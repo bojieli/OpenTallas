@@ -639,6 +639,7 @@ def runnable_leg(
     eos: dict[str, Any],
     deployment_key: str,
     vectors: dict[str, Any],
+    campaign: dict[str, Any],
 ) -> dict[str, Any]:
     """The one span of this program a single transaction could execute today.
 
@@ -657,7 +658,14 @@ def runnable_leg(
     entry_pc = int(loop["back_edge_pc"]) + 1
     argmax_pc = int(roles["argmax"]["pc"])
     eos_pc = int(eos["site"]["pc"])
-    capacity = _g1b.placement_capacity()
+    # The bridge places every operand and result through ONE object table,
+    # and G1b decides that table's depth by MEASUREMENT -- the most objects a
+    # passing campaign case bound and resolved with every result word
+    # compared by address as well as by value -- not by counting the bridge's
+    # port list.  This rung takes the same number from the same function, so
+    # the span's satisfiability cannot be more generous than the layer's, and
+    # with no usable campaign the depth is 0 and no span is satisfiable.
+    capacity = _g1b.placement_capacity(vectors, campaign)
     spans = {}
     for name, bound_pc in (
         ("through_argmax", argmax_pc), ("through_the_eos_site", eos_pc)
@@ -1030,7 +1038,7 @@ def build(
             list(oracle["all_generated_token_ids"]),
         )
         leg = runnable_leg(
-            facts, loop, head, roles, eos, deployment_key, vectors
+            facts, loop, head, roles, eos, deployment_key, vectors, campaign
         )
 
         shard_check: dict[str, Any]

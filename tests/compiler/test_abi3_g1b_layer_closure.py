@@ -55,6 +55,13 @@ def _observed_cases(vectors_path: Path) -> list[dict[str, int]]:
     ]
 
 
+def _words(dims) -> int:
+    total = 1
+    for dim in dims:
+        total *= int(dim)
+    return total
+
+
 def _record(artifact, storage_class):
     return next(
         r for r in artifact["records"] if r["storage_class"] == storage_class
@@ -202,11 +209,12 @@ def _fabricate_complete_vector_set(tool, tmp_path) -> Path:
     """A vector set whose ROM case declares the whole layer executed.
 
     Nothing about it is real -- it exists to prove that the tool's verdict
-    tracks the evidence rather than a constant.  The append cursor and the
-    mapped placement are made self-consistent so the replay cannot reject it
-    for a reason unrelated to completeness.
+    tracks the evidence rather than a constant.  The object placement is made
+    self-consistent so the replay cannot reject it for a reason unrelated to
+    completeness.
     """
     vectors = json.loads(VECTORS.read_text())
+    _span_of: dict[int, int] = {}
     manifest = json.loads(
         (ROOT / "testdata/compiler/abi3_deployment/"
          "abi3_deployment_rtl_vectors.json").read_text()
@@ -229,61 +237,70 @@ def _fabricate_complete_vector_set(tool, tmp_path) -> Path:
         )
         keep = [op for op in case["supported_prefix"]
                 if int(op["pc"]) < min(o["pc"] for o in layer)]
+        # Every object is allocated fresh, so the fabricated span is
+        # self-consistent and cannot be rejected for a reason unrelated to
+        # completeness.
         placement: dict[int, int] = {}
-        produced: dict[int, int] = {}
         operations = list(keep)
-        # Replay the kept prefix so the produced addresses are right.
-        cursor = int(case["bank_mapping"]["output_base"])
+        base = int(case["bank_mapping"]["result_region_base"])
+        cursor = base
+        written = 0
         for operation in keep:
-            words = 1
-            for dim in operation["output_view"]["dims"]:
-                words *= int(dim)
-            produced[int(operation["pc"])] = cursor
-            cursor += words
-        # Append the whole layer, one operation per operator.
+            words = _words(operation["output_view"]["dims"])
+            object_id = int(operation["output_view"]["object_id"])
+            if object_id not in placement:
+                placement[object_id] = cursor
+                _span_of[object_id] = words
+                cursor += words
+            written += words
+        # Append the whole layer, one operation per operator, each result at
+        # its OWN object's base.  A buffer the layer rewrites gets one base
+        # and is written twice there, which is what the vehicle now does.
         by_pc = {op["pc"]: op for op in layer}
         for pc in sorted(by_pc):
             operator = by_pc[pc]
             output = next(
                 s for s in operator["slots"] if s["slot"].startswith("output")
             )
-            words = 1
-            for dim in output["declared_dims"]:
-                words *= int(dim)
-            words = min(words, 4096)
+            object_id = int(output["object_id"])
+            words = min(_words(output["declared_dims"]), 4096)
+            if object_id in placement:
+                # A rewrite: same base, and this compact staging gives an
+                # object one span, so the size must match.
+                words = _span_of[object_id]
+            else:
+                placement[object_id] = cursor
+                _span_of[object_id] = words
+                cursor += words
             operations.append(
                 {
                     "kind": operator["mnemonic"].lower().replace(".", "_"),
                     "pc": pc,
                     "descriptor_id": operator["operator_descriptor_id"],
-                    "output_view": {"dims": [words]},
+                    "output_view": {"dims": [words], "object_id": object_id},
                 }
             )
-            placement[int(output["object_id"])] = cursor
-            produced[pc] = cursor
-            cursor += words
-        # Every operand of the layer resolves to the address that produced it.
-        mapped = []
+            written += words
+        result_span = cursor - base
+        # Every operand the layer reads must be placed too, or the replay
+        # refuses the span outright.  They are not results, so they are placed
+        # outside the region the results allocate.
         for pc in sorted(by_pc):
-            operator = by_pc[pc]
-            for slot in operator["slots"]:
-                if slot["slot"].startswith("output"):
-                    continue
+            for slot in by_pc[pc]["slots"]:
                 object_id = int(slot["object_id"])
-                if object_id in placement:
-                    mapped.append(
-                        {"object_id": object_id, "base_words": placement[object_id]}
-                    )
+                if object_id not in placement:
+                    placement[object_id] = cursor
+                    _span_of[object_id] = 1
+                    cursor += 1
         case["supported_prefix"] = operations
         case["expected"] = dict(case["expected"])
-        case["expected"]["result_words"] = (
-            cursor - int(case["bank_mapping"]["output_base"])
-        )
+        case["expected"]["result_words"] = written
         mapping = dict(case["bank_mapping"])
-        mapping["mapped_placement"] = mapped
-        first_layer_pc = min(by_pc)
-        # The layer's own producers, for the roles that are not object keyed.
-        mapping["rms_input_base"] = produced.get(first_layer_pc, 0)
+        mapping["object_placement"] = [
+            {"object_id": object_id, "base_words": placement[object_id]}
+            for object_id in sorted(placement)
+        ]
+        mapping["result_region_span"] = result_span
         case["bank_mapping"] = mapping
     path = tmp_path / "fabricated_vectors.json"
     path.write_text(json.dumps(vectors))
@@ -330,16 +347,38 @@ def test_a_staged_activation_is_counted_as_an_injected_intermediate(
     vectors = json.loads(vectors_path.read_text())
     for case in vectors["cases"]:
         if case["deployment"] in tool.STORAGE_CLASSES.values():
-            mapped = case["bank_mapping"]["mapped_placement"]
-            assert mapped, "the fabrication must bind mapped operands"
-            # Point one activation object at an address nothing produced, in
-            # every entry that names it, so the resolution really changes.
-            victim = mapped[-1]["object_id"]
-            case["bank_mapping"]["mapped_placement"] = [
-                dict(entry, base_words=999_999)
-                if entry["object_id"] == victim else entry
-                for entry in mapped
+            # Drop one activation object out of the placement table
+            # entirely, so the operator that reads it has no producer of
+            # record and the operand stops being an RTL-to-RTL handoff.
+            layer_pcs = {
+                int(op["pc"]) for op in case["supported_prefix"]
+                if op["kind"] not in ("dma_gather", "tensor_embed_lookup")
+            }
+            victim = max(
+                int(op["output_view"]["object_id"])
+                for op in case["supported_prefix"]
+                if int(op["pc"]) in layer_pcs
+            )
+            case["supported_prefix"] = [
+                op for op in case["supported_prefix"]
+                if int(op["output_view"]["object_id"]) != victim
             ]
+            case["expected"] = dict(case["expected"])
+            case["expected"]["result_words"] = sum(
+                _words(op["output_view"]["dims"])
+                for op in case["supported_prefix"]
+            )
+            # The region shrinks by exactly the object that is gone.
+            seen: set[int] = set()
+            span = 0
+            for op in case["supported_prefix"]:
+                object_id = int(op["output_view"]["object_id"])
+                if object_id in seen:
+                    continue
+                seen.add(object_id)
+                span += _words(op["output_view"]["dims"])
+            case["bank_mapping"] = dict(case["bank_mapping"])
+            case["bank_mapping"]["result_region_span"] = span
     broken = tmp_path / "broken_vectors.json"
     broken.write_text(json.dumps(vectors))
     campaign = {
@@ -367,42 +406,197 @@ def test_a_staged_activation_is_counted_as_an_injected_intermediate(
 
 
 # --------------------------------------------------------------------------
-# The placement census is counted from the RTL, not written down.
+# The placement census is MEASURED, and a port list cannot move it.
+#
+# The failure this replaces is the one section 11.7 already records once: a
+# gate field decided by grepping the verification top's source text for a port
+# name, so that wiring the port would have turned the field green with nothing
+# having run.  The bridge's placement table is exactly that shape of
+# temptation -- widening it is a one-line edit -- so the capacity the demand
+# is compared against is the depth a passing RUN resolved, and the port count
+# is recorded beside it as a declaration that is credited to nothing.
 # --------------------------------------------------------------------------
-def test_placement_capacity_is_counted_from_the_bridge(tool):
-    capacity = tool.placement_capacity()
+def _campaign(vectors_path, tool, usable=True):
+    return {
+        "usable": usable,
+        "observed_cases": _observed_cases(vectors_path),
+    }
+
+
+def test_the_declared_port_count_is_recorded_but_never_credited(tool):
+    vectors = json.loads(VECTORS.read_text())
     text = BRIDGE.read_text()
-    roles = capacity["roles"]
-    assert roles["matmul_weight"]["slots"] == len(
-        set(re.findall(r"cfg_matmul_weight_object_(\d+)\b", text))
+    declared = len(set(re.findall(r"cfg_place_object_(\d+)\b", text)))
+    assert declared > 0, "the bridge declares no placement table at all"
+
+    measured = tool.placement_capacity(
+        vectors, {"usable": True, "observed_cases": _observed_cases(VECTORS)}
     )
-    assert roles["mapped_family_operand"]["slots"] == len(
-        set(re.findall(r"cfg_map_object_(\d+)\b", text))
+    assert measured["declared_entries"] == declared
+    assert measured["source_sha256"] == tool.sha256_file(BRIDGE)
+    # The number every OBJECT-KEYED role is judged against is the measured
+    # one, and on the shipped vector set it is strictly smaller than the
+    # declaration.  The three staged regions do not draw from the table at
+    # all, so widening it does not widen them and they stay at one base each.
+    assert measured["measured_simultaneous_objects"] < declared
+    keyed = [r for r in measured["roles"].values() if r["object_keyed"]]
+    unkeyed = [r for r in measured["roles"].values() if not r["object_keyed"]]
+    assert keyed and unkeyed
+    for role in keyed:
+        assert role["slots"] == measured["measured_simultaneous_objects"]
+    for role in unkeyed:
+        assert role["slots"] == 1
+
+
+def test_with_no_usable_campaign_the_measured_capacity_is_zero(tool):
+    vectors = json.loads(VECTORS.read_text())
+    capacity = tool.placement_capacity(vectors, {"usable": False})
+    assert capacity["measured_simultaneous_objects"] == 0
+    assert all(
+        role["slots"] == 0
+        for role in capacity["roles"].values() if role["object_keyed"]
     )
-    assert capacity["source_sha256"] == tool.sha256_file(BRIDGE)
+    demand = tool.placement_demand(
+        _span((0, "VECTOR.RMS_NORM",
+               [("input_view_0", 40), ("input_view_1", 2),
+                ("output_view_0", 90)])),
+        capacity,
+    )
+    assert demand["every_role_satisfiable"] is False, (
+        "absence of evidence is a failure, not an unknown"
+    )
 
 
 @pytest.mark.parametrize("storage_class", ["rom", "hbm"])
 def test_the_placement_shortfall_is_a_derived_count(artifact, storage_class):
     demand = _record(artifact, storage_class)["layer"]["placement_demand"]
     by_role = {row["role"]: row for row in demand["per_role"]}
-    # The layer's seven projection matrices are seven distinct objects, and
-    # the bridge declares three weight slots.  If either number moves, this
-    # rung's reason must move with it.
+    # The layer's seven projection matrices are seven distinct objects.  If
+    # that number moves, this rung's reason must move with it.
     assert by_role["matmul_weight"]["distinct_objects_the_layer_needs"] == 7
-    assert by_role["matmul_weight"]["short_by"] == (
-        7 - by_role["matmul_weight"]["slots_the_bridge_declares"]
-    )
-    assert demand["every_role_satisfiable"] is False
     assert not demand["unattributed_operands"], (
         "every operand of the layer must be attributed to a placement role, "
         "or the shortfall is not a complete count"
     )
+    # One table serves every role, so the union is the binding constraint and
+    # it is stricter than any single role.
+    union = next(
+        row for row in demand["per_role"] if row["role"].startswith("__")
+    )
+    assert union["distinct_objects_the_layer_needs"] >= max(
+        row["distinct_objects_the_layer_needs"]
+        for row in demand["per_role"] if not row["role"].startswith("__")
+    )
+    assert demand["every_role_satisfiable"] == all(
+        row["satisfiable"] for row in demand["per_role"]
+    )
     reused = demand["output_objects"]["objects_written_more_than_once"]
     assert reused, (
-        "the layer reuses buffers; if it did not, an appending output cursor "
-        "would be sufficient and this reason would be wrong"
+        "the layer reuses buffers; that is why the campaign has to compare "
+        "the engines' write stream and not only the retained image"
     )
+
+
+def _span(*operators):
+    """A minimal issue span: (pc, mnemonic, [(slot, object_id), ...])."""
+    return [
+        {"pc": pc, "mnemonic": mnemonic,
+         "slots": [{"slot": slot, "object_id": object_id}
+                   for slot, object_id in slots]}
+        for pc, mnemonic, slots in operators
+    ]
+
+
+def _capacity_of(tool, depth):
+    """A capacity record with a stated measured depth and nothing else."""
+    return {
+        "declared_entries": depth,
+        "measured_simultaneous_objects": depth,
+        "roles": {
+            role: {"object_keyed": True, "slots": depth}
+            for role in (
+                "matmul_weight", "head_rms_weight", "head_rms_input",
+                "rope_input", "rope_coefficient", "mapped_family_operand",
+                "matmul_input", "rms_input", "rms_weight", "result_object",
+            )
+        },
+    }
+
+
+def test_object_addressed_results_place_a_rewrite(tool):
+    """The predicate that used to be false, in both directions.
+
+    An append cursor gave every write a fresh address, so an object written
+    twice occupied two addresses and no reader could name the right one.  A
+    result placed at its own object's base does not have that problem, and a
+    span that rewrites a buffer is placeable.  What a rewrite still costs is
+    recorded, because it is what makes an image comparison insufficient.
+    """
+    rewritten = tool.placement_demand(
+        _span((0, "TENSOR.MATMUL",
+               [("input_view_0", 30), ("input_view_1", 3),
+                ("output_view_0", 90)]),
+              (3, "TENSOR.MATMUL",
+               [("input_view_0", 90), ("input_view_1", 3),
+                ("output_view_0", 90)])),
+        _capacity_of(tool, 8),
+    )
+    by_role = {row["role"]: row for row in rewritten["per_role"]}
+    assert by_role["result_object"]["satisfiable"] is True
+    assert rewritten["output_objects"]["objects_written_more_than_once"] == {
+        "90": [0, 3]
+    }
+    assert rewritten["every_role_satisfiable"] is True
+
+
+def test_the_union_of_the_roles_is_what_one_table_has_to_hold(tool):
+    """Every role fits and the span still does not.
+
+    Ten roles that each fit in the table can name more objects between them
+    than the table holds.  Reporting only the per-role rows would call such a
+    span placeable, which is the reason this row exists.
+    """
+    span = _span(
+        (0, "VECTOR.RMS_NORM",
+         [("input_view_0", 1), ("input_view_1", 2), ("output_view_0", 3)]),
+        (3, "TENSOR.MATMUL",
+         [("input_view_0", 3), ("input_view_1", 4), ("output_view_0", 5)]),
+        (6, "VECTOR.ROPE",
+         [("input_view_0", 5), ("input_view_1", 6), ("output_view_0", 7)]),
+    )
+    seven = tool.placement_demand(span, _capacity_of(tool, 7))
+    assert all(
+        row["satisfiable"] for row in seven["per_role"]
+        if not row["role"].startswith("__")
+    )
+    assert seven["every_role_satisfiable"] is True
+
+    two = tool.placement_demand(span, _capacity_of(tool, 2))
+    union = next(row for row in two["per_role"] if row["role"].startswith("__"))
+    assert union["distinct_objects_the_layer_needs"] == 7
+    assert union["satisfiable"] is False
+    assert two["every_role_satisfiable"] is False
+
+
+def test_the_two_selection_families_are_attributed_to_a_placement_role(tool):
+    """The bridge names six mapped families; all six must be in the map.
+
+    ``SELECTION.ARGMAX`` and ``SELECTION.TOKEN_APPEND`` were absent, so their
+    operands fell through to ``unattributed_operands`` and any span containing
+    the head counted no mapped demand at all.
+    """
+    for mnemonic in ("SELECTION.ARGMAX", "SELECTION.TOKEN_APPEND"):
+        for slot in ("input_view_0", "output_view_0"):
+            assert tool.OPERAND_ROLE[(mnemonic, slot)] == "mapped_family_operand"
+
+    demand = tool.placement_demand(
+        _span((70, "SELECTION.ARGMAX",
+               [("input_view_0", 194), ("output_view_0", 200)])),
+        _capacity_of(tool, 8),
+    )
+    assert not demand["unattributed_operands"]
+    by_role = {row["role"]: row for row in demand["per_role"]}
+    assert by_role["mapped_family_operand"]["objects"] == [194, 200]
 
 
 # --------------------------------------------------------------------------
@@ -553,7 +747,7 @@ def test_a_moved_graph_is_refused_rather_than_read(tool):
     assert "does not certify a Kernel IR" in str(uncertified_error.value)
 
 
-def test_an_append_replay_that_does_not_add_up_is_refused(tool):
+def test_a_placement_replay_that_does_not_add_up_is_refused(tool):
     """If the placement replay is wrong, nothing derived from it may ship."""
     vectors = json.loads(VECTORS.read_text())
     case = json.loads(json.dumps(vectors["cases"][0]))
@@ -563,111 +757,15 @@ def test_an_append_replay_that_does_not_add_up_is_refused(tool):
     assert "the placement replay is wrong" in str(error.value)
 
 
-# --------------------------------------------------------------------------
-# What an unkeyed base and an append cursor can and cannot place.
-#
-# Both predicates were once written as "unkeyed means unplaceable" and
-# "distinct outputs must fit in one slot", which called a span blocked whose
-# operands the vehicle can address perfectly well.  A rung that is red for a
-# reason that is not true is the failure this ladder exists to prevent, so
-# each predicate is pinned here in both directions.
-# --------------------------------------------------------------------------
-def _span(*operators):
-    """A minimal issue span: (pc, mnemonic, [(slot, object_id), ...])."""
-    return [
-        {"pc": pc, "mnemonic": mnemonic,
-         "slots": [{"slot": slot, "object_id": object_id}
-                   for slot, object_id in slots]}
-        for pc, mnemonic, slots in operators
+def test_a_result_object_the_table_does_not_name_is_refused(tool):
+    """There is no cursor to fall back on, so this cannot be guessed."""
+    vectors = json.loads(VECTORS.read_text())
+    case = json.loads(json.dumps(vectors["cases"][0]))
+    victim = int(case["supported_prefix"][0]["output_view"]["object_id"])
+    case["bank_mapping"]["object_placement"] = [
+        entry for entry in case["bank_mapping"]["object_placement"]
+        if int(entry["object_id"]) != victim
     ]
-
-
-def test_one_unkeyed_base_places_one_object_and_refuses_two(tool):
-    capacity = tool.placement_capacity()
-    assert capacity["roles"]["rms_input"]["object_keyed"] is False
-
-    one = tool.placement_demand(
-        _span((0, "VECTOR.RMS_NORM",
-               [("input_view_0", 40), ("input_view_1", 2),
-                ("output_view_0", 90)])),
-        capacity,
-    )
-    by_role = {row["role"]: row for row in one["per_role"]}
-    assert by_role["rms_input"]["satisfiable"] is True, (
-        "cfg_rms_input_base is one base the harness drives; a span that names "
-        "a single object is placeable through it"
-    )
-
-    two = tool.placement_demand(
-        _span((0, "VECTOR.RMS_NORM",
-               [("input_view_0", 40), ("input_view_1", 2),
-                ("output_view_0", 90)]),
-              (3, "VECTOR.RMS_NORM",
-               [("input_view_0", 41), ("input_view_1", 2),
-                ("output_view_0", 91)])),
-        capacity,
-    )
-    by_role = {row["role"]: row for row in two["per_role"]}
-    assert by_role["rms_input"]["satisfiable"] is False
-    assert by_role["rms_input"]["distinct_objects_the_layer_needs"] == 2
-
-
-def test_the_append_cursor_places_fresh_outputs_and_refuses_a_rewrite(tool):
-    capacity = tool.placement_capacity()
-    assert capacity["roles"]["appending_output"]["object_keyed"] is False
-
-    fresh = tool.placement_demand(
-        _span((0, "TENSOR.MATMUL",
-               [("input_view_0", 30), ("input_view_1", 3),
-                ("output_view_0", 90)]),
-              (3, "TENSOR.MATMUL",
-               [("input_view_0", 90), ("input_view_1", 3),
-                ("output_view_0", 91)])),
-        capacity,
-    )
-    by_role = {row["role"]: row for row in fresh["per_role"]}
-    assert by_role["appending_output"]["distinct_objects_the_layer_needs"] == 2
-    assert by_role["appending_output"]["satisfiable"] is True, (
-        "an append cursor gives every write a fresh address, so any number of "
-        "write-once buffers is placeable through it"
-    )
-    assert not fresh["output_objects"]["objects_written_more_than_once"]
-
-    rewritten = tool.placement_demand(
-        _span((0, "TENSOR.MATMUL",
-               [("input_view_0", 30), ("input_view_1", 3),
-                ("output_view_0", 90)]),
-              (3, "TENSOR.MATMUL",
-               [("input_view_0", 90), ("input_view_1", 3),
-                ("output_view_0", 90)])),
-        capacity,
-    )
-    by_role = {row["role"]: row for row in rewritten["per_role"]}
-    assert by_role["appending_output"]["satisfiable"] is False, (
-        "object 90 is written twice; the cursor gives it two addresses and no "
-        "reader can name the right one"
-    )
-    assert rewritten["output_objects"]["objects_written_more_than_once"] == {
-        "90": [0, 3]
-    }
-
-
-def test_the_two_selection_families_are_attributed_to_a_placement_role(tool):
-    """The bridge names six mapped families; all six must be in the map.
-
-    ``SELECTION.ARGMAX`` and ``SELECTION.TOKEN_APPEND`` were absent, so their
-    operands fell through to ``unattributed_operands`` and any span containing
-    the head counted no mapped demand at all.
-    """
-    for mnemonic in ("SELECTION.ARGMAX", "SELECTION.TOKEN_APPEND"):
-        for slot in ("input_view_0", "output_view_0"):
-            assert tool.OPERAND_ROLE[(mnemonic, slot)] == "mapped_family_operand"
-
-    demand = tool.placement_demand(
-        _span((70, "SELECTION.ARGMAX",
-               [("input_view_0", 194), ("output_view_0", 200)])),
-        tool.placement_capacity(),
-    )
-    assert not demand["unattributed_operands"]
-    by_role = {row["role"]: row for row in demand["per_role"]}
-    assert by_role["mapped_family_operand"]["objects"] == [194, 200]
+    with pytest.raises(SystemExit) as error:
+        tool.executed_span(case, [])
+    assert "placement table does not name" in str(error.value)

@@ -48,6 +48,7 @@ ORACLE_SOURCES = (
     "testdata/compiler/abi3_deployment/a3_program.hex",
     "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
+    "testdata/compiler/abi3_shipped_prefix/p3_writes.hex",
     "results/rtl/abi3_shipped_prefix_campaign.json",
 )
 VECTOR_FILES = (

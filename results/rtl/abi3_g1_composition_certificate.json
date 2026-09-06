@@ -24,7 +24,7 @@
  "generated_by": "tools/build_abi3_g1_composition_certificate.py",
  "generated_by_sha256": "fee569eb0664befd3c6e69322a4f61d3e52c5c323f8495fd3826b4a7c588ed9e",
  "git": {
-  "commit": "fa5e6fa9d39fdefccd5c698b907b811609eabcc4",
+  "commit": "8c3806b3ce8ad9c4b3a34ec113dc315faa3ca53f",
   "dirty_paths": [],
   "scope": "the tree THIS certificate was derived in. Each rung artifact carries the tree ITS run happened in, under records[].git.",
   "worktree_dirty": false
@@ -32,19 +32,19 @@
  "inputs": {
   "G1a": {
    "path": "results/rtl/abi3_g1a_operator_equivalence.json",
-   "sha256": "ac6902d6777648afe584d8f10ed9c5fbea32434808bdf77d34e7f19e43d6b0e2"
+   "sha256": "5b3b363f405f809a9f2409d7a8f29523c92116497a32fda0678fb15cbc829a94"
   },
   "G1b": {
    "path": "results/rtl/abi3_g1b_layer_closure.json",
-   "sha256": "c5d4dd8b417f4ef7062107d77a26bc4b5602d6bfaa8f5d1c051e16962462b414"
+   "sha256": "1de63dc73423598bd8aac68edc0edd795228756cced53ab4a2fcc9366aa6c917"
   },
   "G1c": {
    "path": "results/rtl/abi3_g1c_composition.json",
-   "sha256": "594ce929dbc71c3b0e59128b1e0af62c043d186aea0d6b005cef6b68a9bc661a"
+   "sha256": "4255e667a73832baac775a19b5dd7a233e8ade823745b67a5776acd2e2bf7a0f"
   },
   "G1d": {
    "path": "results/rtl/abi3_g1d_token.json",
-   "sha256": "10921aec60922fdd48afe6bd456bdbb3182fbd0a40cc3add0c79b487a676f02d"
+   "sha256": "2042f17af7e9d0edfe6a0ec1f657d4028e4e0bb7614df19a997d3c9575e3cd71"
   },
   "G1d_oracle": {
    "path": "results/abi3/qwen3_reference_oracle_eos.json",
@@ -52,11 +52,11 @@
   },
   "G1e": {
    "path": "results/rtl/abi3_g1e_control_end_to_end.json",
-   "sha256": "575fa9e297f3bfa91864487378db727d8feb823d6424d5fcf44fb74e305946e4"
+   "sha256": "0267acb1ed0203d92f553a5ba394cd41a84b79f46fe6b766fdfb30e86e6e803f"
   },
   "G1f": {
    "path": "results/rtl/abi3_g1f_reduced_end_to_end.json",
-   "sha256": "dd5a5f2bddda148754fd7403e6870ba712d0d12d6c43c2b8beee2fef9b6dc67a"
+   "sha256": "ce0655f744847ab5f05624794a68939bd57b74f46d0b8ff3f7db2177b3f17775"
   },
   "G1f_oracle": {
    "path": "results/abi3/qwen3_reduced_reference_oracle.json",

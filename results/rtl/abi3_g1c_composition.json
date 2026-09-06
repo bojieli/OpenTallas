@@ -12,9 +12,9 @@
   ],
   "gate": "G1c",
   "generated_by": "tools/build_abi3_g1c_composition.py",
-  "generated_by_sha256": "9e73a2a14350d3ffbb6ed51601ed0833de0e5ee61fbe75b09fed6a78f6f43632",
+  "generated_by_sha256": "81c4a1fefa80342c202139a459f65c6a7a3c61380d28daa998b2f2888d420cbf",
   "git": {
-    "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
+    "commit": "e5eeede21cf42bb9145f5bd86060a80180213794",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -31,13 +31,13 @@
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
         "control_plane_run": {
           "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
-          "artifact_sha256": "cea959e535573059202264f28c69ffeba39a32003fcc5311c500d1b3e95bbc60",
+          "artifact_sha256": "0267acb1ed0203d92f553a5ba394cd41a84b79f46fe6b766fdfb30e86e6e803f",
           "bound_source_count": 54,
           "census_agrees_with_the_run": true,
           "census_rows_from_the_trace_file": 26,
           "control_plane": "rtl/abi3/ot_a3_device_top.sv",
           "declared_git": {
-            "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+            "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
             "worktree_dirty": false
           },
           "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
@@ -262,7 +262,7 @@
           },
           "rung": "G1e",
           "schema": "opentallas.rtl.abi3_g1e_control_end_to_end.v1",
-          "simulated_cycles": 679220,
+          "simulated_cycles": 509415,
           "simulator": "verilator_cpp_executable",
           "simulator_version": "5.050",
           "trace": {
@@ -286,7 +286,7 @@
             "equals_golden": true,
             "golden_source": "runtime.sim.device.Device"
           },
-          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/close_compose/g1e_build2/build-rom/rtl_issue_trace.txt",
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/key_close/g1e_root/build-rom/rtl_issue_trace.txt",
           "trace_file_issue_count": 2073,
           "trace_file_sha256": "1ff54121c906ed18b21f42b7487ba230e05e9f0ac4f5a9c9bd26a7ed5afb9778",
           "usable": true,
@@ -295,14 +295,14 @@
           "workload_id": "TA-QW-EOS-1"
         },
         "evidence_class": "public_open_tool_rtl_simulation",
-        "simulated_cycles": 679220,
+        "simulated_cycles": 509415,
         "simulated_cycles_scope": "the control-plane run in which this rung's loop property was measured -- every device transaction of the governed workload through the design's own control plane. The integrated run that establishes (or here, fails to establish) the handoff reports its own cycles under handoff.integrated_campaign",
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
+        "commit": "e5eeede21cf42bb9145f5bd86060a80180213794",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -382,17 +382,17 @@
         "golden_injected_between_layers": null,
         "integrated_campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
           "bound_source_count": 60,
           "declared_git": {
-            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
           "drifted_sources": [],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "integrated_simulator_checks": {
-            "verilator": 189862
+            "verilator": 353707
           },
           "operator_admission": {
             "capability_trapped_family_count": 6,
@@ -437,8 +437,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "why_unusable": null
         },
         "layer_boundary_crossings_observed": 0,
@@ -454,15 +454,15 @@
         "rtl_to_rtl": false,
         "what_the_missing_half_would_cost": {
           "consecutive_layers_required": 2,
-          "hours": 3.21,
+          "hours": 3.03,
           "mac_count_for_two_consecutive_invocations": 385875968,
           "mac_count_per_invocation": 192937984,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 33355.1,
+            "macs_per_second": 35352.7,
             "measured": true,
-            "simulation_wall_seconds": 1508.965,
+            "simulation_wall_seconds": 1423.7,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the layer body's own multiply-accumulates, twice, at the rate the integrated vehicle itself measured. It is what the handoff half costs once the eleven operators the bridge traps can be issued; it is not what this rung cost, which is the control run above",
@@ -524,7 +524,7 @@
               ]
             }
           ],
-          "seconds": 11568.7
+          "seconds": 10915.0
         },
         "what_would_turn_this_green": [
           "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",
@@ -2629,13 +2629,13 @@
         "control_plane": "rtl/abi3/ot_a3_device_top.sv",
         "control_plane_run": {
           "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
-          "artifact_sha256": "cea959e535573059202264f28c69ffeba39a32003fcc5311c500d1b3e95bbc60",
+          "artifact_sha256": "0267acb1ed0203d92f553a5ba394cd41a84b79f46fe6b766fdfb30e86e6e803f",
           "bound_source_count": 54,
           "census_agrees_with_the_run": true,
           "census_rows_from_the_trace_file": 26,
           "control_plane": "rtl/abi3/ot_a3_device_top.sv",
           "declared_git": {
-            "commit": "acf851838ea6415352027ed73274dd8635fa1bfd",
+            "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
             "worktree_dirty": false
           },
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -2860,7 +2860,7 @@
           },
           "rung": "G1e",
           "schema": "opentallas.rtl.abi3_g1e_control_end_to_end.v1",
-          "simulated_cycles": 679236,
+          "simulated_cycles": 509427,
           "simulator": "verilator_cpp_executable",
           "simulator_version": "5.050",
           "trace": {
@@ -2884,7 +2884,7 @@
             "equals_golden": true,
             "golden_source": "runtime.sim.device.Device"
           },
-          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/close_compose/g1e_build2/build-hbm/rtl_issue_trace.txt",
+          "trace_file": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/key_close/g1e_root/build-hbm/rtl_issue_trace.txt",
           "trace_file_issue_count": 2073,
           "trace_file_sha256": "72dab99c856d88e72a94bd501ad420236a99739841339aae33f27d1497ee4e16",
           "usable": true,
@@ -2893,14 +2893,14 @@
           "workload_id": "TA-QW-EOS-1"
         },
         "evidence_class": "public_open_tool_rtl_simulation",
-        "simulated_cycles": 679236,
+        "simulated_cycles": 509427,
         "simulated_cycles_scope": "the control-plane run in which this rung's loop property was measured -- every device transaction of the governed workload through the design's own control plane. The integrated run that establishes (or here, fails to establish) the handoff reports its own cycles under handoff.integrated_campaign",
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "8be37a02d1aecd3aae9e9c4f01c4963850b451d3",
+        "commit": "e5eeede21cf42bb9145f5bd86060a80180213794",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -2980,17 +2980,17 @@
         "golden_injected_between_layers": null,
         "integrated_campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
           "bound_source_count": 60,
           "declared_git": {
-            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
           "drifted_sources": [],
           "evidence_class": "public_open_tool_rtl_simulation_composite",
           "integrated_simulator_checks": {
-            "verilator": 189862
+            "verilator": 353707
           },
           "operator_admission": {
             "capability_trapped_family_count": 6,
@@ -3035,8 +3035,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "why_unusable": null
         },
         "layer_boundary_crossings_observed": 0,
@@ -3052,15 +3052,15 @@
         "rtl_to_rtl": false,
         "what_the_missing_half_would_cost": {
           "consecutive_layers_required": 2,
-          "hours": 3.21,
+          "hours": 3.03,
           "mac_count_for_two_consecutive_invocations": 385875968,
           "mac_count_per_invocation": 192937984,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 33355.1,
+            "macs_per_second": 35352.7,
             "measured": true,
-            "simulation_wall_seconds": 1508.965,
+            "simulation_wall_seconds": 1423.7,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the layer body's own multiply-accumulates, twice, at the rate the integrated vehicle itself measured. It is what the handoff half costs once the eleven operators the bridge traps can be issued; it is not what this rung cost, which is the control run above",
@@ -3122,7 +3122,7 @@
               ]
             }
           ],
-          "seconds": 11568.7
+          "seconds": 10915.0
         },
         "what_would_turn_this_green": [
           "a run whose back edge retires at least twice, so a second invocation of the body consumes what the first produced",

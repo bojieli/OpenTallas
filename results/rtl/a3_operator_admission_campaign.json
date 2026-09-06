@@ -72,17 +72,17 @@
   ],
   "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "fa44189e79a8b091f4d49b6c1d5846e36b3637e27c76308dcb5ef30089086bcf",
-    "ot_a3_vector_silu_mul_yosys": "5d03ff29872a987144ab75bd96f1fd2c29a1edfe9550cdc3a9f90ac156dd0bca",
+    "ot_a3_selection_token_append_yosys": "6d22dbb9f5eb83e834e1569349788998f81adf4a91b49bbb851b99b4cc2974d1",
+    "ot_a3_vector_silu_mul_yosys": "a8b6bdaa7f0bd3b591cd1eb4d3a5d2491bc39c1f8bbbc015031e8e8faa3d118e",
     "tb_a3_operator_admission_iverilog": "23708bf3359d4ff7293ca287173b244bd575cc3de47e3767308ed31aa5867ce9",
-    "tb_a3_operator_admission_verilator": "2cfb4200f6d00233db3a13c8677d127bba4fca62f69eb5008cbfa59acc855ec2",
-    "tb_a3_operator_admission_verilator_compile": "183f24f2327e56c876da176f958007a557a424901883525540957e6995abb4f3",
+    "tb_a3_operator_admission_verilator": "36830c8ce15a96cb37a14908b19471475fc214959994053bb72b566edc526c1a",
+    "tb_a3_operator_admission_verilator_compile": "66823aedbb349b60d71faf0e8d5f70a5833419c0e7dc550ffe75b6bb9b2c3d40",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "cb11cf3353d5f54eae6e554020a75f45e999dd3ce10e7c34d92de30b0caf54bf",
-    "tb_a3_selection_token_append_verilator_compile": "0f338a4a2ced771b5a7c0e35e3ebe271b33b62e1f28f30e82e8ce869e4a43bdf",
+    "tb_a3_selection_token_append_verilator": "5230d70efb23c354f1276a12c3d1916cf43cfd9bfc2906d3023382f287d162dd",
+    "tb_a3_selection_token_append_verilator_compile": "8df63d0255925313ca5a04d8833d59b9ae5c82bb4c39ecd19321af0a725a0eb2",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "353b34a7dfcda5accba09c128ef209defe48233f6ba0b97f1209ad62dde4da98",
-    "tb_a3_vector_silu_mul_verilator_compile": "18dc2947e485d7b5938876c31b964ace6b9df5194c3d526b1ba314b73b680d88"
+    "tb_a3_vector_silu_mul_verilator": "bcb183cbc6402925fbe01f5cf662b038b9351e3d2ff9c5b1664185bb6f290f07",
+    "tb_a3_vector_silu_mul_verilator_compile": "d78b17e84a65db1f0ea4281e8a5b6de0f50180af167968e4298b413b84453a47"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -584,7 +584,7 @@
   "source_sha256": {
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "473e3b852f4db9491386d1e62fc61d7b0fab1706e6c9531300d45928a417e61f",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
     "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
@@ -608,7 +608,7 @@
     "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
     "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
     "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
-    "rtl/test/tb_a3_operator_admission.sv": "ad7e7278cb1fcecefd0779decfb67830f03066787e8e7d9b8413bc443577cdc8",
+    "rtl/test/tb_a3_operator_admission.sv": "5eacf72f1fe3f955b9d22d858b3f3d683ef8e040194d2a34dfcb2e127272bef6",
     "rtl/test/tb_a3_selection_token_append.sv": "272bd6131a22f10ec708406a58c1f9895cfa1e6083c51ac94810ac8c368d2a8a",
     "rtl/test/tb_a3_vector_silu_mul.sv": "f41f7e67551543debd76fae74ca2431104091cfda324dfdc11eaa1efdcaca81a",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
@@ -618,10 +618,11 @@
     "testdata/compiler/abi3_deployment/a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
     "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
     "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636",
-    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
+    "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
     "tools/build_a3_operator_admission_vectors.py": "44f518aa42297c2ef9c120d38b2e35cd8f2694e978aeaad6b049015365fea4c5",
     "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
-    "tools/run_a3_operator_admission_rtl_campaign.py": "b5726467223ebd3cdfba115474be153ea95a2395cb3b9c5b1e73d04700fbed61"
+    "tools/run_a3_operator_admission_rtl_campaign.py": "0954bf4d2554fd2c4b111d7f900137bb87238b933e8c99036567c726db56c753"
   },
   "status": "pass",
   "storage_class": "rom",
@@ -672,7 +673,7 @@
     "a3_operator_admission/descriptors.hex": "f00899e1e9ecfba03f0ed94b2f3967e87047e729c7a4026c81665f0145ad44af",
     "a3_operator_admission/expected.hex": "66082f3571d372cc92907865275a33acd18e81602446c91a1f7f44d27ccbb107",
     "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
-    "a3_operator_admission/index.json": "7a158259c3bdd43aa70b4df86bb835b597b1a019a00e2f9d10abcc32722c8250",
+    "a3_operator_admission/index.json": "fe0382b9603ab711f767e629b9e62557c14077d08f1336474f85865be6583806",
     "a3_operator_admission/preload.hex": "fe86db3bd65f9b53f10aac7d17785bb890c44af3d2939b064cfdde1c21da3149",
     "a3_operator_admission/views.hex": "5013081e066052f05cb8aa01735857ae1254329c3d612f09289ef2fceb218646",
     "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
@@ -683,19 +684,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.02267768292222172,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 11.408615763997659,
-    "tb_a3_operator_admission_iverilog_compile": 0.08781789289787412,
-    "tb_a3_operator_admission_iverilog_simulation": 829.5643931940431,
-    "tb_a3_operator_admission_verilator_compile": 14.102501120069064,
-    "tb_a3_operator_admission_verilator_simulation": 14.49245257594157,
-    "tb_a3_selection_token_append_iverilog_compile": 0.007779609994031489,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.004914638004265726,
-    "tb_a3_selection_token_append_verilator_compile": 4.349761351943016,
-    "tb_a3_selection_token_append_verilator_simulation": 0.0014561580028384924,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.01501261000521481,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 18.898602467030287,
-    "tb_a3_vector_silu_mul_verilator_compile": 6.998141519026831,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.2695416669594124
+    "ot_a3_selection_token_append_yosys_elaboration": 0.023007808020338416,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 11.610112107009627,
+    "tb_a3_operator_admission_iverilog_compile": 0.08309786801692098,
+    "tb_a3_operator_admission_iverilog_simulation": 794.5526385999983,
+    "tb_a3_operator_admission_verilator_compile": 15.250759855029173,
+    "tb_a3_operator_admission_verilator_simulation": 17.156089804018848,
+    "tb_a3_selection_token_append_iverilog_compile": 0.008057321072556078,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.004599670995958149,
+    "tb_a3_selection_token_append_verilator_compile": 3.6197024610592052,
+    "tb_a3_selection_token_append_verilator_simulation": 0.0015114779816940427,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.016524732927791774,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 18.58938990905881,
+    "tb_a3_vector_silu_mul_verilator_compile": 6.774143687915057,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.26385008601937443
   }
 }

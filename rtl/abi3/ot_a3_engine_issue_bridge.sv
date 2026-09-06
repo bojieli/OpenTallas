@@ -24,19 +24,43 @@
 // and only then is the family's shape predicate evaluated over the captured
 // slots.  Nothing is guessed from a convenience field.
 //
-// These six differ from the original seven in *where their results go*, and
-// the difference is architectural rather than cosmetic.  The original seven
-// append: each writes at ``cfg_output_base + result_word_cursor`` and the
-// cursor then advances by the words it produced.  A scatter is a
-// read-modify-write into a KV plane that already exists, and the second
-// residual add writes back over the trunk object it read, so neither can be
-// placed by an append cursor without moving every later operator's base.
-// The six therefore use *mapped* placement: the base comes from the
-// descriptor's own primary object through ``cfg_map_object_N`` /
-// ``cfg_map_base_N``, the sequencer's resolved element offset selects the
-// plane inside it, and ``result_word_cursor`` is deliberately not advanced.
-// An object the map does not name is a DESCRIPTOR trap, never a guess.
+// PLACEMENT IS OBJECT-ADDRESSED, FOR EVERY OPERAND AND EVERY RESULT OF EVERY
+// FAMILY, THROUGH ONE TABLE.  There used to be ten placement surfaces here --
+// six per-role object tables, three unkeyed single bases, and an append
+// cursor -- and they could not express a whole transformer layer.  The rule
+// now has no exceptions:
+//
+//     address = cfg_place_base_N of the view's own primary object
+//               + the sequencer's resolved element offset for that slot
+//
+// Three consequences, and each was a separate defect before:
+//   * an object has ONE base.  The old surfaces bound the same object through
+//     several ports -- a layer's trunk activation is a MATMUL input, an
+//     RMS_NORM input, a RoPE input, a mapped operand and a result -- and
+//     nothing made those agree.  A table that names an object twice is a
+//     DESCRIPTOR trap at admission (``placement_table_unique``), so the
+//     disagreement cannot be configured at all rather than being trusted.
+//   * a REWRITE is expressible.  The seven original families used to write at
+//     ``cfg_output_base + result_word_cursor``: every write got a fresh
+//     address, so an object written twice occupied two addresses and a later
+//     read of it read the wrong one.  A layer writes 19 intermediates into 10
+//     buffers and rewrites 4 of them, so the cursor could not run one.  The
+//     cursor is gone; a result lands at its object's base, and a second write
+//     to that object lands where the first one did, which is what the
+//     dependence table's WAW ranges (§3.6) already describe.
+//   * the surface is one number, not ten.  ``cfg_place_object_N`` /
+//     ``cfg_place_base_N`` for N in 0..31 -- sized in the header note below.
+//
+// An object the table does not name is a DESCRIPTOR trap, never a guess.
 // Completion is returned only after the datapath finishes.
+//
+// The six mapped families remain separately gated by
+// ``cfg_extended_placement_valid``: that flag says this instantiation admits
+// them at all, and it is not what supplies their addresses.  The bank a base
+// lives in is still chosen by the reading slot (``m0_reads_result``,
+// ``m1_reads_result``, ``m1_reads_matmul_weight``), so two objects in
+// different banks may share a base value; one object in two banks may not,
+// and no shipped program asks for it.
 // Every other opcode returns a precise CAPABILITY trap.  Malformed metadata
 // returns a DESCRIPTOR trap, and a datapath failure returns an ENGINE trap.
 //
@@ -91,69 +115,106 @@ module ot_a3_engine_issue_bridge (
     // Per-transaction compact verification-bank placement.  The first
     // supported operation uses one index word.  Gathers advance through the
     // generated-row source region by the stated stride; embeddings use the
-    // separately packed checkpoint-row region.  Mixed-width results advance
-    // through one contiguous output cursor.
+    // separately packed checkpoint-row region.  These four name staged
+    // REGIONS that the vehicle sweeps by launch counter rather than ABI
+    // objects, and no operand of a transformer layer is drawn from them.
     input  wire [31:0]   cfg_index_base,
     input  wire [31:0]   cfg_source_base,
     input  wire [31:0]   cfg_source_launch_stride,
     input  wire [31:0]   cfg_embedding_source_base,
-    input  wire [31:0]   cfg_rms_input_base,
-    input  wire [31:0]   cfg_rms_weight_base,
     input  wire [31:0]   cfg_transfer_index_base,
     input  wire [31:0]   cfg_transfer_source_base,
-    input  wire [31:0]   cfg_matmul_input_base,
-    input  wire [31:0]   cfg_matmul_weight_object_0,
-    input  wire [31:0]   cfg_matmul_weight_base_0,
-    input  wire [31:0]   cfg_matmul_weight_object_1,
-    input  wire [31:0]   cfg_matmul_weight_base_1,
-    input  wire [31:0]   cfg_matmul_weight_object_2,
-    input  wire [31:0]   cfg_matmul_weight_base_2,
-    input  wire [31:0]   cfg_head_input_object_0,
-    input  wire [31:0]   cfg_head_input_base_0,
-    input  wire [31:0]   cfg_head_input_object_1,
-    input  wire [31:0]   cfg_head_input_base_1,
-    input  wire [31:0]   cfg_head_weight_object_0,
-    input  wire [31:0]   cfg_head_weight_base_0,
-    input  wire [31:0]   cfg_head_weight_object_1,
-    input  wire [31:0]   cfg_head_weight_base_1,
-    input  wire [31:0]   cfg_rope_input_object_0,
-    input  wire [31:0]   cfg_rope_input_base_0,
-    input  wire [31:0]   cfg_rope_input_object_1,
-    input  wire [31:0]   cfg_rope_input_base_1,
-    input  wire [31:0]   cfg_rope_coefficient_object,
-    input  wire [31:0]   cfg_rope_coefficient_base,
-    input  wire [31:0]   cfg_output_base,
 
-    // Object-addressed placement for the six mapped families.  Each entry
-    // binds one ABI object id to its compact verification-bank base.  An
-    // object no entry names is refused; there is no default base.
+    // The object placement table.  Each entry binds one ABI object id to its
+    // compact verification-bank base; an object no entry names is refused,
+    // and there is no default base.  This is the ONLY placement surface for
+    // operands and results.
     //
-    // ``cfg_extended_placement_valid`` states that this *instantiation* has
-    // supplied that placement.  It is not a switch for turning correctness
-    // off: the six families have no operand addresses at all until a bank is
-    // bound to each object, so an instance that has not bound them has no
-    // capability for them, and says so with the same TRAP_CAPABILITY it gave
-    // before they were implemented.  An unconnected input reads as z or 0 and
-    // both take the else branch, so an integration that has not yet wired the
-    // banks keeps its previous behaviour exactly rather than acquiring a
-    // half-configured one.
+    // SIZED FROM MEASURED DEMAND, not from a round number.  The distinct ABI
+    // objects the governed decode program's issued operators name, derived
+    // from each deployment's own descriptors by
+    // tools/build_abi3_g1b_layer_closure.py: 32 on the ROM lowering and 31 on
+    // the HBM lowering over the whole program, 23 over one transformer layer
+    // on both, 26 over the span that reaches the layer's end and 9 over the
+    // head span.  32 entries is the maximum of those, so the headroom is 9
+    // entries over the layer this vehicle must place and NONE over the whole
+    // program on the ROM lowering.  A program that names a 33rd object does
+    // not mis-address it; it fails admission with a DESCRIPTOR trap on the
+    // first operand the table cannot resolve.
+    //
+    // ``cfg_extended_placement_valid`` states that this *instantiation*
+    // admits the six mapped families at all.  It is not a switch for turning
+    // correctness off and it is not what supplies an address: an instance
+    // that has not bound the table has no operand addresses for ANY family
+    // and refuses each of them where it needs one.  An unconnected input
+    // reads as z or 0 and both take the else branch, so an integration that
+    // has not wired this keeps its previous refusals rather than acquiring a
+    // half-configured placement.
     input  wire          cfg_extended_placement_valid,
-    input  wire [31:0]   cfg_map_object_0,
-    input  wire [31:0]   cfg_map_base_0,
-    input  wire [31:0]   cfg_map_object_1,
-    input  wire [31:0]   cfg_map_base_1,
-    input  wire [31:0]   cfg_map_object_2,
-    input  wire [31:0]   cfg_map_base_2,
-    input  wire [31:0]   cfg_map_object_3,
-    input  wire [31:0]   cfg_map_base_3,
-    input  wire [31:0]   cfg_map_object_4,
-    input  wire [31:0]   cfg_map_base_4,
-    input  wire [31:0]   cfg_map_object_5,
-    input  wire [31:0]   cfg_map_base_5,
-    input  wire [31:0]   cfg_map_object_6,
-    input  wire [31:0]   cfg_map_base_6,
-    input  wire [31:0]   cfg_map_object_7,
-    input  wire [31:0]   cfg_map_base_7,
+    input  wire [31:0]   cfg_place_object_0,
+    input  wire [31:0]   cfg_place_base_0,
+    input  wire [31:0]   cfg_place_object_1,
+    input  wire [31:0]   cfg_place_base_1,
+    input  wire [31:0]   cfg_place_object_2,
+    input  wire [31:0]   cfg_place_base_2,
+    input  wire [31:0]   cfg_place_object_3,
+    input  wire [31:0]   cfg_place_base_3,
+    input  wire [31:0]   cfg_place_object_4,
+    input  wire [31:0]   cfg_place_base_4,
+    input  wire [31:0]   cfg_place_object_5,
+    input  wire [31:0]   cfg_place_base_5,
+    input  wire [31:0]   cfg_place_object_6,
+    input  wire [31:0]   cfg_place_base_6,
+    input  wire [31:0]   cfg_place_object_7,
+    input  wire [31:0]   cfg_place_base_7,
+    input  wire [31:0]   cfg_place_object_8,
+    input  wire [31:0]   cfg_place_base_8,
+    input  wire [31:0]   cfg_place_object_9,
+    input  wire [31:0]   cfg_place_base_9,
+    input  wire [31:0]   cfg_place_object_10,
+    input  wire [31:0]   cfg_place_base_10,
+    input  wire [31:0]   cfg_place_object_11,
+    input  wire [31:0]   cfg_place_base_11,
+    input  wire [31:0]   cfg_place_object_12,
+    input  wire [31:0]   cfg_place_base_12,
+    input  wire [31:0]   cfg_place_object_13,
+    input  wire [31:0]   cfg_place_base_13,
+    input  wire [31:0]   cfg_place_object_14,
+    input  wire [31:0]   cfg_place_base_14,
+    input  wire [31:0]   cfg_place_object_15,
+    input  wire [31:0]   cfg_place_base_15,
+    input  wire [31:0]   cfg_place_object_16,
+    input  wire [31:0]   cfg_place_base_16,
+    input  wire [31:0]   cfg_place_object_17,
+    input  wire [31:0]   cfg_place_base_17,
+    input  wire [31:0]   cfg_place_object_18,
+    input  wire [31:0]   cfg_place_base_18,
+    input  wire [31:0]   cfg_place_object_19,
+    input  wire [31:0]   cfg_place_base_19,
+    input  wire [31:0]   cfg_place_object_20,
+    input  wire [31:0]   cfg_place_base_20,
+    input  wire [31:0]   cfg_place_object_21,
+    input  wire [31:0]   cfg_place_base_21,
+    input  wire [31:0]   cfg_place_object_22,
+    input  wire [31:0]   cfg_place_base_22,
+    input  wire [31:0]   cfg_place_object_23,
+    input  wire [31:0]   cfg_place_base_23,
+    input  wire [31:0]   cfg_place_object_24,
+    input  wire [31:0]   cfg_place_base_24,
+    input  wire [31:0]   cfg_place_object_25,
+    input  wire [31:0]   cfg_place_base_25,
+    input  wire [31:0]   cfg_place_object_26,
+    input  wire [31:0]   cfg_place_base_26,
+    input  wire [31:0]   cfg_place_object_27,
+    input  wire [31:0]   cfg_place_base_27,
+    input  wire [31:0]   cfg_place_object_28,
+    input  wire [31:0]   cfg_place_base_28,
+    input  wire [31:0]   cfg_place_object_29,
+    input  wire [31:0]   cfg_place_base_29,
+    input  wire [31:0]   cfg_place_object_30,
+    input  wire [31:0]   cfg_place_base_30,
+    input  wire [31:0]   cfg_place_object_31,
+    input  wire [31:0]   cfg_place_base_31,
 
     // The request's active context length, checked against the position the
     // scatter and attention index views actually resolve to; the compact KV
@@ -324,6 +385,113 @@ module ot_a3_engine_issue_bridge (
     localparam [3:0] S_MAP_INDEX_WAIT  = 4'd14;
     localparam [3:0] S_MAP_ADMIT       = 4'd15;
 
+    // -- the object placement table ---------------------------------------
+    // One table, consulted by every operand slot and every result slot of
+    // every family.  The ports are scalar so the surface can be counted from
+    // the module's own declaration; they are gathered here once.
+    localparam integer PLACE_SLOTS = 32;
+    wire [31:0] place_object [0:PLACE_SLOTS-1];
+    wire [31:0] place_base   [0:PLACE_SLOTS-1];
+    assign place_object[0] = cfg_place_object_0;
+    assign place_base[0]   = cfg_place_base_0;
+    assign place_object[1] = cfg_place_object_1;
+    assign place_base[1]   = cfg_place_base_1;
+    assign place_object[2] = cfg_place_object_2;
+    assign place_base[2]   = cfg_place_base_2;
+    assign place_object[3] = cfg_place_object_3;
+    assign place_base[3]   = cfg_place_base_3;
+    assign place_object[4] = cfg_place_object_4;
+    assign place_base[4]   = cfg_place_base_4;
+    assign place_object[5] = cfg_place_object_5;
+    assign place_base[5]   = cfg_place_base_5;
+    assign place_object[6] = cfg_place_object_6;
+    assign place_base[6]   = cfg_place_base_6;
+    assign place_object[7] = cfg_place_object_7;
+    assign place_base[7]   = cfg_place_base_7;
+    assign place_object[8] = cfg_place_object_8;
+    assign place_base[8]   = cfg_place_base_8;
+    assign place_object[9] = cfg_place_object_9;
+    assign place_base[9]   = cfg_place_base_9;
+    assign place_object[10] = cfg_place_object_10;
+    assign place_base[10]   = cfg_place_base_10;
+    assign place_object[11] = cfg_place_object_11;
+    assign place_base[11]   = cfg_place_base_11;
+    assign place_object[12] = cfg_place_object_12;
+    assign place_base[12]   = cfg_place_base_12;
+    assign place_object[13] = cfg_place_object_13;
+    assign place_base[13]   = cfg_place_base_13;
+    assign place_object[14] = cfg_place_object_14;
+    assign place_base[14]   = cfg_place_base_14;
+    assign place_object[15] = cfg_place_object_15;
+    assign place_base[15]   = cfg_place_base_15;
+    assign place_object[16] = cfg_place_object_16;
+    assign place_base[16]   = cfg_place_base_16;
+    assign place_object[17] = cfg_place_object_17;
+    assign place_base[17]   = cfg_place_base_17;
+    assign place_object[18] = cfg_place_object_18;
+    assign place_base[18]   = cfg_place_base_18;
+    assign place_object[19] = cfg_place_object_19;
+    assign place_base[19]   = cfg_place_base_19;
+    assign place_object[20] = cfg_place_object_20;
+    assign place_base[20]   = cfg_place_base_20;
+    assign place_object[21] = cfg_place_object_21;
+    assign place_base[21]   = cfg_place_base_21;
+    assign place_object[22] = cfg_place_object_22;
+    assign place_base[22]   = cfg_place_base_22;
+    assign place_object[23] = cfg_place_object_23;
+    assign place_base[23]   = cfg_place_base_23;
+    assign place_object[24] = cfg_place_object_24;
+    assign place_base[24]   = cfg_place_base_24;
+    assign place_object[25] = cfg_place_object_25;
+    assign place_base[25]   = cfg_place_base_25;
+    assign place_object[26] = cfg_place_object_26;
+    assign place_base[26]   = cfg_place_base_26;
+    assign place_object[27] = cfg_place_object_27;
+    assign place_base[27]   = cfg_place_base_27;
+    assign place_object[28] = cfg_place_object_28;
+    assign place_base[28]   = cfg_place_base_28;
+    assign place_object[29] = cfg_place_object_29;
+    assign place_base[29]   = cfg_place_base_29;
+    assign place_object[30] = cfg_place_object_30;
+    assign place_base[30]   = cfg_place_base_30;
+    assign place_object[31] = cfg_place_object_31;
+    assign place_base[31]   = cfg_place_base_31;
+
+    // {found, base}.  Descending order leaves entry 0 as the final
+    // assignment, but a table that names an object twice never reaches this
+    // function: admission refuses such a table first, so "entry 0 wins" is a
+    // tie-break that cannot be exercised rather than a policy for resolving a
+    // contradiction.
+    function automatic [32:0] place_lookup;
+        input [31:0] object_id;
+        integer scan;
+        begin
+            place_lookup = 33'd0;
+            for (scan = PLACE_SLOTS - 1; scan >= 0; scan = scan - 1)
+                if ((object_id != NO_ID) &&
+                    (object_id == place_object[scan]))
+                    place_lookup = {1'b1, place_base[scan]};
+        end
+    endfunction
+
+    // An object bound twice is a configuration that cannot be honoured: two
+    // entries disagree about where one object is, and every rule in this
+    // module assumes an object has one place.  NO_ID is the empty entry and
+    // may repeat.
+    reg placement_unique_r;
+    integer place_i;
+    integer place_j;
+    always @* begin
+        placement_unique_r = 1'b1;
+        for (place_i = 0; place_i < PLACE_SLOTS; place_i = place_i + 1)
+            for (place_j = 0; place_j < PLACE_SLOTS; place_j = place_j + 1)
+                if ((place_j > place_i) &&
+                    (place_object[place_i] != NO_ID) &&
+                    (place_object[place_i] == place_object[place_j]))
+                    placement_unique_r = 1'b0;
+    end
+    wire placement_table_unique = placement_unique_r;
+
     reg [3:0] state;
     reg       response_fault;
     reg [15:0] response_trap;
@@ -362,7 +530,9 @@ module ot_a3_engine_issue_bridge (
     reg [31:0] rope_coefficient_base_q;
     reg [31:0] matmul_weight_base_q;
     reg [31:0] numeric_profile_dtypes;
-    reg [31:0] result_word_cursor;
+    // Where the result of the operation now being admitted goes: its own
+    // object's base plus the resolved element offset of its output view.
+    reg [31:0] launch_output_base_q;
 
     // -- the six mapped families ----------------------------------------
     reg        vector_add_q;
@@ -465,6 +635,10 @@ module ot_a3_engine_issue_bridge (
     wire [31:0] desc_view_stride5 = desc_data[1087:1056];
     wire [31:0] desc_permissions = desc_data[287:256];
     wire [31:0] desc_primary_object = desc_data[159:128];
+    // Where this descriptor's object lives, for whichever slot is being
+    // fetched.  One rule for every role that used to have its own port.
+    wire [32:0] desc_place = place_lookup(desc_primary_object);
+    wire        desc_object_placed = desc_place[32];
 
     wire input_view_common_ok = descriptor_header_ok(
         desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
@@ -520,12 +694,6 @@ module ot_a3_engine_issue_bridge (
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
         (captured_offset[0] == desc_view_offset);
-    wire head_input_object_mapped =
-        (desc_primary_object == cfg_head_input_object_0) ||
-        (desc_primary_object == cfg_head_input_object_1);
-    wire [31:0] mapped_head_input_base =
-        (desc_primary_object == cfg_head_input_object_0)
-        ? cfg_head_input_base_0 : cfg_head_input_base_1;
     wire rope_input_source_ok = rope_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) &&
@@ -541,12 +709,6 @@ module ot_a3_engine_issue_bridge (
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
         (captured_offset[0] == desc_view_offset);
-    wire rope_input_object_mapped =
-        (desc_primary_object == cfg_rope_input_object_0) ||
-        (desc_primary_object == cfg_rope_input_object_1);
-    wire [31:0] mapped_rope_input_base =
-        (desc_primary_object == cfg_rope_input_object_0)
-        ? cfg_rope_input_base_0 : cfg_rope_input_base_1;
     wire rms_weight_source_ok = rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 1) &&
         (desc_view_terms <= 4) &&
@@ -560,12 +722,6 @@ module ot_a3_engine_issue_bridge (
         (captured_rank[1] == 1) && (captured_axis[1] == 0) &&
         (captured_extent[1] == source_trailing) &&
         (captured_offset[1] == desc_view_offset);
-    wire head_weight_object_mapped =
-        (desc_primary_object == cfg_head_weight_object_0) ||
-        (desc_primary_object == cfg_head_weight_object_1);
-    wire [31:0] mapped_head_weight_base =
-        (desc_primary_object == cfg_head_weight_object_0)
-        ? cfg_head_weight_base_0 : cfg_head_weight_base_1;
     wire rope_coefficient_source_ok = rope_q &&
         (desc_view_dtype == FMT_FP32) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) &&
@@ -581,8 +737,6 @@ module ot_a3_engine_issue_bridge (
         (captured_rank[1] == 3) && (captured_axis[1] == 0) &&
         (captured_extent[1] == captured_extent[0]) &&
         (captured_offset[1] == desc_view_offset);
-    wire rope_coefficient_object_mapped =
-        desc_primary_object == cfg_rope_coefficient_object;
     wire matmul_weight_source_ok = matmul_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 2) &&
         (desc_view_terms <= 4) &&
@@ -597,16 +751,6 @@ module ot_a3_engine_issue_bridge (
         (captured_rank[1] == 2) && (captured_axis[1] == 0) &&
         (captured_extent[1] == desc_view_dim0) &&
         (captured_offset[1] == desc_view_offset);
-    wire matmul_weight_object_mapped =
-        (desc_primary_object == cfg_matmul_weight_object_0) ||
-        (desc_primary_object == cfg_matmul_weight_object_1) ||
-        (desc_primary_object == cfg_matmul_weight_object_2);
-    wire [31:0] mapped_matmul_weight_base =
-        (desc_primary_object == cfg_matmul_weight_object_0)
-        ? cfg_matmul_weight_base_0
-        : (desc_primary_object == cfg_matmul_weight_object_1)
-        ? cfg_matmul_weight_base_1
-        : cfg_matmul_weight_base_2;
     wire transfer_source_ok = dma_transfer_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) && (desc_view_dim0 != 0) &&
@@ -768,30 +912,6 @@ module ot_a3_engine_issue_bridge (
             for (scan = 5; scan >= 0; scan = scan - 1)
                 if ((scan > cursor_as_integer(from_slot)) && mask[scan])
                     next_bound_slot = scan[2:0];
-        end
-    endfunction
-
-    function automatic [32:0] map_lookup;
-        input [31:0] object_id;
-        begin
-            // {found, base}.  Descending order lets entry 0 win a duplicate.
-            map_lookup = 33'd0;
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_7))
-                map_lookup = {1'b1, cfg_map_base_7};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_6))
-                map_lookup = {1'b1, cfg_map_base_6};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_5))
-                map_lookup = {1'b1, cfg_map_base_5};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_4))
-                map_lookup = {1'b1, cfg_map_base_4};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_3))
-                map_lookup = {1'b1, cfg_map_base_3};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_2))
-                map_lookup = {1'b1, cfg_map_base_2};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_1))
-                map_lookup = {1'b1, cfg_map_base_1};
-            if ((object_id != NO_ID) && (object_id == cfg_map_object_0))
-                map_lookup = {1'b1, cfg_map_base_0};
         end
     endfunction
 
@@ -1130,11 +1250,11 @@ module ot_a3_engine_issue_bridge (
         (captured_valid == expected_slot_mask);
 
     // -- the base map, evaluated over the captured slots ------------------
-    wire [32:0] slot0_map = map_lookup(slot_object[0]);
-    wire [32:0] slot1_map = map_lookup(slot_object[1]);
-    wire [32:0] slot2_map = map_lookup(slot_object[2]);
-    wire [32:0] slot3_map = map_lookup(slot_object[3]);
-    wire [32:0] slot4_map = map_lookup(slot_object[4]);
+    wire [32:0] slot0_map = place_lookup(slot_object[0]);
+    wire [32:0] slot1_map = place_lookup(slot_object[1]);
+    wire [32:0] slot2_map = place_lookup(slot_object[2]);
+    wire [32:0] slot3_map = place_lookup(slot_object[3]);
+    wire [32:0] slot4_map = place_lookup(slot_object[4]);
     wire mapped_bases_found =
         slot0_map[32] && slot4_map[32] &&
         (!expected_slot_mask[1] || slot1_map[32]) &&
@@ -1222,7 +1342,7 @@ module ot_a3_engine_issue_bridge (
             rope_coefficient_base_q <= 32'd0;
             matmul_weight_base_q <= 32'd0;
             numeric_profile_dtypes <= 32'd0;
-            result_word_cursor <= 32'd0;
+            launch_output_base_q <= 32'd0;
             real_launch_count <= 32'd0;
             dma_gather_launch_count <= 32'd0;
             embedding_launch_count <= 32'd0;
@@ -1319,7 +1439,7 @@ module ot_a3_engine_issue_bridge (
                 rope_coefficient_base_q <= 32'd0;
                 matmul_weight_base_q <= 32'd0;
                 op_aux0 <= NO_ID;
-                result_word_cursor <= 32'd0;
+                launch_output_base_q <= 32'd0;
                 real_launch_count <= 32'd0;
                 dma_gather_launch_count <= 32'd0;
                 embedding_launch_count <= 32'd0;
@@ -1366,7 +1486,14 @@ module ot_a3_engine_issue_bridge (
                             last_response_sub <= issue_sub;
                             last_response_descriptor_id <=
                                 issue_descriptor_id;
-                            if (!(((issue_family == FAMILY_DMA) &&
+                            if (!placement_table_unique) begin
+                                // One object, one base.  A table that says
+                                // otherwise is refused before anything is
+                                // fetched, decoded or launched.
+                                response_fault <= 1'b1;
+                                response_trap <= TRAP_DESCRIPTOR;
+                                state <= S_RESPONSE;
+                            end else if (!(((issue_family == FAMILY_DMA) &&
                                    (issue_sub == DMA_GATHER)) ||
                                   ((issue_family == FAMILY_TENSOR) &&
                                    (issue_sub == TENSOR_EMBED_LOOKUP)) ||
@@ -1569,11 +1696,14 @@ module ot_a3_engine_issue_bridge (
                                 !(model_row_input_source_ok ||
                                   head_rms_input_source_ok ||
                                   rope_input_source_ok) ||
+                                // Every one of these four families reads its
+                                // input at the object's own base now; the
+                                // three that used to take an unkeyed base
+                                // are checked the same way as the two that
+                                // did not.
+                                !desc_object_placed ||
                                 (head_rms_norm_q &&
-                                 (!head_input_object_mapped ||
-                                  (op_aux0 != desc_view_dim1))) ||
-                                (rope_q &&
-                                 !rope_input_object_mapped)) begin
+                                 (op_aux0 != desc_view_dim1))) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -1585,12 +1715,11 @@ module ot_a3_engine_issue_bridge (
                                 source_trailing <= (head_rms_norm_q || rope_q)
                                     ? desc_view_dim2 : EMBEDDING_WIDTH;
                                 source_dtype <= FMT_BF16;
-                                rms_input_base_q <= head_rms_norm_q
-                                    ? mapped_head_input_base
-                                    : cfg_rms_input_base;
+                                rms_input_base_q <= desc_place[31:0] +
+                                    captured_offset[0][31:0];
                                 if (rope_q)
-                                    rope_input_base_q <=
-                                        mapped_rope_input_base;
+                                    rope_input_base_q <= desc_place[31:0] +
+                                        captured_offset[0][31:0];
                                 desc_req <= 1'b1;
                                 desc_id <= op_input1;
                                 state <= S_SOURCE_WAIT;
@@ -1765,12 +1894,15 @@ module ot_a3_engine_issue_bridge (
                                   rope_coefficient_source_ok ||
                                   matmul_weight_source_ok ||
                                   transfer_source_ok) ||
-                                (matmul_q &&
-                                 !matmul_weight_object_mapped) ||
-                                (head_rms_norm_q &&
-                                 !head_weight_object_mapped) ||
-                                (rope_q &&
-                                 !rope_coefficient_object_mapped)) begin
+                                // The weight-side operand of every family
+                                // that has one: the RMSNorm gain, the head
+                                // gain, the RoPE coefficient table and the
+                                // projection matrix all resolve through the
+                                // one table.  DMA.TRANSFER and DMA.GATHER
+                                // sweep a staged region instead and are not
+                                // asked for an object.
+                                ((matmul_q || rms_norm_q || rope_q) &&
+                                 !desc_object_placed)) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
@@ -1781,19 +1913,20 @@ module ot_a3_engine_issue_bridge (
                                     source_trailing <= EMBEDDING_WIDTH;
                                     source_dtype <= FMT_BF16;
                                 end else if (rms_norm_q) begin
-                                    rms_weight_base_q <= head_rms_norm_q
-                                        ? mapped_head_weight_base
-                                        : cfg_rms_weight_base;
+                                    rms_weight_base_q <= desc_place[31:0] +
+                                        captured_offset[1][31:0];
                                 end else if (rope_q) begin
                                     rope_coefficient_base_q <=
-                                        cfg_rope_coefficient_base;
+                                        desc_place[31:0] +
+                                        captured_offset[1][31:0];
                                 end else if (!rms_norm_q) begin
                                     source_rows <= desc_view_dim0;
                                     source_trailing <= desc_view_dim1;
                                     source_dtype <= desc_view_dtype;
                                     if (matmul_q)
                                         matmul_weight_base_q <=
-                                            mapped_matmul_weight_base;
+                                            desc_place[31:0] +
+                                            captured_offset[1][31:0];
                                 end
                                 desc_req <= 1'b1;
                                 desc_id <= op_output0;
@@ -1809,11 +1942,19 @@ module ot_a3_engine_issue_bridge (
                                   head_rms_output_ok ||
                                   rope_output_ok ||
                                   matmul_output_ok ||
-                                  transfer_output_ok)) begin
+                                  transfer_output_ok) ||
+                                // A result has an address because its own
+                                // object has one.  There is no cursor to
+                                // fall back on any more, so an unplaced
+                                // result object is a refusal and not a
+                                // write to wherever the last one ended.
+                                !desc_object_placed) begin
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
+                                launch_output_base_q <= desc_place[31:0] +
+                                    captured_offset[4][31:0];
                                 desc_req <= 1'b1;
                                 desc_id <= op_numeric;
                                 state <= S_NUM_WAIT;
@@ -1870,14 +2011,6 @@ module ot_a3_engine_issue_bridge (
                         if (response_fire) begin
                             if (!response_fault) begin
                                 real_launch_count <= real_launch_count + 1;
-                                // Mapped placement does not append.  A
-                                // read-modify-write into a plane that already
-                                // exists must not move the cursor the
-                                // appending operators share.
-                                if (!mapped_family_q)
-                                    result_word_cursor <=
-                                        result_word_cursor +
-                                        expected_result_count;
                                 if (vector_add_q)
                                     vector_add_launch_count <=
                                         vector_add_launch_count + 1;
@@ -2157,8 +2290,7 @@ module ot_a3_engine_issue_bridge (
                embedding_launch_count * EMBEDDING_WIDTH)
             : (cfg_source_base +
                dma_gather_launch_count * cfg_source_launch_stride);
-    wire [31:0] launch_output_base =
-        cfg_output_base + result_word_cursor;
+    wire [31:0] launch_output_base = launch_output_base_q;
 
     ot_a3_vector_rms_norm rms_norm (
         .clk(clk),
@@ -2332,7 +2464,7 @@ module ot_a3_engine_issue_bridge (
                    : selection_argmax_q ? mapped_dtype_a
                    : FMT_U32),
         .cfg_dtype_b(mapped_family_q ? FMT_BF16 : source_dtype),
-        .cfg_a_base(matmul_q ? cfg_matmul_input_base
+        .cfg_a_base(matmul_q ? rms_input_base_q
                   : mapped_family_q ? mapped_left_base
                   : launch_index_base),
         .cfg_b_base(matmul_q ? matmul_weight_base_q

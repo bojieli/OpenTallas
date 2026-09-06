@@ -30,21 +30,27 @@ campaign that fails any of those covers no operator at all -- absence of
 evidence is a failure, not an unknown.
 
 **Every intermediate, not only the layer output.**  The harness compares every
-word the RTL writes into result memory against ``p3_expect.hex``, twice: once
-per case as the case retires and once over the whole retained image at the
-end.  So an operator that ran has had *its own* output words compared, not
-merely the last operator's.  This tool records the comparison per operator, so
+word the RTL writes into result memory against the golden WRITE STREAM
+``p3_writes.hex`` -- address and value, as each write commits -- and then
+compares the retained image against ``p3_expect.hex`` per case and once over
+the whole run.  The write stream is the half that survives a rewrite: results
+are placed by object, so an intermediate a later operator overwrites is no
+longer in the image, and an image comparison alone would silently stop
+checking it.  So an operator that ran has had *its own* output words compared,
+not merely the last operator's.  This tool records the comparison per operator, so
 "the layer output matched" can never stand in for "every intermediate
 matched" -- the failure that produced this project's 99.17 % MFU claim from
 two cancelling unit errors.
 
-**The handoff is computed, not claimed.**  The vehicle places the appending
-families at ``cfg_output_base + result_word_cursor``.  This tool replays that
-cursor over the operations the vector set declares, and then checks each
-executed operator's declared operand base against the address the operator
-that produced that operand actually wrote to.  An operand that equals a
-produced address is an RTL-to-RTL handoff; an operand that does not is a
-staged input, and is listed as one.
+**The handoff is computed, not claimed.**  The vehicle places every operand
+and every result of every family at its own object's base plus the resolved
+element offset.  This tool replays that placement over the operations the
+vector set declares and asks, for each operand, whether the OBJECT it names
+was last written -- before this operator -- by an operator of this run.  That
+is an RTL-to-RTL handoff; anything else is a staged input, and is listed as
+one.  The older test compared addresses, and it stops being sound the moment a
+buffer is written twice: both writes are at one address, so an operand would
+match the wrong one.  This span rewrites three of its buffers.
 
 **Nothing inside is injected** is read from the harness's measured
 ``injected_results`` count and from which PASS marker the run printed.  If the
@@ -57,10 +63,13 @@ that was costed; a test pins it in both directions.
 
 **What is missing is counted, not characterised.**  Every operand of every
 operator in the layer is attributed to the engine-placement role the bridge
-would draw its base from, and the distinct objects per role are compared with
-the slots the bridge's own port list declares.  A role whose demand exceeds
-its capacity is a reason this vehicle cannot run the layer, stated as two
-numbers.
+draws its base from, and the distinct objects per role -- and their union,
+because one table serves them all -- are compared with the depth a RUN has
+been measured to resolve.  Not with the port list: counting ports is counting
+source text, and widening a port list must never move a gate field.  The
+measured depth is the largest number of distinct objects a passing campaign
+case bound into the table and resolved, on a case whose every result word was
+compared against golden by address as well as by value.
 
 What this tool refuses to do
 ----------------------------
@@ -546,73 +555,106 @@ def integrated_evidence(
 # --------------------------------------------------------------------------
 # The vehicle's placement surface, counted from its own port list.
 # --------------------------------------------------------------------------
-def placement_capacity() -> dict[str, Any]:
-    """How many distinct objects each engine-placement role can name.
+def placement_capacity(
+    vectors: dict[str, Any], campaign: dict[str, Any]
+) -> dict[str, Any]:
+    """How many distinct objects the vehicle is MEASURED to place at once.
 
-    Counted from the bridge's own declaration, so this cannot drift away from
-    the RTL by being written down twice.
+    The bridge places every operand and every result of every family through
+    one object table, so "how many objects can this role name" is the same
+    question for every role and the answer is the table's depth.
+
+    Two numbers, and they are not interchangeable.  ``declared_entries`` is
+    counted from the bridge's own port list -- a declaration, and a count of
+    source text, which this programme does not accept as a measurement of
+    anything.  ``slots`` is what a run actually did: the largest number of
+    distinct objects a passing campaign case bound into that table and
+    resolved, on a case whose every result word -- ADDRESS and value -- was
+    compared against golden.  With no usable campaign the measured depth is
+    zero, and every role is unsatisfiable, because absence of evidence is a
+    failure and not an unknown.
+
+    Widening the port list therefore cannot move this number.  Only a run can.
     """
     text = BRIDGE.read_text()
-    port = r"input\s+wire\s+\[31:0\]\s+cfg_"
-
-    def count(name: str) -> int:
-        return len(set(re.findall(port + name + r"_(\d+)", text)))
-
+    declared = len(
+        set(re.findall(r"input\s+wire\s+\[31:0\]\s+cfg_place_object_(\d+)", text))
+    )
+    usable = campaign.get("usable") is True
+    per_case: list[dict[str, Any]] = []
+    for index, case in enumerate(vectors["cases"]):
+        mapping = case.get("bank_mapping") or {}
+        bound = [int(e["object_id"]) for e in mapping.get("object_placement", [])]
+        observed = next(
+            (
+                c for c in (campaign.get("observed_cases") or [])
+                if int(c.get("index", -1)) == index
+            ),
+            None,
+        )
+        agrees = (
+            observed is not None
+            and int(observed.get("words", -1))
+            == int(case["expected"]["result_words"])
+        )
+        per_case.append(
+            {
+                "case_index": index,
+                "case_name": case["name"],
+                "objects_bound_and_named": len(bound),
+                "objects": sorted(bound),
+                "rewritten_objects": mapping.get(
+                    "objects_written_more_than_once", []
+                ),
+                "case_passed_in_the_campaign": bool(usable and agrees),
+            }
+        )
+    measured = max(
+        [row["objects_bound_and_named"] for row in per_case
+         if row["case_passed_in_the_campaign"]] or [0]
+    )
     return {
         "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
         "source_sha256": sha256_file(BRIDGE),
+        "declared_entries": declared,
+        "declared_entries_note": (
+            "counted from the bridge's port list. It is a DECLARATION, not a "
+            "measurement, and nothing below is credited from it"
+        ),
+        "measured_simultaneous_objects": measured,
+        "measured_from": INTEGRATED_CAMPAIGN,
+        "measured_note": (
+            "the largest number of distinct ABI objects a passing campaign "
+            "case bound into the bridge's table and resolved. Every one of "
+            "that case's result words was compared against the golden write "
+            "stream, address and value, so an object the bridge placed "
+            "anywhere but at its own base would have failed the run"
+        ),
+        "per_case": per_case,
         "roles": {
-            "matmul_weight": {
-                "object_keyed": True,
-                "slots": count("matmul_weight_object"),
+            **{
+                role: {
+                    "object_keyed": True,
+                    "slots": measured,
+                    "note": (
+                        "one shared object table serves every role; the "
+                        "per-role capacity is the table's measured depth"
+                    ),
+                }
+                for role in (
+                    "matmul_weight", "head_rms_weight", "head_rms_input",
+                    "rope_input", "rope_coefficient", "mapped_family_operand",
+                    "matmul_input", "rms_input", "rms_weight", "result_object",
+                )
             },
-            "head_rms_weight": {
-                "object_keyed": True,
-                "slots": count("head_weight_object"),
-            },
-            "head_rms_input": {
-                "object_keyed": True,
-                "slots": count("head_input_object"),
-            },
-            "rope_input": {
-                "object_keyed": True,
-                "slots": count("rope_input_object"),
-            },
-            "rope_coefficient": {
-                "object_keyed": True,
-                "slots": len(re.findall(r"cfg_rope_coefficient_object\b", text)) and 1,
-            },
-            "mapped_family_operand": {
-                "object_keyed": True,
-                "slots": count("map_object"),
-            },
-            "matmul_input": {
-                "object_keyed": False,
-                "slots": 1,
-                "note": "cfg_matmul_input_base is a single base, not keyed by object",
-            },
-            "rms_input": {
-                "object_keyed": False,
-                "slots": 1,
-                "note": "cfg_rms_input_base is a single base, not keyed by object",
-            },
-            "rms_weight": {
-                "object_keyed": False,
-                "slots": 1,
-                "note": "cfg_rms_weight_base is a single base, not keyed by object",
-            },
-            # The three bases the bridge's own launch-address assembly draws
-            # a gather's and an embedding lookup's operands from.  They were
-            # missing, and their absence was not neutral: OPERAND_ROLE named
-            # no slot for DMA.GATHER or TENSOR.EMBED_LOOKUP either, so those
-            # operands fell through to ``unattributed_operands`` and were
-            # never counted against any capacity.  A span whose only mapped
-            # demand was satisfiable could therefore be reported
-            # ``every_role_satisfiable`` while two of its operands had not
-            # been examined at all -- absence reported as an optimistic
-            # result, which is the failure this ladder exists to catch.  The
-            # decode program's own head span (PC 68, DMA.GATHER) is one of
-            # the two places this happens.
+            # The three staged REGIONS the vehicle sweeps by launch counter.
+            # They are not ABI objects and they do not go through the table,
+            # so widening the table does not widen them and they are still
+            # one base each.  They were added because their absence was not
+            # neutral: a gather's and an embedding lookup's operands fell
+            # through to ``unattributed_operands`` and were counted against
+            # no capacity at all, which reported an absence as an optimistic
+            # result.  Keeping them here keeps that fix.
             "index_base": {
                 "object_keyed": False,
                 "slots": 1,
@@ -638,16 +680,6 @@ def placement_capacity() -> dict[str, Any]:
                     "cfg_embedding_source_base is a single base advanced by "
                     "embedding_launch_count * EMBEDDING_WIDTH, not keyed by "
                     "object"
-                ),
-            },
-            "appending_output": {
-                "object_keyed": False,
-                "slots": 1,
-                "note": (
-                    "the seven appending families write at cfg_output_base + "
-                    "result_word_cursor; an object written twice therefore "
-                    "occupies two addresses, which the program's own storage "
-                    "semantics do not"
                 ),
             },
         },
@@ -768,7 +800,7 @@ def placement_demand(
             role = OPERAND_ROLE.get((operator["mnemonic"], slot["slot"]))
             if role is None:
                 if slot["slot"].startswith("output"):
-                    role = "appending_output"
+                    role = "result_object"
                 else:
                     unattributed.append(
                         {"pc": operator["pc"], "mnemonic": operator["mnemonic"],
@@ -788,8 +820,9 @@ def placement_demand(
     }
     rows = []
     for role, objects in sorted(demand.items()):
-        slots = int(capacity["roles"].get(role, {}).get("slots", 0))
-        keyed = bool(capacity["roles"].get(role, {}).get("object_keyed"))
+        entry = capacity["roles"].get(role, {})
+        slots = int(entry.get("slots", 0))
+        keyed = bool(entry.get("object_keyed"))
         rows.append(
             {
                 "role": role,
@@ -798,60 +831,61 @@ def placement_demand(
                 "objects": sorted(objects),
                 "slots_the_bridge_declares": slots,
                 "short_by": max(0, len(objects) - slots),
-                # An unkeyed role is ONE base the harness drives, so it
-                # places exactly one object -- not zero.  Reading
-                # ``keyed and ...`` called every unkeyed role unplaceable
-                # even where the span named a single object, which would
-                # report a reachable span as blocked and is the wrong
-                # reason for a rung to be red.  The layer's unkeyed roles
-                # all name two or more objects, so this does not soften
-                # anything G1b says about the layer.
-                # The append cursor is not a slot that holds one object: it
-                # gives every write a fresh address, so it serves any number
-                # of outputs that are written ONCE, and cannot express an
-                # object written twice -- the append gives that object two
-                # addresses and no reader can name the right one.  Counting
-                # distinct outputs against "1 slot" called every multi-output
-                # span unplaceable, including spans with no reuse at all.
-                "satisfiable": (
-                    not reused if role == "appending_output"
-                    else len(objects) <= slots
-                ),
+                # An object-keyed role draws its base from the one object
+                # table, so the question is whether that table is measured to
+                # hold the objects this role names.  An unkeyed role is ONE
+                # staged base, so it places exactly one object -- not zero.
+                # A REWRITE is no longer a reason
+                # for a role to be unsatisfiable: a result lands at its
+                # object's base, so the second write to a buffer lands where
+                # the first one did and a later read of that object reads
+                # what is there.  The append cursor that could not express
+                # that is gone.
+                "satisfiable": len(objects) <= slots,
             }
         )
-    # What would have to change for this vehicle to be able to run the layer
-    # at all, expressed as counts against the bridge's own declaration.  It is
-    # derived from the same two numbers as the shortfall, so it cannot drift
-    # away from the reason the rung is red.
+    # The binding constraint of ONE table is the UNION, not the largest role.
+    # Ten roles that each fit in the table can still name more objects between
+    # them than the table holds, and reporting only the per-role rows would
+    # miss exactly that.  This row is stricter than every row above it.
+    # Only the object-keyed roles draw from the table; the three staged
+    # regions do not, so their objects are not part of what it has to hold.
+    union = sorted({
+        object_id
+        for role, objects in demand.items()
+        if capacity["roles"].get(role, {}).get("object_keyed")
+        for object_id in objects
+    })
+    table = int(capacity.get("measured_simultaneous_objects", 0))
+    union_row = {
+        "role": "__the whole span, through one table__",
+        "object_keyed": True,
+        "distinct_objects_the_layer_needs": len(union),
+        "objects": union,
+        "slots_the_bridge_declares": table,
+        "short_by": max(0, len(union) - table),
+        "satisfiable": len(union) <= table,
+        "note": (
+            "the roles above share one object table, so the span is placeable "
+            "only if the table is measured to hold their union"
+        ),
+    }
+    rows.append(union_row)
     route = []
     for row in rows:
         if row["satisfiable"]:
             continue
-        if row["object_keyed"]:
-            route.append(
-                "widen {role} from {have} to at least {need} object slots"
-                .format(role=row["role"],
-                        have=row["slots_the_bridge_declares"],
-                        need=row["distinct_objects_the_layer_needs"])
+        route.append(
+            "place {need} distinct objects at once: the deepest table a run "
+            "has resolved holds {have} (role {role}); the bridge declares "
+            "{declared} entries, which is a declaration and not a "
+            "measurement".format(
+                role=row["role"],
+                need=row["distinct_objects_the_layer_needs"],
+                have=row["slots_the_bridge_declares"],
+                declared=capacity.get("declared_entries"),
             )
-        elif row["role"] == "appending_output":
-            route.append(
-                "place results by object rather than by the append cursor: "
-                "{n} of this span's buffers are written more than once "
-                "({objects}), and an append cursor gives such an object "
-                "several addresses".format(
-                    n=len(reused), objects=sorted(reused)
-                )
-            )
-        else:
-            route.append(
-                "make {role} object-addressed: it is one unkeyed base and the "
-                "layer needs {need} distinct objects ({objects})".format(
-                    role=row["role"],
-                    need=row["distinct_objects_the_layer_needs"],
-                    objects=row["objects"],
-                )
-            )
+        )
     return {
         "per_role": rows,
         "route_to_completion": route,
@@ -867,10 +901,14 @@ def placement_demand(
                 str(k): sorted(v) for k, v in sorted(reused.items())
             },
             "note": (
-                "the layer writes its intermediates into fewer buffers than it "
-                "has operators: an appending output cursor gives each write a "
-                "fresh address, which is sound only while nothing reads the "
-                "earlier contents of a reused object"
+                "the layer writes its intermediates into fewer buffers than "
+                "it has operators. Under object-addressed results that is not "
+                "a placement problem: the second write to a buffer lands at "
+                "that buffer's own base, which is where a later read of it "
+                "looks. It IS a verification problem, and the campaign "
+                "answers it by comparing the engines' write STREAM rather "
+                "than the retained image, so an intermediate a later operator "
+                "overwrites is still compared"
             ),
         },
         "every_role_satisfiable": all(row["satisfiable"] for row in rows),
@@ -885,35 +923,77 @@ def intermediate_coverage(
 ) -> dict[str, Any]:
     """Whether each executed operator's OWN output words were compared.
 
-    The harness compares every word of the case's result region against the
-    golden image, so the question this answers is whether each operator's
-    output really occupies a distinct, non-empty part of that region.  A layer
-    output that matched by luck through two cancelling errors upstream is the
-    failure this project has already made once; an operator whose intermediate
-    is not separately present in the compared region could hide exactly that.
+    A layer output that matched by luck through two cancelling errors upstream
+    is the failure this project has already made once, so it is not enough
+    that the last operator's words matched: each operator's own output has to
+    have been compared separately.
+
+    The test used to be that the operators' output spans are DISJOINT inside
+    the case's compared image region.  Under object-addressed results that
+    test is wrong in both directions.  Two operators that write one buffer
+    share a span on purpose, so disjointness would call a correct layer
+    broken; and the retained image holds only the last of those two writes, so
+    an image comparison would no longer see the first one at all.  What the
+    campaign compares now is the engines' write STREAM -- every word, at the
+    address it was written to, in launch order -- so each operator's own words
+    are compared as they are produced whether or not a later operator
+    overwrites them.  What is checked here is that every operator writes a
+    non-empty output, that each one lies inside the region the case allocated,
+    and that operators writing DIFFERENT objects do not overlap; an overlap
+    between different objects would mean one operator's words were destroyed
+    by another's and never separately compared.
     """
-    base = int(vector_case["bank_mapping"]["output_base"])
-    end = base + int(vector_case["expected"]["result_words"])
-    spans = sorted(
-        (row["result_base_words"],
-         row["result_base_words"] + row["result_words_written"])
-        for row in executed
+    base = int(vector_case["bank_mapping"]["result_region_base"])
+    end = base + int(vector_case["bank_mapping"]["result_region_span"])
+    by_object: dict[int, tuple[int, int]] = {}
+    overlaps: list[dict[str, Any]] = []
+    for row in executed:
+        object_id = int(row["output_object_id"])
+        span = (
+            int(row["result_base_words"]),
+            int(row["result_base_words"]) + int(row["result_words_written"]),
+        )
+        previous = by_object.get(object_id)
+        if previous is not None and previous != span:
+            overlaps.append(
+                {"object_id": object_id, "spans": [list(previous), list(span)]}
+            )
+        by_object[object_id] = span
+    spans = sorted(by_object.items(), key=lambda item: item[1])
+    for index in range(len(spans) - 1):
+        (left_object, left), (right_object, right) = spans[index], spans[index + 1]
+        if left[1] > right[0]:
+            overlaps.append(
+                {
+                    "objects": [left_object, right_object],
+                    "spans": [list(left), list(right)],
+                }
+            )
+    covered = sum(stop - start for _, (start, stop) in by_object.items())
+    inside = all(base <= start and stop <= end for _, (start, stop) in spans)
+    rewritten = sorted(
+        {
+            int(row["output_object_id"]) for row in executed
+            if row.get("rewrites_object")
+        }
     )
-    disjoint = all(
-        spans[i][1] <= spans[i + 1][0] for i in range(len(spans) - 1)
-    )
-    covered = sum(stop - start for start, stop in spans)
-    inside = all(base <= start and stop <= end for start, stop in spans)
     return {
         "operator_count": len(executed),
         "each_operator_writes_a_non_empty_output": bool(executed) and all(
             row["result_words_written"] > 0 for row in executed
         ),
-        "operator_outputs_are_disjoint": disjoint,
+        "distinct_objects_do_not_overlap": not overlaps,
+        "overlaps": overlaps,
         "operator_outputs_lie_in_the_compared_region": inside,
+        "objects_rewritten_in_the_span": rewritten,
         "words": covered,
         "case_compared_region_words": end - base,
-        "holds": bool(executed) and disjoint and inside and all(
+        "compared_against": (
+            "the golden write stream, address and value, for every word the "
+            "engines write; the retained image is compared as well and holds "
+            "each object's last value"
+        ),
+        "holds": bool(executed) and not overlaps and inside and all(
             row["result_words_written"] > 0 for row in executed
         ),
     }
@@ -922,59 +1002,72 @@ def intermediate_coverage(
 def executed_span(
     vector_case: dict[str, Any], layer: list[dict[str, Any]]
 ) -> dict[str, Any]:
-    """Replay the vehicle's append cursor and attribute every operand."""
+    """Where every operand and result of the executed span actually went.
+
+    Results are object-addressed, so this is no longer a cursor replay: a
+    result's address is its own object's base plus the resolved element
+    offset, and the vector set publishes the object table the run drove the
+    bridge with.  The handoff test changes with it, and gets stricter.  It
+    used to be "the address this operand reads is an address some earlier
+    operator wrote"; under a buffer that is written twice, that test would
+    match the WRONG write, because both writes are at one address.  It is now
+    "the object this operand names was last written, before this operator, by
+    an operator of this run" -- which is the property the ABI's own dependence
+    ranges describe.
+    """
     mapping = vector_case["bank_mapping"]
-    output_base = int(mapping["output_base"])
-    cursor = output_base
+    output_base = int(mapping["result_region_base"])
+    placement = {
+        int(e["object_id"]): int(e["base_words"])
+        for e in mapping["object_placement"]
+    }
     produced: dict[int, dict[str, Any]] = {}
     placed: list[dict[str, Any]] = []
+    written = 0
+    last_writer: dict[int, int] = {}
     for operation in vector_case["supported_prefix"]:
         words = 1
         for dim in operation["output_view"]["dims"]:
             words *= int(dim)
+        object_id = int(operation["output_view"]["object_id"])
+        if object_id not in placement:
+            raise SystemExit(
+                f"{vector_case['name']}: PC {operation['pc']} writes object "
+                f"{object_id}, which the vector set's own placement table "
+                "does not name; nothing derived from this replay may ship"
+            )
         entry = {
             "pc": int(operation["pc"]),
             "kind": operation["kind"],
-            "result_base_words": cursor,
+            "output_object_id": object_id,
+            "result_base_words": placement[object_id],
             "result_words": words,
+            "rewrites_object": object_id in last_writer,
+            "previous_writer_pc": last_writer.get(object_id),
         }
         placed.append(entry)
         produced[int(operation["pc"])] = entry
-        cursor += words
+        last_writer[object_id] = int(operation["pc"])
+        written += words
     declared = int(vector_case["expected"]["result_words"])
-    if cursor - output_base != declared:
+    if written != declared:
         raise SystemExit(
-            f"{vector_case['name']}: the append cursor replays to "
-            f"{cursor - output_base} result words, the vector set declares "
-            f"{declared}; the placement replay is wrong and nothing derived "
-            "from it may be reported"
+            f"{vector_case['name']}: the placement replay covers {written} "
+            f"result words, the vector set declares {declared}; the placement "
+            "replay is wrong and nothing derived from it may be reported"
+        )
+    span = int(mapping["result_region_span"])
+    allocated = sum(
+        entry["result_words"] for entry in placed if not entry["rewrites_object"]
+    )
+    if allocated != span:
+        raise SystemExit(
+            f"{vector_case['name']}: the placement replay allocates "
+            f"{allocated} words, the vector set declares a region of {span}; "
+            "the placement replay is wrong"
         )
 
-    # Which addresses each executed operator's operands were read from.
-    address_of_role = {
-        "rms_input": int(mapping["rms_input_base"]),
-        "matmul_input": int(mapping["matmul_input_base"]),
-    }
-    keyed = {
-        "head_rms_input": {
-            int(e["object_id"]): int(e["base_words"])
-            for e in mapping["head_input_objects"]
-        },
-        "rope_input": {
-            int(e["object_id"]): int(e["base_words"])
-            for e in mapping["rope_input_objects"]
-        },
-    }
-    # Present only once a vector set supplies the object-addressed placement
-    # the mapped families need.  Absent, those operands resolve to no address
-    # at all, which is reported as unresolved rather than assumed to be
-    # anything.
-    object_placement = {
-        int(e["object_id"]): int(e["base_words"])
-        for e in mapping.get("mapped_placement", [])
-    }
     by_pc = {int(p["pc"]): p for p in placed}
-    produced_at = {p["result_base_words"]: p for p in placed}
     executed_pcs = set(by_pc)
     # Every object the layer itself writes.  An operand that names one of
     # these and did NOT come from the RTL operator that wrote it is a golden
@@ -988,41 +1081,37 @@ def executed_span(
         for slot in operator["slots"]
         if slot["slot"].startswith("output")
     }
+    order = [int(operation["pc"]) for operation in vector_case["supported_prefix"]]
     rows: list[dict[str, Any]] = []
     for operator in layer:
         if operator["pc"] not in executed_pcs:
             continue
         place = by_pc[operator["pc"]]
+        position = order.index(operator["pc"])
+        # Who last wrote each object BEFORE this operator ran.
+        writer_before: dict[int, int] = {}
+        for earlier in order[:position]:
+            writer_before[by_pc[earlier]["output_object_id"]] = earlier
         operands = []
         for slot in operator["slots"]:
             if slot["slot"].startswith("output"):
                 continue
             role = OPERAND_ROLE.get((operator["mnemonic"], slot["slot"]))
             object_id = int(slot["object_id"])
-            # Object-addressed placement first, wherever a vector set supplies
-            # it: it is the only form that can survive a buffer being written
-            # more than once.  Then the role's own object table, then the
-            # single unkeyed base the prefix vehicle uses.
-            base = object_placement.get(object_id)
-            if base is None and role in keyed:
-                base = keyed[role].get(object_id)
-            if base is None and role in address_of_role:
-                base = address_of_role[role]
+            base = placement.get(object_id)
             reads_result = role in (
                 "rms_input", "matmul_input", "head_rms_input", "rope_input"
             ) or (
                 role == "mapped_family_operand"
                 and (operator["mnemonic"], slot["slot"]) not in MAPPED_INDEX_SLOTS
             )
-            source = None
-            if reads_result and base is not None and base in produced_at:
-                source = produced_at[base]["pc"]
+            source = writer_before.get(object_id) if reads_result else None
             handoff = (
                 "rtl_to_rtl" if source is not None
                 else "staged_input" if not reads_result
                 else "unresolved"
             )
-            is_intermediate = int(slot["object_id"]) in layer_output_objects
+            is_intermediate = object_id in layer_output_objects
             operands.append(
                 {
                     "slot": slot["slot"],
@@ -1045,12 +1134,11 @@ def executed_span(
                 "mnemonic": operator["mnemonic"],
                 "numeric_contract": operator["numeric_contract"],
                 "operator_descriptor_id": operator["operator_descriptor_id"],
-                "output_object_id": next(
-                    (s["object_id"] for s in operator["slots"]
-                     if s["slot"].startswith("output")), None
-                ),
+                "output_object_id": place["output_object_id"],
                 "result_base_words": place["result_base_words"],
                 "result_words_written": place["result_words"],
+                "rewrites_object": place["rewrites_object"],
+                "previous_writer_pc": place["previous_writer_pc"],
                 "operands": operands,
             }
         )
@@ -1080,10 +1168,12 @@ def executed_span(
             }
         ),
         "note": (
-            "an operand is an RTL-to-RTL handoff when the address the bridge "
-            "reads it from is the address an earlier operator of this run "
-            "wrote; the replay of the vehicle's own append cursor is what "
-            "decides that, not a declaration. A staged operand that names an "
+            "an operand is an RTL-to-RTL handoff when the OBJECT it names "
+            "was last written, before this operator, by an operator of this "
+            "run; the replay of the vehicle's own object placement is what "
+            "decides that, not a declaration. Address equality was the old "
+            "test and it is not sound under a buffer written twice, because "
+            "both writes are at one address. A staged operand that names an "
             "object this layer writes would be a golden intermediate and is "
             "counted as one; a staged operand that names a checkpoint tensor "
             "or a generated coefficient is an input to the layer."
@@ -1094,6 +1184,11 @@ def executed_span(
         "layer_intermediates": rows,
         "handoff": handoff,
         "case_result_words": declared,
+        "case_result_region_span": span,
+        "objects_rewritten_in_the_span": sorted(
+            {int(entry["output_object_id"]) for entry in placed
+             if entry["rewrites_object"]}
+        ),
     }
 
 
@@ -1220,7 +1315,7 @@ def build(
         (PREFIX_VECTORS if vectors_path is None else Path(vectors_path)).read_text()
     )
     campaign = integrated_evidence(campaign_path, vectors_path)
-    capacity = placement_capacity()
+    capacity = placement_capacity(vectors, campaign)
     git = git_state()
 
     records = []
@@ -1239,6 +1334,10 @@ def build(
         executed = span["layer_intermediates"]
         executed_pcs = {row["pc"] for row in executed}
         role_ok = {row["role"]: row for row in demand["per_role"]}
+        span_row = next(
+            (row for row in demand["per_role"] if row["role"].startswith("__")),
+            None,
+        )
         uncovered = []
         for op in layer:
             if op["pc"] in executed_pcs:
@@ -1247,7 +1346,7 @@ def build(
             for slot in op["slots"]:
                 role = OPERAND_ROLE.get((op["mnemonic"], slot["slot"]))
                 if role is None and slot["slot"].startswith("output"):
-                    role = "appending_output"
+                    role = "result_object"
                 row = role_ok.get(role)
                 if row is not None and not row["satisfiable"]:
                     blocking.append(
@@ -1257,11 +1356,45 @@ def build(
                             "object_id": slot["object_id"],
                             "why": (
                                 "role {r} needs {n} distinct objects across "
-                                "the layer, the bridge declares {h}"
+                                "the layer and the deepest object table a run "
+                                "has resolved holds {h}"
                             ).format(
                                 r=role,
                                 n=row["distinct_objects_the_layer_needs"],
                                 h=row["slots_the_bridge_declares"],
+                            ),
+                        }
+                    )
+            # The roles share ONE table, so an operand can be blocked without
+            # any single role being short: the span's objects together can
+            # exceed the table even when no role does.  Attributing that to
+            # the operands whose objects are in the union is what stops this
+            # rung reporting an operator as "blocked only by the boundary"
+            # while the vehicle cannot place its operands at all -- the field
+            # that carried the correction section 11.7 records, reported in
+            # its optimistic form.
+            if span_row is not None and not span_row["satisfiable"]:
+                for slot in op["slots"]:
+                    role = OPERAND_ROLE.get((op["mnemonic"], slot["slot"]))
+                    if role is None and slot["slot"].startswith("output"):
+                        role = "result_object"
+                    row = role_ok.get(role)
+                    if row is None or not row["object_keyed"]:
+                        continue
+                    if int(slot["object_id"]) not in span_row["objects"]:
+                        continue
+                    blocking.append(
+                        {
+                            "slot": slot["slot"],
+                            "role": role,
+                            "object_id": slot["object_id"],
+                            "why": (
+                                "the span names {n} distinct objects through "
+                                "one table and the deepest table a run has "
+                                "resolved holds {h}"
+                            ).format(
+                                n=span_row["distinct_objects_the_layer_needs"],
+                                h=span_row["slots_the_bridge_declares"],
                             ),
                         }
                     )
@@ -1309,7 +1442,8 @@ def build(
             sum(row["result_words_written"] for row in executed) if usable else None
         )
         # A campaign whose every case passed compared every result word it
-        # wrote against p3_expect.hex, twice, and reported no failure.  With no
+        # wrote against the golden write stream, address and value, and its
+        # retained image against p3_expect.hex, and reported no failure.  With no
         # usable campaign there are no comparisons, and a mismatch count over
         # zero comparisons is not a zero mismatch count.
         mismatched = 0 if (usable and compared) else None
@@ -1392,15 +1526,14 @@ def build(
             if not row["satisfiable"]:
                 why.append(
                     "placement role {role} must name {need} distinct objects "
-                    "for this layer and the bridge declares {have}{keyed}"
-                    .format(
+                    "for this layer and the deepest object table a run has "
+                    "been measured to resolve holds {have} (the bridge "
+                    "DECLARES {declared} entries, which is a count of source "
+                    "text and is credited to nothing)".format(
                         role=row["role"],
                         need=row["distinct_objects_the_layer_needs"],
                         have=row["slots_the_bridge_declares"],
-                        keyed=(
-                            "" if row["object_keyed"]
-                            else ", and that base is not keyed by object at all"
-                        ),
+                        declared=capacity.get("declared_entries"),
                     )
                 )
         if usable and not coverage["holds"]:
@@ -1410,18 +1543,11 @@ def build(
                 "output would not establish that every intermediate matched: "
                 + json.dumps(coverage)
             )
-        if demand["output_objects"]["objects_written_more_than_once"]:
-            why.append(
-                "the layer writes {n} intermediates into {d} buffers, so an "
-                "appending output cursor gives a reused object two addresses; "
-                "objects written more than once: {objs}".format(
-                    n=demand["output_objects"]["writes"],
-                    d=demand["output_objects"]["distinct_output_objects"],
-                    objs=sorted(
-                        demand["output_objects"]["objects_written_more_than_once"]
-                    ),
-                )
-            )
+        # The layer rewriting buffers is no longer a reason it cannot be
+        # placed -- results are object-addressed, so a rewrite lands where the
+        # first write did.  It is recorded because it is what makes the write
+        # STREAM, rather than the retained image, the thing the campaign has
+        # to compare.
 
         records.append(
             {
@@ -1564,6 +1690,12 @@ def build(
             "64-bit declarations",
             "any rate; that is gate G3",
         ],
+        # Published because the distinction inside it is the whole point:
+        # ``declared_entries`` is a count of the bridge's port list and is
+        # credited to nothing, ``measured_simultaneous_objects`` is what a
+        # passing run actually placed, and every satisfiability verdict below
+        # is computed from the second.
+        "placement_capacity": capacity,
         "records": records,
         "rerun_not_retained": rerun_note(rerun_path),
     }

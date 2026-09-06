@@ -9,29 +9,12 @@
     {
       "bank_mapping": {
         "embedding_source_base": 4352,
-        "head_input_objects": [
+        "index_base": 0,
+        "object_placement": [
           {
             "base_words": 8448,
-            "object_id": 55
+            "object_id": 4
           },
-          {
-            "base_words": 12544,
-            "object_id": 64
-          }
-        ],
-        "head_weight_objects": [
-          {
-            "base_words": 12544,
-            "object_id": 8
-          },
-          {
-            "base_words": 12672,
-            "object_id": 10
-          }
-        ],
-        "index_base": 0,
-        "matmul_input_base": 4352,
-        "matmul_weight_objects": [
           {
             "base_words": 0,
             "object_id": 5
@@ -43,25 +26,51 @@
           {
             "base_words": 20971520,
             "object_id": 7
-          }
-        ],
-        "output_base": 0,
-        "rms_input_base": 256,
-        "rms_weight_base": 8448,
-        "rope_coefficient_object": {
-          "base_words": 0,
-          "object_id": 27
-        },
-        "rope_input_objects": [
+          },
           {
-            "base_words": 14592,
+            "base_words": 12544,
+            "object_id": 8
+          },
+          {
+            "base_words": 12672,
+            "object_id": 10
+          },
+          {
+            "base_words": 0,
+            "object_id": 27
+          },
+          {
+            "base_words": 256,
+            "object_id": 36
+          },
+          {
+            "base_words": 4352,
             "object_id": 45
           },
           {
-            "base_words": 18688,
+            "base_words": 8448,
+            "object_id": 55
+          },
+          {
+            "base_words": 12544,
+            "object_id": 64
+          },
+          {
+            "base_words": 13568,
+            "object_id": 71
+          },
+          {
+            "base_words": 14592,
             "object_id": 84
           }
         ],
+        "objects_written_more_than_once": [
+          45,
+          55,
+          64
+        ],
+        "result_region_base": 0,
+        "result_region_span": 15616,
         "source_base": 0,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
@@ -1879,29 +1888,12 @@
     {
       "bank_mapping": {
         "embedding_source_base": 17152,
-        "head_input_objects": [
-          {
-            "base_words": 33280,
-            "object_id": 20
-          },
-          {
-            "base_words": 37376,
-            "object_id": 21
-          }
-        ],
-        "head_weight_objects": [
-          {
-            "base_words": 25344,
-            "object_id": 5
-          },
-          {
-            "base_words": 25472,
-            "object_id": 6
-          }
-        ],
         "index_base": 2,
-        "matmul_input_base": 29184,
-        "matmul_weight_objects": [
+        "object_placement": [
+          {
+            "base_words": 21248,
+            "object_id": 1
+          },
           {
             "base_words": 0,
             "object_id": 2
@@ -1913,29 +1905,55 @@
           {
             "base_words": 20971520,
             "object_id": 4
-          }
-        ],
-        "output_base": 24832,
-        "rms_input_base": 25088,
-        "rms_weight_base": 21248,
-        "rope_coefficient_object": {
-          "base_words": 24832,
-          "object_id": 17
-        },
-        "rope_input_objects": [
+          },
           {
-            "base_words": 39424,
+            "base_words": 25344,
+            "object_id": 5
+          },
+          {
+            "base_words": 25472,
+            "object_id": 6
+          },
+          {
+            "base_words": 15616,
+            "object_id": 17
+          },
+          {
+            "base_words": 15872,
+            "object_id": 18
+          },
+          {
+            "base_words": 19968,
             "object_id": 19
           },
           {
-            "base_words": 43520,
+            "base_words": 24064,
+            "object_id": 20
+          },
+          {
+            "base_words": 28160,
+            "object_id": 21
+          },
+          {
+            "base_words": 29184,
+            "object_id": 22
+          },
+          {
+            "base_words": 30208,
             "object_id": 23
           }
         ],
+        "objects_written_more_than_once": [
+          19,
+          20,
+          21
+        ],
+        "result_region_base": 15616,
+        "result_region_span": 15616,
         "source_base": 12800,
         "source_launch_stride": 4352,
         "transfer_index_base": 0,
-        "transfer_source_base": 25088
+        "transfer_source_base": 15872
       },
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
@@ -3749,63 +3767,32 @@
     {
       "bank_mapping": {
         "embedding_source_base": 29952,
-        "head_input_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
-        "head_weight_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
         "index_base": 4,
-        "matmul_input_base": 0,
-        "matmul_weight_objects": [
+        "object_placement": [
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 31232,
+            "object_id": 334
           },
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 31360,
+            "object_id": 344
           },
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 31488,
+            "object_id": 351
+          },
+          {
+            "base_words": 35584,
+            "object_id": 359
           }
         ],
-        "output_base": 49664,
-        "rms_input_base": 49920,
-        "rms_weight_base": 0,
-        "rope_coefficient_object": {
-          "base_words": 0,
-          "object_id": 4294967295
-        },
-        "rope_input_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
+        "objects_written_more_than_once": [],
+        "result_region_base": 31232,
+        "result_region_span": 20736,
         "source_base": 25600,
         "source_launch_stride": 2176,
         "transfer_index_base": 7,
-        "transfer_source_base": 49920
+        "transfer_source_base": 31488
       },
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
@@ -4455,63 +4442,32 @@
     {
       "bank_mapping": {
         "embedding_source_base": 38400,
-        "head_input_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
-        "head_weight_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
         "index_base": 11,
-        "matmul_input_base": 0,
-        "matmul_weight_objects": [
+        "object_placement": [
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 51968,
+            "object_id": 236
           },
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 52096,
+            "object_id": 237
           },
           {
-            "base_words": 0,
-            "object_id": 4294967295
+            "base_words": 52224,
+            "object_id": 238
+          },
+          {
+            "base_words": 56320,
+            "object_id": 239
           }
         ],
-        "output_base": 70400,
-        "rms_input_base": 70656,
-        "rms_weight_base": 0,
-        "rope_coefficient_object": {
-          "base_words": 0,
-          "object_id": 4294967295
-        },
-        "rope_input_objects": [
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          },
-          {
-            "base_words": 0,
-            "object_id": 4294967295
-          }
-        ],
+        "objects_written_more_than_once": [],
+        "result_region_base": 51968,
+        "result_region_span": 20736,
         "source_base": 34048,
         "source_launch_stride": 2176,
         "transfer_index_base": 14,
-        "transfer_source_base": 70656
+        "transfer_source_base": 52224
       },
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
@@ -5356,9 +5312,9 @@
   "embedding_launch_count": 4,
   "embedding_result_word_count": 16384,
   "geometry": {
-    "case_stride": 112,
-    "case_words_used": 448,
-    "expected_words_used": 91136,
+    "case_stride": 139,
+    "case_words_used": 556,
+    "expected_words_used": 72704,
     "index_words": 64,
     "index_words_used": 18,
     "issue_stride": 4,
@@ -5370,12 +5326,13 @@
   "head_rms_norm_launch_count": 4,
   "head_rms_norm_result_word_count": 10240,
   "image_sha256": {
-    "p3_case.hex": "518ffee1d6ff161dc482b869ce2539e87ff5e070fd051e3798aa257da25cb72d",
-    "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+    "p3_case.hex": "10a5fdf096b262ff2fb75c5cd19bfb5078c81d3b212448c3e0fc303e10ae68b4",
+    "p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
     "p3_issue.hex": "843e44c4529d5f0a3ab67df20c184062ee0ad86a4c2a3dc83a76f3b64e9b8319",
-    "p3_meta.hex": "9fbae86e80bfef2ae3500c7ce4c1ce36bd5f2b981945fffda553d0d3f2896952",
-    "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
+    "p3_meta.hex": "f8d1196035f4bd20987efaadae1ca0382111f7b31d1ce45199ba38ef6c417742",
+    "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
+    "p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5"
   },
   "input_deployment_vectors": {
     "images": {
@@ -5400,6 +5357,8 @@
   "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4",
   "resolved_view_count": 94,
   "result_word_count": 91136,
+  "retained_image_note": "the retained image holds each object's LAST value, so it is smaller than result_word_count by exactly the words a rewrite replaces. p3_writes.hex carries every write, address and value, in launch order; it is what an operator's own output has to be compared against once a later operator can overwrite it",
+  "retained_image_word_count": 72704,
   "rms_norm_launch_count": 2,
   "rms_norm_result_word_count": 8192,
   "rope_coefficient_gather_result_word_count": 1024,

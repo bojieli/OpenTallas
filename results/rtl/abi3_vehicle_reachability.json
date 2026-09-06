@@ -11,8 +11,8 @@
     "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_loop_stack.sv": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
     "rtl/abi3/ot_a3_microsequencer.sv": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
-    "rtl/test/a3_shipped_prefix_top.sv": "0c17ea7fa2e3d3876f5befa7a452194b1a30779daa17f0206f1f12c1a03ad466",
-    "tools/build_abi3_shipped_prefix_vectors.py": "951acd043bac1e699dee7c1303ba9ced70237452e3f006751b68555e84b1d611",
+    "rtl/test/a3_shipped_prefix_top.sv": "9a9cff8363c8e28181fc134fdc28380a1c3d8757179630428117ce8b32a5161e",
+    "tools/build_abi3_shipped_prefix_vectors.py": "2848526c897c0b8fbe797908dbd566fee5051bc0062335ca54647af0b99b91f3",
     "tools/build_abi3_vehicle_reachability.py": "1cdad27e2324497377d3bb18dda1c57c55f15fb5ff5bf0e8398b41207df7da9d"
   },
   "targets": [
@@ -337,8 +337,8 @@
       ],
       "deployment": "build/abi3/qwen3-8b-rom",
       "deployment_matches_vector_set": true,
-      "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
-      "deployment_sha256_certified_by_vector_set": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
+      "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "deployment_sha256_certified_by_vector_set": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
       "entry_pc": 0,
       "families": [
         {
@@ -1430,8 +1430,8 @@
       ],
       "deployment": "build/abi3/deepseek-v4-flash-rom",
       "deployment_matches_vector_set": true,
-      "deployment_sha256": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
-      "deployment_sha256_certified_by_vector_set": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
+      "deployment_sha256": "233494df7adfccb77e84a9b39652a614c9f6dc86c887103a6dd199af454909e1",
+      "deployment_sha256_certified_by_vector_set": "233494df7adfccb77e84a9b39652a614c9f6dc86c887103a6dd199af454909e1",
       "entry_pc": 0,
       "families": [
         {

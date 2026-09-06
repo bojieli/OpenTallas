@@ -182,6 +182,61 @@ OBSERVATION_ONLY = {
     "fault_seen",
 }
 ALLOWED_SINKS = COMPLETION_HANDSHAKE | RESULT_MEMORY_WRITE_PORT | OBSERVATION_ONLY
+# The write-stream observation taps.  Object-addressed result placement made
+# the retained image an incomplete record -- a rewritten buffer's first value
+# is no longer in it -- so the campaign compares the engines' WRITE STREAM,
+# and the top republishes the result bank's write port on its own boundary
+# for the harness to read.  Those three signals are in the injection fanout
+# and something has to say so.  They are NOT allowlisted by name: each is
+# admitted only where THIS source text proves it is an ``output`` of the top
+# that appears as a source in no statement of it -- it leaves the design and
+# drives nothing inside it.  A tap that ever fed something back fails the
+# proof and refuses the audit exactly as an undeclared sink does, and
+# ``audit_self_test`` splices such a feedback edge and requires the refusal.
+OBSERVATION_TAP_CANDIDATES = ("obs_write_valid", "obs_write_addr", "obs_write_data")
+OUTPUT_PORT = re.compile(
+    r"\boutput\s+(?:wire|reg|logic)?\s*(?:signed\s*)?(?:\[[^\]]*\]\s*)?"
+    r"([A-Za-z_][A-Za-z0-9_]*)"
+)
+
+
+def _proven_observation_taps(source_text: str) -> dict[str, Any]:
+    """Which write-stream taps this source PROVES are observation only."""
+    statements = _statements(source_text)
+    declared = set(OUTPUT_PORT.findall(source_text))
+    proven: dict[str, str] = {}
+    refused: dict[str, Any] = {}
+    for tap in OBSERVATION_TAP_CANDIDATES:
+        if tap not in declared:
+            refused[tap] = "is not declared an output of the top"
+            continue
+        feeds = []
+        for line, statement in statements:
+            if "module " in statement:
+                continue  # the port list drives nothing
+            if tap not in set(IDENTIFIER.findall(statement)):
+                continue
+            if _driven_names(statement)[:1] == [tap]:
+                continue  # the tap's own assignment
+            feeds.append(
+                {"line": line, "statement": " ".join(statement.split())[-180:]}
+            )
+        if feeds:
+            refused[tap] = feeds
+        else:
+            proven[tap] = (
+                "declared an output of the top and read by no statement of it"
+            )
+    return {
+        "candidates": list(OBSERVATION_TAP_CANDIDATES),
+        "proven": proven,
+        "refused": refused,
+        "method": (
+            "a tap is credited only if it is declared an output and is a "
+            "source in no statement; otherwise it stays outside the sink set "
+            "and the audit refuses"
+        ),
+    }
 MULTICAST_PREFIX = "multicast_"
 # The only design inputs an injected value is permitted to reach through a
 # module instantiation: the completion adapter's engine-side completion, all
@@ -367,12 +422,14 @@ def audit_injection(source_text: str) -> dict[str, Any]:
     set of words a PREDICATE names, and this program names none.
     """
     statements = _statements(source_text)
+    taps = _proven_observation_taps(source_text)
+    allowed = ALLOWED_SINKS | set(taps["proven"])
     direct, edges = _closure(statements, set(INJECTED_INPUTS), {MEMORY})
     reached = sorted(direct - set(INJECTED_INPUTS))
     outside = sorted(
         name
         for name in reached
-        if name not in ALLOWED_SINKS and not name.startswith(MULTICAST_PREFIX)
+        if name not in allowed and not name.startswith(MULTICAST_PREFIX)
     )
     ports = _instance_ports(source_text, direct)
     for entry in ports:
@@ -396,7 +453,8 @@ def audit_injection(source_text: str) -> dict[str, Any]:
     readers = sorted(through - {MEMORY})
     return {
         "injected_inputs": list(INJECTED_INPUTS),
-        "allowed_sinks": sorted(ALLOWED_SINKS),
+        "allowed_sinks": sorted(allowed),
+        "observation_taps": taps,
         "reached": reached,
         "outside_allowed_sinks": outside,
         "edges": edges,
@@ -449,6 +507,17 @@ def audit_self_test(source_text: str) -> dict[str, Any]:
             "did not run and the audit above is therefore unverified",
         }
     result = audit_injection(spliced)
+    # Second arm, for the observation taps.  A tap is credited only because
+    # nothing inside the top reads it; splice a statement that reads one and
+    # the proof must withdraw the credit and the audit must refuse the tap.
+    fed_back = source_text.replace(
+        "    assign inj_issue_family = issue_family;",
+        "    assign inj_issue_family = issue_family;\n"
+        "    wire audit_tap_feedback = obs_write_valid;",
+        1,
+    )
+    tap_result = audit_injection(fed_back)
+    tap_proof = _proven_observation_taps(fed_back)
     return {
         "ran": True,
         "refused_the_spliced_edge": bool(
@@ -456,6 +525,19 @@ def audit_self_test(source_text: str) -> dict[str, Any]:
         ),
         "spliced_edge": "wire audit_probe_pc = inj_result_valid;",
         "outside_allowed_sinks_when_spliced": result["outside_allowed_sinks"],
+        "observation_tap_arm": {
+            "spliced_edge": "wire audit_tap_feedback = obs_write_valid;",
+            "ran": fed_back != source_text,
+            "withdrew_the_tap_credit": "obs_write_valid" in tap_proof["refused"],
+            "refused_the_tap": "obs_write_valid" in (
+                tap_result["outside_allowed_sinks"]
+            ),
+            "why": (
+                "a tap that anything inside the top reads is no longer "
+                "observation only, so the proof withdraws it from the sink "
+                "set and the audit reports it outside"
+            ),
+        },
     }
 
 

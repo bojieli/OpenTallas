@@ -737,20 +737,23 @@ constexpr std::size_t kCases = 4;
 // table, the request's context and generation policy, and the golden launch
 // counts and selection outputs to compare against.
 constexpr std::size_t kCaseStrideLegacy = 80;
-constexpr std::size_t kCaseStrideMapped = 112;
-// Extended case-record word offsets, valid only at kCaseStrideMapped.
-constexpr std::size_t kMapValidWord = 80;      // extended placement supplied
-constexpr std::size_t kMapTableWord = 81;      // 8 x (object id, base words)
-constexpr std::size_t kMapContextWord = 97;    // request context length
-constexpr std::size_t kMapPlaneRowsWord = 98;  // KV K->V plane stride, rows
-constexpr std::size_t kMapPolicyWord = 99;     // GENERATION_POLICY descriptor
-constexpr std::size_t kMapMaxNewWord = 100;    // request max_new_tokens
-constexpr std::size_t kMapGeneratedWord = 101; // tokens produced before this
-constexpr std::size_t kMapLaunchWord = 102;    // 6 expected launch counts
-constexpr std::size_t kMapTokenWord = 108;     // expected selected token
-constexpr std::size_t kMapTieWord = 109;       // expected tie multiplicity
-constexpr std::size_t kMapEosWord = 110;       // expected EOS reason
-constexpr std::size_t kMapReservedWord = 111;  // reserved, must be zero
+constexpr std::size_t kCaseStridePlaced = 139;
+// Case-record word offsets, valid only at kCaseStridePlaced.
+constexpr std::size_t kPlaceSpanWord = 57;      // words the result region spans
+constexpr std::size_t kPlaceValidWord = 58;     // object table supplied
+constexpr std::size_t kMappedFamiliesWord = 59; // the six families admitted
+constexpr std::size_t kPlaceTableWord = 60;     // 32 x (object id, base words)
+constexpr std::size_t kPlaceTableEntries = 32;
+constexpr std::size_t kMapContextWord = 124;   // request context length
+constexpr std::size_t kMapPlaneRowsWord = 125; // KV K->V plane stride, rows
+constexpr std::size_t kMapPolicyWord = 126;    // GENERATION_POLICY descriptor
+constexpr std::size_t kMapMaxNewWord = 127;    // request max_new_tokens
+constexpr std::size_t kMapGeneratedWord = 128; // tokens produced before this
+constexpr std::size_t kMapLaunchWord = 129;    // 6 expected launch counts
+constexpr std::size_t kMapTokenWord = 135;     // expected selected token
+constexpr std::size_t kMapTieWord = 136;       // expected tie multiplicity
+constexpr std::size_t kMapEosWord = 137;       // expected EOS reason
+constexpr std::size_t kMapReservedWord = 138;  // reserved, must be zero
 // What the vector set has to satisfy for the mapped words to be usable, all
 // of it enforced inside rtl/abi3/ot_a3_engine_issue_bridge.sv rather than
 // here, and none of it defaulted:
@@ -877,52 +880,76 @@ struct Model {
         dut.cfg_source_base = 0;
         dut.cfg_source_launch_stride = 0;
         dut.cfg_embedding_source_base = 0;
-        dut.cfg_rms_input_base = 0;
-        dut.cfg_rms_weight_base = 0;
         dut.cfg_transfer_index_base = 0;
         dut.cfg_transfer_source_base = 0;
-        dut.cfg_matmul_input_base = 0;
-        dut.cfg_matmul_weight_object_0 = UINT32_MAX;
-        dut.cfg_matmul_weight_base_0 = 0;
-        dut.cfg_matmul_weight_object_1 = UINT32_MAX;
-        dut.cfg_matmul_weight_base_1 = 0;
-        dut.cfg_matmul_weight_object_2 = UINT32_MAX;
-        dut.cfg_matmul_weight_base_2 = 0;
-        dut.cfg_head_input_object_0 = UINT32_MAX;
-        dut.cfg_head_input_base_0 = 0;
-        dut.cfg_head_input_object_1 = UINT32_MAX;
-        dut.cfg_head_input_base_1 = 0;
-        dut.cfg_head_weight_object_0 = UINT32_MAX;
-        dut.cfg_head_weight_base_0 = 0;
-        dut.cfg_head_weight_object_1 = UINT32_MAX;
-        dut.cfg_head_weight_base_1 = 0;
-        dut.cfg_rope_input_object_0 = UINT32_MAX;
-        dut.cfg_rope_input_base_0 = 0;
-        dut.cfg_rope_input_object_1 = UINT32_MAX;
-        dut.cfg_rope_input_base_1 = 0;
-        dut.cfg_rope_coefficient_object = UINT32_MAX;
-        dut.cfg_rope_coefficient_base = 0;
-        dut.cfg_output_base = 0;
         // No object is mapped until a case binds one.  UINT32_MAX is the
         // ABI's "no id", which the bridge's map lookup never matches, so an
         // unbound instance forms no operand address at all.
         dut.cfg_extended_placement_valid = 0;
-        dut.cfg_map_object_0 = UINT32_MAX;
-        dut.cfg_map_base_0 = 0;
-        dut.cfg_map_object_1 = UINT32_MAX;
-        dut.cfg_map_base_1 = 0;
-        dut.cfg_map_object_2 = UINT32_MAX;
-        dut.cfg_map_base_2 = 0;
-        dut.cfg_map_object_3 = UINT32_MAX;
-        dut.cfg_map_base_3 = 0;
-        dut.cfg_map_object_4 = UINT32_MAX;
-        dut.cfg_map_base_4 = 0;
-        dut.cfg_map_object_5 = UINT32_MAX;
-        dut.cfg_map_base_5 = 0;
-        dut.cfg_map_object_6 = UINT32_MAX;
-        dut.cfg_map_base_6 = 0;
-        dut.cfg_map_object_7 = UINT32_MAX;
-        dut.cfg_map_base_7 = 0;
+        dut.cfg_place_object_0 = UINT32_MAX;
+        dut.cfg_place_base_0 = 0;
+        dut.cfg_place_object_1 = UINT32_MAX;
+        dut.cfg_place_base_1 = 0;
+        dut.cfg_place_object_2 = UINT32_MAX;
+        dut.cfg_place_base_2 = 0;
+        dut.cfg_place_object_3 = UINT32_MAX;
+        dut.cfg_place_base_3 = 0;
+        dut.cfg_place_object_4 = UINT32_MAX;
+        dut.cfg_place_base_4 = 0;
+        dut.cfg_place_object_5 = UINT32_MAX;
+        dut.cfg_place_base_5 = 0;
+        dut.cfg_place_object_6 = UINT32_MAX;
+        dut.cfg_place_base_6 = 0;
+        dut.cfg_place_object_7 = UINT32_MAX;
+        dut.cfg_place_base_7 = 0;
+        dut.cfg_place_object_8 = UINT32_MAX;
+        dut.cfg_place_base_8 = 0;
+        dut.cfg_place_object_9 = UINT32_MAX;
+        dut.cfg_place_base_9 = 0;
+        dut.cfg_place_object_10 = UINT32_MAX;
+        dut.cfg_place_base_10 = 0;
+        dut.cfg_place_object_11 = UINT32_MAX;
+        dut.cfg_place_base_11 = 0;
+        dut.cfg_place_object_12 = UINT32_MAX;
+        dut.cfg_place_base_12 = 0;
+        dut.cfg_place_object_13 = UINT32_MAX;
+        dut.cfg_place_base_13 = 0;
+        dut.cfg_place_object_14 = UINT32_MAX;
+        dut.cfg_place_base_14 = 0;
+        dut.cfg_place_object_15 = UINT32_MAX;
+        dut.cfg_place_base_15 = 0;
+        dut.cfg_place_object_16 = UINT32_MAX;
+        dut.cfg_place_base_16 = 0;
+        dut.cfg_place_object_17 = UINT32_MAX;
+        dut.cfg_place_base_17 = 0;
+        dut.cfg_place_object_18 = UINT32_MAX;
+        dut.cfg_place_base_18 = 0;
+        dut.cfg_place_object_19 = UINT32_MAX;
+        dut.cfg_place_base_19 = 0;
+        dut.cfg_place_object_20 = UINT32_MAX;
+        dut.cfg_place_base_20 = 0;
+        dut.cfg_place_object_21 = UINT32_MAX;
+        dut.cfg_place_base_21 = 0;
+        dut.cfg_place_object_22 = UINT32_MAX;
+        dut.cfg_place_base_22 = 0;
+        dut.cfg_place_object_23 = UINT32_MAX;
+        dut.cfg_place_base_23 = 0;
+        dut.cfg_place_object_24 = UINT32_MAX;
+        dut.cfg_place_base_24 = 0;
+        dut.cfg_place_object_25 = UINT32_MAX;
+        dut.cfg_place_base_25 = 0;
+        dut.cfg_place_object_26 = UINT32_MAX;
+        dut.cfg_place_base_26 = 0;
+        dut.cfg_place_object_27 = UINT32_MAX;
+        dut.cfg_place_base_27 = 0;
+        dut.cfg_place_object_28 = UINT32_MAX;
+        dut.cfg_place_base_28 = 0;
+        dut.cfg_place_object_29 = UINT32_MAX;
+        dut.cfg_place_base_29 = 0;
+        dut.cfg_place_object_30 = UINT32_MAX;
+        dut.cfg_place_base_30 = 0;
+        dut.cfg_place_object_31 = UINT32_MAX;
+        dut.cfg_place_base_31 = 0;
         dut.cfg_context_length = 0;
         dut.cfg_kv_plane_rows = 0;
         dut.cfg_generation_policy_id = UINT32_MAX;
@@ -1324,8 +1351,17 @@ int main(int argc, char** argv) {
         const auto cases = read_hex("p3_case.hex");
         const auto issues = read_hex("p3_issue.hex");
         const auto expected = read_hex("p3_expect.hex");
+        // The write STREAM the engines are required to produce: address then
+        // value, one pair per word, in launch order.  Results are placed by
+        // object, so a buffer the program rewrites is written twice at one
+        // address and only the last value survives in the image above.
+        // Comparing the image alone would stop checking every intermediate
+        // that a later operator overwrote; this is what keeps that claim
+        // true, and it also pins WHERE each word went, which an image compare
+        // never did.
+        const auto writes = read_hex("p3_writes.hex");
         const auto meta = read_hex("p3_meta.hex");
-        const bool multicast_overlay = meta.size() == 26 && meta[1] == 29;
+        const bool multicast_overlay = meta.size() == 27 && meta[1] == 29;
         const std::size_t expected_issue_words =
             multicast_overlay ? 132 : 128;
         // The vector set states its own case stride.  Only the two published
@@ -1334,12 +1370,13 @@ int main(int argc, char** argv) {
         // interpreted.
         const std::size_t case_stride = meta.size() > 4 ? meta[4] : 0;
         const bool mapped_placement_vectors =
-            case_stride == kCaseStrideMapped;
+            case_stride == kCaseStridePlaced;
         if ((case_stride != kCaseStrideLegacy &&
-             case_stride != kCaseStrideMapped) ||
+             case_stride != kCaseStridePlaced) ||
             cases.size() != kCases * case_stride ||
             issues.size() != expected_issue_words ||
-            expected.size() != 91136 || meta.size() != 26)
+            meta.size() != 27 || expected.size() != meta[26] ||
+            writes.size() != 2 * meta[2] || meta[2] != 91136)
             throw std::runtime_error("shipped-prefix vector geometry mismatch");
 
         // The host's copies of the control images (docs/CHIP_ARCHITECTURE_
@@ -1482,32 +1519,153 @@ int main(int argc, char** argv) {
                 model.dut.cfg_source_base = record[11];
                 model.dut.cfg_source_launch_stride = record[12];
                 model.dut.cfg_embedding_source_base = record[32];
-                model.dut.cfg_rms_input_base = record[40];
-                model.dut.cfg_rms_weight_base = record[41];
-                model.dut.cfg_transfer_index_base = record[42];
-                model.dut.cfg_transfer_source_base = record[43];
-                model.dut.cfg_matmul_input_base = record[48];
-                model.dut.cfg_matmul_weight_object_0 = record[49];
-                model.dut.cfg_matmul_weight_base_0 = record[50];
-                model.dut.cfg_matmul_weight_object_1 = record[51];
-                model.dut.cfg_matmul_weight_base_1 = record[52];
-                model.dut.cfg_matmul_weight_object_2 = record[53];
-                model.dut.cfg_matmul_weight_base_2 = record[54];
-                model.dut.cfg_head_input_object_0 = record[58];
-                model.dut.cfg_head_input_base_0 = record[59];
-                model.dut.cfg_head_input_object_1 = record[60];
-                model.dut.cfg_head_input_base_1 = record[61];
-                model.dut.cfg_head_weight_object_0 = record[62];
-                model.dut.cfg_head_weight_base_0 = record[63];
-                model.dut.cfg_head_weight_object_1 = record[64];
-                model.dut.cfg_head_weight_base_1 = record[65];
-                model.dut.cfg_rope_input_object_0 = record[71];
-                model.dut.cfg_rope_input_base_0 = record[72];
-                model.dut.cfg_rope_input_object_1 = record[73];
-                model.dut.cfg_rope_input_base_1 = record[74];
-                model.dut.cfg_rope_coefficient_object = record[75];
-                model.dut.cfg_rope_coefficient_base = record[76];
-                model.dut.cfg_output_base = record[13];
+                model.dut.cfg_transfer_index_base = record[40];
+                model.dut.cfg_transfer_source_base = record[41];
+            {
+                // The object placement table, driven for every family.  The
+                // vector set states each object's base once; the bridge
+                // refuses a table naming one object twice, and refuses any
+                // operand or result whose object the table does not name.
+                const bool placed = record[kPlaceValidWord] != 0;
+                for (std::size_t entry = 0; entry < kPlaceTableEntries;
+                     ++entry) {
+                    const std::uint32_t object = placed
+                        ? record[kPlaceTableWord + entry * 2] : UINT32_MAX;
+                    const std::uint32_t base = placed
+                        ? record[kPlaceTableWord + entry * 2 + 1] : 0U;
+                    switch (entry) {
+                    case 0:
+                        model.dut.cfg_place_object_0 = object;
+                        model.dut.cfg_place_base_0 = base;
+                        break;
+                    case 1:
+                        model.dut.cfg_place_object_1 = object;
+                        model.dut.cfg_place_base_1 = base;
+                        break;
+                    case 2:
+                        model.dut.cfg_place_object_2 = object;
+                        model.dut.cfg_place_base_2 = base;
+                        break;
+                    case 3:
+                        model.dut.cfg_place_object_3 = object;
+                        model.dut.cfg_place_base_3 = base;
+                        break;
+                    case 4:
+                        model.dut.cfg_place_object_4 = object;
+                        model.dut.cfg_place_base_4 = base;
+                        break;
+                    case 5:
+                        model.dut.cfg_place_object_5 = object;
+                        model.dut.cfg_place_base_5 = base;
+                        break;
+                    case 6:
+                        model.dut.cfg_place_object_6 = object;
+                        model.dut.cfg_place_base_6 = base;
+                        break;
+                    case 7:
+                        model.dut.cfg_place_object_7 = object;
+                        model.dut.cfg_place_base_7 = base;
+                        break;
+                    case 8:
+                        model.dut.cfg_place_object_8 = object;
+                        model.dut.cfg_place_base_8 = base;
+                        break;
+                    case 9:
+                        model.dut.cfg_place_object_9 = object;
+                        model.dut.cfg_place_base_9 = base;
+                        break;
+                    case 10:
+                        model.dut.cfg_place_object_10 = object;
+                        model.dut.cfg_place_base_10 = base;
+                        break;
+                    case 11:
+                        model.dut.cfg_place_object_11 = object;
+                        model.dut.cfg_place_base_11 = base;
+                        break;
+                    case 12:
+                        model.dut.cfg_place_object_12 = object;
+                        model.dut.cfg_place_base_12 = base;
+                        break;
+                    case 13:
+                        model.dut.cfg_place_object_13 = object;
+                        model.dut.cfg_place_base_13 = base;
+                        break;
+                    case 14:
+                        model.dut.cfg_place_object_14 = object;
+                        model.dut.cfg_place_base_14 = base;
+                        break;
+                    case 15:
+                        model.dut.cfg_place_object_15 = object;
+                        model.dut.cfg_place_base_15 = base;
+                        break;
+                    case 16:
+                        model.dut.cfg_place_object_16 = object;
+                        model.dut.cfg_place_base_16 = base;
+                        break;
+                    case 17:
+                        model.dut.cfg_place_object_17 = object;
+                        model.dut.cfg_place_base_17 = base;
+                        break;
+                    case 18:
+                        model.dut.cfg_place_object_18 = object;
+                        model.dut.cfg_place_base_18 = base;
+                        break;
+                    case 19:
+                        model.dut.cfg_place_object_19 = object;
+                        model.dut.cfg_place_base_19 = base;
+                        break;
+                    case 20:
+                        model.dut.cfg_place_object_20 = object;
+                        model.dut.cfg_place_base_20 = base;
+                        break;
+                    case 21:
+                        model.dut.cfg_place_object_21 = object;
+                        model.dut.cfg_place_base_21 = base;
+                        break;
+                    case 22:
+                        model.dut.cfg_place_object_22 = object;
+                        model.dut.cfg_place_base_22 = base;
+                        break;
+                    case 23:
+                        model.dut.cfg_place_object_23 = object;
+                        model.dut.cfg_place_base_23 = base;
+                        break;
+                    case 24:
+                        model.dut.cfg_place_object_24 = object;
+                        model.dut.cfg_place_base_24 = base;
+                        break;
+                    case 25:
+                        model.dut.cfg_place_object_25 = object;
+                        model.dut.cfg_place_base_25 = base;
+                        break;
+                    case 26:
+                        model.dut.cfg_place_object_26 = object;
+                        model.dut.cfg_place_base_26 = base;
+                        break;
+                    case 27:
+                        model.dut.cfg_place_object_27 = object;
+                        model.dut.cfg_place_base_27 = base;
+                        break;
+                    case 28:
+                        model.dut.cfg_place_object_28 = object;
+                        model.dut.cfg_place_base_28 = base;
+                        break;
+                    case 29:
+                        model.dut.cfg_place_object_29 = object;
+                        model.dut.cfg_place_base_29 = base;
+                        break;
+                    case 30:
+                        model.dut.cfg_place_object_30 = object;
+                        model.dut.cfg_place_base_30 = base;
+                        break;
+                    case 31:
+                        model.dut.cfg_place_object_31 = object;
+                        model.dut.cfg_place_base_31 = base;
+                        break;
+                    default: break;
+                    }
+                }
+            }
                 model.dut.start = 1;
                 model.cycle([] {});
                 model.dut.start = 0;
@@ -1577,6 +1735,11 @@ int main(int argc, char** argv) {
         std::uint64_t total_matmuls = 0;
         std::uint64_t total_multicasts = 0;
         std::uint64_t total_words = 0;
+        // Where the golden write stream has got to.  It runs across the whole
+        // campaign in launch order, so a case that writes one word too few is
+        // caught by the next case's very first address rather than only at
+        // the end.
+        std::size_t write_cursor = 0;
         std::uint64_t total_views = 0;
         // Reached, per family, in THIS vehicle: the bridge launched it at
         // least once and the case it launched in compared its result words
@@ -1610,66 +1773,164 @@ int main(int argc, char** argv) {
             model.dut.cfg_source_base = record[11];
             model.dut.cfg_source_launch_stride = record[12];
             model.dut.cfg_embedding_source_base = record[32];
-            model.dut.cfg_rms_input_base = record[40];
-            model.dut.cfg_rms_weight_base = record[41];
-            model.dut.cfg_transfer_index_base = record[42];
-            model.dut.cfg_transfer_source_base = record[43];
-            model.dut.cfg_matmul_input_base = record[48];
-            model.dut.cfg_matmul_weight_object_0 = record[49];
-            model.dut.cfg_matmul_weight_base_0 = record[50];
-            model.dut.cfg_matmul_weight_object_1 = record[51];
-            model.dut.cfg_matmul_weight_base_1 = record[52];
-            model.dut.cfg_matmul_weight_object_2 = record[53];
-            model.dut.cfg_matmul_weight_base_2 = record[54];
-            model.dut.cfg_head_input_object_0 = record[58];
-            model.dut.cfg_head_input_base_0 = record[59];
-            model.dut.cfg_head_input_object_1 = record[60];
-            model.dut.cfg_head_input_base_1 = record[61];
-            model.dut.cfg_head_weight_object_0 = record[62];
-            model.dut.cfg_head_weight_base_0 = record[63];
-            model.dut.cfg_head_weight_object_1 = record[64];
-            model.dut.cfg_head_weight_base_1 = record[65];
-            model.dut.cfg_rope_input_object_0 = record[71];
-            model.dut.cfg_rope_input_base_0 = record[72];
-            model.dut.cfg_rope_input_object_1 = record[73];
-            model.dut.cfg_rope_input_base_1 = record[74];
-            model.dut.cfg_rope_coefficient_object = record[75];
-            model.dut.cfg_rope_coefficient_base = record[76];
-            model.dut.cfg_output_base = record[13];
-            // -- mapped placement for the six admitted families -----------
-            // A legacy vector set binds nothing, so every object stays "no
-            // id" and the bridge answers TRAP_CAPABILITY.  That is the state
-            // this vehicle had before these pins existed, reproduced here
-            // deliberately rather than by an unconnected pin, so the refusal
-            // is a measurement instead of an elaboration accident.
+            model.dut.cfg_transfer_index_base = record[40];
+            model.dut.cfg_transfer_source_base = record[41];
+            {
+                // The object placement table, driven for every family.  The
+                // vector set states each object's base once; the bridge
+                // refuses a table naming one object twice, and refuses any
+                // operand or result whose object the table does not name.
+                const bool placed = record[kPlaceValidWord] != 0;
+                for (std::size_t entry = 0; entry < kPlaceTableEntries;
+                     ++entry) {
+                    const std::uint32_t object = placed
+                        ? record[kPlaceTableWord + entry * 2] : UINT32_MAX;
+                    const std::uint32_t base = placed
+                        ? record[kPlaceTableWord + entry * 2 + 1] : 0U;
+                    switch (entry) {
+                    case 0:
+                        model.dut.cfg_place_object_0 = object;
+                        model.dut.cfg_place_base_0 = base;
+                        break;
+                    case 1:
+                        model.dut.cfg_place_object_1 = object;
+                        model.dut.cfg_place_base_1 = base;
+                        break;
+                    case 2:
+                        model.dut.cfg_place_object_2 = object;
+                        model.dut.cfg_place_base_2 = base;
+                        break;
+                    case 3:
+                        model.dut.cfg_place_object_3 = object;
+                        model.dut.cfg_place_base_3 = base;
+                        break;
+                    case 4:
+                        model.dut.cfg_place_object_4 = object;
+                        model.dut.cfg_place_base_4 = base;
+                        break;
+                    case 5:
+                        model.dut.cfg_place_object_5 = object;
+                        model.dut.cfg_place_base_5 = base;
+                        break;
+                    case 6:
+                        model.dut.cfg_place_object_6 = object;
+                        model.dut.cfg_place_base_6 = base;
+                        break;
+                    case 7:
+                        model.dut.cfg_place_object_7 = object;
+                        model.dut.cfg_place_base_7 = base;
+                        break;
+                    case 8:
+                        model.dut.cfg_place_object_8 = object;
+                        model.dut.cfg_place_base_8 = base;
+                        break;
+                    case 9:
+                        model.dut.cfg_place_object_9 = object;
+                        model.dut.cfg_place_base_9 = base;
+                        break;
+                    case 10:
+                        model.dut.cfg_place_object_10 = object;
+                        model.dut.cfg_place_base_10 = base;
+                        break;
+                    case 11:
+                        model.dut.cfg_place_object_11 = object;
+                        model.dut.cfg_place_base_11 = base;
+                        break;
+                    case 12:
+                        model.dut.cfg_place_object_12 = object;
+                        model.dut.cfg_place_base_12 = base;
+                        break;
+                    case 13:
+                        model.dut.cfg_place_object_13 = object;
+                        model.dut.cfg_place_base_13 = base;
+                        break;
+                    case 14:
+                        model.dut.cfg_place_object_14 = object;
+                        model.dut.cfg_place_base_14 = base;
+                        break;
+                    case 15:
+                        model.dut.cfg_place_object_15 = object;
+                        model.dut.cfg_place_base_15 = base;
+                        break;
+                    case 16:
+                        model.dut.cfg_place_object_16 = object;
+                        model.dut.cfg_place_base_16 = base;
+                        break;
+                    case 17:
+                        model.dut.cfg_place_object_17 = object;
+                        model.dut.cfg_place_base_17 = base;
+                        break;
+                    case 18:
+                        model.dut.cfg_place_object_18 = object;
+                        model.dut.cfg_place_base_18 = base;
+                        break;
+                    case 19:
+                        model.dut.cfg_place_object_19 = object;
+                        model.dut.cfg_place_base_19 = base;
+                        break;
+                    case 20:
+                        model.dut.cfg_place_object_20 = object;
+                        model.dut.cfg_place_base_20 = base;
+                        break;
+                    case 21:
+                        model.dut.cfg_place_object_21 = object;
+                        model.dut.cfg_place_base_21 = base;
+                        break;
+                    case 22:
+                        model.dut.cfg_place_object_22 = object;
+                        model.dut.cfg_place_base_22 = base;
+                        break;
+                    case 23:
+                        model.dut.cfg_place_object_23 = object;
+                        model.dut.cfg_place_base_23 = base;
+                        break;
+                    case 24:
+                        model.dut.cfg_place_object_24 = object;
+                        model.dut.cfg_place_base_24 = base;
+                        break;
+                    case 25:
+                        model.dut.cfg_place_object_25 = object;
+                        model.dut.cfg_place_base_25 = base;
+                        break;
+                    case 26:
+                        model.dut.cfg_place_object_26 = object;
+                        model.dut.cfg_place_base_26 = base;
+                        break;
+                    case 27:
+                        model.dut.cfg_place_object_27 = object;
+                        model.dut.cfg_place_base_27 = base;
+                        break;
+                    case 28:
+                        model.dut.cfg_place_object_28 = object;
+                        model.dut.cfg_place_base_28 = base;
+                        break;
+                    case 29:
+                        model.dut.cfg_place_object_29 = object;
+                        model.dut.cfg_place_base_29 = base;
+                        break;
+                    case 30:
+                        model.dut.cfg_place_object_30 = object;
+                        model.dut.cfg_place_base_30 = base;
+                        break;
+                    case 31:
+                        model.dut.cfg_place_object_31 = object;
+                        model.dut.cfg_place_base_31 = base;
+                        break;
+                    default: break;
+                    }
+                }
+            }
+            // -- the six mapped families, admitted or refused --------------
+            // Whether the six families may run at all is a different
+            // question from where objects live, and the record answers it in
+            // its own word.  A vector set that stops at its fail-stop
+            // boundary carries no golden past it and says so here; the bridge
+            // then answers TRAP_CAPABILITY, which is a measurement rather
+            // than an unconnected pin.
             {
                 const bool mapped = mapped_placement_vectors &&
-                                    record[kMapValidWord] != 0;
-                std::uint32_t object[8];
-                std::uint32_t base[8];
-                for (unsigned entry = 0; entry < 8; ++entry) {
-                    object[entry] = mapped
-                        ? record[kMapTableWord + entry * 2] : UINT32_MAX;
-                    base[entry] = mapped
-                        ? record[kMapTableWord + entry * 2 + 1] : 0U;
-                }
+                                    record[kMappedFamiliesWord] != 0;
                 model.dut.cfg_extended_placement_valid = mapped ? 1 : 0;
-                model.dut.cfg_map_object_0 = object[0];
-                model.dut.cfg_map_base_0 = base[0];
-                model.dut.cfg_map_object_1 = object[1];
-                model.dut.cfg_map_base_1 = base[1];
-                model.dut.cfg_map_object_2 = object[2];
-                model.dut.cfg_map_base_2 = base[2];
-                model.dut.cfg_map_object_3 = object[3];
-                model.dut.cfg_map_base_3 = base[3];
-                model.dut.cfg_map_object_4 = object[4];
-                model.dut.cfg_map_base_4 = base[4];
-                model.dut.cfg_map_object_5 = object[5];
-                model.dut.cfg_map_base_5 = base[5];
-                model.dut.cfg_map_object_6 = object[6];
-                model.dut.cfg_map_base_6 = base[6];
-                model.dut.cfg_map_object_7 = object[7];
-                model.dut.cfg_map_base_7 = base[7];
                 model.dut.cfg_context_length =
                     mapped ? record[kMapContextWord] : 0U;
                 model.dut.cfg_kv_plane_rows =
@@ -1688,6 +1949,7 @@ int main(int argc, char** argv) {
             }
 
             last_issue_serial = 0;
+            std::uint64_t case_writes_seen = 0;
             model.dut.result_read_addr = record[13];
             model.dut.eval();
             check.equal("result initially unwritten",
@@ -1806,6 +2068,31 @@ int main(int argc, char** argv) {
             auto observe = [&]() {
                 drive_injection();
                 capture_trace();
+                // -- every result word, compared where and when it is written
+                // The bridge's write is stable for the whole cycle whose
+                // rising edge commits it, so sampling here sees each write
+                // exactly once and in order.  Both halves are checked: the
+                // ADDRESS, which is the whole object-placement claim, and the
+                // VALUE.  Under injection the words come from the model, so
+                // there is nothing of the engines' to compare.
+                if (model.dut.rst_n && !injecting &&
+                    model.dut.obs_write_valid) {
+                    if (write_cursor + 2 > writes.size()) {
+                        ++check.failures;
+                        std::cerr << "FAIL: case " << case_index
+                                  << " wrote more result words than the "
+                                     "golden write stream holds\n";
+                    } else {
+                        check.equal("result write address",
+                                    model.dut.obs_write_addr,
+                                    writes[write_cursor]);
+                        check.equal("result write value",
+                                    model.dut.obs_write_data,
+                                    writes[write_cursor + 1]);
+                        write_cursor += 2;
+                        ++case_writes_seen;
+                    }
+                }
                 if (model.dut.rst_n &&
                     model.dut.multicast_remote_write_valid &&
                     model.dut.multicast_remote_write_ready) {
@@ -1946,20 +2233,20 @@ int main(int argc, char** argv) {
                         model.dut.embedding_launch_count,
                         engine_expect(record[34]));
             check.equal("RMSNorm launches", model.dut.rms_norm_launch_count,
-                        engine_expect(record[44]));
+                        engine_expect(record[42]));
             check.equal("head RMSNorm launches",
                         model.dut.head_rms_norm_launch_count,
-                        engine_expect(record[66]));
+                        engine_expect(record[49]));
             check.equal("RoPE launches", model.dut.rope_launch_count,
-                        engine_expect(record[77]));
+                        engine_expect(record[54]));
             check.equal("DMA transfer launches",
                         model.dut.dma_transfer_launch_count,
-                        engine_expect(record[45]));
+                        engine_expect(record[43]));
             check.equal("MATMUL launches", model.dut.matmul_launch_count,
-                        engine_expect(record[55]));
+                        engine_expect(record[46]));
             if (multicast_overlay) {
                 check.equal("multicast launches",
-                            model.dut.multicast_launch_count, record[79]);
+                            model.dut.multicast_launch_count, record[56]);
                 check.equal("multicast faults",
                             model.dut.multicast_fault_count, 0);
             }
@@ -1982,9 +2269,9 @@ int main(int argc, char** argv) {
             check.equal("engine error", model.dut.engine_error_code, 0);
             check.equal("last engine result count",
                         model.dut.engine_result_count,
-                        engine_expect(record[67]));
+                        engine_expect(record[50]));
             check.equal("last engine work count", model.dut.engine_work_count,
-                        engine_expect(record[68]));
+                        engine_expect(record[51]));
             check.equal("result write count", model.dut.output_write_count,
                         record[15]);
             check.equal("writes after capability fault",
@@ -2016,7 +2303,7 @@ int main(int argc, char** argv) {
                             model.dut.multicast_writes_after_completion, 0);
             }
 
-            if (multicast_overlay && record[79] != 0) {
+            if (multicast_overlay && record[56] != 0) {
                 check.equal("multicast source reads",
                             model.dut.multicast_source_read_count,
                             kMulticastWords);
@@ -2071,10 +2358,22 @@ int main(int argc, char** argv) {
                             model.dut.multicast_crc_errors, 0);
             }
 
-            for (std::uint32_t word = 0; word < record[15]; ++word) {
+            // Every word this case wrote was compared as it was written,
+            // address and value both, against the golden write stream.  What
+            // is left to check about the RETAINED image is that the case
+            // wrote the number of words the vector set declares and that the
+            // region it allocated holds what survives -- which is a smaller
+            // span than the write count exactly where the program rewrites a
+            // buffer.
+            if (!injecting)
+                check.equal("case write-stream words consumed",
+                            case_writes_seen, record[15]);
+            for (std::uint32_t word = 0; word < record[kPlaceSpanWord];
+                 ++word) {
                 model.dut.result_read_addr = record[13] + word;
                 model.dut.eval();
-                check.equal("real result word", model.dut.result_read_data,
+                check.equal("retained case result word",
+                            model.dut.result_read_data,
                             expected[record[13] + word]);
             }
             total_launches += model.dut.real_launch_count;
@@ -2180,14 +2479,20 @@ int main(int argc, char** argv) {
         if (multicast_overlay)
             check.equal("total multicast launches", total_multicasts, 1);
         check.equal("total result words", total_words, meta[2]);
+        if (!injecting)
+            check.equal("golden write stream fully consumed",
+                        write_cursor, writes.size());
         check.equal("total resolved views", total_views, meta[3]);
-        for (std::uint32_t word = 0; word < meta[2]; ++word) {
+        // meta[26], not meta[2]: the image spans what the placement
+        // ALLOCATED, and the write count is larger by the words a rewritten
+        // buffer gave up.
+        for (std::uint32_t word = 0; word < meta[26]; ++word) {
             model.dut.result_read_addr = word;
             model.dut.eval();
             check.equal("final retained result", model.dut.result_read_data,
                         expected[word]);
         }
-        for (std::uint32_t word = meta[2]; word < g_geometry.result_words;
+        for (std::uint32_t word = meta[26]; word < g_geometry.result_words;
              ++word) {
             model.dut.result_read_addr = word;
             model.dut.eval();

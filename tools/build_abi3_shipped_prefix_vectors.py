@@ -83,29 +83,44 @@ DEPLOYMENT_VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
 DEPLOYMENT_VECTOR_JSON = DEPLOYMENT_VECTOR_DIR / "abi3_deployment_rtl_vectors.json"
 
 VECTOR_SCHEMA = "opentallas.rtl.abi3_shipped_prefix_vectors.v1"
-# The case record carries the mapped-placement block the issue bridge needs
-# for the six families it admits by object rather than by the appending
-# result cursor (DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD, VECTOR.SILU_MUL,
-# SELECTION.ARGMAX, SELECTION.TOKEN_APPEND).  Word 79 is NOT free -- the exact
-# multicast overlay writes its launch count there -- so the block starts at
-# word 80, and rtl/test/a3_shipped_prefix_harness.cpp reads it at exactly
-# these offsets.
-CASE_STRIDE = 112
-MAP_VALID_WORD = 80        # this vector set supplied the object -> bank table
-MAP_TABLE_WORD = 81        # 8 x (object id, base words), interleaved
-MAP_TABLE_ENTRIES = 8
-MAP_CONTEXT_WORD = 97      # the request's active context length
-MAP_PLANE_ROWS_WORD = 98   # the compact KV bank's K-to-V plane stride, rows
-MAP_POLICY_WORD = 99       # bound GENERATION_POLICY descriptor id
-MAP_MAX_NEW_WORD = 100     # the request's authenticated max_new_tokens
-MAP_GENERATED_WORD = 101   # tokens produced before this pass
-MAP_LAUNCH_WORD = 102      # six expected per-family launch counts
-MAP_TOKEN_WORD = 108       # expected selected token
-MAP_TIE_WORD = 109         # expected tie multiplicity
-MAP_EOS_WORD = 110         # expected EOS reason
-MAP_RESERVED_WORD = 111    # reserved, must be zero
+# The case record carries the OBJECT PLACEMENT TABLE the issue bridge needs.
+# Every operand and every result of every family is placed by object now, so
+# the ten separate placement words this record used to carry -- three unkeyed
+# bases, six per-role object tables and the appending output base -- are gone
+# and one table replaces them.  Word 56 is NOT free: the exact multicast
+# overlay writes its launch count there.
+#
+# Table size is the derived demand, not a round number.  The distinct ABI
+# objects the governed decode program's issued operators name, counted from
+# each deployment's own descriptors: 32 on the ROM lowering, 31 on the HBM
+# lowering, 23 over one transformer layer on both.  32 entries, so nine spare
+# over the layer and none over the whole program on ROM; a program naming a
+# 33rd object fails admission rather than being mis-addressed.
+CASE_STRIDE = 139
+PLACE_SPAN_WORD = 57       # words this case's result region ALLOCATES
+PLACE_VALID_WORD = 58      # this vector set supplied the object -> bank table
+# Whether this vector set admits the six MAPPED families as well.  It is a
+# separate word from the table above and always was a separate question: the
+# table says where objects live, this says whether DMA.SCATTER, ATTENTION.GQA,
+# VECTOR.ADD, VECTOR.SILU_MUL, SELECTION.ARGMAX and SELECTION.TOKEN_APPEND may
+# run at all.  Collapsing the two would silently extend this campaign's span
+# past its fail-stop boundary, on a vector set that carries no golden for the
+# operators past it.
+MAPPED_FAMILIES_WORD = 59
+PLACE_TABLE_WORD = 60      # 32 x (object id, base words), interleaved
+PLACE_TABLE_ENTRIES = 32
+MAP_CONTEXT_WORD = 124     # the request's active context length
+MAP_PLANE_ROWS_WORD = 125  # the compact KV bank's K-to-V plane stride, rows
+MAP_POLICY_WORD = 126      # bound GENERATION_POLICY descriptor id
+MAP_MAX_NEW_WORD = 127     # the request's authenticated max_new_tokens
+MAP_GENERATED_WORD = 128   # tokens produced before this pass
+MAP_LAUNCH_WORD = 129      # six expected per-family launch counts
+MAP_TOKEN_WORD = 135       # expected selected token
+MAP_TIE_WORD = 136         # expected tie multiplicity
+MAP_EOS_WORD = 137         # expected EOS reason
+MAP_RESERVED_WORD = 138    # reserved, must be zero
 NO_OBJECT = 0xFFFF_FFFF
-META_WORDS = 26
+META_WORDS = 27
 INDEX_WORDS = 64
 SOURCE_WORDS = 65536
 RESULT_WORDS = 98304
@@ -865,6 +880,7 @@ OUTPUT_IMAGES = (
     "p3_index.hex",
     "p3_source.hex",
     "p3_expect.hex",
+    "p3_writes.hex",
     "p3_meta.hex",
 )
 
@@ -1314,7 +1330,12 @@ def emit_golden(vectors: dict[str, Any], vector_dir: Path, out_dir: Path
                 ) -> dict[str, int]:
     cases = _read_hex_words(vector_dir / "p3_case.hex")
     issues = _read_hex_words(vector_dir / "p3_issue.hex")
-    expected = _read_hex_words(vector_dir / "p3_expect.hex")
+    # The golden RESULT stream is the WRITE stream, not the retained image:
+    # a buffer the program rewrites holds only its last value in the image, so
+    # replaying the image would hand a later operator's value to the earlier
+    # one that actually wrote there.
+    writes = _read_hex_words(vector_dir / "p3_writes.hex")
+    write_cursor = 0
 
     trace_lines = [
         "FIELDS ISSUE " + " ".join(GOLDEN_ISSUE_FIELDS),
@@ -1347,7 +1368,7 @@ def emit_golden(vectors: dict[str, Any], vector_dir: Path, out_dir: Path
                 "ISSUE before a looping program can be given a golden trace"
             )
 
-        at = output_base
+        case_written = 0
         for position in range(response_count):
             offset = (response_base + position) * ISSUE_STRIDE
             opcode = issues[offset]
@@ -1380,17 +1401,30 @@ def emit_golden(vectors: dict[str, Any], vector_dir: Path, out_dir: Path
                 f"RESULT {family} {sub} {descriptor_id} {pc} {fault} "
                 f"{trap_class} {words}"
             )
-            for step in range(words):
-                result_lines.append(f"WORD {at + step} {expected[at + step]}")
+            for _ in range(words):
+                if write_cursor + 2 > len(writes):
+                    raise SystemExit(
+                        f"case {index}: the golden write stream ran out while "
+                        "replaying the issue stream"
+                    )
+                address = writes[write_cursor]
+                value = writes[write_cursor + 1]
+                write_cursor += 2
+                result_lines.append(f"WORD {address} {value}")
             word_count += words
-            at += words
+            case_written += words
 
-        if at - output_base != record[15]:
+        if case_written != record[15]:
             raise SystemExit(
-                f"case {index} golden results cover {at - output_base} words, "
+                f"case {index} golden results cover {case_written} words, "
                 f"the vector set declares {record[15]}"
             )
 
+    if write_cursor != len(writes):
+        raise SystemExit(
+            f"the golden write stream has {len(writes) // 2} writes and the "
+            f"issue stream replayed {write_cursor // 2}"
+        )
     (out_dir / "p3_golden_trace.txt").write_text(
         "\n".join(trace_lines) + "\n", encoding="ascii"
     )
@@ -1515,6 +1549,15 @@ def build(argv: list[str] | None = None) -> int:
     index_words: list[int] = []
     source_words: list[int] = []
     expected_words: list[int] = []
+    # The result bank is placed BY OBJECT, so a buffer the program rewrites is
+    # written twice at one address and the retained image holds only the last
+    # value.  ``expected_words`` is therefore the image, and it is no longer
+    # the record of what was computed: the write STREAM below is, one entry
+    # per word the engines write, in launch order.  Both are published,
+    # because an intermediate that a later operator overwrites can be compared
+    # only against the stream.
+    write_addr: list[int] = []
+    write_data: list[int] = []
     records: list[dict[str, Any]] = []
     contract_observations: list[dict[str, Any]] = []
     row_cache: dict[tuple[str, int, int], bytes] = {}
@@ -2658,6 +2701,91 @@ def build(argv: list[str] | None = None) -> int:
         index_base = len(index_words)
         source_base = len(source_words)
         output_base = len(expected_words)
+        # One base per ABI object, allocated at the object's FIRST write and
+        # reused by every later one.  A first write therefore lands exactly
+        # where the retired append cursor put it, and the only addresses that
+        # move are the second and later writes to a reused buffer -- which is
+        # the whole point: those used to land somewhere else and be read back
+        # from the wrong place.
+        placement: dict[int, int] = {}
+        placement_span: dict[int, int] = {}
+        rewrite_count: dict[int, int] = {}
+
+        def place(object_id: int, words: list[int]) -> int:
+            """Write ``words`` into ``object_id`` and return its base."""
+            object_id = int(object_id)
+            if object_id == NO_OBJECT:
+                raise SystemExit("a result view with no primary object")
+            if object_id in placement:
+                base = placement[object_id]
+                if placement_span[object_id] != len(words):
+                    raise SystemExit(
+                        f"object {object_id} was allocated "
+                        f"{placement_span[object_id]} words by its first "
+                        f"write and is rewritten with {len(words)}: this "
+                        "compact staging gives an object one span"
+                    )
+                for offset, word in enumerate(words):
+                    expected_words[base + offset] = word
+            else:
+                base = len(expected_words)
+                placement[object_id] = base
+                placement_span[object_id] = len(words)
+                expected_words.extend(words)
+            rewrite_count[object_id] = rewrite_count.get(object_id, 0) + 1
+            write_addr.extend(range(base, base + len(words)))
+            write_data.extend(words)
+            return base
+
+        def bind(object_id: int, base: int) -> int:
+            """Bind an object that lives in a bank this builder stages by hand.
+
+            The weight-side operands are not results, so nothing writes them
+            through ``place``; they are staged into the source bank or the
+            paged weight window and their base is recorded here.  Two objects
+            in different banks may share a base value.  One object may not be
+            bound twice to different bases -- the bridge refuses such a table
+            at admission, and this refuses to emit one.
+            """
+            object_id = int(object_id)
+            if object_id == NO_OBJECT:
+                raise SystemExit("a weight view with no primary object")
+            if placement.get(object_id, base) != base:
+                raise SystemExit(
+                    f"object {object_id} is already placed at "
+                    f"{placement[object_id]} and would be bound at {base}: "
+                    "one object has one base"
+                )
+            placement[object_id] = base
+            return base
+
+        def agrees(name: str, object_id: int, legacy: int) -> None:
+            """The retired per-role base and the object's base are the same.
+
+            Every role port this record used to carry named a base that some
+            operator had already written to, or that this builder had staged.
+            Checking the two against each other is what makes the collapse
+            onto one table a refactor of the addressing model rather than a
+            new set of addresses: if any of these disagreed, the golden image
+            would move and this build would stop rather than publish it.
+            """
+            actual = placed(object_id)
+            if actual != legacy:
+                raise SystemExit(
+                    f"{name}: object {object_id} is placed at {actual} but the "
+                    f"retired per-role base was {legacy}"
+                )
+
+        def placed(object_id: int) -> int:
+            """Where an object already written lives; never a guess."""
+            object_id = int(object_id)
+            if object_id not in placement:
+                raise SystemExit(
+                    f"object {object_id} is read before anything wrote it, so "
+                    "this vector set has no base to bind it to"
+                )
+            return placement[object_id]
+
         source_stride = (INDEX_VALUE + 1) * trailing
         for launch, gather in enumerate(gathers):
             index_words.append(INDEX_VALUE)
@@ -2666,13 +2794,15 @@ def build(argv: list[str] | None = None) -> int:
                 raise SystemExit("source-bank cursor drift")
             source_words.extend([0] * (INDEX_VALUE * trailing))
             source_words.extend(gather.pop("_source_words"))
-            expected_words.extend(gather.pop("_expected_words"))
+            place(gather["output_view"]["object_id"],
+                  list(gather.pop("_expected_words")))
 
         embedding = embeddings[0]
         embedding_source_base = len(source_words)
         index_words.append(EMBED_TOKEN)
         source_words.extend(embedding.pop("_source_words"))
-        expected_words.extend(embedding.pop("_expected_words"))
+        place(embedding["output_view"]["object_id"],
+              list(embedding.pop("_expected_words")))
         case_rope_words = len(gathers) * trailing
         case_embedding_words = EMBED_WIDTH
         rms_input_base = output_base + case_rope_words
@@ -2682,11 +2812,8 @@ def build(argv: list[str] | None = None) -> int:
         case_rms_words = 0
         case_transfer_words = 0
         matmul_input_base = 0
-        matmul_weight_mappings = [(NO_ID, 0), (NO_ID, 0), (NO_ID, 0)]
-        head_input_mappings = [(NO_ID, 0), (NO_ID, 0)]
-        head_weight_mappings = [(NO_ID, 0), (NO_ID, 0)]
-        rope_input_mappings = [(NO_ID, 0), (NO_ID, 0)]
-        rope_coefficient_mapping = (NO_ID, 0)
+        matmul_weight_mappings = []
+        head_weight_mappings = []
         case_matmul_words = 0
         case_matmul_macs = 0
         case_head_rms_words = 0
@@ -2700,13 +2827,20 @@ def build(argv: list[str] | None = None) -> int:
             rms_norm = rms_norms[0]
             rms_weight_base = len(source_words)
             source_words.extend(rms_norm.pop("_weight_words"))
-            rms_expected = rms_norm.pop("_expected_words")
-            expected_words.extend(rms_expected)
+            bind(rms_norm["weight_view"]["object_id"], rms_weight_base)
+            agrees("rms input", rms_norm["input_view"]["object_id"],
+                   rms_input_base)
+            rms_expected = list(rms_norm.pop("_expected_words"))
+            place(rms_norm["output_view"]["object_id"], rms_expected)
             case_rms_words = len(rms_expected)
             matmul_input_base = output_base + case_rope_words + case_embedding_words
+            for matmul in matmuls:
+                agrees("matmul input", matmul["input_view"]["object_id"],
+                       matmul_input_base)
             matmul_weight_mappings = [
                 (
-                    int(matmul["weight_view"]["object_id"]),
+                    bind(matmul["weight_view"]["object_id"],
+                         int(matmul["staged_weight_base_words"])),
                     int(matmul["staged_weight_base_words"]),
                 )
                 for matmul in matmuls
@@ -2717,50 +2851,37 @@ def build(argv: list[str] | None = None) -> int:
             last_work_count = last_result_words
             matmul_output_bases = []
             for matmul in matmuls:
-                matmul_output_bases.append(len(expected_words))
-                matmul_expected = matmul.pop("_expected_words")
-                expected_words.extend(matmul_expected)
+                matmul_expected = list(matmul.pop("_expected_words"))
+                matmul_output_bases.append(
+                    place(matmul["output_view"]["object_id"], matmul_expected)
+                )
                 case_matmul_words += len(matmul_expected)
                 case_matmul_macs += int(matmul["mac_count"])
-            head_input_mappings = [
-                (
-                    int(head["input_view"]["object_id"]),
-                    matmul_output_bases[index],
-                )
-                for index, head in enumerate(head_rms_norms)
-            ]
+            for index, head in enumerate(head_rms_norms):
+                agrees("head input", head["input_view"]["object_id"],
+                       matmul_output_bases[index])
             head_weight_mappings = []
             head_output_bases = []
             for head in head_rms_norms:
                 head_weight_base = len(source_words)
                 source_words.extend(head.pop("_weight_words"))
-                head_weight_mappings.append(
-                    (
-                        int(head["weight_view"]["object_id"]),
-                        head_weight_base,
-                    )
+                bind(head["weight_view"]["object_id"], head_weight_base)
+                head_expected = list(head.pop("_expected_words"))
+                head_output_bases.append(
+                    place(head["output_view"]["object_id"], head_expected)
                 )
-                head_output_bases.append(len(expected_words))
-                head_expected = head.pop("_expected_words")
-                expected_words.extend(head_expected)
                 case_head_rms_words += len(head_expected)
                 case_head_rms_checkpoint_bytes += int(
                     head["weight_source"]["selected_row_bytes"]
                 )
-            rope_input_mappings = [
-                (
-                    int(rope["input_view"]["object_id"]),
-                    head_output_bases[index],
-                )
-                for index, rope in enumerate(ropes)
-            ]
-            rope_coefficient_mapping = (
-                int(ropes[0]["coefficient_view"]["object_id"]),
-                output_base,
-            )
+            for index, rope in enumerate(ropes):
+                agrees("rope input", rope["input_view"]["object_id"],
+                       head_output_bases[index])
+            agrees("rope coefficient",
+                   ropes[0]["coefficient_view"]["object_id"], output_base)
             for rope in ropes:
-                rope_expected = rope.pop("_expected_words")
-                expected_words.extend(rope_expected)
+                rope_expected = list(rope.pop("_expected_words"))
+                place(rope["output_view"]["object_id"], rope_expected)
                 case_rope_output_words += len(rope_expected)
             last_result_words = int(ropes[-1]["row_count"] * ropes[-1]["row_width"])
             last_work_count = last_result_words
@@ -2768,8 +2889,8 @@ def build(argv: list[str] | None = None) -> int:
             transfer = transfers[0]
             transfer_index_base = len(index_words)
             index_words.extend([0, 0, 0, 0])
-            transfer_expected = transfer.pop("_expected_words")
-            expected_words.extend(transfer_expected)
+            transfer_expected = list(transfer.pop("_expected_words"))
+            place(transfer["output_view"]["object_id"], transfer_expected)
             case_transfer_words = len(transfer_expected)
             last_result_words = len(transfer_expected)
             last_work_count = 4
@@ -2917,81 +3038,65 @@ def build(argv: list[str] | None = None) -> int:
             case_embedding_words,
             EMBED_TOKEN,
             trailing,
-            rms_input_base,
-            rms_weight_base,
             transfer_index_base,
             transfer_source_base,
             len(rms_norms),
             len(transfers),
             case_rms_words,
             case_transfer_words,
-            matmul_input_base,
-            matmul_weight_mappings[0][0],
-            matmul_weight_mappings[0][1],
-            matmul_weight_mappings[1][0],
-            matmul_weight_mappings[1][1],
-            matmul_weight_mappings[2][0],
-            matmul_weight_mappings[2][1],
             len(matmuls),
             last_matmul_words,
             last_matmul_macs,
-            head_input_mappings[0][0],
-            head_input_mappings[0][1],
-            head_input_mappings[1][0],
-            head_input_mappings[1][1],
-            head_weight_mappings[0][0],
-            head_weight_mappings[0][1],
-            head_weight_mappings[1][0],
-            head_weight_mappings[1][1],
             len(head_rms_norms),
             last_result_words,
             last_work_count,
             case_head_rms_words,
             case_head_rms_checkpoint_bytes,
-            rope_input_mappings[0][0],
-            rope_input_mappings[0][1],
-            rope_input_mappings[1][0],
-            rope_input_mappings[1][1],
-            rope_coefficient_mapping[0],
-            rope_coefficient_mapping[1],
             len(ropes),
             case_rope_output_words,
             0,
         ]
-        # -- the mapped-placement block ---------------------------------
-        # Not supplied by this vector set, and the record says so in one
-        # place rather than in fifteen: with word 80 low the bridge has no
-        # bank bound to any object, so the six mapped families have no
-        # operand address at all and it answers the same TRAP_CAPABILITY it
-        # gave before they were implemented.  Every other word of the block
-        # is therefore zero or the unbound object id -- none of them is a
-        # number this file invented, and the builder proves the block is
-        # consistent with the flag rather than leaving the two to drift.
-        words.append(0)  # MAP_VALID_WORD
-        for _ in range(MAP_TABLE_ENTRIES):
+        # -- the object placement table ---------------------------------
+        # Emitted from the placement this case's own walk allocated, sorted by
+        # object id so the record is a function of the walk and not of the
+        # order the builder happened to visit the operators in.  Every object
+        # the bridge will be asked to resolve is here, exactly once.
+        words.append(len(expected_words) - output_base)  # PLACE_SPAN_WORD
+        words.append(1)  # PLACE_VALID_WORD: this vector set supplied a table
+        # This vector set stops at its fail-stop boundary and carries no
+        # golden for the six mapped families, so it does not admit them.  The
+        # refusal is a measurement the campaign records, not an unwired pin.
+        words.append(0)  # MAPPED_FAMILIES_WORD
+        if len(placement) > PLACE_TABLE_ENTRIES:
+            raise SystemExit(
+                f"{target.key}: this case names {len(placement)} distinct "
+                f"objects and the bridge's table holds {PLACE_TABLE_ENTRIES}"
+            )
+        for object_id in sorted(placement):
+            words.extend([int(object_id), int(placement[object_id])])
+        for _ in range(PLACE_TABLE_ENTRIES - len(placement)):
             words.extend([NO_OBJECT, 0])
         words.extend([0] * (CASE_STRIDE - len(words)))
         if len(words) != CASE_STRIDE:
             raise SystemExit("internal case-record length error")
-        if words[MAP_VALID_WORD] == 0 and any(
-            words[MAP_TABLE_WORD + entry * 2] != NO_OBJECT
-            or words[MAP_TABLE_WORD + entry * 2 + 1] != 0
-            for entry in range(MAP_TABLE_ENTRIES)
-        ):
+        if words[PLACE_SPAN_WORD] != len(expected_words) - output_base:
+            raise SystemExit("the case result span word drifted")
+        bound = [
+            words[PLACE_TABLE_WORD + entry * 2]
+            for entry in range(PLACE_TABLE_ENTRIES)
+            if words[PLACE_TABLE_WORD + entry * 2] != NO_OBJECT
+        ]
+        if len(bound) != len(set(bound)):
             raise SystemExit(
-                "the mapped-placement table binds an object while the record "
-                "says no placement was supplied"
+                "the placement table names an object twice; the bridge "
+                "refuses such a table and this builder will not emit one"
             )
-        if words[MAP_VALID_WORD] == 0 and any(
-            words[index] != 0
-            for index in range(MAP_CONTEXT_WORD, CASE_STRIDE)
-        ):
+        if sorted(bound) != sorted(placement):
             raise SystemExit(
-                "the mapped-placement block carries a value while the record "
-                "says no placement was supplied"
+                "the placement table and the walk's own placement disagree"
             )
         if words[MAP_RESERVED_WORD] != 0:
-            raise SystemExit("the mapped-placement reserved word is not zero")
+            raise SystemExit("the placement reserved word is not zero")
         case_words.extend(words)
         for gather in gathers:
             issue_words.extend(
@@ -3136,48 +3241,31 @@ def build(argv: list[str] | None = None) -> int:
                     "symbols": {str(k): v for k, v in sorted(symbols.items())},
                 },
                 "bank_mapping": {
+                    # The four staged REGIONS the vehicle sweeps by launch
+                    # counter, which are not ABI objects and have no entry in
+                    # the placement table.
                     "index_base": index_base,
                     "source_base": source_base,
                     "source_launch_stride": source_stride,
                     "embedding_source_base": embedding_source_base,
-                    "rms_input_base": rms_input_base,
-                    "rms_weight_base": rms_weight_base,
                     "transfer_index_base": transfer_index_base,
                     "transfer_source_base": transfer_source_base,
-                    "matmul_input_base": matmul_input_base,
-                    "matmul_weight_objects": [
-                        {
-                            "object_id": object_id,
-                            "base_words": base_words,
-                        }
-                        for object_id, base_words in matmul_weight_mappings
+                    # Everything else is one object -> base function, the same
+                    # one the case record hands the bridge.  The nine per-role
+                    # entries this block used to publish were nine views of
+                    # this one table, and nothing made them agree.
+                    "result_region_base": output_base,
+                    "result_region_span": (
+                        len(expected_words) - output_base
+                    ),
+                    "object_placement": [
+                        {"object_id": object_id, "base_words": base_words}
+                        for object_id, base_words in sorted(placement.items())
                     ],
-                    "head_input_objects": [
-                        {
-                            "object_id": object_id,
-                            "base_words": base_words,
-                        }
-                        for object_id, base_words in head_input_mappings
-                    ],
-                    "head_weight_objects": [
-                        {
-                            "object_id": object_id,
-                            "base_words": base_words,
-                        }
-                        for object_id, base_words in head_weight_mappings
-                    ],
-                    "rope_input_objects": [
-                        {
-                            "object_id": object_id,
-                            "base_words": base_words,
-                        }
-                        for object_id, base_words in rope_input_mappings
-                    ],
-                    "rope_coefficient_object": {
-                        "object_id": rope_coefficient_mapping[0],
-                        "base_words": rope_coefficient_mapping[1],
-                    },
-                    "output_base": output_base,
+                    "objects_written_more_than_once": sorted(
+                        object_id for object_id, count in rewrite_count.items()
+                        if count > 1
+                    ),
                 },
                 "expected": {
                     **expected_counts,
@@ -3246,7 +3334,7 @@ def build(argv: list[str] | None = None) -> int:
         or total_transfer_words != 32_768
         or total_matmul_words != 12_288
         or total_matmul_macs != 50_331_648
-        or len(expected_words) != 91_136
+        or len(write_data) != 91_136
         or total_embedding_checkpoint_bytes != 32_768
         or total_rms_checkpoint_bytes != 16_384
         or total_head_rms_checkpoint_bytes != 1_024
@@ -3269,7 +3357,7 @@ def build(argv: list[str] | None = None) -> int:
             f"transfer_words={total_transfer_words}, "
             f"matmul_words={total_matmul_words}, "
             f"matmul_macs={total_matmul_macs}, "
-            f"words={len(expected_words)}, "
+            f"writes={len(write_data)}, image={len(expected_words)}, "
             f"embedding_checkpoint_bytes={total_embedding_checkpoint_bytes}, "
             f"rms_checkpoint_bytes={total_rms_checkpoint_bytes}, "
             "head_rms_checkpoint_bytes="
@@ -3283,11 +3371,19 @@ def build(argv: list[str] | None = None) -> int:
         "p3_index.hex": _hex_lines(index_words, total=INDEX_WORDS),
         "p3_source.hex": _hex_lines(source_words, total=SOURCE_WORDS),
         "p3_expect.hex": _hex_lines(expected_words),
+        # The write STREAM: one line per word the engines write, in launch
+        # order, address first then value.  The retained image above is what
+        # survives; this is what happened.  They differ exactly where the
+        # program rewrites a buffer, and comparing only the image would stop
+        # checking the value that was overwritten.
+        "p3_writes.hex": _hex_lines(
+            [word for pair in zip(write_addr, write_data) for word in pair]
+        ),
         "p3_meta.hex": _hex_lines(
             [
                 len(records),
                 total_launches,
-                len(expected_words),
+                len(write_data),
                 total_views,
                 CASE_STRIDE,
                 INDEX_WORDS,
@@ -3311,6 +3407,11 @@ def build(argv: list[str] | None = None) -> int:
                 total_rms_norms + total_head_rms_norms,
                 total_rope_launches,
                 total_rope_output_words,
+                # meta[26]: words the retained image spans.  It is smaller
+                # than meta[1]'s write count by exactly the words a rewritten
+                # buffer gave up, and the two are separate because one is what
+                # survives and the other is what ran.
+                len(expected_words),
             ]
         ),
     }
@@ -3322,7 +3423,7 @@ def build(argv: list[str] | None = None) -> int:
     marker = (
         "PASS: ABI3 shipped-prefix engine integration "
         f"cases={len(records)} launches={total_launches} "
-        f"words={len(expected_words)} capability_faults={len(records)}"
+        f"words={len(write_data)} capability_faults={len(records)}"
     )
     summary = {
         "schema": VECTOR_SCHEMA,
@@ -3404,7 +3505,19 @@ def build(argv: list[str] | None = None) -> int:
                 matrix_staging.values(), key=lambda item: int(item["base_words"])
             ),
         },
-        "result_word_count": len(expected_words),
+        # The words the engines WRITE.  It is what it has always been and it
+        # has not moved; what is new is that it is no longer the same number
+        # as the retained image's extent, because the span rewrites three of
+        # its buffers.
+        "result_word_count": len(write_data),
+        "retained_image_word_count": len(expected_words),
+        "retained_image_note": (
+            "the retained image holds each object's LAST value, so it is "
+            "smaller than result_word_count by exactly the words a rewrite "
+            "replaces. p3_writes.hex carries every write, address and value, "
+            "in launch order; it is what an operator's own output has to be "
+            "compared against once a later operator can overwrite it"
+        ),
         "resolved_view_count": total_views,
         "capability_fault_count": len(records),
         "required_marker": marker,

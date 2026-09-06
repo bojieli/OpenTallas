@@ -102,12 +102,8 @@ module tb_a3_shipped_prefix_deepseek_rom;
     reg [31:0] cfg_source_base = 0;
     reg [31:0] cfg_source_launch_stride = 0;
     reg [31:0] cfg_embedding_source_base = 0;
-    reg [31:0] cfg_rms_input_base = 0;
-    reg [31:0] cfg_rms_weight_base = 0;
     reg [31:0] cfg_transfer_index_base = 0;
     reg [31:0] cfg_transfer_source_base = 0;
-    reg [31:0] cfg_matmul_input_base = 0;
-    reg [31:0] cfg_output_base = 0;
 
     wire busy, done, complete, trapped;
     wire [15:0] trap_class;
@@ -167,32 +163,15 @@ module tb_a3_shipped_prefix_deepseek_rom;
         .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
         .cfg_embedding_source_base(cfg_embedding_source_base),
-        .cfg_rms_input_base(cfg_rms_input_base),
-        .cfg_rms_weight_base(cfg_rms_weight_base),
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
-        .cfg_matmul_input_base(cfg_matmul_input_base),
-        .cfg_matmul_weight_object_0(32'hffff_ffff),
-        .cfg_matmul_weight_base_0(32'd0),
-        .cfg_matmul_weight_object_1(32'hffff_ffff),
-        .cfg_matmul_weight_base_1(32'd0),
-        .cfg_matmul_weight_object_2(32'hffff_ffff),
-        .cfg_matmul_weight_base_2(32'd0),
-        .cfg_head_input_object_0(32'hffff_ffff),
-        .cfg_head_input_base_0(32'd0),
-        .cfg_head_input_object_1(32'hffff_ffff),
-        .cfg_head_input_base_1(32'd0),
-        .cfg_head_weight_object_0(32'hffff_ffff),
-        .cfg_head_weight_base_0(32'd0),
-        .cfg_head_weight_object_1(32'hffff_ffff),
-        .cfg_head_weight_base_1(32'd0),
-        .cfg_rope_input_object_0(32'hffff_ffff),
-        .cfg_rope_input_base_0(32'd0),
-        .cfg_rope_input_object_1(32'hffff_ffff),
-        .cfg_rope_input_base_1(32'd0),
-        .cfg_rope_coefficient_object(32'hffff_ffff),
-        .cfg_rope_coefficient_base(32'd0),
-        .cfg_output_base(cfg_output_base),
+        // The object placement table is deliberately left unbound here.
+        // This bench's vector set is the retired 80-word case generation,
+        // which carries no table, so there is nothing to bind and the bridge
+        // refuses every operand it would have to place -- loudly, with a
+        // DESCRIPTOR trap, rather than writing somewhere plausible.
+        // Regenerating testdata/compiler/abi3_shipped_prefix_multicast from
+        // the current base vector set is what makes this bench run again.
         .busy(busy), .done(done), .complete(complete), .trapped(trapped),
         .trap_class(trap_class),
         .first_fault_instruction(first_fault_instruction),
@@ -370,13 +349,9 @@ module tb_a3_shipped_prefix_deepseek_rom;
         cfg_index_base = record[10];
         cfg_source_base = record[11];
         cfg_source_launch_stride = record[12];
-        cfg_output_base = record[13];
         cfg_embedding_source_base = record[32];
-        cfg_rms_input_base = record[40];
-        cfg_rms_weight_base = record[41];
         cfg_transfer_index_base = record[42];
         cfg_transfer_source_base = record[43];
-        cfg_matmul_input_base = record[48];
         response_expected = record[21];
         response_base = record[31];
 

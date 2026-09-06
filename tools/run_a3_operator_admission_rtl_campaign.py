@@ -137,6 +137,7 @@ ORACLE_SOURCES = (
     "testdata/compiler/abi3_deployment/a3_descriptor.hex",
     "testdata/compiler/abi3_deployment/a3_program.hex",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
+    "testdata/compiler/abi3_shipped_prefix/p3_writes.hex",
 )
 ADMISSION_FILES = (
     "cases.hex",

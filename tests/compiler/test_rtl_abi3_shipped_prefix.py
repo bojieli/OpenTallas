@@ -35,6 +35,13 @@ def _retained_campaign() -> dict:
     return json.loads(CAMPAIGN_JSON.read_text(encoding="utf-8"))
 
 
+def _words(dims) -> int:
+    total = 1
+    for dim in dims:
+        total *= int(dim)
+    return total
+
+
 def test_vector_builder_reproduces_every_retained_image(tmp_path: Path) -> None:
     assert generator.build(["--output", str(tmp_path)]) == 0
     rebuilt = json.loads((tmp_path / VECTOR_JSON.name).read_text(encoding="utf-8"))
@@ -145,9 +152,19 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
             in source["authentication_boundary"]
         )
         if case_index < 2:
+            # One object table, not nine per-role blocks.  The three
+            # projection matrices keep their staged weight-window bases.
+            placement = {
+                int(entry["object_id"]): int(entry["base_words"])
+                for entry in case["bank_mapping"]["object_placement"]
+            }
+            assert len(placement) == len(
+                case["bank_mapping"]["object_placement"]
+            ), "the placement table names an object twice"
             assert [
-                entry["base_words"]
-                for entry in case["bank_mapping"]["matmul_weight_objects"]
+                placement[int(operation["weight_view"]["object_id"])]
+                for operation in case["supported_prefix"]
+                if operation["kind"] == "tensor_matmul"
             ] == [0, 16_777_216, 20_971_520]
             rms_norm = next(
                 operation
@@ -266,9 +283,9 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
                 for operation in head_rms_norms
             )
             assert [
-                mapping["base_words"]
-                for mapping in case["bank_mapping"]["head_input_objects"]
-            ] == ([8_448, 12_544] if case_index == 0 else [33_280, 37_376])
+                placement[int(operation["input_view"]["object_id"])]
+                for operation in head_rms_norms
+            ] == ([8_448, 12_544] if case_index == 0 else [24_064, 28_160])
             ropes = [
                 operation
                 for operation in case["supported_prefix"]
@@ -342,17 +359,36 @@ def test_witness_is_exactly_the_small_abi3_fail_stop_prefix() -> None:
                 ]
                 assert rope["coefficient_view"]["strides"] == [256, 0, 1]
             assert [
-                mapping["object_id"]
-                for mapping in case["bank_mapping"]["rope_input_objects"]
-            ] == [operation["input_view"]["object_id"] for operation in ropes]
-            assert [
-                mapping["base_words"]
-                for mapping in case["bank_mapping"]["rope_input_objects"]
-            ] == ([14_592, 18_688] if case_index == 0 else [39_424, 43_520])
-            assert case["bank_mapping"]["rope_coefficient_object"] == {
-                "object_id": ropes[0]["coefficient_view"]["object_id"],
-                "base_words": 0 if case_index == 0 else 24_832,
-            }
+                placement[int(operation["input_view"]["object_id"])]
+                for operation in ropes
+            ] == ([4_352, 14_592] if case_index == 0 else [19_968, 30_208])
+            assert placement[
+                int(ropes[0]["coefficient_view"]["object_id"])
+            ] == (0 if case_index == 0 else 15_616)
+            # The span the case's results OCCUPY is smaller than the words it
+            # WRITES, by exactly the buffers this prefix rewrites.  Object 45
+            # is the trunk activation: PC 8 normalises the embedding into it
+            # and PC 20 writes the query norm back over it, at one address,
+            # which is what an appending cursor could not express.
+            assert case["bank_mapping"]["objects_written_more_than_once"], (
+                "this prefix rewrites three buffers; if it stopped doing so, "
+                "the reason results are object-addressed would need restating"
+            )
+            rewritten = case["bank_mapping"]["objects_written_more_than_once"]
+            written_twice = sum(
+                _words(operation["output_view"]["dims"])
+                for operation in case["supported_prefix"]
+                if int(operation["output_view"]["object_id"]) in rewritten
+            )
+            assert int(case["bank_mapping"]["result_region_span"]) == (
+                int(case["expected"]["result_words"])
+                - written_twice // 2
+            ), (
+                "the retained region is the words written less the words a "
+                "rewrite replaces; if those two stopped agreeing the golden "
+                "image and the golden write stream would be describing "
+                "different runs"
+            )
         else:
             transfer = next(
                 operation
@@ -392,6 +428,7 @@ def test_vector_and_deployment_images_are_fresh() -> None:
 
 def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     retained = _retained_campaign()
+    vectors = _vectors()
     assert CAMPAIGN_JSON.read_bytes() == (
         json.dumps(retained, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
@@ -418,8 +455,10 @@ def test_retained_campaign_is_current_and_states_the_simple_boundary() -> None:
     assert retained["post_fault_write_count"] == 0
     assert retained["integrated_replay_passed"]
     assert retained["integrated_simulators"] == ["verilator"]
+    # Derived from the vector set, not remembered: the campaign refuses a run
+    # whose check count is not the one this vector set's word counts imply.
     assert retained["integrated_simulator_checks"] == {
-        "verilator": campaign.EXPECTED_INTEGRATED_CHECKS,
+        "verilator": campaign.expected_integrated_checks(vectors),
     }
     assert "simulators_agree" not in retained
     assert "simulator_checks" not in retained

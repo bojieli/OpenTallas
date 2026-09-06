@@ -19,37 +19,37 @@
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 1107.65,
+    "measured_all_stores_seconds": 1009.22,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 20.25,
-        "end_to_end_seconds": 569.69,
-        "golden_model_seconds": 25.4,
+        "elaborate_and_compile_seconds": 19.64,
+        "end_to_end_seconds": 426.27,
+        "golden_model_seconds": 31.25,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 8668,
-        "pass_decomposition_study_seconds": 514.58,
-        "run_seconds": 9.46,
-        "simulate_seconds": 2.349,
+        "hypothetical_seconds_if_every_output_word_were_injected": 9041,
+        "pass_decomposition_study_seconds": 365.42,
+        "run_seconds": 9.96,
+        "simulate_seconds": 2.45,
         "simulated_cycles": 509427,
-        "simulated_cycles_per_second": 216870
+        "simulated_cycles_per_second": 207929
       },
       "rom": {
-        "elaborate_and_compile_seconds": 20.43,
-        "end_to_end_seconds": 537.96,
-        "golden_model_seconds": 27.62,
+        "elaborate_and_compile_seconds": 20.46,
+        "end_to_end_seconds": 582.95,
+        "golden_model_seconds": 35.13,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 8528,
-        "pass_decomposition_study_seconds": 480.57,
-        "run_seconds": 9.34,
-        "simulate_seconds": 2.311,
+        "hypothetical_seconds_if_every_output_word_were_injected": 9188,
+        "pass_decomposition_study_seconds": 517.24,
+        "run_seconds": 10.12,
+        "simulate_seconds": 2.49,
         "simulated_cycles": 509415,
-        "simulated_cycles_per_second": 220431
+        "simulated_cycles_per_second": 204584
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 1107.65,
+      "measured_instead": 1009.22,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -60,7 +60,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
+    "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
     "worktree_dirty": false
   },
   "records": [
@@ -68,12 +68,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.43,
-        "golden_model_seconds": 27.62,
+        "elaborate_and_compile_seconds": 20.46,
+        "golden_model_seconds": 35.13,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 9.34,
-        "simulate_seconds": 2.311,
+        "run_seconds": 10.12,
+        "simulate_seconds": 2.49,
         "simulated_cycles": 509415
       },
       "deployment": {
@@ -124,7 +124,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.311 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.512 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169805,
@@ -196,7 +196,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.311 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.512 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169805,
@@ -258,7 +258,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
+        "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -353,6 +353,9 @@
             "issue_ready",
             "issue_trap_class",
             "last_response_index",
+            "obs_write_addr",
+            "obs_write_data",
+            "obs_write_valid",
             "output_write_count",
             "res_addr",
             "res_data",
@@ -370,7 +373,7 @@
               "from": [
                 "inj_result_valid"
               ],
-              "line": 610,
+              "line": 648,
               "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
             },
             {
@@ -378,7 +381,7 @@
               "from": [
                 "injected_ready"
               ],
-              "line": 615,
+              "line": 653,
               "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
             },
             {
@@ -387,7 +390,7 @@
                 "inj_result_fault",
                 "inj_result_valid"
               ],
-              "line": 617,
+              "line": 655,
               "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
             },
             {
@@ -395,7 +398,7 @@
               "from": [
                 "inj_result_trap_class"
               ],
-              "line": 619,
+              "line": 657,
               "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
             },
             {
@@ -403,7 +406,7 @@
               "from": [
                 "inj_result_eos_reason"
               ],
-              "line": 621,
+              "line": 659,
               "statement": "wire [7:0] engine_eos_reason = (ENABLE_RESULT_INJECTION != 0) ? inj_result_eos_reason : bridge_issue_eos_reason"
             },
             {
@@ -411,7 +414,7 @@
               "from": [
                 "engine_ready"
               ],
-              "line": 623,
+              "line": 661,
               "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
             },
             {
@@ -419,7 +422,7 @@
               "from": [
                 "engine_fault"
               ],
-              "line": 626,
+              "line": 664,
               "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
             },
             {
@@ -427,7 +430,7 @@
               "from": [
                 "engine_trap_class"
               ],
-              "line": 628,
+              "line": 666,
               "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
             },
             {
@@ -435,7 +438,7 @@
               "from": [
                 "engine_eos_reason"
               ],
-              "line": 630,
+              "line": 668,
               "statement": "assign issue_eos_reason = exact_multicast_issue ? 8'd0 : engine_eos_reason"
             },
             {
@@ -443,7 +446,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 632,
+              "line": 670,
               "statement": "assign response_valid = issue_valid && issue_ready"
             },
             {
@@ -451,7 +454,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 634,
+              "line": 672,
               "statement": "assign response_fault = issue_fault"
             },
             {
@@ -459,7 +462,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 635,
+              "line": 673,
               "statement": "assign response_trap_class = issue_trap_class"
             },
             {
@@ -467,7 +470,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 888,
+              "line": 926,
               "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
             },
             {
@@ -475,7 +478,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 911,
+              "line": 949,
               "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
             },
             {
@@ -483,7 +486,7 @@
               "from": [
                 "multicast_response_fire"
               ],
-              "line": 964,
+              "line": 1002,
               "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
             },
             {
@@ -491,7 +494,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 988,
+              "line": 1026,
               "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
             },
             {
@@ -499,7 +502,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1032,
+              "line": 1070,
               "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
             },
             {
@@ -507,7 +510,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1037,
+              "line": 1075,
               "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
             },
             {
@@ -515,7 +518,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1041,
+              "line": 1079,
               "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
             },
             {
@@ -523,7 +526,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 1045,
+              "line": 1083,
               "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
             },
             {
@@ -531,7 +534,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 1077,
+              "line": 1115,
               "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
             },
             {
@@ -539,7 +542,7 @@
               "from": [
                 "inj_write_en"
               ],
-              "line": 1216,
+              "line": 1254,
               "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
             },
             {
@@ -547,7 +550,7 @@
               "from": [
                 "inj_write_addr"
               ],
-              "line": 1219,
+              "line": 1257,
               "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
             },
             {
@@ -555,15 +558,39 @@
               "from": [
                 "inj_write_data"
               ],
-              "line": 1221,
+              "line": 1260,
               "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
+            },
+            {
+              "drives": "obs_write_valid",
+              "from": [
+                "res_we"
+              ],
+              "line": 1262,
+              "statement": "assign obs_write_valid = res_we"
+            },
+            {
+              "drives": "obs_write_addr",
+              "from": [
+                "res_addr"
+              ],
+              "line": 1266,
+              "statement": "assign obs_write_addr = res_addr"
+            },
+            {
+              "drives": "obs_write_data",
+              "from": [
+                "res_data"
+              ],
+              "line": 1267,
+              "statement": "assign obs_write_data = res_data"
             },
             {
               "drives": "inj_completion_count",
               "from": [
                 "issue_ready"
               ],
-              "line": 1245,
+              "line": 1290,
               "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
             },
             {
@@ -571,7 +598,7 @@
               "from": [
                 "res_we"
               ],
-              "line": 1305,
+              "line": 1350,
               "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
             },
             {
@@ -580,7 +607,7 @@
                 "res_addr",
                 "res_data"
               ],
-              "line": 1308,
+              "line": 1353,
               "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
             },
             {
@@ -589,7 +616,7 @@
                 "multicast_remote_write_ready",
                 "res_we"
               ],
-              "line": 1312,
+              "line": 1357,
               "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
             },
             {
@@ -598,7 +625,7 @@
                 "issue_fault",
                 "issue_ready"
               ],
-              "line": 1320,
+              "line": 1365,
               "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
             },
             {
@@ -606,7 +633,7 @@
               "from": [
                 "inj_last_response_index"
               ],
-              "line": 869,
+              "line": 907,
               "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
             },
             {
@@ -614,7 +641,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 950,
+              "line": 988,
               "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
             },
             {
@@ -622,7 +649,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 995,
+              "line": 1033,
               "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
             },
             {
@@ -630,7 +657,7 @@
               "from": [
                 "multicast_source_stall_cycles_q"
               ],
-              "line": 997,
+              "line": 1035,
               "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
             },
             {
@@ -638,7 +665,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1058,
+              "line": 1096,
               "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
             },
             {
@@ -646,7 +673,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1063,
+              "line": 1101,
               "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
             },
             {
@@ -654,7 +681,7 @@
               "from": [
                 "multicast_destination_stall_cycles_q"
               ],
-              "line": 998,
+              "line": 1036,
               "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
             },
             {
@@ -662,7 +689,7 @@
               "from": [
                 "multicast_protocol_error_q"
               ],
-              "line": 1002,
+              "line": 1040,
               "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
             }
           ],
@@ -688,7 +715,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 576,
+              "line": 614,
               "port": "eng_issue_ready"
             },
             {
@@ -697,7 +724,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 577,
+              "line": 615,
               "port": "eng_issue_fault"
             },
             {
@@ -706,7 +733,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 578,
+              "line": 616,
               "port": "eng_issue_trap_class"
             },
             {
@@ -715,7 +742,7 @@
               "from": [
                 "issue_eos_reason"
               ],
-              "line": 579,
+              "line": 617,
               "port": "eng_issue_eos_reason"
             },
             {
@@ -724,7 +751,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1146,
+              "line": 1184,
               "port": "source_read_ready"
             },
             {
@@ -733,7 +760,7 @@
               "from": [
                 "multicast_source_response_data"
               ],
-              "line": 1151,
+              "line": 1189,
               "port": "source_response_data"
             },
             {
@@ -742,11 +769,25 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1154,
+              "line": 1192,
               "port": "remote_write_ready"
             }
           ],
           "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
+          "observation_taps": {
+            "candidates": [
+              "obs_write_valid",
+              "obs_write_addr",
+              "obs_write_data"
+            ],
+            "method": "a tap is credited only if it is declared an output and is a source in no statement; otherwise it stays outside the sink set and the audit refuses",
+            "proven": {
+              "obs_write_addr": "declared an output of the top and read by no statement of it",
+              "obs_write_data": "declared an output of the top and read by no statement of it",
+              "obs_write_valid": "declared an output of the top and read by no statement of it"
+            },
+            "refused": {}
+          },
           "outside_allowed_sinks": [],
           "reached": [
             "engine_eos_reason",
@@ -777,6 +818,9 @@
             "multicast_source_response_data",
             "multicast_source_stall_cycles",
             "multicast_source_stall_cycles_q",
+            "obs_write_addr",
+            "obs_write_data",
+            "obs_write_valid",
             "output_write_count",
             "res_addr",
             "res_data",
@@ -788,6 +832,13 @@
             "writes_after_fault"
           ],
           "self_test": {
+            "observation_tap_arm": {
+              "ran": true,
+              "refused_the_tap": true,
+              "spliced_edge": "wire audit_tap_feedback = obs_write_valid;",
+              "why": "a tap that anything inside the top reads is no longer observation only, so the proof withdraws it from the sink set and the audit reports it outside",
+              "withdrew_the_tap_credit": true
+            },
             "outside_allowed_sinks_when_spliced": [
               "audit_probe_pc"
             ],
@@ -803,7 +854,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 417,
+                "line": 455,
                 "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
               },
               {
@@ -811,7 +862,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 843,
+                "line": 881,
                 "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
               },
               {
@@ -819,7 +870,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1255,
+                "line": 1300,
                 "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
               },
               {
@@ -827,7 +878,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1281,
+                "line": 1326,
                 "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
               },
               {
@@ -835,7 +886,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1322,
+                "line": 1367,
                 "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
               }
             ],
@@ -1064,7 +1115,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.792,
+                  "seconds": 12.08,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -1078,7 +1129,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 7.568,
+                  "seconds": 10.722,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1092,13 +1143,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 7.034,
+                  "seconds": 10.002,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 26.39
+              "wall_seconds": 32.81
             },
             {
               "completed_transactions": 4,
@@ -1124,7 +1175,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.718,
+                  "seconds": 11.286,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1138,7 +1189,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.204,
+                  "seconds": 12.339,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1152,7 +1203,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 8.161,
+                  "seconds": 10.758,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1166,13 +1217,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 7.784,
+                  "seconds": 10.972,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 38.87
+              "wall_seconds": 45.36
             },
             {
               "completed_transactions": 6,
@@ -1200,7 +1251,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.964,
+                  "seconds": 12.006,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1214,7 +1265,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.369,
+                  "seconds": 10.376,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1228,7 +1279,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 9.561,
+                  "seconds": 10.299,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1242,7 +1293,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 9.506,
+                  "seconds": 10.924,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1256,7 +1307,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 8.852,
+                  "seconds": 10.586,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1270,13 +1321,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 7.222,
+                  "seconds": 10.987,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 55.48
+              "wall_seconds": 65.18
             },
             {
               "completed_transactions": 16,
@@ -1314,7 +1365,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 8.419,
+                  "seconds": 7.903,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1328,7 +1379,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 7.07,
+                  "seconds": 11.911,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1342,7 +1393,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 8.538,
+                  "seconds": 8.907,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1356,7 +1407,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.236,
+                  "seconds": 10.576,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1370,7 +1421,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 9.861,
+                  "seconds": 10.525,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1384,7 +1435,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 10.673,
+                  "seconds": 9.887,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1398,7 +1449,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 9.729,
+                  "seconds": 10.466,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1412,7 +1463,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.142,
+                  "seconds": 11.502,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1426,7 +1477,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 10.855,
+                  "seconds": 10.365,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1440,7 +1491,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 10.647,
+                  "seconds": 10.504,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1454,7 +1505,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.343,
+                  "seconds": 10.967,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1468,7 +1519,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.178,
+                  "seconds": 10.759,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1482,7 +1533,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.331,
+                  "seconds": 9.911,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1496,7 +1547,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 10.082,
+                  "seconds": 11.492,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1510,7 +1561,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.389,
+                  "seconds": 10.618,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1524,13 +1575,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.852,
+                  "seconds": 9.821,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 162.35
+              "wall_seconds": 166.12
             },
             {
               "completed_transactions": 16,
@@ -1568,7 +1619,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 8.168,
+                  "seconds": 11.015,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1582,7 +1633,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 9.71,
+                  "seconds": 9.125,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1596,7 +1647,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.099,
+                  "seconds": 9.56,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1610,7 +1661,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.425,
+                  "seconds": 10.244,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1624,7 +1675,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.188,
+                  "seconds": 10.425,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1638,7 +1689,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.349,
+                  "seconds": 11.165,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1652,7 +1703,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.213,
+                  "seconds": 11.495,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1666,7 +1717,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.43,
+                  "seconds": 11.131,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1680,7 +1731,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 9.635,
+                  "seconds": 11.199,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1694,7 +1745,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 6.639,
+                  "seconds": 11.422,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1708,7 +1759,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 7.736,
+                  "seconds": 11.593,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1722,7 +1773,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.363,
+                  "seconds": 10.853,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1736,7 +1787,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 10.931,
+                  "seconds": 11.013,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1750,7 +1801,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.335,
+                  "seconds": 11.321,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1764,7 +1815,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.339,
+                  "seconds": 11.275,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1778,13 +1829,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.058,
+                  "seconds": 10.087,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 162.62
+              "wall_seconds": 172.93
             }
           ],
           "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
@@ -1825,7 +1876,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 480.57,
+          "wall_seconds": 517.24,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -1965,7 +2016,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 27.62
+          "wall_seconds": 35.13
         },
         "uncompared_issue_fields": [
           "serial",
@@ -1986,12 +2037,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.25,
-        "golden_model_seconds": 25.4,
+        "elaborate_and_compile_seconds": 19.64,
+        "golden_model_seconds": 31.25,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 9.46,
-        "simulate_seconds": 2.349,
+        "run_seconds": 9.96,
+        "simulate_seconds": 2.45,
         "simulated_cycles": 509427
       },
       "deployment": {
@@ -2042,7 +2093,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.330 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.454 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169809,
@@ -2114,7 +2165,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.330 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.454 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169809,
@@ -2176,7 +2227,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "f962b17c45adf41678979a03255e59b5eda28c43",
+        "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -2271,6 +2322,9 @@
             "issue_ready",
             "issue_trap_class",
             "last_response_index",
+            "obs_write_addr",
+            "obs_write_data",
+            "obs_write_valid",
             "output_write_count",
             "res_addr",
             "res_data",
@@ -2288,7 +2342,7 @@
               "from": [
                 "inj_result_valid"
               ],
-              "line": 610,
+              "line": 648,
               "statement": "wire injected_ready = (ENABLE_RESULT_INJECTION != 0) && inj_result_valid"
             },
             {
@@ -2296,7 +2350,7 @@
               "from": [
                 "injected_ready"
               ],
-              "line": 615,
+              "line": 653,
               "statement": "wire engine_ready = (ENABLE_RESULT_INJECTION != 0) ? injected_ready : bridge_issue_ready"
             },
             {
@@ -2305,7 +2359,7 @@
                 "inj_result_fault",
                 "inj_result_valid"
               ],
-              "line": 617,
+              "line": 655,
               "statement": "wire engine_fault = (ENABLE_RESULT_INJECTION != 0) ? (inj_result_valid && inj_result_fault) : bridge_issue_fault"
             },
             {
@@ -2313,7 +2367,7 @@
               "from": [
                 "inj_result_trap_class"
               ],
-              "line": 619,
+              "line": 657,
               "statement": "wire [15:0] engine_trap_class = (ENABLE_RESULT_INJECTION != 0) ? inj_result_trap_class : bridge_issue_trap_class"
             },
             {
@@ -2321,7 +2375,7 @@
               "from": [
                 "inj_result_eos_reason"
               ],
-              "line": 621,
+              "line": 659,
               "statement": "wire [7:0] engine_eos_reason = (ENABLE_RESULT_INJECTION != 0) ? inj_result_eos_reason : bridge_issue_eos_reason"
             },
             {
@@ -2329,7 +2383,7 @@
               "from": [
                 "engine_ready"
               ],
-              "line": 623,
+              "line": 661,
               "statement": "assign issue_ready = exact_multicast_issue ? (multicast_issue_active && (multicast_done || multicast_failed)) : engine_ready"
             },
             {
@@ -2337,7 +2391,7 @@
               "from": [
                 "engine_fault"
               ],
-              "line": 626,
+              "line": 664,
               "statement": "assign issue_fault = exact_multicast_issue ? multicast_failed : engine_fault"
             },
             {
@@ -2345,7 +2399,7 @@
               "from": [
                 "engine_trap_class"
               ],
-              "line": 628,
+              "line": 666,
               "statement": "assign issue_trap_class = exact_multicast_issue ? multicast_trap_class : engine_trap_class"
             },
             {
@@ -2353,7 +2407,7 @@
               "from": [
                 "engine_eos_reason"
               ],
-              "line": 630,
+              "line": 668,
               "statement": "assign issue_eos_reason = exact_multicast_issue ? 8'd0 : engine_eos_reason"
             },
             {
@@ -2361,7 +2415,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 632,
+              "line": 670,
               "statement": "assign response_valid = issue_valid && issue_ready"
             },
             {
@@ -2369,7 +2423,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 634,
+              "line": 672,
               "statement": "assign response_fault = issue_fault"
             },
             {
@@ -2377,7 +2431,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 635,
+              "line": 673,
               "statement": "assign response_trap_class = issue_trap_class"
             },
             {
@@ -2385,7 +2439,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 888,
+              "line": 926,
               "statement": "end else if (inj_issue_valid && issue_ready) begin inj_last_response_index <= issue_index"
             },
             {
@@ -2393,7 +2447,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 911,
+              "line": 949,
               "statement": "wire multicast_response_fire = exact_multicast_issue && issue_ready"
             },
             {
@@ -2401,7 +2455,7 @@
               "from": [
                 "multicast_response_fire"
               ],
-              "line": 964,
+              "line": 1002,
               "statement": "if (multicast_response_fire) begin multicast_issue_active <= 1'b0"
             },
             {
@@ -2409,7 +2463,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 988,
+              "line": 1026,
               "statement": "wire multicast_source_read_ready_int = multicast_issue_active && multicast_source_ready_phase"
             },
             {
@@ -2417,7 +2471,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1032,
+              "line": 1070,
               "statement": "else if (multicast_source_read_ready_int) multicast_source_ready_phase <= 1'b0"
             },
             {
@@ -2425,7 +2479,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1037,
+              "line": 1075,
               "statement": "if (multicast_source_read_valid_int && !multicast_source_read_ready_int) multicast_source_stall_cycles_q <= multicast_source_stall_cycles_q + 32'd1"
             },
             {
@@ -2433,7 +2487,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1041,
+              "line": 1079,
               "statement": "if (multicast_source_read_valid_int && multicast_source_read_ready_int) begin multicast_source_read_count_q <= multicast_source_read_count_q + 32'd1"
             },
             {
@@ -2441,7 +2495,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 1045,
+              "line": 1083,
               "statement": "|| (multicast_source_read_offset_int >= 64'd65536) || (multicast_source_read_offset_int[15:2] != multicast_source_read_count_q[13:0])) begin multicast_source_response_data <= 32'd0"
             },
             {
@@ -2449,7 +2503,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 1077,
+              "line": 1115,
               "statement": "end end end end assign multicast_remote_write_ready = multicast_issue_active && (multicast_service_cycle[1:0] != 2'b00)"
             },
             {
@@ -2457,7 +2511,7 @@
               "from": [
                 "inj_write_en"
               ],
-              "line": 1216,
+              "line": 1254,
               "statement": "wire res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we"
             },
             {
@@ -2465,7 +2519,7 @@
               "from": [
                 "inj_write_addr"
               ],
-              "line": 1219,
+              "line": 1257,
               "statement": "wire [31:0] res_addr = (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr"
             },
             {
@@ -2473,15 +2527,39 @@
               "from": [
                 "inj_write_data"
               ],
-              "line": 1221,
+              "line": 1260,
               "statement": "wire [31:0] res_data = (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data"
+            },
+            {
+              "drives": "obs_write_valid",
+              "from": [
+                "res_we"
+              ],
+              "line": 1262,
+              "statement": "assign obs_write_valid = res_we"
+            },
+            {
+              "drives": "obs_write_addr",
+              "from": [
+                "res_addr"
+              ],
+              "line": 1266,
+              "statement": "assign obs_write_addr = res_addr"
+            },
+            {
+              "drives": "obs_write_data",
+              "from": [
+                "res_data"
+              ],
+              "line": 1267,
+              "statement": "assign obs_write_data = res_data"
             },
             {
               "drives": "inj_completion_count",
               "from": [
                 "issue_ready"
               ],
-              "line": 1245,
+              "line": 1290,
               "statement": "end else begin if (inj_issue_valid && issue_ready) inj_completion_count <= inj_completion_count + 32'd1"
             },
             {
@@ -2489,7 +2567,7 @@
               "from": [
                 "res_we"
               ],
-              "line": 1305,
+              "line": 1350,
               "statement": "end if (res_we) begin output_write_count <= output_write_count + 32'd1"
             },
             {
@@ -2498,7 +2576,7 @@
                 "res_addr",
                 "res_data"
               ],
-              "line": 1308,
+              "line": 1353,
               "statement": "if (res_addr < RESULT_WORDS) result_mem[res_addr] <= res_data"
             },
             {
@@ -2507,7 +2585,7 @@
                 "multicast_remote_write_ready",
                 "res_we"
               ],
-              "line": 1312,
+              "line": 1357,
               "statement": "lticast_remote_write_ready))) writes_after_fault <= writes_after_fault + (res_we ? 32'd1 : 32'd0) + ((multicast_remote_write_valid && multicast_remote_write_ready) ? 32'd1 : 32'd0)"
             },
             {
@@ -2516,7 +2594,7 @@
                 "issue_fault",
                 "issue_ready"
               ],
-              "line": 1320,
+              "line": 1365,
               "statement": "if (issue_valid && issue_ready && issue_fault) fault_seen <= 1'b1"
             },
             {
@@ -2524,7 +2602,7 @@
               "from": [
                 "inj_last_response_index"
               ],
-              "line": 869,
+              "line": 907,
               "statement": "assign last_response_index = (ENABLE_RESULT_INJECTION != 0) ? inj_last_response_index : bridge_last_response_index"
             },
             {
@@ -2532,7 +2610,7 @@
               "from": [
                 "multicast_issue_active"
               ],
-              "line": 950,
+              "line": 988,
               "statement": "end else begin if (multicast_issue_active) multicast_service_cycle <= multicast_service_cycle + 32'd1"
             },
             {
@@ -2540,7 +2618,7 @@
               "from": [
                 "multicast_source_read_count_q"
               ],
-              "line": 995,
+              "line": 1033,
               "statement": "assign multicast_source_read_count = multicast_source_read_count_q"
             },
             {
@@ -2548,7 +2626,7 @@
               "from": [
                 "multicast_source_stall_cycles_q"
               ],
-              "line": 997,
+              "line": 1035,
               "statement": "assign multicast_source_stall_cycles = multicast_source_stall_cycles_q"
             },
             {
@@ -2556,7 +2634,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1058,
+              "line": 1096,
               "statement": "end if (multicast_remote_write_valid && !multicast_remote_write_ready) multicast_destination_stall_cycles_q <= multicast_destination_stall_cycles_q + 32'd1"
             },
             {
@@ -2564,7 +2642,7 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1063,
+              "line": 1101,
               "statement": " {8'd0, multicast_remote_write_offset[23:16]}) || (multicast_remote_write_data != multicast_expected_word( multicast_remote_write_offset[15:2]))) multicast_protocol_error_q <= 1'b1"
             },
             {
@@ -2572,7 +2650,7 @@
               "from": [
                 "multicast_destination_stall_cycles_q"
               ],
-              "line": 998,
+              "line": 1036,
               "statement": "assign multicast_destination_stall_cycles = multicast_destination_stall_cycles_q"
             },
             {
@@ -2580,7 +2658,7 @@
               "from": [
                 "multicast_protocol_error_q"
               ],
-              "line": 1002,
+              "line": 1040,
               "statement": "assign multicast_protocol_error = multicast_protocol_error_q"
             }
           ],
@@ -2606,7 +2684,7 @@
               "from": [
                 "issue_ready"
               ],
-              "line": 576,
+              "line": 614,
               "port": "eng_issue_ready"
             },
             {
@@ -2615,7 +2693,7 @@
               "from": [
                 "issue_fault"
               ],
-              "line": 577,
+              "line": 615,
               "port": "eng_issue_fault"
             },
             {
@@ -2624,7 +2702,7 @@
               "from": [
                 "issue_trap_class"
               ],
-              "line": 578,
+              "line": 616,
               "port": "eng_issue_trap_class"
             },
             {
@@ -2633,7 +2711,7 @@
               "from": [
                 "issue_eos_reason"
               ],
-              "line": 579,
+              "line": 617,
               "port": "eng_issue_eos_reason"
             },
             {
@@ -2642,7 +2720,7 @@
               "from": [
                 "multicast_source_read_ready_int"
               ],
-              "line": 1146,
+              "line": 1184,
               "port": "source_read_ready"
             },
             {
@@ -2651,7 +2729,7 @@
               "from": [
                 "multicast_source_response_data"
               ],
-              "line": 1151,
+              "line": 1189,
               "port": "source_response_data"
             },
             {
@@ -2660,11 +2738,25 @@
               "from": [
                 "multicast_remote_write_ready"
               ],
-              "line": 1154,
+              "line": 1192,
               "port": "remote_write_ready"
             }
           ],
           "method": "every statement of the top that mentions a tainted signal is found, the signal it drives is added, and the closure is taken; a tainted signal outside the declared sink set refuses the audit",
+          "observation_taps": {
+            "candidates": [
+              "obs_write_valid",
+              "obs_write_addr",
+              "obs_write_data"
+            ],
+            "method": "a tap is credited only if it is declared an output and is a source in no statement; otherwise it stays outside the sink set and the audit refuses",
+            "proven": {
+              "obs_write_addr": "declared an output of the top and read by no statement of it",
+              "obs_write_data": "declared an output of the top and read by no statement of it",
+              "obs_write_valid": "declared an output of the top and read by no statement of it"
+            },
+            "refused": {}
+          },
           "outside_allowed_sinks": [],
           "reached": [
             "engine_eos_reason",
@@ -2695,6 +2787,9 @@
             "multicast_source_response_data",
             "multicast_source_stall_cycles",
             "multicast_source_stall_cycles_q",
+            "obs_write_addr",
+            "obs_write_data",
+            "obs_write_valid",
             "output_write_count",
             "res_addr",
             "res_data",
@@ -2706,6 +2801,13 @@
             "writes_after_fault"
           ],
           "self_test": {
+            "observation_tap_arm": {
+              "ran": true,
+              "refused_the_tap": true,
+              "spliced_edge": "wire audit_tap_feedback = obs_write_valid;",
+              "why": "a tap that anything inside the top reads is no longer observation only, so the proof withdraws it from the sink set and the audit reports it outside",
+              "withdrew_the_tap_credit": true
+            },
             "outside_allowed_sinks_when_spliced": [
               "audit_probe_pc"
             ],
@@ -2721,7 +2823,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 417,
+                "line": 455,
                 "statement": "clear_word = clear_word + 1) result_mem[clear_word] = 32'hdead_beef"
               },
               {
@@ -2729,7 +2831,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 843,
+                "line": 881,
                 "statement": "if (predicate_mapped) begin predicate_read_value <= (result_mem[predicate_word_addr[31:0]] != 32'd0)"
               },
               {
@@ -2737,7 +2839,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1255,
+                "line": 1300,
                 "statement": "end if (m0_rd_en) begin if (m0_reads_result && (m0_rd_addr < RESULT_WORDS)) m0_rd_data <= result_mem[m0_rd_addr]"
               },
               {
@@ -2745,7 +2847,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1281,
+                "line": 1326,
                 "statement": "end end else if (m1_reads_result && (m1_rd_addr < RESULT_WORDS)) m1_rd_data <= result_mem[m1_rd_addr]"
               },
               {
@@ -2753,7 +2855,7 @@
                 "from": [
                   "result_mem"
                 ],
-                "line": 1322,
+                "line": 1367,
                 "statement": "end end assign result_read_data = (result_read_addr < RESULT_WORDS) ? result_mem[result_read_addr] : 32'd0"
               }
             ],
@@ -2982,7 +3084,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.572,
+                  "seconds": 11.048,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -2996,7 +3098,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.429,
+                  "seconds": 6.825,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3010,13 +3112,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.666,
+                  "seconds": 7.004,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 33.67
+              "wall_seconds": 24.88
             },
             {
               "completed_transactions": 4,
@@ -3042,7 +3144,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 12.221,
+                  "seconds": 9.682,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3056,7 +3158,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.164,
+                  "seconds": 8.813,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3070,7 +3172,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 9.983,
+                  "seconds": 6.613,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3084,13 +3186,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.393,
+                  "seconds": 7.088,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 45.76
+              "wall_seconds": 32.2
             },
             {
               "completed_transactions": 6,
@@ -3118,7 +3220,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.482,
+                  "seconds": 9.231,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3132,7 +3234,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 8.574,
+                  "seconds": 8.087,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3146,7 +3248,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 9.583,
+                  "seconds": 7.896,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3160,7 +3262,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.486,
+                  "seconds": 8.193,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3174,7 +3276,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 11.01,
+                  "seconds": 7.098,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3188,13 +3290,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.475,
+                  "seconds": 6.98,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 62.61
+              "wall_seconds": 47.49
             },
             {
               "completed_transactions": 16,
@@ -3232,7 +3334,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.298,
+                  "seconds": 8.356,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3246,7 +3348,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 7.443,
+                  "seconds": 6.841,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3260,7 +3362,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.191,
+                  "seconds": 6.626,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3274,7 +3376,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.181,
+                  "seconds": 7.013,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3288,7 +3390,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.337,
+                  "seconds": 7.4,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3302,7 +3404,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.103,
+                  "seconds": 7.307,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3316,7 +3418,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.007,
+                  "seconds": 6.6,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3330,7 +3432,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.286,
+                  "seconds": 6.611,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3344,7 +3446,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 8.331,
+                  "seconds": 6.628,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3358,7 +3460,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.258,
+                  "seconds": 6.615,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3372,7 +3474,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 8.167,
+                  "seconds": 7.024,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3386,7 +3488,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.499,
+                  "seconds": 7.371,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3400,7 +3502,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.377,
+                  "seconds": 6.983,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3414,7 +3516,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.155,
+                  "seconds": 7.394,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3428,7 +3530,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.232,
+                  "seconds": 6.651,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3442,13 +3544,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.359,
+                  "seconds": 7.227,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 170.23
+              "wall_seconds": 112.66
             },
             {
               "completed_transactions": 16,
@@ -3486,7 +3588,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 10.904,
+                  "seconds": 8.21,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3500,7 +3602,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.336,
+                  "seconds": 6.727,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3514,7 +3616,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 10.692,
+                  "seconds": 7.072,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3528,7 +3630,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.992,
+                  "seconds": 7.018,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3542,7 +3644,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 10.928,
+                  "seconds": 7.298,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3556,7 +3658,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 10.49,
+                  "seconds": 7.031,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3570,7 +3672,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 7.799,
+                  "seconds": 7.616,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3584,7 +3686,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 8.785,
+                  "seconds": 7.113,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3598,7 +3700,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.11,
+                  "seconds": 6.712,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3612,7 +3714,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 10.965,
+                  "seconds": 7.105,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3626,7 +3728,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.503,
+                  "seconds": 6.895,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3640,7 +3742,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.378,
+                  "seconds": 7.048,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3654,7 +3756,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 9.904,
+                  "seconds": 7.05,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3668,7 +3770,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 9.214,
+                  "seconds": 7.167,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3682,7 +3784,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.396,
+                  "seconds": 6.673,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3696,13 +3798,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.22,
+                  "seconds": 6.927,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 167.62
+              "wall_seconds": 113.67
             }
           ],
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3743,7 +3845,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 514.58,
+          "wall_seconds": 365.42,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -3883,7 +3985,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 25.4
+          "wall_seconds": 31.25
         },
         "uncompared_issue_fields": [
           "serial",
@@ -3909,7 +4011,7 @@
     "rtl/abi3/ot_a3_device_top.sv": "baf0397dfda94df9a69e6b4c15e8ed42c653265a6f292fc82689e56a729e11f8",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "e769729e615dc165a635bb37eeb25df0b32c7ec667a16863b2bc28f5975803d3",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
@@ -3945,8 +4047,8 @@
     "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
     "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
     "rtl/test/a3_engine_completion_adapter.sv": "7af21879c1a0cb1d047543ed65282f174db09e7319c6a8f8e17304437adb8fb2",
-    "rtl/test/a3_g1e_control_harness.cpp": "795ed17c1cc1519a872bd94dbee203cacda41d1f30372ee73a01814649263643",
-    "rtl/test/a3_shipped_prefix_top.sv": "d191ce5dc8cdc459faa979afa903f0cb372eb650dfd8433b5f5117cc04a46f09",
+    "rtl/test/a3_g1e_control_harness.cpp": "8e0a2a537dd81604249ad5c9e53e10b9a2294e30f3c3570039d049ddaa5562a4",
+    "rtl/test/a3_shipped_prefix_top.sv": "9a9cff8363c8e28181fc134fdc28380a1c3d8757179630428117ce8b32a5161e",
     "runtime/abi3/deployment.py": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61",
     "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
     "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
@@ -3957,7 +4059,7 @@
     "tools/build_abi3_deployment_rtl_vectors.py": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582",
     "tools/build_abi3_g1e_control_vectors.py": "b20ff304e1237ed66810ce269235dd61aa07c72cbdb7f073f74b6e1a59245e64",
     "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae",
-    "tools/rtl_abi3_g1e_control_campaign.py": "cafcfb4ac7f26577f3eb51fbb0e7ac4acf0dd532f76dfe344efd741675ce3874"
+    "tools/rtl_abi3_g1e_control_campaign.py": "490ab11d54a1f93b218fba964def1aa05db155b7584b22ac7f042db1740c7f38"
   },
   "status": "pass",
   "tools": {

@@ -68,63 +68,89 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_source_base,
     input  wire [31:0] cfg_source_launch_stride,
     input  wire [31:0] cfg_embedding_source_base,
-    input  wire [31:0] cfg_rms_input_base,
-    input  wire [31:0] cfg_rms_weight_base,
     input  wire [31:0] cfg_transfer_index_base,
     input  wire [31:0] cfg_transfer_source_base,
-    input  wire [31:0] cfg_matmul_input_base,
-    input  wire [31:0] cfg_matmul_weight_object_0,
-    input  wire [31:0] cfg_matmul_weight_base_0,
-    input  wire [31:0] cfg_matmul_weight_object_1,
-    input  wire [31:0] cfg_matmul_weight_base_1,
-    input  wire [31:0] cfg_matmul_weight_object_2,
-    input  wire [31:0] cfg_matmul_weight_base_2,
-    input  wire [31:0] cfg_head_input_object_0,
-    input  wire [31:0] cfg_head_input_base_0,
-    input  wire [31:0] cfg_head_input_object_1,
-    input  wire [31:0] cfg_head_input_base_1,
-    input  wire [31:0] cfg_head_weight_object_0,
-    input  wire [31:0] cfg_head_weight_base_0,
-    input  wire [31:0] cfg_head_weight_object_1,
-    input  wire [31:0] cfg_head_weight_base_1,
-    input  wire [31:0] cfg_rope_input_object_0,
-    input  wire [31:0] cfg_rope_input_base_0,
-    input  wire [31:0] cfg_rope_input_object_1,
-    input  wire [31:0] cfg_rope_input_base_1,
-    input  wire [31:0] cfg_rope_coefficient_object,
-    input  wire [31:0] cfg_rope_coefficient_base,
-    input  wire [31:0] cfg_output_base,
-    // -- mapped placement for the six admitted operator families ---------
-    // The bridge places DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD,
-    // VECTOR.SILU_MUL, SELECTION.ARGMAX and SELECTION.TOKEN_APPEND by
-    // *object*, not by the appending result cursor, because a scatter is a
-    // read-modify-write into a KV plane that already exists and the second
-    // residual add writes back over the trunk object it read.  This top
-    // therefore has to hand the bridge the same object->bank table its own
-    // banks were built from; there is no default base and an unnamed object
-    // is refused.  ``cfg_extended_placement_valid`` is the statement that
-    // *this run* supplied that table.  Driving it low is not a way of
-    // switching a check off: with no bank bound to an object the six
-    // families have no operand address at all, so the bridge answers the
-    // TRAP_CAPABILITY it gave before they were implemented, and the campaign
-    // records that refusal as the measurement it is.
+    // -- the object placement table --------------------------------------
+    // The bridge places EVERY operand and EVERY result of EVERY family by
+    // *object*: the base comes from this table and the sequencer's resolved
+    // element offset selects the position inside it.  There is no default
+    // base, no append cursor and no unkeyed role left; an object this table
+    // does not name is refused, and an object it names twice is refused
+    // before anything is fetched.  This top hands the bridge the same
+    // object->bank table its own banks were built from.
+    //
+    // ``cfg_extended_placement_valid`` is a separate statement: that *this
+    // run* admits the six mapped families (DMA.SCATTER, ATTENTION.GQA,
+    // VECTOR.ADD, VECTOR.SILU_MUL, SELECTION.ARGMAX, SELECTION.TOKEN_APPEND)
+    // at all.  It does not supply an address and never did.  Driving it low
+    // is not a way of switching a check off: the bridge answers the
+    // TRAP_CAPABILITY it gave before those families were implemented, and the
+    // campaign records that refusal as the measurement it is.
     input  wire        cfg_extended_placement_valid,
-    input  wire [31:0] cfg_map_object_0,
-    input  wire [31:0] cfg_map_base_0,
-    input  wire [31:0] cfg_map_object_1,
-    input  wire [31:0] cfg_map_base_1,
-    input  wire [31:0] cfg_map_object_2,
-    input  wire [31:0] cfg_map_base_2,
-    input  wire [31:0] cfg_map_object_3,
-    input  wire [31:0] cfg_map_base_3,
-    input  wire [31:0] cfg_map_object_4,
-    input  wire [31:0] cfg_map_base_4,
-    input  wire [31:0] cfg_map_object_5,
-    input  wire [31:0] cfg_map_base_5,
-    input  wire [31:0] cfg_map_object_6,
-    input  wire [31:0] cfg_map_base_6,
-    input  wire [31:0] cfg_map_object_7,
-    input  wire [31:0] cfg_map_base_7,
+    input  wire [31:0] cfg_place_object_0,
+    input  wire [31:0] cfg_place_base_0,
+    input  wire [31:0] cfg_place_object_1,
+    input  wire [31:0] cfg_place_base_1,
+    input  wire [31:0] cfg_place_object_2,
+    input  wire [31:0] cfg_place_base_2,
+    input  wire [31:0] cfg_place_object_3,
+    input  wire [31:0] cfg_place_base_3,
+    input  wire [31:0] cfg_place_object_4,
+    input  wire [31:0] cfg_place_base_4,
+    input  wire [31:0] cfg_place_object_5,
+    input  wire [31:0] cfg_place_base_5,
+    input  wire [31:0] cfg_place_object_6,
+    input  wire [31:0] cfg_place_base_6,
+    input  wire [31:0] cfg_place_object_7,
+    input  wire [31:0] cfg_place_base_7,
+    input  wire [31:0] cfg_place_object_8,
+    input  wire [31:0] cfg_place_base_8,
+    input  wire [31:0] cfg_place_object_9,
+    input  wire [31:0] cfg_place_base_9,
+    input  wire [31:0] cfg_place_object_10,
+    input  wire [31:0] cfg_place_base_10,
+    input  wire [31:0] cfg_place_object_11,
+    input  wire [31:0] cfg_place_base_11,
+    input  wire [31:0] cfg_place_object_12,
+    input  wire [31:0] cfg_place_base_12,
+    input  wire [31:0] cfg_place_object_13,
+    input  wire [31:0] cfg_place_base_13,
+    input  wire [31:0] cfg_place_object_14,
+    input  wire [31:0] cfg_place_base_14,
+    input  wire [31:0] cfg_place_object_15,
+    input  wire [31:0] cfg_place_base_15,
+    input  wire [31:0] cfg_place_object_16,
+    input  wire [31:0] cfg_place_base_16,
+    input  wire [31:0] cfg_place_object_17,
+    input  wire [31:0] cfg_place_base_17,
+    input  wire [31:0] cfg_place_object_18,
+    input  wire [31:0] cfg_place_base_18,
+    input  wire [31:0] cfg_place_object_19,
+    input  wire [31:0] cfg_place_base_19,
+    input  wire [31:0] cfg_place_object_20,
+    input  wire [31:0] cfg_place_base_20,
+    input  wire [31:0] cfg_place_object_21,
+    input  wire [31:0] cfg_place_base_21,
+    input  wire [31:0] cfg_place_object_22,
+    input  wire [31:0] cfg_place_base_22,
+    input  wire [31:0] cfg_place_object_23,
+    input  wire [31:0] cfg_place_base_23,
+    input  wire [31:0] cfg_place_object_24,
+    input  wire [31:0] cfg_place_base_24,
+    input  wire [31:0] cfg_place_object_25,
+    input  wire [31:0] cfg_place_base_25,
+    input  wire [31:0] cfg_place_object_26,
+    input  wire [31:0] cfg_place_base_26,
+    input  wire [31:0] cfg_place_object_27,
+    input  wire [31:0] cfg_place_base_27,
+    input  wire [31:0] cfg_place_object_28,
+    input  wire [31:0] cfg_place_base_28,
+    input  wire [31:0] cfg_place_object_29,
+    input  wire [31:0] cfg_place_base_29,
+    input  wire [31:0] cfg_place_object_30,
+    input  wire [31:0] cfg_place_base_30,
+    input  wire [31:0] cfg_place_object_31,
+    input  wire [31:0] cfg_place_base_31,
     // The request's active context length, checked inside the bridge against
     // the position the scatter and attention index views actually resolve to
     // (cfg_context_length == index + 1); the compact KV bank's fixed K-to-V
@@ -221,6 +247,18 @@ module ot_a3_shipped_prefix_top #(
     output wire [31:0] engine_result_count,
     output wire [31:0] engine_work_count,
     output reg  [31:0] output_write_count,
+    // -- the result-bank write stream, observed ---------------------------
+    // Results are placed by object now, so a buffer the program rewrites is
+    // written twice at ONE address and the second value replaces the first.
+    // The retained image therefore holds only each object's last value, and
+    // an intermediate that was overwritten is not in it.  Comparing the image
+    // alone would silently stop checking those intermediates -- the exact
+    // shape of defect this vehicle exists to catch -- so the write stream
+    // itself is published and every write is compared as it commits.  These
+    // are pure observation: nothing inside the design reads them.
+    output wire        obs_write_valid,
+    output wire [31:0] obs_write_addr,
+    output wire [31:0] obs_write_data,
     output reg  [31:0] writes_after_fault,
     output reg         operand_read_oob,
     output reg         result_write_oob,
@@ -1217,10 +1255,17 @@ module ot_a3_shipped_prefix_top #(
     // The engine result boundary.  In injection mode the words come from the
     // golden model; every other signal in this module still comes from RTL.
     wire        res_we = (ENABLE_RESULT_INJECTION != 0) ? inj_write_en : out_we;
+
     wire [31:0] res_addr =
         (ENABLE_RESULT_INJECTION != 0) ? inj_write_addr : out_addr;
     wire [31:0] res_data =
         (ENABLE_RESULT_INJECTION != 0) ? inj_write_data : out_data;
+    // Stable for the whole cycle whose rising edge commits the write, so a
+    // harness that samples immediately before raising the clock sees exactly
+    // the writes that land, once each and in order.
+    assign obs_write_valid = res_we;
+    assign obs_write_addr  = res_addr;
+    assign obs_write_data  = res_data;
     wire m0_reads_result;
     wire m1_reads_result;
     wire m1_reads_matmul_weight;
@@ -1360,49 +1405,73 @@ module ot_a3_shipped_prefix_top #(
         .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
         .cfg_embedding_source_base(cfg_embedding_source_base),
-        .cfg_rms_input_base(cfg_rms_input_base),
-        .cfg_rms_weight_base(cfg_rms_weight_base),
         .cfg_transfer_index_base(cfg_transfer_index_base),
         .cfg_transfer_source_base(cfg_transfer_source_base),
-        .cfg_matmul_input_base(cfg_matmul_input_base),
-        .cfg_matmul_weight_object_0(cfg_matmul_weight_object_0),
-        .cfg_matmul_weight_base_0(cfg_matmul_weight_base_0),
-        .cfg_matmul_weight_object_1(cfg_matmul_weight_object_1),
-        .cfg_matmul_weight_base_1(cfg_matmul_weight_base_1),
-        .cfg_matmul_weight_object_2(cfg_matmul_weight_object_2),
-        .cfg_matmul_weight_base_2(cfg_matmul_weight_base_2),
-        .cfg_head_input_object_0(cfg_head_input_object_0),
-        .cfg_head_input_base_0(cfg_head_input_base_0),
-        .cfg_head_input_object_1(cfg_head_input_object_1),
-        .cfg_head_input_base_1(cfg_head_input_base_1),
-        .cfg_head_weight_object_0(cfg_head_weight_object_0),
-        .cfg_head_weight_base_0(cfg_head_weight_base_0),
-        .cfg_head_weight_object_1(cfg_head_weight_object_1),
-        .cfg_head_weight_base_1(cfg_head_weight_base_1),
-        .cfg_rope_input_object_0(cfg_rope_input_object_0),
-        .cfg_rope_input_base_0(cfg_rope_input_base_0),
-        .cfg_rope_input_object_1(cfg_rope_input_object_1),
-        .cfg_rope_input_base_1(cfg_rope_input_base_1),
-        .cfg_rope_coefficient_object(cfg_rope_coefficient_object),
-        .cfg_rope_coefficient_base(cfg_rope_coefficient_base),
-        .cfg_output_base(cfg_output_base),
         .cfg_extended_placement_valid(cfg_extended_placement_valid),
-        .cfg_map_object_0(cfg_map_object_0),
-        .cfg_map_base_0(cfg_map_base_0),
-        .cfg_map_object_1(cfg_map_object_1),
-        .cfg_map_base_1(cfg_map_base_1),
-        .cfg_map_object_2(cfg_map_object_2),
-        .cfg_map_base_2(cfg_map_base_2),
-        .cfg_map_object_3(cfg_map_object_3),
-        .cfg_map_base_3(cfg_map_base_3),
-        .cfg_map_object_4(cfg_map_object_4),
-        .cfg_map_base_4(cfg_map_base_4),
-        .cfg_map_object_5(cfg_map_object_5),
-        .cfg_map_base_5(cfg_map_base_5),
-        .cfg_map_object_6(cfg_map_object_6),
-        .cfg_map_base_6(cfg_map_base_6),
-        .cfg_map_object_7(cfg_map_object_7),
-        .cfg_map_base_7(cfg_map_base_7),
+        .cfg_place_object_0(cfg_place_object_0),
+        .cfg_place_base_0(cfg_place_base_0),
+        .cfg_place_object_1(cfg_place_object_1),
+        .cfg_place_base_1(cfg_place_base_1),
+        .cfg_place_object_2(cfg_place_object_2),
+        .cfg_place_base_2(cfg_place_base_2),
+        .cfg_place_object_3(cfg_place_object_3),
+        .cfg_place_base_3(cfg_place_base_3),
+        .cfg_place_object_4(cfg_place_object_4),
+        .cfg_place_base_4(cfg_place_base_4),
+        .cfg_place_object_5(cfg_place_object_5),
+        .cfg_place_base_5(cfg_place_base_5),
+        .cfg_place_object_6(cfg_place_object_6),
+        .cfg_place_base_6(cfg_place_base_6),
+        .cfg_place_object_7(cfg_place_object_7),
+        .cfg_place_base_7(cfg_place_base_7),
+        .cfg_place_object_8(cfg_place_object_8),
+        .cfg_place_base_8(cfg_place_base_8),
+        .cfg_place_object_9(cfg_place_object_9),
+        .cfg_place_base_9(cfg_place_base_9),
+        .cfg_place_object_10(cfg_place_object_10),
+        .cfg_place_base_10(cfg_place_base_10),
+        .cfg_place_object_11(cfg_place_object_11),
+        .cfg_place_base_11(cfg_place_base_11),
+        .cfg_place_object_12(cfg_place_object_12),
+        .cfg_place_base_12(cfg_place_base_12),
+        .cfg_place_object_13(cfg_place_object_13),
+        .cfg_place_base_13(cfg_place_base_13),
+        .cfg_place_object_14(cfg_place_object_14),
+        .cfg_place_base_14(cfg_place_base_14),
+        .cfg_place_object_15(cfg_place_object_15),
+        .cfg_place_base_15(cfg_place_base_15),
+        .cfg_place_object_16(cfg_place_object_16),
+        .cfg_place_base_16(cfg_place_base_16),
+        .cfg_place_object_17(cfg_place_object_17),
+        .cfg_place_base_17(cfg_place_base_17),
+        .cfg_place_object_18(cfg_place_object_18),
+        .cfg_place_base_18(cfg_place_base_18),
+        .cfg_place_object_19(cfg_place_object_19),
+        .cfg_place_base_19(cfg_place_base_19),
+        .cfg_place_object_20(cfg_place_object_20),
+        .cfg_place_base_20(cfg_place_base_20),
+        .cfg_place_object_21(cfg_place_object_21),
+        .cfg_place_base_21(cfg_place_base_21),
+        .cfg_place_object_22(cfg_place_object_22),
+        .cfg_place_base_22(cfg_place_base_22),
+        .cfg_place_object_23(cfg_place_object_23),
+        .cfg_place_base_23(cfg_place_base_23),
+        .cfg_place_object_24(cfg_place_object_24),
+        .cfg_place_base_24(cfg_place_base_24),
+        .cfg_place_object_25(cfg_place_object_25),
+        .cfg_place_base_25(cfg_place_base_25),
+        .cfg_place_object_26(cfg_place_object_26),
+        .cfg_place_base_26(cfg_place_base_26),
+        .cfg_place_object_27(cfg_place_object_27),
+        .cfg_place_base_27(cfg_place_base_27),
+        .cfg_place_object_28(cfg_place_object_28),
+        .cfg_place_base_28(cfg_place_base_28),
+        .cfg_place_object_29(cfg_place_object_29),
+        .cfg_place_base_29(cfg_place_base_29),
+        .cfg_place_object_30(cfg_place_object_30),
+        .cfg_place_base_30(cfg_place_base_30),
+        .cfg_place_object_31(cfg_place_object_31),
+        .cfg_place_base_31(cfg_place_base_31),
         .cfg_context_length(cfg_context_length),
         .cfg_kv_plane_rows(cfg_kv_plane_rows),
         .cfg_generation_policy_id(cfg_generation_policy_id),

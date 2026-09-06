@@ -34,6 +34,12 @@ PROGRAM_IMAGE = DEPLOYMENT_ROOT / "a3_program.hex"
 PREFIX_ROOT = ROOT / "testdata/compiler/abi3_shipped_prefix"
 PREFIX_MANIFEST = PREFIX_ROOT / "abi3_shipped_prefix_vectors.json"
 PREFIX_EXPECT = PREFIX_ROOT / "p3_expect.hex"
+# The golden WRITE stream: address then value, one pair per word the engines
+# write, in launch order.  Results are placed by object, so the retained image
+# holds only each object's LAST value and an operator whose buffer a later one
+# rewrites is not in it.  Everything below that asks "what did the operator at
+# PC n produce" therefore has to read this and not the image.
+PREFIX_WRITES = PREFIX_ROOT / "p3_writes.hex"
 PREFIX_CAMPAIGN = ROOT / "results/rtl/abi3_shipped_prefix_campaign.json"
 OUTPUT_ROOT = ROOT / "testdata/rtl/a3_qwen_kv_scatter"
 
@@ -257,6 +263,19 @@ def assert_profile(profile: dict[str, Any]) -> None:
             raise RuntimeError("PC 38 GQA geometry changed")
 
 
+def prefix_write_values(path: Path = PREFIX_WRITES) -> list[int]:
+    """The values of the golden write stream, in launch order.
+
+    ``operation_word_ranges`` below is a cursor over the words each operation
+    WRITES, which is exactly this stream's ordering -- and is no longer the
+    ordering of the retained image.
+    """
+    words = read_hex(path)
+    if len(words) % 2:
+        raise RuntimeError("the golden write stream is not address/value pairs")
+    return [words[index * 2 + 1] for index in range(len(words) // 2)]
+
+
 def operation_word_ranges(prefix_case: dict[str, Any]) -> dict[int, tuple[int, int]]:
     cursor = 0
     result: dict[int, tuple[int, int]] = {}
@@ -476,6 +495,7 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         or not campaign.get("integrated_replay_passed")
         or campaign["vector_set"]["sha256"] != sha256_file(PREFIX_MANIFEST)
         or sha256_file(PREFIX_EXPECT) != prefix["image_sha256"]["p3_expect.hex"]
+        or sha256_file(PREFIX_WRITES) != prefix["image_sha256"]["p3_writes.hex"]
     ):
         raise RuntimeError("retained upstream RTL result witness is not current")
 
@@ -496,7 +516,7 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
             assert_profile(profile)
             profiles[(target["profile"], pc)] = profile
 
-    sources = extract_sources(prefix, read_hex(PREFIX_EXPECT))
+    sources = extract_sources(prefix, prefix_write_values())
     expected_planes = {
         "key": scatter_expected(sources["key"], 0),
         "value": scatter_expected(sources["value"], 1),

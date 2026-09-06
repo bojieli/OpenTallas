@@ -141,7 +141,10 @@ def authentic_activations() -> tuple[list[int], list[int], list[int]]:
         "integrated_replay_passed"
     ):
         raise RuntimeError("retained causal prefix is not passing")
-    words = scatter.read_hex(scatter.PREFIX_EXPECT)
+    # The golden WRITE stream, not the retained image: object 55's rope
+    # output overwrites the query projection that PC 26 produced, so the image
+    # no longer holds what PC 26 wrote.
+    words = scatter.prefix_write_values()
     cursor = 0
     selected: dict[str, list[int]] = {}
     for case in prefix["cases"]:

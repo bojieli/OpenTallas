@@ -12,9 +12,9 @@
   ],
   "gate": "G1d",
   "generated_by": "tools/build_abi3_g1d_token.py",
-  "generated_by_sha256": "36405edb38b8d3be3a2c6ae613778f4f3929786afef94f3595b8fbbfd1cfe767",
+  "generated_by_sha256": "50c1769f3ec562fcc043b21bdfdc3b015032b27b91050f610cda5d67ba5afbc9",
   "git": {
-    "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
+    "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -69,17 +69,17 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
           "bound_source_count": 60,
           "case_status": [
             {
-              "checks": 189862,
+              "checks": 353707,
               "name": "verilator",
               "status": "pass"
             }
           ],
           "declared_git": {
-            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -137,7 +137,7 @@
           ],
           "integrated_replay_passed": true,
           "integrated_simulator_checks": {
-            "verilator": 189862
+            "verilator": 353707
           },
           "integrated_simulators": [
             "verilator"
@@ -153,14 +153,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1508.965,
+            "sim_wall_s": 1423.7,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1510.97,
+            "wall_s": 1425.744,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -265,8 +265,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "why_unusable": null
         },
         "evidence_class": "public_open_tool_rtl_simulation_composite",
@@ -276,7 +276,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
+        "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -661,7 +661,7 @@
             "note": "the vehicle's result memory is one bank shared by every case at disjoint bases, so a new case's demand is added to what the committed cases already occupy. RESULT_WORDS is a parameter the campaign passes at elaboration from this very geometry, so this is a sizing statement, not a wall",
             "vehicle_result_words": 98304,
             "words_the_argmax_span_would_add": 160129,
-            "words_the_committed_cases_already_use": 91136
+            "words_the_committed_cases_already_use": 72704
           },
           "spans": {
             "through_argmax": {
@@ -673,24 +673,11 @@
                 "every_role_satisfiable": true,
                 "output_objects": {
                   "distinct_output_objects": 4,
-                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators. Under object-addressed results that is not a placement problem: the second write to a buffer lands at that buffer's own base, which is where a later read of it looks. It IS a verification problem, and the campaign answers it by comparing the engines' write STREAM rather than the retained image, so an intermediate a later operator overwrites is still compared",
                   "objects_written_more_than_once": {},
                   "writes": 4
                 },
                 "per_role": [
-                  {
-                    "distinct_objects_the_layer_needs": 3,
-                    "object_keyed": false,
-                    "objects": [
-                      45,
-                      186,
-                      194
-                    ],
-                    "role": "appending_output",
-                    "satisfiable": true,
-                    "short_by": 2,
-                    "slots_the_bridge_declares": 1
-                  },
                   {
                     "distinct_objects_the_layer_needs": 1,
                     "object_keyed": false,
@@ -723,18 +710,18 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 8
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       186
                     ],
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -745,29 +732,60 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 3
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      45,
+                      186,
+                      194
+                    ],
+                    "role": "result_object",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       36
                     ],
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       2
                     ],
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 7,
+                    "note": "the roles above share one object table, so the span is placeable only if the table is measured to hold their union",
+                    "object_keyed": true,
+                    "objects": [
+                      2,
+                      3,
+                      36,
+                      45,
+                      186,
+                      194,
+                      200
+                    ],
+                    "role": "__the whole span, through one table__",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -859,24 +877,11 @@
                 "every_role_satisfiable": true,
                 "output_objects": {
                   "distinct_output_objects": 5,
-                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators. Under object-addressed results that is not a placement problem: the second write to a buffer lands at that buffer's own base, which is where a later read of it looks. It IS a verification problem, and the campaign answers it by comparing the engines' write STREAM rather than the retained image, so an intermediate a later operator overwrites is still compared",
                   "objects_written_more_than_once": {},
                   "writes": 5
                 },
                 "per_role": [
-                  {
-                    "distinct_objects_the_layer_needs": 3,
-                    "object_keyed": false,
-                    "objects": [
-                      45,
-                      186,
-                      194
-                    ],
-                    "role": "appending_output",
-                    "satisfiable": true,
-                    "short_by": 2,
-                    "slots_the_bridge_declares": 1
-                  },
                   {
                     "distinct_objects_the_layer_needs": 1,
                     "object_keyed": false,
@@ -910,18 +915,18 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 8
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       186
                     ],
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -932,29 +937,61 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 3
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      45,
+                      186,
+                      194
+                    ],
+                    "role": "result_object",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       36
                     ],
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       2
                     ],
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 8,
+                    "note": "the roles above share one object table, so the span is placeable only if the table is measured to hold their union",
+                    "object_keyed": true,
+                    "objects": [
+                      2,
+                      3,
+                      36,
+                      45,
+                      186,
+                      194,
+                      200,
+                      209
+                    ],
+                    "role": "__the whole span, through one table__",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -1233,19 +1270,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.3,
-          "hours_whole": 5.18,
+          "hours_in_concurrent_row_shards": 1.22,
+          "hours_whole": 4.89,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 33355.1,
+            "macs_per_second": 35352.7,
             "measured": true,
-            "simulation_wall_seconds": 1508.965,
+            "simulation_wall_seconds": 1423.7,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 18657.7
+          "seconds_whole": 17603.5
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },
@@ -1319,17 +1356,17 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "079ff281bcc7e63e8edbee3c1e2cf93cfb02406acf53d0d1445ca9419f50ac8b",
+          "artifact_sha256": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
           "bound_source_count": 60,
           "case_status": [
             {
-              "checks": 189862,
+              "checks": 353707,
               "name": "verilator",
               "status": "pass"
             }
           ],
           "declared_git": {
-            "commit": "8555908f42464629f4321e770401589f0f24ebcc",
+            "commit": "c20919d3a3ff7ccef04eaf66c2b34f0ca930a25b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -1387,7 +1424,7 @@
           ],
           "integrated_replay_passed": true,
           "integrated_simulator_checks": {
-            "verilator": 189862
+            "verilator": 353707
           },
           "integrated_simulators": [
             "verilator"
@@ -1403,14 +1440,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1508.965,
+            "sim_wall_s": 1423.7,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1510.97,
+            "wall_s": 1425.744,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -1515,8 +1552,8 @@
           "usable": true,
           "vector_set_is_current": true,
           "vector_set_path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
-          "vector_set_sha256_declared": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
-          "vector_set_sha256_on_disk": "28abd940ae1669e7de2858d7397031f84877974d53e2dcf6b5aee217dd065dec",
+          "vector_set_sha256_declared": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+          "vector_set_sha256_on_disk": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
           "why_unusable": null
         },
         "evidence_class": "public_open_tool_rtl_simulation_composite",
@@ -1526,7 +1563,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "da242233f41f4a3b607b8b658073d7ff3b9b3304",
+        "commit": "34ae44728d1ec5f9dd1b84efec2127cc67f8e84e",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1911,7 +1948,7 @@
             "note": "the vehicle's result memory is one bank shared by every case at disjoint bases, so a new case's demand is added to what the committed cases already occupy. RESULT_WORDS is a parameter the campaign passes at elaboration from this very geometry, so this is a sizing statement, not a wall",
             "vehicle_result_words": 98304,
             "words_the_argmax_span_would_add": 160129,
-            "words_the_committed_cases_already_use": 91136
+            "words_the_committed_cases_already_use": 72704
           },
           "spans": {
             "through_argmax": {
@@ -1923,24 +1960,11 @@
                 "every_role_satisfiable": true,
                 "output_objects": {
                   "distinct_output_objects": 4,
-                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators. Under object-addressed results that is not a placement problem: the second write to a buffer lands at that buffer's own base, which is where a later read of it looks. It IS a verification problem, and the campaign answers it by comparing the engines' write STREAM rather than the retained image, so an intermediate a later operator overwrites is still compared",
                   "objects_written_more_than_once": {},
                   "writes": 4
                 },
                 "per_role": [
-                  {
-                    "distinct_objects_the_layer_needs": 3,
-                    "object_keyed": false,
-                    "objects": [
-                      19,
-                      27,
-                      37
-                    ],
-                    "role": "appending_output",
-                    "satisfiable": true,
-                    "short_by": 2,
-                    "slots_the_bridge_declares": 1
-                  },
                   {
                     "distinct_objects_the_layer_needs": 1,
                     "object_keyed": false,
@@ -1973,18 +1997,18 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 8
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       27
                     ],
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -1995,29 +2019,60 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 3
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      19,
+                      27,
+                      37
+                    ],
+                    "role": "result_object",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       18
                     ],
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       13
                     ],
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 7,
+                    "note": "the roles above share one object table, so the span is placeable only if the table is measured to hold their union",
+                    "object_keyed": true,
+                    "objects": [
+                      13,
+                      14,
+                      18,
+                      19,
+                      27,
+                      28,
+                      37
+                    ],
+                    "role": "__the whole span, through one table__",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -2109,24 +2164,11 @@
                 "every_role_satisfiable": true,
                 "output_objects": {
                   "distinct_output_objects": 5,
-                  "note": "the layer writes its intermediates into fewer buffers than it has operators: an appending output cursor gives each write a fresh address, which is sound only while nothing reads the earlier contents of a reused object",
+                  "note": "the layer writes its intermediates into fewer buffers than it has operators. Under object-addressed results that is not a placement problem: the second write to a buffer lands at that buffer's own base, which is where a later read of it looks. It IS a verification problem, and the campaign answers it by comparing the engines' write STREAM rather than the retained image, so an intermediate a later operator overwrites is still compared",
                   "objects_written_more_than_once": {},
                   "writes": 5
                 },
                 "per_role": [
-                  {
-                    "distinct_objects_the_layer_needs": 3,
-                    "object_keyed": false,
-                    "objects": [
-                      19,
-                      27,
-                      37
-                    ],
-                    "role": "appending_output",
-                    "satisfiable": true,
-                    "short_by": 2,
-                    "slots_the_bridge_declares": 1
-                  },
                   {
                     "distinct_objects_the_layer_needs": 1,
                     "object_keyed": false,
@@ -2160,18 +2202,18 @@
                     "role": "mapped_family_operand",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 8
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       27
                     ],
                     "role": "matmul_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
@@ -2182,29 +2224,61 @@
                     "role": "matmul_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 3
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 3,
+                    "object_keyed": true,
+                    "objects": [
+                      19,
+                      27,
+                      37
+                    ],
+                    "role": "result_object",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       18
                     ],
                     "role": "rms_input",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
                   },
                   {
                     "distinct_objects_the_layer_needs": 1,
-                    "object_keyed": false,
+                    "object_keyed": true,
                     "objects": [
                       13
                     ],
                     "role": "rms_weight",
                     "satisfiable": true,
                     "short_by": 0,
-                    "slots_the_bridge_declares": 1
+                    "slots_the_bridge_declares": 13
+                  },
+                  {
+                    "distinct_objects_the_layer_needs": 8,
+                    "note": "the roles above share one object table, so the span is placeable only if the table is measured to hold their union",
+                    "object_keyed": true,
+                    "objects": [
+                      13,
+                      14,
+                      18,
+                      19,
+                      27,
+                      28,
+                      36,
+                      37
+                    ],
+                    "role": "__the whole span, through one table__",
+                    "satisfiable": true,
+                    "short_by": 0,
+                    "slots_the_bridge_declares": 13
                   }
                 ],
                 "route_note": "derived from the same demand-versus-capacity counts as the shortfall above; it is what this vehicle lacks, not a design",
@@ -2483,19 +2557,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.3,
-          "hours_whole": 5.18,
+          "hours_in_concurrent_row_shards": 1.22,
+          "hours_whole": 4.89,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 33355.1,
+            "macs_per_second": 35352.7,
             "measured": true,
-            "simulation_wall_seconds": 1508.965,
+            "simulation_wall_seconds": 1423.7,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 18657.7
+          "seconds_whole": 17603.5
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },

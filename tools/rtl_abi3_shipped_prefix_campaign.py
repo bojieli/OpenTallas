@@ -46,7 +46,57 @@ PINNED_VERILATOR_VERSION = "5.050"
 # carries mapped placement adds one more check per mapped case (its reserved
 # word), so this constant has to be re-measured, not adjusted by hand, when
 # the case-record generation changes.
-EXPECTED_INTEGRATED_CHECKS = 189_826 + 4 * 9
+# The checks the harness makes that do NOT scale with the words the run
+# produces: the per-case control and admission comparisons and the run-wide
+# totals.  It is the only literal here, and it is the residue of the previous
+# generation's own literal: that campaign expected 189,862 checks over a run
+# whose word-scaled checks were 91,136 (per-case image) + 91,136 (final image)
+# + 7,168 (unwritten tail) = 189,440, leaving 422.  Everything else is derived
+# from the vector set below, so a run that compares a different number of
+# WORDS than the vector set declares is refused by arithmetic rather than by a
+# number somebody remembered to update.
+STRUCTURAL_INTEGRATED_CHECKS = 189_862 - 189_440
+
+
+def expected_integrated_checks(vectors: dict[str, Any]) -> int:
+    """How many checks a correct run of THIS vector set must report.
+
+    Results are placed by object, so three different word counts appear and
+    they are not interchangeable:
+
+      * ``result_word_count`` -- the words the engines WRITE.  Each is
+        compared twice against the golden write stream, by address and by
+        value, as it commits.
+      * the per-case ``result_region_span`` -- the words the retained image
+        HOLDS.  Smaller than the writes by exactly what a rewritten buffer
+        gives up.  Compared once per case and once over the whole image.
+      * the result bank's declared size -- everything above the image has to
+        read back unwritten.
+
+    Plus one consumed-count check per case and one for the whole run.
+    """
+    writes = int(vectors["result_word_count"])
+    span = sum(
+        int(case["bank_mapping"]["result_region_span"]) for case in vectors["cases"]
+    )
+    image = int(vectors["retained_image_word_count"])
+    if span != image:
+        raise SystemExit(
+            f"the cases allocate {span} result words and the vector set "
+            f"declares a retained image of {image}"
+        )
+    result_words = int(vectors["geometry"]["result_words"])
+    if image > result_words:
+        raise SystemExit("the retained image does not fit the result bank")
+    return (
+        STRUCTURAL_INTEGRATED_CHECKS
+        + 2 * writes                      # every write: address and value
+        + len(vectors["cases"])           # each case consumed its own writes
+        + 1                               # the run consumed the whole stream
+        + image                           # the retained image, per case
+        + image                           # the retained image, whole run
+        + (result_words - image)          # and nothing above it was written
+    )
 TOOLS_ROOT = Path(
     os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
 )
@@ -134,6 +184,7 @@ VECTOR_FILES = (
     "p3_index.hex",
     "p3_source.hex",
     "p3_expect.hex",
+    "p3_writes.hex",
     "p3_meta.hex",
 )
 
@@ -766,7 +817,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         len(cases) == 1
         and cases[0]["status"] == "pass"
         and cases[0]["observed_cases"] == expected_cases
-        and cases[0]["checks"] == EXPECTED_INTEGRATED_CHECKS
+        and cases[0]["checks"] == expected_integrated_checks(vectors)
     )
     source_paths = (*RTL_SOURCES, *TEST_SOURCES, *CONTRACT_SOURCES, *TOOL_SOURCES)
     sources = {
@@ -999,7 +1050,11 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "selected_matmul_checkpoint_byte_count"
         ],
         "selected_checkpoint_byte_count": vectors["selected_checkpoint_byte_count"],
+        # Words the engines WRITE, and words the retained image spans.  They
+        # differ by exactly the words a rewritten buffer gives up, and both
+        # are published because only the first is a count of what ran.
         "result_word_count": vectors["result_word_count"],
+        "retained_image_word_count": vectors["retained_image_word_count"],
         "resolved_view_count": vectors["resolved_view_count"],
         "capability_fault_count": vectors["capability_fault_count"],
         "fault_sites": fault_sites,
