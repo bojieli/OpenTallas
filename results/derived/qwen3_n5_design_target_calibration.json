@@ -3,8 +3,8 @@
     "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
     "batch_size": 1,
     "context_tokens": 8192,
-    "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
-    "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4"
+    "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+    "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill"
   },
   "calibration": {
     "band": {
@@ -22,13 +22,13 @@
       },
       "note": "recorded from the reconciliation artifact (gate C3); not part of this field's verdict",
       "rom": {
-        "analytical_over_all_five_terms": "link_latency",
-        "analytical_over_expressible_terms": "kv_read",
+        "analytical_over_all_five_terms": "weight_read",
+        "analytical_over_expressible_terms": "weight_read",
         "cycle": "kv_read",
         "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
-        "same_regime": true
+        "same_regime": false
       },
-      "same_regime_both_targets": true,
+      "same_regime_both_targets": false,
       "source": "results/derived/qwen3_n5_design_target_reconciliation.json"
     },
     "block_cycles_within_band": false,
@@ -1480,10 +1480,10 @@
     "derived_machine": {
       "anchor": {
         "analytical_artifact": "results/roofline/n5_vs_b200/analytical.json",
-        "component_times_s_compute": 5.570312088214652e-05,
-        "compute_roof_ops_s": 271740806767821.84,
+        "component_times_s_compute": 0.00015861700976394524,
+        "compute_roof_ops_s": 95429935481236.78,
         "operations": 15136811008.0,
-        "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+        "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill",
         "rule": "operations_by_canonical_format summed over formats / component_times_s.compute"
       },
       "binding_regime": {
@@ -1496,31 +1496,31 @@
         },
         "note": "recorded from the reconciliation artifact (gate C3); not part of this field's verdict",
         "rom": {
-          "analytical_over_all_five_terms": "link_latency",
-          "analytical_over_expressible_terms": "kv_read",
+          "analytical_over_all_five_terms": "weight_read",
+          "analytical_over_expressible_terms": "weight_read",
           "cycle": "kv_read",
           "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
-          "same_regime": true
+          "same_regime": false
         },
-        "same_regime_both_targets": true,
+        "same_regime_both_targets": false,
         "source": "results/derived/qwen3_n5_design_target_reconciliation.json"
       },
       "compute_time_relative_error": 0.0,
-      "compute_time_s_from_machine": 5.570312088214652e-05,
+      "compute_time_s_from_machine": 0.00015861700976394524,
       "hbm_machine": {
         "clock_hz": 1000000000.0,
-        "compute_roof_ops_s": 271740806767821.84,
+        "compute_roof_ops_s": 95429935481236.78,
         "lanes": 1024.0,
         "relative_error": 0.0,
-        "work_per_lane_cycle": 265.371881609201
+        "work_per_lane_cycle": 93.1932963683953
       },
       "reproduces_anchor": true,
       "rom_machine": {
         "clock_hz": 1000000000.0,
-        "compute_roof_ops_s": 271740806767821.84,
+        "compute_roof_ops_s": 95429935481236.78,
         "lanes": 1024.0,
         "relative_error": 0.0,
-        "work_per_lane_cycle": 265.371881609201
+        "work_per_lane_cycle": 93.1932963683953
       },
       "tolerance_relative": 1e-09
     },
@@ -1539,7 +1539,7 @@
         "wait_check_cycles": 1
       },
       "tensor_engine_as_derived": {
-        "bytes_per_cycle": 475296.0,
+        "bytes_per_cycle": 95424.0,
         "family": "tensor",
         "fixed_latency_cycles": 36,
         "lanes": 1024,
@@ -1549,7 +1549,7 @@
         "queues": 16,
         "tile_issue_cycles": 1,
         "tile_pipeline_depth_default": 2,
-        "work_per_lane_cycle": 265.371881609201
+        "work_per_lane_cycle": 93.1932963683953
       }
     },
     "mapping": {
@@ -6403,7 +6403,7 @@
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "80ff7affd766d2c7efbae69d8384214a951b65bd",
+    "commit": "943613b244f595962c0131d3672c66c2f824564e",
     "dirty": false,
     "dirty_inputs": [],
     "dirty_paths": []
@@ -6413,28 +6413,28 @@
       "sha256": "51d2909a17a4b594550297bfa4fc0b63c640720ec0add6981a694b3c613a934d"
     },
     "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json": {
-      "sha256": "d3c99313d9ef836be7aafcb6b30954bd86e6995ec03e3a53f19eb5dc4eeeb216"
+      "sha256": "bf6db5953075a1befd7e2436c0c5566d7757b968ff505656ea919a8d42f3b8f1"
     },
     "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json": {
-      "sha256": "9da3a4b308209bbdee083223673f65772a4b460d615ce05803eefa5d27941fd7"
+      "sha256": "f55fd912cf4e37a9e88b2c52ddc24aa525fd3bc46178a71aabfa006b86580211"
     },
     "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json": {
-      "sha256": "3067ed97c9acef4c54c3ca76bac9b8d558ba77ab46def1de30441b99d92d512d"
+      "sha256": "58bc45ecfcaec92f02c67433eb7cab8a92e6a9aa4dee1a5c1b7b7a908090e687"
     },
     "configs/hardware/abi3_cost_n5_design_target_rom_v1.json": {
-      "sha256": "cc9c30b311ddea354cdfbd1f9ffd0f657b709b2ccfcfa845d838f93a986469c3"
+      "sha256": "eadfe4dd1771a560222b4e556bf5072e65458803d73cdf78817a79d354dd3110"
     },
     "configs/hardware/technology.json": {
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "49aaeff567d0c0132900660958bedc7593fc532b39acbf470652eefbee211446"
+      "sha256": "93836466431f2fd8a7ebe197599f86abc766821b52cfb5c26609a90add0713e5"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
-      "sha256": "10d1fe4cc4ecdf3b80b1306bbd3fc82af963ade96ef37d7ebfcd4c0d6c31841e"
+      "sha256": "0bdde63ade200f31f71498be577a458f837915799612a279d517d542a59a99c7"
     },
     "results/derived/qwen3_n5_design_target_reconciliation.json": {
-      "sha256": "bca0185170bbb91624cc8f77633c1fe6feaf099745cf8713baa2f2a603cbcf69"
+      "sha256": "13d615b934d63956712618c35ffaecb44c28c3ed45c9dd1c15386c815c8184b3"
     },
     "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json": {
       "sha256": "eee87c1aeab04a47838ab4e58dc584ac91c90ecb7846b91c05b398cda2f270a7"
