@@ -59,9 +59,9 @@
   },
   "log_sha256": {
     "iverilog": "24a614fb9744c805b21aecde1b93c481813480c264301f393756c191faf59af9",
-    "verilator": "e430b0230b1022e1aa2b35b7a1374efc755c39de7c408010a97f1d4ec06b054d",
-    "verilator_compile": "82fe8fe34a4c593f5cb61a6c8dac14def8d465757e50e82bac9578443ac1065e",
-    "yosys": "8943da10b83f0b4d05c342fb70a40c2b00279e59616dccc55c8c78cf56ff0b80"
+    "verilator": "d113d4eb58508d3e229058f1810a08c78f51364814a7829946f250e601fef3b7",
+    "verilator_compile": "2815c0adec03ac87213c80e31e76b02cc09837e1c67ef03f0ca95d4a887b9427",
+    "yosys": "e0df5722333659078260f4082b392ad9ab03d7f2299bf206b43b967c84b5938d"
   },
   "normalized_cases": [
     {
@@ -202,7 +202,7 @@
   },
   "simulators_agree": true,
   "source_sha256": {
-    "results/rtl/abi3_shipped_prefix_campaign.json": "fcb1592760cde8d9a107995c0111f523e44ddf2d859c6d538e49f9bea09a8fc2",
+    "results/rtl/abi3_shipped_prefix_campaign.json": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
     "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
@@ -217,10 +217,10 @@
     "rtl/test/tb_a3_qwen_gqa.sv": "87e56d077eeaa35e38f20d6c42fa1f581af82a4cafdef03e9417d0133550741e",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
     "runtime/reference/tensor_accelerator_attention.py": "72153848bf51ef8a6f2a61456ffa222fbf37150de05305c1ea4bfbaf955abf68",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "85263a2b33597ba63e82e783eef7436b1b5ea0786bf7c20e4817bbdbaee13dbd",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
     "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "e24f73e4510cf141b8b4b3fd2888ea0341efe07653578bb3b370845ab7733636",
-    "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json": "9bfe26104715ba70728aaccc40b4b43bfed995e84d5e812e9e90d0dd2dbe3efd",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e",
+    "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json": "a00ff94fd825231de5c7121ac10833cb4763a31fe36f11187730de8d2e592e82",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
     "tools/build_a3_qwen_gqa_vectors.py": "584d54fc053295c2f5209931c6204b451cc223c0005902c48dbcfa14a82745b1",
@@ -256,7 +256,7 @@
   "vector_sha256": {
     "cases.hex": "c8494f5ec807a34365be02b63b4719f61b80c659fa6e07b5182df6f04ef76687",
     "expected.hex": "80280ed1b646a8b55d75a05134eb47ee69bcd19276de95ae49bdfe34ba9b02cd",
-    "index.json": "8b57fa25059cfbd902ac0703f391415bb7c731c8521bfa5ab3314bf2fd2cd1d3",
+    "index.json": "c60cf0030b6129ef1f5f517332eea2168104a526c78da432d99406400b533409",
     "instruction.hex": "843f602203c869cf1868d4a1d3c8a9671725ee4c96d03acef2561cbbf1745e7a",
     "numeric.hex": "edcd211a51f245d3da51fe4ff3318261e15d6105b49d1d7037fa444f49fae8ae",
     "operator.hex": "a4bc1b569a0c57df786f30a7f863761ac85de2915ff57023f0f73e38cb227d5f",
@@ -268,10 +268,10 @@
     "view3.hex": "1f9d5ba6a4cefe29bb3a29659b57f17b0812ba6b2b0439bfecb9f0379693a42f"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.030172177008353174,
-    "iverilog_simulation": 323.10631625691894,
-    "verilator_compile": 12.2819041069597,
-    "verilator_simulation": 8.857046479010023,
-    "yosys_elaboration": 57.69840773299802
+    "iverilog_compile": 0.01809519703965634,
+    "iverilog_simulation": 306.01847227395047,
+    "verilator_compile": 8.225145332049578,
+    "verilator_simulation": 6.284254543017596,
+    "yosys_elaboration": 55.92446445696987
   }
 }

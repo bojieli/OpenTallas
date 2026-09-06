@@ -135,17 +135,17 @@
   ],
   "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "fa25c8c64948dfeb16d3de806f6407c305b5627c3557e2d49d6b4a30846a9bcb",
-    "ot_a3_vector_silu_mul_yosys": "8221ed3780e1df9cac17048737e4de0cf1d178d1ec7ac93b9d8bf66dbf5832c1",
+    "ot_a3_selection_token_append_yosys": "3948aaff651500f8a68a4507c44141f94a0b3b988cebc44d7d5a6508da691053",
+    "ot_a3_vector_silu_mul_yosys": "af512fdd60a4a2ac77cd791cd08e9b7e960b8ef01d5a8cb33d413ea53b667cfe",
     "tb_a3_operator_admission_iverilog": "8a1a26b0e2633ce15cf63696afadb18e96b6d76e85823e746445c8153297515b",
-    "tb_a3_operator_admission_verilator": "187c1c4efcabe3d1fac2144e5b895838cf239eed6cf29b941cb1aa1fb029e00a",
-    "tb_a3_operator_admission_verilator_compile": "09f2525faff34335f41d6af13ec2d1c13e1f2edd176d1dcf69ad141b270a8b82",
+    "tb_a3_operator_admission_verilator": "39521f7dd28b638ef812d5f2a708344cd6ed1f47affa726226212972a2ecdcd5",
+    "tb_a3_operator_admission_verilator_compile": "30ce6541ef44a179dc22b774087d9c1cd6d9993f81b595343709dffeb4740286",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "725f63ebf63158e7b04fbdce5a450bb51e01a0f6f2d0faa63185fb4a5727812b",
-    "tb_a3_selection_token_append_verilator_compile": "f2dc195da04e19e440f57837a7ee4480b30c84f256596ecadf927bfd1f4e498e",
+    "tb_a3_selection_token_append_verilator": "b7a02ca55e32246717c1f51608680fc4d0c87d0fbd92fbfc30278fa8c8b5c375",
+    "tb_a3_selection_token_append_verilator_compile": "b2a515ff8830779fce4c9eea45657b8928be98d865b27bc14e62776929898277",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "790df96a1c550f1272018eaab6772dfa653de048e2013e4a7e4eaced23673cfd",
-    "tb_a3_vector_silu_mul_verilator_compile": "98dc356a9cf82e5d0cfcc5fb1b0ca0e4613a1d8561bb89e81b095b0188254c45"
+    "tb_a3_vector_silu_mul_verilator": "1a7f0d6fca95183b1c6954d91f51b5853e3fcd8103178d2788ccdd7833b2c01e",
+    "tb_a3_vector_silu_mul_verilator_compile": "6567d173d60991ad8f438e82820f5b066a57be3c8b25ee3bc7f460a4c6040532"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -982,19 +982,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.016035667969845235,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 11.389283966040239,
-    "tb_a3_operator_admission_iverilog_compile": 0.0788563929963857,
-    "tb_a3_operator_admission_iverilog_simulation": 844.4949209589977,
-    "tb_a3_operator_admission_verilator_compile": 15.803750943974592,
-    "tb_a3_operator_admission_verilator_simulation": 19.91878293605987,
-    "tb_a3_selection_token_append_iverilog_compile": 0.006708497065119445,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.005398113979026675,
-    "tb_a3_selection_token_append_verilator_compile": 3.8365074689500034,
-    "tb_a3_selection_token_append_verilator_simulation": 0.0016952049918472767,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.014312488958239555,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 18.793784165056422,
-    "tb_a3_vector_silu_mul_verilator_compile": 7.428696785005741,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.2678327960893512
+    "ot_a3_selection_token_append_yosys_elaboration": 0.018219792982563376,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 11.168871000991203,
+    "tb_a3_operator_admission_iverilog_compile": 0.06907635100651532,
+    "tb_a3_operator_admission_iverilog_simulation": 842.8865776730236,
+    "tb_a3_operator_admission_verilator_compile": 15.071538168005645,
+    "tb_a3_operator_admission_verilator_simulation": 19.580862993956544,
+    "tb_a3_selection_token_append_iverilog_compile": 0.007536815945059061,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.005196055048145354,
+    "tb_a3_selection_token_append_verilator_compile": 3.5627611740492284,
+    "tb_a3_selection_token_append_verilator_simulation": 0.001606520963832736,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.019360408070497215,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 18.50948111107573,
+    "tb_a3_vector_silu_mul_verilator_compile": 6.751528730033897,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.26850771892350167
   }
 }
