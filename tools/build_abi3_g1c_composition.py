@@ -126,7 +126,22 @@ def git_state() -> dict[str, Any]:
             args, cwd=ROOT, text=True, capture_output=True, check=False
         ).stdout.strip()
 
-    porcelain = run(["git", "status", "--porcelain"])
+    def run_lines(args: list[str]) -> str:
+        # ``git status --porcelain`` prefixes every line with a two-column
+        # status field and a space, and an unstaged modification's first
+        # column is a SPACE.  Stripping the whole output before splitting
+        # therefore ate the first line's leading space and ``line[3:]``
+        # then ate the first character of the first dirty path: this
+        # record named a file that does not exist.  It never moved
+        # ``worktree_dirty`` -- that is a bool over a non-empty list -- so
+        # no gate verdict turned on it; what it corrupted is the provenance
+        # a reader would use to find out WHICH file was dirty.  Only the
+        # trailing newline is stripped now.
+        return subprocess.run(
+            args, cwd=ROOT, text=True, capture_output=True, check=False
+        ).stdout.rstrip("\n")
+
+    porcelain = run_lines(["git", "status", "--porcelain"])
     dirty = sorted(line[3:].strip() for line in porcelain.splitlines() if len(line) > 3)
     return {
         "commit": run(["git", "rev-parse", "HEAD"]) or None,

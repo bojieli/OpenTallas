@@ -73,6 +73,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -83,6 +84,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from runtime.abi3.constants import Major  # noqa: E402
+from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
+from runtime.abi3.records import EosReason  # noqa: E402
 from tools import build_abi3_shipped_prefix_vectors as _prefix  # noqa: E402
 
 
@@ -102,6 +105,8 @@ DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_g1d_token.json"
 ORACLE = "results/abi3/qwen3_reference_oracle_eos.json"
 ORACLE_TOKEN_FIELD = "results.TA-QW-EOS-1.generated_token_ids"
 ORACLE_TOKEN_COUNT = 1
+# The golden view stream's word stride, as the deployment vector set states it.
+VIEW_STRIDE = 7
 ENTRY_PROBE = "results/rtl/abi3_vehicle_entry_probe.json"
 WORKLOAD_PATH = "build/workloads/qwen3-8b/TA-QW-EOS-1.json"
 
@@ -112,6 +117,21 @@ HEAD_ROLES = {
     "lm_head": "TENSOR.MATMUL",
     "argmax": "SELECTION.ARGMAX",
 }
+# The one family that can carry an EOS reason, and the reason value the gate
+# names.  The mnemonic is the ABI's; which PC carries it is derived.
+EOS_MNEMONIC = "SELECTION.TOKEN_APPEND"
+# The integrated harness prints one MAPPED line per case that carries mapped
+# placement, and that line is the only place ``selected_eos_reason`` is ever
+# reported by a run.  Reading it is how this rung measures the EOS instead of
+# asking a field of the artifact that no run writes.
+MAPPED_RE = re.compile(
+    r"^MAPPED (?P<case>\d+) placement=(?P<placement>\d+) .*?"
+    r"append=(?P<append>\d+) token=(?P<token>\d+) tie=(?P<tie>\d+) "
+    r"eos=(?P<eos>\d+) ",
+    re.MULTILINE,
+)
+OFFICIAL_EOS = int(EosReason.OFFICIAL_EOS)
+GENERATION_POLICY = ExtendedDescriptorType.GENERATION_POLICY
 # The rung's declared shape: four concurrent row shards, from G1d's own cost
 # statement.  The shard WIDTH is never typed here -- it is derived by dividing
 # the descriptor's own output axis, and a remainder refuses the build.
@@ -537,6 +557,331 @@ def head_execution(
     }
 
 
+def resolved_output_words(
+    deployment_key: str, head: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """How many result words each head operator would actually write.
+
+    Declared dims overstate it: the final normalisation's output view is
+    declared [512, 4096] and resolves to a single row.  The resolved extent
+    comes from the golden device's own recorded view stream -- the same
+    stream the RTL vehicle is checked against -- so this is what ran in the
+    reference model, not a re-derivation from the descriptor's maxima.
+    """
+    manifest = json.loads(_g1b.DEPLOYMENT_MANIFEST.read_text())
+    stream = _g1b.read_hex(_g1b.DEPLOYMENT_DIR / "a3_deployment_view.hex")
+    case = next(
+        c for c in manifest["cases"]
+        if c["deployment"] == deployment_key and c["request"] == "decode"
+    )
+    stride = int(manifest.get("view_stride") or VIEW_STRIDE)
+    base = int(case["view_base"])
+    count = int(case["view_count"])
+    resolved: dict[int, dict[str, int]] = {}
+    for step in range(count):
+        at = (base + step) * stride
+        resolved[int(stream[at])] = {
+            "extent": int(stream[at + 2]),
+            "rank": int(stream[at + 5]),
+            "extent_axis": int(stream[at + 6]),
+        }
+    rows = []
+    total = 0
+    for site in head:
+        for slot in site["slots"]:
+            if not slot["slot"].startswith("output"):
+                continue
+            entry = resolved.get(int(slot["view_descriptor_id"]))
+            if entry is None:
+                raise SystemExit(
+                    f"PC {site['pc']}: output view "
+                    f"{slot['view_descriptor_id']} has no resolved extent in "
+                    "the golden view stream; the span's result-bank demand "
+                    "cannot be measured and is not guessed"
+                )
+            dims = list(slot["declared_dims"])
+            axis = entry["extent_axis"]
+            if axis < len(dims):
+                dims[axis] = entry["extent"]
+            elements = 1
+            for value in dims:
+                elements *= int(value)
+            rows.append(
+                {
+                    "pc": site["pc"],
+                    "mnemonic": site["mnemonic"],
+                    "view_descriptor_id": slot["view_descriptor_id"],
+                    "declared_dims": slot["declared_dims"],
+                    "resolved_extent": entry["extent"],
+                    "resolved_on_axis": axis,
+                    "resolved_dims": dims,
+                    "elements": elements,
+                }
+            )
+            total += elements
+    return {
+        "per_output": rows,
+        "words": total,
+        "source": (
+            "testdata/compiler/abi3_deployment/a3_deployment_view.hex, the "
+            "resolved-view stream runtime.sim.device.Device recorded for this "
+            "case; one result word holds one element, which is what "
+            "p3_expect.hex is and what the harness compares"
+        ),
+    }
+
+
+def runnable_leg(
+    facts: Any,
+    loop: dict[str, Any],
+    head: list[dict[str, Any]],
+    roles: dict[str, dict[str, Any]],
+    eos: dict[str, Any],
+    deployment_key: str,
+    vectors: dict[str, Any],
+) -> dict[str, Any]:
+    """The one span of this program a single transaction could execute today.
+
+    Every number here is derived: the entry is the layer loop's back edge plus
+    one, because the head IS the sites after that edge; each instruction bound
+    is a site's own PC plus one.  The placement demand is computed by G1b's
+    own function against the bridge's own declared capacity, so it cannot
+    drift from the reason the layer rung is red, and it is computed over the
+    span's COMPLETE operand set -- a role no operand is attributed to is a
+    hole, not a pass.
+
+    What it establishes is that this span is reachable, and what it costs.  It
+    establishes nothing about the head having run: no field of this rung is
+    permitted to move because a span was found reachable.
+    """
+    entry_pc = int(loop["back_edge_pc"]) + 1
+    argmax_pc = int(roles["argmax"]["pc"])
+    eos_pc = int(eos["site"]["pc"])
+    capacity = _g1b.placement_capacity()
+    spans = {}
+    for name, bound_pc in (
+        ("through_argmax", argmax_pc), ("through_the_eos_site", eos_pc)
+    ):
+        sites = [site for site in head if entry_pc <= site["pc"] <= bound_pc]
+        demand = _g1b.placement_demand(sites, capacity)
+        outputs = resolved_output_words(deployment_key, sites)
+        spans[name] = {
+            "entry_pc": entry_pc,
+            "instruction_count": bound_pc + 1,
+            "site_pcs": [site["pc"] for site in sites],
+            "operand_count": sum(len(site["slots"]) for site in sites),
+            "unattributed_operand_count": len(demand["unattributed_operands"]),
+            "every_role_satisfiable": demand["every_role_satisfiable"],
+            "placement_demand": demand,
+            "result_bank_words_the_span_would_write": outputs,
+        }
+    geometry = vectors.get("geometry") or {}
+    vehicle_words = geometry.get("result_words")
+    used = geometry.get("expected_words_used")
+    fits = None
+    if isinstance(vehicle_words, int) and isinstance(used, int):
+        need = spans["through_argmax"]["result_bank_words_the_span_would_write"]["words"]
+        fits = (used + need) <= vehicle_words
+    return {
+        "derived_from": (
+            "the layer loop's back edge and the head sites' own PCs; no span "
+            "bound is written down in this file"
+        ),
+        "spans": spans,
+        "result_bank": {
+            "vehicle_result_words": vehicle_words,
+            "words_the_committed_cases_already_use": used,
+            "words_the_argmax_span_would_add": spans["through_argmax"][
+                "result_bank_words_the_span_would_write"]["words"],
+            "a_fifth_case_fits_in_the_vehicle_as_elaborated": fits,
+            "note": (
+                "the vehicle's result memory is one bank shared by every case "
+                "at disjoint bases, so a new case's demand is added to what "
+                "the committed cases already occupy. RESULT_WORDS is a "
+                "parameter the campaign passes at elaboration from this very "
+                "geometry, so this is a sizing statement, not a wall"
+            ),
+        },
+        "establishes": (
+            "that a single transaction entered at the head can reach these "
+            "sites with every placement role satisfiable"
+        ),
+        "does_not_establish": (
+            "that the head ran, that any logit was computed or compared, or "
+            "that the value the span would consume is the composed trunk "
+            "output: no field of this rung moves because of this block"
+        ),
+    }
+
+
+def eos_measurement(
+    facts: Any,
+    head: list[dict[str, Any]],
+    execution: dict[str, Any],
+    campaign: dict[str, Any],
+    campaign_body: dict[str, Any],
+    case_index: int,
+    oracle_ids: list[int],
+) -> dict[str, Any]:
+    """``eos.official_eos_raised``, and the two halves it is the AND of.
+
+    The field moved to this rung on 2026-09-06 because G1e's design excludes
+    engines and could only ever have passed a model value through.  It asks
+    two things at once, and this record answers each separately so a reader
+    can see which half is missing:
+
+    1.  the integrated top's ``selected_eos_reason`` equals ``OFFICIAL_EOS``;
+    2.  the run launched at least one REAL engine.
+
+    Half 2 is measured from the run's own launch count.  Half 1 is not
+    measured at all -- the retained integrated campaign records no
+    ``selected_eos_reason`` observation, because the harness only checks that
+    word for a case carrying mapped placement and the campaign reports
+    ``cases_with_mapped_placement`` 0.  An unmeasured half is FALSE here, and
+    the record says which half and why, rather than reporting the conjunction
+    over an absence.
+
+    Two further facts are derived rather than asserted, because together they
+    say a single head run cannot satisfy this rung as it now stands:
+
+    *   only ``SELECTION.TOKEN_APPEND`` carries an EOS reason at all, and this
+        program has exactly one such site.  Its PC is derived from the
+        deployment's own issue sites and compared against the span the run
+        fetched.
+    *   the deployment's own GENERATION_POLICY descriptor names the EOS token
+        ids.  The oracle's generated ids are compared against that set, and
+        the INDEX at which the official EOS appears is reported.  This rung's
+        ``oracle_token_count`` is 1, so the id it compares is the oracle's
+        FIRST generated id; if the official EOS is not that id, the run whose
+        token this rung certifies is not the run that raises the EOS.
+    """
+    observed = next(
+        (
+            row for row in (campaign.get("observed_cases") or [])
+            if int(row.get("index", -1)) == case_index
+        ),
+        None,
+    )
+    real_launches = int(observed.get("launches", 0)) if observed else None
+    launched_a_real_engine = bool(real_launches) if real_launches is not None else False
+
+    sites = [s for s in head if s["mnemonic"] == EOS_MNEMONIC]
+    if len(sites) != 1:
+        raise SystemExit(
+            f"the head has {len(sites)} {EOS_MNEMONIC} site(s); the EOS "
+            "measurement binds to exactly one and refuses to guess"
+        )
+    site = sites[0]
+    fetched = int(execution.get("instructions_fetched", -1))
+    site_fetched = bool(0 <= site["pc"] < fetched)
+
+    policy_ids = list(facts.deployment.table.ids_of_type(GENERATION_POLICY))
+    if len(policy_ids) != 1:
+        raise SystemExit(
+            f"the deployment declares {len(policy_ids)} GENERATION_POLICY "
+            "descriptors; the EOS token set cannot be derived from one"
+        )
+    policy = facts.deployment.table.get(policy_ids[0], GENERATION_POLICY).payload
+    eos_tokens = [
+        int(policy[f"eos_token_{i}"]) for i in range(int(policy["eos_count"]))
+    ]
+    official_index = next(
+        (i for i, token in enumerate(oracle_ids) if int(token) in eos_tokens), None
+    )
+
+    # The observation comes from the run's own printed MAPPED line for THIS
+    # case, and only from a campaign this rung already found usable: a line in
+    # a drifted, dirty or failed campaign is not evidence of anything.
+    reason_observed = None
+    selected_token = None
+    if campaign.get("usable") is True:
+        for case in (campaign_body.get("cases") or []):
+            for match in MAPPED_RE.finditer(case.get("run_log") or ""):
+                if int(match.group("case")) != case_index:
+                    continue
+                if int(match.group("placement")) == 0:
+                    continue
+                reason_observed = int(match.group("eos"))
+                selected_token = int(match.group("token"))
+    reason_is_official = (
+        reason_observed is not None and int(reason_observed) == OFFICIAL_EOS
+    )
+    return {
+        "official_eos_raised": bool(reason_is_official and launched_a_real_engine),
+        "selected_eos_reason_observed": reason_observed,
+        "selected_token_observed": selected_token,
+        "observation_source": (
+            "the MAPPED line the integrated harness printed for this case, in "
+            "the run log of a campaign this rung found usable"
+        ),
+        "selected_eos_reason_is_official_eos": reason_is_official,
+        "official_eos_reason_value": OFFICIAL_EOS,
+        "run_launched_at_least_one_real_engine": launched_a_real_engine,
+        "real_engine_launches_in_this_case": real_launches,
+        "why_the_reason_is_unmeasured": (
+            None if reason_observed is not None else
+            "no run log of a usable campaign carries a MAPPED line for this "
+            "case: rtl/test/a3_shipped_prefix_harness.cpp prints that line, "
+            "and checks selected_eos_reason at all, only for a case carrying "
+            "mapped placement, and the campaign reports "
+            "cases_with_mapped_placement "
+            f"{_dig(campaign, 'operator_admission.cases_with_mapped_placement')}"
+        ),
+        "site": {
+            "mnemonic": EOS_MNEMONIC,
+            "pc": site["pc"],
+            "kernel_id": site["kernel_id"],
+            "operator_descriptor_id": site["operator_descriptor_id"],
+            "fetched_by_the_integrated_run": site_fetched,
+            "note": (
+                "the only site in this program that can carry an EOS reason. "
+                f"The run fetched {fetched} instruction(s), so this site was "
+                + ("fetched" if site_fetched else "never fetched")
+            ),
+        },
+        "generation_policy": {
+            "descriptor_id": policy_ids[0],
+            "eos_token_ids": eos_tokens,
+            "vocabulary_size": int(policy["vocabulary_size"]),
+            "source": (
+                "the deployment's own GENERATION_POLICY descriptor, not a "
+                "token id written down here"
+            ),
+        },
+        "oracle_position_of_the_official_eos": {
+            "generated_token_ids": [int(t) for t in oracle_ids],
+            "index_of_the_first_eos_token": official_index,
+            "this_rung_compares_only_the_first_n": ORACLE_TOKEN_COUNT,
+            "the_certified_token_is_also_the_eos": (
+                official_index is not None and official_index < ORACLE_TOKEN_COUNT
+            ),
+            "consequence": (
+                "the id this rung certifies and the id that raises the EOS "
+                "are different generated positions, so one head execution "
+                "cannot make both halves of this field true: the rung needs "
+                "the head run at the position whose argmax selects an EOS "
+                "token as well as at the position whose token it certifies"
+            ) if (official_index is not None
+                  and official_index >= ORACLE_TOKEN_COUNT) else (
+                "the certified id is itself an EOS token, so one head "
+                "execution can carry both halves"
+            ),
+        },
+        "why": (
+            "official_eos_raised is the AND of an unmeasured half and a "
+            "measured one. The engine half is "
+            + ("satisfied: this case launched "
+               f"{real_launches} real engine(s). "
+               if launched_a_real_engine else
+               "not satisfied: this case launched no real engine. ")
+            + "The reason half is "
+            + ("satisfied." if reason_is_official else
+               "not measured, and an unmeasured half is false, never "
+               "not_evaluable.")
+        ),
+    }
+
+
 def entry_probe_observation(roles: dict[str, dict[str, Any]], deployment_key: str) -> dict[str, Any]:
     """A mid-program entry probe that did dispatch a head operator, cited."""
     path = ROOT / ENTRY_PROBE
@@ -647,14 +992,19 @@ def build(
     vectors = json.loads(
         (_g1b.PREFIX_VECTORS if vectors_path is None else Path(vectors_path)).read_text()
     )
-    campaign_body = json.loads(
-        (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
-    ) if (ROOT / _g1b.INTEGRATED_CAMPAIGN).is_file() else {}
+    # The body of the campaign this rung reads, honouring --campaign so that
+    # a control run can be pointed at a fabricated one and the tool's own
+    # falsification test means something.
+    campaign_file = (
+        ROOT / _g1b.INTEGRATED_CAMPAIGN if campaign_path is None
+        else Path(campaign_path)
+    )
+    campaign_body = (
+        json.loads(campaign_file.read_text()) if campaign_file.is_file() else {}
+    )
     rate = _g1c.integrated_rate(campaign_body)
     campaign = _g1b.integrated_evidence(campaign_path, vectors_path)
-    rerun = _g1c.rerun_agreement(rerun_path, json.loads(
-        (ROOT / _g1b.INTEGRATED_CAMPAIGN).read_text()
-    ) if (ROOT / _g1b.INTEGRATED_CAMPAIGN).is_file() else {})
+    rerun = _g1c.rerun_agreement(rerun_path, campaign_body)
     oracle = oracle_evidence()
     git = _g1c.git_state()
     workload = json.loads((ROOT / WORKLOAD_PATH).read_text())
@@ -675,6 +1025,13 @@ def build(
         plan = shard_plan(arithmetic, shards)
         execution = head_execution(campaign, head, roles, vector_case, case_index)
         probe = entry_probe_observation(roles, deployment_key)
+        eos = eos_measurement(
+            facts, head, execution, campaign, campaign_body, case_index,
+            list(oracle["all_generated_token_ids"]),
+        )
+        leg = runnable_leg(
+            facts, loop, head, roles, eos, deployment_key, vectors
+        )
 
         shard_check: dict[str, Any]
         if run_shard_check:
@@ -794,12 +1151,14 @@ def build(
                     "shard_composition_check": shard_check,
                     "execution_measured": execution,
                     "entry_probe_observation": probe,
+                    "runnable_leg": leg,
                     "kernel_ir": {
                         "path": kernels["path"],
                         "sha256": kernels["sha256"],
                         "graph_id": kernels["graph_id"],
                     },
                 },
+                "eos": eos,
                 "record_token_ids": [],
                 "record_token_ids_note": (
                     "the RTL emitted no token id. This list is what the RTL "

@@ -601,6 +601,45 @@ def placement_capacity() -> dict[str, Any]:
                 "slots": 1,
                 "note": "cfg_rms_weight_base is a single base, not keyed by object",
             },
+            # The three bases the bridge's own launch-address assembly draws
+            # a gather's and an embedding lookup's operands from.  They were
+            # missing, and their absence was not neutral: OPERAND_ROLE named
+            # no slot for DMA.GATHER or TENSOR.EMBED_LOOKUP either, so those
+            # operands fell through to ``unattributed_operands`` and were
+            # never counted against any capacity.  A span whose only mapped
+            # demand was satisfiable could therefore be reported
+            # ``every_role_satisfiable`` while two of its operands had not
+            # been examined at all -- absence reported as an optimistic
+            # result, which is the failure this ladder exists to catch.  The
+            # decode program's own head span (PC 68, DMA.GATHER) is one of
+            # the two places this happens.
+            "index_base": {
+                "object_keyed": False,
+                "slots": 1,
+                "note": (
+                    "cfg_index_base is a single base advanced by the launch "
+                    "counter, shared by DMA.GATHER and TENSOR.EMBED_LOOKUP; "
+                    "it is not keyed by object"
+                ),
+            },
+            "gather_source": {
+                "object_keyed": False,
+                "slots": 1,
+                "note": (
+                    "cfg_source_base is a single base advanced by "
+                    "dma_gather_launch_count * cfg_source_launch_stride, not "
+                    "keyed by object"
+                ),
+            },
+            "embedding_source": {
+                "object_keyed": False,
+                "slots": 1,
+                "note": (
+                    "cfg_embedding_source_base is a single base advanced by "
+                    "embedding_launch_count * EMBEDDING_WIDTH, not keyed by "
+                    "object"
+                ),
+            },
             "appending_output": {
                 "object_keyed": False,
                 "slots": 1,
@@ -650,6 +689,18 @@ OPERAND_ROLE = {
     ("SELECTION.ARGMAX", "output_view_0"): "mapped_family_operand",
     ("SELECTION.TOKEN_APPEND", "input_view_0"): "mapped_family_operand",
     ("SELECTION.TOKEN_APPEND", "output_view_0"): "mapped_family_operand",
+    # The two appending families whose operands this map never named.  Read
+    # off ``launch_index_base`` and ``launch_source_base`` in the bridge:
+    # a gather's index and an embedding lookup's index both come from
+    # ``cfg_index_base + real_launch_count``; a gather's source comes from
+    # ``cfg_source_base + dma_gather_launch_count * cfg_source_launch_stride``
+    # and an embedding lookup's table from ``cfg_embedding_source_base +
+    # embedding_launch_count * EMBEDDING_WIDTH``.  Each is one unkeyed base,
+    # so each is modelled exactly as ``rms_input`` and ``matmul_input`` are.
+    ("DMA.GATHER", "input_view_0"): "index_base",
+    ("DMA.GATHER", "input_view_1"): "gather_source",
+    ("TENSOR.EMBED_LOOKUP", "input_view_0"): "index_base",
+    ("TENSOR.EMBED_LOOKUP", "input_view_1"): "embedding_source",
 }
 
 # The two mapped operands that address the INDEX bank rather than a plane of
@@ -1053,8 +1104,23 @@ def git_state() -> dict[str, Any]:
             args, cwd=ROOT, text=True, capture_output=True, check=False
         ).stdout.strip()
 
+    def run_lines(args: list[str]) -> str:
+        # ``git status --porcelain`` prefixes every line with a two-column
+        # status field and a space, and an unstaged modification's first
+        # column is a SPACE.  Stripping the whole output before splitting
+        # therefore ate the first line's leading space and ``line[3:]``
+        # then ate the first character of the first dirty path: this
+        # record named a file that does not exist.  It never moved
+        # ``worktree_dirty`` -- that is a bool over a non-empty list -- so
+        # no gate verdict turned on it; what it corrupted is the provenance
+        # a reader would use to find out WHICH file was dirty.  Only the
+        # trailing newline is stripped now.
+        return subprocess.run(
+            args, cwd=ROOT, text=True, capture_output=True, check=False
+        ).stdout.rstrip("\n")
+
     commit = run(["git", "rev-parse", "HEAD"])
-    porcelain = run(["git", "status", "--porcelain"])
+    porcelain = run_lines(["git", "status", "--porcelain"])
     dirty_paths = sorted(
         line[3:].strip() for line in porcelain.splitlines() if len(line) > 3
     )
