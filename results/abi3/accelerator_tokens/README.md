@@ -85,6 +85,64 @@ lane artifact by SHA-256 and records the vendor comparison and layer-0 audit.
 The vendor lane is useful implementation context, not a replacement numeric
 contract.
 
+## Re-take on the current lowering (2026-09-06): the ROM array
+
+`deepseek_v4_flash_rom_array_p32.json` was re-taken because the lowering had
+moved three times under it -- AM-E9 v2, the item-22 `DMA.SCATTER` dtype fix and
+item 26 (the KV arena in SRAM) -- and nobody had checked whether the tokens
+survived. Seven of its 55 bound sources had moved.
+
+The bundle was rebuilt from committed source at `a002283` in a pinned clean
+worktree, not taken from `build/abi3` as found. The rebuilt kernel IR and
+workload reproduce the retained record's digests exactly
+(`b92fadb1…`, `ca3c64c0…`), and the published bundle's `deployment_sha256` is
+`5065fab0…` -- the digest `results/abi3/rom_schedule_checks.json` certifies for
+`deepseek-v4-flash-rom-array-32`. The retained record bound `a3cc19ba…`, which
+is no longer shipped.
+
+What the lowering change actually is, measured by decoding both descriptor
+tables: **3,423 -> 3,159 descriptors, all of it SCHEDULE, 347 -> 83.** Every
+other descriptor type, all 430 memory objects, the 1,344 instructions, the
+4,206,473 proved retired work, the capability digest and the topology digest
+are unchanged.
+
+What the run produced: the same ids `[13806, 345, 7472, 55560]`, the same
+decoded text and `token_ids_sha256`, `agreement: true` over 4 compared
+positions with `first_divergence_index` null, no legitimacy problem -- and
+**all 61 architectural counters, the four token-commit ticks and the per-step
+retired counts identical to the retained record**, node counters included.
+
+**The two walls in this directory are not comparable.** The re-take took
+16,850.9 s against the retained 9,349.6 s, and the difference is thread count,
+not work: `numba_threads` is 8 here and 32 there, while `numba_calls` (18,656)
+and `numba_scalar_product_adds` (375,272,767,488) are identical. The kernel
+parallelises only across independent outputs and keeps every reduction serial
+in k, so its thread count cannot change a value -- but it is part of the
+recorded implementation identity, so `runtime.evidence.check_comparable`
+refuses a ROM-versus-HBM comparison across records taken at different counts.
+The HBM twin must therefore be re-taken at 8 threads before the pair can be
+compared again.
+
+**The HBM twin is NOT re-taken.** Its run was killed by the host OOM killer at
+2026-09-06T20:57:35Z with `anon-rss` 73.9 GiB, after prefill and one decode, on
+a box whose physical lane held about 111 GiB of OpenROAD at the time. That is
+the same constraint the Makefile states in words: this host has no headroom for
+two DeepSeek numerical lanes at once. The retained
+`deepseek_v4_flash_hbm_p32.json` therefore still binds `0da49f94…`, while
+`results/abi3/hbm_deepseek_deployment_certificate.json` certifies `d8328615…`
+-- and a rebuild from `a002283` reproduces `d8328615…` exactly, so only the
+execution is missing. The command is `tools/run_accelerator_tokens.py
+--backend hbm_sram --capability
+configs/hardware/abi3_capability/hbm_sram_cluster_32.json` on the same kernel
+IR, workload, reference and `--expert-numeric-path fp8 --max-new-tokens 4`,
+under an affinity mask of exactly 8 CPUs so that `OPENBLAS_NUM_THREADS=8` is
+honoured rather than clamped.
+
+Consequence for the pair: `tools/build_comparison_report.py` refuses both
+retained records today for source-currency, so
+`results/abi3/comparison_deepseek_rom_array_vs_hbm.json` is not regenerable
+until the HBM leg is re-taken; that was already true before this re-take.
+
 ## What is NOT established
 
 **DeepSeek ROM correctness is established only through the governed four-token
