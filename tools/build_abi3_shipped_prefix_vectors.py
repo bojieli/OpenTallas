@@ -869,6 +869,119 @@ def _audit_contract_agreement(
         )
     return disagreements
 
+def _bound_input_dtypes(
+    deployment: Any, descriptor_id: int
+) -> list[int | None]:
+    """The dtypes of the views an OPERATOR descriptor binds to in0 and in1.
+
+    This reads the *emitted descriptor*, not the graph it came from: the
+    dtype is taken from the TENSOR_VIEW each input slot actually names.  It
+    is therefore a measurement of what the lowering produced, which is what
+    an engine will read.
+    """
+    try:
+        operator = deployment.table.get(
+            descriptor_id, ExtendedDescriptorType.OPERATOR
+        )
+    except Exception:
+        return []
+    bound: list[int | None] = []
+    for slot in range(2):
+        view_id = int(operator.payload.get(f"input_view_{slot}", NO_ID))
+        if view_id == NO_ID:
+            bound.append(None)
+            continue
+        view = deployment.table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW)
+        bound.append(int(view.payload["dtype"]))
+    return bound
+
+
+#: The numeric-profile field that describes each ABI input slot.  This is not
+#: a convention this file chose: every engine that reads the fields --
+#: ``runtime/sim/engines/tensor.py`` and ``runtime/sim/engines/vector.py``,
+#: twenty call sites, no exception -- checks ``profile.input_dtype`` against
+#: ``ctx.input_view(operator, 0)`` and ``profile.second_input_dtype`` against
+#: ``ctx.input_view(operator, 1)``.
+_SLOT_DTYPE_FIELDS = ("input_dtype", "second_input_dtype")
+
+
+def _audit_profile_slot_agreement(
+    observations: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Name every descriptor whose numeric profile contradicts its own views.
+
+    The cross-lowering check above can only see a disagreement when the two
+    backends differ.  It is blind, by construction, to a descriptor that is
+    wrong the *same* way on both -- and that is not hypothetical: the
+    DeepSeek pair carries 29 field-level cases where both lowerings declare
+    an index operand's dtype as I32 over a U32 view, which no comparison of
+    the two can detect.  This check needs no second lowering: a descriptor
+    that says ``input_dtype = BF16`` while binding a U32 view in ``in0``
+    contradicts itself, and one artifact is enough to say so.
+
+    Executed operations are refused outright.  Anything else is recorded and
+    printed, on the same reasoning ``_audit_contract_agreement`` uses for the
+    fail-stop boundary: the prefix never runs it, so the honest record says
+    what was observed rather than raising on an operation it did not execute.
+    """
+    findings: list[dict[str, Any]] = []
+    for entry in observations:
+        signature = dict(entry["numeric_signature"])
+        bound = entry.get("bound_input_dtypes") or []
+        if not signature or not bound:
+            continue
+        differing = [
+            {
+                "slot": slot,
+                "field": field,
+                "profile_says": int(signature[field]),
+                "view_is": int(bound[slot]),
+            }
+            for slot, field in enumerate(_SLOT_DTYPE_FIELDS)
+            if slot < len(bound)
+            and bound[slot] is not None
+            and field in signature
+            and int(signature[field]) != int(bound[slot])
+        ]
+        if not differing:
+            continue
+        findings.append(
+            {
+                "target": entry["target"],
+                "role": entry["role"],
+                "executed": entry["executed"],
+                "descriptor_id": entry["descriptor_id"],
+                "numeric_profile_id": entry["numeric_profile_id"],
+                "differing_slots": differing,
+                "finding": (
+                    "the numeric profile does not describe the operand views "
+                    "this descriptor binds; input_dtype describes "
+                    "input_view_0 and second_input_dtype input_view_1, which "
+                    "is what every engine that reads them checks"
+                ),
+            }
+        )
+    executed = [entry for entry in findings if entry["executed"]]
+    if executed:
+        raise SystemExit(
+            "governed operations carry a numeric profile that contradicts "
+            "the operand views they bind: " + json.dumps(executed, sort_keys=True)
+        )
+    for entry in findings:
+        slots = ", ".join(
+            f"in{item['slot']} {item['field']} says "
+            f"{DType(item['profile_says']).name} over a "
+            f"{DType(item['view_is']).name} view"
+            for item in entry["differing_slots"]
+        )
+        print(
+            f"PROFILE/VIEW DISAGREEMENT {entry['target']} {entry['role']} "
+            f"descriptor {entry['descriptor_id']}: {slots}",
+            file=sys.stderr,
+        )
+    return findings
+
+
 INPUT_IMAGES = (
     "a3_program.hex",
     "a3_descriptor.hex",
@@ -2977,6 +3090,12 @@ def build(argv: list[str] | None = None) -> int:
                     "kernel_declared_input_dtypes": list(
                         resolution.declared_input_dtypes
                     ),
+                    # Read off the emitted descriptor, so the check below
+                    # compares the profile with the operands it actually
+                    # binds rather than with the graph it came from.
+                    "bound_input_dtypes": _bound_input_dtypes(
+                        deployment, resolution.descriptor_id
+                    ),
                 }
             )
         observed_boundary = (
@@ -3419,6 +3538,7 @@ def build(argv: list[str] | None = None) -> int:
         (args.output / name).write_text(payload, encoding="ascii")
 
     contract_disagreements = _audit_contract_agreement(contract_observations)
+    profile_slot_disagreements = _audit_profile_slot_agreement(contract_observations)
 
     marker = (
         "PASS: ABI3 shipped-prefix engine integration "
@@ -3568,8 +3688,14 @@ def build(argv: list[str] | None = None) -> int:
                 "any property of an operation the prefix does not execute, "
                 "including the numeric contract of the boundary descriptor "
                 "named in numeric_contract_disagreements",
+                "that a numeric profile is CORRECT, only that it agrees with "
+                "the views its own descriptor binds; "
+                "profile_slot_disagreements is a self-consistency "
+                "measurement, and a profile can be self-consistent and still "
+                "name the wrong contract",
             ],
             "numeric_contract_disagreements": contract_disagreements,
+            "profile_slot_disagreements": profile_slot_disagreements,
         },
         "cases": records,
     }

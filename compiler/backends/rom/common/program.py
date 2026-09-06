@@ -1910,22 +1910,79 @@ class RomLowering:
             return RouteClass.INTRA_RETICLE
         return RouteClass.LOCAL
 
-    def _numeric(self, kernel: Kernel) -> int:
+    def _numeric(self, kernel: Kernel, family: Major, sub: int) -> int:
+        """The NUMERIC descriptor for one operator, read off its ABI slots.
+
+        ``input_dtype`` and ``second_input_dtype`` describe **ABI operand
+        slots**, not neutral IR inputs.  That is not a reading of the spec, it
+        is what every engine that consumes the fields does:
+        ``runtime/sim/engines/tensor.py`` and ``vector.py`` check
+        ``profile.input_dtype`` against ``ctx.input_view(operator, 0)`` and
+        ``profile.second_input_dtype`` against ``ctx.input_view(operator, 1)``
+        in all twenty places they are read, with no exception.
+
+        This backend already permutes the neutral order into the frozen
+        convention for the *views* -- ``_operand_order`` puts ``DMA.GATHER``
+        and ``DMA.SCATTER``'s U32 index in ``in0`` and ``ROUTE.EXPERT_DISPATCH``
+        's expert IDs there too -- and this function read the *unpermuted*
+        order, so the profile described operands the descriptor does not bind.
+        On the shipped Qwen ROM lowering that made ``layer.0.attention.
+        key_append`` declare ``input_dtype = BF16`` over a U32 index view and
+        ``second_input_dtype = U32`` over a BF16 value view: the descriptor
+        contradicted itself, in a field the RTL issue bridge reads at exactly
+        the PC the integrated vehicle stops on.  Taking the same order the
+        views take is what makes the two halves of one descriptor agree.
+        """
         attributes = kernel.attributes
-        inputs = [self.tensors[n] for n in kernel.inputs]
+        slot_map = self._abi_input_slots(
+            kernel, self._operand_order(kernel, Major(int(family)), int(sub))
+        )
+
+        def slot_tensor(slot: int) -> Any | None:
+            """The tensor bound to ABI input slot ``slot``, or ``None``."""
+            if slot >= len(slot_map):
+                return None
+            ir_slot = slot_map[slot]
+            if ir_slot is None:
+                return None
+            return self.tensors[kernel.inputs[ir_slot]]
+
+        def declared(slot: int, attribute: str) -> str | None:
+            """A graph attribute's dtype, when it describes *this* ABI slot.
+
+            ``input_dtype`` and ``second_input_dtype`` are written by the
+            exporters against the **neutral** input order -- they are the
+            dtype of neutral input 0 and 1 -- so they describe an ABI slot
+            only while that slot still carries the neutral input of the same
+            index.  Where the convention permutes, it does not:
+            ``last_token_select`` declares ``input_dtype: bf16`` for its
+            ``sequence.final_norm`` input and separately names its index
+            ``index_dtype: u32``, and ``DMA.GATHER`` puts that U32 index in
+            ``in0``.  Applying the attribute there declared a BF16 index over
+            a U32 view -- the graph was right about its operand and wrong
+            about the slot, because it was never speaking about slots.
+            """
+            if slot < len(slot_map) and slot_map[slot] == slot:
+                value = attributes.get(attribute)
+                return None if value is None else str(value)
+            return None
+
+        in0 = slot_tensor(0)
+        in1 = slot_tensor(1)
         outputs = [self.tensors[n] for n in kernel.outputs]
-        first = str(attributes.get("input_dtype", inputs[0].dtype if inputs else "bf16"))
+        first = declared(0, "input_dtype") or str(
+            in0.dtype if in0 is not None else "bf16"
+        )
         # ``in1`` is the *weight*.  A routed contraction names its weight bank in
         # an attribute rather than as an operand -- the backend places the bank
         # and binds it to slot 1 -- so the IR's second input is the expert ID
         # array, and reading the profile's second dtype off it declared a U32
-        # weight for an MXFP4 bank.  The bank states its own format.
+        # weight for an MXFP4 bank.  The bank states its own format.  That
+        # binding is not permuted, so the attribute still describes ``in1``.
         second = str(
-            attributes.get(
-                "second_input_dtype",
-                attributes.get("expert_weight_dtype")
-                or (inputs[1].dtype if len(inputs) > 1 else first),
-            )
+            declared(1, "second_input_dtype")
+            or attributes.get("expert_weight_dtype")
+            or (in1.dtype if in1 is not None else first)
         )
         result = str(
             attributes.get("output_dtype", outputs[0].dtype if outputs else first)
@@ -6918,7 +6975,7 @@ class RomLowering:
             inputs=inputs,
             outputs=outputs,
             aux=aux,
-            numeric_profile_id=self._numeric(kernel),
+            numeric_profile_id=self._numeric(kernel, family, sub),
             schedule_id=self._schedule(
                 kernel,
                 family,
@@ -8165,7 +8222,7 @@ class RomLowering:
             inputs=inputs,
             outputs=outputs,
             aux=self._aux(kernel, family, sub),
-            numeric_profile_id=self._numeric(kernel),
+            numeric_profile_id=self._numeric(kernel, family, sub),
             schedule_id=self._schedule(
                 kernel, family, sub, rows_override=schedule_rows
             ),
