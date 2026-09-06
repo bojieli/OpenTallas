@@ -19,37 +19,37 @@
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 1009.22,
+    "measured_all_stores_seconds": 1170.84,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 19.64,
-        "end_to_end_seconds": 426.27,
-        "golden_model_seconds": 31.25,
+        "elaborate_and_compile_seconds": 20.34,
+        "end_to_end_seconds": 593.88,
+        "golden_model_seconds": 30.86,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 9041,
-        "pass_decomposition_study_seconds": 365.42,
-        "run_seconds": 9.96,
-        "simulate_seconds": 2.45,
+        "hypothetical_seconds_if_every_output_word_were_injected": 9137,
+        "pass_decomposition_study_seconds": 532.67,
+        "run_seconds": 10.01,
+        "simulate_seconds": 2.476,
         "simulated_cycles": 509427,
-        "simulated_cycles_per_second": 207929
+        "simulated_cycles_per_second": 205746
       },
       "rom": {
-        "elaborate_and_compile_seconds": 20.46,
-        "end_to_end_seconds": 582.95,
-        "golden_model_seconds": 35.13,
+        "elaborate_and_compile_seconds": 20.26,
+        "end_to_end_seconds": 576.96,
+        "golden_model_seconds": 40.51,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 9188,
-        "pass_decomposition_study_seconds": 517.24,
-        "run_seconds": 10.12,
-        "simulate_seconds": 2.49,
+        "hypothetical_seconds_if_every_output_word_were_injected": 9122,
+        "pass_decomposition_study_seconds": 506.17,
+        "run_seconds": 10.02,
+        "simulate_seconds": 2.472,
         "simulated_cycles": 509415,
-        "simulated_cycles_per_second": 204584
+        "simulated_cycles_per_second": 206074
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 1009.22,
+      "measured_instead": 1170.84,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -60,7 +60,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
+    "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
     "worktree_dirty": false
   },
   "records": [
@@ -68,12 +68,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.46,
-        "golden_model_seconds": 35.13,
+        "elaborate_and_compile_seconds": 20.26,
+        "golden_model_seconds": 40.51,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 10.12,
-        "simulate_seconds": 2.49,
+        "run_seconds": 10.02,
+        "simulate_seconds": 2.472,
         "simulated_cycles": 509415
       },
       "deployment": {
@@ -82,11 +82,11 @@
         "capability_sha256": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
         "certificate": {
           "artifact": "results/abi3/rom_schedule_checks.json",
-          "artifact_sha256": "87da356bd8ecd47881888d8ec79e023ce9dd12da091a3f5821ce1a5688cdb0bb",
+          "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
           "case": "qwen3-rom-single-chip"
         },
         "declared_max_retired_work": 24088,
-        "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+        "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
         "descriptor_count": 215,
         "directory": "build/abi3/qwen3-8b-rom",
         "entrypoint_count": 2,
@@ -124,7 +124,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.512 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.472 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169805,
@@ -196,7 +196,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.512 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.472 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169805,
@@ -258,7 +258,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
+        "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -273,7 +273,7 @@
         "files": {
           "a3_descriptor.hex": {
             "bytes": 3153920,
-            "sha256": "1a5a51d554c7194e1d405ef08e948b4d83d6773b72f53ae83761a02963d0c060"
+            "sha256": "883716abd7ec5f25b215d4abe230f715af624c0c165e35b0988caecfe0fd822c"
           },
           "a3_program.hex": {
             "bytes": 266240,
@@ -1115,7 +1115,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.08,
+                  "seconds": 12.847,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -1129,7 +1129,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.722,
+                  "seconds": 11.959,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1143,13 +1143,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.002,
+                  "seconds": 11.326,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 32.81
+              "wall_seconds": 36.13
             },
             {
               "completed_transactions": 4,
@@ -1175,7 +1175,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.286,
+                  "seconds": 11.821,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1189,7 +1189,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.339,
+                  "seconds": 11.978,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1203,7 +1203,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.758,
+                  "seconds": 10.0,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1217,13 +1217,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.972,
+                  "seconds": 12.158,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 45.36
+              "wall_seconds": 45.96
             },
             {
               "completed_transactions": 6,
@@ -1251,7 +1251,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 12.006,
+                  "seconds": 12.28,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1265,7 +1265,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.376,
+                  "seconds": 11.4,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1279,7 +1279,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.299,
+                  "seconds": 10.822,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1293,7 +1293,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.924,
+                  "seconds": 8.61,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1307,7 +1307,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.586,
+                  "seconds": 7.214,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1321,13 +1321,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 10.987,
+                  "seconds": 6.984,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 65.18
+              "wall_seconds": 57.31
             },
             {
               "completed_transactions": 16,
@@ -1365,7 +1365,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 7.903,
+                  "seconds": 7.864,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1379,7 +1379,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.911,
+                  "seconds": 8.114,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1393,7 +1393,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 8.907,
+                  "seconds": 11.564,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1407,7 +1407,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.576,
+                  "seconds": 11.556,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1421,7 +1421,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 10.525,
+                  "seconds": 11.074,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1435,7 +1435,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 9.887,
+                  "seconds": 11.813,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1449,7 +1449,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 10.466,
+                  "seconds": 10.705,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1463,7 +1463,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.502,
+                  "seconds": 11.395,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1477,7 +1477,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 10.365,
+                  "seconds": 11.258,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1491,7 +1491,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 10.504,
+                  "seconds": 11.211,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1505,7 +1505,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 10.967,
+                  "seconds": 10.41,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1519,7 +1519,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.759,
+                  "seconds": 11.036,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1533,7 +1533,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 9.911,
+                  "seconds": 11.202,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1547,7 +1547,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.492,
+                  "seconds": 11.215,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1561,7 +1561,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.618,
+                  "seconds": 11.197,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1575,13 +1575,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 9.821,
+                  "seconds": 11.268,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 166.12
+              "wall_seconds": 172.89
             },
             {
               "completed_transactions": 16,
@@ -1619,7 +1619,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 11.015,
+                  "seconds": 12.333,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1633,7 +1633,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 9.125,
+                  "seconds": 11.09,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1647,7 +1647,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 9.56,
+                  "seconds": 10.798,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1661,7 +1661,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.244,
+                  "seconds": 11.522,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1675,7 +1675,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 10.425,
+                  "seconds": 9.118,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1689,7 +1689,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 11.165,
+                  "seconds": 8.767,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1703,7 +1703,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.495,
+                  "seconds": 8.768,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1717,7 +1717,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.131,
+                  "seconds": 9.818,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1731,7 +1731,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.199,
+                  "seconds": 8.917,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1745,7 +1745,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.422,
+                  "seconds": 11.084,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1759,7 +1759,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.593,
+                  "seconds": 10.73,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1773,7 +1773,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 10.853,
+                  "seconds": 10.556,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1787,7 +1787,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.013,
+                  "seconds": 10.858,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1801,7 +1801,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.321,
+                  "seconds": 8.668,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1815,7 +1815,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.275,
+                  "seconds": 7.752,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1829,16 +1829,16 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.087,
+                  "seconds": 8.053,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 172.93
+              "wall_seconds": 158.84
             }
           ],
-          "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+          "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
           "does_not_establish": [
             "that no other deployment of this model could execute the workload in a different number of passes; this measures the shipped program, not the model",
             "anything about the RTL: no RTL is compiled, run or read here"
@@ -1876,7 +1876,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 517.24,
+          "wall_seconds": 506.17,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -2016,7 +2016,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 35.13
+          "wall_seconds": 40.51
         },
         "uncompared_issue_fields": [
           "serial",
@@ -2037,12 +2037,12 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 19.64,
-        "golden_model_seconds": 31.25,
+        "elaborate_and_compile_seconds": 20.34,
+        "golden_model_seconds": 30.86,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 9.96,
-        "simulate_seconds": 2.45,
+        "run_seconds": 10.01,
+        "simulate_seconds": 2.476,
         "simulated_cycles": 509427
       },
       "deployment": {
@@ -2093,7 +2093,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.454 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.470 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169809,
@@ -2165,7 +2165,7 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.454 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.470 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
             "probe_cycles": 169809,
@@ -2227,7 +2227,7 @@
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "cf9ac7868b7114a5eea1f4d5fbe44fc18ae35895",
+        "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -3084,7 +3084,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 11.048,
+                  "seconds": 12.44,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -3098,7 +3098,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 6.825,
+                  "seconds": 7.094,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3112,13 +3112,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 7.004,
+                  "seconds": 10.339,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 24.88
+              "wall_seconds": 29.87
             },
             {
               "completed_transactions": 4,
@@ -3144,7 +3144,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.682,
+                  "seconds": 11.943,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3158,7 +3158,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 8.813,
+                  "seconds": 12.132,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3172,7 +3172,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 6.613,
+                  "seconds": 9.784,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3186,13 +3186,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 7.088,
+                  "seconds": 9.219,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 32.2
+              "wall_seconds": 43.08
             },
             {
               "completed_transactions": 6,
@@ -3220,7 +3220,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 9.231,
+                  "seconds": 11.849,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3234,7 +3234,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 8.087,
+                  "seconds": 9.138,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3248,7 +3248,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 7.896,
+                  "seconds": 8.085,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3262,7 +3262,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 8.193,
+                  "seconds": 8.095,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3276,7 +3276,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 7.098,
+                  "seconds": 8.575,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3290,13 +3290,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 6.98,
+                  "seconds": 11.162,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 47.49
+              "wall_seconds": 56.91
             },
             {
               "completed_transactions": 16,
@@ -3334,7 +3334,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 8.356,
+                  "seconds": 11.216,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3348,7 +3348,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 6.841,
+                  "seconds": 10.613,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3362,7 +3362,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 6.626,
+                  "seconds": 10.763,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3376,7 +3376,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 7.013,
+                  "seconds": 11.236,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3390,7 +3390,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 7.4,
+                  "seconds": 11.054,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3404,7 +3404,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 7.307,
+                  "seconds": 10.349,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3418,7 +3418,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 6.6,
+                  "seconds": 6.921,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3432,7 +3432,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 6.611,
+                  "seconds": 11.101,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3446,7 +3446,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 6.628,
+                  "seconds": 10.783,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3460,7 +3460,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 6.615,
+                  "seconds": 10.079,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3474,7 +3474,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 7.024,
+                  "seconds": 10.934,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3488,7 +3488,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 7.371,
+                  "seconds": 11.579,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3502,7 +3502,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 6.983,
+                  "seconds": 11.463,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3516,7 +3516,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 7.394,
+                  "seconds": 11.571,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3530,7 +3530,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 6.651,
+                  "seconds": 11.645,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3544,13 +3544,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 7.227,
+                  "seconds": 11.238,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 112.66
+              "wall_seconds": 172.55
             },
             {
               "completed_transactions": 16,
@@ -3588,7 +3588,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 8.21,
+                  "seconds": 13.141,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3602,7 +3602,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 6.727,
+                  "seconds": 11.847,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3616,7 +3616,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 7.072,
+                  "seconds": 10.786,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3630,7 +3630,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 7.018,
+                  "seconds": 13.695,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3644,7 +3644,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 7.298,
+                  "seconds": 14.025,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3658,7 +3658,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 7.031,
+                  "seconds": 13.154,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3672,7 +3672,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 7.616,
+                  "seconds": 12.769,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3686,7 +3686,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 7.113,
+                  "seconds": 9.33,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3700,7 +3700,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 6.712,
+                  "seconds": 9.566,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3714,7 +3714,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 7.105,
+                  "seconds": 12.987,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3728,7 +3728,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 6.895,
+                  "seconds": 14.008,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3742,7 +3742,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 7.048,
+                  "seconds": 10.366,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3756,7 +3756,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 7.05,
+                  "seconds": 10.353,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3770,7 +3770,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 7.167,
+                  "seconds": 11.404,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3784,7 +3784,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 6.673,
+                  "seconds": 13.96,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3798,13 +3798,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 6.927,
+                  "seconds": 13.777,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 113.67
+              "wall_seconds": 195.18
             }
           ],
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3845,7 +3845,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 365.42,
+          "wall_seconds": 532.67,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -3985,7 +3985,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 31.25
+          "wall_seconds": 30.86
         },
         "uncompared_issue_fields": [
           "serial",
