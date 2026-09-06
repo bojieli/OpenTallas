@@ -145,12 +145,12 @@ a correct one that cannot fail.
 
 ### The verification ladder under G1, and why it is not a whole-network run
 
-Measured on 2026-09-05, not estimated: the integrated RTL runs at **200,231 simulated
-cycles/s** and **5.0164 cycles per MAC** (`ot_a3_mac_lane` is a five-state sequential FSM),
+Measured on 2026-09-05, not estimated: the integrated RTL runs at **166,845 simulated
+cycles per host CPU-second** and **5.00793 cycles per MAC** (`ot_a3_mac_lane` is a five-state sequential FSM),
 so MATMUL is 99.7 % of simulated time. One Qwen3-8B decode step is 7,573,110,784 MACs =
-**2.2 days**; the governed workload's 19 passes are 143,889,104,896 MACs = **41.7 days per
+**2.2 days**; the governed workload's 19 passes are 143,889,104,896 MACs = **50.0 days per
 storage class**. Width does not rescue it, and that was measured too: eight lanes deliver
-**1.14× lane-ops per CPU-second**, because a cycle-accurate simulator's cost tracks
+**about 1.26× lane-ops per CPU-second** (recomputed 2026-09-06 from the two runs' own figures; the value first published, about 1.26×, does not follow from them, and no artifact records either — the pair is a session measurement, not a bound record), because a cycle-accurate simulator's cost tracks
 evaluated logic × cycles.
 
 No chip company verifies an accelerator that way. Pre-silicon sign-off rests on a
@@ -172,7 +172,7 @@ Composition is valid when three things hold, and each is a rung:
 | **G1e** control end to end | all 19 passes through the real RTL control plane, engine results injected only at the engine boundary, issue trace equal to golden's element for element, EOS raised, post-EOS refused | ~3 h |
 | **G1f** reduced full run | the whole workload run whole at reduced dimension with nothing injected | minutes |
 
-The cost column is a **projection** from the measured 39,915 MACs/s and each rung's own MAC count, not a measurement of the rung. Only G1e has been executed end to end and timed: **1,247.94 s across both stores** (ROM 648.68 s, HBM 599.26 s), of which the rung's own simulation is 2.31 s and the bulk is the pass-decomposition study. Corrected 2026-09-06 — the column was labelled "measured", which it was not.
+The cost column is a **projection** from the measured 33,316 MACs/s and each rung's own MAC count, not a measurement of the rung. Only G1e has been executed end to end and timed: **1,247.94 s across both stores** (ROM 648.68 s, HBM 599.26 s), of which the rung's own simulation is 2.31 s and the bulk is the pass-decomposition study. Corrected 2026-09-06 — the column was labelled "measured", which it was not.
 
 G1b is the base case, G1c the inductive step, and the loop property closes the induction over
 all 36 layers — assume–guarantee reasoning, with the loop count and the structural identity
@@ -185,7 +185,7 @@ predicates, the loop and issue, while the datapath results come from the model w
 bit-exactness G1a–G1d establish. G1f is the industry's small-config nightly regression.
 
 **About 6.8 h sequential per store, about 3 h wall with the independent legs concurrent,
-against 41.7 days for the run it replaces — and it is the harder gate**: six falsifiable
+against 50.0 days for the run it replaces — and it is the harder gate**: six falsifiable
 rungs plus a mechanically derived certificate, against one boolean in one globbed file.
 
 What it does not establish is written into G1's `does_not_establish` and must stay there: a
