@@ -147,8 +147,31 @@ RETICLE_AREA_MM2 = 815.0
 
 SHARDED_ROLES = ("expert_bank", "expert_bank_scale")
 
-#: Rows per token block.  See ``deepseek_v4_array_rom_policy``.
-TOKEN_BLOCK_ROWS = 1024
+#: Rows per token block.
+#:
+#: 512, and it is not a free choice: it is what the shared activation
+#: placement admits.  ``schedule_rule.py STAGING_REGIONS`` declares one bank
+#: per region, and a block of 1,024 makes ``sram.vector_stream`` ask for
+#: 8,388,608 bytes across two -- measured on 2026-09-07 by re-lowering the HBM
+#: cluster at 1,024, which refuses to build for exactly that reason.  The
+#: comparator's SRAM cannot hold the doubled activation stream, so 1,024 is
+#: infeasible on the HBM side and 512 is the only value both backends can walk.
+#:
+#: This matters for gate C2 rather than for arithmetic.  ``tile_rows`` is
+#: ``dispatch_rows``, which for a symbolic-leading output IS this block, so
+#: while the array carried 1,024 and the HBM planner's ``TileConfig.block``
+#: carried 512 the two lowerings tiled the same operator differently in four
+#: engine families and the pair could not be compared.  Both constants were
+#: typed in and neither was justified; the staging table is the source of
+#: truth that settles them.  Section 13 item 28.
+#:
+#: Note the direction, because it is the uncomfortable one: 512 REDUCES what
+#: the ROM side is charged (tensor contraction 1,636,192 -> 327,840 cycles per
+#: step), and post-mortem rule R14 says prefer the fix that costs our own
+#: side.  It is adopted anyway because the alternative does not build -- a
+#: refusal, not a preference.  Do not raise this without re-running that
+#: counter-experiment.
+TOKEN_BLOCK_ROWS = 512
 
 CAPABILITY_FEATURES = tuple(
     Feature.INTER_CHIP_ENDPOINT if f is Feature.WAFER_ENDPOINT else f
