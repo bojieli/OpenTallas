@@ -16,6 +16,27 @@
 // user.  Quotients are integer floors either way, so nothing observable
 // depends on the choice.
 //
+// Power-of-two fast path (``POW2_FAST``, section 3.3: "power-of-two fast path
+// 2" against "general 2 x 33 pipelined", and the loop-stack paragraph's
+// "Power-of-two fast path for every shipped divisor (1, 512, 1,024, 32,768,
+// 65,536, 131,072, 262,144) and step").  A request whose effective divisor is
+// a power of two is answered in the cycle after it is seen, without entering
+// the iteration at all: the requester's done pulse arrives 1 cycle after req
+// instead of 66, and the block re-arbitrates 2 cycles after req instead of 67.
+//
+// The arithmetic is identical on both paths, by construction.  The iteration
+// computes the unsigned Euclidean pair for a 64-bit numerator N and a nonzero
+// 32-bit divisor D: q = floor(N / D), r = N - q*D, with 0 <= r < D.  For
+// D = 2^k the same pair is q = N >> k and r = N & (2^k - 1), exactly, in the
+// same 64-bit registers: q <= N < 2^64 and r < 2^k <= 2^31, so neither term
+// can truncate, and no rounding decision exists to differ on.  The zero
+// divisor is substituted with 1 on both paths at the same point, so D = 0 is
+// the fast path's k = 0 and the iteration's divide-by-one, which agree.
+// ``POW2_FAST = 0`` rebuilds the block exactly as it was before the fast path
+// and is what the equivalence sweep of
+// ``tools/rtl_abi3_shared_divider_campaign.py`` compares against; it is not a
+// deployment option, and the campaign is the reason it exists.
+//
 // Arbitration is fixed priority: the loop stack first, then lane 0..5.  A
 // requester holds ``req`` with its operands until it sees its ``done`` pulse,
 // then drops it; the divider spends one cycle idle after every result so the
@@ -28,7 +49,11 @@
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
 module ot_a3_shared_divider #(
-    parameter integer REQUESTERS = 7
+    parameter integer REQUESTERS = 7,
+    // 1 = the power-of-two fast path is built; 0 = the sequential iteration
+    // answers every request, which is this block before the fast path and is
+    // the reference the equivalence sweep drives alongside it.
+    parameter integer POW2_FAST  = 1
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -86,6 +111,27 @@ module ot_a3_shared_divider #(
         end
     end
 
+    // -- power-of-two fast path -------------------------------------------
+    // ``pick_den_eff`` applies the same zero substitution S_IDLE applies to
+    // ``divisor``, so the two paths see one divisor and not two.  A nonzero
+    // value is a power of two exactly when it clears its own low bit, and the
+    // shift is then the index of the single set bit.
+    wire [31:0] pick_den_eff = (pick_den == 32'd0) ? 32'd1 : pick_den;
+    wire        pick_den_pow2 =
+        ((pick_den_eff & (pick_den_eff - 32'd1)) == 32'd0);
+    wire        fast_hit = (POW2_FAST != 0) && pick_den_pow2;
+
+    reg [4:0] fast_shift;
+    always @* begin
+        fast_shift = 5'd0;
+        for (k = 0; k < 32; k = k + 1) begin
+            if (pick_den_eff[k]) fast_shift = k[4:0];
+        end
+    end
+
+    wire [63:0] fast_quot = pick_num >> fast_shift;
+    wire [63:0] fast_rem  = pick_num & {32'd0, (pick_den_eff - 32'd1)};
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
@@ -108,7 +154,18 @@ module ot_a3_shared_divider #(
             end else begin
                 case (state)
                     S_IDLE: begin
-                        if (any_req) begin
+                        if (any_req && fast_hit) begin
+                            // One cycle, and the iteration is never entered.
+                            // ``grant`` and ``busy`` stay low because the
+                            // block is not occupied at any later cycle; the
+                            // requester still sees its done pulse with quot
+                            // and rem settled in the same edge, which is the
+                            // contract S_REST honours for the slow path.
+                            quot <= fast_quot;
+                            rem <= fast_rem;
+                            done <= pick;
+                            state <= S_PAUSE;
+                        end else if (any_req) begin
                             grant <= pick;
                             busy <= 1'b1;
                             shift <= pick_num;
