@@ -19,37 +19,37 @@
     ]
   },
   "cost_measurement": {
-    "measured_all_stores_seconds": 1308.24,
+    "measured_all_stores_seconds": 1169.01,
     "measured_per_store": {
       "hbm": {
-        "elaborate_and_compile_seconds": 19.82,
-        "end_to_end_seconds": 627.96,
-        "golden_model_seconds": 40.81,
+        "elaborate_and_compile_seconds": 19.48,
+        "end_to_end_seconds": 586.08,
+        "golden_model_seconds": 32.43,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 9114,
-        "pass_decomposition_study_seconds": 557.3,
-        "run_seconds": 10.03,
-        "simulate_seconds": 2.47,
-        "simulated_cycles": 509427,
-        "simulated_cycles_per_second": 206246
+        "hypothetical_seconds_if_every_output_word_were_injected": 8834,
+        "pass_decomposition_study_seconds": 527.43,
+        "run_seconds": 6.74,
+        "simulate_seconds": 1.134,
+        "simulated_cycles": 241302,
+        "simulated_cycles_per_second": 212788
       },
       "rom": {
-        "elaborate_and_compile_seconds": 20.56,
-        "end_to_end_seconds": 680.28,
-        "golden_model_seconds": 36.26,
+        "elaborate_and_compile_seconds": 19.59,
+        "end_to_end_seconds": 582.93,
+        "golden_model_seconds": 25.32,
         "hypothetical_note": "a lower bound: one result-memory write cycle per word, 1,879,799,430 words, at this run's own measured rate. It is reported because it is the arithmetic that most plausibly produced the ~3 h estimate, not because this rung needs it -- the RTL control plane can observe a result word only through a PREDICATE, and this program declares none",
-        "hypothetical_seconds_if_every_output_word_were_injected": 9129,
-        "pass_decomposition_study_seconds": 613.45,
-        "run_seconds": 10.01,
-        "simulate_seconds": 2.474,
-        "simulated_cycles": 509415,
-        "simulated_cycles_per_second": 205907
+        "hypothetical_seconds_if_every_output_word_were_injected": 8874,
+        "pass_decomposition_study_seconds": 531.27,
+        "run_seconds": 6.75,
+        "simulate_seconds": 1.139,
+        "simulated_cycles": 241290,
+        "simulated_cycles_per_second": 211844
       }
     },
     "replaces": {
       "also_reported_as": "3.10 h per store by the lane that built the injection vehicle, which reported that conservative figure over an optimistic 0.35 h form under R13",
       "figure": "~3 h per store",
-      "measured_instead": 1308.24,
+      "measured_instead": 1169.01,
       "not_edited_here": "no document or gate figure is changed by this tool; the measurement is published beside the estimate",
       "recorded_in": [
         "docs/OPENTALLAS_REDESIGN_PLAN.md, the ladder table's G1e row",
@@ -60,7 +60,7 @@
   },
   "gate": "G1e (configs/gates/redesign_gates.json)",
   "git": {
-    "commit": "5d82505cd5426923aed45870726187a1f41dd726",
+    "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
     "worktree_dirty": false
   },
   "records": [
@@ -68,13 +68,13 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 20.56,
-        "golden_model_seconds": 36.26,
+        "elaborate_and_compile_seconds": 19.59,
+        "golden_model_seconds": 25.32,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 10.01,
-        "simulate_seconds": 2.474,
-        "simulated_cycles": 509415
+        "run_seconds": 6.75,
+        "simulate_seconds": 1.139,
+        "simulated_cycles": 241290
       },
       "deployment": {
         "admitted": true,
@@ -124,10 +124,10 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.489 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "PASS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=80430\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=80430 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=321720 seconds=1.142 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
-            "probe_cycles": 169805,
+            "probe_cycles": 80430,
             "probe_issues": 691,
             "probe_ran": true,
             "probe_trap_class": 0,
@@ -196,10 +196,10 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "SS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169805\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169805 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679220 seconds=2.489 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "PASS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=80430\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 32 3\nCENSUS-ROW 16 2 190 3\nCENSUS-ROW 16 3 108 108\nCENSUS-ROW 16 3 115 108\nCENSUS-ROW 32 0 59 108\nCENSUS-ROW 32 0 67 108\nCENSUS-ROW 32 0 73 108\nCENSUS-ROW 32 0 130 108\nCENSUS-ROW 32 0 151 108\nCENSUS-ROW 32 0 158 108\nCENSUS-ROW 32 0 171 108\nCENSUS-ROW 32 0 197 3\nCENSUS-ROW 32 3 41 3\nCENSUS-ROW 48 0 50 108\nCENSUS-ROW 48 0 144 108\nCENSUS-ROW 48 0 183 3\nCENSUS-ROW 48 1 79 108\nCENSUS-ROW 48 1 87 108\nCENSUS-ROW 48 2 94 108\nCENSUS-ROW 48 2 100 108\nCENSUS-ROW 48 3 138 108\nCENSUS-ROW 48 3 177 108\nCENSUS-ROW 48 4 165 108\nCENSUS-ROW 64 1 124 108\nCENSUS-ROW 112 0 205 3\nCENSUS-ROW 112 1 212 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=80430 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=321720 seconds=1.142 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
-            "probe_cycles": 169805,
+            "probe_cycles": 80430,
             "probe_issues": 691,
             "probe_ran": true,
             "probe_trap_class": 0,
@@ -251,14 +251,14 @@
           "RESULT_WORDS": 4096,
           "SOURCE_WORDS": 256
         },
-        "simulated_cycles": 509415,
+        "simulated_cycles": 241290,
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
+        "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -1115,7 +1115,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 22.33,
+                  "seconds": 12.256,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -1129,7 +1129,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 14.59,
+                  "seconds": 10.827,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1143,13 +1143,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 14.233,
+                  "seconds": 6.857,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 51.15
+              "wall_seconds": 29.94
             },
             {
               "completed_transactions": 4,
@@ -1175,7 +1175,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 17.542,
+                  "seconds": 11.189,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1189,7 +1189,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 18.489,
+                  "seconds": 11.574,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -1203,7 +1203,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 13.969,
+                  "seconds": 11.13,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1217,13 +1217,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 13.069,
+                  "seconds": 11.196,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 63.07
+              "wall_seconds": 45.09
             },
             {
               "completed_transactions": 6,
@@ -1251,7 +1251,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 18.9,
+                  "seconds": 11.961,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1265,7 +1265,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 14.548,
+                  "seconds": 11.908,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1279,7 +1279,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 15.091,
+                  "seconds": 11.263,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1293,7 +1293,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 16.789,
+                  "seconds": 10.824,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -1307,7 +1307,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 12.206,
+                  "seconds": 10.37,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1321,13 +1321,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 11.169,
+                  "seconds": 10.812,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 88.71
+              "wall_seconds": 67.14
             },
             {
               "completed_transactions": 16,
@@ -1365,7 +1365,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 16.837,
+                  "seconds": 12.439,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1379,7 +1379,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 14.589,
+                  "seconds": 10.995,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1393,7 +1393,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 11.478,
+                  "seconds": 10.713,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1407,7 +1407,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.569,
+                  "seconds": 10.982,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1421,7 +1421,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.432,
+                  "seconds": 11.006,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1435,7 +1435,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 12.191,
+                  "seconds": 11.102,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1449,7 +1449,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.494,
+                  "seconds": 11.797,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1463,7 +1463,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 14.085,
+                  "seconds": 10.98,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1477,7 +1477,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 12.23,
+                  "seconds": 11.041,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1491,7 +1491,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 12.573,
+                  "seconds": 11.135,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1505,7 +1505,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 15.878,
+                  "seconds": 10.87,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1519,7 +1519,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 13.026,
+                  "seconds": 10.876,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1533,7 +1533,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 6.738,
+                  "seconds": 11.205,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1547,7 +1547,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 7.346,
+                  "seconds": 11.143,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1561,7 +1561,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 7.087,
+                  "seconds": 10.944,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1575,13 +1575,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 6.664,
+                  "seconds": 11.21,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 185.23
+              "wall_seconds": 178.45
             },
             {
               "completed_transactions": 16,
@@ -1619,7 +1619,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.325,
+                  "seconds": 12.47,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1633,7 +1633,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 8.803,
+                  "seconds": 10.74,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1647,7 +1647,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 8.097,
+                  "seconds": 11.06,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1661,7 +1661,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 13.478,
+                  "seconds": 11.07,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1675,7 +1675,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 12.58,
+                  "seconds": 10.878,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1689,7 +1689,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 10.944,
+                  "seconds": 10.986,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1703,7 +1703,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.464,
+                  "seconds": 10.934,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1717,7 +1717,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 10.593,
+                  "seconds": 11.003,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1731,7 +1731,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 9.546,
+                  "seconds": 10.85,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1745,7 +1745,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 11.14,
+                  "seconds": 11.235,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1759,7 +1759,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 13.499,
+                  "seconds": 10.725,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1773,7 +1773,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 14.379,
+                  "seconds": 11.345,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1787,7 +1787,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 13.435,
+                  "seconds": 11.068,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1801,7 +1801,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 13.504,
+                  "seconds": 11.087,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1815,7 +1815,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 9.377,
+                  "seconds": 8.614,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -1829,13 +1829,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.301,
+                  "seconds": 10.766,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 183.47
+              "wall_seconds": 174.84
             }
           ],
           "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
@@ -1876,7 +1876,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 613.45,
+          "wall_seconds": 531.27,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -1898,7 +1898,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169805,
+            "simulated_cycles": 80430,
             "views": 2143,
             "wait_events": 689
           },
@@ -1911,7 +1911,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169805,
+            "simulated_cycles": 80430,
             "views": 2143,
             "wait_events": 689
           },
@@ -1924,7 +1924,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169805,
+            "simulated_cycles": 80430,
             "views": 2143,
             "wait_events": 689
           }
@@ -2016,7 +2016,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 36.26
+          "wall_seconds": 25.32
         },
         "uncompared_issue_fields": [
           "serial",
@@ -2037,13 +2037,13 @@
       "checker_returncode": 0,
       "checks": 10441,
       "cost": {
-        "elaborate_and_compile_seconds": 19.82,
-        "golden_model_seconds": 40.81,
+        "elaborate_and_compile_seconds": 19.48,
+        "golden_model_seconds": 32.43,
         "host_writes": 425984,
         "passes": 3,
-        "run_seconds": 10.03,
-        "simulate_seconds": 2.47,
-        "simulated_cycles": 509427
+        "run_seconds": 6.74,
+        "simulate_seconds": 1.134,
+        "simulated_cycles": 241302
       },
       "deployment": {
         "admitted": true,
@@ -2093,10 +2093,10 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.467 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "ASS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=80434\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=80434 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=321736 seconds=1.138 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
-            "probe_cycles": 169809,
+            "probe_cycles": 80434,
             "probe_issues": 691,
             "probe_ran": true,
             "probe_trap_class": 0,
@@ -2165,10 +2165,10 @@
             "checker_returncode": 0,
             "control_holds": true,
             "eos_bytes_removed": 1,
-            "log_tail": "S-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=169809\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=169809 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=679236 seconds=2.467 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
+            "log_tail": "ASS-RECORD index=2 entrypoint=1 generation=2 context=18 issues=691 views=2143 fetched=2104 retired=2104 loops=723 waits=689 cycles=80434\nCENSUS classes=26 instances=2073\nCENSUS-ROW 16 2 46 3\nCENSUS-ROW 16 2 198 3\nCENSUS-ROW 16 3 118 108\nCENSUS-ROW 16 3 125 108\nCENSUS-ROW 32 0 72 108\nCENSUS-ROW 32 0 79 108\nCENSUS-ROW 32 0 84 108\nCENSUS-ROW 32 0 142 108\nCENSUS-ROW 32 0 162 108\nCENSUS-ROW 32 0 168 108\nCENSUS-ROW 32 0 180 108\nCENSUS-ROW 32 0 204 3\nCENSUS-ROW 32 3 54 3\nCENSUS-ROW 48 0 64 108\nCENSUS-ROW 48 0 156 108\nCENSUS-ROW 48 0 192 3\nCENSUS-ROW 48 1 90 108\nCENSUS-ROW 48 1 97 108\nCENSUS-ROW 48 2 104 108\nCENSUS-ROW 48 2 110 108\nCENSUS-ROW 48 3 150 108\nCENSUS-ROW 48 3 186 108\nCENSUS-ROW 48 4 174 108\nCENSUS-ROW 64 1 136 108\nCENSUS-ROW 112 0 211 3\nCENSUS-ROW 112 1 217 3\nEOS selected_token=0 selected_tie_multiplicity=0 selected_eos_reason=0 engine_launches=0\nPOSTEOS ran=1 admitted=1 trapped=0 trap_class=0 issues=691 cycles=80434 retired_before=0 retired_reason=0 refusals_before=0 refusals_after=0\nGEOMETRY program_words=4096 desc_words=8192 index_words=64 source_words=256 result_words=4096 matmul_weight_bytes=0 result_injection=1\nTRACE compared=46866 equal=1 divergence_index=-1 queue_compared=48939 queue_equal=1 queue_divergence_index=-1\nINJECTION results=2073 words=0 engine_launches=0 engine_work=0 weight_halfwords=0\nCOST passes=3 cycles=321736 seconds=1.138 host_writes=425984\nPASS: ABI3 G1e control end to end passes=3 issues=2073 views=6429 elements=46866 injected=2073 checks=10441\n",
             "meaning": "control_holds is true when the design, told nothing about an EOS, ADMITS the very transaction it refused when it was told.  That is what makes eos.post_eos_refused a measurement of the design's session retirement rather than of anything else in the vehicle",
             "probe_admitted": true,
-            "probe_cycles": 169809,
+            "probe_cycles": 80434,
             "probe_issues": 691,
             "probe_ran": true,
             "probe_trap_class": 0,
@@ -2220,14 +2220,14 @@
           "RESULT_WORDS": 4096,
           "SOURCE_WORDS": 256
         },
-        "simulated_cycles": 509427,
+        "simulated_cycles": 241302,
         "simulator": "verilator_cpp_executable",
         "simulator_version": "5.050",
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
         "why_single_simulator": "the vehicle declares `parameter longint unsigned MATMUL_WEIGHT_BYTES` and imports a DPI function returning `longint unsigned`; Icarus 11 cannot parse either, measured at this commit and before it. G1's own scope already records this vehicle as Verilator-only"
       },
       "git": {
-        "commit": "5d82505cd5426923aed45870726187a1f41dd726",
+        "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
         "worktree_dirty": false
       },
       "golden_vectors": {
@@ -3084,7 +3084,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 15.859,
+                  "seconds": 12.9,
                   "span_tokens": 16,
                   "status": 0,
                   "trap_class": 0
@@ -3098,7 +3098,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 12.934,
+                  "seconds": 9.933,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3112,13 +3112,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 13.705,
+                  "seconds": 11.284,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 42.5
+              "wall_seconds": 34.12
             },
             {
               "completed_transactions": 4,
@@ -3144,7 +3144,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 14.553,
+                  "seconds": 12.41,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3158,7 +3158,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 13.767,
+                  "seconds": 13.076,
                   "span_tokens": 8,
                   "status": 0,
                   "trap_class": 0
@@ -3172,7 +3172,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 10.625,
+                  "seconds": 11.381,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3186,13 +3186,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 12.389,
+                  "seconds": 11.242,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 51.34
+              "wall_seconds": 48.11
             },
             {
               "completed_transactions": 6,
@@ -3220,7 +3220,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 12.756,
+                  "seconds": 12.153,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3234,7 +3234,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 13.137,
+                  "seconds": 10.803,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3248,7 +3248,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 11.793,
+                  "seconds": 11.394,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3262,7 +3262,7 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.63,
+                  "seconds": 10.913,
                   "span_tokens": 4,
                   "status": 0,
                   "trap_class": 0
@@ -3276,7 +3276,7 @@
                   "produced_tokens": [
                     13
                   ],
-                  "seconds": 13.042,
+                  "seconds": 11.156,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3290,13 +3290,13 @@
                   "produced_tokens": [
                     151645
                   ],
-                  "seconds": 12.024,
+                  "seconds": 11.163,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 75.38
+              "wall_seconds": 67.58
             },
             {
               "completed_transactions": 16,
@@ -3334,7 +3334,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 12.194,
+                  "seconds": 12.599,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3348,7 +3348,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 9.697,
+                  "seconds": 11.583,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3362,7 +3362,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 10.727,
+                  "seconds": 11.172,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3376,7 +3376,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 10.057,
+                  "seconds": 11.23,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3390,7 +3390,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.611,
+                  "seconds": 10.881,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3404,7 +3404,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 15.085,
+                  "seconds": 11.936,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3418,7 +3418,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 12.972,
+                  "seconds": 10.77,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3432,7 +3432,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 8.705,
+                  "seconds": 9.274,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3446,7 +3446,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 12.454,
+                  "seconds": 10.412,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3460,7 +3460,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 9.78,
+                  "seconds": 8.083,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3474,7 +3474,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 9.152,
+                  "seconds": 9.636,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3488,7 +3488,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 8.913,
+                  "seconds": 6.676,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3502,7 +3502,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 13.582,
+                  "seconds": 8.053,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3516,7 +3516,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 14.207,
+                  "seconds": 10.986,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3530,7 +3530,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.924,
+                  "seconds": 10.768,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3544,13 +3544,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 12.851,
+                  "seconds": 10.856,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 183.92
+              "wall_seconds": 164.92
             },
             {
               "completed_transactions": 16,
@@ -3588,7 +3588,7 @@
                   "produced_tokens": [
                     67
                   ],
-                  "seconds": 9.267,
+                  "seconds": 12.45,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3602,7 +3602,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.194,
+                  "seconds": 11.1,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3616,7 +3616,7 @@
                   "produced_tokens": [
                     2610
                   ],
-                  "seconds": 10.621,
+                  "seconds": 11.399,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3630,7 +3630,7 @@
                   "produced_tokens": [
                     311
                   ],
-                  "seconds": 11.27,
+                  "seconds": 11.087,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3644,7 +3644,7 @@
                   "produced_tokens": [
                     264
                   ],
-                  "seconds": 11.067,
+                  "seconds": 11.136,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3658,7 +3658,7 @@
                   "produced_tokens": [
                     979
                   ],
-                  "seconds": 10.93,
+                  "seconds": 11.389,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3672,7 +3672,7 @@
                   "produced_tokens": [
                     5005
                   ],
-                  "seconds": 11.045,
+                  "seconds": 11.108,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3686,7 +3686,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 11.197,
+                  "seconds": 11.381,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3700,7 +3700,7 @@
                   "produced_tokens": [
                     151644
                   ],
-                  "seconds": 11.079,
+                  "seconds": 11.141,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3714,7 +3714,7 @@
                   "produced_tokens": [
                     1406
                   ],
-                  "seconds": 10.93,
+                  "seconds": 10.813,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3728,7 +3728,7 @@
                   "produced_tokens": [
                     659
                   ],
-                  "seconds": 11.333,
+                  "seconds": 8.26,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3742,7 +3742,7 @@
                   "produced_tokens": [
                     151667
                   ],
-                  "seconds": 9.199,
+                  "seconds": 11.069,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3756,7 +3756,7 @@
                   "produced_tokens": [
                     198
                   ],
-                  "seconds": 11.086,
+                  "seconds": 10.85,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3770,7 +3770,7 @@
                   "produced_tokens": [
                     32313
                   ],
-                  "seconds": 11.162,
+                  "seconds": 11.354,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3784,7 +3784,7 @@
                   "produced_tokens": [
                     271
                   ],
-                  "seconds": 6.771,
+                  "seconds": 11.332,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
@@ -3798,13 +3798,13 @@
                   "produced_tokens": [
                     3925
                   ],
-                  "seconds": 10.262,
+                  "seconds": 11.2,
                   "span_tokens": 1,
                   "status": 0,
                   "trap_class": 0
                 }
               ],
-              "wall_seconds": 168.42
+              "wall_seconds": 177.08
             }
           ],
           "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3845,7 +3845,7 @@
             "tools/build_abi3_g1e_pass_decomposition.py": "ea5cc5cb4d6e5845c7da29e75841c0e55fefb891a3436bfc916f5e97ac93c1ae"
           },
           "tool": "tools/build_abi3_g1e_pass_decomposition.py",
-          "wall_seconds": 557.3,
+          "wall_seconds": 527.43,
           "workload_digest": "ea35fc800cccd2839aa663cdf0e7806600948a26f0057d1ec7ec7bd31d007eaa"
         },
         "device_transactions": 3,
@@ -3867,7 +3867,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169809,
+            "simulated_cycles": 80434,
             "views": 2143,
             "wait_events": 689
           },
@@ -3880,7 +3880,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169809,
+            "simulated_cycles": 80434,
             "views": 2143,
             "wait_events": 689
           },
@@ -3893,7 +3893,7 @@
             "instructions_retired": 2104,
             "issues": 691,
             "loop_iterations": 723,
-            "simulated_cycles": 169809,
+            "simulated_cycles": 80434,
             "views": 2143,
             "wait_events": 689
           }
@@ -3985,7 +3985,7 @@
           "independent_of_rtl": true,
           "module": "runtime.sim.device.Device",
           "view_resolution": "runtime.sim.memory.ViewResolver (the device's own)",
-          "wall_seconds": 40.81
+          "wall_seconds": 32.43
         },
         "uncompared_issue_fields": [
           "serial",
@@ -4011,7 +4011,7 @@
     "rtl/abi3/ot_a3_device_top.sv": "baf0397dfda94df9a69e6b4c15e8ed42c653265a6f292fc82689e56a729e11f8",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "bd25338f8bc398b7ff70566723d991cc71b742e0bdfc446c4fce05fb2e156a57",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
@@ -4028,7 +4028,7 @@
     "rtl/abi3/ot_a3_resolver_bank.sv": "b953bde14c2d3005de0b780dcfb5a7675e6e17a90ab095d242557b67f0e749a3",
     "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
     "rtl/abi3/ot_a3_selection_token_append.sv": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227",
-    "rtl/abi3/ot_a3_shared_divider.sv": "b16700dda17092c0128eefa4ef091cefe199abeeec2fb5ae1b2c09b08a6f407f",
+    "rtl/abi3/ot_a3_shared_divider.sv": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1",
     "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
     "rtl/abi3/ot_a3_symbol_file.sv": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
     "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",

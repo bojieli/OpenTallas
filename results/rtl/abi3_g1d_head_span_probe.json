@@ -20,7 +20,7 @@
      "measured": {
       "capability": 0,
       "case": 1,
-      "cycles": 240,
+      "cycles": 110,
       "entry": 65,
       "fault": 66,
       "fetched": 2,
@@ -164,7 +164,7 @@
      "measured": {
       "capability": 0,
       "case": 0,
-      "cycles": 240,
+      "cycles": 110,
       "entry": 65,
       "fault": 66,
       "fetched": 2,
@@ -305,7 +305,7 @@
      ]
     }
    },
-   "wall_seconds": 4.132
+   "wall_seconds": 2.35
   },
   {
    "entry_and_bound": {
@@ -327,7 +327,7 @@
      "measured": {
       "capability": 0,
       "case": 1,
-      "cycles": 33110,
+      "cycles": 32980,
       "entry": 65,
       "fault": 68,
       "fetched": 4,
@@ -476,7 +476,7 @@
      "measured": {
       "capability": 0,
       "case": 0,
-      "cycles": 33110,
+      "cycles": 32980,
       "entry": 65,
       "fault": 68,
       "fetched": 4,
@@ -622,7 +622,7 @@
      ]
     }
    },
-   "wall_seconds": 5.869
+   "wall_seconds": 2.374
   },
   {
    "entry_and_bound": {
@@ -644,7 +644,7 @@
      "measured": {
       "capability": 0,
       "case": 1,
-      "cycles": 45467,
+      "cycles": 45337,
       "entry": 65,
       "fault": 69,
       "fetched": 5,
@@ -801,7 +801,7 @@
      "measured": {
       "capability": 0,
       "case": 0,
-      "cycles": 45467,
+      "cycles": 45337,
       "entry": 65,
       "fault": 69,
       "fetched": 5,
@@ -955,7 +955,7 @@
      ]
     }
    },
-   "wall_seconds": 5.233
+   "wall_seconds": 2.574
   },
   {
    "entry_and_bound": {
@@ -977,7 +977,7 @@
      "measured": {
       "capability": 0,
       "case": 1,
-      "cycles": 45467,
+      "cycles": 45337,
       "entry": 65,
       "fault": 69,
       "fetched": 5,
@@ -1139,7 +1139,7 @@
      "measured": {
       "capability": 0,
       "case": 0,
-      "cycles": 45467,
+      "cycles": 45337,
       "entry": 65,
       "fault": 69,
       "fetched": 5,
@@ -1298,7 +1298,7 @@
      "unplaced_objects_of_the_refusal": []
     }
    },
-   "wall_seconds": 6.662
+   "wall_seconds": 2.412
   }
  ],
  "attribution": {
@@ -1306,7 +1306,7 @@
    "qwen3-8b-hbm-single-chip": {
     "capability": 0,
     "case": 1,
-    "cycles": 45467,
+    "cycles": 45337,
     "entry": 65,
     "fault": 69,
     "fetched": 5,
@@ -1319,7 +1319,7 @@
    "qwen3-8b-rom-single-chip": {
     "capability": 0,
     "case": 0,
-    "cycles": 45467,
+    "cycles": 45337,
     "entry": 65,
     "fault": 69,
     "fetched": 5,
@@ -1334,7 +1334,7 @@
    "qwen3-8b-hbm-single-chip": {
     "capability": 0,
     "case": 1,
-    "cycles": 240,
+    "cycles": 110,
     "entry": 65,
     "fault": 66,
     "fetched": 2,
@@ -1347,7 +1347,7 @@
    "qwen3-8b-rom-single-chip": {
     "capability": 0,
     "case": 0,
-    "cycles": 240,
+    "cycles": 110,
     "entry": 65,
     "fault": 66,
     "fetched": 2,
@@ -1397,7 +1397,7 @@
       "measured": {
        "capability": 0,
        "case": 1,
-       "cycles": 240,
+       "cycles": 110,
        "entry": 65,
        "fault": 66,
        "fetched": 2,
@@ -1409,14 +1409,14 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 5.752
+      "wall_seconds": 1.943
      },
      {
       "dropped_object_id": 15,
       "measured": {
        "capability": 0,
        "case": 1,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1428,14 +1428,14 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 6.776
+      "wall_seconds": 2.36
      },
      {
       "dropped_object_id": 27,
       "measured": {
        "capability": 0,
        "case": 1,
-       "cycles": 33110,
+       "cycles": 32980,
        "entry": 65,
        "fault": 68,
        "fetched": 4,
@@ -1447,14 +1447,14 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 5.996
+      "wall_seconds": 2.257
      },
      {
       "dropped_object_id": 14,
       "measured": {
        "capability": 0,
        "case": 1,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1466,14 +1466,14 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 4.999
+      "wall_seconds": 2.42
      },
      {
       "dropped_object_id": 37,
       "measured": {
        "capability": 0,
        "case": 1,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1485,7 +1485,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 5.947
+      "wall_seconds": 2.636
      }
     ],
     "objects_added_that_the_design_never_read": [
@@ -1513,7 +1513,7 @@
       "measured": {
        "capability": 0,
        "case": 0,
-       "cycles": 240,
+       "cycles": 110,
        "entry": 65,
        "fault": 66,
        "fetched": 2,
@@ -1525,14 +1525,14 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 5.752
+      "wall_seconds": 1.943
      },
      {
       "dropped_object_id": 23,
       "measured": {
        "capability": 0,
        "case": 0,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1544,14 +1544,14 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 6.776
+      "wall_seconds": 2.36
      },
      {
       "dropped_object_id": 186,
       "measured": {
        "capability": 0,
        "case": 0,
-       "cycles": 33110,
+       "cycles": 32980,
        "entry": 65,
        "fault": 68,
        "fetched": 4,
@@ -1563,14 +1563,14 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 5.996
+      "wall_seconds": 2.257
      },
      {
       "dropped_object_id": 3,
       "measured": {
        "capability": 0,
        "case": 0,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1582,14 +1582,14 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 4.999
+      "wall_seconds": 2.42
      },
      {
       "dropped_object_id": 194,
       "measured": {
        "capability": 0,
        "case": 0,
-       "cycles": 45467,
+       "cycles": 45337,
        "entry": 65,
        "fault": 69,
        "fetched": 5,
@@ -1601,7 +1601,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 5.947
+      "wall_seconds": 2.636
      }
     ],
     "objects_added_that_the_design_never_read": [
@@ -1626,7 +1626,7 @@
  "evidence_class": "public_open_tool_rtl_simulation",
  "gate": "G1d (configs/gates/redesign_gates.json)",
  "git": {
-  "commit": "49c8dd41cd0b5887681c54560be695aac5e609de",
+  "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
   "dirty_paths": [],
   "scope": "the tree this campaign elaborated and ran from",
   "worktree_dirty": false
@@ -1677,7 +1677,7 @@
     "measured": {
      "capability": 0,
      "case": 1,
-     "cycles": 240,
+     "cycles": 110,
      "entry": 65,
      "fault": 66,
      "fetched": 2,
@@ -1694,7 +1694,7 @@
     "measured": {
      "capability": 0,
      "case": 0,
-     "cycles": 240,
+     "cycles": 110,
      "entry": 65,
      "fault": 66,
      "fetched": 2,
@@ -1709,13 +1709,13 @@
  },
  "probe_base_words": 0,
  "schema": "opentallas.rtl.abi3_g1d_head_span_probe.v1",
- "simulated_cycles": 84524216,
+ "simulated_cycles": 84521485,
  "simulated_cycles_by_stage": {
-  "attribution_control": 339502,
-  "ladder": 248568,
-  "positive_control_at_the_entry_probe_bound": 480,
-  "total": 84524216,
-  "weight_view_admission_bracket": 83935666
+  "attribution_control": 338202,
+  "ladder": 247528,
+  "positive_control_at_the_entry_probe_bound": 220,
+  "total": 84521485,
+  "weight_view_admission_bracket": 83935535
  },
  "simulator": "verilator_cpp_executable",
  "spans": {
@@ -1780,7 +1780,7 @@
    "measured": {
     "capability": 0,
     "case": 0,
-    "cycles": 83935666,
+    "cycles": 83935535,
     "entry": 3,
     "fault": 12,
     "fetched": 9,
@@ -1792,7 +1792,7 @@
    },
    "site_pc": 11,
    "target": "qwen3-8b-rom-single-chip",
-   "wall_seconds": 872.658,
+   "wall_seconds": 387.023,
    "weight_view_dims": [
     4096,
     4096
