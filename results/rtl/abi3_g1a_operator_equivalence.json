@@ -1,7 +1,7 @@
 {
   "class_definition": "(family, sub, mnemonic, numeric contract digest, resolved shape), where the resolved shape is the per-slot (slot, extent, extent_axis, rank) of the issue's own resolved views",
   "cross_lowering_transfer": {
-    "differing_program_counter_count": 10,
+    "differing_program_counter_count": 21,
     "identical_program_counter_count": 0,
     "note": "The two Qwen lowerings do not emit identical descriptors for the same equivalence class, so bit-exactness measured on one is not measured on the other and this artifact does not transfer it. The fields listed here are the difference, computed from the retained descriptor image; object ids and view/numeric descriptor REFERENCES are excluded, since a differing reference to an identical descriptor would not change what the datapath sees.",
     "per_program_counter": [
@@ -134,6 +134,146 @@
         "mnemonic": "VECTOR.ROPE",
         "program_counter": 29,
         "rom_operator_descriptor_id": 100
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term1_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 118,
+        "identical": false,
+        "mnemonic": "DMA.SCATTER",
+        "program_counter": 32,
+        "rom_operator_descriptor_id": 108
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term1_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 125,
+        "identical": false,
+        "mnemonic": "DMA.SCATTER",
+        "program_counter": 35,
+        "rom_operator_descriptor_id": 115
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[2].term0_index",
+          "view[3].term1_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 136,
+        "identical": false,
+        "mnemonic": "ATTENTION.GQA",
+        "program_counter": 38,
+        "rom_operator_descriptor_id": 124
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 150,
+        "identical": false,
+        "mnemonic": "VECTOR.ADD",
+        "program_counter": 44,
+        "rom_operator_descriptor_id": 138
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 156,
+        "identical": false,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "program_counter": 47,
+        "rom_operator_descriptor_id": 144
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 174,
+        "identical": false,
+        "mnemonic": "VECTOR.SILU_MUL",
+        "program_counter": 56,
+        "rom_operator_descriptor_id": 165
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[1].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 186,
+        "identical": false,
+        "mnemonic": "VECTOR.ADD",
+        "program_counter": 62,
+        "rom_operator_descriptor_id": 177
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[0].term0_index",
+          "view[4].term0_index"
+        ],
+        "hbm_operator_descriptor_id": 192,
+        "identical": false,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "program_counter": 66,
+        "rom_operator_descriptor_id": 183
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[1].dim0"
+        ],
+        "hbm_operator_descriptor_id": 198,
+        "identical": false,
+        "mnemonic": "DMA.GATHER",
+        "program_counter": 68,
+        "rom_operator_descriptor_id": 190
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id"
+        ],
+        "hbm_operator_descriptor_id": 211,
+        "identical": false,
+        "mnemonic": "SELECTION.ARGMAX",
+        "program_counter": 70,
+        "rom_operator_descriptor_id": 205
+      },
+      {
+        "differing_fields": [
+          "operator.counter_class_id",
+          "view[4].dynamic_term_count",
+          "view[4].term0_index",
+          "view[4].term0_kind",
+          "view[4].term0_stride"
+        ],
+        "hbm_operator_descriptor_id": 217,
+        "identical": false,
+        "mnemonic": "SELECTION.TOKEN_APPEND",
+        "program_counter": 72,
+        "rom_operator_descriptor_id": 212
       }
     ],
     "program_counters": [
@@ -146,20 +286,31 @@
       20,
       23,
       26,
-      29
+      29,
+      32,
+      35,
+      38,
+      44,
+      47,
+      56,
+      62,
+      66,
+      68,
+      70,
+      72
     ]
   },
   "derived_mechanically": true,
   "evidence_campaigns": [
     {
       "artifact": "results/rtl/a3_operator_admission_campaign.json",
-      "artifact_sha256": "a43f21ea3264f84fcbbca8859bf6c556e52fdae2c67ac020fc244cd7e548feff",
-      "bound_source_count": 59,
-      "compared_words": 55877,
+      "artifact_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+      "bound_source_count": 60,
+      "compared_words": 61957,
       "coverage_by_deployment": {
         "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b": {
           "case": "qwen3-8b-rom-single-chip",
-          "compared_words": 55877,
+          "compared_words": 61957,
           "deployment": "qwen3-8b-rom-single-chip",
           "positive_family_subs": [
             [
@@ -253,19 +404,8 @@
       },
       "declared_worktree_dirty": null,
       "declares_own_git_state": false,
-      "drifted_source_count": 10,
-      "drifted_sources": [
-        "a3_operator_admission/bank.hex",
-        "a3_operator_admission/cases.hex",
-        "a3_operator_admission/expected.hex",
-        "a3_operator_admission/index.json",
-        "a3_operator_admission/source.hex",
-        "a3_operator_admission/views.hex",
-        "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-        "rtl/test/tb_a3_operator_admission.sv",
-        "tools/build_a3_operator_admission_vectors.py",
-        "tools/run_a3_operator_admission_rtl_campaign.py"
-      ],
+      "drifted_source_count": 0,
+      "drifted_sources": [],
       "positive_case_count": 22,
       "positive_family_subs": [
         [
@@ -353,7 +493,7 @@
         70,
         72
       ],
-      "simulated_cycles": 3079270,
+      "simulated_cycles": 45036693,
       "simulator_versions": {
         "iverilog": "Icarus Verilog version 11.0 (stable) ()",
         "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
@@ -366,19 +506,18 @@
       "status": "pass",
       "target": "qwen3-8b-rom-single-chip",
       "target_deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
-      "usable": false,
-      "vector_index": "testdata/rtl/a3_operator_admission/index.json",
-      "why_unusable": "10 bound source(s) have drifted since it was recorded"
+      "usable": true,
+      "vector_index": "testdata/rtl/a3_operator_admission/index.json"
     },
     {
       "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
-      "artifact_sha256": "78e01498d6067a178546cd76ec62da333e5caaae7e9bede96e98c27f4663ca46",
-      "bound_source_count": 59,
-      "compared_words": 55877,
+      "artifact_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+      "bound_source_count": 60,
+      "compared_words": 61957,
       "coverage_by_deployment": {
         "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c": {
           "case": "qwen3-8b-hbm-single-chip",
-          "compared_words": 55877,
+          "compared_words": 61957,
           "deployment": "qwen3-8b-hbm-single-chip",
           "positive_family_subs": [
             [
@@ -472,19 +611,8 @@
       },
       "declared_worktree_dirty": null,
       "declares_own_git_state": false,
-      "drifted_source_count": 10,
-      "drifted_sources": [
-        "a3_operator_admission_hbm/bank.hex",
-        "a3_operator_admission_hbm/cases.hex",
-        "a3_operator_admission_hbm/expected.hex",
-        "a3_operator_admission_hbm/index.json",
-        "a3_operator_admission_hbm/source.hex",
-        "a3_operator_admission_hbm/views.hex",
-        "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-        "rtl/test/tb_a3_operator_admission.sv",
-        "tools/build_a3_operator_admission_vectors.py",
-        "tools/run_a3_operator_admission_rtl_campaign.py"
-      ],
+      "drifted_source_count": 0,
+      "drifted_sources": [],
       "positive_case_count": 22,
       "positive_family_subs": [
         [
@@ -572,7 +700,7 @@
         70,
         72
       ],
-      "simulated_cycles": 3079270,
+      "simulated_cycles": 45036693,
       "simulator_versions": {
         "iverilog": "Icarus Verilog version 11.0 (stable) ()",
         "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
@@ -585,9 +713,8 @@
       "status": "pass",
       "target": "qwen3-8b-hbm-single-chip",
       "target_deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
-      "usable": false,
-      "vector_index": "testdata/rtl/a3_operator_admission_hbm/index.json",
-      "why_unusable": "10 bound source(s) have drifted since it was recorded"
+      "usable": true,
+      "vector_index": "testdata/rtl/a3_operator_admission_hbm/index.json"
     },
     {
       "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
@@ -595,15 +722,17 @@
       "bound_source_count": 23,
       "declared_worktree_dirty": null,
       "declares_own_git_state": false,
-      "drifted_source_count": 0,
-      "drifted_sources": [],
+      "drifted_source_count": 1,
+      "drifted_sources": [
+        "results/rtl/abi3_shipped_prefix_campaign.json"
+      ],
       "status": "pass",
       "usable": false,
-      "why_unusable": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+      "why_unusable": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
     },
     {
       "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-      "artifact_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+      "artifact_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
       "bound_source_count": 60,
       "compared_words": 91136,
       "coverage_by_deployment": {
@@ -1330,15 +1459,15 @@
           "SELECTION.TOKEN_APPEND"
         ],
         "operator_admission_vehicle": {
-          "admitted_family_count": null,
+          "admitted_family_count": 11,
           "artifact": "results/rtl/a3_operator_admission_campaign.json",
-          "artifact_is_source_current": false,
-          "trapped_family_count": null,
-          "why_not_read": "10 bound source(s) have drifted since it was recorded"
+          "artifact_is_source_current": true,
+          "trapped_family_count": 0,
+          "why_not_read": null
         },
-        "operator_admission_vehicle_admitted_family_count": null,
+        "operator_admission_vehicle_admitted_family_count": 11,
         "operator_admission_vehicle_note": "this is THIS storage class's own admission campaign, not the ROM campaign read twice; the two lowerings share no governed descriptor id, so one cannot answer for the other",
-        "operator_admission_vehicle_trapped_family_count": null,
+        "operator_admission_vehicle_trapped_family_count": 0,
         "reported_form": "pessimistic",
         "source_of_this_count": "measured launches in the integrated vehicle's own campaign artifact, not the presence of a port connection in its source",
         "why_not_measured": [],
@@ -1362,19 +1491,6 @@
             "program_counters": [
               1,
               68
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "DMA.SCATTER",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              108,
-              115
-            ],
-            "program_counters": [
-              32,
-              35
             ],
             "reachable_in_the_integrated_prefix": false
           },
@@ -1423,78 +1539,6 @@
               11,
               41,
               59
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.RMS_NORM",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              50,
-              144,
-              183
-            ],
-            "program_counters": [
-              8,
-              47,
-              66
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.ADD",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              138,
-              177
-            ],
-            "program_counters": [
-              44,
-              62
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.SILU_MUL",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              165
-            ],
-            "program_counters": [
-              56
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "ATTENTION.GQA",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              124
-            ],
-            "program_counters": [
-              38
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "SELECTION.ARGMAX",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              205
-            ],
-            "program_counters": [
-              70
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "SELECTION.TOKEN_APPEND",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              212
-            ],
-            "program_counters": [
-              72
             ],
             "reachable_in_the_integrated_prefix": false
           }
@@ -1548,11 +1592,18 @@
             "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [32, 190] of this deployment (6a06a4ea97f2) in a positive case"
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 16,
             "issues": 72,
             "mnemonic": "DMA.SCATTER",
             "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               108,
               115
@@ -1587,48 +1638,16 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 3,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [108, 115] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 3
           },
           {
-            "binds_checkpoint_tensor": true,
+            "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
-                "family": 32,
-                "kind": "tensor_matmul",
-                "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 67,
-                "program_counter": 14,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 0
-              },
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
-                "family": 32,
-                "kind": "tensor_matmul",
-                "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 73,
-                "program_counter": 17,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 0
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 32,
             "issues": 72,
             "mnemonic": "TENSOR.MATMUL",
@@ -1637,7 +1656,7 @@
               4194304
             ],
             "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               67,
               73
@@ -1860,7 +1879,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+            "covered_by_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -1918,11 +1937,18 @@
             "sub": 3
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 73,
             "mnemonic": "VECTOR.RMS_NORM",
             "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               50,
               144,
@@ -1959,53 +1985,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 0,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [50, 144, 183] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 0
           },
           {
-            "binds_checkpoint_tensor": true,
+            "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_head_rms_norm",
-                "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 79,
-                "program_counter": 20,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 1
-              },
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_head_rms_norm",
-                "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 87,
-                "program_counter": 23,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 1
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.HEAD_RMS_NORM",
             "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               79,
               87
@@ -2045,47 +2039,16 @@
           {
             "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-rom-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": false,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_rope",
-                "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-                "operand_sources": {
-                  "coefficient_source": "prior_result",
-                  "input_source": "prior_result"
-                },
-                "operator_descriptor_id": 94,
-                "program_counter": 26,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 2
-              },
-              {
-                "binds_checkpoint_tensor": false,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_rope",
-                "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-                "operand_sources": {
-                  "coefficient_source": "prior_result",
-                  "input_source": "prior_result"
-                },
-                "operator_descriptor_id": 100,
-                "program_counter": 29,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 2
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.ROPE",
             "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               94,
               100
@@ -2123,11 +2086,18 @@
             "sub": 2
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.ADD",
             "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               138,
               177
@@ -2162,15 +2132,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 3,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [138, 177] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 3
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 36,
             "mnemonic": "VECTOR.SILU_MUL",
             "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               165
             ],
@@ -2203,15 +2179,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 4,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [165] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 4
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 64,
             "issues": 36,
             "mnemonic": "ATTENTION.GQA",
             "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               124
             ],
@@ -2256,15 +2238,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 1,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [124] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 1
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 112,
             "issues": 1,
             "mnemonic": "SELECTION.ARGMAX",
             "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               205
             ],
@@ -2291,15 +2279,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 0,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [205] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 0
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_campaign.json",
+            "covered_by_case": "qwen3-8b-rom-single-chip",
+            "covered_by_sha256": "9b1ac48654fcb64261e7cd6cd3c1c24543e6574a45d3cc716d8e024ada8f3669",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 112,
             "issues": 1,
             "mnemonic": "SELECTION.TOKEN_APPEND",
             "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               212
             ],
@@ -2326,12 +2320,11 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 1,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [212] of this deployment (6a06a4ea97f2) in a positive case"
+            "sub": 1
           }
         ],
-        "covered_class_count": 4,
-        "covered_instance_count": 217,
+        "covered_class_count": 11,
+        "covered_instance_count": 508,
         "every_issued_class_covered": false,
         "inventory_problems": [],
         "inventory_streams_correspond": true,
@@ -2339,8 +2332,8 @@
         "issued_instance_count": 691,
         "resolved_view_count": 2143,
         "resolved_views_consumed": 2143,
-        "uncovered_class_count": 11,
-        "uncovered_instance_count": 474
+        "uncovered_class_count": 4,
+        "uncovered_instance_count": 183
       },
       "deployment": {
         "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
@@ -2352,8 +2345,8 @@
       },
       "equivalence": {
         "checkpoint_weighted_class_count": 8,
-        "checkpoint_weighted_covered_class_count": 4,
-        "checkpoint_weighted_covered_on_checkpoint_operands_count": 4,
+        "checkpoint_weighted_covered_class_count": 5,
+        "checkpoint_weighted_covered_on_checkpoint_operands_count": 1,
         "checkpoint_weighted_uncovered_classes": [
           {
             "issues": 72,
@@ -2390,23 +2383,9 @@
               41,
               59
             ]
-          },
-          {
-            "issues": 73,
-            "mnemonic": "VECTOR.RMS_NORM",
-            "operator_descriptor_ids": [
-              50,
-              144,
-              183
-            ],
-            "program_counters": [
-              8,
-              47,
-              66
-            ]
           }
         ],
-        "compared_words": 24832,
+        "compared_words": 86789,
         "mismatched_words": 0,
         "mismatched_words_note": null,
         "weights_are_real_checkpoint": false,
@@ -2414,25 +2393,19 @@
       },
       "execution": {
         "campaigns": [
+          "results/rtl/a3_operator_admission_campaign.json",
           "results/rtl/abi3_shipped_prefix_campaign.json"
         ],
         "campaigns_considered_and_refused": [
           {
-            "artifact": "results/rtl/a3_operator_admission_campaign.json",
-            "why": "10 bound source(s) have drifted since it was recorded"
-          },
-          {
-            "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
-            "why": "10 bound source(s) have drifted since it was recorded"
-          },
-          {
             "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-            "why": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+            "why": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
           }
         ],
         "evidence_class": "public_open_tool_rtl_simulation_composite_not_every_covering_campaign_ran_on_two_simulators",
-        "simulated_cycles": 252057074,
+        "simulated_cycles": 297093767,
         "simulated_cycles_by_campaign": {
+          "results/rtl/a3_operator_admission_campaign.json": 45036693,
           "results/rtl/abi3_shipped_prefix_campaign.json": 252057074
         },
         "simulated_cycles_scope": [
@@ -2441,16 +2414,29 @@
             "scope": "the whole integrated run, over every case it executed -- the harness reports one total and no per-case split, so this is not this lowering's share alone"
           }
         ],
-        "simulator": "verilator",
+        "simulator": "icarus, verilator",
         "simulators": [
+          "icarus",
           "verilator"
         ],
         "simulators_by_campaign": {
+          "results/rtl/a3_operator_admission_campaign.json": [
+            "icarus",
+            "verilator"
+          ],
           "results/rtl/abi3_shipped_prefix_campaign.json": [
             "verilator"
           ]
         },
         "underlying_campaign_provenance": [
+          {
+            "artifact": "results/rtl/a3_operator_admission_campaign.json",
+            "binds_every_source_digest_and_they_all_match": true,
+            "bound_source_count": 60,
+            "declared_worktree_dirty": null,
+            "declares_own_git_state": false,
+            "note": "this campaign does not declare the worktree it ran in; what binds it to committed bytes is that every source and vector digest it recorded still matches the tree, recomputed here"
+          },
           {
             "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
             "binds_every_source_digest_and_they_all_match": true,
@@ -2462,7 +2448,7 @@
         ]
       },
       "git": {
-        "commit": "4c9480af137f56afbf4e959c6645f3c41c295b3b",
+        "commit": "a541227e00accbcff2ed69cb0c137360bf268511",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
@@ -2493,15 +2479,15 @@
           "SELECTION.TOKEN_APPEND"
         ],
         "operator_admission_vehicle": {
-          "admitted_family_count": null,
+          "admitted_family_count": 11,
           "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
-          "artifact_is_source_current": false,
-          "trapped_family_count": null,
-          "why_not_read": "10 bound source(s) have drifted since it was recorded"
+          "artifact_is_source_current": true,
+          "trapped_family_count": 0,
+          "why_not_read": null
         },
-        "operator_admission_vehicle_admitted_family_count": null,
+        "operator_admission_vehicle_admitted_family_count": 11,
         "operator_admission_vehicle_note": "this is THIS storage class's own admission campaign, not the ROM campaign read twice; the two lowerings share no governed descriptor id, so one cannot answer for the other",
-        "operator_admission_vehicle_trapped_family_count": null,
+        "operator_admission_vehicle_trapped_family_count": 0,
         "reported_form": "pessimistic",
         "source_of_this_count": "measured launches in the integrated vehicle's own campaign artifact, not the presence of a port connection in its source",
         "why_not_measured": [],
@@ -2515,30 +2501,6 @@
         "integrated_run_measured_cycles": 252057074,
         "integrated_run_measured_matmul_macs": 50331648,
         "per_uncovered_class": [
-          {
-            "mnemonic": "DMA.GATHER",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              198
-            ],
-            "program_counters": [
-              68
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "DMA.SCATTER",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              118,
-              125
-            ],
-            "program_counters": [
-              32,
-              35
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
           {
             "mnemonic": "TENSOR.MATMUL",
             "multiply_accumulates_per_issue": [
@@ -2586,78 +2548,6 @@
               59
             ],
             "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.RMS_NORM",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              64,
-              156,
-              192
-            ],
-            "program_counters": [
-              8,
-              47,
-              66
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.ADD",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              150,
-              186
-            ],
-            "program_counters": [
-              44,
-              62
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "VECTOR.SILU_MUL",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              174
-            ],
-            "program_counters": [
-              56
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "ATTENTION.GQA",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              136
-            ],
-            "program_counters": [
-              38
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "SELECTION.ARGMAX",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              211
-            ],
-            "program_counters": [
-              70
-            ],
-            "reachable_in_the_integrated_prefix": false
-          },
-          {
-            "mnemonic": "SELECTION.TOKEN_APPEND",
-            "multiply_accumulates_per_issue": null,
-            "operator_descriptor_ids": [
-              217
-            ],
-            "program_counters": [
-              72
-            ],
-            "reachable_in_the_integrated_prefix": false
           }
         ],
         "uncovered_matmul_multiply_accumulates": 806879232,
@@ -2670,7 +2560,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+            "covered_by_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -2728,11 +2618,18 @@
             "sub": 2
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 16,
             "issues": 1,
             "mnemonic": "DMA.GATHER",
             "numeric_contract_sha256": "12a24197c80d3851cc5ea3e69915f7dbc926aa1c2ee795c8fe3af1a67677daee",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               198
             ],
@@ -2765,15 +2662,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 2,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [198] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 2
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 16,
             "issues": 72,
             "mnemonic": "DMA.SCATTER",
             "numeric_contract_sha256": "55f39bccbda65baf6238cfcd93d7bf9959330984af837979870cc019be00e16f",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               118,
               125
@@ -2808,48 +2711,16 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 3,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [118, 125] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 3
           },
           {
-            "binds_checkpoint_tensor": true,
+            "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
-                "family": 32,
-                "kind": "tensor_matmul",
-                "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 79,
-                "program_counter": 14,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 0
-              },
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
-                "family": 32,
-                "kind": "tensor_matmul",
-                "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 84,
-                "program_counter": 17,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 0
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 32,
             "issues": 72,
             "mnemonic": "TENSOR.MATMUL",
@@ -2858,7 +2729,7 @@
               4194304
             ],
             "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               79,
               84
@@ -3081,7 +2952,7 @@
             "covered": true,
             "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
             "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+            "covered_by_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
             "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
             "covered_operations": [
               {
@@ -3139,11 +3010,18 @@
             "sub": 3
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 73,
             "mnemonic": "VECTOR.RMS_NORM",
             "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               64,
               156,
@@ -3180,53 +3058,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 0,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [64, 156, 192] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 0
           },
           {
-            "binds_checkpoint_tensor": true,
+            "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_head_rms_norm",
-                "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 90,
-                "program_counter": 20,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 1
-              },
-              {
-                "binds_checkpoint_tensor": true,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_head_rms_norm",
-                "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-                "operand_sources": {
-                  "input_source": "prior_result",
-                  "weight_source": "checkpoint"
-                },
-                "operator_descriptor_id": 97,
-                "program_counter": 23,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 1
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.HEAD_RMS_NORM",
             "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               90,
               97
@@ -3266,47 +3112,16 @@
           {
             "binds_checkpoint_tensor": false,
             "covered": true,
-            "covered_by": "results/rtl/abi3_shipped_prefix_campaign.json",
-            "covered_by_case": "qwen3-8b-hbm-single-chip/decode",
-            "covered_by_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
-            "covered_by_vehicle": "rtl/test/a3_shipped_prefix_top.sv",
-            "covered_operations": [
-              {
-                "binds_checkpoint_tensor": false,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_rope",
-                "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-                "operand_sources": {
-                  "coefficient_source": "prior_result",
-                  "input_source": "prior_result"
-                },
-                "operator_descriptor_id": 104,
-                "program_counter": 26,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 2
-              },
-              {
-                "binds_checkpoint_tensor": false,
-                "expected_row_sha256": null,
-                "family": 48,
-                "kind": "vector_rope",
-                "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-                "operand_sources": {
-                  "coefficient_source": "prior_result",
-                  "input_source": "prior_result"
-                },
-                "operator_descriptor_id": 110,
-                "program_counter": 29,
-                "ran_on_checkpoint_numbers": true,
-                "sub": 2
-              }
-            ],
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.ROPE",
             "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
-            "operands_are_real_checkpoint": true,
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               104,
               110
@@ -3344,11 +3159,18 @@
             "sub": 2
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 72,
             "mnemonic": "VECTOR.ADD",
             "numeric_contract_sha256": "3c972568ff6c0a44baf54121a08d9b4ad9c3c35883a87c5f258a998e3dde0b09",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               150,
               186
@@ -3383,15 +3205,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 3,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [150, 186] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 3
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 48,
             "issues": 36,
             "mnemonic": "VECTOR.SILU_MUL",
             "numeric_contract_sha256": "1ef5b3760135b2482b4f0e1cfeb3aef86955757b320b151defe69d2d64c45aca",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               174
             ],
@@ -3424,15 +3252,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 4,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [174] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 4
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 64,
             "issues": 36,
             "mnemonic": "ATTENTION.GQA",
             "numeric_contract_sha256": "623af598461a17f0b15fb564380a7b8de0bf3f8c89a0833947ad9ed8872ce181",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               136
             ],
@@ -3477,15 +3311,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 1,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [136] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 1
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 112,
             "issues": 1,
             "mnemonic": "SELECTION.ARGMAX",
             "numeric_contract_sha256": "27df2365e5f573211f5b7c19a3f92792ad0cf16ec44cc08db7cc87a9ec5e7c3a",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               211
             ],
@@ -3512,15 +3352,21 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 0,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [211] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 0
           },
           {
-            "covered": false,
+            "binds_checkpoint_tensor": false,
+            "covered": true,
+            "covered_by": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "covered_by_case": "qwen3-8b-hbm-single-chip",
+            "covered_by_sha256": "a7b78ee48569bd64c41962af8ea11e4579453c4c4e9f4f23bf1d4be59c3ac04e",
+            "covered_by_vehicle": "rtl/test/tb_a3_operator_admission.sv",
+            "covered_operations": [],
             "family": 112,
             "issues": 1,
             "mnemonic": "SELECTION.TOKEN_APPEND",
             "numeric_contract_sha256": "8d70087c8b6f58d95f91b7e498a253c2b5805c5e175dd681b951f3ef9e3f3dfc",
+            "operands_are_real_checkpoint": false,
             "operator_descriptor_ids": [
               217
             ],
@@ -3547,12 +3393,11 @@
               "extent_axis",
               "rank"
             ],
-            "sub": 1,
-            "why_not_covered": "no source-current retained RTL campaign drove operator descriptor(s) [217] of this deployment (cb9067f5fbf6) in a positive case"
+            "sub": 1
           }
         ],
-        "covered_class_count": 5,
-        "covered_instance_count": 218,
+        "covered_class_count": 13,
+        "covered_instance_count": 510,
         "every_issued_class_covered": false,
         "inventory_problems": [],
         "inventory_streams_correspond": true,
@@ -3560,8 +3405,8 @@
         "issued_instance_count": 691,
         "resolved_view_count": 2143,
         "resolved_views_consumed": 2143,
-        "uncovered_class_count": 11,
-        "uncovered_instance_count": 473
+        "uncovered_class_count": 3,
+        "uncovered_instance_count": 181
       },
       "deployment": {
         "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
@@ -3573,8 +3418,8 @@
       },
       "equivalence": {
         "checkpoint_weighted_class_count": 8,
-        "checkpoint_weighted_covered_class_count": 4,
-        "checkpoint_weighted_covered_on_checkpoint_operands_count": 4,
+        "checkpoint_weighted_covered_class_count": 5,
+        "checkpoint_weighted_covered_on_checkpoint_operands_count": 1,
         "checkpoint_weighted_uncovered_classes": [
           {
             "issues": 72,
@@ -3611,23 +3456,9 @@
               41,
               59
             ]
-          },
-          {
-            "issues": 73,
-            "mnemonic": "VECTOR.RMS_NORM",
-            "operator_descriptor_ids": [
-              64,
-              156,
-              192
-            ],
-            "program_counters": [
-              8,
-              47,
-              66
-            ]
           }
         ],
-        "compared_words": 24832,
+        "compared_words": 86789,
         "mismatched_words": 0,
         "mismatched_words_note": null,
         "weights_are_real_checkpoint": false,
@@ -3635,25 +3466,19 @@
       },
       "execution": {
         "campaigns": [
+          "results/rtl/a3_operator_admission_hbm_campaign.json",
           "results/rtl/abi3_shipped_prefix_campaign.json"
         ],
         "campaigns_considered_and_refused": [
           {
-            "artifact": "results/rtl/a3_operator_admission_campaign.json",
-            "why": "10 bound source(s) have drifted since it was recorded"
-          },
-          {
-            "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
-            "why": "10 bound source(s) have drifted since it was recorded"
-          },
-          {
             "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-            "why": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+            "why": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
           }
         ],
         "evidence_class": "public_open_tool_rtl_simulation_composite_not_every_covering_campaign_ran_on_two_simulators",
-        "simulated_cycles": 252057074,
+        "simulated_cycles": 297093767,
         "simulated_cycles_by_campaign": {
+          "results/rtl/a3_operator_admission_hbm_campaign.json": 45036693,
           "results/rtl/abi3_shipped_prefix_campaign.json": 252057074
         },
         "simulated_cycles_scope": [
@@ -3662,16 +3487,29 @@
             "scope": "the whole integrated run, over every case it executed -- the harness reports one total and no per-case split, so this is not this lowering's share alone"
           }
         ],
-        "simulator": "verilator",
+        "simulator": "icarus, verilator",
         "simulators": [
+          "icarus",
           "verilator"
         ],
         "simulators_by_campaign": {
+          "results/rtl/a3_operator_admission_hbm_campaign.json": [
+            "icarus",
+            "verilator"
+          ],
           "results/rtl/abi3_shipped_prefix_campaign.json": [
             "verilator"
           ]
         },
         "underlying_campaign_provenance": [
+          {
+            "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
+            "binds_every_source_digest_and_they_all_match": true,
+            "bound_source_count": 60,
+            "declared_worktree_dirty": null,
+            "declares_own_git_state": false,
+            "note": "this campaign does not declare the worktree it ran in; what binds it to committed bytes is that every source and vector digest it recorded still matches the tree, recomputed here"
+          },
           {
             "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
             "binds_every_source_digest_and_they_all_match": true,
@@ -3683,7 +3521,7 @@
         ]
       },
       "git": {
-        "commit": "4c9480af137f56afbf4e959c6645f3c41c295b3b",
+        "commit": "a541227e00accbcff2ed69cb0c137360bf268511",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
@@ -3694,8 +3532,8 @@
   "schema": "opentallas.rtl.g1a_operator_equivalence.v1",
   "status": "fail",
   "summary": [
-    "rom: 4 of 15 issued equivalence classes covered bit-exactly (217 of 691 issued instances); 11 uncovered; 24832 words compared, 0 mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6",
-    "hbm: 5 of 16 issued equivalence classes covered bit-exactly (218 of 691 issued instances); 11 uncovered; 24832 words compared, 0 mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6"
+    "rom: 11 of 15 issued equivalence classes covered bit-exactly (508 of 691 issued instances); 4 uncovered; 86789 words compared, 0 mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6",
+    "hbm: 13 of 16 issued equivalence classes covered bit-exactly (510 of 691 issued instances); 3 uncovered; 86789 words compared, 0 mismatched; real checkpoint weights: False; capability-trapped families (pessimistic form): 6"
   ],
   "workload_id": "TA-QW-EOS-1"
 }
