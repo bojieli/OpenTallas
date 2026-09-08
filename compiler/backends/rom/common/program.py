@@ -77,6 +77,7 @@ from compiler.backends.schedule_rule import (
     family_ordinals,
     operator_shape as _e9_operator_shape,
     queue_ordinal,
+    surface_rows as _e9_surface_rows,
 )
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
@@ -1735,6 +1736,7 @@ class RomLowering:
         *,
         rows_override: int | None = None,
         placement_views: tuple[Sequence[int], Sequence[int]] | None = None,
+        surface_views: tuple[Sequence[int], Sequence[int]] | None = None,
     ) -> int:
         """Emit the SCHEDULE descriptor for one operator.
 
@@ -1765,16 +1767,27 @@ class RomLowering:
         """
         inputs = [self.tensors[n] for n in kernel.inputs]
         weights = [t for t in inputs if t.role in WEIGHT_ROLES]
-        # The rows *one dispatch* covers (AM-E9 ``rows``): the emission path
-        # states them from its loop structure -- one row for a per-token
-        # dispatch however many rows the iteration domain names -- and the
-        # auxiliary primitives take the block-bounded derivation.  Never the
-        # span maximum: a schedule that priced a dispatch as the whole span
-        # would be wrong on both sides of the comparison.
-        rows = (
+        # AM-E9 ``rows``: the surface this operator covers, read off the very
+        # views it names (``schedule_rule.surface_rows``), because that is the
+        # surface ``runtime.cycle.model.tile_mapping`` charges ``tile_rows``
+        # against.  ``rows_override`` and ``_dispatch_rows`` state this
+        # backend's loop trip -- one row for a per-token dispatch, however
+        # many the iteration domain names otherwise -- which is a fact about
+        # iteration and not about the tile: the KV append walks one token row
+        # and tiles the whole 65,536-row compressed-KV surface, and pricing
+        # that tile at one row made the same 1,024-byte write cost 524,288
+        # tiles here against 1,024 on the HBM side (section 13 item 28).  The
+        # loop trip stands only where the surface is request-narrowed, or
+        # where the operator names no view at all; never the span maximum,
+        # which would be wrong on both sides of the comparison.
+        loop_rows = (
             rows_override
             if rows_override is not None
             else self._dispatch_rows(kernel)
+        )
+        views = surface_views or placement_views or ((), ())
+        rows = _e9_surface_rows(
+            self.builder.table, views[0], views[1], fallback=loop_rows
         )
         shape = _e9_operator_shape(
             kernel,
@@ -8278,7 +8291,13 @@ class RomLowering:
             aux=self._aux(kernel, family, sub),
             numeric_profile_id=self._numeric(kernel, family, sub),
             schedule_id=self._schedule(
-                kernel, family, sub, rows_override=schedule_rows
+                kernel,
+                family,
+                sub,
+                rows_override=schedule_rows,
+                # AM-E9 reads ``rows`` off the surface these views name; the
+                # route class still comes from the kernel on this path.
+                surface_views=(inputs, outputs),
             ),
             counter_class_id=self._counter_class(kernel.counter_class, family),
             source_kernel_id=kernel.index,

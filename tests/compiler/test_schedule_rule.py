@@ -40,18 +40,20 @@ from compiler.backends.schedule_rule import (
     OperatorShape,
     choose_tile,
     column_lane_bound,
+    declared_view_rows,
     e9_schedule,
     family_ordinals,
     operator_shape,
     queue_count,
     queue_ordinal,
+    request_narrows_rows,
     sram_banks,
     sram_ports,
     staging_bank_mask,
 )
 from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import Capability
-from runtime.abi3.constants import Major, StorageClass
+from runtime.abi3.constants import NO_ID, Dma, Major, StorageClass
 from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.verifier import verify_deployment
 
@@ -504,6 +506,94 @@ def test_the_qwen_graph_lowers_to_identical_tiled_fields_on_both_backends():
         if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
     }
     assert int(StorageClass.ROM) in classes
+
+
+# ---------------------------------------------------------------------------
+# ``rows`` is the surface, not the loop trip (section 13 item 28's DMA.SCATTER)
+# ---------------------------------------------------------------------------
+def _surface_view(deployment, operator):
+    """The view ``operand_extents`` reads: ``out0``, or ``in0`` when absent."""
+    out0 = int(operator.payload["output_view_0"])
+    in0 = int(operator.payload["input_view_0"])
+    view = out0 if out0 != NO_ID else in0
+    return None if view == NO_ID else view
+
+
+def _row_tiling(deployment):
+    """``[(operator_id, tile_rows, declared surface rows, narrowed?)]``."""
+    table = {d.descriptor_id: d for d in deployment.table.descriptors()}
+    rows = []
+    for d in deployment.table.descriptors():
+        if d.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        view = _surface_view(deployment, d)
+        if view is None:
+            continue
+        schedule = table[int(d.payload["schedule_id"])].payload
+        rows.append((
+            int(d.descriptor_id),
+            int(schedule["tile_rows"]),
+            declared_view_rows(deployment.table, view),
+            request_narrows_rows(deployment.table, view),
+        ))
+    return rows
+
+
+@pytest.mark.skipif(not QWEN_IR.exists(), reason="the Qwen IR is a build product")
+def test_the_tile_spans_every_request_independent_surface_on_both_backends():
+    """AM-E9 section 3.8: row tiling is not a program construct.
+
+    The consumer is ``runtime.cycle.model.tile_mapping``, which charges
+    ``ceil(rows / tile_rows)`` row tiles over the operator's own surface.  A
+    surface the request does not narrow has its declared extents at every
+    request, so a ``tile_rows`` below them is row tiling the rule forbids --
+    which is what a backend's loop trip produces, and what made one
+    ``DMA.SCATTER`` of a single token row cost 524,288 tiles on the ROM array
+    against 1,024 on its HBM twin (design section 13 item 28).
+    """
+    graph = KernelGraph.read(QWEN_IR)
+    rom_capability = _capability(ROM_CAPABILITY)
+    hbm_capability = _capability(HBM_CAPABILITY)
+    rom_deployment, _plan = build_qwen3_rom_deployment(graph, capability=rom_capability)
+    hbm_deployment = hbm_lower(graph, hbm_capability)
+    for name, deployment in (("rom", rom_deployment), ("hbm", hbm_deployment)):
+        offenders = [
+            row for row in _row_tiling(deployment)
+            if not row[3] and row[1] < row[2]
+        ]
+        assert offenders == [], (name, offenders)
+
+
+@pytest.mark.skipif(not QWEN_IR.exists(), reason="the Qwen IR is a build product")
+def test_a_state_scatter_is_tiled_by_the_cache_it_addresses_not_by_the_dispatch():
+    """The KV write: one token row into a cache whose extent is fixed.
+
+    Both backends emit the cache's own row count, so the model charges one row
+    tile.  Before this rule the ROM side emitted its per-token dispatch and the
+    HBM side its token block, and neither described the surface.
+    """
+    graph = KernelGraph.read(QWEN_IR)
+    rom_deployment, _plan = build_qwen3_rom_deployment(
+        graph, capability=_capability(ROM_CAPABILITY)
+    )
+    hbm_deployment = hbm_lower(graph, _capability(HBM_CAPABILITY))
+    for name, deployment in (("rom", rom_deployment), ("hbm", hbm_deployment)):
+        table = {d.descriptor_id: d for d in deployment.table.descriptors()}
+        scatters = [
+            d for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and int(d.payload["engine_family"]) == int(Major.DMA)
+            and int(d.payload["engine_sub"]) == int(Dma.SCATTER)
+        ]
+        assert scatters, name
+        for operator in scatters:
+            view = _surface_view(deployment, operator)
+            assert view is not None, name
+            schedule = table[int(operator.payload["schedule_id"])].payload
+            surface = declared_view_rows(deployment.table, view)
+            assert int(schedule["tile_rows"]) == surface, (
+                name, int(operator.descriptor_id), int(schedule["tile_rows"]), surface
+            )
 
 
 # ---------------------------------------------------------------------------

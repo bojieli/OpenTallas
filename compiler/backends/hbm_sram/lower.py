@@ -49,6 +49,7 @@ from compiler.backends.schedule_rule import (
     queue_ordinal,
     sram_ports,
     staging_bank_mask,
+    surface_rows as _e9_surface_rows,
 )
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
@@ -1324,7 +1325,9 @@ class _Emitter:
         self._numeric[key] = nid
         return nid
 
-    def _schedule_for(self, plan: KernelPlan, family: int | None = None) -> int:
+    def _schedule_for(self, plan: KernelPlan, family: int | None = None, *,
+                      views: tuple[Sequence[int], Sequence[int]] | None = None,
+                      ) -> int:
         """The tile mapping, bank/port use, issue window and resource bound.
 
         These numbers are the cycle model's direct input.  AM-E9
@@ -1348,8 +1351,23 @@ class _Emitter:
         # axis of its own and takes the kernel's graph index as its ordinal.
         family = plan.engine_family if family is None else int(family)
         own = family == int(plan.engine_family)
+        # AM-E9 ``rows`` is the surface the operator names, not the plan's
+        # loop trip.  ``plan.schedule_rows`` is the token block this lowering
+        # walks, and for an operator that writes into a persistent state
+        # surface -- the KV scatter, whose destination extent the planner
+        # deliberately replaces with the value operand's rows so that the
+        # operation gets a token-block loop at all -- that is not the surface
+        # ``tile_mapping`` charges ``tile_rows`` against.  Both backends now
+        # read it off the views (``schedule_rule.surface_rows``); the loop
+        # trip stands only where an operator names no view.
+        rows = _e9_surface_rows(
+            self.builder.table,
+            views[0] if views else (),
+            views[1] if views else (),
+            fallback=max(int(plan.schedule_rows), 1),
+        )
         shape = OperatorShape(
-            rows=max(int(plan.schedule_rows), 1),
+            rows=max(int(rows), 1),
             cols=max(int(plan.schedule_cols), 1),
             reduction=max(int(plan.schedule_reduction), 1) if own else 1,
             contracts=bool(plan.schedule_contracts) if own else False,
@@ -1404,7 +1422,9 @@ class _Emitter:
         self._schedule[key] = sid
         return sid
 
-    def _scratch_schedule_for(self, plan: KernelPlan) -> int:
+    def _scratch_schedule_for(self, plan: KernelPlan, *,
+                              views: tuple[Sequence[int], Sequence[int]] | None = None,
+                              ) -> int:
         """A one-credit DMA queue shared by every exchange-buffer transfer.
 
         Cluster pack/LINK/unpack sites deliberately reuse one symmetric HBM
@@ -1431,10 +1451,19 @@ class _Emitter:
                 f"the capability advertises {queues} queue(s)"
             )
         queue_index = queues - 1
+        # AM-E9 ``rows``: the exchange transfer's own surface, like every other
+        # operator's.  ``plan.tile_rows`` is the kernel's token block, which is
+        # not the slot array a pack writes.
+        tile_rows = _e9_surface_rows(
+            self.builder.table,
+            views[0] if views else (),
+            views[1] if views else (),
+            fallback=max(int(plan.tile_rows), 1),
+        )
         key = (
             "exchange",
             family,
-            plan.tile_rows,
+            tile_rows,
             plan.tile_cols,
             plan.tile_depth,
             mask,
@@ -1447,7 +1476,7 @@ class _Emitter:
             engine_family=Major.DMA,
             queue_index=queue_index,
             issue_window=1,
-            tile_rows=plan.tile_rows,
+            tile_rows=tile_rows,
             tile_cols=plan.tile_cols,
             tile_depth=plan.tile_depth,
             bank_mask=mask,
@@ -3478,7 +3507,7 @@ class _Emitter:
             outputs=outputs,
             aux=list(plan.aux),
             numeric_profile_id=self._kernel_numeric(plan),
-            schedule_id=self._schedule_for(plan),
+            schedule_id=self._schedule_for(plan, views=(inputs, outputs)),
             counter_class_id=self._counter_class(plan.engine_family),
             source_kernel_id=plan.index,
             key=f"op.k{plan.index}",
@@ -3636,7 +3665,9 @@ class _Emitter:
             outputs=list(outputs),
             aux=list(aux),
             numeric_profile_id=numeric_profile_id,
-            schedule_id=self._schedule_for(plan, int(family)),
+            schedule_id=self._schedule_for(
+                plan, int(family), views=(list(inputs), list(outputs))
+            ),
             counter_class_id=self._counter_class(int(family)),
             source_kernel_id=plan.index,
             key=key,
@@ -4237,7 +4268,9 @@ class _Emitter:
                 outputs=list(row_outputs),
                 aux=list(plan.aux),
                 numeric_profile_id=self._kernel_numeric(plan),
-                schedule_id=self._schedule_for(plan),
+                schedule_id=self._schedule_for(
+                    plan, views=(list(row_inputs), list(row_outputs))
+                ),
                 counter_class_id=self._counter_class(plan.engine_family),
                 source_kernel_id=plan.index,
                 key=f"op.k{plan.index}.compress.{phase}",
@@ -4430,7 +4463,9 @@ class _Emitter:
                 outputs=list(row_out),
                 aux=list(plan.aux),
                 numeric_profile_id=self._kernel_numeric(plan),
-                schedule_id=self._schedule_for(plan),
+                schedule_id=self._schedule_for(
+                    plan, views=(list(row_in), list(row_out))
+                ),
                 counter_class_id=self._counter_class(plan.engine_family),
                 source_kernel_id=plan.index,
                 key=key,
@@ -4748,7 +4783,9 @@ class _Emitter:
                 outputs=[output, *outputs[1:]],
                 aux=list(plan.aux),
                 numeric_profile_id=self._kernel_numeric(plan),
-                schedule_id=self._schedule_for(plan),
+                schedule_id=self._schedule_for(
+                    plan, views=(list(row), [output, *outputs[1:]])
+                ),
                 counter_class_id=self._counter_class(plan.engine_family),
                 source_kernel_id=plan.index,
                 key=(
@@ -5153,7 +5190,9 @@ class _Emitter:
                     outputs=list(outputs),
                     aux=list(plan.aux),
                     numeric_profile_id=self._kernel_numeric(plan),
-                    schedule_id=self._schedule_for(plan),
+                    schedule_id=self._schedule_for(
+                        plan, views=(list(row), list(outputs))
+                    ),
                     counter_class_id=self._counter_class(plan.engine_family),
                     source_kernel_id=plan.index,
                     key=f"op.k{plan.index}.{phase}",
@@ -5283,7 +5322,6 @@ class _Emitter:
         builder = self.builder
         loops = self._open_loops(plan, shared_row_loop=shared_row_loop)
         numeric = self._kernel_numeric(plan)
-        schedule = self._schedule_for(plan)
         counter = self._counter_class(plan.engine_family)
         predicate = self._phase_predicate(plan.phases)
         column = 0
@@ -5296,6 +5334,13 @@ class _Emitter:
             dims, strides, row_stride = self._declared_view(plan, operand)
             destination = self._state_window(
                 plan, kernel, loops, column=column, dims=dims, row_stride=row_stride
+            )
+            # AM-E9 ``rows`` is read off this write's own destination window,
+            # so the schedule is resolved per slot; ``_schedule_for`` returns
+            # one descriptor per distinct field tuple, so the slots that agree
+            # still share one.
+            schedule = self._schedule_for(
+                plan, views=([source], [destination])
             )
             operator = builder.operator(
                 engine_family=Major(plan.engine_family),
@@ -5935,7 +5980,6 @@ class _Emitter:
         extent_unit = max(int(out.extent_unit), 1)
         extent_bias = int(out.extent_bias)
         numeric = self._kernel_numeric(plan)
-        schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
         predicate = self._phase_predicate(plan.phases)
 
@@ -5973,7 +6017,6 @@ class _Emitter:
             pack_source,
             pack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             wait,
@@ -6038,7 +6081,6 @@ class _Emitter:
             unpack_source,
             unpack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             scattered,
@@ -6084,7 +6126,6 @@ class _Emitter:
         extent_unit = max(int(contribution.extent_unit), 1)
         extent_bias = int(contribution.extent_bias)
         numeric = self._kernel_numeric(plan)
-        schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
         predicate = self._phase_predicate(plan.phases)
 
@@ -6107,7 +6148,6 @@ class _Emitter:
             source_view,
             pack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             wait,
@@ -6171,7 +6211,6 @@ class _Emitter:
             unpack_source,
             unpack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             reduced,
@@ -6331,7 +6370,6 @@ class _Emitter:
             else None
         )
         numeric = self._kernel_numeric(plan)
-        schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
         predicate = (
             self._phase_predicate(plan.phases)
@@ -6380,7 +6418,6 @@ class _Emitter:
             pack_source,
             pack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             wait,
@@ -6458,7 +6495,6 @@ class _Emitter:
             unpack_source,
             unpack_destination,
             numeric,
-            schedule,
             counter,
             predicate,
             gathered,
@@ -6523,7 +6559,6 @@ class _Emitter:
             [DynamicTerm.loop(row_loop, cols * block)] if row_loop is not None else []
         )
         numeric = self._kernel_numeric(plan)
-        schedule = self._scratch_schedule_for(plan)
         counter = self._counter_class(int(Major.DMA))
         predicate = self._phase_predicate(plan.phases)
 
@@ -6553,7 +6588,7 @@ class _Emitter:
         # every consumer of the result on the unpack.
         packed = builder.new_event()
         self._emit_move(
-            plan, pack_source, pack_destination, numeric, schedule, counter,
+            plan, pack_source, pack_destination, numeric, counter,
             predicate, wait, packed, "pack",
         )
 
@@ -6620,7 +6655,7 @@ class _Emitter:
         # on a machine with asynchronous engines it is a race.
         unpacked = builder.new_event()
         self._emit_move(
-            plan, unpack_source, unpack_destination, numeric, schedule, counter,
+            plan, unpack_source, unpack_destination, numeric, counter,
             predicate, gathered, unpacked, "unpack",
         )
         return unpacked
@@ -6631,14 +6666,21 @@ class _Emitter:
         source: int,
         destination: int,
         numeric: int,
-        schedule: int,
         counter: int,
         predicate: int,
         wait: int,
         signal: int,
         tag: str,
     ) -> None:
-        """One DMA.TRANSFER between two views, waiting on ``wait``."""
+        """One DMA.TRANSFER between two views, waiting on ``wait``.
+
+        The exchange schedule is resolved here, from this move's own views:
+        AM-E9 measures ``tile_rows`` on the surface the operator names, and a
+        pack and its unpack name different ones.
+        """
+        schedule = self._scratch_schedule_for(
+            plan, views=([source], [destination])
+        )
         operator = self.builder.operator(
             engine_family=Major.DMA,
             engine_sub=int(Dma.TRANSFER),

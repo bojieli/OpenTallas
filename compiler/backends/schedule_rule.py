@@ -22,17 +22,47 @@ The rule, field by field
 ------------------------
 
 ``rows``
-    The token rows ONE dispatch covers: ``1`` for a per-token dispatch, else
-    the token block (512, ``compiler.qwen3.constants.TOKEN_BLOCK_ROWS`` /
-    ``TileConfig.block``) for a symbolic-leading output, else the product of
-    the output's static leading extents.  Never the span maximum: a SCHEDULE
-    that priced a 512-row block as 8,192 rows would be wrong on both sides.
-    Each backend states its own loop structure, so ``rows`` is an input of the
-    rule; :func:`dispatch_rows` is the shared derivation for the common case.
+    The rows of the surface ONE operator covers, read off the operator's own
+    ``out0`` view (its ``in0`` when it writes none) by :func:`surface_rows` --
+    the same surface, read the same way, that
+    ``runtime.cycle.model.operand_extents`` reads when it charges the tile.
+    Never the span maximum: a SCHEDULE that priced a 512-row block as 8,192
+    rows would be wrong on both sides.  And never, where the surface is
+    request-INDEPENDENT, the backend's loop trip: the loop trip is a fact
+    about iteration while ``tile_rows`` is charged against the surface, and
+    the two differ for exactly the operators that write into a persistent
+    state surface.  Where the request narrows the surface's leading axis
+    (:func:`request_narrows_rows`, asked with the resolver's own predicate) no
+    static field can state it and the backend's dispatch rows stand --
+    :func:`dispatch_rows` for the common case -- with the residual row tiling
+    owned as a limit of a static SCHEDULE over a dynamic extent.  Both
+    backends take the same branch on the same operator, because both read the
+    same descriptors.
 
 ``tile_rows = rows``
     Section 3.8 verbatim: the tile spans every row of the dispatch.  Row
-    tiling is not a program construct on either side.
+    tiling is not a program construct on either side -- which is a statement
+    about the CONSUMER, and the consumer is
+    ``runtime.cycle.model.tile_mapping``: it reads the operator's own output
+    view (its ``in0`` when it writes none), calls the product of every axis
+    but the last ``rows`` (``operand_extents``), and charges
+    ``ceil(rows / tile_rows)`` row tiles.  So ``tile_rows`` has to be measured
+    against THAT surface.  Each backend's loop trip is a fact about its own
+    iteration, not about the tile, and where the two differ the loop trip is
+    the wrong number: an operator that writes one indexed row into a
+    persistent state surface iterates one row and tiles 65,536 of them.
+    :func:`surface_rows` is therefore the one derivation of ``rows``, read off
+    the views the operator actually names, and both backends call it.
+
+    Measured 2026-09-08 on the DeepSeek array pair re-lowered from committed
+    source (request BATCH 1 / CONTEXT_LENGTH 200,000): before this clause the
+    two backends' answers for one ``DMA.SCATTER`` of one token row into a
+    65,536-row compressed-KV surface were ``tile_rows`` 1 (ROM, its per-token
+    dispatch) against 512 (HBM, its token block) -- 524,288 tiles against
+    1,024 for the same 1,024-byte write, the 512x that dominated gate C2's
+    array cell.  Neither number described the surface; both were the backend's
+    own loop, and that surface is request-independent, so both were available
+    to be measured and neither was.
 
 ``tile_cols = choose_tile(cols, 64)``
     [T2.1-3]: a pass is 64 columns.  ``choose_tile`` (the HBM planner's
@@ -373,6 +403,101 @@ def dispatch_rows(tensor: Tensor | None, *, block: int, capability: Any) -> int:
     for axis in tensor.shape[:-1]:
         rows *= resolve_extent(axis, capability)
     return max(rows, 1)
+
+
+def declared_view_rows(table: Any, view_id: int) -> int:
+    """Leading-extent product of one TENSOR_VIEW descriptor, as declared."""
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    payload = table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW).payload
+    rank = int(payload["rank"])
+    rows = 1
+    for axis in range(max(rank - 1, 0)):
+        rows *= max(int(payload[f"dim{axis}"]), 1)
+    return max(rows, 1)
+
+
+def request_narrows_rows(table: Any, view_id: int) -> bool:
+    """Does the request narrow an axis this view folds into ``rows``?
+
+    Asked with the CONSUMER's own predicate, not a re-derivation of it:
+    ``runtime.sim.memory.ViewResolver`` clamps the A18 extent axis when a
+    LOOP_INDUCTION term walks it in whole blocks, or when an edge mask (A26)
+    names an active symbol-bounded loop, and ``_walks_extent_axis`` is the
+    arithmetic that decides the first.  A second copy of that arithmetic here
+    is exactly the divergence AM-E9 exists to remove, so the resolver's own
+    method is called over the table being built.
+
+    False means the declared extents ARE the surface at every request, so the
+    tile can span them.  True means the surface is request-dependent and no
+    static ``tile_rows`` can state it; the backend's dispatch rows then stand.
+    """
+    from types import SimpleNamespace
+
+    from runtime.abi3.constants import NO_ID
+    from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind
+    from runtime.sim.memory import ViewResolver
+
+    payload = table.get(view_id, ExtendedDescriptorType.TENSOR_VIEW).payload
+    rank = int(payload["rank"])
+    axis = int(payload["extent_axis"])
+    if rank <= 1 or axis >= rank - 1:
+        # Nothing to fold, or the request narrows the column axis, which
+        # ``operand_extents`` reads as ``cols`` and not as ``rows``.
+        return False
+    if int(payload["edge_mask_id"]) != int(NO_ID):
+        return True
+    resolver = ViewResolver(SimpleNamespace(table=table), None)
+    unit = max(int(payload["extent_unit"]), 1)
+    numerator = max(int(payload["extent_numerator"]), 1)
+    for slot in range(int(payload["dynamic_term_count"])):
+        if int(payload[f"term{slot}_kind"]) != int(SelectorKind.LOOP_INDUCTION):
+            continue
+        if resolver._walks_extent_axis(
+            payload,
+            int(payload[f"term{slot}_stride"]),
+            int(payload[f"term{slot}_index"]),
+            axis,
+            numerator,
+            unit,
+        ):
+            return True
+    return False
+
+
+def surface_rows(table: Any, inputs: Sequence[int], outputs: Sequence[int],
+                 *, fallback: int) -> int:
+    """AM-E9 ``rows``: the surface ``tile_rows`` is charged against.
+
+    ``operand_extents`` takes the operator's ``out0`` view, or its ``in0``
+    when it writes none, and calls the product of every axis but the last
+    ``rows``.  This is that, read off the descriptors the operator names, so
+    the compiler's ``tile_rows`` and the cycle model's ``rows`` are the same
+    measurement of the same surface and ``ceil(rows / tile_rows)`` is one.
+
+    Two cases, and the second is a limit of the field rather than a choice.
+    A **request-independent** surface -- a persistent state cache, a slot
+    array, a fixed staging buffer -- has the extents it declares at every
+    request, so the tile spans them and ``rows`` is the declared product.  A
+    **request-narrowed** surface (:func:`request_narrows_rows`) does not: its
+    leading axis is whatever this request left, and no static field can state
+    it.  There ``fallback`` stands -- the backend's own dispatch rows, which
+    is what both backends passed for every operator before this rule -- and
+    the residual row tiling is a property of a static SCHEDULE describing a
+    dynamic extent, not of either backend's private tile policy.  Both
+    backends take the same branch on the same operator because both read the
+    same descriptors.
+    """
+    from runtime.abi3.constants import NO_ID
+
+    out0 = int(outputs[0]) if outputs else int(NO_ID)
+    in0 = int(inputs[0]) if inputs else int(NO_ID)
+    view_id = out0 if out0 != int(NO_ID) else in0
+    if view_id == int(NO_ID):
+        return max(int(fallback), 1)
+    if request_narrows_rows(table, view_id):
+        return max(int(fallback), 1)
+    return declared_view_rows(table, view_id)
 
 
 def _domain_extent(kernel: Kernel, keys: Sequence[str], capability: Any) -> int:
