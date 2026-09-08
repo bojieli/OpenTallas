@@ -26,9 +26,9 @@
   },
   "log_sha256": {
     "iverilog": "d6b9e2b5eda5031a6d6d33e5f7c6bdf7cadf37a26e10eed9d972d96cc934f90f",
-    "verilator": "fcca3169a9a87434bf4dc4c3660f5fdb57ee235205abe9afd40871c85435bbe8",
-    "verilator_compile": "2b4051bd21cde77ad556f93cc28eee0ad0755211db3e0f41843642e3f51b480c",
-    "yosys": "74967036257a5d058659b77faebd283cbbee40aca0fee0065bdf56b8768fc4a1"
+    "verilator": "2524bab0c5c1e1297a327a7cd0a50af39460a719bb1aa1e5cc27f1bde73801f3",
+    "verilator_compile": "703d33c59dc8411c9b6a7fa830b0bbf86b33e471bb8f7a7de1875e132acd50ba",
+    "yosys": "4b502dc4cc2d5a1b2d7ce95e1d23c96c1c64ff9e7e2ad1c7b08c3ef7921d9907"
   },
   "normalized_cases": [
     {
@@ -232,7 +232,7 @@
     }
   },
   "source_sha256": {
-    "results/rtl/abi3_shipped_prefix_campaign.json": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
+    "results/rtl/abi3_shipped_prefix_campaign.json": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
     "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
@@ -279,7 +279,7 @@
   },
   "upstream_dependency": {
     "campaign": "results/rtl/abi3_shipped_prefix_campaign.json",
-    "campaign_sha256": "e749f127b71f1d71724f1c2e8ab57d762b468f1fb8cb215a925c32a2400ce2a3",
+    "campaign_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
     "campaign_status": "pass",
     "expected_image": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
     "expected_image_sha256": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
@@ -289,7 +289,7 @@
   },
   "vector_sha256": {
     "cases.hex": "cb5cf27b6145a5d62c2e10841b0fdbff1782a70a0f05661fcde3eb869d95df00",
-    "index.json": "1d0f8d43b3357c8b2645a36e3c0d62ccaf6becffdbfcc87f6c9e6346288664f5",
+    "index.json": "cf47c3bfdecd2c5feb907f1dcbc58a146e0778fc361c082588f2ae31858379c1",
     "instruction.hex": "a1d1ff76e87ea11f421d33104019ccd80a50839f939d90c99d6f32423906d97f",
     "numeric.hex": "b9944253f854feb9036e0ea2fa19ebddd64fa77b0de51d6d6112d2b1fc39d306",
     "operator.hex": "e910ab77fe88f3c09e4e2276cca6521fd8f01ee81f724a3570b87bf0167f980b",
@@ -301,10 +301,10 @@
     "view3.hex": "efcaebdc71dce84f8c3d69f61987c061e891f5319a5265ba6d9fa36802776d57"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.01204400509595871,
-    "iverilog_simulation": 1.3372048949822783,
-    "verilator_compile": 4.277748093940318,
-    "verilator_simulation": 0.10290163697209209,
-    "yosys_elaboration": 0.5085983090102673
+    "iverilog_compile": 0.02537991409189999,
+    "iverilog_simulation": 1.315751668997109,
+    "verilator_compile": 4.012837049900554,
+    "verilator_simulation": 0.09907257207669318,
+    "yosys_elaboration": 0.4250545119866729
   }
 }
