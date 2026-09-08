@@ -973,7 +973,7 @@ def head_admission_observation(deployment_key: str) -> dict[str, Any]:
         findings=findings,
         mapped_families_word_in_the_committed_vector_set=_dig(
             body,
-            "vector_set.mapped_families_word_in_the_committed_vector_set."
+            "vector_set.mapped_families_word_in_the_committed_set."
             + deployment_key,
         ),
     )
