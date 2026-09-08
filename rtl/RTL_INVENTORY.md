@@ -55,6 +55,8 @@ integrity, reset, poison, and test contracts remain equivalent.
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
 | ABI 3.0 inter-chip endpoint | `abi3/ot_a3_link_pkg.sv`, `abi3/ot_a3_link_channel.sv`, `abi3/ot_a3_link_endpoint.sv` | COMMUNICATION `credit_bound`, `integrity_mode` = CRC32C, `retry_bound` and `timeout_class`: a bounded credit window, a monotone sequence, CRC32C per flit, go-back-N replay to the receiver's own expected sequence, and a credit return that is separate from the acknowledgement because a slot frees when a flit drains and a replay slot frees when a flit is accepted | A3-LINK-001 |
+| ABI 3.0 partial collector | `abi3/ot_a3_partial_collector.sv` | The block between `ot_a3_tile64`'s 64 x binary32 partial port and `ot_a3_tree_endpoint_fp32`'s leaf port: it transposes one-K-block-at-a-time-64-lanes-wide into one-output-element-at-a-time-B-K-blocks-wide, presenting each element's leaves in ascending block index -- the tree's own leaf order -- with dense ascending tags, one vector per cycle. Each lane owns a disjoint slice of the endpoint's 4 KiB leaf buffer (section 4.4), so the buffer is 64 single-write-port arrays rather than a 64-ported memory; a window wider than it holds, or a reduction deeper than the endpoint's leaf count, is REFUSED rather than wrapped or improvised | A3-BOUNDARY-001 |
+| ABI 3.0 operand receiver | `abi3/ot_a3_operand_receiver.sv`, `ot_fp32_rne_pkg.sv` | The block between a tree root arriving off the link and a consumer tile's activation FIFO: the output stage's single rounding to BF16 (`fp32_to_bf16_rne`, the lane's own function), the consumer's 64-bit activation word packed g elements at a time under `ot_a3_tile64`'s own slice rule, the write on the tile's activation broadcast port, and `act_ready_kblocks` advanced one cycle AFTER the slice's last word has landed so the tile's operand gate cannot open on a word that is not there. A scaled activation and any format but BF16 are refused: the E8M0 activation interleave is unwritten and a two-output quantisation is not this block's | A3-BOUNDARY-001 |
 | ABI 3.0 mesh router | `abi3/ot_a3_mesh_router.sv` | Dimension-ordered (X then Y) routing of single-flit packets over five ports with per-output round-robin arbitration; deadlock-free without virtual channels, and every cycle of a traversal is spent in the link channel rather than the crossbar | A3-LINK-001 |
 | ABI 3.0 collective engine | `abi3/ot_a3_collective_engine.sv`, `ot_fp32_rne_pkg.sv` | SUM/MAX/MIN all-reduce, BROADCAST, ALL_GATHER and barrier over a 2-D mesh under two explicitly selected published algorithms -- recursive doubling (diameter traversals, lg(P) x payload) and Rabenseifner halving/doubling (2 x diameter traversals, 2(P-1)/P x payload). A binary32 SUM is refused with trap class 11 unless the declared `reduction_order` is one the chosen algorithm can actually produce | A3-LINK-001 |
 | ABI 3.0 mesh node and wire | `abi3/ot_a3_link_node.sv` | One node's router, four credit/retry channels and collective engine, plus the declared-occupancy wire and return path between nodes. `HOP_CYCLES` is a parameter of the experiment and no block here measures it | A3-LINK-001 |
@@ -501,3 +503,29 @@ to that operation and to nothing else. Its retained measurements are in
 `results/physical_abi3/sky130hd/a3_numeric_probes/`, and they are what showed
 that `ot_fp32_rne_pkg::fp32_add_rne` -- not `fp32_mul_rne` -- sets the
 contraction lane's period ([OI-44]).
+
+A3-BOUNDARY-001 is the dependent-boundary evidence of
+[`CHIP_ARCHITECTURE_DESIGN.md`](../docs/CHIP_ARCHITECTURE_DESIGN.md) section
+13 item 13, in three records. `results/rtl/abi3_partial_collector.json` and
+`results/rtl/abi3_operand_receiver.json` qualify the two blocks named above,
+each on Icarus Verilog and Verilator through independently written checkers
+over one deterministic top, with the collector's roots checked against the
+exact AM-E1 reference (`re8_chain`, asserted equal to `pairwise_tree`) through
+a real `ot_a3_tree_endpoint_fp32` on its leaf port, and six distinct
+fail-closed modes each. `results/rtl/abi3_boundary_chain_measured.json` then
+chains two `ot_a3_tile64` through them and measures the span from the
+producer's last partial write to the consumer's first lane-op, decomposed into
+six legs that sum to it, with a design module behind every cycle.
+
+**What that measurement is not.** It is the DATAPATH half of a dependent
+boundary. Three of section 3.6's five terms -- mesh transfer, queue admission
+and acknowledged completion -- are outside the span by construction and are
+measured in `results/rtl/abi3_boundary_control.json` and
+`results/rtl/a3_link_campaign.json`; the record declares
+`boundary.is_the_section_13_item_13_boundary: false` and
+`tools/derive_cycle_machine.py` refuses it on that declaration, so gate G4's
+boundary item does not move on it. `technology.json#latency.pipeline_fill_drain_s`
+is untouched and still graded `assumed`. The chain runs the decode geometry
+(rows 1, cols 64, one partial per lane per K-block); a wider window needs the
+operand H-tree's address rule, which section 4.4 leaves unwritten and which the
+receiver refuses rather than improvises. Neither block is routed.
