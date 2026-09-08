@@ -14,7 +14,7 @@
   "generated_by": "tools/build_abi3_g1d_token.py",
   "generated_by_sha256": "50c1769f3ec562fcc043b21bdfdc3b015032b27b91050f610cda5d67ba5afbc9",
   "git": {
-    "commit": "93ff4b48a62734cf7297e3a3be219bc858e30915",
+    "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -276,7 +276,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "93ff4b48a62734cf7297e3a3be219bc858e30915",
+        "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -306,9 +306,9 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "8be7ca8c8ed2d7fb78df5edbe2079754e5a11ec8671bec661934030a58e255fc",
+          "artifact_sha256": "f05fe63102561c3f913823d6a61a9f91a80997e014890467ec52a1069a227787",
           "declared_git": {
-            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
+            "commit": "46c5ff2941e11717701a116bcd37ca6fe0bf953d",
             "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
@@ -327,7 +327,7 @@
                 "dispatches_the_site": true,
                 "engine_launches": 0,
                 "issued": 1,
-                "simulated_cycles": 240,
+                "simulated_cycles": 110,
                 "trap_class": 3,
                 "trap_pc": 66
               },
@@ -1562,7 +1562,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "93ff4b48a62734cf7297e3a3be219bc858e30915",
+        "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1592,9 +1592,9 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "8be7ca8c8ed2d7fb78df5edbe2079754e5a11ec8671bec661934030a58e255fc",
+          "artifact_sha256": "f05fe63102561c3f913823d6a61a9f91a80997e014890467ec52a1069a227787",
           "declared_git": {
-            "commit": "82827ff64a24cba2cc88fed6cdb2abd8a5071e50",
+            "commit": "46c5ff2941e11717701a116bcd37ca6fe0bf953d",
             "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
@@ -1613,7 +1613,7 @@
                 "dispatches_the_site": true,
                 "engine_launches": 0,
                 "issued": 1,
-                "simulated_cycles": 240,
+                "simulated_cycles": 110,
                 "trap_class": 3,
                 "trap_pc": 66
               },
