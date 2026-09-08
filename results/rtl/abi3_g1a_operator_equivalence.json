@@ -591,17 +591,15 @@
     },
     {
       "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-      "artifact_sha256": "7873f33988f5ea63a95bbcfcbb98a05cf1a982e98d03699cfbe6a7a88dff4074",
+      "artifact_sha256": "2de7215709fdd1700e4db21b5dc85f2e810dcbfe03c5b8cba39f87dc39f205a7",
       "bound_source_count": 23,
       "declared_worktree_dirty": null,
       "declares_own_git_state": false,
-      "drifted_source_count": 1,
-      "drifted_sources": [
-        "results/rtl/abi3_shipped_prefix_campaign.json"
-      ],
+      "drifted_source_count": 0,
+      "drifted_sources": [],
       "status": "pass",
       "usable": false,
-      "why_unusable": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+      "why_unusable": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
     },
     {
       "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
@@ -2429,7 +2427,7 @@
           },
           {
             "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-            "why": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+            "why": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
           }
         ],
         "evidence_class": "public_open_tool_rtl_simulation_composite_not_every_covering_campaign_ran_on_two_simulators",
@@ -2464,7 +2462,7 @@
         ]
       },
       "git": {
-        "commit": "93ff4b48a62734cf7297e3a3be219bc858e30915",
+        "commit": "4c9480af137f56afbf4e959c6645f3c41c295b3b",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
@@ -3650,7 +3648,7 @@
           },
           {
             "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-            "why": "1 bound source(s) have drifted since it was recorded; nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
+            "why": "nothing names the operator descriptors it drove, so it cannot be said to cover any particular class"
           }
         ],
         "evidence_class": "public_open_tool_rtl_simulation_composite_not_every_covering_campaign_ran_on_two_simulators",
@@ -3685,7 +3683,7 @@
         ]
       },
       "git": {
-        "commit": "93ff4b48a62734cf7297e3a3be219bc858e30915",
+        "commit": "4c9480af137f56afbf4e959c6645f3c41c295b3b",
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree each underlying RTL campaign ran in; see execution.underlying_campaign_provenance.",
         "worktree_dirty": false
       },
