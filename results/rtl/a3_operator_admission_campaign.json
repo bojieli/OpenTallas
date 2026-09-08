@@ -7,7 +7,15 @@
     "admitted_families": [
       {
         "family": 16,
+        "sub": 2
+      },
+      {
+        "family": 16,
         "sub": 3
+      },
+      {
+        "family": 32,
+        "sub": 0
       },
       {
         "family": 48,
@@ -42,10 +50,12 @@
         "sub": 1
       }
     ],
-    "admitted_family_count": 9,
+    "admitted_family_count": 11,
     "capability_trapped_family_count": 0,
     "governed_program_counters": [
       8,
+      14,
+      17,
       20,
       23,
       26,
@@ -58,10 +68,19 @@
       56,
       62,
       66,
+      68,
       70,
       72
     ],
     "object_keyed_families_also_issued": [
+      {
+        "family": 16,
+        "sub": 2
+      },
+      {
+        "family": 32,
+        "sub": 0
+      },
       {
         "family": 48,
         "sub": 0
@@ -75,7 +94,7 @@
         "sub": 2
       }
     ],
-    "object_keyed_families_note": "families the bridge already admitted, issued here because they resolve their operands through the SAME object table the six mapped families use and name objects the six never do; the placement block below is what they are for",
+    "object_keyed_families_note": "families outside the six, issued here because they resolve their operands through the SAME object table the six mapped families use and name objects the six never do; the placement block below is what they are for.  TENSOR.MATMUL and the two head-span forms were already admitted; the BF16 dense-row DMA.GATHER was not, and its admission is the one predicate this campaign widened",
     "previously_capability_trapped_families": [
       "DMA.SCATTER",
       "ATTENTION.GQA",
@@ -113,19 +132,19 @@
     "previously_capability_trapped_family_count": 6,
     "still_refused": [
       "VECTOR.SOFTMAX, checked in this campaign: an opcode with no datapath is still a CAPABILITY trap",
-      "the three MLP projections of the governed layer, PCs 50, 53 and 59, checked in this campaign: the admitted TENSOR.MATMUL weight view is [n <= 4096, 4096] and theirs are [12288, 4096], [12288, 4096] and [4096, 12288], so each is a DESCRIPTOR trap and the three weight objects they name can be resolved by no run of this design",
-      "the head span's DMA.GATHER, PC 68, checked in this campaign: its source row is BF16 and the bridge admits a dense-row gather source only in FP32, so the object it would publish is unreachable too",
+      "PC 68's DMA.GATHER is NO LONGER refused: it was, on a dense-row source dtype pinned to FP32 by the one gather the predicate had been written against, and it is issued as a passing case in this campaign now",
+      "the three MLP projections of the governed layer, PCs 50, 53 and 59, checked in this campaign: the admitted TENSOR.MATMUL weight view is [n <= 4096, 4096] and theirs are [12288, 4096], [12288, 4096] and [4096, 12288], so each is a DESCRIPTOR trap and the three weight objects they name can be resolved by no run of this design.  The refusal is the admission predicate's and not the datapath's -- ot_a3_mac_lane takes N and K on 16-bit ports, which 12288 fits, and ABI 3.0 section 2 bounds neither -- but widening a predicate is not evidence until a run pays for it, and each of the three is 50.3 x 10^6 MACs against the admitted pair's 4.2",
       "any of the six, on an instance that has not bound its operand banks: cfg_extended_placement_valid low keeps the previous TRAP_CAPABILITY exactly, which is what leaves an unwired integration's behaviour unchanged"
     ]
   },
   "aggregate": {
-    "admission_case_count": 30,
-    "admission_negative_case_count": 11,
-    "admission_positive_case_count": 19,
-    "admission_words_compared": 55877,
-    "admission_write_beats": 133123,
+    "admission_case_count": 32,
+    "admission_negative_case_count": 10,
+    "admission_positive_case_count": 22,
+    "admission_words_compared": 61957,
+    "admission_write_beats": 139267,
     "append_case_count": 13,
-    "checks_per_simulator": 58090,
+    "checks_per_simulator": 64224,
     "silu_case_count": 5,
     "silu_elements_compared": 1217
   },
@@ -135,17 +154,17 @@
   ],
   "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "e7f880f5512439f278bbcb487211e4a22608e37b3b34d65abe72dd22cdc6e15e",
-    "ot_a3_vector_silu_mul_yosys": "7d9014e649d9d3c3f4da1223734c1e3227bd892fa7683db14123224a287ccacb",
-    "tb_a3_operator_admission_iverilog": "159a07ac9896f0ae069120a59de276c89007ad23b56aca7c3f7ab745ced1eacd",
-    "tb_a3_operator_admission_verilator": "99c64985242d7eef787231e5782695db1dad2a841ff3d710113d7be830df1e20",
-    "tb_a3_operator_admission_verilator_compile": "c769d17d978b23da6cafdce8c2674fcdcda193bbd3a7672831e6b605cabe5757",
+    "ot_a3_selection_token_append_yosys": "9f749cca173b66ae88833db412c37df7c318885708004d604ede0f4d03c78b82",
+    "ot_a3_vector_silu_mul_yosys": "221c9bf6a2577940f6061e24848cb433640e1ebc39dbcb304dafb926236a68da",
+    "tb_a3_operator_admission_iverilog": "a0a396fdc93551163484583e0bdf19ebca6453e1b4305c242e704b05f4738d50",
+    "tb_a3_operator_admission_verilator": "f5a9bd2b3756b28d846b5580ccb0c4ab035d4fd611f61a605c083e438f1c89c8",
+    "tb_a3_operator_admission_verilator_compile": "69b70707a240095d54db94eab499fef26cc88c4e274053e638a7384070acf4fe",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "3063e0c295c14a26012e60688321497169a9bf21c823466f168336ef7a74cb0f",
-    "tb_a3_selection_token_append_verilator_compile": "278fd9afa616f371fcb28fd23bdc0f3dcdd651944893646399bf22431ba40551",
+    "tb_a3_selection_token_append_verilator": "163a02a8a8ca5c9e686297b16dae74c9a6447bebdcae7c82664db4203cb13bbc",
+    "tb_a3_selection_token_append_verilator_compile": "1ff138362cdfde53217d17509fa16a09c6017f8a1203564254d36409b9134b48",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "57caa66086a5ba33084aaa63aa4535f1274e16e5c7e3ec17e6c5bc10aa361ce0",
-    "tb_a3_vector_silu_mul_verilator_compile": "f506759307ca50a5098892301205bcfe5c5ecbd6973280b9806dc2bc14566be3"
+    "tb_a3_vector_silu_mul_verilator": "641b5a4a87c9b0f942f804cf24dfbbf4271688334b59d80a5d00f1954bce8360",
+    "tb_a3_vector_silu_mul_verilator_compile": "74dbb8f8829034cdfaec8e6d82f40914c069b89357aea1a11df2d1ecc4f08993"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -166,6 +185,30 @@
           "eos": 0,
           "fault": 0,
           "index": 1,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 20972560,
+          "work": 4194304,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 2,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 20972560,
+          "work": 4194304,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 3,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -177,7 +220,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 2,
+          "index": 4,
           "result": 1024,
           "ties": 0,
           "token": 0,
@@ -189,7 +232,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 3,
+          "index": 5,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -201,7 +244,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 4,
+          "index": 6,
           "result": 1024,
           "ties": 0,
           "token": 0,
@@ -213,31 +256,31 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 5,
-          "result": 1024,
-          "ties": 0,
-          "token": 0,
-          "trap": 0,
-          "verification_cycles": 61465,
-          "work": 1,
-          "writes": 20480
-        },
-        {
-          "eos": 0,
-          "fault": 0,
-          "index": 6,
-          "result": 1024,
-          "ties": 0,
-          "token": 0,
-          "trap": 0,
-          "verification_cycles": 61465,
-          "work": 1,
-          "writes": 20480
-        },
-        {
-          "eos": 0,
-          "fault": 0,
           "index": 7,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 8,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 9,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -249,7 +292,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 8,
+          "index": 10,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -261,7 +304,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 9,
+          "index": 11,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -273,7 +316,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 10,
+          "index": 12,
           "result": 12288,
           "ties": 0,
           "token": 0,
@@ -285,7 +328,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 11,
+          "index": 13,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -297,7 +340,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 12,
+          "index": 14,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -309,31 +352,43 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 13,
-          "result": 1024,
-          "ties": 0,
-          "token": 0,
-          "trap": 0,
-          "verification_cycles": 61465,
-          "work": 1,
-          "writes": 20480
-        },
-        {
-          "eos": 0,
-          "fault": 0,
-          "index": 14,
-          "result": 1024,
-          "ties": 0,
-          "token": 0,
-          "trap": 0,
-          "verification_cycles": 61465,
-          "work": 1,
-          "writes": 20480
-        },
-        {
-          "eos": 0,
-          "fault": 0,
           "index": 15,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 12310,
+          "work": 1,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 16,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 17,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 18,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -345,7 +400,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 16,
+          "index": 19,
           "result": 1,
           "ties": 2,
           "token": 151645,
@@ -357,7 +412,7 @@
         {
           "eos": 1,
           "fault": 0,
-          "index": 17,
+          "index": 20,
           "result": 1,
           "ties": 0,
           "token": 151645,
@@ -369,7 +424,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 18,
+          "index": 21,
           "result": 1,
           "ties": 0,
           "token": 12345,
@@ -377,42 +432,6 @@
           "verification_cycles": 20,
           "work": 1,
           "writes": 1
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 19,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 4,
-          "verification_cycles": 1,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 20,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 11,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 21,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 4,
-          "verification_cycles": 11,
-          "work": 151936,
-          "writes": 0
         },
         {
           "eos": 0,
@@ -430,6 +449,42 @@
           "eos": 0,
           "fault": 1,
           "index": 23,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 11,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 24,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 11,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 25,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 1,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 26,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -441,7 +496,7 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 24,
+          "index": 27,
           "result": 0,
           "ties": 0,
           "token": 0,
@@ -453,49 +508,13 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 25,
+          "index": 28,
           "result": 0,
           "ties": 0,
           "token": 0,
           "trap": 4,
           "verification_cycles": 16,
           "work": 0,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 26,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 7,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 27,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 7,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 28,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 5,
-          "work": 151936,
           "writes": 0
         },
         {
@@ -509,27 +528,52 @@
           "verification_cycles": 7,
           "work": 151936,
           "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 30,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 7,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 31,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 5,
+          "work": 151936,
+          "writes": 0
         }
       ],
       "geometry": {
-        "bank_words": 243330,
+        "bank_words": 247426,
         "case_words": 128,
-        "cases": 30,
+        "cases": 32,
         "descriptor_records": 218,
-        "expected_words": 55877,
+        "expected_words": 61957,
         "index_words": 64,
         "map_base": 64,
         "map_entries": 32,
         "preload_words": 12291,
-        "source_words": 12544,
+        "source_words": 16640,
         "view_slots": 5,
-        "view_words": 8
+        "view_words": 8,
+        "weight_words": 8388608
       },
       "pass": {
-        "cases": 30,
-        "checks": 56693,
-        "positive": 19,
-        "words": 55877
+        "cases": 32,
+        "checks": 62827,
+        "positive": 22,
+        "words": 61957
       }
     },
     "tb_a3_selection_token_append": {
@@ -746,8 +790,9 @@
     }
   },
   "operands": {
-    "attention_projections": "the query, key and value projections are the retained golden outputs of PCs 11, 14 and 17; those three TENSOR.MATMULs are not issued in this vehicle",
+    "attention_projections": "the key and value projections at PCs 14 and 17 are ISSUED here, in RTL, against the real checkpoint k_proj and v_proj of layer zero -- the shard, offset and SHA-256 the deployment's own object record declares, re-read and re-hashed at build time, every code consumed -- and their 1,024-word results are required to equal the shipped prefix's golden write stream for those same program counters.  The query projection at PC 11 is not issued and its output is the retained golden value, staged",
     "attention_query_key_value": "retained causal RTL results of shipped decode PCs 26, 29 and 17",
+    "head_gather_source_row": "the row PC 68 selects is staged in the source bank because cfg_source_base is not keyed by object; the staged row is required at build time to be word for word the PC 66 result the preceding case's RTL wrote into object 45",
     "normalization_gains": "the PC 8, PC 20 and PC 23 gains are the real checkpoint gains the retained shipped-prefix source bank carries, at their own objects' bases; the PC 47 and PC 66 gains are a seeded spread because the shipped prefix stops at PC 32 and never staged them",
     "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
     "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations",
@@ -757,15 +802,19 @@
     "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
     "cross_checked_against_the_retained_golden_write_stream": [
       8,
+      14,
+      17,
       20,
       23,
       26,
       29
     ],
+    "dma_gather": "byte-preserving row selection, computed here",
     "dma_scatter": "byte-preserving row placement, computed here",
     "independent_of_dut": true,
     "selection_argmax": "greedy_lowest_token_id_argmax_v1, computed here",
     "selection_token_append": "runtime/sim/engines/selection.py semantics",
+    "tensor_matmul": "runtime/reference/tensor_accelerator_bf16.py",
     "vector_add": "runtime/reference/tensor_accelerator_elementwise.py",
     "vector_head_rms_norm": "runtime/reference/tensor_accelerator_rmsnorm.py",
     "vector_rms_norm": "runtime/reference/tensor_accelerator_rmsnorm.py",
@@ -774,9 +823,11 @@
   },
   "placement": {
     "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-    "bridge_sha256": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
+    "bridge_sha256": "bd25338f8bc398b7ff70566723d991cc71b742e0bdfc446c4fce05fb2e156a57",
     "cases_credited": [
       "vector_rms_norm_attention_input",
+      "tensor_matmul_key_projection",
+      "tensor_matmul_value_projection",
       "vector_head_rms_norm_query",
       "vector_head_rms_norm_key",
       "vector_rope_query",
@@ -789,6 +840,7 @@
       "vector_silu_mul_swiglu",
       "vector_add_mlp_residual_read_modify_write",
       "vector_rms_norm_final",
+      "dma_gather_head_row_select",
       "dma_scatter_key_position18",
       "dma_scatter_value_position18",
       "attention_gqa_context19",
@@ -797,10 +849,12 @@
       "selection_token_append_continues"
     ],
     "definition": "the largest number of distinct ABI objects one byte-identical binding of the bridge's object table held while the design resolved every one of them, on cases that issued without fault, wrote the declared number of beats and had their whole result region compared word by word at its own address",
-    "measured_simultaneous_objects": 20,
+    "measured_simultaneous_objects": 23,
     "objects_bound": [
       2,
       4,
+      6,
+      7,
       8,
       10,
       13,
@@ -816,6 +870,7 @@
       149,
       156,
       162,
+      186,
       194,
       200,
       209
@@ -823,6 +878,8 @@
     "objects_resolved_and_compared": [
       2,
       4,
+      6,
+      7,
       8,
       10,
       13,
@@ -838,6 +895,7 @@
       149,
       156,
       162,
+      186,
       194,
       200,
       209
@@ -846,11 +904,11 @@
       "iverilog",
       "verilator"
     ],
-    "table_entries_bound": 20,
+    "table_entries_bound": 23,
     "vector_format_entries": 32,
     "vector_format_entries_note": "how many entries the CASE RECORD can carry, echoed by the run's own GEOMETRY line and checked against the vector manifest. It is a bound on the measurement below, never a substitute for it",
     "vehicle": "rtl/test/tb_a3_operator_admission.sv",
-    "vehicle_sha256": "ed775d6c4524907186085b2d94fc340b43f5d19c76278bf61cde2232d4f561ec"
+    "vehicle_sha256": "7d8eb39e100c974b8c965b092662f4ba35703fe1a6be790343a4d4ea83dee67b"
   },
   "schema": "opentallas.rtl.a3_operator_admission_campaign.v1",
   "scope": {
@@ -862,11 +920,14 @@
     "exact_resolved_view_stream": true,
     "exact_shipped_operator_records": true,
     "fail_closed_matrix": true,
+    "layer_matmul_count": 7,
     "layer_matmuls_issued": false,
+    "layer_matmuls_issued_count": 2,
     "model_token_generation": false,
     "object_keyed_families_issued_through_one_shared_table": true,
     "read_modify_write_placement": true,
     "real_checkpoint_normalization_gains": false,
+    "real_checkpoint_projection_weights": true,
     "runtime_context_length": true,
     "simulator_cycles_are_verification_cost_only": true,
     "six_previously_capability_trapped_families_admitted": true,
@@ -878,7 +939,7 @@
   "source_sha256": {
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "0be35e7fc669f34f8c7c9d6a0e12fe1b11c08b70bc138cab386173ee1b7c7f66",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "bd25338f8bc398b7ff70566723d991cc71b742e0bdfc446c4fce05fb2e156a57",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
     "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
     "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
@@ -902,7 +963,7 @@
     "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
     "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
     "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
-    "rtl/test/tb_a3_operator_admission.sv": "ed775d6c4524907186085b2d94fc340b43f5d19c76278bf61cde2232d4f561ec",
+    "rtl/test/tb_a3_operator_admission.sv": "7d8eb39e100c974b8c965b092662f4ba35703fe1a6be790343a4d4ea83dee67b",
     "rtl/test/tb_a3_selection_token_append.sv": "d8d980a9d6d81f44555d40680f64be92e2588f7ec617a6a20f6737e5f6914ec9",
     "rtl/test/tb_a3_vector_silu_mul.sv": "faa0f7283193c353eecd1d536e04ca10e0a617e83cbf691eb6a2d92151ce5e6c",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
@@ -917,9 +978,9 @@
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
-    "tools/build_a3_operator_admission_vectors.py": "05c7547093ede08dc4af03393189c6717fa23d3c5b2b13ca8827fbfc7c0e5832",
+    "tools/build_a3_operator_admission_vectors.py": "38978c2c05c1d64bfa932e073f0d82608169cfcb1ee120cf73d75c66ca2d87f9",
     "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
-    "tools/run_a3_operator_admission_rtl_campaign.py": "6b589606f460595d07db88418e4561b71c2a4ff39195212563f1e032c29bbf9c"
+    "tools/run_a3_operator_admission_rtl_campaign.py": "0a77919d63da0a1b799225eeb091acad0a48fd2ea39da39c7921568f5a473ada"
   },
   "status": "pass",
   "storage_class": "rom",
@@ -965,15 +1026,16 @@
     "token_append": "runtime/sim/engines/selection.py::token_append"
   },
   "vector_sha256": {
-    "a3_operator_admission/bank.hex": "15c7dde6c7dafe5ed9af1feddb579a5843881d71b7c1b2c617e1e35fcbda6139",
-    "a3_operator_admission/cases.hex": "109a84a0e0c055527cc10b037c92fa4f17538c33be84f057b9c11843875cb787",
+    "a3_operator_admission/bank.hex": "aefaf27a75ca9ecfded9a3a051d1b9ec6ba56c547d58de860c1ebe6d3a4ac815",
+    "a3_operator_admission/cases.hex": "8da7b534edcdb25df5ce885cce642a8e0249ec0bb9f095ecd1341eeee8becfed",
     "a3_operator_admission/descriptors.hex": "5ccfd9fc5e469dbd93c2088e4c35298838d044086fdfdab47db55f28e5cb12c7",
-    "a3_operator_admission/expected.hex": "5d1bb82f1033eed7fa4bade504ff7e936870709c6bda0ec13c4362a47b71c928",
+    "a3_operator_admission/expected.hex": "a699b10c2c0067081dfdad865ead0b730be1ccb780ffd542f90b419c54fd625c",
     "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
-    "a3_operator_admission/index.json": "ecb94153250ba0ae4c71082ee8c16931f0a054afae4ea4df8e83a4c469083265",
+    "a3_operator_admission/index.json": "19ced9cbe23bf2d2cc9d4b8c4f6a4fc73d5423be51d4fbc140a970e3b9cd9d0f",
     "a3_operator_admission/preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
-    "a3_operator_admission/source.hex": "86228c2db30e953184a87985f540d7c8a3f744613cd433c3ec696cb03a3cb9bb",
-    "a3_operator_admission/views.hex": "6594ac091e1db5a98ddbc106d6daddb3409caa59eabc7b1c78bd853a7d78891a",
+    "a3_operator_admission/source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
+    "a3_operator_admission/views.hex": "a93c8d92541b170a030b83f834e47d18f8918db8fffed228da463f73f3fe375e",
+    "a3_operator_admission/weights.hex": "14a41091f0303795889f44a95774fb0672e287ad5d8421eb39c09dd0a71449e9",
     "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
     "a3_operator_units/index.json": "c2ed9527772d7ef32474f6881935b9b25c71802533765c95b31b17a5683f9d17",
     "a3_operator_units/silu_cases.hex": "b8eb33d987f5e7cf66acee5ed647b3ffaaf5e2e162c54bcd07562b6f12d0b358",
@@ -982,19 +1044,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.01953378098551184,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 11.107995859114453,
-    "tb_a3_operator_admission_iverilog_compile": 0.06006676401011646,
-    "tb_a3_operator_admission_iverilog_simulation": 845.5257970079547,
-    "tb_a3_operator_admission_verilator_compile": 15.031258653034456,
-    "tb_a3_operator_admission_verilator_simulation": 19.573985585011542,
-    "tb_a3_selection_token_append_iverilog_compile": 0.06302821903955191,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.005162970977835357,
-    "tb_a3_selection_token_append_verilator_compile": 3.589344445965253,
-    "tb_a3_selection_token_append_verilator_simulation": 0.0015337519580498338,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.012800251017324626,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 18.55247137194965,
-    "tb_a3_vector_silu_mul_verilator_compile": 7.071513453032821,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.2615399919450283
+    "ot_a3_selection_token_append_yosys_elaboration": 0.034732938976958394,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 26.992894150083885,
+    "tb_a3_operator_admission_iverilog_compile": 0.08121515007223934,
+    "tb_a3_operator_admission_iverilog_simulation": 19399.91142000293,
+    "tb_a3_operator_admission_verilator_compile": 31.710211167810485,
+    "tb_a3_operator_admission_verilator_simulation": 564.694542854093,
+    "tb_a3_selection_token_append_iverilog_compile": 0.013947577215731144,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.006224161013960838,
+    "tb_a3_selection_token_append_verilator_compile": 7.5800739109981805,
+    "tb_a3_selection_token_append_verilator_simulation": 0.0019117658957839012,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.03471298608928919,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 33.204410213045776,
+    "tb_a3_vector_silu_mul_verilator_compile": 17.899659265065566,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.49288073694333434
   }
 }
