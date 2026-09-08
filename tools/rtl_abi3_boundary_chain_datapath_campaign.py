@@ -180,8 +180,11 @@ def run_stage(command: list[str], cwd: Path, build: Path, timeout: int) -> dict[
 
 def run_iverilog(build: Path, stages: int) -> dict[str, Any]:
     vvp = build / "ch.vvp"
+    # Icarus applies -P only to a ROOT module, so the depth is set on the
+    # checker and passed down; setting it on the top would leave Icarus at the
+    # default while Verilator's -G moved, and the two would disagree.
     compile_cmd = ["iverilog", "-g2012", "-s", "tb_a3_boundary_chain",
-                   f"-Pot_a3_boundary_chain_top.ADDER_STAGES={stages}",
+                   f"-Ptb_a3_boundary_chain.ADDER_STAGES={stages}",
                    "-o", str(vvp)]
     compile_cmd += [str(ROOT / s) for s in RTL_SOURCES]
     compile_cmd.append(str(ROOT / "rtl/test/tb_a3_boundary_chain.sv"))

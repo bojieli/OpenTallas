@@ -17,6 +17,10 @@
 // simulators to report the same cycles.
 // ---------------------------------------------------------------------------
 module tb_a3_boundary_chain;
+    // Overridden by the campaign with -Ptb_a3_boundary_chain.ADDER_STAGES=<L>.
+    // Icarus applies -P only to a ROOT module, so the depth has to arrive here
+    // and be passed down rather than being set on the top directly.
+    parameter integer ADDER_STAGES = 3;
     localparam integer CASE_STRIDE = 32;
     localparam integer TILE_LANES  = 64;
     localparam integer GUARD       = 4000000;
@@ -46,7 +50,7 @@ module tb_a3_boundary_chain;
     wire [31:0] case_rd_data, expect_rd_data, meta_rd_data;
     wire [31:0] root_rd_data, act_rd_data, res_rd_data, adder_stages_param;
 
-    ot_a3_boundary_chain_top dut (
+    ot_a3_boundary_chain_top #(.ADDER_STAGES(ADDER_STAGES)) dut (
         .clk(clk), .rst_n(rst_n), .run(run), .run_case(run_case),
         .busy(busy), .done(done),
         .boundary_cycles(boundary_cycles),
