@@ -1665,7 +1665,7 @@
     "three_of_five_normalization_gains_are_checkpoint": true,
     "tpot": false
   },
-  "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+  "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
   "expected_pass": {
     "cases": 32,
     "compared_words": 61957,
@@ -1712,7 +1712,7 @@
   "image_sha256": {
     "bank.hex": "77e909977cfa766bc66d7323c286c0bcdb7ec5ace0265e184dd3063083b0111e",
     "cases.hex": "782ebf6dbdb50c3577083075a5db90cec5f0fcf0034967427349b9e18f9aefdd",
-    "descriptors.hex": "9afb2cba8be6f7c95b7a638ae65d7823303baaf4e110d58ee6584d9c3f21788e",
+    "descriptors.hex": "b0d8b160a44557e609ffa6705fb031b58d6ede10f5d1fbf90a2390e4690d6be9",
     "expected.hex": "a699b10c2c0067081dfdad865ead0b730be1ccb780ffd542f90b419c54fd625c",
     "index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
     "preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
@@ -1756,9 +1756,9 @@
   "target": "qwen3-8b-hbm-single-chip",
   "upstream_dependency": {
     "deployment_manifest": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "deployment_manifest_sha256": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e",
+    "deployment_manifest_sha256": "dcbee360748f3151492403b896ef482fe76799ead5f7f694fb7a0183c990c1cb",
     "descriptor_image": "testdata/compiler/abi3_deployment/a3_descriptor.hex",
-    "descriptor_image_sha256": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
+    "descriptor_image_sha256": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
     "prefix_expected": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
     "prefix_expected_sha256": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "prefix_source": "testdata/compiler/abi3_shipped_prefix/p3_source.hex",
@@ -1766,6 +1766,6 @@
     "prefix_writes": "testdata/compiler/abi3_shipped_prefix/p3_writes.hex",
     "prefix_writes_sha256": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
     "program_image": "testdata/compiler/abi3_deployment/a3_program.hex",
-    "program_image_sha256": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c"
+    "program_image_sha256": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88"
   }
 }

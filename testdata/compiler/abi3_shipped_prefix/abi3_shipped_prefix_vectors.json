@@ -79,12 +79,12 @@
       "deployment": "qwen3-8b-rom-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
+        "artifact_sha256": "c27dc456577d05b2db4d594867d456e162fe1aa5b322be8259ac27e4453dab46",
         "case": "qwen3-rom-single-chip"
       },
-      "deployment_sha256": "6a06a4ea97f290326b448f4fcc8c654a9c32b61e707ca62ef070060daf9cc21b",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "f15100f5f18b297ec0b43c7d5631e1d5094683ce92802c2117a6a36c5e4faaa0",
+        "descriptor_table_sha256": "cc156307d432d29ca582cdc358f26997652d1813c85e86d56d924dd3b54ed828",
         "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
         "kernel_ir_graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
         "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
@@ -1958,12 +1958,12 @@
       "deployment": "qwen3-8b-hbm-single-chip",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
-        "artifact_sha256": "a12e84decb9d77ed31eca1af8a4313f8aa57485de4a4bea84fc0dafd8bbcb2a0",
+        "artifact_sha256": "f6552861c717b05a620b7f7bb5ac762f14e76d579b874a1b414bbad97da847f3",
         "case": "qwen3-hbm-single-chip"
       },
-      "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "e20927409e93980c837ad9c1070b2efdf1731f751c87fc5775a2c66695ca7175",
+        "descriptor_table_sha256": "f024a58586519fe47e9619dae49dbb8d004a59718879c7fc469836bc0e5d707a",
         "kernel_ir": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
         "kernel_ir_graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
         "kernel_ir_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
@@ -3797,12 +3797,12 @@
       "deployment": "deepseek-v4-flash-rom-wafer",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/rom_schedule_checks.json",
-        "artifact_sha256": "1ba09273ab84c471edcae4a0fb35482ccd0f3bfa5c04c70041a1800dccf7d9cf",
+        "artifact_sha256": "c27dc456577d05b2db4d594867d456e162fe1aa5b322be8259ac27e4453dab46",
         "case": "deepseek-v4-flash-rom-wafer"
       },
-      "deployment_sha256": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "47f149ea6813439ce6b3d780ca8e92f64181ba83f82f5bac3eac0dc0bd2f28a8",
+        "descriptor_table_sha256": "e74c73008e707fcaceae50cab787ba1f2dc7ac9a12498a6351253bfa443065e5",
         "kernel_ir": "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
         "kernel_ir_graph_id": "6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834",
         "kernel_ir_sha256": "b92fadb125d43e451b3aa39669489671efe7e07bd3d8612169ebaaec067ac034",
@@ -3814,7 +3814,7 @@
             "descriptors_considered": 18,
             "equivalence_class": [
               368,
-              930,
+              931,
               1746
             ],
             "kernel_id": null,
@@ -4472,12 +4472,12 @@
       "deployment": "deepseek-v4-flash-hbm-cluster",
       "deployment_identity_evidence": {
         "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
-        "artifact_sha256": "a1d9d0e0829e5aea5791c77c8237bbfe9ec6a35e8abcef0565685753ab75bc2a",
+        "artifact_sha256": "c9702ad8c630ece653d6f8dd44e6a2452c057963e2e955649dd9260a31f4c593",
         "case": "deepseek-v4-flash-hbm-cluster"
       },
-      "deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
       "descriptor_derivation": {
-        "descriptor_table_sha256": "1ea967305d5256d501b6d260a66d590b2607ca21167367c130fe17c2b127e924",
+        "descriptor_table_sha256": "ff27f6ac0a07dd2507a080c0a047b93f6f919b8eb695a7b7c4b2729657bebb10",
         "kernel_ir": "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
         "kernel_ir_graph_id": "6c281c3b7f1bcf3366b9e572c553b6bddae8d13a6ac8056676a2a70166898834",
         "kernel_ir_sha256": "b92fadb125d43e451b3aa39669489671efe7e07bd3d8612169ebaaec067ac034",
@@ -5271,7 +5271,7 @@
   "head_rms_norm_launch_count": 4,
   "head_rms_norm_result_word_count": 10240,
   "image_sha256": {
-    "p3_case.hex": "10a5fdf096b262ff2fb75c5cd19bfb5078c81d3b212448c3e0fc303e10ae68b4",
+    "p3_case.hex": "e097c3f4150ed34fc63158ec6b4cebba7ce743a0e7ac74eb0f4f193b4a6bb456",
     "p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
     "p3_issue.hex": "843e44c4529d5f0a3ab67df20c184062ee0ad86a4c2a3dc83a76f3b64e9b8319",
@@ -5281,12 +5281,12 @@
   },
   "input_deployment_vectors": {
     "images": {
-      "a3_descriptor.hex": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
-      "a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
+      "a3_descriptor.hex": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
+      "a3_program.hex": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88",
       "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
     },
     "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "sha256": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e"
+    "sha256": "dcbee360748f3151492403b896ef482fe76799ead5f7f694fb7a0183c990c1cb"
   },
   "matmul_launch_count": 6,
   "matmul_mac_count": 50331648,
