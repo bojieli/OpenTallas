@@ -2032,6 +2032,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="bisect the clock period for the shortest period meeting setup timing",
     )
     parser.add_argument("--core-utilization", type=int, default=35)
+    parser.add_argument(
+        "--vt",
+        default=None,
+        help=(
+            "ASAP7 threshold-voltage flavour(s) for place-and-route, e.g. 'LVT' or "
+            "'RVT LVT SLVT'.  ORFS reads this as ASAP7_USE_VT: the first entry is "
+            "primary and the rest are added as extra liberty/LEF/GDS so the sizer "
+            "may pick a faster cell on a critical path.  The view's own default "
+            "(RVT) stands when this is not given.  NOTE: only the pnr stage honours "
+            "it -- the sta stage reads the local PDK mirror, which carries RVT only."
+        ),
+    )
     parser.add_argument("--place-density", type=float, default=0.60)
     parser.add_argument("--keep-heavy-artifacts", action="store_true")
     parser.add_argument(
@@ -2194,6 +2206,29 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     view = VIEWS[args.view]
+
+    # ``--vt`` is a place-and-route parameter, not a view identity: the view still
+    # names the same PDK and the same corner, and only the cell flavour ORFS is
+    # allowed to size with changes.  Copy rather than mutate the module-level
+    # VIEWS entry, so one process cannot leak the choice into a later run.
+    if args.vt is not None:
+        flavours = args.vt.split()
+        if not flavours:
+            print("--vt needs at least one flavour", file=sys.stderr)
+            return 2
+        allowed = {"RVT", "LVT", "SLVT"}
+        unknown = [f for f in flavours if f not in allowed]
+        if unknown:
+            print(f"--vt: unknown flavour(s) {unknown}; choose from {sorted(allowed)}",
+                  file=sys.stderr)
+            return 2
+        if view.get("pnr") is None:
+            print(f"--vt: view {args.view} has no place-and-route platform", file=sys.stderr)
+            return 2
+        view = dict(view)
+        view["pnr"] = dict(view["pnr"])
+        view["pnr"]["extra_config"] = dict(view["pnr"]["extra_config"])
+        view["pnr"]["extra_config"]["ASAP7_USE_VT"] = " ".join(flavours)
 
     if args.block:
         block = dict(BLOCKS[args.block])
