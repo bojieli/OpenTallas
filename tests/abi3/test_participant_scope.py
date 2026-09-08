@@ -129,10 +129,18 @@ def test_participant_scope_is_one_byte_at_offset_eighty() -> None:
 
 
 def test_the_scope_registry_is_node_reticle_tile() -> None:
+    """A14 assigns three values; AM-R1 adds a fourth without moving them.
+
+    The three A14 values are the amendment under test here and are pinned
+    exactly.  ``WAFER = 3`` is amendment AM-R1's (wire format section 12.21);
+    it is listed so this test fails if a later amendment reassigns rather than
+    appends, which is the failure mode a frozen registry exists to catch.
+    """
     assert [(s.name, int(s)) for s in ParticipantScope] == [
         ("NODE", 0),
         ("RETICLE", 1),
         ("TILE", 2),
+        ("WAFER", 3),
     ]
 
 
@@ -204,15 +212,19 @@ def test_the_reserved_span_is_still_checked_on_encode_and_decode() -> None:
 
 
 def test_the_byte_holds_values_the_registry_does_not_assign() -> None:
-    """One byte holds 0..255; only three of those values name a scope.
+    """One byte holds 0..255; only the assigned values name a scope.
 
     The layout carries an unsigned byte and says nothing about which values
     are legal, so an unassigned value survives a round trip.  Refusing it is
     the verifier's and the engine's job, and both do -- see the admission case
-    below and ``tests/sim/test_engines_link_participant_scope.py``.
+    below and ``tests/sim/test_engines_link_participant_scope.py``.  The probe
+    is the first unassigned value, which AM-R1 moved from 3 to 4; an assigned
+    value that has no member derivation yet is refused for a different reason
+    and by a different rule (``tests/abi3/test_topology_amendment_r1.py``).
     """
+    unassigned = max(int(scope) for scope in ParticipantScope) + 1
     with pytest.raises(ValueError):
-        ParticipantScope(3)
+        ParticipantScope(unassigned)
     assert COMMUNICATION_PAYLOAD.decode(
         bytes(COMMUNICATION_PAYLOAD.encode({**PRE_A14_VALUES, "participant_scope": 255}))
     )["participant_scope"] == 255

@@ -481,10 +481,58 @@ class Verifier:
         )
         if described_class == int(TopologyClass.WAFER_LOGICAL_DEVICE):
             self._verify_wafer_topology_geometry(payload)
+        if described_class == int(TopologyClass.CLUSTER_N):
+            self._check(
+                "topology_cluster_n_node_count",
+                described_nodes >= 2 and described_nodes != 32,
+                "CLUSTER_N topology must describe at least two nodes and must "
+                "not describe exactly 32 (that is CLUSTER_32); describes "
+                f"{described_nodes}",
+            )
+        self._verify_cluster_fabric_binding(payload)
         self._check(
             "topology_digest",
             self.header.topology_digest == sha256(descriptor.encode()),
             "program header does not bind the admitted TOPOLOGY descriptor",
+        )
+
+    def _verify_cluster_fabric_binding(self, payload: Mapping[str, Any]) -> None:
+        """Amendment AM-R1: bind the descriptor's route groups to the fabric.
+
+        The capability declares the fabric as ``domains`` domains of
+        ``domain_size`` nodes.  The TOPOLOGY descriptor already carried the
+        partition the LINK engine actually uses -- ``route_group_count``, which
+        :func:`runtime.sim.engines.link._participants` divides the member set
+        by -- but nothing bound the two together, so a deployment could declare
+        a two-level fabric in its capability and a different one in the
+        descriptor the program header authenticates, and every collective would
+        run on the second while every cycle estimate was priced against the
+        first.
+
+        This runs for any capability that declares a fabric, not only for
+        ``CLUSTER_N``: the 32-node array is a two-level 4 x 8 machine whose
+        class does not move, and it must be bound by the same rule.
+        """
+
+        cluster = (self.capability.fabric or {}).get("cluster")
+        if not cluster:
+            return
+        domains = int(cluster["domains"])
+        domain_size = int(cluster["domain_size"])
+        described_nodes = int(payload["node_count"])
+        groups = int(payload["route_group_count"])
+        self._check(
+            "topology_fabric_route_groups",
+            groups == domains,
+            f"topology declares {groups} route groups; the capability's fabric "
+            f"declares {domains} domain(s)",
+        )
+        self._check(
+            "topology_fabric_domain_size",
+            described_nodes == domains * domain_size,
+            f"topology declares {described_nodes} nodes; the capability's "
+            f"fabric partitions {domains} x {domain_size} = "
+            f"{domains * domain_size}",
         )
 
     def _verify_wafer_topology_geometry(self, payload: Mapping[str, Any]) -> None:
@@ -1997,7 +2045,8 @@ class Verifier:
         ``participant_scope`` decides what a collective's members are, and the
         engine derives the member count from the TOPOLOGY descriptor:
         ``NODE`` from ``node_count``, ``RETICLE`` from ``reticle_count``,
-        ``TILE`` from ``reticle_count * tiles_per_reticle``.  Two rules keep the
+        ``TILE`` from ``reticle_count * tiles_per_reticle``.  AM-R1's ``WAFER``
+        is assigned and refused here; see the branch below.  Two rules keep the
         field honest, and both are admission rules rather than engine faults
         because a deployment that cannot run its own collectives should be
         refused before it is activated, not when it reaches the instruction:
@@ -2058,6 +2107,22 @@ class Verifier:
                     f"COMMUNICATION descriptor {did} is TILE-scoped; the "
                     f"admitted topology declares {reticles} reticles of {tiles} "
                     "tiles, so it has no tile fabric to address",
+                )
+            elif scope is ParticipantScope.WAFER:
+                # AM-R1 assigns the value so the registry is republished once.
+                # Its member derivation reads the topology payload's
+                # ``node_class``, which is an AM-R1 wire field that has not
+                # landed, so there is no admitted descriptor it can be derived
+                # from.  Refuse it: an assigned-but-underivable scope that fell
+                # through to "admitted" would be the silent-default defect A14
+                # was written to remove.
+                self._check(
+                    "participant_scope_supported",
+                    False,
+                    f"COMMUNICATION descriptor {did} is WAFER-scoped; AM-R1 "
+                    "assigns the value but its member derivation reads the "
+                    "TOPOLOGY payload's node_class, which no admitted "
+                    "descriptor carries until the AM-R1 wire fields land",
                 )
             if topology_class == int(TopologyClass.SINGLE_CHIP):
                 self._check(

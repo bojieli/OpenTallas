@@ -330,9 +330,38 @@ class TrapClass(enum.IntEnum):
 
 
 class TopologyClass(enum.IntEnum):
+    """Wire format section 8.
+
+    ``CLUSTER_N`` is amendment AM-R1.  The first three values are frozen and
+    keep their meanings exactly: ``CLUSTER_32`` is still *the* 32-node
+    accelerator and still means exactly 32 nodes, because four shipped
+    capability records name it and every deployment bound to them quotes their
+    digest.  What did not exist before AM-R1 was a class in which a node count
+    other than one or thirty-two is legal, which is why the design's Qwen x4 /
+    x5 / x8 points and DeepSeek-V4-Pro's four wafer-class nodes could not be
+    expressed at all.  ``CLUSTER_N`` is that class: the node count is a
+    capability value and the fabric between the nodes is declared beside it.
+    """
+
     SINGLE_CHIP = 0
     CLUSTER_32 = 1
     WAFER_LOGICAL_DEVICE = 2
+    CLUSTER_N = 3
+
+
+class NodeClass(enum.IntEnum):
+    """Amendment AM-R1: what one node of a topology *is*.
+
+    A node is a die or a wafer logical device.  The distinction is not
+    cosmetic: a wafer-class node is itself an internally distributed machine,
+    so a deployment placed on one advertises both the inter-chip endpoint (bit
+    8, the fabric between nodes) and the wafer endpoint (bit 9, the fabric
+    inside one).  Zero is ``DIE``, which is what every topology descriptor
+    written before AM-R1 means.
+    """
+
+    DIE = 0
+    WAFER = 1
 
 
 class Scope(enum.IntEnum):
@@ -358,7 +387,17 @@ class ParticipantScope(enum.IntEnum):
     ``NODE``        ``node_count``
     ``RETICLE``     ``reticle_count``
     ``TILE``        ``reticle_count * tiles_per_reticle``
+    ``WAFER``       ``node_count`` of wafer-class nodes (AM-R1)
     ==============  ==========================================
+
+    ``WAFER`` is amendment AM-R1's value.  It names the wafer logical devices
+    of a ``CLUSTER_N`` whose ``node_class`` is ``WAFER_LOGICAL_DEVICE`` -- the
+    fabric DeepSeek-V4-Pro's four-wafer placement collectives over.  The value
+    is assigned here so a decoder that enumerates the registry is republished
+    once rather than drifting later; **it has no admissible derivation until
+    the AM-R1 topology-payload fields land**, because the node class it selects
+    on is one of those fields.  The LINK engine therefore refuses it rather
+    than falling through to a scope it is not.
 
     Zero is ``NODE``, which is the derivation every pre-A14 program already
     had, so a program written before the amendment carries the amendment's
@@ -370,6 +409,7 @@ class ParticipantScope(enum.IntEnum):
     NODE = 0
     RETICLE = 1
     TILE = 2
+    WAFER = 3
 
 
 class Ordering(enum.IntEnum):

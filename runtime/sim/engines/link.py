@@ -273,13 +273,27 @@ def _member_count(topology: Mapping[str, int], scope: int) -> tuple[int, str]:
             f"{reticles} reticles, so it has no reticle fabric to address",
         )
         return reticles, "reticle"
-    _require(
-        reticles >= 1 and tiles >= 1,
-        "communication is TILE-scoped; the admitted topology declares "
-        f"{reticles} reticles of {tiles} tiles, so it has no tile fabric to "
-        "address",
+    if participant_scope is ParticipantScope.TILE:
+        _require(
+            reticles >= 1 and tiles >= 1,
+            "communication is TILE-scoped; the admitted topology declares "
+            f"{reticles} reticles of {tiles} tiles, so it has no tile fabric to "
+            "address",
+        )
+        return reticles * tiles, "tile"
+    # Amendment AM-R1 assigns ``WAFER``.  Its member set is the wafer-class
+    # nodes of a CLUSTER_N, which the topology payload names through the AM-R1
+    # ``node_class`` field -- a field this decoder cannot read until that wire
+    # change lands.  Before AM-R1 this function ended with the TILE derivation
+    # as an unguarded fall-through, so a newly assigned scope would have been
+    # silently counted as tiles; making every branch explicit is what stops the
+    # registry growing a value that quietly means something else.
+    raise EngineError(
+        f"communication declares participant scope {participant_scope.name}, "
+        "whose member derivation reads the AM-R1 node_class field that no "
+        "admitted TOPOLOGY descriptor carries",
+        trap_class=int(TrapClass.DESCRIPTOR_OR_ADDRESS),
     )
-    return reticles * tiles, "tile"
 
 
 def _participants(

@@ -103,6 +103,11 @@ def build(*, include_derived: bool = True) -> dict[str, dict]:
             "completion_flags": enum_record(constants.CompletionFlag),
             "trap_classes": enum_record(constants.TrapClass),
             "topology_classes": enum_record(constants.TopologyClass),
+            # Amendment AM-R1: what one node of a topology is.  Published
+            # beside the topology classes because a decoder reads both from
+            # the same TOPOLOGY payload, and republished with the amendment
+            # rather than left to drift.
+            "node_classes": enum_record(constants.NodeClass),
             "scopes": enum_record(constants.Scope),
             # Amendment A14: what a collective's participants are.  Distinct
             # from "scopes", which names a memory and event scope.

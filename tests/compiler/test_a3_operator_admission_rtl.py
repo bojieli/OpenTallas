@@ -27,9 +27,13 @@ GOVERNED_FAMILIES = [
     {"family": 0x70, "sub": 0x01},  # SELECTION.TOKEN_APPEND
 ]
 
-# The families the bridge already admitted, issued by this campaign for the
-# placement question rather than the admission one.
+# The families outside the six, issued by this campaign for the placement
+# question rather than the admission one.  DMA.GATHER is here because its
+# dense-row form was admitted only in FP32 until the source dtype was widened
+# to the two codes the mover can carry; the rest were already admitted.
 OBJECT_KEYED_FAMILIES = [
+    {"family": 0x10, "sub": 0x02},  # DMA.GATHER
+    {"family": 0x20, "sub": 0x00},  # TENSOR.MATMUL
     {"family": 0x30, "sub": 0x00},  # VECTOR.RMS_NORM
     {"family": 0x30, "sub": 0x01},  # VECTOR.HEAD_RMS_NORM
     {"family": 0x30, "sub": 0x02},  # VECTOR.ROPE
@@ -62,7 +66,7 @@ def test_vectors_are_byte_exact_and_source_current() -> None:
         if entry not in GOVERNED_FAMILIES
     ] == OBJECT_KEYED_FAMILIES
     assert manifest["governed_program_counters"] == [
-        8, 20, 23, 26, 29, 32, 35, 38, 44, 47, 56, 62, 66, 70, 72
+        8, 14, 17, 20, 23, 26, 29, 32, 35, 38, 44, 47, 56, 62, 66, 68, 70, 72
     ]
 
 
@@ -89,7 +93,7 @@ def test_fail_closed_matrix_is_present_and_distinct() -> None:
         for item in manifest["cases"]
         if item["expected"]["fault"]
     }
-    assert len(refusals) == 11
+    assert len(refusals) == 10
     assert refusals["capability_refusal_vector_softmax"]["trap_class"] == 4
     assert refusals["descriptor_refusal_mutated_add_contract"]["trap_class"] == 3
     assert refusals["capability_refusal_unmapped_output_object"]["trap_class"] == 4
@@ -102,17 +106,24 @@ def test_fail_closed_matrix_is_present_and_distinct() -> None:
     )
     assert refusals["engine_refusal_token_outside_vocabulary"]["trap_class"] == 8
     assert refusals["capability_refusal_sampling_generation_policy"]["trap_class"] == 4
-    # Four shipped instructions of the governed program that this bridge does
-    # not admit at all.  They are measured rather than read out of the source,
-    # because what they bound is what bounds the placement measurement: the
-    # objects these operators name can be resolved by no run of this design.
+    # Three shipped instructions of the governed program that this bridge
+    # does not admit at all.  They are measured rather than read out of the
+    # source, because the objects these operators name can be resolved by no
+    # run of this design.  They were four: PC 68's BF16 dense-row DMA.GATHER
+    # is now a PASSING case, so a refusal record for it here would be a stale
+    # assertion about a gap that is closed.
     for name in (
         "descriptor_refusal_mlp_gate_projection_weight_view",
         "descriptor_refusal_mlp_up_projection_weight_view",
         "descriptor_refusal_mlp_down_projection_weight_view",
-        "descriptor_refusal_bf16_dense_row_gather",
     ):
         assert refusals[name]["trap_class"] == 3
+    assert "descriptor_refusal_bf16_dense_row_gather" not in refusals
+    passing = {item["name"] for item in manifest["cases"]
+               if not item["expected"]["fault"]}
+    assert "dma_gather_head_row_select" in passing
+    assert "tensor_matmul_key_projection" in passing
+    assert "tensor_matmul_value_projection" in passing
     for expected in refusals.values():
         assert expected["write_beats"] == 0
 
@@ -164,10 +175,10 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert result["admission"]["capability_trapped_family_count"] == 0
     assert result["contexts_covered"] == [17, 19]
     aggregate = result["aggregate"]
-    assert aggregate["admission_case_count"] == 30
-    assert aggregate["admission_positive_case_count"] == 19
-    assert aggregate["admission_negative_case_count"] == 11
-    assert aggregate["admission_words_compared"] == 55_877
+    assert aggregate["admission_case_count"] == 32
+    assert aggregate["admission_positive_case_count"] == 22
+    assert aggregate["admission_negative_case_count"] == 10
+    assert aggregate["admission_words_compared"] == 61_957
     assert aggregate["silu_elements_compared"] == 1_217
     assert aggregate["append_case_count"] == 13
     scope = result["scope"]
@@ -177,7 +188,13 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert scope["fail_closed_matrix"]
     assert scope["model_token_generation"] is False
     assert scope["tpot"] is False
+    # Two of the layer's seven projections are issued, on the checkpoint's
+    # own layer-zero k_proj and v_proj; five are not, so the boolean stays
+    # false and the count carries the fact.
     assert scope["layer_matmuls_issued"] is False
+    assert scope["layer_matmuls_issued_count"] == 2
+    assert scope["layer_matmul_count"] == 7
+    assert scope["real_checkpoint_projection_weights"] is True
 
 
 def test_the_placement_depth_is_measured_and_not_declared() -> None:

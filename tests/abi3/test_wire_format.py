@@ -582,13 +582,22 @@ def test_trap_class_registry_matches_the_document() -> None:
 
 
 def test_topology_scope_and_ordering_registries_match_the_document() -> None:
+    """Section 8 publishes four registries and the code assigns exactly those.
+
+    ``NodeClass`` joined the section with amendment AM-R1.  Its ``WAFER`` is
+    deliberately not spelled ``WAFER_LOGICAL_DEVICE``: that identifier is
+    already a topology class at a different value, and this test is precisely
+    the thing that would fail -- one name, two numbers, one document -- if a
+    later amendment reused it.
+    """
     text = section_text("8.")
     documented = registry(text, r"`([A-Z_0-9]+)=(\d+)`")
-    for enum in (C.TopologyClass, C.Scope, C.Ordering):
+    registries = (C.TopologyClass, C.NodeClass, C.Scope, C.Ordering)
+    for enum in registries:
         encoded = {member.name: int(member) for member in enum}
         for name, value in encoded.items():
             assert documented.get(name) == value, (name, value, documented.get(name))
-    assert len(documented) == len(C.TopologyClass) + len(C.Scope) + len(C.Ordering)
+    assert len(documented) == sum(len(enum) for enum in registries)
 
 
 # ---------------------------------------------------------------------------

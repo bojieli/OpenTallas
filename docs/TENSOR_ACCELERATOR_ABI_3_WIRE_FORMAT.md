@@ -357,8 +357,14 @@ Stable trap classes are:
 | 12 | power, reset, or thermal |
 | 13 | internal invariant |
 
-Topology classes are `SINGLE_CHIP=0`, `CLUSTER_32=1`, and
-`WAFER_LOGICAL_DEVICE=2`. Memory/event scopes are `ENGINE=0`, `SRAM_BANK=1`,
+Topology classes are `SINGLE_CHIP=0`, `CLUSTER_32=1`,
+`WAFER_LOGICAL_DEVICE=2`, and `CLUSTER_N=3` (amendment AM-R1, section 12.21:
+the node count is a capability value and the fabric between the nodes is
+declared beside it). Node classes (AM-R1) are `DIE=0` and `WAFER=1`; the member is `WAFER`
+because `WAFER_LOGICAL_DEVICE` is already a topology class at a different
+value, and one identifier with two numbers in one document is how a decoder
+author gets it wrong.
+Memory/event scopes are `ENGINE=0`, `SRAM_BANK=1`,
 `HBM_WINDOW=2`, `STATE_RESOURCE=3`, `NODE=4`, `CLUSTER=5`, `RETICLE=6`,
 `WAFER_DEVICE=7`, and `SYSTEM=8`. Ordering values are `NONE=0`, `ACQUIRE=1`,
 `RELEASE=2`, `ACQUIRE_RELEASE=3`, and `SEQUENTIAL=4` within the declared scope.
@@ -2322,6 +2328,261 @@ republished with this amendment rather than as quiet drift; it is generated from
 `runtime/abi3/constants.py::SUBOPCODES` and the republish is purely additive, no
 existing value moving.
 
+### 12.21 Amendment AM-R1 — a topology has a node count and a fabric, and both are declared
+
+`TopologyClass` had exactly three values, and `Capability.validate` bound the
+middle one to exactly 32 nodes with the comment "Exactly 32, not at least 32".
+That is a correct rule and it was never the problem. The problem is that there
+were only three classes, so the set of machines ABI 3.0 can *name* is: one
+chip, thirty-two chips, and one wafer. Every other machine in the design has no
+topology at all.
+
+**What that cost, measured rather than asserted.** Two things, and the second
+is worse than the first.
+
+DeepSeek-V4-Pro fits no topology. The design places it on four stitched wafers
+(architecture section 5.5); four wafers is neither `WAFER_LOGICAL_DEVICE`
+(one wafer) nor `CLUSTER_32` (thirty-two dies), and
+`configs/gates/tpot_budget_provisional.json` says so in the budget row itself —
+"the design places Pro on four wafers (section 5.5) and no ABI topology fits it
+today ... **no run can exist until AM-R1**". A terminal gate has a row that
+cannot be measured because the machine it prices cannot be spelled.
+
+The Qwen artifacts are single-chip stand-ins for a multi-die machine. The
+budgeted ROM design point is `Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill`
+at `device_count = 5`, against a comparator `Qwen3-8B/b200_sxm-x3-tensor` at
+`device_count = 3` (`results/roofline/n5_vs_b200/analytical.json#points`).
+Neither five nor three is an expressible node count, so both shipped Qwen
+bundles declare `topology_class = 0`: `build/abi3/qwen3-8b-rom` carries
+`target_id` `qwen3-8b-rom-single-chip` and `build/abi3/qwen3-8b-hbm-tokens`
+carries `hbm-sram-abi3-single_chip`. **The substitution is not neutral**, and
+the size of the non-neutrality is measurable at the superseded Qwen design
+point, where the same artifact prices both sides: deleting the link term
+removes **68.164 %** of the ROM step (`link_share_of_step` 0.6816443584742785
+at `ROM-N5-native-HBMKV-array-tensor-x4`) against **12.053 %** of the GPU step
+(0.12053335704121183 at `b200_sxm-x3-tensor`). A single-chip stand-in *is* the
+deletion of the link term, and it deletes 5.65× more of one side's step than
+the other's. That is precisely the asymmetry gate C2 exists to catch, hidden
+one level below where C2 looks: not in the compiled deployment, but in the
+topology the deployment was allowed to declare.
+
+#### The model
+
+A topology is **a number of devices and the fabric that joins them**. AM-R1
+states both, and states them in two places that must agree: the capability, so
+an implementation advertises what it is, and the authenticated `TOPOLOGY`
+descriptor, so the program header binds what it was compiled against.
+
+`TopologyClass.CLUSTER_N = 3` is assigned. `SINGLE_CHIP = 0`,
+`CLUSTER_32 = 1` and `WAFER_LOGICAL_DEVICE = 2` keep their values *and their
+meanings*: in particular `CLUSTER_32` still means exactly 32 nodes and is not
+widened. That is not conservatism for its own sake. Four shipped capability
+records name a 32-node class and 27 of the 35 built deployment bundles quote
+one of five capability digests; widening `CLUSTER_32` would move those digests
+and re-emit every bundle bound to them, which is the cost this amendment is
+structured to avoid paying twice.
+
+`NodeClass` is assigned: `DIE = 0`, `WAFER = 1`. A node is a die
+or a wafer logical device, and a wafer-class node advertises **feature bits 8
+and 9 together** — bit 8 for the fabric between nodes, bit 9 for the fabric
+inside one. A record claiming one of the two is describing half a machine.
+
+`ParticipantScope.WAFER = 3` is assigned (section 12.5), so a decoder that
+enumerates the scope registry is republished once rather than drifting later.
+
+#### The wire-format change, exactly
+
+The node **count** was never the wire's limitation: `TOPOLOGY.node_count` is
+already a `u16` at payload offset 2. What the payload did not carry is the node
+class and the fabric. Both come out of reserved bytes the payload already has,
+so **no field moves and the payload stays 192 bytes** (total record 256):
+
+| offset | size | before | after |
+|---:|---:|---|---|
+| 1 | 1 | `reserved_0` | `node_class` (`u8`, `NodeClass`) |
+| 56 | 2 | `reserved_1` | `fabric_domain_size` (`u16`) |
+| 58 | 2 | `reserved_1` | `fabric_domain_count` (`u16`) |
+| 60 | 1 | `reserved_1` | `inter_domain_class` (`u8`, a link class id) |
+| 61 | 3 | `reserved_1` | `reserved_1` (still reserved) |
+
+This is additive in the strict A14 sense. Reserved bytes must be zero, checked
+on encode and on decode, so every `TOPOLOGY` descriptor written before AM-R1
+carries `node_class = DIE` and a zero fabric — and zero fabric means
+*single-level*: the domain is the whole node set, which is the derivation every
+pre-amendment deployment already had. No existing descriptor changes and no
+byte of any existing program moves.
+
+Two generated specifications are republished with this amendment rather than
+left to drift, and they are republished at different times because they carry
+different halves of it. `spec/abi3/registries.json` is republished **now**,
+with the landed half: `topology_classes` gains `CLUSTER_N`, `participant_scopes`
+gains `WAFER`, and a new `node_classes` registry appears — three additions, no
+assigned value moved, `descriptor_payloads.json` byte-identical, which is
+itself the evidence that the landed half touches no payload.
+`spec/abi3/descriptor_payloads.json` is republished when the `TOPOLOGY` fields
+above land, and not before.
+
+`CLUSTER_N` does not accept the zero default: a class that exists to name the
+fabric between its nodes must name it, so `fabric_domain_size` and
+`fabric_domain_count` are both nonzero on `CLUSTER_N`, and the flat case is
+stated as one domain of `node_count` rather than left implicit.
+
+#### The capability fields
+
+`fabric` is a new optional block:
+
+```
+fabric.node_class                  NodeClass, default DIE
+fabric.cluster.domain_size         nodes per domain
+fabric.cluster.domains             domains
+fabric.cluster.inter_domain_class  link class id joining the domains
+```
+
+**A capability that declares no fabric publishes no `fabric` key.** It is not
+published as an empty object, because the canonical JSON is the digest, and an
+empty object would move every committed capability record and the 65 committed
+result artifacts that quote a digest in use. Absent is absent; that single rule
+is what lets this half of the amendment land before the re-lowering. The claim
+is re-derived by `tools/check_amr1_topology_amendment.py` into
+`results/abi3/amr1_topology_amendment.json`, which recomputes every committed
+record's digest and requires it to be one a committed evidence artifact already
+recorded for that record — so a moved byte has nowhere to hide.
+
+The fabric is *not* restricted to `CLUSTER_N`. The 32-node DeepSeek array is a
+two-level machine — four pipeline stages of eight tensor/expert shards
+(architecture section 5.3) — and under AM-R1 it declares
+`fabric.cluster = {domain_size: 8, domains: 4, inter_domain_class: c}` **while
+staying `CLUSTER_32`**. The priority topology gains the ability to say what its
+fabric is without its class, its node count or its admission rule moving.
+
+#### The verifier rules
+
+Capability side (`runtime/abi3/capability.py`), each a refusal with the machine
+it refuses named:
+
+1. `CLUSTER_N` declares at least 2 nodes — a one-node machine is `SINGLE_CHIP`.
+2. `CLUSTER_N` does not declare exactly 32 — 32 nodes is `CLUSTER_32`, and one
+   machine with two expressible classes is an asymmetry no digest comparison
+   can see through.
+3. `CLUSTER_N` advertises bit 8 and declares `fabric.cluster`.
+4. `domain_size × domains == max_nodes`, exactly. A fabric that does not
+   partition the nodes it claims to join is refused.
+5. `domains == 1` may not price an inter-domain hop.
+6. A fabric may be declared only where `max_nodes > 1`: a fabric needs
+   something to join.
+7. `node_class = WAFER` requires bits 8 and 9 together.
+8. `CLUSTER_32` keeps "exactly 32", unchanged.
+
+Deployment side (`runtime/abi3/verifier.py`), on the descriptor the program
+header authenticates:
+
+9. `topology_cluster_n_node_count` — a `CLUSTER_N` descriptor describes at
+   least two nodes and not exactly 32.
+10. `topology_fabric_route_groups` — the descriptor's `route_group_count`
+    equals the capability's `fabric.cluster.domains`. This binds a field that
+    already existed and was already load-bearing: `_participants` in
+    `runtime/sim/engines/link.py` divides the member set by
+    `route_group_count`, so before AM-R1 a deployment could declare one fabric
+    in its capability and a different one in its descriptor, and every
+    collective would run on the second while every cycle estimate was priced
+    against the first.
+11. `topology_fabric_domain_size` — the descriptor's `node_count` equals
+    `domains × domain_size`.
+12. `participant_scope_supported` refuses `WAFER` until the payload fields
+    above land, because its member derivation reads `node_class`. The LINK
+    engine refuses it too, and its scope dispatch is now exhaustive: before
+    AM-R1 the function ended with the `TILE` derivation as an unguarded
+    fall-through, so a newly assigned scope would have been silently counted as
+    tiles.
+
+Rules 9–11 apply to any capability that declares a fabric, not only to
+`CLUSTER_N`, so the array is bound by the same rule that binds Qwen.
+
+#### What AM-R1 does not change
+
+No instruction, no descriptor header, no payload *offset*, and no payload size.
+Not the 32-byte instruction, the 64-byte descriptor header, the 256-byte
+`TOPOLOGY` record, A24 level events, the wait-on-unsignalled trap, the loop-trip
+formulae, the predicate outcomes, the A29 descriptor, the 128-byte host
+records, the counter registry ids, or the golden model's retire count at
+`COMPLETE`. No feature bit is added; bits 8 and 9 keep their meanings and AM-R1
+only states that a wafer-class node needs both. No numeric contract, no state
+class and no runtime symbol moves, so **no token changes**. `CLUSTER_32` is not
+widened, `SINGLE_CHIP` and `WAFER_LOGICAL_DEVICE` are untouched, and every
+capability record and every deployment that predates the amendment keeps its
+digest — measured: all 41 committed capability records validate and none
+publishes a `fabric` key, the five whose digests committed evidence quotes
+reproduce those digests exactly, and the verifier admits all 27 built bundles
+that bind a committed capability over 1,548 named checks
+(`results/abi3/amr1_topology_amendment.json`). That the 1,548 checks are
+*byte-identical either side of the amendment* is a session measurement made by
+running the same verification from a worktree pinned at `0c2546b`, the commit
+before this amendment; it is recorded here as such rather than as something one
+checkout can reproduce.
+
+What it does **not** do on its own is make any of those machines run. It makes
+them expressible. The lowering, the placement and the collectives are the next
+step and are costed separately below.
+
+#### The blast radius, and what must be re-emitted
+
+Nothing on this list is re-emitted by the amendment as landed; this is the bill
+for the step that follows it, and it is stated so the step is chosen with the
+price visible.
+
+**Capability records (7 committed, plus 34 derived `n5_design_target` records).**
+Only records that gain a `fabric` block or change class move. The Qwen pair
+(`rom_qwen3.json`, `hbm_sram_single_chip.json`) must become `CLUSTER_N` at the
+design point's device count; `rom_deepseek_v4_array_32.json` and
+`hbm_sram_cluster_32.json` gain a two-level `fabric` and keep `CLUSTER_32`;
+`rom_deepseek_v4_pro_array_32.json` — which architecture section 10.2 already
+retires as a placeholder — is replaced by a four-node wafer-class `CLUSTER_N`.
+
+**Deployments.** 35 bundles are built; 27 bind one of five committed capability
+digests. Every bundle bound to a record whose digest moves must be rebuilt,
+because `tools/build_abi3_deployment_rtl_vectors.py` re-hashes the capability
+and refuses drift.
+
+**Artifacts.** 65 committed files under `results/` quote one of the five
+capability digests currently in use, including `results/abi3/rom_schedule_checks.json`, both HBM deployment
+certificates, `results/abi3/asap7_comparison_readiness.json`, the
+`accelerator_tokens` records and the C1/C2 `machine_pair` and
+`deployment_audit` pairs.
+
+**Campaigns.** Every campaign that hashes the ABI sources it is checked
+against: 21 tools list `runtime/abi3/constants.py` among their contract
+sources, 11 list `runtime/abi3/capability.py`, 18 list
+`runtime/abi3/verifier.py`. Landing the constants alone already stales the
+recorded source digests in **35 committed evidence artifacts**, among them
+`results/rtl/abi3_g1e_control_end_to_end.json` (the one passing G1 rung),
+`results/rtl/abi3_pipelined_lane.json` (D1, D2, D5), `results/rtl/abi3_lq8.json`,
+`results/rtl/abi3_re8.json`, `results/rtl/abi3_tile64.json` and
+`results/rtl/abi3_deployment_campaign.json`. Their *content* is unaffected —
+the gate table is unchanged and the 1,548-check admission diff is empty — but
+their source binding is broken until they are re-run in a clean pinned
+worktree. Re-running them is part of the price of AM-R1, not of the re-lowering
+that follows it.
+
+**Gates.** C1 and C2 are re-derived once the Qwen pair is a multi-device pair
+on both sides; G3's Pro rows become measurable for the first time; G4's cycle
+model gains a fabric to price, which is AM-R2's field set.
+
+#### What has landed, and what has not
+
+Landed here: `TopologyClass.CLUSTER_N`, `NodeClass`, `ParticipantScope.WAFER`,
+the capability `fabric` block with its digest-stability rule, the eight
+capability refusals, the four deployment-side rules, and a conformance suite
+that requires each refusal by name.
+
+Not landed, and deliberately: the `TOPOLOGY` payload's `node_class` and fabric
+fields, `spec/abi3/descriptor_payloads.json`'s republication, the RTL topology
+decoder, the golden model's `WAFER` member derivation, `experts_per_node`
+divisibility (which is a property of the compiled model, not of the
+implementation, and so belongs to the deployment audit rather than to the
+capability), and the re-lowering of any bundle. Until the payload fields land,
+`CLUSTER_N` is a class an implementation can advertise and a verifier can bind,
+and `WAFER` scope is refused rather than defaulted.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -2378,6 +2639,7 @@ remain normative.
 | A28 | a symmetric cluster object may bind one ordered authenticated local image per node through a domain-separated manifest content root | this document, section 12.19; `runtime/abi3/deployment.py` |
 | A29 | `request_descriptor_id` resolves one integrity-bound, generation- and transaction-owned complete runtime-symbol map | this document, section 6.1; `runtime/abi3/request.py` |
 | A30 | the draft window is an operator, not a family label: `ROUTE.DSPARK_WINDOW_INDEX` | this document, section 12.20; operator conventions, section 25 |
+| AM-R1 | a topology has a node count and a fabric between the nodes, and both are declared: `TopologyClass.CLUSTER_N`, `NodeClass`, `ParticipantScope.WAFER`, the capability `fabric` block | this document, sections 8, 12.5 and 12.21; architecture section 10.1 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a
@@ -2465,7 +2727,8 @@ recorded here rather than left in one implementation's resolver.
 
 A `COMMUNICATION` descriptor gains a `participant_scope` at payload offset 80,
 one byte, taking `NODE = 0`, `RETICLE = 1`, `TILE = 2`. The reserved span
-shrinks from 48 bytes at offset 80 to 47 at offset 81.
+shrinks from 48 bytes at offset 80 to 47 at offset 81. Amendment AM-R1
+(section 12.21) assigns `WAFER = 3` in the same byte; nothing here moves.
 
 `_participants` derives a collective's member set from the admitted topology.
 Until now it derived that set from `node_count` alone, so participants were
@@ -2491,7 +2754,10 @@ TILE     -> reticle_count * tiles_per_reticle
 
 with `group_id` partitioning that set exactly as before, and the degenerate-set
 refusal unchanged: a collective over one participant is still an error at any
-scope, because a one-endpoint transfer is `LINK.SEND`.
+scope, because a one-endpoint transfer is `LINK.SEND`. AM-R1's `WAFER` derives
+from `node_count` where the topology's `node_class` is `WAFER`;
+until that field lands it has no derivation, and both the verifier and the LINK
+engine refuse it rather than fall through to a derivation it is not.
 
 Two admission rules keep the field honest. A scope the topology cannot support
 is refused — `RETICLE` against a zero `reticle_count`, `TILE` against a zero
