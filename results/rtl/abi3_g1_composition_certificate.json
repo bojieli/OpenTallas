@@ -24,7 +24,7 @@
  "generated_by": "tools/build_abi3_g1_composition_certificate.py",
  "generated_by_sha256": "fee569eb0664befd3c6e69322a4f61d3e52c5c323f8495fd3826b4a7c588ed9e",
  "git": {
-  "commit": "6b1ac38219ad68e8f01f718a9a20ba192bc2dbf2",
+  "commit": "1ebbffa97830534cba5d4a462bfb2fd53efbc8f9",
   "dirty_paths": [],
   "scope": "the tree THIS certificate was derived in. Each rung artifact carries the tree ITS run happened in, under records[].git.",
   "worktree_dirty": false
@@ -32,7 +32,7 @@
  "inputs": {
   "G1a": {
    "path": "results/rtl/abi3_g1a_operator_equivalence.json",
-   "sha256": "85dc8617a8cb6d5641c00078f19245d8981b97af97c46d249cd24c5b8dae2811"
+   "sha256": "04157e4934e10855521d3e50b836e0b3cc4abe435795ac777d66f644ec7c5457"
   },
   "G1b": {
    "path": "results/rtl/abi3_g1b_layer_closure.json",
