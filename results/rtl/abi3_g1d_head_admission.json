@@ -1,0 +1,2694 @@
+{
+  "arms": {
+    "argmax_ladder": [
+      {
+        "kind": "an admitted head width, with the refusal's own unplaced objects added",
+        "lm_head_weight_rows_rewritten_to": 128,
+        "mapped_families_admitted": true,
+        "marker_present": true,
+        "returncode": 0,
+        "rewritten_descriptor_fields": {
+          "qwen3-8b-hbm-single-chip": {
+            "output_view": {
+              "descriptor_id": 202,
+              "fields": {
+                "dim1": [
+                  151936,
+                  128
+                ],
+                "stride0": [
+                  151936,
+                  128
+                ]
+              }
+            },
+            "weight_view": {
+              "descriptor_id": 201,
+              "fields": {
+                "dim0": [
+                  151936,
+                  128
+                ]
+              }
+            }
+          },
+          "qwen3-8b-rom-single-chip": {
+            "output_view": {
+              "descriptor_id": 195,
+              "fields": {
+                "dim1": [
+                  151936,
+                  128
+                ],
+                "stride0": [
+                  151936,
+                  128
+                ]
+              }
+            },
+            "weight_view": {
+              "descriptor_id": 193,
+              "fields": {
+                "dim0": [
+                  151936,
+                  128
+                ]
+              }
+            }
+          }
+        },
+        "step": 0,
+        "targets": {
+          "qwen3-8b-hbm-single-chip": {
+            "mapped_families": {
+              "admitted": 1,
+              "attention_gqa": 0,
+              "case": 1,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 1,
+              "rms_norm": 1,
+              "selection_argmax": 1,
+              "selection_token_append": 0,
+              "tie": 65920,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 1,
+              "cycles": 3122777,
+              "entry": 65,
+              "fault": 71,
+              "fetched": 6,
+              "ic": 71,
+              "issued": 4,
+              "launches": 4,
+              "retired": 6,
+              "trap": 5
+            },
+            "placement_table_entry_count": 19,
+            "refused_instruction_views": []
+          },
+          "qwen3-8b-rom-single-chip": {
+            "mapped_families": {
+              "admitted": 1,
+              "attention_gqa": 0,
+              "case": 0,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 1,
+              "rms_norm": 1,
+              "selection_argmax": 1,
+              "selection_token_append": 0,
+              "tie": 61824,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 0,
+              "cycles": 3122777,
+              "entry": 65,
+              "fault": 71,
+              "fetched": 6,
+              "ic": 71,
+              "issued": 4,
+              "launches": 4,
+              "retired": 6,
+              "trap": 5
+            },
+            "placement_table_entry_count": 19,
+            "refused_instruction_views": []
+          }
+        },
+        "wall_seconds": 34.169
+      }
+    ],
+    "final": {
+      "kind": "an admitted head width, with the refusal's own unplaced objects added",
+      "lm_head_weight_rows_rewritten_to": 128,
+      "mapped_families_admitted": true,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": {
+        "qwen3-8b-hbm-single-chip": {
+          "output_view": {
+            "descriptor_id": 202,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 201,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        },
+        "qwen3-8b-rom-single-chip": {
+          "output_view": {
+            "descriptor_id": 195,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 193,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        }
+      },
+      "step": 0,
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 1,
+            "selection_token_append": 0,
+            "tie": 65920,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 1,
+            "cycles": 3122777,
+            "entry": 65,
+            "fault": 71,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 4,
+            "retired": 6,
+            "trap": 5
+          },
+          "placement_table_entry_count": 19,
+          "refused_instruction_views": []
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 1,
+            "selection_token_append": 0,
+            "tie": 61824,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 0,
+            "cycles": 3122777,
+            "entry": 65,
+            "fault": 71,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 4,
+            "retired": 6,
+            "trap": 5
+          },
+          "placement_table_entry_count": 19,
+          "refused_instruction_views": []
+        }
+      },
+      "wall_seconds": 34.169
+    },
+    "ladder": [
+      {
+        "kind": "baseline",
+        "lm_head_weight_rows_rewritten_to": null,
+        "mapped_families_admitted": false,
+        "marker_present": true,
+        "returncode": 0,
+        "rewritten_descriptor_fields": null,
+        "step": 0,
+        "targets": {
+          "qwen3-8b-hbm-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 1,
+              "dma_gather": 0,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 0,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 1,
+              "cycles": 110,
+              "entry": 65,
+              "fault": 66,
+              "fetched": 2,
+              "ic": 71,
+              "issued": 1,
+              "launches": 0,
+              "retired": 1,
+              "trap": 3
+            },
+            "placement_table_entry_count": 13,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  512,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 18,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 189
+              },
+              {
+                "dims": [
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 13,
+                "rank": 1,
+                "role": "input_view_1",
+                "strides": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 190
+              },
+              {
+                "dims": [
+                  512,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 19,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 191
+              }
+            ]
+          },
+          "qwen3-8b-rom-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 0,
+              "dma_gather": 0,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 0,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 0,
+              "cycles": 110,
+              "entry": 65,
+              "fault": 66,
+              "fetched": 2,
+              "ic": 71,
+              "issued": 1,
+              "launches": 0,
+              "retired": 1,
+              "trap": 3
+            },
+            "placement_table_entry_count": 13,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  512,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 36,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 180
+              },
+              {
+                "dims": [
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 2,
+                "rank": 1,
+                "role": "input_view_1",
+                "strides": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 181
+              },
+              {
+                "dims": [
+                  512,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 45,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 182
+              }
+            ]
+          }
+        },
+        "wall_seconds": 2.495
+      },
+      {
+        "kind": "ladder",
+        "lm_head_weight_rows_rewritten_to": null,
+        "mapped_families_admitted": false,
+        "marker_present": true,
+        "returncode": 0,
+        "rewritten_descriptor_fields": null,
+        "step": 1,
+        "targets": {
+          "qwen3-8b-hbm-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 1,
+              "dma_gather": 0,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 1,
+              "cycles": 32980,
+              "entry": 65,
+              "fault": 68,
+              "fetched": 4,
+              "ic": 71,
+              "issued": 2,
+              "launches": 1,
+              "retired": 3,
+              "trap": 3
+            },
+            "placement_table_entry_count": 14,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 4,
+                "object_id": 15,
+                "rank": 1,
+                "role": "input_view_0",
+                "strides": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 193
+              },
+              {
+                "dims": [
+                  8704,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 19,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 194
+              },
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 27,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 195
+              }
+            ]
+          },
+          "qwen3-8b-rom-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 0,
+              "dma_gather": 0,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 0,
+              "cycles": 32980,
+              "entry": 65,
+              "fault": 68,
+              "fetched": 4,
+              "ic": 71,
+              "issued": 2,
+              "launches": 1,
+              "retired": 3,
+              "trap": 3
+            },
+            "placement_table_entry_count": 14,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 4,
+                "object_id": 23,
+                "rank": 1,
+                "role": "input_view_0",
+                "strides": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 184
+              },
+              {
+                "dims": [
+                  8256,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 45,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 185
+              },
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 186,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 187
+              }
+            ]
+          }
+        },
+        "wall_seconds": 2.699
+      },
+      {
+        "kind": "ladder",
+        "lm_head_weight_rows_rewritten_to": null,
+        "mapped_families_admitted": false,
+        "marker_present": true,
+        "returncode": 0,
+        "rewritten_descriptor_fields": null,
+        "step": 2,
+        "targets": {
+          "qwen3-8b-hbm-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 1,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 1,
+              "cycles": 45337,
+              "entry": 65,
+              "fault": 69,
+              "fetched": 5,
+              "ic": 71,
+              "issued": 3,
+              "launches": 2,
+              "retired": 4,
+              "trap": 3
+            },
+            "placement_table_entry_count": 16,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 27,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 200
+              },
+              {
+                "dims": [
+                  151936,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 14,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 201
+              },
+              {
+                "dims": [
+                  1,
+                  151936,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 37,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  151936,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 202
+              }
+            ]
+          },
+          "qwen3-8b-rom-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 0,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 0,
+              "cycles": 45337,
+              "entry": 65,
+              "fault": 69,
+              "fetched": 5,
+              "ic": 71,
+              "issued": 3,
+              "launches": 2,
+              "retired": 4,
+              "trap": 3
+            },
+            "placement_table_entry_count": 16,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 186,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 192
+              },
+              {
+                "dims": [
+                  151936,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 3,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 193
+              },
+              {
+                "dims": [
+                  1,
+                  151936,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 194,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  151936,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 195
+              }
+            ]
+          }
+        },
+        "wall_seconds": 3.599
+      },
+      {
+        "kind": "ladder",
+        "lm_head_weight_rows_rewritten_to": null,
+        "mapped_families_admitted": false,
+        "marker_present": true,
+        "returncode": 0,
+        "rewritten_descriptor_fields": null,
+        "step": 3,
+        "targets": {
+          "qwen3-8b-hbm-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 1,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 1,
+              "cycles": 45337,
+              "entry": 65,
+              "fault": 69,
+              "fetched": 5,
+              "ic": 71,
+              "issued": 3,
+              "launches": 2,
+              "retired": 4,
+              "trap": 3
+            },
+            "placement_table_entry_count": 18,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 27,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 200
+              },
+              {
+                "dims": [
+                  151936,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 14,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 201
+              },
+              {
+                "dims": [
+                  1,
+                  151936,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 37,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  151936,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 202
+              }
+            ]
+          },
+          "qwen3-8b-rom-single-chip": {
+            "mapped_families": {
+              "admitted": 0,
+              "attention_gqa": 0,
+              "case": 0,
+              "dma_gather": 1,
+              "dma_scatter": 0,
+              "eos": 0,
+              "matmul": 0,
+              "rms_norm": 1,
+              "selection_argmax": 0,
+              "selection_token_append": 0,
+              "tie": 0,
+              "token": 0,
+              "vector_add": 0,
+              "vector_silu_mul": 0
+            },
+            "measured": {
+              "capability": 0,
+              "case": 0,
+              "cycles": 45337,
+              "entry": 65,
+              "fault": 69,
+              "fetched": 5,
+              "ic": 71,
+              "issued": 3,
+              "launches": 2,
+              "retired": 4,
+              "trap": 3
+            },
+            "placement_table_entry_count": 18,
+            "refused_instruction_views": [
+              {
+                "dims": [
+                  1,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 186,
+                "rank": 2,
+                "role": "input_view_0",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 192
+              },
+              {
+                "dims": [
+                  151936,
+                  4096,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 3,
+                "rank": 2,
+                "role": "input_view_1",
+                "strides": [
+                  4096,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 193
+              },
+              {
+                "dims": [
+                  1,
+                  151936,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "dtype": 16,
+                "object_id": 194,
+                "rank": 2,
+                "role": "output_view_0",
+                "strides": [
+                  151936,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "view_descriptor_id": 195
+              }
+            ]
+          }
+        },
+        "wall_seconds": 3.057
+      }
+    ],
+    "negative_control_mapped_off": {
+      "kind": "the final arm with the mapped-families word back to the shipped 0",
+      "lm_head_weight_rows_rewritten_to": 128,
+      "mapped_families_admitted": false,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": {
+        "qwen3-8b-hbm-single-chip": {
+          "output_view": {
+            "descriptor_id": 202,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 201,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        },
+        "qwen3-8b-rom-single-chip": {
+          "output_view": {
+            "descriptor_id": 195,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 193,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        }
+      },
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 0,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 1,
+            "cycles": 2666958,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 19,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 206
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 28,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 207
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 0,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 0,
+            "cycles": 2666958,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 19,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 199
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 200,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            }
+          ]
+        }
+      },
+      "wall_seconds": 26.744
+    },
+    "placement_bound_mapped_off": {
+      "kind": "ladder",
+      "lm_head_weight_rows_rewritten_to": null,
+      "mapped_families_admitted": false,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": null,
+      "step": 3,
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 0,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 1,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 27,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 200
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 14,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 202
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 0,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 0,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 186,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 192
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 3,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 193
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 195
+            }
+          ]
+        }
+      },
+      "wall_seconds": 3.057
+    },
+    "placement_bound_mapped_on": {
+      "kind": "the same table and span, with the six mapped families admitted",
+      "lm_head_weight_rows_rewritten_to": null,
+      "mapped_families_admitted": true,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": null,
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 1,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 27,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 200
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 14,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 202
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 0,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 186,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 192
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 3,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 193
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 195
+            }
+          ]
+        }
+      },
+      "wall_seconds": 3.679
+    },
+    "weight_rows_at_the_bound": {
+      "kind": "the LM head weight view rewritten to the bracket itself",
+      "lm_head_weight_rows_rewritten_to": 4096,
+      "mapped_families_admitted": true,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": {
+        "qwen3-8b-hbm-single-chip": {
+          "output_view": {
+            "descriptor_id": 202,
+            "fields": {
+              "dim1": [
+                151936,
+                4096
+              ],
+              "stride0": [
+                151936,
+                4096
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 201,
+            "fields": {
+              "dim0": [
+                151936,
+                4096
+              ]
+            }
+          }
+        },
+        "qwen3-8b-rom-single-chip": {
+          "output_view": {
+            "descriptor_id": 195,
+            "fields": {
+              "dim1": [
+                151936,
+                4096
+              ],
+              "stride0": [
+                151936,
+                4096
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 193,
+            "fields": {
+              "dim0": [
+                151936,
+                4096
+              ]
+            }
+          }
+        }
+      },
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 1,
+            "cycles": 83935574,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 206
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 28,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 207
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 0,
+            "cycles": 83935574,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 199
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 200,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            }
+          ]
+        }
+      },
+      "wall_seconds": 866.868
+    },
+    "weight_rows_for_the_argmax_arms": {
+      "kind": "the LM head weight view rewritten to the cheap admitted width the argmax arms use",
+      "lm_head_weight_rows_rewritten_to": 128,
+      "mapped_families_admitted": true,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": {
+        "qwen3-8b-hbm-single-chip": {
+          "output_view": {
+            "descriptor_id": 202,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 201,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        },
+        "qwen3-8b-rom-single-chip": {
+          "output_view": {
+            "descriptor_id": 195,
+            "fields": {
+              "dim1": [
+                151936,
+                128
+              ],
+              "stride0": [
+                151936,
+                128
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 193,
+            "fields": {
+              "dim0": [
+                151936,
+                128
+              ]
+            }
+          }
+        }
+      },
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 1,
+            "cycles": 2666966,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 206
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 28,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 207
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 1,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 1,
+            "case": 0,
+            "cycles": 2666966,
+            "entry": 65,
+            "fault": 70,
+            "fetched": 6,
+            "ic": 71,
+            "issued": 4,
+            "launches": 3,
+            "retired": 5,
+            "trap": 4
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                151936,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 1,
+              "role": "input_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 199
+            },
+            {
+              "dims": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 4,
+              "object_id": 200,
+              "rank": 1,
+              "role": "output_view_0",
+              "strides": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            }
+          ]
+        }
+      },
+      "wall_seconds": 30.53
+    },
+    "weight_rows_one_over_the_bound": {
+      "kind": "the LM head weight view rewritten to one row over the bracket",
+      "lm_head_weight_rows_rewritten_to": 4097,
+      "mapped_families_admitted": true,
+      "marker_present": true,
+      "returncode": 0,
+      "rewritten_descriptor_fields": {
+        "qwen3-8b-hbm-single-chip": {
+          "output_view": {
+            "descriptor_id": 202,
+            "fields": {
+              "dim1": [
+                151936,
+                4097
+              ],
+              "stride0": [
+                151936,
+                4097
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 201,
+            "fields": {
+              "dim0": [
+                151936,
+                4097
+              ]
+            }
+          }
+        },
+        "qwen3-8b-rom-single-chip": {
+          "output_view": {
+            "descriptor_id": 195,
+            "fields": {
+              "dim1": [
+                151936,
+                4097
+              ],
+              "stride0": [
+                151936,
+                4097
+              ]
+            }
+          },
+          "weight_view": {
+            "descriptor_id": 193,
+            "fields": {
+              "dim0": [
+                151936,
+                4097
+              ]
+            }
+          }
+        }
+      },
+      "targets": {
+        "qwen3-8b-hbm-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 1,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 1,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 27,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 200
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 14,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 201
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 37,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 202
+            }
+          ]
+        },
+        "qwen3-8b-rom-single-chip": {
+          "mapped_families": {
+            "admitted": 1,
+            "attention_gqa": 0,
+            "case": 0,
+            "dma_gather": 1,
+            "dma_scatter": 0,
+            "eos": 0,
+            "matmul": 0,
+            "rms_norm": 1,
+            "selection_argmax": 0,
+            "selection_token_append": 0,
+            "tie": 0,
+            "token": 0,
+            "vector_add": 0,
+            "vector_silu_mul": 0
+          },
+          "measured": {
+            "capability": 0,
+            "case": 0,
+            "cycles": 45337,
+            "entry": 65,
+            "fault": 69,
+            "fetched": 5,
+            "ic": 71,
+            "issued": 3,
+            "launches": 2,
+            "retired": 4,
+            "trap": 3
+          },
+          "placement_table_entry_count": 18,
+          "refused_instruction_views": [
+            {
+              "dims": [
+                1,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 186,
+              "rank": 2,
+              "role": "input_view_0",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 192
+            },
+            {
+              "dims": [
+                151936,
+                4096,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 3,
+              "rank": 2,
+              "role": "input_view_1",
+              "strides": [
+                4096,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 193
+            },
+            {
+              "dims": [
+                1,
+                151936,
+                0,
+                0,
+                0,
+                0
+              ],
+              "dtype": 16,
+              "object_id": 194,
+              "rank": 2,
+              "role": "output_view_0",
+              "strides": [
+                151936,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "view_descriptor_id": 195
+            }
+          ]
+        }
+      },
+      "wall_seconds": 3.369
+    }
+  },
+  "compile_returncode": 0,
+  "does_not_establish": [
+    "gate G1d: no arm runs the head on the composed trunk output and no arm compares a logit against golden",
+    "any token id: an arm enters mid-program on an initialised result memory and binds objects at a base with nothing staged there, so a selected token is evidence that a selection happened and is not a token id",
+    "that the governed program's LM head is admissible: it is 151,936 rows and every arm at that width refuses",
+    "any numeric result of the rewritten operator"
+  ],
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "findings": {
+    "qwen3-8b-hbm-single-chip": {
+      "argmax_launched": true,
+      "argmax_launches_with_the_gate_off": 0,
+      "argmax_launches_with_the_gate_on": 1,
+      "argmax_refusal_class_when_its_own_object_was_unplaced": 4,
+      "argmax_site_pc": 70,
+      "final_fault_pc": 71,
+      "final_placement_table_entry_count": 19,
+      "final_placement_table_objects": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        13,
+        15,
+        27,
+        14,
+        37,
+        28
+      ],
+      "final_trap_class": 5,
+      "head_rows_the_argmax_arms_ran_at": 128,
+      "largest_weight_rows_measured_to_launch": 4096,
+      "lm_head_pc": 69,
+      "objects_added_after_the_bracket": [
+        28
+      ],
+      "refusal_is_the_weight_row_count": true,
+      "shipped_weight_rows": 151936,
+      "smallest_weight_rows_measured_to_refuse": 4097
+    },
+    "qwen3-8b-rom-single-chip": {
+      "argmax_launched": true,
+      "argmax_launches_with_the_gate_off": 0,
+      "argmax_launches_with_the_gate_on": 1,
+      "argmax_refusal_class_when_its_own_object_was_unplaced": 4,
+      "argmax_site_pc": 70,
+      "final_fault_pc": 71,
+      "final_placement_table_entry_count": 19,
+      "final_placement_table_objects": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        27,
+        36,
+        45,
+        55,
+        64,
+        71,
+        84,
+        2,
+        23,
+        186,
+        3,
+        194,
+        200
+      ],
+      "final_trap_class": 5,
+      "head_rows_the_argmax_arms_ran_at": 128,
+      "largest_weight_rows_measured_to_launch": 4096,
+      "lm_head_pc": 69,
+      "objects_added_after_the_bracket": [
+        200
+      ],
+      "refusal_is_the_weight_row_count": true,
+      "shipped_weight_rows": 151936,
+      "smallest_weight_rows_measured_to_refuse": 4097
+    }
+  },
+  "gate": "G1d (configs/gates/redesign_gates.json)",
+  "git": {
+    "commit": "315af74172168830a7dc6ec42375f40d233dffed",
+    "dirty_paths": [],
+    "scope": "the tree this campaign elaborated and ran from",
+    "worktree_dirty": false
+  },
+  "head_matmul": {
+    "qwen3-8b-hbm-single-chip": {
+      "output_view_descriptor_id": 202,
+      "output_view_dims": [
+        1,
+        151936
+      ],
+      "pc": 69,
+      "weight_view_descriptor_id": 201,
+      "weight_view_dims": [
+        151936,
+        4096
+      ]
+    },
+    "qwen3-8b-rom-single-chip": {
+      "output_view_descriptor_id": 195,
+      "output_view_dims": [
+        1,
+        151936
+      ],
+      "pc": 69,
+      "weight_view_descriptor_id": 193,
+      "weight_view_dims": [
+        151936,
+        4096
+      ]
+    }
+  },
+  "mapped_configuration": {
+    "qwen3-8b-hbm-single-chip": {
+      "context_length": 0,
+      "generated_before": 0,
+      "generation_policy_id": 219,
+      "kv_plane_rows": 0,
+      "max_new_tokens": 0,
+      "note": "only the admission flag and the placement bases decide a SELECTION.ARGMAX: the bridge reads the policy id on SELECTION.TOKEN_APPEND and the KV terms on DMA.SCATTER and ATTENTION.GQA, neither of which this span reaches.  The policy id is the deployment's own so no arm runs a configuration the deployment does not have"
+    },
+    "qwen3-8b-rom-single-chip": {
+      "context_length": 0,
+      "generated_before": 0,
+      "generation_policy_id": 21,
+      "kv_plane_rows": 0,
+      "max_new_tokens": 0,
+      "note": "only the admission flag and the placement bases decide a SELECTION.ARGMAX: the bridge reads the policy id on SELECTION.TOKEN_APPEND and the KV terms on DMA.SCATTER and ATTENTION.GQA, neither of which this span reaches.  The policy id is the deployment's own so no arm runs a configuration the deployment does not have"
+    }
+  },
+  "one_elaboration_for_every_arm": true,
+  "schema": "opentallas.rtl.abi3_g1d_head_admission.v1",
+  "simulated_cycles": 185213426,
+  "simulator": "verilator_cpp_executable",
+  "spans": {
+    "qwen3-8b-hbm-single-chip": {
+      "derived_by": "the greatest entry from which the abstract machine of tools/build_abi3_vehicle_reachability.py reaches the fetch bound one past the site without a wait-set or loop-stack refusal",
+      "entry_pc": 65,
+      "instruction_count": 71,
+      "issued_pcs": [
+        66,
+        68,
+        69,
+        70
+      ],
+      "macs": 622329856,
+      "site_pc": 70
+    },
+    "qwen3-8b-rom-single-chip": {
+      "derived_by": "the greatest entry from which the abstract machine of tools/build_abi3_vehicle_reachability.py reaches the fetch bound one past the site without a wait-set or loop-stack refusal",
+      "entry_pc": 65,
+      "instruction_count": 71,
+      "issued_pcs": [
+        66,
+        68,
+        69,
+        70
+      ],
+      "macs": 622329856,
+      "site_pc": 70
+    }
+  },
+  "status": "pass",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    }
+  },
+  "vector_set": {
+    "case_record_stride": 139,
+    "committed": true,
+    "directory": "testdata/compiler/abi3_shipped_prefix",
+    "mapped_families_word_in_the_committed_set": {
+      "qwen3-8b-hbm-single-chip": 0,
+      "qwen3-8b-rom-single-chip": 0
+    }
+  },
+  "vehicle": "rtl/test/a3_shipped_prefix_top.sv",
+  "what_this_measures": "what refuses the LM head at the end of the G1d head span, and whether the span's SELECTION.ARGMAX is admitted once it is reached -- attributed by changing one field per arm on one elaborated binary"
+}

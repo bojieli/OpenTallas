@@ -305,7 +305,7 @@
      ]
     }
    },
-   "wall_seconds": 2.35
+   "wall_seconds": 2.164
   },
   {
    "entry_and_bound": {
@@ -622,7 +622,7 @@
      ]
     }
    },
-   "wall_seconds": 2.374
+   "wall_seconds": 2.286
   },
   {
    "entry_and_bound": {
@@ -955,7 +955,7 @@
      ]
     }
    },
-   "wall_seconds": 2.574
+   "wall_seconds": 2.491
   },
   {
    "entry_and_bound": {
@@ -1298,7 +1298,7 @@
      "unplaced_objects_of_the_refusal": []
     }
    },
-   "wall_seconds": 2.412
+   "wall_seconds": 2.748
   }
  ],
  "attribution": {
@@ -1409,7 +1409,7 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 1.943
+      "wall_seconds": 1.983
      },
      {
       "dropped_object_id": 15,
@@ -1428,7 +1428,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.36
+      "wall_seconds": 4.307
      },
      {
       "dropped_object_id": 27,
@@ -1447,7 +1447,7 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 2.257
+      "wall_seconds": 3.213
      },
      {
       "dropped_object_id": 14,
@@ -1466,7 +1466,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.42
+      "wall_seconds": 4.313
      },
      {
       "dropped_object_id": 37,
@@ -1485,7 +1485,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.636
+      "wall_seconds": 3.729
      }
     ],
     "objects_added_that_the_design_never_read": [
@@ -1525,7 +1525,7 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 1.943
+      "wall_seconds": 1.983
      },
      {
       "dropped_object_id": 23,
@@ -1544,7 +1544,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.36
+      "wall_seconds": 4.307
      },
      {
       "dropped_object_id": 186,
@@ -1563,7 +1563,7 @@
       },
       "measurement_unchanged": false,
       "refusal_moved_back": true,
-      "wall_seconds": 2.257
+      "wall_seconds": 3.213
      },
      {
       "dropped_object_id": 3,
@@ -1582,7 +1582,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.42
+      "wall_seconds": 4.313
      },
      {
       "dropped_object_id": 194,
@@ -1601,7 +1601,7 @@
       },
       "measurement_unchanged": true,
       "refusal_moved_back": false,
-      "wall_seconds": 2.636
+      "wall_seconds": 3.729
      }
     ],
     "objects_added_that_the_design_never_read": [
@@ -1626,7 +1626,7 @@
  "evidence_class": "public_open_tool_rtl_simulation",
  "gate": "G1d (configs/gates/redesign_gates.json)",
  "git": {
-  "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
+  "commit": "315af74172168830a7dc6ec42375f40d233dffed",
   "dirty_paths": [],
   "scope": "the tree this campaign elaborated and ran from",
   "worktree_dirty": false
@@ -1792,7 +1792,7 @@
    },
    "site_pc": 11,
    "target": "qwen3-8b-rom-single-chip",
-   "wall_seconds": 387.023,
+   "wall_seconds": 463.188,
    "weight_view_dims": [
     4096,
     4096
