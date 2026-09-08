@@ -108,6 +108,7 @@ ORACLE_TOKEN_COUNT = 1
 # The golden view stream's word stride, as the deployment vector set states it.
 VIEW_STRIDE = 7
 ENTRY_PROBE = "results/rtl/abi3_vehicle_entry_probe.json"
+HEAD_ADMISSION = "results/rtl/abi3_g1d_head_admission.json"
 WORKLOAD_PATH = "build/workloads/qwen3-8b/TA-QW-EOS-1.json"
 
 # The three head fields G1d names, and the operator each is.  The mnemonics
@@ -934,6 +935,64 @@ def entry_probe_observation(roles: dict[str, dict[str, Any]], deployment_key: st
     return record
 
 
+def head_admission_observation(deployment_key: str) -> dict[str, Any]:
+    """What refuses the head span's last two instructions, measured.
+
+    ``entry_probe_observation`` above records that a head operator dispatched
+    under a mid-program entry.  This records how far that span then gets and
+    what stops it, which is the more useful half for a rung that is red: the
+    LM head's ``TENSOR.MATMUL`` and the span's ``SELECTION.ARGMAX``, each
+    attributed by an arm that changed one thing.
+
+    It moves no field of this rung, and the reason is the same one the entry
+    probe carries: a mid-program entry runs on a result memory holding its
+    initialisation pattern with objects bound at bases nothing was staged at,
+    so an admitted engine's words are not the checkpoint's and an admitted
+    argmax's selection is not a token id.  What it does is turn two of this
+    rung's blockers from absences into measurements.
+    """
+    path = ROOT / HEAD_ADMISSION
+    record: dict[str, Any] = {"artifact": HEAD_ADMISSION}
+    if not path.is_file():
+        record["present"] = False
+        record["why_absent_is_not_neutral"] = (
+            "with no such measurement the LM head's refusal has a trap class "
+            "and no attribution, which is the state this rung was in"
+        )
+        return record
+    body = json.loads(path.read_text())
+    findings = _dig(body, f"findings.{deployment_key}") or {}
+    record.update(
+        present=True,
+        artifact_sha256=sha256_file(path),
+        status=body.get("status"),
+        declared_git=body.get("git"),
+        source_bound=bool(_dig(body, "git.worktree_dirty") is False),
+        one_elaboration_for_every_arm=body.get("one_elaboration_for_every_arm"),
+        simulated_cycles=body.get("simulated_cycles"),
+        findings=findings,
+        mapped_families_word_in_the_committed_vector_set=_dig(
+            body,
+            "vector_set.mapped_families_word_in_the_committed_vector_set."
+            + deployment_key,
+        ),
+    )
+    record["why_it_does_not_make_a_field_true"] = (
+        "an arm of that campaign enters mid-program, binds objects at a "
+        "declared base with nothing staged there, and compares no word "
+        "against golden. G1d asks for the head to execute ON THE COMPOSED "
+        "TRUNK OUTPUT and for its logits to be compared. A selected token "
+        "measured there is evidence that a selection happened and is not a "
+        "token id, and record_token_ids is never filled from it"
+    )
+    if record.get("source_bound") is False:
+        record["caveat"] = (
+            "this campaign declares a dirty worktree, so it is not "
+            "source-bound evidence; it is cited as an observation only"
+        )
+    return record
+
+
 def oracle_evidence() -> dict[str, Any]:
     path = ROOT / ORACLE
     if not path.is_file():
@@ -1033,6 +1092,7 @@ def build(
         plan = shard_plan(arithmetic, shards)
         execution = head_execution(campaign, head, roles, vector_case, case_index)
         probe = entry_probe_observation(roles, deployment_key)
+        admission = head_admission_observation(deployment_key)
         eos = eos_measurement(
             facts, head, execution, campaign, campaign_body, case_index,
             list(oracle["all_generated_token_ids"]),
@@ -1159,6 +1219,7 @@ def build(
                     "shard_composition_check": shard_check,
                     "execution_measured": execution,
                     "entry_probe_observation": probe,
+                    "head_admission_observation": admission,
                     "runnable_leg": leg,
                     "kernel_ir": {
                         "path": kernels["path"],
