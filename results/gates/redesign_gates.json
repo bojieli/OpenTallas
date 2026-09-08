@@ -15,7 +15,7 @@
       "kind": "verification",
       "statement": "Every operator equivalence class the governed decode program issues executes in the integrated RTL, from the real compiled program against the real checkpoint weights, and matches the golden model bit for bit.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 4, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 4, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 11, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 11, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
     },
     {
       "fails_when": "The layer is incomplete, any intermediate differs, or any intermediate was injected from the golden model.",
@@ -79,7 +79,7 @@
       "kind": "terminal",
       "statement": "The cycle model reproduces the measured block cycles of the RTL within a stated band, and the derived machine reproduces the analytical design point.",
       "status": "fail",
-      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- 32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0454 (7724 model over 170022 measured); iverilog case 0 transaction_less_bench 0.0455 (7724 model over 169805 measured); section 11.5 boundary item unmet: unmeasured (rtl3_abi3_boundary_chain: see boundary.why_unmeasured), model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived"
+      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- 32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0958 (7724 model over 80637 measured); iverilog case 0 transaction_less_bench 0.0960 (7724 model over 80430 measured); section 11.5 boundary item unmet: unmeasured (rtl3_abi3_boundary_chain: see boundary.why_unmeasured), model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived"
     },
     {
       "fails_when": "One bit differs.",
@@ -151,7 +151,7 @@
       "kind": "comparison",
       "statement": "No published run sits more than 100x above its own bandwidth floor.",
       "status": "pass",
-      "why": "2 of 2 artifact(s) state a floor; worst is 1.11x"
+      "why": "2 of 2 artifact(s) state a floor; worst is 8.22x"
     }
   ],
   "passing": 9,
