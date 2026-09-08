@@ -103,7 +103,27 @@ BENCHES = (
     {
         "top": "tb_a3_operator_admission",
         "sources": BRIDGE_SOURCES + ("rtl/test/tb_a3_operator_admission.sv",),
-        "timeout": 5400,
+        # HOST WALL-CLOCK BUDGET, not a check and not a tolerance.  Every
+        # comparison this campaign makes is unchanged: both pinned simulators
+        # still run every case and their normalized results must still be
+        # equal.  What changed is the WORK.  958071e added the layer-zero key
+        # and value projections -- two real TENSOR.MATMULs of 20,972,560
+        # simulated cycles each, against the checkpoint's own k_proj and
+        # v_proj -- to a bench whose whole previous case list cost Icarus
+        # 845.5 s, the figure the retained pre-958071e artifact records in
+        # its own verification_wall_seconds.  5,400 s was chosen for that
+        # bench and is too small for this one, and that is measured rather
+        # than assumed: on 2026-09-08 ONE of the two projection cases ran
+        # past 2,784 s under Icarus without finishing, while the same widened
+        # bench completes under Verilator in 311 s -- and the 43.2x
+        # Icarus/Verilator ratio the retained artifact records for this same
+        # bench pair (845.5 / 19.6) projects 13,435 s for the Icarus leg.
+        # 28,800 s is that projection with 2.1x headroom for a loaded box.
+        # Section 11.7 records what NOT raising it cost: the campaign could
+        # not be re-taken at all, so the placement depth it measures stayed
+        # an unreproducible number and the two rungs that read it fell back
+        # to the integrated vehicle's own span of 13 objects.
+        "timeout": 28800,
     },
     {
         "top": "tb_a3_vector_silu_mul",
