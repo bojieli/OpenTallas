@@ -98,6 +98,54 @@ def _oracle_of(ev: dict[str, Any]) -> tuple[Any, str | None, str | None]:
     return ids, digest, oracle_path
 
 
+def _tree_was_clean(rec: dict[str, Any] | None) -> str | None:
+    """Was this artifact written from a clean tree?  None means yes.
+
+    The gate board reads three provenance schemas and they do not agree on a
+    field name: the G1 ladder's records and the physical records write
+    ``git.worktree_dirty``, while the lane and LQ8 RTL records write
+    ``git.dirty``.  A check that knew only one name would pass the other
+    vacuously, which is the failure this helper exists to prevent -- so it
+    accepts either and refuses an artifact that carries neither.
+
+    This is deliberately the SAME standard the G1 ladder already applies in
+    :func:`_rtl_record_problems` ("a record written from a dirty tree is not
+    evidence whatever it claims").  It is not a new rule; it is the existing
+    rule reaching the gates that were never given it.
+
+    It does not recompute ``source_sha256`` against the tree.  That stricter
+    check belongs to the tools that derive the rungs (which do recompute it),
+    and doing it here would fail an artifact for a drifted README as readily
+    as for drifted RTL.  What is checked here is the claim the artifact makes
+    about its own tree, which it is in a position to know and the gate is not.
+    """
+
+    if not isinstance(rec, dict):
+        return "artifact is not a JSON object, so it states no provenance"
+    git = rec.get("git")
+    if not isinstance(git, dict):
+        # Silence, not a failure.  The derived artifacts under results/derived
+        # carry no git block by convention -- they are composed from records
+        # that each carry their own -- and failing them here would invent a
+        # requirement this board has never made of them.  It would also be
+        # actively harmful: C3 would stop reporting the reason it actually
+        # fails and start reporting a missing field instead, which is a worse
+        # diagnostic, not a stricter one.
+        return None
+    for field in ("worktree_dirty", "dirty"):
+        if field in git:
+            if git[field] is False:
+                return None
+            return f"git.{field} is {git[field]!r} -- written from a dirty tree"
+    # A git block that states a commit but not cleanliness is a real gap: the
+    # artifact went to the trouble of recording provenance and then left out
+    # the part that decides admissibility.
+    return (
+        "git block names neither worktree_dirty nor dirty -- the artifact "
+        "does not state whether its tree was clean"
+    )
+
+
 def _rtl_record_problems(
     rec: dict[str, Any], ev: dict[str, Any], oracle_ids: Any, oracle_digest: str | None
 ) -> list[str]:
@@ -311,6 +359,10 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
             if body is None:
                 reasons.append(f"{rel}: unreadable")
                 continue
+            unclean = _tree_was_clean(body)
+            if unclean:
+                reasons.append(f"{rel}: {unclean}")
+                continue
             pnr = body.get("place_and_route")
             if not isinstance(pnr, dict) or body.get("flow_completed") is not True:
                 reasons.append(f"{rel}: no completed place-and-route stage")
@@ -405,6 +457,10 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
             body = _load(path)
             if body is None:
                 reasons.append(f"{rel}: unreadable")
+                continue
+            unclean = _tree_was_clean(body)
+            if unclean:
+                reasons.append(f"{rel}: {unclean}")
                 continue
             view = _dig(body, "view.name")
             if view != base_view:
@@ -566,9 +622,14 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
                 f"all {len(paths)} artifact(s) have {want['field']} == {want.get('equals')}"
             )
         verdicts: list[tuple[Path, Any, Any]] = []
+        unclean_paths: list[str] = []
         for path in paths:
             body = _load(path)
             if body is None:
+                continue
+            unclean = _tree_was_clean(body)
+            if unclean:
+                unclean_paths.append(f"{path.relative_to(REPO)}: {unclean}")
                 continue
             got = _dig(body, want["field"])
             if got != want.get("equals"):
@@ -583,6 +644,15 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
             return _pass(
                 f"{path.relative_to(REPO)}: {want['field']} == {want['equals']}"
                 + (f" and {also['field']} == {also['equals']}" if also else "")
+            )
+        if unclean_paths and not verdicts:
+            # Every candidate was rejected on provenance.  Say so, rather than
+            # falling through to "no artifact carries the field" -- an
+            # artifact that carries the field but cannot be trusted is a
+            # different failure from one that never wrote it.
+            return _fail(
+                f"{len(unclean_paths)} artifact(s) rejected on provenance: "
+                + "; ".join(unclean_paths[:3])
             )
         if verdicts:
             # Lead with a verdict that examined evidence; an artifact whose
@@ -616,6 +686,10 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
         best: tuple[float, Path] | None = None
         for path in paths:
             body = _load(path)
+            unclean = _tree_was_clean(body) if body else None
+            if unclean:
+                rejected.append(f"{path.relative_to(REPO)}: {unclean}")
+                continue
             got = _dig(body, ev["field"]) if body else None
             if not isinstance(got, (int, float)):
                 continue
@@ -627,13 +701,16 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
             if best is None or got > best[0]:
                 best = (float(got), path)
         if best is None:
+            # ``rejected`` now collects two different kinds of rejection --
+            # the second field disagreeing, and the artifact failing
+            # provenance -- so the message can no longer assume the first.
+            # It named ``also`` unconditionally, which crashed on a gate that
+            # has no second field the moment a provenance rejection was the
+            # only entry.  Each reason now carries its own text.
             return _fail(
-                f"{len(paths)} artifact(s) matched and none carries {ev['field']}"
-                + (
-                    f" with {also['field']} == {also.get('equals')}: " + "; ".join(rejected[:3])
-                    if rejected
-                    else ""
-                )
+                f"{len(paths)} artifact(s) matched and none supplied a usable "
+                f"{ev['field']}"
+                + (": " + "; ".join(rejected[:3]) if rejected else "")
             )
         if best[0] < float(ev["min"]):
             return _fail(
