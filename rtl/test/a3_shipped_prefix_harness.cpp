@@ -1666,6 +1666,36 @@ int main(int argc, char** argv) {
                     }
                 }
             }
+            // -- the six mapped families, under an entry probe too ---------
+            // This path used to leave ``cfg_extended_placement_valid`` at its
+            // reset value while the main path drove it from the case record,
+            // so every probe measured a machine configured DIFFERENTLY from
+            // the one the campaign measures: the six mapped families were
+            // gated off no matter what the record said, and a probe span that
+            // ends in SELECTION.ARGMAX could not have reached an admission
+            // decision about it even with every object placed and every
+            // geometry admitted.  A probe that cannot reach the question it
+            // is asked is not a measurement of the design.  The record's own
+            // word decides it here exactly as it does there -- same field,
+            // same guard, same UINT32_MAX for an unbound policy id -- so a
+            // vector set that carries no golden past its fail-stop boundary
+            // still gets TRAP_CAPABILITY, and one that opts in gets the
+            // admission walk.
+            {
+                const bool mapped = mapped_placement_vectors &&
+                                    record[kMappedFamiliesWord] != 0;
+                model.dut.cfg_extended_placement_valid = mapped ? 1 : 0;
+                model.dut.cfg_context_length =
+                    mapped ? record[kMapContextWord] : 0U;
+                model.dut.cfg_kv_plane_rows =
+                    mapped ? record[kMapPlaneRowsWord] : 0U;
+                model.dut.cfg_generation_policy_id =
+                    mapped ? record[kMapPolicyWord] : UINT32_MAX;
+                model.dut.cfg_request_max_new_tokens =
+                    mapped ? record[kMapMaxNewWord] : 0U;
+                model.dut.cfg_generated_before =
+                    mapped ? record[kMapGeneratedWord] : 0U;
+            }
                 model.dut.start = 1;
                 model.cycle([] {});
                 model.dut.start = 0;
@@ -1686,6 +1716,37 @@ int main(int argc, char** argv) {
                           << " retired=" << model.dut.count_retired
                           << " capability=" << model.dut.capability_fault_count
                           << " cycles=" << guard << "\n";
+                // A SECOND line, never a wider PROBE line: the existing
+                // campaign's parser is anchored on the end of that one and a
+                // new field there would silently stop matching.  This carries
+                // what the six mapped families did, which the PROBE line has
+                // never been able to say.
+                std::cout << "PROBEMAPPED case=" << case_index
+                          << " admitted="
+                          << static_cast<unsigned>(
+                                 model.dut.cfg_extended_placement_valid)
+                          << " vector_add="
+                          << model.dut.vector_add_launch_count
+                          << " vector_silu_mul="
+                          << model.dut.vector_silu_mul_launch_count
+                          << " dma_scatter="
+                          << model.dut.dma_scatter_launch_count
+                          << " attention_gqa="
+                          << model.dut.attention_gqa_launch_count
+                          << " selection_argmax="
+                          << model.dut.selection_argmax_launch_count
+                          << " selection_token_append="
+                          << model.dut.selection_token_append_launch_count
+                          << " matmul=" << model.dut.matmul_launch_count
+                          << " rms_norm=" << model.dut.rms_norm_launch_count
+                          << " dma_gather="
+                          << model.dut.dma_gather_launch_count
+                          << " token=" << model.dut.selected_token
+                          << " tie=" << model.dut.selected_tie_multiplicity
+                          << " eos="
+                          << static_cast<unsigned>(
+                                 model.dut.selected_eos_reason)
+                          << "\n";
                 ++probes;
                 model.cycle([] {});
             }
