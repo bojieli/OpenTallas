@@ -12,9 +12,9 @@
   ],
   "gate": "G1d",
   "generated_by": "tools/build_abi3_g1d_token.py",
-  "generated_by_sha256": "50c1769f3ec562fcc043b21bdfdc3b015032b27b91050f610cda5d67ba5afbc9",
+  "generated_by_sha256": "ef9ea829a63347cacda68dd8572ca668fd6910317d17839e9432d0b111c7ae1b",
   "git": {
-    "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
+    "commit": "852140f7c0babf24a8ba61a8c10d86f2fd95f632",
     "dirty_paths": [],
     "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
     "worktree_dirty": false
@@ -69,7 +69,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+          "artifact_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -79,7 +79,7 @@
             }
           ],
           "declared_git": {
-            "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
+            "commit": "92dc31ecca8d497a0a3b375833efbb0f00f0347b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -153,14 +153,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1435.686,
+            "sim_wall_s": 1671.215,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1437.696,
+            "wall_s": 1673.897,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -276,7 +276,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
+        "commit": "852140f7c0babf24a8ba61a8c10d86f2fd95f632",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -306,9 +306,9 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "f05fe63102561c3f913823d6a61a9f91a80997e014890467ec52a1069a227787",
+          "artifact_sha256": "61928c8e5c8667f8cc0419f3a6401b8b7b1c15ac13521701c77061dc2fa462e8",
           "declared_git": {
-            "commit": "46c5ff2941e11717701a116bcd37ca6fe0bf953d",
+            "commit": "92dc31ecca8d497a0a3b375833efbb0f00f0347b",
             "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
@@ -454,6 +454,63 @@
           "why": "the integrated run fetched 33 instruction(s) of one pass and failed closed at PC 32 with trap class 4. Every head instruction lies at PC 66 or later, so none was fetched, none was issued, and none launched"
         },
         "final_norm_in_rtl": false,
+        "head_admission_observation": {
+          "artifact": "results/rtl/abi3_g1d_head_admission.json",
+          "artifact_sha256": "2f8462709765a8a02a307db77a49cf2ef44dacca8af6eab60fc9dae96a11cb1d",
+          "declared_git": {
+            "commit": "315af74172168830a7dc6ec42375f40d233dffed",
+            "dirty_paths": [],
+            "scope": "the tree this campaign elaborated and ran from",
+            "worktree_dirty": false
+          },
+          "findings": {
+            "argmax_launched": true,
+            "argmax_launches_with_the_gate_off": 0,
+            "argmax_launches_with_the_gate_on": 1,
+            "argmax_refusal_class_when_its_own_object_was_unplaced": 4,
+            "argmax_site_pc": 70,
+            "final_fault_pc": 71,
+            "final_placement_table_entry_count": 19,
+            "final_placement_table_objects": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              27,
+              36,
+              45,
+              55,
+              64,
+              71,
+              84,
+              2,
+              23,
+              186,
+              3,
+              194,
+              200
+            ],
+            "final_trap_class": 5,
+            "head_rows_the_argmax_arms_ran_at": 128,
+            "largest_weight_rows_measured_to_launch": 4096,
+            "lm_head_pc": 69,
+            "objects_added_after_the_bracket": [
+              200
+            ],
+            "refusal_is_the_weight_row_count": true,
+            "shipped_weight_rows": 151936,
+            "smallest_weight_rows_measured_to_refuse": 4097
+          },
+          "mapped_families_word_in_the_committed_vector_set": 0,
+          "one_elaboration_for_every_arm": true,
+          "present": true,
+          "simulated_cycles": 185213426,
+          "source_bound": true,
+          "status": "pass",
+          "why_it_does_not_make_a_field_true": "an arm of that campaign enters mid-program, binds objects at a declared base with nothing staged there, and compares no word against golden. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its logits to be compared. A selected token measured there is evidence that a selection happened and is not a token id, and record_token_ids is never filled from it"
+        },
         "head_named_by": "every issue site after the layer loop's back edge (PC 64), named by the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at",
         "kernel_ir": {
           "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
@@ -1269,19 +1326,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.23,
-          "hours_whole": 4.93,
+          "hours_in_concurrent_row_shards": 1.43,
+          "hours_whole": 5.74,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 35057.55993998688,
+            "macs_per_second": 30116.8000526563,
             "measured": true,
-            "simulation_wall_seconds": 1435.686,
+            "simulation_wall_seconds": 1671.215,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 17751.7
+          "seconds_whole": 20663.9
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },
@@ -1355,7 +1412,7 @@
       "execution": {
         "campaign": {
           "artifact": "results/rtl/abi3_shipped_prefix_campaign.json",
-          "artifact_sha256": "6f09d8840a970e5aecb3dcd9f23b59fe771cb51ce222aab32a099775e2c1dbc1",
+          "artifact_sha256": "eedbf8b4dd63d76e86c4259930aae176a1357ee4677e130a701d35176335c0d9",
           "bound_source_count": 60,
           "case_status": [
             {
@@ -1365,7 +1422,7 @@
             }
           ],
           "declared_git": {
-            "commit": "509a9039260178089d8aa6dd9bd2066b9988898b",
+            "commit": "92dc31ecca8d497a0a3b375833efbb0f00f0347b",
             "worktree_dirty": false
           },
           "drifted_source_count": 0,
@@ -1439,14 +1496,14 @@
             "pages_evicted": 88,
             "refilled_bytes": 100663296,
             "result_words": 98304,
-            "sim_wall_s": 1435.686,
+            "sim_wall_s": 1671.215,
             "source_words": 65536,
             "trace_compared_elements": 0,
             "trace_divergence_index": -1,
             "trace_issues": 0,
             "trace_last_case_issues": 5,
             "trace_uncompared_fields": "none",
-            "wall_s": 1437.696,
+            "wall_s": 1673.897,
             "weight_image_bytes": 50331648,
             "window_cap_bytes": 8388608,
             "window_page_bytes": 1048576,
@@ -1562,7 +1619,7 @@
         "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
       },
       "git": {
-        "commit": "735a2eebf3ab59bfe79be4738488af5a04dfd5d1",
+        "commit": "852140f7c0babf24a8ba61a8c10d86f2fd95f632",
         "dirty_paths": [],
         "scope": "the tree THIS artifact was derived in. It is not a claim about the tree either run happened in; see execution.control_plane_run and handoff.integrated_campaign for those.",
         "worktree_dirty": false
@@ -1592,9 +1649,9 @@
         "compared_logits": 0,
         "entry_probe_observation": {
           "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
-          "artifact_sha256": "f05fe63102561c3f913823d6a61a9f91a80997e014890467ec52a1069a227787",
+          "artifact_sha256": "61928c8e5c8667f8cc0419f3a6401b8b7b1c15ac13521701c77061dc2fa462e8",
           "declared_git": {
-            "commit": "46c5ff2941e11717701a116bcd37ca6fe0bf953d",
+            "commit": "92dc31ecca8d497a0a3b375833efbb0f00f0347b",
             "worktree_dirty": false
           },
           "head_sites_that_dispatched": [
@@ -1740,6 +1797,63 @@
           "why": "the integrated run fetched 33 instruction(s) of one pass and failed closed at PC 32 with trap class 4. Every head instruction lies at PC 66 or later, so none was fetched, none was issued, and none launched"
         },
         "final_norm_in_rtl": false,
+        "head_admission_observation": {
+          "artifact": "results/rtl/abi3_g1d_head_admission.json",
+          "artifact_sha256": "2f8462709765a8a02a307db77a49cf2ef44dacca8af6eab60fc9dae96a11cb1d",
+          "declared_git": {
+            "commit": "315af74172168830a7dc6ec42375f40d233dffed",
+            "dirty_paths": [],
+            "scope": "the tree this campaign elaborated and ran from",
+            "worktree_dirty": false
+          },
+          "findings": {
+            "argmax_launched": true,
+            "argmax_launches_with_the_gate_off": 0,
+            "argmax_launches_with_the_gate_on": 1,
+            "argmax_refusal_class_when_its_own_object_was_unplaced": 4,
+            "argmax_site_pc": 70,
+            "final_fault_pc": 71,
+            "final_placement_table_entry_count": 19,
+            "final_placement_table_objects": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              13,
+              15,
+              27,
+              14,
+              37,
+              28
+            ],
+            "final_trap_class": 5,
+            "head_rows_the_argmax_arms_ran_at": 128,
+            "largest_weight_rows_measured_to_launch": 4096,
+            "lm_head_pc": 69,
+            "objects_added_after_the_bracket": [
+              28
+            ],
+            "refusal_is_the_weight_row_count": true,
+            "shipped_weight_rows": 151936,
+            "smallest_weight_rows_measured_to_refuse": 4097
+          },
+          "mapped_families_word_in_the_committed_vector_set": 0,
+          "one_elaboration_for_every_arm": true,
+          "present": true,
+          "simulated_cycles": 185213426,
+          "source_bound": true,
+          "status": "pass",
+          "why_it_does_not_make_a_field_true": "an arm of that campaign enters mid-program, binds objects at a declared base with nothing staged there, and compares no word against golden. G1d asks for the head to execute ON THE COMPOSED TRUNK OUTPUT and for its logits to be compared. A selected token measured there is evidence that a selection happened and is not a token id, and record_token_ids is never filled from it"
+        },
         "head_named_by": "every issue site after the layer loop's back edge (PC 64), named by the certified Kernel IR kernel each OPERATOR descriptor's source_kernel_id points at",
         "kernel_ir": {
           "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
@@ -2555,19 +2669,19 @@
           "why_that_is_exact": "each output element's complete reduction over 4096 terms happens inside one shard, so no accumulator is split and no partial sum is ever re-associated. Sharding the REDUCTION axis instead would split accumulators and is what the falsification control below exercises"
         },
         "what_running_the_head_would_cost": {
-          "hours_in_concurrent_row_shards": 1.23,
-          "hours_whole": 4.93,
+          "hours_in_concurrent_row_shards": 1.43,
+          "hours_whole": 5.74,
           "mac_count": 622329856,
           "measured_integrated_rate": {
             "caveat": "this is the rate THAT run measured, on a machine other work was sharing. Another run of the same vehicle on a quieter box measures a higher one; the figure is reported with the run it came from rather than as a property of the design",
             "mac_count": 50331648,
-            "macs_per_second": 35057.55993998688,
+            "macs_per_second": 30116.8000526563,
             "measured": true,
-            "simulation_wall_seconds": 1435.686,
+            "simulation_wall_seconds": 1671.215,
             "source": "results/rtl/abi3_shipped_prefix_campaign.json: its own matmul_mac_count and the sim_wall_s of its MEASURE line"
           },
           "note": "derived: the head's own multiply-accumulates at the rate the integrated vehicle itself measured. The shard figure is wall time with the shards run concurrently, which is exact because the shards share no accumulator -- see shard_plan. It is what the head would cost, not what this rung cost, which ran no head at all",
-          "seconds_whole": 17751.7
+          "seconds_whole": 20663.9
         },
         "why_null": "mismatched_logits is null, not 0: zero logits were compared because the head never ran. Zero mismatches over zero comparisons is not evidence"
       },
