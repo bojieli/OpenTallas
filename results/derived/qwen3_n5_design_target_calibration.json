@@ -121,7 +121,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -129,7 +129,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -137,7 +137,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -145,7 +145,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -153,7 +153,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -161,7 +161,7 @@
           "block": "lane",
           "case": 61,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -169,7 +169,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -177,7 +177,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -185,7 +185,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -193,7 +193,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L1",
-          "first_retire_cycle": 24,
+          "first_retire_cycle": 27,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -201,7 +201,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -209,7 +209,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -217,7 +217,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -225,7 +225,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L2",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -233,7 +233,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -241,7 +241,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "iverilog"
         },
@@ -249,7 +249,7 @@
           "block": "lane_groups",
           "case": 40,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -257,7 +257,7 @@
           "block": "lane_groups",
           "case": 41,
           "depth": "L3",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 1,
           "simulator": "verilator"
         },
@@ -265,7 +265,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -273,7 +273,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -281,7 +281,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -289,7 +289,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -297,7 +297,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -305,7 +305,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L1",
-          "first_retire_cycle": 25,
+          "first_retire_cycle": 28,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -313,7 +313,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -321,7 +321,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -329,7 +329,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -337,7 +337,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -345,7 +345,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -353,7 +353,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L2",
-          "first_retire_cycle": 26,
+          "first_retire_cycle": 29,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -361,7 +361,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -369,7 +369,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -377,7 +377,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "iverilog"
         },
@@ -385,7 +385,7 @@
           "block": "lq8",
           "case": 93,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -393,7 +393,7 @@
           "block": "lq8",
           "case": 94,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "verilator"
         },
@@ -401,7 +401,7 @@
           "block": "lq8",
           "case": 95,
           "depth": "L3",
-          "first_retire_cycle": 27,
+          "first_retire_cycle": 30,
           "lanes": 8,
           "simulator": "verilator"
         }
@@ -452,11 +452,11 @@
       "routed": {
         "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json": {
           "clock_period_ns": 6.0,
-          "fmax_hz": 199653000.0
+          "fmax_hz": 392518000.0
         },
         "results/physical_abi3/asap7/a3_lq8_array/pnr.json": {
           "clock_period_ns": 16.0,
-          "fmax_hz": 137817000.0
+          "fmax_hz": 140285000.0
         },
         "results/physical_abi3/asap7/a3_microsequencer/pnr.json": {
           "clock_period_ns": 4.4,
@@ -1701,19 +1701,19 @@
       },
       "lane": {
         "all_within_band": true,
-        "max": 1.000009536591584,
+        "max": 1.000007629258716,
         "min": 1.0,
         "ratios": 18
       },
       "lane_groups": {
         "all_within_band": true,
-        "max": 1.000076284245269,
+        "max": 1.0000610264651437,
         "min": 1.0,
         "ratios": 36
       },
       "lq8": {
         "all_within_band": true,
-        "max": 1.0010556232237109,
+        "max": 1.0008118201006657,
         "min": 1.0,
         "ratios": 54
       }
@@ -1721,19 +1721,19 @@
     "per_depth": {
       "L1": {
         "all_within_band": true,
-        "max": 1.0010556232237109,
+        "max": 1.0008118201006657,
         "min": 1.0,
         "ratios": 36
       },
       "L2": {
         "all_within_band": true,
-        "max": 1.0009743423189348,
+        "max": 1.0007305787807452,
         "min": 1.0,
         "ratios": 36
       },
       "L3": {
         "all_within_band": true,
-        "max": 1.0008930746123244,
+        "max": 1.0006493506493506,
         "min": 1.0,
         "ratios": 36
       }
@@ -1769,9 +1769,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -1814,9 +1814,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -1856,11 +1856,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000009536591584,
-        "rtl_cycles": 1572889,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.000007629258716,
+        "rtl_cycles": 1572892,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -1902,9 +1902,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -1947,9 +1947,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -1989,11 +1989,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000009536591584,
-        "rtl_cycles": 1572889,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.000007629258716,
+        "rtl_cycles": 1572892,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572887,
+        "rtl_last_retire_cycle": 1572890,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2035,9 +2035,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2080,9 +2080,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2122,11 +2122,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000008900813153,
-        "rtl_cycles": 1572890,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000069934827098,
+        "rtl_cycles": 1572893,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2168,9 +2168,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2213,9 +2213,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2255,11 +2255,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000008900813153,
-        "rtl_cycles": 1572890,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000069934827098,
+        "rtl_cycles": 1572893,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572888,
+        "rtl_last_retire_cycle": 1572891,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2301,9 +2301,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2346,9 +2346,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2388,11 +2388,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0000082650355302,
-        "rtl_cycles": 1572891,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0000063577075124,
+        "rtl_cycles": 1572894,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2434,9 +2434,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1572864,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2479,9 +2479,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2521,11 +2521,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0000082650355302,
-        "rtl_cycles": 1572891,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0000063577075124,
+        "rtl_cycles": 1572894,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 1572864,
-        "rtl_last_retire_cycle": 1572889,
+        "rtl_last_retire_cycle": 1572892,
         "rtl_products": 1572864,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -2567,9 +2567,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2612,9 +2612,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2654,11 +2654,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0000381445474913,
-        "rtl_cycles": 393241,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.0000305154051938,
+        "rtl_cycles": 393244,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2700,9 +2700,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -2745,9 +2745,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -2787,11 +2787,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.000076284245269,
-        "rtl_cycles": 196633,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.0000610264651437,
+        "rtl_cycles": 196636,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -2833,9 +2833,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2878,9 +2878,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2920,11 +2920,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0000381445474913,
-        "rtl_cycles": 393241,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.0000305154051938,
+        "rtl_cycles": 393244,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393239,
+        "rtl_last_retire_cycle": 393242,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -2966,9 +2966,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3011,9 +3011,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 24,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3053,11 +3053,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.000076284245269,
-        "rtl_cycles": 196633,
-        "rtl_first_retire_cycle": 24,
+        "ratio_model_over_rtl": 1.0000610264651437,
+        "rtl_cycles": 196636,
+        "rtl_first_retire_cycle": 27,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196631,
+        "rtl_last_retire_cycle": 196634,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3099,9 +3099,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3144,9 +3144,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3186,11 +3186,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.000035601487125,
-        "rtl_cycles": 393242,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000279723836285,
+        "rtl_cycles": 393245,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3232,9 +3232,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3277,9 +3277,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3319,11 +3319,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0000711982668307,
-        "rtl_cycles": 196634,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000559406418934,
+        "rtl_cycles": 196637,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3365,9 +3365,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3410,9 +3410,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3452,11 +3452,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.000035601487125,
-        "rtl_cycles": 393242,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000279723836285,
+        "rtl_cycles": 393245,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393240,
+        "rtl_last_retire_cycle": 393243,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3498,9 +3498,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3543,9 +3543,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3585,11 +3585,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0000711982668307,
-        "rtl_cycles": 196634,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0000559406418934,
+        "rtl_cycles": 196637,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196632,
+        "rtl_last_retire_cycle": 196635,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3631,9 +3631,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3676,9 +3676,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3718,11 +3718,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0000330584396926,
-        "rtl_cycles": 393243,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0000254293749968,
+        "rtl_cycles": 393246,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3764,9 +3764,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3809,9 +3809,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3851,11 +3851,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0000661123401227,
-        "rtl_cycles": 196635,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.000050854870371,
+        "rtl_cycles": 196638,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -3897,9 +3897,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 393216,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3942,9 +3942,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -3984,11 +3984,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0000330584396926,
-        "rtl_cycles": 393243,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0000254293749968,
+        "rtl_cycles": 393246,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 393241,
+        "rtl_last_retire_cycle": 393244,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4030,9 +4030,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 196608,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4075,9 +4075,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4117,11 +4117,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0000661123401227,
-        "rtl_cycles": 196635,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.000050854870371,
+        "rtl_cycles": 196638,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 196633,
+        "rtl_last_retire_cycle": 196636,
         "rtl_products": 786432,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4163,9 +4163,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4208,9 +4208,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4250,11 +4250,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000264340470526,
-        "rtl_cycles": 49179,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.000203326420235,
+        "rtl_cycles": 49182,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4296,9 +4296,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4341,9 +4341,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4383,11 +4383,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0005283908466447,
-        "rtl_cycles": 24603,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0004064049418842,
+        "rtl_cycles": 24606,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4429,9 +4429,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4474,9 +4474,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4516,11 +4516,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0010556232237109,
-        "rtl_cycles": 12315,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0008118201006657,
+        "rtl_cycles": 12318,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4562,9 +4562,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4607,9 +4607,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4649,11 +4649,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.000264340470526,
-        "rtl_cycles": 49179,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.000203326420235,
+        "rtl_cycles": 49182,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49176,
+        "rtl_last_retire_cycle": 49179,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -4695,9 +4695,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4740,9 +4740,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4782,11 +4782,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0005283908466447,
-        "rtl_cycles": 24603,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0004064049418842,
+        "rtl_cycles": 24606,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24600,
+        "rtl_last_retire_cycle": 24603,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -4828,9 +4828,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4873,9 +4873,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 25,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4915,11 +4915,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0010556232237109,
-        "rtl_cycles": 12315,
-        "rtl_first_retire_cycle": 25,
+        "ratio_model_over_rtl": 1.0008118201006657,
+        "rtl_cycles": 12318,
+        "rtl_first_retire_cycle": 28,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12312,
+        "rtl_last_retire_cycle": 12315,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -4961,9 +4961,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5006,9 +5006,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5048,11 +5048,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0002440016266776,
-        "rtl_cycles": 49180,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0001829900575403,
+        "rtl_cycles": 49183,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5094,9 +5094,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5139,9 +5139,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5181,11 +5181,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0004877255730775,
-        "rtl_cycles": 24604,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.000365749583452,
+        "rtl_cycles": 24607,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5227,9 +5227,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5272,9 +5272,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5314,11 +5314,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0009743423189348,
-        "rtl_cycles": 12316,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0007305787807452,
+        "rtl_cycles": 12319,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5360,9 +5360,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5405,9 +5405,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5447,11 +5447,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0002440016266776,
-        "rtl_cycles": 49180,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0001829900575403,
+        "rtl_cycles": 49183,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49177,
+        "rtl_last_retire_cycle": 49180,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5493,9 +5493,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5538,9 +5538,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5580,11 +5580,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0004877255730775,
-        "rtl_cycles": 24604,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.000365749583452,
+        "rtl_cycles": 24607,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24601,
+        "rtl_last_retire_cycle": 24604,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5626,9 +5626,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5671,9 +5671,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 26,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5713,11 +5713,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0009743423189348,
-        "rtl_cycles": 12316,
-        "rtl_first_retire_cycle": 26,
+        "ratio_model_over_rtl": 1.0007305787807452,
+        "rtl_cycles": 12319,
+        "rtl_first_retire_cycle": 29,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12313,
+        "rtl_last_retire_cycle": 12316,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -5759,9 +5759,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5804,9 +5804,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5846,11 +5846,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0002236636099306,
-        "rtl_cycles": 49181,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0001626545217956,
+        "rtl_cycles": 49184,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -5892,9 +5892,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5937,9 +5937,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -5979,11 +5979,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0004470636049583,
-        "rtl_cycles": 24605,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0003250975292588,
+        "rtl_cycles": 24608,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -6025,9 +6025,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6070,9 +6070,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6112,11 +6112,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0008930746123244,
-        "rtl_cycles": 12317,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0006493506493506,
+        "rtl_cycles": 12320,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6158,9 +6158,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 49152,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -6203,9 +6203,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 1024.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -6245,11 +6245,11 @@
           "products_per_lane_cycle": 1.0,
           "work_units_per_lane_cycle": 2.0
         },
-        "ratio_model_over_rtl": 1.0002236636099306,
-        "rtl_cycles": 49181,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0001626545217956,
+        "rtl_cycles": 49184,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 393216,
-        "rtl_last_retire_cycle": 49178,
+        "rtl_last_retire_cycle": 49181,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 1.0,
         "shape": {
@@ -6291,9 +6291,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 24576,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -6336,9 +6336,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 512.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -6378,11 +6378,11 @@
           "products_per_lane_cycle": 2.0,
           "work_units_per_lane_cycle": 4.0
         },
-        "ratio_model_over_rtl": 1.0004470636049583,
-        "rtl_cycles": 24605,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0003250975292588,
+        "rtl_cycles": 24608,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 196608,
-        "rtl_last_retire_cycle": 24602,
+        "rtl_last_retire_cycle": 24605,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 2.0,
         "shape": {
@@ -6424,9 +6424,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 12288,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6469,9 +6469,9 @@
         },
         "ratio_model_over_rtl": 1.0,
         "rtl_cycles": 256.0,
-        "rtl_first_retire_cycle": 27,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6511,11 +6511,11 @@
           "products_per_lane_cycle": 4.0,
           "work_units_per_lane_cycle": 8.0
         },
-        "ratio_model_over_rtl": 1.0008930746123244,
-        "rtl_cycles": 12317,
-        "rtl_first_retire_cycle": 27,
+        "ratio_model_over_rtl": 1.0006493506493506,
+        "rtl_cycles": 12320,
+        "rtl_first_retire_cycle": 30,
         "rtl_lane_ops": 98304,
-        "rtl_last_retire_cycle": 12314,
+        "rtl_last_retire_cycle": 12317,
         "rtl_products": 393216,
         "rtl_products_per_lane_window_cycle": 4.0,
         "shape": {
@@ -6535,7 +6535,7 @@
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "b801e4673b8092dc3f10501168bcd3e3055575b2",
+    "commit": "c3721c037aa359f82122bb232165b9e7c434f4da",
     "dirty": false,
     "dirty_inputs": [],
     "dirty_paths": []
@@ -6560,7 +6560,7 @@
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "53b43eafecc6682746032c30c1d18babfb62a6c68ebd8adb61a8383323dfe6c4"
+      "sha256": "f37026b9d686bcc6e7d6ece7a98000acf49c5f57093764fe1322fa5a7ebd602f"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
       "sha256": "a744b2b7bf14ccbb8739b4c403bffc86f322e46f867ce54456aa77e7e0b6fe81"
@@ -6569,10 +6569,10 @@
       "sha256": "a103c994bcbe5b36dfb27446c71f35db6756b0b649f81ed3da9aa54f3aafabdd"
     },
     "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json": {
-      "sha256": "eee87c1aeab04a47838ab4e58dc584ac91c90ecb7846b91c05b398cda2f270a7"
+      "sha256": "7c90d2b6219d02f56c8b3813c91c8548c5d1dc0598d89a9bf06ce7ef3ba6164d"
     },
     "results/physical_abi3/asap7/a3_lq8_array/pnr.json": {
-      "sha256": "9855d535e193542d718dec2160515a36c9686a4444f2ed09e2a04e4e6db7af4e"
+      "sha256": "cb8465b449967d2bba4a4be395d17201228b2bdadbf794c685e4e4eb6222e1bc"
     },
     "results/physical_abi3/asap7/a3_microsequencer/pnr.json": {
       "sha256": "b3ae9772b3d0fe851531fbc5b334ad870773013a33b8d68407903c5f7f4176d2"
@@ -6587,13 +6587,13 @@
       "sha256": "37b030e70b131e55cf08ba957ed2347227ec1550a47c157adcc76f8669d6263c"
     },
     "results/rtl/abi3_lq8.json": {
-      "sha256": "68a8c5b1980a45c4ed33bbc986a2e3d129cd8806ba09ed81b01b88eafbdc24c0"
+      "sha256": "8abc474e455a01598b233fa5a9c06b35c1735cfcb54b2e1302cb10285c29b1cd"
     },
     "results/rtl/abi3_pipelined_lane.json": {
-      "sha256": "25b3f398dc038a5e2f4472edc20c1433f1a642dd6609fe568d97a075eb14c162"
+      "sha256": "18f529a2b85a883f548e5f5dfce00eb84ca2a9811cd2d9218653a3e6040bee7b"
     },
     "results/rtl/abi3_pipelined_lane_groups.json": {
-      "sha256": "356e09286979269f551af0374edc2316e059e4a6649f09c557d5b12e8c1e6be1"
+      "sha256": "cff577c9b600e54fa07720f9c8e40fe39f3051d72aa0b1839e5b863492fb2c67"
     },
     "runtime/cycle/machine.py": {
       "sha256": "8e8fe08c576c1ba6c491e20966fc647bf2a9bcc8abc3c2efcbf8542cc66a10df"
