@@ -34,3 +34,17 @@ results/roofline/speculative/*/analytical.json
 # committed images, so it is bound by content without being stored.
 testdata/rtl/a3_operator_admission/weights.hex
 testdata/rtl/a3_operator_admission_hbm/weights.hex
+
+# Claude Code's per-session worktree metadata: tool state, not project content.
+.claude/
+
+# Routed-artifact convention (results/physical_abi3/*/*/pnr_artifacts/) keeps the
+# whole ORFS bundle, netlists included, because for the small engines that bundle
+# is ~1.8 MB. The microsequencer's is 107 MB -- 1_2_yosys.v is 60 MB and
+# 6_final.v is 47 MB -- and Verilog netlists do not delta-compress, so storing
+# them would permanently bloat the repository for evidence that config.mk plus
+# the pinned sources already regenerate. The REPORTS are what the evidence cites
+# (6_finish.rpt carries "max slew violation count 3204"; 5_route_drc.rpt is empty,
+# i.e. zero routing DRC), so those stay tracked and only the netlists are ignored.
+results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/6_final.v
