@@ -39,7 +39,13 @@ module ot_a3_microsequencer_top
 #(
     parameter integer PROGRAM_WORDS = 2048,
     parameter integer DESC_WORDS    = 4096,
-    parameter integer STATE_COMPAT  = 1
+    parameter integer STATE_COMPAT  = 1,
+    // Instruction-CRC re-validation policy; 0 keeps the recurrence on
+    // every fetch, which is what this design has always done.
+    parameter integer CRC_CACHE     = 0,
+    parameter integer CRC_PERIOD    = 0,
+    parameter integer CRC_CACHE_ENTRIES = 2048,
+    parameter integer FAST_FRONT_END = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -221,7 +227,11 @@ module ot_a3_microsequencer_top
     ot_a3_device_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
         .DESC_WORDS(DESC_WORDS),
-        .STATE_COMPAT(STATE_COMPAT)
+        .STATE_COMPAT(STATE_COMPAT),
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
+        .FAST_FRONT_END(FAST_FRONT_END)
     ) device (
         .clk(clk),
         .rst_n(rst_n),

@@ -37,6 +37,13 @@
 // tools/rtl_abi3_device_top_host_load.py.
 // ---------------------------------------------------------------------------
 module tb_a3_device_top_host_load;
+    // Instruction-CRC re-validation policy under test; 0/0 is the design as
+    // it has always been.  The empty-store case below is the reason
+    // ot_a3_microsequencer.sv kept the CRC at fetch, so it is run against
+    // both builds (-Ptb_a3_device_top_host_load.CRC_CACHE=1).
+    parameter integer CRC_CACHE  = 0;
+    parameter integer CRC_PERIOD = 0;
+
     localparam integer PROGRAM_WORDS = 128;
     localparam integer DESC_WORDS    = 256;
     localparam integer IMAGE_PROGRAM_WORDS = 4096;
@@ -227,7 +234,10 @@ module tb_a3_device_top_host_load;
     ot_a3_device_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
         .DESC_WORDS(DESC_WORDS),
-        .STATE_COMPAT(0)
+        .STATE_COMPAT(0),
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .CRC_CACHE_ENTRIES(128)
     ) dut (
         .clk(clk),
         .rst_n(rst_n),

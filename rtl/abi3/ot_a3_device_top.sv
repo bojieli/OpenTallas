@@ -75,7 +75,15 @@ module ot_a3_device_top #(
     // 1 elaborates the compatibility STATE controller (the sibling
     // microsequencer campaign); 0 is the production profile every shipped
     // deployment campaign runs.
-    parameter integer STATE_COMPAT  = 1
+    parameter integer STATE_COMPAT  = 1,
+    // Instruction-CRC re-validation policy; 0 keeps the recurrence on
+    // every fetch, which is what this design has always done.
+    parameter integer CRC_CACHE     = 0,
+    parameter integer CRC_PERIOD    = 0,
+    parameter integer CRC_CACHE_ENTRIES = 2048,
+    // Front-end request scheduling; passed through to the microsequencer.
+    // 0 rebuilds the pre-parameter front end exactly.
+    parameter integer FAST_FRONT_END = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -457,7 +465,11 @@ module ot_a3_device_top #(
 
     // -- the microsequencer ---------------------------------------------------
     ot_a3_microsequencer #(
-        .STATE_COMPAT(STATE_COMPAT)
+        .STATE_COMPAT(STATE_COMPAT),
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
+        .FAST_FRONT_END(FAST_FRONT_END)
     ) sequencer (
         .clk(clk),
         .rst_n(rst_n),

@@ -80,6 +80,39 @@
 // no predicate value cache; no node-band predication (AM-R4); frontier
 // streaming is frontier 0 (section 3.6, non-architectural).
 //
+// RE-VALIDATION OF A RE-FETCHED RECORD (``CRC_CACHE`` / ``CRC_PERIOD``).
+// The front end re-runs the eight-beat instruction CRC on every fetch,
+// including every re-fetch of a loop body.  The Qwen decode token fetches
+// 2,104 records out of a 74-instruction body, so 2,030 of those 2,104
+// recurrences re-check bits this block has already checked in this same
+// transaction.  Nothing in the frozen ABI asks for that: wire format section
+// 1 says invalid CRCs "fail before work is issued" and section 2 says "every
+// instruction CRC must pass" -- both are validate-before-act obligations on a
+// record, not per-fetch obligations.  docs/CHIP_ARCHITECTURE_DESIGN.md
+// section 3.4 is more explicit still: the program store is "written only by
+// the management processor after the body SHA-256 and every instruction CRC
+// have passed", and post-load corruption of the store is caught by the
+// store's SECDED, which "traps 2" -- not by re-running the checksum.
+//
+// ``CRC_CACHE = 0`` keeps the recurrence on every fetch and is the build this
+// block has always been.  ``CRC_CACHE = 1`` keeps one bit per instruction
+// index saying "this index's CRC has been run and passed since this
+// transaction started", and a hit admits the record without the recurrence.
+// The bit vector is cleared at every ``start``, so it never spans a program
+// load and never outlives one transaction.  ``CRC_PERIOD`` bounds the
+// exposure further: 0 validates an index once per transaction, K >= 2
+// re-validates it on every Kth fetch.
+//
+// What is skipped is exactly the 32-bit checksum.  The opcode, subopcode,
+// reserved-flag, predicate-flag, predicate-ID and branch-target checks are
+// combinational in the record and are re-evaluated on every fetch in both
+// builds.  What is given up with CRC_CACHE = 1 is stated once, plainly: a bit
+// that flips IN the program store after an index's validating fetch and
+// before its last fetch of the same transaction is no longer caught by this
+// block, because the record is no longer re-checksummed -- that is the case
+// section 3.4 assigns to the store's SECDED, which this RTL does not yet
+// implement.
+//
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer
@@ -88,7 +121,30 @@ module ot_a3_microsequencer
     // and contain no STATE descriptors or instructions.  Keeping the legacy
     // controller behind a parameter preserves ABI 3.0 compatibility tests
     // without forcing its slot file or apply path into the shipped profile.
-    parameter integer STATE_COMPAT = 1
+    parameter integer STATE_COMPAT = 1,
+    // 0 re-runs the instruction CRC on every fetch, exactly as before.
+    parameter integer CRC_CACHE = 0,
+    // 0 = validate an index once per transaction; K >= 2 = every Kth fetch of
+    // that index; 1 = never skip (equivalent to CRC_CACHE = 0).
+    parameter integer CRC_PERIOD = 0,
+    // Instruction indexes covered by the vector.  A pc at or above this always
+    // takes the full recurrence, so a short vector loses cycles, never checks.
+    parameter integer CRC_CACHE_ENTRIES = 2048,
+    // Front-end request scheduling.  ``FAST_FRONT_END = 0`` rebuilds the
+    // front end exactly as it was before this parameter: one state per
+    // decision, each request registered by the state that decided to make
+    // it, so the store sees it a cycle after the decision and the wait state
+    // costs two cycles.  ``FAST_FRONT_END = 1`` launches each request from
+    // the state that already held the operand a cycle earlier and deletes
+    // the pure-decision states (S_DECODE_PUSH, S_PRED_REQ, S_WAIT_REQ,
+    // S_LOOP_SYM), which removes four cycles per instruction and one per
+    // LOOP_SETUP.  It moves no logic onto a memory address or enable path:
+    // every request signal stays a register output, ``imem_index`` is
+    // maintained as program_base + pc by a single adder, and the only new
+    // combinational logic is one 32-bit equality (the wait-set ID against
+    // A3_NO_ID) between two registers.  Both builds are driven from one
+    // stimulus by rtl/test/tb_a3_front_end_equiv.sv.
+    parameter integer FAST_FRONT_END = 0
 )
 (
     input  wire          clk,
@@ -301,6 +357,36 @@ module ot_a3_microsequencer
     wire [63:0] sym_value = sym_values[sym_index_q*64 +: 64];
     wire        sym_bound = sym_bounds[sym_index_q];
 
+    // -- validated-record vector (CRC_CACHE) -----------------------------
+    // One bit per instruction index: "the CRC of the record at this index has
+    // been run by the decoder and passed, since this transaction started".
+    // Cleared on reset and on every start pulse, so a hit can never refer to
+    // a program the host loaded after the bit was set.
+    localparam integer CRC_IDX_W  = (CRC_CACHE_ENTRIES < 2) ? 1 : $clog2(CRC_CACHE_ENTRIES);
+    localparam integer CRC_PHASE_W = (CRC_PERIOD < 2) ? 1 : $clog2(CRC_PERIOD);
+
+    // Both are packed vectors rather than unpacked arrays so the clear at
+    // start is one assignment, not a loop: a delayed assignment to an array
+    // inside a for loop is not accepted by every simulator this program
+    // pins, and the vector form is also what synthesis wants here.
+    reg  [CRC_CACHE_ENTRIES-1:0]              crc_valid_vec;
+    reg  [CRC_CACHE_ENTRIES*CRC_PHASE_W-1:0]  crc_phase_vec;
+
+    // pc is the index; a pc outside the vector is never cached.
+    wire                  crc_in_range = (CRC_CACHE != 0) &&
+                                         (pc < CRC_CACHE_ENTRIES[31:0]);
+    wire [CRC_IDX_W-1:0]  crc_idx      = pc[CRC_IDX_W-1:0];
+    // Registered one fetch state ahead of use: the vector read is resolved
+    // during S_CHECK_PC and consumed at S_DECODE_PUSH, two states later, so
+    // the read multiplexer is never in the same cycle as the decoder handshake.
+    reg                   crc_hit_q;
+    reg                   crc_cached_q;   // this fetch's index is in the vector
+    reg  [CRC_IDX_W-1:0]  crc_idx_q;
+
+    // Counted, not asserted: both checkers read these out of the design.
+    reg  [31:0]           dbg_crc_full;
+    reg  [31:0]           dbg_crc_skipped;
+
     // -- instruction decoder --------------------------------------------
     reg         dec_in_valid;
     wire        dec_in_ready;
@@ -319,7 +405,7 @@ module ot_a3_microsequencer
     wire [31:0] dec_source_operation_id;
     wire [31:0] dec_index;
 
-    ot_a3_instruction_decoder decoder (
+    ot_a3_instruction_decoder #(.CRC_CACHE(CRC_CACHE)) decoder (
         .clk(clk),
         .rst_n(rst_n),
         .in_valid(dec_in_valid),
@@ -327,6 +413,7 @@ module ot_a3_microsequencer
         .in_record(record),
         .in_index(pc),
         .in_instruction_count(instruction_count),
+        .in_crc_validated(crc_hit_q),
         .out_valid(dec_out_valid),
         .out_ready(1'b1),
         .out_legal(dec_out_legal),
@@ -397,6 +484,11 @@ module ot_a3_microsequencer
     wire [31:0] loop_body_start = loop_payload[255:224];
     wire [31:0] loop_body_end   = loop_payload[287:256];
     wire [31:0] loop_divisor    = loop_payload[351:320];
+    // The same two fields taken straight off the descriptor word, one cycle
+    // before loop_payload is readable, so S_LOOP_SYM's work can happen in
+    // S_LOOP_WAIT (FAST_FRONT_END).  Slices of a store output, no logic.
+    wire [7:0]  desc_loop_kind   = desc_payload[15:8];
+    wire [31:0] desc_loop_symbol = desc_payload[223:192];
 
     ot_a3_loop_stack #(.QUERY_PORTS(7)) loops (
         .clk(clk),
@@ -951,6 +1043,45 @@ module ot_a3_microsequencer
         end
     endtask
 
+    // Start the fetch of the instruction at ``next_index`` (already
+    // program_base + pc) and enter the bound/watchdog check.  Under
+    // FAST_FRONT_END the request is registered here, one state before
+    // S_CHECK_PC, so it is on the wire *during* the check and the store's
+    // one-cycle answer lands in the first S_FETCH_WAIT cycle instead of the
+    // second.  The checks themselves do not move and neither does the cycle
+    // they trap in; what changes is that a fetch the checks then reject has
+    // already been presented to the store, which for a read-only port is one
+    // ignored read on the one instruction that traps.  The address is one
+    // 32-bit add or increment away from a register in every caller, never an
+    // add chain, so nothing lengthens.
+    task launch_fetch;
+        input [31:0] next_index;
+        begin
+            if (FAST_FRONT_END != 0) begin
+                imem_req   <= 1'b1;
+                imem_index <= next_index;
+            end
+            state <= S_CHECK_PC;
+        end
+    endtask
+
+    // Enter the wait stage.  S_WAIT_REQ exists only to read a register the
+    // caller already holds, so under FAST_FRONT_END the caller makes the
+    // decision and launches the descriptor read itself.
+    task enter_wait_stage;
+        begin
+            if (FAST_FRONT_END == 0) begin
+                state <= S_WAIT_REQ;
+            end else if (ins_wait_set_id != ot_a3_pkg::A3_NO_ID) begin
+                seq_desc_req <= 1'b1;
+                seq_desc_id <= ins_wait_set_id;
+                state <= S_WAIT_WAIT;
+            end else begin
+                state <= S_DISPATCH;
+            end
+        end
+    endtask
+
     // A precise front-end trap.  Applied at once when nothing is outstanding;
     // otherwise held, because an outstanding operation that faults has the
     // lower serial and wins (section 3.2 item 5).
@@ -1118,6 +1249,13 @@ module ot_a3_microsequencer
             dep_check1_hi <= 40'd0;
             dep_check1_write <= 1'b0;
             dec_in_valid <= 1'b0;
+            crc_valid_vec <= {CRC_CACHE_ENTRIES{1'b0}};
+            crc_phase_vec <= {(CRC_CACHE_ENTRIES*CRC_PHASE_W){1'b0}};
+            crc_hit_q <= 1'b0;
+            crc_cached_q <= 1'b0;
+            crc_idx_q <= {CRC_IDX_W{1'b0}};
+            dbg_crc_full <= 32'd0;
+            dbg_crc_skipped <= 32'd0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
             loop_query_id_q <= ot_a3_pkg::A3_NO_ID;
@@ -1211,6 +1349,15 @@ module ot_a3_microsequencer
                         pc <= cfg_entry_pc;
                         program_base <= cfg_program_base;
                         instruction_count <= cfg_instruction_count;
+                        // A validated bit never spans a transaction, so it can
+                        // never refer to a program image the host replaced
+                        // between transactions.
+                        crc_valid_vec <= {CRC_CACHE_ENTRIES{1'b0}};
+                        crc_phase_vec <= {(CRC_CACHE_ENTRIES*CRC_PHASE_W){1'b0}};
+                        crc_hit_q <= 1'b0;
+                        crc_cached_q <= 1'b0;
+                        dbg_crc_full <= 32'd0;
+                        dbg_crc_skipped <= 32'd0;
                         work_bound <= cfg_max_retired_work;
                         state_count <= cfg_state_count;
                         serial <= 32'd0;
@@ -1237,7 +1384,7 @@ module ot_a3_microsequencer
                             first_fault_instruction <= ot_a3_pkg::A3_NO_ID;
                             state <= S_DONE;
                         end else begin
-                            state <= S_CHECK_PC;
+                            launch_fetch(cfg_program_base + cfg_entry_pc);
                         end
                     end
                 end
@@ -1255,8 +1402,22 @@ module ot_a3_microsequencer
                         if (work_exceeded) begin
                             raise_trap(ot_a3_pkg::A3_TRAP_WATCHDOG, pc);
                         end else begin
-                            imem_req <= 1'b1;
-                            imem_index <= program_base + pc;
+                            // Resolve the validated bit here, two states before
+                            // the decoder handshake consumes it.
+                            crc_cached_q <= crc_in_range;
+                            crc_idx_q <= crc_idx;
+                            crc_hit_q <= crc_in_range && crc_valid_vec[crc_idx] &&
+                                         ((CRC_PERIOD == 0) ||
+                                          ((CRC_PERIOD >= 2) &&
+                                           (crc_phase_vec[crc_idx*CRC_PHASE_W +: CRC_PHASE_W]
+                                            != {CRC_PHASE_W{1'b0}})));
+                            // Under FAST_FRONT_END the request was registered
+                            // by the state that set this pc and is on the wire
+                            // now; there is nothing left to drive here.
+                            if (FAST_FRONT_END == 0) begin
+                                imem_req <= 1'b1;
+                                imem_index <= program_base + pc;
+                            end
                             state <= S_FETCH_WAIT;
                         end
                     end
@@ -1264,7 +1425,15 @@ module ot_a3_microsequencer
                 S_FETCH_WAIT: begin
                     if (imem_valid) begin
                         record <= imem_data;
-                        state <= S_DECODE_PUSH;
+                        if (FAST_FRONT_END != 0) begin
+                            // S_DECODE_PUSH only ever offered the record the
+                            // cycle after it arrived; ``record`` is written on
+                            // this same edge, so the offer can ride with it.
+                            dec_in_valid <= 1'b1;
+                            state <= S_DECODE_WAIT;
+                        end else begin
+                            state <= S_DECODE_PUSH;
+                        end
                     end
                 end
                 S_DECODE_PUSH: begin
@@ -1274,7 +1443,36 @@ module ot_a3_microsequencer
                     end
                 end
                 S_DECODE_WAIT: begin
+                    // The admission offer is held until the decoder takes it.
+                    // S_DECODE_PUSH sampled dec_in_ready a cycle before it
+                    // raised dec_in_valid; holding is strictly safer and, with
+                    // out_ready tied high and one instruction in flight, never
+                    // fires.
+                    if (FAST_FRONT_END != 0)
+                        if (dec_in_valid && !dec_in_ready)
+                            dec_in_valid <= 1'b1;
                     if (dec_out_valid) begin
+                        // Record what the recurrence learned about this index.
+                        // A bit is set only by a fetch that actually ran the
+                        // recurrence and saw it pass; a failed CRC leaves the
+                        // index unvalidated (and traps below anyway).
+                        if (crc_cached_q && !crc_hit_q) begin
+                            if (dec_out_error != ot_a3_pkg::A3_ERR_CRC)
+                                crc_valid_vec[crc_idx_q] <= 1'b1;
+                            crc_phase_vec[crc_idx_q*CRC_PHASE_W +: CRC_PHASE_W] <=
+                                (CRC_PERIOD >= 2) ? {{(CRC_PHASE_W-1){1'b0}}, 1'b1}
+                                                  : {CRC_PHASE_W{1'b0}};
+                        end else if (crc_cached_q && crc_hit_q) begin
+                            crc_phase_vec[crc_idx_q*CRC_PHASE_W +: CRC_PHASE_W] <=
+                                (crc_phase_vec[crc_idx_q*CRC_PHASE_W +: CRC_PHASE_W] ==
+                                 (CRC_PERIOD[CRC_PHASE_W-1:0] - 1'b1))
+                                    ? {CRC_PHASE_W{1'b0}}
+                                    : (crc_phase_vec[crc_idx_q*CRC_PHASE_W +: CRC_PHASE_W] + 1'b1);
+                        end
+                        if (crc_hit_q)
+                            dbg_crc_skipped <= dbg_crc_skipped + 32'd1;
+                        else
+                            dbg_crc_full <= dbg_crc_full + 32'd1;
                         ins_major <= dec_major;
                         ins_sub <= dec_sub;
                         ins_flags <= dec_flags;
@@ -1283,10 +1481,24 @@ module ot_a3_microsequencer
                         ins_wait_set_id <= dec_wait_set_id;
                         ins_signal_event_id <= dec_signal_event_id;
                         ins_control_id <= dec_control_id;
-                        if (!dec_out_legal)
+                        if (!dec_out_legal) begin
                             raise_trap(dec_out_trap_class, dec_index);
-                        else
+                        end else if (FAST_FRONT_END == 0) begin
                             state <= S_PRED_REQ;
+                        end else if (dec_flags[ot_a3_pkg::A3_FLAG_PREDICATED]) begin
+                            // S_PRED_REQ and S_WAIT_REQ read nothing this
+                            // cycle has not already produced, so both reads
+                            // are launched from here.
+                            seq_desc_req <= 1'b1;
+                            seq_desc_id <= dec_predicate_id;
+                            state <= S_PRED_WAIT;
+                        end else if (dec_wait_set_id != ot_a3_pkg::A3_NO_ID) begin
+                            seq_desc_req <= 1'b1;
+                            seq_desc_id <= dec_wait_set_id;
+                            state <= S_WAIT_WAIT;
+                        end else begin
+                            state <= S_DISPATCH;
+                        end
                     end
                 end
 
@@ -1327,9 +1539,9 @@ module ot_a3_microsequencer
                             if (invert) begin
                                 count_predicated_off <= count_predicated_off + 32'd1;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end else begin
-                                state <= S_WAIT_REQ;
+                                enter_wait_stage;
                             end
                         end
                         ot_a3_pkg::A3_PRED_PHASE_IS, ot_a3_pkg::A3_PRED_COMPARE_SYMBOL: begin
@@ -1340,22 +1552,22 @@ module ot_a3_microsequencer
                             end else if ((pred_kind == ot_a3_pkg::A3_PRED_PHASE_IS)
                                          ? ((pred_left == pred_immediate) ^ invert)
                                          : (pred_compare_result ^ invert)) begin
-                                state <= S_WAIT_REQ;
+                                enter_wait_stage;
                             end else begin
                                 count_predicated_off <= count_predicated_off + 32'd1;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end
                         end
                         ot_a3_pkg::A3_PRED_COMPARE_LOOP: begin
                             if (!pq_active) begin
                                 raise_trap(ot_a3_pkg::A3_TRAP_ILLEGAL, pc);
                             end else if (loop_compare_result ^ invert) begin
-                                state <= S_WAIT_REQ;
+                                enter_wait_stage;
                             end else begin
                                 count_predicated_off <= count_predicated_off + 32'd1;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end
                         end
                         ot_a3_pkg::A3_PRED_LOOP_FIRST, ot_a3_pkg::A3_PRED_LOOP_LAST: begin
@@ -1364,11 +1576,11 @@ module ot_a3_microsequencer
                                   ? (pq_value == 32'd0)
                                   : (pq_value == (pq_trip - 32'd1))))
                                 ^ invert) begin
-                                state <= S_WAIT_REQ;
+                                enter_wait_stage;
                             end else begin
                                 count_predicated_off <= count_predicated_off + 32'd1;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end
                         end
                         ot_a3_pkg::A3_PRED_BOOLEAN_OBJECT, ot_a3_pkg::A3_PRED_EOS_MEMBER: begin
@@ -1408,11 +1620,11 @@ module ot_a3_microsequencer
                         if (predicate_read_trap_class != ot_a3_pkg::A3_TRAP_NONE) begin
                             raise_trap(predicate_read_trap_class, pc);
                         end else if (predicate_read_value ^ invert) begin
-                            state <= S_WAIT_REQ;
+                            enter_wait_stage;
                         end else begin
                             count_predicated_off <= count_predicated_off + 32'd1;
                             pc <= pc + 32'd1;
-                            state <= S_CHECK_PC;
+                            launch_fetch(imem_index + 32'd1);
                         end
                     end
                 end
@@ -1458,7 +1670,7 @@ module ot_a3_microsequencer
                             ot_a3_pkg::A3_CONTROL_ASSERT: begin
                                 retire_control;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end
                             ot_a3_pkg::A3_CONTROL_FENCE: begin
                                 // AM-C2: an ENGINE-scope drain -- the scope
@@ -1471,7 +1683,7 @@ module ot_a3_microsequencer
                                 retire_control;
                                 count_branches <= count_branches + 32'd1;
                                 pc <= ins_control_id;
-                                state <= S_CHECK_PC;
+                                launch_fetch(program_base + ins_control_id);
                             end
                             ot_a3_pkg::A3_CONTROL_COMPLETE: begin
                                 // Implicit SYSTEM drain (AM-C2), then the
@@ -1517,9 +1729,25 @@ module ot_a3_microsequencer
                         if (!desc_header_ok ||
                             (desc_type != ot_a3_pkg::A3_DESC_LOOP_CONTROL)) begin
                             raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
-                        end else begin
+                        end else if (FAST_FRONT_END == 0) begin
                             loop_payload <= desc_payload;
                             state <= S_LOOP_SYM;
+                        end else begin
+                            // S_LOOP_SYM only selected the symbol from a
+                            // payload this cycle already has on its input.
+                            loop_payload <= desc_payload;
+                            if (desc_loop_symbol >= ot_a3_pkg::A3_SYMBOL_COUNT) begin
+                                sym_index_q <= 4'd0;
+                                if (desc_loop_kind != ot_a3_pkg::A3_SELECTOR_CONSTANT) begin
+                                    raise_trap(ot_a3_pkg::A3_TRAP_DESCRIPTOR, pc);
+                                end else begin
+                                    loop_setup_valid <= 1'b1;
+                                    state <= S_LOOP_DONE;
+                                end
+                            end else begin
+                                sym_index_q <= desc_loop_symbol[3:0];
+                                state <= S_LOOP_OP;
+                            end
                         end
                     end
                 end
@@ -1550,7 +1778,7 @@ module ot_a3_microsequencer
                         end else begin
                             retire_control;
                             pc <= loop_next_pc;
-                            state <= S_CHECK_PC;
+                            launch_fetch(program_base + loop_next_pc);
                         end
                     end
                 end
@@ -1751,7 +1979,7 @@ module ot_a3_microsequencer
                         irs_wdata <= snapshot_word;
                         serial <= serial + 32'd1;
                         pc <= pc + 32'd1;
-                        state <= S_CHECK_PC;
+                        launch_fetch(imem_index + 32'd1);
                     end
                 end
 
@@ -1762,7 +1990,7 @@ module ot_a3_microsequencer
                             DRAIN_RETIRE: begin
                                 retire_control;
                                 pc <= pc + 32'd1;
-                                state <= S_CHECK_PC;
+                                launch_fetch(imem_index + 32'd1);
                             end
                             DRAIN_COMPLETE: begin
                                 retire_control;

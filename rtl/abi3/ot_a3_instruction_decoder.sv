@@ -17,6 +17,23 @@
 // different, incompatible checksum; this block implements the normative
 // encoder, so word 7 is driven to zero instead of being skipped.
 //
+// SKIPPING THE RECURRENCE (``CRC_CACHE``).  ``CRC_CACHE = 0`` is the block as
+// it has always been: the eight-beat recurrence runs on every record.  With
+// ``CRC_CACHE = 1`` the caller may assert ``in_crc_validated``, which asserts
+// that THIS EXACT RECORD's CRC has already been checked and passed by this
+// block, and the recurrence is skipped -- the record is admitted in the cycle
+// after it is accepted instead of eight cycles later.  Nothing else is
+// skipped: the opcode, subopcode, reserved-flag, predicate-flag,
+// predicate-ID and branch-target checks are combinational functions of the
+// record and are re-evaluated on every fetch either way.  Only the 32-bit
+// checksum is elided, and only for a record the caller has already validated.
+//
+// The skip is a control decision, not a datapath one.  ``in_crc_validated``
+// steers the initial value of ``crc_word_index`` and one enable on the final
+// compare; it adds no term to the recurrence and no term to the structural
+// checker, so the block's combinational depth with ``CRC_CACHE = 1`` and a
+// hit is the depth it already had, minus the recurrence that is not run.
+//
 // Legality is evaluated in a fixed priority order so that a record with more
 // than one defect always reports the same trap class:
 //   integrity (CRC)  >  opcode  >  subopcode  >  reserved flag bits  >
@@ -28,6 +45,11 @@ module ot_a3_instruction_decoder
     // wildcard import is not accepted by every open synthesis front end this
     // program pins, and a block that only elaborates in a simulator is not an
     // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
+#(
+    // 0 rebuilds the block exactly as it was before the skip existed:
+    // in_crc_validated is not read and every record takes eight beats.
+    parameter integer CRC_CACHE = 0
+)
 (
     input  wire         clk,
     input  wire         rst_n,
@@ -37,6 +59,9 @@ module ot_a3_instruction_decoder
     input  wire [255:0] in_record,
     input  wire [31:0]  in_index,             // instruction index of the record
     input  wire [31:0]  in_instruction_count, // authenticated body length
+    // Asserts that this exact record's CRC has already been checked and
+    // passed by this block.  Ignored unless CRC_CACHE != 0.
+    input  wire         in_crc_validated,
 
     output reg          out_valid,
     input  wire         out_ready,
@@ -57,6 +82,7 @@ module ot_a3_instruction_decoder
     localparam [2:0] CRC_LAST_WORD = 3'd7;
 
     reg          busy;
+    reg          skip_q;          // this record was admitted on a validated hit
     reg  [2:0]   crc_word_index;
     reg  [31:0]  crc_state;
     reg  [255:0] record;
@@ -80,6 +106,9 @@ module ot_a3_instruction_decoder
                          : record[{crc_word_index, 5'b00000} +: 32];
     wire [31:0] crc_next = ot_a3_pkg::a3_crc32c_word(crc_state, crc_word);
     wire [31:0] crc_final = crc_next ^ 32'hffff_ffff;
+
+    // A hit is honoured only when the block is built with the skip.
+    wire skip_now = (CRC_CACHE != 0) && in_crc_validated;
 
     wire predicated = flags[ot_a3_pkg::A3_FLAG_PREDICATED];
     wire invert     = flags[ot_a3_pkg::A3_FLAG_PREDICATE_INVERT];
@@ -131,6 +160,7 @@ module ot_a3_instruction_decoder
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0;
+            skip_q <= 1'b0;
             crc_word_index <= 3'd0;
             crc_state <= 32'hffff_ffff;
             record <= 256'b0;
@@ -156,7 +186,13 @@ module ot_a3_instruction_decoder
 
             if (in_valid && in_ready) begin
                 busy <= 1'b1;
-                crc_word_index <= 3'd0;
+                skip_q <= skip_now;
+                // On a hit the beat counter is started AT the terminal beat,
+                // so the next cycle takes the same completion branch the
+                // eighth beat would have taken.  The recurrence registers are
+                // still initialised, and crc_state is never consumed on this
+                // path, so the two builds differ in control only.
+                crc_word_index <= skip_now ? CRC_LAST_WORD : 3'd0;
                 crc_state <= 32'hffff_ffff;
                 record <= in_record;
                 index_buffer <= in_index;
@@ -175,7 +211,12 @@ module ot_a3_instruction_decoder
                     out_signal_event_id <= signal_id;
                     out_control_id <= control_id;
                     out_source_operation_id <= source_id;
-                    if (crc_final != supplied_crc) begin
+                    // The integrity verdict is the recurrence's on a miss and
+                    // the caller's standing "this record already passed" on a
+                    // hit.  Priority is unchanged either way: a record whose
+                    // CRC fails reports class 2 and never reaches the
+                    // structural verdict below.
+                    if (!skip_q && (crc_final != supplied_crc)) begin
                         out_legal <= 1'b0;
                         out_error <= ot_a3_pkg::A3_ERR_CRC;
                         out_trap_class <= ot_a3_pkg::A3_TRAP_INTEGRITY;

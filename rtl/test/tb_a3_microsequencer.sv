@@ -28,6 +28,12 @@
 // streams the program header through the admission beat port.
 // ---------------------------------------------------------------------------
 module tb_a3_microsequencer;
+    // Instruction-CRC re-validation policy under test; 0/0 is the design as
+    // it has always been.  Overridden at elaboration so both builds exist
+    // from one source (-Ptb_a3_microsequencer.CRC_CACHE=1).
+    parameter integer CRC_CACHE  = 0;
+    parameter integer CRC_PERIOD = 0;
+
     localparam integer PROGRAM_WORDS   = 2048;
     localparam integer DESC_WORDS      = 4096;
     localparam integer HEADER_WORDS    = 8192;
@@ -139,7 +145,11 @@ module tb_a3_microsequencer;
     wire        event_signal_error;
     wire        state_apply_overflow;
 
-    ot_a3_microsequencer_top dut (
+    ot_a3_microsequencer_top #(
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .CRC_CACHE_ENTRIES(2048)
+    ) dut (
         .clk(clk),
         .rst_n(rst_n),
         .hdr_in_valid(hdr_in_valid),

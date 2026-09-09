@@ -62,6 +62,15 @@
 // and with reorder the completion picked among the due ones by rand % count.
 // ---------------------------------------------------------------------------
 module tb_a3_deployment;
+    // The instruction-CRC re-validation policy under test.  0/0 is the
+    // design as it has always been -- the eight-beat recurrence on every
+    // fetch -- and is the retained regression.  Overridden at elaboration
+    // (`iverilog -Ptb_a3_deployment.CRC_CACHE=1`, `verilator -GCRC_CACHE=1`)
+    // so both builds exist from one source, as ot_a3_shared_divider.sv's
+    // POW2_FAST does.
+    parameter integer CRC_CACHE  = 0;
+    parameter integer CRC_PERIOD = 0;
+
     localparam integer PROGRAM_WORDS   = 4096;
     localparam integer DESC_WORDS      = 8192;
     localparam integer HEADER_WORDS    = 8192;
@@ -241,7 +250,10 @@ module tb_a3_deployment;
     ot_a3_microsequencer_top #(
         .PROGRAM_WORDS(PROGRAM_WORDS),
         .DESC_WORDS(DESC_WORDS),
-        .STATE_COMPAT(0)
+        .STATE_COMPAT(0),
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .CRC_CACHE_ENTRIES(2048)
     ) dut (
         .clk(clk),
         .rst_n(rst_n),
@@ -998,6 +1010,13 @@ module tb_a3_deployment;
                      case_index, cyc_total, cyc_issue_stall, cyc_predicate_req,
                      count_fetched, count_predicated_off, count_issued,
                      count_branches, count_loop_iterations, count_wait_events);
+            // How many of this case's fetches ran the recurrence and how
+            // many were admitted on a validated bit.  Read out of the design,
+            // not reconstructed.
+            $display("CRC case=%0d policy_cache=%0d policy_period=%0d full=%0d skipped=%0d",
+                     case_index, CRC_CACHE, CRC_PERIOD,
+                     dut.device.sequencer.dbg_crc_full,
+                     dut.device.sequencer.dbg_crc_skipped);
             @(negedge clk);
         end
         close_deployment;
