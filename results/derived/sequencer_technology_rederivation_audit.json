@@ -15,9 +15,9 @@
   },
   "g4_item": "G4's reason line reads 'technology.json#latency not re-derived'. With this artifact and the boundary audit, both keys that phrase covers are refused with reasons rather than left undone.  G4 should keep failing: the model still charges assumed values, and the dominant unmodelled cost is not a parameter at all -- view resolution alone is 9.51 cycles per instruction and CycleModel._time_steps prices no term for it.",
   "generated_by": "tools/audit_sequencer_technology_rederivation.py",
-  "generated_by_sha256": "18efa83c65bccc43279279016df5604b0f5ca714f55765511f4502487cb39f06",
+  "generated_by_sha256": "f4b8ddf21f3ddccdca8f6d747495984442e994a8ce8b511279805d95236c04ad",
   "git": {
-    "commit": "bee755e3b08bc144b5638f9e84929ab3ed297c53",
+    "commit": "221fe7dbc4bf984944739607df1ca2ec008de386",
     "scope": "the tree THIS artifact was derived in; each measurement it cites carries its own provenance",
     "worktree_dirty": true
   },
@@ -62,6 +62,16 @@
       "evidence": "every ratio above is in cycles; the derived machine's clock (1e+09 Hz, from technology.json#latency.sequencer_issue_decode_s) is a design-target assumption and no routed record at N5 exists.  The routed periods below are the open-PDK records and are context, not calibration.",
       "holds": true,
       "id": "no-clock-to-convert-with",
+      "the_control_planes_own_route": {
+        "artifact": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+        "clock_period_ns": 4.4,
+        "closed": false,
+        "fmax_mhz": 264.8,
+        "max_cap_violations": 3,
+        "max_slew_violations": 3204,
+        "present": true,
+        "why_it_matters": "the one routed period the control plane has does not close, so there is no closed period on ANY node with which to convert its cycles into seconds"
+      },
       "why": "calibration.clock.calibrated is false and the record states no routed N5 record exists, so there is no measured period with which to turn 14 cycles into a second"
     },
     {

@@ -27,9 +27,13 @@ There is no clock with which to convert RTL cycles into an N5 second.
     token slots.  They are different machines, and the key is a second, not a
     cycle count.
   * ``calibration.clock.calibrated`` is false, and the calibration record says
-    in as many words that no routed record at N5 exists.  The only routed
-    control-plane period that exists at all is ASAP7's, and the cluster that
-    carries it does not close cleanly there.
+    in as many words that no routed record at N5 exists.  The control plane DOES
+    have its own ASAP7 route -- ``results/physical_abi3/asap7/a3_microsequencer/
+    pnr.json``, 264.8 MHz at 4.4 ns -- and it does not close: ``closed`` is
+    false with 3,204 max-slew and 3 max-cap violations.  (An earlier draft of
+    this file cited the g2 cluster's 216.7 MHz and 8 slew violations here, which
+    is a different and much larger vehicle; the microsequencer's own record is
+    the right evidence and makes the point more strongly.)
   * ``derive_cycle_machine.py`` (line ~818) hardcodes ``front_end_cycles = 3``
     and then sets ``clock_hz = front_end_cycles / sequencer_issue_decode_s``.
     The key and the cycle count are two ends of one identity.  Substituting a
@@ -73,6 +77,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TECHNOLOGY = ROOT / "configs/hardware/technology.json"
 CALIBRATION = ROOT / "results/derived/qwen3_n5_design_target_calibration.json"
 MODEL_SITE = ROOT / "tools/derive_cycle_machine.py"
+MICROSEQ_ROUTE = ROOT / "results/physical_abi3/asap7/a3_microsequencer/pnr.json"
 BOUNDARY_AUDIT = ROOT / "results/derived/boundary_technology_rederivation_audit.json"
 
 DEFAULT_OUTPUT = ROOT / "results/derived/sequencer_technology_rederivation_audit.json"
@@ -107,6 +112,36 @@ def git_state() -> dict[str, Any]:
         "scope": (
             "the tree THIS artifact was derived in; each measurement it cites "
             "carries its own provenance"
+        ),
+    }
+
+
+def _microsequencer_route() -> dict[str, Any]:
+    """The control plane's OWN routed record, not the cluster's.
+
+    Cited because the distinction matters: the microsequencer routes at 264.8
+    MHz and does NOT close, with 3,204 max-slew violations.  A draft of this
+    audit cited the g2 cluster instead -- a 699k-cell vehicle containing the
+    array and five memory macro types -- which is a different machine and a
+    weaker fact.
+    """
+
+    if not MICROSEQ_ROUTE.exists():
+        return {"present": False}
+    d = json.loads(MICROSEQ_ROUTE.read_text())
+    m = d["place_and_route"]["metrics"]
+    return {
+        "present": True,
+        "artifact": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+        "fmax_mhz": round(m.get("fmax_hz", 0) / 1e6, 1),
+        "clock_period_ns": d["place_and_route"].get("clock_period_ns"),
+        "closed": (d.get("design") or {}).get("closed"),
+        "max_slew_violations": m.get("max_slew_violations"),
+        "max_cap_violations": m.get("max_cap_violations"),
+        "why_it_matters": (
+            "the one routed period the control plane has does not close, so "
+            "there is no closed period on ANY node with which to convert its "
+            "cycles into seconds"
         ),
     }
 
@@ -170,6 +205,7 @@ def refusals(assumption: dict[str, Any]) -> list[dict[str, Any]]:
         },
         {
             "id": "no-clock-to-convert-with",
+            "the_control_planes_own_route": _microsequencer_route(),
             "why": (
                 "calibration.clock.calibrated is false and the record states no "
                 "routed N5 record exists, so there is no measured period with "
