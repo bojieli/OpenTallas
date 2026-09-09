@@ -1,0 +1,79 @@
+{
+  "assumed_cycles_at_fabric_clock": 3.0,
+  "assumption": {
+    "fabric_clock_hz": 1000000000.0,
+    "grade": "assumed",
+    "key": "latency.sequencer_issue_decode_s",
+    "note": "Instruction fetch, decode and operand setup for one layer's command stream in a statically scheduled sequencer. A few cycles at a ~1 GHz fabric clock; 1-8 ns spans a single-cycle issue to a deeply decoded microcoded one. Charged once per layer. THIS ENTRY IS DERIVED IN FABRIC CYCLES: 3 cycles at `power.fabric_clock_hz`, with the band 1 and 8 cycles at the same clock. It does not READ that key, so moving the clock without moving these three numbers makes this note false; the consistency audit in tools/run_roofline_studies.py refuses that.",
+    "source": "no published sequencer for a mask-ROM or compute-in-ROM inference die",
+    "value_s": 3e-09
+  },
+  "companion": {
+    "artifact": "results/derived/boundary_technology_rederivation_audit.json",
+    "note": "the other half of G4's 'technology.json#latency not re-derived'. That one is refused on a mismatch of KIND -- a service term spent as a fixed latency.  This one is refused on machine and clock.  Both are refusals with stated reasons, not omissions.",
+    "sha256": "480c0c01e59236af8daed544a70f326a3d619ad4c918a153a2691bbfde40e5f1"
+  },
+  "g4_item": "G4's reason line reads 'technology.json#latency not re-derived'. With this artifact and the boundary audit, both keys that phrase covers are refused with reasons rather than left undone.  G4 should keep failing: the model still charges assumed values, and the dominant unmodelled cost is not a parameter at all -- view resolution alone is 9.51 cycles per instruction and CycleModel._time_steps prices no term for it.",
+  "generated_by": "tools/audit_sequencer_technology_rederivation.py",
+  "generated_by_sha256": "18efa83c65bccc43279279016df5604b0f5ca714f55765511f4502487cb39f06",
+  "git": {
+    "commit": "bee755e3b08bc144b5638f9e84929ab3ed297c53",
+    "scope": "the tree THIS artifact was derived in; each measurement it cites carries its own provenance",
+    "worktree_dirty": true
+  },
+  "identity_coupling": {
+    "consequence": "the front-end cycle count and this key are not independent.  Substituting a measured cycle count republishes the clock rather than calibrating the model -- and the model's predicted TIME does not move when it changes, so nothing about the design point tests which value is right.",
+    "derives_clock_from_the_key": true,
+    "hardcodes_front_end_cycles_3": true,
+    "identity": "clock_hz = front_end_cycles / latency.sequencer_issue_decode_s",
+    "measured_counterfactual": {
+      "anchor_reproduced": "True at all three, relative error 0.000e+00",
+      "front_end_14_cycles": {
+        "clock_ghz": 4.667
+      },
+      "front_end_38_cycles": {
+        "clock_ghz": 12.667
+      },
+      "front_end_3_cycles": {
+        "clock_ghz": 1.0
+      },
+      "predicted_compute_time_s": "bit-identical at all three (1.586170097639e-04)"
+    },
+    "site": "tools/derive_cycle_machine.py"
+  },
+  "measured": {
+    "census_cases": 65,
+    "census_instructions": 452,
+    "front_end_cycles_per_instruction_knobs_off": 13.97,
+    "front_end_cycles_per_instruction_knobs_on": 8.66,
+    "vehicle": "ot_a3_microsequencer, non-pipelined front end, open-PDK elaboration",
+    "what_knobs": "CRC_CACHE and FAST_FRONT_END, landed off by default in b641c86"
+  },
+  "optimism_factor_knobs_off": 4.656666666666667,
+  "optimism_factor_knobs_on": 2.8866666666666667,
+  "question": "does the measured microsequencer front end license re-deriving technology.json#latency.sequencer_issue_decode_s?",
+  "refusals": [
+    {
+      "holds": true,
+      "id": "different-machine",
+      "why": "the measurement is of a NON-PIPELINED control plane elaborated for an open PDK; the key serves an N5 pipelined design point at five token slots.  A cycle count on one is not a second on the other."
+    },
+    {
+      "evidence": "every ratio above is in cycles; the derived machine's clock (1e+09 Hz, from technology.json#latency.sequencer_issue_decode_s) is a design-target assumption and no routed record at N5 exists.  The routed periods below are the open-PDK records and are context, not calibration.",
+      "holds": true,
+      "id": "no-clock-to-convert-with",
+      "why": "calibration.clock.calibrated is false and the record states no routed N5 record exists, so there is no measured period with which to turn 14 cycles into a second"
+    },
+    {
+      "holds": true,
+      "id": "the-key-is-half-an-identity",
+      "why": "derive_cycle_machine.py sets clock_hz = front_end_cycles / this key, so a substitution moves the published clock and changes no prediction the model makes"
+    }
+  ],
+  "schema": "opentallas.derived.sequencer_technology_rederivation_audit.v1",
+  "verdict": "refused",
+  "what_is_licensed": {
+    "claim": "a BOUND on an assumed parameter: a statically scheduled front end of this shape costs 14 cycles rather than 'a few', and 8.66 is reachable with two changes already in the tree.  Either the N5 front end must be pipelined in a way this RTL is not, or 3 ns is optimistic by close to the measured ratio.",
+    "not_licensed": "replacing the value, or reporting any cycles-to-seconds conversion as a measurement of this key"
+  }
+}
