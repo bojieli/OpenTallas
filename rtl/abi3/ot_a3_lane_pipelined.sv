@@ -26,7 +26,7 @@
 // chain's next add always sees its previous result (a same-slot bypass covers
 // the exact-latency case).
 //
-// Pipeline (P = 5 front-end stages, then L = ADDER_STAGES adder stages):
+// Pipeline (P = 8 front-end stages, then L = ADDER_STAGES adder stages):
 //
 //   issue    address generation for (row, column, k-group); one token per cycle
 //   read     the operand memories answer one cycle after the address
@@ -34,9 +34,16 @@
 //            an exponent add with np.float32 subnormal rounding; nonfinite
 //            BF16, reserved E4M3FN / E8M0 and scale range faults raised here
 //   multiply the reconfigurable 8 x 8 partial-product field; exponent adds
-//   group    g = 1: round the product to binary32 (subnormal grid), range
-//            check; g > 1: exact aligned fixed-point group sum, range check;
-//            then normalise for the adder
+//   group    the exact group sum, in four stages -- encode (msb16, the
+//            four-way exponent minimum, the align distances; at g = 1 the
+//            product rounded to binary32 on the subnormal grid instead),
+//            align (the four variable shifts, the add tree's first level),
+//            sum (its second level and the magnitude), normalise -- with the
+//            product and aligner range checks raised on the way.  It was one
+//            combinational stage until it became the design's critical path;
+//            splitting it cost three cycles of latency and no throughput
+//            (see the block's own comment for why neither the accumulator
+//            recurrence nor the issue rate moves with P)
 //   adder    align | add + normalise | round + pack, cut into L register
 //            stages; accumulator read at entry (with bypass), written at exit
 //
@@ -341,7 +348,9 @@ module ot_a3_lane_pipelined #(
     wire        kg_wrap_a  = ({1'b0, kg_in_block_a} + 17'd1) == {1'b0, bw_a};
     wire        kg_wrap_b  = ({1'b0, kg_in_block_b} + 17'd1) == {1'b0, bw_b};
 
-    reg [TOKEN_BITS-1:0] tok_i, tok_r, tok_u, tok_m, tok_g;
+    // tok_ge, tok_ga and tok_gs are the group block's three internal stages;
+    // tok_g is still the token at the group registers the adder reads.
+    reg [TOKEN_BITS-1:0] tok_i, tok_r, tok_u, tok_m, tok_ge, tok_ga, tok_gs, tok_g;
     reg [TOKEN_BITS-1:0] tok_a [0:L-1];
 
     // ---------------------------------------------------------------------------
@@ -463,95 +472,262 @@ module ot_a3_lane_pipelined #(
     reg [47:0] p_pow;
 
     // ---------------------------------------------------------------------------
-    // Group sum and normalise (combinational on the multiply stage)
+    // Group sum and normalise: four register stages on the multiply stage
     // ---------------------------------------------------------------------------
+    // This was one combinational block from the multiply registers to the group
+    // registers, and it was the worst setup path of both routed views of the
+    // lane: `p_mag[0] -> g_pow[11]` on asap7 and `p_mag[1] -> g_mag[32]` on
+    // sky130hd, around 146 data-path cells of group alignment each, and the
+    // period-independent search put the lane at 4.32 ns (232 MHz) at asap7 TT
+    // (results/physical_abi3/*/a3_lane_pipelined/pnr.json, the records this
+    // change was written against).  In one cycle the block encoded four
+    // significands, took a four-way exponent minimum, ran four 48-bit variable
+    // align shifts, a serial chain of four 50-bit signed adds, a 50-bit negate,
+    // a 48-bit leading-zero count and a 48-bit normalise shift.  It is cut into
+    // four stages, each carrying its own copy of the two operand shapes the
+    // block serves (g = 1's rounded product and g > 1's exact aligned sum):
+    //
+    //   G1 encode     msb16 per product, the product range check, the four-way
+    //                 minimum of the counting powers and each product's align
+    //                 distance; at g = 1, round_product instead
+    //   G2 align      the four 48-bit variable shifts and the first level of the
+    //                 add tree (two 50-bit signed adds side by side)
+    //   G3 sum        the tree's second level and the magnitude of the sum; the
+    //                 group's failure detail is resolved here
+    //   G4 normalise  msb48, the normalise shift and the power adjust, into the
+    //                 g_* registers the adder's first piece reads
+    //
+    // The deepest of the four is G1's round_product (a 17-bit subnormal shift,
+    // its sticky and its increment in series).  After the cut this block is no
+    // longer the lane's longest path at all: a generic elaboration's longest
+    // topological path (yosys `synth -flatten; abc -g ...; ltp -noff`) falls
+    // from 267 cells starting at p_mag to 115 starting at the adder's first
+    // register, at a cost of about 5 % more cells, so the next path to answer
+    // for is the adder's own middle piece, acc_sum_normalise.  That is a
+    // proxy on a generic gate set, not a setup number: only a route measures
+    // this lane, and this change has not had one.
+    //
+    // Throughput is unchanged at one lane-op per cycle, and that is structural,
+    // not a measurement: the only cyclic dependence in this lane is the
+    // accumulator recurrence, which runs from the accumulator read at the group
+    // registers, through the L adder stages, to the writeback -- L cycles, and
+    // entirely downstream of here.  Everything above the group registers is
+    // feed-forward, so three more registers in it delay every token equally and
+    // change no distance the issue logic enforces: a slot still may not reissue
+    // for L cycles (slot_wait = L_WAIT), and a chain's next add still meets its
+    // predecessor's result exactly at the writeback bypass.  What grows is
+    // latency: the first lane-op retires three cycles later than before (the
+    // front end is P = 8 stages, was 5) and the whole run is three cycles
+    // longer, while the steady-state window between the first and the last
+    // retirement is the same length.
+    //
+    // Three restructurings inside the block are what let the stages be shallow;
+    // each is an identity, not an approximation, which is why gate D1 still
+    // holds bit for bit:
+    //
+    //   * the serial four-way minimum becomes a two-level tree.  A product that
+    //     does not count carries POW_NEUTRAL, which no real power can beat, so
+    //     the tree's minimum equals the serial minimum over the counting
+    //     products; when none counts the tree returns POW_NEUTRAL and it is
+    //     never read (the sum is then zero, and G4 forces a zero group's power
+    //     to 0 exactly as the serial form did).
+    //   * the serial chain of four 50-bit signed adds becomes a balanced tree.
+    //     Every add in the chain was a wrapping 50-bit two's complement add, and
+    //     addition modulo 2**50 is associative and commutative, so any grouping
+    //     of the same four terms yields the same 50 bits.  The one place the
+    //     chain's width mattered -- the 48-bit window check -- reads the final
+    //     sum, never an intermediate, and is unchanged.
+    //   * the magnitude of the sum no longer puts a negate in series with the
+    //     final add: -(p0 + p1) = ~p0 + ~p1 + 2 modulo 2**50, so the negated sum
+    //     is formed from the inverted summands by an adder that runs beside the
+    //     sum's own, and only the select waits for the sign bit.
+    //
+    // The failure detail is resolved once, in G3, in the order the single block
+    // resolved it: within that block later assignments overwrote earlier ones,
+    // so an aligner exit (a clamped align distance, or a sum outside the 48-bit
+    // window) beat a product range exit, which beat none.  G1 and G3 therefore
+    // raise flags rather than details, and G3 turns the flags into the one
+    // detail token_with_detail applies -- so gate D5's modes stay distinct and
+    // an unpack detail still wins over both, as before.
+    // ---------------------------------------------------------------------------
+
+    // An exponent that never wins the four-way minimum: a real product power is
+    // a sign-extended 12-bit code, so it is at most 2047.
+    localparam integer POW_NEUTRAL = 4095;
+
+    // -- G1: encode, the exponent minimum and the align distances ---------------
     reg [38:0] rounded;
-    reg        g_zero_c, g_sign_c;
-    reg [47:0] g_mag_c;
-    reg [11:0] g_pow_c;
-    reg [7:0]  g_detail_c;
-    reg [47:0] aligned;
-    reg signed [49:0] group_sum;
-    reg [49:0] group_abs;
-    integer    gj;
-    integer    pow_j, pow_min, shift_j, msb_j;
-    reg        any_nonzero;
-    integer    lz;
+    reg [15:0] ge_mag_c   [0:3];
+    reg [5:0]  ge_shift_c [0:3];
+    reg [3:0]  ge_sign_c, ge_use_c;
+    reg [12:0] ge_pow_c;
+    reg        ge_range_c, ge_clamp_c;
+    reg [16:0] ge_s_mag_c;
+    reg        ge_s_sign_c, ge_s_zero_c;
+    reg [7:0]  ge_s_detail_c;
+    integer    pow_of  [0:3];       // each product's power, sign extended
+    integer    pow_key [0:3];       // ... or POW_NEUTRAL when it does not count
+    integer    pow_lo01, pow_lo23, pow_min;
+    integer    gj, msb_j, shift_j;
     always @* begin
-        g_zero_c = 1'b1;
-        g_sign_c = 1'b0;
-        g_mag_c = 48'b0;
-        g_pow_c = 12'b0;
-        g_detail_c = DETAIL_NONE;
         rounded = 39'b0;
-        aligned = 48'b0;
-        group_sum = 50'sd0;
-        group_abs = 50'd0;
-        pow_min = 0;
-        pow_j = 0;
-        shift_j = 0;
+        ge_sign_c = 4'b0;
+        ge_use_c = 4'b0;
+        ge_pow_c = 13'b0;
+        ge_range_c = 1'b0;
+        ge_clamp_c = 1'b0;
+        ge_s_mag_c = 17'b0;
+        ge_s_sign_c = 1'b0;
+        ge_s_zero_c = 1'b1;
+        ge_s_detail_c = DETAIL_NONE;
+        pow_lo01 = POW_NEUTRAL;
+        pow_lo23 = POW_NEUTRAL;
+        pow_min = POW_NEUTRAL;
         msb_j = 0;
-        any_nonzero = 1'b0;
-        lz = 0;
-        gj = 0;
+        shift_j = 0;
+        for (gj = 0; gj < 4; gj = gj + 1) begin
+            ge_mag_c[gj] = 16'b0;
+            ge_shift_c[gj] = 6'b0;
+            pow_of[gj] = {{20{p_pow[gj*12 + 11]}}, p_pow[gj*12 +: 12]};
+            pow_key[gj] = POW_NEUTRAL;
+        end
         if (mode == 2'd0) begin
+            // g = 1: one product, rounded to binary32 (subnormal grid) here.
+            // Its 17-bit significand, sign, zero and detail travel beside the
+            // group path -- G2 and G3 carry them untouched -- and G3 selects
+            // them, so the shifters and the sum tree stay quiet at g = 1.
             rounded = ot_a3_lane_pkg::round_product(
                 p_sign[0], p_zero[0], p_mag[15:0], p_pow[11:0]);
-            g_detail_c = rounded[38:31];
-            g_sign_c = rounded[30];
-            g_zero_c = rounded[29];
-            g_mag_c = {31'b0, rounded[28:12]};
+            ge_s_detail_c = rounded[38:31];
+            ge_s_sign_c = rounded[30];
+            ge_s_zero_c = rounded[29];
+            ge_s_mag_c = rounded[28:12];
             pow_min = {{20{rounded[11]}}, rounded[11:0]};
         end else begin
             // Exact products; the minimum power of the nonzero ones is the
             // fixed-point unit of the group sum.
             for (gj = 0; gj < 4; gj = gj + 1) begin
-                if (!p_zero[gj] && (p_mag[gj*16 +: 16] != 16'b0)) begin
-                    pow_j = {{20{p_pow[gj*12 + 11]}}, p_pow[gj*12 +: 12]};
-                    msb_j = ot_a3_lane_pkg::msb16(p_mag[gj*16 +: 16]);
-                    if (pow_j + msb_j > 127)
-                        g_detail_c = DETAIL_PRODUCT_RANGE;
-                    if (!any_nonzero || (pow_j < pow_min))
-                        pow_min = pow_j;
-                    any_nonzero = 1'b1;
+                ge_mag_c[gj] = p_mag[gj*16 +: 16];
+                ge_sign_c[gj] = p_sign[gj];
+                ge_use_c[gj] = !p_zero[gj] && (p_mag[gj*16 +: 16] != 16'b0);
+                msb_j = ot_a3_lane_pkg::msb16(p_mag[gj*16 +: 16]);
+                if (ge_use_c[gj]) begin
+                    pow_key[gj] = pow_of[gj];
+                    if (pow_of[gj] + msb_j > 127)
+                        ge_range_c = 1'b1;
                 end
             end
+            pow_lo01 = (pow_key[1] < pow_key[0]) ? pow_key[1] : pow_key[0];
+            pow_lo23 = (pow_key[3] < pow_key[2]) ? pow_key[3] : pow_key[2];
+            pow_min  = (pow_lo23 < pow_lo01) ? pow_lo23 : pow_lo01;
+            // A product that does not count may compute a negative or wrapped
+            // distance here; it is never shifted in and never raises the clamp,
+            // exactly as the serial loop only aligned the counting products.
             for (gj = 0; gj < 4; gj = gj + 1) begin
-                if (!p_zero[gj] && (p_mag[gj*16 +: 16] != 16'b0)) begin
-                    pow_j = {{20{p_pow[gj*12 + 11]}}, p_pow[gj*12 +: 12]};
-                    shift_j = pow_j - pow_min;
-                    if (shift_j > 32) begin
-                        g_detail_c = DETAIL_ALIGNER;
-                        shift_j = 32;
-                    end
-                    aligned = {32'b0, p_mag[gj*16 +: 16]} << shift_j;
-                    if (p_sign[gj])
-                        group_sum = group_sum - $signed({2'b0, aligned});
-                    else
-                        group_sum = group_sum + $signed({2'b0, aligned});
+                shift_j = pow_of[gj] - pow_min;
+                if (ge_use_c[gj] && (shift_j > 32)) begin
+                    ge_clamp_c = 1'b1;
+                    shift_j = 32;
                 end
+                ge_shift_c[gj] = shift_j[5:0];
             end
-            g_sign_c = group_sum[49];
-            group_abs = g_sign_c ? (~group_sum + 50'd1) : group_sum;
-            if (group_abs[49:48] != 2'b00)
-                g_detail_c = DETAIL_ALIGNER;
-            g_mag_c = group_abs[47:0];
-            g_zero_c = (g_mag_c == 48'b0);
-            if (g_zero_c)
-                g_sign_c = 1'b0;
         end
-        // Normalise: leading one to bit 47, power adjusted.
-        if (!g_zero_c) begin
-            lz = 47 - ot_a3_lane_pkg::msb48(g_mag_c);
-            g_mag_c = g_mag_c << lz;
-            pow_min = pow_min - lz;
-        end else begin
-            pow_min = 0;
-        end
-        g_pow_c = pow_min[11:0];
+        ge_pow_c = pow_min[12:0];
     end
 
-    // Group stage registers
+    // G1 (encode) stage registers
+    reg [15:0] ge_mag   [0:3];
+    reg [5:0]  ge_shift [0:3];
+    reg [3:0]  ge_sign, ge_use;
+    reg [12:0] ge_pow;
+    reg        ge_range, ge_clamp;
+    reg [16:0] ge_s_mag;
+    reg        ge_s_sign, ge_s_zero;
+    reg [7:0]  ge_s_detail;
+
+    // -- G2: the four align shifts and the first level of the add tree ----------
+    reg [47:0] aligned   [0:3];
+    reg [49:0] term      [0:3];
+    reg [49:0] ga_part_c [0:1];
+    integer    aj;
+    always @* begin
+        for (aj = 0; aj < 4; aj = aj + 1) begin
+            aligned[aj] = {32'b0, ge_mag[aj]} << ge_shift[aj];
+            // The sign is applied without a negate per product: (x ^ -s) + s is
+            // x for s = 0 and ~x + 1 for s = 1, and the two carry bits of a pair
+            // fold into that pair's own adder below.  A product that does not
+            // count contributes exactly zero, and so does its carry.
+            term[aj] = ge_use[aj] ? ({50{ge_sign[aj]}} ^ {2'b0, aligned[aj]})
+                                  : 50'b0;
+        end
+        ga_part_c[0] = term[0] + term[1]
+                     + {49'b0, (ge_use[0] & ge_sign[0])}
+                     + {49'b0, (ge_use[1] & ge_sign[1])};
+        ga_part_c[1] = term[2] + term[3]
+                     + {49'b0, (ge_use[2] & ge_sign[2])}
+                     + {49'b0, (ge_use[3] & ge_sign[3])};
+    end
+
+    // G2 (align) stage registers
+    reg [49:0] ga_part [0:1];
+    reg [12:0] ga_pow;
+    reg        ga_range, ga_clamp;
+    reg [16:0] ga_s_mag;
+    reg        ga_s_sign, ga_s_zero;
+    reg [7:0]  ga_s_detail;
+
+    // -- G3: the tree's second level, the magnitude, and the detail -------------
+    reg [49:0] group_sum, group_neg, group_abs;
+    reg        gs_sign_c, gs_zero_c;
+    reg [47:0] gs_mag_c;
+    reg [7:0]  gs_detail_c;
+    always @* begin
+        group_sum = ga_part[0] + ga_part[1];
+        group_neg = (~ga_part[0]) + (~ga_part[1]) + 50'd2;
+        gs_sign_c = group_sum[49];
+        group_abs = gs_sign_c ? group_neg : group_sum;
+        gs_mag_c = group_abs[47:0];
+        gs_zero_c = (gs_mag_c == 48'b0);
+        if (gs_zero_c)
+            gs_sign_c = 1'b0;
+        gs_detail_c = (ga_clamp || (group_abs[49:48] != 2'b00)) ? DETAIL_ALIGNER :
+                      (ga_range ? DETAIL_PRODUCT_RANGE : DETAIL_NONE);
+        if (mode == 2'd0) begin
+            gs_mag_c = {31'b0, ga_s_mag};
+            gs_sign_c = ga_s_sign;
+            gs_zero_c = ga_s_zero;
+            gs_detail_c = ga_s_detail;
+        end
+    end
+
+    // G3 (sum) stage registers
+    reg [47:0] gs_mag;
+    reg        gs_sign, gs_zero;
+    reg [12:0] gs_pow;
+
+    // -- G4: normalise ----------------------------------------------------------
+    reg        g_zero_c, g_sign_c;
+    reg [47:0] g_mag_c;
+    reg [11:0] g_pow_c;
+    integer    lz, pow_res;
+    always @* begin
+        g_zero_c = gs_zero;
+        g_sign_c = gs_sign;
+        g_mag_c = gs_mag;
+        lz = 0;
+        pow_res = {{19{gs_pow[12]}}, gs_pow};
+        // Normalise: leading one to bit 47, power adjusted.
+        if (!g_zero_c) begin
+            lz = 47 - ot_a3_lane_pkg::msb48(gs_mag);
+            g_mag_c = gs_mag << lz;
+            pow_res = pow_res - lz;
+        end else begin
+            pow_res = 0;
+        end
+        g_pow_c = pow_res[11:0];
+    end
+
+    // G4 (normalise) stage registers: what the adder's first piece reads
     reg        g_zero, g_sign;
     reg [47:0] g_mag;
     reg [11:0] g_pow;
@@ -752,6 +928,9 @@ module ot_a3_lane_pipelined #(
             tok_r <= {TOKEN_BITS{1'b0}};
             tok_u <= {TOKEN_BITS{1'b0}};
             tok_m <= {TOKEN_BITS{1'b0}};
+            tok_ge <= {TOKEN_BITS{1'b0}};
+            tok_ga <= {TOKEN_BITS{1'b0}};
+            tok_gs <= {TOKEN_BITS{1'b0}};
             tok_g <= {TOKEN_BITS{1'b0}};
             for (si = 0; si < L; si = si + 1)
                 tok_a[si] <= {TOKEN_BITS{1'b0}};
@@ -767,6 +946,32 @@ module ot_a3_lane_pipelined #(
             p_zero <= 4'b0;
             p_mag <= 64'b0;
             p_pow <= 48'b0;
+            for (si = 0; si < 4; si = si + 1) begin
+                ge_mag[si] <= 16'b0;
+                ge_shift[si] <= 6'b0;
+            end
+            ge_sign <= 4'b0;
+            ge_use <= 4'b0;
+            ge_pow <= 13'b0;
+            ge_range <= 1'b0;
+            ge_clamp <= 1'b0;
+            ge_s_mag <= 17'b0;
+            ge_s_sign <= 1'b0;
+            ge_s_zero <= 1'b1;
+            ge_s_detail <= DETAIL_NONE;
+            ga_part[0] <= 50'b0;
+            ga_part[1] <= 50'b0;
+            ga_pow <= 13'b0;
+            ga_range <= 1'b0;
+            ga_clamp <= 1'b0;
+            ga_s_mag <= 17'b0;
+            ga_s_sign <= 1'b0;
+            ga_s_zero <= 1'b1;
+            ga_s_detail <= DETAIL_NONE;
+            gs_mag <= 48'b0;
+            gs_sign <= 1'b0;
+            gs_zero <= 1'b1;
+            gs_pow <= 13'b0;
             g_zero <= 1'b1;
             g_sign <= 1'b0;
             g_mag <= 48'b0;
@@ -792,7 +997,40 @@ module ot_a3_lane_pipelined #(
             p_zero <= m_zero;
             p_mag <= m_mag;
             p_pow <= m_pow;
-            tok_g <= token_with_detail(tok_m, g_detail_c);
+            // The group block's four stages.  Only G3 contributes a detail, and
+            // it contributes the one the single-stage block resolved (aligner
+            // over product range over none), so the token still meets exactly
+            // one group detail on its way to the adder.
+            tok_ge <= tok_m;
+            for (si = 0; si < 4; si = si + 1) begin
+                ge_mag[si] <= ge_mag_c[si];
+                ge_shift[si] <= ge_shift_c[si];
+            end
+            ge_sign <= ge_sign_c;
+            ge_use <= ge_use_c;
+            ge_pow <= ge_pow_c;
+            ge_range <= ge_range_c;
+            ge_clamp <= ge_clamp_c;
+            ge_s_mag <= ge_s_mag_c;
+            ge_s_sign <= ge_s_sign_c;
+            ge_s_zero <= ge_s_zero_c;
+            ge_s_detail <= ge_s_detail_c;
+            tok_ga <= tok_ge;
+            ga_part[0] <= ga_part_c[0];
+            ga_part[1] <= ga_part_c[1];
+            ga_pow <= ge_pow;
+            ga_range <= ge_range;
+            ga_clamp <= ge_clamp;
+            ga_s_mag <= ge_s_mag;
+            ga_s_sign <= ge_s_sign;
+            ga_s_zero <= ge_s_zero;
+            ga_s_detail <= ge_s_detail;
+            tok_gs <= token_with_detail(tok_ga, gs_detail_c);
+            gs_mag <= gs_mag_c;
+            gs_sign <= gs_sign_c;
+            gs_zero <= gs_zero_c;
+            gs_pow <= ga_pow;
+            tok_g <= tok_gs;
             g_zero <= g_zero_c;
             g_sign <= g_sign_c;
             g_mag <= g_mag_c;
@@ -897,6 +1135,9 @@ module ot_a3_lane_pipelined #(
                     tok_r <= {TOKEN_BITS{1'b0}};
                     tok_u <= {TOKEN_BITS{1'b0}};
                     tok_m <= {TOKEN_BITS{1'b0}};
+                    tok_ge <= {TOKEN_BITS{1'b0}};
+                    tok_ga <= {TOKEN_BITS{1'b0}};
+                    tok_gs <= {TOKEN_BITS{1'b0}};
                     tok_g <= {TOKEN_BITS{1'b0}};
                     for (si = 0; si < L; si = si + 1)
                         tok_a[si] <= {TOKEN_BITS{1'b0}};
