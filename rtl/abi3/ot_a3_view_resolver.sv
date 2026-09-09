@@ -114,7 +114,52 @@ module ot_a3_view_resolver
     // wildcard import is not accepted by every open synthesis front end this
     // program pins, and a block that only elaborates in a simulator is not an
     // implementable block.  [OI-43] docs/UNIFIED_EXECUTION_CHECKLIST.md
-(
+#(
+    // FAST_WALK (measured, not asserted).  A per-state census of the Qwen ROM
+    // deployment (Icarus, case 0: 2,143 views, 2,240 dynamic terms, mean rank
+    // 2.18) charged this block 31,097 cycles, 14.51 per view.  Two of its
+    // states did no arithmetic:
+    //
+    //   * S_SELECT, 4,383 cycles -- one per term plus one per view to notice
+    //     the terms were finished.  All it did was drive the loop-stack and
+    //     symbol selects, which the state that advances the slot already knows
+    //     one cycle earlier: the payload is held from start to done, so the
+    //     *next* term's index is readable from the same registered payload
+    //     through a second mux.  FAST_WALK drives them there and folds the
+    //     terms-exhausted decision in with them.
+    //   * the bounding walk's fill, 4,674 - 2,143 = 2,531 cycles -- S_BOUND_MUL
+    //     presented (dim_i - 1, stride_i) and S_BOUND_ACC accumulated the
+    //     product a cycle later, two cycles for each of 2.18 axes.  The
+    //     accumulate of axis i and the operand presentation of axis i + 1 are
+    //     two *parallel* paths from two different registers, not one path in
+    //     series, so FAST_WALK does both in one cycle and pays a single fill
+    //     cycle per view instead of one per axis.
+    //
+    // Neither change puts new logic in series: no product feeds an adder or a
+    // comparator it did not already feed, and no arithmetic result is consumed
+    // in the cycle it is produced that was not already.  What is added is a
+    // second copy of the term-index mux (16 bits, selected by slot + 1) and a
+    // second copy of the dim/stride mux (selected by b_axis + 1), each of which
+    // is the same depth as the copy it sits beside.  The 32x32 product, the
+    // 64-bit compare in S_AXIS and the 70-bit span accumulate are untouched.
+    //
+    // 0 restores the walk exactly as it shipped, and is the default, so a
+    // build that does not name the parameter is the block as it shipped.  Both
+    // builds are driven from one stimulus by
+    // rtl/test/tb_a3_resolver_bank_equiv.sv, and the 0 build is driven against
+    // a verbatim copy of the shipped source by
+    // rtl/test/tb_a3_resolver_bank_inert.sv.
+    //
+    // This default decides NOTHING in the shipped hierarchy.  Every lane is
+    // instantiated by ot_a3_resolver_bank, which passes its own FAST_WALK
+    // down, so an override there wins over this line.  Editing this default on
+    // its own to turn the optimisation off is a no-op, and reading a cycle
+    // count from a build made that way is how this change was once measured
+    // "not inert" when the residual was simply this parameter still on.  Set
+    // it from the top: a3_microsequencer_top -> ot_a3_device_top ->
+    // ot_a3_microsequencer -> ot_a3_resolver_bank.
+    parameter integer FAST_WALK = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          clear,
@@ -229,6 +274,25 @@ module ot_a3_view_resolver
         endcase
     end
     wire [31:0] b_dim_resolved = ({5'd0, b_axis} == view_extent_axis) ? out_extent : b_dim;
+    // FAST_WALK presents axis i + 1's operands in the cycle that accumulates
+    // axis i's product, so it needs the same two fields one axis ahead.  This
+    // is a second copy of the mux above, selected by b_axis + 1: the same
+    // depth from the same registered payload, not a longer path.
+    wire [2:0]  b_axis_next = b_axis + 3'd1;
+    reg [31:0]  b_dim_n;
+    reg [31:0]  b_stride_n;
+    always @* begin
+        case (b_axis_next)
+            3'd0: begin b_dim_n = payload[223:192]; b_stride_n = payload[415:384]; end
+            3'd1: begin b_dim_n = payload[255:224]; b_stride_n = payload[447:416]; end
+            3'd2: begin b_dim_n = payload[287:256]; b_stride_n = payload[479:448]; end
+            3'd3: begin b_dim_n = payload[319:288]; b_stride_n = payload[511:480]; end
+            3'd4: begin b_dim_n = payload[351:320]; b_stride_n = payload[543:512]; end
+            default: begin b_dim_n = payload[383:352]; b_stride_n = payload[575:544]; end
+        endcase
+    end
+    wire [31:0] b_dim_resolved_n =
+        ({5'd0, b_axis_next} == view_extent_axis) ? out_extent : b_dim_n;
     wire [6:0]  b_bits = ot_a3_pkg::a3_dtype_bits(view_dtype);
     // log2(bits): 4 -> 2, 8 -> 3, 16 -> 4, 32 -> 5, 64 -> 6
     wire [2:0]  b_shift = (b_bits == 7'd4)  ? 3'd2 :
@@ -309,6 +373,32 @@ module ot_a3_view_resolver
         endcase
     end
 
+    // FAST_WALK drives the loop-stack and symbol selects for term ``slot + 1``
+    // from the state that advances the slot, so it reads that term's index a
+    // cycle early through a second copy of the mux above.  Only the index is
+    // needed early; the kind and the stride are still read at ``slot``, which
+    // by then names the term being read.
+    wire [2:0] slot_next = slot + 3'd1;
+    reg [15:0] term_index_n;
+    always @* begin
+        case (slot_next)
+            3'd0:    term_index_n = payload[607:592];
+            3'd1:    term_index_n = payload[671:656];
+            3'd2:    term_index_n = payload[735:720];
+            default: term_index_n = payload[799:784];
+        endcase
+    end
+    wire [15:0] term_index_0 = payload[607:592];
+    // ``slot`` has not advanced yet when this is evaluated, so the test is the
+    // one S_SELECT would make on the next cycle's counter, unchanged.
+    wire       terms_done_next = ({5'd0, slot_next} >= view_terms);
+    wire       terms_done_zero = (view_terms == 8'd0);
+    wire       edge_pending    = (view_edge_mask != ot_a3_pkg::A3_NO_ID);
+
+    // Any non-zero parameter selects the fast build, so an instantiation that
+    // passes 2 does not silently get the slow one.
+    localparam FAST_WALK_ON = (FAST_WALK != 0);
+
     localparam [4:0] S_IDLE      = 5'd0;
     localparam [4:0] S_SELECT    = 5'd1;
     localparam [4:0] S_READ      = 5'd2;
@@ -375,6 +465,31 @@ module ot_a3_view_resolver
     // bits wide on both sides so a product too large for a 32-bit stride is
     // unequal rather than truncated into equality.
     wire walks_extent_axis = unit_divides && (product_w == {32'd0, term_stride});
+
+    // FAST_WALK: leave one term for the next, driving that term's loop-stack
+    // and symbol selects in the same cycle.  This is S_SELECT's entire body,
+    // executed one state earlier by the state that already knows the slot is
+    // advancing; the terms-exhausted test is the same comparison against the
+    // same counter value, one cycle sooner.
+    task advance_term;
+        begin
+            slot <= slot + 3'd1;
+            if (terms_done_next) begin
+                if (!edge_done && edge_pending) begin
+                    loop_query_id <= view_edge_mask;
+                    edge_phase <= 1'b1;
+                    state <= S_EDGE_READ;
+                end else begin
+                    state <= S_FINISH;
+                end
+            end else begin
+                edge_phase <= 1'b0;
+                loop_query_id <= {16'd0, term_index_n};
+                sym_index <= term_index_n[3:0];
+                state <= S_READ;
+            end
+        end
+    endtask
 
     task fail_closed;
         input [15:0] class_value;
@@ -448,10 +563,28 @@ module ot_a3_view_resolver
                             // axes at all, which the reference guards with
                             // ``if rank and ...``.
                             if ((view_rank != 8'd0) &&
-                                (view_extent_axis >= view_rank))
+                                (view_extent_axis >= view_rank)) begin
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
-                            else
+                            end else if (FAST_WALK_ON) begin
+                                // What S_SELECT would decide next cycle, made
+                                // now: term zero's index is a fixed slice of
+                                // the payload, so no mux is even needed.
+                                if (terms_done_zero) begin
+                                    if (edge_pending) begin
+                                        loop_query_id <= view_edge_mask;
+                                        edge_phase <= 1'b1;
+                                        state <= S_EDGE_READ;
+                                    end else begin
+                                        state <= S_FINISH;
+                                    end
+                                end else begin
+                                    loop_query_id <= {16'd0, term_index_0};
+                                    sym_index <= term_index_0[3:0];
+                                    state <= S_READ;
+                                end
+                            end else begin
                                 state <= S_SELECT;
+                            end
                         end
                     end
                     // Drive the loop and symbol selects for this term; both
@@ -489,7 +622,10 @@ module ot_a3_view_resolver
                                 // loop no partial extent.  Admission rejects
                                 // this form, but the resolver still fails
                                 // closed to the declared dimension if reached.
-                                state <= S_SELECT;
+                                // The terms are finished and the edge mask is
+                                // the last thing a view carries, so S_SELECT
+                                // had nothing left to decide.
+                                state <= FAST_WALK_ON ? S_FINISH : S_SELECT;
                             end else if (view_identity) begin
                                 axis_step <= {32'd0, loop_query_divisor};
                                 unit_divides <= 1'b1;
@@ -571,6 +707,8 @@ module ot_a3_view_resolver
                                 mul_b <= loop_divisor;
                                 state <= S_NUM_STEP;
                             end
+                        end else if (FAST_WALK_ON) begin
+                            advance_term;
                         end else begin
                             slot <= slot + 3'd1;
                             state <= S_SELECT;
@@ -599,7 +737,7 @@ module ot_a3_view_resolver
                                 end else begin
                                     // iteration_extent() is undefined: no
                                     // clamp, matching _remaining_extent.
-                                    state <= S_SELECT;
+                                    state <= FAST_WALK_ON ? S_FINISH : S_SELECT;
                                 end
                             end else begin
                                 state <= S_AXIS_MUL;
@@ -626,6 +764,8 @@ module ot_a3_view_resolver
                             mul_a <= value;
                             mul_b <= loop_divisor;
                             state <= S_REMAIN;
+                        end else if (FAST_WALK_ON) begin
+                            advance_term;
                         end else begin
                             slot <= slot + 3'd1;
                             state <= S_SELECT;
@@ -644,8 +784,12 @@ module ot_a3_view_resolver
                             // nothing: the affine image of a count the loop
                             // never poses is not an extent, so the divider is
                             // not needed to know that.
-                            slot <= slot + 3'd1;
-                            state <= S_SELECT;
+                            if (FAST_WALK_ON) begin
+                                advance_term;
+                            end else begin
+                                slot <= slot + 3'd1;
+                                state <= S_SELECT;
+                            end
                         end else if (view_identity) begin
                             axis_extent <= {32'd0, remaining_units} +
                                            {32'd0, view_bias};
@@ -684,9 +828,17 @@ module ot_a3_view_resolver
                             remain <= axis_extent[31:0];
                             remain_valid <= 1'b1;
                         end
-                        if (!edge_phase)
-                            slot <= slot + 3'd1;
-                        state <= S_SELECT;
+                        if (FAST_WALK_ON) begin
+                            // After the edge phase the terms are finished and
+                            // edge_done is set, which is the only thing
+                            // S_SELECT would have looked at.
+                            if (!edge_phase) advance_term;
+                            else             state <= S_FINISH;
+                        end else begin
+                            if (!edge_phase)
+                                slot <= slot + 3'd1;
+                            state <= S_SELECT;
+                        end
                     end
                     S_FINISH: begin
                         // resolve(): dim[axis] = extent if 0 < extent <
@@ -717,6 +869,18 @@ module ot_a3_view_resolver
                         b_span <= b_span + {6'd0, product_w};
                         if ({5'd0, b_axis} + 8'd1 >= view_rank) begin
                             state <= S_BOUND_END;
+                        end else if (FAST_WALK_ON) begin
+                            // Accumulate axis i and present axis i + 1 in the
+                            // same cycle.  The accumulate reads the product of
+                            // operands registered last cycle and the
+                            // presentation reads the payload: two paths from
+                            // two registers, in parallel, neither feeding the
+                            // other.  S_BOUND_MUL stays as the one fill cycle.
+                            b_axis <= b_axis_next;
+                            mul_a <= (b_dim_resolved_n == 32'd0)
+                                     ? 32'd0 : (b_dim_resolved_n - 32'd1);
+                            mul_b <= b_stride_n;
+                            state <= S_BOUND_ACC;
                         end else begin
                             b_axis <= b_axis + 3'd1;
                             state <= S_BOUND_MUL;

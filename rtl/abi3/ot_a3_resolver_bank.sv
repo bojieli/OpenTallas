@@ -27,9 +27,51 @@
 // of the resolution, because the one-port store cannot serve six readers;
 // that is 6 x 1,024 bits of flops and is the cost of six lanes on one port.
 //
+// FAST_SCAN (measured, not asserted).  The slot walk this block shipped with
+// visited all six slots one cycle each and then took a seventh cycle to notice
+// it was done, whether or not a slot named anything: a per-state census of the
+// Qwen ROM deployment (Icarus, case 0, 691 OPERATOR instructions, 2,143 views)
+// charged 4,837 cycles to the scan state -- exactly 7.00 per operator -- of
+// which 2,003 were spent stepping over the empty slots of instructions that
+// name 3.10 operands on average, and 691 were the terminal cycle.  With
+// FAST_SCAN the six slot IDs are compared with NO_ID in parallel at ``start``,
+// a priority encoder names the lowest slot still owed a descriptor, and the
+// request for it is issued from ``start`` itself and thereafter from the cycle
+// that consumes the previous record: the scan state is gone and a descriptor
+// read costs the two cycles the port takes and nothing else.
+//
+// Exactly one read is in flight at any time, which is the descriptor port's
+// standing contract (ot_a3_g2_descriptor_store: "each master has at most one
+// read in flight by construction").  Issuing the next request in the cycle the
+// previous ``desc_valid`` is observed does not break it: that store clears its
+// pending register when a read starts, so the pulse is captured cleanly and
+// nothing is dropped.  This block still never has two reads outstanding.
+//
+// The order of the walk is unchanged -- the priority encoder picks the lowest
+// slot, which is the order the counter visited them in -- so the fault that a
+// faulting instruction reports and the descriptor IDs recorded per slot are
+// what they always were.
+//
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
-module ot_a3_resolver_bank (
+module ot_a3_resolver_bank #(
+    // 1: the scan state is elided and empty slots are skipped by a priority
+    // encoder.  0: the six-slot serial counter walk this block shipped with,
+    // which is the default, so a build that does not name the parameter is the
+    // block as it shipped.  Both builds are driven from one stimulus by
+    // rtl/test/tb_a3_resolver_bank_equiv.sv, and the 0 build is driven against
+    // a verbatim copy of the shipped source by
+    // rtl/test/tb_a3_resolver_bank_inert.sv.
+    parameter integer FAST_SCAN = 0,
+    // Forwarded to every lane; see ot_a3_view_resolver.  Defaults off for the
+    // same reason: two optimisations, two knobs, neither on by default.
+    //
+    // This is the parameter that decides the lanes' walk.  It is passed down
+    // explicitly below, so it OVERRIDES ot_a3_view_resolver's own default;
+    // turning the lane walk off means setting it here (or from the top through
+    // ot_a3_microsequencer), never by editing the lane's default.
+    parameter integer FAST_WALK = 0
+) (
     input  wire            clk,
     input  wire            rst_n,
     input  wire            clear,
@@ -97,6 +139,10 @@ module ot_a3_resolver_bank (
                                    (desc_payload_offset == 32'd64) &&
                                    (desc_type == ot_a3_pkg::A3_DESC_TENSOR_VIEW);
 
+    // Any non-zero parameter selects the fast build, so an instantiation that
+    // passes 2 does not silently get the slow one.
+    localparam FAST_SCAN_ON = (FAST_SCAN != 0);
+
     // -- slot walk -----------------------------------------------------------
     localparam [1:0] S_IDLE  = 2'd0;
     localparam [1:0] S_SCAN  = 2'd1;
@@ -115,16 +161,69 @@ module ot_a3_resolver_bank (
     // 24, output_view_0..1 at byte 40); nothing above byte 47 is read.  The
     // sequencer holds op_payload stable from start to done, so it is read
     // in place rather than copied.
+    function [31:0] slot_id_of;
+        input [2:0] which;
+        begin
+            case (which)
+                3'd0:    slot_id_of = op_payload[223:192];
+                3'd1:    slot_id_of = op_payload[255:224];
+                3'd2:    slot_id_of = op_payload[287:256];
+                3'd3:    slot_id_of = op_payload[319:288];
+                3'd4:    slot_id_of = op_payload[351:320];
+                3'd5:    slot_id_of = op_payload[383:352];
+                default: slot_id_of = ot_a3_pkg::A3_NO_ID;
+            endcase
+        end
+    endfunction
+
+    // Explicit sensitivity, not @*: the payload is read inside the function
+    // rather than named in the statement, and a continuous assignment would
+    // not be re-evaluated when it changes.
     reg [31:0] slot_id;
+    always @(slot or op_payload) slot_id = slot_id_of(slot);
+
+    // FAST_SCAN.  The six comparisons the counter walk made one per cycle,
+    // made at once: bit k is set exactly when slot k names a descriptor.  The
+    // comparison is the same one, against the same field, in the same order.
+    wire [5:0] slot_present = {
+        (op_payload[383:352] != ot_a3_pkg::A3_NO_ID),
+        (op_payload[351:320] != ot_a3_pkg::A3_NO_ID),
+        (op_payload[319:288] != ot_a3_pkg::A3_NO_ID),
+        (op_payload[287:256] != ot_a3_pkg::A3_NO_ID),
+        (op_payload[255:224] != ot_a3_pkg::A3_NO_ID),
+        (op_payload[223:192] != ot_a3_pkg::A3_NO_ID)
+    };
+
+    // Slots that still owe a descriptor read.  ``pick`` is the lowest of them,
+    // which is the slot the counter walk would have reached next, so the read
+    // order -- and therefore the fault order and the port's request order --
+    // is unchanged.
+    reg  [5:0] pending;
+    wire [5:0] pick_mask = FAST_SCAN_ON ? pending : 6'd0;
+    reg  [2:0] pick;
     always @* begin
-        case (slot)
-            3'd0:    slot_id = op_payload[223:192];
-            3'd1:    slot_id = op_payload[255:224];
-            3'd2:    slot_id = op_payload[287:256];
-            3'd3:    slot_id = op_payload[319:288];
-            3'd4:    slot_id = op_payload[351:320];
-            3'd5:    slot_id = op_payload[383:352];
-            default: slot_id = ot_a3_pkg::A3_NO_ID;
+        casez (pick_mask)
+            6'b?????1: pick = 3'd0;
+            6'b????10: pick = 3'd1;
+            6'b???100: pick = 3'd2;
+            6'b??1000: pick = 3'd3;
+            6'b?10000: pick = 3'd4;
+            6'b100000: pick = 3'd5;
+            default:   pick = 3'd0;
+        endcase
+    end
+    // The same encoder applied to the mask ``start`` computes, for the first
+    // read of a transaction; the register is not yet loaded that cycle.
+    reg [2:0] pick_first;
+    always @* begin
+        casez (slot_present)
+            6'b?????1: pick_first = 3'd0;
+            6'b????10: pick_first = 3'd1;
+            6'b???100: pick_first = 3'd2;
+            6'b??1000: pick_first = 3'd3;
+            6'b?10000: pick_first = 3'd4;
+            6'b100000: pick_first = 3'd5;
+            default:   pick_first = 3'd0;
         endcase
     end
 
@@ -143,7 +242,7 @@ module ot_a3_resolver_bank (
             wire [3:0]  lane_sym_index;
             wire [63:0] lane_sym_value = sym_values[lane_sym_index*64 +: 64];
             wire        lane_sym_bound = sym_bound[lane_sym_index];
-            ot_a3_view_resolver lane (
+            ot_a3_view_resolver #(.FAST_WALK(FAST_WALK)) lane (
                 .clk(clk),
                 .rst_n(rst_n),
                 .clear(clear),
@@ -204,6 +303,11 @@ module ot_a3_resolver_bank (
         end
     end
 
+    reg [31:0] pick_id;
+    always @(pick or op_payload)       pick_id       = slot_id_of(pick);
+    reg [31:0] pick_first_id;
+    always @(pick_first or op_payload) pick_first_id = slot_id_of(pick_first);
+
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -222,6 +326,7 @@ module ot_a3_resolver_bank (
             end
             desc_req <= 1'b0;
             desc_id <= ot_a3_pkg::A3_NO_ID;
+            pending <= 6'd0;
             busy <= 1'b0;
             done <= 1'b0;
             fault <= 1'b0;
@@ -247,6 +352,7 @@ module ot_a3_resolver_bank (
                 lane_finished <= 6'd0;
                 lane_faulted <= 6'd0;
                 desc_faulted <= 6'd0;
+                pending <= 6'd0;
             end else begin
                 case (state)
                     S_IDLE: begin
@@ -260,7 +366,24 @@ module ot_a3_resolver_bank (
                             lane_faulted <= 6'd0;
                             desc_faulted <= 6'd0;
                             slot_valid <= 6'd0;
-                            state <= S_SCAN;
+                            if (FAST_SCAN_ON) begin
+                                // The first read leaves with ``start``: the
+                                // caller holds op_payload from here to done,
+                                // so the six IDs are settled this cycle.
+                                if (slot_present != 6'd0) begin
+                                    desc_req <= 1'b1;
+                                    desc_id <= pick_first_id;
+                                    slot <= pick_first;
+                                    pending <= slot_present &
+                                               ~(6'd1 << pick_first);
+                                    state <= S_WAIT;
+                                end else begin
+                                    pending <= 6'd0;
+                                    state <= S_RUN;
+                                end
+                            end else begin
+                                state <= S_SCAN;
+                            end
                         end
                     end
                     S_SCAN: begin
@@ -287,8 +410,24 @@ module ot_a3_resolver_bank (
                                 lane_started[slot] <= 1'b1;
                                 slot_valid[slot] <= 1'b1;
                             end
-                            slot <= slot + 3'd1;
-                            state <= S_SCAN;
+                            if (FAST_SCAN_ON) begin
+                                // The next request leaves in the cycle that
+                                // consumed this record.  One read is in
+                                // flight at a time either way; what is gone
+                                // is the dead cycle between them.
+                                if (pending != 6'd0) begin
+                                    desc_req <= 1'b1;
+                                    desc_id <= pick_id;
+                                    slot <= pick;
+                                    pending <= pending & ~(6'd1 << pick);
+                                    state <= S_WAIT;
+                                end else begin
+                                    state <= S_RUN;
+                                end
+                            end else begin
+                                slot <= slot + 3'd1;
+                                state <= S_SCAN;
+                            end
                         end
                     end
                     S_RUN: begin

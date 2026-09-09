@@ -144,7 +144,18 @@ module ot_a3_microsequencer
     // combinational logic is one 32-bit equality (the wait-set ID against
     // A3_NO_ID) between two registers.  Both builds are driven from one
     // stimulus by rtl/test/tb_a3_front_end_equiv.sv.
-    parameter integer FAST_FRONT_END = 0
+    parameter integer FAST_FRONT_END = 0,
+    // View-resolution scheduling, forwarded to ot_a3_resolver_bank.  Two
+    // separate optimisations behind two separate knobs, both 0 by default so
+    // the unconfigured build is the control plane exactly as it shipped:
+    //   FAST_SCAN elides the bank's per-slot scan state.
+    //   FAST_WALK folds ot_a3_view_resolver's S_SELECT into the states that
+    //   already advance the term, and pairs the bounding walk's accumulate
+    //   with the next axis's operand presentation.
+    // The 0 build is held to cycle-exact identity with a verbatim copy of the
+    // shipped blocks by rtl/test/tb_a3_resolver_bank_inert.sv.
+    parameter integer FAST_SCAN = 0,
+    parameter integer FAST_WALK = 0
 )
 (
     input  wire          clk,
@@ -729,7 +740,10 @@ module ot_a3_microsequencer
     wire [5:0]      bank_slot_scale_valid;
     reg  [511:0]    op_payload;
 
-    ot_a3_resolver_bank bank (
+    ot_a3_resolver_bank #(
+        .FAST_SCAN(FAST_SCAN),
+        .FAST_WALK(FAST_WALK)
+    ) bank (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear | bank_abort),

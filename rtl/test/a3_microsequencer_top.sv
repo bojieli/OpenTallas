@@ -45,7 +45,10 @@ module ot_a3_microsequencer_top
     parameter integer CRC_CACHE     = 0,
     parameter integer CRC_PERIOD    = 0,
     parameter integer CRC_CACHE_ENTRIES = 2048,
-    parameter integer FAST_FRONT_END = 0
+    parameter integer FAST_FRONT_END = 0,
+    // View-resolution scheduling; passed through to ot_a3_device_top.
+    parameter integer FAST_SCAN     = 0,
+    parameter integer FAST_WALK     = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -231,7 +234,9 @@ module ot_a3_microsequencer_top
         .CRC_CACHE(CRC_CACHE),
         .CRC_PERIOD(CRC_PERIOD),
         .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
-        .FAST_FRONT_END(FAST_FRONT_END)
+        .FAST_FRONT_END(FAST_FRONT_END),
+        .FAST_SCAN(FAST_SCAN),
+        .FAST_WALK(FAST_WALK)
     ) device (
         .clk(clk),
         .rst_n(rst_n),
