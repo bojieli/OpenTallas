@@ -152,19 +152,19 @@
     17,
     19
   ],
-  "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+  "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "ff5d505e35d19ca1c6b0faa86b9acee98b87c6ba1254a5fb318a70464ddb07b1",
-    "ot_a3_vector_silu_mul_yosys": "9032bc538233951386dd7094157a8416f7d41c9d6fe826b18942bd3a69a3b147",
+    "ot_a3_selection_token_append_yosys": "55947da1d31001fbfc2f20d4393a339f5d53f2a668cd04a648e023c623c62116",
+    "ot_a3_vector_silu_mul_yosys": "814adec312ad971b9164e79e9fc2bf2eec5dafdfbbe488b9ae2f2d1150a45688",
     "tb_a3_operator_admission_iverilog": "3460e37fa6cefa7c61183c80645004b89c6f9ecfe8eeb66823569546406fefb9",
-    "tb_a3_operator_admission_verilator": "9b4df8a463aec312f2112686386f384f1a4e47aea1518969551a7c0e52898e14",
-    "tb_a3_operator_admission_verilator_compile": "619f3239db81eabce93d22ce133be423eab4e3ccdde00fef7623b8c8f1349557",
+    "tb_a3_operator_admission_verilator": "76c42f4f64db221cc4416de5d88d411536c88d666b247152f52006ecc77f513e",
+    "tb_a3_operator_admission_verilator_compile": "89a62daff4c15161532affbdce6e45ac85e1ba405e574c53f41d2bfbb1c67c7b",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "472d4f84b7812e8b0e486ba63b1c152a6c672258c416aaf11ee514ee738a4d8d",
-    "tb_a3_selection_token_append_verilator_compile": "b3c430eb9fbbd567b4b774fa17ec17c05639004c84aa6abc4fe3e763a9c2e900",
+    "tb_a3_selection_token_append_verilator": "d97971a1ffbfc762fd2e942bfae97aed6791f5a47376d044e2938136e6dd8258",
+    "tb_a3_selection_token_append_verilator_compile": "8063ec9c0dbb3491ef83b651512b57034aa21fea0a95d9d06bc7c6eaba9dad16",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "f44a6b3bf44c4dc171b7dede9f7d5e62864159f6b1a053b6421b1a63a39f0c35",
-    "tb_a3_vector_silu_mul_verilator_compile": "107dcce51321645365115b3b31c1517cc9d2d2c82448409553b452b74d24baa9"
+    "tb_a3_vector_silu_mul_verilator": "793b6d3374f7af25a5a042d0469ba7af58e3b17ee037abc09c41f15742f351df",
+    "tb_a3_vector_silu_mul_verilator_compile": "d8c66c903193025ab91e388f20a0eb29a3a99a30212844b7409d29765e64d6f1"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -972,9 +972,9 @@
     "runtime/reference/tensor_accelerator_rmsnorm.py": "a9e5cb021251f39269ba3a5703cd91aa428b9726316b05c88676607e6e79f6ae",
     "runtime/reference/tensor_accelerator_rope.py": "be71d1a65ba0fc3d98d52ad50e1783b326e9874d9a949b97acb75245454c51a7",
     "runtime/sim/engines/selection.py": "751240f24f79e48a25ff055908fa82592ad74fd98d48c63e71624069feca1708",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "bcc3d5c79897f711ac42db414f041e58353e3e2f0c11e86c38eda023509add89",
-    "testdata/compiler/abi3_deployment/a3_program.hex": "910a714f1eca1799df203b1330dd95f3cb6da2027569acce935729e13bcf463c",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "339149f2437fed4c2e4502c303ef294aff6d2af1dc3c5284fc33e7f11527679e",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "dcbee360748f3151492403b896ef482fe76799ead5f7f694fb7a0183c990c1cb",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
@@ -1028,10 +1028,10 @@
   "vector_sha256": {
     "a3_operator_admission_hbm/bank.hex": "77e909977cfa766bc66d7323c286c0bcdb7ec5ace0265e184dd3063083b0111e",
     "a3_operator_admission_hbm/cases.hex": "782ebf6dbdb50c3577083075a5db90cec5f0fcf0034967427349b9e18f9aefdd",
-    "a3_operator_admission_hbm/descriptors.hex": "9afb2cba8be6f7c95b7a638ae65d7823303baaf4e110d58ee6584d9c3f21788e",
+    "a3_operator_admission_hbm/descriptors.hex": "b0d8b160a44557e609ffa6705fb031b58d6ede10f5d1fbf90a2390e4690d6be9",
     "a3_operator_admission_hbm/expected.hex": "a699b10c2c0067081dfdad865ead0b730be1ccb780ffd542f90b419c54fd625c",
     "a3_operator_admission_hbm/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
-    "a3_operator_admission_hbm/index.json": "9ce5fe07cabc66dfd7621cc98d07e66968fa5a23a0d0c2306b5ec25f40d99334",
+    "a3_operator_admission_hbm/index.json": "9800d75d3ab738d6aff416f3f73712f5c818ab54dc8299357763e667ca96f769",
     "a3_operator_admission_hbm/preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
     "a3_operator_admission_hbm/source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
     "a3_operator_admission_hbm/views.hex": "bcc0de0e63b64c9f365878c06278b3508c90b7c4b122269b7fa70e300bf0c889",
@@ -1044,19 +1044,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.06288488092832267,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 25.318967647850513,
-    "tb_a3_operator_admission_iverilog_compile": 0.06290987494867295,
-    "tb_a3_operator_admission_iverilog_simulation": 19358.06855858292,
-    "tb_a3_operator_admission_verilator_compile": 31.969712387071922,
-    "tb_a3_operator_admission_verilator_simulation": 558.9007821970154,
-    "tb_a3_selection_token_append_iverilog_compile": 0.01454653195105493,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.005950656021013856,
-    "tb_a3_selection_token_append_verilator_compile": 6.789702156092972,
-    "tb_a3_selection_token_append_verilator_simulation": 0.001963991904631257,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.03192020207643509,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 33.17261418001726,
-    "tb_a3_vector_silu_mul_verilator_compile": 13.97369026299566,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.5015424520242959
+    "ot_a3_selection_token_append_yosys_elaboration": 0.024935652036219835,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 12.203195004025474,
+    "tb_a3_operator_admission_iverilog_compile": 0.05740088899619877,
+    "tb_a3_operator_admission_iverilog_simulation": 14204.422232897952,
+    "tb_a3_operator_admission_verilator_compile": 16.50041776103899,
+    "tb_a3_operator_admission_verilator_simulation": 271.9567920360714,
+    "tb_a3_selection_token_append_iverilog_compile": 0.008096406934782863,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.005141266155987978,
+    "tb_a3_selection_token_append_verilator_compile": 4.052168142050505,
+    "tb_a3_selection_token_append_verilator_simulation": 0.0013892969582229853,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.016662898007780313,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 19.065122958971187,
+    "tb_a3_vector_silu_mul_verilator_compile": 7.344920041039586,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.2694038129411638
   }
 }
