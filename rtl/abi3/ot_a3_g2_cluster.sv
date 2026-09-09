@@ -146,7 +146,19 @@ module ot_a3_g2_cluster #(
     parameter integer STATE_COMPAT  = 0,     // as routed: a3_microsequencer
     parameter integer LANES         = 8,     // as routed: a3_lq8_array
     parameter integer ADDER_STAGES  = 3,
-    parameter integer ACC_SLOTS     = 8
+    parameter integer ACC_SLOTS     = 8,
+    // The control-plane performance knobs, forwarded to the sequencer.  They
+    // are declared here so a route can select a configuration with --param
+    // instead of editing a default in a scratch worktree: a record produced
+    // that way carries worktree_dirty true and is inadmissible under the rule
+    // 49c5c55 added, which is exactly how the first shipping-configuration
+    // route was wasted.  Every one defaults to 0, so a build that names none
+    // of them is the design as routed.
+    parameter integer CRC_CACHE      = 0,
+    parameter integer CRC_PERIOD     = 0,
+    parameter integer FAST_FRONT_END = 0,
+    parameter integer FAST_SCAN      = 0,
+    parameter integer FAST_WALK      = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -416,7 +428,12 @@ module ot_a3_g2_cluster #(
     wire [15:0] seq_complete_trap_class;
 
     ot_a3_microsequencer #(
-        .STATE_COMPAT(STATE_COMPAT)
+        .STATE_COMPAT(STATE_COMPAT),
+        .CRC_CACHE(CRC_CACHE),
+        .CRC_PERIOD(CRC_PERIOD),
+        .FAST_FRONT_END(FAST_FRONT_END),
+        .FAST_SCAN(FAST_SCAN),
+        .FAST_WALK(FAST_WALK)
     ) sequencer (
         .clk(clk),
         .rst_n(rst_n),
