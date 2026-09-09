@@ -162,6 +162,11 @@ PC_HEAD_GATHER = 68
 # PCs 47 and 66 are NOT among them: the shipped prefix stops at PC 32, so
 # their RMSNorm gains are not in the retained source bank and their operands
 # are a seeded spread with only the scalar oracle behind them.
+# PC 1 appears twice over: its retained result is the coefficient row the two
+# RoPE cases read, and the instruction itself is ALSO issued here, because
+# G1a's per-campaign coverage rule needs one campaign to drive both operator
+# descriptors of the ROM lowering's merged DMA.GATHER class.  The issued case
+# does not gather the coefficient table -- see its own note.
 PC_ROPE_COEFFICIENT_GATHER = 1
 PC_EMBED_LOOKUP = 4
 PC_MATMUL_QUERY = 11
@@ -1025,6 +1030,7 @@ class Builder:
                 (PC_MATMUL_UP, "TENSOR.MATMUL"),
                 (PC_MATMUL_DOWN, "TENSOR.MATMUL"),
                 (PC_HEAD_GATHER, "DMA.GATHER"),
+                (PC_ROPE_COEFFICIENT_GATHER, "DMA.GATHER"),
             )
         }
 
@@ -1055,6 +1061,7 @@ class Builder:
         matmul_up = objects(PC_MATMUL_UP)
         matmul_down = objects(PC_MATMUL_DOWN)
         head_gather = objects(PC_HEAD_GATHER)
+        coefficient_gather = objects(PC_ROPE_COEFFICIENT_GATHER)
 
         # The reuse this campaign exists to place correctly.  Each is a fact
         # about the shipped program, so an assertion is the right way to hold
@@ -1122,6 +1129,15 @@ class Builder:
             )
         if rope_query[1] != rope_key[1]:
             raise RuntimeError("the two RoPEs no longer share one coefficient object")
+        # PC 1 publishes the row the two RoPEs then read.  That is why the
+        # coefficient object needs no second base for the gather's result: the
+        # object the shipped PC 1 writes IS the object the shipped PCs 26 and
+        # 29 read, and this campaign places it once.
+        if coefficient_gather[4] != rope_query[1]:
+            raise RuntimeError(
+                "the shipped PC 1 gather no longer publishes into the object "
+                "the RoPEs read their coefficient row from"
+            )
         if len({
             rms_attention[1], rms_mlp[1], rms_head[1],
             head_rms_query[1], head_rms_key[1],
@@ -1832,6 +1848,102 @@ class Builder:
             self.base_head_gather : self.base_head_gather + ADD_WIDTH
         ] = gather_source_row
 
+        # ------------------------------------------ the shipped PC 1 gather
+        # The second DMA.GATHER of the governed decode program, and the reason
+        # it is issued here is a property of rung G1a rather than of this
+        # bridge.  G1a decides coverage PER CAMPAIGN: a class is covered only
+        # if ONE campaign's positive cases drove EVERY operator descriptor the
+        # class names.  On the ROM lowering PC 1 and PC 68 resolve to the same
+        # shape -- (0,1,0,1), (1,8256,0,2), (4,1,0,2) -- under the same
+        # exact_index_select_v1 digest, so they merge into ONE equivalence
+        # class naming descriptors 32 and 190, and the two were driven by two
+        # DIFFERENT vehicles: the integrated shipped-prefix campaign drove 32
+        # and this campaign drove 190.  Neither campaign drove both, so the
+        # class was uncovered while every one of its instances had in fact
+        # been executed.  On the HBM lowering the two PCs resolve to extents
+        # 8256 and 8704, stay two classes, and each is singly covered -- which
+        # is exactly why the ROM record carried this uncovered class and the
+        # HBM record did not.
+        #
+        # Two facts about the operand are stated rather than softened.  The
+        # row this case selects is NOT the checkpoint RoPE coefficient table
+        # row: `cfg_source_base` is a swept staged region and the bridge
+        # addresses it by launch ordinal, so both gathers of this campaign
+        # read the row this bank stages at 0 -- the PC 66 result the RTL wrote
+        # -- and the width the SHIPPED PC 1 view declares selects its leading
+        # 256 words.  What this case measures is therefore the admission and
+        # the byte-preserving copy of the shipped descriptor at the shipped
+        # resolved shape, on an operand the RTL itself produced; it is not a
+        # second measurement of the coefficient row the integrated vehicle
+        # already gathers at PC 1 against the real checkpoint.  And it runs
+        # AFTER both RoPE cases on purpose: the object it publishes into is
+        # the coefficient object those two read, so a case order that put it
+        # first would replace their operand.
+        coefficient_operation = operations[PC_ROPE_COEFFICIENT_GATHER]
+        coefficient_output_view = next(
+            item for item in coefficient_operation["views"] if int(item["slot"]) == 4
+        )
+        coefficient_width = 2 * HEAD_WIDTH
+        if [int(value) for value in coefficient_output_view["dims"]] != [
+            1, coefficient_width
+        ]:
+            raise RuntimeError("PC 1 no longer publishes one RoPE coefficient row")
+        coefficient_gather_row = gather_source_row[:coefficient_width]
+        # The comparison must be able to fail.  The region this case writes
+        # holds the staged coefficient row until this case overwrites it, so
+        # a gather that wrote nothing would leave words that are NOT the
+        # expected ones.  If the two were ever equal the check would pass
+        # without the engine doing anything, and that is a refusal.
+        if list(
+            self.bank[
+                self.base_rope_coefficient
+                : self.base_rope_coefficient + coefficient_width
+            ]
+        ) == coefficient_gather_row:
+            raise RuntimeError(
+                "the PC 1 gather's expected result already sits in the region "
+                "it writes, so the comparison could not fail"
+            )
+        self.emit(
+            name="dma_gather_rope_coefficient_row_select",
+            pc=PC_ROPE_COEFFICIENT_GATHER,
+            family=int(Major.DMA),
+            sub=int(Dma.GATHER),
+            operator_id=coefficient_operation["operator_id"],
+            views=coefficient_operation["views"],
+            object_map=shared(),
+            context_length=17,
+            kv_plane_rows=KV_PLANE_ROWS,
+            request_max_new_tokens=1,
+            generated_before=0,
+            expected_fault=False,
+            expected_trap=TRAP_NONE,
+            expected_result_count=coefficient_width,
+            expected_work_count=1,
+            expected_write_count=coefficient_width,
+            expected_token=0,
+            expected_tie_multiplicity=0,
+            expected_eos_reason=0,
+            expected_launch=LAUNCH_GATHER,
+            compare_base=self.base_rope_coefficient,
+            compare_words=coefficient_gather_row,
+            note=(
+                "the shipped decode program's PC 1 DMA.GATHER, issued with "
+                "its own operator, view and NUMERIC records under the same "
+                "exact_index_select_v1 contract digest PC 68 carries: an FP32 "
+                "dense-row select of one 256-element row, compared word by "
+                "word at the coefficient object's own base.  The row selected "
+                "is the leading 256 words of the same staged source row PC 68 "
+                "gathers -- the PC 66 result the RTL wrote -- because this "
+                "bridge addresses a gather's source by launch ordinal and not "
+                "by the object; it is not the checkpoint coefficient table"
+            ),
+        )
+        self.bank[
+            self.base_rope_coefficient
+            : self.base_rope_coefficient + coefficient_width
+        ] = coefficient_gather_row
+
         # -- the second generated token: contexts 18 and 19 --------------------
         last = KV_PLANE_ROWS - 1
         scatter_case(PC_SCATTER_KEY, last, current_key, key_rows)
@@ -2446,7 +2558,10 @@ def build(
             "rope_coefficients": (
                 "the FP32 coefficient row the shipped PC 1 gather published, "
                 "taken from the retained golden write stream and narrowed to "
-                "BF16 by the same round-to-nearest-even the datapath performs"
+                "BF16 by the same round-to-nearest-even the datapath performs. "
+                "It is staged into the coefficient object and read there by "
+                "both RoPE cases; the PC 1 gather case, which runs after them, "
+                "then overwrites that object with the row it selects"
             ),
             "attention_projections": (
                 "the key and value projections at PCs 14 and 17 are ISSUED "
@@ -2464,6 +2579,20 @@ def build(
                 "cfg_source_base is not keyed by object; the staged row is "
                 "required at build time to be word for word the PC 66 result "
                 "the preceding case's RTL wrote into object 45"
+            ),
+            "rope_coefficient_gather_source_row": (
+                "PC 1 is issued here so ONE campaign drives both operator "
+                "descriptors of the ROM lowering's merged DMA.GATHER class, "
+                "which G1a decides per campaign.  The row it selects is NOT "
+                "the checkpoint RoPE coefficient table: this bridge addresses "
+                "a gather's source by launch ordinal, so both gathers read "
+                "the row staged at 0 and the shipped PC 1 view's own 256-wide "
+                "row selects that row's leading 256 words -- the PC 66 result "
+                "the RTL produced.  The coefficient table row itself is "
+                "gathered only by the integrated shipped-prefix vehicle, and "
+                "this case does not restate that measurement.  The case runs "
+                "after both RoPE cases because it publishes into the object "
+                "they read"
             ),
         },
         "oracles": {

@@ -53,6 +53,7 @@
     "admitted_family_count": 11,
     "capability_trapped_family_count": 0,
     "governed_program_counters": [
+      1,
       8,
       14,
       17,
@@ -138,13 +139,13 @@
     ]
   },
   "aggregate": {
-    "admission_case_count": 32,
+    "admission_case_count": 33,
     "admission_negative_case_count": 10,
-    "admission_positive_case_count": 22,
-    "admission_words_compared": 61957,
-    "admission_write_beats": 139267,
+    "admission_positive_case_count": 23,
+    "admission_words_compared": 62213,
+    "admission_write_beats": 139523,
     "append_case_count": 13,
-    "checks_per_simulator": 64224,
+    "checks_per_simulator": 64507,
     "silu_case_count": 5,
     "silu_elements_compared": 1217
   },
@@ -154,17 +155,17 @@
   ],
   "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "d69a948d59b637a9287d4a4411a86645448fbb87b465b183247dbe7bbfb66e58",
-    "ot_a3_vector_silu_mul_yosys": "72d32a6c86d1718dc6506b30a902e58d657fe3ff1c6e5a78b963ddf5a98d8b01",
-    "tb_a3_operator_admission_iverilog": "a0a396fdc93551163484583e0bdf19ebca6453e1b4305c242e704b05f4738d50",
-    "tb_a3_operator_admission_verilator": "04b20c976e722ab4cba08d00852953dab42444591c2bbcfa5814e70bd33c1267",
-    "tb_a3_operator_admission_verilator_compile": "cd510b28c6d43bfad9cff355c67e08dcc8256c63855c1b065c200418d26779ff",
+    "ot_a3_selection_token_append_yosys": "28b964cde65a9b49502b838ea628a96a87944a572d95a7288b7b9c1d4c46dd66",
+    "ot_a3_vector_silu_mul_yosys": "244559247c9d8cd79d78600c50a49ca770c5b6da18e50251c5247ce4c6010134",
+    "tb_a3_operator_admission_iverilog": "77bbc560bb9dfabc67ab95c673ac972d2fe7b0ac6d9131760d6b91d85947217d",
+    "tb_a3_operator_admission_verilator": "d36c0030768455ce5db4a006877f85a75054366964d2ba54c10e1e9045dbb5a0",
+    "tb_a3_operator_admission_verilator_compile": "743e9082e981d8b347a1bd4e889d5892486ec43a9bba24ee16f90fb7af227420",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "6f8ad434d62049ab47dcba49ac9b00733028f27e15b9b792e873fee9ff8f17d2",
-    "tb_a3_selection_token_append_verilator_compile": "550c28013ef620d21eecbca60d32726d478fd31afe0677e7f093cbc7b6dba727",
+    "tb_a3_selection_token_append_verilator": "7eae7bc74db75a8e5a646b724f8d37dac6de3e1a3dc6875cee8b3711f035e113",
+    "tb_a3_selection_token_append_verilator_compile": "e756ca8c98d54d4d40008abc1dfcd08cd7432f6979dca12b293fe47e6b242f2f",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "2e1af072440ebdc81533b824d12419a3ec817762d9fa8ff3086a66e394d7f6b3",
-    "tb_a3_vector_silu_mul_verilator_compile": "0008c5ffced3fe40c9b86002764c5133464798941d5740a3de70e2d3c5171f90"
+    "tb_a3_vector_silu_mul_verilator": "a56a35ccd539df4bcdafc5b16f95e27d4ebd173782b9ec635b8e52b02533e843",
+    "tb_a3_vector_silu_mul_verilator_compile": "a52efbb5b09f497272e5c22246f3b029565f5a6a3e3559570a7b8631151e6fc9"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -365,13 +366,13 @@
           "eos": 0,
           "fault": 0,
           "index": 16,
-          "result": 1024,
+          "result": 256,
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 61465,
+          "verification_cycles": 790,
           "work": 1,
-          "writes": 20480
+          "writes": 256
         },
         {
           "eos": 0,
@@ -389,6 +390,18 @@
           "eos": 0,
           "fault": 0,
           "index": 18,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61465,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 19,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -400,7 +413,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 19,
+          "index": 20,
           "result": 1,
           "ties": 2,
           "token": 151645,
@@ -412,7 +425,7 @@
         {
           "eos": 1,
           "fault": 0,
-          "index": 20,
+          "index": 21,
           "result": 1,
           "ties": 0,
           "token": 151645,
@@ -424,7 +437,7 @@
         {
           "eos": 0,
           "fault": 0,
-          "index": 21,
+          "index": 22,
           "result": 1,
           "ties": 0,
           "token": 12345,
@@ -436,7 +449,7 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 22,
+          "index": 23,
           "result": 1,
           "ties": 0,
           "token": 0,
@@ -448,23 +461,11 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 23,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 11,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
           "index": 24,
           "result": 1,
           "ties": 0,
           "token": 0,
-          "trap": 4,
+          "trap": 3,
           "verification_cycles": 11,
           "work": 151936,
           "writes": 0
@@ -477,7 +478,7 @@
           "ties": 0,
           "token": 0,
           "trap": 4,
-          "verification_cycles": 1,
+          "verification_cycles": 11,
           "work": 151936,
           "writes": 0
         },
@@ -485,6 +486,18 @@
           "eos": 0,
           "fault": 1,
           "index": 26,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 1,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 27,
           "result": 4096,
           "ties": 0,
           "token": 0,
@@ -496,7 +509,7 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 27,
+          "index": 28,
           "result": 0,
           "ties": 0,
           "token": 0,
@@ -508,25 +521,13 @@
         {
           "eos": 0,
           "fault": 1,
-          "index": 28,
+          "index": 29,
           "result": 0,
           "ties": 0,
           "token": 0,
           "trap": 4,
           "verification_cycles": 16,
           "work": 0,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 29,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 7,
-          "work": 151936,
           "writes": 0
         },
         {
@@ -549,6 +550,18 @@
           "ties": 0,
           "token": 0,
           "trap": 3,
+          "verification_cycles": 7,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 32,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
           "verification_cycles": 5,
           "work": 151936,
           "writes": 0
@@ -557,9 +570,9 @@
       "geometry": {
         "bank_words": 247426,
         "case_words": 128,
-        "cases": 32,
+        "cases": 33,
         "descriptor_records": 218,
-        "expected_words": 61957,
+        "expected_words": 62213,
         "index_words": 64,
         "map_base": 64,
         "map_entries": 32,
@@ -570,10 +583,10 @@
         "weight_words": 8388608
       },
       "pass": {
-        "cases": 32,
-        "checks": 62827,
-        "positive": 22,
-        "words": 61957
+        "cases": 33,
+        "checks": 63110,
+        "positive": 23,
+        "words": 62213
       }
     },
     "tb_a3_selection_token_append": {
@@ -796,7 +809,8 @@
     "normalization_gains": "the PC 8, PC 20 and PC 23 gains are the real checkpoint gains the retained shipped-prefix source bank carries, at their own objects' bases; the PC 47 and PC 66 gains are a seeded spread because the shipped prefix stops at PC 32 and never staged them",
     "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
     "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations",
-    "rope_coefficients": "the FP32 coefficient row the shipped PC 1 gather published, taken from the retained golden write stream and narrowed to BF16 by the same round-to-nearest-even the datapath performs"
+    "rope_coefficient_gather_source_row": "PC 1 is issued here so ONE campaign drives both operator descriptors of the ROM lowering's merged DMA.GATHER class, which G1a decides per campaign.  The row it selects is NOT the checkpoint RoPE coefficient table: this bridge addresses a gather's source by launch ordinal, so both gathers read the row staged at 0 and the shipped PC 1 view's own 256-wide row selects that row's leading 256 words -- the PC 66 result the RTL produced.  The coefficient table row itself is gathered only by the integrated shipped-prefix vehicle, and this case does not restate that measurement.  The case runs after both RoPE cases because it publishes into the object they read",
+    "rope_coefficients": "the FP32 coefficient row the shipped PC 1 gather published, taken from the retained golden write stream and narrowed to BF16 by the same round-to-nearest-even the datapath performs. It is staged into the coefficient object and read there by both RoPE cases; the PC 1 gather case, which runs after them, then overwrites that object with the row it selects"
   },
   "oracles": {
     "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
@@ -841,6 +855,7 @@
       "vector_add_mlp_residual_read_modify_write",
       "vector_rms_norm_final",
       "dma_gather_head_row_select",
+      "dma_gather_rope_coefficient_row_select",
       "dma_scatter_key_position18",
       "dma_scatter_value_position18",
       "attention_gqa_context19",
@@ -978,7 +993,7 @@
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
-    "tools/build_a3_operator_admission_vectors.py": "38978c2c05c1d64bfa932e073f0d82608169cfcb1ee120cf73d75c66ca2d87f9",
+    "tools/build_a3_operator_admission_vectors.py": "e0b22d19d97a31481e253fa692a184e85c67c392ce6aa115577a310a9c424030",
     "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
     "tools/run_a3_operator_admission_rtl_campaign.py": "0a77919d63da0a1b799225eeb091acad0a48fd2ea39da39c7921568f5a473ada"
   },
@@ -1027,14 +1042,14 @@
   },
   "vector_sha256": {
     "a3_operator_admission/bank.hex": "aefaf27a75ca9ecfded9a3a051d1b9ec6ba56c547d58de860c1ebe6d3a4ac815",
-    "a3_operator_admission/cases.hex": "8da7b534edcdb25df5ce885cce642a8e0249ec0bb9f095ecd1341eeee8becfed",
+    "a3_operator_admission/cases.hex": "e3af9047a374d86a601ac177c900fc18fff09281211b3fbc71dec634368f3464",
     "a3_operator_admission/descriptors.hex": "0787952ceba50aed8cc23abb0543c8c594963132041135671b8697197386879e",
-    "a3_operator_admission/expected.hex": "a699b10c2c0067081dfdad865ead0b730be1ccb780ffd542f90b419c54fd625c",
+    "a3_operator_admission/expected.hex": "3eda81f0c7f86b9b0a43744c023e5b6f2d559e725e33237891bf3933c715eaa5",
     "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
-    "a3_operator_admission/index.json": "940c9f08bab07cfb369338b927adec30eb87222f53e5b6cce6c8c25379d27249",
+    "a3_operator_admission/index.json": "84c48d18b626359d4912d15ff28b765c8704d2baaf3f78bcff0645fd91208622",
     "a3_operator_admission/preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
     "a3_operator_admission/source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
-    "a3_operator_admission/views.hex": "a93c8d92541b170a030b83f834e47d18f8918db8fffed228da463f73f3fe375e",
+    "a3_operator_admission/views.hex": "83c63f9a1c18a5058358c149fbc362ac662650ea803a688c5949eb68c68f8f8f",
     "a3_operator_admission/weights.hex": "14a41091f0303795889f44a95774fb0672e287ad5d8421eb39c09dd0a71449e9",
     "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
     "a3_operator_units/index.json": "c2ed9527772d7ef32474f6881935b9b25c71802533765c95b31b17a5683f9d17",
@@ -1044,19 +1059,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.024709890829399228,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 11.989925394998863,
-    "tb_a3_operator_admission_iverilog_compile": 0.061523023061454296,
-    "tb_a3_operator_admission_iverilog_simulation": 14160.968680519843,
-    "tb_a3_operator_admission_verilator_compile": 16.74196472298354,
-    "tb_a3_operator_admission_verilator_simulation": 271.19745353003964,
-    "tb_a3_selection_token_append_iverilog_compile": 0.008108017966151237,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.0052893031388521194,
-    "tb_a3_selection_token_append_verilator_compile": 3.902221580967307,
-    "tb_a3_selection_token_append_verilator_simulation": 0.0016767638735473156,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.014131187926977873,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 19.716112646041438,
-    "tb_a3_vector_silu_mul_verilator_compile": 7.6496188619639724,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.2726172669790685
+    "ot_a3_selection_token_append_yosys_elaboration": 0.016621747985482216,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 10.925065432908013,
+    "tb_a3_operator_admission_iverilog_compile": 0.11107574310153723,
+    "tb_a3_operator_admission_iverilog_simulation": 16551.80936434702,
+    "tb_a3_operator_admission_verilator_compile": 14.39291884494014,
+    "tb_a3_operator_admission_verilator_simulation": 261.9678102200851,
+    "tb_a3_selection_token_append_iverilog_compile": 0.013680523028597236,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.006453579990193248,
+    "tb_a3_selection_token_append_verilator_compile": 3.9791437049861997,
+    "tb_a3_selection_token_append_verilator_simulation": 0.0012085309717804193,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.014832467073574662,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 18.52227433398366,
+    "tb_a3_vector_silu_mul_verilator_compile": 6.787026437930763,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.2892218101769686
   }
 }

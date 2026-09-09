@@ -65,8 +65,15 @@ def test_vectors_are_byte_exact_and_source_current() -> None:
         entry for entry in manifest["admitted_families"]
         if entry not in GOVERNED_FAMILIES
     ] == OBJECT_KEYED_FAMILIES
+    # PC 1 joins the governed set with the dma_gather_rope_coefficient_row_select
+    # case.  It is there so that ONE campaign drives both descriptors of the ROM
+    # DMA.GATHER class: PCs 1 and 68 resolve to the same shape and merge into a
+    # single class, G1a's rule is evaluated per campaign with no union across
+    # campaigns, and before this the two descriptors were driven by two
+    # different vehicles -- so the class was uncovered despite both being
+    # exercised.  Closing it takes G1a from 11/15 to 12/15 on ROM.
     assert manifest["governed_program_counters"] == [
-        8, 14, 17, 20, 23, 26, 29, 32, 35, 38, 44, 47, 56, 62, 66, 68, 70, 72
+        1, 8, 14, 17, 20, 23, 26, 29, 32, 35, 38, 44, 47, 56, 62, 66, 68, 70, 72
     ]
 
 
@@ -175,10 +182,10 @@ def test_retained_dual_simulator_campaign_is_source_current() -> None:
     assert result["admission"]["capability_trapped_family_count"] == 0
     assert result["contexts_covered"] == [17, 19]
     aggregate = result["aggregate"]
-    assert aggregate["admission_case_count"] == 32
-    assert aggregate["admission_positive_case_count"] == 22
+    assert aggregate["admission_case_count"] == 33
+    assert aggregate["admission_positive_case_count"] == 23
     assert aggregate["admission_negative_case_count"] == 10
-    assert aggregate["admission_words_compared"] == 61_957
+    assert aggregate["admission_words_compared"] == 62_213
     assert aggregate["silu_elements_compared"] == 1_217
     assert aggregate["append_case_count"] == 13
     scope = result["scope"]

@@ -898,6 +898,57 @@
       "sub": 2
     },
     {
+      "context_length": 17,
+      "expected": {
+        "compare_base": 243074,
+        "compare_count": 256,
+        "eos_reason": 0,
+        "fault": false,
+        "launch": 11,
+        "result_count": 256,
+        "tie_multiplicity": 0,
+        "token": 0,
+        "trap_class": 0,
+        "work_count": 1,
+        "write_beats": 256
+      },
+      "family": 16,
+      "name": "dma_gather_rope_coefficient_row_select",
+      "note": "the shipped decode program's PC 1 DMA.GATHER, issued with its own operator, view and NUMERIC records under the same exact_index_select_v1 contract digest PC 68 carries: an FP32 dense-row select of one 256-element row, compared word by word at the coefficient object's own base.  The row selected is the leading 256 words of the same staged source row PC 68 gathers -- the PC 66 result the RTL wrote -- because this bridge addresses a gather's source by launch ordinal and not by the object; it is not the checkpoint coefficient table",
+      "object_map": {
+        "10": 16512,
+        "13": 8192,
+        "149": 53248,
+        "156": 65536,
+        "162": 77824,
+        "17": 0,
+        "186": 243330,
+        "194": 90112,
+        "2": 12288,
+        "200": 242048,
+        "209": 242049,
+        "23": 0,
+        "27": 243074,
+        "36": 49152,
+        "4": 4096,
+        "45": 45056,
+        "55": 40960,
+        "6": 0,
+        "64": 38912,
+        "7": 4194304,
+        "71": 39936,
+        "8": 16384,
+        "84": 242050
+      },
+      "objects_named": [
+        27
+      ],
+      "operator_descriptor_id": 32,
+      "pc": 1,
+      "placement_valid": true,
+      "sub": 2
+    },
+    {
       "context_length": 19,
       "expected": {
         "compare_base": 18432,
@@ -1667,17 +1718,17 @@
   },
   "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
   "expected_pass": {
-    "cases": 32,
-    "compared_words": 61957,
+    "cases": 33,
+    "compared_words": 62213,
     "negative": 10,
-    "positive": 22,
-    "write_beats": 139267
+    "positive": 23,
+    "write_beats": 139523
   },
   "geometry": {
     "bank_words": 247426,
     "case_words": 128,
     "descriptor_records": 218,
-    "expected_words": 61957,
+    "expected_words": 62213,
     "index_words": 64,
     "kv_plane_rows": 19,
     "map_base": 64,
@@ -1690,6 +1741,7 @@
     "weight_words": 8388608
   },
   "governed_program_counters": [
+    1,
     8,
     14,
     17,
@@ -1711,13 +1763,13 @@
   ],
   "image_sha256": {
     "bank.hex": "aefaf27a75ca9ecfded9a3a051d1b9ec6ba56c547d58de860c1ebe6d3a4ac815",
-    "cases.hex": "8da7b534edcdb25df5ce885cce642a8e0249ec0bb9f095ecd1341eeee8becfed",
+    "cases.hex": "e3af9047a374d86a601ac177c900fc18fff09281211b3fbc71dec634368f3464",
     "descriptors.hex": "0787952ceba50aed8cc23abb0543c8c594963132041135671b8697197386879e",
-    "expected.hex": "a699b10c2c0067081dfdad865ead0b730be1ccb780ffd542f90b419c54fd625c",
+    "expected.hex": "3eda81f0c7f86b9b0a43744c023e5b6f2d559e725e33237891bf3933c715eaa5",
     "index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
     "preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
     "source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
-    "views.hex": "a93c8d92541b170a030b83f834e47d18f8918db8fffed228da463f73f3fe375e",
+    "views.hex": "83c63f9a1c18a5058358c149fbc362ac662650ea803a688c5949eb68c68f8f8f",
     "weights.hex": "14a41091f0303795889f44a95774fb0672e287ad5d8421eb39c09dd0a71449e9"
   },
   "operands": {
@@ -1727,7 +1779,8 @@
     "normalization_gains": "the PC 8, PC 20 and PC 23 gains are the real checkpoint gains the retained shipped-prefix source bank carries, at their own objects' bases; the PC 47 and PC 66 gains are a seeded spread because the shipped prefix stops at PC 32 and never staged them",
     "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
     "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations",
-    "rope_coefficients": "the FP32 coefficient row the shipped PC 1 gather published, taken from the retained golden write stream and narrowed to BF16 by the same round-to-nearest-even the datapath performs"
+    "rope_coefficient_gather_source_row": "PC 1 is issued here so ONE campaign drives both operator descriptors of the ROM lowering's merged DMA.GATHER class, which G1a decides per campaign.  The row it selects is NOT the checkpoint RoPE coefficient table: this bridge addresses a gather's source by launch ordinal, so both gathers read the row staged at 0 and the shipped PC 1 view's own 256-wide row selects that row's leading 256 words -- the PC 66 result the RTL produced.  The coefficient table row itself is gathered only by the integrated shipped-prefix vehicle, and this case does not restate that measurement.  The case runs after both RoPE cases because it publishes into the object they read",
+    "rope_coefficients": "the FP32 coefficient row the shipped PC 1 gather published, taken from the retained golden write stream and narrowed to BF16 by the same round-to-nearest-even the datapath performs. It is staged into the coefficient object and read there by both RoPE cases; the PC 1 gather case, which runs after them, then overwrites that object with the row it selects"
   },
   "oracles": {
     "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
