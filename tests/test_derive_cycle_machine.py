@@ -1377,3 +1377,159 @@ def test_the_two_deployments_cost_the_same_tensor_work_only_inside_a_narrow_band
         "bigger finding than the one this test was written for"
     )
     assert outside[0] / outside[1] == pytest.approx(0.5625, rel=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# The shipped-deployment manifest (configs/abi3/shipped_deployments.json)
+# ---------------------------------------------------------------------------
+#
+# ``build/`` is gitignored, so the deployments gate C2 binds are NOT versioned
+# and a pinned digest is the only thing that makes an audit result
+# reproducible.  The pins used to be a Python literal inside the generator;
+# they now live in a committed manifest so that changing one shows up as a
+# reviewable diff.  These tests pin the manifest's contract, not its contents:
+# the contents are already checked, registration by registration, by
+# ``test_every_registered_deployment_is_pinned_by_digest``.
+
+
+def _manifest_body():
+    from tools.derive_cycle_machine import SHIPPED_DEPLOYMENTS_MANIFEST
+
+    return json.loads(SHIPPED_DEPLOYMENTS_MANIFEST.read_text())
+
+
+def test_the_registration_table_is_the_committed_manifest():
+    """The generator holds no digest of its own.
+
+    A pin the reader cannot find in a config file is a pin nobody reviews.
+    Every registration the audit uses must come from the manifest, and the
+    generator's source must not carry a competing copy of one.
+    """
+    from tools import derive_cycle_machine as dcm
+
+    body = _manifest_body()
+    assert body["schema"] == dcm.SHIPPED_DEPLOYMENTS_SCHEMA
+    from_manifest = {
+        (r["base_capability"], r["model_id"]): r["deployment_sha256"]
+        for r in body["registrations"]
+    }
+    in_use = {
+        (base, e["model_id"]): e["deployment_sha256"]
+        for base, entries in SHIPPED_DEPLOYMENTS.items()
+        for e in entries
+    }
+    assert in_use == from_manifest and in_use, (
+        "the audit is binding deployments the manifest does not register"
+    )
+    source = pathlib.Path(dcm.__file__).read_text()
+    for digest in from_manifest.values():
+        assert digest not in source, (
+            f"{digest[:12]} is hardcoded in derive_cycle_machine.py as well as "
+            "the manifest; two copies of a pin drift apart"
+        )
+
+
+def test_every_registration_states_how_to_rebuild_it():
+    """A pin nobody can rebuild is not evidence.
+
+    ``build/abi3`` is not tracked, so a registration that does not say how its
+    bundle was produced cannot be reproduced by a reader who does not have the
+    directory -- which is every reader on a fresh clone.
+    """
+    for reg in _manifest_body()["registrations"]:
+        argv = reg["build_command"]
+        assert argv and all(isinstance(a, str) for a in argv), reg
+        tool = next((a for a in argv if a.endswith(".py")), None)
+        assert tool is not None, f"{reg['registration_id']} names no builder"
+        assert (REPO / tool).exists(), (
+            f"{reg['registration_id']} is rebuilt by {tool}, which is absent"
+        )
+        assert reg["root"] in argv, (
+            f"{reg['registration_id']}'s build command does not write "
+            f"{reg['root']}"
+        )
+
+
+def test_a_frozen_pin_records_the_drift_instead_of_hiding_it():
+    """A frozen evidence pin owes the reader the divergence it is frozen over.
+
+    ``frozen_evidence`` means committed artifacts name the pinned digest, so
+    the pin must NOT be refreshed even though current source no longer
+    produces it.  That is only safe to state if the registration also records
+    what current source produces instead, and where the pin last reproduced --
+    otherwise "frozen" is indistinguishable from "stale and unnoticed", which
+    is the stale-artifact defect the R-series post-mortems name.
+    """
+    body = _manifest_body()
+    assert set(body["pin_kinds"]) == {"frozen_evidence", "live"}
+    for reg in body["registrations"]:
+        assert reg["frozen"] == (reg["pin_kind"] == "frozen_evidence")
+        if not reg["frozen"]:
+            continue
+        for field in ("reproduces_from_source_at",
+                      "current_source_deployment_sha256",
+                      "current_source_measured_at_commit", "why_frozen"):
+            assert reg.get(field), (
+                f"{reg['registration_id']} is frozen but states no {field}"
+            )
+        assert (reg["current_source_deployment_sha256"]
+                != reg["deployment_sha256"]), (
+            f"{reg['registration_id']} is marked frozen_evidence but current "
+            "source reproduces its pin; it is a live pin and should say so"
+        )
+        assert reg["evidence"], reg["registration_id"]
+
+
+def test_the_manifest_loader_refuses_a_pin_it_cannot_trust(tmp_path):
+    """The move to a config file must not become a way to smuggle a pin in.
+
+    The literal could only be edited in a diff a Python reviewer reads.  A JSON
+    file is easier to edit, so the loader is stricter than the literal was: a
+    digest that is not a digest, a pin kind it does not know, a registration
+    that does not say how to rebuild itself, and two deployments claiming one
+    capability-and-model are each refused rather than read with a guess.
+    """
+    import copy
+
+    from tools.derive_cycle_machine import (
+        SHIPPED_DEPLOYMENTS_MANIFEST, DerivationError, load_shipped_deployments,
+    )
+
+    good = _manifest_body()
+
+    def written(mutate, name):
+        body = copy.deepcopy(good)
+        mutate(body)
+        path = tmp_path / f"{name.replace(' ', '_')}.json"
+        path.write_text(json.dumps(body))
+        return path
+
+    cases = {
+        "wrong schema": lambda b: b.update(schema="opentallas.not_this.v1"),
+        "no registrations": lambda b: b.update(registrations=[]),
+        "short digest": lambda b: b["registrations"][0].update(
+            deployment_sha256="abc123"),
+        "non-hex digest": lambda b: b["registrations"][0].update(
+            deployment_sha256="z" * 64),
+        "unknown pin kind": lambda b: b["registrations"][0].update(
+            pin_kind="probably_fine"),
+        "frozen contradicts pin kind": lambda b: b["registrations"][0].update(
+            frozen=False),
+        "no build command": lambda b: b["registrations"][0].update(
+            build_command=[]),
+        "no evidence": lambda b: b["registrations"][0].update(evidence=[]),
+        "no root": lambda b: b["registrations"][0].pop("root"),
+        "one capability and model registered twice":
+            lambda b: b["registrations"][1].update(
+                registration_id="clone",
+                base_capability=b["registrations"][0]["base_capability"],
+                model_id=b["registrations"][0]["model_id"]),
+    }
+    for name, mutate in cases.items():
+        with pytest.raises(DerivationError):
+            load_shipped_deployments(written(mutate, name))
+
+    # and the committed manifest itself still loads to the table in use
+    assert load_shipped_deployments(SHIPPED_DEPLOYMENTS_MANIFEST) == (
+        SHIPPED_DEPLOYMENTS
+    )

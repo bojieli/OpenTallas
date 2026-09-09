@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.abi3.shipped_deployments.v1",
+  "version": "1.0.0",
+  "generator": "hand-authored; read by tools/derive_cycle_machine.py",
+  "purpose": "The compiled deployments the C2 audit binds each design-point cell to, keyed by the base capability record each was lowered against and selected within that key by model id.  build/ is gitignored, so the bundles themselves are NOT versioned and a digest here is the only thing that makes an audit result reproducible: tools/derive_cycle_machine.py _bind_shipped_deployment refuses a root whose deployment.json carries a different deployment_sha256 with status 'not the registered deployment', and refuses one lowered against a different capability with 'bound to a different capability'.  Both refusals make the cell NOT COMPARABLE, which gate C2 reads as a failure.  This file exists so that the pins are reviewable in a diff instead of buried in a Python literal.",
+  "pin_kinds": {
+    "frozen_evidence": "A byte-identical historical snapshot.  Committed evidence artifacts name THIS digest, so re-pointing the pin at a fresh lowering would orphan that evidence and is a defect, not an update.  The registration is expected NOT to reproduce from current source; 'reproduces_from_source_at' names the last commit at which it did, and 'current_source_deployment_sha256' records what current source produces instead.  Refreshing one requires re-running every artifact in 'evidence' in the same change.",
+    "live": "A pin meant to track current source.  The build command must reproduce the digest at HEAD, and a divergence is a stale-artifact defect to fix by rebuilding, not by re-pinning.  No registration is currently of this kind."
+  },
+  "registrations": [
+    {
+      "registration_id": "qwen3-8b-rom-e9",
+      "base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+      "model_id": "qwen3-8b",
+      "root": "build/abi3/qwen3-8b-rom-e9",
+      "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "pin_kind": "frozen_evidence",
+      "frozen": true,
+      "build_command": [
+        "python3",
+        "tools/build_rom_deployment.py",
+        "qwen3-8b",
+        "--ir",
+        "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+        "--output",
+        "build/abi3/qwen3-8b-rom-e9"
+      ],
+      "registered_at_commit": "b7441e8",
+      "reproduces_from_source_at": "6b41a53",
+      "current_source_deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "current_source_measured_at_commit": "58ce25b",
+      "why_frozen": "aae304e re-derived SCHEDULE tile_rows from the operand surface instead of the loop trip and moved this bundle's KV-scatter descriptors from tile_rows 512 to 66,048; the three evidence artifacts below were produced before it and name the pinned digest.  Re-pointing this registration without re-running all three would leave the audit citing evidence about a bundle that no longer exists.",
+      "evidence": [
+        "results/derived/qwen3_e9_deployment_audit.json",
+        "results/abi3/rom_schedule_checks_e9.json",
+        "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+        "commit b7441e8 (AM-E9 v2: one activation-buffer placement, one bank_mask)"
+      ]
+    },
+    {
+      "registration_id": "qwen3-8b-hbm-e9",
+      "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+      "model_id": "qwen3-8b",
+      "root": "build/abi3/qwen3-8b-hbm-e9",
+      "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "pin_kind": "frozen_evidence",
+      "frozen": true,
+      "build_command": [
+        "python3",
+        "tools/build_hbm_sram_deployment.py",
+        "--ir",
+        "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+        "--profile",
+        "single-chip",
+        "--out",
+        "build/abi3/qwen3-8b-hbm-e9"
+      ],
+      "registered_at_commit": "b7441e8",
+      "reproduces_from_source_at": "6b41a53",
+      "current_source_deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "current_source_measured_at_commit": "58ce25b",
+      "why_frozen": "The ROM half of this pair is frozen, and a C2 cell compares the two halves against each other.  aae304e moved this bundle's KV-scatter tile_rows 512 -> 66,048 symmetrically with the ROM side, so refreshing one half alone would compare a post-aae304e lowering against a pre-aae304e one.  The pair moves together or not at all.",
+      "evidence": [
+        "results/derived/qwen3_e9_deployment_audit.json",
+        "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+        "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+        "commit b7441e8 (AM-E9 v2: one activation-buffer placement, one bank_mask)"
+      ]
+    },
+    {
+      "registration_id": "deepseek-v4-flash-rom-array-32-e9",
+      "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+      "model_id": "deepseek-v4-flash-0731",
+      "root": "build/abi3/deepseek-v4-flash-rom-array-32-e9",
+      "deployment_sha256": "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9",
+      "pin_kind": "frozen_evidence",
+      "frozen": true,
+      "build_command": [
+        "python3",
+        "tools/build_rom_deployment.py",
+        "deepseek-v4-flash-array",
+        "--ir",
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "--output",
+        "build/abi3/deepseek-v4-flash-rom-array-32-e9"
+      ],
+      "registered_at_commit": "6b41a53",
+      "reproduces_from_source_at": "6b41a53",
+      "current_source_deployment_sha256": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "current_source_measured_at_commit": "58ce25b",
+      "why_frozen": "Two later commits moved this lowering: aae304e (SCHEDULE tile_rows from the operand surface: 3,159 -> 3,165 descriptors) and 4f390b9 (the array token block is 512, which moves max_retired_work 4,206,473 -> 6,655,369).  results/abi3/rom_schedule_checks_deepseek_e9.json names the pinned digest and was produced before both.",
+      "evidence": [
+        "results/abi3/rom_schedule_checks_deepseek_e9.json",
+        "commit 6b41a53 (the DeepSeek Flash pair re-lowered under AM-E9 v2)"
+      ]
+    },
+    {
+      "registration_id": "deepseek-v4-flash-hbm-e9",
+      "base_capability": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+      "model_id": "deepseek-v4-flash-0731",
+      "root": "build/abi3/deepseek-v4-flash-hbm-e9",
+      "deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "pin_kind": "frozen_evidence",
+      "frozen": true,
+      "build_command": [
+        "python3",
+        "tools/build_hbm_sram_deployment.py",
+        "--ir",
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "--profile",
+        "cluster-32",
+        "--out",
+        "build/abi3/deepseek-v4-flash-hbm-e9"
+      ],
+      "registered_at_commit": "6b41a53",
+      "reproduces_from_source_at": "6b41a53",
+      "current_source_deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "current_source_measured_at_commit": "58ce25b",
+      "why_frozen": "aae304e moved this bundle from 3,305 to 3,341 descriptors (its SCHEDULE count 45 -> 81).  Its ROM twin is frozen for the same reason and a C2 cell compares the two, so the pair moves together or not at all.  results/abi3/hbm_deepseek_e9_deployment_certificate.json names the pinned digest.",
+      "evidence": [
+        "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+        "commit 6b41a53 (the DeepSeek Flash pair re-lowered under AM-E9 v2)"
+      ]
+    }
+  ]
+}

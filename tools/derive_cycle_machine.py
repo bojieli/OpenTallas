@@ -2502,86 +2502,152 @@ SCHEDULE_FIELDS: tuple[str, ...] = (
 #: An entry added here must cite the artifact field that justifies it.
 DEPLOYMENT_AUDIT_ALLOWLIST: dict[str, str] = {}
 
+#: Where the registrations live.  ``build/abi3`` is a build product and is not
+#: tracked, so a digest is the only thing that makes an audit result
+#: reproducible -- and a digest buried in a Python literal is not reviewable as
+#: a pin.  The manifest is the committed record; this module reads it and never
+#: carries a digest of its own.
+SHIPPED_DEPLOYMENTS_MANIFEST: Path = REPO / "configs/abi3/shipped_deployments.json"
+
+#: The schema string the manifest must declare.  A manifest that does not
+#: declare it is refused rather than read with guessed semantics.
+SHIPPED_DEPLOYMENTS_SCHEMA = "opentallas.abi3.shipped_deployments.v1"
+
+#: Every field a registration must state.  ``pin_kind`` and ``build_command``
+#: are required and not decorative: a pin nobody can rebuild is not evidence,
+#: and a reader who cannot tell a frozen historical snapshot from a pin meant
+#: to track current source cannot tell a stale artifact from a deliberate one.
+_REGISTRATION_REQUIRED_FIELDS: tuple[str, ...] = (
+    "registration_id", "base_capability", "model_id", "root",
+    "deployment_sha256", "pin_kind", "frozen", "build_command", "evidence",
+)
+
+#: ``frozen_evidence`` -- a byte-identical historical snapshot that committed
+#: evidence artifacts name by digest; it is expected NOT to reproduce from
+#: current source, and re-pointing it without re-running its evidence is a
+#: defect.  ``live`` -- a pin meant to track current source, whose build command
+#: must reproduce its digest at HEAD.  The manifest's own ``pin_kinds`` block
+#: carries the same two definitions for a reader of the file.
+_PIN_KINDS: tuple[str, ...] = ("frozen_evidence", "live")
+
+
+def load_shipped_deployments(
+    path: Path | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """The registration table, read from the committed manifest.
+
+    Keyed by the base capability record each deployment was lowered against.
+    One capability record can serve more than one model -- every DeepSeek cell
+    and every Qwen cell reaches the GPU side through an ``hbm_sram_*`` record --
+    so the value is the LIST of registrations for that record and the model id
+    selects within it.  A cell binds a side only when the cell's base capability
+    is the key AND the deployment's model is the cell's model; the audit then
+    verifies, from the deployment manifest on disk, that the bundle really
+    carries that capability's digest and is the exact deployment the cited
+    evidence names.
+
+    The manifest is validated on the way in, and every failure raises rather
+    than dropping the offending row: a registration that silently vanished
+    would turn a bound cell into "no deployment built", which reads as a
+    missing build rather than as a broken manifest.
+    """
+    manifest_path = SHIPPED_DEPLOYMENTS_MANIFEST if path is None else Path(path)
+    body = json.loads(manifest_path.read_text())
+    if body.get("schema") != SHIPPED_DEPLOYMENTS_SCHEMA:
+        raise DerivationError(
+            f"{_relative(manifest_path)} declares schema "
+            f"{body.get('schema')!r}, not {SHIPPED_DEPLOYMENTS_SCHEMA!r}"
+        )
+    registrations = body.get("registrations")
+    if not isinstance(registrations, list) or not registrations:
+        raise DerivationError(
+            f"{_relative(manifest_path)} states no registrations"
+        )
+    table: dict[str, list[dict[str, Any]]] = {}
+    seen: set[tuple[str, str]] = set()
+    ids: set[str] = set()
+    for row in registrations:
+        missing = [f for f in _REGISTRATION_REQUIRED_FIELDS if f not in row]
+        if missing:
+            raise DerivationError(
+                f"{_relative(manifest_path)}: registration "
+                f"{row.get('registration_id', '<unnamed>')!r} omits "
+                f"{', '.join(missing)}"
+            )
+        entry = dict(row)
+        rid = str(entry["registration_id"])
+        if rid in ids:
+            raise DerivationError(
+                f"{_relative(manifest_path)}: registration_id {rid!r} is "
+                "declared twice"
+            )
+        ids.add(rid)
+        digest = str(entry["deployment_sha256"])
+        if len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest):
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} pins "
+                f"{digest!r}, which is not a sha256 digest"
+            )
+        if entry["pin_kind"] not in _PIN_KINDS:
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} declares pin_kind "
+                f"{entry['pin_kind']!r}, not one of {', '.join(_PIN_KINDS)}"
+            )
+        if not isinstance(entry["frozen"], bool):
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} states a non-boolean "
+                "frozen"
+            )
+        if entry["frozen"] != (entry["pin_kind"] == "frozen_evidence"):
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} states frozen="
+                f"{entry['frozen']} against pin_kind {entry['pin_kind']!r}; "
+                "the two must agree"
+            )
+        if (not isinstance(entry["build_command"], list)
+                or not entry["build_command"]
+                or not all(isinstance(a, str) for a in entry["build_command"])):
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} states no build command; "
+                "a pin nobody can rebuild is not evidence"
+            )
+        if (not isinstance(entry["evidence"], list)
+                or not entry["evidence"]
+                or not all(isinstance(e, str) for e in entry["evidence"])):
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {rid} cites no evidence"
+            )
+        base = str(entry["base_capability"])
+        model = str(entry["model_id"])
+        if (base, model) in seen:
+            raise DerivationError(
+                f"{_relative(manifest_path)}: {base} is registered twice for "
+                f"model {model}; the model id must select one deployment"
+            )
+        seen.add((base, model))
+        entry["build_command"] = list(entry["build_command"])
+        entry["evidence"] = list(entry["evidence"])
+        table.setdefault(base, []).append(entry)
+    return table
+
+
 #: The compiled deployments the repository's own comparison evidence was
-#: produced from, keyed by the base capability record each was lowered
-#: against.  One capability record can serve more than one model -- every
-#: DeepSeek cell and every Qwen cell reaches the GPU side through an
-#: ``hbm_sram_*`` record -- so the value is the LIST of registrations for that
-#: record and the model id selects within it.  A cell binds a side only when
-#: the cell's base capability is the key AND the deployment's model is the
-#: cell's model; the audit then verifies, from the deployment manifest, that it
-#: really carries that capability's digest and is the exact deployment the
-#: cited evidence names.  ``build/abi3`` is a build product and is not tracked,
-#: so the digests are what make an audit result reproducible.
+#: produced from.  See ``load_shipped_deployments`` for the shape and
+#: ``configs/abi3/shipped_deployments.json`` for the pins themselves, each with
+#: the command that rebuilds it, whether it is a frozen historical snapshot or
+#: a pin that tracks current source, and -- for a frozen one -- the commit at
+#: which its build command last reproduced it and what current source produces
+#: instead.
 #:
-#: Only a deployment that is the CURRENT lowering of its capability is
-#: registered.  A pre-AM-E9-v2 bundle still carries the split bank_mask the
-#: unified activation placement removed (commit b7441e8), so registering one
-#: would bind the audit to a build product the source no longer produces --
-#: the stale-artifact defect the R-series post-mortems name.  Every digest
-#: below was reproduced from a clean worktree pinned at the registering commit.
-SHIPPED_DEPLOYMENTS: dict[str, list[dict[str, Any]]] = {
-    "configs/hardware/abi3_capability/rom_qwen3.json": [
-        {
-            "model_id": "qwen3-8b",
-            "root": "build/abi3/qwen3-8b-rom-e9",
-            "deployment_sha256": (
-                "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243"
-            ),
-            "evidence": [
-                "results/derived/qwen3_e9_deployment_audit.json",
-                "results/abi3/rom_schedule_checks_e9.json",
-                "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
-                "commit b7441e8 (AM-E9 v2: one activation-buffer placement, "
-                "one bank_mask)",
-            ],
-        },
-    ],
-    "configs/hardware/abi3_capability/hbm_sram_single_chip.json": [
-        {
-            "model_id": "qwen3-8b",
-            "root": "build/abi3/qwen3-8b-hbm-e9",
-            "deployment_sha256": (
-                "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c"
-            ),
-            "evidence": [
-                "results/derived/qwen3_e9_deployment_audit.json",
-                "results/abi3/hbm_qwen_e9_deployment_certificate.json",
-                "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
-                "commit b7441e8 (AM-E9 v2: one activation-buffer placement, "
-                "one bank_mask)",
-            ],
-        },
-    ],
-    "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json": [
-        {
-            "model_id": "deepseek-v4-flash-0731",
-            "root": "build/abi3/deepseek-v4-flash-rom-array-32-e9",
-            "deployment_sha256": (
-                "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9"
-            ),
-            "evidence": [
-                "results/abi3/rom_schedule_checks_deepseek_e9.json",
-                "commit 6b41a53 (the DeepSeek Flash pair re-lowered under "
-                "AM-E9 v2)",
-            ],
-        },
-    ],
-    "configs/hardware/abi3_capability/hbm_sram_cluster_32.json": [
-        {
-            "model_id": "deepseek-v4-flash-0731",
-            "root": "build/abi3/deepseek-v4-flash-hbm-e9",
-            "deployment_sha256": (
-                "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b"
-            ),
-            "evidence": [
-                "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
-                "commit 6b41a53 (the DeepSeek Flash pair re-lowered under "
-                "AM-E9 v2)",
-            ],
-        },
-    ],
-}
+#: A registration is NOT a claim that the bundle rebuilds from HEAD.  Every pin
+#: in the manifest today is ``frozen_evidence``: committed evidence artifacts
+#: name the pinned digest, so re-pointing a pin at a fresh lowering orphans that
+#: evidence and is a defect rather than an update.  The manifest records the
+#: divergence per registration instead of hiding it, because the alternative --
+#: silently refreshing a pin -- is the stale-artifact defect the R-series
+#: post-mortems name, with the staleness moved into the evidence instead of the
+#: build product.
+SHIPPED_DEPLOYMENTS: dict[str, list[dict[str, Any]]] = load_shipped_deployments()
 
 #: Design points whose C2 cell can never bind a deployment pair, with the
 #: reason each is impossible rather than merely unbuilt.  Nothing reads this
