@@ -908,6 +908,15 @@ def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str
     )
     reduced_attention_writes = heads * head_dim
     gqa = by_case.get("gqa_context_16", {})
+    # The same engine elaborated for the reduced attention geometry.  Its
+    # traffic is compared against the expectation derived just above from the
+    # reduced model's OWN config, so the two are independent.
+    reduced_gqa = by_case.get("gqa_reduced_context_16", {})
+    reduced_gqa_matches = bool(
+        reduced_gqa.get("admitted")
+        and reduced_gqa.get("reads") == reduced_attention_reads
+        and reduced_gqa.get("writes") == reduced_attention_writes
+    )
     admitted_cases = [e["case"] for e in probe["cases"] if e["admitted"]]
     refused_cases = [e["case"] for e in probe["cases"] if not e["admitted"]]
     return {
@@ -955,12 +964,27 @@ def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str
                 else None
             ),
             "geometry_is_a_runtime_input": False,
+            "geometry_is_an_elaboration_parameter": True,
+            "reduced_elaboration": {
+                "case": "gqa_reduced_context_16",
+                "admitted": reduced_gqa.get("admitted"),
+                "error_code": reduced_gqa.get("err"),
+                "measured_operand_words_read": reduced_gqa.get("reads"),
+                "measured_result_words_written": reduced_gqa.get("writes"),
+                "matches_the_reduced_row": reduced_gqa_matches,
+            },
             "why": (
                 "ot_a3_qwen_gqa takes cfg_context_length and four base "
-                "addresses and nothing else; the traffic it generated for one "
-                "query row is the measurement of the geometry it is built for, "
-                "and no port exists through which a different one could be "
-                "asked for"
+                "addresses at runtime, and its query-head count, KV-head count, "
+                "head width and attention scale as ELABORATION parameters.  The "
+                "shipped instance's traffic is still the measurement of the "
+                "geometry it is built for -- that is the positive control -- and "
+                "the reduced configuration is a second elaboration whose traffic "
+                "is compared against the expectation derived from the reduced "
+                "model's own config.  The scale travels with the geometry "
+                "because it is bf16(1/sqrt(head_width)): 0x3db5 at 128 and "
+                "0x3e80 at 16, so a head width changed without it would compute "
+                "a different attention in silence"
             ),
         },
         "shape_driven_engines_admit_the_reduction": [
@@ -1071,7 +1095,12 @@ def main() -> int:
                     "error_code": refusal["error_code"],
                 }
             )
-        if verdict["attention_engine"]["ratio_reads"]:
+        if (
+            verdict["attention_engine"]["ratio_reads"]
+            and not verdict["attention_engine"]["reduced_elaboration"][
+                "matches_the_reduced_row"
+            ]
+        ):
             blockers.append(
                 {
                     "order": 2,
@@ -1089,14 +1118,45 @@ def main() -> int:
                     "measured_by": probe["vehicle"],
                 }
             )
+        # The order-3 statement has to say WHY nothing ran, and the reason
+        # changes as the order-1 and order-2 blockers close.  Saying "with no
+        # reduced program and no engine that admits the reduced geometry" once
+        # both of those are false would be a stale reason attached to a true
+        # verdict, which is exactly the kind of thing this ladder exists to
+        # prevent.
+        lowered_both = all(
+            (store or {}).get("produced_deployment")
+            for store in (lowering.get("stores") or {}).values()
+        )
+        attention_ready = verdict["attention_engine"]["reduced_elaboration"][
+            "matches_the_reduced_row"
+        ]
+        normalisation_ready = not [
+            entry
+            for entry in probe["cases"]
+            if str(entry.get("case", "")).startswith("reduced")
+            and not entry.get("admitted")
+        ]
+        if lowered_both and attention_ready and normalisation_ready:
+            why_nothing_ran = (
+                "the reduced program now exists on both stores and every engine "
+                "the probe drives admits the reduced geometry, but there is no "
+                "vehicle that runs that program end to end: the probe exercises "
+                "three engines in isolation, and the integrated vehicle would "
+                "have to be elaborated at the reduced geometry and driven with "
+                "the reduced program before a token could be emitted.  So the "
+                "RTL emitted no token ids"
+            )
+        else:
+            why_nothing_ran = (
+                "with no reduced program and no engine that admits the "
+                "reduced attention geometry, no end-to-end execution took "
+                "place, so the RTL emitted no token ids"
+            )
         blockers.append(
             {
                 "order": 3,
-                "what": (
-                    "with no reduced program and no engine that admits the "
-                    "reduced attention geometry, no end-to-end execution took "
-                    "place, so the RTL emitted no token ids"
-                ),
+                "what": why_nothing_ran,
                 "measured_by": "this rung",
             }
         )

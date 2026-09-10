@@ -112,6 +112,58 @@ module tb_a3_g1f_reduced_geometry;
         .value_multiply_count(gqa_values), .saturation_count(gqa_saturations)
     );
 
+    // -- The same attention engine, elaborated for the REDUCED geometry ----
+    // The instance above is the shipped 32/8/128 and is the positive control.
+    // This one is 8 query heads of 16 over 2 KV heads, with the scale the
+    // reduced head width implies: bf16(1/sqrt(16)) = 0x3e80 = 0.25 exactly,
+    // where the shipped 128-wide head uses bf16(1/sqrt(128)) = 0x3db5.  The
+    // geometry is an elaboration parameter, so the reduced configuration is a
+    // different elaboration of the same RTL rather than a runtime mode; that is
+    // what a small-config regression is, and it keeps the shipped instance's
+    // address strides constant.
+    reg         rgqa_start = 1'b0;
+    reg  [31:0] rgqa_context = 0;
+    wire        rgqa_req_valid, rgqa_out_valid;
+    wire [31:0] rgqa_req_addr, rgqa_out_addr, rgqa_out_data;
+    reg         rgqa_rsp_valid = 1'b0;
+    reg  [31:0] rgqa_rsp_data = 0;
+    wire        rgqa_busy, rgqa_done, rgqa_failed;
+    wire [7:0]  rgqa_error;
+    wire [31:0] rgqa_reads, rgqa_writes, rgqa_scores, rgqa_exps, rgqa_values;
+    wire [31:0] rgqa_saturations;
+
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            rgqa_rsp_valid <= 1'b0;
+            rgqa_rsp_data <= 32'd0;
+        end else begin
+            rgqa_rsp_valid <= rgqa_req_valid;
+            rgqa_rsp_data <= BF16_ONE;
+        end
+    end
+
+    ot_a3_qwen_gqa #(
+        .QUERY_HEADS(8),
+        .KV_HEADS(2),
+        .HEAD_WIDTH(16),
+        .SCALE_CODE(32'h3e80_0000)
+    ) rgqa (
+        .clk(clk), .rst_n(rst_n), .start(rgqa_start),
+        .cfg_context_length(rgqa_context),
+        .cfg_query_base(32'd0), .cfg_key_base(32'd0),
+        .cfg_value_base(32'd0), .cfg_output_base(32'd0),
+        .mem_req_valid(rgqa_req_valid), .mem_req_ready(1'b1),
+        .mem_req_addr(rgqa_req_addr),
+        .mem_rsp_valid(rgqa_rsp_valid), .mem_rsp_data(rgqa_rsp_data),
+        .out_valid(rgqa_out_valid), .out_ready(1'b1),
+        .out_addr(rgqa_out_addr), .out_data(rgqa_out_data),
+        .busy(rgqa_busy), .done(rgqa_done), .failed(rgqa_failed),
+        .error_code(rgqa_error),
+        .memory_read_count(rgqa_reads), .output_write_count(rgqa_writes),
+        .score_multiply_count(rgqa_scores), .exponential_count(rgqa_exps),
+        .value_multiply_count(rgqa_values), .saturation_count(rgqa_saturations)
+    );
+
     // -- One contraction lane ----------------------------------------------
     reg         mac_start = 1'b0;
     reg  [15:0] mac_rows = 0, mac_cols = 0, mac_depth = 0;
@@ -207,6 +259,29 @@ module tb_a3_g1f_reduced_geometry;
         end
     endtask
 
+    task run_gqa_reduced;
+        input [1023:0] label;
+        input integer ctx_len;
+        begin
+            rgqa_context = ctx_len[31:0];
+            case_start = cycles;
+            @(negedge clk);
+            rgqa_start = 1'b1;
+            @(negedge clk);
+            rgqa_start = 1'b0;
+            guard = 0;
+            while (!rgqa_done && guard < 40000000) begin
+                @(posedge clk);
+                guard = guard + 1;
+            end
+            $display("CASE %0s engine=gqa_reduced context=%0d err=%0d failed=%0d reads=%0d writes=%0d scores=%0d values=%0d cycles=%0d",
+                     label, ctx_len, rgqa_error, rgqa_failed, rgqa_reads,
+                     rgqa_writes, rgqa_scores, rgqa_values, cycles - case_start);
+            cases_run = cases_run + 1;
+            @(negedge clk);
+        end
+    endtask
+
     task run_mac;
         input [1023:0] label;
         input integer rows;
@@ -251,6 +326,11 @@ module tb_a3_g1f_reduced_geometry;
         // it reads and how many result words it writes for one query row.
         run_gqa("gqa_context_16", 16);
         run_gqa("gqa_context_below_minimum", 4);
+        // The same engine elaborated for the reduced attention geometry.  The
+        // reduced row is 1/32 of the shipped one in both directions, so this
+        // is where the "32.0x" this rung used to report is either closed or
+        // still open, measured rather than argued.
+        run_gqa_reduced("gqa_reduced_context_16", 16);
 
         // The contraction lane is shape-driven, so both the reduced and the
         // full projection depths are asked for directly.
