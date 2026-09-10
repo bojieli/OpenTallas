@@ -104,6 +104,21 @@
             }
           }
         },
+        "margin": {
+          "commensurable_margin_fraction": 3.730050500117593,
+          "commensurable_margin_is_inside_the_residual": false,
+          "commensurable_runner_up": "compute",
+          "commensurable_winner": "weight_read",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 2.2143456572182867,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "compute",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "weight_read"
+        },
         "refused_because": null,
         "regimes_agree": true,
         "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
@@ -200,6 +215,21 @@
               "bytes_written": 1218003972
             }
           }
+        },
+        "margin": {
+          "commensurable_margin_fraction": 0.008741438113194056,
+          "commensurable_margin_is_inside_the_residual": true,
+          "commensurable_runner_up": "weight_read",
+          "commensurable_winner": "compute",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 0.4844072332798983,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "weight_read",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "compute"
         },
         "refused_because": null,
         "regimes_agree": false,

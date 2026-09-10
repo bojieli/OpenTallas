@@ -2500,6 +2500,12 @@ SCHEDULE_FIELDS: tuple[str, ...] = (
 #: point in ``results/roofline/n5_vs_b200/analytical.json`` publishes one, so
 #: the allowlist is empty and every difference the audit finds is unexplained.
 #: An entry added here must cite the artifact field that justifies it.
+#: The upward rounding the cycle model's tensor tile charge carries at the
+#: shipped ROM cost table: ceil(128 * 1.999793745 / 93.1932963683953) =
+#: ceil(2.746695) = 3, i.e. +9.2222%.  Named so the binding margin can be read
+#: against it instead of against nothing.
+TENSOR_TILE_CEILING_RESIDUAL = 0.092222
+
 DEPLOYMENT_AUDIT_ALLOWLIST: dict[str, str] = {}
 
 #: Where the registrations live.  ``build/abi3`` is a build product and is not
@@ -4338,6 +4344,98 @@ def kv_placement(run: Mapping[str, Any], kv_store: str) -> dict[str, Any]:
     return out
 
 
+def _binding_margin(
+    terms: Mapping[str, Any],
+    measurable: Mapping[str, float],
+    winner: str,
+) -> dict[str, Any]:
+    """How much the binding term won by, against the model's own rounding.
+
+    The cycle model charges a tensor tile
+    ``ceil(tile_depth * work_scale / work_per_lane_cycle)``.  At the shipped
+    ROM cost table that is ``ceil(2.746695) = 3``, an inflation of 9.22% on the
+    compute term -- and on this anchor compute beats weight_read by 0.87%.  The
+    winner is therefore decided inside a rounding artefact of its own term, an
+    order of magnitude larger than the gap it decides, which is a fact about
+    the measurement rather than about the machine.
+
+    Reported, never acted on: nothing here changes which term is named, and no
+    tolerance is widened.  The point is that a bare argmax cannot distinguish a
+    real disagreement from this, and now a reader can.
+    """
+
+    ranked = sorted(
+        ((k, v) for k, v in measurable.items() if k != "link_latency"),
+        key=lambda kv: kv[1],
+        reverse=True,
+    )
+    if len(ranked) < 2:
+        return {"determinate": None, "note": "fewer than two comparable terms"}
+    (top, top_s), (second, second_s) = ranked[0], ranked[1]
+    margin = (top_s / second_s - 1.0) if second_s else None
+    compute = terms.get("compute") or {}
+    tensor_only = compute.get("cycle_tensor_only_s")
+    alt = None
+    alt_margin = None
+    alt_top = alt_second = None
+    if tensor_only is not None:
+        swapped = {
+            k: (tensor_only if k == "compute" else v)
+            for k, v in measurable.items()
+            if k != "link_latency"
+        }
+        alt_ranked = sorted(swapped.items(), key=lambda kv: kv[1], reverse=True)
+        alt = alt_ranked[0][0]
+        if len(alt_ranked) >= 2:
+            alt_top, alt_second = alt_ranked[0], alt_ranked[1]
+            alt_margin = (
+                (alt_top[1] / alt_second[1] - 1.0) if alt_second[1] else None
+            )
+    # The COMMENSURABLE margin is the load-bearing one and is reported first.
+    # The whole-device compute term is 48% clear of weight_read on the ROM
+    # anchor, which reads as decisive; the term that is actually comparable
+    # with the analytical operation count -- tensor arithmetic only, no
+    # attention and no other family -- is 0.87% clear, inside its own 9.22%
+    # rounding artefact.  Reporting only the wider figure would understate the
+    # problem by a factor of 55.
+    return {
+        "commensurable_winner": alt,
+        "commensurable_runner_up": None if alt_second is None else alt_second[0],
+        "commensurable_margin_fraction": alt_margin,
+        "commensurable_margin_is_inside_the_residual": (
+            None
+            if alt_margin is None
+            else abs(alt_margin) < TENSOR_TILE_CEILING_RESIDUAL
+        ),
+        "winner": top,
+        "runner_up": second,
+        "margin_fraction": margin,
+        "margin_basis": (
+            "over terms.compute.cycle_s, which is every engine family; the "
+            "commensurable fields above use terms.compute.cycle_tensor_only_s"
+        ),
+        "same_winner_under_the_commensurable_compute_term": (
+            None if alt is None else alt == winner
+        ),
+        "tensor_tile_quantisation_residual_fraction": TENSOR_TILE_CEILING_RESIDUAL,
+        "margin_is_inside_the_residual": (
+            None
+            if margin is None
+            else abs(margin) < TENSOR_TILE_CEILING_RESIDUAL
+        ),
+        "why_that_matters": (
+            "the cycle model charges ceil(tile_depth * work_scale / "
+            "work_per_lane_cycle) per tensor tile; at the shipped ROM table "
+            "that is ceil(2.746695) = 3, so the compute term carries a 9.22% "
+            "upward rounding artefact.  A margin smaller than that does not "
+            "establish which term binds"
+        ),
+        "not_acted_on": (
+            "no term is renamed and no tolerance is widened by this field"
+        ),
+    }
+
+
 def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
               hbm_run: Mapping[str, Any]) -> dict[str, Any]:
     """Put the analytical five terms and the measured cycle terms side by side.
@@ -4548,6 +4646,15 @@ def reconcile(anchor: Anchor, rom_run: Mapping[str, Any],
                 "kv_placement": placement,
                 "cycle_over_tensor_only_compute": cycle_binding_tensor_only,
                 "regimes_agree": analytical_expressible_binding == cycle_binding,
+                # The margin the argmax won by, and the residual it was decided
+                # inside.  Published because "which term binds" is reported as a
+                # bare winner, and on this anchor the winner is separated from
+                # the runner-up by less than the quantisation error of its own
+                # term: a reader cannot otherwise tell a real disagreement from
+                # an arithmetic artefact.  Both compute figures give the same
+                # winner here, so this changes no verdict -- it says how much to
+                # trust the one already reported.
+                "margin": _binding_margin(terms, measurable, cycle_binding),
                 "same_regime": (
                     analytical_expressible_binding == cycle_binding
                     and bool(placement["exercised"])
