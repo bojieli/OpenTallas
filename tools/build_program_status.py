@@ -120,12 +120,49 @@ def oracle_results() -> dict[str, Any]:
     return out
 
 
+#: Paths under results/physical_abi3 that are not single-run P&R records.
+#: Reported rather than dropped, because this document's own header promises
+#: that "an absent artifact is reported as absent rather than omitted", and a
+#: file skipped in silence is the same defect in the other direction.
+PHYSICAL_NON_RUN_RECORDS: list[str] = []
+
+
+def _is_physical_run(body: dict[str, Any]) -> bool:
+    """Does this artifact describe ONE physical run?
+
+    The tree also holds sweep records, which carry a whole campaign rather than
+    a run: their ``corner`` is a bare string like "TT" where a run's is an
+    object with a ``name``.  Treating one as the other used to raise
+    ``AttributeError: 'str' object has no attribute 'get'`` and take the whole
+    document down with it -- so PROGRAM_STATUS.md could not be regenerated at
+    all, and stayed pinned at whatever commit last produced it.
+    """
+
+    return any(
+        isinstance(body.get(section), dict)
+        for section in ("synthesis", "static_timing", "routing", "place_and_route")
+    )
+
+
+def _corner_name(body: dict[str, Any]) -> Any:
+    """The corner, whichever shape the record states it in."""
+
+    corner = body.get("corner")
+    if isinstance(corner, dict):
+        return corner.get("name")
+    return corner
+
+
 def physical_results() -> dict[str, Any]:
     out: dict[str, Any] = {}
+    PHYSICAL_NON_RUN_RECORDS.clear()
     root = REPO / "results" / "physical_abi3"
     for path in sorted(root.rglob("*.json")) if root.exists() else []:
         body = _load(path)
         if not isinstance(body, dict):
+            continue
+        if not _is_physical_run(body):
+            PHYSICAL_NON_RUN_RECORDS.append(str(path.relative_to(REPO)))
             continue
         view = path.relative_to(root).parts[0]
         block = body.get("design", {}).get("block", path.parent.name)
@@ -148,7 +185,7 @@ def physical_results() -> dict[str, Any]:
             "timing_met": timing_met,
             "setup_violating_paths": timing.get("setup_violating_paths"),
             "hold_violating_paths": timing.get("hold_violating_paths"),
-            "corner": body.get("corner", {}).get("name"),
+            "corner": _corner_name(body),
             "cell_count": synth.get("cell_count"),
             "cell_area_um2": synth.get("cell_area_um2"),
             "macro_count": synth.get("macro_count"),
@@ -349,6 +386,7 @@ def main() -> int:
         "workloads": workloads(),
         "reference_oracle": oracle_results(),
         "physical": physical_results(),
+        "physical_non_run_records": list(PHYSICAL_NON_RUN_RECORDS),
         "campaigns": campaign_results(),
         "rtl_correlation": rtl_correlation(),
         "rtl_deployment_correlation": rtl_deployment_correlation(),
