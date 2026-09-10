@@ -1,0 +1,80 @@
+{
+  "corroboration": {
+    "artifact": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+    "clock_period_ns": 4.4,
+    "closed": false,
+    "fmax_mhz": 264.8,
+    "max_cap_violations": 3,
+    "max_slew_violations": 3204,
+    "present": true,
+    "why_cited": "the control plane's own route says the same thing from the other side: thousands of slew violations, and the routing DRC report is empty"
+  },
+  "finding": {
+    "fmax_delta_mhz": -13.4,
+    "fmax_fell_as_the_period_was_relaxed": true,
+    "reading": "a design bounded by drive and slew, not by setup: relaxing the constraint gives the optimiser less reason to upsize buffers, so transition times worsen even as timing eases.  A setup-bound design would have moved the other way",
+    "slew_delta": 2,
+    "slew_violations_rose_as_the_period_was_relaxed": true
+  },
+  "generated_by": "tools/audit_g2_cluster_operating_point.py",
+  "generated_by_sha256": "79007ee5965ab1206a515efd41e4431a3e9bfb21711eeb9c8791f2e1b934c42c",
+  "git": {
+    "commit": "bdba6c8a1118732b5777739e28cdb079b4a48605",
+    "worktree_dirty": false
+  },
+  "held_equal": {
+    "ACC_SLOTS": 8,
+    "ADDER_STAGES": 3,
+    "LANES": 8,
+    "STATE_COMPAT": 0,
+    "core_utilization": 25,
+    "max_fanout": 32,
+    "slew_margin_percent": 40
+  },
+  "points_measured": [
+    {
+      "clock_period_ns": 4.75,
+      "closed": false,
+      "fmax_mhz": 274.1,
+      "git_commit": "58ce25bb",
+      "hold_violations": 0,
+      "instance_count": 2442446,
+      "max_slew_violations": 12,
+      "source_root": "/home/ubuntu/ot-phys",
+      "worktree_dirty": false
+    },
+    {
+      "clock_period_ns": 7.0,
+      "closed": false,
+      "fmax_mhz": 260.7,
+      "git_commit": "58ce25bb",
+      "hold_violations": 0,
+      "instance_count": 2439909,
+      "max_slew_violations": 14,
+      "source_root": "/home/ubuntu/ot-phys",
+      "worktree_dirty": false
+    }
+  ],
+  "points_retired_unrun_ns": [
+    "4.00",
+    "4.50",
+    "5.00",
+    "6.00"
+  ],
+  "refusals": [
+    {
+      "id": "no-operating-point",
+      "what": "this states no period at which the cluster closes",
+      "why": "neither measured point closes, and the trend is away from closure, so the sweep licenses a direction and not a value"
+    },
+    {
+      "id": "not-a-frequency-claim",
+      "what": "274.1 MHz is not a performance figure for the cluster",
+      "why": "closed is False at both points; an unclosed route's fmax is what the tool reports having failed to meet, not what the design achieves"
+    }
+  ],
+  "schema": "opentallas.derived.g2_operating_point.v1",
+  "vehicle": "ot_a3_g2_cluster, asap7, core utilisation 25",
+  "what_to_vary_instead": "core utilisation, which changes the placement density repeaters have to work in.  The queued retry sweeps 20 and 30 against the 25 these points hold.",
+  "why_retired": "the two completed points already answer the question in the negative, and four more period points cannot change a conclusion about the direction the period moves closure in"
+}
