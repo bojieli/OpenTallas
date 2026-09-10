@@ -17,9 +17,9 @@
     "slew_violations_rose_as_the_period_was_relaxed": true
   },
   "generated_by": "tools/audit_g2_cluster_operating_point.py",
-  "generated_by_sha256": "427fc96f9027a85152f5c8865ecc931c62c61996ace75084a40e93ea93970eb0",
+  "generated_by_sha256": "799b11c018861fa192a8d2df6065ae6675c8d32a5c7a9349874bcb749b78f763",
   "git": {
-    "commit": "ae6d91ce33f1072cd1f5e17238498515c4dbe139",
+    "commit": "9a4214e0096f8561568f16c9121f3fb89b5ee3e6",
     "worktree_dirty": true
   },
   "held_equal": {
@@ -74,7 +74,27 @@
     }
   ],
   "schema": "opentallas.derived.g2_operating_point.v1",
+  "utilisation_points_measured": [
+    {
+      "clock_period_ns": 4.75,
+      "closed": false,
+      "core_utilization": 20,
+      "fmax_mhz": 272.0,
+      "git_commit": "2bb16488",
+      "hold_violations": 0,
+      "instance_count": 2884444,
+      "max_cap_violations": 0,
+      "max_slew_violations": 20,
+      "performance_knobs": {
+        "CRC_CACHE": 1,
+        "FAST_FRONT_END": 1
+      },
+      "source_root": "/home/ubuntu/ot-ship2",
+      "worktree_dirty": false
+    }
+  ],
+  "utilisation_reading": "lowering utilisation from 25 to 20 did not close the design and the max-slew count rose from 12 to 20.  That is suggestive rather than conclusive, because the util-20 run also carries the performance knobs and 442,000 more instances -- two variables moved.  The conclusion that survives is that neither 25 nor 20 closes at 4.75 ns, and slew is the failing check in both",
   "vehicle": "ot_a3_g2_cluster, asap7, core utilisation 25",
-  "what_to_vary_instead": "core utilisation, which changes the placement density repeaters have to work in.  The queued retry sweeps 20 and 30 against the 25 these points hold.",
+  "what_to_vary_instead": "utilisation was the remaining candidate and util 20 has now been measured: it does not close.  util 30 is the last point of that sweep.  If it also fails, the cluster does not close at 4.75 ns under either knob, and the next question is the slew constraint itself rather than the placement",
   "why_retired": "the two completed points already answer the question in the negative, and four more period points cannot change a conclusion about the direction the period moves closure in"
 }
