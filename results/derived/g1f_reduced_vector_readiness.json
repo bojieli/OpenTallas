@@ -1,0 +1,120 @@
+{
+  "already_closed": [
+    "the compiler exports the reduced Kernel IR (second source contract)",
+    "both stores lower it, verifier ADMITTED",
+    "ot_a3_vector_rms_norm admits the reduced widths, bit-exact",
+    "ot_a3_qwen_gqa and its reference take a geometry, bit-exact",
+    "the integrated vehicle elaborates at the reduced geometry"
+  ],
+  "answer": "walkable; the first link is measured and passes",
+  "cascade": {
+    "artifact_that_would_change": "results/abi3/rom_schedule_checks.json",
+    "binders": [
+      "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_deployment_audit.json",
+      "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
+      "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_deployment_audit.json",
+      "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_machine_pair.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_deployment_audit.json",
+      "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_machine_pair.json",
+      "results/derived/qwen3_n5_design_target_deployment_audit.json",
+      "results/derived/qwen3_n5_design_target_machine_pair.json"
+    ],
+    "current_case_count": 3,
+    "derived_artifacts_binding_it": 18,
+    "why_it_matters": "TARGETS cites ROM_SCHEDULE_EVIDENCE by case name, so the reduced case has to be in the committed artifact; adding it changes that artifact's digest and stales every binder"
+  },
+  "gate": "G1f (configs/gates/redesign_gates.json)",
+  "generated_by": "tools/audit_g1f_reduced_vector_readiness.py",
+  "generated_by_sha256": "914404529d0b6770ccfc3abb4a9ffb5afbdeb1541c7139a956c366514d47915e",
+  "git": {
+    "commit": "3cdfbff5885ce93dfd20a681320d7df88d70431d",
+    "worktree_dirty": false
+  },
+  "lowering": {
+    "hbm": {
+      "deployment_sha256": "27f4c6b33359cc2f1887002237141ea3708b0c25ecb13b233fe5d7ac32303366",
+      "instruction_count": 74,
+      "path": "build/abi3/qwen3-reduced-hbm",
+      "present": true
+    },
+    "kernel_ir": {
+      "path": "build/ir-v3/qwen3-reduced-v1/kernel_ir.v3.json",
+      "present": true,
+      "sha256": "81709278a7a7240270b5b6e441b6a397cb7a6401686f62d6ef2e7ebfab945ade"
+    },
+    "rom": {
+      "deployment_sha256": "39e85b8867ada100ff96f5f3e1e204ff3eb34662e54d7bb6d3b272028990c209",
+      "instruction_count": 74,
+      "path": "build/abi3/qwen3-reduced-rom",
+      "present": true
+    }
+  },
+  "question": "is the chain that ends at a reduced vector set walkable, and what does walking it cost?",
+  "refusals": [
+    {
+      "id": "not-a-pass",
+      "what": "this does not advance G1f's verdict",
+      "why": "G1f fails on token ids [] against the oracle's [1073, 382, 93], and nothing here runs the program"
+    },
+    {
+      "id": "no-silent-cascade",
+      "what": "the reduced case was NOT added to the committed ROM schedule artifact",
+      "why": "18 derived artifacts bind its digest; incurring that while proving a link works would leave the tree in drift for a measurement that did not need it"
+    }
+  ],
+  "remaining_chain": [
+    {
+      "blocked_by": "a cascade over the artifacts that bind its digest",
+      "kind": "bookkeeping with a measured cost",
+      "step": 1,
+      "what": "the reduced case in the committed ROM schedule artifact"
+    },
+    {
+      "blocked_by": "the HBM side's evidence field needs a deployment certificate for the reduced model",
+      "kind": "new evidence",
+      "step": 2,
+      "what": "a TARGETS entry in build_abi3_deployment_rtl_vectors.py"
+    },
+    {
+      "blocked_by": "nothing, but they cannot be written ahead of time: they are what a first run reports and are then pinned",
+      "kind": "bootstrap",
+      "step": 3,
+      "what": "per-target BOUNDARY_IDENTITIES and expected_counts in build_abi3_shipped_prefix_vectors.py"
+    },
+    {
+      "blocked_by": "step 3",
+      "kind": "builder work",
+      "step": 4,
+      "what": "a golden write stream for the reduced program, the analogue of p3_writes.hex and p3_expect.hex"
+    },
+    {
+      "blocked_by": "step 4",
+      "kind": "campaign",
+      "note": "G1e's injection shortcut is unavailable: G1f requires golden_injected_operation_count == 0, so the engines must compute",
+      "step": 5,
+      "what": "the run, with ENABLE_RESULT_INJECTION=0"
+    }
+  ],
+  "rom_schedule_measurement": {
+    "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "capability_is_the_shipped_one": true,
+    "case": "qwen3-reduced-rom",
+    "checks_failed": 0,
+    "checks_passed": 63,
+    "instructions": 74,
+    "schedules": 19,
+    "status": "pass",
+    "verifier_admitted": true
+  },
+  "schema": "opentallas.derived.g1f_reduced_vector_readiness.v1"
+}
