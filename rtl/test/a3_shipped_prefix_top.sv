@@ -24,6 +24,12 @@
 // not control stores, and stay preloaded.
 // ---------------------------------------------------------------------------
 module ot_a3_shipped_prefix_top #(
+    // Forwarded to the engine bridge's attention geometry.  Defaults are the
+    // shipped Qwen3-8B values, so the shipped elaboration is unchanged.
+    parameter integer GQA_QUERY_HEADS = 32,
+    parameter integer GQA_KV_HEADS    = 8,
+    parameter integer GQA_HEAD_WIDTH  = 128,
+    parameter [31:0]  GQA_SCALE_CODE  = 32'h3db5_0000,
     parameter integer PROGRAM_WORDS = 4096,
     parameter integer DESC_WORDS = 8192,
     parameter integer INDEX_WORDS = 64,
@@ -1375,7 +1381,12 @@ module ot_a3_shipped_prefix_top #(
     wire [31:0] bridge_real_launch_count;
     assign real_launch_count =
         bridge_real_launch_count + multicast_launch_count_q;
-    ot_a3_engine_issue_bridge bridge (
+    ot_a3_engine_issue_bridge #(
+        .GQA_QUERY_HEADS(GQA_QUERY_HEADS),
+        .GQA_KV_HEADS(GQA_KV_HEADS),
+        .GQA_HEAD_WIDTH(GQA_HEAD_WIDTH),
+        .GQA_SCALE_CODE(GQA_SCALE_CODE)
+    ) bridge (
         .clk(clk),
         .rst_n(rst_n),
         .clear(start),

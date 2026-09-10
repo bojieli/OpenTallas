@@ -71,7 +71,18 @@
 // resolved extents and the exact numeric-contract digest all come from the
 // ABI descriptors and the sequencer's resolved-view stream.
 // ---------------------------------------------------------------------------
-module ot_a3_engine_issue_bridge (
+module ot_a3_engine_issue_bridge #(
+    // The attention geometry, forwarded to ot_a3_qwen_gqa.  Defaults are
+    // Qwen3-8B's, so every existing instantiation is unchanged.  Rung G1f's
+    // reduced regression configuration needs 8 query heads of 16 over 2 KV
+    // heads with the scale that head width implies; ot_a3_vector_rms_norm needs
+    // no parameter here because its shape check admits any width whose
+    // reciprocal is exact.
+    parameter integer GQA_QUERY_HEADS = 32,
+    parameter integer GQA_KV_HEADS    = 8,
+    parameter integer GQA_HEAD_WIDTH  = 128,
+    parameter [31:0]  GQA_SCALE_CODE  = 32'h3db5_0000
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          clear,
@@ -2437,7 +2448,12 @@ module ot_a3_engine_issue_bridge (
         .out_count(append_result_count)
     );
 
-    ot_a3_qwen_gqa gqa (
+    ot_a3_qwen_gqa #(
+        .QUERY_HEADS(GQA_QUERY_HEADS),
+        .KV_HEADS(GQA_KV_HEADS),
+        .HEAD_WIDTH(GQA_HEAD_WIDTH),
+        .SCALE_CODE(GQA_SCALE_CODE)
+    ) gqa (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & attention_gqa_q),
