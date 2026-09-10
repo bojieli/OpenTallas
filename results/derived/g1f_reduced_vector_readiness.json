@@ -10,34 +10,25 @@
   "cascade": {
     "artifact_that_would_change": "results/abi3/rom_schedule_checks.json",
     "binders": [
-      "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_deployment_audit.json",
       "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
-      "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_deployment_audit.json",
       "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_machine_pair.json",
-      "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_deployment_audit.json",
       "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_machine_pair.json",
-      "results/derived/qwen3_n5_design_target_deployment_audit.json",
       "results/derived/qwen3_n5_design_target_machine_pair.json"
     ],
     "current_case_count": 3,
-    "derived_artifacts_binding_it": 18,
+    "derived_artifacts_binding_it": 9,
     "why_it_matters": "TARGETS cites ROM_SCHEDULE_EVIDENCE by case name, so the reduced case has to be in the committed artifact; adding it changes that artifact's digest and stales every binder"
   },
   "gate": "G1f (configs/gates/redesign_gates.json)",
   "generated_by": "tools/audit_g1f_reduced_vector_readiness.py",
-  "generated_by_sha256": "2276429278fe9726830839e35989840d44d813886b5c0147b37c7502ca141fdb",
+  "generated_by_sha256": "1798fdefc0388ea8a33f26ba845fc63d7e7df8fd43c6d51cb62752dbea888299",
   "git": {
-    "commit": "ae6d91ce33f1072cd1f5e17238498515c4dbe139",
+    "commit": "b69d1e0a0218c043f0bfcadc5fb8e94ac2547a91",
     "worktree_dirty": true
   },
   "lowering": {

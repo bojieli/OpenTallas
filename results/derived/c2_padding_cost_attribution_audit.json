@@ -164,7 +164,7 @@
     "digests": {
       "runtime/cycle/machine.py": "8e8fe08c576c1ba6c491e20966fc647bf2a9bcc8abc3c2efcbf8542cc66a10df",
       "runtime/cycle/model.py": "d711e210e9181fcd70e1d2938f4c6d78895df6f55e1fdcd776f970ace4c43827",
-      "tools/derive_cycle_machine.py": "a3d52920e67bad5101fb3b54eacfcc468c9e5230ea6ef7fee28b589805d53fe6"
+      "tools/derive_cycle_machine.py": "83bd136777259f00e11419cb5cae55f1a8bf803f42dd8905f0676bad966c49ec"
     },
     "issued_work_is_tiles_times_tile_work": true,
     "per_tile_multiplies_tile_work_by_the_scale": true,
@@ -175,7 +175,7 @@
   "generated_by": "tools/audit_c2_padding_cost_attribution.py",
   "generated_by_sha256": "264885b5645f2cf055723bc5c3e2a8bed02d515cd6f1c0b40d9c7210cac2323d",
   "git": {
-    "commit": "ae6d91ce33f1072cd1f5e17238498515c4dbe139",
+    "commit": "b69d1e0a0218c043f0bfcadc5fb8e94ac2547a91",
     "worktree_dirty": true
   },
   "question": "are C2's attention/reduction/route/vector tile_rows asymmetries measured on a quantity the cycle model charges for?",
