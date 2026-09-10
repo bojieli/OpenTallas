@@ -407,6 +407,12 @@
     },
     "families": {
       "attention": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 4608,
+          "magnitude_x": 1.0,
+          "rom": 4608
+        },
         "issued_work": {
           "favours": "neither",
           "hbm": 19327352832,
@@ -422,6 +428,12 @@
           "hbm": 0.9375,
           "magnitude_x": 1.0,
           "rom": 0.9375
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 4608,
+          "magnitude_x": 1.0,
+          "rom": 4608
         },
         "tiles": {
           "favours": "neither",
@@ -488,6 +500,12 @@
         }
       },
       "selection": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
         "issued_work": {
           "favours": "neither",
           "hbm": 2,
@@ -503,6 +521,12 @@
           "hbm": 0.0,
           "magnitude_x": 1.0,
           "rom": 0.0
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
         },
         "tiles": {
           "favours": "neither",
@@ -576,6 +600,12 @@
         }
       },
       "vector": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 16480,
+          "magnitude_x": 1.0,
+          "rom": 16480
+        },
         "issued_work": {
           "favours": "neither",
           "hbm": 540016640,
@@ -591,6 +621,12 @@
           "hbm": 0.997398,
           "magnitude_x": 1.0,
           "rom": 0.997398
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 16480,
+          "magnitude_x": 1.0,
+          "rom": 16480
         },
         "tiles": {
           "favours": "neither",
@@ -620,12 +656,14 @@
       ],
       "families": {
         "attention": {
+          "cycles": 4608,
           "issued_work": 19327352832,
           "operations": 36,
           "operators": 1,
           "padding_fraction": 0.9375,
           "padding_work": 18119393280,
           "tile_errors": 0,
+          "tile_issue_cycles": 4608,
           "tiles": 4608,
           "useful_work": 1207959552
         },
@@ -643,12 +681,14 @@
           "useful_work": 608702720
         },
         "selection": {
+          "cycles": 2,
           "issued_work": 2,
           "operations": 2,
           "operators": 2,
           "padding_fraction": 0.0,
           "padding_work": 0,
           "tile_errors": 0,
+          "tile_issue_cycles": 2,
           "tiles": 2,
           "useful_work": 2
         },
@@ -667,12 +707,14 @@
           "useful_work": 7568101376
         },
         "vector": {
+          "cycles": 16480,
           "issued_work": 540016640,
           "operations": 325,
           "operators": 10,
           "padding_fraction": 0.997398,
           "padding_work": 538611712,
           "tile_errors": 0,
+          "tile_issue_cycles": 16480,
           "tiles": 16480,
           "useful_work": 1404928
         }
@@ -754,12 +796,14 @@
       ],
       "families": {
         "attention": {
+          "cycles": 4608,
           "issued_work": 19327352832,
           "operations": 36,
           "operators": 1,
           "padding_fraction": 0.9375,
           "padding_work": 18119393280,
           "tile_errors": 0,
+          "tile_issue_cycles": 4608,
           "tiles": 4608,
           "useful_work": 1207959552
         },
@@ -777,12 +821,14 @@
           "useful_work": 608702720
         },
         "selection": {
+          "cycles": 2,
           "issued_work": 2,
           "operations": 2,
           "operators": 2,
           "padding_fraction": 0.0,
           "padding_work": 0,
           "tile_errors": 0,
+          "tile_issue_cycles": 2,
           "tiles": 2,
           "useful_work": 2
         },
@@ -801,12 +847,14 @@
           "useful_work": 7568101376
         },
         "vector": {
+          "cycles": 16480,
           "issued_work": 540016640,
           "operations": 325,
           "operators": 10,
           "padding_fraction": 0.997398,
           "padding_work": 538611712,
           "tile_errors": 0,
+          "tile_issue_cycles": 16480,
           "tiles": 16480,
           "useful_work": 1404928
         }

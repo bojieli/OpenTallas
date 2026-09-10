@@ -142,6 +142,12 @@
   },
   "families": {
     "attention": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 13824,
+        "magnitude_x": 1.0,
+        "rom": 13824
+      },
       "issued_work": {
         "favours": "neither",
         "hbm": 19327352832,
@@ -157,6 +163,12 @@
         "hbm": 0.9375,
         "magnitude_x": 1.0,
         "rom": 0.9375
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 4608,
+        "magnitude_x": 1.0,
+        "rom": 4608
       },
       "tiles": {
         "favours": "neither",
@@ -223,6 +235,12 @@
       }
     },
     "selection": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
+      },
       "issued_work": {
         "favours": "neither",
         "hbm": 2,
@@ -238,6 +256,12 @@
         "hbm": 0.0,
         "magnitude_x": 1.0,
         "rom": 0.0
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
       },
       "tiles": {
         "favours": "neither",
@@ -311,6 +335,12 @@
       }
     },
     "vector": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 16480,
+        "magnitude_x": 1.0,
+        "rom": 16480
+      },
       "issued_work": {
         "favours": "neither",
         "hbm": 540016640,
@@ -326,6 +356,12 @@
         "hbm": 0.997398,
         "magnitude_x": 1.0,
         "rom": 0.997398
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 16480,
+        "magnitude_x": 1.0,
+        "rom": 16480
       },
       "tiles": {
         "favours": "neither",
@@ -354,12 +390,14 @@
     ],
     "families": {
       "attention": {
+        "cycles": 13824,
         "issued_work": 19327352832,
         "operations": 36,
         "operators": 1,
         "padding_fraction": 0.9375,
         "padding_work": 18119393280,
         "tile_errors": 0,
+        "tile_issue_cycles": 4608,
         "tiles": 4608,
         "useful_work": 1207959552
       },
@@ -377,12 +415,14 @@
         "useful_work": 608702720
       },
       "selection": {
+        "cycles": 2,
         "issued_work": 2,
         "operations": 2,
         "operators": 2,
         "padding_fraction": 0.0,
         "padding_work": 0,
         "tile_errors": 0,
+        "tile_issue_cycles": 2,
         "tiles": 2,
         "useful_work": 2
       },
@@ -401,12 +441,14 @@
         "useful_work": 7568101376
       },
       "vector": {
+        "cycles": 16480,
         "issued_work": 540016640,
         "operations": 325,
         "operators": 10,
         "padding_fraction": 0.997398,
         "padding_work": 538611712,
         "tile_errors": 0,
+        "tile_issue_cycles": 16480,
         "tiles": 16480,
         "useful_work": 1404928
       }
@@ -564,6 +606,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -626,6 +669,7 @@
         },
         "schedule_id": 63,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -857,6 +901,7 @@
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -921,12 +966,14 @@
         },
         "schedule_id": 89,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 4096
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -991,12 +1038,14 @@
         },
         "schedule_id": 96,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 1024
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -1063,12 +1112,14 @@
         },
         "schedule_id": 89,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 4096
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -1135,6 +1186,7 @@
         },
         "schedule_id": 96,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 1024
       },
@@ -1295,6 +1347,7 @@
       {
         "col_tiles": 2,
         "column_group_span": 1024,
+        "cycles_per_issue": 384,
         "depth_tiles": 64,
         "extent": {
           "cols": 128,
@@ -1381,6 +1434,7 @@
         },
         "schedule_id": 135,
         "schedule_tiles": 128,
+        "tile_issue_cycles_per_issue": 128,
         "tiles": 128,
         "useful_work": 33554432
       },
@@ -1462,6 +1516,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -1525,12 +1580,14 @@
         },
         "schedule_id": 149,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -1593,6 +1650,7 @@
         },
         "schedule_id": 63,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -1749,6 +1807,7 @@
       {
         "col_tiles": 192,
         "column_group_span": 1024,
+        "cycles_per_issue": 192,
         "depth_tiles": 1,
         "extent": {
           "cols": 12288,
@@ -1812,6 +1871,7 @@
         },
         "schedule_id": 149,
         "schedule_tiles": 192,
+        "tile_issue_cycles_per_issue": 192,
         "tiles": 192,
         "useful_work": 12288
       },
@@ -1893,6 +1953,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -1956,12 +2017,14 @@
         },
         "schedule_id": 63,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -2024,6 +2087,7 @@
         },
         "schedule_id": 63,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -2180,6 +2244,7 @@
       {
         "col_tiles": 1,
         "column_group_span": 1,
+        "cycles_per_issue": 1,
         "depth_tiles": 1,
         "extent": {
           "cols": 1,
@@ -2231,12 +2296,14 @@
         },
         "schedule_id": 209,
         "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
         "tiles": 1,
         "useful_work": 1
       },
       {
         "col_tiles": 1,
         "column_group_span": 1,
+        "cycles_per_issue": 1,
         "depth_tiles": 1,
         "extent": {
           "cols": 1,
@@ -2288,6 +2355,7 @@
         },
         "schedule_id": 209,
         "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
         "tiles": 1,
         "useful_work": 1
       }
@@ -2482,6 +2550,10 @@
         "hbm": 1024,
         "rom": 1024
       },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
       "extent": {
         "cols": 4096,
         "depth": 1,
@@ -2528,6 +2600,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
       },
       "tiles": {
         "hbm": 64,
@@ -2774,6 +2850,10 @@
         "hbm": 128,
         "rom": 128
       },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
       "extent": {
         "cols": 128,
         "depth": 1,
@@ -2821,6 +2901,10 @@
           "rom": 512
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
       "tiles": {
         "hbm": 2,
         "rom": 2
@@ -2831,6 +2915,10 @@
       "column_group_span": {
         "hbm": 128,
         "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
       },
       "extent": {
         "cols": 128,
@@ -2879,6 +2967,10 @@
           "rom": 512
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
       "tiles": {
         "hbm": 2,
         "rom": 2
@@ -2889,6 +2981,10 @@
       "column_group_span": {
         "hbm": 128,
         "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
       },
       "extent": {
         "cols": 128,
@@ -2937,6 +3033,10 @@
           "rom": 512
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
       "tiles": {
         "hbm": 2,
         "rom": 2
@@ -2947,6 +3047,10 @@
       "column_group_span": {
         "hbm": 128,
         "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
       },
       "extent": {
         "cols": 128,
@@ -2994,6 +3098,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
       },
       "tiles": {
         "hbm": 2,
@@ -3146,6 +3254,10 @@
         "hbm": 1024,
         "rom": 1024
       },
+      "cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
       "extent": {
         "cols": 128,
         "depth": 8192,
@@ -3192,6 +3304,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 128,
+        "rom": 128
       },
       "tiles": {
         "hbm": 128,
@@ -3282,6 +3398,10 @@
         "hbm": 1024,
         "rom": 1024
       },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
       "extent": {
         "cols": 4096,
         "depth": 1,
@@ -3329,6 +3449,10 @@
           "rom": 512
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
       "tiles": {
         "hbm": 64,
         "rom": 64
@@ -3339,6 +3463,10 @@
       "column_group_span": {
         "hbm": 1024,
         "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
       },
       "extent": {
         "cols": 4096,
@@ -3386,6 +3514,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
       },
       "tiles": {
         "hbm": 64,
@@ -3554,6 +3686,10 @@
         "hbm": 1024,
         "rom": 1024
       },
+      "cycles_per_issue": {
+        "hbm": 192,
+        "rom": 192
+      },
       "extent": {
         "cols": 12288,
         "depth": 1,
@@ -3600,6 +3736,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 192,
+        "rom": 192
       },
       "tiles": {
         "hbm": 192,
@@ -3690,6 +3830,10 @@
         "hbm": 1024,
         "rom": 1024
       },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
       "extent": {
         "cols": 4096,
         "depth": 1,
@@ -3737,6 +3881,10 @@
           "rom": 512
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
       "tiles": {
         "hbm": 64,
         "rom": 64
@@ -3747,6 +3895,10 @@
       "column_group_span": {
         "hbm": 1024,
         "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
       },
       "extent": {
         "cols": 4096,
@@ -3794,6 +3946,10 @@
           "hbm": 512,
           "rom": 512
         }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
       },
       "tiles": {
         "hbm": 64,
@@ -3954,6 +4110,10 @@
         "hbm": 1,
         "rom": 1
       },
+      "cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
       "extent": {
         "cols": 1,
         "depth": 1,
@@ -4001,6 +4161,10 @@
           "rom": 1
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
       "tiles": {
         "hbm": 1,
         "rom": 1
@@ -4009,6 +4173,10 @@
     },
     {
       "column_group_span": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_issue": {
         "hbm": 1,
         "rom": 1
       },
@@ -4059,6 +4227,10 @@
           "rom": 1
         }
       },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
       "tiles": {
         "hbm": 1,
         "rom": 1
@@ -4097,12 +4269,14 @@
     ],
     "families": {
       "attention": {
+        "cycles": 13824,
         "issued_work": 19327352832,
         "operations": 36,
         "operators": 1,
         "padding_fraction": 0.9375,
         "padding_work": 18119393280,
         "tile_errors": 0,
+        "tile_issue_cycles": 4608,
         "tiles": 4608,
         "useful_work": 1207959552
       },
@@ -4120,12 +4294,14 @@
         "useful_work": 608702720
       },
       "selection": {
+        "cycles": 2,
         "issued_work": 2,
         "operations": 2,
         "operators": 2,
         "padding_fraction": 0.0,
         "padding_work": 0,
         "tile_errors": 0,
+        "tile_issue_cycles": 2,
         "tiles": 2,
         "useful_work": 2
       },
@@ -4144,12 +4320,14 @@
         "useful_work": 7568101376
       },
       "vector": {
+        "cycles": 16480,
         "issued_work": 540016640,
         "operations": 325,
         "operators": 10,
         "padding_fraction": 0.997398,
         "padding_work": 538611712,
         "tile_errors": 0,
+        "tile_issue_cycles": 16480,
         "tiles": 16480,
         "useful_work": 1404928
       }
@@ -4307,6 +4485,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -4369,6 +4548,7 @@
         },
         "schedule_id": 48,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -4600,6 +4780,7 @@
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -4664,12 +4845,14 @@
         },
         "schedule_id": 78,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 4096
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -4734,12 +4917,14 @@
         },
         "schedule_id": 86,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 1024
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -4806,12 +4991,14 @@
         },
         "schedule_id": 78,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 4096
       },
       {
         "col_tiles": 2,
         "column_group_span": 128,
+        "cycles_per_issue": 2,
         "depth_tiles": 1,
         "extent": {
           "cols": 128,
@@ -4878,6 +5065,7 @@
         },
         "schedule_id": 86,
         "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
         "tiles": 2,
         "useful_work": 1024
       },
@@ -5038,6 +5226,7 @@
       {
         "col_tiles": 2,
         "column_group_span": 1024,
+        "cycles_per_issue": 384,
         "depth_tiles": 64,
         "extent": {
           "cols": 128,
@@ -5124,6 +5313,7 @@
         },
         "schedule_id": 122,
         "schedule_tiles": 128,
+        "tile_issue_cycles_per_issue": 128,
         "tiles": 128,
         "useful_work": 33554432
       },
@@ -5205,6 +5395,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -5268,12 +5459,14 @@
         },
         "schedule_id": 137,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -5336,6 +5529,7 @@
         },
         "schedule_id": 48,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -5492,6 +5686,7 @@
       {
         "col_tiles": 192,
         "column_group_span": 1024,
+        "cycles_per_issue": 192,
         "depth_tiles": 1,
         "extent": {
           "cols": 12288,
@@ -5555,6 +5750,7 @@
         },
         "schedule_id": 137,
         "schedule_tiles": 192,
+        "tile_issue_cycles_per_issue": 192,
         "tiles": 192,
         "useful_work": 12288
       },
@@ -5636,6 +5832,7 @@
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -5699,12 +5896,14 @@
         },
         "schedule_id": 48,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
       {
         "col_tiles": 64,
         "column_group_span": 1024,
+        "cycles_per_issue": 64,
         "depth_tiles": 1,
         "extent": {
           "cols": 4096,
@@ -5767,6 +5966,7 @@
         },
         "schedule_id": 48,
         "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
         "tiles": 64,
         "useful_work": 4096
       },
@@ -5923,6 +6123,7 @@
       {
         "col_tiles": 1,
         "column_group_span": 1,
+        "cycles_per_issue": 1,
         "depth_tiles": 1,
         "extent": {
           "cols": 1,
@@ -5974,12 +6175,14 @@
         },
         "schedule_id": 203,
         "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
         "tiles": 1,
         "useful_work": 1
       },
       {
         "col_tiles": 1,
         "column_group_span": 1,
+        "cycles_per_issue": 1,
         "depth_tiles": 1,
         "extent": {
           "cols": 1,
@@ -6031,6 +6234,7 @@
         },
         "schedule_id": 203,
         "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
         "tiles": 1,
         "useful_work": 1
       }

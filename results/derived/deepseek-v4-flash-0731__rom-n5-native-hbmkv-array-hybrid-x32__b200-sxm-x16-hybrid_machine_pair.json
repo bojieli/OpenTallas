@@ -248,10 +248,10 @@
       {
         "allowlisted": false,
         "cost_bearing": true,
-        "effect_x": 2.0,
+        "effect_x": 1.0,
         "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
         "family": "attention",
-        "favours": "hbm",
+        "favours": "neither",
         "field": "tile_rows",
         "hbm": {
           "512": 43
@@ -263,7 +263,7 @@
           "1024": 43
         },
         "rom_value": 1024,
-        "why": "tiles 537,672 either way; issued_work on the HBM side 2,255,159,820,288 as compiled, 4,510,319,640,576 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+        "why": "cycles_per_issue 1,075,344 either way"
       },
       {
         "allowlisted": false,
@@ -533,10 +533,10 @@
       {
         "allowlisted": false,
         "cost_bearing": true,
-        "effect_x": 2.0,
+        "effect_x": 1.0,
         "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
         "family": "reduction",
-        "favours": "hbm",
+        "favours": "neither",
         "field": "tile_rows",
         "hbm": {
           "1": 86,
@@ -552,7 +552,7 @@
           "1280": 21
         },
         "rom_value": 1024,
-        "why": "tiles 11,604 either way; issued_work on the HBM side 380,239,872 as compiled, 760,479,744 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+        "why": "cycles_per_issue 11,604 either way"
       },
       {
         "allowlisted": false,
@@ -577,10 +577,10 @@
       {
         "allowlisted": false,
         "cost_bearing": true,
-        "effect_x": 2.0,
+        "effect_x": 1.0,
         "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
         "family": "route",
-        "favours": "hbm",
+        "favours": "neither",
         "field": "tile_rows",
         "hbm": {
           "1": 21,
@@ -594,7 +594,7 @@
           "6144": 43
         },
         "rom_value": 1024,
-        "why": "tiles 849 either way; issued_work on the HBM side 25,355,264 as compiled, 50,710,528 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+        "why": "cycles_per_issue 849 either way"
       },
       {
         "allowlisted": false,
@@ -682,10 +682,10 @@
       {
         "allowlisted": false,
         "cost_bearing": true,
-        "effect_x": 2.0,
+        "effect_x": 1.0,
         "enters": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
         "family": "vector",
-        "favours": "hbm",
+        "favours": "neither",
         "field": "tile_rows",
         "hbm": {
           "1": 22,
@@ -700,7 +700,7 @@
           "6144": 172
         },
         "rom_value": 1024,
-        "why": "tiles 29,686 either way; issued_work on the HBM side 968,832,000 as compiled, 1,937,664,000 with the ROM value 1024 (padded work is charged only when a tile's work exceeds the one-cycle issue floor)"
+        "why": "cycles_per_issue 29,686 either way"
       },
       {
         "allowlisted": false,
@@ -758,6 +758,12 @@
     },
     "families": {
       "attention": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 1075344,
+          "magnitude_x": 1.0,
+          "rom": 1075344
+        },
         "issued_work": {
           "favours": "hbm",
           "hbm": 2255159820288,
@@ -773,6 +779,12 @@
           "hbm": 0.87504,
           "magnitude_x": 1.0714024501737063,
           "rom": 0.93752
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 537672,
+          "magnitude_x": 1.0,
+          "rom": 537672
         },
         "tiles": {
           "favours": "neither",
@@ -839,6 +851,12 @@
         }
       },
       "reduction": {
+        "cycles": {
+          "favours": "rom",
+          "hbm": 67236,
+          "magnitude_x": 1.1760302245854615,
+          "rom": 57172
+        },
         "issued_work": {
           "favours": "rom",
           "hbm": 1483177984,
@@ -855,6 +873,12 @@
           "magnitude_x": 1.0723464639610938,
           "rom": 0.580678
         },
+        "tile_issue_cycles": {
+          "favours": "rom",
+          "hbm": 67236,
+          "magnitude_x": 1.1760302245854615,
+          "rom": 57172
+        },
         "tiles": {
           "favours": "rom",
           "hbm": 67236,
@@ -867,6 +891,12 @@
         }
       },
       "route": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 3811,
+          "magnitude_x": 1.0,
+          "rom": 3811
+        },
         "issued_work": {
           "favours": "hbm",
           "hbm": 115546240,
@@ -883,6 +913,12 @@
           "magnitude_x": 1.0087992737620277,
           "rom": 0.999023
         },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 3811,
+          "magnitude_x": 1.0,
+          "rom": 3811
+        },
         "tiles": {
           "favours": "neither",
           "hbm": 3811,
@@ -895,6 +931,12 @@
         }
       },
       "selection": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
+        },
         "issued_work": {
           "favours": "neither",
           "hbm": 2,
@@ -910,6 +952,12 @@
           "hbm": 0.0,
           "magnitude_x": 1.0,
           "rom": 0.0
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 2,
+          "magnitude_x": 1.0,
+          "rom": 2
         },
         "tiles": {
           "favours": "neither",
@@ -985,6 +1033,12 @@
         }
       },
       "vector": {
+        "cycles": {
+          "favours": "neither",
+          "hbm": 57187,
+          "magnitude_x": 1.0,
+          "rom": 57187
+        },
         "issued_work": {
           "favours": "hbm",
           "hbm": 1266857600,
@@ -1000,6 +1054,12 @@
           "hbm": 0.990697,
           "magnitude_x": 1.0068285257752874,
           "rom": 0.997462
+        },
+        "tile_issue_cycles": {
+          "favours": "neither",
+          "hbm": 57187,
+          "magnitude_x": 1.0,
+          "rom": 57187
         },
         "tiles": {
           "favours": "neither",
@@ -1031,12 +1091,14 @@
       ],
       "families": {
         "attention": {
+          "cycles": 1075344,
           "issued_work": 2255159820288,
           "operations": 43,
           "operators": 4,
           "padding_fraction": 0.87504,
           "padding_work": 1973355020288,
           "tile_errors": 0,
+          "tile_issue_cycles": 537672,
           "tiles": 537672,
           "useful_work": 281804800000
         },
@@ -1054,32 +1116,38 @@
           "useful_work": 2548994191
         },
         "reduction": {
+          "cycles": 67236,
           "issued_work": 1483177984,
           "operations": 363,
           "operators": 33,
           "padding_fraction": 0.622688,
           "padding_work": 923557632,
           "tile_errors": 0,
+          "tile_issue_cycles": 67236,
           "tiles": 67236,
           "useful_work": 559620352
         },
         "route": {
+          "cycles": 3811,
           "issued_work": 115546240,
           "operations": 210,
           "operators": 17,
           "padding_fraction": 0.990309,
           "padding_work": 114426510,
           "tile_errors": 0,
+          "tile_issue_cycles": 3811,
           "tiles": 3811,
           "useful_work": 1119730
         },
         "selection": {
+          "cycles": 2,
           "issued_work": 2,
           "operations": 2,
           "operators": 2,
           "padding_fraction": 0.0,
           "padding_work": 0,
           "tile_errors": 0,
+          "tile_issue_cycles": 2,
           "tiles": 2,
           "useful_work": 2
         },
@@ -1098,12 +1166,14 @@
           "useful_work": 9052663826
         },
         "vector": {
+          "cycles": 57187,
           "issued_work": 1266857600,
           "operations": 1660,
           "operators": 152,
           "padding_fraction": 0.990697,
           "padding_work": 1255072062,
           "tile_errors": 0,
+          "tile_issue_cycles": 57187,
           "tiles": 57187,
           "useful_work": 11785538
         }
@@ -1319,6 +1389,15 @@
         "rom": 320
       },
       {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 784,
+        "magnitude_x": 2.45,
+        "metric": "cycles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (50128x512x1)",
+        "rom": 320
+      },
+      {
         "family": "dma",
         "favours": "hbm",
         "hbm": 32,
@@ -1352,6 +1431,15 @@
         "hbm": 32,
         "magnitude_x": 2.0,
         "metric": "tiles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (1690x512x1)",
+        "rom": 16
+      },
+      {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 32,
+        "magnitude_x": 2.0,
+        "metric": "cycles_per_issue",
         "operator": "REDUCTION.GROUPED_CONCAT (1690x512x1)",
         "rom": 16
       },
@@ -1417,6 +1505,15 @@
         "hbm": 784,
         "magnitude_x": 2.45,
         "metric": "tiles_per_issue",
+        "operator": "REDUCTION.GROUPED_CONCAT (50128x512x1)",
+        "rom": 320
+      },
+      {
+        "family": "reduction",
+        "favours": "rom",
+        "hbm": 784,
+        "magnitude_x": 2.45,
+        "metric": "cycles_per_issue",
         "operator": "REDUCTION.GROUPED_CONCAT (50128x512x1)",
         "rom": 320
       }
@@ -1568,12 +1665,14 @@
       ],
       "families": {
         "attention": {
+          "cycles": 1075344,
           "issued_work": 4510319640576,
           "operations": 43,
           "operators": 4,
           "padding_fraction": 0.93752,
           "padding_work": 4228514840576,
           "tile_errors": 0,
+          "tile_issue_cycles": 537672,
           "tiles": 537672,
           "useful_work": 281804800000
         },
@@ -1591,32 +1690,38 @@
           "useful_work": 1997607753
         },
         "reduction": {
+          "cycles": 57172,
           "issued_work": 1334583296,
           "operations": 363,
           "operators": 33,
           "padding_fraction": 0.580678,
           "padding_work": 774962944,
           "tile_errors": 0,
+          "tile_issue_cycles": 57172,
           "tiles": 57172,
           "useful_work": 559620352
         },
         "route": {
+          "cycles": 3811,
           "issued_work": 1146603520,
           "operations": 210,
           "operators": 17,
           "padding_fraction": 0.999023,
           "padding_work": 1145483790,
           "tile_errors": 0,
+          "tile_issue_cycles": 3811,
           "tiles": 3811,
           "useful_work": 1119730
         },
         "selection": {
+          "cycles": 2,
           "issued_work": 2,
           "operations": 2,
           "operators": 2,
           "padding_fraction": 0.0,
           "padding_work": 0,
           "tile_errors": 0,
+          "tile_issue_cycles": 2,
           "tiles": 2,
           "useful_work": 2
         },
@@ -1635,12 +1740,14 @@
           "useful_work": 12930256914
         },
         "vector": {
+          "cycles": 57187,
           "issued_work": 4644309824,
           "operations": 1660,
           "operators": 152,
           "padding_fraction": 0.997462,
           "padding_work": 4632524286,
           "tile_errors": 0,
+          "tile_issue_cycles": 57187,
           "tiles": 57187,
           "useful_work": 11785538
         }
