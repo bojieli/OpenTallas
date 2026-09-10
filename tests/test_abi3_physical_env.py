@@ -385,6 +385,20 @@ def test_emitted_results_do_not_claim_pass_without_meeting_timing(path):
     record = json.loads(path.read_text(encoding="utf-8"))
     if "status" not in record:
         pytest.skip(f"{path} is not a result record")
+    # Scope to THIS flow's records, by campaign, not by "has a status field".
+    #
+    # results/physical_abi3 also holds campaign records from other tools:
+    # tools/run_abi3_tile64_blocks_pilot.py writes four whose campaign_id is
+    # opentallas-abi3-tile64-blocks-pilot-v1, with their own vocabulary
+    # ("block_hardened", "stopped") and no flow_completed field. They were
+    # failing here on "unknown status" for being a different kind of record,
+    # not for claiming anything.
+    #
+    # Identifying the flow's records POSITIVELY, rather than widening the
+    # status set or relaxing the flow_completed assertion, keeps both checks
+    # exactly as strict for the 52 records they are about.
+    if record.get("campaign_id") != flow.CAMPAIGN_ID:
+        pytest.skip(f"{path} is not a {flow.CAMPAIGN_ID} record")
     status = record["status"]
     assert status in {
         flow.STATUS_PASS,
