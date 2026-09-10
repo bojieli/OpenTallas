@@ -54,6 +54,23 @@ def fixture_capability(topology: TopologyClass = TopologyClass.SINGLE_CHIP) -> C
         features.append(Feature.INTER_CHIP_ENDPOINT)
     if topology == TopologyClass.WAFER_LOGICAL_DEVICE:
         features.append(Feature.WAFER_ENDPOINT)
+    if topology != TopologyClass.SINGLE_CHIP:
+        # A multi-chip fixture must declare INTEGRITY_RETRY, because
+        # DeploymentBuilder requires it automatically for any COMMUNICATION
+        # descriptor carrying an integrity mode or a retry bound -- so that two
+        # programs with the same wire record cannot advertise different
+        # requirements.  Without it the fixture admits no link collective at
+        # all: the deployment is refused with "capability does not implement
+        # required feature bits [10]" before any behaviour is measured.
+        #
+        # This matches the shipped capabilities, which all declare it
+        # (compiler/backends/rom/qwen3.py, rom/deepseek_v4.py,
+        # hbm_sram/capability.py), and tests/abi3/test_feature_requirements.py
+        # asserts they must.  Kept off SINGLE_CHIP for the builder's own reason:
+        # a one-chip program has no link operation and must not inherit packet
+        # retry machinery merely because the shared chip also serves a
+        # clustered product.
+        features.append(Feature.INTEGRITY_RETRY)
     capability = Capability(
         capability_id="",
         topology_class=int(topology),
