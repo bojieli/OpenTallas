@@ -14,6 +14,9 @@ tokens receive the pinned finite BF16 causal-mask value before FP32 softmax.
 from __future__ import annotations
 
 from collections.abc import Sequence
+import math
+import struct
+
 from dataclasses import dataclass
 from typing import TypeAlias
 
@@ -36,9 +39,68 @@ QUERY_HEADS = 32
 KEY_VALUE_HEADS = 8
 HEAD_DIM = 128
 QUERY_HEADS_PER_KV_HEAD = QUERY_HEADS // KEY_VALUE_HEADS
+
+
+@dataclass(frozen=True)
+class AttentionGeometry:
+    """One attention shape this reference is characterised for.
+
+    The module constants above are Qwen3-8B's and remain the default
+    everywhere, so every existing caller is unchanged.  This type exists
+    because rung G1f runs a reduced regression model -- 8 query heads, 2 KV
+    heads, 16-element heads -- and the reference could not express it: it
+    hardcoded 32/8/128 and refused any row that was not 128 wide, so there was
+    no oracle a reduced attention could be checked against.
+
+    ``scale_code`` is DERIVED, not supplied.  It is bf16(1/sqrt(head_dim)), and
+    getting it wrong is silent: at 128 it is 0x3db5 and at 16 it is 0x3e80
+    (0.25, which unlike 1/sqrt(128) is exact in BF16).  Making it a field a
+    caller could set independently of ``head_dim`` would allow a geometry whose
+    scale does not match its own head width.
+    """
+
+    query_heads: int
+    kv_heads: int
+    head_dim: int
+
+    def __post_init__(self) -> None:
+        for name in ("query_heads", "kv_heads", "head_dim"):
+            value = getattr(self, name)
+            if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+                raise AttentionReferenceError(f"{name} must be a positive integer")
+        if self.query_heads % self.kv_heads:
+            raise AttentionReferenceError(
+                "query heads must be divisible by KV heads"
+            )
+
+    @property
+    def query_heads_per_kv_head(self) -> int:
+        return self.query_heads // self.kv_heads
+
+    @property
+    def scale_code(self) -> int:
+        """bf16(1 / sqrt(head_dim)), as a BF16 code."""
+
+        scale = 1.0 / math.sqrt(self.head_dim)
+        return (struct.unpack("<I", struct.pack("<f", scale))[0] >> 16) & 0xFFFF
+
+
 MAX_CONTEXT_TOKENS = 8192
 SCALE_BF16_CODE = 0x3DB5
 CAUSAL_MASK_BF16_CODE = 0xFF7F
+
+QWEN3_8B_GEOMETRY = AttentionGeometry(
+    query_heads=QUERY_HEADS,
+    kv_heads=KEY_VALUE_HEADS,
+    head_dim=HEAD_DIM,
+)
+
+QWEN3_REDUCED_GEOMETRY = AttentionGeometry(query_heads=8, kv_heads=2, head_dim=16)
+
+if QWEN3_8B_GEOMETRY.scale_code != SCALE_BF16_CODE:
+    raise AssertionError(
+        "the derived Qwen3-8B attention scale does not reproduce SCALE_BF16_CODE"
+    )
 
 BF16Vector: TypeAlias = tuple[int, ...]
 BF16Heads: TypeAlias = tuple[BF16Vector, ...]
@@ -58,6 +120,11 @@ class KVSnapshotReference:
     capacity: int
     key_values: BF16Sequence
     value_values: BF16Sequence
+    geometry: "AttentionGeometry" = None  # type: ignore[assignment]
+
+    def __post_init__(self) -> None:
+        if self.geometry is None:
+            object.__setattr__(self, "geometry", QWEN3_8B_GEOMETRY)
 
     @property
     def length(self) -> int:
@@ -74,6 +141,11 @@ class PreparedKVReference:
     position_start: int
     key_values: BF16Sequence
     value_values: BF16Sequence
+    geometry: "AttentionGeometry" = None  # type: ignore[assignment]
+
+    def __post_init__(self) -> None:
+        if self.geometry is None:
+            object.__setattr__(self, "geometry", QWEN3_8B_GEOMETRY)
 
     @property
     def length(self) -> int:
@@ -154,6 +226,7 @@ def _tensor3(
     *,
     heads: int,
     allow_empty: bool,
+    head_dim: int = HEAD_DIM,
 ) -> BF16Sequence:
     raw_tokens = _sequence(value, label)
     if not raw_tokens and not allow_empty:
@@ -168,10 +241,10 @@ def _tensor3(
         parsed_heads: list[BF16Vector] = []
         for head_index, raw_row in enumerate(head_rows):
             row = _sequence(raw_row, f"{label}[{token_index}][{head_index}]")
-            if len(row) != HEAD_DIM:
+            if len(row) != head_dim:
                 raise AttentionReferenceError(
                     f"{label}[{token_index}][{head_index}] must contain "
-                    f"exactly {HEAD_DIM} elements"
+                    f"exactly {head_dim} elements"
                 )
             parsed_heads.append(
                 tuple(
@@ -193,6 +266,7 @@ def make_kv_snapshot(
     capacity: int,
     key_values: Sequence[Sequence[Sequence[int]]],
     value_values: Sequence[Sequence[Sequence[int]]],
+    geometry: AttentionGeometry = QWEN3_8B_GEOMETRY,
 ) -> KVSnapshotReference:
     """Validate and construct one immutable committed snapshot."""
 
@@ -206,14 +280,16 @@ def make_kv_snapshot(
     keys = _tensor3(
         key_values,
         "key_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=True,
+        head_dim=geometry.head_dim,
     )
     values = _tensor3(
         value_values,
         "value_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=True,
+        head_dim=geometry.head_dim,
     )
     if len(keys) != len(values):
         raise AttentionReferenceError("committed key/value lengths differ")
@@ -225,6 +301,7 @@ def make_kv_snapshot(
         parsed_capacity,
         keys,
         values,
+        geometry,
     )
 
 
@@ -232,6 +309,7 @@ def empty_kv_snapshot(
     resource_id: str,
     *,
     capacity: int = MAX_CONTEXT_TOKENS,
+    geometry: AttentionGeometry = QWEN3_8B_GEOMETRY,
 ) -> KVSnapshotReference:
     """Construct generation zero with no committed tokens."""
 
@@ -241,6 +319,7 @@ def empty_kv_snapshot(
         capacity=capacity,
         key_values=(),
         value_values=(),
+        geometry=geometry,
     )
 
 
@@ -253,6 +332,10 @@ def _validated_snapshot(snapshot: object) -> KVSnapshotReference:
         capacity=snapshot.capacity,
         key_values=snapshot.key_values,
         value_values=snapshot.value_values,
+        # Forward the snapshot's OWN geometry.  Re-validating against the
+        # default would silently reject every non-Qwen3-8B snapshot here, which
+        # is exactly what it did before this line existed.
+        geometry=snapshot.geometry,
     )
 
 
@@ -268,6 +351,7 @@ def prepare_kv_append(
     """Prepare a contiguous, byte-preserving append without publishing it."""
 
     committed = _validated_snapshot(snapshot)
+    geometry = committed.geometry
     transaction = _bounded_integer(
         transaction_id,
         "transaction_id",
@@ -295,14 +379,16 @@ def prepare_kv_append(
     keys = _tensor3(
         key_values,
         "prepared key_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=False,
+        head_dim=geometry.head_dim,
     )
     values = _tensor3(
         value_values,
         "prepared value_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=False,
+        head_dim=geometry.head_dim,
     )
     if len(keys) != len(values):
         raise AttentionReferenceError("prepared key/value lengths differ")
@@ -315,6 +401,7 @@ def prepare_kv_append(
         start,
         keys,
         values,
+        geometry,
     )
 
 
@@ -323,19 +410,22 @@ def _validated_pair(
     prepared: object,
 ) -> tuple[KVSnapshotReference, PreparedKVReference]:
     committed = _validated_snapshot(snapshot)
+    geometry = committed.geometry
     if not isinstance(prepared, PreparedKVReference):
         raise AttentionReferenceError("prepared state must be a PreparedKVReference")
     keys = _tensor3(
         prepared.key_values,
         "prepared key_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=False,
+        head_dim=geometry.head_dim,
     )
     values = _tensor3(
         prepared.value_values,
         "prepared value_values",
-        heads=KEY_VALUE_HEADS,
+        heads=geometry.kv_heads,
         allow_empty=False,
+        head_dim=geometry.head_dim,
     )
     canonical = PreparedKVReference(
         _resource_id(prepared.resource_id),
@@ -359,6 +449,7 @@ def _validated_pair(
         ),
         keys,
         values,
+        geometry,
     )
     if canonical.resource_id != committed.resource_id:
         raise AttentionReferenceError("prepared resource differs from snapshot")
@@ -492,11 +583,13 @@ def gqa_causal_attention_bf16(
     """Execute exact full-shape Qwen GQA against transaction-private KV state."""
 
     committed, transaction = _validated_pair(snapshot, prepared)
+    geometry = committed.geometry
     queries = _tensor3(
         query_codes,
         "query_codes",
-        heads=QUERY_HEADS,
+        heads=geometry.query_heads,
         allow_empty=False,
+        head_dim=geometry.head_dim,
     )
     if len(queries) != transaction.length:
         raise AttentionReferenceError(
@@ -522,7 +615,7 @@ def gqa_causal_attention_bf16(
             token_probabilities: list[BF16Vector] = []
             token_outputs: list[BF16Vector] = []
             for query_head, query in enumerate(query_heads):
-                kv_head = query_head // QUERY_HEADS_PER_KV_HEAD
+                kv_head = query_head // geometry.query_heads_per_kv_head
                 masked_codes: list[int] = []
                 scaled_codes: list[int] = []
                 for key_index, key_token in enumerate(keys):
@@ -538,7 +631,7 @@ def gqa_causal_attention_bf16(
                     score_saturation += int(score.saturated)
                     scaled_binary32 = binary32_multiply(
                         score.code << 16,
-                        SCALE_BF16_CODE << 16,
+                        geometry.scale_code << 16,
                     )
                     scaled = binary32_bits_to_bf16_rne(scaled_binary32)
                     scaling_saturation += int(scaled.saturated)
@@ -572,7 +665,7 @@ def gqa_causal_attention_bf16(
                     probability_row.append(probability.code)
 
                 output_row: list[int] = []
-                for element in range(HEAD_DIM):
+                for element in range(geometry.head_dim):
                     accumulator = 0
                     for probability, value_token in zip(
                         probability_row,
@@ -597,16 +690,16 @@ def gqa_causal_attention_bf16(
     except NumericReferenceError as exc:
         raise AttentionReferenceError(f"attention arithmetic failed: {exc}") from exc
 
-    rows = len(queries) * QUERY_HEADS
+    rows = len(queries) * geometry.query_heads
     score_elements = rows * total_tokens
-    value_elements = score_elements * HEAD_DIM
+    value_elements = score_elements * geometry.head_dim
     accounting = AttentionReferenceAccounting(
         exponential_evaluations=score_elements,
         mask_additions=score_elements,
         probability_multiplications=score_elements,
         scaling_multiplications=score_elements,
-        score_accumulation_additions=score_elements * HEAD_DIM,
-        score_multiplications=score_elements * HEAD_DIM,
+        score_accumulation_additions=score_elements * geometry.head_dim,
+        score_multiplications=score_elements * geometry.head_dim,
         softmax_reduction_additions=rows * (total_tokens - 1),
         softmax_reciprocal_divisions=rows,
         value_accumulation_additions=value_elements,
@@ -633,6 +726,9 @@ __all__ = [
     "BF16Sequence",
     "BF16Vector",
     "CAUSAL_MASK_BF16_CODE",
+    "AttentionGeometry",
+    "QWEN3_8B_GEOMETRY",
+    "QWEN3_REDUCED_GEOMETRY",
     "HEAD_DIM",
     "KEY_VALUE_HEADS",
     "KVSnapshotReference",

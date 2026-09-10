@@ -34,7 +34,29 @@ module ot_a3_qwen_gqa #(
     // Qwen KV cache at runtime.reference.tensor_accelerator_attention.
     // MAX_CONTEXT_TOKENS = 8192; a verification instance sizes itself to the
     // contexts its campaign actually issues.
-    parameter integer MAX_CONTEXT = 32
+    parameter integer MAX_CONTEXT = 32,
+
+    // The attention geometry this instance is elaborated for.  Defaults are
+    // Qwen3-8B's, so every existing instantiation is unchanged.
+    //
+    // Rung G1f measured this engine having "no geometry input": at the reduced
+    // regression model's shape it still read a full-model attention row, 32x
+    // what the reduced row is.  These make the reduced configuration a
+    // different ELABORATION of the same RTL, which is what a small-config
+    // nightly regression is, rather than a runtime mode.  Runtime geometry
+    // would turn the fixed address strides below into variable multipliers,
+    // which is a timing cost on a design whose routed control plane already
+    // does not close.
+    //
+    // SCALE_CODE is part of the geometry and not an independent knob: it is
+    // bf16(1 / sqrt(HEAD_WIDTH)) widened to binary32.  0x3db5 is
+    // bf16(1/sqrt(128)); the reduced 16-wide head needs bf16(1/sqrt(16)) =
+    // 0x3e80, which is 0.25 exactly.  Changing HEAD_WIDTH without changing
+    // this would silently compute a different attention.
+    parameter integer QUERY_HEADS = 32,
+    parameter integer KV_HEADS    = 8,
+    parameter integer HEAD_WIDTH  = 128,
+    parameter [31:0]  SCALE_CODE  = 32'h3db5_0000
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -75,12 +97,13 @@ module ot_a3_qwen_gqa #(
     // The eight-lane softmax reduction the contract names is defined for
     // rows of eight or more; below that the reference reduces sequentially.
     localparam integer MIN_CONTEXT = 8;
-    localparam integer QUERY_HEADS = 32;
-    localparam integer KV_HEADS = 8;
-    localparam integer HEAD_WIDTH = 128;
     localparam integer KV_ROW_WORDS = KV_HEADS * HEAD_WIDTH;
     localparam integer OUTPUT_WORDS = QUERY_HEADS * HEAD_WIDTH;
-    localparam [31:0] SCALE_CODE = 32'h3db5_0000;
+    // Query heads per KV head -- the GQA sharing factor.  Derived, because the
+    // head index used to be advanced by a hardcoded ">> 2" that is only correct
+    // at 32/8.
+    localparam integer QUERY_HEADS_PER_KV_HEAD = QUERY_HEADS / KV_HEADS;
+    localparam integer KV_SHARE_SHIFT = $clog2(QUERY_HEADS_PER_KV_HEAD);
     localparam [31:0] FP32_ONE = 32'h3f80_0000;
 
     localparam [5:0] S_IDLE = 6'd0;
@@ -557,7 +580,8 @@ module ot_a3_qwen_gqa #(
                                     end else begin
                                         query_head_q <= query_head_q + 1'b1;
                                         kv_head_q <=
-                                            (query_head_q + 1'b1) >> 2;
+                                            (query_head_q + 1'b1)
+                                                >> KV_SHARE_SHIFT;
                                         state <= S_QUERY_REQ;
                                     end
                                 end else begin
