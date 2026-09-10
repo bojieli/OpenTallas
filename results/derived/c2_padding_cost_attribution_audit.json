@@ -1,0 +1,197 @@
+{
+  "answer": "no",
+  "c2_survey": {
+    "cells": [
+      {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
+        "magnitude_each_entry_reports": {
+          "attention.tile_rows": 2.0,
+          "reduction.tile_rows": 2.0,
+          "route.tile_rows": 2.0,
+          "vector.tile_rows": 2.0
+        },
+        "metric_each_entry_was_scored_on": {
+          "attention.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "reduction.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "route.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "vector.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles"
+        },
+        "proxy_scored_present": [
+          "attention.tile_rows",
+          "reduction.tile_rows",
+          "route.tile_rows",
+          "vector.tile_rows"
+        ],
+        "reason": "not comparable",
+        "unexplained_count": 14
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
+        "magnitude_each_entry_reports": {
+          "attention.tile_rows": 2.0,
+          "reduction.tile_rows": 2.0,
+          "route.tile_rows": 2.0,
+          "vector.tile_rows": 2.0
+        },
+        "metric_each_entry_was_scored_on": {
+          "attention.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "reduction.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "route.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles",
+          "vector.tile_rows": "tile_mapping / tensor_lane_mapping / apply_tile_amplification / _compute_cycles"
+        },
+        "proxy_scored_present": [
+          "attention.tile_rows",
+          "reduction.tile_rows",
+          "route.tile_rows",
+          "vector.tile_rows"
+        ],
+        "reason": "not comparable",
+        "unexplained_count": 14
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      },
+      {
+        "artifact": "results/derived/deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_machine_pair.json",
+        "magnitude_each_entry_reports": {},
+        "metric_each_entry_was_scored_on": {},
+        "proxy_scored_present": [],
+        "reason": "no deployment built",
+        "unexplained_count": 0
+      }
+    ],
+    "cells_carrying_the_four_proxy_scored_entries": 2,
+    "failing_cells": 8
+  },
+  "cancellation_demonstrated": {
+    "held_equal": {
+      "lanes": 64,
+      "tile_cols": 64,
+      "tile_depth": 128,
+      "tiles": 200,
+      "useful_work_units": 1228800000,
+      "work_per_lane_cycle": 1.0
+    },
+    "issued_work_doubled_either_way": true,
+    "rows": [
+      {
+        "cycles": 13107200,
+        "family_work_counter_present": false,
+        "issued_work": 838860800,
+        "tile_rows": 512
+      },
+      {
+        "cycles": 19200000,
+        "family_work_counter_present": true,
+        "issued_work": 838860800,
+        "tile_rows": 512
+      },
+      {
+        "cycles": 26214400,
+        "family_work_counter_present": false,
+        "issued_work": 1677721600,
+        "tile_rows": 1024
+      },
+      {
+        "cycles": 19200000,
+        "family_work_counter_present": true,
+        "issued_work": 1677721600,
+        "tile_rows": 1024
+      }
+    ],
+    "with_the_counter_absent": {
+      "cycles_1024": 26214400,
+      "cycles_512": 13107200,
+      "ratio": 2.0,
+      "reading": "doubling tile_rows doubles the charge, so padding looks exactly as costly as the audit reports"
+    },
+    "with_the_counter_present": {
+      "cycles_1024": 19200000,
+      "cycles_512": 19200000,
+      "ratio": 1.0,
+      "reading": "tile_work cancels and the charge is identical, so padding costs nothing"
+    }
+  },
+  "chain": {
+    "attention_work_counters": [
+      "attention.score_multiplications",
+      "attention.value_multiplications"
+    ],
+    "attention_work_counters_declared": true,
+    "audit_sets_context_positions_not_a_work_counter": true,
+    "audit_sets_no_attention_work_counter": true,
+    "audit_sets_no_reduction_work_counter": true,
+    "audit_sets_no_route_work_counter": true,
+    "audit_sets_no_vector_work_counter": true,
+    "audit_sets_the_tensor_work_counters": true,
+    "digests": {
+      "runtime/cycle/machine.py": "8e8fe08c576c1ba6c491e20966fc647bf2a9bcc8abc3c2efcbf8542cc66a10df",
+      "runtime/cycle/model.py": "d711e210e9181fcd70e1d2938f4c6d78895df6f55e1fdcd776f970ace4c43827",
+      "tools/derive_cycle_machine.py": "a3d52920e67bad5101fb3b54eacfcc468c9e5230ea6ef7fee28b589805d53fe6"
+    },
+    "issued_work_is_tiles_times_tile_work": true,
+    "per_tile_multiplies_tile_work_by_the_scale": true,
+    "work_scale_divides_by_issued_work": true,
+    "work_scale_falls_back_to_one_when_the_counter_is_absent": true
+  },
+  "gate": "C2 (configs/gates/redesign_gates.json)",
+  "generated_by": "tools/audit_c2_padding_cost_attribution.py",
+  "generated_by_sha256": "b62ac596720bc6da80710369fd437aa1b9ae48c3196938d9082d67e5761d5bd0",
+  "git": {
+    "commit": "982e1d374e76eaf85311c8d77488fd5bf57addc7",
+    "worktree_dirty": false
+  },
+  "question": "are C2's attention/reduction/route/vector tile_rows asymmetries measured on a quantity the cycle model charges for?",
+  "refusals": [
+    {
+      "id": "no-allowlist-entry",
+      "what": "these four entries must not be added to DEPLOYMENT_AUDIT_ALLOWLIST",
+      "why": "the allowlist is empty and a test pins it empty, which is the guard against turning C2 green by citation; and the true statement is not 'this asymmetry is permitted' but 'this asymmetry was never measured on a cost'"
+    },
+    {
+      "id": "not-a-clearance-of-c2",
+      "what": "this does not make the failing pair comparable",
+      "why": "comparable ANDs in program_mismatch, which is true here because 58 HBM-only DMA.TRANSFER operators carrying 99.7% of that side's DMA payload are weight loads the ROM machine does not need -- the design under test, not a lowering choice"
+    }
+  ],
+  "schema": "opentallas.derived.c2_padding_cost_attribution.v1",
+  "verdict": "measured-on-a-free-quantity",
+  "what_would_fix_it": "set the family work counters the model already reads (attention.score_multiplications and attention.value_multiplications, vector.elements, route.topk_candidates, reduction.elements) on the audit's synthetic step, so _work_scale is meaningful and these families are scored on cycles instead of on issued_work"
+}
