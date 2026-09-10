@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Relaxing the clock does not close the G2 cluster; it makes closure worse.
+"""Neither knob closes the G2 cluster: not the clock, and not utilisation.
 
 The cluster's ASAP7 route does not close.  The obvious response is to relax the
 period until it does, and an operating-point sweep was run to find that point:
@@ -75,6 +75,33 @@ POINTS = (
 
 RETIRED = ("4.00", "4.50", "5.00", "6.00")
 
+#: The other axis.  Period was the wrong knob, so the shipping configuration
+#: was re-run at lower utilisation -- the knob that changes the placement
+#: density repeaters have to work in.  It does not close either.
+#:
+#: These are NOT a clean single-variable comparison against the period points
+#: above, and saying so matters: the utilisation runs also carry the
+#: performance knobs (CRC_CACHE=1, FAST_FRONT_END=1) and 2,884,444 instances
+#: against 2,442,446, so utilisation and logic content moved together.  What
+#: they establish is weaker and still useful: at 4.75 ns the cluster does not
+#: close at util 25 or at util 20, and the failure is max-slew in both.
+UTILISATION_POINTS = (
+    {
+        "core_utilization": 20,
+        "clock_period_ns": 4.75,
+        "fmax_mhz": 272.0,
+        "hold_violations": 0,
+        "max_slew_violations": 20,
+        "max_cap_violations": 0,
+        "instance_count": 2_884_444,
+        "closed": False,
+        "performance_knobs": {"CRC_CACHE": 1, "FAST_FRONT_END": 1},
+        "git_commit": "2bb16488",
+        "worktree_dirty": False,
+        "source_root": "/home/ubuntu/ot-ship2",
+    },
+)
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -133,6 +160,15 @@ def build() -> dict[str, Any]:
             "max_fanout": 32,
         },
         "points_measured": list(POINTS),
+        "utilisation_points_measured": list(UTILISATION_POINTS),
+        "utilisation_reading": (
+            "lowering utilisation from 25 to 20 did not close the design and "
+            "the max-slew count rose from 12 to 20.  That is suggestive rather "
+            "than conclusive, because the util-20 run also carries the "
+            "performance knobs and 442,000 more instances -- two variables "
+            "moved.  The conclusion that survives is that neither 25 nor 20 "
+            "closes at 4.75 ns, and slew is the failing check in both"
+        ),
         "points_retired_unrun_ns": list(RETIRED),
         "why_retired": (
             "the two completed points already answer the question in the "
@@ -176,9 +212,11 @@ def build() -> dict[str, Any]:
             },
         ],
         "what_to_vary_instead": (
-            "core utilisation, which changes the placement density repeaters "
-            "have to work in.  The queued retry sweeps 20 and 30 against the "
-            "25 these points hold."
+            "utilisation was the remaining candidate and util 20 has now been "
+            "measured: it does not close.  util 30 is the last point of that "
+            "sweep.  If it also fails, the cluster does not close at 4.75 ns "
+            "under either knob, and the next question is the slew constraint "
+            "itself rather than the placement"
         ),
     }
 
