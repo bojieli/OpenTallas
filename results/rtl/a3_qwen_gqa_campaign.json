@@ -59,9 +59,9 @@
   },
   "log_sha256": {
     "iverilog": "24a614fb9744c805b21aecde1b93c481813480c264301f393756c191faf59af9",
-    "verilator": "cdc01a3ecfc91f34c87c80213ee00e3a154c3d31481e51bfe5d7e84513c944af",
-    "verilator_compile": "5d7c408ae008e0a997c0c7dcb1301353da28126c1dc666f805716007e317f5b2",
-    "yosys": "1205e26a71147385f010b8f517f1456ad2742d18d34bbbf1170a1faa498ca36d"
+    "verilator": "42d8e54a524cce8e0a4b6389567100ea0110b728e6fb5b0090484d5a48e16184",
+    "verilator_compile": "81f27ebe12629f8a5e1bef469e15c75c95bbe7925361e54bc16931a537956d8b",
+    "yosys": "fcb971da0035a0280fe3aa2ab2086b12abfcedee329ccf6d90ef79ad322ee25b"
   },
   "normalized_cases": [
     {
@@ -202,7 +202,7 @@
   },
   "simulators_agree": true,
   "source_sha256": {
-    "results/rtl/abi3_shipped_prefix_campaign.json": "e4657c6f27b3b259aad172639b978f7e3cd44cf26649ef1a8e3ea831237134a9",
+    "results/rtl/abi3_shipped_prefix_campaign.json": "24c7128fa861e83caabaceaadedc58b70d47d69ccc2eeaa392ebc25982b3c563",
     "rtl/abi3/ot_a3_descriptor_record_validator.sv": "92d39545cb99c762c8b96144c4c165fadeb4c355a77155db42c175ba5a36c1f3",
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
@@ -256,7 +256,7 @@
   "vector_sha256": {
     "cases.hex": "c8494f5ec807a34365be02b63b4719f61b80c659fa6e07b5182df6f04ef76687",
     "expected.hex": "80280ed1b646a8b55d75a05134eb47ee69bcd19276de95ae49bdfe34ba9b02cd",
-    "index.json": "86f9a686d6389ccecc690c697ce567b4e30614d2063cc6e23c08b737a100756e",
+    "index.json": "af7513eb2c5b3bcf35de9a2429095ad5db2627eacb28ac7b538147a9b2079ecd",
     "instruction.hex": "843f602203c869cf1868d4a1d3c8a9671725ee4c96d03acef2561cbbf1745e7a",
     "numeric.hex": "edcd211a51f245d3da51fe4ff3318261e15d6105b49d1d7037fa444f49fae8ae",
     "operator.hex": "a4bc1b569a0c57df786f30a7f863761ac85de2915ff57023f0f73e38cb227d5f",
@@ -268,10 +268,10 @@
     "view3.hex": "1f9d5ba6a4cefe29bb3a29659b57f17b0812ba6b2b0439bfecb9f0379693a42f"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.021162817953154445,
-    "iverilog_simulation": 304.17317727883346,
-    "verilator_compile": 8.114805396879092,
-    "verilator_simulation": 6.251103553920984,
-    "yosys_elaboration": 57.59173073107377
+    "iverilog_compile": 0.026907177176326513,
+    "iverilog_simulation": 322.8707326450385,
+    "verilator_compile": 10.016397251049057,
+    "verilator_simulation": 6.582250716164708,
+    "yosys_elaboration": 62.11309860111214
   }
 }
