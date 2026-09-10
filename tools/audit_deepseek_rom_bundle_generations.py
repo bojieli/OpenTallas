@@ -122,8 +122,27 @@ def git_state() -> dict[str, Any]:
     }
 
 
+#: Files that MENTION a digest without BINDING it: this audit's own source and
+#: output, and the sibling audits that catalogue digests rather than pin them.
+#: Counting them inflated the first published figure -- this tool hardcodes all
+#: three digests as constants, so scanning tools/ found itself and reported
+#: itself as evidence.  A catalogue is not a binder.
+def _is_catalogue(relative: str) -> bool:
+    name = Path(relative).name
+    return (
+        name.startswith("audit_")
+        or name.endswith("_audit.json")
+        or name
+        in {
+            "source_currency_drift.json",
+            "deepseek_rom_bundle_generations.json",
+            "g1f_reduced_vector_readiness.json",
+        }
+    )
+
+
 def binders(digest: str) -> list[str]:
-    """Every committed file that names this digest."""
+    """Every committed file that BINDS this digest, catalogues excluded."""
 
     found: list[str] = []
     for root in ("results", "testdata", "tools", "configs", "docs"):
@@ -133,9 +152,12 @@ def binders(digest: str) -> list[str]:
         for path in base.rglob("*"):
             if not path.is_file() or path.suffix not in {".json", ".py", ".md"}:
                 continue
+            relative = str(path.relative_to(ROOT))
+            if _is_catalogue(relative):
+                continue
             try:
                 if digest[:16] in path.read_text(errors="ignore"):
-                    found.append(str(path.relative_to(ROOT)))
+                    found.append(relative)
             except OSError:
                 continue
     return sorted(found)

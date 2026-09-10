@@ -117,10 +117,22 @@ def cascade_cost() -> dict[str, Any]:
     # lands in results/derived containing the very string this scan matches.
     # Counting itself made the answer change every time it ran -- 15 of the 16
     # leaves that moved between two runs were this list shifting by one entry.
+    # Catalogues excluded, not just this audit's own output.  Sibling audits
+    # under results/derived list source paths wholesale, so they match the
+    # substring without binding anything -- source_currency_drift.json began
+    # appearing here for exactly that reason.  A catalogue is not a binder.
+    def _is_catalogue(path: Path) -> bool:
+        return path.name.endswith("_audit.json") or path.name in {
+            "source_currency_drift.json",
+            "deepseek_rom_bundle_generations.json",
+            "g1f_reduced_vector_readiness.json",
+        }
+
     binders = sorted(
         str(path.relative_to(ROOT))
         for path in (ROOT / "results/derived").glob("*.json")
         if path.resolve() != DEFAULT_OUTPUT.resolve()
+        and not _is_catalogue(path)
         and "rom_schedule_checks" in path.read_text()
     )
     return {
