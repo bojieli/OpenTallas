@@ -100,6 +100,28 @@ UTILISATION_POINTS = (
         "worktree_dirty": False,
         "source_root": "/home/ubuntu/ot-ship2",
     },
+    {
+        "core_utilization": 30,
+        "clock_period_ns": 4.75,
+        "fmax_mhz": 280.9,
+        "hold_violations": 0,
+        "max_slew_violations": 5,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "drc_errors": 0,
+        "setup_wns_ns": 1.18987,
+        "instance_count": 2_216_811,
+        "achieved_utilization_fraction": 0.320953,
+        "closed": False,
+        "closed_reason": (
+            "signal-integrity violations in the routed netlist: "
+            "max_slew_violations 5"
+        ),
+        "performance_knobs": {"CRC_CACHE": 1, "FAST_FRONT_END": 1},
+        "git_commit": "2bb16488",
+        "worktree_dirty": False,
+        "source_root": "/home/ubuntu/ot-ship2",
+    },
 )
 
 
@@ -162,12 +184,31 @@ def build() -> dict[str, Any]:
         "points_measured": list(POINTS),
         "utilisation_points_measured": list(UTILISATION_POINTS),
         "utilisation_reading": (
-            "lowering utilisation from 25 to 20 did not close the design and "
-            "the max-slew count rose from 12 to 20.  That is suggestive rather "
-            "than conclusive, because the util-20 run also carries the "
-            "performance knobs and 442,000 more instances -- two variables "
-            "moved.  The conclusion that survives is that neither 25 nor 20 "
-            "closes at 4.75 ns, and slew is the failing check in both"
+            "two points of this sweep share a build -- util 20 and util 30, "
+            "both at 2bb16488 out of /home/ubuntu/ot-ship2 -- and between "
+            "them max-slew violations fall from 20 to 5 as utilisation "
+            "RISES, while fmax rises 272.0 -> 280.9 MHz and instance count "
+            "falls 2,884,444 -> 2,216,811.  That is the opposite of the "
+            "direction first swept.  The mechanism the trend most plausibly "
+            "runs through is the instance count: a denser core is a smaller "
+            "core, the nets crossing it are shorter, and a shorter net at "
+            "fixed drive strength has less slew to violate.  The util-25 "
+            "point (12 violations, 2,442,446 instances) orders consistently "
+            "between them, but it was built at 58ce25bb out of "
+            "/home/ubuntu/ot-phys -- a different commit and a different "
+            "source root -- so it corroborates the gradient and is NOT a "
+            "third point of the same series; this audit does not average it "
+            "in.  The earlier reading had util 20 and util 25 across that "
+            "same build boundary and took the rise from 12 to 20 as a "
+            "warning that lowering utilisation hurt; the same-build pair now "
+            "says the knob has a direction, and the sweep was being run "
+            "downhill.  None of the points closes at 4.75 ns: slew is the "
+            "failing check at every one, hold and max-cap are 0 throughout, "
+            "and DRC and antenna are 0 at util 30.  Whether the gradient "
+            "reaches 0 is a measurement, not an extrapolation, so util 35 "
+            "and util 40 are running at 2bb16488 out of the same root, which "
+            "will make the series four same-build points.  A gradient is not "
+            "a closure and none is claimed here"
         ),
         "points_retired_unrun_ns": list(RETIRED),
         "why_retired": (
