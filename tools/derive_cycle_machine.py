@@ -2697,6 +2697,30 @@ UNBUILDABLE_DEPLOYMENT_PAIRS: dict[str, str] = {
 #: how ``_work_scale`` arrives at exactly 2.0 on a compiled contraction.
 TENSOR_WORK_UNITS_PER_MAC = 2.0
 
+#: The work counter each non-tensor family is scored on when the audit builds a
+#: synthetic step.  ``CycleModel._work_scale`` divides the family's recorded
+#: work by ``issued_work``; when the family records NO work it returns 1.0 and
+#: the padded coordinate ``tile_work`` survives into the charge instead of
+#: cancelling.  The audit used to record work for ``tensor`` only, so a wider
+#: tile appeared to cost its own padding ratio on the other four families --
+#: which is what gate C2 reported as "favours hbm 2.0x" on ``*.tile_rows``.
+#: See ``tools/audit_c2_padding_cost_attribution.py``.
+#:
+#: Only the PRIMARY counter is set.  The secondary counters name a different
+#: quantity rather than a second unit of the same work -- vector's
+#: ``activation_elements`` counts an activation the operator may not apply,
+#: route's ``hash_lookups`` a lookup it may not perform -- so setting them
+#: would inflate the work rather than express one coordinate in the counter's
+#: own units, the way ``tensor``'s multiply/add pair does.
+FAMILY_PRIMARY_WORK_COUNTER: dict[str, str] = {
+    "vector": "vector.elements",
+    "attention": "attention.score_multiplications",
+    "route": "route.topk_candidates",
+    "reduction": "reduction.elements",
+    "selection": "selection.vocabulary_elements",
+    "state": "state.rows_committed",
+}
+
 #: A static walk of the control stream is bounded so that a malformed program
 #: cannot spin the audit forever.
 _STATIC_WALK_STEP_LIMIT = 50_000_000
@@ -3062,6 +3086,15 @@ def _describe_operator(dep: Any, views: Any, operator_id: int,
         macs = rows * cols * depth
         step.counter_delta["tensor.multiplications"] = macs
         step.counter_delta["tensor.additions"] = macs
+    else:
+        # Record the family's own work counter, so that the cycle charge scales
+        # by useful work over issued work and the padded tile shape cancels --
+        # the same arithmetic the tensor branch above relies on.  Without this
+        # the step records no work, ``_work_scale`` falls back to 1.0, and the
+        # tile's padding is charged as though it were a cost.
+        primary = FAMILY_PRIMARY_WORK_COUNTER.get(family)
+        if primary is not None:
+            step.counter_delta[primary] = rows * cols * depth
     rec: dict[str, Any] = {
         "operator_id": operator_id, "family": family, "mnemonic": name,
         "schedule_id": schedule_id,
@@ -3161,11 +3194,24 @@ def _metrics_of(step: Any, mapping: Any, params: Any,
         step.accesses = [dataclasses.replace(a) for a in step.accesses]
         apply_tile_amplification(step, mapping)
         out["transferred_bytes_static"] = step.bytes_transferred
-    if charger is not None and (
+    charge = charger is not None and (
         step.family == "dma"
         or (step.family == "tensor" and step.mnemonic in TENSOR_CONTRACTIONS)
-    ):
-        cycles, tile_issue = charger._compute_cycles(step, params, mapping)
+        # The families that record a primary work counter are charged on
+        # cycles too: _work_scale divides their useful work by issued work, so
+        # the generic branch of _compute_cycles prices them on the same
+        # footing as a contraction instead of leaving the audit to score them
+        # on issued_work, which is padded and cancels.
+        or step.family in FAMILY_PRIMARY_WORK_COUNTER
+    )
+    if charge:
+        from runtime.cycle.model import ScheduleError
+        try:
+            cycles, tile_issue = charger._compute_cycles(step, params, mapping)
+        except (ScheduleError, KeyError, ZeroDivisionError):
+            # No charge could be recomputed for this family; the caller falls
+            # back to the tile-count witness and says so.
+            return out
         out["cycles_per_issue"] = int(cycles)
         out["tile_issue_cycles_per_issue"] = int(tile_issue)
     return out
@@ -3587,13 +3633,21 @@ def _field_effect(family: str, field: str, rom_v: int, hbm_v: int,
         elif family == "dma":
             order = ["cycles_per_issue", "tiles", "issued_work"]
         else:
-            order = ["tiles", "issued_work"]
+            # Cycles first, for the same reason the tensor and dma branches
+            # take it: it is the quantity the pair is actually charged.  The
+            # synthetic step records this family's work counter (see
+            # FAMILY_PRIMARY_WORK_COUNTER), so _work_scale divides useful work
+            # by issued work and the padded tile shape cancels instead of
+            # being charged.  ``issued_work`` stays last as a witness for the
+            # case where no machine was given and cycles cannot be recomputed.
+            order = ["cycles_per_issue", "tiles", "issued_work"]
         order = [m for m in order if m in seen]
         if not order:
             return verdict("unknown", None, "no cost-bearing metric could be recomputed")
         first = side(order[0])
         favours, effect, why = first
-        if family not in ("tensor", "dma") and len(order) > 1:
+        if (family not in ("tensor", "dma") and len(order) > 1
+                and order[0] != "cycles_per_issue"):
             second = side(order[1])
             if favours == "neither" and second[0] != "neither":
                 favours, effect = second[0], second[1]
