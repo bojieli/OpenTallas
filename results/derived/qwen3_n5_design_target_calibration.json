@@ -48,6 +48,21 @@
             }
           }
         },
+        "margin": {
+          "commensurable_margin_fraction": 3.730050500117593,
+          "commensurable_margin_is_inside_the_residual": false,
+          "commensurable_runner_up": "compute",
+          "commensurable_winner": "weight_read",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 2.2143456572182867,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "compute",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "weight_read"
+        },
         "refused_because": null,
         "regimes_agree": true,
         "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
@@ -88,6 +103,21 @@
               "bytes_written": 1218003972
             }
           }
+        },
+        "margin": {
+          "commensurable_margin_fraction": 0.008741438113194056,
+          "commensurable_margin_is_inside_the_residual": true,
+          "commensurable_runner_up": "weight_read",
+          "commensurable_winner": "compute",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 0.4844072332798983,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "weight_read",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "compute"
         },
         "refused_because": null,
         "regimes_agree": false,
@@ -1588,6 +1618,21 @@
               }
             }
           },
+          "margin": {
+            "commensurable_margin_fraction": 3.730050500117593,
+            "commensurable_margin_is_inside_the_residual": false,
+            "commensurable_runner_up": "compute",
+            "commensurable_winner": "weight_read",
+            "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+            "margin_fraction": 2.2143456572182867,
+            "margin_is_inside_the_residual": false,
+            "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+            "runner_up": "compute",
+            "same_winner_under_the_commensurable_compute_term": true,
+            "tensor_tile_quantisation_residual_fraction": 0.092222,
+            "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+            "winner": "weight_read"
+          },
           "refused_because": null,
           "regimes_agree": true,
           "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
@@ -1628,6 +1673,21 @@
                 "bytes_written": 1218003972
               }
             }
+          },
+          "margin": {
+            "commensurable_margin_fraction": 0.008741438113194056,
+            "commensurable_margin_is_inside_the_residual": true,
+            "commensurable_runner_up": "weight_read",
+            "commensurable_winner": "compute",
+            "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+            "margin_fraction": 0.4844072332798983,
+            "margin_is_inside_the_residual": false,
+            "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+            "runner_up": "weight_read",
+            "same_winner_under_the_commensurable_compute_term": true,
+            "tensor_tile_quantisation_residual_fraction": 0.092222,
+            "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+            "winner": "compute"
           },
           "refused_because": null,
           "regimes_agree": false,
@@ -6535,7 +6595,7 @@
   "gate": "G4",
   "generator": "tools/derive_cycle_machine.py --calibrate",
   "git": {
-    "commit": "c3721c037aa359f82122bb232165b9e7c434f4da",
+    "commit": "5c60f6962ac73375bc09d5e562d512e38cffba2c",
     "dirty": false,
     "dirty_inputs": [],
     "dirty_paths": []
@@ -6560,13 +6620,13 @@
       "sha256": "7b1558f821f1f42bfde9b57a036ecec431718f3e68e072e46b37a24cbaacfa58"
     },
     "docs/CHIP_ARCHITECTURE_DESIGN.md": {
-      "sha256": "f37026b9d686bcc6e7d6ece7a98000acf49c5f57093764fe1322fa5a7ebd602f"
+      "sha256": "ae879ac5177e24833c03a1148a07c7769b00382f2ff7bd5da99d846778299933"
     },
     "results/derived/qwen3_n5_design_target_machine_pair.json": {
       "sha256": "a744b2b7bf14ccbb8739b4c403bffc86f322e46f867ce54456aa77e7e0b6fe81"
     },
     "results/derived/qwen3_n5_design_target_reconciliation.json": {
-      "sha256": "a103c994bcbe5b36dfb27446c71f35db6756b0b649f81ed3da9aa54f3aafabdd"
+      "sha256": "fde0741e310b5c471ea0589909b46eb983db5c42f2180ee4593b72cab0efef62"
     },
     "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json": {
       "sha256": "7c90d2b6219d02f56c8b3813c91c8548c5d1dc0598d89a9bf06ce7ef3ba6164d"
