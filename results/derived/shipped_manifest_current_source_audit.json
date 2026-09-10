@@ -1,0 +1,87 @@
+{
+  "answer": "yes, all of them",
+  "claims_broken": 0,
+  "claims_holding": 4,
+  "generated_by": "tools/audit_shipped_manifest_current_source.py",
+  "generated_by_sha256": "fb9afeeccea2e869c448a1f57bfe00a4fe080165db9ace642d7eb19741972a35",
+  "git": {
+    "commit": "b1e39f59d74cf9ca54560c07f24cb09d4e3d7196",
+    "worktree_dirty": false
+  },
+  "manifest": "configs/abi3/shipped_deployments.json",
+  "manifest_sha256": "58729518fd16e287748022f383a7d5784571ae06c25211126dde06699dace6e3",
+  "question": "does re-lowering each registration from source reproduce the current_source_deployment_sha256 the manifest asserts?",
+  "refusals": [
+    {
+      "id": "frozen-roots-untouched",
+      "what": "every build was redirected to scratch; no frozen root was written",
+      "why": "each build_command names that registration's own frozen root as its output, so running the manifest's commands as written would overwrite the evidence they describe -- and one of those roots is bound by abi3_g1a_operator_equivalence.json, on gate G1's critical path"
+    },
+    {
+      "id": "not-a-revalidation-of-the-frozen-evidence",
+      "what": "this says nothing about whether the frozen bundles are still the right evidence",
+      "why": "it checks only the second field.  The frozen digests differ from current source by design, which is what frozen_evidence means"
+    }
+  ],
+  "registrations": 4,
+  "rows": [
+    {
+      "claim_holds": true,
+      "claim_measured_at_commit": "58ce25b",
+      "claimed_current_source_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "frozen_deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "pin_kind": "frozen_evidence",
+      "rebuild": {
+        "command": "python3 tools/build_rom_deployment.py qwen3-8b --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --output /tmp/manifest-verify-uv0qznwx/qwen3-8b-rom-e9",
+        "rebuilt": true,
+        "redirected_from": "build/abi3/qwen3-8b-rom-e9"
+      },
+      "rebuilt_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "registration_id": "qwen3-8b-rom-e9"
+    },
+    {
+      "claim_holds": true,
+      "claim_measured_at_commit": "58ce25b",
+      "claimed_current_source_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "frozen_deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "pin_kind": "frozen_evidence",
+      "rebuild": {
+        "command": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip --out /tmp/manifest-verify-uv0qznwx/qwen3-8b-hbm-e9",
+        "rebuilt": true,
+        "redirected_from": "build/abi3/qwen3-8b-hbm-e9"
+      },
+      "rebuilt_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "registration_id": "qwen3-8b-hbm-e9"
+    },
+    {
+      "claim_holds": true,
+      "claim_measured_at_commit": "58ce25b",
+      "claimed_current_source_sha256": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "frozen_deployment_sha256": "7839775d53466243e2f6274d85c898599611a07b60e1e567d76db70cafa656b9",
+      "pin_kind": "frozen_evidence",
+      "rebuild": {
+        "command": "python3 tools/build_rom_deployment.py deepseek-v4-flash-array --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output /tmp/manifest-verify-uv0qznwx/deepseek-v4-flash-rom-array-32-e9",
+        "rebuilt": true,
+        "redirected_from": "build/abi3/deepseek-v4-flash-rom-array-32-e9"
+      },
+      "rebuilt_sha256": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "registration_id": "deepseek-v4-flash-rom-array-32-e9"
+    },
+    {
+      "claim_holds": true,
+      "claim_measured_at_commit": "58ce25b",
+      "claimed_current_source_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "frozen_deployment_sha256": "d83286151b5c9f7e4d653b124c93a8d4350e405e5af37239ed07d81c578ea08b",
+      "pin_kind": "frozen_evidence",
+      "rebuild": {
+        "command": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --profile cluster-32 --out /tmp/manifest-verify-uv0qznwx/deepseek-v4-flash-hbm-e9",
+        "rebuilt": true,
+        "redirected_from": "build/abi3/deepseek-v4-flash-hbm-e9"
+      },
+      "rebuilt_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "registration_id": "deepseek-v4-flash-hbm-e9"
+    }
+  ],
+  "schema": "opentallas.derived.shipped_manifest_current_source.v1",
+  "why_this_was_worth_running": "the claims were measured once, at 58ce25b, and never re-checked.  An assertion about what the compiler would produce, that nobody re-runs, is the kind of claim this repository refuses elsewhere"
+}
