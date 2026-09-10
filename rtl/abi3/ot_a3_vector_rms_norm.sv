@@ -8,9 +8,15 @@
 // rounded, normalization rounds to BF16 before the BF16 gain multiply, and
 // the final result rounds to BF16.  The complete result is buffered before
 // the first write, so a numeric refusal cannot expose a partial destination.
-// The admitted geometries are one 4096-element model row or up to 32
-// independent 128-element attention-head rows.  One BF16 code occupies the
-// low half of each 32-bit verification-bank word.
+// The admitted geometries are any power-of-two row width up to 4,096 -- one
+// model row of that width, or up to 32 independent rows no wider than the
+// 128-element head profile.  Power-of-two is the exact condition under which
+// the engine's reciprocal multiply reproduces the golden's division by the
+// width bit for bit, so it is the widest set that stays inside the
+// characterised arithmetic; the shipped Qwen pair (one 4,096-element model row,
+// up to 32 128-element head rows) and the reduced regression pair (128 and 16)
+// are both inside it.  One BF16 code occupies the low half of each 32-bit
+// verification-bank word.
 // ---------------------------------------------------------------------------
 module ot_a3_vector_rms_norm (
     input  wire        clk,
@@ -54,8 +60,45 @@ module ot_a3_vector_rms_norm (
     localparam [31:0] PROFILE_MODEL_WIDTH = 32'd4096;
     localparam [31:0] PROFILE_HEAD_WIDTH = 32'd128;
     localparam [31:0] PROFILE_EPSILON = 32'h3586_37bd;
-    localparam [31:0] MODEL_MEAN_SCALE_CODE = 32'h3980_0000;
-    localparam [31:0] HEAD_MEAN_SCALE_CODE = 32'h3c00_0000;
+    // The two widths the shipped Qwen deployment issues, kept as named
+    // constants because the shape check and the census both cite them.
+    localparam [31:0] MODEL_MEAN_SCALE_CODE = 32'h3980_0000;  // 1/4096 = 2**-12
+    localparam [31:0] HEAD_MEAN_SCALE_CODE = 32'h3c00_0000;   // 1/128  = 2**-7
+
+    // ...but the reciprocal is DERIVED, not selected from those two.
+    //
+    // The golden model is width-generic and does not use a reciprocal at all:
+    // ``runtime/reference/tensor_accelerator_rmsnorm.py`` reads
+    // ``width = len(inputs[0])`` and takes the mean as
+    // ``binary32_divide(total, encode_binary32_rne(width))``.  For a
+    // power-of-two width, dividing by 2**k and multiplying by the exact
+    // reciprocal 2**-k are both pure exponent adjustments with no rounding, so
+    // the two are BIT-IDENTICAL.  The engine's former restriction to exactly
+    // 4096 and 128 was therefore an artefact of hardcoding two constants, not
+    // a limit of the characterised arithmetic.
+    //
+    // Deriving it admits the reduced regression configuration (a 128-wide
+    // model row and 16-wide attention-head rows), which rung G1f measured this
+    // engine refusing with ERR_SHAPE.  Non-powers-of-two are still refused,
+    // because for those the reciprocal is inexact and would NOT reproduce the
+    // golden's division.
+    function automatic [31:0] exact_reciprocal_code(input [31:0] width);
+        integer k;
+        begin
+            exact_reciprocal_code = 32'd0;
+            for (k = 0; k < 31; k = k + 1) begin
+                if (width == (32'd1 << k)) begin
+                    exact_reciprocal_code = {1'b0, (8'd127 - k[7:0]), 23'd0};
+                end
+            end
+        end
+    endfunction
+
+    function automatic is_power_of_two(input [31:0] width);
+        begin
+            is_power_of_two = (width != 32'd0) && ((width & (width - 32'd1)) == 32'd0);
+        end
+    endfunction
     localparam integer BUFFER_ELEMENTS = 4096;
 
     localparam [3:0] S_IDLE         = 4'd0;
@@ -106,10 +149,10 @@ module ot_a3_vector_rms_norm (
             reduction_buffer[reduction_left_index],
             reduction_buffer[reduction_right_index]
         );
+    wire [31:0] mean_scale_code = exact_reciprocal_code(cfg_cols);
     wire [33:0] mean_scale = ot_fp32_rne_pkg::fp32_mul_rne(
         reduction_buffer[0],
-        (cfg_cols == PROFILE_HEAD_WIDTH)
-            ? HEAD_MEAN_SCALE_CODE : MODEL_MEAN_SCALE_CODE
+        mean_scale_code
     );
     wire [33:0] epsilon_add =
         ot_fp32_rne_pkg::fp32_add_positive_rne(
@@ -200,10 +243,10 @@ module ot_a3_vector_rms_norm (
                             (cfg_count > PROFILE_MAX_COUNT) ||
                             (cfg_rows == 0) ||
                             (cfg_rows > PROFILE_MAX_ROWS) ||
-                            !(((cfg_rows == 1) &&
-                               (cfg_cols == PROFILE_MODEL_WIDTH)) ||
-                              ((cfg_rows <= PROFILE_MAX_ROWS) &&
-                               (cfg_cols == PROFILE_HEAD_WIDTH))) ||
+                            !is_power_of_two(cfg_cols) ||
+                            (cfg_cols > PROFILE_MODEL_WIDTH) ||
+                            ((cfg_rows > 1) &&
+                             (cfg_cols > PROFILE_HEAD_WIDTH)) ||
                             ((cfg_rows * cfg_cols) != cfg_count) ||
                             (cfg_epsilon_bits != PROFILE_EPSILON)) begin
                             error_code <= ERR_SHAPE;
