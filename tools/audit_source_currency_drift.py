@@ -62,6 +62,21 @@ DEFAULT_OUTPUT = ROOT / "results/derived/source_currency_drift.json"
 #: just the boundary the separation is drawn at.
 SESSION_BASE = "221fe7d"
 
+#: Artifacts do not agree on what to call the map that binds their sources.
+#: The first version of this audit read only ``source_sha256`` and therefore
+#: undercounted: ``results/rtl/abi3_row_shard_campaign.json`` binds under
+#: ``bound_sources`` and was reported clean while a test was failing on its
+#: drift. These are every field name in the tree whose keys are repository
+#: paths and whose values are SHA-256 digests.
+BINDING_FIELDS = (
+    "source_sha256",
+    "vendor_source_sha256",
+    "vector_sha256",
+    "source_files",
+    "bound_sources",
+    "sources",
+)
+
 
 def sha256(path: Path) -> str | None:
     try:
@@ -107,15 +122,27 @@ def survey() -> dict[str, Any]:
             continue
         if not isinstance(body, dict):
             continue
-        sources = body.get("source_sha256")
-        if not isinstance(sources, dict) or not sources:
+        sources: dict[str, str] = {}
+        fields_used: list[str] = []
+        for field in BINDING_FIELDS:
+            candidate = body.get(field)
+            if not isinstance(candidate, dict) or not candidate:
+                continue
+            usable = {
+                key: value
+                for key, value in candidate.items()
+                if isinstance(key, str) and isinstance(value, str)
+            }
+            if not usable:
+                continue
+            fields_used.append(field)
+            sources.update(usable)
+        if not sources:
             continue
         pinning += 1
         stale: list[str] = []
         missing: list[str] = []
         for relative, expected in sources.items():
-            if not isinstance(relative, str) or not isinstance(expected, str):
-                continue
             path = ROOT / relative
             if not path.is_file():
                 missing.append(relative)
@@ -129,6 +156,7 @@ def survey() -> dict[str, Any]:
         drifted.append(
             {
                 "artifact": str(artifact.relative_to(ROOT)),
+                "binding_fields": fields_used,
                 "pinned_sources": len(sources),
                 "stale": sorted(stale),
                 "missing": sorted(missing),
