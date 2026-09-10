@@ -537,10 +537,34 @@ def attempt_lowering(
 # ---------------------------------------------------------------------------
 # 3. The RTL geometry probe
 # ---------------------------------------------------------------------------
+#: The simulator this rung is characterised against, resolved the way every
+#: other RTL campaign here resolves it.  Taking it from PATH instead cost a run:
+#: /usr/bin/verilator is 4.038 (2020) on this machine, which has no --binary,
+#: so the probe failed with "Invalid option: --binary" and the rung reported
+#: "the G1f geometry probe did not elaborate" -- a tool-version accident
+#: recorded as a design fact.  A pinned path also makes the artifact's
+#: simulator field reproducible instead of PATH-dependent.
+PINNED_VERILATOR_VERSION = "5.050"
+TOOLS_ROOT = Path(
+    os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")
+)
+
+
+def resolve_verilator() -> str:
+    pinned = TOOLS_ROOT / f"verilator-{PINNED_VERILATOR_VERSION}/bin/verilator"
+    if pinned.is_file():
+        return str(pinned)
+    found = shutil.which("verilator")
+    if found is None:
+        raise SystemExit(
+            f"pinned verilator {PINNED_VERILATOR_VERSION} is not at {pinned} and "
+            "none is on PATH"
+        )
+    return found
+
+
 def run_probe(work: Path, *, store: str) -> dict[str, Any]:
-    verilator = shutil.which("verilator")
-    if verilator is None:
-        raise SystemExit("verilator is not on PATH")
+    verilator = resolve_verilator()
     version = subprocess.run(
         [verilator, "--version"], capture_output=True, text=True
     ).stdout.strip()
