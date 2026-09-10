@@ -364,6 +364,24 @@ def cycle_capability(
         features.append(Feature.INTER_CHIP_ENDPOINT)
     if topology == TopologyClass.WAFER_LOGICAL_DEVICE:
         features.append(Feature.WAFER_ENDPOINT)
+    if topology != TopologyClass.SINGLE_CHIP:
+        # A COMMUNICATION descriptor carrying an integrity mode or a retry
+        # bound makes the builder require INTEGRITY_RETRY automatically
+        # (runtime/abi3/builder.py) -- deliberately, so two programs with the
+        # same wire record cannot advertise different requirements.  This
+        # fixture declared six features and never this one, so every link and
+        # collective test here was refused with "capability does not implement
+        # required feature bits [10]" before it could measure anything.
+        #
+        # Declaring it matches what the shipped capabilities do -- rom/qwen3.py,
+        # rom/deepseek_v4.py and hbm_sram/capability.py all list it, and
+        # tests/abi3/test_feature_requirements.py asserts they must -- and what
+        # the sibling fixture in test_abi3_cycle_batch.py already does for its
+        # link cases.  It is added only off SINGLE_CHIP, because a one-chip
+        # program has no link operation and must not inherit packet retry
+        # machinery merely because the shared chip also serves a clustered
+        # product.
+        features.append(Feature.INTEGRITY_RETRY)
     capability = Capability(
         capability_id="",
         topology_class=int(topology),
