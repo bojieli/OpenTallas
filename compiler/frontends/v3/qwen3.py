@@ -58,8 +58,11 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
 from compiler.qwen3.adapter import (
     Qwen3AdapterError,
+    OFFICIAL_SOURCE_CONTRACT,
+    Qwen3SourceContract,
     build_tensor_specs,
     load_official_config,
+    load_source_config,
 )
 from compiler.qwen3.constants import (
     CONFIG_SHA256,
@@ -190,10 +193,61 @@ KERNEL_CENSUS: Mapping[str, int] = {
 }
 KERNEL_COUNT = sum(KERNEL_CENSUS.values())
 
+
+def kernel_census_for(layers: int) -> dict[str, int]:
+    """The exact kernel census for a Qwen3 of ``layers`` layers.
+
+    Every count above is either fixed or a multiple of the layer count, and the
+    docstring states the whole-model total as ``2 + 36 * 20 + 6 == 728``.  This
+    reproduces that decomposition so the reduced regression model can be
+    checked as strictly as the official one instead of not at all.  The module
+    self-check below refuses to import if it does not reproduce KERNEL_CENSUS
+    at 36 layers, so the official pin still guards the formula.
+    """
+
+    return {
+        "ADD": 2 * layers,
+        "GATHER": 1,
+        "ARGMAX": 1,
+        "ATTENTION_GQA": layers,
+        "EMBEDDING_LOOKUP": 1,
+        "HEAD_RMS_NORM": 2 * layers,
+        "KV_APPEND": 2 * layers,
+        "LAST_TOKEN_SELECT": 1,
+        "MATMUL": 7 * layers,
+        "RMS_NORM": 2 * layers + 1,
+        "ROPE": 2 * layers,
+        "SILU_MUL": layers,
+        "STATE_COMMIT": 1,
+        "STATE_PREPARE": layers,
+        "TOKEN_APPEND": 1,
+        "VOCAB_PROJECT": 1,
+    }
+
+
+#: 2 request inputs + the pinned weights + 1 generated rotary table
+#: + 2 KV views per layer + 19 activations per layer + 5 non-layer activations
+#: + 2 outputs.  At 36 layers and 399 weights this is
+#: 2 + 399 + 1 + 72 + 684 + 5 + 2 == 1,165, which is TENSOR_TOTAL below; the
+#: self-check refuses to import if it is not.
+def tensor_total_for(layers: int, weight_count: int) -> int:
+    return 2 + weight_count + 1 + 2 * layers + 19 * layers + 5 + 2
+
+
+if kernel_census_for(36) != dict(KERNEL_CENSUS):
+    raise AssertionError(
+        "kernel_census_for(36) does not reproduce the official KERNEL_CENSUS"
+    )
+
 #: 2 request inputs + 399 weights + 1 generated rotary table + 72 KV views
 #: + 689 activations + 2 outputs.  The key and value planes are appended
 #: separately, so each layer declares two appended tensors rather than one.
 TENSOR_TOTAL = 1165
+
+if tensor_total_for(36, 399) != TENSOR_TOTAL:
+    raise AssertionError(
+        "tensor_total_for(36, 399) does not reproduce the official TENSOR_TOTAL"
+    )
 
 GENERATION_POLICY_ID = "greedy_argmax_lowest_id_first_eos_v1"
 
@@ -386,7 +440,11 @@ def verify_checkpoint_bindings(
 # Official generation policy
 # ---------------------------------------------------------------------------
 def official_generation_policy(
-    snapshot: Path, lock: Mapping[str, Any], *, maximum_new_tokens: int
+    snapshot: Path,
+    lock: Mapping[str, Any],
+    *,
+    maximum_new_tokens: int,
+    has_tokenizer: bool = True,
 ) -> dict[str, Any]:
     """Read the official EOS set from the checkpoint and confirm it two ways.
 
@@ -395,6 +453,18 @@ def official_generation_policy(
     tokenizer: ``tokenizer_config.json`` names the EOS and pad token strings,
     and ``tokenizer.json`` resolves those strings to ids.  No constant from
     this repository is trusted as the source of the EOS set.
+
+    ``has_tokenizer=False`` is for a pinned source that ships no tokenizer --
+    the reduced regression model is a synthetic 4,096-entry vocabulary with no
+    text side at all.  The AUTHORITATIVE derivation is unchanged: the stop set
+    still comes from ``generation_config.json`` and is still cross-checked
+    against ``config.json``, so no constant from this repository becomes the
+    source.  What is lost is the SECOND confirmation, and it is recorded as
+    unavailable in ``eos_tokenizer_confirmation`` -- a key present ONLY when a
+    confirmation is missing, so the official graph_id is untouched -- rather
+    than skipped quietly;
+    ``eos_token_strings`` is empty because a token string that does not exist
+    must not be invented to fill a field.
     """
 
     generation = json.loads(
@@ -403,12 +473,15 @@ def official_generation_policy(
     config = json.loads(
         _authenticated_bytes(snapshot, lock, "config.json").decode("utf-8")
     )
-    tokenizer_config = json.loads(
-        _authenticated_bytes(snapshot, lock, "tokenizer_config.json").decode("utf-8")
-    )
-    tokenizer = json.loads(
-        _authenticated_bytes(snapshot, lock, "tokenizer.json").decode("utf-8")
-    )
+    if has_tokenizer:
+        tokenizer_config = json.loads(
+            _authenticated_bytes(
+                snapshot, lock, "tokenizer_config.json"
+            ).decode("utf-8")
+        )
+        tokenizer = json.loads(
+            _authenticated_bytes(snapshot, lock, "tokenizer.json").decode("utf-8")
+        )
 
     raw = generation.get("eos_token_id")
     ids = [raw] if isinstance(raw, int) and not isinstance(raw, bool) else raw
@@ -425,31 +498,34 @@ def official_generation_policy(
     if config.get("eos_token_id") not in ids:
         raise Qwen3KernelIRError("config.json EOS id is not in the official stop set")
 
-    by_id = {
-        int(item["id"]): item["content"]
-        for item in tokenizer.get("added_tokens", [])
-        if isinstance(item, dict) and "id" in item and "content" in item
-    }
-    strings = []
-    for token_id in ids:
-        content = by_id.get(token_id)
-        if content is None:
+    if has_tokenizer:
+        by_id = {
+            int(item["id"]): item["content"]
+            for item in tokenizer.get("added_tokens", [])
+            if isinstance(item, dict) and "id" in item and "content" in item
+        }
+        strings = []
+        for token_id in ids:
+            content = by_id.get(token_id)
+            if content is None:
+                raise Qwen3KernelIRError(
+                    f"EOS id {token_id} has no tokenizer.json token string"
+                )
+            strings.append(content)
+        declared = {
+            tokenizer_config.get("eos_token"),
+            tokenizer_config.get("pad_token"),
+        } - {None}
+        missing = sorted(declared - set(strings))
+        if tokenizer_config.get("eos_token") != strings[0] or missing:
             raise Qwen3KernelIRError(
-                f"EOS id {token_id} has no tokenizer.json token string"
+                "tokenizer_config.json stop tokens differ from the official EOS set"
             )
-        strings.append(content)
-    declared = {
-        tokenizer_config.get("eos_token"),
-        tokenizer_config.get("pad_token"),
-    } - {None}
-    missing = sorted(declared - set(strings))
-    if tokenizer_config.get("eos_token") != strings[0] or missing:
-        raise Qwen3KernelIRError(
-            "tokenizer_config.json stop tokens differ from the official EOS set"
-        )
+    else:
+        strings = []
     if not 1 <= maximum_new_tokens <= MAX_CONTEXT_TOKENS:
         raise Qwen3KernelIRError("maximum_new_tokens is outside the session capacity")
-    return {
+    policy = {
         "eos_token_ids": [int(i) for i in ids],
         "eos_token_strings": strings,
         "eos_source": "generation_config.json",
@@ -464,6 +540,17 @@ def official_generation_policy(
         "tie_rule": "lowest_token_id",
         "vocabulary_size": vocabulary,
     }
+    if not has_tokenizer:
+        # Recorded ONLY when it is missing.  Adding it unconditionally would
+        # change the official graph_id, and the official Kernel IR digest is
+        # certified and referenced by other artefacts -- so the absence of this
+        # key is itself the statement that both confirmations ran.
+        policy["eos_tokenizer_confirmation"] = (
+            "unavailable: this pinned source ships no tokenizer, so the EOS set "
+            "is authoritative from generation_config.json and confirmed only "
+            "against config.json#eos_token_id"
+        )
+    return policy
 
 
 # ---------------------------------------------------------------------------
@@ -552,7 +639,7 @@ def export_qwen3_kernel_graph(
     snapshot: Path = DEFAULT_SNAPSHOT,
     checkpoint_lock_path: Path = DEFAULT_CHECKPOINT_LOCK,
     config_path: Path = DEFAULT_CONFIG,
-    source_path: Path = DEFAULT_SOURCE,
+    source_path: Path | None = None,
     maximum_new_tokens: int = MAX_CONTEXT_TOKENS,
     build_lock_if_missing: bool = False,
 ) -> KernelGraph:
@@ -561,9 +648,9 @@ def export_qwen3_kernel_graph(
     snapshot = Path(snapshot)
     checkpoint_lock_path = Path(checkpoint_lock_path)
     try:
-        config = load_official_config(Path(config_path))
-        specs = build_tensor_specs(config)
-        semantic_nodes = build_graph_nodes(config)
+        config, contract = load_source_config(Path(config_path))
+        specs = build_tensor_specs(config, contract)
+        semantic_nodes = build_graph_nodes(config, contract)
     except Qwen3AdapterError as exc:
         raise Qwen3KernelIRError(f"pinned Qwen3 source contract failed: {exc}") from exc
 
@@ -575,7 +662,14 @@ def export_qwen3_kernel_graph(
             )
         checkpoint_lock_path.parent.mkdir(parents=True, exist_ok=True)
         lock = build_checkpoint_lock(
-            snapshot, load_checkpoint_source(Path(source_path))
+            snapshot,
+            load_checkpoint_source(
+                Path(
+                    source_path
+                    if source_path is not None
+                    else contract.checkpoint_source_path
+                )
+            ),
         )
         checkpoint_lock_path.write_bytes(
             json.dumps(lock, sort_keys=True, separators=(",", ":")).encode("ascii")
@@ -586,16 +680,21 @@ def export_qwen3_kernel_graph(
     except CheckpointError as exc:
         raise Qwen3KernelIRError(f"invalid Qwen3 checkpoint lock: {exc}") from exc
     if (
-        lock["source"]["repository"] != REPOSITORY
-        or lock["source"]["revision"] != REVISION
-        or lock["checkpoint"]["tensor_count"] != TENSOR_COUNT
-        or lock["checkpoint"]["payload_bytes"] != PAYLOAD_BYTES
+        lock["source"]["repository"] != contract.repository
+        or lock["source"]["revision"] != contract.revision
+        or lock["checkpoint"]["tensor_count"] != contract.tensor_count
+        or lock["checkpoint"]["payload_bytes"] != contract.payload_bytes
     ):
-        raise Qwen3KernelIRError("checkpoint lock is not the pinned Qwen3-8B release")
+        raise Qwen3KernelIRError(
+            f"checkpoint lock is not the pinned {contract.name} release"
+        )
 
     bindings = read_checkpoint_bindings(snapshot, lock)
     generation_policy = official_generation_policy(
-        snapshot, lock, maximum_new_tokens=maximum_new_tokens
+        snapshot,
+        lock,
+        maximum_new_tokens=maximum_new_tokens,
+        has_tokenizer=contract.has_tokenizer,
     )
 
     hidden = int(config["hidden_size"])
@@ -660,9 +759,12 @@ def export_qwen3_kernel_graph(
             )
         weight_shapes[spec.name] = spec.shape
         builder.tensor(spec.name, "bf16", spec.shape, "weight", binding)
-    if len(weight_shapes) != TENSOR_COUNT or set(bindings) != set(weight_shapes):
+    if len(weight_shapes) != contract.tensor_count or set(bindings) != set(
+        weight_shapes
+    ):
         raise Qwen3KernelIRError(
-            "weight coverage differs from the official 399 tensors"
+            f"weight coverage differs from the pinned {contract.name} "
+            f"{contract.tensor_count} tensors"
         )
 
     states = tuple(
@@ -1211,11 +1313,11 @@ def export_qwen3_kernel_graph(
     entrypoint_inputs = (token_ids, positions)
     entrypoint_outputs = (logits, next_token)
     graph = KernelGraph(
-        model_id=MODEL_ID,
+        model_id=contract.model_id,
         source={
             "architecture": str(config["model_type"]),
             "checkpoint_lock_id": lock["lock_id"],
-            "config_sha256": CONFIG_SHA256,
+            "config_sha256": contract.released_config_sha256,
             "exporter": "compiler.frontends.v3.qwen3",
             "head_dim": head_dim,
             "hidden_size": hidden,
@@ -1223,16 +1325,16 @@ def export_qwen3_kernel_graph(
             "key_value_heads": kv_heads,
             "layer_count": layers,
             "maximum_position_embeddings": int(config["max_position_embeddings"]),
-            "payload_bytes": PAYLOAD_BYTES,
+            "payload_bytes": contract.payload_bytes,
             "query_heads": query_heads,
-            "repository": REPOSITORY,
-            "revision": REVISION,
+            "repository": contract.repository,
+            "revision": contract.revision,
             "rms_norm_epsilon": epsilon,
             "rope_theta": rope_theta,
             "session_context_capacity": MAX_CONTEXT_TOKENS,
             "target_context_tokens": TARGET_CONTEXT_TOKENS,
             "tensor_content_sha256": lock["checkpoint"]["tensor_content_sha256"],
-            "tensor_count": TENSOR_COUNT,
+            "tensor_count": contract.tensor_count,
             "transformers_version": TRANSFORMERS_VERSION,
             "vocabulary_size": vocabulary,
         },
@@ -1274,7 +1376,7 @@ def export_qwen3_kernel_graph(
         numeric_profile=NUMERIC_PROFILE,
         generation_policy=generation_policy,
     )
-    _require_complete(graph)
+    _require_complete(graph, contract)
     return graph
 
 
@@ -1301,22 +1403,30 @@ def _cross_check_semantic_graph(builder: _Builder, nodes: Iterable[Any]) -> None
         )
 
 
-def _require_complete(graph: KernelGraph) -> None:
+def _require_complete(
+    graph: KernelGraph,
+    contract: Qwen3SourceContract = OFFICIAL_SOURCE_CONTRACT,
+) -> None:
+    layers = contract.layer_count
+    expected_census = kernel_census_for(layers)
+    expected_tensors = tensor_total_for(layers, contract.tensor_count)
     errors = check_neutral(graph)
     if errors:
         raise Qwen3KernelIRError("neutral IR rejected:\n  " + "\n  ".join(errors))
     census = dict(sorted(Counter(k.kind for k in graph.kernels).items()))
-    if census != dict(sorted(KERNEL_CENSUS.items())):
+    if census != dict(sorted(expected_census.items())):
         raise Qwen3KernelIRError(f"kernel census differs: {census}")
-    if len(graph.tensors) != TENSOR_TOTAL:
+    if len(graph.tensors) != expected_tensors:
         raise Qwen3KernelIRError(
-            f"tensor count is {len(graph.tensors)}, expected {TENSOR_TOTAL}"
+            f"tensor count is {len(graph.tensors)}, expected {expected_tensors}"
         )
-    if len(graph.states) != LAYER_COUNT:
+    if len(graph.states) != layers:
         raise Qwen3KernelIRError("one KV state resource per layer is required")
     bound = [t for t in graph.tensors if t.role == "weight"]
-    if len(bound) != TENSOR_COUNT or any(t.binding is None for t in bound):
-        raise Qwen3KernelIRError("every one of the 399 weights must carry a binding")
+    if len(bound) != contract.tensor_count or any(t.binding is None for t in bound):
+        raise Qwen3KernelIRError(
+            f"every one of the {contract.tensor_count} weights must carry a binding"
+        )
     unknown = sorted({k.kind for k in graph.kernels} - set(KERNEL_TO_ENGINE))
     if unknown:
         raise Qwen3KernelIRError(f"kinds without an ABI 3.0 lowering: {unknown}")

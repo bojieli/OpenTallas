@@ -9,7 +9,13 @@ from typing import Any, Iterable, Mapping
 
 from compiler.ir.model import canonical_json_bytes
 
-from .adapter import TensorSpec, build_tensor_specs, load_official_config
+from .adapter import (
+    OFFICIAL_SOURCE_CONTRACT,
+    Qwen3SourceContract,
+    TensorSpec,
+    build_tensor_specs,
+    load_official_config,
+)
 from .constants import (
     CONFIG_SHA256,
     LAYER_COUNT,
@@ -180,10 +186,13 @@ class _Builder:
         )
 
 
-def build_graph_nodes(config: Mapping[str, Any]) -> tuple[GraphNode, ...]:
+def build_graph_nodes(
+    config: Mapping[str, Any],
+    contract: Qwen3SourceContract = OFFICIAL_SOURCE_CONTRACT,
+) -> tuple[GraphNode, ...]:
     """Build the complete 36-layer prefill/decode graph in source order."""
 
-    specs = build_tensor_specs(config)
+    specs = build_tensor_specs(config, contract)
     expected_names = {spec.name for spec in specs}
     builder = _Builder()
     builder.add(
@@ -319,11 +328,15 @@ def build_graph_nodes(config: Mapping[str, Any]) -> tuple[GraphNode, ...]:
         tensors=("lm_head.weight",),
     )
     nodes = tuple(builder.nodes)
-    _validate_nodes(nodes, expected_names)
+    _validate_nodes(nodes, expected_names, int(config["num_hidden_layers"]))
     return nodes
 
 
-def _validate_nodes(nodes: tuple[GraphNode, ...], expected_tensors: set[str]) -> None:
+def _validate_nodes(
+    nodes: tuple[GraphNode, ...],
+    expected_tensors: set[str],
+    layer_count: int = LAYER_COUNT,
+) -> None:
     if not nodes:
         raise Qwen3GraphError("Qwen3 graph is empty")
     available = {"input.token_ids"}
@@ -358,7 +371,7 @@ def _validate_nodes(nodes: tuple[GraphNode, ...], expected_tensors: set[str]) ->
         raise Qwen3GraphError(
             f"checkpoint tensors do not have one consumer: {duplicated[:8]}"
         )
-    if layer_kv_commits != Counter({layer: 1 for layer in range(LAYER_COUNT)}):
+    if layer_kv_commits != Counter({layer: 1 for layer in range(layer_count)}):
         raise Qwen3GraphError("every layer must have exactly one KV commit")
     if "output.logits" not in available:
         raise Qwen3GraphError("graph does not produce final logits")

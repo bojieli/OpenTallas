@@ -53,6 +53,15 @@ def main() -> int:
     parser.add_argument(
         "--output", type=Path, default=ROOT / "build/ir-v3/qwen3-8b/kernel_ir.v3.json"
     )
+    parser.add_argument(
+        "--source",
+        type=Path,
+        default=None,
+        help=(
+            "checkpoint_source.json to pin against; defaults to the one the "
+            "resolved source contract names, so --config alone selects a model"
+        ),
+    )
     parser.add_argument("--maximum-new-tokens", type=int, default=MAX_CONTEXT_TOKENS)
     parser.add_argument(
         "--build-lock",
@@ -79,6 +88,7 @@ def main() -> int:
             config_path=arguments.config,
             maximum_new_tokens=arguments.maximum_new_tokens,
             build_lock_if_missing=arguments.build_lock,
+            source_path=arguments.source,
         )
     except Qwen3KernelIRError as exc:
         print(f"qwen3 kernel IR v3 export failed: {exc}", file=sys.stderr)

@@ -82,20 +82,167 @@ _EXPECTED_CONFIG: dict[str, Any] = {
 }
 
 
+_MODELS_DIR = Path(DEFAULT_CONFIG).resolve().parent.parent
+
+_REDUCED_CONFIG: dict[str, Any] = {
+    "architectures": ["Qwen3ForCausalLM"],
+    "attention_bias": False,
+    "attention_dropout": 0.0,
+    "bos_token_id": 91,
+    "eos_token_id": 93,
+    "head_dim": 16,
+    "hidden_act": "silu",
+    "hidden_size": 128,
+    "initializer_range": 0.02,
+    "intermediate_size": 384,
+    "max_position_embeddings": 40960,
+    "max_window_layers": 4,
+    "model_type": "qwen3",
+    "num_attention_heads": 8,
+    "num_hidden_layers": 4,
+    "num_key_value_heads": 2,
+    "rms_norm_eps": 1e-06,
+    "rope_scaling": None,
+    "rope_theta": 1000000,
+    "sliding_window": None,
+    "tie_word_embeddings": False,
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.51.0",
+    "use_cache": True,
+    "use_sliding_window": False,
+    "vocab_size": 4096,
+}
+
+
+@dataclass(frozen=True)
+class Qwen3SourceContract:
+    """One pinned Qwen3 source: its config bytes and the shape facts they imply.
+
+    There are two, and the second is why this type exists.  ``load_official_config``
+    used to byte-pin EVERY config it was handed against the single official
+    digest, so the reduced regression model -- a first-class committed model at
+    ``compiler/models/qwen3-reduced-v1`` -- could not be exported at all: the
+    compiler refused it with "Qwen3 local config SHA-256 differs" before
+    reaching any lowering.  Rung G1f records exactly that refusal as its first
+    blocker.
+
+    The fix is a SECOND pinned contract, not a weakened pin.  Every check the
+    official path made it still makes, byte for byte; the reduced path makes
+    the same checks against its own pinned digest and its own shape facts.  A
+    config that matches neither contract is still refused, and a drifted
+    reduced config fails exactly as a drifted official one does.
+
+    ``tensor_count``, ``tensors_per_layer``, ``parameter_count`` and
+    ``payload_bytes`` are integrity assertions, not documentation:
+    ``build_tensor_specs`` expands the tensor list from the config's own
+    formula and refuses to return it unless the expansion reproduces these
+    numbers.  The reduced values were derived by running that same formula and
+    then CORROBORATED against the reduced checkpoint's own
+    ``model.safetensors.index.json``, which carries 47 tensors and
+    ``total_size`` 3,607,040 -- the two agree exactly.
+    """
+
+    name: str
+    #: SHA-256 of the checked-in config file, the byte-pin used to RESOLVE this
+    #: contract.  For the official model the mirror differs from the upstream
+    #: release by the repository's required trailing newline, so this is NOT
+    #: the released digest -- see ``released_config_sha256``.
+    local_config_sha256: str
+    #: SHA-256 of the config as RELEASED upstream, reported in graph metadata.
+    #: The reduced model has no upstream release, so its own file is the
+    #: released artefact and the two digests coincide.
+    released_config_sha256: str
+    expected_config: Mapping[str, Any]
+    layer_count: int
+    tensor_count: int
+    tensors_per_layer: int
+    parameter_count: int
+    payload_bytes: int
+    repository: str
+    revision: str
+    config_path: Path
+    checkpoint_source_path: Path
+    has_tokenizer: bool
+    model_id: str
+
+
+OFFICIAL_SOURCE_CONTRACT = Qwen3SourceContract(
+    name="qwen3-8b",
+    local_config_sha256=LOCAL_CONFIG_SHA256,
+    released_config_sha256=CONFIG_SHA256,
+    expected_config=_EXPECTED_CONFIG,
+    layer_count=LAYER_COUNT,
+    tensor_count=TENSOR_COUNT,
+    tensors_per_layer=TENSORS_PER_LAYER,
+    parameter_count=PARAMETER_COUNT,
+    payload_bytes=PAYLOAD_BYTES,
+    repository=REPOSITORY,
+    revision=REVISION,
+    config_path=DEFAULT_CONFIG,
+    checkpoint_source_path=DEFAULT_SOURCE,
+    has_tokenizer=True,
+    model_id=MODEL_ID,
+)
+
+REDUCED_SOURCE_CONTRACT = Qwen3SourceContract(
+    name="qwen3-reduced-v1",
+    local_config_sha256=(
+        "65f0a4f7b4022057ba98d8812d284dd12d5aca1113e59c0f76e04035d2cb568b"
+    ),
+    released_config_sha256=(
+        "65f0a4f7b4022057ba98d8812d284dd12d5aca1113e59c0f76e04035d2cb568b"
+    ),
+    expected_config=_REDUCED_CONFIG,
+    layer_count=4,
+    tensor_count=47,
+    tensors_per_layer=11,
+    parameter_count=1_803_520,
+    payload_bytes=3_607_040,
+    repository="opentallas/qwen3-reduced-v1",
+    revision="1db8a59e6230d04cfb41a6cb888c38e3c9447b26",
+    config_path=_MODELS_DIR / "qwen3-reduced-v1/config.json",
+    checkpoint_source_path=(
+        _MODELS_DIR / "qwen3-reduced-v1/checkpoint_source.json"
+    ),
+    # A synthetic 4,096-entry vocabulary with no text side: the snapshot ships
+    # config.json, generation_config.json and the weights, and no tokenizer.
+    has_tokenizer=False,
+    model_id="qwen3-reduced-v1",
+)
+
+SOURCE_CONTRACTS: tuple[Qwen3SourceContract, ...] = (
+    OFFICIAL_SOURCE_CONTRACT,
+    REDUCED_SOURCE_CONTRACT,
+)
+
+
+def contract_for_digest(digest: str) -> Qwen3SourceContract | None:
+    """The pinned contract whose config bytes hash to ``digest``, or None."""
+
+    for candidate in SOURCE_CONTRACTS:
+        if candidate.local_config_sha256 == digest:
+            return candidate
+    return None
+
+
 def _sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def _exact_config(config: Mapping[str, Any]) -> None:
+def _exact_config(
+    config: Mapping[str, Any],
+    expected: Mapping[str, Any] | None = None,
+) -> None:
+    expected = _EXPECTED_CONFIG if expected is None else expected
     if not isinstance(config, Mapping):
         raise Qwen3AdapterError("Qwen3 config must be an object")
-    missing = sorted(set(_EXPECTED_CONFIG) - set(config))
-    unknown = sorted(set(config) - set(_EXPECTED_CONFIG))
+    missing = sorted(set(expected) - set(config))
+    unknown = sorted(set(config) - set(expected))
     differing = sorted(
         key
-        for key in set(config) & set(_EXPECTED_CONFIG)
-        if config[key] != _EXPECTED_CONFIG[key]
-        or type(config[key]) is not type(_EXPECTED_CONFIG[key])
+        for key in set(config) & set(expected)
+        if config[key] != expected[key]
+        or type(config[key]) is not type(expected[key])
     )
     if missing or unknown or differing:
         raise Qwen3AdapterError(
@@ -129,6 +276,37 @@ def load_official_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
         )
     _exact_config(config)
     return config
+
+
+def load_source_config(
+    path: Path,
+) -> tuple[dict[str, Any], Qwen3SourceContract]:
+    """Load a config and the pinned contract its own bytes identify.
+
+    This is the multi-source entry point ``load_official_config`` could not be:
+    it pins just as hard, but it resolves WHICH pin applies from the config's
+    digest instead of assuming the official one.  A config matching no
+    registered contract is refused, and its digest is reported so a genuinely
+    new source can be pinned deliberately rather than by loosening a check.
+    """
+
+    try:
+        payload = Path(path).read_bytes()
+        config = load_strict_json(Path(path))
+    except (OSError, ValueError) as exc:
+        raise Qwen3AdapterError(f"cannot load Qwen3 config {path}: {exc}") from exc
+    observed = _sha256(payload)
+    contract = contract_for_digest(observed)
+    if contract is None:
+        known = ", ".join(
+            f"{c.name}={c.local_config_sha256[:12]}" for c in SOURCE_CONTRACTS
+        )
+        raise Qwen3AdapterError(
+            f"Qwen3 config {path} matches no pinned source contract: "
+            f"observed {observed}, known {known}"
+        )
+    _exact_config(config, contract.expected_config)
+    return config, contract
 
 
 @dataclass(frozen=True)
@@ -251,10 +429,18 @@ def _layer_specs(layer: int, config: Mapping[str, Any]) -> tuple[TensorSpec, ...
     )
 
 
-def build_tensor_specs(config: Mapping[str, Any]) -> tuple[TensorSpec, ...]:
-    """Expand all 399 official tensor shapes without reading checkpoint headers."""
+def build_tensor_specs(
+    config: Mapping[str, Any],
+    contract: Qwen3SourceContract = OFFICIAL_SOURCE_CONTRACT,
+) -> tuple[TensorSpec, ...]:
+    """Expand a pinned Qwen3 source's tensor shapes without reading headers.
 
-    _exact_config(config)
+    The default contract is the official 8B release, so every existing caller
+    keeps the checks it had.  Passing ``REDUCED_SOURCE_CONTRACT`` expands the
+    reduced regression model instead, under its own pinned shape facts.
+    """
+
+    _exact_config(config, contract.expected_config)
     hidden = int(config["hidden_size"])
     vocab = int(config["vocab_size"])
     specs: list[TensorSpec] = [
@@ -285,19 +471,34 @@ def build_tensor_specs(config: Mapping[str, Any]) -> tuple[TensorSpec, ...]:
     )
     result = tuple(specs)
     names = [spec.name for spec in result]
-    if len(result) != TENSOR_COUNT or len(set(names)) != TENSOR_COUNT:
-        raise Qwen3AdapterError("formula did not produce 399 unique Qwen3 tensors")
+    if (
+        len(result) != contract.tensor_count
+        or len(set(names)) != contract.tensor_count
+    ):
+        raise Qwen3AdapterError(
+            f"formula did not produce {contract.tensor_count} unique "
+            f"{contract.name} tensors"
+        )
     layer_counts = Counter(spec.layer for spec in result if spec.layer is not None)
     if layer_counts != Counter(
-        {layer: TENSORS_PER_LAYER for layer in range(LAYER_COUNT)}
+        {
+            layer: contract.tensors_per_layer
+            for layer in range(contract.layer_count)
+        }
     ):
-        raise Qwen3AdapterError("formula did not produce 11 tensors for every layer")
-    if sum(spec.parameter_count for spec in result) != PARAMETER_COUNT:
         raise Qwen3AdapterError(
-            "formula parameter count differs from the pinned release"
+            f"formula did not produce {contract.tensors_per_layer} tensors for "
+            f"every one of {contract.name}'s {contract.layer_count} layers"
         )
-    if sum(spec.size_bytes for spec in result) != PAYLOAD_BYTES:
-        raise Qwen3AdapterError("formula payload bytes differ from the pinned release")
+    if sum(spec.parameter_count for spec in result) != contract.parameter_count:
+        raise Qwen3AdapterError(
+            f"formula parameter count differs from the pinned {contract.name} "
+            "release"
+        )
+    if sum(spec.size_bytes for spec in result) != contract.payload_bytes:
+        raise Qwen3AdapterError(
+            f"formula payload bytes differ from the pinned {contract.name} release"
+        )
     return result
 
 
@@ -451,6 +652,10 @@ __all__ = [
     "build_official_tensor_contract",
     "build_tensor_specs",
     "load_official_config",
+    "load_source_config",
+    "Qwen3SourceContract",
+    "OFFICIAL_SOURCE_CONTRACT",
+    "REDUCED_SOURCE_CONTRACT",
     "tensor_structure_sha256",
     "validate_official_checkpoint_lock",
 ]
