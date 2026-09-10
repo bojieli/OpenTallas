@@ -50,8 +50,13 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
 
     assert report["schema"] == "opentallas.prose_figure_coverage.v2"
     assert [document["path"] for document in report["documents"]] == expected_paths
-    assert report["totals"]["documents"] == 59
-    assert report["totals"]["annotations"] == 813
+    # Derived, not a literal.  This was pinned at 59 while the corpus grew to
+    # 70, so the test failed for eleven documents that had been added correctly
+    # and were covered correctly.  The load-bearing assertion is the path-list
+    # equality above -- that the report covers exactly README plus every
+    # docs/*.md -- and this now restates it in a form that cannot go stale.
+    assert report["totals"]["documents"] == len(expected_paths)
+    assert report["totals"]["annotations"] == 847
     assert report["totals"]["zero_candidate_documents"] > 0
     assert report["totals"]["classifications"]["unbound"] > 0
 

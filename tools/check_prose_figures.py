@@ -247,7 +247,7 @@ REPO = Path(__file__).resolve().parents[1]
 REQUIRED_COVERAGE: dict[str, int] = {
     "README.md": 54,
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 67,
-    "docs/CHIP_ARCHITECTURE_DESIGN.md": 9,
+    "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/ABI3_PROGRAM_REPORT.md": 17,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
     "docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md": 9,
