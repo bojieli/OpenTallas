@@ -1,0 +1,81 @@
+{
+  "answer": "no -- three distinct deployment digests are pinned",
+  "bundle_path": "build/abi3/deepseek-v4-flash-rom",
+  "campaign_refusals": {
+    "rtl_a3_wafer_multicast_campaign": "DeepSeek ROM deployment is a187b4d7..., expected 34ca189c...",
+    "run_a3_hc_pre_t1_rtl_campaign": "deepseek-v4-flash-hbm-cluster PC 14 does not name the expected MHC",
+    "run_a3_hc_softmax_sinkhorn20_rtl_campaign": "current HC_PRE target site drift: deepseek-v4-flash-hbm-cluster",
+    "run_a3_mhc_pre_tile_rtl_campaign": "deepseek-v4-flash-hbm-cluster PC 14 does not name the expected MHC"
+  },
+  "generated_by": "tools/audit_deepseek_rom_bundle_generations.py",
+  "generated_by_sha256": "81a318635242d7975412f1c0b8fcde3c7eed49d594748bb6ad6e937dfcb752c0",
+  "generation_count": 3,
+  "generations": [
+    {
+      "binder_count": 11,
+      "committed_binders": [
+        "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+        "results/rtl/a3_hc_pre_t1_campaign.json",
+        "results/rtl/a3_hc_softmax_sinkhorn20_campaign.json",
+        "results/rtl/a3_wafer_multicast_campaign.json",
+        "testdata/compiler/abi3_shipped_prefix_multicast/abi3_shipped_prefix_multicast_vectors.json",
+        "testdata/rtl/a3_hc_pre_t1/index.json",
+        "testdata/rtl/a3_hc_softmax_sinkhorn20/index.json",
+        "testdata/rtl/a3_mhc_pre_tiles/index.json",
+        "testdata/rtl/a3_wafer_multicast/index.json",
+        "tools/audit_deepseek_rom_bundle_generations.py",
+        "tools/build_a3_wafer_multicast_vectors.py"
+      ],
+      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "label": "oldest-and-most-widely-bound",
+      "note": "hardcoded as EXPECTED_DEPLOYMENT in tools/build_a3_wafer_multicast_vectors.py"
+    },
+    {
+      "binder_count": 5,
+      "committed_binders": [
+        "results/abi3/rom_schedule_checks.json",
+        "results/rtl/abi3_shipped_prefix_campaign.json",
+        "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+        "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+        "tools/audit_deepseek_rom_bundle_generations.py"
+      ],
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "label": "reproducible-from-source-at-head",
+      "note": "a rebuild from the committed DeepSeek Kernel IR against rom_deepseek_v4.json produces exactly this digest"
+    },
+    {
+      "binder_count": 5,
+      "committed_binders": [
+        "results/rtl/abi3_deployment_campaign.json",
+        "results/rtl/abi3_g1a_operator_equivalence.json",
+        "results/rtl/abi3_vehicle_entry_probe.json",
+        "results/rtl/abi3_vehicle_reachability.json",
+        "tools/audit_deepseek_rom_bundle_generations.py"
+      ],
+      "deployment_sha256": "a187b4d7cae7a21b97068db583311c1b9fdcbdcb9f4fae5e88b05d4e05c7b723",
+      "label": "on-disk-now",
+      "note": "what the bundle path currently holds; same capability digest"
+    }
+  ],
+  "git": {
+    "commit": "41d790616f6d33c6eaddfa62b219572053e68e51",
+    "worktree_dirty": false
+  },
+  "question": "do the artifacts that bind this bundle path agree on what it holds?",
+  "refusals": [
+    {
+      "id": "no-bundle-swap",
+      "what": "the reproducible rebuild was NOT installed at the bundle path",
+      "why": "four artifacts bind the on-disk digest and one of them is abi3_g1a_operator_equivalence.json, on terminal gate G1's critical path.  Trading a green rung for a tidy build directory is not a repair"
+    },
+    {
+      "id": "no-pin-edit",
+      "what": "the wafer builder's hardcoded EXPECTED_DEPLOYMENT was not updated to match what the rebuild produces",
+      "why": "that is a pin edited until it matches the artifact in front of it.  It may well be right -- the committed deployment vectors independently agree with the rebuild, which makes the oldest generation the provable outlier -- but it re-pins ten artifacts' worth of evidence and belongs in its own change with its own campaign"
+    }
+  ],
+  "reproducible_generation": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+  "schema": "opentallas.derived.deepseek_rom_bundle_generations.v1",
+  "total_committed_binders": 21,
+  "what_the_refusals_mean": "the four campaigns refused to run rather than re-pin themselves against whatever was on disk.  That is the source-currency governance working as designed: they would rather report nothing than report a measurement taken on a deployment they were not characterised against"
+}
