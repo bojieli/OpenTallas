@@ -141,6 +141,26 @@ UTILISATION_POINTS = (
         "worktree_dirty": False,
         "source_root": "/home/ubuntu/ot-ship2",
     },
+    {
+        "core_utilization": 40,
+        "clock_period_ns": 4.75,
+        "fmax_mhz": 286.1,
+        "hold_violations": 20,
+        "max_slew_violations": 12,
+        "max_cap_violations": 0,
+        "instance_count": 1_875_402,
+        "achieved_utilization_fraction": 0.423527,
+        "closed": False,
+        "closed_reason": (
+            "signal-integrity violations in the routed netlist: "
+            "max_slew_violations 12; and the first hold failures of the "
+            "sweep, hold_violations 20"
+        ),
+        "performance_knobs": {"CRC_CACHE": 1, "FAST_FRONT_END": 1},
+        "git_commit": "2bb16488",
+        "worktree_dirty": False,
+        "source_root": "/home/ubuntu/ot-ship2",
+    },
 )
 
 
@@ -203,38 +223,39 @@ def build() -> dict[str, Any]:
         "points_measured": list(POINTS),
         "utilisation_points_measured": list(UTILISATION_POINTS),
         "utilisation_reading": (
-            "three same-build points (2bb16488, /home/ubuntu/ot-ship2) show "
-            "max-slew violations falling monotonically as utilisation RISES "
-            "-- 20 at util 20, 5 at util 30, 3 at util 35 -- with instance "
-            "count falling the same way, 2,884,444 -> 2,216,811 -> "
-            "2,027,815.  That is the opposite of the direction first swept, "
-            "and the instance count is the mechanism it most plausibly runs "
-            "through: a denser core is a smaller core, the nets crossing it "
-            "are shorter, and a shorter net at fixed drive strength has less "
-            "slew to violate.  "
-            "Frequency does NOT follow that trend, and an earlier version of "
-            "this reading was wrong to bundle it in.  With only util 20 and "
-            "util 30 in hand, fmax appeared to rise with utilisation, 272.0 "
-            "-> 280.9 MHz, and this audit said so.  Util 35 falsifies it: "
-            "fmax falls to 260.0 MHz, 20.9 MHz below the util-30 point, "
-            "while slew still improves.  So the two quantities come apart -- "
-            "slew is monotone in utilisation over the range measured, fmax "
-            "peaks near util 30 -- and buying signal integrity by packing "
-            "the core costs frequency past that peak.  Two points were "
-            "enough to see the slew gradient and not enough to see the fmax "
-            "peak; that is the hazard of reading a direction off the "
-            "smallest number of points that can show one.  "
+            "the sweep is now four same-build points (2bb16488, "
+            "/home/ubuntu/ot-ship2) and it does NOT describe a gradient.  "
+            "Max-slew violations by utilisation: 20 at util 20, 5 at util 30, "
+            "3 at util 35, 12 at util 40.  Slew has a MINIMUM near util 35 "
+            "and worsens past it.  Util 40 also produces hold_violations 20 "
+            "-- the first hold failures anywhere in this sweep -- so packing "
+            "the core past the mid-thirties trades a signal-integrity "
+            "problem for a timing one.  Instance count is the only quantity "
+            "monotone across all four: 2,884,444, 2,216,811, 2,027,815, "
+            "1,875,402.  fmax is not even unimodal: 272.0, 280.9, 260.0, "
+            "286.1 MHz.  "
+            "This reading has now been rewritten three times by successive "
+            "points, and the sequence is the finding.  Two points said "
+            "lowering utilisation makes slew worse, so the knob should be "
+            "raised.  A third kept slew falling but broke the claim that "
+            "fmax rose with it.  A fourth broke the slew trend itself and "
+            "introduced a failing check that the previous three had reported "
+            "as clean at every point.  Each intermediate reading was a "
+            "monotone story fitted to the points then in hand, and each was "
+            "falsified by the next measurement.  What survives is the "
+            "shape -- a slew optimum around util 30-35 at 3-5 violations, "
+            "bounded above and below by worse -- and the fact that NO point "
+            "measured closes at 4.75 ns.  "
             "The util-25 point (12 violations, 2,442,446 instances, 274.1 "
-            "MHz) orders consistently on slew but was built at 58ce25bb out "
-            "of /home/ubuntu/ot-phys -- a different commit and source root "
-            "-- so it corroborates and is NOT counted as a point of this "
-            "series.  "
-            "No point measured closes at 4.75 ns.  Slew is the failing check "
-            "at every one; hold and max-cap are 0 throughout; DRC and "
-            "antenna are 0 at util 30 and util 35.  Util 40 is running at "
-            "the same commit and root.  Three violations at util 35 makes "
-            "closure a live question, but a gradient is not a closure and "
-            "none is claimed here"
+            "MHz) sits at 58ce25bb out of /home/ubuntu/ot-phys, a different "
+            "commit and source root, so it is corroboration and not a fifth "
+            "point of this series.  "
+            "max-cap is 0 at all four points, and DRC and antenna are 0 at "
+            "util 30, 35 and 40.  The remaining question is not which "
+            "utilisation closes the design -- none of the four does -- but "
+            "whether the slew constraint itself is the right one, which is "
+            "where this audit said the question would move if the sweep "
+            "failed.  It has failed; the question has moved"
         ),
         "points_retired_unrun_ns": list(RETIRED),
         "why_retired": (
