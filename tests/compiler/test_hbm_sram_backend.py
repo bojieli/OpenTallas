@@ -2329,12 +2329,41 @@ def test_every_kernel_reaches_an_operator(dense, single_chip):
     for instruction in decode_body(body):
         if instruction.source_operation_id != 0xFFFFFFFF:
             covered.add(instruction.source_operation_id)
+    # State kernels are excluded, and the exclusion is itself asserted below.
+    #
+    # This used to expect every layer-0 and layerless kernel to reach an
+    # operator, and it has been failing on exactly two -- STATE_PREPARE and
+    # STATE_COMMIT -- because the design deliberately stopped emitting ABI
+    # state.  docs/PROGRAM_STATUS.md records it: "every current four-target
+    # deployment lowers mutable values to ordinary live buffers and emits zero
+    # ABI STATE descriptors and instructions", and the ROM schedule campaign
+    # asserts it positively as direct_state_has_no_state_descriptors and
+    # direct_state_has_no_state_instructions.
+    #
+    # So the old assertion could only be satisfied by reversing a design
+    # decision.  Rather than delete the check, it is turned around: the state
+    # kernels are expected NOT to reach an operator, and the deployment is
+    # expected to carry no state descriptors and no state instructions at all.
+    # A regression in either direction still fails here.
+    state_kinds = {"STATE_PREPARE", "STATE_COMMIT"}
+    state_kernels = {k.index for k in dense.kernels if k.kind in state_kinds}
     expected = {
         k.index
         for k in dense.kernels
-        if k.layer is None or k.layer == 0
+        if (k.layer is None or k.layer == 0) and k.index not in state_kernels
     }
     assert expected <= covered
+
+    # The positive half: state is lowered away, not merely uncovered.
+    assert not (state_kernels & covered), (
+        "a state kernel reached an operator; the deployment is expected to "
+        "lower mutable values to live buffers instead"
+    )
+    assert not [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if "STATE" in descriptor.descriptor_type.name
+    ], "deployment emitted an ABI STATE descriptor"
 
 
 def test_live_state_resources_are_merged_without_abi_state(dense, single_chip):
