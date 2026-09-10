@@ -112,10 +112,16 @@ def git_state() -> dict[str, Any]:
 def cascade_cost() -> dict[str, Any]:
     """How many committed artifacts bind the ROM schedule campaign."""
 
+    # Excluding this audit's OWN output is load-bearing, not tidiness: it names
+    # results/abi3/rom_schedule_checks.json in the cascade field below, so it
+    # lands in results/derived containing the very string this scan matches.
+    # Counting itself made the answer change every time it ran -- 15 of the 16
+    # leaves that moved between two runs were this list shifting by one entry.
     binders = sorted(
-        str(p.relative_to(ROOT))
-        for p in (ROOT / "results/derived").glob("*.json")
-        if "rom_schedule_checks" in p.read_text()
+        str(path.relative_to(ROOT))
+        for path in (ROOT / "results/derived").glob("*.json")
+        if path.resolve() != DEFAULT_OUTPUT.resolve()
+        and "rom_schedule_checks" in path.read_text()
     )
     return {
         "artifact_that_would_change": "results/abi3/rom_schedule_checks.json",
@@ -282,10 +288,22 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  refusal {refusal['id']}")
 
     if args.check:
-        if not args.output.exists() or args.output.read_text() != rendered:
+        # Compare CONTENT, not provenance.  The question --check asks is
+        # "does this artifact still reproduce from its inputs", and the commit
+        # it was taken at is history rather than an input -- comparing it made
+        # the check fail on every later commit, which is a check that can only
+        # ever be red.
+        if not args.output.exists():
+            print(f"{args.output} does not exist")
+            return 1
+        retained = json.loads(args.output.read_text())
+        retained.pop("git", None)
+        candidate = json.loads(rendered)
+        candidate.pop("git", None)
+        if retained != candidate:
             print(f"{args.output} does not match a fresh audit")
             return 1
-        print(f"{args.output} reproduces")
+        print(f"{args.output} reproduces (provenance excluded)")
         return 0
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered)

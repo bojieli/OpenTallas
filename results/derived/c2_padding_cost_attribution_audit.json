@@ -173,10 +173,10 @@
   },
   "gate": "C2 (configs/gates/redesign_gates.json)",
   "generated_by": "tools/audit_c2_padding_cost_attribution.py",
-  "generated_by_sha256": "b62ac596720bc6da80710369fd437aa1b9ae48c3196938d9082d67e5761d5bd0",
+  "generated_by_sha256": "264885b5645f2cf055723bc5c3e2a8bed02d515cd6f1c0b40d9c7210cac2323d",
   "git": {
-    "commit": "982e1d374e76eaf85311c8d77488fd5bf57addc7",
-    "worktree_dirty": false
+    "commit": "ae6d91ce33f1072cd1f5e17238498515c4dbe139",
+    "worktree_dirty": true
   },
   "question": "are C2's attention/reduction/route/vector tile_rows asymmetries measured on a quantity the cycle model charges for?",
   "refusals": [
