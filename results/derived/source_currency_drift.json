@@ -1,14 +1,15 @@
 {
   "artifacts_drifted_only_by_recent_work": 5,
-  "artifacts_pinning_source_sha256": 88,
-  "artifacts_with_drift": 82,
-  "drift_fraction": 0.9318,
+  "artifacts_pinning_source_sha256": 96,
+  "artifacts_with_drift": 64,
+  "drift_fraction": 0.6667,
   "drifted": [
     {
       "artifact": "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 52,
       "missing": [],
       "pinned_sources": 52,
       "stale": [
@@ -39,13 +40,15 @@
         "runtime/tensor_accelerator/rope.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 51,
       "missing": [],
       "pinned_sources": 51,
       "stale": [
@@ -75,13 +78,15 @@
         "runtime/tensor_accelerator/rope.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/w10/legacy_plain_text_20260902/qwen3_8b_hbm_natural_a.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 51,
       "missing": [],
       "pinned_sources": 51,
       "stale": [
@@ -109,13 +114,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/w10/legacy_plain_text_20260902/qwen3_8b_hbm_natural_b.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 51,
       "missing": [],
       "pinned_sources": 51,
       "stale": [
@@ -143,13 +150,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/w10/qwen3_8b_hbm_stress.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 51,
       "missing": [],
       "pinned_sources": 51,
       "stale": [
@@ -177,42 +186,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_context_gate.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [],
-      "pinned_sources": 60,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "compiler/backends/rom/deepseek_v4_array.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 55,
       "missing": [],
       "pinned_sources": 55,
       "stale": [
@@ -235,13 +217,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/w10/attempts/hbm-a-20260904T003035Z-1bb6e3af8e0f4aa4/result.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 53,
       "missing": [],
       "pinned_sources": 53,
       "stale": [
@@ -264,13 +248,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/w10/qwen3_8b_hbm_natural_a.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 53,
       "missing": [],
       "pinned_sources": 53,
       "stale": [
@@ -293,13 +279,15 @@
         "runtime/sim/memory.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_link_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 83,
       "missing": [],
       "pinned_sources": 83,
       "stale": [
@@ -322,13 +310,15 @@
         "runtime/sim/engines/link.py",
         "spec/abi3/registries.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_deployment_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 39,
       "missing": [],
       "pinned_sources": 39,
       "stale": [
@@ -351,13 +341,15 @@
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/static_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 83,
       "missing": [],
       "pinned_sources": 83,
       "stale": [
@@ -377,13 +369,15 @@
         "rtl/rom/ot_rom_pkg.sv",
         "rtl/rom/ot_rom_read_service.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_device_top_host_load.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 22,
       "missing": [],
       "pinned_sources": 22,
       "stale": [
@@ -400,35 +394,15 @@
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "tools/rtl_abi3_deployment_campaign.py"
       ],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [],
-      "pinned_sources": 53,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/link.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 36,
       "missing": [],
       "pinned_sources": 36,
       "stale": [
@@ -444,13 +418,15 @@
         "runtime/abi3/constants.py",
         "runtime/abi3/verifier.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_g1e_control_end_to_end.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 54,
       "missing": [],
       "pinned_sources": 54,
       "stale": [
@@ -466,13 +442,15 @@
         "rtl/test/a3_shipped_prefix_top.sv",
         "runtime/abi3/verifier.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 54,
       "missing": [],
       "pinned_sources": 54,
       "stale": [
@@ -487,13 +465,15 @@
         "runtime/sim/engines/link.py",
         "tools/run_accelerator_tokens.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_boundary32_operator_bisect.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 15,
       "missing": [],
       "pinned_sources": 15,
       "stale": [
@@ -508,13 +488,15 @@
         "runtime/sim/engines/tensor.py",
         "tools/bisect_deepseek_layer_operators.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_layer00_norm_input_bisect.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 15,
       "missing": [],
       "pinned_sources": 15,
       "stale": [
@@ -529,13 +511,15 @@
         "runtime/sim/engines/tensor.py",
         "tools/bisect_deepseek_layer_operators.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_layer02_operator_bisect.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 15,
       "missing": [],
       "pinned_sources": 15,
       "stale": [
@@ -550,13 +534,15 @@
         "runtime/sim/engines/tensor.py",
         "tools/bisect_deepseek_layer_operators.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_routed_chain_input_bisect.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 15,
       "missing": [],
       "pinned_sources": 15,
       "stale": [
@@ -571,13 +557,15 @@
         "runtime/sim/engines/tensor.py",
         "tools/bisect_deepseek_layer_operators.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_lane_activation_bisect.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 14,
       "missing": [],
       "pinned_sources": 14,
       "stale": [
@@ -591,13 +579,15 @@
         "runtime/sim/engines/deepseek_vector.py",
         "runtime/sim/engines/tensor.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_vehicle_entry_probe.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 45,
       "missing": [],
       "pinned_sources": 45,
       "stale": [
@@ -611,13 +601,15 @@
         "rtl/abi3/ot_a3_view_resolver.sv",
         "rtl/test/a3_shipped_prefix_top.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/rom_service_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 51,
       "missing": [],
       "pinned_sources": 51,
       "stale": [
@@ -631,13 +623,15 @@
         "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md",
         "runtime/abi3/constants.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 56,
       "missing": [],
       "pinned_sources": 56,
       "stale": [
@@ -649,13 +643,15 @@
         "runtime/abi3/verifier.py",
         "runtime/sim/engines/link.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 54,
       "missing": [],
       "pinned_sources": 54,
       "stale": [
@@ -667,13 +663,15 @@
         "runtime/sim/device.py",
         "runtime/sim/engines/link.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 55,
       "missing": [],
       "pinned_sources": 55,
       "stale": [
@@ -685,13 +683,15 @@
         "runtime/sim/device.py",
         "runtime/sim/engines/link.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 60,
       "missing": [],
       "pinned_sources": 60,
       "stale": [
@@ -703,13 +703,15 @@
         "runtime/abi3/verifier.py",
         "runtime/sim/engines/link.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_row_shard_campaign.json",
       "binding_fields": [
         "bound_sources"
       ],
+      "entries_checked": 40,
       "missing": [],
       "pinned_sources": 40,
       "stale": [
@@ -721,7 +723,8 @@
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
         "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_qwen_kv_scatter_campaign.json",
@@ -729,19 +732,8 @@
         "source_sha256",
         "vector_sha256"
       ],
-      "missing": [
-        "cases.hex",
-        "index.json",
-        "instruction.hex",
-        "numeric.hex",
-        "operator.hex",
-        "output.hex",
-        "source.hex",
-        "view0.hex",
-        "view1.hex",
-        "view2.hex",
-        "view3.hex"
-      ],
+      "entries_checked": 27,
+      "missing": [],
       "pinned_sources": 27,
       "stale": [
         "results/rtl/abi3_shipped_prefix_campaign.json",
@@ -751,13 +743,15 @@
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
         "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_control_plane_yosys_elaboration.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 17,
       "missing": [],
       "pinned_sources": 17,
       "stale": [
@@ -768,7 +762,27 @@
         "rtl/abi3/ot_a3_shared_divider.sv",
         "rtl/abi3/ot_a3_view_resolver.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/comparison_deepseek_rom_vs_hbm.json",
+      "binding_fields": [
+        "source_sha256",
+        "sources"
+      ],
+      "entries_checked": 6,
+      "missing": [],
+      "pinned_sources": 6,
+      "stale": [
+        "hbm -> /home/ubuntu/OpenTallas/results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+        "rom -> /home/ubuntu/OpenTallas/results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+        "runtime/abi3/capability.py",
+        "runtime/evidence.py",
+        "tools/build_comparison_report.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_hc_softmax_sinkhorn20_campaign.json",
@@ -776,11 +790,8 @@
         "source_sha256",
         "vector_sha256"
       ],
-      "missing": [
-        "index.json",
-        "matrix_expected.hex",
-        "meta.hex"
-      ],
+      "entries_checked": 27,
+      "missing": [],
       "pinned_sources": 27,
       "stale": [
         "results/abi3/hbm_deepseek_deployment_certificate.json",
@@ -789,7 +800,26 @@
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/comparison_deepseek_rom_array_vs_hbm.json",
+      "binding_fields": [
+        "source_sha256",
+        "sources"
+      ],
+      "entries_checked": 6,
+      "missing": [],
+      "pinned_sources": 6,
+      "stale": [
+        "hbm -> /home/ubuntu/OpenTallas/results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+        "rom -> /home/ubuntu/OpenTallas/results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+        "runtime/abi3/capability.py",
+        "runtime/evidence.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_hc_pre_t1_campaign.json",
@@ -797,6 +827,7 @@
         "source_sha256",
         "vector_sha256"
       ],
+      "entries_checked": 37,
       "missing": [],
       "pinned_sources": 37,
       "stale": [
@@ -805,7 +836,8 @@
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
         "tools/build_a3_hc_pre_t1_vectors.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_operator_admission_campaign.json",
@@ -813,6 +845,7 @@
         "source_sha256",
         "vector_sha256"
       ],
+      "entries_checked": 60,
       "missing": [
         "a3_operator_admission/bank.hex",
         "a3_operator_admission/cases.hex",
@@ -838,7 +871,8 @@
         "rtl/abi3/ot_a3_vector_rms_norm.sv",
         "runtime/reference/tensor_accelerator_attention.py"
       ],
-      "stale_only_from_recent_work": true
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_operator_admission_hbm_campaign.json",
@@ -846,6 +880,7 @@
         "source_sha256",
         "vector_sha256"
       ],
+      "entries_checked": 60,
       "missing": [
         "a3_operator_admission_hbm/bank.hex",
         "a3_operator_admission_hbm/cases.hex",
@@ -871,7 +906,8 @@
         "rtl/abi3/ot_a3_vector_rms_norm.sv",
         "runtime/reference/tensor_accelerator_attention.py"
       ],
-      "stale_only_from_recent_work": true
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_wafer_multicast_campaign.json",
@@ -879,15 +915,8 @@
         "source_sha256",
         "vector_sha256"
       ],
-      "missing": [
-        "case_meta.hex",
-        "communication.hex",
-        "counter.hex",
-        "index.json",
-        "local_object.hex",
-        "remote_object.hex",
-        "topology.hex"
-      ],
+      "entries_checked": 29,
+      "missing": [],
       "pinned_sources": 29,
       "stale": [
         "runtime/abi3/constants.py",
@@ -895,13 +924,15 @@
         "runtime/sim/engines/link.py",
         "spec/abi3/registries.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_engine_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 46,
       "missing": [],
       "pinned_sources": 46,
       "stale": [
@@ -910,27 +941,15 @@
         "runtime/sim/engines/deepseek_vector.py",
         "runtime/sim/engines/selection.py"
       ],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/comparison_deepseek_rom_vs_hbm.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [],
-      "pinned_sources": 4,
-      "stale": [
-        "runtime/abi3/capability.py",
-        "runtime/evidence.py",
-        "tools/build_comparison_report.py"
-      ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_activation_liveness_capacity.json",
       "binding_fields": [
         "source_files"
       ],
+      "entries_checked": 5,
       "missing": [],
       "pinned_sources": 5,
       "stale": [
@@ -938,13 +957,15 @@
         "compiler/backends/rom/common/program.py",
         "compiler/backends/rom/deepseek_v4_array.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_link_node_synthesis.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 8,
       "missing": [],
       "pinned_sources": 8,
       "stale": [
@@ -952,7 +973,8 @@
         "rtl/abi3/ot_a3_link_pkg.sv",
         "rtl/ot_fp32_rne_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_mhc_pre_tile_campaign.json",
@@ -960,146 +982,146 @@
         "source_sha256",
         "vector_sha256"
       ],
-      "missing": [
-        "cases.hex",
-        "index.json"
-      ],
+      "entries_checked": 13,
+      "missing": [],
       "pinned_sources": 13,
       "stale": [
         "testdata/compiler/abi3_deployment/a3_descriptor.hex",
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_tile64.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "<BUILD>/testdata/rtl/abi3_tile64/manifest_contract_L3_W0.json",
-        "<BUILD>/testdata/rtl/abi3_tile64/manifest_quick_L3_W0.json",
-        "<BUILD>/testdata/rtl/abi3_tile64/manifest_quick_L3_W1.json"
-      ],
+      "entries_checked": 19,
+      "missing": [],
       "pinned_sources": 22,
       "stale": [
         "docs/CHIP_ARCHITECTURE_DESIGN.md",
         "rtl/abi3/ot_a3_lane_pipelined.sv",
         "runtime/abi3/constants.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "<BUILD>/testdata/rtl/abi3_tile64/manifest_contract_L3_W0.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_tile64/manifest_quick_L3_W0.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_tile64/manifest_quick_L3_W1.json [build_output]"
+      ]
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_dma_matmul_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/matmul_accumulators.hex",
-        "generated/matmul_commands.hex",
-        "generated/matmul_input.hex",
-        "generated/matmul_output.hex",
-        "generated/matmul_payload.hex",
-        "generated/signed_add.hex",
-        "generated/signed_add_fields.hex"
-      ],
+      "entries_checked": 15,
+      "missing": [],
       "pinned_sources": 22,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv",
         "rtl/ot_ta_dma_matmul_sequencer.sv",
         "rtl/ot_ta_matmul_bf16_sram_engine.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/matmul_accumulators.hex [ephemeral]",
+        "generated/matmul_commands.hex [ephemeral]",
+        "generated/matmul_input.hex [ephemeral]",
+        "generated/matmul_output.hex [ephemeral]",
+        "generated/matmul_payload.hex [ephemeral]",
+        "generated/signed_add.hex [ephemeral]",
+        "generated/signed_add_fields.hex [ephemeral]"
+      ]
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_q_proj_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/q_proj_accumulators.hex",
-        "generated/q_proj_commands.hex",
-        "generated/q_proj_input.hex",
-        "generated/q_proj_output.hex",
-        "generated/q_proj_weights.bin"
-      ],
+      "entries_checked": 13,
+      "missing": [],
       "pinned_sources": 18,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv",
         "rtl/ot_ta_dma_matmul_sequencer.sv",
         "rtl/ot_ta_matmul_bf16_sram_engine.sv"
       ],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/comparison_deepseek_rom_array_vs_hbm.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [],
-      "pinned_sources": 4,
-      "stale": [
-        "runtime/abi3/capability.py",
-        "runtime/evidence.py"
-      ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/q_proj_accumulators.hex [ephemeral]",
+        "generated/q_proj_commands.hex [ephemeral]",
+        "generated/q_proj_input.hex [ephemeral]",
+        "generated/q_proj_output.hex [ephemeral]",
+        "generated/q_proj_weights.bin [ephemeral]"
+      ]
     },
     {
       "artifact": "results/rtl/abi3_re8.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L1.json",
-        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L2.json",
-        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L3.json"
-      ],
+      "entries_checked": 13,
+      "missing": [],
       "pinned_sources": 16,
       "stale": [
         "docs/CHIP_ARCHITECTURE_DESIGN.md",
         "runtime/abi3/constants.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L1.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L2.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_re8/manifest_full_L3.json [build_output]"
+      ]
     },
     {
       "artifact": "results/rtl/abi3_vehicle_reachability.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 6,
       "missing": [],
       "pinned_sources": 6,
       "stale": [
         "rtl/abi3/ot_a3_microsequencer.sv",
         "rtl/test/a3_shipped_prefix_top.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/rom_service_physical.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 3,
       "missing": [],
       "pinned_sources": 3,
       "stale": [
         "rtl/rom/ot_rom_pkg.sv",
         "rtl/rom/ot_rom_read_service.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/simulation_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 56,
       "missing": [],
       "pinned_sources": 56,
       "stale": [
         "rtl/Makefile",
         "spec/verification.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/abi3/deepseek_v4_reference_boundaries_p32.json",
@@ -1107,267 +1129,281 @@
         "source_sha256",
         "vendor_source_sha256"
       ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
+      "entries_checked": 10,
+      "missing": [],
       "pinned_sources": 10,
       "stale": [
         "runtime/sim/backend.py"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_link_physical.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 5,
       "missing": [],
       "pinned_sources": 5,
       "stale": [
         "rtl/abi3/ot_a3_link_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_link_physical_25ns.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 5,
       "missing": [],
       "pinned_sources": 5,
       "stale": [
         "rtl/abi3/ot_a3_link_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/a3_link_router_synthesis.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 4,
       "missing": [],
       "pinned_sources": 4,
       "stale": [
         "rtl/abi3/ot_a3_link_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_boundary_chain.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 10,
       "missing": [],
       "pinned_sources": 10,
       "stale": [
         "rtl/abi3/ot_a3_lane_pipelined.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_boundary_chain_measured.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 14,
       "missing": [],
       "pinned_sources": 14,
       "stale": [
         "rtl/abi3/ot_a3_lane_pipelined.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/abi3_lq8.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L1.json",
-        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L2.json",
-        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L3.json"
-      ],
+      "entries_checked": 19,
+      "missing": [],
       "pinned_sources": 22,
       "stale": [
         "docs/CHIP_ARCHITECTURE_DESIGN.md"
       ],
-      "stale_only_from_recent_work": true
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": [
+        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L1.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L2.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lq8/manifest_full_L3.json [build_output]"
+      ]
     },
     {
       "artifact": "results/rtl/abi3_pipelined_lane.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L1.json",
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L2.json",
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L3.json"
-      ],
+      "entries_checked": 18,
+      "missing": [],
       "pinned_sources": 21,
       "stale": [
         "docs/CHIP_ARCHITECTURE_DESIGN.md"
       ],
-      "stale_only_from_recent_work": true
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": [
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L1.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L2.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_full_L3.json [build_output]"
+      ]
     },
     {
       "artifact": "results/rtl/abi3_pipelined_lane_groups.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L1.json",
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L2.json",
-        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L3.json"
-      ],
+      "entries_checked": 18,
+      "missing": [],
       "pinned_sources": 21,
       "stale": [
         "docs/CHIP_ARCHITECTURE_DESIGN.md"
       ],
-      "stale_only_from_recent_work": true
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": [
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L1.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L2.json [build_output]",
+        "<BUILD>/testdata/rtl/abi3_lane_pipelined/groups/manifest_full_L3.json [build_output]"
+      ]
     },
     {
       "artifact": "results/rtl/coverage_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 48,
       "missing": [],
       "pinned_sources": 48,
       "stale": [
         "spec/verification.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/fault_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 22,
       "missing": [],
       "pinned_sources": 22,
       "stale": [
         "spec/verification.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/rtl/formal_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
+      "entries_checked": 22,
       "missing": [],
       "pinned_sources": 22,
       "stale": [
         "spec/verification.json"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_dma_rmsnorm_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/arithmetic_add.hex",
-        "generated/arithmetic_add_fields.hex",
-        "generated/arithmetic_bf16.hex",
-        "generated/arithmetic_bf16_fields.hex",
-        "generated/arithmetic_mul.hex",
-        "generated/arithmetic_mul_fields.hex",
-        "generated/arithmetic_rsqrt.hex",
-        "generated/arithmetic_rsqrt_fields.hex",
-        "generated/expected.hex",
-        "generated/input.hex",
-        "generated/payload.hex"
-      ],
+      "entries_checked": 16,
+      "missing": [],
       "pinned_sources": 27,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/arithmetic_add.hex [ephemeral]",
+        "generated/arithmetic_add_fields.hex [ephemeral]",
+        "generated/arithmetic_bf16.hex [ephemeral]",
+        "generated/arithmetic_bf16_fields.hex [ephemeral]",
+        "generated/arithmetic_mul.hex [ephemeral]",
+        "generated/arithmetic_mul_fields.hex [ephemeral]",
+        "generated/arithmetic_rsqrt.hex [ephemeral]",
+        "generated/arithmetic_rsqrt_fields.hex [ephemeral]",
+        "generated/expected.hex [ephemeral]",
+        "generated/input.hex [ephemeral]",
+        "generated/payload.hex [ephemeral]"
+      ]
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_head_rmsnorm_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/head_rmsnorm_commands.hex",
-        "generated/head_rmsnorm_k_input.hex",
-        "generated/head_rmsnorm_k_inverse.hex",
-        "generated/head_rmsnorm_k_mean.hex",
-        "generated/head_rmsnorm_k_output.hex",
-        "generated/head_rmsnorm_k_weight.hex",
-        "generated/head_rmsnorm_q_input.hex",
-        "generated/head_rmsnorm_q_output.hex",
-        "generated/head_rmsnorm_q_weight.hex"
-      ],
+      "entries_checked": 16,
+      "missing": [],
       "pinned_sources": 25,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/head_rmsnorm_commands.hex [ephemeral]",
+        "generated/head_rmsnorm_k_input.hex [ephemeral]",
+        "generated/head_rmsnorm_k_inverse.hex [ephemeral]",
+        "generated/head_rmsnorm_k_mean.hex [ephemeral]",
+        "generated/head_rmsnorm_k_output.hex [ephemeral]",
+        "generated/head_rmsnorm_k_weight.hex [ephemeral]",
+        "generated/head_rmsnorm_q_input.hex [ephemeral]",
+        "generated/head_rmsnorm_q_output.hex [ephemeral]",
+        "generated/head_rmsnorm_q_weight.hex [ephemeral]"
+      ]
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_kv_proj_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/kv_proj_accumulators.hex",
-        "generated/kv_proj_commands.hex",
-        "generated/kv_proj_input.hex",
-        "generated/kv_proj_output.hex",
-        "generated/kv_proj_weights.bin"
-      ],
+      "entries_checked": 13,
+      "missing": [],
       "pinned_sources": 18,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/kv_proj_accumulators.hex [ephemeral]",
+        "generated/kv_proj_commands.hex [ephemeral]",
+        "generated/kv_proj_input.hex [ephemeral]",
+        "generated/kv_proj_output.hex [ephemeral]",
+        "generated/kv_proj_weights.bin [ephemeral]"
+      ]
     },
     {
       "artifact": "results/tensor_accelerator/qwen3_rtl_rope_campaign.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "missing": [
-        "generated/rope_coefficient_0.hex",
-        "generated/rope_coefficient_7999.hex",
-        "generated/rope_commands.hex",
-        "generated/rope_k_input.hex",
-        "generated/rope_k_output_0.hex",
-        "generated/rope_k_output_7999.hex",
-        "generated/rope_q_input.hex",
-        "generated/rope_q_output_0.hex",
-        "generated/rope_q_output_7999.hex"
-      ],
+      "entries_checked": 14,
+      "missing": [],
       "pinned_sources": 23,
       "stale": [
         "rtl/ot_fp32_rne_pkg.sv"
       ],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/comparison_qwen_rom_vs_hbm.json",
-      "binding_fields": [
-        "sources"
-      ],
-      "missing": [
-        "hbm",
-        "rom"
-      ],
-      "pinned_sources": 2,
-      "stale": [],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": [
+        "generated/rope_coefficient_0.hex [ephemeral]",
+        "generated/rope_coefficient_7999.hex [ephemeral]",
+        "generated/rope_commands.hex [ephemeral]",
+        "generated/rope_k_input.hex [ephemeral]",
+        "generated/rope_k_output_0.hex [ephemeral]",
+        "generated/rope_k_output_7999.hex [ephemeral]",
+        "generated/rope_q_input.hex [ephemeral]",
+        "generated/rope_q_output_0.hex [ephemeral]",
+        "generated/rope_q_output_7999.hex [ephemeral]"
+      ]
     },
     {
       "artifact": "results/abi3/cycle/qwen3_exact8k_decode_batch_rowfold_diagnostic_v1.json",
       "binding_fields": [
         "sources"
       ],
+      "entries_checked": 8,
       "missing": [
         "asap7_cost_table_sha256",
         "hbm_capability_digest",
@@ -1380,335 +1416,90 @@
       ],
       "pinned_sources": 8,
       "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_prefix_gold_reproduction.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_oracle_context_ladder.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_oracle_prefix.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_oracle_short.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_oracle_stress.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_oracle_threshold.json",
-      "binding_fields": [
-        "vendor_source_sha256"
-      ],
-      "missing": [
-        "encoding/encoding_dsv4.py",
-        "inference/config.json",
-        "inference/kernel.py",
-        "inference/model.py",
-        "tokenizer.json"
-      ],
-      "pinned_sources": 5,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/rtl/a3_hc_numeric_campaign.json",
-      "binding_fields": [
-        "source_sha256",
-        "vector_sha256"
-      ],
-      "missing": [
-        "division.hex",
-        "index.json",
-        "meta.hex",
-        "sinkhorn_expected.hex",
-        "sinkhorn_input.hex"
-      ],
-      "pinned_sources": 14,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/rtl/a3_hc_stable_softmax_campaign.json",
-      "binding_fields": [
-        "source_sha256",
-        "vector_sha256"
-      ],
-      "missing": [
-        "checkpoint_logits.json",
-        "checkpoint_logits.u32le",
-        "index.json",
-        "matrix_expected.hex",
-        "matrix_input.hex",
-        "meta.hex"
-      ],
-      "pinned_sources": 16,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/rtl/a3_hc_transcendental_campaign.json",
-      "binding_fields": [
-        "source_sha256",
-        "vector_sha256"
-      ],
-      "missing": [
-        "cases.hex",
-        "index.json"
-      ],
-      "pinned_sources": 7,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
-      "binding_fields": [
-        "source_sha256",
-        "vector_sha256"
-      ],
-      "missing": [
-        "cases.hex",
-        "expected.hex",
-        "index.json",
-        "instruction.hex",
-        "numeric.hex",
-        "operator.hex",
-        "output.hex",
-        "source.hex",
-        "view0.hex",
-        "view1.hex",
-        "view2.hex",
-        "view3.hex"
-      ],
-      "pinned_sources": 35,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/tensor_accelerator/qwen3_rtl_add_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [
-        "generated/expected.hex",
-        "generated/left.hex",
-        "generated/ot_ta_add_campaign_top.sv",
-        "generated/qwen_ta_add_harness.cpp",
-        "generated/right.hex",
-        "generated/tb_qwen_ta_add.sv"
-      ],
-      "pinned_sources": 14,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/tensor_accelerator/qwen3_rtl_add_sram_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [
-        "generated/expected.hex",
-        "generated/left.hex",
-        "generated/qwen_ta_add_sram_harness.cpp",
-        "generated/right.hex",
-        "generated/tb_qwen_ta_add_sram.sv"
-      ],
-      "pinned_sources": 14,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/tensor_accelerator/qwen3_rtl_command_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [
-        "generated/ta_command_harness.cpp",
-        "generated/tb_ta_command_decoder.sv"
-      ],
-      "pinned_sources": 8,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/tensor_accelerator/qwen3_rtl_dma_add_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [
-        "generated/expected.hex",
-        "generated/left.hex",
-        "generated/payload.hex",
-        "generated/qwen_ta_dma_add_harness.cpp",
-        "generated/right.hex",
-        "generated/tb_qwen_ta_dma_add.sv"
-      ],
-      "pinned_sources": 17,
-      "stale": [],
-      "stale_only_from_recent_work": false
-    },
-    {
-      "artifact": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "missing": [
-        "generated/payload.hex",
-        "generated/qwen_ta_dma_harness.cpp",
-        "generated/tb_qwen_ta_dma.sv"
-      ],
-      "pinned_sources": 10,
-      "stale": [],
-      "stale_only_from_recent_work": false
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
     }
   ],
   "generated_by": "tools/audit_source_currency_drift.py",
-  "generated_by_sha256": "1037ac5ca0ae6205730fd4ed931c3a429e81652ac254524c2548ea050aeb10a9",
+  "generated_by_sha256": "eef21f85494c9755b54c0b77d7b3b288673d58bc11053f46d3693dd324fe8b66",
   "git": {
-    "commit": "77307a37226945753fc6ff78187ed86c49eab8d4",
+    "commit": "dd1eaf45c52451ebfcfae7f781375c8202c9b85a",
     "worktree_dirty": false
   },
   "most_common_missing_sources": [
     {
-      "artifacts_affected": 8,
-      "source": "index.json"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/append_cases.hex"
     },
     {
-      "artifacts_affected": 7,
-      "source": "encoding/encoding_dsv4.py"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/index.json"
     },
     {
-      "artifacts_affected": 7,
-      "source": "inference/config.json"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/silu_cases.hex"
     },
     {
-      "artifacts_affected": 7,
-      "source": "inference/kernel.py"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/silu_expected.hex"
     },
     {
-      "artifacts_affected": 7,
-      "source": "inference/model.py"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/silu_gate.hex"
     },
     {
-      "artifacts_affected": 7,
-      "source": "tokenizer.json"
+      "artifacts_affected": 2,
+      "source": "a3_operator_units/silu_up.hex"
     }
   ],
   "most_common_stale_sources": [
     {
-      "artifacts_staled": 23,
+      "artifacts_staled": 21,
       "source": "runtime/abi3/constants.py"
     },
     {
-      "artifacts_staled": 18,
+      "artifacts_staled": 16,
       "source": "runtime/abi3/verifier.py"
     },
     {
-      "artifacts_staled": 18,
+      "artifacts_staled": 16,
       "source": "runtime/sim/device.py"
     },
     {
-      "artifacts_staled": 17,
+      "artifacts_staled": 15,
       "source": "runtime/abi3/capability.py"
     },
     {
-      "artifacts_staled": 17,
+      "artifacts_staled": 15,
       "source": "runtime/sim/engines/link.py"
     },
     {
-      "artifacts_staled": 16,
+      "artifacts_staled": 14,
       "source": "compiler/backends/numeric_contracts.py"
     },
     {
-      "artifacts_staled": 15,
-      "source": "compiler/backends/hbm_sram/lower.py"
-    },
-    {
-      "artifacts_staled": 14,
-      "source": "compiler/backends/hbm_sram/plan.py"
-    },
-    {
-      "artifacts_staled": 14,
+      "artifacts_staled": 13,
       "source": "compiler/backends/rom/common/program.py"
     },
     {
       "artifacts_staled": 13,
+      "source": "compiler/backends/hbm_sram/lower.py"
+    },
+    {
+      "artifacts_staled": 12,
+      "source": "compiler/backends/hbm_sram/plan.py"
+    },
+    {
+      "artifacts_staled": 11,
       "source": "runtime/evidence.py"
     },
     {
       "artifacts_staled": 11,
-      "source": "compiler/ir/v3/numeric.py"
+      "source": "runtime/sim/engines/deepseek_vector.py"
     },
     {
-      "artifacts_staled": 11,
-      "source": "tools/run_accelerator_tokens.py"
+      "artifacts_staled": 10,
+      "source": "runtime/sim/engines/tensor.py"
     }
   ],
   "question": "of the artifacts that pin source digests, how many still bind the sources on disk?",
