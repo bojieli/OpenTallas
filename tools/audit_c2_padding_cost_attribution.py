@@ -69,13 +69,52 @@ The audit should set the work counters its own model reads, and then score
 these families on cycles -- the quantity that actually costs -- instead of on
 a proxy that cancels.
 
-Nor does it clear C2.  ``comparable`` is
-``not unexplained and not program_mismatch and not tile_errors``, and
-``program_mismatch`` is true on this pair for a reason no allowlist and no
-re-lowering can touch: 58 HBM-only ``DMA.TRANSFER`` operators carrying 99.7%
-of that side's DMA payload are weight loads from HBM, and the ROM machine
-reads weights in place and has no counterpart.  That is the design under
-test, not an asymmetry the deployments chose.
+Nor does it clear C2, and for two reasons -- one of which this tool stated
+wrongly until 2026-09-11.
+
+FIRST, the fix does not reach the predicate.  ``unexplained`` is built at
+``tools/derive_cycle_machine.py`` as::
+
+    unexplained = [a for a in asymmetries
+                   if a["cost_bearing"] and not a["allowlisted"]]
+
+It never consults ``favours`` or ``effect_x`` -- the very fields the
+re-scoring corrects.  So an asymmetry measured at "neither, 1.0x" is still
+counted.  ``unexplained_asymmetries`` is 14 on the DeepSeek Flash array cell
+both before and after the fix.  What moved is what the evidence CLAIMS, not
+what the gate COUNTS.  Making the predicate read the measured effect is a
+change to gate semantics and is deliberately not made here.
+
+SECOND -- and this is the correction -- ``program_mismatch`` is NOT the
+ROM-versus-HBM weight-store thesis.  This docstring previously asserted that
+the 58 HBM-only ``DMA.TRANSFER`` operators "carrying 99.7% of that side's DMA
+payload are weight loads from HBM, and the ROM machine reads weights in place
+and has no counterpart".  That is wrong.  The unmatched sets are::
+
+    hbm   21 TENSOR.MATMUL   58 DMA.TRANSFER   2 DMA.GATHER
+    rom   21 TENSOR.MATMUL    4 DMA.TRANSFER   2 DMA.GATHER   4 DMA.FILL
+
+and all 21 unmatched HBM contractions pair 1:1 with an unmatched ROM
+contraction at EXACTLY 32x the middle axis -- 21 of 21, no residue::
+
+    hbm 1x1024 x1024  x4   <->  rom 1x32768  x1024
+    hbm 1x128  x8192  x4   <->  rom 1x4096   x8192
+    hbm 1x8    x4096  x4   <->  rom 1x256    x4096
+    hbm 1x128  x2048  x4   <->  rom 1x4096   x2048
+    hbm 1x256  x1024  x2   <->  rom 1x8192   x1024
+    hbm 1x2    x4096  x2   <->  rom 1x64     x4096
+    hbm 1x4040 x4096  x1   <->  rom 1x129280 x4096
+
+The last row is DeepSeek's 129,280-entry vocabulary divided by 32.  This is
+ONE program sharded 32 ways on the HBM side and walked against a 1-node ROM
+program at NODE_COUNT=1: a topology artefact of how the pair is compared, not
+two machines doing different work.  It is therefore closable in principle --
+by walking the sharded side at its own node count -- rather than inherent to
+the design under test, which is what the old text claimed.
+
+THIRD, and independent of both: six of the fifteen cells carry
+``unbuildable: true``, so C2's ``require_all`` cannot go green regardless of
+what happens to the DeepSeek pairs.
 """
 
 from __future__ import annotations
