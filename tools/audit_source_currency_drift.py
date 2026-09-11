@@ -51,6 +51,7 @@ import hashlib
 import json
 import subprocess
 from collections import Counter
+import pathlib
 from pathlib import Path
 from typing import Any
 
@@ -108,6 +109,62 @@ def changed_since(base: str) -> set[str]:
     return {line.strip() for line in out.splitlines() if line.strip()}
 
 
+#: A binding entry is not always "repo-relative path -> digest".  Five other
+#: shapes occur, and resolving every key against ROOT reported all of them as
+#: drift.  Measured 2026-09-11: 17 of 80 "drifted" artifacts had no genuinely
+#: stale repo file at all -- they were unresolvable keys, counted as missing.
+#:
+#:   repo_source      key is a repo-relative path, value is its digest
+#:   label_path       key is a LABEL ("rom"/"hbm") and the value is a path,
+#:                    or a {path, sha256} dict.  Reading key-as-path here is
+#:                    meaningless; the path to check is in the value.
+#:   vector_basename  vector_sha256 keys are basenames inside the campaign's
+#:                    own vector directory, testdata/rtl/<campaign stem>/
+#:   vendor           vendor_source_sha256 keys are relative to the recorded
+#:                    HuggingFace snapshot, body["snapshot"]
+#:   build_output     "<BUILD>/..." is a deliberate placeholder for a path
+#:                    only meaningful inside a build tree
+#:   ephemeral        "generated/..." is written into a TemporaryDirectory
+#:                    during the run and never persisted
+#:
+#: The last two are not repository sources and cannot drift; they are reported
+#: separately rather than silently dropped, so the exclusion stays auditable.
+_VECTOR_DIR_ALIASES = {"a3_mhc_pre_tile": "a3_mhc_pre_tiles"}
+
+
+def classify_binding(field, key, value, artifact, body):
+    """(kind, path or None, expected digest or None) for one binding entry."""
+    if isinstance(value, dict):
+        path = value.get("path")
+        digest = value.get("sha256")
+        if isinstance(path, str):
+            return "label_path", ROOT / path, (digest if isinstance(digest, str) else None)
+        return "label_path", None, None
+    if not isinstance(value, str):
+        return "label_path", None, None
+    # A value that is a path rather than a digest means the key is a label.
+    if "/" in value or not _looks_like_digest(value):
+        return "label_path", ROOT / value, None
+    if "<BUILD>" in key:
+        return "build_output", None, value
+    if key.startswith("generated/"):
+        return "ephemeral", None, value
+    if field == "vendor_source_sha256":
+        snapshot = body.get("snapshot")
+        if isinstance(snapshot, str):
+            return "vendor", pathlib.Path(snapshot) / key, value
+        return "vendor", None, value
+    if field == "vector_sha256" and "/" not in key:
+        stem = artifact.name.replace("_campaign.json", "").replace(".json", "")
+        stem = _VECTOR_DIR_ALIASES.get(stem, stem)
+        return "vector_basename", ROOT / "testdata" / "rtl" / stem / key, value
+    return "repo_source", ROOT / key, value
+
+
+def _looks_like_digest(text):
+    return len(text) in (40, 64) and all(c in "0123456789abcdef" for c in text)
+
+
 def survey() -> dict[str, Any]:
     recent = changed_since(SESSION_BASE)
     pinning = 0
@@ -122,33 +179,48 @@ def survey() -> dict[str, Any]:
             continue
         if not isinstance(body, dict):
             continue
-        sources: dict[str, str] = {}
+        entries: list[tuple[str, str, Any]] = []
         fields_used: list[str] = []
         for field in BINDING_FIELDS:
             candidate = body.get(field)
             if not isinstance(candidate, dict) or not candidate:
                 continue
-            usable = {
-                key: value
+            usable = [
+                (field, key, value)
                 for key, value in candidate.items()
-                if isinstance(key, str) and isinstance(value, str)
-            }
+                if isinstance(key, str)
+            ]
             if not usable:
                 continue
             fields_used.append(field)
-            sources.update(usable)
-        if not sources:
+            entries.extend(usable)
+        if not entries:
             continue
         pinning += 1
         stale: list[str] = []
         missing: list[str] = []
-        for relative, expected in sources.items():
-            path = ROOT / relative
+        unresolvable: list[str] = []
+        checked = 0
+        for field, key, value in entries:
+            kind, path, expected = classify_binding(
+                field, key, value, artifact, body
+            )
+            if kind in ("build_output", "ephemeral"):
+                unresolvable.append(f"{key} [{kind}]")
+                continue
+            if path is None or expected is None:
+                # A label whose value names a path but pins no digest: the
+                # path's existence is checkable, its content is not.
+                if path is not None and not path.is_file():
+                    missing.append(f"{key} -> {path}")
+                continue
+            checked += 1
             if not path.is_file():
-                missing.append(relative)
+                missing.append(key if kind == "repo_source" else f"{key} -> {path}")
                 continue
             if sha256(path) != expected:
-                stale.append(relative)
+                stale.append(key if kind == "repo_source" else f"{key} -> {path}")
+        sources = {k: v for _, k, v in entries}
         if not stale and not missing:
             continue
         stale_counter.update(stale)
@@ -158,6 +230,8 @@ def survey() -> dict[str, Any]:
                 "artifact": str(artifact.relative_to(ROOT)),
                 "binding_fields": fields_used,
                 "pinned_sources": len(sources),
+                "entries_checked": checked,
+                "unresolvable_by_design": sorted(unresolvable),
                 "stale": sorted(stale),
                 "missing": sorted(missing),
                 "stale_only_from_recent_work": bool(stale)
@@ -277,7 +351,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered)
-    print(f"wrote {args.output.relative_to(ROOT)}")
+    try:
+        shown = args.output.relative_to(ROOT)
+    except ValueError:
+        # --output outside the repo (a scratch dir) is the RECOMMENDED
+        # way to run this: writing into results/ dirties the worktree
+        # and poisons the provenance of whatever runs next.
+        shown = args.output
+    print(f"wrote {shown}")
     return 0
 
 
