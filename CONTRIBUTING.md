@@ -19,7 +19,11 @@ request, and see [`NOTICE`](NOTICE) for how third-party material is recorded her
 
 <a id="areas"></a>
 Start with [`STATUS.md`](STATUS.md) — it says what passes, what fails, and why.
-Then pick an area. Each of these is real, scoped work, not a wish.
+Then pick an area below, or go straight to
+[**`docs/CONTRIBUTOR_TASKS.md`**](docs/CONTRIBUTOR_TASKS.md), which lists 32
+scoped tasks with a size estimate and the document that specifies each one.
+
+Each area below is real, scoped work, not a wish.
 
 ### 1. Correct a number or an assumption
 

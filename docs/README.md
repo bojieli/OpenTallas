@@ -21,6 +21,7 @@ document roles rather than by moving active working documents.
 | Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
 | Audit the performance claim | [Root README performance guide](../README.md#performance-comparison) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
 | Evaluate ROM for video/world models | [Recent-model landscape audit](../results/world-model-landscape/REPORT.md) | [Oasis causal-state and H3 study](../results/world-model/REPORT.md), [compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md), and the [source register](SOURCES.md) |
+| **Find something to work on** | [Contributor tasks](CONTRIBUTOR_TASKS.md) — 32 scoped tasks, each naming the document that specifies it | [How to contribute](../CONTRIBUTING.md#areas) |
 | **What works today, in prose** | [STATUS.md](../STATUS.md) — every gate, its blocker, and the contributor task attached | [How to contribute](../CONTRIBUTING.md#areas) |
 | **See what works today** | `PYTHONPATH=. python3 tools/check_redesign_gates.py` — prints all 19 gate rungs in 0.47 s and exits 1 while any terminal gate fails | [Generated status](PROGRAM_STATUS.md), then [four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md) for the narrative |
 | **Know what you can reproduce** | [Reproducibility boundary](REPRODUCIBILITY.md) — three tiers, with measured timings | [Methodology](METHODOLOGY.md) and [source register](SOURCES.md) |
@@ -29,6 +30,36 @@ document roles rather than by moving active working documents.
 | Review RTL | [RTL inventory](../rtl/README.md) | [Engine datapaths](ABI3_ENGINE_DATAPATH_RTL.md), [ROM service](ROM_SERVICE_RTL.md), and [RTL reports](../results/rtl/) |
 | Review physical or circuit evidence | [ROM physical methodology](ROM_PHYSICAL_METHODOLOGY.md) | [Open-PDK selection](OPEN_PDK_SELECTION.md), [SPICE guide](../spice/README.md), and [physical views](ABI3_PHYSICAL_VIEWS.md) |
 | Audit a number or source | [Methodology](METHODOLOGY.md) | [Source register](SOURCES.md), [evidence ledger](EVIDENCE_LEDGER.md), and [fairness audit](COMPARISON_FAIRNESS_AUDIT.md) |
+
+## Reading by audience
+
+69 documents is too many to scan. This is what each tier is for, and how much of
+it you need.
+
+| If you are… | Read | Skip |
+|---|---|---|
+| **evaluating the project** | [STATUS.md](../STATUS.md), [REPRODUCIBILITY.md](REPRODUCIBILITY.md), [OVERVIEW.md](OVERVIEW.md), [COMPARISON_FAIRNESS_AUDIT.md](COMPARISON_FAIRNESS_AUDIT.md) | everything else |
+| **about to contribute** | [CONTRIBUTOR_TASKS.md](CONTRIBUTOR_TASKS.md), then the one document your task names | the other 60 |
+| **auditing a specific number** | [METHODOLOGY.md](METHODOLOGY.md), [ASSUMPTIONS.md](ASSUMPTIONS.md), [SOURCES.md](SOURCES.md), then the figure annotation's own `src=` attribute in the prose | the plans |
+| **implementing against the ABI** | [../spec/README.md](../spec/README.md), [TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md), [..._OPERATOR_CONVENTIONS.md](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md) | the evidence logs |
+
+A census of the corpus, so the shape is not a surprise:
+
+| Kind | Count | What it means for you |
+|---|---:|---|
+| evidence-log | 29 | A record of one campaign: what was proven, on which vectors, and what it does **not** prove. Dense by design. Read the claim-boundary section, not the whole file. |
+| reference | 17 | Specifications and input ledgers. Authoritative; cite these. |
+| plan | 10 | Design and implementation plans. Several contain numbered work packages a contributor can take. |
+| newcomer-facing | 9 | Prose explanations. Start here. |
+| post-mortem | 5 | What went wrong and why, including *"how the accelerator came to be 44,000× too slow"*. Read at least one — they show the project's standard of self-criticism. |
+| guide | 4 | How to run something. |
+| working-notes | 3 | Author-oriented. Useful specifications inside, but not organised for a reader. |
+| superseded | 1 | Retained for history. |
+
+**The evidence logs are the bulk and the hardest to read.** They exist so a claim
+can be audited rather than trusted, and they are deliberately explicit about their
+own limits. If you want the finding without the derivation, most have a §1 or an
+executive summary; the claim boundary is usually the last numbered section.
 
 ## How the documentation fits together
 

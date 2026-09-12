@@ -135,8 +135,9 @@ State this plainly so nobody has to infer it:
 
 ## Where to help
 
-`CONTRIBUTING.md` has the full list with entry points. The tasks this page
-refers to:
+[`docs/CONTRIBUTOR_TASKS.md`](docs/CONTRIBUTOR_TASKS.md) lists 32 scoped tasks
+with sizes and the document specifying each; `CONTRIBUTING.md` explains how to
+submit. The tasks this page refers to:
 
 <a id="g2-semantics"></a>
 **G2 semantics** — decide whether G2's evaluator should read `design.closed`, or
