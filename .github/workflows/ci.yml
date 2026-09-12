@@ -1,4 +1,21 @@
-# Tier 1 CI: only what is demonstrably green on a bare checkout.
+# Tier 1 CI: only what is demonstrably green on a bare checkout, and only what
+# fits in a runner's memory.
+#
+# MEMORY BUDGET. A GitHub-hosted ubuntu-latest runner has ~7 GB of RAM. Every job
+# here was measured with /usr/bin/time -v on the same commit, peak RSS:
+#
+#     tests/sim                   1.29 GB   <- the largest thing in this file
+#     make check-figures          0.54 GB
+#     tests/abi3                  0.13 GB
+#     make iso-node               0.07 GB
+#     tests/qwen3                 0.05 GB
+#     make check-chip-architecture 0.01 GB
+#
+# Nothing here comes within 5x of the limit. That is deliberate: the suites left
+# out are not merely slow, they are physically unable to run on a hosted runner.
+# tests/runtime/test_abi3_cycle.py alone was measured at 72-84 GB RSS and has
+# been OOM-killed repeatedly on a 250 GB machine. Never add a job to this file
+# without measuring its peak RSS first.
 #
 # This repository's full test suite is 7,445 tests, and some evidence campaigns
 # take hours (several artifacts record verification_wall_seconds near 16,500 s

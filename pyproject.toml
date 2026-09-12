@@ -11,6 +11,31 @@ requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
 dependencies = ["numpy>=1.23"]
+authors = [{ name = "Bojie Li", email = "bojieli@gmail.com" }]
+keywords = [
+  "machine-learning-accelerator",
+  "mask-rom",
+  "llm-inference",
+  "computer-architecture",
+  "open-source-eda",
+  "asap7",
+  "reproducible-research",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering",
+  "Topic :: System :: Hardware",
+]
+
+[project.urls]
+Homepage = "https://github.com/bojieli/OpenTallas"
+Repository = "https://github.com/bojieli/OpenTallas"
+Documentation = "https://github.com/bojieli/OpenTallas/blob/main/docs/README.md"
+"Reproducibility boundary" = "https://github.com/bojieli/OpenTallas/blob/main/docs/REPRODUCIBILITY.md"
+Issues = "https://github.com/bojieli/OpenTallas/issues"
 
 [project.optional-dependencies]
 compiler = ["jinja2>=3.1,<4", "tokenizers==0.22.2"]

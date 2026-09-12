@@ -12,6 +12,30 @@ badge always means a regression rather than a known gap. Three jobs:
 All timings were measured at `b0f92a9` in a fresh virtualenv containing nothing
 but the declared dependencies, not estimated.
 
+## Memory budget
+
+A hosted `ubuntu-latest` runner has ~7 GB. Peak RSS of everything in `ci.yml`,
+measured with `/usr/bin/time -v`:
+
+| Job step | Peak RSS |
+|---|---:|
+| `tests/sim` | 1.29 GB |
+| `make check-figures` | 0.54 GB |
+| `tests/abi3` | 0.13 GB |
+| `make iso-node` | 0.07 GB |
+| `tests/qwen3` | 0.05 GB |
+| `make check-chip-architecture` | 0.01 GB |
+
+Nothing is within 5× of the limit. **Measure peak RSS before adding any job**:
+
+```sh
+/usr/bin/time -v python3 -m pytest <target> 2>&1 | grep 'Maximum resident'
+```
+
+The excluded suites are not merely slow — they cannot physically run on a hosted
+runner. `tests/runtime/test_abi3_cycle.py` alone measures 72–84 GB and has been
+OOM-killed on a 250 GB machine.
+
 ## Why the gate board does not fail the build
 
 `tools/check_redesign_gates.py` exits 1 while any terminal gate fails, and three
