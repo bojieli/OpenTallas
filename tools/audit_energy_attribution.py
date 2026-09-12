@@ -47,6 +47,28 @@ LANES = {
 COMPUTE_UNIT = "results/physical_abi3/asap7/compute_unit/pnr.json"
 COMPUTE_UNIT_LANES = 16
 
+#: Two CLOSED operating points for the same chip. Timing repair buys frequency by
+#: upsizing and buffering, which costs power, so "maximum frequency" and "best
+#: energy" are different design points and the project should be explicit about
+#: which one it is quoting. Both sets are status-pass records.
+OPERATING_POINTS = {
+    "frequency_optimal": {
+        "compute_unit": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "vector_add_unit": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+        "reduction": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+    },
+    "energy_optimal": {
+        "compute_unit": "results/physical_abi3/asap7/operating_points/compute_unit_1p0.json",
+        "vector_add_unit": "results/physical_abi3/asap7/operating_points/vector_add_unit_1p0.json",
+        "reduction": "results/physical_abi3/asap7/operating_points/reduction_s8_g2_2p25.json",
+    },
+}
+DISPATCHER = "results/physical_abi3/asap7/cluster_dispatcher/pnr.json"
+SEQUENCER = "results/physical_abi3/asap7/a3_microsequencer/pnr.json"
+CHIP_UNITS = 16
+LANES_PER_UNIT = 16
+A100_DEVICE_OPS_S_PER_MM2 = 312e12 / A100_DIE_AREA_MM2
+
 
 def git_state() -> dict[str, Any]:
     def run(*a: str) -> str:
@@ -114,6 +136,26 @@ def main() -> int:
                   "sequencer and the interconnect between them"),
     }
 
+    #: ---- operating points: is "maximum frequency" the right target? ----------
+    disp, seq = metrics(DISPATCHER), metrics(SEQUENCER)
+    points = {}
+    for pname, sel in OPERATING_POINTS.items():
+        parts = {k: metrics(v) for k, v in sel.items()}
+        clock = min(min(p["fmax_hz"] for p in parts.values()), disp["fmax_hz"])
+        area_mm2 = (sum(p["core_area_um2"] for p in parts.values()) * CHIP_UNITS
+                    + disp["core_area_um2"] + seq["core_area_um2"]) / 1e6
+        power_w = (sum(p["power_total_w"] for p in parts.values()) * CHIP_UNITS
+                   + disp["power_total_w"] + seq["power_total_w"])
+        ops = CHIP_UNITS * LANES_PER_UNIT * 2 * clock
+        binding = min(parts.items(), key=lambda kv: kv[1]["fmax_hz"])[0]
+        points[pname] = {
+            "components": parts, "clock_hz": clock, "binding_block": binding,
+            "chip_area_mm2": area_mm2, "chip_power_w": power_w, "bf16_ops_s": ops,
+            "ops_s_per_mm2": ops / area_mm2, "ops_s_per_w": ops / power_w,
+            "vs_a100_area": (ops / area_mm2) / A100_DEVICE_OPS_S_PER_MM2,
+            "vs_a100_energy": (ops / power_w) / ref["ops_s_per_w"],
+        }
+
     body = {
         "schema": "opentallas.audit.energy_attribution.v1",
         "question": ("Is the chip's energy deficit an arithmetic problem or a "
@@ -124,6 +166,7 @@ def main() -> int:
         "lanes": lanes,
         "accumulator_sharing_gain": sharing,
         "compute_unit_attribution": attribution,
+        "operating_points": points,
         "refusals": [
             "power-is-a-default-activity-estimate: ORFS reports power from the "
             "routed netlist under the flow's default switching activity, not from "
@@ -174,6 +217,31 @@ def main() -> int:
           "the multipliers --\n  which is what the accelerator literature says, and "
           "what the ROM thesis claims\n  to address. It also means packing "
           "multipliers harder cannot fix it.")
+
+    fo, eo = points["frequency_optimal"], points["energy_optimal"]
+    print("\nIs \"maximum frequency\" the right target? Two CLOSED operating points:\n")
+    print(f"  {'point':<20} {'clock':>8} {'TFLOP/s':>8} {'watt':>7} "
+          f"{'T/s/mm2':>8} {'area':>7} {'T/s/W':>7} {'energy':>7}")
+    for n, p in points.items():
+        print(f"  {n:<20} {p['clock_hz']/1e6:>7.0f}M {p['bf16_ops_s']/1e12:>8.2f} "
+              f"{p['chip_power_w']:>7.3f} {p['ops_s_per_mm2']/1e12:>8.3f} "
+              f"{p['vs_a100_area']:>6.2f}x {p['ops_s_per_w']/1e12:>7.3f} "
+              f"{p['vs_a100_energy']:>6.2f}x")
+    dt = fo["bf16_ops_s"] / eo["bf16_ops_s"]
+    de = eo["ops_s_per_w"] / fo["ops_s_per_w"]
+    print(f"\n  Per BLOCK, timing repair is brutal: the reduction engine goes "
+          f"2.980 -> 1.197 TFLOP/s\n  per W between 1,031 and 1,287 MHz -- 25 % more "
+          f"clock for 60 % of the efficiency.")
+    print(f"  At CHIP level it is diluted, because that block is a small share of "
+          f"total power:\n  {dt:.2f}x the throughput for {de:.2f}x the efficiency.")
+    if dt > de:
+        print("  So the frequency-optimal point WINS on this chip, and "
+              "'maximum frequency' is the\n  right target up to closure -- but only "
+              "because operand delivery dominates power.\n  Pushing past closure "
+              "buys nothing: 0.75 ns and below do not meet timing at all.")
+    else:
+        print("  So the energy-optimal point wins and the frequency push is not "
+              "worth its power.")
 
     if args.output:
         args.output.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n")
