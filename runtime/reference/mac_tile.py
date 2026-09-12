@@ -32,8 +32,40 @@ from typing import Iterable, Sequence
 #: A BF16 significand is 8 bits including the implicit leading one.
 BF16_SIGNIFICAND_BITS = 8
 
+#: The formats the lane is parameterised over, as (exponent bits, stored
+#: fraction bits). The significand is fraction + 1 for the implicit leading one.
+#:
+#:   bf16      E8M7   activations, and what the checkpoints ship
+#:   fp8_e4m3  E4M3   HBM-resident weights
+#:   mxfp4     E2M1   mask-ROM-resident weights; the density thesis needs this one
+FORMATS: dict[str, tuple[int, int]] = {
+    "bf16": (8, 7),
+    "fp8_e4m3": (4, 3),
+    "mxfp4": (2, 1),
+}
+
 #: The window width the tile is parameterised with by default.
 DEFAULT_EXP_WINDOW = 16
+
+
+def format_parts(code: int, fmt: str) -> tuple[int, int, int]:
+    """``(sign, biased exponent, significand)`` of one code in ``fmt``.
+
+    The same unpack the RTL does for every format: a magnitude field of zero is
+    an exact zero, and otherwise the significand is the stored fraction with the
+    implicit leading one prepended. Widths come from :data:`FORMATS`.
+    """
+    if fmt not in FORMATS:
+        raise ValueError(f"unknown format {fmt!r}; expected one of {sorted(FORMATS)}")
+    exp_bits, frac_bits = FORMATS[fmt]
+    width = 1 + exp_bits + frac_bits
+    code &= (1 << width) - 1
+    sign = (code >> (exp_bits + frac_bits)) & 1
+    exponent = (code >> frac_bits) & ((1 << exp_bits) - 1)
+    fraction = code & ((1 << frac_bits) - 1)
+    if (code & ((1 << (exp_bits + frac_bits)) - 1)) == 0 or exponent == 0:
+        return sign, exponent, 0
+    return sign, exponent, (1 << frac_bits) | fraction
 
 
 def bf16_parts(code: int) -> tuple[int, int, int]:
@@ -69,8 +101,15 @@ def dot_product(
     *,
     scale_exp: int,
     exp_window: int = DEFAULT_EXP_WINDOW,
+    act_format: str = "bf16",
+    wgt_format: str = "bf16",
 ) -> TileResult:
-    """One lane: the exact block-floating-point dot product the tile computes."""
+    """One lane: the exact block-floating-point dot product the tile computes.
+
+    ``act_format`` and ``wgt_format`` may differ, which is the point: the ROM
+    design multiplies BF16 activations by MXFP4 weights, and the HBM comparator
+    multiplies BF16 activations by FP8 weights.
+    """
     if len(activations) != len(weights):
         raise ValueError(
             f"activation count {len(activations)} does not match weight count "
@@ -79,8 +118,8 @@ def dot_product(
     total = 0
     dropped = False
     for act, wgt in zip(activations, weights):
-        a_sign, a_exp, a_man = bf16_parts(act)
-        w_sign, w_exp, w_man = bf16_parts(wgt)
+        a_sign, a_exp, a_man = format_parts(act, act_format)
+        w_sign, w_exp, w_man = format_parts(wgt, wgt_format)
         product = a_man * w_man
         if product == 0:
             # An exact zero is not a dropped term, however far its exponent is.
@@ -100,11 +139,14 @@ def tile(
     *,
     scale_exp: int,
     exp_window: int = DEFAULT_EXP_WINDOW,
+    act_format: str = "bf16",
+    wgt_format: str = "bf16",
 ) -> list[TileResult]:
     """Every lane of the tile, sharing one activation stream."""
     return [
         dot_product(
-            activations, lane_weights, scale_exp=scale_exp, exp_window=exp_window
+            activations, lane_weights, scale_exp=scale_exp,
+            exp_window=exp_window, act_format=act_format, wgt_format=wgt_format,
         )
         for lane_weights in weights_per_lane
     ]
