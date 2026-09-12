@@ -43,7 +43,7 @@
 module ot_mac_lane_packed #(
     parameter integer ACC_W       = 40,
     parameter integer EXP_WINDOW  = 16,
-    parameter integer PACK        = 8,    // multipliers sharing one accumulator
+    parameter integer PACK        = 8,    // 1..8; the tree is an 8-term network
     parameter integer W_EXP_BITS  = 2,    // MXFP4 E2M1 by default
     parameter integer W_FRAC_BITS = 1
 ) (
@@ -60,6 +60,29 @@ module ot_mac_lane_packed #(
     output reg  [ACC_W-1:0]            result,
     output reg                         dropped
 );
+    //: THE REDUCTION TREE IS A FIXED EIGHT-TERM NETWORK, and the term array is
+    //: sized to it rather than to PACK.
+    //:
+    //: It was sized to PACK, and the tree names term[6] and term[7] directly, so
+    //: at PACK=4 those indices were outside the array and the lane computed a
+    //: silently WRONG dot product: tb_mac_lane_packed returned ffee24f365 where
+    //: the reference says fff71279bd, while PACK=8 was bit-exact.
+    //:
+    //: The tool did warn. Verilator reports "SELRANGE: Selection index out of
+    //: range: 4 outside 3:0" on the tree lines -- precisely the defect -- and every
+    //: build here passes -Wno-fatal, which demotes it to a line of output nobody
+    //: reads. That flag turned a range error into a wrong number.
+    //:
+    //: The fix is not a guard against PACK != 8. Unused terms are driven to zero
+    //: and a zero contributes nothing to a sum, so a fixed eight-term tree is
+    //: CORRECT for every PACK from 1 to 8 -- it just stops being optimal. PACK
+    //: above 8 has no network and is refused.
+    localparam integer TREE_TERMS = 8;
+    localparam integer PACK_OK    = (PACK >= 1 && PACK <= TREE_TERMS) ? 1 : 0;
+    //: A zero-width net is illegal in every front end, so PACK outside 1..8 fails
+    //: to elaborate instead of quietly synthesising a truncated tree.
+    wire [PACK_OK-1:0] pack_within_tree_width;
+
     localparam integer HALF    = ACC_W/2;
     localparam integer W_FMT_W = 1 + W_EXP_BITS + W_FRAC_BITS;
     localparam integer W_SIG_W = 1 + W_FRAC_BITS;
@@ -75,9 +98,9 @@ module ot_mac_lane_packed #(
     reg                s2_drop;
 
     // signed aligned terms, summed exactly in the window
-    wire [ACC_W-1:0] term  [0:PACK-1];
-    wire             neg   [0:PACK-1];
-    wire             drops [0:PACK-1];
+    wire [ACC_W-1:0] term  [0:TREE_TERMS-1];
+    wire             neg   [0:TREE_TERMS-1];
+    wire             drops [0:TREE_TERMS-1];
 
     genvar i;
     generate
@@ -116,6 +139,14 @@ module ot_mac_lane_packed #(
             assign neg[i]   = s1_sign[i] && (s1_prod[i] != {PROD_W{1'b0}});
             assign drops[i] = !in_win && (s1_prod[i] != {PROD_W{1'b0}});
         end
+        for (i = PACK; i < TREE_TERMS; i = i + 1) begin : unused
+            //: A term that no multiplier drives must be exactly zero, not ~0:
+            //: the tree sums these unconditionally, and an inverted zero would
+            //: add -1 per unused slot.
+            assign term[i]  = {ACC_W{1'b0}};
+            assign neg[i]   = 1'b0;
+            assign drops[i] = 1'b0;
+        end
     endgenerate
 
     // ---- the reduction tree, carry-save ------------------------------------
@@ -136,7 +167,7 @@ module ot_mac_lane_packed #(
     reg [ACC_W-1:0] neg_corr;
     always @* begin
         neg_corr = {ACC_W{1'b0}};
-        for (nq = 0; nq < PACK; nq = nq + 1)
+        for (nq = 0; nq < TREE_TERMS; nq = nq + 1)
             neg_corr = neg_corr + {{(ACC_W-1){1'b0}}, neg[nq]};
     end
 
@@ -166,7 +197,7 @@ module ot_mac_lane_packed #(
     reg any_drop;
     always @* begin
         any_drop = 1'b0;
-        for (t = 0; t < PACK; t = t + 1) any_drop = any_drop | drops[t];
+        for (t = 0; t < TREE_TERMS; t = t + 1) any_drop = any_drop | drops[t];
     end
 
     always @(posedge clk or negedge rst_n)
