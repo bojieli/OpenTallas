@@ -1,4 +1,4 @@
-.PHONY: abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-prose-coverage check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: lint-strict abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-prose-coverage check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 .PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-comparison-deepseek-array abi3-comparison-deepseek-wafer-array abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
 .PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
@@ -631,3 +631,31 @@ checkpoint-source-deepseek-pro:
 	  --snapshot $(DEEPSEEK_PRO_SNAPSHOT) \
 	  --registry-listing $(DEEPSEEK_PRO_REGISTRY_LISTING) \
 	  --output compiler/models/deepseek-v4-pro-0813/checkpoint_source.json
+
+# Strict lint on the redesigned datapath and control RTL: NO -Wno-fatal.
+#
+# Every simulation target in this file passes -Wno-fatal, which demotes real
+# errors to output nobody reads.  That flag hid two genuine faults: a SELRANGE
+# index-out-of-range in ot_mac_lane_packed's reduction tree, which made the lane
+# return a wrong dot product at PACK=4 for three commits, and tb_compute_unit
+# printing "timeout after 100000 cycles" for four commits because an input that
+# gates its sequencer was left unconnected.
+#
+# So the redesigned blocks are linted with warnings fatal, and the one legitimate
+# false positive (UNOPTFLAT on a tree-shaped array) is waived AT ITS DECLARATION
+# with a justification, not by a global flag.
+VERILATOR ?= $(HOME)/.local/opentallas-tools/verilator-5.050/bin/verilator
+lint-strict:
+	@set -e; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_mac_lane.sv --top-module ot_mac_lane; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_mac_lane.sv rtl/proto/ot_mac_tile.sv --top-module ot_mac_tile; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_mac_lane_packed.sv --top-module ot_mac_lane_packed; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_mac_lane_fmt.sv --top-module ot_mac_lane_fmt; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_bf16_add_flat.sv --top-module ot_bf16_add_flat; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_bf16_add_pipe.sv --top-module ot_bf16_add_pipe; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_bf16_add_pipe.sv rtl/proto/ot_vector_add_unit.sv --top-module ot_vector_add_unit; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_kernel_dispatcher.sv --top-module ot_kernel_dispatcher; \
+	$(VERILATOR) --lint-only -sv rtl/proto/ot_cluster_dispatcher.sv --top-module ot_cluster_dispatcher; \
+	$(VERILATOR) --lint-only -sv rtl/ot_reduction_tree.sv --top-module ot_reduction_endpoint; \
+	$(VERILATOR) --lint-only -sv rtl/ot_bf16_add_rne.sv --top-module ot_bf16_add_rne; \
+	echo "strict lint clean: every redesigned block, warnings fatal, one justified waiver"

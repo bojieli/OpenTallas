@@ -116,7 +116,20 @@ module ot_reduction_endpoint #(
     localparam integer RED_LEVELS = (SOURCES <= 1) ? 0 : $clog2(SOURCES);
     localparam integer RED_NP     = 1 << RED_LEVELS;
 
+    //: NARROW WAIVER, and the only one in this file. gnode is a strict reduction
+    //: TREE, not a cycle: gnode[g][i] depends solely on gnode[g][2i] and
+    //: gnode[g][2i+1], so every dependency strictly increases the index, and the
+    //: leaves at [RED_NP .. 2*RED_NP-1] depend on nothing inside the array.
+    //: Verilator's dependency analysis is per-SIGNAL rather than per-element, so
+    //: any array whose elements reference other elements of itself reads as
+    //: circular combinational logic. It is a false positive.
+    //:
+    //: It is waived HERE, at the declaration, rather than by passing -Wno-fatal to
+    //: the whole build. A blanket suppression is what let a real SELRANGE error in
+    //: ot_mac_lane_packed produce a wrong dot product for three commits.
+    /* verilator lint_off UNOPTFLAT */
     wire signed [REDUCE_W-1:0] gnode [0:GROUPS-1][0:2*RED_NP-1];
+    /* verilator lint_on UNOPTFLAT */
     wire signed [REDUCE_W-1:0] group_sum [0:GROUPS-1];
 
     genvar gg, ss;
