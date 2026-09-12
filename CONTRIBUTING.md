@@ -15,6 +15,103 @@ right to license it that way. Please keep this in mind if any part of your chang
 derives from code, weights, or PDK material under other terms: say so in the pull
 request, and see [`NOTICE`](NOTICE) for how third-party material is recorded here.
 
+## Where the project needs help
+
+<a id="areas"></a>
+Start with [`STATUS.md`](STATUS.md) — it says what passes, what fails, and why.
+Then pick an area. Each of these is real, scoped work, not a wish.
+
+### 1. Correct a number or an assumption
+
+The highest-value contribution is showing that a figure is wrong. Every
+quantitative claim in prose is bound by digest to the artifact that produced it,
+so disagreements are checkable rather than rhetorical.
+
+```sh
+make check-figures          # every annotated figure vs its artifact
+PYTHONPATH=. python3 tools/check_prose_figures.py --list   # see all bindings
+```
+
+Assumptions live in `configs/` — `configs/hardware/*.json` for device and vendor
+figures (each with a source URL), `configs/models/*.json` for model geometry,
+`configs/pdk/*.json` for process locks. `docs/ASSUMPTIONS.md` and
+`docs/SOURCES.md` record where each came from.
+
+**The open question worth attacking first:** gate **C3**. The analytical model
+says ROM is 5.05× faster than the HBM comparator for Qwen3-8B at 8K; the cycle
+model says 0.179×, i.e. 5.6× slower. The cycle model reproduces the *comparator*
+to 1.5% and is 28.7× apart on the *subject*, and ~90% of the ROM cycle step is
+unattributed. Either model could be the wrong one. See
+`results/derived/qwen3_n5_design_target_reconciliation.json`.
+
+### 2. Run more simulation, or close a verification rung
+
+Six rungs gate end-to-end token correctness (G1a–G1f). `STATUS.md` lists each
+blocker. Two concrete entry points:
+
+- **G1e re-take** — the cheapest structural fix, ~10 min per store. Its evidence
+  has drifted, so the only green G1 rung currently passes on stale sources.
+- **`MAPPED_FAMILIES_WORD`** — one literal `0` in
+  `tools/build_abi3_shipped_prefix_vectors.py` fail-stops the integrated vehicle
+  at PC 32 and blocks **four** rungs (G1a–G1d). Flipping it is trivial;
+  producing golden past it is the work.
+
+Campaigns are single-threaded but independent, so they parallelise across cores.
+Costs are recorded in the artifacts themselves — look for `wall_seconds` or
+`verification_wall_seconds` before starting one. Needs Verilator 5.050 and Icarus
+≥ 11.0; `tools/bootstrap_verilator_5_050.sh` installs the pinned build.
+
+### 3. Port to another PDK, or add a constraint set
+
+Physical results currently come from **ASAP7** (predictive, non-manufacturable),
+with **SKY130** and **IHP SG13G2** used for circuit methodology. A port to
+another open PDK — or a real foundry process, under whatever NDA terms apply —
+would materially strengthen the physical claims, which are the weakest link.
+
+Start at `docs/ROM_PHYSICAL_METHODOLOGY.md` and `docs/OPEN_PDK_SELECTION.md`.
+Process locks are `configs/pdk/*_lock.json`; each pins tool versions and a
+container image digest so a run is reproducible. `tools/bootstrap_sky130_pdk.sh`
+and `tools/bootstrap_ihp_pdk.sh` show the expected shape of a new PDK bootstrap.
+
+Constraint work is equally welcome and cheaper: the g2 cluster does not close
+timing at 4.75 ns at any utilisation from 20 to 40 (slew bottoms at 3 violations
+near util 35, then rises, and util 40 introduces the sweep's first hold
+failures). The open question there is whether the **slew constraint itself** is
+right — see `tools/audit_g2_cluster_operating_point.py`.
+
+### 4. Improve performance
+
+The design's own numbers are the target. `results/roofline/*/REPORT.md` and
+`results/iso-node/*/REPORT.md` show where the model says time goes; the cycle
+model in `runtime/cycle/` shows where it says the *implementation* spends it. The
+~24× gap between them (area 1) is itself a performance question: if the cycle
+model is right, the architecture is much slower than claimed and the reason is
+not yet attributed.
+
+### 5. Pay down the evidence backlog
+
+**59 of 91** artifacts that pin source digests no longer bind current sources.
+A drifted artifact is inadmissible, not wrong — its numbers were true of sources
+that have since changed. Re-taking them is mechanical and parallelisable:
+
+```sh
+python3 tools/audit_source_currency_drift.py --output /tmp/drift.json
+```
+
+The worst single staler is `runtime/abi3/constants.py`, which alone invalidates
+21 artifacts. Re-taking a family together is far cheaper than one at a time.
+
+### 6. Fix the test-suite memory footprint
+
+`tests/runtime` reports 64 failures as a group and 10 per-file. The gap is
+**memory, not test isolation**: `tests/runtime/test_abi3_cycle.py` alone measures
+72–84 GB peak RSS and a group run gets OOM-killed. Capping that footprint —
+`pytest-forked`, per-file invocation, or reducing the fixture — would let the
+group run in CI, which it currently cannot (a hosted runner has ~7 GB).
+
+Pairwise runs already ruled out shared module-level state, so that is *not* where
+to look.
+
 ## Before you begin
 
 Read the entry point that owns the area you plan to change:

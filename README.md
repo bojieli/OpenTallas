@@ -2,9 +2,10 @@
 
 **Open research toward instant, affordable AI inference.**
 
-[Why speed matters](docs/VISION.md) · [Documentation](docs/README.md) ·
-[Plain-English overview](docs/OVERVIEW.md) · [Specification](spec/README.md) ·
-[Results](results/) · [Contributing](CONTRIBUTING.md)
+**[What works today](STATUS.md)** · [What you can reproduce](docs/REPRODUCIBILITY.md) ·
+[How to contribute](CONTRIBUTING.md#areas) · [Why speed matters](docs/VISION.md) ·
+[Plain-English overview](docs/OVERVIEW.md) · [Documentation](docs/README.md) ·
+[Specification](spec/README.md) · [Results](results/)
 
 More than 10,000 tokens per second per user is now a publicly reported silicon
 result. [Taalas](https://taalas.com/products/) reports **16,960 tokens/s** <!-- figure: 16,960 src="configs/hardware/technology.json#reference_parts.taalas_hc1.published_tokens_s_per_user.value" name="Taalas HC1 published per-user rate, README" -->
@@ -95,6 +96,8 @@ Two further facts a reader should have before quoting anything here:
 - The analytical layer **is** byte-reproducible: `make iso-node` regenerates the
   headline studies in ~3 seconds and leaves `git status` clean.
 
+[**STATUS.md**](STATUS.md) explains every failing gate in plain language and
+names the contributor task attached to it.
 [**What you can and cannot reproduce**](docs/REPRODUCIBILITY.md) states the full
 boundary in three tiers.
 
