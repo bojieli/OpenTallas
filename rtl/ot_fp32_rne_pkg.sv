@@ -611,9 +611,18 @@ package ot_fp32_rne_pkg;
                             main_mantissa[bit_index] =
                                 exact_magnitude[bit_index + shift_distance];
                         round_bit = exact_magnitude[shift_distance-1];
-                        for (bit_index = 0; bit_index < shift_distance-1;
+                        // Constant loop bound with a guarded body, matching the
+                        // sibling branch above.  A variable bound is not
+                        // synthesizable -- Yosys rejects it outright, which
+                        // stopped ot_a3_vector_compress_project and
+                        // ot_a3_vector_index_score from elaborating at all.
+                        // 524 is the width of exact_magnitude; the guard keeps
+                        // the OR over exactly bits 0..shift_distance-2 as
+                        // before.
+                        for (bit_index = 0; bit_index < 524;
                              bit_index = bit_index + 1)
-                            sticky = sticky | exact_magnitude[bit_index];
+                            if (bit_index < shift_distance-1)
+                                sticky = sticky | exact_magnitude[bit_index];
                         rounded_mantissa = {1'b0, main_mantissa};
                         if (round_bit && (sticky || main_mantissa[0]))
                             rounded_mantissa = rounded_mantissa + 1'b1;
