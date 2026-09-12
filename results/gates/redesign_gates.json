@@ -15,7 +15,7 @@
       "kind": "verification",
       "statement": "Every operator equivalence class the governed decode program issues executes in the integrated RTL, from the real compiled program against the real checkpoint weights, and matches the golden model bit for bit.",
       "status": "fail",
-      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 11, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 11, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
+      "why": "no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1a_operator_equivalence.json [rom]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 4, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0; results/rtl/abi3_g1a_operator_equivalence.json [hbm]: coverage.every_issued_class_covered is False, want True; coverage.uncovered_class_count is 3, want 0; equivalence.weights_are_real_checkpoint is False, want True; capability_trapped_family_count is 6, want 0"
     },
     {
       "fails_when": "The layer is incomplete, any intermediate differs, or any intermediate was injected from the golden model.",
@@ -111,7 +111,7 @@
       "kind": "design",
       "statement": "Per-MAC area and per-MAC period both improve against the recorded matmul_bf16_sram_engine baseline at the same PDK.",
       "status": "pass",
-      "why": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: per-MAC area 3,790.2 um2 < baseline 48,274 um2 and per-MAC period 6.000 ns < baseline 104.1 ns, both routed at asap7"
+      "why": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json: per-MAC area 3,947.8 um2 < baseline 48,274 um2 and per-MAC period 6.000 ns < baseline 104.1 ns, both routed at asap7"
     },
     {
       "fails_when": "Any becomes silent.",
