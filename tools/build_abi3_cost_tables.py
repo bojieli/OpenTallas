@@ -65,16 +65,54 @@ ROUTED_BLOCKS: tuple[dict[str, Any], ...] = (
     {
         "view": "asap7",
         "block": "add_bf16_sram_engine",
-        "family": "vector",
+        "family": None,
         "path": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json",
         "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "SUPERSEDED as the vector engine by ot_vector_add_unit.  This block "
+            "retires ONE element per cycle through a combinational BF16 adder "
+            "whose normalise step is a ten-deep cascade of conditional shifts, "
+            "and closes at 239 MHz.  Reported because it was routed; excluded "
+            "because the machine no longer instantiates it"
+        ),
+    },
+    {
+        "view": "asap7",
+        "block": "vector_add_unit",
+        "family": "vector",
+        "path": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+        "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "eight lanes of five-stage pipelined BF16 add under one issue port, "
+            "credit-based flow control so no datapath register carries an enable"
+        ),
     },
     {
         "view": "asap7",
         "block": "matmul_bf16_sram_engine",
-        "family": "tensor",
+        "family": None,
         "path": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json",
         "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "SUPERSEDED as the tensor engine by ot_compute_unit.  This block is "
+            "an unpipelined datapath: its multiply-accumulate is combinational "
+            "from operand to accumulator, so its cycle time is a whole "
+            "multiply-add and it closes at 58 MHz.  It set this view's core "
+            "clock, and therefore the whole cycle model, to that figure.  It is "
+            "reported here because it was routed and the number is real, and it "
+            "is excluded because the machine no longer instantiates it"
+        ),
+    },
+    {
+        "view": "asap7",
+        "block": "compute_unit",
+        "family": "tensor",
+        "path": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "16-lane block-floating-point MAC tile with its weight SRAM, "
+            "activation register file and sequencer, fully pipelined"
+        ),
     },
     {
         "view": "asap7",
@@ -335,6 +373,17 @@ def routed_clock(view: str) -> dict[str, Any]:
         note_parts.append(
             f"{row['block']} closes at {row['fmax_hz']:.6g} Hz and is excluded: "
             f"{row['note']}."
+        )
+    #: A view whose binding blocks are all newer than a superseded one is
+    #: reporting a redesign, not a measurement error.  Say so, so that a reader
+    #: comparing this table against an older one can see why the clock moved by
+    #: more than an order of magnitude.
+    if excluded and any("SUPERSEDED" in (row.get("note") or "") for row in excluded):
+        note_parts.append(
+            "The excluded blocks marked SUPERSEDED were the previous "
+            "implementations of engine families that have since been redesigned; "
+            "this view's clock moved because the design changed, not because the "
+            "same design was re-measured."
         )
     if uncovered:
         note_parts.append(

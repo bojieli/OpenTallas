@@ -6,12 +6,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.039429200000000005,
+        "hold_wns_ns": 0.008166330000000001,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.06657160000000001,
+        "setup_wns_ns": 0.0246408,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -22,7 +22,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-12T16:27:42.928991+00:00",
+  "completed_at": "2026-09-12T16:25:34.840179+00:00",
   "corner": {
     "liberty": [
       {
@@ -61,23 +61,23 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 664.965,
-    "block": "ot_probe_packed8",
-    "cells": 5947,
+    "area_um2": 7381.39,
+    "block": "ot_compute_unit",
+    "cells": 60583,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
-    "clock_period_ns": 1.0,
+    "clock_period_ns": 0.8,
     "clock_port": "clk",
     "closed": true,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 1697.58,
+    "core_area_um2": 31524.7,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1071320000.0,
-    "hold_wns_ns": 0.039429200000000005,
+    "fmax_hz": 1289720000.0,
+    "hold_wns_ns": 0.008166330000000001,
     "parameters": {},
-    "setup_wns_ns": 0.06657160000000001,
+    "setup_wns_ns": 0.0246408,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -86,45 +86,42 @@
     },
     "sources": [
       {
-        "path": "rtl/proto/ot_mac_lane_packed.sv",
-        "sha256": "9e149203059b6aac9cb351969a284fb4f557bb3b7c271920f6cb2f04d4b09339",
-        "size_bytes": 9821
+        "path": "rtl/proto/ot_mac_lane.sv",
+        "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+        "size_bytes": 4997
       },
       {
-        "path": "rtl/abi3/ot_probe_packed8.sv",
-        "sha256": "c77d3b381fa770093ad64fd7f38917a59907bdebca3908ef9dbc59285b8ffa20",
-        "size_bytes": 332
+        "path": "rtl/proto/ot_mac_tile.sv",
+        "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+        "size_bytes": 8993
+      },
+      {
+        "path": "rtl/proto/ot_compute_unit.sv",
+        "sha256": "22de7d7922d430d204d2d8ea9606aaf126c8e225d4c53296fe27f30d5007d9ea",
+        "size_bytes": 9634
       }
     ],
-    "top": "ot_probe_packed8",
-    "utilization_fraction": 0.391714
+    "top": "ot_compute_unit",
+    "utilization_fraction": 0.32325
   },
-  "elapsed_seconds": 791.492,
+  "elapsed_seconds": 1456.963,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-12T16:14:31.437176+00:00",
+  "generated_at": "2026-09-12T16:01:17.877201+00:00",
   "git": {
     "commit": "86f4b3a26461896f306c38489e7b52b32ccb8a61",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
-    "worktree_dirty": true,
-    "worktree_status": [
-      "?? rtl/abi3/ot_probe_bf16_add.sv",
-      "?? rtl/abi3/ot_probe_bf16_add_flat.sv",
-      "?? rtl/abi3/ot_probe_bf16_add_pipe.sv",
-      "?? rtl/proto/ot_bf16_add_flat.sv",
-      "?? rtl/proto/ot_bf16_add_pipe.sv",
-      "?? rtl/test/tb_bf16_add_pipe.sv",
-      "?? tools/prove_bf16_add_equivalence.sh"
-    ]
+    "worktree_dirty": false,
+    "worktree_status": []
   },
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8pnr_1p0_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/cu_0p8_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
-        "sha256": "302fc1b3d78ae04977754d21a99e64608ac8f42e39da9ff6922939b3b9001c8b",
-        "size_bytes": 834167
+        "sha256": "f6abfb8c86812a7dad1da94086cfa38c03fcb6fd3d06f7e4e6dbe57664ccfef0",
+        "size_bytes": 7598592
       },
       "5_route_drc.rpt": {
         "retained": true,
@@ -133,59 +130,135 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "0255587cb638eab8810ba5e4cae9da21f3f35fca51b1187e27499090b33fd5bd",
-        "size_bytes": 5155023
+        "sha256": "6563390ee58de41967f7b4c16fbfbd15c2ec2f9d4a072a711c2e28e171b8f40f",
+        "size_bytes": 63482915
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "ad6e4018939bed75e88db22aa9f2072f5b728371370c58548cc59a33e183721b",
-        "size_bytes": 6228994
+        "sha256": "6bbeccab9331f692d82a4c262d6e413dab5c5452f179c53505ed35fab8c579bf",
+        "size_bytes": 68592732
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "76751cf375712998a5c84e40e75e1f9bfa95ae95da681f4871b0eb6f568b77ca",
-        "size_bytes": 10450843
+        "sha256": "83846f1608ea76ec035889eac4ae923af2c4cc962acf76248c9e2b8c74fe0984",
+        "size_bytes": 113300141
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "ec3f7c632bfe049dca5a7e231bd4a31a8b3f5e1eaa8317fcf1899653b71cf5f2",
-        "size_bytes": 5413678
+        "sha256": "fc0a49bce5fdd4edc31c59275667e2a90d7d485b10731b4d245c12b63834b2b5",
+        "size_bytes": 63394812
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "ca0fc16a60a3287b3f94703431c6de2e823f7680abbda64c79662d27986127fc",
-        "size_bytes": 592618
+        "sha256": "3563957332fc324c631c4e47bbd049e0018e8973808eb9117ebc8132e21a9f15",
+        "size_bytes": 6416568
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "9afe6aee42e49f09873e2174709c79d1a30e56f86d2dd3fab91cd1720aa33346",
-        "size_bytes": 37647
+        "sha256": "4abd12e50013dacd4fada668db76684aa298b8ff352e3c471674b397cdef8e0b",
+        "size_bytes": 45457
       },
       "config.mk": {
         "retained": true,
-        "sha256": "4273ca736da599fbbdfccc04bea64b36ee55e6bdd88dc0dc581520a27db52caf",
-        "size_bytes": 714
+        "sha256": "e536a4c0b5058ca6bb88fe5b4312bf8826865c040beda4115b0b9d5b3c4a8b5d",
+        "size_bytes": 968
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
-        "size_bytes": 340
+        "sha256": "bcf252d0d301c842648ca43aca7e390e6b2e8174a284606d33287f952061b2ce",
+        "size_bytes": 339
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "43c1e02064c7a90f5d6a5fc2e96a974afe740669454d7852513b5c6d8a696d6d",
-        "size_bytes": 23797
+        "sha256": "5df7192590c7d80e21d43fd41493e932767c5b623fb93dccabefc26dd4d8a548",
+        "size_bytes": 24329
       }
     },
-    "clock_period_ns": 1.0,
-    "core_utilization_percent": 35,
-    "design_nickname": "opentallas_ot_probe_packed8_asap7",
+    "clock_period_ns": 0.8,
+    "core_utilization_percent": 30,
+    "design_nickname": "opentallas_ot_compute_unit_asap7",
+    "memory_macros": {
+      "additional_lefs": [
+        "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/fakeram_256x128.lef"
+      ],
+      "additional_libs": [
+        "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/fakeram_256x128.lib"
+      ],
+      "basis": "the platform memory macros this route was given, resolved inside the pinned image from the platform's own lef/ and lib/ directories; absent from a record means no ADDITIONAL_LEFS, ADDITIONAL_LIBS or SYNTH_BLACKBOXES were emitted and the config.mk is the one every earlier record had",
+      "capacity_bits_total": 32768,
+      "config_lines": [
+        "export ADDITIONAL_LEFS = /OpenROAD-flow-scripts/flow/platforms/asap7/lef/fakeram_256x128.lef",
+        "export ADDITIONAL_LIBS = /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/fakeram_256x128.lib",
+        "export SYNTH_BLACKBOXES = fakeram_256x128"
+      ],
+      "counts_are_per_macro_type": "one entry per named macro TYPE; how many instances the netlist holds is place_and_route.metrics.macro_count, which the flow reports",
+      "footprint_area_um2_total": 1404.48,
+      "macro_place_halo": {
+        "emitted_in_config": false,
+        "source": "platform default: platforms/asap7/config.mk export MACRO_PLACE_HALO        ?= 10 10",
+        "used_by": "ORFS scripts/macro_place_util.tcl: rtl_macro_placer -halo_width -halo_height, run automatically whenever the netlist holds macros",
+        "x_um": 10.0,
+        "y_um": 10.0
+      },
+      "macros": [
+        {
+          "banks": 1,
+          "bits_per_word": 128,
+          "capacity_bits": 32768,
+          "capacity_bytes": 4096.0,
+          "capacity_source": "LEF PROPERTY depth x width",
+          "footprint": {
+            "area_um2": 1404.48,
+            "height_um": 84.0,
+            "source": "LEF SIZE of the macro's own abstract",
+            "width_um": 16.72
+          },
+          "lef": {
+            "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/fakeram_256x128.lef",
+            "sha256": "eef5d3706e44d810bc4c8f373487f94b0d6f85cc55ee072640f7af8f8be6c220",
+            "size_bytes": 53902
+          },
+          "lef_class": "BLOCK",
+          "lib": {
+            "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/fakeram_256x128.lib",
+            "sha256": "8b8d90b7664e1dfc6de5cfc667502c2047f3deaad208cd603c337c7a12b1538f",
+            "size_bytes": 12297
+          },
+          "liberty": {
+            "address_width": 8,
+            "area": 1375.941,
+            "capacitive_load_unit": "1,pf",
+            "cell": "fakeram_256x128",
+            "min_period_library_units": 0.157,
+            "time_unit": "1ns",
+            "time_unit_matches_standard_cells": false,
+            "time_unit_ns": 1.0,
+            "unit_note": "the macro liberty declares its own units; the SDC and every reported time stay in the standard cells' unit (0.001 ns), which is read first",
+            "word_width": 128
+          },
+          "name": "fakeram_256x128",
+          "pin_count": 269,
+          "power_pin_count": 2,
+          "signal_pin_count": 267,
+          "views_resolved_from": "the platform's own directories inside openroad/orfs:latest (/OpenROAD-flow-scripts/flow/platforms/asap7); no view is copied into the design",
+          "words": 256
+        }
+      ],
+      "platform": "asap7",
+      "requested": [
+        "fakeram_256x128"
+      ],
+      "synth_blackbox_basis": "ORFS scripts/synth_preamble.tcl blackboxes SYNTH_BLACKBOXES module names after hierarchy -check, so the liberty view read from ADDITIONAL_LIBS by scripts/synth_stdcells.tcl (read_liberty -lib) is what survives into 1_2_yosys.v -- the mechanism ORFS's own macro-bearing designs use",
+      "synth_blackboxes": [
+        "fakeram_256x128"
+      ]
+    },
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 1697.58,
-      "die_area_um2": 2063.7,
+      "core_area_um2": 31524.7,
+      "die_area_um2": 33039.2,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -198,41 +271,41 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 1071320000.0,
+      "fmax_hz": 1289720000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.039429200000000005,
-      "instance_count": 14823,
+      "hold_wns_ns": 0.008166330000000001,
+      "instance_count": 191501,
       "library_time_unit_ns": 0.001,
-      "macro_area_um2": 0,
-      "macro_count": 0,
+      "macro_area_um2": 2808.96,
+      "macro_count": 2,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.00331339,
+      "power_total_w": 0.0650793,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 39.4292,
+        "hold_wns_ns": 8.16633,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 66.5716
+        "setup_wns_ns": 24.6408
       },
-      "routed_nets": 6278,
-      "routed_wirelength_um": 15205,
-      "sequential_area_um2": 158.835,
-      "sequential_cell_count": 419,
+      "routed_nets": 60149,
+      "routed_wirelength_um": 234532,
+      "sequential_area_um2": 2829.74,
+      "sequential_cell_count": 8410,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.06657160000000001,
-      "standard_cell_area_um2": 664.965,
-      "standard_cell_count": 5947,
-      "utilization_fraction": 0.391714,
-      "vias": 42714
+      "setup_wns_ns": 0.0246408,
+      "standard_cell_area_um2": 7381.39,
+      "standard_cell_count": 60583,
+      "utilization_fraction": 0.32325,
+      "vias": 475867
     },
     "netlist_normalization": {
-      "normalized_netlist_sha256": "302fc1b3d78ae04977754d21a99e64608ac8f42e39da9ff6922939b3b9001c8b",
+      "normalized_netlist_sha256": "f6abfb8c86812a7dad1da94086cfa38c03fcb6fd3d06f7e4e6dbe57664ccfef0",
       "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
-      "raw_netlist_sha256": "302fc1b3d78ae04977754d21a99e64608ac8f42e39da9ff6922939b3b9001c8b",
+      "raw_netlist_sha256": "f6abfb8c86812a7dad1da94086cfa38c03fcb6fd3d06f7e4e6dbe57664ccfef0",
       "signed_declarations_stripped": 0
     },
     "place_density": 0.6,
@@ -381,7 +454,7 @@
       "lib/NLDM/fakeregfile_32x46.lib": "532e8f4e2494e950db6dd3c3358d346c4403ff51b56a8c4bc18690158f24637a",
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
-    "sdc_clock_period_library_units": 1000.0,
+    "sdc_clock_period_library_units": 800.0,
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
@@ -405,21 +478,25 @@
       "--view",
       "asap7",
       "--top",
-      "ot_probe_packed8",
+      "ot_compute_unit",
       "--source",
-      "rtl/proto/ot_mac_lane_packed.sv",
+      "rtl/proto/ot_mac_lane.sv",
       "--source",
-      "rtl/abi3/ot_probe_packed8.sv",
+      "rtl/proto/ot_mac_tile.sv",
+      "--source",
+      "rtl/proto/ot_compute_unit.sv",
       "--clock-port",
       "clk",
       "--clock-period-ns",
-      "1.0",
+      "0.8",
       "--stages",
       "pnr",
+      "--memory-macro",
+      "fakeram_256x128",
       "--core-utilization",
-      "35",
+      "30",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8pnr_1p0.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/cu_0p8.json",
       "--force"
     ],
     "driver": {
@@ -443,7 +520,7 @@
     "pnr"
   ],
   "status": "pass",
-  "target_clock_period_ns": 1.0,
+  "target_clock_period_ns": 0.8,
   "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
   "tools": {},
   "view": {
