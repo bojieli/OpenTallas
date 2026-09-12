@@ -2,8 +2,8 @@
 
 **Status:** PASS
 
-Baseline commit: `34a0d2ec791a1344a5db96f0123e5d02d57d02ab`  
-Run fingerprint: `87e057764094b9ed`  
+Baseline commit: `18065bd4819cc81480c5b7ec9ed2a800281b9047`  
+Run fingerprint: `5dccd12aafbfd034`  
 Evidence class: `synthetic_open_pdk_proxy`
 
 This is a Nangate45 45 nm typical-corner methodology and scaling proxy. It is not target-node or product signoff, does not establish 1 GHz, and excludes ROM/SRAM/HBM/PHY/package/analog macro PPA.
