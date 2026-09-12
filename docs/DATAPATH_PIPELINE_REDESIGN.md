@@ -74,6 +74,69 @@ The stages are:
 Nothing exotic. This is the textbook FMA pipeline, and it is what the repository
 should have been built on.
 
+## The full measured progression, and the method that found it
+
+Four successive changes, each measured on the same ASAP7 view with the same
+tools. Records under `results/physical_abi3/asap7/datapath_probes/`.
+
+| Design | f_max | critical path | cells |
+|---|---:|---:|---:|
+| `fp32_add_rne` — unpipelined, 524-bit exact | 174 MHz | — | 2,458 |
+| 5-stage pipelined FP MAC | 725 MHz | 1.380 ns | 1,859 |
+| + carry-save accumulate (3:2 compressor loop) | 844 MHz | 1.186 ns | 1,143 |
+| **+ resolve adder split across two cycles** | **1,469 MHz** | 0.681 ns | 1,287 |
+
+**8.4× the baseline at roughly half the cells.**
+
+### Calibrate the node before blaming the RTL
+
+| Reference circuit | f_max | critical path |
+|---|---:|---:|
+| Flop → inverter → flop | 8,691 MHz | 0.115 ns |
+| 8-bit registered add | 3,412 MHz | 0.293 ns |
+| 40-bit registered add | 962 MHz | 1.040 ns |
+
+ASAP7 and this flow have ample headroom. Any block below ~1 GHz here is limited
+by its own logic depth, not by the node. Establish this first: it converts
+"the PDK is slow" into a testable claim, and it was false.
+
+### Measure each stage in isolation, then find what the assembly adds
+
+| Stage | f_max | critical path |
+|---|---:|---:|
+| 1 — unpack, exponent add, 8×8 significand multiply | 1,642 MHz | 0.609 ns |
+| 2 — exponent subtract, window compare, align shift | 1,478 MHz | 0.676 ns |
+| 3 — carry-save accumulate (3:2 compressor) | 3,373 MHz | 0.296 ns |
+
+Every stage ran at ≥1.4 GHz while the assembled MAC managed 844 MHz. That gap is
+the whole diagnostic: it says the critical path is **not inside any stage**, so
+looking for a slow adder or a slow multiplier is looking in the wrong place.
+
+The culprit was the 40-bit carry-propagate add that resolves the carry-save pair —
+1.040 ns on its own, which accounts for essentially the entire assembled path.
+Registering its output was not enough; the adder itself is the depth.
+
+The fix is free rather than clever: **that resolve runs once per dot product, not
+once per MAC.** Split across two 20-bit halves with a carry register, it costs one
+extra cycle amortised over K accumulations — 1/K of the throughput — and the MAC
+then runs at 0.681 ns, which matches stage 2's standalone 0.676 ns. The pipeline
+is balanced, and the next gain would come from splitting stage 2's align shift.
+
+### The transferable method
+
+1. Calibrate the node with a trivial flop-to-flop path.
+2. Measure every stage standalone.
+3. Compare the assembly against the slowest stage. Any gap is a path that
+   crosses a boundary you thought you had.
+4. Attack the widest carry chain first, and check whether it sits in the
+   recurring loop or off it — off-loop chains can be split for free.
+
+Two false starts worth recording, because they cost time: the first pipeline
+attempt used a `while` loop for the leading-zero count, which Yosys rejects
+outright (`While loops are only allowed in constant functions`), and the first
+frequency sweep varied the synthesis target across 0.4–1.4 ns and produced four
+**identical** netlists — the constraint was not the lever, the logic depth was.
+
 ## Proposed precision set
 
 Driven by what the models actually need, not by what is elegant:
