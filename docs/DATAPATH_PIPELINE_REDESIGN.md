@@ -225,13 +225,45 @@ Device level on **both** sides, worst case 2.03×. That is the comparison the
 array-level number could not support, and it is the one the design target was
 written against.
 
-Two things make it honest rather than flattering, and both are in the audit's
-refusals. The **inclusion list is incomplete**: no KV-cache SRAM, no global
-activation buffer, no HBM PHY or controller, no ROM array for the ROM variants, no
-clock or power distribution, no pad ring. All real silicon, so this overstates a
-finished product. And **nothing here is power-constrained** while the A100 sustains
-its 312 TFLOP/s inside 400 W — a design that ignores power can always win on area,
-and this is probably the largest unmodelled term in the whole comparison.
+### And on energy it loses
+
+The area table above was measured before the power term, which the audit itself
+named as probably the largest unmodelled one. ORFS reports it and the runner already
+recorded it, so it was measurable and merely unmeasured:
+
+| capability | area vs A100 | power | TFLOP/s per W | **energy vs A100** |
+|---|---:|---:|---:|---:|
+| `hbm_sram_single_chip` | 2.23× | 1.833 W | 0.360 | **0.46×** |
+| `rom_qwen3` | 2.49× | 3.334 W | 0.395 | **0.51×** |
+| `rom_deepseek_v4` | 2.74× | 52.493 W | 0.402 | **0.52×** |
+
+A100 reference: 312 TFLOP/s inside 400 W = 0.780 TFLOP/s per W.
+
+**The design is 2.23–2.74× ahead on area and 0.46–0.52× behind on energy.** Both
+are inside the one-order-of-magnitude bar, but the sign flips between the axes, and
+every area figure in this document should be read next to that. A single compute
+unit is the clearest case: 1.309 TFLOP/s per mm² is 2.08× the A100 at logic level,
+while 0.634 TFLOP/s per W is 0.81× its energy efficiency.
+
+It is worse than it looks, not better. **ORFS power comes from the routed netlist
+under the flow's DEFAULT switching activity**, not from a workload trace, and a MAC
+array running a dense GEMM switches far more than a default assumption. So these
+watts are an optimistic lower bound and the energy ratios are *upper bounds* on this
+design's advantage. Nothing here checks power density, IR drop or thermal
+feasibility either.
+
+This matters for the thesis, not just the scoreboard: part of the ROM argument is an
+energy argument, and on the only energy number this project has actually measured,
+the design is behind a 2020 GPU.
+
+### The inclusion list, which is the rest of the honesty
+
+The **area is incomplete**: no KV-cache SRAM, no global activation buffer, no HBM
+PHY or controller, no ROM array for the ROM variants, no clock or power
+distribution, no pad ring. All real silicon, so the area density overstates a
+finished product. And the A100's 400 W is a package TDP that *includes* the HBM and
+PHY the area list excludes — so the two sides are not charged for the same
+components on either axis.
 
 The single-clock assumption is also load-bearing: the chip clock is the minimum over
 instantiated **datapath** blocks, and the control plane is excluded and charged its
