@@ -6,12 +6,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.472428,
+        "hold_wns_ns": 0.731616,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.164671,
+        "setup_wns_ns": 11.8243,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -22,7 +22,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-12T17:34:13.436886+00:00",
+  "completed_at": "2026-09-12T17:38:20.136173+00:00",
   "corner": {
     "liberty": [
       {
@@ -41,30 +41,23 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 40687.8,
-    "block": "reduction_s8_g2",
-    "cells": 4006,
+    "area_um2": 7707.39,
+    "block": "ot_probe_bf16_add_flat",
+    "cells": 1145,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
-    "clock_period_ns": 6.0,
+    "clock_period_ns": 28.0,
     "clock_port": "clk",
     "closed": true,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 98707.2,
-    "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "core_area_um2": 18893.1,
+    "description": "ad-hoc block supplied on the command line",
     "drc": 0,
-    "false_path_from_ports": [
-      "rst_n"
-    ],
+    "false_path_from_ports": [],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 171370000.0,
-    "hold_wns_ns": 0.472428,
-    "parameters": {
-      "DATA_W": 32,
-      "GROUPS": 2,
-      "SOURCES": 8,
-      "TAG_W": 16
-    },
-    "setup_wns_ns": 0.164671,
+    "fmax_hz": 61821000.0,
+    "hold_wns_ns": 0.731616,
+    "parameters": {},
+    "setup_wns_ns": 11.8243,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -73,18 +66,23 @@
     },
     "sources": [
       {
-        "path": "rtl/ot_reduction_tree.sv",
-        "sha256": "ceaf333ad13911e7155ddebbffbfe55b158ae0454516c8b7be1d173c22e833d6",
-        "size_bytes": 11047
+        "path": "rtl/proto/ot_bf16_add_flat.sv",
+        "sha256": "11788eb2887045d80fe1b15f46efbc89c1bd4952ccfa9fd16a029d3f06b8cd06",
+        "size_bytes": 6609
+      },
+      {
+        "path": "rtl/abi3/ot_probe_bf16_add_flat.sv",
+        "sha256": "583825ce79891ca480ee4fa1b8f786ae78cb5fdd2632fd9cdadf910b81818d14",
+        "size_bytes": 594
       }
     ],
-    "top": "ot_reduction_endpoint",
-    "utilization_fraction": 0.412207
+    "top": "ot_probe_bf16_add_flat",
+    "utilization_fraction": 0.407947
   },
-  "elapsed_seconds": 627.326,
+  "elapsed_seconds": 874.015,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-12T17:23:46.110661+00:00",
+  "generated_at": "2026-09-12T17:23:46.121257+00:00",
   "git": {
     "commit": "6b9c1e8a524292869a4cb3fa703b607a01283f86",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -93,12 +91,12 @@
     "worktree_status": []
   },
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/sky/skyred_6_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/sky/skyadd_flat_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
-        "sha256": "19c612f0abe613cd7ff9106031935847bce67e3b9040a1e435895b965b9ff199",
-        "size_bytes": 491294
+        "sha256": "2f368768eed36d5ce33b62e3432e2114b46bad23f85f09ece70f7b41ea13ee58",
+        "size_bytes": 132557
       },
       "5_route_drc.rpt": {
         "retained": true,
@@ -107,59 +105,59 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "49d8eaef44f52eced74793cae6686c8c446a1d409fdc81c40b5b2efa3e1c836d",
-        "size_bytes": 3761949
+        "sha256": "dd7c6a8439c42360aa1ae3e0f86b45983877b4e0ece4a19c99c3e5169bf30fde",
+        "size_bytes": 998761
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "2d8d978953cc78219cafaa4c1b8a892186b09f397260c11696babf0d2f22e775",
-        "size_bytes": 4251936
+        "sha256": "25a892075d088552e3934598b201ea0d16baf40f4ead61684c2bce05c2366322",
+        "size_bytes": 1713336
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "0dc8e4d15a274451e976bf4146193298c1f804eed29eac7a0ca0d0861905105c",
-        "size_bytes": 9574352
+        "sha256": "509da81bbe7759ca2572f45ea78ac4bb2655545f58d4443c7bd81af9deed10f8",
+        "size_bytes": 4169643
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "3b2b82891b608b081f3f001aff4fc5ea65f9ddca88a8ec9c93840e750f478663",
-        "size_bytes": 2839892
+        "sha256": "be9f68c6b3e1b0bcab737117f8e1c0b8df4d956f4f76c18bf30d6a5e18eb892e",
+        "size_bytes": 892685
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "7fe12ab4b5e3a9afadca8809d9f2d3694fdacbf92c4acfe54e8d716a5cb4b753",
-        "size_bytes": 346292
+        "sha256": "b953847e5938e2e0fb32b5aca64044592e3fc053dd14154e0b6a281a86484d04",
+        "size_bytes": 97328
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "f8225827b38a3a466eb713c2a1b2d5b2f15d9242d2e44462f9fe7c2455167ff8",
-        "size_bytes": 29348
+        "sha256": "2e03757a8b7bb1dfd1e013be00ccf1b5812e3c03656b2de706a3d4d9c484cde8",
+        "size_bytes": 57775
       },
       "config.mk": {
         "retained": true,
-        "sha256": "fd60510d713c85d46f38ff12d3cdfe92b66e9111371fcdd572a24ac3d7cefc8b",
-        "size_bytes": 704
+        "sha256": "50be80d492c9b59270ad88d87ed3ab1e7fd347182937778a736f00cff2b5f2b4",
+        "size_bytes": 691
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "ef1b860198ab9141f3baf55c66f4b94fd5df0cbc2380fee12d66cd900d3807b9",
-        "size_bytes": 376
+        "sha256": "4f839baaee9037efd565352f15cf7ae3925dcab8d43b3bd24c1a67fe497296f5",
+        "size_bytes": 338
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "6aab33e027f74daed3db65a718369da482f35dfa0390fd71461e78a47fcb96c3",
-        "size_bytes": 23008
+        "sha256": "50491c89afa02f28da864bf0ffbb2a51d97fd624e582d9f50c18358f19d0f5cb",
+        "size_bytes": 22925
       }
     },
-    "clock_period_ns": 6.0,
+    "clock_period_ns": 28.0,
     "core_utilization_percent": 35,
-    "design_nickname": "opentallas_reduction_s8_g2_sky130hd",
+    "design_nickname": "opentallas_ot_probe_bf16_add_flat_sky130hd",
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 98707.2,
-      "die_area_um2": 102400,
+      "core_area_um2": 18893.1,
+      "die_area_um2": 20534.9,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -172,11 +170,11 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 171370000.0,
+      "fmax_hz": 61821000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.472428,
-      "instance_count": 13069,
+      "hold_wns_ns": 0.731616,
+      "instance_count": 3127,
       "library_time_unit_ns": 1.0,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -184,30 +182,30 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0437983,
+      "power_total_w": 0.000552325,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 0.472428,
+        "hold_wns_ns": 0.731616,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 0.164671
+        "setup_wns_ns": 11.8243
       },
-      "routed_nets": 3149,
-      "routed_wirelength_um": 101403,
-      "sequential_area_um2": 18077.3,
-      "sequential_cell_count": 620,
+      "routed_nets": 987,
+      "routed_wirelength_um": 21956,
+      "sequential_area_um2": 1276.22,
+      "sequential_cell_count": 51,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.164671,
-      "standard_cell_area_um2": 40687.8,
-      "standard_cell_count": 4006,
-      "utilization_fraction": 0.412207,
-      "vias": 20249
+      "setup_wns_ns": 11.8243,
+      "standard_cell_area_um2": 7707.39,
+      "standard_cell_count": 1145,
+      "utilization_fraction": 0.407947,
+      "vias": 6586
     },
     "netlist_normalization": {
-      "normalized_netlist_sha256": "19c612f0abe613cd7ff9106031935847bce67e3b9040a1e435895b965b9ff199",
+      "normalized_netlist_sha256": "2f368768eed36d5ce33b62e3432e2114b46bad23f85f09ece70f7b41ea13ee58",
       "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
-      "raw_netlist_sha256": "f9bc12ddc4a9f9ac89518aab805a6f50035f72edef438facff69c05fca26d4ae",
-      "signed_declarations_stripped": 4
+      "raw_netlist_sha256": "2f368768eed36d5ce33b62e3432e2114b46bad23f85f09ece70f7b41ea13ee58",
+      "signed_declarations_stripped": 0
     },
     "place_density": 0.6,
     "platform": "sky130hd",
@@ -219,7 +217,7 @@
       "lib/sky130_dummy_io.lib": "6b7589ec90fb90deffe4a79eb24e1f9bf127cf2238887101ee15e3dda25c6be2",
       "lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
     },
-    "sdc_clock_period_library_units": 6.0,
+    "sdc_clock_period_library_units": 28.0,
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
@@ -236,22 +234,28 @@
       "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
     }
   },
-  "purpose": "signoff_target",
+  "purpose": "characterization",
   "runner": {
     "argv": [
       "tools/run_abi3_physical.py",
       "--view",
       "sky130hd",
-      "--block",
-      "reduction_s8_g2",
+      "--top",
+      "ot_probe_bf16_add_flat",
+      "--source",
+      "rtl/proto/ot_bf16_add_flat.sv",
+      "--source",
+      "rtl/abi3/ot_probe_bf16_add_flat.sv",
+      "--clock-port",
+      "clk",
       "--clock-period-ns",
-      "6",
+      "28",
       "--stages",
       "pnr",
-      "--purpose",
-      "signoff_target",
+      "--core-utilization",
+      "35",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/sky/skyred_6.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/sky/skyadd_flat.json",
       "--force"
     ],
     "driver": {
@@ -275,8 +279,8 @@
     "pnr"
   ],
   "status": "pass",
-  "target_clock_period_ns": 6.0,
-  "target_semantics": "the target clock period is the intended operating point",
+  "target_clock_period_ns": 28.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
   "tools": {},
   "view": {
     "cell_library": "sky130_fd_sc_hd",
