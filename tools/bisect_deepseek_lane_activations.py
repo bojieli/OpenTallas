@@ -57,10 +57,11 @@ from runtime.sim.engines import load_engines  # noqa: E402
 
 SCHEMA = "opentallas.deepseek_v4_lane_activation_bisect.v1"
 DEFAULT_IR = REPO / "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 )
 LANES = {
     "rom": (

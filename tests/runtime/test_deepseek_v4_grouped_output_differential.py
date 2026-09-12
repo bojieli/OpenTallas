@@ -226,7 +226,7 @@ def _evidence_body() -> dict[str, object]:
     root = Path(
         os.environ.get(
             _EVIDENCE_ROOT_ENV,
-            "/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731",
+            str(Path.home() / ".cache/opentallas/deepseek-v4-flash-0731"),
         )
     ) / "canonical-mp4"
     payloads = _canonical_weight_payloads(root)

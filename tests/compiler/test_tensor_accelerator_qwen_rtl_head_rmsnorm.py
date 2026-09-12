@@ -50,9 +50,10 @@ PHYSICAL_PLAN = (
     / "results/tensor_accelerator/qwen3_full_model_physical/physical/physical_plan.json"
 )
 QUALIFICATION = ROOT / "results/tensor_accelerator/qwen3_qkv_qualification.json"
-INTEGRATION = Path(
-    "/home/ubuntu/OpenTallas-ta-integration/"
-    "results/tensor_accelerator/qwen3_full_model_physical"
+INTEGRATION = (
+    Path.home()
+    / "OpenTallas-ta-integration"
+    / "results/tensor_accelerator/qwen3_full_model_physical"
 )
 COMMAND_PROGRAM = INTEGRATION / "program/commands.bin"
 HBM_SHARD = (

@@ -82,9 +82,10 @@ WORKLOAD_SET_SCHEMA_PATH = (
 REFERENCE_SET_SCHEMA_PATH = (
     REPO / "schemas/abi3/qwen3_heterogeneous_reference_set_v1.schema.json"
 )
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 DEFAULT_CHECKPOINT_LOCK = (
     REPO

@@ -65,15 +65,18 @@ def _official_source() -> tuple[Path, dict[str, Any], Path]:
     evidence = Path(
         os.environ.get(
             "OPENTALLAS_DEEPSEEK_V4_EVIDENCE_ROOT",
-            "/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731",
+            str(Path.home() / ".cache/opentallas/deepseek-v4-flash-0731"),
         )
     )
     snapshot = Path(
         os.environ.get(
             "OPENTALLAS_DEEPSEEK_V4_SNAPSHOT",
-            "/home/ubuntu/.cache/huggingface/hub/"
-            "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-            "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+            str(
+                Path.home()
+                / ".cache/huggingface/hub"
+                / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+                / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+            ),
         )
     )
     lock_path = evidence / "checkpoint.lock.json"

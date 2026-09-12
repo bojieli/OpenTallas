@@ -80,10 +80,11 @@ from compiler.workloads.deepseek_v4 import (  # noqa: E402
 from compiler.workloads.qwen3 import load_corpus, natural_body  # noqa: E402
 from runtime.abi3.capability import canonical_json  # noqa: E402
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 )
 MODEL_PROFILE = REPO / "configs" / "models" / "deepseek-v4-flash-0731.json"
 

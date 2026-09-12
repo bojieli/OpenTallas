@@ -42,12 +42,13 @@ from runtime.tensor_accelerator.production_connected_layer_simulator import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
-CHECKPOINT_LOCK = Path("/home/ubuntu/OpenTallas/build/qwen3-8b/checkpoint.lock.json")
+CHECKPOINT_LOCK = ROOT / "build/qwen3-8b/checkpoint.lock.json"
 GRAPH = ROOT / "build/tensor-accelerator/qwen3-8b/model_graph.v2.json"
 CAPABILITY = ROOT / "configs/hardware/tensor_accelerator_development_v5.json"
 QKV_QUALIFICATION = ROOT / "results/tensor_accelerator/qwen3_qkv_qualification.json"

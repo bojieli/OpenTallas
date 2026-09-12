@@ -42,9 +42,10 @@ from compiler.workloads.qwen3_exact_8k import (  # noqa: E402
 )
 from runtime.abi3.capability import canonical_json  # noqa: E402
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 DEFAULT_CHECKPOINT_LOCK = (
     REPO

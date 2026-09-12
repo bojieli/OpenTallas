@@ -68,10 +68,11 @@ from compiler.workloads.deepseek_v4 import (  # noqa: E402
 )
 from runtime.abi3.capability import canonical_json  # noqa: E402
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 )
 
 #: The workload these are prefixes of, and its pinned identity.  If this digest

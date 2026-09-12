@@ -22,10 +22,11 @@ from tools import run_qwen3_ta_rtl_add_campaign as campaign_runner
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 DEPLOYMENT = ROOT / "results/tensor_accelerator/qwen3_full_model_physical"
 CHECKPOINT_LOCK = DEPLOYMENT / "source/checkpoint.lock.json"

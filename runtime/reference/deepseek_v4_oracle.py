@@ -90,10 +90,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 )
 
 #: Vendor sources this engine is pinned to.  The same digests appear in

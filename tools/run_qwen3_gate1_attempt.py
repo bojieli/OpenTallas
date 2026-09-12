@@ -59,9 +59,10 @@ ATTEMPT_ID = re.compile(
     r"^(oracle|hbm-a|hbm-b|rom)-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{16}$"
 )
 
-QWEN_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+QWEN_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 WORKLOAD = REPO / "build/workloads/qwen3-8b/TA-QW-8K-1.json"
 KERNEL_IR = REPO / "build/ir-v3/qwen3-8b/kernel_ir.v3.json"

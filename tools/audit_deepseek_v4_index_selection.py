@@ -111,10 +111,11 @@ import runtime.sim.engines.route  # noqa: E402,F401  (registers the handlers)
 
 SCHEMA = "opentallas.deepseek_v4_index_selection_audit.v1"
 MODEL_PROFILE = REPO / "configs" / "models" / "deepseek-v4-flash-0731.json"
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 )
 #: The pinned released source the comparator is transcribed from.
 MODEL_SOURCE_SHA256 = (

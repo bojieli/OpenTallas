@@ -101,9 +101,10 @@ QWEN_CHECKPOINT_LOCK_ID = (
 )
 GATE_1_LAUNCH_SCHEMA = "opentallas.qwen3.gate1_launch.v1"
 GATE_1_PROFILE_ID = "qwen3_exact_8k_external_oracle_v1"
-QWEN_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+QWEN_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 CAPABILITIES = {
     "hbm_sram": REPO / "configs/hardware/abi3_capability/hbm_sram_single_chip.json",

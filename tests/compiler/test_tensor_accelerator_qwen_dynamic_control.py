@@ -34,9 +34,10 @@ from compiler.tensor_accelerator.qwen_workload import load_shared_workload
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/"
-    "snapshots/b968826d9c46dd6066d109eabc6255188de91218"
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B"
+    / "snapshots/b968826d9c46dd6066d109eabc6255188de91218"
 )
 LOCK = (
     ROOT

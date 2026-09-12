@@ -33,25 +33,25 @@ BUILD_ROOT = ROOT / "rtl" / "build" / "implementation_campaign"
 DEFAULT_YOSYS = Path(
     os.environ.get(
         "OPENTALLAS_YOSYS",
-        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        str(Path.home() / ".local/opentallas-tools/yosys-0.68/bin/yosys"),
     )
 )
 DEFAULT_ABC = Path(
     os.environ.get(
         "OPENTALLAS_ABC",
-        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+        str(Path.home() / ".local/opentallas-tools/yosys-0.68/bin/yosys-abc"),
     )
 )
 DEFAULT_OPENSTA = Path(
     os.environ.get(
         "OPENTALLAS_OPENSTA",
-        "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+        str(Path.home() / ".local/opentallas-tools/opensta-be771a0/bin/sta"),
     )
 )
 DEFAULT_PDK = Path(
     os.environ.get(
         "OPENTALLAS_NANGATE45",
-        "/home/ubuntu/.local/opentallas-pdk/nangate45-be0dca0",
+        str(Path.home() / ".local/opentallas-pdk/nangate45-be0dca0"),
     )
 )
 LIBERTY_NAME = "NangateOpenCellLibrary_typical.lib"

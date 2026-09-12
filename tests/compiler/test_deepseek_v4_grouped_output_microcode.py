@@ -412,7 +412,7 @@ def test_typed_contract_verifiers_reject_bool_int_and_list_tuple_aliases() -> No
 
 
 def test_real_cached_assignment_bytes_match_when_available() -> None:
-    root = Path("/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731/canonical-mp4")
+    root = Path.home() / ".cache/opentallas/deepseek-v4-flash-0731/canonical-mp4"
     if not all((root / item.path).is_file() for item in CANONICAL_ASSIGNMENTS):
         pytest.skip("canonical DeepSeek V4 MP4 assignments are unavailable")
     for assignment in CANONICAL_ASSIGNMENTS:

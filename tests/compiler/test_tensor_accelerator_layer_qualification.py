@@ -16,12 +16,14 @@ from compiler.tensor_accelerator.layer_qualification import (
 from compiler.tensor_accelerator.common import canonical_json_bytes, sha256_bytes
 
 
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+ROOT = Path(__file__).resolve().parents[2]
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
-LOCK = Path("/home/ubuntu/OpenTallas/build/qwen3-8b/checkpoint.lock.json")
+LOCK = ROOT / "build/qwen3-8b/checkpoint.lock.json"
 ATTENTION = Path(
     "results/tensor_accelerator/qwen3_hbm_sram_attention_execution.json"
 )

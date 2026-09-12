@@ -16,9 +16,10 @@ from compiler.tensor_accelerator.common import canonical_json_bytes
 
 ROOT = Path(__file__).resolve().parents[2]
 QKV_EXECUTION = ROOT / "results/tensor_accelerator/qwen3_hbm_sram_qkv_execution.json"
-PINNED_SOURCE = Path(
-    "/home/ubuntu/OpenTallas/build/qwen3-8b/reference-venv/lib/python3.10/"
-    "site-packages/transformers/models/qwen3/modeling_qwen3.py"
+PINNED_SOURCE = (
+    ROOT
+    / "build/qwen3-8b/reference-venv/lib/python3.10"
+    / "site-packages/transformers/models/qwen3/modeling_qwen3.py"
 )
 SCHEMA = (
     ROOT / "schemas/compiler/tensor_accelerator/attention_qualification_v1.schema.json"

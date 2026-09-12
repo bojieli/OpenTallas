@@ -35,8 +35,8 @@ from typing import Any, Mapping
 #: ``tools/build_checkpoint_lock.py`` writes a lock.  Both are host paths, not
 #: release facts, so they are composed from the identity below rather than
 #: written out per release.
-HUGGINGFACE_HUB = Path("/home/ubuntu/.cache/huggingface/hub")
-CHECKPOINT_LOCK_ROOT = Path("/home/ubuntu/.cache/opentallas")
+HUGGINGFACE_HUB = Path.home() / ".cache/huggingface/hub"
+CHECKPOINT_LOCK_ROOT = Path.home() / ".cache/opentallas"
 MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
 
 

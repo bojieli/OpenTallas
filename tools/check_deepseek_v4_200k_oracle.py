@@ -69,10 +69,11 @@ DEFAULT_INDEX = REPO / "build" / "workloads" / MODEL_ID / "index.json"
 DEFAULT_CHECKPOINT_SOURCE = (
     REPO / "compiler" / "models" / MODEL_ID / "checkpoint_source.json"
 )
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-    f"{OFFICIAL_REVISION}"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+    / f"{OFFICIAL_REVISION}"
 )
 
 # The producer records this non-removable set.  Every recorded extra source is

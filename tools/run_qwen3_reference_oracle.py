@@ -59,9 +59,10 @@ from runtime.agent import (  # noqa: E402
     split_thinking,
 )
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 
 PREFILL_ASSOCIATION_SCHEMA = "opentallas.qwen3.prefill_association.v1"

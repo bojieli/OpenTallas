@@ -59,10 +59,11 @@ SEMANTICS = ROOT / "results/tensor_accelerator/qwen3_full_model_semantics"
 COVERAGE = SEMANTICS / "coverage.json"
 KERNEL_IR = SEMANTICS / "tensor_kernel_ir.json"
 SEMANTIC_CHECK = SEMANTICS / "independent_check.json"
-CHECKPOINT_LOCK = Path("/home/ubuntu/OpenTallas/build/qwen3-8b/checkpoint.lock.json")
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/"
-    "snapshots/b968826d9c46dd6066d109eabc6255188de91218"
+CHECKPOINT_LOCK = ROOT / "build/qwen3-8b/checkpoint.lock.json"
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B"
+    / "snapshots/b968826d9c46dd6066d109eabc6255188de91218"
 )
 SCHEMAS = ROOT / "schemas/compiler/tensor_accelerator"
 AUTHENTIC_ENV = "OPENTALLAS_RUN_QWEN_FULL_MODEL_PHYSICAL"

@@ -429,10 +429,11 @@ def _record(
 
 @pytest.fixture
 def accepted_oracle(tmp_path: Path, monkeypatch):
-    tokenizer_source = Path(
-        "/home/ubuntu/.cache/huggingface/hub/"
-        "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/"
-        "7872f01b1d1fe23eabc4c98b48bffcef5a386062/tokenizer.json"
+    tokenizer_source = (
+        Path.home()
+        / ".cache/huggingface/hub"
+        / "models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots"
+        / "7872f01b1d1fe23eabc4c98b48bffcef5a386062/tokenizer.json"
     )
     if not tokenizer_source.is_file():
         pytest.skip("pinned DeepSeek tokenizer is unavailable")

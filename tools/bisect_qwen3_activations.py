@@ -43,9 +43,10 @@ from runtime.driver import GenerationDriver  # noqa: E402
 from runtime.sim.device import Device  # noqa: E402
 from runtime.sim.engines import load_engines  # noqa: E402
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 
 

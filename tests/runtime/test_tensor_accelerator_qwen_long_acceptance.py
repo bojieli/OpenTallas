@@ -73,7 +73,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEPLOYMENT = (
     ROOT / "results/tensor_accelerator/qwen3_long_acceptance_physical_v1"
 )
-FIXTURE_REPOSITORY = Path("/home/ubuntu/OpenTallas")
+FIXTURE_REPOSITORY = ROOT
 RESTART_EVIDENCE = (
     ROOT / "results/tensor_accelerator/qwen3_long_acceptance_restart_v1"
 )

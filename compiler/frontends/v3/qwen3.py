@@ -82,10 +82,11 @@ from compiler.qwen3.graph import build_graph_nodes
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 DEFAULT_CHECKPOINT_LOCK = (
     REPOSITORY_ROOT / "build" / "qwen3-8b" / "checkpoint.lock.json"

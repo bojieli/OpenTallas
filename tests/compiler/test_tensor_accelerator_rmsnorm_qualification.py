@@ -14,12 +14,14 @@ from compiler.tensor_accelerator.rmsnorm_qualification import (
 )
 
 
-SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+ROOT = Path(__file__).resolve().parents[2]
+SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
-LOCK = Path("/home/ubuntu/OpenTallas/build/qwen3-8b/checkpoint.lock.json")
+LOCK = ROOT / "build/qwen3-8b/checkpoint.lock.json"
 
 
 @pytest.mark.skipif(not SNAPSHOT.is_dir() or not LOCK.is_file(), reason="Qwen fixture unavailable")

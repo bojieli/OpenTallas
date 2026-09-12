@@ -17,10 +17,11 @@ from compiler.tensor_accelerator.qwen_final_output_qualification import (  # noq
 )
 
 
-DEFAULT_SNAPSHOT = Path(
-    "/home/ubuntu/.cache/huggingface/hub/"
-    "models--Qwen--Qwen3-8B/snapshots/"
-    "b968826d9c46dd6066d109eabc6255188de91218"
+DEFAULT_SNAPSHOT = (
+    Path.home()
+    / ".cache/huggingface/hub"
+    / "models--Qwen--Qwen3-8B/snapshots"
+    / "b968826d9c46dd6066d109eabc6255188de91218"
 )
 
 
@@ -30,7 +31,7 @@ def main() -> int:
     parser.add_argument(
         "--checkpoint-lock",
         type=Path,
-        default=Path("/home/ubuntu/OpenTallas/build/qwen3-8b/checkpoint.lock.json"),
+        default=ROOT / "build/qwen3-8b/checkpoint.lock.json",
     )
     parser.add_argument(
         "--model-graph",

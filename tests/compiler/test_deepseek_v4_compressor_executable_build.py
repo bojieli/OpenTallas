@@ -38,9 +38,10 @@ from compiler.vertical_slice.deepseek_v4_compressor_executable import (
 )
 
 
-OFFICIAL_APE = Path(
-    "/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731/canonical-mp4/"
-    "ranks/rank-000/layers.2.attn.compressor.ape.bin"
+OFFICIAL_APE = (
+    Path.home()
+    / ".cache/opentallas/deepseek-v4-flash-0731/canonical-mp4"
+    / "ranks/rank-000/layers.2.attn.compressor.ape.bin"
 )
 
 
