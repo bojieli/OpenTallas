@@ -23,14 +23,21 @@ gates pass, this job should start enforcing its exit code.
 
 | Excluded | Why |
 |---|---|
-| `tests/runtime` | 64 failures as a group, 10 per-file — 54 are order-dependent from shared module-level state. Would be permanently red for reasons unrelated to any contributor's change. |
+| `tests/runtime` | 64 failures as a group, 10 per-file. The gap is **memory, not test pollution**: `test_abi3_cycle.py` exceeds 70 GB RSS and a group run is OOM-killed (measured rc=137, `anon-rss:72208572kB`, zero failures recorded before the kill). A GitHub runner has ~7 GB, so this cannot run in CI at all until the footprint is fixed. |
 | `tests/compiler` | 67 failures at HEAD, dominated by source-currency drift (64 of 96 pinning artifacts drifted). A backlog, not a regression. |
 | RTL, synthesis, ORFS | Need pinned Verilator 5.050, Icarus, Yosys 0.68, OpenROAD and a PDK. See [`docs/REPRODUCIBILITY.md`](../../docs/REPRODUCIBILITY.md) tiers 2–3. |
 | Long campaigns | Several artifacts record `verification_wall_seconds` near 16,500 s per store. |
 
-Each exclusion is a tracked debt, not a permanent decision. Fixing the runtime
-isolation bug should add `tests/runtime` as its own job; paying down the drift
-backlog should add `tests/compiler`.
+Each exclusion is a tracked debt, not a permanent decision. Capping
+`tests/runtime`'s memory footprint should add it as its own job; paying down the
+drift backlog should add `tests/compiler`.
+
+Note the correction: an earlier version of this file attributed the
+`tests/runtime` gap to an "isolation bug" and order-dependent shared state. That
+was inferred from solo-clean-plus-group-red without reproducing it, and it is
+wrong — three pairwise runs show no file poisoning another, and the group run is
+simply OOM-killed. Anyone hunting module-level caches here is looking in the
+wrong place.
 
 ## The determinism gate
 

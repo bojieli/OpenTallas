@@ -8,10 +8,14 @@
 # regression rather than a known gap.
 #
 # Deliberately NOT in tier 1, and why:
-#   * tests/runtime  -- reports 64 failures as a group and 10 per-file; 54 are
-#                       order-dependent from shared module-level state. Adding
-#                       it now would make CI permanently red for a reason that
-#                       is not the contributor's change. Tracked separately.
+#   * tests/runtime  -- reports 64 failures as a group and 10 per-file. The gap
+#                       is MEMORY, not test pollution: test_abi3_cycle.py alone
+#                       grows past 70 GB RSS and a group run gets OOM-killed
+#                       (measured: rc=137, anon-rss 72 GB, zero failures
+#                       recorded before the kill). A GitHub runner has ~7 GB, so
+#                       this group cannot run there at all until the memory
+#                       footprint is fixed -- per-file invocation, pytest-forked,
+#                       or an explicit cap.
 #   * tests/compiler -- 67 failures at HEAD, dominated by source-currency drift
 #                       (64 of 96 pinning artifacts have drifted). A backlog,
 #                       not a regression.
