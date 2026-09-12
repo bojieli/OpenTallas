@@ -1,0 +1,177 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-12T15:23:29.127500+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_mac_tile_h",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "parameters": {
+      "LANES": 4
+    },
+    "sources": [
+      {
+        "path": "rtl/proto/ot_mac_lane.sv",
+        "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+        "size_bytes": 4997
+      },
+      {
+        "path": "rtl/proto/ot_mac_tile_h.sv",
+        "sha256": "f4772df0f2bc655ae2821724323585d2df1bc81af8bd3ffa578c53c38489e1c1",
+        "size_bytes": 4283
+      }
+    ],
+    "top": "ot_mac_tile_h"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\nubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nWarning: Replacing memory \\b_sign with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nSuccessfully finished Verilog frontend.\n\n3. Executing HIERARCHY pass (managing design hierarchy).\nParameter \\LANES = 4\n\n4. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_mac_tile_h'.\nParameter \\LANES = 4\nGenerating RTLIL representation for module `$paramod\\ot_mac_tile_h\\LANES=s32'00000000000000000000000000000100'.\nWarning: Replacing memory \\b_accept with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_scale with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_zero with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_man with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nWarning: Replacing memory \\b_exp with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nWarning: Replacing memory \\b_sign with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\n\n4.1. Analyzing design hierarchy..\nTop module:  \\ot_mac_tile_h\nUsed module:     \\ot_mac_lane\nParameter \\ACC_W = 40\nParameter \\EXP_WINDOW = 16\n\n4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_mac_lane'.\nParameter \\ACC_W = 40\nParameter \\EXP_WINDOW = 16\nGenerating RTLIL representation for module `$paramod$62808af1416084ecb6f675cd18e18b3e204d8038\\ot_mac_lane'.\nParameter \\ACC_W = 40\nParameter \\EXP_WINDOW = 16\nFound cached RTLIL representation for module `$paramod$62808af1416084ecb6f675cd18e18b3e204d8038\\ot_mac_lane'.\nParameter \\ACC_W = 40\nParameter \\EXP_WINDOW = 16\nFound cached RTLIL representation for module `$paramod$62808af1416084ecb6f675cd18e18b3e204d8038\\ot_mac_lane'.\nParameter \\ACC_W = 40\nParameter \\EXP_WINDOW = 16\nFound cached RTLIL representation for module `$paramod$62808af1416084ecb6f675cd18e18b3e204d8038\\ot_mac_lane'.\nReprocessing module ot_mac_tile_h because instantiated module $paramod$62808af1416084ecb6f675cd18e18b3e204d8038\\ot_mac_lane has become available.\nGenerating RTLIL representation for module `$paramod\\ot_mac_tile_h\\LANES=s32'00000000000000000000000000000100'.\nWarning: Replacing memory \\b_accept with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_scale with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_zero with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:47\nWarning: Replacing memory \\b_man with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nWarning: Replacing memory \\b_exp with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\nWarning: Replacing memory \\b_sign with list of registers. See /home/ubuntu/ot-regen/rtl/proto/ot_mac_tile_h.sv:46\n\nERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-12T15:23:28.864073+00:00",
+  "git": {
+    "commit": "994526c3981831ca4dafae68d8640eb78dbab04b",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M results/rtl/a3_operator_admission_campaign.json",
+      " M results/rtl/a3_operator_admission_hbm_campaign.json",
+      " M results/rtl/abi3_device_top_host_load.json",
+      " M rtl/abi3/ot_a3_vector_hadamard.sv",
+      " M rtl/ot_fp32_rne_pkg.sv",
+      "?? rtl/abi3/ot_probe_add40.sv",
+      "?? rtl/abi3/ot_probe_add8.sv",
+      "?? rtl/abi3/ot_probe_floor.sv",
+      "?? rtl/abi3/ot_probe_fp32_add.sv",
+      "?? rtl/abi3/ot_probe_fp32_mul.sv",
+      "?? rtl/abi3/ot_probe_fp32_tobf16.sv",
+      "?? rtl/abi3/ot_probe_had1.sv",
+      "?? rtl/abi3/ot_probe_indep4.sv",
+      "?? rtl/abi3/ot_probe_mac_csa.sv",
+      "?? rtl/abi3/ot_probe_mac_fx.sv",
+      "?? rtl/abi3/ot_probe_mac_pipe.sv",
+      "?? rtl/abi3/ot_probe_mul_bf16.sv",
+      "?? rtl/abi3/ot_probe_mul_fp32.sv",
+      "?? rtl/abi3/ot_probe_mul_fp8.sv",
+      "?? rtl/abi3/ot_probe_mul_mxfp4.sv",
+      "?? rtl/abi3/ot_probe_st1.sv",
+      "?? rtl/abi3/ot_probe_st2.sv",
+      "?? rtl/abi3/ot_probe_st2b.sv",
+      "?? rtl/abi3/ot_probe_st3.sv",
+      "?? rtl/abi3/ot_probe_tile16.sv",
+      "?? rtl/abi3/ot_probe_tile4.sv",
+      "?? rtl/abi3/ot_probe_tile64.sv",
+      "?? rtl/proto/"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_mac_tile_h",
+      "--source",
+      "rtl/proto/ot_mac_lane.sv",
+      "--source",
+      "rtl/proto/ot_mac_tile_h.sv",
+      "--param",
+      "LANES=4",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.7",
+      "--stages",
+      "synth,sta",
+      "--output",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/probe/hier_4.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "994526c3981831ca4dafae68d8640eb78dbab04b",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/ot-regen/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/ot-regen"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/ot-regen"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.7,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -137,6 +137,66 @@ outright (`While loops are only allowed in constant functions`), and the first
 frequency sweep varied the synthesis target across 0.4–1.4 ns and produced four
 **identical** netlists — the constraint was not the lever, the logic depth was.
 
+## The array, place-and-routed: 1,117 MHz and 4.6x a same-node GPU's logic density
+
+`rtl/proto/ot_mac_tile.sv` at 16 lanes, taken through **synthesis, STA and
+place-and-route with clock-tree synthesis** (`results/physical_abi3/asap7/mac_tile/pnr_lanes16.json`):
+
+| | |
+|---|---:|
+| f_max | **1,117 MHz** |
+| setup WNS at a 1.2 ns target | **+0.305 ns** (meets timing) |
+| hold violations | 0 |
+| max-cap / DRC / antenna | 0 / 0 / 0 |
+| max-slew violations | 13 (the only thing short of full closure) |
+| instances | 92,660 |
+| core area | 12,278 µm² |
+
+### Synth-only measurement is invalid for this class of design
+
+The same tile measured **128 MHz** through `synth,sta` and **1,117 MHz** through
+`synth,sta,pnr` — a factor of **8.7**. The reason is clock-tree synthesis: without
+it, every one of the tile's thousands of registers sits on a failing path, and the
+violating-path count scaled with register count (255 at 4 lanes, 2,016 at 16,
+8,384 at 64 — about 130 per lane, i.e. all of them).
+
+This invalidates a measurement approach, not just a number. Three restructurings
+were attempted against the synth-only figure and all three were wasted:
+generate-local registers instead of module-level arrays (no change), a registered
+operand broadcast tree (no change), and hierarchical module instances per lane
+(made it *worse*, 97 MHz at 16 lanes). None of them were the problem, because the
+problem was never in the RTL.
+
+**Any frequency figure for a register-rich block in this repository that comes
+from `synth,sta` alone should be treated as unusable.** The broadcast tree and the
+lane-local registers are kept anyway — both are correct practice and neither
+costs anything — but they were not what mattered.
+
+### Density against the comparator
+
+ASAP7 is a 7 nm predictive PDK, so the like-for-like part is the A100 (TSMC N7),
+whose figures this repository already records: 312 TFLOP/s dense BF16 on an
+826 mm² die. `tools/audit_mac_array_density.py` computes the comparison at three
+levels of inclusion and refuses to collapse them:
+
+| Level | TFLOP/s per mm² |
+|---|---:|
+| A100, whole die | 0.378 |
+| A100, standard-cell logic only (die × 0.6) | 0.630 |
+| **this array, placed core area** | **2.912** |
+
+**4.63× the logic-level comparator.** The design target was to come within an
+order of magnitude; the array is ahead of it, which is the margin a complete
+design needs because register file, shared memory, scheduler and interconnect can
+only spend density from here.
+
+What this is not: a device claim. The array has no operand storage, no scheduler,
+no interconnect and no memory controller, so its density is an upper bound on a
+finished design. And ASAP7 is predictive and non-manufacturable while the
+comparator is fabricated silicon — the node family matches, the confidence does
+not. Both refusals are recorded in the audit artifact rather than left to a
+reader's charity.
+
 ## Proposed precision set
 
 Driven by what the models actually need, not by what is elegant:
