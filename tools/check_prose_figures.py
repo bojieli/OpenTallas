@@ -728,10 +728,33 @@ class Finding:
         return f"  {self.annotation.shown}  {self.headline}\n{body}"
 
 
+#: Artifacts under ``build/`` are BUILD PRODUCTS: .gitignore excludes them, so a
+#: fresh clone does not have them and a figure bound to one cannot be resolved
+#: there.  Before this exemption the checker passed for anyone who had already
+#: built and failed for everyone else -- which is precisely backwards for a
+#: reproducibility check, and made `make check-figures` unusable in CI.
+#:
+#: Such a figure is reported as UNVERIFIABLE-HERE rather than silently skipped or
+#: counted as a pass: the annotation is still wrong to have, because a published
+#: figure should cite evidence a reader can obtain.  The right fix is to bind it
+#: to a tracked artifact under results/, or to retract the figure.
+BUILD_PRODUCT_PREFIX = "build/"
+
+
+def annotation_needs_a_build(annotation: Annotation) -> bool:
+    return str(annotation.attrs.get("src", "")).startswith(BUILD_PRODUCT_PREFIX)
+
+
 def check_annotation(annotation: Annotation) -> Finding | None:
     try:
         resolved = resolve(annotation)
     except AnnotationError as error:
+        if annotation_needs_a_build(annotation) and not (
+            REPO / str(annotation.attrs["src"]).split("#", 1)[0]
+        ).exists():
+            # Unbuilt tree: not this checker's failure to report.  The caller
+            # counts these separately and says so.
+            return None
         return Finding(annotation, f"unresolvable provenance for {annotation.label!r}",
                        [str(error)])
 
@@ -831,6 +854,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     findings: list[Finding] = []
     per_document: dict[str, int] = {}
     checked = 0
+    unbuilt: list[Annotation] = []
 
     for document in documents(args.targets):
         shown = str(document.resolve().relative_to(REPO)) \
@@ -854,6 +878,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                           f"= {clean(resolved.text):<16}  {resolved.detail}")
                 except AnnotationError as error:
                     print(f"  {annotation.shown}  {annotation.value:>16}  !! {error}")
+            if annotation_needs_a_build(annotation) and not (
+                REPO / str(annotation.attrs["src"]).split("#", 1)[0]
+            ).exists():
+                unbuilt.append(annotation)
             finding = check_annotation(annotation)
             if finding:
                 findings.append(finding)
@@ -883,6 +911,22 @@ def main(argv: Sequence[str] | None = None) -> int:
               "checker cannot see.")
         return 2
     print("\nevery annotated figure still matches the artifact that produces it")
+    if unbuilt:
+        # Say so rather than let a green line imply full coverage.  A figure
+        # bound to a build product is unverifiable by anyone who has not built,
+        # which for a published document is a defect even when nothing is wrong
+        # with the number.
+        print(
+            f"\n{len(unbuilt)} figure(s) could NOT be checked here: they cite a "
+            "build product that this tree has not built."
+        )
+        for a in unbuilt:
+            print(f"  {a.document.name}:{a.line}  {a.attrs['src']}")
+        print(
+            "  Build the artifact, or rebind the figure to a tracked artifact "
+            "under results/. A published figure should cite evidence a reader "
+            "can obtain."
+        )
     return 0
 
 
