@@ -172,7 +172,22 @@ def survey() -> dict[str, Any]:
     stale_counter: Counter[str] = Counter()
     missing_counter: Counter[str] = Counter()
 
+    # Only TRACKED artifacts are repository evidence. An untracked file under
+    # results/ is a local run product: it ships to nobody, no commit contains
+    # it, and "re-taking" it to clear drift would spend hours regenerating
+    # something that is not published. Measured 2026-09-12: 5 of 64 reported
+    # drifted artifacts were untracked, all under results/abi3/w10/, together
+    # carrying ~12.4 h of recorded wall_seconds.
+    tracked = {
+        (ROOT / line).resolve()
+        for line in subprocess.run(
+            ["git", "ls-files", "results"],
+            cwd=ROOT, capture_output=True, text=True, check=False,
+        ).stdout.split()
+    }
     for artifact in sorted((ROOT / "results").rglob("*.json")):
+        if artifact.resolve() not in tracked:
+            continue
         try:
             body = json.loads(artifact.read_text())
         except (OSError, ValueError):

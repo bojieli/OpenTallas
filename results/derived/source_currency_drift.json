@@ -1,8 +1,8 @@
 {
   "artifacts_drifted_only_by_recent_work": 5,
-  "artifacts_pinning_source_sha256": 96,
-  "artifacts_with_drift": 64,
-  "drift_fraction": 0.6667,
+  "artifacts_pinning_source_sha256": 91,
+  "artifacts_with_drift": 59,
+  "drift_fraction": 0.6484,
   "drifted": [
     {
       "artifact": "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
@@ -82,114 +82,6 @@
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/abi3/w10/legacy_plain_text_20260902/qwen3_8b_hbm_natural_a.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 51,
-      "missing": [],
-      "pinned_sources": 51,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/builder.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engine.py",
-        "runtime/sim/engines/attention.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "runtime/sim/engines/tensor.py",
-        "runtime/sim/generators.py",
-        "runtime/sim/memory.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/w10/legacy_plain_text_20260902/qwen3_8b_hbm_natural_b.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 51,
-      "missing": [],
-      "pinned_sources": 51,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/builder.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engine.py",
-        "runtime/sim/engines/attention.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "runtime/sim/engines/tensor.py",
-        "runtime/sim/generators.py",
-        "runtime/sim/memory.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/w10/qwen3_8b_hbm_stress.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 51,
-      "missing": [],
-      "pinned_sources": 51,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/builder.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engine.py",
-        "runtime/sim/engines/attention.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "runtime/sim/engines/tensor.py",
-        "runtime/sim/generators.py",
-        "runtime/sim/memory.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
       "artifact": "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
       "binding_fields": [
         "source_sha256"
@@ -201,68 +93,6 @@
         "compiler/backends/numeric_contracts.py",
         "compiler/backends/rom/common/program.py",
         "compiler/backends/rom/deepseek_v4_array.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engine.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "runtime/sim/memory.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/w10/attempts/hbm-a-20260904T003035Z-1bb6e3af8e0f4aa4/result.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 53,
-      "missing": [],
-      "pinned_sources": 53,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/ir/v3/kernel_ir.py",
-        "compiler/ir/v3/lowering.py",
-        "compiler/ir/v3/numeric.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/driver.py",
-        "runtime/evidence.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engine.py",
-        "runtime/sim/engines/link.py",
-        "runtime/sim/engines/route.py",
-        "runtime/sim/engines/selection.py",
-        "runtime/sim/memory.py",
-        "tools/run_accelerator_tokens.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/w10/qwen3_8b_hbm_natural_a.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 53,
-      "missing": [],
-      "pinned_sources": 53,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
         "compiler/ir/v3/kernel_ir.py",
         "compiler/ir/v3/lowering.py",
         "compiler/ir/v3/numeric.py",
@@ -398,6 +228,102 @@
       "unresolvable_by_design": []
     },
     {
+      "artifact": "results/abi3/deepseek_v4_boundary32_operator_bisect.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 15,
+      "missing": [],
+      "pinned_sources": 15,
+      "stale": [
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/numeric_contracts.py",
+        "compiler/backends/rom/common/program.py",
+        "runtime/sim/backend.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engines/deepseek_vector.py",
+        "runtime/sim/engines/tensor.py",
+        "tools/bisect_deepseek_lane_activations.py",
+        "tools/bisect_deepseek_layer_operators.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/deepseek_v4_layer00_norm_input_bisect.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 15,
+      "missing": [],
+      "pinned_sources": 15,
+      "stale": [
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/numeric_contracts.py",
+        "compiler/backends/rom/common/program.py",
+        "runtime/sim/backend.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engines/deepseek_vector.py",
+        "runtime/sim/engines/tensor.py",
+        "tools/bisect_deepseek_lane_activations.py",
+        "tools/bisect_deepseek_layer_operators.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/deepseek_v4_layer02_operator_bisect.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 15,
+      "missing": [],
+      "pinned_sources": 15,
+      "stale": [
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/numeric_contracts.py",
+        "compiler/backends/rom/common/program.py",
+        "runtime/sim/backend.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engines/deepseek_vector.py",
+        "runtime/sim/engines/tensor.py",
+        "tools/bisect_deepseek_lane_activations.py",
+        "tools/bisect_deepseek_layer_operators.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/deepseek_v4_routed_chain_input_bisect.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 15,
+      "missing": [],
+      "pinned_sources": 15,
+      "stale": [
+        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/hbm_sram/plan.py",
+        "compiler/backends/numeric_contracts.py",
+        "compiler/backends/rom/common/program.py",
+        "runtime/sim/backend.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engines/deepseek_vector.py",
+        "runtime/sim/engines/tensor.py",
+        "tools/bisect_deepseek_lane_activations.py",
+        "tools/bisect_deepseek_layer_operators.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
       "artifact": "results/rtl/abi3_campaign.json",
       "binding_fields": [
         "source_sha256"
@@ -469,98 +395,6 @@
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/abi3/deepseek_v4_boundary32_operator_bisect.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 15,
-      "missing": [],
-      "pinned_sources": 15,
-      "stale": [
-        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "runtime/sim/backend.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/tensor.py",
-        "tools/bisect_deepseek_layer_operators.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_layer00_norm_input_bisect.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 15,
-      "missing": [],
-      "pinned_sources": 15,
-      "stale": [
-        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "runtime/sim/backend.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/tensor.py",
-        "tools/bisect_deepseek_layer_operators.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_layer02_operator_bisect.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 15,
-      "missing": [],
-      "pinned_sources": 15,
-      "stale": [
-        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "runtime/sim/backend.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/tensor.py",
-        "tools/bisect_deepseek_layer_operators.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_routed_chain_input_bisect.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 15,
-      "missing": [],
-      "pinned_sources": 15,
-      "stale": [
-        "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json",
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/hbm_sram/plan.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "runtime/sim/backend.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/tensor.py",
-        "tools/bisect_deepseek_layer_operators.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
       "artifact": "results/abi3/deepseek_v4_lane_activation_bisect.json",
       "binding_fields": [
         "source_sha256"
@@ -577,7 +411,8 @@
         "runtime/sim/backend.py",
         "runtime/sim/device.py",
         "runtime/sim/engines/deepseek_vector.py",
-        "runtime/sim/engines/tensor.py"
+        "runtime/sim/engines/tensor.py",
+        "tools/bisect_deepseek_lane_activations.py"
       ],
       "stale_only_from_recent_work": false,
       "unresolvable_by_design": []
@@ -1060,6 +895,22 @@
       ]
     },
     {
+      "artifact": "results/abi3/deepseek_v4_reference_boundaries_p32.json",
+      "binding_fields": [
+        "source_sha256",
+        "vendor_source_sha256"
+      ],
+      "entries_checked": 10,
+      "missing": [],
+      "pinned_sources": 10,
+      "stale": [
+        "runtime/reference/deepseek_v4_oracle.py",
+        "runtime/sim/backend.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
       "artifact": "results/rtl/abi3_re8.json",
       "binding_fields": [
         "source_sha256"
@@ -1119,21 +970,6 @@
       "stale": [
         "rtl/Makefile",
         "spec/verification.json"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_reference_boundaries_p32.json",
-      "binding_fields": [
-        "source_sha256",
-        "vendor_source_sha256"
-      ],
-      "entries_checked": 10,
-      "missing": [],
-      "pinned_sources": 10,
-      "stale": [
-        "runtime/sim/backend.py"
       ],
       "stale_only_from_recent_work": false,
       "unresolvable_by_design": []
@@ -1421,10 +1257,10 @@
     }
   ],
   "generated_by": "tools/audit_source_currency_drift.py",
-  "generated_by_sha256": "eef21f85494c9755b54c0b77d7b3b288673d58bc11053f46d3693dd324fe8b66",
+  "generated_by_sha256": "0318c94d5f3a8e0f8f1906e24f76844d47353f44cc4c141f422ed2697203005d",
   "git": {
-    "commit": "dd1eaf45c52451ebfcfae7f781375c8202c9b85a",
-    "worktree_dirty": false
+    "commit": "994526c3981831ca4dafae68d8640eb78dbab04b",
+    "worktree_dirty": true
   },
   "most_common_missing_sources": [
     {
@@ -1454,52 +1290,52 @@
   ],
   "most_common_stale_sources": [
     {
-      "artifacts_staled": 21,
+      "artifacts_staled": 16,
       "source": "runtime/abi3/constants.py"
-    },
-    {
-      "artifacts_staled": 16,
-      "source": "runtime/abi3/verifier.py"
-    },
-    {
-      "artifacts_staled": 16,
-      "source": "runtime/sim/device.py"
-    },
-    {
-      "artifacts_staled": 15,
-      "source": "runtime/abi3/capability.py"
-    },
-    {
-      "artifacts_staled": 15,
-      "source": "runtime/sim/engines/link.py"
-    },
-    {
-      "artifacts_staled": 14,
-      "source": "compiler/backends/numeric_contracts.py"
     },
     {
       "artifacts_staled": 13,
       "source": "compiler/backends/rom/common/program.py"
     },
     {
-      "artifacts_staled": 13,
-      "source": "compiler/backends/hbm_sram/lower.py"
-    },
-    {
-      "artifacts_staled": 12,
-      "source": "compiler/backends/hbm_sram/plan.py"
+      "artifacts_staled": 11,
+      "source": "runtime/abi3/verifier.py"
     },
     {
       "artifacts_staled": 11,
-      "source": "runtime/evidence.py"
-    },
-    {
-      "artifacts_staled": 11,
-      "source": "runtime/sim/engines/deepseek_vector.py"
+      "source": "runtime/sim/device.py"
     },
     {
       "artifacts_staled": 10,
-      "source": "runtime/sim/engines/tensor.py"
+      "source": "runtime/abi3/capability.py"
+    },
+    {
+      "artifacts_staled": 10,
+      "source": "runtime/sim/engines/link.py"
+    },
+    {
+      "artifacts_staled": 9,
+      "source": "compiler/backends/numeric_contracts.py"
+    },
+    {
+      "artifacts_staled": 8,
+      "source": "compiler/backends/hbm_sram/lower.py"
+    },
+    {
+      "artifacts_staled": 8,
+      "source": "runtime/sim/backend.py"
+    },
+    {
+      "artifacts_staled": 8,
+      "source": "runtime/sim/engines/deepseek_vector.py"
+    },
+    {
+      "artifacts_staled": 8,
+      "source": "rtl/ot_fp32_rne_pkg.sv"
+    },
+    {
+      "artifacts_staled": 8,
+      "source": "rtl/abi3/ot_a3_instruction_decoder.sv"
     }
   ],
   "question": "of the artifacts that pin source digests, how many still bind the sources on disk?",
@@ -1519,6 +1355,10 @@
   "schema": "opentallas.derived.source_currency_drift.v1",
   "session_base": "221fe7d",
   "stale_sources_changed_since_session_base": [
+    {
+      "artifacts_staled": 5,
+      "source": "tools/bisect_deepseek_lane_activations.py"
+    },
     {
       "artifacts_staled": 5,
       "source": "rtl/abi3/ot_a3_engine_issue_bridge.sv"
@@ -1542,6 +1382,10 @@
     {
       "artifacts_staled": 2,
       "source": "runtime/reference/tensor_accelerator_attention.py"
+    },
+    {
+      "artifacts_staled": 1,
+      "source": "runtime/reference/deepseek_v4_oracle.py"
     },
     {
       "artifacts_staled": 1,

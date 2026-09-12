@@ -2,9 +2,9 @@
 
 **Status:** **PASS**
 
-Run fingerprint: `87e057764094b9ed`  
-Clean snapshot commit: `34a0d2ec791a1344a5db96f0123e5d02d57d02ab`  
-Clean snapshot tree: `a8bf5906a98014739058615c61c32e9d4cd05f36`
+Run fingerprint: `5dccd12aafbfd034`  
+Clean snapshot commit: `ba41fcd42aa902e8d28403dfe831955620380217`  
+Clean snapshot tree: `14502d22871bb8f9e4ff51043a28203c1c1a7880`
 
 The exact fingerprinted source inventory was copied into an isolated repository and committed with deterministic identity. The complete seven-case campaign then ran without any dirty-tree or skip option.
 
