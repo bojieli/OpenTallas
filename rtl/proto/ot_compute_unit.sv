@@ -56,6 +56,27 @@ module ot_compute_unit #(
     input  wire [8:0]             act_waddr,
     input  wire [15:0]            act_wdata,
 
+    //: WEIGHT REFILL -- the one place the two designs differ.
+    //:
+    //: The compute datapath is IDENTICAL on both sides of this project's
+    //: comparison: same MAC tile, same accumulate, same P&R flow.  What differs
+    //: is where a weight column comes from when it is not already in the local
+    //: buffer:
+    //:
+    //:   ROM design   an on-die mask ROM read.  No off-chip traffic, so the
+    //:                refill is limited by on-die bandwidth only.
+    //:   HBM design   an off-chip read.  Limited by HBM bandwidth per byte, so a
+    //:                miss stalls the array.
+    //:
+    //: Modelling that as BACKPRESSURE on one port keeps both sides at equal
+    //: fidelity: the same gates, the same timing closure, and the cycle count is
+    //: the comparison rather than an assumption fed into a spreadsheet.  A design
+    //: that got its weights for free in the RTL and paid for them only in an
+    //: analytical model would not be comparable to one that did the opposite.
+    input  wire                   refill_valid,   // a weight column is available
+    output wire                   refill_ready,   // the unit wants one now
+    output wire                   stalled,        // waiting on refill this cycle
+
     // ---- result read-out ----
     input  wire [4:0]             res_sel,
     output wire [ACC_W-1:0]       res_data,
@@ -134,6 +155,9 @@ module ot_compute_unit #(
                     end
 
                 S_WALK: begin
+                    //: An unbacked column stalls the walk.  The array holds its
+                    //: accumulators and burns a cycle, which is exactly what a
+                    //: bandwidth-starved compute unit does.
                     //: valid must follow the ADDRESS ISSUE by exactly one cycle,
                     //: because that is the SRAM's read latency and the register
                     //: file's.  Deriving it from `col != 0` instead dropped the
@@ -141,11 +165,13 @@ module ot_compute_unit #(
                     //: cycle col reaches cfg_k, which is where the old code
                     //: deasserted valid.  31 of 32 columns accumulated and every
                     //: lane came out wrong -- caught by tb_compute_unit.
-                    tile_valid <= (col < cfg_k);
+                    tile_valid <= (col < cfg_k) && refill_valid;
                     if (col < cfg_k) begin
-                        rd_addr   <= col[7:0];
-                        act_raddr <= col;
-                        col       <= col + 9'd1;
+                        if (refill_valid) begin
+                            rd_addr   <= col[7:0];
+                            act_raddr <= col;
+                            col       <= col + 9'd1;
+                        end
                     end else begin
                         drain <= 4'd12;       // tile pipeline depth plus margin
                         state <= S_DRAIN;
@@ -174,6 +200,9 @@ module ot_compute_unit #(
         .result(tile_result), .dropped_mask(dropped_mask),
         .result_valid()
     );
+
+    assign refill_ready = (state == S_WALK) && (col < cfg_k);
+    assign stalled      = refill_ready && !refill_valid;
 
     assign res_data = tile_result[ACC_W*res_sel +: ACC_W];
 endmodule

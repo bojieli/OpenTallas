@@ -243,10 +243,24 @@ and retires a K=32 dot product in **4 cycles instead of 32**:
 
     PASS PACK=8 E2M1: bit-identical to the reference (ffffffc320), 4 cycles for K=32
 
-That is where a mask-ROM weight store's density argument becomes an arithmetic
-density argument. Sizing the array by multiplier area alone would have produced a
-design whose accumulators dwarfed its multipliers, and no amount of re-measuring
-the multiplier would have revealed it.
+Sizing the array by multiplier area alone would have produced a design whose
+accumulators dwarfed its multipliers, and no amount of re-measuring the multiplier
+would have revealed it.
+
+**But the first packed lane does not close, and the gain is 2.1× not 8×.**
+Place-and-routed (`lane_mxfp4_packed8.json`): 717 MHz at setup WNS **−0.394 ns**
+in 1,975 µm², against the unpacked lane's 1,388 MHz *closed* in 530 µm². Eight
+MAC/cycle for 3.7× the area.
+
+The cause is the adder tree: summing eight 40-bit aligned terms with `+` builds a
+chain of carry-propagate adders — the identical carry-chain mistake already fixed
+once in the accumulator loop, reintroduced one level up. The tree has to be
+carry-save too: 3:2 compressors reducing eight terms to a (sum, carry) pair, then
+a 4:2 compression against the accumulator pair, with no carry propagation
+anywhere in the recurring path.
+
+So the direction is confirmed and the implementation is not finished. Recorded
+that way rather than quoting the 8× the idea promises.
 
 ## Proposed precision set
 
@@ -314,6 +328,59 @@ issued by the existing lane machinery:
 
 Sizing follows from the target: at 1 GHz, a 16×16 tile of BF16 MACs delivers
 256 MAC/cycle = 512 GFLOP/s per tile.
+
+## The comparison, at equal fidelity, measured
+
+`rtl/proto/ot_compute_unit.sv` is **one RTL used for both sides**: same MAC tile,
+same SRAM-backed operand delivery, same place-and-route, same gates. The only
+structural difference between the ROM design and the HBM comparator is where a
+weight column comes from when it is not already in the local buffer, and that is
+modelled as backpressure on `refill_valid` rather than as an assumption fed into
+a spreadsheet. The cycle count is therefore the comparison, not an input to it.
+
+`rtl/test/tb_kernel_rom_vs_hbm.sv`, same operands, same expected results:
+
+| refill period | cycles | stall cycles | result |
+|---:|---:|---:|---|
+| 1 (on-die ROM, never starved) | 46 | 0 | correct |
+| 2 | 78 | 31 | correct |
+| 4 | 142 | 95 | correct |
+| 8 | 266 | 219 | correct |
+
+Correct at every rate is the load-bearing part: the accumulators hold across a
+stall instead of drifting, so a unit that only worked when fed would have failed
+here.
+
+### What the bandwidth actually implies, and why it cuts against the thesis
+
+`tools/audit_kernel_refill_regimes.py` turns a bandwidth figure into the refill
+period it implies. A100 HBM at 2.0 TB/s over 108 compute units is **16.9 bytes
+per cycle per unit** at 1,117 MHz. One weight column of this 16-lane tile is 32 B
+in BF16, 16 B in FP8, 8 B in MXFP4:
+
+| Weight format | reuse 1 | reuse 8 | reuse 64 |
+|---|---:|---:|---:|
+| BF16 | **1.89** | 0.24 | 0.03 |
+| FP8 E4M3 | 0.95 | 0.12 | 0.01 |
+| MXFP4 | 0.47 | 0.06 | 0.01 |
+
+A period below 1.0 means the memory keeps up and the array never stalls. So at a
+reuse factor of 8 or more — any batch above a handful — **HBM bandwidth is not the
+bottleneck at compute-unit level, and the ROM store buys nothing here.** The
+measured advantage exists only at reuse 1: BF16 weights from HBM need period 1.89,
+which costs 78 cycles against the ROM path's 46, a factor of 1.7.
+
+That is a narrower claim than "ROM is faster", and it is the one the measurement
+supports. It also agrees with what this repository's own
+`COMPARISON_FAIRNESS_AUDIT.md` says about single-session versus multi-session
+comparisons, and with the README's batch-1 framing being the regime where the
+advantage lives.
+
+The audit refuses to emit a single headline for exactly this reason: the refill
+period depends on reuse, reuse depends on batch, and a one-number comparison
+silently picks a batch and flatters whichever side has the cheaper weight store.
+The HBM figure is also a peak-rate divide with no DRAM page behaviour, refresh or
+inter-unit contention, which is generous to the HBM side.
 
 ## Fairness: the comparator must get the same treatment
 

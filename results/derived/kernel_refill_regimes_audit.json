@@ -1,0 +1,133 @@
+{
+  "clock_hz": 1117000000.0,
+  "equal_fidelity_basis": {
+    "note": "Both sides are the same gates. The only structural difference is backpressure on refill_valid, so the cycle count is the comparison rather than an input to it.",
+    "rtl": "rtl/proto/ot_compute_unit.sv"
+  },
+  "git": {
+    "commit": "8170ce631891a76a39e65bc06679f925587ce25d",
+    "worktree_dirty": true
+  },
+  "hbm_reference": {
+    "bandwidth_bytes_s": 2039000000000.0,
+    "compute_units_assumed": 108,
+    "device_bytes_per_cycle": 1825.4252461951655,
+    "part": "a100_sxm_80gb",
+    "per_unit_bytes_per_cycle": 16.9020856129182
+  },
+  "implied_periods": [
+    {
+      "column_bytes": 32,
+      "hbm_refill_period_cycles": 1.8932574791564494,
+      "reuse_factor": 1,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "bf16"
+    },
+    {
+      "column_bytes": 32,
+      "hbm_refill_period_cycles": 0.23665718489455617,
+      "reuse_factor": 8,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "bf16"
+    },
+    {
+      "column_bytes": 32,
+      "hbm_refill_period_cycles": 0.02958214811181952,
+      "reuse_factor": 64,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "bf16"
+    },
+    {
+      "column_bytes": 32,
+      "hbm_refill_period_cycles": 0.00739553702795488,
+      "reuse_factor": 256,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "bf16"
+    },
+    {
+      "column_bytes": 16,
+      "hbm_refill_period_cycles": 0.9466287395782247,
+      "reuse_factor": 1,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "fp8_e4m3"
+    },
+    {
+      "column_bytes": 16,
+      "hbm_refill_period_cycles": 0.11832859244727809,
+      "reuse_factor": 8,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "fp8_e4m3"
+    },
+    {
+      "column_bytes": 16,
+      "hbm_refill_period_cycles": 0.01479107405590976,
+      "reuse_factor": 64,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "fp8_e4m3"
+    },
+    {
+      "column_bytes": 16,
+      "hbm_refill_period_cycles": 0.00369776851397744,
+      "reuse_factor": 256,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "fp8_e4m3"
+    },
+    {
+      "column_bytes": 8,
+      "hbm_refill_period_cycles": 0.47331436978911234,
+      "reuse_factor": 1,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "mxfp4"
+    },
+    {
+      "column_bytes": 8,
+      "hbm_refill_period_cycles": 0.05916429622363904,
+      "reuse_factor": 8,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "mxfp4"
+    },
+    {
+      "column_bytes": 8,
+      "hbm_refill_period_cycles": 0.00739553702795488,
+      "reuse_factor": 64,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "mxfp4"
+    },
+    {
+      "column_bytes": 8,
+      "hbm_refill_period_cycles": 0.00184888425698872,
+      "reuse_factor": 256,
+      "rom_refill_period_cycles": 1.0,
+      "weight_format": "mxfp4"
+    }
+  ],
+  "measured_cycles": [
+    {
+      "cycles": 46,
+      "refill_period": 1,
+      "stall_cycles": 0
+    },
+    {
+      "cycles": 78,
+      "refill_period": 2,
+      "stall_cycles": 31
+    },
+    {
+      "cycles": 142,
+      "refill_period": 4,
+      "stall_cycles": 95
+    },
+    {
+      "cycles": 266,
+      "refill_period": 8,
+      "stall_cycles": 219
+    }
+  ],
+  "question": "At equal fidelity -- one RTL, one place-and-route -- what refill rate does each weight store imply, and what does the measured compute unit cost at that rate?",
+  "refusals": [
+    "no-single-headline: the refill period depends on the reuse factor, which depends on batch. A one-number comparison silently picks a batch and flatters whichever side has the cheaper weight store.",
+    "peak-bandwidth-is-generous-to-hbm: the HBM period is a peak-rate divide with no DRAM page behaviour, refresh or inter-unit contention. A real memory system delivers less than this.",
+    "activation-and-output-paths-not-modelled: only weight refill is charged here. Activation supply and output write-back are absent."
+  ],
+  "schema": "opentallas.audit.kernel_refill_regimes.v1"
+}

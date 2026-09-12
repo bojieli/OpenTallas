@@ -22,9 +22,19 @@
 // in a common window, so summing them introduces no rounding and the result does
 // not depend on tree shape.
 //
-// At PACK=8 with MXFP4 weights the arithmetic cost per MAC becomes roughly
-// (8 x 7.4 + accumulator) / 8 instead of (7.4 + accumulator), which is where the
-// density argument for a mask-ROM weight store actually gets cashed.
+// MEASURED, AND NOT YET GOOD ENOUGH.  Place-and-routed at PACK=8 with MXFP4
+// weights this lane reaches 717 MHz with setup WNS -0.394 ns -- it does NOT close
+// -- in 1,975 um2, against the unpacked lane's 1,388 MHz closed in 530 um2.  That
+// is 8 MAC/cycle for 3.7x the area: a 2.1x density gain, not the 8x the idea
+// promises.
+//
+// The cause is the adder tree below: summing eight 40-bit aligned terms with `+`
+// builds a chain of carry-propagate adders, which is the same carry-chain mistake
+// already fixed once in the accumulator loop.  The tree must be carry-save --
+// 3:2 compressors reducing eight terms to a (sum, carry) pair, then a 4:2
+// compression against the accumulator pair, with no carry propagation anywhere in
+// the recurring path.  Until that is done this module is a demonstration that
+// sharing the accumulator is the right direction, not a usable lane.
 //
 // Qualified against runtime.reference.mac_tile: the reference sums the same terms
 // in the same window, so a packed lane must agree bit-for-bit with an unpacked one
