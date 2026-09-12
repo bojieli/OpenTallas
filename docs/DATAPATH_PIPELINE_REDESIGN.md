@@ -256,6 +256,46 @@ This matters for the thesis, not just the scoreboard: part of the ROM argument i
 energy argument, and on the only energy number this project has actually measured,
 the design is behind a 2020 GPU.
 
+### Where the energy goes, and why packing harder will not fix it
+
+`tools/audit_energy_attribution.py` attributes the deficit instead of caveating it.
+
+**Accumulator sharing is an area optimisation, not an energy one.** The packed
+lane's 10.0 TFLOP/s per mm² and 5.15 per W are **MXFP4 weights**, and setting those
+against the A100's dense BF16 rate would credit a format change as a structural win.
+Measured at matched precision — BF16 weights, so the only difference from an
+unpacked BF16 lane is the sharing:
+
+| lane | fmax | area | power | TFLOP/s/mm² | TFLOP/s/W |
+|---|---:|---:|---:|---:|---:|
+| BF16 unpacked ×1 | 1,358 MHz | 649.6 µm² | 1.02 mW | 4.181 | 2.674 |
+| BF16 packed ×8 | 1,030 MHz | 2,500.4 µm² | 5.85 mW | 6.591 | 2.819 |
+| MXFP4 unpacked ×1 | 1,388 MHz | 530.4 µm² | 0.73 mW | 5.234 | 3.797 |
+| MXFP4 packed ×8 | 1,063 MHz | 1,697.6 µm² | 3.30 mW | 10.016 | 5.154 |
+
+At matched BF16: **area 1.58×, energy 1.05×.** Sharing the accumulator buys area and
+is essentially energy-neutral; the 1.36× that appeared at MXFP4 is mostly the
+narrower multiplier, not the sharing. So the honest figure for this optimisation is
+1.58×, not 1.91× — the larger number compares two different arithmetics.
+
+**The arithmetic is not the problem.** The BF16 packed lane is 10.5× the A100 on area
+and **3.6× on energy**. The complete compute unit is 0.81×. Subtracting 16 routed
+lanes from the routed unit says where it went:
+
+| | power | share |
+|---|---:|---:|
+| compute unit, total | 65.08 mW | |
+| arithmetic (16 lanes) | 16.25 mW | **25%** |
+| operand delivery + sequencer | 48.83 mW | **75%** |
+
+**Three quarters of a compute unit's power is moving operands, not multiplying
+them.** That is what the accelerator literature says, and it is what the ROM thesis
+claims to address. It also means the obvious next optimisation — pack the
+multipliers harder — is the wrong one: it cannot touch 75% of the energy.
+
+The 25/75 split is an *attribution by subtraction*, not a per-component measurement:
+a lane inside the unit has different placement and loading from one routed alone.
+
 ### The inclusion list, which is the rest of the honesty
 
 The **area is incomplete**: no KV-cache SRAM, no global activation buffer, no HBM
