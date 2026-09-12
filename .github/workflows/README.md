@@ -1,0 +1,53 @@
+# CI scope
+
+`ci.yml` runs only what is demonstrably green on a bare checkout, so that a red
+badge always means a regression rather than a known gap. Three jobs:
+
+| Job | Needs | Measured cost | Fails the build? |
+|---|---|---|---|
+| `evidence-checks` | Python 3.10 + numpy | ~5 s | yes |
+| `fast-tests` | `pip install -e '.[test]'` | ~45 s | yes |
+| `gate-board` | standard library only | ~0.5 s | no — informational |
+
+All timings were measured at `b0f92a9` in a fresh virtualenv containing nothing
+but the declared dependencies, not estimated.
+
+## Why the gate board does not fail the build
+
+`tools/check_redesign_gates.py` exits 1 while any terminal gate fails, and three
+of four currently do. That is the honest state of the program, not a build break,
+so the job prints the board into the run summary and exits 0. When the terminal
+gates pass, this job should start enforcing its exit code.
+
+## What is deliberately excluded
+
+| Excluded | Why |
+|---|---|
+| `tests/runtime` | 64 failures as a group, 10 per-file — 54 are order-dependent from shared module-level state. Would be permanently red for reasons unrelated to any contributor's change. |
+| `tests/compiler` | 67 failures at HEAD, dominated by source-currency drift (64 of 96 pinning artifacts drifted). A backlog, not a regression. |
+| RTL, synthesis, ORFS | Need pinned Verilator 5.050, Icarus, Yosys 0.68, OpenROAD and a PDK. See [`docs/REPRODUCIBILITY.md`](../../docs/REPRODUCIBILITY.md) tiers 2–3. |
+| Long campaigns | Several artifacts record `verification_wall_seconds` near 16,500 s per store. |
+
+Each exclusion is a tracked debt, not a permanent decision. Fixing the runtime
+isolation bug should add `tests/runtime` as its own job; paying down the drift
+backlog should add `tests/compiler`.
+
+## The determinism gate
+
+`evidence-checks` regenerates the analytical artifacts and then requires
+`git status --porcelain` to be empty. This is the property the entire evidence
+chain rests on: figures in prose are checkable only because the artifacts behind
+them reproduce byte-for-byte. If that step ever fails, treat it as the most
+serious signal in CI — not a flake.
+
+It has already earned its place. A doc edit in `ae2bcde` changed
+`CHIP_RESOURCE_BUDGETS.md` without regenerating the prose-figure census; the
+`check-figures` step catches that class of mistake in under two seconds.
+
+## Running the same checks locally
+
+```sh
+make spec-check check-figures check-evidence-grades check-chip-architecture
+PYTHONPATH=. python3 -m pytest tests/abi3 tests/qwen3 tests/sim -q
+PYTHONPATH=. python3 tools/check_redesign_gates.py   # exits 1 by design
+```
