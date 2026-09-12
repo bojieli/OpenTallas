@@ -247,6 +247,11 @@ abi3-ir:
 
 abi3-status:
 	PYTHONPATH=. python3 tools/build_program_status.py
+# PROGRAM_STATUS.md is part of the prose corpus that
+# audit_prose_figure_coverage.py digests, so writing it moves the census and
+# leaves `make check-figures` failing until the census is re-taken.  Doing it
+# here removes an ordering footgun that bit three times in one session.
+	PYTHONPATH=. python3 tools/audit_prose_figure_coverage.py
 
 # W9.5.  The cost tables the cycle model reads are derived from the routed
 # blocks and the executed RTL campaigns, so `--check` is what catches a table
