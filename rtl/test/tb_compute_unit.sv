@@ -38,11 +38,23 @@ module tb_compute_unit;
 
     integer k, l, mism, dmism, guard;
 
+    wire refill_ready, stalled;
+
     ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_k(cfg_k),
         .cfg_scale(cfg_scale), .busy(busy), .done(done),
         .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
         .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
+        //: refill_valid MUST be driven.  It was added to ot_compute_unit for the
+        //: ROM-versus-HBM comparison and this bench was not updated, so the input
+        //: defaulted low, the column counter never advanced and the bench hung to
+        //: its 100,000-cycle guard.  A missing connection on an input that gates
+        //: the sequencer is a hang, not a wrong answer, which is why the guard is
+        //: there -- but the guard reported a timeout for four commits without
+        //: anyone reading it.
+        //: Tied high here: this bench checks the datapath and operand delivery,
+        //: and the starvation behaviour is tb_kernel_rom_vs_hbm's subject.
+        .refill_valid(1'b1), .refill_ready(refill_ready), .stalled(stalled),
         .res_sel(res_sel), .res_data(res_data), .dropped_mask(dropped_mask)
     );
 
