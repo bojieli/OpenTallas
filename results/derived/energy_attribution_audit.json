@@ -1,0 +1,86 @@
+{
+  "accumulator_sharing_gain": {
+    "bf16_matched_precision": {
+      "area": 1.5764847816278702,
+      "energy": 1.0544133149416726
+    },
+    "mxfp4_not_comparable_to_a100_bf16": {
+      "area": 1.9136694996993693,
+      "energy": 1.3574954610113925
+    }
+  },
+  "comparator": {
+    "logic_level_ops_s_per_mm2": 629539951573.85,
+    "ops_s_per_w": 780000000000.0,
+    "part": "a100_sxm_80gb"
+  },
+  "compute_unit_attribution": {
+    "arithmetic_fraction": 0.24972364484559603,
+    "arithmetic_power_w": 0.01625184,
+    "basis": "16 routed unpacked BF16 lanes subtracted from the routed compute unit; the remainder is two ganged fakeram_256x128 macros, the activation register file, the sequencer and the interconnect between them",
+    "compute_unit_power_w": 0.0650793,
+    "operand_delivery_fraction": 0.7502763551544039,
+    "operand_delivery_power_w": 0.04882746
+  },
+  "git": {
+    "commit": "da618b70219412d14d5da83216b748627b9989da",
+    "worktree_dirty": true
+  },
+  "lanes": {
+    "bf16_packed8": {
+      "core_area_um2": 2500.4,
+      "fmax_hz": 1030020000.0,
+      "macs_per_cycle": 8,
+      "ops_s": 16480320000.0,
+      "ops_s_per_mm2": 6591073428251.4795,
+      "ops_s_per_w": 2819409064703.1553,
+      "power_total_w": 0.00584531,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_bf16_packed8.json",
+      "status": "pass",
+      "weight_format": "bf16"
+    },
+    "bf16_unpacked": {
+      "core_area_um2": 649.626,
+      "fmax_hz": 1358000000.0,
+      "macs_per_cycle": 1,
+      "ops_s": 2716000000.0,
+      "ops_s_per_mm2": 4180867145095.794,
+      "ops_s_per_w": 2673912615433.0835,
+      "power_total_w": 0.00101574,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_bf16.json",
+      "status": "pass",
+      "weight_format": "bf16"
+    },
+    "mxfp4_packed8": {
+      "core_area_um2": 1697.58,
+      "fmax_hz": 1062640000.0,
+      "macs_per_cycle": 8,
+      "ops_s": 17002240000.0,
+      "ops_s_per_mm2": 10015575112807.645,
+      "ops_s_per_w": 5153911910030.616,
+      "power_total_w": 0.0032989,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_mxfp4_packed8.json",
+      "status": "pass",
+      "weight_format": "mxfp4"
+    },
+    "mxfp4_unpacked": {
+      "core_area_um2": 530.42,
+      "fmax_hz": 1388030000.0,
+      "macs_per_cycle": 1,
+      "ops_s": 2776060000.0,
+      "ops_s_per_mm2": 5233701594962.482,
+      "ops_s_per_w": 3796632886117.1514,
+      "power_total_w": 0.00073119,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_mxfp4.json",
+      "status": "pass",
+      "weight_format": "mxfp4"
+    }
+  },
+  "question": "Is the chip's energy deficit an arithmetic problem or a data-movement problem, and does accumulator sharing help energy at matched precision?",
+  "refusals": [
+    "power-is-a-default-activity-estimate: ORFS reports power from the routed netlist under the flow's default switching activity, not from a workload trace. Every watt here is therefore an optimistic lower bound, and a lane under a dense GEMM switches far more than a default. The RATIOS are more trustworthy than the absolutes, since both sides carry the same assumption.",
+    "mxfp4-figures-are-not-comparable-to-a100-bf16: a 4-bit weight multiply is a different operation from a BF16 one. The MXFP4 row is reported for the structural comparison against the MXFP4 unpacked lane only, never against the GPU.",
+    "subtraction-is-not-a-measurement: the operand-delivery power is the compute unit's power minus 16 standalone lanes. A lane inside the unit is not identical to a lane routed alone -- different placement, different loading -- so the split is an attribution and not a per-component measurement."
+  ],
+  "schema": "opentallas.audit.energy_attribution.v1"
+}

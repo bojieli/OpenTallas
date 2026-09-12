@@ -6,12 +6,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.039845900000000004,
+        "hold_wns_ns": 0.0414936,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.0589473,
+        "setup_wns_ns": 0.0291434,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -22,7 +22,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-12T18:12:44.129948+00:00",
+  "completed_at": "2026-09-12T18:12:50.880585+00:00",
   "corner": {
     "liberty": [
       {
@@ -61,23 +61,23 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 664.221,
-    "block": "ot_probe_packed8",
-    "cells": 5947,
+    "area_um2": 993.86,
+    "block": "ot_probe_packed8_bf16",
+    "cells": 9327,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 1.0,
     "clock_port": "clk",
     "closed": true,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 1697.58,
+    "core_area_um2": 2500.4,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1062640000.0,
-    "hold_wns_ns": 0.039845900000000004,
+    "fmax_hz": 1030020000.0,
+    "hold_wns_ns": 0.0414936,
     "parameters": {},
-    "setup_wns_ns": 0.0589473,
+    "setup_wns_ns": 0.0291434,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -91,18 +91,18 @@
         "size_bytes": 11619
       },
       {
-        "path": "rtl/abi3/ot_probe_packed8.sv",
-        "sha256": "c77d3b381fa770093ad64fd7f38917a59907bdebca3908ef9dbc59285b8ffa20",
-        "size_bytes": 332
+        "path": "rtl/abi3/ot_probe_packed8_bf16.sv",
+        "sha256": "6b564707a1e28f6ad52797d317ec061ac83ee6d0533ea04fd1240566985c7197",
+        "size_bytes": 421
       }
     ],
-    "top": "ot_probe_packed8",
-    "utilization_fraction": 0.391276
+    "top": "ot_probe_packed8_bf16",
+    "utilization_fraction": 0.397481
   },
-  "elapsed_seconds": 350.919,
+  "elapsed_seconds": 357.657,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-12T18:06:53.210559+00:00",
+  "generated_at": "2026-09-12T18:06:53.223606+00:00",
   "git": {
     "commit": "da618b70219412d14d5da83216b748627b9989da",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -111,12 +111,12 @@
     "worktree_status": []
   },
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8re_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8bf16_1p0_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
-        "sha256": "77ed674cae9eab52c27041647140c96df3206c1b4e287572c320f9d5919e5124",
-        "size_bytes": 834167
+        "sha256": "c91f55fcb34fc0f47d4556c29961f7c8652409575252b339c8546fa3eb1e9160",
+        "size_bytes": 1469256
       },
       "5_route_drc.rpt": {
         "retained": true,
@@ -125,38 +125,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "6a48dfaf2e22cdd76ba73d11c42d36296ab2bd26355255b9e362a22095a016ef",
-        "size_bytes": 5159573
+        "sha256": "6a5de11d3b3fc5eb08e6fb4a509bc1ecb99e37c89053c6abd6828af07bd50a35",
+        "size_bytes": 7911541
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "9e8d9b8a62af0d1c8863a2fc4d16d187f79c8b854808a217f6374514aacbf303",
-        "size_bytes": 6220236
+        "sha256": "836863abf8338b8aacf44062c176bfb15bc87ea648a546b9af569a8ec0963ea5",
+        "size_bytes": 9239196
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "cd4f5760df82e2746d14d629723fd2e6b7537c2b1b3b253ed0b39f1d4c63932d",
-        "size_bytes": 10460514
+        "sha256": "6d747043ac58d5ea79e436afda220499da3f3d1848038df110b7abca4499e05d",
+        "size_bytes": 15598562
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "980d47686431378a1b70b45cafd0e46e8804aceff16c2a9f06800e96b1273148",
-        "size_bytes": 5393354
+        "sha256": "18240100001ccea4bedce741b47763b09ae2b3073985b154a88d12c882f3fd93",
+        "size_bytes": 8537974
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "258262774e88652352688d1f1000f7479b6508f395095d5bba0ee88d7e6536a1",
-        "size_bytes": 592547
+        "sha256": "71b61dbca997d20ab4fe76401f5f9431451e3e4efb313a3d60b3b9693c33eb50",
+        "size_bytes": 925392
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "463dbded355fa1dcad5a10b8ff3205d28a47c1a59f7b6006d8efe551f45b54f9",
-        "size_bytes": 37713
+        "sha256": "287832eb48775b80774dcbd9ec2bf5c54e0161a23983969ee98cf4a1cc60a308",
+        "size_bytes": 38418
       },
       "config.mk": {
         "retained": true,
-        "sha256": "4273ca736da599fbbdfccc04bea64b36ee55e6bdd88dc0dc581520a27db52caf",
-        "size_bytes": 714
+        "sha256": "1b34f821906ae0911260624b21db68cd92cfaadfba3e7355d9cf32e98007449c",
+        "size_bytes": 729
       },
       "constraint.sdc": {
         "retained": true,
@@ -165,19 +165,19 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "bbb56187b459e80c62dec9defa99fdfd8acb78ada7efa1bc9c613e3e7ed40393",
-        "size_bytes": 23587
+        "sha256": "0760708153052212588638e9af7116e0e37f6557add9b0c4f2202df4ef71f921",
+        "size_bytes": 23653
       }
     },
     "clock_period_ns": 1.0,
     "core_utilization_percent": 35,
-    "design_nickname": "opentallas_ot_probe_packed8_asap7",
+    "design_nickname": "opentallas_ot_probe_packed8_bf16_asap7",
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 1697.58,
-      "die_area_um2": 2063.7,
+      "core_area_um2": 2500.4,
+      "die_area_um2": 2932.66,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -190,11 +190,11 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 1062640000.0,
+      "fmax_hz": 1030020000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.039845900000000004,
-      "instance_count": 14885,
+      "hold_wns_ns": 0.0414936,
+      "instance_count": 22710,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -202,29 +202,29 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0032989,
+      "power_total_w": 0.00584531,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 39.8459,
+        "hold_wns_ns": 41.4936,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 58.9473
+        "setup_wns_ns": 29.1434
       },
-      "routed_nets": 6278,
-      "routed_wirelength_um": 14962,
-      "sequential_area_um2": 158.835,
-      "sequential_cell_count": 419,
+      "routed_nets": 10128,
+      "routed_wirelength_um": 23582,
+      "sequential_area_um2": 177.03,
+      "sequential_cell_count": 467,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.0589473,
-      "standard_cell_area_um2": 664.221,
-      "standard_cell_count": 5947,
-      "utilization_fraction": 0.391276,
-      "vias": 42662
+      "setup_wns_ns": 0.0291434,
+      "standard_cell_area_um2": 993.86,
+      "standard_cell_count": 9327,
+      "utilization_fraction": 0.397481,
+      "vias": 65779
     },
     "netlist_normalization": {
-      "normalized_netlist_sha256": "77ed674cae9eab52c27041647140c96df3206c1b4e287572c320f9d5919e5124",
+      "normalized_netlist_sha256": "c91f55fcb34fc0f47d4556c29961f7c8652409575252b339c8546fa3eb1e9160",
       "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
-      "raw_netlist_sha256": "77ed674cae9eab52c27041647140c96df3206c1b4e287572c320f9d5919e5124",
+      "raw_netlist_sha256": "c91f55fcb34fc0f47d4556c29961f7c8652409575252b339c8546fa3eb1e9160",
       "signed_declarations_stripped": 0
     },
     "place_density": 0.6,
@@ -397,11 +397,11 @@
       "--view",
       "asap7",
       "--top",
-      "ot_probe_packed8",
+      "ot_probe_packed8_bf16",
       "--source",
       "rtl/proto/ot_mac_lane_packed.sv",
       "--source",
-      "rtl/abi3/ot_probe_packed8.sv",
+      "rtl/abi3/ot_probe_packed8_bf16.sv",
       "--clock-port",
       "clk",
       "--clock-period-ns",
@@ -411,7 +411,7 @@
       "--core-utilization",
       "35",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8re.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/gpu/pk8bf16_1p0.json",
       "--force"
     ],
     "driver": {
