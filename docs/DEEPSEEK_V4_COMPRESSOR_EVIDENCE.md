@@ -264,7 +264,7 @@ the complete canonical application:
 
 ```bash
 python tools/audit_deepseek_v4_compressor_executable.py \
-  --ape /home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731/canonical-mp4/ranks/rank-000/layers.2.attn.compressor.ape.bin \
+  --ape "$HOME"/.cache/opentallas/deepseek-v4-flash-0731/canonical-mp4/ranks/rank-000/layers.2.attn.compressor.ape.bin \
   --output /tmp/deepseek-v4-compressor-executable.json
 ```
 

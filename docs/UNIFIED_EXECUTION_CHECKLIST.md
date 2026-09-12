@@ -1016,7 +1016,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **3,318** candidates remain explicitly `untriaged`. <!-- figure: 3318 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **3,319** candidates remain explicitly `untriaged`. <!-- figure: 3319 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as
@@ -1464,7 +1464,7 @@ lanes are a precondition for it, not the product. These items are the product.
   clean checkout of HEAD, so it predates tonight's work. It rebuilds a vector
   artifact from `results/tensor_accelerator/qwen3_full_model_physical/ir/tensor_kernel_ir.json`
   (the ABI 2.5 IR, not `build/ir-v3/qwen3-8b/kernel_ir.v3.json`) and from a
-  second repository at `/home/ubuntu/OpenTallas-ta-integration/`. Thirteen more
+  second repository at `~/OpenTallas-ta-integration/`. Thirteen more
   files in `tests/compiler/test_tensor_accelerator_qwen_*.py` have the same two
   dependencies.
 

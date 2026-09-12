@@ -78,7 +78,7 @@ Accordingly:
 
 ## 3. Where ASAP7 is installed
 
-The Liberty-only tree at `/home/ubuntu/.local/opentallas-pdk-asap7` (5 NLDM
+The Liberty-only tree at `~/.local/opentallas-pdk-asap7` (5 NLDM
 `.lib` files, no layers, no rules) is **not** sufficient for layout. The complete
 ASAP7 v1.7 platform lives inside the pinned OpenROAD-flow-scripts container that
 the existing `tools/run_asap7_physical.py` campaign already uses, at
@@ -87,7 +87,7 @@ the existing `tools/run_asap7_physical.py` campaign already uses, at
 It was extracted read-only to:
 
 ```
-/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7
+~/.local/opentallas-pdk-asap7-platform/asap7
 ```
 
 from image `openroad/orfs` digest

@@ -292,7 +292,8 @@ conclusion the project would like to reach.
 
 ## 6. The cost
 
-From `/home/ubuntu/.codex/goals_1.sqlite`, across 26 Codex threads on this machine:
+From a local agent-session database on the development machine, across 26 agent
+threads:
 
 - **456,803,790 tokens**
 - **340 agent-hours**

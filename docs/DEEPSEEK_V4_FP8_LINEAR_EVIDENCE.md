@@ -134,8 +134,8 @@ Large official payloads and generated evidence remain outside Git. With the
 immutable local snapshot and lock present, the governed sequence is:
 
 ```bash
-DSV4_SNAPSHOT=/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062
-DSV4_EVIDENCE=/home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731
+DSV4_SNAPSHOT="$HOME"/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/snapshots/7872f01b1d1fe23eabc4c98b48bffcef5a386062
+DSV4_EVIDENCE="$HOME"/.cache/opentallas/deepseek-v4-flash-0731
 
 python3 -m compiler.cli compile-deepseek-v4-fp8-linear-slice \
   --snapshot "$DSV4_SNAPSHOT" \

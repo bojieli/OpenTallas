@@ -1,6 +1,6 @@
 # Chip architecture review: fixes and worker handoff
 
-This report covers the architecture review begun from `1b492a4` and the corrections on `codex/architecture-review-fixes`. Work was isolated in `/home/ubuntu/OpenTallas-architecture-fixes` while the main workspace’s RTL/compiler implementation continued. The resource and reference fixes below are implemented; the proposed chip is not fully implemented or performance-qualified.
+This report covers the architecture review begun from `1b492a4` and the corrections on `codex/architecture-review-fixes`. Work was isolated in a sibling worktree while the main workspace’s RTL/compiler implementation continued. The resource and reference fixes below are implemented; the proposed chip is not fully implemented or performance-qualified.
 
 Read [CHIP_RESOURCE_BUDGETS.md](CHIP_RESOURCE_BUDGETS.md) for generated numbers and [CHIP_ARCHITECTURE_DESIGN.md](CHIP_ARCHITECTURE_DESIGN.md) for the revised specification. `configs/architecture/chip_design_v2.json` is the input contract, `src/opentallas/chip_architecture.py` derives resources, and `tools/check_chip_architecture.py` checks retained JSON/Markdown. The historical roofline study is a separate artifact and was not rewritten into a chip performance claim.
 

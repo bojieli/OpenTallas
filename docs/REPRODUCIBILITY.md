@@ -5,8 +5,10 @@ the SHA-256 of the sources it was produced from. This page states plainly which
 of those you can re-derive on your own machine and which you cannot, so that
 nobody has to discover the boundary by hitting it.
 
-Timings below were measured on a 32-core x86-64 Linux host on 2026-09-12 at
-commit `764c57d`. They are wall-clock for a warm filesystem.
+Timings below were measured on a 32-core x86-64 Linux host on 2026-09-12,
+originally at commit `764c57d` and re-checked in a fresh clone since. They are
+wall-clock for a warm filesystem, and they are indicative rather than pinned:
+nothing in this repository's evidence depends on them.
 
 ---
 
@@ -58,11 +60,15 @@ Costs here are hours, not seconds, and the artifacts record their own: several
 campaigns carry `verification_wall_seconds` near 16,500 s per store. Read the
 cost field before starting one.
 
-**Known issue:** run `tests/runtime` as a group and it reports 64 failures;
-run the same files individually and 10 remain. 54 are order-dependent, from
-shared module-level state, and three files pass completely alone. Until that is
-fixed, triage per-file and quote failure counts with the execution mode
-attached.
+**Known issue — memory, not test isolation.** Run `tests/runtime` as a group and
+it reports 64 failures; run the same files individually and 10 remain. The gap is
+**resource exhaustion**: `tests/runtime/test_abi3_cycle.py` alone measures
+72–84 GB peak RSS, and a group run gets OOM-killed (measured: rc=137,
+`anon-rss:72208572kB`, with zero failures recorded before the kill). Three
+pairwise runs confirmed that no file poisons a later one, so this is not shared
+module-level state — an earlier version of this page said it was, and that was
+wrong. Until the footprint is capped, triage per-file and quote failure counts
+with the execution mode attached. 10 is the real defect count.
 
 ---
 
@@ -93,6 +99,22 @@ measured here, and no GPU was run.
 it. A few record more than a day of simulated work.
 
 ---
+
+## Why the clone is large
+
+A full clone is roughly 950 MB, and about 167 MB of that is two files:
+`results/roofline/n5_vs_b200/analytical.json` (84.5 MB) and
+`results/roofline/n6_vs_a100/analytical.json` (82.7 MB).
+
+They are tracked deliberately. **69 prose figures across the documentation bind
+to them by digest** — 52 to one, 17 to the other — including the headline
+comparison in `README.md`. Gitignoring them would shrink the clone by a sixth and
+make every figure that cites them unverifiable by anyone who had not first spent
+~9 minutes running `make roofline`. For a repository whose claim is that its
+numbers are checkable, that is the wrong trade.
+
+If clone size matters to you, `git clone --filter=blob:limit=10m` fetches the
+history without the large blobs, and `make roofline` regenerates them.
 
 ## The state of the evidence
 

@@ -7,6 +7,14 @@ OpenTallas is an evidence-driven hardware research project. A good contribution
 does more than make code pass: it keeps the implementation, specification,
 generated artifacts, and public claim boundary aligned.
 
+## Inbound license
+
+By opening a pull request you agree that your contribution is licensed under the
+same terms as this repository — the [MIT License](LICENSE) — and that you have the
+right to license it that way. Please keep this in mind if any part of your change
+derives from code, weights, or PDK material under other terms: say so in the pull
+request, and see [`NOTICE`](NOTICE) for how third-party material is recorded here.
+
 ## Before you begin
 
 Read the entry point that owns the area you plan to change:
