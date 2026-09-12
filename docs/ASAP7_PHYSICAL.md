@@ -132,3 +132,56 @@ passing run is therefore reproducible predictive digital evidence, not an N7
 silicon measurement. It does not validate ROM density, sensing, read energy,
 PVT margin, full-array current, package, HBM, power delivery, thermal behavior,
 yield, repair, or cost.
+
+## Why the comparison is ASAP7 against N7 silicon, and what would close it
+
+The density and frequency comparisons in
+[`../docs/DATAPATH_PIPELINE_REDESIGN.md`](DATAPATH_PIPELINE_REDESIGN.md) and
+`tools/audit_chip_level_density.py` put routed ASAP7 blocks against a fabricated
+A100 on TSMC N7. That is an asymmetric comparison and it is deliberate, because
+the symmetric one is not available:
+
+* **A foundry N7 PDK cannot be used here.** It is distributed under NDA, cannot be
+  committed to a public repository, and cannot be re-run by anyone reading this.
+  Every result in this project is required to be reproducible from the repository
+  by a third party, and an NDA PDK is the one input that makes that impossible.
+* **ASAP7 is the accepted substitute for exactly this purpose.** It is a 7 nm
+  predictive PDK built by ASU and ARM to let academic work reason about a 7 nm
+  FinFET node without foundry access. It is the standard vehicle in published
+  accelerator work for the same reason it is used here.
+* **The node family matches; the confidence does not.** ASAP7 has no calibrated
+  error bar against N7. So a ratio between a routed ASAP7 block and A100 silicon
+  is a comparison of *two models of a 7 nm-class part*, and the ASAP7 side is a
+  prediction. It is not a silicon result and no amount of place-and-route makes it
+  one.
+
+### What this does and does not license
+
+It licences a statement about **design structure**: that a pipelined,
+carry-save, output-stationary datapath with hardware descriptor fan-out lands
+within an order of magnitude of a same-generation GPU's arithmetic density, rather
+than three orders away, and that the previous unpipelined design did not. That
+conclusion depends on ratios between blocks measured in the *same* flow, and it is
+robust to a uniform ASAP7-to-N7 offset because such an offset cancels.
+
+It does not licence an absolute figure. "0.768 TFLOP/s per mm²" is what this flow
+predicts for this design on this predictive PDK. The true N7 number could be
+meaningfully different in either direction, and nothing here bounds by how much.
+
+### What would close the gap
+
+In descending order of value, and none of them are RTL work:
+
+1. **Route the same RTL on a foundry 7 nm or 5 nm PDK** and publish the ratio to
+   the ASAP7 result, not the absolute numbers. One such ratio would calibrate every
+   ASAP7 figure in this repository at once. Needs foundry access; the *ratio* is
+   publishable even when the PDK is not.
+2. **Route on a second open node and check the trend.** SKY130 and IHP SG13G2
+   views already exist for some blocks. Extending them to the redesigned blocks
+   would show whether the improvements are node-independent structure or an ASAP7
+   artefact — which is answerable with no NDA at all.
+3. **Add a power and thermal budget.** The A100 sustains 312 TFLOP/s inside 400 W.
+   Nothing in this project is power-constrained, and an unconstrained design can
+   always win on area. This is probably the largest unmodelled term in the
+   comparison and it is fully reachable with open tools.
+
