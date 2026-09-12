@@ -176,10 +176,39 @@ In descending order of value, and none of them are RTL work:
    the ASAP7 result, not the absolute numbers. One such ratio would calibrate every
    ASAP7 figure in this repository at once. Needs foundry access; the *ratio* is
    publishable even when the PDK is not.
-2. **Route on a second open node and check the trend.** SKY130 and IHP SG13G2
-   views already exist for some blocks. Extending them to the redesigned blocks
-   would show whether the improvements are node-independent structure or an ASAP7
-   artefact — which is answerable with no NDA at all.
+2. ~~**Route on a second open node and check the trend.**~~ **Done, for three
+   changes.** See below.
+
+### The second-node check, done
+
+The worry that ASAP7 might be *flattering these particular changes* — that a
+predictive PDK could reward removing a carry chain more than a real node would — does
+not need foundry access to test. SKY130 is a **fabricable** 130 nm open PDK sharing
+nothing with ASAP7: different library, different metal stack, different device
+generation, roughly an order of magnitude slower. Each change was re-routed there
+end to end, before and after
+(`tools/audit_cross_node_reproducibility.py`):
+
+| change | ASAP7 | SKY130 | agree to |
+|---|---:|---:|---:|
+| normalise cascade → leading-zero count | 1.39× | 1.77× | 1.28× |
+| combinational → five-stage pipeline | 3.95× | 5.06× | 1.28× |
+| serial accumulation → balanced tree | 2.83× | 2.56× | 1.11× |
+
+All three reproduce. The area ratios are the sharper evidence: the balanced tree
+lands **0.73× the area on ASAP7 and 0.72× on SKY130**, and the LZC restructure
+roughly halves area on both. A PDK artefact would not track that closely.
+
+The tool also **measures** the assumption the ratio argument rests on instead of
+asserting it. "A uniform node offset cancels out of a within-node ratio" is only
+sound if the offset is roughly uniform, so the offset is computed on the same design
+across both nodes: spread **1.54× across six measurements**. That is moderate rather
+than tight — it weakens the argument somewhat without overturning it, and the number
+is published so a reader can judge by how much.
+
+**This is still not an N7 calibration.** Two open nodes agreeing shows a change is
+about circuit structure rather than about one PDK. It says nothing about what TSMC N7
+would measure.
 3. **Add a power and thermal budget.** The A100 sustains 312 TFLOP/s inside 400 W.
    Nothing in this project is power-constrained, and an unconstrained design can
    always win on area. This is probably the largest unmodelled term in the
