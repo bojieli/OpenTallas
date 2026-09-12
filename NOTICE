@@ -48,22 +48,25 @@ Model weight tensors
   sibling index.json records the checkpoint repository, revision and per-shard
   SHA-256 digests it was taken from.
 
-  This tensor remains the property of its original authors and is governed by
-  the DeepSeek-V4-Flash-0731 model licence, NOT by OpenTallas' MIT licence.
-  It is present so that one RTL campaign can be replayed bit-exactly against
-  real checkpoint operands rather than synthetic data.
+  That checkpoint is released under the MIT License. Verified by reading the
+  LICENSE file inside the pinned snapshot itself, not inferred:
 
-  Downstream users who cannot accept that licence should delete the file and
-  regenerate it from their own copy of the checkpoint; the campaign that binds
-  it will then need re-taking. If the upstream licence is found to prohibit
-  redistribution of weight data, the correct remedy is removal, not this
-  notice -- see docs/REPRODUCIBILITY.md for the boundary this repository
-  claims.
+      MIT License
+      Copyright (c) 2023 DeepSeek
 
-  Model identities referenced by configuration (not redistributed): Qwen/Qwen3-8B,
-  deepseek-ai/DeepSeek-V4-Flash-0731, deepseek-ai/DeepSeek-V4-Pro-0813,
-  moonshotai/Kimi-K3. Their weights are NOT included; tooling fetches them
-  from their upstream sources under their own licences.
+  MIT permits redistribution provided the copyright notice and permission
+  notice are included, which is what this entry does. The same applies to
+  deepseek-ai/DeepSeek-V4-Pro-0813, whose pinned snapshot carries the identical
+  MIT License and copyright line.
+
+  Qwen/Qwen3-8B, referenced by configuration but NOT redistributed here, is
+  released under the Apache License 2.0 (verified the same way, in the pinned
+  snapshot at revision b968826d9c46dd6066d109eabc6255188de91218).
+
+  Model identities referenced by configuration without redistribution:
+  Qwen/Qwen3-8B (Apache-2.0), deepseek-ai/DeepSeek-V4-Flash-0731 (MIT),
+  deepseek-ai/DeepSeek-V4-Pro-0813 (MIT), moonshotai/Kimi-K3. Their weights are
+  not included; the tooling fetches them from their upstream sources.
 
 
 SKY130 and IHP SG13G2 PDK-derived artifacts

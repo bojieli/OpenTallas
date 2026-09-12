@@ -86,11 +86,12 @@ silicon result and not a foundry claim.** No number in this repository has been
 measured on fabricated hardware.
 
 **Anything reading real model weights** needs the checkpoints from their
-upstream sources under their own licences: Qwen/Qwen3-8B,
-deepseek-ai/DeepSeek-V4-Flash-0731, deepseek-ai/DeepSeek-V4-Pro-0813. Expect
-tens of GB of download and disk. `compiler/qwen3/README.md` documents the exact
-revision and free-space requirement. One tensor is committed as test data; see
-`NOTICE`.
+upstream sources: Qwen/Qwen3-8B (Apache-2.0),
+deepseek-ai/DeepSeek-V4-Flash-0731 (MIT), deepseek-ai/DeepSeek-V4-Pro-0813
+(MIT) — licences verified by reading the LICENSE file inside each pinned
+snapshot. Expect tens of GB of download and disk. `compiler/qwen3/README.md`
+documents the exact revision and free-space requirement. One DeepSeek tensor is
+committed as test data under its MIT terms; see [`NOTICE`](../NOTICE).
 
 **Vendor comparator figures** (NVIDIA, Cerebras, Taalas and others) are quoted
 from published sources, cited by URL in `configs/hardware/*.json`. They were not
