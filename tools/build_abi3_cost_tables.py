@@ -144,9 +144,27 @@ ROUTED_BLOCKS: tuple[dict[str, Any], ...] = (
     {
         "view": "sky130",
         "block": "add_bf16_sram_engine",
-        "family": "vector",
+        "family": None,
         "path": "results/physical_abi3/sky130hd/add_bf16_sram_engine/pnr.json",
         "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "SUPERSEDED as the vector engine by ot_vector_add_unit, on this view "
+            "as well as on asap7.  One element per cycle through a combinational "
+            "BF16 adder, 38.8 MHz.  Reported because it was routed; excluded "
+            "because the machine no longer instantiates it"
+        ),
+    },
+    {
+        "view": "sky130",
+        "block": "vector_add_unit",
+        "family": "vector",
+        "path": "results/physical_abi3/sky130hd/vector_add_unit/pnr.json",
+        "field": "place_and_route.metrics.fmax_hz",
+        "note": (
+            "the same RTL routed on asap7 and on sky130, so this view's vector "
+            "engine is the redesigned one on both nodes rather than only on the "
+            "predictive PDK"
+        ),
     },
     {
         "view": "sky130",
