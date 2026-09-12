@@ -54,6 +54,7 @@ CONTROL_RECORD = ROOT / "results/rtl/abi3_g1e_control_end_to_end.json"
 SEQ_FULL = ROOT / "results/physical_abi3/asap7/a3_microsequencer/pnr.json"
 SEQ_FRONTEND = ROOT / "results/physical_abi3/asap7/a3_microsequencer/pnr_frontend_only.json"
 CAPABILITY_DIR = ROOT / "configs/hardware/abi3_capability"
+MODEL_DIR = ROOT / "configs/models"
 
 #: Lanes in one ot_compute_unit, so a capability's tensor lane count converts to
 #: a compute-unit count. The unit is the thing a descriptor launches.
@@ -115,6 +116,26 @@ def sequencer_clocks() -> dict[str, Any]:
                         for s in (body.get("design") or {}).get("sources", [])],
         }
     return out
+
+
+def models() -> list[dict[str, Any]]:
+    """Active parameters per token, from each model's own config."""
+    rows = []
+    for path in sorted(MODEL_DIR.glob("*.json")):
+        body = json.loads(path.read_text())
+        active = body.get("active_parameters")
+        per_param = body.get("operations_per_active_parameter")
+        if not active or not per_param:
+            continue
+        rows.append({
+            "model": path.stem,
+            "active_parameters": float(active),
+            "operations_per_active_parameter": float(per_param),
+            "operations_per_token": float(active) * float(per_param),
+            "num_layers": body.get("num_layers"),
+            "source": str(path.relative_to(ROOT)),
+        })
+    return rows
 
 
 def accelerators() -> list[dict[str, Any]]:
@@ -195,6 +216,52 @@ def main() -> int:
             "utilisation_with_fanout": min(1.0, busy / ctrl_interval_datapath_cycles),
         })
 
+    #: ---- end to end: a whole decode step, not one kernel -------------------
+    #: The per-accelerator table above asks whether control can feed a unit at a
+    #: chosen descriptor granularity. This asks the question the chip actually has
+    #: to answer: for a whole transformer decode step, how much array time does
+    #: one command buy, and is that more than the command costs?
+    #:
+    #: Commands per forward pass is MEASURED (691, from G1e on the shipped Qwen3
+    #: program). Applying it to the DeepSeek models assumes their lowering issues
+    #: a comparable number of commands per layer, scaled by layer count -- an
+    #: assumption, recorded as a refusal, not a measurement.
+    qwen_layers = 36
+    cmds_per_layer = ctrl["commands_per_forward_pass"] / qwen_layers
+    e2e = []
+    for m in models():
+        for acc in accelerators():
+            units = acc["compute_units"]
+            lanes_total = units * LANES_PER_COMPUTE_UNIT
+            flops_per_cycle = lanes_total * 2          # one MAC is two operations
+            datapath_cycles = m["operations_per_token"] / flops_per_cycle
+            commands = cmds_per_layer * (m["num_layers"] or qwen_layers)
+            cycles_per_command = datapath_cycles / commands
+            ctrl_seconds_token = commands * ctrl["cycles_per_command"] / f_ctrl
+            data_seconds_token = datapath_cycles / DATAPATH_FMAX_HZ
+            e2e.append({
+                "model": m["model"],
+                "capability": acc["capability"],
+                "compute_units": units,
+                "operations_per_token": m["operations_per_token"],
+                "commands_per_token": commands,
+                "datapath_cycles_per_token": datapath_cycles,
+                "datapath_cycles_per_command": cycles_per_command,
+                "control_seconds_per_token": ctrl_seconds_token,
+                "datapath_seconds_per_token": data_seconds_token,
+                #: The two run in SEPARATE clock domains, decoupled by the
+                #: dispatcher's descriptor queue, so the step takes the LONGER of
+                #: them and not the sum. That decoupling is the thing
+                #: ot_cluster_dispatcher exists to provide; without it these add.
+                "tokens_per_second_decoupled":
+                    1.0 / max(ctrl_seconds_token, data_seconds_token),
+                "tokens_per_second_if_serialised":
+                    1.0 / (ctrl_seconds_token + data_seconds_token),
+                "control_headroom_factor": data_seconds_token / ctrl_seconds_token,
+                "control_is_bottleneck": ctrl_seconds_token > data_seconds_token,
+                "required_fanout": units,
+            })
+
     body = {
         "schema": "opentallas.audit.control_path_throughput.v1",
         "question": ("Can the control plane issue kernel descriptors fast enough "
@@ -217,6 +284,7 @@ def main() -> int:
             "descriptors_per_second_per_unit": per_unit_rate,
         },
         "accelerators": rows,
+        "end_to_end_decode": e2e,
         "refusals": [
             "no-single-verdict: whether control is the bottleneck depends on "
             "descriptor fan-out, which is an architectural choice and not a "
@@ -235,6 +303,19 @@ def main() -> int:
             "control rate is a LOWER bound.",
             "not-a-silicon-claim: ASAP7 is a predictive, non-manufacturable PDK "
             "and both clocks come from it.",
+            "commands-per-token-measured-on-one-model: 691 commands per forward "
+            "pass is G1e's measurement of the SHIPPED Qwen3 program. The "
+            "end-to-end rows scale it by layer count for the DeepSeek models, "
+            "which assumes a comparable lowering and is an assumption.",
+            "compute-bound-only: the end-to-end rows price arithmetic at the "
+            "array's peak and charge no weight traffic, no attention over the KV "
+            "cache and no interconnect. A real decode step is usually "
+            "memory-bound at batch 1, so the datapath time is a LOWER bound and "
+            "the control headroom a lower bound with it.",
+            "decoupling-is-required-not-assumed: tokens_per_second_decoupled is "
+            "valid only because ot_cluster_dispatcher puts a descriptor queue "
+            "between the two clock domains. The serialised column is what a "
+            "design without it gets.",
         ],
     }
 
@@ -274,6 +355,23 @@ def main() -> int:
         print("Control keeps up, GIVEN the fan-out in the table: one descriptor "
               "must be expanded\nin hardware across every compute unit, not "
               "issued once per unit by the sequencer.")
+    print("\n  end-to-end decode, one token, compute-bound, control decoupled:")
+    print(f"  {'model':<24} {'capability':<34} {'cyc/cmd':>9} {'headroom':>9} {'tok/s':>9}")
+    for r in e2e:
+        flag = "  CONTROL-BOUND" if r["control_is_bottleneck"] else ""
+        print(f"  {r['model']:<24} {r['capability'].replace('.json',''):<34} "
+              f"{r['datapath_cycles_per_command']:>9.0f} "
+              f"{r['control_headroom_factor']:>8.1f}x "
+              f"{r['tokens_per_second_decoupled']:>9.1f}{flag}")
+    bound = [r for r in e2e if r["control_is_bottleneck"]]
+    print()
+    if bound:
+        print(f"CONTROL-BOUND in {len(bound)} of {len(e2e)} combinations.")
+    else:
+        print(f"Control is NOT the bottleneck in any of the {len(e2e)} "
+              f"(model, accelerator) combinations,")
+        print(f"  minimum headroom {min(r['control_headroom_factor'] for r in e2e):.1f}x "
+              f"-- GIVEN descriptor fan-out across every compute unit.")
     print("\nRead with the refusals. The per-unit column is what a design gets if "
           "one descriptor\nlaunches one compute unit; fan-out is the hardware "
           "expansion that removes that factor.")
