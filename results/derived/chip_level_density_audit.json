@@ -1,0 +1,775 @@
+{
+  "area_excludes": [
+    "KV-cache SRAM",
+    "global activation buffer",
+    "HBM PHY and memory controller",
+    "the mask-ROM array itself, for the ROM capabilities",
+    "clock distribution and power delivery",
+    "pad ring and I/O"
+  ],
+  "chips": [
+    {
+      "bf16_ops_s": 600842240000.0,
+      "capability": "hbm_sram_cluster_32.json",
+      "chip_area_mm2": 0.7826391770000001,
+      "components": [
+        {
+          "area_um2_total": 504395.2,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 16,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 114490.08,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 828.377,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 1,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 767712961039.2605,
+      "tensor_lanes": 256
+    },
+    {
+      "bf16_ops_s": 600842240000.0,
+      "capability": "hbm_sram_cluster_32_speculative.json",
+      "chip_area_mm2": 0.7826391770000001,
+      "components": [
+        {
+          "area_um2_total": 504395.2,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 16,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 114490.08,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 828.377,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 1,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 767712961039.2605,
+      "tensor_lanes": 256
+    },
+    {
+      "bf16_ops_s": 600842240000.0,
+      "capability": "hbm_sram_single_chip.json",
+      "chip_area_mm2": 0.7826391770000001,
+      "components": [
+        {
+          "area_um2_total": 504395.2,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 16,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 114490.08,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 828.377,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 1,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 767712961039.2605,
+      "tensor_lanes": 256
+    },
+    {
+      "bf16_ops_s": 19226951680000.0,
+      "capability": "rom_deepseek_v4.json",
+      "chip_area_mm2": 20.383755344,
+      "components": [
+        {
+          "area_um2_total": 16140646.4,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 512,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 3663682.56,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 512,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 415992.32,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 256,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 26508.064,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 32,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 943248746637.8217,
+      "tensor_lanes": 8192
+    },
+    {
+      "bf16_ops_s": 600842240000.0,
+      "capability": "rom_deepseek_v4_array_32.json",
+      "chip_area_mm2": 0.7826391770000001,
+      "components": [
+        {
+          "area_um2_total": 504395.2,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 16,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 114490.08,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 828.377,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 1,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 767712961039.2605,
+      "tensor_lanes": 256
+    },
+    {
+      "bf16_ops_s": 600842240000.0,
+      "capability": "rom_deepseek_v4_pro_array_32.json",
+      "chip_area_mm2": 0.7826391770000001,
+      "components": [
+        {
+          "area_um2_total": 504395.2,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 16,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 114490.08,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 828.377,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 1,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 767712961039.2605,
+      "tensor_lanes": 256
+    },
+    {
+      "bf16_ops_s": 1201684480000.0,
+      "capability": "rom_qwen3.json",
+      "chip_area_mm2": 1.402352834,
+      "components": [
+        {
+          "area_um2_total": 1008790.4,
+          "closed": true,
+          "core_area_um2": 31524.7,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1289720000.0,
+          "instances": 32,
+          "lanes_each": 16,
+          "name": "tensor_compute_unit",
+          "provides_flops": true,
+          "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+          "standard_cell_count": 60583,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 228980.16,
+          "closed": true,
+          "core_area_um2": 7155.63,
+          "datapath": true,
+          "engine": "vector",
+          "fmax_hz": 1377420000.0,
+          "instances": 32,
+          "lanes_each": 8,
+          "name": "vector_add_unit",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+          "standard_cell_count": 19980,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 25999.52,
+          "closed": true,
+          "core_area_um2": 1624.97,
+          "datapath": true,
+          "engine": "reduction",
+          "fmax_hz": 1173520000.0,
+          "instances": 16,
+          "lanes_each": 8,
+          "name": "reduction_endpoint",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+          "standard_cell_count": 5009,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 1656.754,
+          "closed": true,
+          "core_area_um2": 828.377,
+          "datapath": true,
+          "engine": "tensor",
+          "fmax_hz": 1290490000.0,
+          "instances": 2,
+          "lanes_each": 256,
+          "name": "cluster_dispatcher",
+          "note": "one per 16 compute units, which is 256 tensor lanes",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+          "standard_cell_count": 2734,
+          "status": "pass"
+        },
+        {
+          "area_um2_total": 136926.0,
+          "closed": false,
+          "core_area_um2": 136926.0,
+          "datapath": false,
+          "engine": null,
+          "fmax_hz": 264834000.0,
+          "instances": 1,
+          "lanes_each": null,
+          "name": "microsequencer",
+          "note": "one per chip; on its own clock, decoupled by the dispatcher queue",
+          "provides_flops": false,
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+          "standard_cell_count": 416715,
+          "status": "pass"
+        }
+      ],
+      "datapath_clock_binding_block": "reduction_endpoint",
+      "datapath_clock_hz": 1173520000.0,
+      "datapath_fmax_candidates": [
+        {
+          "block": "tensor_compute_unit",
+          "fmax_hz": 1289720000.0
+        },
+        {
+          "block": "vector_add_unit",
+          "fmax_hz": 1377420000.0
+        },
+        {
+          "block": "reduction_endpoint",
+          "fmax_hz": 1173520000.0
+        },
+        {
+          "block": "cluster_dispatcher",
+          "fmax_hz": 1290490000.0
+        }
+      ],
+      "device_level_ops_s_per_mm2": 856905944684.6741,
+      "tensor_lanes": 512
+    }
+  ],
+  "comparator": {
+    "bf16_dense_ops_s": 312000000000000.0,
+    "device_level_ops_s_per_mm2": 377723970944.30994,
+    "die_area_mm2": 826.0,
+    "logic_level_ops_s_per_mm2": 629539951573.85,
+    "part": "a100_sxm_80gb",
+    "process": "TSMC N7"
+  },
+  "git": {
+    "commit": "e370dc7ff68ec5fa53d4d8bfb7d9b72e982a9cbe",
+    "worktree_dirty": true
+  },
+  "question": "Assembled from blocks that have been place-and-routed, how does a whole chip's throughput per unit area compare with a same-node-family GPU die, at DEVICE level on both sides?",
+  "refusals": [
+    "asap7-is-not-tsmc-n7: the comparator is fabricated silicon on a foundry node; this design is on ASAP7, a predictive and explicitly NON-MANUFACTURABLE academic PDK, and a foundry N7 PDK is not obtainable to close the gap. The node family matches; the confidence does not. This is a comparison of two models of a 7 nm-class part, not a silicon result.",
+    "area-inclusion-is-incomplete: the summed area omits KV-cache SRAM, a global activation buffer, HBM PHY and controller, the mask-ROM array itself, clock and power distribution, and the pad ring. Every one is real silicon, so this density OVERSTATES a finished product.",
+    "peak-arithmetic-only: the throughput is lanes x 2 x clock, a peak figure that assumes every lane retires a MAC every cycle. Measured array utilisation on real compute units under a real dispatcher is 99.1 %, but that is one kernel shape and not a whole workload.",
+    "no-power-or-thermal-limit: the A100's 312 TFLOP/s is a figure it sustains inside a 400 W envelope. Nothing here is power-constrained, and a design that ignores power can always win on area.",
+    "single-clock-assumption-is-load-bearing: the datapath clock is the minimum over instantiated datapath blocks. The control plane is excluded and charged its own clock, which is only legitimate because the dispatcher decouples the domains and the control audit measures that it keeps up."
+  ],
+  "schema": "opentallas.audit.chip_level_density.v1"
+}
