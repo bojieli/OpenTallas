@@ -2,58 +2,38 @@
 /* verilator lint_off DECLFILENAME */
 // Canonical ascending-order reduction.  Missing sources are positive zero;
 // duplicate detection is performed by the endpoint wrapper below.
-module ot_reduction_tree #(
+module ot_reduction_tree_golden #(
     parameter integer SOURCES = 8,
     parameter integer DATA_W = 32
 ) (
     input  wire [SOURCES-1:0] source_valid,
     input  wire signed [SOURCES*DATA_W-1:0] source_data,
-    output wire signed [DATA_W-1:0] sum,
-    output wire overflow
+    output reg signed [DATA_W-1:0] sum,
+    output reg overflow
 );
     localparam integer EXTRA_W = (SOURCES <= 1) ? 1 : $clog2(SOURCES);
     localparam integer REDUCE_W = DATA_W + EXTRA_W;
-    localparam integer LEVELS = (SOURCES <= 1) ? 0 : $clog2(SOURCES);
-    localparam integer NP = 1 << LEVELS;      // sources, padded to a power of two
-
-    //: A BALANCED TREE, not a serial accumulation.  The loop this replaces added
-    //: the sources one at a time into a running total, which is SOURCES
-    //: carry-propagate adds back to back -- eight of them at 35 bits wide for the
-    //: routed s8 configuration.  Pairwise reduction is ceil(log2(SOURCES)) adds
-    //: deep instead: three, not eight.
-    //:
-    //: The sum is unchanged and this is not an approximation: these are signed
-    //: two's-complement integers in a width that cannot overflow before the
-    //: final truncation, and integer addition is associative, so no grouping can
-    //: give a different total.  Proven against the previous implementation over
-    //: every input by SAT miter, in tools/prove_reduction_tree_equivalence.sh.
-    wire signed [REDUCE_W-1:0] node [0:2*NP-1];
-
-    genvar i;
-    generate
-        for (i = 0; i < NP; i = i + 1) begin : leaf
-            //: A source that is not valid contributes exactly zero, so masking
-            //: here is what lets the tree be a plain sum with no per-level
-            //: conditionals.
-            wire signed [DATA_W-1:0] raw = (i < SOURCES)
-                ? $signed(source_data[i*DATA_W +: DATA_W]) : {DATA_W{1'b0}};
-            assign node[NP+i] = ((i < SOURCES) && source_valid[i])
-                ? {{(REDUCE_W-DATA_W){raw[DATA_W-1]}}, raw}
-                : {REDUCE_W{1'b0}};
+    integer i;
+    reg signed [REDUCE_W-1:0] work;
+    reg signed [DATA_W-1:0] value;
+    always @* begin
+        work = {REDUCE_W{1'b0}};
+        value = {DATA_W{1'b0}};
+        for (i = 0; i < SOURCES; i = i + 1) begin
+            if (source_valid[i]) begin
+                value = $signed(source_data[i*DATA_W +: DATA_W]);
+                work = work + {{(REDUCE_W-DATA_W){value[DATA_W-1]}},value};
+            end
         end
-        for (i = 1; i < NP; i = i + 1) begin : branch
-            assign node[i] = node[2*i] + node[2*i+1];
-        end
-    endgenerate
-
-    wire signed [REDUCE_W-1:0] work = (NP >= 1) ? node[1] : {REDUCE_W{1'b0}};
-    assign sum = work[DATA_W-1:0];
-    assign overflow = (work[REDUCE_W-1:DATA_W] != {EXTRA_W{work[DATA_W-1]}});
+        sum = work[DATA_W-1:0];
+        overflow = (work[REDUCE_W-1:DATA_W] !=
+                    {EXTRA_W{work[DATA_W-1]}});
+    end
 endmodule
 
 // Tagged collector for a reduced reticle/stage.  Arrival order is arbitrary,
 // but emission waits for every expected source and reduces in source-ID order.
-module ot_reduction_endpoint #(
+module ot_reduction_endpoint_golden #(
     parameter integer SOURCES = 8,
     parameter integer DATA_W = 32,
     parameter integer GROUPS = 2,
@@ -99,41 +79,6 @@ module ot_reduction_endpoint #(
         {{(SOURCES-1){1'b0}},1'b1} << in_source;
 
     assign in_ready = 1'b1; // a group slot is reserved before service issue
-
-    //: PER-GROUP BALANCED TREES, hoisted OUT of the sequential block.
-    //:
-    //: The emission path used to sum a group's sources with a loop that added
-    //: them one at a time into a running total, inside the clocked always block.
-    //: That is SOURCES carry-propagate adds in series -- eight at 35 bits for the
-    //: routed s8 configuration -- and it sat on the register-to-register path, so
-    //: it set the cycle time.  It is why this engine place-and-routed at 455 MHz.
-    //:
-    //: Each group's sum is now a pairwise tree, ceil(log2(SOURCES)) adds deep,
-    //: evaluated continuously outside the always block.  The clocked process only
-    //: selects one and registers it.  The sum is identical: signed integer
-    //: addition is associative and the reduce width cannot overflow before the
-    //: final truncation, so no grouping changes the total.
-    localparam integer RED_LEVELS = (SOURCES <= 1) ? 0 : $clog2(SOURCES);
-    localparam integer RED_NP     = 1 << RED_LEVELS;
-
-    wire signed [REDUCE_W-1:0] gnode [0:GROUPS-1][0:2*RED_NP-1];
-    wire signed [REDUCE_W-1:0] group_sum [0:GROUPS-1];
-
-    genvar gg, ss;
-    generate
-        for (gg = 0; gg < GROUPS; gg = gg + 1) begin : gtree
-            for (ss = 0; ss < RED_NP; ss = ss + 1) begin : gleaf
-                assign gnode[gg][RED_NP+ss] = ((ss < SOURCES) && seen[gg][ss])
-                    ? {{(REDUCE_W-DATA_W){data_mem[gg][ss][DATA_W-1]}},
-                       data_mem[gg][ss]}
-                    : {REDUCE_W{1'b0}};
-            end
-            for (ss = 1; ss < RED_NP; ss = ss + 1) begin : gbranch
-                assign gnode[gg][ss] = gnode[gg][2*ss] + gnode[gg][2*ss+1];
-            end
-            assign group_sum[gg] = gnode[gg][1];
-        end
-    endgenerate
 
     always @* begin
         selected_group = 0;
@@ -225,7 +170,12 @@ module ot_reduction_endpoint #(
                                ((seen[g] & expected_mask) == expected_mask) &&
                                !(out_valid && out_ready && group_tag[g] == out_tag);
                     if (all_seen && !output_found) begin
-                        reduce_work = group_sum[g];
+                        reduce_work = {REDUCE_W{1'b0}};
+                        for (s = 0; s < SOURCES; s = s + 1)
+                            if (seen[g][s])
+                                reduce_work = reduce_work +
+                                    {{(REDUCE_W-DATA_W){data_mem[g][s][DATA_W-1]}},
+                                     data_mem[g][s]};
                         out_tag <= group_tag[g];
                         out_data <= reduce_work[DATA_W-1:0];
                         out_poison <= poison_mem[g];
