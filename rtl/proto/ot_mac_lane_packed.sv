@@ -70,13 +70,14 @@ module ot_mac_lane_packed #(
     reg [9:0]          s1_exp  [0:PACK-1];
     reg [PROD_W-1:0]   s1_prod [0:PACK-1];
 
-    // ---- stage 2: align each product, then sum the tree --------------------
+    // ---- stage 2: align each product, reduce carry-save --------------------
     reg [ACC_W-1:0]    s2_sum;
     reg                s2_drop;
 
     // signed aligned terms, summed exactly in the window
-    wire signed [ACC_W-1:0] term [0:PACK-1];
-    wire                    drops [0:PACK-1];
+    wire [ACC_W-1:0] term  [0:PACK-1];
+    wire             neg   [0:PACK-1];
+    wire             drops [0:PACK-1];
 
     genvar i;
     generate
@@ -108,34 +109,81 @@ module ot_mac_lane_packed #(
             wire [ACC_W-1:0] mag    = in_win
                 ? ({{(ACC_W-PROD_W){1'b0}}, s1_prod[i]} << sh) : {ACC_W{1'b0}};
 
-            assign term[i]  = s1_sign[i] ? -$signed(mag) : $signed(mag);
+            //: Sign by XOR only.  The +1 each negated term owes is deferred and
+            //: all PACK of them are summed as ONE correction term below, so no
+            //: incrementer appears anywhere in this path.
+            assign term[i]  = s1_sign[i] ? ~mag : mag;
+            assign neg[i]   = s1_sign[i] && (s1_prod[i] != {PROD_W{1'b0}});
             assign drops[i] = !in_win && (s1_prod[i] != {PROD_W{1'b0}});
         end
     endgenerate
 
-    // The tree is exact: fixed-point integers in one window, so no rounding and
-    // no dependence on association order.
-    integer t;
-    reg signed [ACC_W-1:0] tree;
-    reg                    any_drop;
+    // ---- the reduction tree, carry-save ------------------------------------
+    //: A chain of `+` here cost the whole design: eight 40-bit carry-propagate
+    //: adds put the lane at 717 MHz with NEGATIVE slack.  3:2 compressors reduce
+    //: the terms with two gate levels each and no carry propagation at all; one
+    //: carry-propagate add happens later, once per dot product, in the split
+    //: resolve.  This is the same lesson as the accumulator loop, one level up.
+    function automatic [ACC_W-1:0] csa_s(input [ACC_W-1:0] x, y, z);
+        csa_s = x ^ y ^ z;
+    endfunction
+    function automatic [ACC_W-1:0] csa_c(input [ACC_W-1:0] x, y, z);
+        csa_c = ((x & y) | (x & z) | (y & z)) << 1;
+    endfunction
+
+    // the deferred +1s, summed as one term: popcount of the negated lanes
+    integer nq;
+    reg [ACC_W-1:0] neg_corr;
     always @* begin
-        tree = {ACC_W{1'b0}};
+        neg_corr = {ACC_W{1'b0}};
+        for (nq = 0; nq < PACK; nq = nq + 1)
+            neg_corr = neg_corr + {{(ACC_W-1){1'b0}}, neg[nq]};
+    end
+
+    // reduce PACK terms plus the correction to a (sum, carry) pair
+    wire [ACC_W-1:0] l1s0 = csa_s(term[0], term[1], term[2]);
+    wire [ACC_W-1:0] l1c0 = csa_c(term[0], term[1], term[2]);
+    wire [ACC_W-1:0] l1s1 = csa_s(term[3], term[4], term[5]);
+    wire [ACC_W-1:0] l1c1 = csa_c(term[3], term[4], term[5]);
+    wire [ACC_W-1:0] l1s2 = csa_s(term[6], term[7], neg_corr);
+    wire [ACC_W-1:0] l1c2 = csa_c(term[6], term[7], neg_corr);
+
+    wire [ACC_W-1:0] l2s0 = csa_s(l1s0, l1c0, l1s1);
+    wire [ACC_W-1:0] l2c0 = csa_c(l1s0, l1c0, l1s1);
+    wire [ACC_W-1:0] l2s1 = csa_s(l1c1, l1s2, l1c2);
+    wire [ACC_W-1:0] l2c1 = csa_c(l1c1, l1s2, l1c2);
+
+    wire [ACC_W-1:0] l3s  = csa_s(l2s0, l2c0, l2s1);
+    wire [ACC_W-1:0] l3c  = csa_c(l2s0, l2c0, l2s1);
+
+    wire [ACC_W-1:0] t_sum = csa_s(l3s, l3c, l2c1);
+    wire [ACC_W-1:0] t_car = csa_c(l3s, l3c, l2c1);
+
+    reg [ACC_W-1:0] s2_car;
+    reg             any_drop_q;
+
+    integer t;
+    reg any_drop;
+    always @* begin
         any_drop = 1'b0;
-        for (t = 0; t < PACK; t = t + 1) begin
-            tree = tree + term[t];
-            any_drop = any_drop | drops[t];
-        end
+        for (t = 0; t < PACK; t = t + 1) any_drop = any_drop | drops[t];
     end
 
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin s2_sum <= {ACC_W{1'b0}}; s2_drop <= 1'b0; end
-        else begin s2_sum <= tree; s2_drop <= any_drop; end
+        if (!rst_n) begin
+            s2_sum <= {ACC_W{1'b0}}; s2_car <= {ACC_W{1'b0}}; s2_drop <= 1'b0;
+        end else begin
+            s2_sum <= t_sum; s2_car <= t_car; s2_drop <= any_drop;
+        end
 
     // ---- stage 3: one carry-save accumulate for all PACK products ----------
+    //: 4:2 compression: the accumulator pair plus the tree pair, two CSA levels,
+    //: still no carry chain in the recurring path.
     reg [ACC_W-1:0] acc_sum, acc_car;
-    wire [ACC_W-1:0] cs_sum = acc_sum ^ acc_car ^ s2_sum;
-    wire [ACC_W-1:0] cs_car =
-        ((acc_sum & acc_car) | (acc_sum & s2_sum) | (acc_car & s2_sum)) << 1;
+    wire [ACC_W-1:0] m1s = csa_s(acc_sum, acc_car, s2_sum);
+    wire [ACC_W-1:0] m1c = csa_c(acc_sum, acc_car, s2_sum);
+    wire [ACC_W-1:0] cs_sum = csa_s(m1s, m1c, s2_car);
+    wire [ACC_W-1:0] cs_car = csa_c(m1s, m1c, s2_car);
 
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
