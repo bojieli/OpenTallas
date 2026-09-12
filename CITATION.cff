@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+title: >-
+  OpenTallas: an evidence-gated study of model-specific mask-ROM
+  inference silicon
+message: >-
+  If you refer to this work, please cite it, and please cite what the
+  repository actually establishes. Its headline throughput and cost
+  figures are deterministic ANALYTICAL model outputs, not measurements of
+  hardware. No OpenTallas silicon exists: there is no tapeout, no
+  fabricated device, no foundry signoff, and no benchmark on real
+  hardware. Physical-design results come from ASAP7, a predictive and
+  non-manufacturable academic PDK.
+
+  The repository tracks its own readiness with a 19-rung gate board.
+  Running `python3 tools/check_redesign_gates.py` takes under a second
+  and prints the current state; at the time of writing 9 of 19 rungs and
+  1 of 4 terminal gates pass. Gate C3 -- that the cycle model and the
+  analytical model agree on the binding constraint -- is FAILING, and it
+  bears directly on the headline comparison. See
+  docs/REPRODUCIBILITY.md for what an outside reader can and cannot
+  re-derive.
+type: software
+authors:
+  - family-names: Li
+    given-names: Bojie
+    email: bojieli@gmail.com
+repository-code: https://github.com/bojieli/OpenTallas
+license: MIT
+version: 0.1.0
+date-released: '2026-08-27'
+keywords:
+  - machine-learning-accelerator
+  - mask-rom
+  - llm-inference
+  - computer-architecture
+  - open-source-eda
+  - asap7
+  - reproducible-research
+abstract: >-
+  OpenTallas asks what it would take to make model-specific ROM
+  inference open and inspectable: weights fabricated into mask ROM rather
+  than streamed from HBM, evaluated against a conventional HBM/GPU
+  comparator under a shared ABI.
+
+  The repository connects model accounting, an analytical architecture
+  study, a backend-neutral compiler and runtime with a cycle model,
+  synthesizable reference RTL, and open-PDK physical and circuit
+  experiments into one evidence chain in which prose figures are bound by
+  digest to the artifacts that produced them.
+
+  Its distinguishing feature is that it is gated against itself rather
+  than presented as finished. Claims are separated by evidence class;
+  absence of evidence is recorded as failure rather than as "not
+  evaluable"; source-binding digests make a stale artifact inadmissible;
+  and the repository publishes its own post-mortems, including one
+  titled "how the accelerator came to be 44,000x too slow". Readers are
+  invited to check the numbers, and the tooling to do so is included.
