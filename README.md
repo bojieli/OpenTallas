@@ -58,6 +58,46 @@ independent laboratory. The exact source boundary is recorded in the
 > A cycle result that depends on assumed machine values is correctness evidence,
 > not a performance measurement or projection.
 
+## Where this program actually stands
+
+Every figure below is a model output. Whether the design *works* is tracked
+separately, by a gate board of 19 rungs that is deliberately mostly red. Run it
+yourself on a bare checkout — no install, no EDA tools, under half a second:
+
+```
+PYTHONPATH=. python3 tools/check_redesign_gates.py
+```
+
+At the time of writing it prints **9 of 19 rungs passing and 1 of 4 terminal
+gates**, and exits non-zero:
+
+```
+TERMINAL GATES FAILING: G1, G3, G4 -- the release criteria of
+docs/OPENTALLAS_REDESIGN_PLAN.md are not met
+```
+
+What those failures mean, in plain terms:
+
+- **G1** — the integrated RTL does not yet produce the reference model's tokens.
+  End-to-end token correctness is not demonstrated.
+- **G3** — no correctness-qualified time-per-output-token measurement exists.
+- **G4** — the cycle model is ~10x off the measured RTL control plane, with 32 of
+  32 ratios outside the acceptance band.
+- **C3** — the cycle model and the analytical model do **not** agree on the
+  binding constraint. This one bears directly on the headline numbers; see
+  [the disagreement](#the-cycle-model-disagrees-with-the-analytical-model) below.
+
+Two further facts a reader should have before quoting anything here:
+
+- **64 of 96** artifacts that pin source digests no longer bind the current tree
+  (`results/derived/source_currency_drift.json`). A drifted artifact is
+  inadmissible as evidence until re-taken.
+- The analytical layer **is** byte-reproducible: `make iso-node` regenerates the
+  headline studies in ~3 seconds and leaves `git status` clean.
+
+[**What you can and cannot reproduce**](docs/REPRODUCIBILITY.md) states the full
+boundary in three tiers.
+
 ## Why 10,000 tokens per second matters
 
 High token rates are not valuable simply because a benchmark number is large.
@@ -284,6 +324,39 @@ per-user latency advantage is not automatically an aggregate serving advantage.
 Read the complete [N6/A100](results/roofline/n6_vs_a100/REPORT.md) and
 [N5/B200](results/roofline/n5_vs_b200/REPORT.md) reports before quoting a row.
 
+Four of the six rows above are **single-resident-session** machines compared
+against comparators holding 344 to 1,637 sessions. For the N5/Qwen3-8B row that
+is 1 session against 388. As
+[`results/roofline/n5_vs_b200/REPORT.md`](results/roofline/n5_vs_b200/REPORT.md)
+puts it: *"a latency claim taken from a machine that holds 1 session against one
+that holds 388 is not the trade it looks like."* The batch-regime tables in those
+reports are the honest reading; these rows are not.
+
+#### The cycle model disagrees with the analytical model
+
+The table above is analytical. This repository also has a cycle model, and for
+the N5/Qwen3-8B design point the two do not agree — by a factor of about 24, in
+the direction that reverses the claim:
+
+| Model | ROM vs HBM, per-user | Source |
+|---|---:|---|
+| Analytical (the 5.05× row above) | **5.05×** faster | `results/roofline/n5_vs_b200/analytical.json` |
+| Analytical, like-for-like with the link term removed from both | 4.29× faster | `qwen3_n5_design_target_reconciliation.json#headline` |
+| **Cycle model, same design pair** | **0.179× — i.e. 5.6× slower** | same artifact, `cycle_ratio` |
+
+The asymmetry is what makes this load-bearing rather than a tolerance question.
+On the **HBM comparator** the cycle model reproduces the analytical model to
+within 1.5% (`step_ratio_cycle_over_analytical` 1.0148). On the **ROM side** it is
+28.7× apart (28.686). A cross-check that validates the comparator and fails only
+the subject is evidence about the subject. Roughly 90% of the ROM cycle step is
+not attributed to any measured term in the artifact.
+
+This is recorded as gate **C3: fail**, and it is not resolved. Until it is, treat
+the analytical advantage as an *upper bound from a roofline projection* whose
+own higher-fidelity cross-check does not reproduce it — not as a performance
+result. The reconciliation artifact and gate G4 (cycle model vs measured RTL
+control plane) are where this gets settled.
+
 ## What is implemented—and what is not
 
 | Evidence layer | Present in the repository | Claim boundary |
@@ -315,6 +388,8 @@ before extending a claim.
 | Review digital hardware evidence | [RTL inventory](rtl/README.md) and [RTL result reports](results/rtl/) |
 | Review ROM circuit evidence | [SPICE guide](spice/README.md) and [physical methodology](docs/ROM_PHYSICAL_METHODOLOGY.md) |
 | Track active work | [Unified execution checklist](docs/UNIFIED_EXECUTION_CHECKLIST.md) |
+| **See what passes today** | `PYTHONPATH=. python3 tools/check_redesign_gates.py` — 19 rungs in 0.47 s |
+| **Know what you can reproduce** | [Reproducibility boundary](docs/REPRODUCIBILITY.md) |
 
 ## Quick start
 
@@ -374,3 +449,17 @@ renaming or moving an active plan or checklist.
 The most valuable contribution is often not a larger number. It is a clearer
 boundary between what the repository demonstrates, what it models, and what
 still has to be measured in silicon.
+
+## License
+
+OpenTallas is released under the [MIT License](LICENSE).
+
+[`NOTICE`](NOTICE) lists third-party material that is redistributed inside this
+repository under its own terms and is **not** covered by MIT — notably ASAP7
+standard-cell geometry embedded in three routed GDSII files, and one weight
+tensor from a third-party model checkpoint committed as RTL test data. Read it
+before redistributing.
+
+Vendor comparator figures are quoted from published sources and remain the
+property of their publishers. OpenTallas is independent of Taalas and of every
+other vendor named here.
