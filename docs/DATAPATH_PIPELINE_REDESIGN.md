@@ -197,6 +197,57 @@ comparator is fabricated silicon — the node family matches, the confidence doe
 not. Both refusals are recorded in the audit artifact rather than left to a
 reader's charity.
 
+## Every precision lane closes at ~1.37 GHz, and the density argument does not survive contact
+
+All three weight formats, each through synthesis, STA **and** place-and-route,
+each **fully closed** -- zero max-slew, zero max-cap, zero DRC, positive slack
+(`results/physical_abi3/asap7/mac_lanes/`):
+
+| Weight format | f_max | setup WNS | instances | core area | slew | DRC |
+|---|---:|---:|---:|---:|---:|---:|
+| BF16 E8M7 | 1,358 MHz | +0.264 ns | 5,637 | 650 µm² | 0 | 0 |
+| FP8 E4M3 | 1,371 MHz | +0.271 ns | 4,801 | 571 µm² | 0 | 0 |
+| MXFP4 E2M1 | 1,388 MHz | +0.280 ns | 4,418 | 530 µm² | 0 | 0 |
+
+All three are qualified bit-exact against `runtime.reference.mac_tile` by
+`rtl/test/tb_mac_lane_fmt.sv`.
+
+### The correction this forces
+
+Earlier in this document the measured multiplier costs were used to argue a 370×
+throughput-density spread across precisions. **At lane level that argument is
+wrong**, and these numbers are why:
+
+| Format | multiplier | whole lane | multiplier's share |
+|---|---:|---:|---:|
+| BF16 | 46.4 µm² | 650 µm² | **7.1 %** |
+| FP8 | 13.3 µm² | 571 µm² | **2.3 %** |
+| MXFP4 | 7.4 µm² | 530 µm² | **1.4 %** |
+
+The multiplier is a rounding error in a lane. The 40-bit accumulator, the align
+shifter and the split resolve dominate, and **none of them shrink with the weight
+format**, so the 6.3× multiplier saving from BF16 to MXFP4 becomes an **18 %**
+lane saving. Quoting the multiplier ratio as an architectural advantage charges
+the accumulator to nobody.
+
+### What actually cashes it: share the accumulator
+
+`rtl/proto/ot_mac_lane_packed.sv` puts PACK multipliers behind **one**
+accumulator, summing their aligned products in an exact fixed-point tree -- the
+same thing a tensor core does, and for the same reason. The tree introduces no
+rounding because the terms are already integers in a common window, so the result
+does not depend on association order.
+
+At PACK=8 with MXFP4 weights the lane is qualified bit-identical to the reference
+and retires a K=32 dot product in **4 cycles instead of 32**:
+
+    PASS PACK=8 E2M1: bit-identical to the reference (ffffffc320), 4 cycles for K=32
+
+That is where a mask-ROM weight store's density argument becomes an arithmetic
+density argument. Sizing the array by multiplier area alone would have produced a
+design whose accumulators dwarfed its multipliers, and no amount of re-measuring
+the multiplier would have revealed it.
+
 ## Proposed precision set
 
 Driven by what the models actually need, not by what is elegant:
