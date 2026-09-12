@@ -197,6 +197,49 @@ comparator is fabricated silicon — the node family matches, the confidence doe
 not. Both refusals are recorded in the audit artifact rather than left to a
 reader's charity.
 
+### The device claim, now that there is one
+
+The paragraph above ends "what this is not: a device claim", because an array with
+no operand storage cannot make one. That gap is now closed from both ends.
+
+**A complete compute unit.** `ot_compute_unit` is the tile plus two ganged
+`fakeram_256x128` weight macros, an activation register file and a sequencer,
+place-and-routed to status pass with clean signal integrity
+(`results/physical_abi3/asap7/compute_unit/pnr.json`): **1,290 MHz in 31,525 µm²**,
+which is **1.309 TFLOP/s per mm² — 2.08× the A100 at logic level**, with its
+operand memory counted.
+
+**A whole chip.** `tools/audit_chip_level_density.py` instantiates each
+capability's declared engine counts out of blocks that have actually been routed --
+compute units with their SRAM, vector units, reduction units, cluster dispatchers
+and the control plane -- and compares summed throughput over summed area against
+the A100's **whole 826 mm² die**:
+
+| capability | tensor lanes | chip area | clock | TFLOP/s | per mm² | vs A100 device level |
+|---|---:|---:|---:|---:|---:|---:|
+| `hbm_sram_single_chip` | 256 | 0.783 mm² | 1,174 MHz | 0.60 | 0.768 | **2.03×** |
+| `rom_qwen3` | 512 | 1.402 mm² | 1,174 MHz | 1.20 | 0.857 | 2.27× |
+| `rom_deepseek_v4` | 8,192 | 20.384 mm² | 1,174 MHz | 19.23 | 0.943 | 2.50× |
+
+Device level on **both** sides, worst case 2.03×. That is the comparison the
+array-level number could not support, and it is the one the design target was
+written against.
+
+Two things make it honest rather than flattering, and both are in the audit's
+refusals. The **inclusion list is incomplete**: no KV-cache SRAM, no global
+activation buffer, no HBM PHY or controller, no ROM array for the ROM variants, no
+clock or power distribution, no pad ring. All real silicon, so this overstates a
+finished product. And **nothing here is power-constrained** while the A100 sustains
+its 312 TFLOP/s inside 400 W — a design that ignores power can always win on area,
+and this is probably the largest unmodelled term in the whole comparison.
+
+The single-clock assumption is also load-bearing: the chip clock is the minimum over
+instantiated **datapath** blocks, and the control plane is excluded and charged its
+own 265 MHz. That is only legitimate because `ot_cluster_dispatcher` decouples the
+domains and the control audit measures 99.1 % array utilisation across it. Wired
+directly, the chip would run at 265 MHz and the table would read 0.46×. See
+[`CONTROL_PATH_DESIGN.md`](CONTROL_PATH_DESIGN.md).
+
 ## Every precision lane closes at ~1.37 GHz, and the density argument does not survive contact
 
 All three weight formats, each through synthesis, STA **and** place-and-route,
