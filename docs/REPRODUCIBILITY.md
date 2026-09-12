@@ -65,9 +65,10 @@ it reports 64 failures; run the same files individually and 10 remain. The gap i
 **resource exhaustion**: `tests/runtime/test_abi3_cycle.py` alone measures
 72–84 GB peak RSS, and a group run gets OOM-killed (measured: rc=137,
 `anon-rss:72208572kB`, with zero failures recorded before the kill). Three
-pairwise runs confirmed that no file poisons a later one, so this is not shared
-module-level state — an earlier version of this page said it was, and that was
-wrong. Until the footprint is capped, triage per-file and quote failure counts
+pairwise runs confirmed that no file poisons a later one, and running the three
+files that carry 56 of the group's failures together yields only 4 — all of them
+the known real failures. So this is not shared module-level state; an earlier
+version of this page said it was, and that was wrong. Until the footprint is capped, triage per-file and quote failure counts
 with the execution mode attached. 10 is the real defect count.
 
 ---

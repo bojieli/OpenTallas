@@ -47,7 +47,7 @@ gates pass, this job should start enforcing its exit code.
 
 | Excluded | Why |
 |---|---|
-| `tests/runtime` | 64 failures as a group, 10 per-file. The gap is **memory, not test pollution**: `test_abi3_cycle.py` exceeds 70 GB RSS and a group run is OOM-killed (measured rc=137, `anon-rss:72208572kB`, zero failures recorded before the kill). A GitHub runner has ~7 GB, so this cannot run in CI at all until the footprint is fixed. |
+| `tests/runtime` | 64 failures as a group, 10 per-file, and only **4** when the three worst files run together. The gap is **memory, not test pollution**: `test_abi3_cycle.py` exceeds 70 GB RSS and a group run is OOM-killed (measured rc=137, `anon-rss:72208572kB`, zero failures recorded before the kill). A GitHub runner has ~7 GB, so this cannot run in CI at all until the footprint is fixed. |
 | `tests/compiler` | 67 failures at HEAD, dominated by source-currency drift (64 of 96 pinning artifacts drifted). A backlog, not a regression. |
 | RTL, synthesis, ORFS | Need pinned Verilator 5.050, Icarus, Yosys 0.68, OpenROAD and a PDK. See [`docs/REPRODUCIBILITY.md`](../../docs/REPRODUCIBILITY.md) tiers 2–3. |
 | Long campaigns | Several artifacts record `verification_wall_seconds` near 16,500 s per store. |
