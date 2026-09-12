@@ -123,7 +123,7 @@ Recorded as refusals in the tool, not as prose caveats:
   queue between two clock domains. The serialised column is what a design without
   it gets, and it is worse in every row.
 
-## Open: where the decode time actually goes
+## Resolved: the 98% padding figure is not a cost
 
 `results/abi3/cycle_characterization_feedback.json` reports, for one Qwen3-8B
 decode transaction on the single-chip capability:
@@ -131,21 +131,44 @@ decode transaction on the single-chip capability:
 * `tiling.padding_fraction` **0.981668** — issued tile work is 54.5× the useful work
 * `tensor.busy_cycles` is **99.1%** of `total_cycles`
 * the dominant tensor SCHEDULE shape in the built deployment is **512 rows × 4096
-  columns**, in a transaction that generates one token
+  columns**
 
-If that padding is charged, it is a larger factor than the 20.2× the machine clock
-just gained, and it would be the next thing to fix. **Whether it is charged is not
-yet established.** Two attempts to attribute it from reading the model were both
-wrong: `tools/audit_c2_padding_cost_attribution.py` shows `tile_work` cancelling in
-`_work_scale` when a family's work counter is present, and `tensor_lane_mapping`
-asserts that it covers exactly `rows × cols` and so pads no rows. The observation
-stands; the attribution does not. It needs an experiment on the cycle model, not
-another reading of it.
+That looks like a 54.5× waste sitting on top of everything else, and larger than
+the 20.2× the machine clock just gained. **It is not.** For the tensor family the
+charge in `runtime/cycle/model.py` `_compute_cycles` is
 
-Note that the redesigned `ot_compute_unit` is output-stationary — lanes hold output
-columns and the single activation column is broadcast — so a batch-1 decode step
-maps onto it with no row dimension to pad. Whether the *model* charges padding is
-therefore a separate question from whether the *hardware* wastes work on it.
+```python
+cycles = mapping.tensor_lanes.output_waves * depth_cycles
+```
+
+with the reason stated in the code: *"Masked lanes do no work and cannot accelerate
+a live lane, so a wave's time depends on active K depth, not on a padded row
+rectangle or on the number of tail lanes."* `tensor_lane_mapping` additionally
+asserts `active_lane_slots == rows * cols`, so the wave count covers the real
+output surface exactly and pads nothing.
+
+So `padding_fraction` is a **reported statistic about tile geometry, not a charged
+cost**, for the tensor family — which is also what
+`tools/audit_c2_padding_cost_attribution.py` concluded from the other direction.
+
+This is recorded because getting there took three readings and the first two were
+wrong. A numerical coincidence made the wrong answer look confirmed:
+`tensor.busy_cycles × lanes` comes within 0.14% of `issued_tile_work`, which is
+exactly what one would expect if the padded rectangle *were* being charged. It is
+a coincidence. An arithmetic near-match is not a mechanism, and the only thing that
+settled it was reading the branch that computes the number.
+
+### What that leaves open
+
+Tensor throughput in the model is still far below the array's peak: 1.5×10¹⁰ useful
+operations in 1.74×10⁹ cycles on 256 lanes is about 3.4% of peak. Padding is now
+ruled out as the cause, so the remaining candidates are the `work_per_lane_cycle`
+characterization, the depth-tile charge, and `issue_window`. That is a separate
+investigation and it is not attributed here.
+
+Note separately that the redesigned `ot_compute_unit` is output-stationary — lanes
+hold output columns and the single activation column is broadcast — so a batch-1
+decode step maps onto it with no row dimension to pad in the hardware either.
 
 ## Cross-references
 
