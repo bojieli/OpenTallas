@@ -32,7 +32,7 @@ document, section, literal, and optional source-line context; it carries a
 disposition and rationale, declares how many candidates it must match, and the
 audit refuses stale or overlapping rules.  The first deliberately small pass
 classifies **8** candidates as ABI norms or examples. <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="explicitly triaged normative/example prose candidates" -->
-It leaves **3,347** explicitly untriaged. <!-- figure: 3347 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="prose candidates still awaiting triage" -->
+It leaves **3,354** explicitly untriaged. <!-- figure: 3354 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="prose candidates still awaiting triage" -->
 No document-wide default is allowed, and neither the new classification nor a
 snapshot entry is evidence that a result is correct.  Produced figures still
 need resolving `figure:` annotations; external values need named sources; and

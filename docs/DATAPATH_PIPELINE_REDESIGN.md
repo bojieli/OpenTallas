@@ -149,18 +149,42 @@ Driven by what the models actually need, not by what is elegant:
 | Accumulation | FP32 | 24 b | One rounding per step; the tensor-core contract. |
 | Reductions/norms | FP32 | 24 b | Softmax and RMS norm need the headroom. |
 
-Every multiplier array is then sized by its **significand product width**, which
-is the quantity that sets both depth and area:
+### Measured multiplier cost per precision
 
-| Pair | Product width | Relative array |
-|---|---:|---:|
-| MXFP4 × FP8 | 3×4 = 12 b | 0.25× |
-| FP8 × FP8 | 4×4 = 16 b | 0.25× |
-| BF16 × BF16 | 8×8 = 64 b | 1× |
-| FP32 × FP32 | 24×24 = 576 b | 9× |
+Not estimated from significand widths — synthesised, one registered significand
+multiply per format, same view and tools:
 
-This is why a tensor core is built around BF16/FP8 and not FP32, and why
-supporting FP32 multiply in the same array is the wrong trade.
+| Pair | f_max | crit | cells | area | ×MXFP4 area | MAC/s per µm² |
+|---|---:|---:|---:|---:|---:|---:|
+| MXFP4 × FP8 | **4,713 MHz** | 0.212 ns | 48 | 7.4 µm² | 1.0× | 6.4 × 10⁸ |
+| FP8 × FP8 | 2,606 MHz | 0.384 ns | 94 | 13.3 µm² | 1.8× | 2.0 × 10⁸ |
+| BF16 × BF16 | 1,541 MHz | 0.649 ns | 346 | 46.4 µm² | 6.3× | 3.3 × 10⁷ |
+| FP32 × FP32 | **613 MHz** | 1.631 ns | 2,812 | 354.6 µm² | **48.1×** | 1.7 × 10⁶ |
+
+Three conclusions follow, and the first two were predictions this measurement
+confirms:
+
+1. **FP32 multiply cannot reach 1 GHz here even standalone** — 613 MHz at
+   1.631 ns, the only format in the set that fails to. Any datapath that must
+   multiply in FP32 is capped below the others before anything else is designed.
+   Supporting it in the shared array is the wrong trade; it belongs on a separate
+   slow path if it is needed at all.
+2. **Area scales roughly as the significand product**, as the significand-width
+   argument predicts: FP32 measures 7.6× BF16 against a 9× prediction, and MXFP4
+   measures 0.16× BF16 against 0.25×.
+3. **Throughput per unit area spans 370×** across the set: MXFP4 delivers 370×
+   the multiplies per second per µm² that FP32 does, and 19× what BF16 does.
+
+That last number is the quantitative core of this project's own thesis. The case
+for mask ROM rests on weight density, and the arithmetic density moves the same
+way — for a fixed silicon budget you buy **48 MXFP4 multipliers per FP32
+multiplier**. A design that stores weights at 4 bits and then multiplies them in
+FP32 has thrown the advantage away in the datapath after paying for it in the
+memory.
+
+These are multiply-only and unpipelined, so they are a floor on achievable
+frequency and a lower bound on the ratio, not a full MAC figure. The ratio is the
+point.
 
 ## Array allocation
 
