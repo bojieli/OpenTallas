@@ -126,13 +126,13 @@ jobs:
       - name: Print the 19-rung board
         run: |
           set +e
-          PYTHONPATH=. python tools/check_redesign_gates.py | tee board.txt
+          PYTHONPATH=. python tools/check_redesign_gates.py | tee "$RUNNER_TEMP/board.txt"
           status=${PIPESTATUS[0]}
           {
             echo '### Gate board'
             echo
             echo '```'
-            tail -n 25 board.txt
+            tail -n 25 "$RUNNER_TEMP/board.txt"
             echo '```'
             echo
             echo "Exit status: ${status} (1 is expected while any terminal gate fails)."
