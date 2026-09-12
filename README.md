@@ -454,6 +454,13 @@ still has to be measured in silicon.
 
 OpenTallas is released under the [MIT License](LICENSE).
 
+See also [`CONTRIBUTING.md`](CONTRIBUTING.md), the
+[code of conduct](CODE_OF_CONDUCT.md), and the [security policy](SECURITY.md) —
+which distinguishes a security report (crafted input to the toolchain, a broken
+tool pin) from a correctness report (a wrong number, a drifted artifact, a
+failing gate). Correctness reports are welcome as ordinary issues; this project
+is deliberately public about them.
+
 [`NOTICE`](NOTICE) lists third-party material that is redistributed inside this
 repository under its own terms and is **not** covered by MIT — notably ASAP7
 standard-cell geometry embedded in three routed GDSII files, and one weight
