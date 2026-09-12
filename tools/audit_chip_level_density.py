@@ -58,6 +58,9 @@ TECH_INPUTS = ROOT / "configs/hardware/technology_inputs.json"
 CAPABILITY_DIR = ROOT / "configs/hardware/abi3_capability"
 
 A100_DIE_AREA_MM2 = 826.0
+#: The A100's 312 TFLOP/s is what it sustains inside this envelope, so an energy
+#: comparison is the one that charges both sides for the same thing.
+A100_POWER_W = 400.0
 GPU_LOGIC_FRACTION = 0.6
 FLOPS_PER_MAC = 2
 
@@ -113,6 +116,8 @@ def load_block(rel: str) -> dict[str, Any]:
         "fmax_hz": float(metrics["fmax_hz"]),
         "core_area_um2": float(metrics["core_area_um2"]),
         "standard_cell_count": metrics.get("standard_cell_count"),
+        "power_total_w": (float(metrics["power_total_w"])
+                          if metrics.get("power_total_w") is not None else None),
         "status": body.get("status"),
         "closed": (body.get("design") or {}).get("closed"),
     }
@@ -128,6 +133,8 @@ def comparator() -> dict[str, Any]:
         "die_area_mm2": A100_DIE_AREA_MM2,
         "device_level_ops_s_per_mm2": ops / A100_DIE_AREA_MM2,
         "logic_level_ops_s_per_mm2": ops / (A100_DIE_AREA_MM2 * GPU_LOGIC_FRACTION),
+        "power_w": A100_POWER_W,
+        "ops_s_per_w": ops / A100_POWER_W,
     }
 
 
@@ -135,6 +142,8 @@ def build_chip(capability: Path) -> dict[str, Any]:
     cap = json.loads(capability.read_text())
     engines = cap.get("engines") or {}
     parts, area_um2, tensor_lanes = [], 0.0, 0
+    power_w = 0.0
+    power_complete = True
     datapath_fmax = []
 
     for comp in COMPONENTS:
@@ -151,6 +160,10 @@ def build_chip(capability: Path) -> dict[str, Any]:
         parts.append({**comp, **block, "instances": count,
                       "area_um2_total": block["core_area_um2"] * count})
         area_um2 += block["core_area_um2"] * count
+        if block["power_total_w"] is None:
+            power_complete = False
+        else:
+            power_w += block["power_total_w"] * count
         if comp["datapath"]:
             datapath_fmax.append({"block": comp["name"], "fmax_hz": block["fmax_hz"]})
 
@@ -169,6 +182,9 @@ def build_chip(capability: Path) -> dict[str, Any]:
         "datapath_fmax_candidates": datapath_fmax,
         "bf16_ops_s": ops_s,
         "device_level_ops_s_per_mm2": ops_s / area_mm2,
+        "chip_power_w": power_w if power_complete else None,
+        "power_is_complete": power_complete,
+        "ops_s_per_w": (ops_s / power_w) if (power_complete and power_w) else None,
     }
 
 
@@ -205,9 +221,18 @@ def main() -> int:
             "figure that assumes every lane retires a MAC every cycle. Measured "
             "array utilisation on real compute units under a real dispatcher is "
             "99.1 %, but that is one kernel shape and not a whole workload.",
-            "no-power-or-thermal-limit: the A100's 312 TFLOP/s is a figure it "
-            "sustains inside a 400 W envelope. Nothing here is power-constrained, "
-            "and a design that ignores power can always win on area.",
+            "power-is-a-default-activity-estimate: ORFS reports power from the "
+            "routed netlist under the flow's DEFAULT switching activity, not from "
+            "a workload trace. Real power depends on what the design is running, "
+            "and a MAC array under a dense GEMM switches far more than a default "
+            "assumption. These watts are therefore an OPTIMISTIC lower bound and "
+            "the energy ratios are upper bounds on this design's advantage.",
+            "energy-comparison-is-against-a-tdp: the A100 figure is 312 TFLOP/s "
+            "inside a 400 W package TDP, which includes HBM, PHY and everything "
+            "else the area list excludes. The two sides are not charged for the "
+            "same components on the power axis any more than on the area axis.",
+            "no-thermal-or-ir-drop-analysis: nothing here checks power density, "
+            "IR drop or thermal feasibility, all of which bound a real design.",
             "single-clock-assumption-is-load-bearing: the datapath clock is the "
             "minimum over instantiated datapath blocks. The control plane is "
             "excluded and charged its own clock, which is only legitimate because "
@@ -219,22 +244,35 @@ def main() -> int:
     print(f"comparator: {ref['part']} on {ref['process']}, "
           f"{ref['bf16_dense_ops_s']/1e12:.0f} TFLOP/s over {ref['die_area_mm2']:.0f} mm2")
     print(f"  device level: {ref['device_level_ops_s_per_mm2']/1e12:.3f} TFLOP/s per mm2\n")
-    print(f"  {'capability':<38} {'lanes':>6} {'area mm2':>9} {'clock':>8} "
-          f"{'TFLOP/s':>9} {'T/s/mm2':>9} {'vs A100':>8}")
+    print(f"  {'capability':<34} {'lanes':>6} {'area mm2':>9} {'TFLOP/s':>8} "
+          f"{'T/s/mm2':>8} {'area':>7} | {'watt':>7} {'T/s/W':>7} {'energy':>7}")
     for c in chips:
         ratio = c["device_level_ops_s_per_mm2"] / ref["device_level_ops_s_per_mm2"]
-        print(f"  {c['capability'].replace('.json',''):<38} {c['tensor_lanes']:>6} "
-              f"{c['chip_area_mm2']:>9.3f} {c['datapath_clock_hz']/1e6:>7.0f}M "
-              f"{c['bf16_ops_s']/1e12:>9.2f} "
-              f"{c['device_level_ops_s_per_mm2']/1e12:>9.3f} {ratio:>7.2f}x")
+        eff = c["ops_s_per_w"]
+        eratio = (eff / ref["ops_s_per_w"]) if eff else None
+        print(f"  {c['capability'].replace('.json',''):<34} {c['tensor_lanes']:>6} "
+              f"{c['chip_area_mm2']:>9.3f} {c['bf16_ops_s']/1e12:>8.2f} "
+              f"{c['device_level_ops_s_per_mm2']/1e12:>8.3f} {ratio:>6.2f}x | "
+              f"{c['chip_power_w']:>7.3f} {eff/1e12:>7.3f} "
+              f"{eratio:>6.2f}x" if eff else "")
 
     worst = min(c["device_level_ops_s_per_mm2"] / ref["device_level_ops_s_per_mm2"]
                 for c in chips)
-    print(f"\nworst case {worst:.2f}x the A100 at DEVICE level on both sides.")
+    effs = [c["ops_s_per_w"] / ref["ops_s_per_w"] for c in chips if c["ops_s_per_w"]]
+    print(f"\nAREA:   worst case {worst:.2f}x the A100, device level on both sides.")
+    if effs:
+        print(f"ENERGY: worst case {min(effs):.2f}x, best {max(effs):.2f}x "
+              f"(A100 = {ref['ops_s_per_w']/1e12:.3f} TFLOP/s per W, "
+              f"312 TFLOP/s in {ref['power_w']:.0f} W).")
+        if min(effs) < 1.0:
+            print("        The area advantage does NOT carry over to energy. On "
+                  "joules per\n        operation this design is BEHIND the "
+                  "comparator, inside one order of magnitude.")
     print(f"clock bound by: {chips[0]['datapath_clock_binding_block']}")
     print("\nThis is chip against die at matched inclusion, which the array-level "
-          "audit could not\nclaim. Read the refusals: the area list is incomplete, "
-          "the throughput is peak, and\nASAP7 is not TSMC N7.")
+          "audit could not\nclaim. Read the refusals -- especially that the power "
+          "is a default-activity estimate,\nnot a workload measurement, and that "
+          "ASAP7 is not TSMC N7.")
 
     if args.output:
         args.output.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n")
