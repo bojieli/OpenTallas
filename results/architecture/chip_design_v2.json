@@ -33,15 +33,15 @@
       "clock_period_ns": 6.0,
       "closed": true,
       "closed_reason": null,
-      "core_area_um2": 10213.3,
+      "core_area_um2": 10537.8,
       "drc_errors": 0,
-      "hold_wns_ns": 0.0406484,
+      "hold_wns_ns": 0.0357284,
       "macro_count": 0,
       "max_slew_violations": 0,
       "mismatched_sources": [],
       "path": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
-      "record_sha256": "eee87c1aeab04a47838ab4e58dc584ac91c90ecb7846b91c05b398cda2f270a7",
-      "setup_wns_ns": 0.991298,
+      "record_sha256": "7c90d2b6219d02f56c8b3813c91c8548c5d1dc0598d89a9bf06ce7ef3ba6164d",
+      "setup_wns_ns": 3.45235,
       "signal_integrity_violations": {
         "max_cap_violations": 0,
         "max_fanout_violations": 0,
@@ -61,32 +61,32 @@
         },
         {
           "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
-          "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
-          "size_bytes": 47623
+          "sha256": "b99bb6c64deda7113b8f54e291890af2aade51339e96b6f884e5bb5d517dc343",
+          "size_bytes": 59866
         }
       ],
-      "standard_cell_area_um2": 3790.2,
-      "standard_cell_count": 32909,
+      "standard_cell_area_um2": 3947.84,
+      "standard_cell_count": 33459,
       "status": "pass"
     },
     {
       "antenna_violating_nets": 0,
       "clock_period_ns": 16.0,
-      "closed": false,
-      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 292",
-      "core_area_um2": 76187.6,
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77429.7,
       "drc_errors": 0,
-      "hold_wns_ns": 0.0393152,
+      "hold_wns_ns": 0.0293264,
       "macro_count": 0,
-      "max_slew_violations": 292,
+      "max_slew_violations": 0,
       "mismatched_sources": [],
       "path": "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
-      "record_sha256": "569460cf558ae3e4b1232dba7ac9ce197fe291775643a86481812604ea429f29",
-      "setup_wns_ns": 8.73675,
+      "record_sha256": "cb8465b449967d2bba4a4be395d17201228b2bdadbf794c685e4e4eb6222e1bc",
+      "setup_wns_ns": 8.87167,
       "signal_integrity_violations": {
         "max_cap_violations": 0,
         "max_fanout_violations": 0,
-        "max_slew_violations": 292
+        "max_slew_violations": 0
       },
       "source_current": true,
       "source_digests": [
@@ -102,8 +102,8 @@
         },
         {
           "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
-          "sha256": "35261aff19662d5de0fc18c073f5df2a8f399bae33d65897fb1e12563442f8ef",
-          "size_bytes": 47623
+          "sha256": "b99bb6c64deda7113b8f54e291890af2aade51339e96b6f884e5bb5d517dc343",
+          "size_bytes": 59866
         },
         {
           "path": "rtl/abi3/ot_a3_lq8.sv",
@@ -111,41 +111,41 @@
           "size_bytes": 16564
         }
       ],
-      "standard_cell_area_um2": 27842.5,
-      "standard_cell_count": 238757,
-      "status": "not_met"
+      "standard_cell_area_um2": 28807.7,
+      "standard_cell_count": 241167,
+      "status": "pass"
     },
     {
       "antenna_violating_nets": 0,
       "clock_period_ns": 4.4,
       "closed": false,
-      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 49",
-      "core_area_um2": 21764.5,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 3204, max_cap_violations 3",
+      "core_area_um2": 136926,
       "drc_errors": 0,
-      "hold_wns_ns": 0.0449029,
+      "hold_wns_ns": 0.0358396,
       "macro_count": 0,
-      "max_slew_violations": 49,
+      "max_slew_violations": 3204,
       "mismatched_sources": [
-        "rtl/abi3/ot_a3_pkg.sv",
-        "rtl/abi3/ot_a3_loop_stack.sv",
+        "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "rtl/abi3/ot_a3_shared_divider.sv",
         "rtl/abi3/ot_a3_view_resolver.sv",
-        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "rtl/abi3/ot_a3_resolver_bank.sv",
         "rtl/abi3/ot_a3_microsequencer.sv"
       ],
       "path": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
-      "record_sha256": "6235d37cae9eb87486ff53749d966ef56baa6dda458cd9d986f74efdc1a2b6c4",
-      "setup_wns_ns": 2.44427,
+      "record_sha256": "b3ae9772b3d0fe851531fbc5b334ad870773013a33b8d68407903c5f7f4176d2",
+      "setup_wns_ns": 0.624053,
       "signal_integrity_violations": {
-        "max_cap_violations": 0,
+        "max_cap_violations": 3,
         "max_fanout_violations": 0,
-        "max_slew_violations": 49
+        "max_slew_violations": 3204
       },
       "source_current": false,
       "source_digests": [
         {
           "path": "rtl/abi3/ot_a3_pkg.sv",
-          "sha256": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054",
-          "size_bytes": 14629
+          "sha256": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
+          "size_bytes": 19189
         },
         {
           "path": "rtl/abi3/ot_a3_instruction_decoder.sv",
@@ -153,19 +153,44 @@
           "size_bytes": 8736
         },
         {
+          "path": "rtl/abi3/ot_a3_shared_divider.sv",
+          "sha256": "b16700dda17092c0128eefa4ef091cefe199abeeec2fb5ae1b2c09b08a6f407f",
+          "size_bytes": 6303
+        },
+        {
+          "path": "rtl/abi3/ot_a3_symbol_file.sv",
+          "sha256": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+          "size_bytes": 2821
+        },
+        {
           "path": "rtl/abi3/ot_a3_loop_stack.sv",
-          "sha256": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8",
-          "size_bytes": 17522
+          "sha256": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0",
+          "size_bytes": 17824
         },
         {
           "path": "rtl/abi3/ot_a3_view_resolver.sv",
-          "sha256": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e",
-          "size_bytes": 31772
+          "sha256": "ca70c306e3e96ec3d3e0535159bf56678c4efd16141fb9049c4b520797dcac80",
+          "size_bytes": 36805
+        },
+        {
+          "path": "rtl/abi3/ot_a3_resolver_bank.sv",
+          "sha256": "b953bde14c2d3005de0b780dcfb5a7675e6e17a90ab095d242557b67f0e749a3",
+          "size_bytes": 12946
         },
         {
           "path": "rtl/abi3/ot_a3_event_scoreboard.sv",
-          "sha256": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428",
-          "size_bytes": 8827
+          "sha256": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
+          "size_bytes": 13924
+        },
+        {
+          "path": "rtl/abi3/ot_a3_issue_record_store.sv",
+          "sha256": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
+          "size_bytes": 10619
+        },
+        {
+          "path": "rtl/abi3/ot_a3_dependence_table.sv",
+          "sha256": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05",
+          "size_bytes": 9294
         },
         {
           "path": "rtl/abi3/ot_a3_state_controller.sv",
@@ -174,13 +199,13 @@
         },
         {
           "path": "rtl/abi3/ot_a3_microsequencer.sv",
-          "sha256": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c",
-          "size_bytes": 49815
+          "sha256": "3a96fabaadb1bab0d9b971c52e822de3ece61a1fe77ef4cc846b880219ade278",
+          "size_bytes": 83287
         }
       ],
-      "standard_cell_area_um2": 8437.9,
-      "standard_cell_count": 66098,
-      "status": "not_met"
+      "standard_cell_area_um2": 51151.6,
+      "standard_cell_count": 416715,
+      "status": "pass"
     }
   ],
   "production_ready": false,

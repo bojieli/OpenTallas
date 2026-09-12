@@ -67,8 +67,8 @@ Source-current below means the record's RTL source hashes match this checkout wh
 
 | Record | Status | Closed | RTL source-current | Target ns | Cell area µm² | Core area µm² | Macros |
 |---|---|---|---|---:|---:|---:|---:|
-| `results/physical_abi3/asap7/a3_lane_pipelined/pnr.json` | pass | True | True | 6.0 | 3790.2 | 10213.3 | 0 |
-| `results/physical_abi3/asap7/a3_lq8_array/pnr.json` | not_met | False | True | 16.0 | 27842.5 | 76187.6 | 0 |
-| `results/physical_abi3/asap7/a3_microsequencer/pnr.json` | not_met | False | False | 4.4 | 8437.9 | 21764.5 | 0 |
+| `results/physical_abi3/asap7/a3_lane_pipelined/pnr.json` | pass | True | True | 6.0 | 3947.84 | 10537.8 | 0 |
+| `results/physical_abi3/asap7/a3_lq8_array/pnr.json` | pass | True | True | 16.0 | 28807.7 | 77429.7 | 0 |
+| `results/physical_abi3/asap7/a3_microsequencer/pnr.json` | pass | False | False | 4.4 | 51151.6 | 136926 | 0 |
 
 Closure is the record's full engineering verdict, including electrical violations; positive setup slack and zero DRC alone do not establish closure. Inspect `closed_reason` in the JSON for failures. Use the lane and LQ8 records independently; an older route cannot supply a revised block's area or timing. None of these records contains an integrated memory macro, compute array and sequencer. DeepSeek array and wafer proposals require their own exact per-node placement and network schedules before a corrected full-chip rate can be published.
