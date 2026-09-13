@@ -1,0 +1,1300 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "capability_fault_count": 4,
+  "case_count": 4,
+  "cases": [
+    {
+      "checks": 353707,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_shipped_prefix_top --Mdir obj_p3 -GINDEX_WORDS=64 -GSOURCE_WORDS=65536 -GRESULT_WORDS=98304 <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/ot_fp32_rsqrt_rne.sv <ROOT>/rtl/ot_ta_command_decoder.sv <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_shared_divider.sv <ROOT>/rtl/abi3/ot_a3_symbol_file.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_issue_record_store.sv <ROOT>/rtl/abi3/ot_a3_dependence_table.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/proto/ot_mac_bf16_fp32_pipe.sv <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv <ROOT>/rtl/abi3/ot_a3_vector_rope.sv <ROOT>/rtl/abi3/ot_a3_fp32_div_rne.sv <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv <ROOT>/rtl/abi3/ot_a3_vector_silu_mul.sv <ROOT>/rtl/abi3/ot_a3_selection_token_append.sv <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv <ROOT>/rtl/test/a3_engine_completion_adapter.sv <ROOT>/rtl/test/a3_shipped_prefix_top.sv <ROOT>/rtl/test/a3_shipped_prefix_harness.cpp -CFLAGS -std=c++17",
+      "compile_log": "%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv:253:18: Instance pin connected by name with empty reference: 'busy'\n  253 |                 .busy(),\n      |                  ^~~~\n                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050\n                          ... Use \"/* verilator lint_off PINCONNECTEMPTY */\" and lint_on around source to disable this message.\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv:261:18: Instance pin connected by name with empty reference: 'out_dtype'\n  261 |                 .out_dtype(),\n      |                  ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv:262:18: Instance pin connected by name with empty reference: 'out_term_count'\n  262 |                 .out_term_count(),\n      |                  ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:463:10: Instance pin connected by name with empty reference: 'grant'\n  463 |         .grant(),\n      |          ^~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:464:10: Instance pin connected by name with empty reference: 'busy'\n  464 |         .busy(),\n      |          ^~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:522:10: Instance pin connected by name with empty reference: 'busy'\n  522 |         .busy(),\n      |          ^~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:650:10: Instance pin connected by name with empty reference: 'wait_busy'\n  650 |         .wait_busy(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:692:18: Instance pin connected by name with empty reference: 'apply_busy'\n  692 |                 .apply_busy(),\n      |                  ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:771:10: Instance pin connected by name with empty reference: 'busy'\n  771 |         .busy(),\n      |          ^~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:840:10: Instance pin connected by name with empty reference: 'dbg_ranges_used'\n  840 |         .dbg_ranges_used()\n      |          ^~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:268:10: Instance pin connected by name with empty reference: 'out_abi_major'\n  268 |         .out_abi_major(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:269:10: Instance pin connected by name with empty reference: 'out_abi_minor'\n  269 |         .out_abi_minor(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:270:10: Instance pin connected by name with empty reference: 'out_flags'\n  270 |         .out_flags(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:274:10: Instance pin connected by name with empty reference: 'out_watchdog_class'\n  274 |         .out_watchdog_class(),\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:276:10: Instance pin connected by name with empty reference: 'out_signature_descriptor'\n  276 |         .out_signature_descriptor()\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:707:10: Instance pin connected by name with empty reference: 'header_done'\n  707 |         .header_done(),\n      |          ^~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:708:10: Instance pin connected by name with empty reference: 'header_legal'\n  708 |         .header_legal(),\n      |          ^~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:709:10: Instance pin connected by name with empty reference: 'header_error'\n  709 |         .header_error(),\n      |          ^~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:710:10: Instance pin connected by name with empty reference: 'header_trap_class'\n  710 |         .header_trap_class(),\n      |          ^~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:711:10: Instance pin connected by name with empty reference: 'header_instruction_count'\n  711 |         .header_instruction_count(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:712:10: Instance pin connected by name with empty reference: 'header_entrypoint_count'\n  712 |         .header_entrypoint_count(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:713:10: Instance pin connected by name with empty reference: 'header_max_retired_work'\n  713 |         .header_max_retired_work(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:714:10: Instance pin connected by name with empty reference: 'header_entrypoint_descriptor'\n  714 |         .header_entrypoint_descriptor(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:805:10: Instance pin connected by name with empty reference: 'loop_depth'\n  805 |         .loop_depth(),\n      |          ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:808:10: Instance pin connected by name with empty reference: 'dbg_decode_error'\n  808 |         .dbg_decode_error(),\n      |          ^~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:809:10: Instance pin connected by name with empty reference: 'dbg_source_operation_id'\n  809 |         .dbg_source_operation_id(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:810:10: Instance pin connected by name with empty reference: 'dbg_wait_fault_event'\n  810 |         .dbg_wait_fault_event(),\n      |          ^~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:811:10: Instance pin connected by name with empty reference: 'dbg_loop_action'\n  811 |         .dbg_loop_action(),\n      |          ^~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:812:10: Instance pin connected by name with empty reference: 'dbg_outstanding'\n  812 |         .dbg_outstanding(),\n      |          ^~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:813:10: Instance pin connected by name with empty reference: 'dbg_max_outstanding'\n  813 |         .dbg_max_outstanding(),\n      |          ^~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:814:10: Instance pin connected by name with empty reference: 'dbg_dep_stalls'\n  814 |         .dbg_dep_stalls(),\n      |          ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:815:10: Instance pin connected by name with empty reference: 'dbg_wait_stalls'\n  815 |         .dbg_wait_stalls(),\n      |          ^~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:816:10: Instance pin connected by name with empty reference: 'irs_protocol_error'\n  816 |         .irs_protocol_error()\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-MISINDENT: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:342:59: Misleading indentation\n  342 |                                       {16'b0, candidate}] <=\n      |                                                           ^~\n                    <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:338:25: ... Expected indentation matching this earlier statement's line:\n  338 |                         if (output_narrowed[16])\n      |                         ^~\n                    ... For warning description see https://verilator.org/warn/MISINDENT?v=5.050\n                    ... Use \"/* verilator lint_off MISINDENT */\" and lint_on around source to disable this message.\n%Warning-WIDTHTRUNC: <ROOT>/rtl/ot_fp32_rne_pkg.sv:603:43: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  603 |                             result[30:23] = floor_exponent + 127;\n      |                                           ^\n                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050\n                     ... Use \"/* verilator lint_off WIDTHTRUNC */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_dependence_table.sv:157:57: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ins_merge_index' generates 3 bits.\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.deps'\n  157 |     wire [31:0] merge_index_wide = insert_slot * RANGES + ins_merge_index;\n      |                                                         ^\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_dependence_table.sv:158:57: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ins_free_index' generates 3 bits.\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.deps'\n  158 |     wire [31:0] free_index_wide  = insert_slot * RANGES + ins_free_index;\n      |                                                         ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_issue_record_store.sv:117:39: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 6 bits.\n                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.irs'\n  117 |                          (outstanding < ot_a3_pkg::A3_OUTSTANDING) &&\n      |                                       ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_issue_record_store.sv:118:52: Operator LT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.\n                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.irs'\n  118 |                          (queue_count[alloc_queue] < ot_a3_pkg::A3_QUEUE_DEPTH);\n      |                                                    ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:192:44: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  192 |     wire [31:0] top_next_index = loop_index[top] + 32'd1;\n      |                                            ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:308:43: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  308 |                                 loop_index[top] <= top_next_index;\n      |                                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:309:43: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  309 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:309:62: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  309 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                                              ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:309:79: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  309 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                                                               ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:310:54: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  310 |                                 next_pc <= loop_start[top];\n      |                                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:307:68: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  307 |                             end else if (top_next_index < loop_trip[top]) begin\n      |                                                                    ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:303:49: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  303 |                             end else if (loop_id[top] != op_loop_id) begin\n      |                                                 ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:367:36: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  367 |                             loop_id[stack_pointer] <= hold_loop_id;\n      |                                    ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:368:38: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  368 |                             loop_trip[stack_pointer] <= hold_trip;\n      |                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:369:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  369 |                             loop_value[stack_pointer] <= hold_lower;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:370:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  370 |                             loop_index[stack_pointer] <= 32'd0;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:371:38: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  371 |                             loop_step[stack_pointer] <= hold_step;\n      |                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:372:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  372 |                             loop_start[stack_pointer] <= hold_body_start;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:373:42: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  373 |                             loop_symbolic[stack_pointer] <= hold_symbolic;\n      |                                          ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:374:41: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  374 |                             loop_divisor[stack_pointer] <= hold_divisor;\n      |                                         ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:375:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  375 |                             loop_bound[stack_pointer] <= hold_symbol_value;\n      |                                       ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:363:52: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'stack_pointer' generates 4 bits.\n                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  363 |                         end else if (stack_pointer >= DEPTH) begin\n      |                                                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:159:52: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  159 |         ? query_base_q + query_head_q * HEAD_WIDTH + dimension_q\n      |                                                    ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:162:36: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  162 |             kv_head_q * HEAD_WIDTH + dimension_q\n      |                                    ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:164:36: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  164 |             kv_head_q * HEAD_WIDTH + dimension_q;\n      |                                    ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:167:37: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'publish_index_q' generates 12 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  167 |     assign out_addr = output_base_q + publish_index_q;\n      |                                     ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:171:43: Bit extraction of array[127:0] requires 7 bit index, not 8 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  171 |     wire [31:0] query_fp32 = {query_buffer[dimension_q], 16'd0};\n      |                                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:214:22: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  214 |         {score_buffer[context_index_q], 16'd0}, negate_fp32(maximum_code_q)\n      |                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:268:27: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  268 |         exponential_buffer[context_index_q], inverse_denominator_q\n      |                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:274:28: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  274 |         {probability_buffer[context_index_q], 16'd0}, response_fp32\n      |                            ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:370:41: Bit extraction of array[127:0] requires 7 bit index, not 8 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  370 |                             query_buffer[dimension_q] <= mem_rsp_data[15:0];\n      |                                         ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:371:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  371 |                             if (dimension_q == HEAD_WIDTH-1) begin\n      |                                             ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:406:45: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  406 |                                 score_buffer[context_index_q] <=\n      |                                             ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:400:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  400 |                         end else if (dimension_q == HEAD_WIDTH-1) begin\n      |                                                  ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:451:47: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  451 |                             exponential_buffer[context_index_q] <= exp_result;\n      |                                               ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:533:43: Bit extraction of array[31:0] requires 5 bit index, not 16 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  533 |                         probability_buffer[context_index_q] <=\n      |                                           ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:569:63: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  569 |                                     query_head_q * HEAD_WIDTH + dimension_q\n      |                                                               ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:582:51: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's SHIFTR generates 6 bits.\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  582 |                                         kv_head_q <=\n      |                                                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:577:54: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'query_head_q' generates 6 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  577 |                                     if (query_head_q == QUERY_HEADS-1) begin\n      |                                                      ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:575:49: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'dimension_q' generates 8 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  575 |                                 if (dimension_q == HEAD_WIDTH-1) begin\n      |                                                 ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:603:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'publish_index_q' generates 12 bits.\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n  603 |                         if (publish_index_q == OUTPUT_WORDS-1)\n      |                                             ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:314:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  314 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:347:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  347 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:369:57: Operator EQ expects 64 bits on the RHS, but RHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  369 |         (shape_elements(desc_in0_rank, cfg_input0_dims) == cfg_count) &&\n      |                                                         ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:371:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  371 |         (cfg_rows == (cfg_count >> 7)) && (cfg_cols == 128) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:404:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  404 |         (cfg_rows == cfg_input0_dims[63:32]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:405:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  405 |         (cfg_cols == cfg_input1_dims[63:32]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:406:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_depth' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  406 |         (cfg_depth == cfg_input0_dims[127:96]) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:408:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  408 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:442:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  442 |         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:443:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  443 |         (cfg_cols == cfg_input1_dims[31:0]) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:444:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_depth' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  444 |         (cfg_depth == cfg_input0_dims[95:64]) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:445:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  445 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:488:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_rows' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  488 |         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:489:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_cols' generates 16 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  489 |         (cfg_cols == cfg_input0_dims[95:64]) && (cfg_slots == 4) &&\n      |                   ^~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:490:20: Operator EQ expects 64 bits on the LHS, but LHS's VARREF 'cfg_count' generates 32 bits.\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  490 |         (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&\n      |                    ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:482:28: Bit extraction of array[4095:0] requires 12 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  482 |                 program_mem[pstore_addr[19:0]][pstore_wlane*32 +: 32]\n      |                            ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:485:44: Bit extraction of array[4095:0] requires 12 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  485 |                 pstore_rdata <= program_mem[pstore_addr[19:0]];\n      |                                            ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:500:25: Bit extraction of array[8191:0] requires 13 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  500 |                 desc_mem[dstore_addr[19:0]][dstore_wlane*32 +: 32]\n      |                         ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:503:41: Bit extraction of array[8191:0] requires 13 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  503 |                 dstore_rdata <= desc_mem[dstore_addr[19:0]];\n      |                                         ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:516:51: Operator GTE expects 33 bits on the RHS, but RHS's VARREF 'DESC_WORDS' generates 32 bits.\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top'\n  516 |                             (bridge_desc_absolute >= DESC_WORDS);\n      |                                                   ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:527:41: Bit extraction of array[8191:0] requires 13 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  527 |                     ? 1536'd0 : desc_mem[bridge_desc_absolute[19:0]];\n      |                                         ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:869:30: Operator LT expects 33 bits on the RHS, but RHS's VARREF 'RESULT_WORDS' generates 32 bits.\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top'\n  869 |         (predicate_word_addr < RESULT_WORDS);\n      |                              ^\n%Warning-BLKSEQ: <ROOT>/rtl/proto/ot_mac_bf16_fp32_pipe.sv:372:15: Blocking assignment '=' in sequential logic process\n                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac.mac'\n                                                                                  : ... Suggest using delayed assignment '<='\n  372 |             e = e_pre;\n      |               ^\n                 ... For warning description see https://verilator.org/warn/BLKSEQ?v=5.050\n                 ... Use \"/* verilator lint_off BLKSEQ */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:401:18: Signal is not used: 'multicast_communication_record'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  401 |     reg [1535:0] multicast_communication_record;\n      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050\n                       ... Use \"/* verilator lint_off UNUSEDSIGNAL */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:402:18: Signal is not used: 'multicast_topology_record'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  402 |     reg [2047:0] multicast_topology_record;\n      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:403:18: Signal is not used: 'multicast_local_object_record'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  403 |     reg [1023:0] multicast_local_object_record;\n      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:404:18: Signal is not used: 'multicast_remote_object_record'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  404 |     reg [1023:0] multicast_remote_object_record;\n      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:405:18: Signal is not used: 'multicast_counter_record'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  405 |     reg [1023:0] multicast_counter_record;\n      |                  ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:473:18: Bits of signal are not used: 'pstore_addr'[31:20]\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  473 |     wire [31:0]  pstore_addr;\n      |                  ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:491:19: Bits of signal are not used: 'dstore_addr'[31:20]\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  491 |     wire [31:0]   dstore_addr;\n      |                   ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:645:9: Signal is not used: 'multicast_start'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top'\n  645 |     reg multicast_start;\n      |         ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:646:9: Signal is not used: 'multicast_inject_crc'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top'\n  646 |     reg multicast_inject_crc;\n      |         ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:647:16: Signal is not used: 'multicast_observed_views'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  647 |     reg [31:0] multicast_observed_views;\n      |                ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:650:10: Signal is not used: 'multicast_busy'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  650 |     wire multicast_busy;\n      |          ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:654:16: Signal is not used: 'multicast_refusal_reason'\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top'\n  654 |     wire [7:0] multicast_refusal_reason;\n      |                ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:1039:16: Signal is not used: 'multicast_source_response_data'\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top'\n 1039 |     reg [31:0] multicast_source_response_data;\n      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:1256:41: Signal is not used: 'm2_rd_addr'\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top'\n 1256 |     wire [31:0] m0_rd_addr, m1_rd_addr, m2_rd_addr, m3_rd_addr;\n      |                                         ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:1256:53: Signal is not used: 'm3_rd_addr'\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top'\n 1256 |     wire [31:0] m0_rd_addr, m1_rd_addr, m2_rd_addr, m3_rd_addr;\n      |                                                     ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:1380:10: Signal is not used: 'engine_busy'\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top'\n 1380 |     wire engine_busy;\n      |          ^~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:31:22: Parameter is not used: 'FMT_U8'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top'\n   31 |     localparam [7:0] FMT_U8         = 8'h00;\n      |                      ^~~~~~\n                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050\n                      ... Use \"/* verilator lint_off UNUSEDPARAM */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:32:22: Parameter is not used: 'FMT_U32'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top'\n   32 |     localparam [7:0] FMT_U32        = 8'h04;\n      |                      ^~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:20:24: Parameter is not used: 'A3_INSTRUCTION_BYTES'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   20 |     localparam integer A3_INSTRUCTION_BYTES = 32;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:22:24: Parameter is not used: 'A3_DESCRIPTOR_HEADER_BYTES'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   22 |     localparam integer A3_DESCRIPTOR_HEADER_BYTES = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:23:24: Parameter is not used: 'A3_DESCRIPTOR_PAYLOAD_OFFSET'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   23 |     localparam integer A3_DESCRIPTOR_PAYLOAD_OFFSET = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:32:24: Parameter is not used: 'A3_HEADER_CRC_WORD'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   32 |     localparam integer A3_HEADER_CRC_WORD = A3_HEADER_WORDS - 1;\n      |                        ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:37:23: Parameter is not used: 'A3_TYPE_MINOR'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   37 |     localparam [7:0]  A3_TYPE_MINOR = 8'd0;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:39:23: Parameter is not used: 'A3_DESC_MEMORY_OBJECT'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   39 |     localparam [15:0] A3_DESC_MEMORY_OBJECT      = 16'h0001;\n      |                       ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:41:23: Parameter is not used: 'A3_DESC_NUMERIC'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   41 |     localparam [15:0] A3_DESC_NUMERIC            = 16'h0003;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:43:23: Parameter is not used: 'A3_DESC_TOPOLOGY'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   43 |     localparam [15:0] A3_DESC_TOPOLOGY           = 16'h0005;\n      |                       ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:49:23: Parameter is not used: 'A3_DESC_GENERATION_POLICY'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   49 |     localparam [15:0] A3_DESC_GENERATION_POLICY  = 16'h000b;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:51:23: Parameter is not used: 'A3_DESC_ENTRYPOINT_TABLE'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   51 |     localparam [15:0] A3_DESC_ENTRYPOINT_TABLE   = 16'h000d;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:52:23: Parameter is not used: 'A3_DESC_SIGNATURE_METADATA'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   52 |     localparam [15:0] A3_DESC_SIGNATURE_METADATA = 16'h000e;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:62:24: Parameter is not used: 'A3_FLAG_TRANSACTION_SCOPED'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   62 |     localparam integer A3_FLAG_TRANSACTION_SCOPED= 4;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:63:24: Parameter is not used: 'A3_FLAG_GLOBAL_SCOPE'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   63 |     localparam integer A3_FLAG_GLOBAL_SCOPE      = 5;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:64:24: Parameter is not used: 'A3_FLAG_TRACE_BOUNDARY'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   64 |     localparam integer A3_FLAG_TRACE_BOUNDARY    = 6;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:65:24: Parameter is not used: 'A3_FLAG_OPTIONAL_FEATURE'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   65 |     localparam integer A3_FLAG_OPTIONAL_FEATURE  = 7;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:85:22: Parameter is not used: 'A3_CONTROL_LOOP_NEXT'\n                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   85 |     localparam [7:0] A3_CONTROL_LOOP_NEXT  = 8'h03;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:112:22: Parameter is not used: 'A3_RECOVERY_POISON'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  112 |     localparam [7:0] A3_RECOVERY_POISON = 8'h00;\n      |                      ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:114:22: Parameter is not used: 'A3_RECOVERY_DRAIN'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  114 |     localparam [7:0] A3_RECOVERY_DRAIN  = 8'h02;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:123:23: Parameter is not used: 'A3_TRAP_NUMERIC'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  123 |     localparam [15:0] A3_TRAP_NUMERIC         = 16'd6;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:128:23: Parameter is not used: 'A3_TRAP_LINK'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  128 |     localparam [15:0] A3_TRAP_LINK            = 16'd11;\n      |                       ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:129:23: Parameter is not used: 'A3_TRAP_POWER'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  129 |     localparam [15:0] A3_TRAP_POWER           = 16'd12;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:135:22: Parameter is not used: 'A3_SYMBOL_POSITION_START'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  135 |     localparam [3:0] A3_SYMBOL_POSITION_START    = 4'd1;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:136:22: Parameter is not used: 'A3_SYMBOL_POSITION_END'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  136 |     localparam [3:0] A3_SYMBOL_POSITION_END      = 4'd2;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:137:22: Parameter is not used: 'A3_SYMBOL_CONTEXT_LENGTH'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  137 |     localparam [3:0] A3_SYMBOL_CONTEXT_LENGTH    = 4'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:139:22: Parameter is not used: 'A3_SYMBOL_GENERATION_INDEX'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  139 |     localparam [3:0] A3_SYMBOL_GENERATION_INDEX  = 4'd5;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:145:22: Parameter is not used: 'A3_PRED_ENGINE_STATUS'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  145 |     localparam [7:0] A3_PRED_ENGINE_STATUS  = 8'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:146:22: Parameter is not used: 'A3_PRED_ROUTE_VALID'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  146 |     localparam [7:0] A3_PRED_ROUTE_VALID    = 8'd4;\n      |                      ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:158:22: Parameter is not used: 'A3_CMP_GE'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  158 |     localparam [7:0] A3_CMP_GE = 8'd5;\n      |                      ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:165:22: Parameter is not used: 'A3_ORDER_NONE'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  165 |     localparam [7:0] A3_ORDER_NONE            = 8'd0;\n      |                      ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:167:22: Parameter is not used: 'A3_ORDER_RELEASE'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  167 |     localparam [7:0] A3_ORDER_RELEASE         = 8'd2;\n      |                      ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:194:24: Parameter is not used: 'A3_WAIT_PRODUCERS'\n                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  194 |     localparam integer A3_WAIT_PRODUCERS = 12;  \n      |                        ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_pkg.sv:262:19: Bits of function variable are not used: 'bound'[7:0]\n                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  262 |         reg [8:0] bound;\n      |                   ^~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:513:16: Signal is not used: 'issue_descriptor_q'\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  513 |     reg [31:0] issue_descriptor_q;\n      |                ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:514:16: Signal is not used: 'issue_index_q'\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  514 |     reg [31:0] issue_index_q;\n      |                ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:529:16: Signal is not used: 'op_input0'\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  529 |     reg [31:0] op_input0;\n      |                ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:568:16: Signal is not used: 'slot_permissions'\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  568 |     reg [31:0] slot_permissions [0:5];\n      |                ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:585:16: Signal is not used: 'mapped_index_base'\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  585 |     reg [31:0] mapped_index_base;\n      |                ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:602:24: Bits of function variable are not used: 'data'[1535:384,319:96]\n                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  602 |         input [1535:0] data;\n      |                        ^~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:2132:17: Signal is not used: 'array_saturation_count'\n                                                                                            : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 2132 |     wire [31:0] array_saturation_count;\n      |                 ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:2148:17: Signal is not used: 'rms_saturation_count'\n                                                                                            : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 2148 |     wire [31:0] rms_saturation_count;\n      |                 ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:84:25: Signal is not used: 'cfg_output1_dims'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n   84 |     input  wire [127:0] cfg_output1_dims,\n      |                         ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:139:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  139 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:140:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  140 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:141:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  141 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:142:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  142 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:143:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  143 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:144:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  144 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:203:16: Signal is not used: 'desc_out1_dtype'\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  203 |     wire [7:0] desc_out1_dtype = cfg_output_dtypes[15:8];\n      |                ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:209:16: Signal is not used: 'desc_out1_rank'\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  209 |     wire [3:0] desc_out1_rank = cfg_view_ranks[23:20];\n      |                ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:35:24: Bits of signal are not used: 'input_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   35 |     input  wire [31:0] input_rd_data,\n      |                        ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:38:24: Bits of signal are not used: 'weight_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   38 |     input  wire [31:0] weight_rd_data,\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:65:23: Parameter is not used: 'MODEL_MEAN_SCALE_CODE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   65 |     localparam [31:0] MODEL_MEAN_SCALE_CODE = 32'h3980_0000;   \n      |                       ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:66:23: Parameter is not used: 'HEAD_MEAN_SCALE_CODE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   66 |     localparam [31:0] HEAD_MEAN_SCALE_CODE = 32'h3c00_0000;    \n      |                       ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:30:24: Bits of signal are not used: 'input_rd_data'[31:16]\n                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n   30 |     input  wire [31:0] input_rd_data,\n      |                        ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:135:17: Bits of signal are not used: 'selected_input_offset'[63:33,0]\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  135 |     wire [63:0] selected_input_offset = active_query\n      |                 ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:138:17: Bits of signal are not used: 'coefficient_offset'[63:33,0]\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  138 |     wire [63:0] coefficient_offset =\n      |                 ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:172:17: Bits of signal are not used: 'selected_output_offset'[63:33,0]\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  172 |     wire [63:0] selected_output_offset = active_query\n      |                 ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_qwen_gqa.sv:74:24: Bits of signal are not used: 'mem_rsp_data'[31:16]\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa'\n   74 |     input  wire [31:0] mem_rsp_data,\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_silu_mul.sv:52:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.silu_mul'\n   52 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_silu_mul.sv:55:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.silu_mul'\n   55 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_silu_mul.sv:107:17: Bits of signal are not used: 'gate_decoded'[31:0]\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.silu_mul'\n  107 |     wire [33:0] gate_decoded = ot_a3_format_pkg::decode_bf16(a_rd_data[15:0]);\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_silu_mul.sv:108:17: Bits of signal are not used: 'up_decoded'[31:0]\n                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.silu_mul'\n  108 |     wire [33:0] up_decoded = ot_a3_format_pkg::decode_bf16(b_rd_data[15:0]);\n      |                 ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:237:26: Bits of signal are not used: 'irs_rdata'[511:448]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  237 |     input  wire [511:0]  irs_rdata,\n      |                          ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:335:16: Signal is not used: 'state_count'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  335 |     reg [31:0] state_count;\n      |                ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:351:17: Bits of signal are not used: 'pred_payload'[511:192,31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  351 |     reg [511:0] pred_payload;\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:352:17: Bits of signal are not used: 'state_payload'[511:128,63:0]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  352 |     reg [511:0] state_payload;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:483:21: Bits of signal are not used: 'loop_query_trip'[223:32]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  483 |     wire [7*32-1:0] loop_query_trip;\n      |                     ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:484:21: Bits of signal are not used: 'loop_query_symbol_bounded'[0]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  484 |     wire [6:0]      loop_query_symbol_bounded;\n      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:485:21: Bits of signal are not used: 'loop_query_divisor'[31:0]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  485 |     wire [7*32-1:0] loop_query_divisor;\n      |                     ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:486:21: Bits of signal are not used: 'loop_query_bound_value'[31:0]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  486 |     wire [7*32-1:0] loop_query_bound_value;\n      |                     ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:487:18: Bits of signal are not used: 'loop_payload'[511:352,319:288,191:160,31:16,7:0]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  487 |     reg  [511:0] loop_payload;\n      |                  ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:555:17: Signal is not used: 'irs_retire_serial'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  555 |     wire [31:0] irs_retire_serial;\n      |                 ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:562:17: Signal is not used: 'irs_fault_serial'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  562 |     wire [31:0] irs_fault_serial;\n      |                 ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:661:17: Signal is not used: 'st_op_valid'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  661 |     reg         st_op_valid;\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:662:17: Signal is not used: 'st_commit_all'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  662 |     reg         st_commit_all;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:663:17: Signal is not used: 'st_discard_all'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  663 |     reg         st_discard_all;\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:967:17: Bits of signal are not used: 'comm_vc'[7:2]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  967 |     wire [7:0]  comm_vc          = desc_payload[31:24];\n      |                 ^~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:968:17: Bits of signal are not used: 'comm_local_obj'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  968 |     wire [31:0] comm_local_obj   = desc_payload[159:128];\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:975:17: Bits of signal are not used: 'sched_queue_index'[7:2]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  975 |     wire [7:0]  sched_queue_index = desc_payload[15:8];\n      |                 ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:977:17: Bits of signal are not used: 'state_committed_obj'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  977 |     wire [31:0] state_committed_obj = state_payload[95:64];\n      |                 ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:978:17: Bits of signal are not used: 'state_prepared_obj'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  978 |     wire [31:0] state_prepared_obj  = state_payload[127:96];\n      |                 ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:92:24: Bits of signal are not used: 'div_quot'[63:32]\n                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n   92 |     input  wire [63:0] div_quot,\n      |                        ^~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:191:16: Bits of signal are not used: 'top'[3:2]\n                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  191 |     wire [3:0] top = (stack_pointer == 4'd0) ? 4'd0 : (stack_pointer - 4'd1);\n      |                ^~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_resolver_bank.sv:87:28: Bits of signal are not used: 'desc_data'[511:352,319:288,255:160,127:56]\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.bank'\n   87 |     input  wire [1535:0]   desc_data,\n      |                            ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_dependence_table.sv:157:17: Bits of signal are not used: 'merge_index_wide'[31:7]\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.deps'\n  157 |     wire [31:0] merge_index_wide = insert_slot * RANGES + ins_merge_index;\n      |                 ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_dependence_table.sv:158:17: Bits of signal are not used: 'free_index_wide'[31:7]\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.deps'\n  158 |     wire [31:0] free_index_wide  = insert_slot * RANGES + ins_free_index;\n      |                 ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:63:24: Bits of signal are not used: 's_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   63 |     input  wire [31:0] s_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:66:24: Bits of signal are not used: 't_rd_data'[31:8]\n                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   66 |     input  wire [31:0] t_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:92:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   92 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:93:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   93 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:54:24: Signal is not used: 'cfg_dtype_a'\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n   54 |     input  wire [7:0]  cfg_dtype_a,\n      |                        ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:55:24: Signal is not used: 'cfg_dtype_b'\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n   55 |     input  wire [7:0]  cfg_dtype_b,\n      |                        ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:62:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n   62 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:65:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n   65 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:97:16: Signal is not used: 'group_cols'\n                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n   97 |     reg [15:0] group_cols;                 \n      |                ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane_pipe.sv:159:51: Bits of signal are not used: 'slot_d5'[3]\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac'\n  159 |     reg [3:0] slot_d1, slot_d2, slot_d3, slot_d4, slot_d5;\n      |                                                   ^~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:58:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   58 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:59:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   59 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:60:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   60 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:61:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   61 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:63:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   63 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:65:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   65 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:66:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   66 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:67:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   67 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:69:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   69 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:70:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   70 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:29:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   29 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:32:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   32 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:55:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   55 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:57:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   57 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:58:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   58 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:59:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   59 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:32:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.scaler'\n   32 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:35:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                   : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.scaler'\n   35 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:28:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.hadamard'\n   28 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:70:17: Bits of signal are not used: 'upper_index'[31:9]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.hadamard'\n   70 |     wire [31:0] upper_index = lower_index + {24'b0, stride};\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:41:24: Bits of signal are not used: 'q_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   41 |     input  wire [31:0] q_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:44:24: Bits of signal are not used: 'k_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   44 |     input  wire [31:0] k_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:47:24: Bits of signal are not used: 'w_rd_data'[31:16]\n                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   47 |     input  wire [31:0] w_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:131:17: Bits of signal are not used: 'scan_decoded'[31:0]\n                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n  131 |     wire [33:0] scan_decoded = (scan_kind == 0) ? decoded_q\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:37:24: Bits of signal are not used: 'h_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   37 |     input  wire [31:0] h_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:40:24: Bits of signal are not used: 'kv_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   40 |     input  wire [31:0] kv_rd_data,\n      |                        ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:43:24: Bits of signal are not used: 'gate_rd_data'[31:16]\n                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   43 |     input  wire [31:0] gate_rd_data,\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:56:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                             : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   56 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:90:17: Bits of signal are not used: 'decoded_hidden'[31:0]\n                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   90 |     wire [33:0] decoded_hidden =\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:96:17: Bits of signal are not used: 'decoded_weight'[31:0]\n                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   96 |     wire [33:0] decoded_weight = plane ? decoded_gate : decoded_kv;\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:41:24: Bits of signal are not used: 'branch_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mhc_post'\n   41 |     input  wire [31:0] branch_rd_data,\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:44:24: Bits of signal are not used: 'residual_rd_data'[31:16]\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mhc_post'\n   44 |     input  wire [31:0] residual_rd_data,\n      |                        ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:215:27: Bits of signal are not used: 'lower_product'[159:0]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  215 |     reg [2*FRAC_BITS+7:0] lower_product;\n      |                           ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:219:26: Bits of signal are not used: 'lower_division'[176:172,8:0]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  219 |     reg [FRAC_BITS+16:0] lower_division;\n      |                          ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:220:26: Bits of signal are not used: 'upper_division'[176:172]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  220 |     reg [FRAC_BITS+16:0] upper_division;\n      |                          ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:251:27: Bits of signal are not used: 'square_lower_product'[327:323,159:0]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  251 |     reg [2*FRAC_BITS+7:0] square_lower_product;\n      |                           ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:252:27: Bits of signal are not used: 'square_upper_product'[327:323]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  252 |     reg [2*FRAC_BITS+7:0] square_upper_product;\n      |                           ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:275:25: Bits of signal are not used: 'transform_lower_division'[0]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  275 |     reg [FRAC_BITS+3:0] transform_lower_division;\n      |                         ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv:289:29: Bits of function variable are not used: 'remainder_difference'[164]\n                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.gqa.exponential'\n  289 |         reg [FRAC_BITS+4:0] remainder_difference;\n      |                             ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv:66:24: Parameter is not used: 'QUERY_ELEMENTS'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope.qualified_rope'\n   66 |     localparam integer QUERY_ELEMENTS = 4096;\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv:67:24: Parameter is not used: 'KEY_ELEMENTS'\n                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope.qualified_rope'\n   67 |     localparam integer KEY_ELEMENTS = 1024;\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_view_resolver.sv:177:26: Bits of signal are not used: 'object_id'[31:16]\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.bank.g_lane[5].lane'\n  177 |     input  wire [31:0]   object_id,\n      |                          ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_view_resolver.sv:178:26: Bits of signal are not used: 'permissions'[31:2,0]\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.bank.g_lane[5].lane'\n  178 |     input  wire [31:0]   permissions,\n      |                          ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_view_resolver.sv:305:17: Bits of signal are not used: 'b_hi_bits'[2:0]\n                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.bank.g_lane[5].lane'\n  305 |     wire [69:0] b_hi_bits   = b_lo_bits + b_span_bits + 70'd7;\n      |                 ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/proto/ot_mac_bf16_fp32_pipe.sv:334:17: Bits of signal are not used: 'sub_q'[28:24]\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac.mac'\n  334 |     wire [28:0] sub_q  = (tsh_c >= 6'd29) ? 29'b0 : (nrm >> tsh_c);\n      |                 ^~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/proto/ot_mac_bf16_fp32_pipe.sv:353:17: Bits of signal are not used: 'sub_man'[23]\n                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.fastmac.mac'\n  353 |     wire [23:0] sub_man = sub_far ? 24'b0\n      |                 ^~~~~~~\nmake: Entering directory '<BUILD>/obj_p3'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o a3_shipped_prefix_harness.o <ROOT>/rtl/test/a3_shipped_prefix_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_dpi.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_shipped_prefix_top__pch.h -o Vot_a3_shipped_prefix_top__pch.h.fast.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__4.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__5.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__6.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__7.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__8.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__9.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top__Dpi.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_shipped_prefix_top__pch.h -o Vot_a3_shipped_prefix_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__4__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__5__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__6__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__7__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top__Syms__Slow.cpp\ng++    a3_shipped_prefix_harness.o verilated.o verilated_dpi.o verilated_threads.o Vot_a3_shipped_prefix_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_shipped_prefix_top\nrm Vot_a3_shipped_prefix_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_p3'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 14.085 MB sources in 45 modules, into 14.597 MB in 23 C++ files needing 0.041 MB\n- Verilator: Walltime 20.830 s (elab=0.043, cvt=0.937, bld=19.661); cpu 1.169 s on 1 threads; allocated 157.184 MB\n",
+      "compile_returncode": 0,
+      "compile_wall_seconds": 20.873,
+      "log_sha256": "2832a18efb90f1a09cff136902906bddf0ad3b695b20810bc515d3d33a59705d",
+      "marker_present": true,
+      "measure": {
+        "measured": true,
+        "simulated_cycles": 50745842
+      },
+      "name": "verilator",
+      "observed_cases": [
+        {
+          "fault": 32,
+          "fetched": 33,
+          "index": 0,
+          "issued": 11,
+          "launches": 10,
+          "responses": 11,
+          "retired": 32,
+          "trap": 4,
+          "views": 33,
+          "words": 24832
+        },
+        {
+          "fault": 32,
+          "fetched": 33,
+          "index": 1,
+          "issued": 11,
+          "launches": 10,
+          "responses": 11,
+          "retired": 32,
+          "trap": 4,
+          "views": 33,
+          "words": 24832
+        },
+        {
+          "fault": 13,
+          "fetched": 14,
+          "index": 2,
+          "issued": 5,
+          "launches": 4,
+          "responses": 5,
+          "retired": 13,
+          "trap": 4,
+          "views": 11,
+          "words": 20736
+        },
+        {
+          "fault": 14,
+          "fetched": 15,
+          "index": 3,
+          "issued": 5,
+          "launches": 4,
+          "responses": 5,
+          "retired": 14,
+          "trap": 4,
+          "views": 17,
+          "words": 20736
+        }
+      ],
+      "operator_admission": {
+        "capability_trapped_family_count": 6,
+        "cases_with_mapped_placement": 0,
+        "launches": {
+          "ATTENTION.GQA": 0,
+          "DMA.SCATTER": 0,
+          "SELECTION.ARGMAX": 0,
+          "SELECTION.TOKEN_APPEND": 0,
+          "VECTOR.ADD": 0,
+          "VECTOR.SILU_MUL": 0
+        },
+        "measured": true,
+        "reached_families": [],
+        "reached_family_count": 0,
+        "result_injection": false,
+        "trapped_families": [
+          "VECTOR.ADD",
+          "VECTOR.SILU_MUL",
+          "DMA.SCATTER",
+          "ATTENTION.GQA",
+          "SELECTION.ARGMAX",
+          "SELECTION.TOKEN_APPEND"
+        ],
+        "vector_generation": "mapped",
+        "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+      },
+      "peak_child_resident_bytes": 314834944,
+      "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4",
+      "run_command": "./obj_p3/Vot_a3_shipped_prefix_top",
+      "run_cpu_seconds": 276.509,
+      "run_log": "MAPPED 0 placement=0 add=0 silu=0 scatter=0 gqa=0 argmax=0 append=0 token=0 tie=0 eos=0 capability_faults=1\nCASE 0 OK launches=10 words=24832 responses=11 trap=4 fault=32 fetched=33 retired=32 issued=11 views=33\nMAPPED 1 placement=0 add=0 silu=0 scatter=0 gqa=0 argmax=0 append=0 token=0 tie=0 eos=0 capability_faults=1\nCASE 1 OK launches=10 words=24832 responses=11 trap=4 fault=32 fetched=33 retired=32 issued=11 views=33\nMAPPED 2 placement=0 add=0 silu=0 scatter=0 gqa=0 argmax=0 append=0 token=0 tie=0 eos=0 capability_faults=1\nCASE 2 OK launches=4 words=20736 responses=5 trap=4 fault=13 fetched=14 retired=13 issued=5 views=11\nMAPPED 3 placement=0 add=0 silu=0 scatter=0 gqa=0 argmax=0 append=0 token=0 tie=0 eos=0 capability_faults=1\nCASE 3 OK launches=4 words=20736 responses=5 trap=4 fault=14 fetched=15 retired=14 issued=5 views=17\nADMISSION vectors=mapped cases_with_placement=0 injecting=0 VECTOR.ADD=0 VECTOR.SILU_MUL=0 DMA.SCATTER=0 ATTENTION.GQA=0 SELECTION.ARGMAX=0 SELECTION.TOKEN_APPEND=0 reached=0 trapped=6\nMEASURE cycles=50745842 wall_s=276.486 sim_wall_s=274.472 cycle_guard=64000000000 result_words=98304 source_words=65536 weight_image_bytes=50331648 window_page_bytes=1048576 window_cap_bytes=8388608 window_peak_resident_bytes=8388608 window_segments=1 halfword_reads=50331648 page_hits=50331552 page_faults=96 pages_evicted=88 distinct_bytes=50331648 refilled_bytes=100663296 trace_last_case_issues=5 trace_issues=0 injected_results=0 trace_compared_elements=0 trace_divergence_index=-1 trace_uncompared_fields=none\nPASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4 checks=353707\n",
+      "run_returncode": 0,
+      "run_wall_seconds": 276.523,
+      "simulated_cycles": 50745842,
+      "status": "pass"
+    }
+  ],
+  "checkpoint_gains": [
+    {
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 50,
+      "operator_pc": 8,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8192,
+        "declared_segment_offset": 1244669048,
+        "declared_segment_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+        "object_content_sha256": "579d67ccd61b48d4b026755a6187d3e9ae690baa03b9e11ab4ece0fe6c8add44",
+        "object_id": 4,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 1244669048,
+        "selected_row_file_range": {
+          "start": 1244669048,
+          "stop_exclusive": 1244677240
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 64,
+      "operator_pc": 8,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8192,
+        "declared_segment_offset": 1244669048,
+        "declared_segment_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+        "object_content_sha256": "579d67ccd61b48d4b026755a6187d3e9ae690baa03b9e11ab4ece0fe6c8add44",
+        "object_id": 1,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 1244669048,
+        "selected_row_file_range": {
+          "start": 1244669048,
+          "stop_exclusive": 1244677240
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    }
+  ],
+  "checkpoint_head_gains": [
+    {
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "expected_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+      "inverse_rms_payload_sha256": "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+      "mean_square_payload_sha256": "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 79,
+      "operator_pc": 20,
+      "row_count": 32,
+      "row_width": 128,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 256,
+        "declared_segment_offset": 1588618616,
+        "declared_segment_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+        "object_content_sha256": "cfa42893a601d392d2ecf8f6e71dcc2e6c0b807d4dbcd9d585d8a74bb6f62389",
+        "object_id": 8,
+        "selected_row_bytes": 256,
+        "selected_row_file_offset": 1588618616,
+        "selected_row_file_range": {
+          "start": 1588618616,
+          "stop_exclusive": 1588618872
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "expected_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+      "inverse_rms_payload_sha256": "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+      "mean_square_payload_sha256": "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 87,
+      "operator_pc": 23,
+      "row_count": 8,
+      "row_width": 128,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 256,
+        "declared_segment_offset": 1546675320,
+        "declared_segment_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+        "object_content_sha256": "5e788860c8b531b7750b4f62e429a59196309749b59e671667ee21a113f3348d",
+        "object_id": 10,
+        "selected_row_bytes": 256,
+        "selected_row_file_offset": 1546675320,
+        "selected_row_file_range": {
+          "start": 1546675320,
+          "stop_exclusive": 1546675576
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "expected_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+      "inverse_rms_payload_sha256": "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+      "mean_square_payload_sha256": "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 90,
+      "operator_pc": 20,
+      "row_count": 32,
+      "row_width": 128,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 256,
+        "declared_segment_offset": 1588618616,
+        "declared_segment_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+        "object_content_sha256": "cfa42893a601d392d2ecf8f6e71dcc2e6c0b807d4dbcd9d585d8a74bb6f62389",
+        "object_id": 5,
+        "selected_row_bytes": 256,
+        "selected_row_file_offset": 1588618616,
+        "selected_row_file_range": {
+          "start": 1588618616,
+          "stop_exclusive": 1588618872
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "expected_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+      "inverse_rms_payload_sha256": "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+      "mean_square_payload_sha256": "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+      "numeric_contract_sha256": "999ef86bc4d4c36dfd57db84d49618af46bed2e6c1f0b1bf031a27b5b8c03fda",
+      "operator_descriptor_id": 97,
+      "operator_pc": 23,
+      "row_count": 8,
+      "row_width": 128,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 256,
+        "declared_segment_offset": 1546675320,
+        "declared_segment_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+        "object_content_sha256": "5e788860c8b531b7750b4f62e429a59196309749b59e671667ee21a113f3348d",
+        "object_id": 6,
+        "selected_row_bytes": 256,
+        "selected_row_file_offset": 1546675320,
+        "selected_row_file_range": {
+          "start": 1546675320,
+          "stop_exclusive": 1546675576
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    }
+  ],
+  "checkpoint_matrices": [
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 4096,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 59,
+      "operator_pc": 11,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 16,777,216 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 33554432,
+        "declared_segment_offset": 1588618872,
+        "declared_segment_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "object_content_sha256": "f085ed2c8f8e81d7f341e01504b1a1ec1a3cf2441dd171349b58967e2bf4be69",
+        "object_id": 5,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1588618872,
+          "stop_exclusive": 1622173304
+        },
+        "selected_matrix_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "selected_matrix_shape": [
+          4096,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 1024,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 67,
+      "operator_pc": 14,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 4,194,304 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8388608,
+        "declared_segment_offset": 1546675576,
+        "declared_segment_sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "object_content_sha256": "1a1f838cb3de1b8a343bcce899c8f4a8ed3db872ca98d1682b9c7379426fceb9",
+        "object_id": 6,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1546675576,
+          "stop_exclusive": 1555064184
+        },
+        "selected_matrix_sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "selected_matrix_shape": [
+          1024,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 1024,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 73,
+      "operator_pc": 17,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 4,194,304 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8388608,
+        "declared_segment_offset": 1622173304,
+        "declared_segment_sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "object_content_sha256": "43ae0bc4c1ffd3c18d8da992db0b0242c31c21427d42f04bef9be979c6ca6291",
+        "object_id": 7,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1622173304,
+          "stop_exclusive": 1630561912
+        },
+        "selected_matrix_sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "selected_matrix_shape": [
+          1024,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 4096,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 72,
+      "operator_pc": 11,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 16,777,216 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 33554432,
+        "declared_segment_offset": 1588618872,
+        "declared_segment_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "object_content_sha256": "f085ed2c8f8e81d7f341e01504b1a1ec1a3cf2441dd171349b58967e2bf4be69",
+        "object_id": 2,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1588618872,
+          "stop_exclusive": 1622173304
+        },
+        "selected_matrix_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "selected_matrix_shape": [
+          4096,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 1024,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 79,
+      "operator_pc": 14,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 4,194,304 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8388608,
+        "declared_segment_offset": 1546675576,
+        "declared_segment_sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "object_content_sha256": "1a1f838cb3de1b8a343bcce899c8f4a8ed3db872ca98d1682b9c7379426fceb9",
+        "object_id": 3,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1546675576,
+          "stop_exclusive": 1555064184
+        },
+        "selected_matrix_sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "selected_matrix_shape": [
+          1024,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "association_scope": {
+        "binary32_rounding": "rne_after_each_product_and_add",
+        "columns": 1024,
+        "lane_count": 1,
+        "output_rounding": "bf16_rne_once",
+        "reduction": 4096,
+        "reduction_order": "ascending_k",
+        "rows": 1
+      },
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "executed_association": "ot_a3_mac_lane_single_lane_ascending_k_v1",
+      "expected_row_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5",
+      "numeric_contract_sha256": "7550dc6a773fd9d5773b46182887613fb777bb8e4f01652321c4d93ca0765aa1",
+      "operator_descriptor_id": 84,
+      "operator_pc": 17,
+      "source": {
+        "authentication_boundary": "the complete selected source segment was re-read and hashed; all 4,194,304 BF16 codes are consumed by the RTL operation",
+        "checkpoint": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 8388608,
+        "declared_segment_offset": 1622173304,
+        "declared_segment_sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "object_content_sha256": "43ae0bc4c1ffd3c18d8da992db0b0242c31c21427d42f04bef9be979c6ca6291",
+        "object_id": 4,
+        "selected_matrix_dtype": "BF16",
+        "selected_matrix_file_range": {
+          "start": 1622173304,
+          "stop_exclusive": 1630561912
+        },
+        "selected_matrix_sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "selected_matrix_shape": [
+          1024,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    }
+  ],
+  "checkpoint_rows": [
+    {
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/rom_schedule_checks.json",
+        "artifact_sha256": "c27dc456577d05b2db4d594867d456e162fe1aa5b322be8259ac27e4453dab46",
+        "case": "qwen3-rom-single-chip"
+      },
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+      "operator_descriptor_id": 41,
+      "operator_pc": 4,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 1244659712,
+        "declared_segment_offset": 9336,
+        "declared_segment_sha256": "458b4af1d22ed8d7d12235ed5249a4606c7606e35e775e7ea2244ba623b0312e",
+        "object_content_sha256": "174b006ef57b1ffffdbaf2680b5d47a5c32bf6b71276f4f30ebc3ab726e678d7",
+        "object_id": 1,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 9336,
+        "selected_row_file_range": {
+          "start": 9336,
+          "stop_exclusive": 17528
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/hbm_qwen_deployment_certificate.json",
+        "artifact_sha256": "f6552861c717b05a620b7f7bb5ac762f14e76d579b874a1b414bbad97da847f3",
+        "case": "qwen3-hbm-single-chip"
+      },
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "numeric_contract_sha256": "d1ea2f18e0b161e19e17f465ced630e0af7d0de970dadd6776c685ab6539fbcc",
+      "operator_descriptor_id": 54,
+      "operator_pc": 4,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "declared_segment_bytes": 1244659712,
+        "declared_segment_offset": 9336,
+        "declared_segment_sha256": "458b4af1d22ed8d7d12235ed5249a4606c7606e35e775e7ea2244ba623b0312e",
+        "object_content_sha256": "174b006ef57b1ffffdbaf2680b5d47a5c32bf6b71276f4f30ebc3ab726e678d7",
+        "object_id": 12,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 9336,
+        "selected_row_file_range": {
+          "start": 9336,
+          "stop_exclusive": 17528
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00005.safetensors"
+      }
+    },
+    {
+      "case": "deepseek-v4-flash-rom-wafer/decode",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/rom_schedule_checks.json",
+        "artifact_sha256": "c27dc456577d05b2db4d594867d456e162fe1aa5b322be8259ac27e4453dab46",
+        "case": "deepseek-v4-flash-rom-wafer"
+      },
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "numeric_contract_sha256": "ca62e720aa0132c21f095a7f1f8d5d9407149b8547ddeb0abd5d882a2f0180d3",
+      "operator_descriptor_id": 356,
+      "operator_pc": 7,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+        "declared_segment_bytes": 1059061760,
+        "declared_segment_offset": 96,
+        "declared_segment_sha256": "c05019ecf9435fa47cdcbb35df74c8ade6c4ceedd6ebe75db9ea7a607f6ad2ef",
+        "object_content_sha256": "db233a8c5c60e69e8c9202d4170a9e14352b8e5822d4e1b9d669dfacd68cdefb",
+        "object_id": 1,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 96,
+        "selected_row_file_range": {
+          "start": 96,
+          "stop_exclusive": 8288
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "168a19a08342a3282a62348d6dc045c7863338098a6c50f6857ced44dd3ac421",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00048.safetensors"
+      }
+    },
+    {
+      "case": "deepseek-v4-flash-hbm-cluster/decode",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
+        "artifact_sha256": "c9702ad8c630ece653d6f8dd44e6a2452c057963e2e955649dd9260a31f4c593",
+        "case": "deepseek-v4-flash-hbm-cluster"
+      },
+      "deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "numeric_contract_sha256": "ca62e720aa0132c21f095a7f1f8d5d9407149b8547ddeb0abd5d882a2f0180d3",
+      "operator_descriptor_id": 527,
+      "operator_pc": 7,
+      "source": {
+        "authentication_boundary": "only this selected byte range was re-read and hashed; complete segment identity and its declared SHA-256 are bound by the certified deployment but the complete segment was not rehashed",
+        "checkpoint_revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+        "declared_segment_bytes": 1059061760,
+        "declared_segment_offset": 96,
+        "declared_segment_sha256": "c05019ecf9435fa47cdcbb35df74c8ade6c4ceedd6ebe75db9ea7a607f6ad2ef",
+        "object_content_sha256": "db233a8c5c60e69e8c9202d4170a9e14352b8e5822d4e1b9d669dfacd68cdefb",
+        "object_id": 223,
+        "selected_row_bytes": 8192,
+        "selected_row_file_offset": 96,
+        "selected_row_file_range": {
+          "start": 96,
+          "stop_exclusive": 8288
+        },
+        "selected_row_logical_offset": 0,
+        "selected_row_segment_offset": 0,
+        "selected_row_sha256": "168a19a08342a3282a62348d6dc045c7863338098a6c50f6857ced44dd3ac421",
+        "selected_token_id": 0,
+        "shard": "model-00001-of-00048.safetensors"
+      }
+    }
+  ],
+  "compositional_mac_lane_qualification": {
+    "artifact": "results/rtl/abi3_engine_campaign.json",
+    "artifact_sha256": "91c312fec51fb6ebdbe61ccf4160e21991871f3168b910d933515575b8156d08",
+    "blocked_contract_limit": "only bf16_bf16_fp32_sequential_rne_v1 is correlated. The blocked contract's association is the executing implementation's declared one, so bit-exactness against it is not a well-posed claim about a different implementation and is not made",
+    "checks_per_simulator": {
+      "iverilog": 40878,
+      "verilator": 40878
+    },
+    "composition_boundary": "the exact shipped blocked-contract operation declares the same single-lane ascending-K arithmetic association and executes it completely in the integrated Verilator replay; the retained Icarus evidence qualifies that unchanged lane arithmetic on its bounded sequential-contract vectors, not the full shipped program, exact query/key/value shapes, or blocked descriptors",
+    "evidence_class": "public_open_tool_rtl_simulation",
+    "lane_source": "rtl/abi3/ot_a3_mac_lane.sv",
+    "lane_source_sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+    "qualification_contract": "bf16_bf16_fp32_sequential_rne_v1",
+    "qualified_mac_count": 59868,
+    "schema": "opentallas.rtl.abi3_engine_campaign.v1",
+    "simulators_counted": [
+      "iverilog_vvp",
+      "verilator_cpp_executable"
+    ],
+    "status": "pass"
+  },
+  "compositional_rope_qualification": {
+    "artifact": "results/tensor_accelerator/qwen3_rtl_rope_campaign.json",
+    "artifact_sha256": "be8466d89fb9666a4e846fdcfecd159cc5558a769681a858b34f93d1d4835430",
+    "composition_boundary": "the ABI 3.0 adapter narrows each declared FP32 coefficient to BF16 RNE and presents one declared query or key tensor to the unchanged fused core while the inactive side is internal zero; the retained Icarus-plus-Verilator campaign qualifies that core at positions 0 and 7999, while the integrated Verilator replay checks every position-16 result from the real ABI descriptors",
+    "core_source": "rtl/ot_ta_rope_bf16_sram_engine.sv",
+    "core_source_sha256": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
+    "qualification_contract": "qwen3_rope_fp32_bf16_v1",
+    "qualified_addition_count_per_position": 5120,
+    "qualified_element_count_per_position": 5120,
+    "qualified_multiplication_count_per_position": 10240,
+    "qualified_positions": [
+      0,
+      7999
+    ],
+    "schema": "opentallas.tensor_accelerator.qwen_rtl_rope_campaign.v1",
+    "simulators_counted": [
+      "iverilog",
+      "verilator"
+    ],
+    "status": "pass"
+  },
+  "cost": {
+    "compile_wall_seconds": [
+      20.873
+    ],
+    "peak_child_resident_bytes": 314834944,
+    "run_cpu_seconds": [
+      276.509
+    ],
+    "run_wall_seconds": [
+      276.523
+    ]
+  },
+  "dma_gather_launch_count": 6,
+  "dma_transfer_launch_count": 2,
+  "dma_transfer_result_word_count": 32768,
+  "elaboration": {
+    "declared_by": "the vector set's own geometry block",
+    "geometry_flags": [
+      "-GINDEX_WORDS=64",
+      "-GSOURCE_WORDS=65536",
+      "-GRESULT_WORDS=98304"
+    ],
+    "index_words": 64,
+    "operand_bank_bytes": 655616,
+    "result_words": 98304,
+    "source_words": 65536
+  },
+  "embedding_launch_count": 4,
+  "embedding_result_word_count": 16384,
+  "evidence_class": "public_open_tool_rtl_simulation_composite",
+  "evidence_mode": "full_integrated_verilator_plus_dual_simulator_mac_lane_and_rope_composition",
+  "expected_cases": [
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 0,
+      "issued": 11,
+      "launches": 10,
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 1,
+      "issued": 11,
+      "launches": 10,
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 13,
+      "fetched": 14,
+      "index": 2,
+      "issued": 5,
+      "launches": 4,
+      "responses": 5,
+      "retired": 13,
+      "trap": 4,
+      "views": 11,
+      "words": 20736
+    },
+    {
+      "fault": 14,
+      "fetched": 15,
+      "index": 3,
+      "issued": 5,
+      "launches": 4,
+      "responses": 5,
+      "retired": 14,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    }
+  ],
+  "fault_sites": [
+    {
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "descriptor_id": 108,
+      "family": 16,
+      "opcode": "DMA.SCATTER",
+      "pc": 32,
+      "sub": 3,
+      "trap_class": 4
+    },
+    {
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "descriptor_id": 118,
+      "family": 16,
+      "opcode": "DMA.SCATTER",
+      "pc": 32,
+      "sub": 3,
+      "trap_class": 4
+    },
+    {
+      "case": "deepseek-v4-flash-rom-wafer/decode",
+      "descriptor_id": 368,
+      "family": 144,
+      "opcode": "LINK.MULTICAST",
+      "pc": 13,
+      "sub": 3,
+      "trap_class": 4
+    },
+    {
+      "case": "deepseek-v4-flash-hbm-cluster/decode",
+      "descriptor_id": 547,
+      "family": 48,
+      "opcode": "VECTOR.MHC",
+      "pc": 14,
+      "sub": 9,
+      "trap_class": 4
+    }
+  ],
+  "git": {
+    "commit": "1a4e29c36140bd95c95f956bfac3c0f3cf2bb095",
+    "worktree_dirty": true
+  },
+  "head_rms_norm_launch_count": 4,
+  "head_rms_norm_result_word_count": 10240,
+  "integrated_replay_passed": true,
+  "integrated_simulator_checks": {
+    "verilator": 353707
+  },
+  "integrated_simulators": [
+    "verilator"
+  ],
+  "matmul_launch_count": 6,
+  "matmul_mac_count": 50331648,
+  "matmul_result_word_count": 12288,
+  "operator_admission": {
+    "capability_trapped_family_count": 6,
+    "cases_with_mapped_placement": 0,
+    "launches": {
+      "ATTENTION.GQA": 0,
+      "DMA.SCATTER": 0,
+      "SELECTION.ARGMAX": 0,
+      "SELECTION.TOKEN_APPEND": 0,
+      "VECTOR.ADD": 0,
+      "VECTOR.SILU_MUL": 0
+    },
+    "measured": true,
+    "reached_families": [],
+    "reached_family_count": 0,
+    "result_injection": false,
+    "trapped_families": [
+      "VECTOR.ADD",
+      "VECTOR.SILU_MUL",
+      "DMA.SCATTER",
+      "ATTENTION.GQA",
+      "SELECTION.ARGMAX",
+      "SELECTION.TOKEN_APPEND"
+    ],
+    "vector_generation": "mapped",
+    "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+  },
+  "post_fault_write_count": 0,
+  "real_engine_launch_count": 28,
+  "required_marker": "PASS: ABI3 shipped-prefix engine integration cases=4 launches=28 words=91136 capability_faults=4",
+  "resolved_view_count": 94,
+  "result_word_count": 91136,
+  "retained_image_word_count": 72704,
+  "rms_norm_launch_count": 2,
+  "rms_norm_result_word_count": 8192,
+  "rope_coefficient_gather_result_word_count": 1024,
+  "rope_launch_count": 4,
+  "rope_operations": [
+    {
+      "addition_count": 4096,
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+      "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+      "coefficient_narrow_saturated_element_count": 0,
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "expected_payload_sha256": "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+      "multiplication_count": 8192,
+      "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+      "operator_aux_id_0": 128,
+      "operator_descriptor_id": 94,
+      "operator_pc": 26,
+      "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+      "row_count": 32,
+      "row_width": 128
+    },
+    {
+      "addition_count": 1024,
+      "case": "qwen3-8b-rom-single-chip/decode",
+      "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+      "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+      "coefficient_narrow_saturated_element_count": 0,
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "expected_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+      "multiplication_count": 2048,
+      "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+      "operator_aux_id_0": 128,
+      "operator_descriptor_id": 100,
+      "operator_pc": 29,
+      "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+      "row_count": 8,
+      "row_width": 128
+    },
+    {
+      "addition_count": 4096,
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+      "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+      "coefficient_narrow_saturated_element_count": 0,
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "expected_payload_sha256": "f36db31b14aa59e0b0c7bc444403a7991063c3a0e874dcee151b7428b0ee8150",
+      "multiplication_count": 8192,
+      "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+      "operator_aux_id_0": 256,
+      "operator_descriptor_id": 104,
+      "operator_pc": 26,
+      "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+      "row_count": 32,
+      "row_width": 128
+    },
+    {
+      "addition_count": 1024,
+      "case": "qwen3-8b-hbm-single-chip/decode",
+      "coefficient_bf16_payload_sha256": "836c0e4d9ba8556db28ac7d300914b4cb42d15418e59c6550a693558252049f1",
+      "coefficient_fp32_payload_sha256": "d5c65f780aa8e9d6618ffc6dc5e82df124968be09bc0e407df16070cb7cbae21",
+      "coefficient_narrow_saturated_element_count": 0,
+      "deployment_sha256": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "expected_payload_sha256": "b41de05c0a7f1f495ded2295c22781f4aa345136d2c572248469c422f266c406",
+      "multiplication_count": 2048,
+      "numeric_contract_sha256": "34ad155c76b1ab1ee5efb8463a85753eaebd08e169ee93c07ba364759f1836cf",
+      "operator_aux_id_0": 256,
+      "operator_descriptor_id": 110,
+      "operator_pc": 29,
+      "oracle_agreement": "optimized_numpy_equals_independent_scalar_all_elements",
+      "row_count": 8,
+      "row_width": 128
+    }
+  ],
+  "rope_result_word_count": 10240,
+  "schema": "opentallas.rtl.abi3_shipped_prefix_campaign.v1",
+  "scope": {
+    "does_not_establish": [
+      "prefill execution",
+      "Qwen DMA.SCATTER, ATTENTION.GQA, LINK.MULTICAST, VECTOR.MHC, or any later model operator",
+      "a whole transaction, token selection, decoding, EOS, or model correctness",
+      "output-token correctness, legitimate decoded text, or correctness-qualified TPOT",
+      "complete checkpoint-segment reauthentication during this bounded run",
+      "memory-macro timing, SRAM/HBM arbitration, physical timing, area, or power",
+      "a complete integrated shipped-prefix execution under Icarus; Icarus coverage is compositional qualification of the unchanged MAC lane and Qwen RoPE core, not execution of these full shipped descriptor/control paths",
+      "dual-simulator agreement on this complete integrated transaction"
+    ],
+    "establishes": [
+      "the real sequencer resolves exact operand views from each of the four shipped decode programs",
+      "six dense one-index FP32 DMA.GATHER operations execute through ot_a3_engine_array and reproduce 1,024 authenticated generated RoPE words",
+      "four exact BF16 TENSOR.EMBED_LOOKUP operations execute through the existing index mover and reproduce 16,384 checkpoint codes from four bounded 8 KiB selected-row reads",
+      "two exact Qwen BF16 VECTOR.RMS_NORM operations consume the prior embedding result and authenticated layer-zero gain, reproducing all 8,192 retained output codes",
+      "two DeepSeek stride-zero DMA.TRANSFER operations consume the prior embedding result and reproduce all 32,768 output codes through a four-zero-index mover lowering",
+      "six complete Qwen layer-zero query/key/value TENSOR.MATMUL operations consume the prior RMSNorm result and every code of three authenticated matrices through one descriptor-driven ot_a3_mac_lane path, reproducing all 12,288 output codes after 50,331,648 MACs",
+      "the blocked MATMUL contract is bound to the explicit ot_a3_mac_lane single-lane ascending-K association, executed for 1x4096 by 4096x4096 and two 1024x4096 shapes per deployment, with per-product and per-add binary32 RNE and one final BF16 RNE",
+      "four Qwen VECTOR.HEAD_RMS_NORM operations consume the exact prior query/key projection result banks and authenticated 128-code gains through one descriptor-sized buffered datapath, reproducing 10,240 output codes for two 32x128 and two 8x128 row sets",
+      "the head-normalization datapath applies the declared qwen3_rmsnorm_fp32_bf16_v1 contract independently to every descriptor-selected head row and buffers every output before its first destination write",
+      "four Qwen VECTOR.ROPE operations consume the exact prior query/key head-normalization result banks and the previously gathered FP32 position-16 coefficient row, narrow all 256 coefficients to BF16 RNE, and reproduce 10,240 output codes that agree element-for-element with the independent scalar oracle",
+      "the ABI 3.0 RoPE adapter executes each declared 32x128 or 8x128 operand through the unchanged qualified Qwen RoPE core, provides internal positive zero to its inactive fused side, and neither reads an undeclared external operand nor publishes an undeclared destination write",
+      "each selected checkpoint range is bound to its certified deployment, checkpoint revision, shard, declared segment digest, exact byte range, and selected-range SHA-256 without claiming a complete-shard rehash",
+      "Qwen next refuses DMA.SCATTER at PC 32; DeepSeek ROM refuses LINK.MULTICAST at PC 13 and DeepSeek HBM refuses VECTOR.MHC at PC 14, each with a precise CAPABILITY trap, no retirement, no event publication, and no later write",
+      "the production profile elaborates STATE_COMPAT=0 and every compatibility-state counter and overflow output remains zero",
+      "Verilator executes the complete integrated shipped-prefix cases and its independent C++ checker reproduces every retained observation and result word",
+      "the unchanged ot_a3_mac_lane source is bound by SHA-256 to its retained Icarus-plus-Verilator engine qualification; that compositional campaign contributes 40,878 checks per simulator over 59,868 MACs",
+      "the unchanged ot_ta_rope_bf16_sram_engine source is bound by SHA-256 to its retained Icarus-plus-Verilator operation-complete qualification at positions 0 and 7999"
+    ]
+  },
+  "selected_checkpoint_byte_count": 100713472,
+  "selected_embedding_checkpoint_byte_count": 32768,
+  "selected_head_rms_checkpoint_byte_count": 1024,
+  "selected_matmul_checkpoint_byte_count": 100663296,
+  "selected_rms_checkpoint_byte_count": 16384,
+  "simulated_cycles": 50745842,
+  "simulated_cycles_by_simulator": {
+    "verilator": 50745842
+  },
+  "source": {
+    "docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md": {
+      "bytes": 64185,
+      "sha256": "93c4a815ae2d9c0bc2ed3e8d15c9047821115f12af88b3e63fda037c3ee7c186"
+    },
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": {
+      "bytes": 150010,
+      "sha256": "b1a58675458d638d3c475419cfbd4f0b16633e2b6e4f5ad82af65b89e956ac25"
+    },
+    "rtl/abi3/ot_a3_dependence_table.sv": {
+      "bytes": 9294,
+      "sha256": "3ac3172c508d277a3b28d0438161c012365bc26a3a7c97eee3d3f12bb2d12c05"
+    },
+    "rtl/abi3/ot_a3_device_top.sv": {
+      "bytes": 26868,
+      "sha256": "cd6272d8939b4e9301b60aabcb53f069ccbbe4544a71eca6386e1170423540bf"
+    },
+    "rtl/abi3/ot_a3_dma_index_mover.sv": {
+      "bytes": 10361,
+      "sha256": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64"
+    },
+    "rtl/abi3/ot_a3_engine_array.sv": {
+      "bytes": 46871,
+      "sha256": "3d3ed3333516d592c17c023ef9c2cdaa6d08f5d5c512ea7de8146fc395dec9f5"
+    },
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": {
+      "bytes": 125971,
+      "sha256": "40f14f285091d160408cac5c26deae7dd77fce7e0e5f3ba92968961b3d714bea"
+    },
+    "rtl/abi3/ot_a3_engine_pkg.sv": {
+      "bytes": 3047,
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    "rtl/abi3/ot_a3_event_scoreboard.sv": {
+      "bytes": 13924,
+      "sha256": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65"
+    },
+    "rtl/abi3/ot_a3_format_pkg.sv": {
+      "bytes": 7072,
+      "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0"
+    },
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": {
+      "bytes": 12418,
+      "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1"
+    },
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": {
+      "bytes": 21865,
+      "sha256": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e"
+    },
+    "rtl/abi3/ot_a3_instruction_decoder.sv": {
+      "bytes": 11286,
+      "sha256": "7cabe54def8fa53d0a7c85c716487e7848dfe1bb2fa703e2f56928daf9386a15"
+    },
+    "rtl/abi3/ot_a3_issue_record_store.sv": {
+      "bytes": 10619,
+      "sha256": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04"
+    },
+    "rtl/abi3/ot_a3_loop_stack.sv": {
+      "bytes": 17824,
+      "sha256": "6167c65cf533bbbc8635d53b100b7ed9c3deea7dba437ae680f2c0b19db70ef0"
+    },
+    "rtl/abi3/ot_a3_mac_lane.sv": {
+      "bytes": 14028,
+      "sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37"
+    },
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv": {
+      "bytes": 14298,
+      "sha256": "9fa13df6e934783b2bd5a7fb5348e33f262322381c87a926145d9bfef41bb454"
+    },
+    "rtl/abi3/ot_a3_microsequencer.sv": {
+      "bytes": 97848,
+      "sha256": "82f430c4638007b9d68a2c8e1b93fd88bbf7c6a95f6dd816f0b979d2650fd080"
+    },
+    "rtl/abi3/ot_a3_pkg.sv": {
+      "bytes": 19189,
+      "sha256": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e"
+    },
+    "rtl/abi3/ot_a3_program_header.sv": {
+      "bytes": 9455,
+      "sha256": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619"
+    },
+    "rtl/abi3/ot_a3_qwen_gqa.sv": {
+      "bytes": 26554,
+      "sha256": "13f76d377495ee729301f87b0bba3414a933c44f3f843c50f0a5134a3d793433"
+    },
+    "rtl/abi3/ot_a3_resolver_bank.sv": {
+      "bytes": 20192,
+      "sha256": "0473c9723a9ea4819b336d07b369d921e4c00dd52ef8614cc844754dcc0bd6f4"
+    },
+    "rtl/abi3/ot_a3_selection_argmax.sv": {
+      "bytes": 7021,
+      "sha256": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543"
+    },
+    "rtl/abi3/ot_a3_selection_token_append.sv": {
+      "bytes": 9912,
+      "sha256": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227"
+    },
+    "rtl/abi3/ot_a3_shared_divider.sv": {
+      "bytes": 9593,
+      "sha256": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1"
+    },
+    "rtl/abi3/ot_a3_state_controller.sv": {
+      "bytes": 17595,
+      "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006"
+    },
+    "rtl/abi3/ot_a3_symbol_file.sv": {
+      "bytes": 2821,
+      "sha256": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d"
+    },
+    "rtl/abi3/ot_a3_vector_add.sv": {
+      "bytes": 6851,
+      "sha256": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9"
+    },
+    "rtl/abi3/ot_a3_vector_compress_project.sv": {
+      "bytes": 11344,
+      "sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+    },
+    "rtl/abi3/ot_a3_vector_convert.sv": {
+      "bytes": 8480,
+      "sha256": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6"
+    },
+    "rtl/abi3/ot_a3_vector_hadamard.sv": {
+      "bytes": 9005,
+      "sha256": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162"
+    },
+    "rtl/abi3/ot_a3_vector_index_score.sv": {
+      "bytes": 15577,
+      "sha256": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb"
+    },
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": {
+      "bytes": 16104,
+      "sha256": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071"
+    },
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": {
+      "bytes": 17791,
+      "sha256": "cbd659bf6a88580da63aac8e7777b1eb6a9163d4e4136780b0a56380b524be77"
+    },
+    "rtl/abi3/ot_a3_vector_rope.sv": {
+      "bytes": 14473,
+      "sha256": "59cf5fa16c0079ef90e7a21fa051b44c1c5e9f7ce9df0db6df2e3bdd3019c5be"
+    },
+    "rtl/abi3/ot_a3_vector_scale.sv": {
+      "bytes": 7211,
+      "sha256": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4"
+    },
+    "rtl/abi3/ot_a3_vector_silu_mul.sv": {
+      "bytes": 13358,
+      "sha256": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4"
+    },
+    "rtl/abi3/ot_a3_view_resolver.sv": {
+      "bytes": 46067,
+      "sha256": "926bf2657cf2cd29175651f72cd82650fcbd92c3bf312e43d2623c92e7834157"
+    },
+    "rtl/ot_fp32_rne_pkg.sv": {
+      "bytes": 30130,
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+    },
+    "rtl/ot_fp32_rsqrt_rne.sv": {
+      "bytes": 7397,
+      "sha256": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b"
+    },
+    "rtl/ot_ta_command_decoder.sv": {
+      "bytes": 11949,
+      "sha256": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908"
+    },
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": {
+      "bytes": 16894,
+      "sha256": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369"
+    },
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv": {
+      "bytes": 20684,
+      "sha256": "a2af0b4f4e5e9c841a142dc0971d599899015cd20f402d40ead68e01b98dbed5"
+    },
+    "rtl/test/a3_engine_completion_adapter.sv": {
+      "bytes": 9489,
+      "sha256": "7af21879c1a0cb1d047543ed65282f174db09e7319c6a8f8e17304437adb8fb2"
+    },
+    "rtl/test/a3_shipped_prefix_harness.cpp": {
+      "bytes": 127396,
+      "sha256": "80bcdb4072da0ffe5c4efd8b7c11b13ef975e54861d6ca2476b2d8587c705e79"
+    },
+    "rtl/test/a3_shipped_prefix_top.sv": {
+      "bytes": 72423,
+      "sha256": "0280e4df394d28180735309c6988c4cad73be5635f93800ce3c643117dd02ab0"
+    },
+    "runtime/abi3/constants.py": {
+      "bytes": 16682,
+      "sha256": "209b9070512893f1dd4df54daf63d8ca6803826ea5cbb7a97cf12c70b31812a1"
+    },
+    "runtime/abi3/deployment.py": {
+      "bytes": 37216,
+      "sha256": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61"
+    },
+    "runtime/abi3/descriptors.py": {
+      "bytes": 29207,
+      "sha256": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e"
+    },
+    "runtime/abi3/records.py": {
+      "bytes": 22120,
+      "sha256": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca"
+    },
+    "runtime/reference/tensor_accelerator_rmsnorm.py": {
+      "bytes": 8201,
+      "sha256": "a9e5cb021251f39269ba3a5703cd91aa428b9726316b05c88676607e6e79f6ae"
+    },
+    "runtime/reference/tensor_accelerator_rope.py": {
+      "bytes": 7330,
+      "sha256": "be71d1a65ba0fc3d98d52ad50e1783b326e9874d9a949b97acb75245454c51a7"
+    },
+    "runtime/sim/engines/dma.py": {
+      "bytes": 7603,
+      "sha256": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45"
+    },
+    "runtime/sim/formats.py": {
+      "bytes": 7017,
+      "sha256": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385"
+    },
+    "runtime/sim/generators.py": {
+      "bytes": 16660,
+      "sha256": "fb51190f1f3b432f6946d185bc4f8fd7864d8683d23bdf2d7da23a4d72c925fb"
+    },
+    "runtime/sim/memory.py": {
+      "bytes": 45863,
+      "sha256": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7"
+    },
+    "runtime/tensor_accelerator/bf16.py": {
+      "bytes": 15465,
+      "sha256": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34"
+    },
+    "runtime/tensor_accelerator/rope.py": {
+      "bytes": 8432,
+      "sha256": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d"
+    },
+    "tools/build_abi3_deployment_rtl_vectors.py": {
+      "bytes": 61409,
+      "sha256": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582"
+    },
+    "tools/build_abi3_shipped_prefix_vectors.py": {
+      "bytes": 163582,
+      "sha256": "152bc49f7ce4403584b20fe0ad766b5d1fd434a882b024e571d6c5141cf7e7f1"
+    },
+    "tools/rtl_abi3_shipped_prefix_campaign.py": {
+      "bytes": 52259,
+      "sha256": "b656a3c708d0ca2c61863e3e24e11a387c2a9521984585178e8c3d611576f527"
+    }
+  },
+  "staged_matmul_weight": {
+    "bytes": 50331648,
+    "matrices": [
+      {
+        "base_words": 0,
+        "bytes": 33554432,
+        "pc": 11,
+        "sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1588618872,
+        "source_shard": "model-00001-of-00005.safetensors"
+      },
+      {
+        "base_words": 16777216,
+        "bytes": 8388608,
+        "pc": 14,
+        "sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1546675576,
+        "source_shard": "model-00001-of-00005.safetensors"
+      },
+      {
+        "base_words": 20971520,
+        "bytes": 8388608,
+        "pc": 17,
+        "sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1622173304,
+        "source_shard": "model-00001-of-00005.safetensors"
+      }
+    ],
+    "path": "generated/p3_matmul_weight.bin",
+    "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+  },
+  "state_activity": {
+    "apply_overflow_count": 0,
+    "bytes_written": 0,
+    "commit_apply_count": 0,
+    "commit_count": 0,
+    "compatibility_controller_elaborated": false,
+    "configured_state_descriptor_count": 0,
+    "discard_count": 0,
+    "generation_advance_count": 0,
+    "prepare_count": 0,
+    "read_count": 0,
+    "rows_committed": 0
+  },
+  "state_compat": 0,
+  "status": "pass",
+  "supported_profile": "dense one-index FP32 DMA.GATHER plus exact token-zero BF16 TENSOR.EMBED_LOOKUP with 4,096-code rows, exact one-row Qwen BF16 RMSNorm, three descriptor-driven Qwen 1x4096 query/key/value MATMUL launches with 4,096/1,024/1,024 output columns through the declared single-lane ascending-K association, plus weighted Qwen head RMSNorm over descriptor-selected 32x128 and 8x128 row sets, and Qwen whole-head RoPE with FP32-to-BF16 RNE coefficient narrowing over those same row sets, and DeepSeek four-copy stride-zero BF16 transfer; resolved views, unscaled operands, and numeric contracts are bound before each launch",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    }
+  },
+  "unsupported_policy": "every other family/subopcode returns CAPABILITY before any engine launch, result write, retirement, or signal publication",
+  "vector_set": {
+    "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+    "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
+    "sha256": "10e8dcfdd9d24abbcc0bf7928b8c57b6bf60bb72b3c76a9b2bfebd4d58ff0ae5"
+  }
+}

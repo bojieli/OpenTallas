@@ -508,14 +508,51 @@ module ot_a3_engine_array (
                              : 1'b1;
 
     // -- TENSOR.MATMUL ---------------------------------------------------
-    wire        mac_a_en, mac_b_en, mac_s_en, mac_t_en, mac_we, mac_busy, mac_done;
-    wire [31:0] mac_a_addr, mac_b_addr, mac_s_addr, mac_t_addr;
-    wire [31:0] mac_addr, mac_data, mac_out_count, mac_sat, mac_macs;
-    wire [7:0]  mac_error;
+    wire        lmac_a_en, lmac_b_en, mac_s_en, mac_t_en, lmac_we, lmac_busy, lmac_done;
+    wire [31:0] lmac_a_addr, lmac_b_addr, mac_s_addr, mac_t_addr;
+    wire [31:0] lmac_addr, lmac_data, lmac_out_count, lmac_sat, lmac_macs;
+    wire [7:0]  lmac_error;
+
+    //: TWO TENSOR LANES, selected per descriptor.
+    //:
+    //: ot_a3_mac_lane_pipe retires one multiply-accumulate per cycle where
+    //: ot_a3_mac_lane retires one every five, and is proven to produce identical
+    //: write streams and error codes (rtl/test/tb_mac_lane_pipe_equiv.sv). It
+    //: implements BF16 x BF16 with no block scaling; anything else -- another dtype
+    //: pair, or a descriptor declaring a scale object -- goes to the legacy lane.
+    //:
+    //: Routing on the descriptor rather than replacing the lane outright means no
+    //: descriptor changes behaviour: one that the pipelined lane does not claim is
+    //: executed by exactly the gates that executed it before.
+    wire use_pipe_mac = select_mac
+                     && (cfg_dtype_a == FMT_BF16) && (cfg_dtype_b == FMT_BF16)
+                     && !cfg_scale_a && !cfg_scale_b;
+
+    wire        pmac_a_en, pmac_b_en, pmac_we, pmac_busy, pmac_done;
+    wire [31:0] pmac_a_addr, pmac_b_addr, pmac_addr, pmac_data;
+    wire [31:0] pmac_out_count, pmac_sat, pmac_macs;
+    wire [7:0]  pmac_error;
+
+    //: The array's consumers below read mac_* and do not know which lane answered.
+    wire        mac_a_en     = use_pipe_mac ? pmac_a_en     : lmac_a_en;
+    wire        mac_b_en     = use_pipe_mac ? pmac_b_en     : lmac_b_en;
+    wire [31:0] mac_a_addr   = use_pipe_mac ? pmac_a_addr   : lmac_a_addr;
+    wire [31:0] mac_b_addr   = use_pipe_mac ? pmac_b_addr   : lmac_b_addr;
+    wire        mac_we       = use_pipe_mac ? pmac_we       : lmac_we;
+    wire [31:0] mac_addr     = use_pipe_mac ? pmac_addr     : lmac_addr;
+    wire [31:0] mac_data     = use_pipe_mac ? pmac_data     : lmac_data;
+    //: busy and done are ORed rather than muxed: whichever lane was started must be
+    //: able to finish even if the configuration inputs have since changed.
+    wire        mac_busy     = pmac_busy | lmac_busy;
+    wire        mac_done     = pmac_done | lmac_done;
+    wire [7:0]  mac_error    = pmac_done ? pmac_error     : lmac_error;
+    wire [31:0] mac_out_count = pmac_done ? pmac_out_count : lmac_out_count;
+    wire [31:0] mac_sat      = pmac_done ? pmac_sat       : lmac_sat;
+    wire [31:0] mac_macs     = pmac_done ? pmac_macs      : lmac_macs;
 
     ot_a3_mac_lane mac (
         .clk(clk), .rst_n(rst_n),
-        .start(start & select_mac),
+        .start(start & select_mac & ~use_pipe_mac),
         .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
         .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
         .cfg_a_base(cfg_a_base), .cfg_b_base(cfg_b_base),
@@ -524,14 +561,29 @@ module ot_a3_engine_array (
         .cfg_block_rows_a(cfg_block_rows_a), .cfg_block_rows_b(cfg_block_rows_b),
         .cfg_scale_a_base(cfg_scale_a_base), .cfg_scale_b_base(cfg_scale_b_base),
         .cfg_out_base(cfg_out_base),
-        .a_rd_en(mac_a_en), .a_rd_addr(mac_a_addr), .a_rd_data(m0_rd_data),
-        .b_rd_en(mac_b_en), .b_rd_addr(mac_b_addr), .b_rd_data(m1_rd_data),
+        .a_rd_en(lmac_a_en), .a_rd_addr(lmac_a_addr), .a_rd_data(m0_rd_data),
+        .b_rd_en(lmac_b_en), .b_rd_addr(lmac_b_addr), .b_rd_data(m1_rd_data),
         .s_rd_en(mac_s_en), .s_rd_addr(mac_s_addr), .s_rd_data(m2_rd_data),
         .t_rd_en(mac_t_en), .t_rd_addr(mac_t_addr), .t_rd_data(m3_rd_data),
-        .out_we(mac_we), .out_addr(mac_addr), .out_data(mac_data),
-        .busy(mac_busy), .done(mac_done), .error_code(mac_error),
-        .out_count(mac_out_count), .saturation_count(mac_sat),
-        .mac_count(mac_macs)
+        .out_we(lmac_we), .out_addr(lmac_addr), .out_data(lmac_data),
+        .busy(lmac_busy), .done(lmac_done), .error_code(lmac_error),
+        .out_count(lmac_out_count), .saturation_count(lmac_sat),
+        .mac_count(lmac_macs)
+    );
+
+    ot_a3_mac_lane_pipe #(.LANES_IF(8)) fastmac (
+        .clk(clk), .rst_n(rst_n),
+        .start(start & use_pipe_mac),
+        .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
+        .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b),
+        .cfg_a_base(cfg_a_base), .cfg_b_base(cfg_b_base),
+        .cfg_out_base(cfg_out_base),
+        .a_rd_en(pmac_a_en), .a_rd_addr(pmac_a_addr), .a_rd_data(m0_rd_data),
+        .b_rd_en(pmac_b_en), .b_rd_addr(pmac_b_addr), .b_rd_data(m1_rd_data),
+        .out_we(pmac_we), .out_addr(pmac_addr), .out_data(pmac_data),
+        .busy(pmac_busy), .done(pmac_done), .error_code(pmac_error),
+        .out_count(pmac_out_count), .saturation_count(pmac_sat),
+        .mac_count(pmac_macs)
     );
 
     // -- SELECTION.ARGMAX ------------------------------------------------

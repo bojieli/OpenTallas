@@ -123,6 +123,11 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_microsequencer.sv",
     "rtl/abi3/ot_a3_device_top.sv",
     "rtl/abi3/ot_a3_mac_lane.sv",
+    #: The pipelined TENSOR lane and the qualified MAC it is built from.
+    #: ot_a3_engine_array routes BF16 x BF16 unscaled MATMUL descriptors to the
+    #: pipelined lane and everything else to ot_a3_mac_lane, so both are compiled.
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",
