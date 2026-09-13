@@ -825,19 +825,41 @@ module ot_a3_engine_issue_bridge #(
     // embedding, the query rows of an attention, the left operand of an
     // elementwise -- so one expression serves all of them.
     //
-    // The two SELECTION families are the exception and are span-1 by
-    // construction rather than by a pin: a prefill still selects ONE token,
-    // from the last position, so SELECTION.ARGMAX's slot-0 extent is the
-    // vocabulary it scans and not a span at all, and TOKEN_APPEND appends one
-    // id.  Naming them here is what keeps ``request_span`` meaning the same
-    // thing at every site that reads it.
-    wire [31:0] request_span =
-        (selection_argmax_q || selection_token_append_q) ? 32'd1
-                                                         : captured_extent[0];
+    // THREE FAMILIES ARE SPAN-1 BY CONSTRUCTION rather than by a pin, and the
+    // distinction matters: a family in this set must still be REFUSED a slot-0
+    // extent other than one, so the bound it is checked against is 1 and not
+    // SPAN_BOUND.  Folding them into ``request_span`` alone would have made
+    // ``span_admitted`` the constant true for them and DELETED a check that
+    // the literal comparisons used to perform.
+    //
+    //   SELECTION.ARGMAX     a prefill still selects ONE token, from the last
+    //                        position, and slot 0 is the vocabulary it scans
+    //                        rather than a sequence axis at all -- which is why
+    //                        argmax_shape_ok compares slot 0 to
+    //                        ``argmax_vocabulary`` itself and never consults
+    //                        ``span_admitted``.
+    //   SELECTION.TOKEN_APPEND  appends one id.
+    //   DMA.TRANSFER         its row count is TRANSFER_COPIES, a staged fan-out
+    //                        of one embedding row, and its slot-0 extent is not
+    //                        a sequence span.  Admitting a span here would have
+    //                        scaled counts the staged region cannot supply.
+    wire span_is_one_by_construction = selection_argmax_q ||
+                                      selection_token_append_q ||
+                                      dma_transfer_q;
+    wire [31:0] slot0_extent = captured_extent[0];
+    //: The largest slot-0 extent this family may present.  Explicitly bounded,
+    //: not arithmetic: ``<= span_limit`` cannot wrap the way a subtraction can.
+    wire [31:0] span_limit = span_is_one_by_construction ? 32'd1 : SPAN_BOUND;
     // A span of zero has no rows and a span past the bound has no buffer, and
     // both are refusals rather than clamps.  At MAX_SEQUENCE_SPAN == 1 this is
     // exactly the ``extent == 1`` the sites below used to spell out.
-    wire span_admitted = (request_span >= 32'd1) && (request_span <= SPAN_BOUND);
+    wire span_admitted = (slot0_extent >= 32'd1) && (slot0_extent <= span_limit);
+    //: The span every count, every row configuration and every peer-slot extent
+    //: below is derived from.  It is ``slot0_extent`` wherever slot 0 IS the
+    //: sequence axis, and the constant one for the three families above -- so a
+    //: vocabulary scan never reaches an engine as a span of 4,096.
+    wire [31:0] request_span =
+        span_is_one_by_construction ? 32'd1 : slot0_extent;
 
     wire input_view_common_ok = descriptor_header_ok(
         desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
@@ -1233,7 +1255,11 @@ module ot_a3_engine_issue_bridge #(
         (slot_stride0[4] == 32'd1) && (slot_stride1[4] == 32'd0) &&
         (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
         (captured_rank[4] == 8'd1) && (captured_axis[4] == 8'd0) &&
-        (captured_extent[4] == 32'd1);
+        //: ONE selected id, whatever the prompt length: ``request_span`` is the
+        //: constant one on this leg by construction, so this reads as the span
+        //: every other family's output extent is checked against rather than as
+        //: a second, unexplained literal.
+        (captured_extent[4] == request_span);
 
     wire token_append_shape_ok =
         (slot_dtype[0] == FMT_U32) && (slot_rank[0] == 8'd1) &&
@@ -1242,14 +1268,17 @@ module ot_a3_engine_issue_bridge #(
         (slot_stride0[0] == 32'd1) && (slot_stride1[0] == 32'd0) &&
         (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
         (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
-        (captured_extent[0] == 32'd1) &&
+        //: ``span_limit`` is one for this family, so this is the same refusal
+        //: the literal performed -- and it is now the SAME predicate the other
+        //: families use, so there is one statement of what a span is.
+        span_admitted &&
         (slot_dtype[4] == FMT_U32) && (slot_rank[4] == 8'd1) &&
         (slot_dim0[4] == 32'd1) && (slot_dim1[4] == 32'd0) &&
         (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
         (slot_stride0[4] == 32'd1) && (slot_stride1[4] == 32'd0) &&
         (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
         (captured_rank[4] == 8'd1) && (captured_axis[4] == 8'd0) &&
-        (captured_extent[4] == 32'd1);
+        (captured_extent[4] == request_span);
 
     // One decode row of eight KV heads by 128 elements, presented as the
     // second operand of a scatter or as the query of an attention.
@@ -1317,7 +1346,45 @@ module ot_a3_engine_issue_bridge #(
         end
     endfunction
 
-    wire scatter_plane_is_value = (captured_offset[4] == {32'd0, KV_PLANE_WORDS});
+    //: WHICH KV PLANE, AND WHICH LAYER.  Two different questions, and one
+    //: comparison used to answer both -- wrongly.
+    //:
+    //: A KV view's RESOLVED element offset is its declared static offset plus
+    //: its dynamic terms.  For this program the static part IS the plane (0 for
+    //: the key view, KV_PLANE_WORDS for the value view -- a property of the
+    //: descriptor, identical at every layer) and the dynamic part is the LAYER
+    //: (the loop term, one KV plane pair per layer).  ``scatter_plane_is_value``
+    //: compared the RESOLVED offset against KV_PLANE_WORDS, which is true only
+    //: where the dynamic part is zero: layer 0.
+    //:
+    //: MEASURED, not reasoned.  At layer 0 that comparison holds and the value
+    //: scatter lands on the value plane; at layers 1-3 it does not, so those
+    //: three value scatters were classified as KEY writes -- and because
+    //: ``slot4_base`` also dropped the dynamic part, all eight scatters of a
+    //: four-layer program wrote into LAYER 0's two planes.  Dumping the RTL's KV
+    //: object after a 16-token prefill showed layer 1's key region still zero
+    //: and layer 0's key row 0 holding layer 3's VALUE row, against a golden
+    //: device that had four distinct layers of KV.  ``slot2_base`` -- the
+    //: attention's value plane -- had the same omission, so every layer read
+    //: layer 0's values.
+    //:
+    //: Stated as the two separate facts they are: the plane comes from the
+    //: view's OWN static offset, and the layer is whatever the sequencer
+    //: resolved on top of it.
+    wire scatter_plane_is_value =
+        (slot_offset[4][31:0] == KV_PLANE_WORDS);
+    //: The resolved offset minus the declared one: the dynamic terms alone.
+    //: ``slot_offset_consistent`` refuses a resolved offset below the declared
+    //: one, so an admitted launch never takes the guarded branch -- and an
+    //: inadmissible one yields the object's own base rather than a wrapped
+    //: address 4 GiB away, which is the difference between a refusal and a
+    //: write into another object.
+    wire [63:0] slot2_dynamic_wide = (captured_offset[2] >= slot_offset[2])
+        ? (captured_offset[2] - slot_offset[2]) : 64'd0;
+    wire [63:0] slot4_dynamic_wide = (captured_offset[4] >= slot_offset[4])
+        ? (captured_offset[4] - slot_offset[4]) : 64'd0;
+    wire [31:0] slot2_dynamic_offset = slot2_dynamic_wide[31:0];
+    wire [31:0] slot4_dynamic_offset = slot4_dynamic_wide[31:0];
     wire scatter_shape_ok =
         index_element_view_ok(
             slot_dtype[0], slot_rank[0], slot_dim0[0], slot_dim1[0],
@@ -1518,10 +1585,22 @@ module ot_a3_engine_issue_bridge #(
     wire [31:0] kv_plane_span = cfg_kv_plane_rows * KV_PLANE_WORDS;
     wire [31:0] slot0_base = slot0_map[31:0] + captured_offset[0][31:0];
     wire [31:0] slot1_base = slot1_map[31:0] + captured_offset[1][31:0];
-    wire [31:0] slot2_base = slot2_map[31:0] + kv_plane_span;
+    //: THE ATTENTION'S VALUE PLANE.  Its layer is the dynamic offset, exactly as
+    //: the key plane's is on the line above (the key view's declared offset is
+    //: zero, so ``slot1_base``'s use of the resolved offset is already the
+    //: dynamic part and needs no change).  The plane sits one KV plane above the
+    //: key plane in THIS device's planar layout, which is a relative fact --
+    //: ``gqa_shape_ok`` checks the declared views state the same relation.
+    wire [31:0] slot2_base =
+        slot2_map[31:0] + slot2_dynamic_offset + kv_plane_span;
     wire [31:0] slot3_base = slot3_map[31:0] + captured_offset[3][31:0];
+    //: A SCATTER'S DESTINATION: object base, plus the layer the sequencer
+    //: resolved, plus the plane the descriptor declares.  Every other family's
+    //: result goes to the resolved offset unchanged, because only the KV cache
+    //: is presented interleaved to the program and stored planar here.
     wire [31:0] slot4_base = dma_scatter_q
-        ? (slot4_map[31:0] + (scatter_plane_is_value ? kv_plane_span : 32'd0))
+        ? (slot4_map[31:0] + slot4_dynamic_offset +
+           (scatter_plane_is_value ? kv_plane_span : 32'd0))
         : (slot4_map[31:0] + captured_offset[4][31:0]);
     wire [31:0] mapped_index_slot_base =
         attention_gqa_q ? slot3_base : slot0_base;
@@ -2169,25 +2248,53 @@ module ot_a3_engine_issue_bridge #(
                             mapped_context <= cfg_context_length;
                             mapped_vocabulary <= argmax_vocabulary;
                             mapped_dtype_a <= slot_dtype[0];
+                            //: THE SAME THREE COUNTS FOR THE MAPPED FAMILIES,
+                            //: each the per-position figure times the span.
+                            //: ``elementwise_width`` and ``KV_PLANE_WORDS`` are
+                            //: one row's worth; a span-S launch presents S rows
+                            //: contiguously, which is what makes the product --
+                            //: and not a second base or stride -- the whole
+                            //: change on this path.
+                            //:
+                            //:   ADD / SILU_MUL  S rows of elementwise_width,
+                            //:     one flat count; SILU_MUL reads two operands
+                            //:     per output, hence the leading two.
+                            //:   SCATTER  S KV rows written (moved_elements)
+                            //:     and S indices validated (indices_checked).
+                            //:   GQA  S query rows of GQA_OUTPUT_WORDS, and one
+                            //:     score multiply per query element per context
+                            //:     position per row.  The engine's own header
+                            //:     states score_multiply_count = S * C *
+                            //:     QUERY_HEADS * HEAD_WIDTH: a MASKED position
+                            //:     is still read and multiplied, the mask is
+                            //:     applied to the score afterwards, so the
+                            //:     count does not shrink with causality.
+                            //:   ARGMAX / TOKEN_APPEND  span-1 by
+                            //:     construction, so the span factor is one and
+                            //:     these legs are unchanged.
                             mapped_element_count <=
                                 (vector_add_q || vector_silu_mul_q)
-                                ? elementwise_width
+                                ? (request_span * elementwise_width)
                                 : selection_argmax_q ? argmax_vocabulary
                                 : 32'd1;
                             mapped_result_words <=
                                 (vector_add_q || vector_silu_mul_q)
-                                ? elementwise_width
-                                : dma_scatter_q ? KV_PLANE_WORDS
-                                : attention_gqa_q ? GQA_OUTPUT_WORDS
+                                ? (request_span * elementwise_width)
+                                : dma_scatter_q
+                                ? (request_span * KV_PLANE_WORDS)
+                                : attention_gqa_q
+                                ? (request_span * GQA_OUTPUT_WORDS)
                                 : 32'd1;
                             mapped_work_words <=
-                                vector_add_q ? elementwise_width
+                                vector_add_q
+                                ? (request_span * elementwise_width)
                                 : vector_silu_mul_q
-                                ? (32'd2 * elementwise_width)
+                                ? (32'd2 * request_span * elementwise_width)
                                 : selection_argmax_q ? argmax_vocabulary
                                 : attention_gqa_q
-                                ? (cfg_context_length * QUERY_HEADS *
-                                   HEAD_WIDTH)
+                                ? (request_span * cfg_context_length *
+                                   QUERY_HEADS * HEAD_WIDTH)
+                                : dma_scatter_q ? request_span
                                 : 32'd1;
                             state <= S_START;
                         end
@@ -2565,19 +2672,46 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_work_count
         : selection_token_append_q ? append_work_count
         : attention_gqa_q ? gqa_work_count : array_work_count;
+    //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
+    //: correct 16-row launch used to come back as TRAP_ENGINE.
+    //:
+    //: Neither expression read the span.  ``source_rows`` and
+    //: ``source_trailing`` are the DECLARED row and column counts of ONE
+    //: sequence position -- captured from the descriptor image, which carries no
+    //: span -- so both counts described a single row however many the sequencer
+    //: resolved.  An engine that correctly retired S rows then reported S times
+    //: the expected result count and was refused by its own bridge.
+    //:
+    //: Each leg is the per-position count multiplied by the span, because that
+    //: is precisely what a span-S launch is; the multiplication is written once
+    //: per leg rather than hoisted, because the three families factor
+    //: differently and a shared product would hide which one is which.
+    //:
+    //:   RMSNorm / RoPE   S rows of source_rows x source_trailing elements, and
+    //:                    both engines report result_count == work_count ==
+    //:                    cfg_count, which is this same product.
+    //:   MATMUL           S output rows of source_rows columns; the work is one
+    //:                    multiply-accumulate per output element per reduction
+    //:                    step, so the depth multiplies in as well.
+    //:   GATHER / EMBED   S gathered rows of source_trailing words (the mover's
+    //:                    moved_elements), and S validated indices (its
+    //:                    indices_checked) -- which is why the work leg is the
+    //:                    span itself and not one.
+    //:   TRANSFER         span-1 by construction, so ``request_span`` is one
+    //:                    here and the staged fan-out counts are unchanged.
     wire [31:0] expected_result_count = mapped_family_q
         ? mapped_result_words
-        : rms_norm_q ? (source_rows * source_trailing)
-        : rope_q ? (source_rows * source_trailing)
-        : matmul_q ? source_rows
+        : rms_norm_q ? (request_span * source_rows * source_trailing)
+        : rope_q ? (request_span * source_rows * source_trailing)
+        : matmul_q ? (request_span * source_rows)
         : dma_transfer_q ? (TRANSFER_COPIES * EMBEDDING_WIDTH)
-        : source_trailing;
+        : (request_span * source_trailing);
     wire [31:0] expected_work_count = mapped_family_q
         ? mapped_work_words
-        : rms_norm_q ? (source_rows * source_trailing)
-        : rope_q ? (source_rows * source_trailing)
-        : matmul_q ? (source_rows * source_trailing)
-        : dma_transfer_q ? TRANSFER_COPIES : 32'd1;
+        : rms_norm_q ? (request_span * source_rows * source_trailing)
+        : rope_q ? (request_span * source_rows * source_trailing)
+        : matmul_q ? (request_span * source_rows * source_trailing)
+        : dma_transfer_q ? TRANSFER_COPIES : request_span;
 
     // The index read the bridge itself performs before a scatter or an
     // attention: the position is architecture, not configuration.
@@ -2645,13 +2779,42 @@ module ot_a3_engine_issue_bridge #(
         ((GATHER_PLACEMENT_ADDRESSED != 0) && dma_gather_q);
     assign m1_reads_matmul_weight = matmul_q;
 
+    //: WHERE A GATHER OR AN EMBED LOOKUP READS ITS INDICES.
+    //:
+    //: ``cfg_index_base + real_launch_count`` is a LAUNCH COUNTER.  It names
+    //: exactly one index word per launch, so a span of S has nowhere to read S
+    //: indices from -- and at S=1 the word it reads is whatever the host staged
+    //: for that launch ordinal rather than the one the operator's own index view
+    //: resolves to.  ``embed_index_addr_q`` is that view's address, formed in
+    //: S_INDEX_WAIT for BOTH families as the index object's placement base plus
+    //: the element offset slot 0 resolves to, and the mover reads S consecutive
+    //: words from there.
+    //:
+    //: At INDEX_VIEW_ADDRESSED == 0 -- the default, and what every retained
+    //: vector set was recorded against -- this is the launch counter unchanged.
+    wire index_view_addressed_q = (INDEX_VIEW_ADDRESSED != 0) &&
+                                  (embedding_q || dma_gather_q);
     wire [31:0] launch_index_base = dma_transfer_q
         ? cfg_transfer_index_base
-        : (cfg_index_base + real_launch_count);
+        : index_view_addressed_q
+            ? embed_index_addr_q
+            : (cfg_index_base + real_launch_count);
+    //: WHAT AN EMBED LOOKUP'S TABLE BASE IS.
+    //:
+    //: With the index applied by the bridge (EMBEDDING_TOKEN_INDEXED), the table
+    //: base carries ``token * EMBEDDING_WIDTH`` already and the mover's own row
+    //: index must be zero for the address to come out right -- which is a second
+    //: place the token is used and a launch that can only embed ONE token.  With
+    //: the index applied by the mover instead, the base is the table's own and
+    //: the mover's S row indices select S rows of it.  The two are not composed:
+    //: pre-multiplying and then adding a row would address the wrong row, so the
+    //: index-view path takes the table base unmodified.
     wire [31:0] launch_source_base = dma_transfer_q
         ? cfg_transfer_source_base
         : embedding_q
-            ? ((EMBEDDING_TOKEN_INDEXED != 0)
+            ? ((INDEX_VIEW_ADDRESSED != 0)
+                ? embed_table_base_q
+                : (EMBEDDING_TOKEN_INDEXED != 0)
                 ? (embed_table_base_q + embed_token_q * EMBEDDING_WIDTH)
                 : (cfg_embedding_source_base +
                    embedding_launch_count * EMBEDDING_WIDTH))
@@ -2661,12 +2824,35 @@ module ot_a3_engine_issue_bridge #(
                    dma_gather_launch_count * cfg_source_launch_stride));
     wire [31:0] launch_output_base = launch_output_base_q;
 
-    ot_a3_vector_rms_norm rms_norm (
+    //: THE RMSNorm PROFILE, scaled by the span bound.  A span-S launch of an
+    //: R-row profile presents S*R rows in one launch -- 16 positions x 8 heads
+    //: for a head norm, where the shipped ceiling was 32 -- and S*C elements.
+    //: Both ceilings are therefore the declared profile times the bound, which
+    //: is a DERIVATION and not a second hand-kept constant: raise
+    //: MAX_SEQUENCE_SPAN and neither has to be revisited.  The engine derives
+    //: every index width from these, so a raised ceiling refuses rather than
+    //: hangs.  At MAX_SEQUENCE_SPAN == 1 both products are the declared profile
+    //: and the engine's defaults are what the shipped elaboration forwarded.
+    ot_a3_vector_rms_norm #(
+        .PROFILE_MAX_COUNT(RMS_PROFILE_MAX_COUNT * SPAN_BOUND),
+        .PROFILE_MAX_ROWS(RMS_PROFILE_MAX_ROWS * SPAN_BOUND),
+        .PROFILE_MODEL_WIDTH(RMS_PROFILE_MODEL_WIDTH),
+        .PROFILE_HEAD_WIDTH(RMS_PROFILE_HEAD_WIDTH)
+    ) rms_norm (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & rms_norm_q),
         .cfg_count(expected_result_count),
-        .cfg_rows(source_rows),
+        //: ROWS PER LAUNCH, NOT ROWS PER POSITION.  ``source_rows`` is the
+        //: declared row count of one position -- 1 for a body norm, the head
+        //: count for a head norm -- and the engine refuses unless
+        //: ``cfg_rows * cfg_cols == cfg_count``.  Scaling the count without the
+        //: rows is exactly the ERR_SHAPE a correct 16-position launch came back
+        //: with: 2,048 elements offered as 1 x 128.  The rows a span-S launch
+        //: presents are S * source_rows, contiguously, because a position's rows
+        //: are adjacent and the positions are adjacent -- which is what
+        //: ``stride0 == dim1 * HEAD_WIDTH`` on the input view already states.
+        .cfg_rows(request_span * source_rows),
         .cfg_cols(source_trailing),
         .cfg_epsilon_bits(RMS_EPSILON),
         .cfg_input_base(rms_input_base_q),
@@ -2699,6 +2885,12 @@ module ot_a3_engine_issue_bridge #(
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & rope_q),
+        //: cfg_count CARRIES THE SPAN and cfg_rows deliberately does not.  This
+        //: engine recovers S by subtracting one position block of
+        //: ``cfg_rows * cfg_cols`` from the count until nothing is left -- it
+        //: reloads the coefficient row per position, so it has to know where a
+        //: position ends.  Scaling cfg_rows here as the RMSNorm above does would
+        //: present S positions as one, and the span would come out as 1.
         .cfg_count(expected_result_count),
         .cfg_rows(source_rows),
         .cfg_cols(source_trailing),
@@ -2789,18 +2981,34 @@ module ot_a3_engine_issue_bridge #(
         .QUERY_HEADS(GQA_QUERY_HEADS),
         .KV_HEADS(GQA_KV_HEADS),
         .HEAD_WIDTH(GQA_HEAD_WIDTH),
-        .SCALE_CODE(GQA_SCALE_CODE)
+        .SCALE_CODE(GQA_SCALE_CODE),
+        //: THE QUERY-SPAN BOUND IS THE BRIDGE'S SPAN BOUND.  This engine is the
+        //: one all-or-nothing block on the path: it buffers the whole result
+        //: before publishing a word, so MAX_QUERY_SPAN * QUERY_HEADS *
+        //: HEAD_WIDTH BF16 words of buffer is what raising the bound costs, and
+        //: forwarding rather than restating it is what keeps the two from
+        //: drifting.  At MAX_SEQUENCE_SPAN == 1 this is the engine's own default
+        //: and the netlist is the pre-span one.
+        .MAX_QUERY_SPAN(MAX_SEQUENCE_SPAN)
     ) gqa (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & attention_gqa_q),
         .cfg_context_length(mapped_context),
-        //: Decode: one query row, ending at the context.  Tied rather than left
-        //: unconnected -- a floating input is 0 or x by tool, and at
-        //: MAX_QUERY_SPAN=1 both fold away at elaboration anyway.  A prefill
-        //: bridge drives the resolved extent here instead.
-        .cfg_query_span(32'd1),
-        .cfg_first_position(mapped_context - 32'd1),
+        //: THE QUERY ROWS AND WHERE THEY SIT.  These were tied to one row
+        //: ending at the context, which is a decode and only a decode.  The
+        //: span is the resolved extent of the query view; the first position is
+        //: the context minus it, because a causal span is a TAIL of its KV plane
+        //: -- the same identity ``mapped_context_ok`` checked the resolved index
+        //: value against, so the position the index view names and the position
+        //: handed to the engine are one statement, not two.
+        //:
+        //: The subtraction cannot underflow: ``mapped_context_ok`` refused the
+        //: launch unless ``cfg_context_length >= request_span``, and the engine
+        //: independently refuses a span wider than its context
+        //: (``span_within_context``) rather than trusting this arithmetic.
+        .cfg_query_span(request_span),
+        .cfg_first_position(mapped_context - request_span),
         .cfg_query_base(mapped_left_base),
         .cfg_key_base(mapped_right_base),
         .cfg_value_base(mapped_third_base),
@@ -2841,7 +3049,14 @@ module ot_a3_engine_issue_bridge #(
                : selection_argmax_q ? SELECTION_ARGMAX
                : dma_scatter_q ? DMA_SCATTER
                : DMA_GATHER),
-        .cfg_rows(matmul_q ? 16'd1 : 16'd0),
+        //: M, THE MATMUL'S OUTPUT ROW COUNT.  This was the literal one, which
+        //: is the only place a 16-row prefill projection differed from a decode
+        //: projection in the datapath: both mac lanes already walk M rows and
+        //: were measured identical at M=16.  ``request_span`` is bounded by
+        //: SPAN_BOUND at admission, and SPAN_BOUND is itself bounded by the
+        //: 16-bit field this port is, so the slice cannot truncate a span the
+        //: bridge admitted.
+        .cfg_rows(matmul_q ? request_span[15:0] : 16'd0),
         .cfg_cols(matmul_q ? source_rows[15:0] : source_trailing[15:0]),
         .cfg_depth(matmul_q ? source_trailing[15:0] : 16'd0),
         .cfg_count(mapped_family_q
@@ -2867,7 +3082,15 @@ module ot_a3_engine_issue_bridge #(
         .cfg_block_rows_b(16'd0),
         .cfg_scale_a_base(32'd0),
         .cfg_scale_b_base(32'd0),
-        .cfg_slots(dma_transfer_q ? TRANSFER_COPIES : 32'd1),
+        //: THE INDEX-MOVER'S ROW COUNT, which is what ot_a3_dma_index_mover
+        //: calls cfg_slots and its port comment calls "index count": one index
+        //: word, and one moved row, per slot.  The literal one is what made a
+        //: gather, an embed lookup and a scatter single-row operations; the row
+        //: count of a span-S launch is S, and the mover is already a row walker
+        //: that validates every index before it moves anything.  TRANSFER keeps
+        //: its staged fan-out, and every family that does not reach the mover
+        //: leaves cfg_slots unread.
+        .cfg_slots(dma_transfer_q ? TRANSFER_COPIES : request_span),
         .cfg_trailing(dma_scatter_q ? KV_PLANE_WORDS : source_trailing),
         .cfg_extent(dma_scatter_q ? cfg_kv_plane_rows
                   : dma_transfer_q ? 32'd1 : source_rows),
@@ -2887,17 +3110,25 @@ module ot_a3_engine_issue_bridge #(
         .cfg_profile_scale_bits(32'd0),
         .cfg_epsilon_bits(32'd0),
         .cfg_profile_flags(32'd0),
+        //: THE DECLARED SHAPES THAT ACCOMPANY THE CONFIGURATION.  The leading
+        //: term of each was the literal one -- the same frozen single row, said
+        //: a third time -- so a span-S launch described itself as a one-row
+        //: launch to the engine it was configuring.  It is the span here too.
+        //: (``descriptor_admitted`` is the constant true for MATMUL, DMA, ADD
+        //: and ARGMAX, so these shapes gate nothing today; that is exactly why
+        //: leaving them at one would have been a latent trap for the first
+        //: family that started reading them.)
         .cfg_input0_dims(matmul_q
-            ? {64'd0, source_trailing, 32'd1}
-            : {96'd0, dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
+            ? {64'd0, source_trailing, request_span}
+            : {96'd0, dma_transfer_q ? TRANSFER_COPIES : request_span}),
         .cfg_input1_dims({64'd0, source_trailing,
             dma_transfer_q ? 32'd1 : source_rows}),
         .cfg_input2_dims(128'd0),
         .cfg_input3_dims(128'd0),
         .cfg_output0_dims(matmul_q
-            ? {64'd0, source_rows, 32'd1}
+            ? {64'd0, source_rows, request_span}
             : {64'd0, source_trailing,
-               dma_transfer_q ? TRANSFER_COPIES : 32'd1}),
+               dma_transfer_q ? TRANSFER_COPIES : request_span}),
         .cfg_output1_dims(128'd0),
         .cfg_contract_0(matmul_q ? 32'h7550dc6a : embedding_q
             ? ((source_rows == QWEN_VOCABULARY)

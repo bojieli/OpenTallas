@@ -185,7 +185,16 @@ int main(int argc, char** argv) {
     //: the six mapped families are admitted for this run; their addresses come from
     //: the placement table below, which is what actually resolves them
     dut.cfg_extended_placement_valid = 1;
-    dut.cfg_context_length = static_cast<std::uint32_t>(get("symbol_context", 17));
+    // The request's declared context. There is no defensible default: 17 (a
+    // decode of a 16-token prompt) was the fallback, and a prefill silently
+    // inheriting it declares a context one longer than its own span. Absent, say
+    // so and stop rather than run the wrong request.
+    if (plan.scalars.find("symbol_context") == plan.scalars.end()) {
+        std::printf("FAIL: driver.txt states no symbol_context; "
+                    "re-run tools/stage_reduced_token_run.py --case\n");
+        return 2;
+    }
+    dut.cfg_context_length = static_cast<std::uint32_t>(get("symbol_context"));
     dut.cfg_kv_plane_rows = static_cast<std::uint32_t>(get("kv_plane_rows", 0));
     dut.cfg_generation_policy_id =
         static_cast<std::uint32_t>(get("generation_policy_id", 0xFFFFFFFFu));

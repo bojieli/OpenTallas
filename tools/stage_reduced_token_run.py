@@ -47,6 +47,7 @@ from runtime.abi3.constants import (  # noqa: E402
     DType,
     Attention, Dma, Major, Selection, Tensor, Vector,
 )
+from runtime.abi3.descriptors import Symbol  # noqa: E402
 from runtime.sim.generators import generate_bytes, digest_of  # noqa: E402
 
 NO_OBJECT = 0xFFFFFFFF
@@ -495,6 +496,23 @@ def main() -> int:
         #: the oracle saw.
         for key, value in sorted(case["symbols"].items(), key=lambda kv: int(kv[0])):
             lines.append(f"symbol {int(key)} {int(value)} 1")
+        #: THE CONTEXT THE REQUEST DECLARES, which the device takes as an input
+        #: (``cfg_context_length``) and not from the symbol file.  It is
+        #: Symbol.CONTEXT_LENGTH's own binding -- named, not the index 3 -- so a
+        #: prefill states 16 and a decode states 17 from the same line of code.
+        #: The driver used to fall back to a literal 17 when this was absent,
+        #: which is a decode constant: a 16-token prefill then declared a context
+        #: one longer than its own span and the attention's own
+        #: ``span_tail_aligned`` refused the launch.
+        context_symbol = str(int(Symbol.CONTEXT_LENGTH))
+        if context_symbol not in case["symbols"]:
+            raise SystemExit(
+                f"case {args.case!r} binds no Symbol.CONTEXT_LENGTH "
+                f"({context_symbol}); cfg_context_length has no source"
+            )
+        lines.append(
+            f"symbol_context {int(case['symbols'][context_symbol])}"
+        )
         golden = case.get("golden") or {}
         for name in ("fetched", "retired", "issued", "loop_iterations", "complete"):
             if name in golden:

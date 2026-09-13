@@ -41,6 +41,23 @@ module ot_a3_shipped_prefix_top #(
     //: Forwarded: 1 addresses a gather's source by object and reads it
     //: from the result bank.
     parameter integer GATHER_PLACEMENT_ADDRESSED = 0,
+    //: Forwarded: THE LARGEST RESOLVED SEQUENCE EXTENT this elaboration admits.
+    //: 1 is a decode-only device and is what every retained vector set was
+    //: recorded against; S admits an S-token prefill launch, which the golden
+    //: device issues as the SAME 83 launches each covering S positions.  The
+    //: bridge documents what raising it costs.
+    parameter integer MAX_SEQUENCE_SPAN = 1,
+    //: Forwarded: 1 reads a gather's and an embed lookup's indices from the
+    //: operator's own index view instead of from a launch counter, which is what
+    //: lets one launch name S indices.
+    parameter integer INDEX_VIEW_ADDRESSED = 0,
+    //: Forwarded: the RMSNorm operating profile.  The bridge scales the row and
+    //: element ceilings by MAX_SEQUENCE_SPAN, so these stay the PER-POSITION
+    //: profile and are not restated per span.
+    parameter [31:0]  RMS_PROFILE_MAX_COUNT   = 32'd4096,
+    parameter [31:0]  RMS_PROFILE_MAX_ROWS    = 32'd32,
+    parameter [31:0]  RMS_PROFILE_MODEL_WIDTH = 32'd4096,
+    parameter [31:0]  RMS_PROFILE_HEAD_WIDTH  = 32'd128,
     parameter integer PROGRAM_WORDS = 4096,
     parameter integer DESC_WORDS = 8192,
     parameter integer INDEX_WORDS = 64,
@@ -1409,7 +1426,13 @@ module ot_a3_shipped_prefix_top #(
         .QWEN_VOCABULARY(QWEN_VOCABULARY),
         .DEEPSEEK_VOCABULARY(DEEPSEEK_VOCABULARY),
         .EMBEDDING_TOKEN_INDEXED(EMBEDDING_TOKEN_INDEXED),
-        .GATHER_PLACEMENT_ADDRESSED(GATHER_PLACEMENT_ADDRESSED)
+        .GATHER_PLACEMENT_ADDRESSED(GATHER_PLACEMENT_ADDRESSED),
+        .MAX_SEQUENCE_SPAN(MAX_SEQUENCE_SPAN),
+        .INDEX_VIEW_ADDRESSED(INDEX_VIEW_ADDRESSED),
+        .RMS_PROFILE_MAX_COUNT(RMS_PROFILE_MAX_COUNT),
+        .RMS_PROFILE_MAX_ROWS(RMS_PROFILE_MAX_ROWS),
+        .RMS_PROFILE_MODEL_WIDTH(RMS_PROFILE_MODEL_WIDTH),
+        .RMS_PROFILE_HEAD_WIDTH(RMS_PROFILE_HEAD_WIDTH)
     ) bridge (
         .clk(clk),
         .rst_n(rst_n),
