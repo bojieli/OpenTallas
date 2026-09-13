@@ -250,6 +250,45 @@ TARGETS = (
         evidence_case="deepseek-v4-flash-hbm-cluster",
         reproduce="make abi3-hbm-deepseek-build",
     ),
+    #: The reduced regression configuration. Structurally identical to the shipped
+    #: Qwen3 release -- every config field classified, the module tree compared with
+    #: layer indices normalised, and the per-layer ATen operator sequence compared
+    #: from an actual traced forward -- at hidden 128, 8 query heads, 2 KV heads,
+    #: head_dim 16, 4 layers and vocab 4,096.
+    #:
+    #: It exists because the SHIPPED configuration cannot emit a token in RTL at
+    #: all: the head-admission campaign measures the largest LM-head weight-row
+    #: count that launches as 4,096 against a shipped head of 151,936, and a whole
+    #: shipped forward pass is 7.57e9 MACs -- about 10 hours even with the pipelined
+    #: tensor lane. This one is 613 seconds.
+    #:
+    #: Appended LAST on purpose. The images are concatenated in target order and
+    #: each target's program and descriptor bases are the length of the image before
+    #: it, so adding a target at the end leaves every existing target's bases -- and
+    #: therefore its case record -- unchanged.
+    Target(
+        key="qwen3-reduced-rom-single-chip",
+        title="Qwen3 reduced regression, ROM single chip",
+        deployment="build/abi3/qwen3-reduced-rom",
+        capability="configs/hardware/abi3_capability/rom_qwen3.json",
+        kernel_ir="build/ir-v3/qwen3-reduced-v1/kernel_ir.v3.json",
+        checkpoint="build/models/qwen3-reduced-v1",
+        evidence=DeploymentEvidence(
+            artifact="results/abi3/rom_schedule_checks_reduced.json",
+            campaign_schema="opentallas.rom.schedule_campaign.v1",
+            case_schema="opentallas.rom.schedule_check.v1",
+            identity_path=(),
+            admission_path=("verifier", "admitted"),
+            input_layout="rom",
+        ),
+        evidence_case="qwen3-reduced-rom-single-chip",
+        reproduce=(
+            "PYTHONPATH=. python3 tools/build_rom_deployment.py qwen3-8b "
+            "--ir build/ir-v3/qwen3-reduced-v1/kernel_ir.v3.json "
+            "--output build/abi3/qwen3-reduced-rom "
+            "--checkpoint-root build/models/qwen3-reduced-v1"
+        ),
+    ),
 )
 
 

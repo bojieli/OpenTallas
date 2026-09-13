@@ -232,6 +232,7 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
         capability = supplied or qwen3_rom_capability()
         deployment, plan = build_qwen3_rom_deployment(
             graph,
+            **({"target_id": args.target_id} if args.target_id else {}),
             capability=capability,
             defects=defects,
             weight_storage_class=storage,
@@ -305,6 +306,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--inverse", action="store_true")
     parser.add_argument("--determinism", action="store_true")
+    parser.add_argument(
+        "--target-id",
+        default=None,
+        help=(
+            "override the backend's target id. The reduced regression "
+            "configuration lowers through the same backend as the shipped one and "
+            "must be distinguishable from it: the RTL vector builder keys a target "
+            "by this id and refuses two deployments claiming the same one."
+        ),
+    )
     parser.add_argument("--json", action="store_true", help="machine-readable report")
     args = parser.parse_args(argv)
 

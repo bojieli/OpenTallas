@@ -1699,7 +1699,31 @@ def build(argv: list[str] | None = None) -> int:
     total_checkpoint_bytes = 0
     total_views = 0
 
+    #: TARGETS THIS BUILDER HAS GEOMETRY FOR. Its Qwen constants are the shipped
+    #: release's -- HEAD_WIDTH 128 through ROPE_AUX0, vocabulary 151,936, and a model
+    #: discriminator that reads `target_index < 2`. A second Qwen configuration, the
+    #: reduced regression build, lowers through the same backend with head_dim 16 and
+    #: vocabulary 4,096, so it needs its own geometry here before it can be walked.
+    #: Until then it is SKIPPED EXPLICITLY rather than silently walked with the wrong
+    #: constants -- which is exactly what happened first: the DeepSeek identity set
+    #: was applied to a Qwen target because its index was >= 2, and the builder
+    #: reported names 0 kernels main.token_embed.
+    #:
+    #: Skipping keeps the two layers consistent. The reduced target exists in the
+    #: deployment vector set, whose images are append-only, and this builder output
+    #: for the four targets it does know is unchanged.
+    GEOMETRY_KNOWN = frozenset({
+        "qwen3-8b-rom-single-chip",
+        "qwen3-8b-hbm-single-chip",
+        "deepseek-v4-flash-rom-wafer",
+        "deepseek-v4-flash-hbm-cluster",
+    })
+    skipped_targets: list[str] = []
+
     for target_index, target in enumerate(TARGETS):
+        if target.key not in GEOMETRY_KNOWN:
+            skipped_targets.append(target.key)
+            continue
         case_name = f"{target.key}/decode"
         matches = [
             (index, case)

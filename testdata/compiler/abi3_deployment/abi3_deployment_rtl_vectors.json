@@ -3,7 +3,7 @@
     "major": 3,
     "minor": 0
   },
-  "case_count": 8,
+  "case_count": 10,
   "cases": [
     {
       "declared_max_retired_work": 24088,
@@ -16624,10 +16624,304 @@
       "view_stream_sha256": "64e77a0d85ec6476bd3a258c083b8ae751852aeb05136e39f6f8f450a787f6df",
       "work_bound": 139340050,
       "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 2776,
+      "deployment": "qwen3-reduced-rom-single-chip",
+      "deployment_sha256": "7091bc998f980741600e87469b82a69d26f466681ad470968efe044cce541e84",
+      "depth": {
+        "data_dependent_predicate_reads": 0,
+        "distinct_static_instructions_reached": 26,
+        "engine_issues": 83,
+        "instructions_fetched": 248,
+        "instructions_retired": 248,
+        "resolved_operand_views": 255,
+        "static_instructions_in_program": 74
+      },
+      "entrypoint_id": 0,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 248,
+        "first_fault": 4294967295,
+        "issued": 83,
+        "loop_iterations": 83,
+        "message": "",
+        "node_count": 1,
+        "predicated_off": 0,
+        "retired": 248,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_row_scope": "per_node_symmetric_commit_run",
+        "state_rows_committed": 0,
+        "state_rows_committed_cluster_total": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 81
+      },
+      "golden_counters": {
+        "control.loop_iterations": 83,
+        "engine.attention.descriptors": 4,
+        "engine.dma.descriptors": 10,
+        "engine.selection.descriptors": 2,
+        "engine.tensor.descriptors": 30,
+        "engine.vector.descriptors": 37,
+        "instructions.fetched": 248,
+        "instructions.issued": 83,
+        "instructions.retired": 248,
+        "queue.wait_events": 81
+      },
+      "issue_base": 28850,
+      "issue_count": 83,
+      "issue_stream_sha256": "119f5f660ce4903a140afffe10c88280d52adfe1f2a479233818f0a6e76a3a4b",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 8,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 29,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 9,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 4,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 4,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        }
+      ],
+      "name": "qwen3-reduced-rom-single-chip/prefill",
+      "phase": 0,
+      "predicate_base": 3000,
+      "predicate_count": 0,
+      "predicate_reads": [],
+      "predicate_stream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "prefill",
+      "symbols": {
+        "0": 16,
+        "1": 0,
+        "10": 0,
+        "11": 0,
+        "12": 4,
+        "13": 1,
+        "14": 15,
+        "2": 16,
+        "3": 16,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 83537,
+      "view_count": 255,
+      "view_stream_sha256": "e82b02b2df3a266600df0c5834b286deb35544a2da0ccc4bd10f29d3b7144a79",
+      "work_bound": 2776,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 2776,
+      "deployment": "qwen3-reduced-rom-single-chip",
+      "deployment_sha256": "7091bc998f980741600e87469b82a69d26f466681ad470968efe044cce541e84",
+      "depth": {
+        "data_dependent_predicate_reads": 0,
+        "distinct_static_instructions_reached": 26,
+        "engine_issues": 83,
+        "instructions_fetched": 248,
+        "instructions_retired": 248,
+        "resolved_operand_views": 255,
+        "static_instructions_in_program": 74
+      },
+      "entrypoint_id": 1,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 248,
+        "first_fault": 4294967295,
+        "issued": 83,
+        "loop_iterations": 83,
+        "message": "",
+        "node_count": 1,
+        "predicated_off": 0,
+        "retired": 248,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_row_scope": "per_node_symmetric_commit_run",
+        "state_rows_committed": 0,
+        "state_rows_committed_cluster_total": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 81
+      },
+      "golden_counters": {
+        "control.loop_iterations": 83,
+        "engine.attention.descriptors": 4,
+        "engine.dma.descriptors": 10,
+        "engine.selection.descriptors": 2,
+        "engine.tensor.descriptors": 30,
+        "engine.vector.descriptors": 37,
+        "instructions.fetched": 248,
+        "instructions.issued": 83,
+        "instructions.retired": 248,
+        "queue.wait_events": 81
+      },
+      "issue_base": 28933,
+      "issue_count": 83,
+      "issue_stream_sha256": "119f5f660ce4903a140afffe10c88280d52adfe1f2a479233818f0a6e76a3a4b",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 8,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 29,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 9,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 8,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 4,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 4,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        }
+      ],
+      "name": "qwen3-reduced-rom-single-chip/decode",
+      "phase": 1,
+      "predicate_base": 3000,
+      "predicate_count": 0,
+      "predicate_reads": [],
+      "predicate_stream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "decode",
+      "symbols": {
+        "0": 1,
+        "1": 16,
+        "10": 0,
+        "11": 0,
+        "12": 4,
+        "13": 1,
+        "14": 0,
+        "2": 17,
+        "3": 17,
+        "4": 1,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 83792,
+      "view_count": 255,
+      "view_stream_sha256": "2b2d346514a087a063f2bbb96fcafc92ede111ed2b12b71cbfe0739589ddafa4",
+      "work_bound": 2776,
+      "work_bound_lowered_for_cosimulation": false
     }
   ],
-  "completion_count": 8,
-  "deployment_count": 4,
+  "completion_count": 10,
+  "deployment_count": 5,
   "deployments": [
     {
       "admitted": true,
@@ -16760,6 +17054,39 @@
       "target_id": "hbm-sram-abi3-cluster_32",
       "title": "DeepSeek-V4-Flash HBM 32-node cluster",
       "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+      "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+      "co_simulable_within_rtl_bounds": true,
+      "declared_max_retired_work": 2776,
+      "deployment_dir": "build/abi3/qwen3-reduced-rom",
+      "deployment_identity_evidence": {
+        "artifact": "results/abi3/rom_schedule_checks_reduced.json",
+        "artifact_sha256": "a69e6dadf6126860b5070091a84f6f84895e0d36352e1446d81cea12505252fe",
+        "case": "qwen3-reduced-rom-single-chip"
+      },
+      "deployment_sha256": "7091bc998f980741600e87469b82a69d26f466681ad470968efe044cce541e84",
+      "descriptor_count": 223,
+      "descriptor_table_sha256": "386f576155082d6c491bbd9bbcc1996520adec64d997c36c7a7023aa7eecd0e8",
+      "entrypoint_count": 2,
+      "instruction_count": 74,
+      "key": "qwen3-reduced-rom-single-chip",
+      "model_id": "qwen3-reduced-v1",
+      "program_sha256": "791623975a8df5a7518e50ae0ed5d1286e722efc808032e4272a47bb3b9327ea",
+      "reproduce": "PYTHONPATH=. python3 tools/build_rom_deployment.py qwen3-8b --ir build/ir-v3/qwen3-reduced-v1/kernel_ir.v3.json --output build/abi3/qwen3-reduced-rom --checkpoint-root build/models/qwen3-reduced-v1",
+      "rtl_bound_demands": {
+        "A3_EVENT_COUNT": 27,
+        "A3_LOOP_DEPTH": 2,
+        "A3_STATE_SLOTS": 0,
+        "A3_WAIT_PRODUCERS": 3
+      },
+      "rtl_bound_overruns": [],
+      "state_descriptor_count": 0,
+      "target_id": "qwen3-reduced-rom-single-chip",
+      "title": "Qwen3 reduced regression, ROM single chip",
+      "verifier_errors": []
     }
   ],
   "engine_stub_policy": "every dispatchable engine operation is a recording no-op: RTL 3.0 implements the control plane, so the comparison is the control plane and no checkpoint byte reaches an engine on either side; the golden Device still authenticates all mapped source ranges before execution",
@@ -16767,30 +17094,30 @@
     "case_stride": 40,
     "descriptor_prefix_bytes": 192,
     "descriptor_words": 8192,
-    "descriptor_words_used": 6912,
+    "descriptor_words_used": 7135,
     "header_words": 8192,
-    "header_words_used": 256,
+    "header_words_used": 320,
     "issue_stride": 3,
     "predicate_stride": 3,
     "predicate_words_used": 9000,
     "program_words": 4096,
-    "program_words_used": 2757,
+    "program_words_used": 2831,
     "symbol_words": 2048,
-    "symbol_words_used": 128,
+    "symbol_words_used": 160,
     "view_stride": 7
   },
   "image_sha256": {
-    "a3_deployment_case.hex": "04fc156f45842843f0afb2dbff5314bcfb940d2a1495c670329ed3fb91731849",
-    "a3_deployment_issue.hex": "81cf72172c5b79857a61ecf7577328ad9433637cf9a3c290940671ceea128e29",
-    "a3_deployment_meta.hex": "38cad2143b6ab2e2a9d40c34803d87464b1c1e80ccd422940b72ec8de8cec904",
+    "a3_deployment_case.hex": "2055d5facdbfe4df6b53a146d39893efb0df749718d3a9298efb62be0be6f935",
+    "a3_deployment_issue.hex": "82aedf6b348c751c2a727a7dd23b56cf8c4c7516198af8aaf602f580310b2e51",
+    "a3_deployment_meta.hex": "cb78a1e5a038c94f71addaa89b895dbfc735ae290bbdb97f920ad0d9a256a3d9",
     "a3_deployment_predicate.hex": "132dfc6a84bf15a36748d0ff073c3d18ff6ef430ebbad0ad1869a675a15eb65e",
-    "a3_deployment_view.hex": "904e76eb72b3a5246aa2691e8def8fa5ea2c4a0db571cff610265c6d948dca80",
-    "a3_descriptor.hex": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
-    "a3_header.hex": "7ca0013db28f37da5f98f405d8f2f3d57f93771465d710f90ce1059e39319e17",
-    "a3_program.hex": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88",
-    "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
+    "a3_deployment_view.hex": "87a4b5b963c06b47ebf7d6f04fd40e25928f21b7664a8e7d8c4b190fade634c7",
+    "a3_descriptor.hex": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb",
+    "a3_header.hex": "546e7ced945a917a5b5aae51dbff6e073438a608b268374ee3718aaf862fa02b",
+    "a3_program.hex": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c",
+    "a3_symbol.hex": "8d562e2f5f7bd5f1930856ec1026606c966a7dfaa3e0a44f5dfbc3a18fcb83f4"
   },
-  "issue_event_count": 28850,
+  "issue_event_count": 29016,
   "issue_reference": "runtime.sim.device.Device's own trace: for every engine issue the family, subopcode, descriptor ID and the instruction index that issued it, in program order",
   "issued_opcodes": [
     {
@@ -16805,17 +17132,17 @@
     },
     {
       "family": 16,
-      "issues": 2768,
+      "issues": 2772,
       "sub": 2
     },
     {
       "family": 16,
-      "issues": 1288,
+      "issues": 1304,
       "sub": 3
     },
     {
       "family": 32,
-      "issues": 3936,
+      "issues": 3994,
       "sub": 0
     },
     {
@@ -16825,32 +17152,32 @@
     },
     {
       "family": 32,
-      "issues": 20,
+      "issues": 22,
       "sub": 3
     },
     {
       "family": 48,
-      "issues": 1316,
+      "issues": 1334,
       "sub": 0
     },
     {
       "family": 48,
-      "issues": 460,
+      "issues": 476,
       "sub": 1
     },
     {
       "family": 48,
-      "issues": 1094,
+      "issues": 1110,
       "sub": 2
     },
     {
       "family": 48,
-      "issues": 288,
+      "issues": 304,
       "sub": 3
     },
     {
       "family": 48,
-      "issues": 488,
+      "issues": 496,
       "sub": 4
     },
     {
@@ -16890,7 +17217,7 @@
     },
     {
       "family": 64,
-      "issues": 144,
+      "issues": 152,
       "sub": 1
     },
     {
@@ -16940,12 +17267,12 @@
     },
     {
       "family": 112,
-      "issues": 8,
+      "issues": 10,
       "sub": 0
     },
     {
       "family": 112,
-      "issues": 8,
+      "issues": 10,
       "sub": 1
     },
     {
@@ -16983,7 +17310,7 @@
   "predicate_reference": "the raw BOOLEAN_OBJECT or EOS_MEMBER value returned by runtime.sim.device.Device for each dynamic predicate evaluation, together with the object ID and element index requested by the RTL; instruction-level inversion remains inside the sequencer",
   "prompt_tokens": 16,
   "requested_max_retired_work": 0,
-  "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=4 cases=8 completions=8 issues=28850 views=83537 predicates=3000",
+  "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=5 cases=10 completions=10 issues=29016 views=84047 predicates=3000",
   "rtl_implementation_bounds": {
     "expressed_by": {
       "A3_EVENT_COUNT": "limits.max_event_id + 1 (amendment A23) -- runtime.abi3.verifier check event_id_bound and tools/check_abi3_deployment.py refuse a program naming an event ID above the capability's space. Before A23 this parameter was labelled limits.max_events, which bounds the *number of distinct event IDs* a program signals; a scoreboard indexed by event ID is bounded by the largest ID plus one, and the two coincide only when IDs are dense from zero. The four shipped capabilities now agree with this parameter and with each other, because it is storage in the shared microsequencer",
@@ -17003,6 +17330,6 @@
   },
   "schema": "opentallas.rtl.abi3_deployment_vectors.v1",
   "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop) and A18 (the axis that iteration is partial in)",
-  "view_resolution_count": 83537,
+  "view_resolution_count": 84047,
   "what_is_correlated": "the four deployments this program ships, executed on the RTL control plane and on runtime.sim.device.Device from the same program image, the same descriptor table and the same runtime symbols; one verification top is compared with node zero's resolved views and the exact per-node state commit run, while the vector record separately retains the cluster node count and cluster-total committed rows"
 }

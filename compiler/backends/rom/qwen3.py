@@ -296,10 +296,11 @@ def qwen3_rom_policy(
     alignment_bytes: int = ROM_ROW_BYTES,
     sram_budget_bytes: int = SRAM_BYTES,
     notes: Mapping[str, Any] | None = None,
+    target_id: str = TARGET_ID,
 ) -> RomTargetPolicy:
     return RomTargetPolicy(
         product=PRODUCT,
-        target_id=TARGET_ID,
+        target_id=target_id,
         backend=BACKEND,
         topology_class=TopologyClass.SINGLE_CHIP,
         layout=qwen3_layout_policy(alignment_bytes=alignment_bytes),
@@ -336,11 +337,20 @@ def build_qwen3_rom_deployment(
     deployment_id: int = 1,
     generation: int = 1,
     notes: Mapping[str, Any] | None = None,
+    target_id: str = TARGET_ID,
 ) -> tuple[Deployment, RomImagePlan]:
-    """Lower ``graph`` onto the conventional single-chip Qwen ROM target."""
+    """Lower ``graph`` onto the conventional single-chip Qwen ROM target.
+
+    ``target_id`` defaults to this backend's own TARGET_ID, so every existing
+    caller is unchanged. It is overridable because a second configuration of the
+    same model -- the reduced regression build -- lowers through this same backend
+    and must be distinguishable from the shipped one: the RTL vector builder keys
+    a target by it and refuses two deployments that claim the same id.
+    """
     capability = capability or qwen3_rom_capability()
     policy = qwen3_rom_policy(
-        defects=defects, alignment_bytes=alignment_bytes, notes=notes
+        defects=defects, alignment_bytes=alignment_bytes, notes=notes,
+        target_id=target_id,
     )
     lowering = RomLowering(
         graph,
