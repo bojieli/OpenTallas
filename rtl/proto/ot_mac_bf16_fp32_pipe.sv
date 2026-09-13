@@ -107,7 +107,7 @@ module ot_mac_bf16_fp32_pipe (
     wire [7:0] b_expf = b_sub ? 8'd1 : b[14:7];
 
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin s1_v <= 1'b0; s1_sign <= 1'b0; s1_exp <= 10'b0;
+        if (!rst_n) begin s1_v <= 1'b0; s1_sign <= 1'b0; s1_exp <= 11'b0;
                           s1_prod <= 16'b0; s1_c <= 32'b0; s1_nf <= 1'b0; end
         else begin
             s1_v    <= valid_in;
@@ -129,7 +129,7 @@ module ot_mac_bf16_fp32_pipe (
     reg        s2_nf;
 
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin s2_v <= 1'b0; s2_sign <= 1'b0; s2_exp <= 10'b0;
+        if (!rst_n) begin s2_v <= 1'b0; s2_sign <= 1'b0; s2_exp <= 11'b0;
                           s2_man <= 24'b0; s2_c <= 32'b0; s2_nf <= 1'b0; end
         else begin
             s2_v    <= s1_v;
@@ -332,7 +332,8 @@ module ot_mac_bf16_fp32_pipe (
     wire [5:0]  tsh    = 6'd5 + {1'b0, sub_shift[4:0]};
     wire [5:0]  tsh_c  = (sub_shift >= 8'd24) ? 6'd29 : ((tsh > 6'd29) ? 6'd29 : tsh);
     wire [28:0] sub_q  = (tsh_c >= 6'd29) ? 29'b0 : (nrm >> tsh_c);
-    wire        sub_r  = (tsh_c == 6'd0) ? 1'b0 : nrm[tsh_c - 6'd1];
+    wire [4:0]  sub_ri = (tsh_c == 6'd0) ? 5'd0 : (tsh_c[4:0] - 5'd1);
+    wire        sub_r  = (tsh_c == 6'd0) ? 1'b0 : nrm[sub_ri];
     reg         sub_st;
     integer     sb;
     always @* begin
