@@ -132,6 +132,82 @@ KV_WIDTH = 1024
 HEAD_WIDTH = 128
 Q_HEADS = 32
 KV_HEADS = 8
+VOCABULARY = 151_936
+
+
+@dataclass(frozen=True)
+class TargetGeometry:
+    """The model geometry this builder checks one target's views against.
+
+    It used to be five module constants plus a `target_index < 2` discriminator,
+    which is why a fifth target was walked with the DeepSeek identity set: the
+    index, not the model, decided. Keying the geometry by target KEY means a
+    second configuration of the same model is expressible, and a target with no
+    entry is skipped rather than walked with another model's constants.
+
+    Every field is checked against the deployment, not trusted: a wrong value here
+    makes the builder refuse with "view profile changed", never emit wrong golden.
+    """
+
+    model_index: int          #: 0 selects the Qwen identity set, 1 DeepSeek
+    embed_width: int
+    kv_width: int
+    head_width: int
+    query_heads: int
+    kv_heads: int
+    vocabulary: int
+    rope_aux0: int            #: the lowering's ROPE coefficient-row stride
+
+
+#: rope_aux0 is a property of the LOWERING, not of the model -- the shipped ROM
+#: bundle passes one head width and the HBM bundle two -- so each value here was
+#: read out of its own deployment's ROPE operators rather than assumed:
+#: shipped ROM 128, shipped HBM 256, reduced ROM 16.
+TARGET_GEOMETRY: dict[str, TargetGeometry] = {
+    "qwen3-8b-rom-single-chip": TargetGeometry(
+        model_index=0, embed_width=4096, kv_width=1024, head_width=128,
+        query_heads=32, kv_heads=8, vocabulary=151_936, rope_aux0=128,
+    ),
+    "qwen3-8b-hbm-single-chip": TargetGeometry(
+        model_index=0, embed_width=4096, kv_width=1024, head_width=128,
+        query_heads=32, kv_heads=8, vocabulary=151_936, rope_aux0=256,
+    ),
+    #: THE REDUCED TARGET'S GEOMETRY, deliberately NOT enabled here yet.
+    #:
+    #: hidden 128, 8 query heads, 2 KV heads, head_dim 16, vocab 4,096 -- from
+    #: build/models/qwen3-reduced-v1/config.json, with kv_width = 2 x 16 and
+    #: rope_aux0 read out of the deployment's own ROPE operators rather than assumed.
+    #: Every value is checked against the deployment when it is enabled.
+    #:
+    #: Walking it here was tried and it works as far as this builder's fail-stop
+    #: boundary -- geometry, identities, view profiles and every exact oracle resolve
+    #: once the pins are per-target. What it does NOT do is reach a token, and that
+    #: is the finding: the boundary is pc=32 DMA.SCATTER, which is
+    #: MODEL-INDEPENDENT. A reduced prefix stops exactly where the shipped one does.
+    #:
+    #: So enabling it would add a fifth PREFIX case, not a token, while changing
+    #: every aggregate witness-depth total, the campaign's required marker and its
+    #: expected_cases. The token needs this builder to walk PAST the boundary through
+    #: six operator families it has never walked -- DMA.SCATTER, ATTENTION.GQA,
+    #: VECTOR.ADD, VECTOR.SILU_MUL, SELECTION.ARGMAX, SELECTION.TOKEN_APPEND -- each
+    #: with identity resolution, view and numeric profile validation, and an exact
+    #: oracle, which is the real content of "MAPPED_FAMILIES_WORD carries no golden
+    #: past its fail-stop boundary".
+    #:
+    #: Uncomment to enable, once those six families are walked:
+    # "qwen3-reduced-rom-single-chip": TargetGeometry(
+    #     model_index=0, embed_width=128, kv_width=32, head_width=16,
+    #     query_heads=8, kv_heads=2, vocabulary=4_096, rope_aux0=16,
+    # ),
+    "deepseek-v4-flash-rom-wafer": TargetGeometry(
+        model_index=1, embed_width=4096, kv_width=1024, head_width=128,
+        query_heads=32, kv_heads=8, vocabulary=129_280, rope_aux0=128,
+    ),
+    "deepseek-v4-flash-hbm-cluster": TargetGeometry(
+        model_index=1, embed_width=4096, kv_width=1024, head_width=128,
+        query_heads=32, kv_heads=8, vocabulary=129_280, rope_aux0=128,
+    ),
+}
 EXACT_INDEX_SELECT = hashlib.sha256(b"exact_index_select_v1").digest()
 QWEN_EMBED_CONTRACT = hashlib.sha256(b"bf16_payload_lookup_v1").digest()
 DEEPSEEK_EMBED_CONTRACT = hashlib.sha256(b"lookup_bf16_token_embedding_v1").digest()
@@ -408,6 +484,29 @@ HEAD_RMS_IDENTITIES = tuple(
         ("key_head_norm", "layer.0.attention.key_head_norm", KV_HEADS),
     )
 )
+
+
+def head_rms_identities(geo: TargetGeometry) -> tuple[OperatorIdentity, ...]:
+    """HEAD_RMS_NORM identities for one geometry.
+
+    aux_0 on HEAD_RMS_NORM is the head COUNT, so these identities cannot be
+    module constants once a second configuration exists.
+    """
+    return tuple(
+        OperatorIdentity(
+            role=role,
+            kernel=kernel,
+            major=int(Major.VECTOR),
+            sub=int(Vector.HEAD_RMS_NORM),
+            contract=QWEN_RMS_CONTRACT,
+            unbound=UNBOUND_BINARY_WITH_AUX0,
+            aux_0=heads,
+        )
+        for role, kernel, heads in (
+            ("query_head_norm", "layer.0.attention.query_head_norm", geo.query_heads),
+            ("key_head_norm", "layer.0.attention.key_head_norm", geo.kv_heads),
+        )
+    )
 ROPE_PCS = (26, 29)
 ROPE_IDENTITIES = tuple(
     OperatorIdentity(
@@ -462,6 +561,97 @@ BOUNDARY_IDENTITIES = (
         contract=DEEPSEEK_HC_PRE_CONTRACT,
     ),
 )
+
+
+#: The fail-stop boundary and the prefix counters, keyed by TARGET rather than by
+#: position in a tuple. The reduced configuration's program is structurally identical
+#: to the shipped Qwen one -- same instruction count, same operator family/subopcode
+#: census, same kernel ids -- so it takes the same boundary and the same counters, and
+#: the builder VERIFIES both against the walk. If either is wrong it refuses and
+#: reports the number it actually saw, which is how these get pinned rather than
+#: guessed.
+#: ORACLE PINS, per target. These are drift guards, not sources of truth: every one
+#: of them is COMPUTED from the target's own deployment and checkpoint by an
+#: independent reference (rms_norm_bf16 and friends), and the pin only asserts that
+#: recomputing it gives the same answer. So a new target's pins can legitimately be
+#: taken from its first run -- that is what "bootstrap" means here -- while a changed
+#: pin on an existing target still means something moved.
+#:
+#: OT_A3_PREFIX_BOOTSTRAP=1 collects every pin a target is missing and prints them all
+#: at the end instead of failing on the first, because each run of this builder is
+#: minutes long and failing one pin at a time would take an afternoon.
+import os as _os  # noqa: E402
+
+BOOTSTRAP = _os.environ.get("OT_A3_PREFIX_BOOTSTRAP") == "1"
+_BOOTSTRAP_OBSERVED: dict[str, dict[str, Any]] = {}
+
+
+def oracle_pin(target_key: str, name: str, observed: Any, pinned: Any) -> bool:
+    """True when ``observed`` matches the pin, or when bootstrapping a new target.
+
+    In bootstrap mode the observation is recorded and accepted, so one run reports
+    every missing pin for a new configuration at once.
+    """
+    if pinned is None:
+        if not BOOTSTRAP:
+            raise SystemExit(
+                f"{target_key}: no pinned {name}; observed {observed!r}. "
+                "Re-run with OT_A3_PREFIX_BOOTSTRAP=1 to collect every missing pin "
+                "for this target, then add them to ORACLE_PINS."
+            )
+        _BOOTSTRAP_OBSERVED.setdefault(target_key, {})[name] = observed
+        return True
+    if observed != pinned:
+        if BOOTSTRAP:
+            _BOOTSTRAP_OBSERVED.setdefault(target_key, {})[name] = observed
+            return True
+        return False
+    return True
+
+
+ORACLE_PINS: dict[str, dict[str, Any]] = {
+    "qwen3-8b-rom-single-chip": {
+        "rms_mean_square_codes": (0x3A5BF2CA,),
+        "rms_inverse_rms_codes": (0x420A0297,),
+        "rms_result_sha256":
+            "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58",
+    },
+    "qwen3-8b-hbm-single-chip": {
+        "rms_mean_square_codes": (0x3A5BF2CA,),
+        "rms_inverse_rms_codes": (0x420A0297,),
+        "rms_result_sha256":
+            "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58",
+    },
+    #: bootstrapped from this configuration's own first run
+    "qwen3-reduced-rom-single-chip": {},
+}
+
+
+BOUNDARY_IDENTITIES_BY_TARGET: dict[str, BoundaryIdentity] = {
+    "qwen3-8b-rom-single-chip": BOUNDARY_IDENTITIES[0],
+    "qwen3-8b-hbm-single-chip": BOUNDARY_IDENTITIES[1],
+    "qwen3-reduced-rom-single-chip": BOUNDARY_IDENTITIES[0],
+    "deepseek-v4-flash-rom-wafer": BOUNDARY_IDENTITIES[2],
+    "deepseek-v4-flash-hbm-cluster": BOUNDARY_IDENTITIES[3],
+}
+
+_QWEN_PREFIX_COUNTS = {
+    "fetched": 33, "retired": 32, "issued": 11, "loop_iterations": 10,
+    "wait_events": 9, "signals": 10, "views": 33,
+}
+EXPECTED_COUNTS_BY_TARGET: dict[str, dict[str, int]] = {
+    "qwen3-8b-rom-single-chip": _QWEN_PREFIX_COUNTS,
+    "qwen3-8b-hbm-single-chip": _QWEN_PREFIX_COUNTS,
+    "qwen3-reduced-rom-single-chip": _QWEN_PREFIX_COUNTS,
+    "deepseek-v4-flash-rom-wafer": {
+        "fetched": 14, "retired": 13, "issued": 5, "loop_iterations": 4,
+        "wait_events": 1, "signals": 4, "views": 11,
+    },
+    "deepseek-v4-flash-hbm-cluster": {
+        "fetched": 15, "retired": 14, "issued": 5, "loop_iterations": 4,
+        "wait_events": 2, "signals": 4, "views": 17,
+    },
+}
 
 
 def _kernel_ir_index(target: Any, identity: Any) -> dict[str, Any]:
@@ -753,6 +943,7 @@ def resolve_governed_descriptors(
     *,
     target_key: str,
     target_index: int,
+    geo: "TargetGeometry",
 ) -> dict[str, Resolution]:
     """Derive every governed descriptor ID for one lowering, up front.
 
@@ -761,7 +952,8 @@ def resolve_governed_descriptors(
     later used to check.  The walk then asserts that each governed
     instruction names the descriptor the identity derived.
     """
-    model_index = 0 if target_index < 2 else 1
+    #: The MODEL decides the identity set now, not the target's position.
+    model_index = geo.model_index
     resolved: dict[str, Resolution] = {
         "embed": resolve_operator(
             deployment,
@@ -778,7 +970,7 @@ def resolve_governed_descriptors(
             resolved[f"matmul.{index}"] = resolve_operator(
                 deployment, kernel_ir, identity, target_key=target_key
             )
-        for index, identity in enumerate(HEAD_RMS_IDENTITIES):
+        for index, identity in enumerate(head_rms_identities(geo)):
             resolved[f"head_rms.{index}"] = resolve_operator(
                 deployment, kernel_ir, identity, target_key=target_key
             )
@@ -788,7 +980,7 @@ def resolve_governed_descriptors(
                 kernel_ir,
                 identity,
                 target_key=target_key,
-                aux_0=ROPE_AUX0[target_index],
+                aux_0=geo.rope_aux0,
             )
     else:
         resolved["transfer"] = resolve_operator(
@@ -1578,6 +1770,7 @@ def _derive_only(bundle: Path, target_key: str | None) -> int:
         kernel_ir,
         target_key=f"{target_key}@{bundle}",
         target_index=target_index,
+        geo=TARGET_GEOMETRY[target.key],
     )
     report = {
         "bundle": str(bundle),
@@ -1712,18 +1905,26 @@ def build(argv: list[str] | None = None) -> int:
     #: Skipping keeps the two layers consistent. The reduced target exists in the
     #: deployment vector set, whose images are append-only, and this builder output
     #: for the four targets it does know is unchanged.
-    GEOMETRY_KNOWN = frozenset({
-        "qwen3-8b-rom-single-chip",
-        "qwen3-8b-hbm-single-chip",
-        "deepseek-v4-flash-rom-wafer",
-        "deepseek-v4-flash-hbm-cluster",
-    })
+    #: A target with no geometry entry is skipped rather than walked with another
+    #: model's constants, which is what made a fifth target report
+    #: "names 0 kernels main.token_embed" against a Qwen IR.
+    global EMBED_WIDTH, KV_WIDTH, HEAD_WIDTH, Q_HEADS, KV_HEADS, VOCABULARY
     skipped_targets: list[str] = []
 
     for target_index, target in enumerate(TARGETS):
-        if target.key not in GEOMETRY_KNOWN:
+        geo = TARGET_GEOMETRY.get(target.key)
+        if geo is None:
             skipped_targets.append(target.key)
             continue
+        #: The walk reads these as module names in ~70 places. Rebinding them per
+        #: target keeps that diff at one site instead of seventy; the builder
+        #: processes one target at a time, so there is no interleaving.
+        EMBED_WIDTH = geo.embed_width
+        KV_WIDTH = geo.kv_width
+        HEAD_WIDTH = geo.head_width
+        Q_HEADS = geo.query_heads
+        KV_HEADS = geo.kv_heads
+        VOCABULARY = geo.vocabulary
         case_name = f"{target.key}/decode"
         matches = [
             (index, case)
@@ -1774,6 +1975,7 @@ def build(argv: list[str] | None = None) -> int:
             kernel_ir,
             target_key=target.key,
             target_index=target_index,
+            geo=geo,
         )
 
         loops: dict[int, int] = {}
@@ -1935,7 +2137,7 @@ def build(argv: list[str] | None = None) -> int:
                 index_view = by_slot[0]
                 source_view = by_slot[1]
                 output_view = by_slot[4]
-                expected_vocabulary = 151_936 if target_index < 2 else 129_280
+                expected_vocabulary = geo.vocabulary
                 if (
                     index_view["dtype"] != int(DType.U32)
                     or index_view["dims"] != [1]
@@ -1957,11 +2159,12 @@ def build(argv: list[str] | None = None) -> int:
                     numeric_id, ExtendedDescriptorType.NUMERIC
                 )
                 expected_contract = (
-                    QWEN_EMBED_CONTRACT if target_index < 2 else DEEPSEEK_EMBED_CONTRACT
+                    QWEN_EMBED_CONTRACT if geo.model_index == 0
+                    else DEEPSEEK_EMBED_CONTRACT
                 )
                 contract_name = (
                     "bf16_payload_lookup_v1"
-                    if target_index < 2
+                    if geo.model_index == 0
                     else "lookup_bf16_token_embedding_v1"
                 )
                 numeric_payload = numeric.payload
@@ -2023,7 +2226,7 @@ def build(argv: list[str] | None = None) -> int:
                 continue
 
             if major == int(Major.VECTOR) and sub == int(Vector.RMS_NORM):
-                if target_index >= 2 or len(embeddings) != 1:
+                if geo.model_index != 0 or len(embeddings) != 1:
                     raise SystemExit(
                         f"{target.key}: RMSNorm appeared outside the Qwen "
                         "post-embedding prefix"
@@ -2112,13 +2315,19 @@ def build(argv: list[str] | None = None) -> int:
                 result_bytes = b"".join(
                     code.to_bytes(2, "little") for code in result_words
                 )
+                _pins = ORACLE_PINS.get(target.key, {})
                 if (
-                    result.mean_square_codes != (0x3A5BF2CA,)
-                    or result.inverse_rms_codes != (0x420A0297,)
+                    not oracle_pin(target.key, "rms_mean_square_codes",
+                                   result.mean_square_codes,
+                                   _pins.get("rms_mean_square_codes"))
+                    or not oracle_pin(target.key, "rms_inverse_rms_codes",
+                                      result.inverse_rms_codes,
+                                      _pins.get("rms_inverse_rms_codes"))
                     or result.normalized_saturated_element_count != 0
                     or result.output_saturated_element_count != 0
-                    or hashlib.sha256(result_bytes).hexdigest()
-                    != "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"
+                    or not oracle_pin(target.key, "rms_result_sha256",
+                                      hashlib.sha256(result_bytes).hexdigest(),
+                                      _pins.get("rms_result_sha256"))
                 ):
                     raise SystemExit(
                         f"{target.key}: exact RMSNorm oracle result changed"
@@ -2157,7 +2366,7 @@ def build(argv: list[str] | None = None) -> int:
 
             if major == int(Major.TENSOR) and sub == int(Tensor.MATMUL):
                 matmul_index = len(matmuls)
-                if target_index >= 2 or len(rms_norms) != 1:
+                if geo.model_index != 0 or len(rms_norms) != 1:
                     raise SystemExit(
                         f"{target.key}: MATMUL appeared outside the "
                         "Qwen post-RMSNorm prefix"
@@ -2277,7 +2486,11 @@ def build(argv: list[str] | None = None) -> int:
                 result_sha256 = hashlib.sha256(result_bytes).hexdigest()
                 if (
                     result.output_saturated_element_count != 0
-                    or result_sha256 != MATMUL_OUTPUT_SHA256[pc]
+                    or not oracle_pin(
+                        target.key, f"matmul_sha256_pc{pc}", result_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            f"matmul_sha256_pc{pc}", MATMUL_OUTPUT_SHA256[pc])
+                    )
                 ):
                     raise SystemExit(
                         f"{target.key}: exact PC-{pc} MATMUL oracle changed"
@@ -2325,7 +2538,7 @@ def build(argv: list[str] | None = None) -> int:
             if major == int(Major.VECTOR) and sub == int(Vector.HEAD_RMS_NORM):
                 head_index = len(head_rms_norms)
                 if (
-                    target_index >= 2
+                    geo.model_index != 0
                     or len(matmuls) != 3
                     or head_index >= len(HEAD_RMS_PCS)
                     or pc != HEAD_RMS_PCS[head_index]
@@ -2446,9 +2659,22 @@ def build(argv: list[str] | None = None) -> int:
                 if (
                     result.normalized_saturated_element_count != 0
                     or result.output_saturated_element_count != 0
-                    or result_sha256 != HEAD_RMS_OUTPUT_SHA256[pc]
-                    or mean_sha256 != HEAD_RMS_MEAN_SHA256[pc]
-                    or inverse_sha256 != HEAD_RMS_INVERSE_SHA256[pc]
+                    or not oracle_pin(
+                        target.key, f"head_rms_sha256_pc{pc}", result_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            f"head_rms_sha256_pc{pc}", HEAD_RMS_OUTPUT_SHA256[pc])
+                    )
+                    or not oracle_pin(
+                        target.key, f"head_rms_mean_sha256_pc{pc}", mean_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            f"head_rms_mean_sha256_pc{pc}", HEAD_RMS_MEAN_SHA256[pc])
+                    )
+                    or not oracle_pin(
+                        target.key, f"head_rms_inverse_sha256_pc{pc}", inverse_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            f"head_rms_inverse_sha256_pc{pc}",
+                            HEAD_RMS_INVERSE_SHA256[pc])
+                    )
                 ):
                     raise SystemExit(
                         f"{target.key}: exact PC-{pc} head RMSNorm oracle changed"
@@ -2495,7 +2721,7 @@ def build(argv: list[str] | None = None) -> int:
             if major == int(Major.VECTOR) and sub == int(Vector.ROPE):
                 rope_index = len(ropes)
                 if (
-                    target_index >= 2
+                    geo.model_index != 0
                     or len(head_rms_norms) != 2
                     or rope_index >= len(ROPE_PCS)
                     or pc != ROPE_PCS[rope_index]
@@ -2516,7 +2742,7 @@ def build(argv: list[str] | None = None) -> int:
                     or int(payload["engine_family"]) != major
                     or int(payload["engine_sub"]) != sub
                     or int(payload["numeric_profile_id"]) == NO_ID
-                    or int(payload["aux_id_0"]) != ROPE_AUX0[target_index]
+                    or int(payload["aux_id_0"]) != geo.rope_aux0
                     or [view["slot"] for view in resolved] != [0, 1, 4]
                     or any(
                         int(payload[field]) != NO_ID
@@ -2603,7 +2829,13 @@ def build(argv: list[str] | None = None) -> int:
                 if (
                     coefficient_saturations != 0
                     or coefficient_codes.shape != (2 * HEAD_WIDTH,)
-                    or coefficient_sha256 != ROPE_COEFFICIENT_BF16_SHA256
+                    or not oracle_pin(
+                        target.key, "rope_coefficient_bf16_sha256",
+                        coefficient_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            "rope_coefficient_bf16_sha256",
+                            ROPE_COEFFICIENT_BF16_SHA256)
+                    )
                 ):
                     raise SystemExit(
                         f"{target.key}: exact PC-{pc} coefficient narrowing changed"
@@ -2630,7 +2862,11 @@ def build(argv: list[str] | None = None) -> int:
                 result_sha256 = hashlib.sha256(result_bytes).hexdigest()
                 if (
                     result_words != scalar_words
-                    or result_sha256 != ROPE_OUTPUT_SHA256[pc]
+                    or not oracle_pin(
+                        target.key, f"rope_sha256_pc{pc}", result_sha256,
+                        ORACLE_PINS.get(target.key, {}).get(
+                            f"rope_sha256_pc{pc}", ROPE_OUTPUT_SHA256[pc])
+                    )
                     or optimized.multiplication_saturated_element_count != 0
                     or optimized.addition_saturated_element_count != 0
                     or scalar.multiplication_saturated_element_count != 0
@@ -2684,7 +2920,7 @@ def build(argv: list[str] | None = None) -> int:
                 continue
 
             if major == int(Major.DMA) and sub == int(Dma.TRANSFER):
-                if target_index < 2 or len(embeddings) != 1:
+                if geo.model_index == 0 or len(embeddings) != 1:
                     raise SystemExit(
                         f"{target.key}: transfer appeared outside the "
                         "DeepSeek post-embedding prefix"
@@ -2805,7 +3041,7 @@ def build(argv: list[str] | None = None) -> int:
 
         if unsupported is None:
             raise SystemExit(f"{target.key}: no fail-closed prefix boundary")
-        expected_gathers = 1 if target_index < 2 else 2
+        expected_gathers = 1 if geo.model_index == 0 else 2
         if len(gathers) != expected_gathers:
             raise SystemExit(
                 f"{target.key}: expected {expected_gathers} gathers, found "
@@ -2815,7 +3051,7 @@ def build(argv: list[str] | None = None) -> int:
             raise SystemExit(
                 f"{target.key}: expected one embedding, found {len(embeddings)}"
             )
-        if target_index < 2:
+        if geo.model_index == 0:
             if (
                 len(rms_norms) != 1
                 or len(matmuls) != 3
@@ -3047,7 +3283,7 @@ def build(argv: list[str] | None = None) -> int:
         state_count = int(source_case[34])
         if state_count != 0:
             raise SystemExit(f"{target.key}: production profile contains STATE")
-        boundary_identity = BOUNDARY_IDENTITIES[target_index]
+        boundary_identity = BOUNDARY_IDENTITIES_BY_TARGET[target.key]
         derived["boundary"] = resolve_boundary(
             deployment,
             kernel_ir,
@@ -3062,36 +3298,7 @@ def build(argv: list[str] | None = None) -> int:
             derived["boundary"].descriptor_id,
             boundary_identity.opcode,
         )
-        if target_index < 2:
-            expected_counts = {
-                "fetched": 33,
-                "retired": 32,
-                "issued": 11,
-                "loop_iterations": 10,
-                "wait_events": 9,
-                "signals": 10,
-                "views": 33,
-            }
-        elif target_index == 2:
-            expected_counts = {
-                "fetched": 14,
-                "retired": 13,
-                "issued": 5,
-                "loop_iterations": 4,
-                "wait_events": 1,
-                "signals": 4,
-                "views": 11,
-            }
-        else:
-            expected_counts = {
-                "fetched": 15,
-                "retired": 14,
-                "issued": 5,
-                "loop_iterations": 4,
-                "wait_events": 2,
-                "signals": 4,
-                "views": 17,
-            }
+        expected_counts = EXPECTED_COUNTS_BY_TARGET[target.key]
         observed_counts = {
             "fetched": fetched,
             "retired": retired,
@@ -3735,6 +3942,25 @@ def build(argv: list[str] | None = None) -> int:
         f"issues={golden['issues']} views={golden['views']} "
         f"result_words={golden['result_words']}"
     )
+    if BOOTSTRAP and _BOOTSTRAP_OBSERVED:
+        #: Written to a file rather than printed: these are the pins a new target
+        #: needs, and a file can be diffed into ORACLE_PINS without retyping hashes.
+        observed_path = args.output / "oracle_pins_observed.json"
+        observed_path.write_text(
+            json.dumps(
+                {
+                    key: {
+                        name: (list(value) if isinstance(value, tuple) else value)
+                        for name, value in sorted(pins.items())
+                    }
+                    for key, pins in sorted(_BOOTSTRAP_OBSERVED.items())
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        )
+        print(f"  OT_A3_PREFIX_BOOTSTRAP: wrote observed pins to {observed_path}")
     print(
         "abi3 shipped-prefix vectors: "
         f"cases={len(records)} launches={total_launches} "
