@@ -168,6 +168,11 @@ module ot_a3_qwen_gqa_adapter #(
         .MAX_CONTEXT(MAX_CONTEXT)
     ) engine (
         .clk(clk), .rst_n(rst_n), .start(state == S_ENGINE_START),
+        //: Decode: one query row, ending at the context.  Tied rather
+        //: than left unconnected -- a floating input is 0 or x by tool,
+        //: and MAX_QUERY_SPAN=1 folds both away regardless.
+        .cfg_query_span(32'd1),
+        .cfg_first_position(context_q - 32'd1),
         .cfg_context_length(context_q), .cfg_query_base(query_base_q),
         .cfg_key_base(key_base_q), .cfg_value_base(value_base_q),
         .cfg_output_base(output_base_q),

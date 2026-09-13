@@ -2701,6 +2701,12 @@ module ot_a3_engine_issue_bridge #(
         .rst_n(rst_n),
         .start(engine_start & attention_gqa_q),
         .cfg_context_length(mapped_context),
+        //: Decode: one query row, ending at the context.  Tied rather than left
+        //: unconnected -- a floating input is 0 or x by tool, and at
+        //: MAX_QUERY_SPAN=1 both fold away at elaboration anyway.  A prefill
+        //: bridge drives the resolved extent here instead.
+        .cfg_query_span(32'd1),
+        .cfg_first_position(mapped_context - 32'd1),
         .cfg_query_base(mapped_left_base),
         .cfg_key_base(mapped_right_base),
         .cfg_value_base(mapped_third_base),

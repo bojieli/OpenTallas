@@ -13,6 +13,55 @@
 // adapter boundary, exactly as qwen3_rope_fp32_bf16_v1 requires, before the
 // qualified core performs its two BF16-rounded products and BF16-rounded sum.
 // One BF16 code occupies the low half of each 32-bit verification-bank word.
+//
+// MULTI-POSITION LAUNCHES (prefill).  A decode launch rotates ONE position; the
+// golden device reports the same 83 launches for prefill, each covering a span
+// of 16 positions.  The qualified core cannot retire that: its coefficient row
+// is loaded once per command and on the last coefficient index falls through to
+// the input stage, so nothing in it iterates positions.  So a span of two or
+// more is retired by ot_a3_rope_lane_pipe instead -- six registered stages, one
+// element per cycle, the same six ot_fp32_rne_pkg calls in the same order -- and
+// a span of exactly one still goes to the unchanged qualified core, which is
+// what makes every decode launch bit-identical rather than argued.
+//
+// WHERE THE SPAN COMES FROM, and it is not a new port.  cfg_count is the
+// launch's resolved result count.  For a span-S launch the bridge derives it as
+// S * cfg_rows * cfg_cols, because that is what the resolved view extent means,
+// so cfg_count already carries S and no descriptor field is invented.  The span
+// is recovered by repeated subtraction of one position block -- S cycles, once
+// per launch, off the datapath -- rather than by a divider.  When cfg_count is
+// exactly one block the check is the identity this engine has always applied
+// and the legacy path is entered on the same cycle as before.
+//
+// WHAT THE BRIDGE MUST PASS for a span-S VECTOR.ROPE launch.  Three things, all
+// of them already implied by the RoPE view predicates it enforces today:
+//
+//   1. cfg_count = S * cfg_rows * cfg_cols.  Today the bridge's rope leg of
+//      expected_result_count and expected_work_count is source_rows *
+//      source_trailing with no extent factor; both need the resolved extent.
+//   2. captured_extent[0] for the RoPE input view must be allowed to be that
+//      extent.  rope_input_source_ok pins it to the literal 1, and that single
+//      comparison is the bridge-side refusal of prefill.  The coefficient and
+//      output views already tie their extents to it.
+//   3. Nothing else.  The three operand regions are contiguous position-major
+//      sweeps -- input and output stride S blocks of cfg_rows*cfg_cols words, the
+//      coefficient table S rows of 2*cfg_cols FP32 words -- which is exactly
+//      what rope_input_source_ok, rope_coefficient_source_ok and rope_output_ok
+//      already require of stride0.  No base, no stride and no rank changes.
+//
+// WHY THE SPAN IS NOT IN THE CORE COMMAND RECORD.  The record is ABI 2.2,
+// private to this adapter, and its reflected CRC32 over the first fifteen words
+// is retained evidence for the qualified fused single-position profile
+// (results/tensor_accelerator/qwen3_rtl_rope_campaign.json pins the core's
+// source digest).  A span belongs outside it for three reasons.  It is per
+// launch, and the record is an elaboration constant, so a span in the record
+// would freeze the span exactly as size0/size1/size2 froze the geometry.  The
+// qualified datapath cannot execute S > 1 whatever the record says, so the
+// field would describe a command the decoder admits and the engine cannot run.
+// And the span already reaches this engine as the resolved view extent, which is
+// launch state, not profile state.  The retarget function below therefore still
+// rewrites exactly three words and recomputes the CRC, and the record for a
+// prefill launch is the record for a decode launch.
 // ---------------------------------------------------------------------------
 module ot_a3_vector_rope #(
     //: MODEL GEOMETRY.  These three were localparams frozen to Qwen3-8B, and
@@ -23,7 +72,23 @@ module ot_a3_vector_rope #(
     //: command record's CRC.
     parameter [31:0] QUERY_HEADS = 32'd32,
     parameter [31:0] KEY_HEADS   = 32'd8,
-    parameter [31:0] HEAD_WIDTH  = 32'd128
+    parameter [31:0] HEAD_WIDTH  = 32'd128,
+    //: POSITIONS PER LAUNCH, a bound and not geometry.  It sizes the span
+    //: counters in this wrapper and in the lane and nothing else -- no array is
+    //: sized by it, because the lane streams positions -- so the cost of the
+    //: default is $clog2 flip-flops rather than storage, and it is large enough
+    //: that a prefill chunk is never refused for being long.
+    parameter [31:0] MAX_POSITION_SPAN = 32'd65536,
+    //: Route a span-1 launch through the pipelined lane too.  Default 0 keeps
+    //: every decode launch on the unchanged qualified core; setting it to 1 is
+    //: how rtl/test/tb_a3_rope_span.sv proves the two agree word for word.
+    parameter integer LANE_AT_SPAN1 = 0,
+    //: Forwarded to the lane, which documents each trade at its own
+    //: declaration.  They are here so a deployment can spend storage on the
+    //: last per-position bubble instead of inheriting a default.
+    parameter integer ROW_BUFFERS = 4,
+    parameter integer COEF_BUFFERS = 2,
+    parameter integer OUT_BUFFERS = 2
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -136,21 +201,33 @@ module ot_a3_vector_rope #(
     localparam [511:0] CORE_COMMAND =
         retarget_command(CORE_COMMAND_SHIPPED, QUERY_HEADS, KEY_HEADS, HEAD_WIDTH);
 
-    localparam [1:0] S_IDLE = 2'd0;
-    localparam [1:0] S_DISPATCH = 2'd1;
-    localparam [1:0] S_RUN = 2'd2;
-    localparam [1:0] S_DONE = 2'd3;
+    localparam [2:0] S_IDLE = 3'd0;
+    localparam [2:0] S_DISPATCH = 3'd1;
+    localparam [2:0] S_RUN = 3'd2;
+    localparam [2:0] S_DONE = 3'd3;
+    //: Span recovery and the pipelined-lane launch.  A span-1 launch never
+    //: enters either, so its cycle count is the shipped one.
+    localparam [2:0] S_SPAN = 3'd4;
+    localparam [2:0] S_LANE_START = 3'd5;
+    localparam [2:0] S_LANE_RUN = 3'd6;
     localparam [1:0] READ_DUMMY = 2'd0;
     localparam [1:0] READ_INPUT = 2'd1;
     localparam [1:0] READ_COEFFICIENT = 2'd2;
     localparam [1:0] READ_INVALID = 2'd3;
 
-    reg [1:0] state;
+    reg [2:0] state;
     reg active_query;
     reg [31:0] input_base_q;
     reg [31:0] coefficient_base_q;
     reg [31:0] output_base_q;
     reg [31:0] count_q;
+    reg [31:0] rows_q;
+    reg [31:0] cols_q;
+    reg [31:0] block_q;
+    reg [31:0] span_q;
+    reg [31:0] span_remaining;
+    reg        lane_mode;
+    reg        lane_start;
     reg read_pending;
     reg [1:0] read_kind;
     reg address_fault;
@@ -204,12 +281,13 @@ module ot_a3_vector_rope #(
         core_read_address - CORE_COEFFICIENT_BASE;
 
     assign core_read_ready = (state == S_RUN) && !read_pending;
-    assign input_rd_en = core_read_valid && core_read_ready &&
-                         read_is_selected_input;
-    assign input_rd_addr = input_base_q + selected_input_offset[32:1];
-    assign coefficient_rd_en = core_read_valid && core_read_ready &&
-                               read_is_coefficient;
-    assign coefficient_rd_addr =
+    wire        adapter_input_rd_en = core_read_valid && core_read_ready &&
+                                      read_is_selected_input;
+    wire [31:0] adapter_input_rd_addr =
+        input_base_q + selected_input_offset[32:1];
+    wire        adapter_coefficient_rd_en = core_read_valid && core_read_ready &&
+                                            read_is_coefficient;
+    wire [31:0] adapter_coefficient_rd_addr =
         coefficient_base_q + coefficient_offset[32:1];
 
     wire [18:0] narrowed_coefficient =
@@ -238,9 +316,80 @@ module ot_a3_vector_rope #(
         ? core_write_address - CORE_QUERY_OUTPUT_BASE
         : core_write_address - CORE_KEY_OUTPUT_BASE;
     assign core_write_ready = state == S_RUN;
-    assign out_we = core_write_valid && core_write_ready && write_is_selected;
-    assign out_addr = output_base_q + selected_output_offset[32:1];
-    assign out_data = {16'd0, core_write_data};
+    wire        adapter_out_we =
+        core_write_valid && core_write_ready && write_is_selected;
+    wire [31:0] adapter_out_addr =
+        output_base_q + selected_output_offset[32:1];
+    wire [31:0] adapter_out_data = {16'd0, core_write_data};
+
+    // ---- the pipelined multi-position lane ---------------------------------
+    //: A VECTOR.ROPE launch declares ONE operand, so the lane only ever needs
+    //: the larger of the two head counts.  Derived, so it cannot disagree with
+    //: the geometry the shape check admits.
+    localparam [31:0] LANE_MAX_HEADS =
+        (QUERY_HEADS > KEY_HEADS) ? QUERY_HEADS : KEY_HEADS;
+
+    wire        lane_input_rd_en;
+    wire [31:0] lane_input_rd_addr;
+    wire        lane_coefficient_rd_en;
+    wire [31:0] lane_coefficient_rd_addr;
+    wire        lane_out_we;
+    wire [31:0] lane_out_addr;
+    wire [31:0] lane_out_data;
+    wire        lane_busy;
+    wire        lane_done;
+    wire [7:0]  lane_error_code;
+    wire [31:0] lane_result_count;
+    wire [31:0] lane_saturation_count;
+    wire [31:0] lane_work_count;
+
+    ot_a3_rope_lane_pipe #(
+        .MAX_HEADS(LANE_MAX_HEADS),
+        .MAX_HEAD_WIDTH(HEAD_WIDTH),
+        .MAX_POSITION_SPAN(MAX_POSITION_SPAN),
+        .ROW_BUFFERS(ROW_BUFFERS),
+        .COEF_BUFFERS(COEF_BUFFERS),
+        .OUT_BUFFERS(OUT_BUFFERS)
+    ) span_lane (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(lane_start),
+        .cfg_heads(rows_q),
+        .cfg_cols(cols_q),
+        .cfg_span(span_q),
+        .cfg_input_base(input_base_q),
+        .cfg_coefficient_base(coefficient_base_q),
+        .cfg_output_base(output_base_q),
+        .input_rd_en(lane_input_rd_en),
+        .input_rd_addr(lane_input_rd_addr),
+        .input_rd_data(input_rd_data),
+        .coefficient_rd_en(lane_coefficient_rd_en),
+        .coefficient_rd_addr(lane_coefficient_rd_addr),
+        .coefficient_rd_data(coefficient_rd_data),
+        .out_we(lane_out_we),
+        .out_addr(lane_out_addr),
+        .out_data(lane_out_data),
+        .busy(lane_busy),
+        .done(lane_done),
+        .error_code(lane_error_code),
+        .result_count(lane_result_count),
+        .saturation_count(lane_saturation_count),
+        .work_count(lane_work_count)
+    );
+
+    //: The two paths never drive the banks at once: the core is dispatched only
+    //: from S_DISPATCH and the lane started only from S_LANE_START, and
+    //: lane_mode is latched before either runs.
+    assign input_rd_en = lane_mode ? lane_input_rd_en : adapter_input_rd_en;
+    assign input_rd_addr = lane_mode ? lane_input_rd_addr
+                                     : adapter_input_rd_addr;
+    assign coefficient_rd_en = lane_mode ? lane_coefficient_rd_en
+                                         : adapter_coefficient_rd_en;
+    assign coefficient_rd_addr = lane_mode ? lane_coefficient_rd_addr
+                                           : adapter_coefficient_rd_addr;
+    assign out_we = lane_mode ? lane_out_we : adapter_out_we;
+    assign out_addr = lane_mode ? lane_out_addr : adapter_out_addr;
+    assign out_data = lane_mode ? lane_out_data : adapter_out_data;
 
     ot_ta_rope_bf16_sram_engine #(
         .PROFILE_COMMAND_INDEX(32'd0),
@@ -295,6 +444,13 @@ module ot_a3_vector_rope #(
             coefficient_base_q <= 0;
             output_base_q <= 0;
             count_q <= 0;
+            rows_q <= 0;
+            cols_q <= 0;
+            block_q <= 0;
+            span_q <= 0;
+            span_remaining <= 0;
+            lane_mode <= 1'b0;
+            lane_start <= 1'b0;
             read_pending <= 1'b0;
             read_kind <= READ_DUMMY;
             address_fault <= 1'b0;
@@ -350,19 +506,43 @@ module ot_a3_vector_rope #(
                         coefficient_base_q <= cfg_coefficient_base;
                         output_base_q <= cfg_output_base;
                         count_q <= cfg_count;
+                        rows_q <= cfg_rows;
+                        cols_q <= cfg_cols;
+                        block_q <= cfg_rows * cfg_cols;
+                        span_q <= 32'd0;
+                        span_remaining <= cfg_count;
+                        lane_mode <= 1'b0;
                         active_query <= cfg_rows == QUERY_HEADS;
                         if ((cfg_cols != HEAD_WIDTH) ||
                             !((cfg_rows == QUERY_HEADS) ||
                               (cfg_rows == KEY_HEADS)) ||
-                            (cfg_count != cfg_rows * cfg_cols)) begin
+                            //: Below one position block there is no span to
+                            //: recover, so refuse here rather than in the scan.
+                            //: One comparator, and it keeps the refusal on the
+                            //: cycle this engine has always refused on.
+                            (cfg_count < cfg_rows * cfg_cols)) begin
                             if (trace_rope)
-                                $display("OT_ROPE_CFG_SHAPE rows=%0d cols=%0d count=%0d (want cols=%0d rows in {%0d,%0d} count=rows*cols)",
+                                $display("OT_ROPE_CFG_SHAPE rows=%0d cols=%0d count=%0d (want cols=%0d rows in {%0d,%0d} count=span*rows*cols)",
                                          cfg_rows, cfg_cols, cfg_count,
                                          HEAD_WIDTH, QUERY_HEADS, KEY_HEADS);
                             error_code <= ERR_SHAPE;
                             state <= S_DONE;
+                        //: ONE POSITION.  Byte for byte the check this engine
+                        //: has always applied, entered on the same cycle, so a
+                        //: decode launch still runs on the qualified core with
+                        //: the cycle count it has always had.
+                        end else if (cfg_count == cfg_rows * cfg_cols) begin
+                            span_q <= 32'd1;
+                            lane_mode <= (LANE_AT_SPAN1 != 0);
+                            state <= (LANE_AT_SPAN1 != 0) ? S_LANE_START
+                                                          : S_DISPATCH;
+                        //: MORE THAN ONE.  Recover the span by subtracting one
+                        //: position block at a time: S cycles once per launch,
+                        //: which buys a divider's answer without a divider and
+                        //: without the count check becoming a remainder test the
+                        //: engine could not perform.
                         end else begin
-                            state <= S_DISPATCH;
+                            state <= S_SPAN;
                         end
                     end
                 end
@@ -419,6 +599,64 @@ module ot_a3_vector_rope #(
                     end
                 end
 
+                S_SPAN: begin
+                    if (span_remaining >= block_q) begin
+                        if (span_q == MAX_POSITION_SPAN) begin
+                            if (trace_rope)
+                                $display("OT_ROPE_SPAN_BOUND count=%0d block=%0d bound=%0d",
+                                         count_q, block_q, MAX_POSITION_SPAN);
+                            error_code <= ERR_SHAPE;
+                            state <= S_DONE;
+                        end else begin
+                            span_remaining <= span_remaining - block_q;
+                            span_q <= span_q + 32'd1;
+                        end
+                    //: A count that is not a whole number of position blocks is
+                    //: refused BEFORE anything is read or written, which is the
+                    //: fail-closed point the single-position check had.
+                    end else if (span_remaining != 32'd0) begin
+                        if (trace_rope)
+                            $display("OT_ROPE_SPAN_SHAPE count=%0d block=%0d remainder=%0d",
+                                     count_q, block_q, span_remaining);
+                        error_code <= ERR_SHAPE;
+                        state <= S_DONE;
+                    end else begin
+                        lane_mode <= 1'b1;
+                        state <= S_LANE_START;
+                    end
+                end
+
+                S_LANE_START: begin
+                    lane_start <= 1'b1;
+                    state <= S_LANE_RUN;
+                end
+
+                S_LANE_RUN: begin
+                    lane_start <= 1'b0;
+                    if (lane_done) begin
+                        saturation_count <= lane_saturation_count;
+                        //: The written-word count is checked against the
+                        //: declared count, as the legacy path checks
+                        //: selected_write_count: a lane that retired the wrong
+                        //: number of positions fails closed rather than
+                        //: reporting success over a short destination.
+                        if ((lane_error_code != ERR_NONE) ||
+                            (lane_result_count != count_q)) begin
+                            if (trace_rope)
+                                $display("OT_ROPE_LANE_DONE err=%0d wrote=%0d/%0d span=%0d rows=%0d cols=%0d",
+                                         lane_error_code, lane_result_count,
+                                         count_q, span_q, rows_q, cols_q);
+                            error_code <= (lane_error_code != ERR_NONE)
+                                ? lane_error_code : ERR_SHAPE;
+                        end else begin
+                            error_code <= ERR_NONE;
+                            result_count <= count_q;
+                            work_count <= count_q;
+                        end
+                        state <= S_DONE;
+                    end
+                end
+
                 S_DONE: begin
                     busy <= 1'b0;
                     done <= 1'b1;
@@ -435,5 +673,6 @@ module ot_a3_vector_rope #(
 
     wire _unused_core = &{1'b0, core_write_byte_enable,
         core_done_multiplication_saturations,
-        core_done_addition_saturations};
+        core_done_addition_saturations,
+        lane_busy, lane_work_count};
 endmodule
