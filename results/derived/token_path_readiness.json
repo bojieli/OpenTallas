@@ -53,7 +53,7 @@
     }
   ],
   "git": {
-    "commit": "ccf0d830ad485b1dac42fb29005f4bb658b9a053",
+    "commit": "0c70dcfa734d0ceb6df2b302f8ef36c89403adef",
     "worktree_dirty": true
   },
   "met_count": 5,
@@ -67,6 +67,34 @@
     "greps-are-not-proofs: the RTL checks test for parameter and function names in the source. They establish that the mechanism exists, not that it is correct at the reduced geometry -- the G1f probe measures that separately and reports admitted=True.",
     "the-reduced-configuration-is-not-the-shipped-one: a token from the reduced model is a regression result. It says the integrated path works end to end; it says nothing about Qwen3-8B's own output."
   ],
+  "remaining_run_plan": [
+    "assign a distinct base per object, per bank, from the sizes in the deployment's own object table; the bridge refuses an object the placement table does not name and refuses one named twice",
+    "stage the `segments` objects: the large ones through the DPI weight window the vehicle already has, the small ones into the source bank",
+    "elaborate ot_a3_shipped_prefix_top at the reduced geometry (GQA_QUERY_HEADS=8, GQA_KV_HEADS=2, GQA_HEAD_WIDTH=16, scale code 0x3e800000 for 1/sqrt(16)) with RESULT_WORDS raised past the largest object",
+    "bootstrap the placement table by probing, which is the pattern tools/rtl_abi3_g1d_head_admission.py already uses: run, read which object the bridge refused, add it, repeat. Unlike that tool this must give each object its OWN base and stage its bytes, because a shared probe base is exactly why its selected token is not a token id",
+    "read selected_token off the vehicle's port and compare it against the oracle's [1073, 382, 93]"
+  ],
+  "remaining_run_staging": {
+    "by_source_kind": {
+      "generated": {
+        "bytes": 1124608,
+        "objects": 2
+      },
+      "segments": {
+        "bytes": 3607040,
+        "objects": 14
+      },
+      "zero": {
+        "bytes": 33845256,
+        "objects": 21
+      }
+    },
+    "largest_object_bytes": 6684672,
+    "note": "Only objects whose source is `segments` carry data that must be staged; `zero` objects need address space and no bytes, and they are the large ones (KV planes). The largest object is bigger than the vehicle's default result bank, so RESULT_WORDS has to be raised at elaboration -- it is a parameter, not a limit.",
+    "objects": 37,
+    "placement_table_entries_available": 32,
+    "total_bytes": 38576904
+  },
   "rtl_token_ids_today": [],
   "schema": "opentallas.audit.token_path_readiness.v1",
   "unmet_count": 2

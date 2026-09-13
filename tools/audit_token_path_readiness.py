@@ -147,6 +147,32 @@ def main() -> int:
         },
     ]
 
+    #: ---- the staging the remaining run needs, measured from the deployment ----
+    dep = jload("build/abi3/qwen3-reduced-rom/deployment.json") or {}
+    objs = dep.get("objects") or []
+    def size(o):
+        return int((o.get("source") or {}).get("size_bytes") or 0)
+    by_kind: dict[str, dict[str, int]] = {}
+    for o in objs:
+        kind = (o.get("source") or {}).get("kind") or "unknown"
+        row = by_kind.setdefault(kind, {"objects": 0, "bytes": 0})
+        row["objects"] += 1
+        row["bytes"] += size(o)
+    staging = {
+        "objects": len(objs),
+        "total_bytes": sum(size(o) for o in objs),
+        "by_source_kind": by_kind,
+        "largest_object_bytes": max((size(o) for o in objs), default=0),
+        "placement_table_entries_available": 32,
+        "note": (
+            "Only objects whose source is `segments` carry data that must be "
+            "staged; `zero` objects need address space and no bytes, and they are "
+            "the large ones (KV planes). The largest object is bigger than the "
+            "vehicle's default result bank, so RESULT_WORDS has to be raised at "
+            "elaboration -- it is a parameter, not a limit."
+        ),
+    }
+
     met = [c for c in checks if c["met"]]
     unmet = [c for c in checks if not c["met"]]
     stale = [c for c in checks if c["met"] and c["was_listed_as_blocking"]]
@@ -158,6 +184,25 @@ def main() -> int:
         "rtl_token_ids_today": tok.get("records", [{}])[0].get("record_token_ids")
                                if tok.get("records") else None,
         "checks": checks,
+        "remaining_run_staging": staging,
+        "remaining_run_plan": [
+            "assign a distinct base per object, per bank, from the sizes in the "
+            "deployment's own object table; the bridge refuses an object the "
+            "placement table does not name and refuses one named twice",
+            "stage the `segments` objects: the large ones through the DPI weight "
+            "window the vehicle already has, the small ones into the source bank",
+            "elaborate ot_a3_shipped_prefix_top at the reduced geometry "
+            "(GQA_QUERY_HEADS=8, GQA_KV_HEADS=2, GQA_HEAD_WIDTH=16, scale code "
+            "0x3e800000 for 1/sqrt(16)) with RESULT_WORDS raised past the largest "
+            "object",
+            "bootstrap the placement table by probing, which is the pattern "
+            "tools/rtl_abi3_g1d_head_admission.py already uses: run, read which "
+            "object the bridge refused, add it, repeat. Unlike that tool this must "
+            "give each object its OWN base and stage its bytes, because a shared "
+            "probe base is exactly why its selected token is not a token id",
+            "read selected_token off the vehicle's port and compare it against the "
+            "oracle's [1073, 382, 93]",
+        ],
         "met_count": len(met),
         "unmet_count": len(unmet),
         "previously_listed_blockers_now_met": [c["id"] for c in stale],
