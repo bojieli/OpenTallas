@@ -40,11 +40,17 @@ module tb_a3_row_shard;
     parameter integer BANK_WORDS = 32768;
     parameter integer SOURCE_WORDS = 16;
     parameter integer INDEX_WORDS = 64;
-    parameter integer EXPECTED_WORDS = 4096;
+    //: 12,288 because that is the widest operator the bridge now admits: the
+    //: MLP gate and up projections are [12288, 4096], and they were refused
+    //: while the weight predicate pinned the reduction length to the embedding
+    //: width.  At 4,096 this array was large enough only because those legs
+    //: never ran -- $readmemh aborted on "file address beyond bounds of array"
+    //: the first time one was admitted.
+    parameter integer EXPECTED_WORDS = 12288;
     parameter integer PRELOAD_WORDS = 12288;
     // A guard against a case that never retires, not a budget.  The largest
-    // shard this vehicle issues is 4,096 output rows over K = 4,096, which is
-    // 16,777,216 multiply-accumulates and about 84 x 10^6 cycles at the
+    // shard this vehicle issues is 12,288 output rows over K = 4,096, which is
+    // 50,331,648 multiply-accumulates and about 252 x 10^6 cycles at the
     // sequential lane's measured 5.008 cycles per MAC.
     localparam integer CASE_TIMEOUT = 400000000;
 

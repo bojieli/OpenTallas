@@ -127,13 +127,23 @@ PLAN = (
     {"name": "pc17_shards8", "pc": 17, "shards": 8,
      "role": "equivalence_sharded", "pair": "pc17"},
     {"name": "pc41_whole", "pc": 41, "role": "coverage"},
-    {"name": "pc50_rows4096", "pc": 50, "rows_per_shard": 4096, "role": "coverage"},
-    {"name": "pc50_whole_refusal", "pc": 50, "role": "refusal"},
-    {"name": "pc53_rows4096", "pc": 53, "rows_per_shard": 4096, "role": "coverage"},
-    {"name": "pc53_whole_refusal", "pc": 53, "role": "refusal"},
-    {"name": "pc59_whole_refusal", "pc": 59, "role": "refusal"},
-    {"name": "pc59_rows4096_refusal", "pc": 59, "rows_per_shard": 4096,
-     "role": "refusal"},
+    #: pc50, pc53 and pc59 are the MLP projections.  They were refusal legs
+    #: because the bridge's weight predicate pinned the reduction length to the
+    #: embedding width, which no MLP satisfies -- so the whole 12,288-row forms
+    #: and the whole of pc59 (which reduces over 12,288) were refused, and the
+    #: refusal was the measurement.  With the predicate generalised they are
+    #: admitted, so they become what the goldens were always there for: an
+    #: equivalence pair each between the whole operator and its 4,096-row
+    #: decomposition.
+    {"name": "pc50_rows4096", "pc": 50, "rows_per_shard": 4096,
+     "role": "equivalence_sharded", "pair": "pc50"},
+    {"name": "pc50_whole", "pc": 50, "role": "equivalence_whole", "pair": "pc50"},
+    {"name": "pc53_rows4096", "pc": 53, "rows_per_shard": 4096,
+     "role": "equivalence_sharded", "pair": "pc53"},
+    {"name": "pc53_whole", "pc": 53, "role": "equivalence_whole", "pair": "pc53"},
+    {"name": "pc59_whole", "pc": 59, "role": "equivalence_whole", "pair": "pc59"},
+    {"name": "pc59_rows4096", "pc": 59, "rows_per_shard": 4096,
+     "role": "equivalence_sharded", "pair": "pc59"},
     {"name": "pc69_rows4096", "pc": 69, "rows_per_shard": 4096, "role": "coverage"},
 )
 

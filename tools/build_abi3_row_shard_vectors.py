@@ -91,10 +91,19 @@ STORAGE_CLASSES = {
     "hbm": "qwen3-8b-hbm-single-chip",
 }
 EMBEDDING_WIDTH = 4096
-# The bridge's admitted MATMUL weight predicate: rank 2, dim1 == 4096, and
-# dim0 in [1, 4096].  It is read here, not chosen: a shard wider than this is
-# refused by the design and the campaign records the refusal.
-MAX_ADMITTED_ROWS = EMBEDDING_WIDTH
+# The bridge's admitted MATMUL weight predicate, read here rather than chosen:
+# rank 2, stride0 == dim1, dim0 in [1, 65535], and dim1 equal to the INPUT ROW'S
+# WIDTH -- the length the matmul is about to reduce over.
+#
+# It used to be dim1 == 4096 and dim0 <= 4096, which is a property of the
+# attention projections and of no MLP: a gate projection is [12288, 4096] and a
+# down projection reduces over 12288.  The shipped prefix fail-stops before the
+# MLP, so that pin was never contradicted -- only never reached -- and this
+# campaign recorded the resulting refusals as its measurement.  With the
+# predicate generalised, four of the shipped program's seven TENSOR.MATMULs stop
+# being refusals and become checkable operators, which is why the `_refusal`
+# legs below are now equivalence and coverage legs.
+MAX_ADMITTED_ROWS = 0xFFFF
 # ot_a3_pkg::A3_TRAP_DESCRIPTOR.  A shard the bridge's weight or input
 # predicate refuses is not a hole in this campaign; it is the measurement, and
 # the case is emitted as a fail-closed one that must return exactly this class
@@ -577,8 +586,9 @@ def build(
         "bridge_weight_row_limit": MAX_ADMITTED_ROWS,
         "whole_operator_admitted_by_the_bridge_predicate": bool(
             declared_rows <= MAX_ADMITTED_ROWS
-            and int(input_view.payload["dim1"]) == EMBEDDING_WIDTH
-            and reduction == EMBEDDING_WIDTH
+            #: The reduction length is whatever the input row is wide, and the
+            #: weight's own dim1 must equal it.  Neither has to be 4,096.
+            and int(input_view.payload["dim1"]) == reduction
         ),
         "whole_operator_golden_chunk_rows": 3000,
         "retained_images": {
@@ -691,14 +701,13 @@ def _emit_shard(
 
     # What the design's own predicates say about this shard, read off the
     # bridge's admitted MATMUL weight and input rules rather than assumed: the
-    # weight view must be rank 2 with dim1 == 4,096 and dim0 in [1, 4,096],
-    # and the input row must be 4,096 wide.  A shard outside them is issued
+    # weight view must be rank 2 with dim0 in [1, 65535] and dim1 equal to the
+    # width of the input row it reduces against.  A shard outside them is issued
     # anyway, as a fail-closed case that must return TRAP_DESCRIPTOR with
     # nothing launched and nothing written.
     admitted = (
         shard.row_count <= MAX_ADMITTED_ROWS
-        and int(input_view.payload["dim1"]) == EMBEDDING_WIDTH
-        and int(weight_view.payload["dim1"]) == EMBEDDING_WIDTH
+        and int(weight_view.payload["dim1"]) == int(input_view.payload["dim1"])
     )
     case = [0] * CASE_WORDS
     case[0] = int(Major.TENSOR)
