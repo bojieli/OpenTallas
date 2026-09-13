@@ -177,6 +177,12 @@ UNDERFILLED_OPERANDS = {
     # is (streams, pre coefficients) with no base, because the branch input is
     # a weighted stream sum and nothing is added to it.
     "EXPERT_REDUCE": None,
+    # AM-E10 widened ``ROUTE.INDEX_TOPK`` to four views for DeepSeek-V4.1's
+    # candidate-pool mask, which this release does not have: its pool is one
+    # level, so the mask slot is absent at every site and the three A19 operands
+    # -- scores, window block, compression ratio -- are the whole row here.  The
+    # dense family declares ``absent_operands: [0]`` and is counted above.
+    "INDEX_TOPK": (3, 1),
     # variable by site
     "CONCAT": None,
     "SCALE": None,

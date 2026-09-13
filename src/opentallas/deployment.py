@@ -145,6 +145,21 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
         groups.append(replace(group, **updates))
 
     metadata = dict(model.metadata)
+    # A region the model holds resident in its KV store expands exactly as any
+    # other tensor does, so the expanded policy has to charge the expanded
+    # bytes.  The profile that declares the region declares its expansion in the
+    # same storage entry; a profile that declares one without the other would
+    # silently charge packed bytes for a BF16 table, so it is refused.
+    if float(model.metadata.get("hbm_resident_weight_bytes", 0.0)):
+        expanded_resident = storage.get("hbm_resident_bytes")
+        expanded_regions = storage.get("hbm_resident_regions")
+        if expanded_resident is None or not isinstance(expanded_regions, list):
+            raise ValidationError(
+                "model declares hbm_resident_weight_bytes but its expanded "
+                "deployment storage carries no hbm_resident_bytes/regions"
+            )
+        metadata["hbm_resident_weight_bytes"] = float(expanded_resident)
+        metadata["hbm_resident_regions"] = list(expanded_regions)
     metadata.update(
         {
             "deployment_policy": A100_BF16_EXPANDED,

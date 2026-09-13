@@ -247,7 +247,7 @@ bounded Qwen operations, not a complete controller.
 | TA-DS-HBM-PRO | DeepSeek-V4 Pro | node-local external HBM with SRAM tiling | N accelerator nodes over a two-level fabric (`CLUSTER_N`) | N copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
 | TA-DS-ROM-ARRAY-PRO | DeepSeek-V4 Pro | mask ROM plus node-local HBM/SRAM buffers | N reticle-class ROM chips over a two-level fabric (`CLUSTER_N`) | DeepSeek-Pro-specific conventional ROM netlist and masks, one die replicated | the same Pro workload contract |
 | TA-DS41-ROM-WAFER | DeepSeek-V4.1 Flash | distributed mask ROM plus live HBM buffers; Engram tables resident in wafer-edge HBM | two wafer-scale logical accelerators in a pipeline, one crossing per token | DeepSeek-V4.1-specific wafer-scale netlist, stitching, and masks | exactly 200,000 natural prompt tokens (`TA-DS41-CTX-200K-1`); plan `DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md` |
-| TA-DS41-ROM-ARRAY | DeepSeek-V4.1 Flash | mask ROM plus node-local HBM/SRAM buffers | 51 reticle-class ROM chips over the TA-DS-HBM NVLink-class fabric (`CLUSTER_N`) | DeepSeek-V4.1-specific conventional ROM netlist and masks, one die replicated | the same V4.1 workload contract |
+| TA-DS41-ROM-ARRAY | DeepSeek-V4.1 Flash | mask ROM plus node-local HBM/SRAM buffers | 64 reticle-class ROM chips over the TA-DS-HBM NVLink-class fabric (`CLUSTER_N`) — derived 2026-09-13 from the plan's own whole-expert ownership rule, which its 51-node analytical design point violates (384 routed experts per layer do not divide by 51); the 51-node row it replaces is the roofline design point, not a placement | DeepSeek-V4.1-specific conventional ROM netlist and masks, one die replicated | the same V4.1 workload contract |
 | TA-DS41-HBM | DeepSeek-V4.1 Flash | node-local external HBM with SRAM tiling; Engram tables in host memory | N accelerator nodes over an NVLink-class fabric | N copies of the identical TA-QW-HBM chip/netlist | the same V4.1 workload contract |
 
 The two HBM rows use one conventional accelerator-chip design. Qwen uses one
@@ -268,6 +268,41 @@ they do not retire the wafer row. It remains illegal to *relabel* the wafer
 target as a multi-chip stage pipeline or to describe any cluster as one
 oversized chip: a result carries the `topology_class` and `node_count` of the
 target that produced it.
+
+The three V4.1 rows were added on 2026-09-13 by
+[`DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md),
+which amends this section and ADR-003 section 3.3 and retires, weakens and
+replaces nothing above. They repeat the V4 comparison structure on a newer
+model: TA-DS41-ROM-WAFER is compared with TA-DS41-HBM for storage class and with
+TA-DS41-ROM-ARRAY for packaging, and the three contracts live in
+`configs/abi3/comparison_contracts/deepseek_v41_*_v1.json` under gate
+DS41-CMP11. Four properties of these rows are load-bearing and easy to lose:
+
+1. **The primary target is two wafers, and the pair is not a wafer.** It is
+   one `WAFER_LOGICAL_DEVICE` of two `WAFER`-class nodes — one deployment, one
+   session, one submission, two complete wafer logical devices of silicon
+   (ADR-003 section 3.3, amendment of 2026-09-13). The relabelling prohibition
+   of the paragraph above applies to it in both directions: the pair may not be
+   reported as one wafer, and neither wafer may be reported as half of one.
+2. **The array's node count is a capacity result, not an area match.** At the
+   published 815.0 mm² <!-- figure: 815.0 src="configs/hardware/technology.json#reticle.area_mm2.value" name="master plan reticle die area" -->
+   reticle die, 64 nodes is well under the silicon of two 46,225.0 mm² <!-- figure: 46,225.0 src="configs/hardware/technology.json#wafer.area_mm2.value" name="master plan wafer die area" -->
+   wafers, so the wafer-versus-array pair is the packaging control at unequal
+   area and not an iso-area result — and it stays outside the tolerance at the
+   plan's 51 as well, so that reading does not depend on which count survives.
+   Its contract states the reticle count that would be iso-area, records that no
+   such build exists, and refuses the iso-area reading; section 12's comparison
+   protocol governs the rest.
+3. **The comparator's node count is not yet a number.** TA-DS41-HBM is the
+   model-blind chip at a node count derived when the deployment is compiled
+   (gate DS41-P3), so its contract carries a null node count with the derivation
+   rule beside it rather than a placeholder that would become the denominator of
+   every per-node figure.
+4. **None of the three rows is implemented evidence.** No DeepSeek-V4.1 token
+   has been produced by any lane in this repository, no V4.1 deployment has been
+   compiled, and the V4.1 Kernel IR is not emitted yet; the rows register
+   targets, and section 11.1's correct-token gate stands in front of every
+   performance number any of them may eventually carry.
 
 Every row has two separately reported physical verification views: SKY130 is
 the mature open 130-nm baseline, and ASAP7 is an academic predictive 7-nm
@@ -719,8 +754,17 @@ Only same-model pairs are compared:
 - TA-DS-ROM versus TA-DS-HBM;
 - TA-DS-ROM-ARRAY-FLASH versus TA-DS-HBM (the storage-class comparison at
   equal node count and, when the two dies match in area, at iso-area);
-- TA-DS-ROM versus TA-DS-ROM-ARRAY-FLASH (the packaging comparison); and
-- TA-DS-ROM-ARRAY-PRO versus TA-DS-HBM-PRO.
+- TA-DS-ROM versus TA-DS-ROM-ARRAY-FLASH (the packaging comparison);
+- TA-DS-ROM-ARRAY-PRO versus TA-DS-HBM-PRO;
+- TA-DS41-ROM-WAFER versus TA-DS41-HBM (the storage-class comparison at
+  wafer scale, pending the comparator's derived node count);
+- TA-DS41-ROM-ARRAY versus TA-DS41-HBM (the storage-class comparison at
+  reticle scale; unlike the V4 pair of this shape it is not equal-node by
+  construction, because each side's node count is a capacity result — 64 derived
+  on the ROM side, and still underived on the HBM side); and
+- TA-DS41-ROM-WAFER versus TA-DS41-ROM-ARRAY (the packaging comparison, whose
+  two sides are not iso-area and whose contract therefore carries the
+  granularity correction this section requires).
 
 **Every pair is read at iso-area.** Area is accelerator die area per node
 times node count; HBM stacks, package, switch silicon, and board are reported
@@ -745,7 +789,12 @@ Each pair freezes:
 For Qwen, the comparison boundary is one HBM/SRAM chip versus one Qwen ROM chip.
 For DeepSeek, it is the complete 32-node HBM/SRAM cluster versus one DeepSeek
 ROM wafer-scale accelerator, including all fabric endpoints, links, switches,
-distributed HBM, wafer fabric, and system power. The HBM design is not a claimed
+distributed HBM, wafer fabric, and system power. For DeepSeek-V4.1 it is the
+two-wafer pipeline, counted as both of its wafers and the crossing between them,
+against the HBM/SRAM cluster at the node count gate DS41-P3 derives; the three
+contracts under `configs/abi3/comparison_contracts/deepseek_v41_*_v1.json` freeze
+every item in the list above, and each records which of its bindings is still
+pending rather than omitting it. The HBM design is not a claimed
 reproduction of a commercial GPU. Public NVIDIA NVLink/NVL72-class data must be
 a source-locked link-envelope reference, and measured NVIDIA hardware remains a
 separate external comparator.

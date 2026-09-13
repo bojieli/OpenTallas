@@ -61,10 +61,14 @@ and fail-stop. Link retry is packet-only. There is no production state-member,
 journal, rollback, checkpoint/restart, anti-rollback, durable publication, or
 model-operation retry gate. Historical rows below that describe old `STATE`
 or restart experiments remain provenance only and do not override this profile.
-**Top-level progress:** **83/94 complete (88.3%)**, **10 partial**, **1 open**,
-and **0 blocked**, counting only the `Wn.m` rows below.
+**Top-level progress:** **83/107 complete (77.6%)**, **18 partial**, **6 open**,
+and **0 blocked**, counting only the `Wn.m` rows below. The twelve DeepSeek-V4.1
+rows of W14 entered this denominator on 2026-09-13; the same recount also
+corrected a line that had been reporting 94 rows and 10 partial while the file
+already carried 95 rows and 11 partial, the unlisted partial being W13.3.
 **Remaining top-level rows:** partial — W8.3, W8.4, W8.5, W9.4, W9.5,
-W10.1, W10.2, W11.1, W11.3, W13.4; open — W11.2.
+W10.1, W10.2, W11.1, W11.3, W13.3, W13.4, W14.1, W14.2, W14.3, W14.6, W14.8,
+W14.10, W14.11; open — W11.2, W14.4, W14.5, W14.7, W14.9, W14.12.
 **Certification freshness:** commit `6633a3b` canonically rebuilds the affected
 deployments and refreshes the deployment-bound shipped-prefix campaigns after
 the dynamic-batch/request-symbol, DeepSeek scheduler, and release-profile
@@ -1016,7 +1020,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **3,547** candidates remain explicitly `untriaged`. <!-- figure: 3547 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **3,562** candidates remain explicitly `untriaged`. <!-- figure: 3562 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as
@@ -1031,6 +1035,113 @@ lanes are a precondition for it, not the product. These items are the product.
   `results/abi3/program_status.json`, with `worktree_dirty: false`; the
   generated artifact records the exact clean source/documentation commit it
   summarizes
+
+---
+
+## W14 — DeepSeek-V4.1-Flash ROM machine (plan TA-DS41-3.0, three new targets)
+
+Registered 2026-09-13 by
+[`DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)
+(WP-P, section 13), one row per gate DS41-A0 to DS41-REL12. **A row here is the
+state of the gate, not of the package working on it.** Five packages were writing
+this repository when these rows were set, so several gates have their inputs
+present and none of their exit evidence; the presence of a package's files is not
+a closed gate, and nothing in this section is a token, a cycle, or a TPOT result.
+No DeepSeek-V4.1 token has been produced by any lane in this repository.
+
+- [~] W14.1 DS41-A0 third Engram placement modelled — the `engram_hbm` placement,
+  its `configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json` profile, its
+  `configs/hardware/technology.json` by-model serial-depth entry and its
+  `results/roofline/candidates/deepseek-v41-flash-engram-hbm/` rows are present.
+  The gate also requires every prior row to stay byte-identical and the
+  feasibility study's section 6 to cite the modelled row instead of arithmetic;
+  neither is verified here.
+- [~] W14.2 DS41-S1 checkpoint contract — `compiler/models/deepseek-v4.1-flash/checkpoint_source.json`
+  is committed, `V41_FLASH` is in `compiler/frontend/deepseek_v4_releases.py`, and
+  the checkpoint lock at `~/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json`
+  carries `lock_id` `3035f90f54bdb461…` over the released 96,085 tensors and
+  510,286,023,000 payload bytes, which is why the IR front end reports all 96,085
+  tensor specs resolving. The lock is host state, not a committed artifact.
+- [~] W14.3 DS41-I2 kernel IR — the four AM-E10 kinds (`BLOCK_MAX`,
+  `CANDIDATE_MASK`, `NGRAM_HASH`, `ENGRAM_GATE`), the `fp4_e2m1_s16_e4m3` dtype,
+  their engine sub-ops and their simulator engines are present with tests, and
+  `compiler/frontends/v3/deepseek_v41.py` carries the profile, mode sequence and
+  per-layer plan. **The IR document itself is not emitted:**
+  `tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash` exits
+  with "the remainder of gate DS41-I2 is the node-by-node lowering itself, which
+  this front end does not emit yet", and `build/ir-v3/deepseek-v4.1-flash/` holds
+  only `planned_census.json`. Every artifact downstream of a `graph_id` is
+  therefore unbindable, which is why the comparison contracts carry a `pending`
+  model binding rather than a forged digest.
+- [ ] W14.4 DS41-P3 compiled deployments — `compiler/backends/rom/deepseek_v41.py`
+  and `deepseek_v41_array.py` exist, and no deployment has been built:
+  `build/abi3/deepseek-v4.1-flash-rom-wafer-2/`,
+  `build/abi3/deepseek-v4.1-flash-rom-array-64/` and
+  `build/abi3/deepseek-v4.1-flash-hbm-tokens/` are absent. `tools/check_rom_schedules.py`
+  carries the wafer-pair case and not the array's, and the certificate artifact
+  `results/abi3/rom_schedule_checks.json` carries neither, so the
+  `shared_state_locality` rule the gate names has no certificate. The array-versus-HBM descriptor-multiset equality and the
+  byte-identical rebuild are both unattempted.
+- [ ] W14.5 DS41-X4 functional execution — the ten V4.1 workloads and
+  `results/abi3/deepseek_v41_workload_pins.json` exist, and **workloads are inputs,
+  not evidence**: no reference-oracle artifact and no accelerator-token record
+  exists for any V4.1 target, so the measured main/index/window KV entry widths
+  that are supposed to replace the read-off widths at grade `executed` do not
+  exist either. Plan risk 1 is the reason this matters: for V4 the measured width
+  differed from the recipe by 1.8×.
+- [~] W14.6 DS41-N5 numeric contracts qualified — `runtime/reference/fp4_kv.py`,
+  `candidate_pool.py` and `engram.py` exist as independent references, and the
+  four `docs/DEEPSEEK_V41_*_EVIDENCE.md` documents were being written when this
+  row was set. The `tools/qualify_numeric_contracts.py` rows for FP4 KV dequant
+  (`fp4_e2m1_s16_e4m3_to_fp8_v1`) and the Engram gate (`engram_gate_fp32_v1`) do
+  not exist, and the V4 ladder's open `fp4_gemm_agrees: false` item is inherited
+  and unresolved.
+- [ ] W14.7 DS41-C2 cycle model and comparison gates — `configs/abi3/shipped_deployments.json`
+  carries three `planned_registrations` for the V4.1 targets that explicitly
+  declare themselves absent, because a registration states the digest of a built
+  bundle and no bundle exists. No V4.1 anchor cell, machine pair or
+  reconciliation artifact exists, and the section 3.4 Engram-placement decision
+  has not been priced.
+- [~] W14.8 DS41-R6 RTL witness — the five new engine blocks are in `rtl/abi3/`
+  with dual-simulator campaign records under `results/rtl/a3_v41_*_campaign.json`.
+  The V4.1 shipped-prefix campaign (`results/rtl/abi3_shipped_prefix_campaign_v41.json`)
+  is absent, and `configs/gates/redesign_gates.json` carries no V4.1 workload
+  binding, so the G1a-, G1b- and G1f-shaped records the gate requires cannot be
+  reported beside Qwen's.
+- [ ] W14.9 DS41-200K7 exact mandatory context — nothing. `TA-DS41-CTX-200K-1`
+  exists as a prompt with a digest and has never been executed on any target.
+- [~] W14.10 DS41-PHY10 physical closure of the five new blocks —
+  `results/physical_abi3/asap7/` carries routed records for all five, and
+  `results/physical_abi3/sky130hd/` did not carry all five when this row was
+  written. The gate additionally requires DRC 0, antenna 0, `flow_completed` and a
+  clean worktree on **both** views, D4 unchanged, the wafer-pair link endpoint
+  record, and `configs/hardware/abi3_cost_{wafer,rom_array}_v3.json`; the two cost
+  tables are absent, so the cycle model still reads the v2 tables with the five
+  blocks unpriced.
+- [~] W14.11 DS41-CMP11 governed comparison — the three contracts
+  (`configs/abi3/comparison_contracts/deepseek_v41_{rom_wafer_2_vs_hbm_cluster,rom_array_51_vs_hbm_cluster,rom_wafer_2_vs_rom_array_51}_v1.json`)
+  are registered in `tools/abi3_comparison_boundary.py`, schema-valid under the
+  new contract schema v2, and bound to the mandatory 200,000-token workload. The
+  file names keep the plan's 51-node design-point spelling while the array
+  target's `node_count` is the derived 64, which is recorded in the contract's
+  `node_count_derivation` rather than in a filename;
+  `make abi3-comparison-deepseek-v41` proves them. Every lock in them is
+  `pending`, the wafer-versus-array pair is recorded as a packaging control
+  outside the 0.02 iso-area tolerance with its granularity correction, and both
+  HBM pairs publish no ratio at all because the comparator has neither a node
+  count nor a die area. **No comparison has been executed**, and
+  `tools/build_comparison_report.py` emits neither the binding constraint nor the
+  resident-session count the gate requires beside every published ratio.
+- [ ] W14.12 DS41-REL12 release — every gate above is open.
+
+**Arithmetic note.** These twelve rows enter the `Wn.m` denominator of the
+top-level progress line above, which is why that line now reads 107 rows rather
+than 95. Two other statements of the older denominator are deliberately left
+alone: `docs/ABI3_PROGRAM_REPORT.md` says W6.6 closing took the checklist "to
+83/94", which is a statement about that moment and not a current total, and the
+generated `docs/PROGRAM_STATUS.md` is a retained clean-tree snapshot of commit
+`c3ca06b01287` whose checklist line will move to include W14 the next time
+`make abi3-status` is taken on a clean tree.
 
 ---
 

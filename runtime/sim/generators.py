@@ -354,6 +354,236 @@ def constant_binary32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
     return np.full(count, value, dtype=np.float32)
 
 
+# ---------------------------------------------------------------------------
+# Engram tables (AM-E10)
+# ---------------------------------------------------------------------------
+#: Deterministic primality for the Engram bucket search.
+#:
+#: ``inference/engram.py`` draws its bucket moduli with ``sympy.isprime``.  A
+#: device-side generator may not depend on a symbolic-algebra package, and it
+#: must not depend on a probabilistic answer either, so the test below is the
+#: Miller-Rabin witness set that is *proved* deterministic for every integer
+#: under 3.3e24 -- far above the released bucket base -- and the two published
+#: row counts are what check it: the 24 moduli a layer draws sum to exactly the
+#: released ``engram_num_embeddings`` entry for that layer, so a wrong answer
+#: anywhere in the search changes a number this repository did not choose.
+_MILLER_RABIN_WITNESSES = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
+
+
+def _is_prime(candidate: int) -> bool:
+    if candidate < 2:
+        return False
+    for witness in _MILLER_RABIN_WITNESSES:
+        if candidate % witness == 0:
+            return candidate == witness
+    exponent, remainder = 0, candidate - 1
+    while remainder % 2 == 0:
+        remainder //= 2
+        exponent += 1
+    for witness in _MILLER_RABIN_WITNESSES:
+        value = pow(witness, remainder, candidate)
+        if value in (1, candidate - 1):
+            continue
+        for _ in range(exponent - 1):
+            value = value * value % candidate
+            if value == candidate - 1:
+                break
+        else:
+            return False
+    return True
+
+
+def _next_prime(start: int, seen: set[int]) -> int:
+    candidate = start + 1
+    while not _is_prime(candidate) or candidate in seen:
+        candidate += 1
+    return candidate
+
+
+@register("engram_hash_multipliers_v1")
+def engram_hash_multipliers_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """One n-gram hash multiplier per lookback, for one Engram layer.
+
+    ``compute_hash_multipliers`` draws them from a per-layer generator seeded
+    ``10007 * layer_id``, keeps them odd, and bounds them so that
+    ``token_id * multiplier`` cannot reach the int64 window -- which is why the
+    compressed vocabulary is a parameter and not a decoration: the bound is
+    derived from it, so a table hashed under the wrong vocabulary is a different
+    table.  The values are an operand of ``DMA.NGRAM_HASH``, never a constant of
+    the machine.
+    """
+    layer_id = int(_require(parameters, "layer_id"))
+    count = int(_require(parameters, "count"))
+    vocabulary = int(_require(parameters, "compressed_vocabulary"))
+    if layer_id < 0:
+        raise GeneratorError("layer_id must be non-negative")
+    if count < 2:
+        raise GeneratorError("count is the maximum n-gram size and is at least 2")
+    if vocabulary < 1:
+        raise GeneratorError("compressed_vocabulary must be positive")
+    bound = max(1, (int(np.iinfo(np.int64).max) // vocabulary) // 2)
+    generator = np.random.default_rng(10007 * layer_id)
+    values = generator.integers(low=0, high=bound, size=(count,), dtype=np.int64)
+    return np.ascontiguousarray(values * 2 + 1, dtype=np.uint64)
+
+
+@register("engram_hash_columns_v1")
+def engram_hash_columns_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """One Engram layer's column table: ``[2, orders, heads]`` unsigned 64-bit.
+
+    Plane 0 is the prime bucket modulus of each (n-gram order, hash head) pair
+    and plane 1 is that pair's base row, the prefix sum of the earlier columns'
+    moduli.  ``EngramLayout.from_args`` draws the primes in layer order from one
+    shared set, so a layer's table depends on every layer drawn before it:
+    ``layer_ids`` is therefore the whole released list and ``layer_id`` says
+    which of them this table belongs to.  Nothing here is a model constant --
+    the base, the order count and the head count are all parameters -- and the
+    result is checkable against a released number, because the moduli of one
+    layer sum to its ``engram_num_embeddings`` row count.
+    """
+    layer_ids = [int(value) for value in _require(parameters, "layer_ids")]
+    layer_id = int(_require(parameters, "layer_id"))
+    orders = int(_require(parameters, "orders"))
+    heads = int(_require(parameters, "heads"))
+    base = int(_require(parameters, "bucket_base"))
+    if layer_id not in layer_ids:
+        raise GeneratorError(f"layer {layer_id} is not one of {layer_ids}")
+    if orders < 1 or heads < 1:
+        raise GeneratorError("orders and heads must be positive")
+    if base < 2:
+        raise GeneratorError("bucket_base must be at least two")
+    seen: set[int] = set()
+    table: np.ndarray | None = None
+    for drawn in layer_ids:
+        primes: list[int] = []
+        for _ in range(orders):
+            current = base - 1
+            for _ in range(heads):
+                current = _next_prime(current, seen)
+                seen.add(current)
+                primes.append(current)
+        if drawn != layer_id:
+            continue
+        offsets = np.cumsum([0, *primes[:-1]], dtype=np.uint64)
+        table = np.stack(
+            (
+                np.asarray(primes, dtype=np.uint64).reshape(orders, heads),
+                offsets.reshape(orders, heads),
+            )
+        )
+    assert table is not None  # layer_id is in layer_ids, checked above
+    return np.ascontiguousarray(table, dtype=np.uint64)
+
+
+@register("engram_compressed_token_map_v1")
+def engram_compressed_token_map_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """The compressed token id of every token id, per ``build_compressed_token_map``.
+
+    N-grams are hashed over compressed ids, so tokens that normalise alike share
+    a row.  The map is a function of the released tokenizer and of nothing else,
+    and it is not in the checkpoint: ``NgramHashState`` builds it at load and
+    asserts its size against ``engram_compressed_vocab_size``.  This derives it
+    the same way and makes the same assertion, which is what lets a graph
+    *declare* the table rather than carry an unbound one -- the released
+    tokenizer is pinned by digest in the checkpoint source contract, and this
+    refuses a tokenizer whose bytes differ from the digest it is given.
+    """
+    repository = str(_require(parameters, "repository"))
+    revision = str(_require(parameters, "revision"))
+    digest = str(_require(parameters, "tokenizer_sha256"))
+    filename = str(parameters.get("tokenizer_file", "tokenizer.json"))
+    vocabulary = int(_require(parameters, "vocabulary"))
+    compressed = int(_require(parameters, "compressed_vocabulary"))
+    try:
+        from huggingface_hub import try_to_load_from_cache
+        from tokenizers import Regex, Tokenizer, normalizers
+    except ImportError as exc:  # pragma: no cover - environment without them
+        raise GeneratorError(
+            f"the compressed token map is derived from the released {filename}, "
+            f"which needs huggingface_hub and tokenizers: {exc}"
+        ) from exc
+    path = try_to_load_from_cache(repository, filename, revision=revision)
+    if not isinstance(path, str):
+        raise GeneratorError(
+            f"{repository} {filename} at revision {revision} is not in the local "
+            "cache; the compressed token map is derived from the released "
+            "tokenizer and may not be guessed"
+        )
+    payload = open(path, "rb").read()
+    observed = sha256_hex(payload)
+    if observed != digest:
+        raise GeneratorError(
+            f"{filename} has sha256 {observed} against the declared {digest}"
+        )
+    backend = Tokenizer.from_file(path)
+    if backend.get_vocab_size(with_added_tokens=True) != vocabulary:
+        raise GeneratorError(
+            f"{filename} holds {backend.get_vocab_size(with_added_tokens=True)} "
+            f"tokens against the declared {vocabulary}"
+        )
+    # A private-use character, so a token that is exactly one space survives
+    # Strip() instead of collapsing to the empty string, exactly as the released
+    # build_compressed_token_map does.
+    sentinel = "\ue000"
+    normalizer = normalizers.Sequence(
+        [
+            normalizers.NFKC(),
+            normalizers.NFD(),
+            normalizers.StripAccents(),
+            normalizers.Lowercase(),
+            normalizers.Replace(Regex(r"[ \t\r\n]+"), " "),
+            normalizers.Replace(Regex(r"^ $"), sentinel),
+            normalizers.Strip(),
+            normalizers.Replace(sentinel, " "),
+        ]
+    )
+    key_to_new: dict[str, int] = {}
+    lookup = np.zeros(vocabulary, dtype=np.uint32)
+    for token_id in range(vocabulary):
+        text = backend.decode([token_id], skip_special_tokens=False)
+        if "\ufffd" in text:
+            # A partial UTF-8 byte token: nothing to normalise, so it is keyed by
+            # its raw form.
+            key = backend.id_to_token(token_id)
+        else:
+            normalized = normalizer.normalize_str(text)
+            key = normalized if normalized else text
+        new_id = key_to_new.get(key)
+        if new_id is None:
+            new_id = len(key_to_new)
+            key_to_new[key] = new_id
+        lookup[token_id] = new_id
+    if len(key_to_new) != compressed:
+        raise GeneratorError(
+            f"the released tokenizer compresses to {len(key_to_new)} ids against "
+            f"the declared {compressed}; every hash multiplier is derived from "
+            "that size, so a disagreement rehashes the whole table"
+        )
+    return lookup
+
+
+@register("one_hot_binary32_v1")
+def one_hot_binary32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """``count`` binary32 values, one at ``index`` and zero elsewhere.
+
+    DeepSeek-V4.1's first block collapses its hyper-connection copies with
+    ``make_identity_pre_mix``, a one-hot weighting of the first copy.  Every
+    later collapse reads coefficients a previous sublayer computed, so this is
+    the one coefficient vector that is a deployment constant rather than an
+    activation -- and a ``constant_binary32_v1`` fill cannot state it, because
+    the whole content of the vector is that its entries differ.
+    """
+    count = int(_require(parameters, "count"))
+    index = int(_require(parameters, "index"))
+    if count <= 0:
+        raise GeneratorError("count must be positive")
+    if not 0 <= index < count:
+        raise GeneratorError(f"index {index} is outside 0..{count - 1}")
+    out = np.zeros(count, dtype=np.float32)
+    out[index] = 1.0
+    return out
+
+
 def generate(name: str, parameters: Mapping[str, Any]) -> np.ndarray:
     try:
         function = _REGISTRY[name]

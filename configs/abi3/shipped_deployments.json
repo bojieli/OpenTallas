@@ -122,5 +122,76 @@
         "commit 6b41a53 (the DeepSeek Flash pair re-lowered under AM-E9 v2)"
       ]
     }
-  ]
+  ],
+  "planned_registrations": [
+    {
+      "planned_registration_id": "deepseek-v41-flash-rom-wafer-2",
+      "target_id": "TA-DS41-ROM-WAFER",
+      "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+      "model_ids": [
+        "deepseek-v4-1-flash-engram-hbm",
+        "deepseek-v4-1-flash"
+      ],
+      "pin_kind": "live",
+      "build_command": [
+        "python3",
+        "tools/build_rom_deployment.py",
+        "deepseek-v4.1-flash",
+        "--ir",
+        "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+        "--output",
+        "build/abi3/deepseek-v4.1-flash-rom"
+      ],
+      "build_command_status": "PLANNED, not run: docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 13 WP-E names the product `deepseek-v4.1-flash` of tools/build_rom_deployment.py and the Makefile target `abi3-rom-deepseek-v41-build`; neither the product nor the target exists at HEAD, and neither does compiler/backends/rom/deepseek_v41.py.  The argv above is the V4 product's shape with the V4.1 model substituted and is recorded as the SHAPE a registration will need, not as a command this repository has executed.",
+      "absent_because": "a registration states a deployment_sha256 of a built bundle.  The capability records now exist but no V4.1 BUNDLE does, and the loader refuses -- correctly -- any row whose digest is not 64 hex characters, so there is no way to pre-register this pin without inventing a digest.  Until the bundle exists the cells report `no deployment built` and gate C2 reads that as a failure.",
+      "base_capability_status": "PRESENT, untracked at the time this block was written: the WP-E record landed as rom_deepseek_v41_wafer.json, declaring limits.max_nodes 2, memory.rom.bytes 412,316,860,416 and memory.hbm.resident_region_bytes 202,758,032,400 -- which is sum(metadata.engram.num_embeddings) x row_bytes_packed to the byte, i.e. the record reserves exactly the two Engram tables plan section 3.4 places in wafer-edge HBM."
+    },
+    {
+      "planned_registration_id": "deepseek-v41-flash-rom-array-51",
+      "target_id": "TA-DS41-ROM-ARRAY",
+      "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+      "model_ids": [
+        "deepseek-v4-1-flash-engram-host",
+        "deepseek-v4-1-flash-engram-hbm"
+      ],
+      "pin_kind": "live",
+      "build_command": [
+        "python3",
+        "tools/build_rom_deployment.py",
+        "deepseek-v4.1-flash-array",
+        "--ir",
+        "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+        "--output",
+        "build/abi3/deepseek-v4.1-flash-rom-array-64"
+      ],
+      "build_command_status": "PLANNED, not run: section 13 WP-F names the product `deepseek-v4.1-flash-array` and the target `abi3-rom-deepseek-v41-array-build`; compiler/backends/rom/deepseek_v41_array.py does not exist at HEAD.",
+      "absent_because": "as above.  Note which model_id binds it: the 51-node design point the plan says it builds is published in the engram-HOST candidate study (model_id deepseek-v4-1-flash-engram-host), while WP-F places Engram in node-local HBM, whose own study's array rung is 55 nodes.  Both model ids are listed so whichever product WP-F actually lowers can bind, and results/derived/deepseek_v41_cycle_cells.json records the disagreement.",
+      "base_capability_status": "PRESENT, untracked, and it is SIXTY-FOUR nodes: rom_deepseek_v41_array_64.json declares limits.max_nodes 64.  No candidate roofline study publishes an array design point at 64 nodes (engram-host has 51, 55, 57, 63, 68 and up; engram-hbm 55, 57, 68 and up), so the array cell of the cycle model is anchored to a node count the built record does not have.  results/derived/deepseek_v41_cycle_cells.json records both numbers per cell; resolving it is a WP-F and WP-N decision."
+    },
+    {
+      "planned_registration_id": "deepseek-v41-flash-hbm-cluster",
+      "target_id": "TA-DS41-HBM",
+      "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+      "model_ids": [
+        "deepseek-v4-1-flash-engram-hbm",
+        "deepseek-v4-1-flash-engram-host",
+        "deepseek-v4-1-flash"
+      ],
+      "pin_kind": "live",
+      "build_command": [
+        "python3",
+        "tools/build_hbm_sram_deployment.py",
+        "--profile",
+        "cluster-N",
+        "--model",
+        "deepseek-v4.1-flash",
+        "--output",
+        "build/abi3/deepseek-v4.1-flash-hbm"
+      ],
+      "build_command_status": "PLANNED, not run: section 13 WP-G names `--profile cluster-N --model deepseek-v4.1-flash`; the profile does not exist at HEAD.",
+      "absent_because": "as above.  The base_capability is the single-chip record only because it is what tools/derive_cycle_machine.py GPU_BASE_CAPABILITY resolves for a V4.1 cell today.  WP-G's cluster-N profile will need its own capability record, and GPU_BASE_CAPABILITY must gain an entry keyed on the V4.1 ROM record when it lands -- otherwise the emitted pair declares a wafer or 51-node array against a single-chip comparator's link block, which is the undeclared machine difference C2 exists to catch.",
+      "base_capability_status": "PRESENT: hbm_sram_single_chip.json is what GPU_BASE_CAPABILITY resolves for a V4.1 cell today, and it is the wrong peer for both V4.1 products -- see absent_because."
+    }
+  ],
+  "planned_registrations_note": "NOT REGISTRATIONS AND NOT READ BY ANY TOOL.  tools/derive_cycle_machine.py::load_shipped_deployments reads `schema` and `registrations` only, so nothing here can bind a deployment or move a gate.  It is the record of the three pins plan section 13 WP-J asks for, of the (base_capability, model_id) pair each must carry for a V4.1 cell to bind it, and of why none can be written yet: every registration states a deployment_sha256, and no DeepSeek-V4.1-Flash bundle has been built (the two ROM capability records landed on 2026-09-13 and are named here; the bundles lowered against them have not).  tests/test_derive_cycle_machine_v41.py checks this block against the registrations the V4.1 cells actually require, so it cannot drift from them."
 }

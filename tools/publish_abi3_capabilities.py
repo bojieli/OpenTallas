@@ -67,6 +67,30 @@ PUBLISHED: dict[str, tuple[str, str]] = {
         "compiler.backends.rom.deepseek_v4_array",
         "rom-deepseek-v4-pro-array-32",
     ),
+    # DeepSeek-V4.1-Flash on the reticle-class ROM array (plan WP-F).  The 64 in
+    # both halves of this entry is DERIVED, not chosen: the plan's design point
+    # is 51 devices, and `expert_parallel_node_count` returns the smallest count
+    # at or above it that 384-expert whole-expert ownership and an 8-device
+    # NVLink domain both divide.  `tests/test_deepseek_v41_array_backend.py`
+    # confronts this stem with the backend's own NODE_COUNT, so a change in the
+    # released expert count or the declared domain size fails here rather than
+    # publishing a record named for a node count nothing builds.
+    "rom_deepseek_v41_array_64": (
+        "compiler.backends.rom.deepseek_v41_array",
+        "rom-deepseek-v41-array-64",
+    ),
+    # DeepSeek-V4.1-Flash on two wafer-scale logical devices (plan WP-E).  A
+    # separate record and not a parameter of ``rom_deepseek_v4`` for the reason
+    # Pro is separate from Flash: a capability is a published boundary, and this
+    # one moves five things at once -- two nodes instead of one, 384 expert ids
+    # instead of 256, a routed top-k of six instead of eight, a
+    # 1,048,576-position context instead of 262,144, and a declared load-once
+    # HBM region -- so writing any of it into the V4 record would move a shipped
+    # digest.
+    "rom_deepseek_v41_wafer": (
+        "compiler.backends.rom.deepseek_v41",
+        "rom-deepseek-v41-wafer-2",
+    ),
 }
 
 

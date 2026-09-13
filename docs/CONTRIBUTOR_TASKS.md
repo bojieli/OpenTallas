@@ -95,6 +95,26 @@ non-manufacturable; there is no foundry PDK and no signoff.
 
 ---
 
+## DeepSeek-V4.1-Flash, the three newest targets (plan TA-DS41-3.0)
+
+Registered 2026-09-13. Nothing in this family has produced a token yet, so every
+task here is upstream of any V4.1 number. Read
+[`DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)
+first: it names the file, the test and the make target for each work package, and
+checklist section W14 records which gate each task belongs to.
+
+| # | Task | Size | Specified in |
+|---|---|---|---|
+| 35 | **Emit the V4.1 Kernel IR.** The front end carries the profile, the CSA2 mode sequence, the lowering plan and a 3,131-kernel census, and the checkpoint lock resolves all 96,085 tensor specs — but the node-by-node lowering is not written, so `tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash` refuses and there is no `graph_id`. Every deployment, capability, cost table and comparison contract downstream is unbindable until this exists; it is the single highest-fan-out gap in the family. | L | plan §13 WP-D, gate DS41-I2 |
+| 36 | **Derive the TA-DS41-HBM node count.** The comparator is the model-blind chip replicated until the HBM-resident weights plus the session KV fit, with the Engram tables in host memory. Both storage-class comparison contracts carry a null node count and the derivation rule beside it, and publish no ratio at all until it is a number — a placeholder here would become the denominator of every per-node figure. | M | plan §3.3, `configs/abi3/comparison_contracts/deepseek_v41_*_vs_hbm_cluster_v1.json` |
+| 37 | **Measure the three KV entry widths.** The main latent at 288 B, the index key at 68 B and the window at 528 B are read off the released code and the technical report. For DeepSeek-V4 the measured width differed from the recipe by 1.8×, and the iso-node advantage moves with the KV read, so this is the measurement most likely to change a headline. | M | plan §14 risk 1, gate DS41-X4 |
+| 38 | **Give the HBM comparator a die area, or prove no comparison may divide by one.** No artifact in this repository states the die area of the shared conventional accelerator chip, so the V4 array-versus-HBM comparison already records `hbm declares no geometry` and publishes no area ratio. The iso-area rule needs both sides; either produce the number from a physical record or establish formally that the HBM side's denominator is unavailable and what may be published without it. | L | plan §11, `results/abi3/comparison_deepseek_rom_array_vs_hbm.json#silicon` |
+| 39 | **Print each ratio beside its binding constraint and its resident-session count.** `tools/build_comparison_report.py` emits neither field and does not read a comparison contract at all, so gate DS41-CMP11's central requirement has nowhere to live in the artifact. The three V4.1 contracts declare the requirement, the field names and the analytical antecedents; the tool has to honour them, and the gate cannot close until it does. | S | plan gate DS41-CMP11, the contracts' `reporting` block |
+| 40 | **Add the V4.1 ladder as a second workload binding on the G1 board.** `configs/gates/redesign_gates.json` and `tools/check_redesign_gates.py` are bound to Qwen. The board must report a V4.1 rung *beside* Qwen's rather than in place of it, and a V4.1 rung must be able to fail on its own. | M | plan §13 WP-L, §14 risk 8 |
+| 41 | **Finish the five new blocks on both technology views and derive cost tables v3.** The five AM-E10 blocks have ASAP7 routed records; SKY130 is incomplete and `configs/hardware/abi3_cost_{wafer,rom_array}_v3.json` do not exist, so the cycle model still reads v2 tables in which all five blocks are unpriced. | M | plan §11 and §13 WP-M, gate DS41-PHY10 |
+
+---
+
 ## Picking something up
 
 There is no issue tracker convention yet. Open a GitHub issue naming the task

@@ -86,6 +86,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from tools import abi3_g1_models as ladder_models  # noqa: E402
 from runtime.abi3.constants import NO_ID  # noqa: E402
 from runtime.abi3.descriptors import ExtendedDescriptorType  # noqa: E402
 from runtime.abi3.records import Instruction  # noqa: E402
@@ -118,10 +119,27 @@ SLOT_FIELDS = (
 )
 
 # The two storage classes G1a requires, and the deployment each one names.
+# Rebound from the --model preset in main(); these are the default binding's
+# values, kept as literals so reading this file tells you what it does by
+# default.
 STORAGE_CLASSES = {
     "rom": "qwen3-8b-rom-single-chip",
     "hbm": "qwen3-8b-hbm-single-chip",
 }
+
+
+def _deployment_vector_keys() -> set[str]:
+    """Target keys the recorded deployment vector set actually carries."""
+
+    manifest = DEPLOYMENT_DIR / "abi3_deployment_rtl_vectors.json"
+    if not manifest.exists():
+        return set()
+    body = json.loads(manifest.read_text(encoding="utf-8"))
+    return {
+        str(entry.get("key"))
+        for entry in body.get("deployments", [])
+        if isinstance(entry, dict)
+    }
 
 # The retained RTL campaigns that may carry operator-equivalence evidence.
 # Each is re-validated here before it is allowed to cover anything.
@@ -1493,9 +1511,34 @@ def build(output: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--output", type=Path, default=None)
+    ladder_models.add_argument(parser)
     args = parser.parse_args()
-    artifact = build(args.output)
+    # The rung's binding, rebound HERE rather than threaded through the ~20
+    # sites that read WORKLOAD and STORAGE_CLASSES, for the same reason
+    # tools/build_abi3_shipped_prefix_vectors.py rebinds its geometry per
+    # target: one diff site instead of twenty, and one model per process so
+    # there is no interleaving.  The default preset rebinds to exactly the
+    # values that were literals here, so an existing invocation is unchanged.
+    global WORKLOAD, STORAGE_CLASSES
+    model = ladder_models.resolve(args.model)
+    WORKLOAD = model.workload_id
+    STORAGE_CLASSES = dict(model.storage_classes)
+    output = args.output or model.artifact("g1a", "operator_equivalence")
+    missing = sorted(
+        key
+        for key in STORAGE_CLASSES.values()
+        if key not in _deployment_vector_keys()
+    )
+    if missing:
+        raise SystemExit(
+            f"{model.key}: the deployment RTL vector set "
+            f"{DEPLOYMENT_DIR / 'abi3_deployment_rtl_vectors.json'} carries no "
+            f"case for {missing}; G1a reads the issue trace of a compiled "
+            "deployment, so the deployment and its recorded vectors are the "
+            "prerequisite, not something this rung can stand in for"
+        )
+    artifact = build(output)
     print(f"G1a operator-equivalence artifact status={artifact['status']}")
     for record in artifact["records"]:
         coverage = record["coverage"]
@@ -1509,7 +1552,7 @@ def main() -> int:
             f"cycles {record['execution']['simulated_cycles']}, "
             f"capability-trapped {record['capability_trapped_family_count']}"
         )
-    print(f"wrote {args.output}")
+    print(f"wrote {output}")
     return 0
 
 

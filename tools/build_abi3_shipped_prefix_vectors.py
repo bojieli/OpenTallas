@@ -207,6 +207,46 @@ TARGET_GEOMETRY: dict[str, TargetGeometry] = {
         model_index=1, embed_width=4096, kv_width=1024, head_width=128,
         query_heads=32, kv_heads=8, vocabulary=129_280, rope_aux0=128,
     ),
+    #: THE V4.1 ROM WAFER TARGET, docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md
+    #: WP-L.  Added ALONGSIDE the two V4 entries, never by widening a
+    #: discriminator: the previous generation of this table selected the identity
+    #: set with ``target_index < 2``, and a fifth target was therefore walked with
+    #: another model's constants and reported "names 0 kernels main.token_embed".
+    #:
+    #: Every value is read off a source, not scaled from V4:
+    #:
+    #: * ``embed_width`` 5,120 is ``text_config.hidden_size`` of the pinned config
+    #:   ``8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879``, as
+    #:   ``compiler/frontend/deepseek_v4_releases.py`` V41_FLASH records it.  It is
+    #:   NOT V4's 4,096: this release widened the residual stream, and an entry
+    #:   copied from the V4 row would make the embedding view check pass on the
+    #:   wrong width.
+    #: * ``vocabulary`` 129,280 is that config's ``text_config.vocab_size``, equal
+    #:   to V4's; recorded from the V4.1 record rather than inherited from it.
+    #: * ``model_index`` 1 selects the DeepSeek identity set.  V4.1's lowering
+    #:   names the same two governed prefix kernels under the same contract
+    #:   names -- ``lookup_bf16_token_embedding`` and ``structural_hc_expand_bf16``
+    #:   in ``compiler/frontends/v3/deepseek_v41.py``, the same strings V4 uses --
+    #:   so the embed and transfer identities resolve unchanged.  If that stops
+    #:   being true ``resolve_operator`` refuses by name instead of emitting golden.
+    #:
+    #: ``kv_width``, ``head_width``, ``query_heads``, ``kv_heads`` and ``rope_aux0``
+    #: are INERT on this path: every operator block that reads them is guarded by
+    #: ``geo.model_index != 0`` and refuses outright on a DeepSeek lowering, and
+    #: ``resolve_governed_descriptors`` resolves only ``embed`` and ``transfer``
+    #: when ``model_index`` is 1.  The two V4 rows carry Qwen's 128/32/8 there for
+    #: that reason.  This row states V4.1's own released values instead --
+    #: ``head_dim`` 512, ``num_attention_heads`` 64, ``num_key_value_heads`` 1, so
+    #: one latent KV plane of 512 -- so that the row is right rather than merely
+    #: unread if a future lowering puts a MATMUL, a head RMSNorm or a RoPE in the
+    #: V4.1 prefix.  ``rope_aux0`` is left at the ROM lowering's 128 because it is
+    #: a property of the LOWERING's coefficient-row stride, and no V4.1 deployment
+    #: exists yet to read it out of; the RoPE block that would use it refuses on
+    #: this path, and WP-E's bundle is what settles it.
+    "deepseek-v4.1-flash-rom-wafer": TargetGeometry(
+        model_index=1, embed_width=5120, kv_width=512, head_width=512,
+        query_heads=64, kv_heads=1, vocabulary=129_280, rope_aux0=128,
+    ),
 }
 EXACT_INDEX_SELECT = hashlib.sha256(b"exact_index_select_v1").digest()
 QWEN_EMBED_CONTRACT = hashlib.sha256(b"bf16_payload_lookup_v1").digest()
@@ -624,9 +664,28 @@ ORACLE_PINS: dict[str, dict[str, Any]] = {
     },
     #: bootstrapped from this configuration's own first run
     "qwen3-reduced-rom-single-chip": {},
+    #: The V4.1 ROM wafer target (WP-L).  DeepSeek lowerings resolve only the
+    #: embed and transfer identities, so no RMSNorm oracle runs on this path and
+    #: the pin set is legitimately empty -- the same reason the two V4 targets
+    #: carry no entry at all.  It is written out rather than omitted so that a
+    #: reader can tell "no pins are needed here" from "nobody looked".
+    "deepseek-v4.1-flash-rom-wafer": {},
 }
 
 
+#: A target needs BOTH of the two tables below before it can be walked, and
+#: neither of them is derivable from a release: the fail-stop boundary is the
+#: first instruction THIS LOWERING emits that the shipped-prefix harness does
+#: not implement, and the prefix counters are what walking THIS program produces.
+#: Both are read off the target's own bundle on its first run -- the walk
+#: verifies them afterwards and refuses with the number it actually saw -- so a
+#: target whose deployment does not exist yet cannot have them, and writing a
+#: plausible row would be inventing a measurement.
+#:
+#: ``deepseek-v4.1-flash-rom-wafer`` is in that state: WP-L supplies its
+#: geometry, which IS derivable (from the pinned config), and WP-E's bundle is
+#: what supplies these two rows.  ``_target_boundary`` and ``_target_counts``
+#: refuse by name and print the bootstrap procedure rather than raising KeyError.
 BOUNDARY_IDENTITIES_BY_TARGET: dict[str, BoundaryIdentity] = {
     "qwen3-8b-rom-single-chip": BOUNDARY_IDENTITIES[0],
     "qwen3-8b-hbm-single-chip": BOUNDARY_IDENTITIES[1],
@@ -652,6 +711,39 @@ EXPECTED_COUNTS_BY_TARGET: dict[str, dict[str, int]] = {
         "wait_events": 2, "signals": 4, "views": 17,
     },
 }
+
+
+def _target_boundary(target_key: str) -> BoundaryIdentity:
+    """This target's fail-stop boundary, or a refusal that says how to get one."""
+
+    try:
+        return BOUNDARY_IDENTITIES_BY_TARGET[target_key]
+    except KeyError:
+        raise SystemExit(
+            f"{target_key}: this builder has geometry for this target but no "
+            "fail-stop boundary identity, and a boundary is a property of the "
+            "lowering rather than of the model, so it cannot be derived here. "
+            "Build the target's deployment, run this builder once, and pin the "
+            "(pc, family, sub-opcode, kernel, contract) it reports as the first "
+            "unsupported instruction into BOUNDARY_IDENTITIES and "
+            "BOUNDARY_IDENTITIES_BY_TARGET."
+        ) from None
+
+
+def _target_counts(target_key: str) -> dict[str, int]:
+    """This target's prefix counters, or a refusal that says how to get them."""
+
+    try:
+        return EXPECTED_COUNTS_BY_TARGET[target_key]
+    except KeyError:
+        raise SystemExit(
+            f"{target_key}: this builder has geometry for this target but no "
+            "expected prefix counters. They are what walking this program "
+            "produces, not something a release states. Build the target's "
+            "deployment, run this builder once with OT_A3_PREFIX_BOOTSTRAP=1, "
+            "and pin the fetched/retired/issued/loop_iterations/wait_events/"
+            "signals/views it reports into EXPECTED_COUNTS_BY_TARGET."
+        ) from None
 
 
 def _kernel_ir_index(target: Any, identity: Any) -> dict[str, Any]:
@@ -3283,7 +3375,7 @@ def build(argv: list[str] | None = None) -> int:
         state_count = int(source_case[34])
         if state_count != 0:
             raise SystemExit(f"{target.key}: production profile contains STATE")
-        boundary_identity = BOUNDARY_IDENTITIES_BY_TARGET[target.key]
+        boundary_identity = _target_boundary(target.key)
         derived["boundary"] = resolve_boundary(
             deployment,
             kernel_ir,
@@ -3298,7 +3390,7 @@ def build(argv: list[str] | None = None) -> int:
             derived["boundary"].descriptor_id,
             boundary_identity.opcode,
         )
-        expected_counts = EXPECTED_COUNTS_BY_TARGET[target.key]
+        expected_counts = _target_counts(target.key)
         observed_counts = {
             "fetched": fetched,
             "retired": retired,

@@ -50,7 +50,10 @@ from opentallas.roofline import (  # noqa: E402
     taalas_hc1_power_anchor,
 )
 from opentallas.schema import ModelProfile, ValidationError  # noqa: E402
-from opentallas.workload import kv_traffic  # noqa: E402
+from opentallas.workload import (  # noqa: E402
+    hbm_resident_weight_bytes,
+    kv_traffic,
+)
 
 
 TECHNOLOGY_PATH = ROOT / "configs" / "hardware" / "technology.json"
@@ -177,6 +180,16 @@ CANDIDATE_MODELS: tuple[tuple[str, str, Path, int], ...] = (
         / "deepseek-v4.1-flash-engram_host.json",
         200_000,
     ),
+    (
+        "deepseek-v41-flash-engram-hbm",
+        "DeepSeek-V4.1-Flash-engram-hbm",
+        ROOT
+        / "configs"
+        / "models"
+        / "candidates"
+        / "deepseek-v4.1-flash-engram_hbm.json",
+        200_000,
+    ),
 )
 """Candidate models, each run as a single-model study in its own tree.
 
@@ -188,9 +201,15 @@ them.  Each candidate is written under
 ``results/roofline/candidates/<slug>/<study>/`` by the same rule on the same
 code path as the primary, at the DeepSeek-V4-Flash primary context.
 
-DeepSeek-V4.1-Flash (2026-09-10) is carried twice: with its 203 GB of Engram
-n-gram tables stored beside the weights on both sides, and with them in host
-memory on both sides as DeepSeek's own serving stack places them."""
+DeepSeek-V4.1-Flash (2026-09-10) is carried three times, once per placement of
+its 203 GB of Engram n-gram tables: stored beside the weights on both sides, in
+host memory on both sides as DeepSeek's own serving stack places them, and
+resident in the store that holds the KV cache -- wafer-edge HBM on the ROM side
+and the same HBM on the GPU side.  The third is the placement the V4.1 primary
+target takes (plan section 3.4) and it is the only one the machine actually
+pays for: the tables leave the weight store, so the ROM is sized without them,
+and in exchange the KV store loses their capacity on the stage that owns them
+and their 24 rows per module per token cost that store's bandwidth."""
 
 
 def candidates_output_root(output_root: Path) -> Path:
@@ -1128,6 +1147,19 @@ def _step_row(
         "max_resident_users": metrics["max_resident_users"],
         "weight_capacity_bytes": metrics["weight_capacity_bytes"],
         "kv_capacity_bytes": metrics["kv_capacity_bytes"],
+        # Carried only where the model declares a region resident in its KV
+        # store, so that the capacity the placement costs is auditable in the
+        # artifact rather than only implied by a smaller max_resident_users, and
+        # so that no prior point row gains a zero column.
+        **(
+            {
+                "kv_store_resident_weight_bytes": metrics[
+                    "kv_store_resident_weight_bytes"
+                ]
+            }
+            if "kv_store_resident_weight_bytes" in metrics
+            else {}
+        ),
         "weight_to_kv_read_ratio": _finite(metrics["weight_to_kv_read_ratio"]),
         "execution_format": metrics["execution_format"],
         "hop_events_per_token": metrics["hop_events_per_token"],
@@ -2566,7 +2598,16 @@ def _simulate_study(
                 provision_batch = (
                     DESIGN_BATCH if kv_store == "sram" else PROVISION_BATCH
                 )
-                design_batch_kv = kv.storage_bytes_per_user * provision_batch
+                # The KV store has to hold the provisioning batch's KV *and*
+                # any region the model declares resident in that same store, so
+                # both size it: stacks on an HBM design, array area on an SRAM
+                # one.  This is the identity for every model that declares no
+                # such region, and it is what stops an Engram-in-HBM design from
+                # being sized for KV alone and then refused for capacity.
+                design_batch_kv = (
+                    kv.storage_bytes_per_user * provision_batch
+                    + hbm_resident_weight_bytes(model)
+                )
                 design_batch_kv_transfer = (
                     kv.read_bytes + kv.write_bytes
                 ) * provision_batch
@@ -2779,7 +2820,12 @@ def _simulate_study(
                 model_technology,
                 part,
                 stored_weight_bytes=gpu_stored_bytes,
-                resident_kv_bytes=kv.storage_bytes_per_user * PROVISION_BATCH,
+                # A GPU has one store, so a region the model declares resident
+                # in the KV store is HBM the cluster must also buy.  Without
+                # this the "smallest cluster whose HBM holds the checkpoint plus
+                # the KV" would be a cluster that does not hold the tables.
+                resident_kv_bytes=kv.storage_bytes_per_user * PROVISION_BATCH
+                + hbm_resident_weight_bytes(model),
             )
             counts.setdefault(
                 minimum,

@@ -1,0 +1,234 @@
+{
+  "comparison_id": "deepseek_v41_rom_array_51_vs_hbm_cluster",
+  "execution": {
+    "batch": 1,
+    "concurrency": 1,
+    "context_tokens": 200000,
+    "evidence_scope": "full_workload",
+    "generation": {
+      "eos_token_ids": [
+        1
+      ],
+      "include_eos_in_output": true,
+      "max_new_tokens": 256,
+      "selection_mode": "greedy_argmax_lowest_id",
+      "stop_condition": "first_official_eos_or_maximum_new_tokens",
+      "tie_rule": "lowest_token_id",
+      "vocabulary_size": 129280
+    },
+    "phases": [
+      "prefill",
+      "decode"
+    ]
+  },
+  "external_oracle": {
+    "evidence_class": "external_reference_comparator",
+    "path": "results/abi3/deepseek_v41_reference_oracle_context_ladder.json",
+    "producer": {
+      "source_sha256": null,
+      "tool": "tools/run_deepseek_v41_reference_oracle.py"
+    },
+    "schema": "opentallas.abi3.reference_oracle.v1",
+    "source_sha256": null,
+    "status": "pending"
+  },
+  "iso_area": {
+    "denominator_role": "rom",
+    "granularity_correction": null,
+    "note": "The storage-class comparison at reticle scale: 64 ROM dies against the conventional HBM chip on the same fabric, same model, same workload. The V4 pair of this shape was equal-node by construction (32 against 32); this one is not, because the V4.1 array's node count is a ROM-capacity result (64, derived) and the comparator's is an HBM-capacity result WP-G still has to derive. The rom side's silicon is 52,160.0 mm2; the hbm side has neither a node count nor a die area, so the ratio is null and no equal-node or iso-area reading may be asserted here yet. Which of the two this pair turns out to be is a result of DS41-P3, not a choice of this contract.",
+    "numerator_role": "hbm",
+    "ratio": null,
+    "rule": "Iso-area rule, DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17 as inherited by DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 3.5: area is accelerator die area per node times node count, on both sides, and nothing else enters the denominator. HBM stacks, package, switch silicon and board are reported beside the ratio and never inside it. Two sides are iso-area only when their silicon areas agree within the tolerance; when they do not, rule 2 requires the node count that would agree to be stated as a granularity correction, and the pair is published as the control it is rather than as an iso-area ratio.",
+    "status": "pending",
+    "tolerance": 0.02,
+    "within_tolerance": null
+  },
+  "model": {
+    "graph_id": null,
+    "kernel_ir_path": "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+    "kernel_ir_source_sha256": null,
+    "model_id": "deepseek-v4.1-flash",
+    "numeric_profile": "deepseek_v41_flash_target_precision_v1",
+    "pending_reason": "tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash refuses to emit an IR: \"error: every deepseek-v4.1-flash checkpoint artifact is present and 96,085 tensor specs resolve, so the remainder of gate DS41-I2 is the node-by-node lowering itself, which this front end does not emit yet.  The plan that lowering must realise is complete and checkable now: 3,131 kernels from layer_source_plan(), lowering_plan() and planned_census().\"  Until WP-D emits build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json there is no graph_id to bind, and inventing one would forge the identity every other lock in this contract is checked against.",
+    "status": "pending"
+  },
+  "policy": {
+    "clock": {
+      "comparison_frequency_hz": null,
+      "policy_id": "common_routed_minimum_fmax_v1",
+      "same_frequency_required": true
+    },
+    "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
+    "external_fabric_policy": "source_locked_cluster_and_wafer_fabric_v1",
+    "external_memory_policy": "source_locked_distributed_hbm_phy_and_stack_v1",
+    "latency_boundary": "host_request_to_terminal_completion_v1",
+    "pvt": {
+      "corner_id": "asap7_tt_0p70v_25c",
+      "process": "TT",
+      "temperature_c": 25,
+      "voltage_v": 0.7
+    },
+    "state_boundary": "fresh_session_live_hbm_compressed_kv_prefill_decode_fail_stop_v1",
+    "technology_claim": "Predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim. No DeepSeek-V4.1 token has been produced by any lane in this repository: this document is the pair identity, and every target lock in it is pending. The rom_array side is 64 reticle-class ROM dies on the TA-DS-HBM fabric, a CLUSTER_N under AM-R1 with the Engram tables off ROM. 64 is derived, not chosen: the plan's 51-node design point cannot own whole experts because 384 % 51 = 27, and 64 is the smallest admissible count at or above it (targets.rom_array.node_count_derivation states the rule and its four inputs). Its silicon is 64 x 815.0 mm2 = 52,160.0 mm2 at the published Taalas HC1 die area. Plan risk 5 states the consequence the controlled experiment exists to measure: if the routed ROM density lands below the N5 analytical value the count rises again and the array falls further from parity, and the rounding already applied is in that direction. The hbm side is the model-blind conventional HBM/SRAM chip replicated to a node count plan section 3.3 derives and WP-G fixes, with the Engram tables in host memory as DeepSeek serves them. Its node count is null and its die area is unavailable here, so this pair has no area denominator yet and iso_area.status is pending: no ratio may be published from it, iso-area or otherwise, until both are locked. Iso-area rule, DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17 as inherited by DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 3.5: area is accelerator die area per node times node count, on both sides, and nothing else enters the denominator. HBM stacks, package, switch silicon and board are reported beside the ratio and never inside it. Two sides are iso-area only when their silicon areas agree within the tolerance; when they do not, rule 2 requires the node count that would agree to be stated as a granularity correction, and the pair is published as the control it is rather than as an iso-area ratio.",
+    "technology_view": "asap7"
+  },
+  "reporting": {
+    "companion_sources": {
+      "binding_constraint": {
+        "analytical_antecedent": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.binding_constraint, and for the central iso-node envelope results/iso-node/leading_node_market/analytical.json#comparisons[model=DeepSeek-V4.1-Flash].wafer_binding_constraint; both analytical, neither executed",
+        "evidence_class": "executed_comparison_artifact",
+        "field": "binding_constraint",
+        "per_role": true
+      },
+      "resident_session_count": {
+        "analytical_antecedent": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.max_resident_users, and for the central iso-node envelope results/iso-node/leading_node_market/analytical.json#comparisons[model=DeepSeek-V4.1-Flash].wafer_resident_users; both analytical, neither executed",
+        "evidence_class": "executed_comparison_artifact",
+        "field": "resident_session_count",
+        "per_role": true
+      }
+    },
+    "gate_id": "DS41-CMP11",
+    "published_ratios": [
+      "per_user_speed_ratio",
+      "aggregate_throughput_ratio",
+      "energy_per_token_ratio"
+    ],
+    "ratio_publication_rule": "Gate DS41-CMP11: every published ratio appears beside its binding constraint and its resident-session count, per role, in the executed comparison artifact that publishes it. A ratio whose two companions are not printed with it is not published. The companions are read from the executed artifact; the analytical antecedent named here is the roofline row the same quantity has at L0 and may be quoted only in a column labelled analytical -- master plan section 11.1 forbids reading it as an executed result, and plan section 1 forbids reading any of it as a TPOT. tools/build_comparison_report.py does not yet read a contract and emits neither companion field, and no V4.1 execution record exists, so this contract publishes no ratio today: iso_area.status and every target lock say so. This pair's iso_area.status is pending, so it publishes no ratio at all; the companions are declared here so the requirement is in force the moment a ratio becomes possible.",
+    "required_companions": [
+      "binding_constraint",
+      "resident_session_count"
+    ]
+  },
+  "schema": "opentallas.abi3.comparison_contract.v2",
+  "targets": {
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/hbm_sram_cluster_n_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-hbm-cluster32-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_hbm_cluster32_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_v41_hbm_cluster_n_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4.1-flash-hbm-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_class": "DIE",
+      "node_count": null,
+      "node_count_derivation": {
+        "fixed_by_gate": "DS41-P3",
+        "fixed_by_work_package": "WP-G",
+        "inputs": [
+          "plan section 3.3: the existing cluster profile of tools/build_hbm_sram_deployment.py fed the V4.1 kernel IR, with the node count raised until the HBM-resident weights plus the session KV fit, and the Engram tables in host memory as DeepSeek serves them; --profile cluster-n takes the count as a parameter because under AM-R1 it is a capability value",
+          "tools/build_deepseek_v41_hbm_comparator.py comparator_sizing(), read at 2026-09-13: on_device_weight_bytes 307,527,990,600 (the 510,286,023,000-byte checkpoint less the 202,758,032,400 bytes of Engram tables, both from data/inventory/deepseek-v4.1-flash.json), session_kv_bytes 178,000,000 (890 B per token at 200,000 tokens), hbm_bytes_per_node 103,079,215,104, capacity_floor_nodes 3, smallest_admissible_nodes 8",
+          "that function's own boundary: \"a capacity floor, not a plan fit: the physical plan adds activation arenas, generated constants and state, so the fitted count is build_plan's and needs the V4.1 kernel IR\"",
+          "the per-node HBM capacity of the one conventional accelerator chip, from the capability record this target is lowered against"
+        ],
+        "rule": "The smallest node count at which the HBM-resident weight bytes plus the live per-session KV of the admitted concurrency fit in node-local HBM, with the Engram tables in host memory. A capacity FLOOR of 3 nodes and a smallest admissible CLUSTER_N of 8 already exist; the fitted count does not, because it needs the physical plan and therefore the Kernel IR this contract's model binding is still waiting on. The count is a property of the compiled deployment, not of this contract: WP-G derives it and DS41-P3 locks it. It is null here rather than set to the floor because a floor is not a fit, and whichever number lands becomes the denominator of every per-node figure this pair publishes."
+      },
+      "role": "hbm",
+      "silicon": {
+        "die_area_grade": "unavailable",
+        "die_area_mm2_per_node": null,
+        "die_area_source": "no artifact in this repository states the die area of the shared conventional HBM/SRAM accelerator chip. results/abi3/comparison_deepseek_rom_array_vs_hbm.json#silicon records the same absence for the V4 pair: \"hbm declares no geometry, so its die area is a physical grade this comparison may not assume\". DS41-PHY10 and the HBM lane's own physical records are what can fill it.",
+        "excluded_from_denominator": [
+          "HBM stacks and their PHY",
+          "package and interposer",
+          "switch silicon and cabling",
+          "board and chassis"
+        ],
+        "silicon_area_mm2": null
+      },
+      "storage_class": "HBM",
+      "target_id": "hbm-sram-abi3-cluster_n",
+      "topology_class": 3
+    },
+    "rom": {
+      "backend": "rom.cluster_n",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-rom-array-v3",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_rom_array_v3.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_v41_rom_array_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4.1-flash-rom-array-64-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_class": "DIE",
+      "node_count": 64,
+      "node_count_derivation": {
+        "fixed_by_gate": "DS41-P3",
+        "fixed_by_work_package": "WP-F",
+        "inputs": [
+          "plan section 3.2 names N = 51, read off results/roofline/candidates/deepseek-v4.1-flash-engram-host/n5_vs_b200/analytical.json design ROM-N5-native-SRAMKV-array-hybrid-x51 at device_count 51; that is the analytical design point",
+          "plan section 3.2's own whole-expert ownership rule: the 384 routed experts of a layer must divide by the node count, and 384 % 51 = 27, so the design point cannot own whole experts and is inadmissible under the rule that names it",
+          "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json: topology_class 3 (CLUSTER_N), limits.max_nodes 64, fabric.cluster 8 domains of 8",
+          "compiler/backends/rom/deepseek_v41_array.py expert_parallel_node_count: the smallest admissible count at or above the design point, admissibility being 384 % n == 0, n == domains * domain_size and n != 32; the module records that it rounds UP because 48 would make the ROM side cheaper than the point it stands in for"
+        ],
+        "rule": "64, derived from the released 384-expert geometry and the declared 8 x 8 fabric rather than read off the plan. This contract's file name and comparison_id keep the plan's 51-node design-point name because plan section 13 WP-N registers those exact paths; the built node count is this field, and a reader who needs the geometry reads it here and not out of a filename. If WP-F's derivation changes before DS41-P3, target_rom_array_deployment_source_exact refuses the deployment instead of absorbing the difference."
+      },
+      "role": "rom",
+      "silicon": {
+        "die_area_grade": "published",
+        "die_area_mm2_per_node": 815.0,
+        "die_area_source": "configs/hardware/technology.json#reticle.area_mm2 (815.0 mm2, grade published, Taalas HC1 die area, https://taalas.com/products/); the ROM bytes this model places on one node imply a larger die at both the wafer backend's usable density and the roofline's N5 array density, which is why DS41-PHY10 may raise the node count again and is stated in iso_area.note rather than silently absorbed",
+        "excluded_from_denominator": [
+          "HBM stacks and their PHY",
+          "package and interposer",
+          "switch silicon and cabling",
+          "board and chassis"
+        ],
+        "silicon_area_mm2": 52160.0
+      },
+      "storage_class": "ROM",
+      "target_id": "deepseek-v4.1-flash-rom-array-64",
+      "topology_class": 3
+    }
+  },
+  "version": "1.0.0",
+  "workload": {
+    "digest": "8895f768adda9d31b8b6809bd01f32d4a6a2cae646177d74d9eac8810fe670a0",
+    "index_path": "build/workloads/deepseek-v4.1-flash/index.json",
+    "index_schema": "opentallas.workload_index.v1",
+    "index_source_sha256": "34f6324307ed8b3883cd55b431dc07adf320ab3ca9fe21f2d2eb8e6da60d1fc2",
+    "kind": "long_natural",
+    "max_new_tokens": 256,
+    "path": "build/workloads/deepseek-v4.1-flash/TA-DS41-CTX-200K-1.json",
+    "prompt_token_count": 200000,
+    "rendered_text_sha256": "6ad57114c426156f7e25341d6faa55d061033e6b98244d31ab1e8a395463527a",
+    "source_sha256": "7b2696ca041e544af3e473a605bd56e19fcbe9135eb8c77d0630c59b52fe416d",
+    "template": {
+      "mode": "none_plain_text",
+      "path": null,
+      "source_sha256": null,
+      "template_id": "none_plain_text"
+    },
+    "tokenizer_sha256": "c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b",
+    "workload_id": "TA-DS41-CTX-200K-1"
+  }
+}

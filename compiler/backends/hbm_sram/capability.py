@@ -34,7 +34,7 @@ from compiler.ir.v3.numeric import (
     union_contract_ids,
 )
 from runtime.abi3.capability import Capability
-from runtime.abi3.constants import Feature, TopologyClass
+from runtime.abi3.constants import Feature, NodeClass, TopologyClass
 
 TECHNOLOGY_VIEW = "shared-hbm-sram-chip-v3"
 
@@ -216,6 +216,7 @@ def _shared_capability(
     node_count: int,
     link: Mapping[str, int],
     numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
+    fabric: Mapping[str, Any] | None = None,
 ) -> Capability:
     limits = dict(SHARED_LIMITS)
     limits["max_nodes"] = node_count
@@ -228,6 +229,10 @@ def _shared_capability(
         engines={name: dict(spec) for name, spec in SHARED_ENGINES.items()},
         memory={name: dict(spec) for name, spec in SHARED_MEMORY.items()},
         link=dict(link),
+        # A record that declares no fabric publishes no ``fabric`` key, which is
+        # what keeps the two shipped digests where the committed evidence quotes
+        # them; only ``CLUSTER_N`` declares one, because AM-R1 requires it there.
+        fabric={} if fabric is None else dict(fabric),
         technology_view=TECHNOLOGY_VIEW,
     )
     capability.validate()
@@ -291,6 +296,107 @@ def cluster32_speculative_capability() -> Capability:
     )
 
 
+# ---------------------------------------------------------------------------
+# CLUSTER_N: the same chip at a node count that is neither one nor thirty-two
+# ---------------------------------------------------------------------------
+#: Nodes per intra-domain group of the shipped fabric.  Not a new number: the
+#: published ``hbm_sram_cluster_32`` record declares 32 nodes in 4 route groups,
+#: so a group is 8 nodes, and AM-R1's ``fabric.cluster`` names the same
+#: partition the LINK engine already divides its member set by.  Deriving it
+#: here rather than writing 8 is the point -- one published record is the only
+#: statement of the fabric this chip has, and a second literal would be a
+#: second statement of it.
+CLUSTER_DOMAIN_SIZE = 32 // int(CLUSTER_32_LINK["route_groups"])
+
+
+def cluster_n_link(
+    *,
+    node_count: int,
+    domain_count: int,
+    base: Mapping[str, int] = CLUSTER_32_LINK,
+) -> dict[str, int]:
+    """The link record for an ``N``-node cluster of this chip.
+
+    The endpoint inventory is the chip's and does not move: that is the whole
+    claim of TA-HBM-3.0 section 3.5.  Three fields are *attachment* rather than
+    chip and follow the node count -- ``peers_per_node`` is ``N - 1`` by
+    definition, ``route_groups`` is the domain count (amendment AM-R1 binds the
+    TOPOLOGY descriptor's route-group count to the capability's fabric, so the
+    two may not disagree), and ``bisection_links`` is two endpoints per node
+    crossing a symmetric cut, the rule that reproduces the published 32-node
+    record's 64 links exactly.  One published record cannot distinguish that
+    rule from others that agree at 32, so the field is a declaration and
+    nothing in the lowering reads it.
+    """
+    record = {key: int(value) for key, value in base.items()}
+    record["peers_per_node"] = int(node_count) - 1
+    record["route_groups"] = int(domain_count)
+    record["bisection_links"] = 2 * int(node_count)
+    return record
+
+
+def cluster_n_fabric(*, node_count: int, domain_count: int) -> dict[str, Any]:
+    """AM-R1's ``fabric`` block for an ``N``-node cluster of dies."""
+    domain_size, remainder = divmod(int(node_count), int(domain_count))
+    if remainder:
+        raise ValueError(
+            f"{node_count} nodes do not partition into {domain_count} domains; "
+            "AM-R1 requires domains x domain_size to be the node count exactly"
+        )
+    return {
+        "node_class": int(NodeClass.DIE),
+        "cluster": {
+            "domain_size": domain_size,
+            "domains": int(domain_count),
+            # A single-level fabric has no inter-domain hop to price, and AM-R1
+            # refuses a record that names one anyway.
+            "inter_domain_class": 0 if int(domain_count) == 1 else 1,
+        },
+    }
+
+
+def cluster_n_capability(
+    *,
+    node_count: int,
+    domain_size: int = CLUSTER_DOMAIN_SIZE,
+    numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
+) -> Capability:
+    """The shared chip at ``node_count`` nodes under amendment AM-R1.
+
+    Nothing here knows a model.  The node count is the caller's, the fabric is
+    the shipped one partitioned at the shipped domain size, and the contract
+    union is the shipped one unless a caller widens it deliberately -- the same
+    three degrees of freedom :func:`profile_difference` already allows between
+    the two shipped records, plus the ``fabric`` block AM-R1 requires of this
+    class.
+
+    ``node_count`` must be a whole number of ``domain_size`` domains: the class
+    exists to name the fabric between its nodes, and a partition that does not
+    divide is refused rather than rounded.  32 is refused by the ABI itself --
+    that count is ``CLUSTER_32``, and one machine with two expressible topology
+    classes is a difference no digest comparison can see.
+    """
+    nodes = int(node_count)
+    if nodes < 2:
+        raise ValueError(
+            f"a CLUSTER_N cluster has at least two nodes; {nodes} is "
+            "SINGLE_CHIP"
+        )
+    domains, remainder = divmod(nodes, int(domain_size))
+    if remainder or domains < 1:
+        raise ValueError(
+            f"{nodes} nodes are not a whole number of {domain_size}-node "
+            "domains of the shipped fabric"
+        )
+    return _shared_capability(
+        topology_class=TopologyClass.CLUSTER_N,
+        node_count=nodes,
+        link=cluster_n_link(node_count=nodes, domain_count=domains),
+        numeric_contracts=numeric_contracts,
+        fabric=cluster_n_fabric(node_count=nodes, domain_count=domains),
+    )
+
+
 #: Factories, one per named profile.  Kept private so that ``PROFILES`` can be
 #: a mapping of *capabilities* rather than of callables: a consumer that writes
 #: ``PROFILES["single-chip"]`` should get the record, not something it has to
@@ -300,6 +406,11 @@ _FACTORIES: dict[str, Any] = {
     "cluster-32": cluster32_capability,
     "cluster-32-speculative": cluster32_speculative_capability,
 }
+
+#: The profile whose node count is a parameter rather than a cardinality.  It
+#: has no ``_FACTORIES`` entry because a factory takes no arguments and this
+#: record is not one machine.
+CLUSTER_N_PROFILE = "cluster-n"
 
 #: The profiles that describe a shipped product.  :func:`profile_difference`
 #: reports on exactly these, so adding a research profile above does not
@@ -313,14 +424,32 @@ PROFILES: dict[str, Capability] = {
 }
 
 
-def capability_for(profile: str) -> Capability:
-    """Return a fresh capability record for a named profile."""
+def capability_for(profile: str, *, node_count: int | None = None) -> Capability:
+    """Return a fresh capability record for a named profile.
+
+    ``node_count`` is accepted only for ``cluster-n``, whose whole point is that
+    the count is a capability *value* rather than a class: every other profile
+    names a fixed cardinality, and silently ignoring a count against one of them
+    would hand back a record for a machine the caller did not ask for.
+    """
+    if profile == CLUSTER_N_PROFILE:
+        if node_count is None:
+            raise KeyError(
+                f"profile {profile!r} is a node count, not a cardinality; pass "
+                "node_count"
+            )
+        return cluster_n_capability(node_count=int(node_count))
+    if node_count is not None:
+        raise KeyError(
+            f"profile {profile!r} declares its own node count; only "
+            f"{CLUSTER_N_PROFILE!r} takes one"
+        )
     try:
         factory = _FACTORIES[profile]
     except KeyError:
         raise KeyError(
             f"unknown capability profile {profile!r}; known profiles are "
-            f"{sorted(_FACTORIES)}"
+            f"{sorted(_FACTORIES) + [CLUSTER_N_PROFILE]}"
         ) from None
     return factory()
 

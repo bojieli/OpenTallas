@@ -152,6 +152,30 @@ SHARED_QUEUES = {f: SHARED_OUTSTANDING_PER_QUEUE for f in FAMILIES}
 
 SHARED_QUEUE_DEPTH = {f: (4 if f == "state" else 8) for f in FAMILIES}
 
+#: The cycle model's per-instruction front end: fetch + decode + issue.  The
+#: analytical model states no clock and this is the one analytical quantity that
+#: fixes one, so it is named once and read by every caller that needs the clock
+#: (``derive`` itself and the Engram pricing) rather than restated.
+CLOCK_FRONT_END_CYCLES = 3
+
+#: Channels on one HBM stack.  The modelling convention the shipped cost tables
+#: already use (``hbm.channels.default`` 8 against one stack's datasheet rate),
+#: named once for the same reason.
+CHANNELS_PER_STACK = 8
+
+
+def derived_clock_hz(anchor: "Anchor") -> float:
+    """The one clock this generator derives, in Hz.
+
+    ``CLOCK_FRONT_END_CYCLES`` sequencer cycles over
+    ``technology.json#latency.sequencer_issue_decode_s``.  Every rate the
+    derivation emits is an analytical B/s or ops/s divided by this number, so a
+    different clock moves the per-cycle figures and leaves every derived TIME
+    unchanged -- which is why the Engram pricing below may read it without
+    becoming a second derivation of it.
+    """
+    return CLOCK_FRONT_END_CYCLES / anchor.latency("sequencer_issue_decode_s")
+
 #: Resolved machine parameters the two emitted machines are PERMITTED to
 #: differ on, each with the analytical field that justifies the difference.
 #: Anything outside this set differing is a hard failure of the emit.
@@ -300,6 +324,84 @@ ROM_BASE_CAPABILITY: dict[tuple[str, str], str] = {
     # in the manifest and in ``derived_from.design_point``, not here.
     ("DeepSeek-V4-Pro-0813", "array"): "rom_deepseek_v4_pro_array_32.json",
     ("DeepSeek-V4-Pro-0813", "wafer"): "rom_deepseek_v4_pro_array_32.json",
+    # -- DeepSeek-V4.1-Flash (plan TA-DS41, section 13 WP-J) --------------
+    # THREE analytical model names, ONE pair of products.  The study prices
+    # where the Engram tables live as three separate models -- the tables are
+    # 202.8 GB and the placement moves capacity and traffic -- but only two ROM
+    # products are built: the two-wafer device of WP-E and the 51-node array of
+    # WP-F (plan sections 3.1, 3.2 and 13).  Each (model, topology_kind) below
+    # therefore names the record of the product that would SERVE that design
+    # point, following the V4 rule above: the base contributes capacities,
+    # limits, features and numeric contracts, never a timing parameter, and the
+    # design point's own topology stays in the manifest and in
+    # ``derived_from.design_point``.
+    #
+    # NEITHER RECORD EXISTS AT HEAD.  WP-E and WP-F produce them; until then
+    # ``base_capabilities`` returns the registered path and ``build`` refuses on
+    # its absence with the plan section that names its producer, which is what
+    # ``--v41-cells`` reports as the cell's blocker.  Registering the names now
+    # is what makes the V4.1 cells derive the day those two records land
+    # instead of needing this table edited again.
+    #
+    # The placement variant is KEPT in the key, unlike in :func:`ir_model_slug`:
+    # the kernel IR is placement-blind, but a capability record declares the
+    # storage capacities a placement changes, so an engram-hbm cell and an
+    # engram-host cell may not silently share one record.  The engram-hbm rows
+    # are the ones plan section 3.4 decided on and the ones WP-E and WP-F
+    # build; the plain ``DeepSeek-V4.1-Flash`` rows are the Engram-in-ROM
+    # envelope the same section retains as TA-DS41-ROM-WAFER-3, and they are
+    # registered against the SAME records with the difference MEASURED rather
+    # than asserted: the Engram-in-ROM design point stores 510,286,023,000 B of
+    # weights (``points[].stored_weight_bytes``, which is the checkpoint payload
+    # to the byte and is exactly 307,527,990,600 of weights plus 202,758,032,400
+    # of Engram tables) against 307,527,990,600 for the HBM placements.  Whether
+    # that fits is not a guess and is not stated here: ``--v41-cells`` divides it
+    # by the design point's own device count and compares it with the record's
+    # ``memory.rom.bytes`` per cell, so the answer moves with the record instead
+    # of with this comment.
+    # THE ARRAY RECORD IS 64 NODES AND NO STUDY PRICES A 64-NODE ARRAY.
+    # rom_deepseek_v41_array_64.json declares limits.max_nodes 64; the array
+    # node counts the three candidate studies publish are 51, 55, 57, 63, 68 and
+    # up (engram-host), 55, 57, 68 and up (engram-hbm) and 84 and up
+    # (Engram-in-ROM).  The base record contributes capacities and limits only --
+    # the V4 rule above -- so a 51- or 55-node design point still derives
+    # against it, and ``--v41-cells`` records both numbers per cell so the
+    # divergence is visible rather than absorbed.  It is NOT resolved here:
+    # either the study gains a 64-node rung or WP-F builds the node count
+    # section 3.2 names, and both are decisions for those packages.
+    ("DeepSeek-V4.1-Flash-engram-hbm", "wafer"): "rom_deepseek_v41_wafer.json",
+    ("DeepSeek-V4.1-Flash-engram-hbm", "array"): "rom_deepseek_v41_array_64.json",
+    ("DeepSeek-V4.1-Flash-engram-host", "wafer"): "rom_deepseek_v41_wafer.json",
+    ("DeepSeek-V4.1-Flash-engram-host", "array"): "rom_deepseek_v41_array_64.json",
+    ("DeepSeek-V4.1-Flash", "wafer"): "rom_deepseek_v41_wafer.json",
+    ("DeepSeek-V4.1-Flash", "array"): "rom_deepseek_v41_array_64.json",
+}
+
+#: A registered base capability that is not on disk yet, and the plan section
+#: that names its producer.  Read ONLY to make the refusal say what is missing:
+#: a cell blocked on an absent record must not report a bare FileNotFoundError,
+#: because that reads as a broken tool rather than as an unbuilt input.  Nothing
+#: here is a command this repository has run -- the Makefile targets the plan
+#: names do not exist at HEAD -- and it is labelled as the plan's, not as
+#: evidence.
+BASE_CAPABILITY_PRODUCERS: dict[str, str] = {
+    "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json": (
+        "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 13 WP-E "
+        "(DS41-P3) names the producer: compiler/backends/rom/deepseek_v41.py "
+        "PROFILES['rom-deepseek-v41-wafer-2'] through tools/"
+        "build_rom_deployment.py product deepseek-v4.1-flash (planned target "
+        "`make abi3-rom-deepseek-v41-build`; neither the module nor the target "
+        "is present at HEAD).  If WP-E lands the record under a different "
+        "name, ROM_BASE_CAPABILITY is what has to move"
+    ),
+    "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json": (
+        "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 13 WP-F "
+        "(DS41-P3) names the producer: compiler/backends/rom/"
+        "deepseek_v41_array.py, the 51-node placer under CLUSTER_N, through "
+        "tools/build_rom_deployment.py product deepseek-v4.1-flash-array "
+        "(planned target `make abi3-rom-deepseek-v41-array-build`; neither the "
+        "module nor the target is present at HEAD)"
+    ),
 }
 
 #: The GPU-side base record, per model, and the single-chip default.
@@ -395,9 +497,16 @@ def pair_id(anchor: "Anchor") -> str:
     return _pair_id(anchor.rom["model"], anchor.rom_design, anchor.hbm_design)
 
 
-def base_capabilities(anchor: "Anchor", rom_base: str | None = None,
-                      hbm_base: str | None = None) -> tuple[str, str]:
-    """Repo-relative paths of the two base capability records for this cell."""
+def registered_base_capabilities(
+    anchor: "Anchor", rom_base: str | None = None, hbm_base: str | None = None,
+) -> tuple[str, str]:
+    """The two base capability paths this cell is REGISTERED against.
+
+    The lookup alone, with no check that either record is on disk, so a
+    readiness report can name the record a cell is waiting for.  Callers that
+    are about to READ the records use :func:`base_capabilities`, which is this
+    function plus the refusal.
+    """
     model = str(anchor.rom["model"])
     kind = str(anchor.rom.get("topology_kind", "array"))
     if rom_base is None:
@@ -413,6 +522,28 @@ def base_capabilities(anchor: "Anchor", rom_base: str | None = None,
             Path(rom_base).name, HBM_BASE_CAPABILITY
         )
         hbm_base = f"configs/hardware/abi3_capability/{name}"
+    return rom_base, hbm_base
+
+
+def base_capabilities(anchor: "Anchor", rom_base: str | None = None,
+                      hbm_base: str | None = None) -> tuple[str, str]:
+    """Repo-relative paths of the two base capability records for this cell."""
+    model = str(anchor.rom["model"])
+    kind = str(anchor.rom.get("topology_kind", "array"))
+    rom_base, hbm_base = registered_base_capabilities(anchor, rom_base, hbm_base)
+    # A registered record that is not on disk is an UNBUILT INPUT, not a broken
+    # tool.  Saying which work package produces it here is what turns a
+    # FileNotFoundError three frames deeper into a blocker a reader can act on.
+    for role, base in (("ROM", rom_base), ("GPU", hbm_base)):
+        if (REPO / base).exists():
+            continue
+        why = BASE_CAPABILITY_PRODUCERS.get(base)
+        raise DerivationError(
+            f"the {role} base capability {base} is registered for model "
+            f"{model!r} with topology_kind {kind!r} but is not in this tree"
+            + (f".  {why}" if why else
+               "; nothing in this tool records what produces it")
+        )
     return rom_base, hbm_base
 
 
@@ -815,9 +946,9 @@ def derive(anchor: Anchor, *, rom_arrays: int | None = None) -> Derivation:
     # spends exactly three sequencer cycles on that act (fetch + decode +
     # issue).  Those two statements fix the clock and nothing else in this file
     # is free to choose it.
-    front_end_cycles = 3
+    front_end_cycles = CLOCK_FRONT_END_CYCLES
     seq_s = A.latency("sequencer_issue_decode_s")
-    clock_hz = front_end_cycles / seq_s
+    clock_hz = derived_clock_hz(A)
     d.shared["clock.frequency_hz"] = Derived(
         name="clock.frequency_hz",
         value=clock_hz,
@@ -1197,7 +1328,7 @@ def derive(anchor: Anchor, *, rom_arrays: int | None = None) -> Derivation:
     # point's 5 stacks x 4 devices at 1e12 B/s x 0.9 and the GPU point's 2
     # packages of 8 stacks at 8e12 B/s x 0.9 are the same stack -- so the only
     # thing that differs is how many of them each design buys.
-    channels_per_stack = 8
+    channels_per_stack = CHANNELS_PER_STACK
     rom_channels, hbm_channels, per_channel_bpc = _hbm_split(
         A, clock_hz, channels_per_stack
     )
@@ -1627,8 +1758,117 @@ def derive(anchor: Anchor, *, rom_arrays: int | None = None) -> Derivation:
     return d
 
 
+#: Where the model registry lives.  A model's kernel-IR directory is the
+#: registry file's STEM, because that stem is the release ``model_id`` the
+#: kernel-IR builder writes under
+#: (tools/build_deepseek_v4_kernel_ir_v3.py:62-63 --
+#: ``build/ir-v3/<model_id>/kernel_ir.v3.json``, and
+#: ``compiler.frontends.v3.deepseek_v41.MODEL_ID`` is ``deepseek-v4.1-flash``).
+#: The slug is therefore READ off the registry rather than computed from the
+#: analytical display name.
+MODEL_REGISTRY_DIRS: tuple[str, ...] = ("configs/models", "configs/models/candidates")
+
+_MODEL_REGISTRY: dict[str, dict[str, str]] = {}
+
+
+def model_registry() -> dict[str, dict[str, str]]:
+    """``analytical model name -> {stem, variant, config}`` from the registry.
+
+    Read once.  Every model any study in this repository prices carries a
+    registry file: ``configs/models/*.json`` for the three models the roofline
+    study publishes and ``configs/models/candidates/*.json`` for the V4.1
+    candidates, each stating its own ``model_id`` -- the exact string the
+    analytical artifact's ``points[].model`` carries -- and, for a placement
+    variant, ``metadata.variant``.
+    """
+    if _MODEL_REGISTRY:
+        return _MODEL_REGISTRY
+    for directory in MODEL_REGISTRY_DIRS:
+        root = REPO / directory
+        if not root.is_dir():
+            continue
+        for path in sorted(root.glob("*.json")):
+            try:
+                body = json.loads(path.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            # ``name`` is the field the model registry states the analytical
+            # model id in (configs/models/qwen3-8b.json#name is ``Qwen3-8B``,
+            # the exact string points[].model carries); ``model_id`` is
+            # accepted too so a future registry file that uses the release
+            # vocabulary is not silently skipped.
+            name = body.get("name") or body.get("model_id")
+            if not isinstance(name, str) or not name:
+                continue
+            variant = str(((body.get("metadata") or {}).get("variant") or ""))
+            _MODEL_REGISTRY[name] = {
+                "stem": path.stem,
+                "variant": variant,
+                "config": _relative(path),
+            }
+    return _MODEL_REGISTRY
+
+
+def ir_model_slug(model: str) -> str:
+    """The ``build/ir-v3`` directory of an analytical model name.
+
+    Two rules, both read off the registry rather than guessed from the name:
+
+    1.  The slug is the registry stem, NOT the lower-cased display name.
+        ``DeepSeek-V4.1-Flash`` is ``deepseek-v4.1-flash`` -- with the dot --
+        and the rule this replaces (``.lower().replace(".", "-")``) looked for
+        ``build/ir-v3/deepseek-v4-1-flash``, a directory no builder writes and
+        which does not exist.  The three models that existed before V4.1 carry
+        no dot in their names and their stems are exactly their lower-cased
+        names, so both rules agree on every Qwen, V4-Flash and V4-Pro cell and
+        nothing already emitted moves.
+    2.  A PLACEMENT VARIANT collapses to its base model.  The analytical study
+        prices ``DeepSeek-V4.1-Flash-engram-hbm`` and
+        ``-engram-host`` as separate models because where the Engram tables
+        live changes capacity and traffic, but the KERNEL IR is placement-blind:
+        placement is a storage-class decision the ROM/HBM backends make, which
+        is why plan section 3.4 can revisit it at gate DS41-C2 without
+        re-deriving the IR, and why the census the V4.1 front end plans is one
+        document (``build/ir-v3/deepseek-v4.1-flash/``) and not three.  The
+        variant is stripped using the registry's own ``metadata.variant``
+        field -- ``engram_hbm`` strips the suffix ``-engram-hbm`` -- and the
+        base stem is used only when the registry really carries it, so a
+        variant whose base is missing raises instead of inventing a path.
+        NOTE the asymmetry with :func:`_bind_shipped_deployment`: a compiled
+        DEPLOYMENT does not collapse, because two placements put the same
+        tables in different storage classes and are two different bundles.
+    """
+    registry = model_registry()
+    entry = registry.get(model)
+    if entry is None:
+        # No registry row: fall back to the display name, lower-cased.  This is
+        # the historical rule minus its dot mangling, and it is reported by the
+        # caller's own error message when the directory is not there.
+        return str(model).lower()
+    variant = entry["variant"]
+    if not variant:
+        return entry["stem"]
+    suffix = "-" + variant.replace("_", "-")
+    if not model.endswith(suffix):
+        raise DerivationError(
+            f"{entry['config']} declares variant {variant!r}, but its model_id "
+            f"{model!r} does not end in {suffix!r}; the base model cannot be "
+            f"derived from the registry and the IR directory would be a guess"
+        )
+    base = model[: -len(suffix)]
+    base_entry = registry.get(base)
+    if base_entry is None:
+        raise DerivationError(
+            f"{model!r} is the {variant!r} placement variant of {base!r}, which "
+            f"no model registry file under {', '.join(MODEL_REGISTRY_DIRS)} "
+            f"declares; the kernel IR of the base model is what the lane rule "
+            f"needs and its directory cannot be derived"
+        )
+    return base_entry["stem"]
+
+
 def model_slug(anchor: Anchor) -> str:
-    return str(anchor.rom["model"]).lower().replace(".", "-")
+    return ir_model_slug(str(anchor.rom["model"]))
 
 
 _IR_CACHE: dict[str, list[dict[str, Any]]] = {}
@@ -5019,6 +5259,181 @@ REPOSITORY_CELLS: tuple[tuple[str, str], ...] = (
      "Pro's array rung nearest the wafer headline's area, priced at the same "
      "iso-area GPU comparator; the study says array and wafer disagree by "
      "1.6x here, so which one is 'the' Pro cell has to be stated"),
+    # -- the V4.1 cells (plan sections 8 and 13 WP-J) ---------------------
+    # Named here as literals for the same reason the superseded Qwen point is:
+    # the repository is committing to them, and if a candidate study's own
+    # recommendation moves they must not silently leave the matrix.  Each is
+    # inert on any artifact that does not publish it -- ``add`` drops a design
+    # the artifact has no batch-1 point for -- so these five entries appear only
+    # when ``--analytical`` names the candidate study they belong to.  Their GPU
+    # side is NOT named here and never can be: it is whatever
+    # ``comparisons[batch_size=1, rom_design=...].iso_area_gpu_design`` of that
+    # artifact says, which is the rule that keeps this generator from choosing a
+    # comparator.  See :data:`V41_CELLS` for the per-cell reasons and for the
+    # one place the plan's own text cannot be followed.
+    ("DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+     "TA-DS41-ROM-WAFER, the primary target: two wafer-scale devices with both "
+     "Engram tables resident in wafer-edge HBM (plan sections 3.1 and 3.4).  It "
+     "is the engram-hbm study's own best_design at batch 32 "
+     "(topology_choices[batch_size=32].best_design) and the only two-wafer rung "
+     "of the DECIDED placement; its iso-area comparator is the "
+     "b200_sxm-x58-tensor plan section 8 names"),
+    ("DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+     "the engram-hbm study's own batch-1 recommendation "
+     "(design_selection.models[].batch_regimes[1].recommended), one wafer "
+     "against b200_sxm-x29-tensor.  It is in the matrix because it is what the "
+     "study recommends at the batch the mandatory workload runs at, and because "
+     "plan section 3.1's two-wafer target and this one-wafer recommendation are "
+     "the two readings of 'the recommended N5 design' that have to be side by "
+     "side rather than chosen between"),
+    ("DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55",
+     "the array rung of the DECIDED placement: Engram in node-local HBM as "
+     "WP-F builds it, which is the engram-hbm study's own array_best_design at "
+     "batch 1.  Its node count is 55, not the 51 plan section 3.2 says the plan "
+     "builds -- see V41_CELLS"),
+    ("DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51",
+     "TA-DS41-ROM-ARRAY at the node count plan section 3.2 states the plan "
+     "builds, N = 51: the engram-host study's own array_best_design at batch 1, "
+     "against its own iso-area comparator b200_sxm-x26-tensor"),
+    ("DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2",
+     "the Engram-in-ROM envelope plan section 3.4 retains as "
+     "TA-DS41-ROM-WAFER-3: the Engram-in-ROM study's own batch-1 recommendation "
+     "and a two-wafer design against b200_sxm-x58-tensor.  Kept because it is "
+     "the cell the words of plan section 8 select if they are read against the "
+     "Engram-in-ROM candidate instead of the decided placement"),
+)
+
+#: The V4.1 cells of plan section 8, each with the candidate study it lives in.
+#:
+#: The V4.1 design points are NOT in ``results/roofline/n5_vs_b200/
+#: analytical.json``: the main study prices Qwen3-8B, V4-Flash and V4-Pro, and
+#: each V4.1 Engram placement is published as its own candidate study.  Every
+#: cell therefore names the artifact it is derived from, and ``--matrix
+#: --analytical <that artifact>`` reaches it through the same selection rule as
+#: every other cell (:func:`matrix_cells`), so there is no second derivation
+#: path and no second comparator rule.
+#:
+#: WHERE THE PLAN'S OWN TEXT CANNOT BE FOLLOWED.  Section 8 asks for "the
+#: recommended N5 two-wafer design against ``b200_sxm-x58-tensor`` and the
+#: 51-reticle array against ``b200_sxm-x43-tensor``".  The first pairing exists
+#: exactly as written.  The second does not exist in any artifact and must not
+#: be constructed:
+#:
+#: * ``b200_sxm-x43-tensor`` is 43 x 1,600 = 68,800 mm2 and is the iso-area
+#:   comparator of the EIGHTY-FOUR-node array (84 x 815 = 68,460 mm2, ratio
+#:   0.995), which is the Engram-in-ROM class -- section 3.2's own "N = 84 to 91
+#:   with Engram in ROM".
+#: * The 51-node array is 51 x 815 = 41,565 mm2 and its own artifact's iso-area
+#:   comparator is ``b200_sxm-x26-tensor`` at 26 x 1,600 = 41,600 mm2 (ratio
+#:   0.999).
+#: * Pairing the 51-node ROM array with the x43 comparator would hand the GPU
+#:   side 68,800 mm2 against the ROM side's 41,565 -- 1.655x the silicon -- and
+#:   break the iso-area convention the whole comparison rests on.  It is
+#:   directionally AGAINST this repository's thesis, which is not a licence to
+#:   do it: post-mortem R14 forbids choosing a comparator at all, in either
+#:   direction, and the artifact's own field is the only admissible source.
+#:
+#: So both halves are carried: the 51-node array at its own comparator, and the
+#: x84/x43 pairing named as what the plan's number actually belongs to.  The
+#: plan sentence, not this table, is what has to be corrected.
+V41_CELLS: tuple[dict[str, Any], ...] = (
+    {
+        "cell_id": "TA-DS41-ROM-WAFER",
+        "analytical": (
+            "results/roofline/candidates/deepseek-v41-flash-engram-hbm/"
+            "n5_vs_b200/analytical.json"
+        ),
+        "rom_design": (
+            "DeepSeek-V4.1-Flash-engram-hbm/"
+            "ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill"
+        ),
+        "batch_sizes": (1, 8, 32),
+        "why": (
+            "the primary target of plan section 3.1: two wafer-scale devices, "
+            "both Engram tables resident in wafer-edge HBM (section 3.4's "
+            "decision).  92,450 mm2 against the b200_sxm-x58-tensor comparator "
+            "section 8 names, which is this artifact's own iso_area_gpu_design "
+            "for it at batch 1 and 8 (x58-hybrid at 32)"
+        ),
+        "engram_priced_here": True,
+    },
+    {
+        "cell_id": "TA-DS41-ROM-WAFER-1",
+        "analytical": (
+            "results/roofline/candidates/deepseek-v41-flash-engram-hbm/"
+            "n5_vs_b200/analytical.json"
+        ),
+        "rom_design": (
+            "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1"
+        ),
+        "batch_sizes": (1, 8, 32),
+        "why": (
+            "the engram-hbm study's OWN batch-1 recommendation, one wafer at "
+            "46,225 mm2 against b200_sxm-x29-tensor.  Section 3.1 states two "
+            "wafer stages from the iso-node study while this roofline study "
+            "recommends one device at batch 1; the disagreement is carried as "
+            "two cells rather than resolved by preference"
+        ),
+        "engram_priced_here": True,
+    },
+    {
+        "cell_id": "TA-DS41-ROM-ARRAY",
+        "analytical": (
+            "results/roofline/candidates/deepseek-v41-flash-engram-host/"
+            "n5_vs_b200/analytical.json"
+        ),
+        "rom_design": (
+            "DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51"
+        ),
+        "batch_sizes": (1, 8, 32),
+        "why": (
+            "the controlled experiment of plan section 3.2 at the node count it "
+            "says the plan builds, N = 51 (41,565 mm2) against this artifact's "
+            "own b200_sxm-x26-tensor (41,600 mm2).  NOT against "
+            "b200_sxm-x43-tensor: see V41_CELLS' header.  Its kv_store is sram, "
+            "so the Engram lookup cannot be priced on its HBM path -- the design "
+            "point buys no HBM at all"
+        ),
+        "engram_priced_here": False,
+    },
+    {
+        "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+        "analytical": (
+            "results/roofline/candidates/deepseek-v41-flash-engram-hbm/"
+            "n5_vs_b200/analytical.json"
+        ),
+        "rom_design": (
+            "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55"
+        ),
+        "batch_sizes": (1, 8, 32),
+        "why": (
+            "the array rung whose PLACEMENT matches WP-F -- Engram in "
+            "node-local HBM -- which is this artifact's own array_best_design at "
+            "batch 1.  It is 55 nodes, not 51: the placement WP-F builds and the "
+            "node count section 3.2 builds are published in two different "
+            "candidate studies and do not meet in one design point.  Carried so "
+            "the array target is not represented by a cell whose Engram lives "
+            "somewhere else"
+        ),
+        "engram_priced_here": True,
+    },
+    {
+        "cell_id": "TA-DS41-ROM-WAFER-3",
+        "analytical": (
+            "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/"
+            "analytical.json"
+        ),
+        "rom_design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2",
+        "batch_sizes": (1, 8, 32),
+        "why": (
+            "the Engram-in-ROM envelope section 3.4 retains as "
+            "TA-DS41-ROM-WAFER-3, and the literal reading of section 8's "
+            "'recommended N5 two-wafer design against b200_sxm-x58-tensor' "
+            "against the Engram-in-ROM candidate: this study's own batch-1 "
+            "recommendation, 92,450 mm2, comparator b200_sxm-x58-tensor"
+        ),
+        "engram_priced_here": False,
+    },
 )
 
 
@@ -6542,6 +6957,1039 @@ def _print_calibration(body: Mapping[str, Any]) -> None:
 
 
 
+# ---------------------------------------------------------------------------
+# The V4.1 cells of plan section 8, and the Engram lookup priced on the HBM path
+# ---------------------------------------------------------------------------
+V41_CELLS_SCHEMA = "opentallas.derived_cycle_machine.v41_cells.v1"
+
+#: The table the Engram transaction QUANTUM is read from.  Plan section 8 is
+#: explicit -- "the Engram lookup is priced on the HBM path with
+#: ``hbm.transaction_bytes`` from the measured table" -- and this is the wafer
+#: view's generated table, whose ``hbm.transaction_bytes`` is the only HBM
+#: parameter in this repository with provenance ``characterized``: 64 B, from
+#: ``results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation
+#: .hbm_burst_bytes``, the burst the DMA RTL actually issues.  The derived
+#: machine's own ``hbm.transaction_bytes`` is deliberately set equal to its
+#: ``bytes_per_cycle_per_channel`` so the model's ceil() is lossless, which is
+#: right for reproducing an analytical bandwidth term and WRONG for pricing 264
+#: byte random rows: it would quantise a 264 B row into one transaction of 112.5
+#: B/cycle and hide the overfetch. The measured quantum is the conservative one
+#: and it is the one the plan asks for.
+ENGRAM_MEASURED_COST_TABLE = "configs/hardware/abi3_cost_wafer_v2.json"
+
+#: Gate DS41-C2's bar for the lookup, from plan section 4.4: "the Engram lookup
+#: priced on the HBM path is below 1% of the step, or section 3.4's fallback
+#: fires".
+ENGRAM_STEP_FRACTION_BAR = 0.01
+
+_ANALYTICAL_CACHE: dict[str, dict[str, Any]] = {}
+
+
+def analytical_body(path: str) -> dict[str, Any]:
+    """One candidate study, read once.  The V4.1 artifacts are 80-90 MB each."""
+    if path not in _ANALYTICAL_CACHE:
+        _ANALYTICAL_CACHE[path] = json.loads((REPO / path).read_text())
+    return _ANALYTICAL_CACHE[path]
+
+
+def engram_lookup_shape(model: str) -> dict[str, Any]:
+    """One token's Engram read, from the model registry's own numbers.
+
+    Every field is READ: the two module layer ids, the rows each module reads
+    per token, and the packed row width.  The per-token byte count the plan
+    quotes is then CHECKED against their product rather than trusted --
+    2 modules x 24 rows x 264 B = 12,672 B -- because that identity is the whole
+    reason a transaction count can be derived at all.  A registry that ever
+    stopped satisfying it would otherwise be priced with a row count and a byte
+    total that disagree.
+    """
+    entry = model_registry().get(model)
+    if entry is None:
+        raise DerivationError(
+            f"no model registry file under {', '.join(MODEL_REGISTRY_DIRS)} "
+            f"declares {model!r}, so its Engram tables cannot be priced"
+        )
+    body = json.loads((REPO / entry["config"]).read_text())
+    meta = body.get("metadata") or {}
+    eng = meta.get("engram")
+    if not isinstance(eng, dict):
+        raise DerivationError(
+            f"{entry['config']} states no metadata.engram block; this model has "
+            f"no Engram tables to price"
+        )
+    layer_ids = list(eng["layer_ids"])
+    rows_per_module = int(eng["rows_read_per_token_per_module"])
+    row_bytes = float(eng["row_bytes_packed"])
+    lookup_bytes = float(eng["lookup_bytes_per_token"])
+    if row_bytes != int(row_bytes):
+        raise DerivationError(
+            f"{entry['config']}#metadata.engram.row_bytes_packed is "
+            f"{row_bytes!r}, not a whole number of bytes; a transaction count "
+            f"cannot be derived from a fractional row"
+        )
+    product = len(layer_ids) * rows_per_module * row_bytes
+    if product != lookup_bytes:
+        raise DerivationError(
+            f"{entry['config']}#metadata.engram does not close: "
+            f"{len(layer_ids)} modules x {rows_per_module} rows x "
+            f"{row_bytes:g} B = {product:g} B, but lookup_bytes_per_token is "
+            f"{lookup_bytes:g} B"
+        )
+    return {
+        "config": entry["config"],
+        "placement_variant": entry["variant"] or "engram_rom",
+        "engram_placement": str(meta.get("engram_placement", "")),
+        "module_layer_ids": layer_ids,
+        "modules": len(layer_ids),
+        "rows_read_per_token_per_module": rows_per_module,
+        "row_bytes_packed": int(row_bytes),
+        "rows_read_per_token": len(layer_ids) * rows_per_module,
+        "lookup_bytes_per_token": int(lookup_bytes),
+        "identity_checked": (
+            f"{len(layer_ids)} modules x {rows_per_module} rows x "
+            f"{int(row_bytes)} B = {int(lookup_bytes)} B"
+        ),
+    }
+
+
+def _engram_bound(rows: int, row_bytes: int, hbm: Any, address_stride: int,
+                  ) -> dict[str, Any]:
+    """Schedule ``rows`` reads of ``row_bytes`` on ``hbm`` through the model.
+
+    The cycle model's own memory system does the arithmetic -- transaction
+    count, channel striping, per-channel occupancy and the class read latency --
+    so nothing here re-implements a cost.  ``address_stride`` is the only knob,
+    and it is what turns this into a BOUND rather than a guess: the Engram row
+    address is an n-gram hash of the token ids (SRC-DSV41-FLASH-REPORT section
+    2.4.2), so the channel it lands on is not predictable from anything the
+    compiler knows, and no single address pattern is "the" answer.
+    """
+    from runtime.abi3.constants import StorageClass
+    from runtime.cycle.machine import MemoryClassParams, MemoryParams
+    from runtime.cycle.model import MemoryAccess, MemorySystem
+
+    params = MemoryParams(
+        hbm=hbm["params"],
+        # The other three classes are required by the container and are never
+        # touched: every access below is StorageClass.HBM.  They are read from
+        # the measured table rather than invented so the object cannot carry a
+        # number this tool made up.
+        sram=MemoryClassParams(
+            name="sram", units=hbm["table"]["sram.banks.default"],
+            bytes_per_cycle_per_unit=hbm["table"]["sram.bytes_per_cycle_per_port"],
+            read_latency_cycles=hbm["table"]["sram.read_latency_cycles"],
+            write_latency_cycles=hbm["table"]["sram.write_latency_cycles"],
+            transaction_bytes=hbm["table"]["sram.transaction_bytes"],
+            interleave_bytes=hbm["table"]["sram.interleave_bytes"],
+            ports_per_unit=hbm["table"]["sram.ports_per_bank.default"],
+        ),
+        rom=MemoryClassParams(
+            name="rom", units=hbm["table"]["rom.arrays.default"],
+            bytes_per_cycle_per_unit=hbm["table"]["rom.bytes_per_cycle_per_array"],
+            read_latency_cycles=hbm["table"]["rom.read_latency_cycles"],
+            write_latency_cycles=1 << 30,
+            transaction_bytes=hbm["table"]["rom.transaction_bytes"],
+            interleave_bytes=hbm["table"]["rom.interleave_bytes"],
+            ports_per_unit=1,
+        ),
+        host=MemoryClassParams(
+            name="host", units=1,
+            bytes_per_cycle_per_unit=hbm["table"]["host.bytes_per_cycle"],
+            read_latency_cycles=hbm["table"]["host.latency_cycles"],
+            write_latency_cycles=hbm["table"]["host.latency_cycles"],
+            transaction_bytes=hbm["table"]["host.transaction_bytes"],
+            interleave_bytes=hbm["table"]["host.transaction_bytes"],
+            ports_per_unit=1,
+        ),
+        state_backing=StorageClass[hbm["table"]["state.backing_storage_class"]],
+        max_modeled_transactions_per_access=hbm["table"][
+            "model.max_modeled_transactions_per_access"],
+    )
+    system = MemorySystem(params)
+    accesses = [
+        MemoryAccess(
+            object_id=index,
+            storage_class=int(StorageClass.HBM),
+            address=index * address_stride,
+            nbytes=row_bytes,
+            write=False,
+        )
+        for index in range(rows)
+    ]
+    finish, conflicts = system.schedule(accesses, 0)
+    report = system.report(max(finish, 1))["hbm"]
+    return {
+        "rows": rows,
+        "address_stride_bytes": address_stride,
+        "finish_cycles": finish,
+        "conflict_cycles": int(conflicts.get("hbm", 0)),
+        "transactions": report["transactions"],
+        "bytes_moved": report["transferred_bytes_read"],
+        "useful_bytes": report["bytes_read"],
+        "busy_cycles": report["busy_cycles"],
+        "channels_touched": sum(
+            1 for unit in system.units["hbm"] if unit.transactions
+        ),
+    }
+
+
+def engram_resident_region(anchor: Anchor, shape: Mapping[str, Any],
+                           ) -> dict[str, Any]:
+    """The HBM region the ROM base record reserves, against the tables' bytes.
+
+    The registry states each Engram module's row count (``num_embeddings``) and
+    the packed row width, so the bytes a resident region has to hold is
+    arithmetic, not a claim.  The built capability record declares the region it
+    reserves.  Checking one against the other is what makes "resident in HBM" a
+    statement with a number behind it, and it is the only check in this tool
+    that connects the model registry to a compiled product.
+
+    Whether ``memory.hbm.resident_region_bytes`` is per node or per machine is
+    not stated by the schema, so BOTH readings are reported and the region is
+    refused only if neither covers the tables.
+    """
+    registry = model_registry()[str(anchor.rom["model"])]
+    body = json.loads((REPO / registry["config"]).read_text())
+    eng = body["metadata"]["engram"]
+    rows = [int(n) for n in eng["num_embeddings"]]
+    row_bytes = int(shape["row_bytes_packed"])
+    required = sum(rows) * row_bytes
+    rom_base, _ = registered_base_capabilities(anchor)
+    out: dict[str, Any] = {
+        "module_rows": rows,
+        "row_bytes_packed": row_bytes,
+        "required_region_bytes": required,
+        "required_derivation": (
+            f"sum(metadata.engram.num_embeddings) = {sum(rows)} rows x "
+            f"{row_bytes} B = {required} B"
+        ),
+        "rom_base_capability": rom_base,
+    }
+    if not (REPO / rom_base).exists():
+        out["declared"] = None
+        out["verdict"] = (
+            f"{rom_base} is not in this tree, so no product declares a region "
+            f"to check the {required} B against"
+        )
+        return out
+    cap = json.loads((REPO / rom_base).read_text())
+    declared = ((cap.get("memory") or {}).get("hbm") or {}).get(
+        "resident_region_bytes")
+    nodes = int((cap.get("limits") or {}).get("max_nodes", 1) or 1)
+    out.update({"declared": declared, "base_capability_max_nodes": nodes})
+    if declared is None:
+        out["verdict"] = (
+            f"{rom_base} declares no memory.hbm.resident_region_bytes; the "
+            f"placement is priced but nothing in the built record reserves the "
+            f"region it needs"
+        )
+        return out
+    declared = int(declared)
+    as_machine = declared
+    as_per_node = declared * nodes
+    out.update({
+        "declared_as_whole_machine_bytes": as_machine,
+        "declared_as_per_node_total_bytes": as_per_node,
+        "covers_as_whole_machine": as_machine >= required,
+        "covers_as_per_node": as_per_node >= required,
+        "exact_as_whole_machine": as_machine == required,
+    })
+    if not (out["covers_as_whole_machine"] or out["covers_as_per_node"]):
+        raise DerivationError(
+            f"{rom_base} reserves {declared} B for the resident region and the "
+            f"Engram tables need {required} B "
+            f"({out['required_derivation']}); the region does not hold them "
+            f"under either reading ({as_per_node} B even at "
+            f"{nodes} nodes), so this placement is not the one the record was "
+            f"built for"
+        )
+    out["verdict"] = (
+        "exact: the reserved region is the tables, byte for byte"
+        if out["exact_as_whole_machine"] else
+        f"covers: {declared} B reserved"
+        + (f" per node x {nodes} nodes = {as_per_node} B" if not
+           out["covers_as_whole_machine"] else "")
+        + f" against {required} B of tables"
+    )
+    return out
+
+
+def price_engram_on_hbm(anchor: Anchor, *,
+                        measured_cost_table: str = ENGRAM_MEASURED_COST_TABLE,
+                        ) -> dict[str, Any]:
+    """Price one token's Engram lookup on the ROM side's HBM.  Gate DS41-C2.
+
+    Plan section 3.4 decided that TA-DS41-ROM-WAFER holds both Engram tables in
+    wafer-edge HBM and said the decision is "revisited exactly once, at gate
+    DS41-C2, when the cycle model prices the lookup on the HBM path with a
+    measured transaction size; if the lookup then lands on the critical path the
+    fallback is the ROM placement, not host DRAM".  This is that price.
+
+    What is derived here and what is read:
+
+    * the clock, the HBM channel count the ROM design point provisions and the
+      per-channel rate they share come from THIS generator's own derivation
+      (:func:`derived_clock_hz`, :func:`_hbm_split`) -- the same two functions
+      ``derive`` uses, not a copy of them;
+    * the transaction quantum, the class read latency, the address interleave
+      and the transaction cap come from the measured table, each with its own
+      provenance carried into the record (the 120-cycle read latency is
+      ``assumed`` and says so in the table: "no HBM latency figure exists
+      anywhere in this repository; this is a modelling choice and every
+      HBM-bound result inherits it");
+    * the row count and row width come from the model registry;
+    * the CYCLES come from ``runtime.cycle.model.MemorySystem``, the cycle
+      model's own memory scheduler.
+
+    Two bounds are reported instead of one number, because the row address is an
+    n-gram hash and the channel it lands on cannot be known: ``distributed``
+    walks consecutive stripes, ``collided`` aims every row at one stripe.  A 264
+    byte row is wider than the 256 byte stripe, so even the collided bound
+    spills one transaction in five onto the next channel -- that is the model's
+    own striping rule, not a choice made here.  The verdict is taken on the
+    WORSE bound.
+    """
+    from runtime.cycle.machine import MemoryClassParams, load_cost_table
+
+    if anchor.rom_kv_store != "hbm":
+        raise DerivationError(
+            f"{anchor.rom_design} declares kv_store "
+            f"{anchor.rom_kv_store!r} and area_fractions.hbm_phy "
+            f"{anchor.rom['area_fractions']['hbm_phy']!r}: the design point buys "
+            f"no HBM at all, so an Engram region cannot be priced on its HBM "
+            f"path.  The derived machine gives it one INERT channel and pricing "
+            f"against that would be pricing against a fiction"
+        )
+    shape = engram_lookup_shape(str(anchor.rom["model"]))
+    clock_hz = derived_clock_hz(anchor)
+    rom_channels, gpu_channels, per_channel_bpc = _hbm_split(
+        anchor, clock_hz, CHANNELS_PER_STACK
+    )
+    # ``hbm.channels`` is a STRUCTURAL parameter: runtime/cycle/machine.py
+    # resolves it from capability.memory.hbm.channels first and falls back to the
+    # cost table's default, so a record that declares one is what the machine
+    # would really carry and the derived count would never be read.  Price on
+    # what the machine resolves, and record both.
+    rom_base, _ = registered_base_capabilities(anchor)
+    declared_channels = None
+    if (REPO / rom_base).exists():
+        cap = json.loads((REPO / rom_base).read_text())
+        declared_channels = (
+            ((cap.get("memory") or {}).get("hbm") or {}).get("channels")
+        )
+    channels = int(declared_channels) if declared_channels else rom_channels
+    table = load_cost_table(REPO / measured_cost_table)
+    wanted = (
+        "hbm.transaction_bytes", "hbm.interleave_bytes",
+        "hbm.read_latency_cycles", "hbm.write_latency_cycles",
+        "hbm.bytes_per_cycle_per_channel",
+        "model.max_modeled_transactions_per_access",
+        "sram.banks.default", "sram.bytes_per_cycle_per_port",
+        "sram.read_latency_cycles", "sram.write_latency_cycles",
+        "sram.transaction_bytes", "sram.interleave_bytes",
+        "sram.ports_per_bank.default",
+        "rom.arrays.default", "rom.bytes_per_cycle_per_array",
+        "rom.read_latency_cycles", "rom.transaction_bytes",
+        "rom.interleave_bytes",
+        "host.bytes_per_cycle", "host.latency_cycles", "host.transaction_bytes",
+        "state.backing_storage_class",
+    )
+    resolved = {name: table.resolve(name) for name in wanted}
+    values = {name: resolved[name].value for name in wanted}
+    transaction_bytes = int(values["hbm.transaction_bytes"])
+    interleave_bytes = int(values["hbm.interleave_bytes"])
+    hbm_params = MemoryClassParams(
+        name="hbm",
+        units=channels,
+        bytes_per_cycle_per_unit=per_channel_bpc,
+        read_latency_cycles=int(values["hbm.read_latency_cycles"]),
+        write_latency_cycles=int(values["hbm.write_latency_cycles"]),
+        transaction_bytes=transaction_bytes,
+        interleave_bytes=interleave_bytes,
+        ports_per_unit=1,
+    )
+    hbm = {"params": hbm_params, "table": values}
+    row_bytes = shape["row_bytes_packed"]
+    per_token_rows = shape["rows_read_per_token"]
+    per_module_rows = shape["rows_read_per_token_per_module"]
+    bounds: dict[str, Any] = {}
+    for label, rows, stride in (
+        ("per_token_distributed", per_token_rows, interleave_bytes),
+        ("per_token_collided", per_token_rows, interleave_bytes * channels),
+        ("per_module_distributed", per_module_rows, interleave_bytes),
+        ("per_module_collided", per_module_rows, interleave_bytes * channels),
+    ):
+        bounds[label] = _engram_bound(rows, row_bytes, hbm, stride)
+        bounds[label]["seconds"] = bounds[label]["finish_cycles"] / clock_hz
+        bounds[label]["burst_bytes"] = (
+            bounds[label]["transactions"] * transaction_bytes
+        )
+        # ``finish_cycles`` is the class read latency plus however long the
+        # channels this pattern lands on were busy ahead of the last
+        # transaction.  Splitting the two says which input a reader should
+        # argue with: the assumed latency, or the measured burst quantum.
+        bounds[label]["read_latency_cycles"] = int(
+            values["hbm.read_latency_cycles"]
+        )
+        bounds[label]["serialised_cycles"] = max(
+            0,
+            bounds[label]["finish_cycles"]
+            - int(values["hbm.read_latency_cycles"]),
+        )
+    # The bound records must agree with the quantum they were priced at: a row
+    # of 264 B at a 64 B burst is five transactions, and 48 rows are 240 of
+    # them.  Checked rather than assumed, because a silent disagreement here
+    # would be a lookup priced at a quantum other than the measured one.
+    per_row = max(1, math.ceil(row_bytes / transaction_bytes))
+    for label, bound in bounds.items():
+        expect = bound["rows"] * per_row
+        if bound["transactions"] != expect:
+            raise DerivationError(
+                f"the {label} bound moved {bound['transactions']} transactions "
+                f"for {bound['rows']} rows of {row_bytes} B at a "
+                f"{transaction_bytes} B burst; {expect} was the only count "
+                f"consistent with the measured quantum"
+            )
+
+    component_times = {
+        k: float(v) for k, v in anchor.rom["component_times_s"].items()
+    }
+    steps = {
+        "sum_of_component_times_s": sum(component_times.values()),
+        "one_over_per_user_tokens_s": (
+            1.0 / float(anchor.rom["per_user_tokens_s"])
+            if float(anchor.rom["per_user_tokens_s"]) > 0 else None
+        ),
+    }
+    live = [v for v in steps.values() if v]
+    if not live:
+        raise DerivationError(
+            f"{anchor.rom_design} publishes no positive step time at batch "
+            f"{anchor.batch_size}; the lookup cannot be expressed as a fraction "
+            f"of a step that does not exist"
+        )
+    # The SMALLEST step is the conservative denominator: it makes the lookup the
+    # largest fraction it can be of anything this point publishes.
+    step_s = min(live)
+    fractions = {
+        label: bounds[label]["seconds"] / step_s for label in bounds
+    }
+    worst = max(fractions.values())
+    worst_label = max(fractions, key=lambda k: fractions[k])
+    decision = (
+        "section 3.4 CONFIRMED" if worst < ENGRAM_STEP_FRACTION_BAR
+        else "section 3.4 FALLBACK FIRED"
+    )
+    return {
+        "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+        "gate": "DS41-C2",
+        "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+        "pair_id": pair_id(anchor),
+        "rom_design": anchor.rom_design,
+        "hbm_design": anchor.hbm_design,
+        "batch_size": anchor.batch_size,
+        "context_tokens": anchor.context_tokens,
+        "analytical_artifact": anchor.analytical_path,
+        "lookup": shape,
+        "resident_region": engram_resident_region(anchor, shape),
+        "machine": {
+            "clock_hz": clock_hz,
+            "clock_derivation": (
+                f"{CLOCK_FRONT_END_CYCLES} sequencer cycles over "
+                f"technology.json#latency.sequencer_issue_decode_s"
+            ),
+            "rom_role_hbm_channels": rom_channels,
+            "gpu_role_hbm_channels": gpu_channels,
+            "channels_priced": channels,
+            "channels_declared_by_capability": declared_channels,
+            "channels_source": (
+                f"{rom_base}#memory.hbm.channels" if declared_channels
+                else "the derived ROM-role channel count (_hbm_split)"
+            ),
+            "hbm_bytes_per_cycle_per_channel": per_channel_bpc,
+            "rom_role_hbm_bytes_s": rom_channels * per_channel_bpc * clock_hz,
+            "channels_derivation": (
+                "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the "
+                "ROM point's kv_transfer_bytes_per_step / "
+                "component_times_s.kv_read over the per-channel rate the GPU "
+                "point's stacks fix"
+            ),
+        },
+        "measured_inputs": {
+            "cost_table": measured_cost_table,
+            "cost_table_digest": table.digest,
+            "parameters": {
+                name: {
+                    "value": resolved[name].value,
+                    "unit": resolved[name].unit,
+                    "provenance": resolved[name].provenance.value,
+                    "source": resolved[name].source,
+                }
+                for name in (
+                    "hbm.transaction_bytes", "hbm.interleave_bytes",
+                    "hbm.read_latency_cycles",
+                    "model.max_modeled_transactions_per_access",
+                )
+            },
+        },
+        "transactions_per_row": per_row,
+        # A 264 B row does not fill four 64 B bursts and does not fit them, so
+        # the fifth burst carries 8 useful bytes.  The cycle model charges the
+        # burst and counts the useful extent separately, so the ratio is taken
+        # from the TRANSACTION count and not from bytes_moved -- which is the
+        # useful figure and would read 1.0 whatever the quantum.
+        "burst_bytes_per_token": (
+            bounds["per_token_distributed"]["transactions"] * transaction_bytes
+        ),
+        "burst_bytes_over_useful_bytes": (
+            bounds["per_token_distributed"]["transactions"] * transaction_bytes
+            / shape["lookup_bytes_per_token"]
+        ),
+        "bounds": bounds,
+        # What actually costs the time.  The bytes themselves are nothing at
+        # this bandwidth; the charge is the class read latency plus the burst
+        # quantisation, and a reader who is told "0.14% of the step" is owed
+        # which of the three it came from.
+        "bandwidth_floor_seconds": (
+            bounds["per_token_distributed"]["transactions"] * transaction_bytes
+            / (channels * per_channel_bpc * clock_hz)
+        ),
+        "read_latency_seconds": (
+            int(values["hbm.read_latency_cycles"]) / clock_hz
+        ),
+        "cost_is_dominated_by": (
+            "the assumed hbm.read_latency_cycles"
+            if bounds[worst_label]["read_latency_cycles"]
+            >= bounds[worst_label]["serialised_cycles"]
+            else "channel serialisation at the measured burst size"
+        ),
+        "step": {
+            "candidates_s": steps,
+            "used_s": step_s,
+            "used": "the smallest step the design point publishes",
+            "component_times_s": component_times,
+            "binding_constraint": anchor.rom["binding_constraint"],
+        },
+        "fraction_of_step": fractions,
+        "bar": ENGRAM_STEP_FRACTION_BAR,
+        "worst_bound": worst_label,
+        "worst_fraction_of_step": worst,
+        "below_bar": worst < ENGRAM_STEP_FRACTION_BAR,
+        "decision": decision,
+        "refusals": [
+            "not-a-tpot: every time here is a cycle-model charge against an "
+            "analytical step, both above section 4 of the plan's floor.  No "
+            "number in this record is a TPOT and none may be published as one.",
+            "numerator-and-denominator-are-different-layers: the lookup is "
+            "charged by the L3 cycle model (cycles at the derived clock) and the "
+            "step is the L1 analytical component-time sum of the same design "
+            "point.  At gate DS41-C2 there is no third option -- no cycle run of "
+            "a V4.1 deployment exists, because no V4.1 deployment exists -- so "
+            "this fraction is a MAGNITUDE test across two layers and not a "
+            "correlated one.  It answers 'could this lookup be on the critical "
+            "path', which is what plan section 3.4 asks; it does not answer "
+            "'what fraction of a measured step is it'.",
+            "address-pattern-bounded-not-modelled: the Engram row address is an "
+            "n-gram hash of the token ids, so which channel a row lands on is "
+            "not knowable from the program.  Two address patterns bound it; the "
+            "real one lies between them and is not modelled.",
+            "read-latency-is-assumed: hbm.read_latency_cycles is 120 with "
+            "provenance assumed and the table says no HBM latency figure exists "
+            "anywhere in this repository.  It dominates the distributed bound, "
+            "so that bound is a latency assumption with a measured quantum on "
+            "top, not a measurement.",
+            "load-path-not-priced: the tables are written once at load and never "
+            "at runtime (section 3.4), and that one-off write is not priced "
+            "here.  Neither is the capacity it costs the KV store, which the "
+            "analytical model charges instead.",
+            "no-prefetch-credit: the lookup is charged as if it were issued and "
+            "waited on inside the step.  Section 3.4 and the technology.json "
+            "by-model note both argue it is prefetchable because the row "
+            "address is a function of the token ids alone; charging it in full "
+            "is the pessimistic reading, and it is the one a placement decision "
+            "should survive.",
+            "one-token-only: this is one token's lookup at this batch.  It is "
+            "not multiplied by batch, because the two modules' rows are read "
+            "once per token and the study's batch axis is a throughput axis.",
+        ],
+    }
+
+
+#: Where ``--v41-cells`` writes.  One manifest for the whole V4.1 cell set,
+#: named after the model rather than after a study, because the cells are drawn
+#: from three candidate studies and a per-study file would split the gate state
+#: across three artifacts nobody reads together.
+V41_CELLS_OUT = "results/derived/deepseek_v41_cycle_cells.json"
+
+
+def _v41_blockers(anchor: Anchor, rom_base: str, hbm_base: str,
+                  ) -> list[dict[str, Any]]:
+    """Every input this cell is waiting for, named with what produces it.
+
+    Computed BEFORE the derivation is attempted, so a cell reports all of its
+    missing inputs rather than whichever one happened to raise first.  A cell
+    with an empty list is derived for real; a cell with a non-empty one is not
+    attempted, because a traceback from a missing file is not a verdict.
+    """
+    out: list[dict[str, Any]] = []
+    slug = ir_model_slug(str(anchor.rom["model"]))
+    ir = REPO / "build" / "ir-v3" / slug / "kernel_ir.v3.json"
+    if not ir.exists():
+        out.append({
+            "input": _relative(ir),
+            "why_needed": (
+                "the lane rule reads every tensor operator's own output width "
+                "off the neutral IR; the narrowest one IS the lane count"
+            ),
+            "produced_by": (
+                "plan section 13 WP-D (DS41-I2): tools/"
+                "build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash "
+                "(the front end exists at compiler/frontends/v3/"
+                "deepseek_v41.py; only build/ir-v3/deepseek-v4.1-flash/"
+                "planned_census.json is on disk, and a PLANNED census is not an "
+                "IR)"
+            ),
+        })
+    for role, base in (("rom", rom_base), ("hbm", hbm_base)):
+        if (REPO / base).exists():
+            continue
+        out.append({
+            "input": base,
+            "why_needed": (
+                f"the {role} side's capacities, limits, features and numeric "
+                f"contracts; every timing parameter is derived, but these decide "
+                f"whether a deployment could ever be admitted against the "
+                f"emitted record"
+            ),
+            "produced_by": BASE_CAPABILITY_PRODUCERS.get(
+                base,
+                "not recorded in BASE_CAPABILITY_PRODUCERS; the GPU comparator "
+                "of plan section 13 WP-G (tools/build_hbm_sram_deployment.py "
+                "--profile cluster-N --model deepseek-v4.1-flash) is what a "
+                "V4.1 cluster record would come from",
+            ),
+        })
+    # The HBM collapse is checkable without the IR, and a pair that fails it can
+    # never be a cell however many artifacts land: the two design points do not
+    # share an HBM generation, so the one parameter the allowlist permits them to
+    # differ on -- the channel COUNT -- cannot be a whole number on both sides.
+    # Reported as a blocker rather than left to surface as a pricing refusal.
+    try:
+        _hbm_split(anchor, derived_clock_hz(anchor), CHANNELS_PER_STACK)
+    except DerivationError as exc:
+        out.append({
+            "input": f"{anchor.analytical_path}#points[{anchor.rom_design}]",
+            "why_needed": (
+                "the collapsed logical device carries an integer number of the "
+                "GPU point's own HBM channels; this pair does not"
+            ),
+            "produced_by": (
+                f"not a missing artifact: a structural refusal -- {exc}"
+            ),
+        })
+    if anchor.rom.get("feasible") is False:
+        out.append({
+            "input": (
+                f"{anchor.analytical_path}#points[design={anchor.rom_design},"
+                f"batch_size={anchor.batch_size}].feasible"
+            ),
+            "why_needed": (
+                "the study declares this point INFEASIBLE -- binding_constraint "
+                f"{anchor.rom['binding_constraint']!r}, per_user_tokens_s "
+                f"{anchor.rom['per_user_tokens_s']!r} -- and a machine derived "
+                "from a configuration the analytical model refuses would be a "
+                "machine for something that cannot run.  Nothing unblocks this "
+                "except a different design point or a re-run study"
+            ),
+            "produced_by": "not a missing artifact: a refused configuration",
+        })
+    return out
+
+
+def _base_capability_facts(anchor: Anchor, rom_base: str) -> dict[str, Any]:
+    """What the ROM record this cell is registered against actually declares.
+
+    Recorded per cell because the record and the design point can disagree and
+    the disagreement must be visible: the built V4.1 array record declares 64
+    nodes and no candidate study publishes a 64-node array design point, so
+    every array cell carries a base record whose node count is not its own.  The
+    V4 rule says the base contributes capacities and limits only, which makes
+    that derivable rather than wrong -- but only if it is stated.
+    """
+    out: dict[str, Any] = {"record": rom_base, "present": False}
+    path = REPO / rom_base
+    if not path.exists():
+        return out
+    cap = json.loads(path.read_text())
+    limits = cap.get("limits") or {}
+    memory = cap.get("memory") or {}
+    nodes = limits.get("max_nodes")
+    out.update({
+        "present": True,
+        "max_nodes": nodes,
+        "max_context_positions": limits.get("max_context_positions"),
+        "max_expert_ids": limits.get("max_expert_ids"),
+        "rom_bytes": (memory.get("rom") or {}).get("bytes"),
+        "rom_banks": (memory.get("rom") or {}).get("banks"),
+        "hbm_bytes": (memory.get("hbm") or {}).get("bytes"),
+        "hbm_channels_declared": (memory.get("hbm") or {}).get("channels"),
+        "hbm_resident_region_bytes": (
+            (memory.get("hbm") or {}).get("resident_region_bytes")
+        ),
+        "design_point_device_count": anchor.rom["device_count"],
+        "node_counts_agree": (
+            nodes is not None
+            and int(nodes) == int(anchor.rom["device_count"])
+        ),
+    })
+    if not out["node_counts_agree"]:
+        out["node_count_note"] = (
+            f"the record declares limits.max_nodes {nodes} and this design "
+            f"point is {anchor.rom['device_count']:g} device(s).  The base "
+            f"contributes capacities, limits, features and numeric contracts "
+            f"only -- every timing parameter is derived from the design point -- "
+            f"so the cell is still one machine emitted twice; but a deployment "
+            f"lowered for this point against this record is lowered for a "
+            f"different node count and that is a WP-F/WP-N decision, not a "
+            f"cycle-model one"
+        )
+    # ROM capacity, per node, from the design point's own stored_weight_bytes.
+    # A capability record's memory figures are per-node declarations (the array
+    # record's 19,327,352,832 B of ROM is one reticle-class chip's), so the
+    # comparison is per node and is reported rather than judged: a cell that
+    # does not fit is a deployment question for WP-E/WP-F, and the cycle model's
+    # own timing comes from the design point either way.
+    stored = anchor.rom.get("stored_weight_bytes")
+    devices = int(anchor.rom["device_count"])
+    if stored is not None and devices > 0 and out.get("rom_bytes"):
+        per_node = int(stored) / devices
+        out.update({
+            "stored_weight_bytes": int(stored),
+            "stored_weight_bytes_per_node": per_node,
+            "rom_bytes_per_node_declared": int(out["rom_bytes"]),
+            "weights_fit_declared_rom_per_node": (
+                per_node <= float(out["rom_bytes"])
+            ),
+        })
+    if anchor.context_tokens > int(
+            limits.get("max_context_positions", 0) or 0):
+        out["context_note"] = (
+            f"the cell is anchored at {anchor.context_tokens} context tokens "
+            f"and the record admits {limits.get('max_context_positions')}"
+        )
+    return out
+
+
+def v41_cell_rows(config_dir: Path, artifact_dir: Path, *, write: bool,
+                  ) -> dict[str, Any]:
+    """Derive, or state the blockers for, every V4.1 cell of plan section 8.
+
+    One walk, the existing machinery: :func:`matrix_cells` chooses the GPU side
+    from the artifact, :func:`load_anchor` and :func:`emit_cell` do the
+    derivation, :func:`_bind_shipped_deployment` reports the C2 side, and
+    :func:`price_engram_on_hbm` prices the section 3.4 decision.  Nothing is
+    re-derived here.
+    """
+    rows: list[dict[str, Any]] = []
+    pricing: list[dict[str, Any]] = []
+    drift: list[str] = []
+    for cell in V41_CELLS:
+        body = analytical_body(cell["analytical"])
+        selected = {c["rom_design"]: c for c in matrix_cells(body)}
+        chosen = selected.get(cell["rom_design"])
+        points = body["points"]
+        for batch in cell["batch_sizes"]:
+            row: dict[str, Any] = {
+                "cell_id": cell["cell_id"],
+                "analytical_artifact": cell["analytical"],
+                "study_id": body.get("study_id", ""),
+                "rom_design": cell["rom_design"],
+                "batch_size": batch,
+                "why_this_cell": cell["why"],
+            }
+            if chosen is None:
+                row.update({
+                    "status": "blocked",
+                    "blockers": [{
+                        "input": cell["analytical"],
+                        "why_needed": (
+                            "matrix_cells does not select this design from this "
+                            "artifact, so the artifact states no iso-area GPU "
+                            "comparator for it and this tool may not choose one"
+                        ),
+                        "produced_by": "a study re-run, or a corrected cell",
+                    }],
+                })
+                rows.append(row)
+                continue
+            row["hbm_design"] = chosen["hbm_design"]
+            row["comparator_rule"] = (
+                "comparisons[batch_size=1, rom_design=...]."
+                "iso_area_gpu_design of this artifact, through matrix_cells; "
+                "this tool never chooses a comparator"
+            )
+            row["why_the_matrix_selects_it"] = list(chosen["why"])
+            hits = [
+                pt for pt in points
+                if pt["design"] == cell["rom_design"]
+                and int(pt["batch_size"]) == batch
+            ]
+            if len(hits) != 1:
+                row.update({
+                    "status": "blocked",
+                    "blockers": [{
+                        "input": (
+                            f"{cell['analytical']}#points[design="
+                            f"{cell['rom_design']},batch_size={batch}]"
+                        ),
+                        "why_needed": (
+                            f"{len(hits)} points match; a cell needs exactly one"
+                        ),
+                        "produced_by": "a study re-run",
+                    }],
+                })
+                rows.append(row)
+                continue
+            context = int(hits[0]["context_tokens"])
+            row["context_tokens"] = context
+            try:
+                A = load_anchor(
+                    REPO / cell["analytical"], REPO / DEFAULT_TECHNOLOGY,
+                    rom_design=cell["rom_design"],
+                    hbm_design=chosen["hbm_design"],
+                    batch_size=batch, context_tokens=context,
+                )
+            except Exception as exc:  # noqa: BLE001 -- recorded, not raised
+                row.update({
+                    "status": "blocked",
+                    "blockers": [{
+                        "input": cell["analytical"],
+                        "why_needed": "the anchor could not be loaded",
+                        "produced_by": f"{type(exc).__name__}: {exc}",
+                    }],
+                })
+                rows.append(row)
+                continue
+            rom_base, hbm_base = registered_base_capabilities(A)
+            model_id = _model_slug_of_pair(A)
+            own_comparator = next(
+                (c.get("iso_area_gpu_design") for c in body["comparisons"]
+                 if c.get("rom_design") == cell["rom_design"]
+                 and int(c.get("batch_size", -1)) == batch),
+                None,
+            )
+            row.update({
+                "pair_id": pair_id(A),
+                "model": A.rom["model"],
+                "ir_model_slug": ir_model_slug(str(A.rom["model"])),
+                "deployment_model_id": model_id,
+                "topology_kind": A.rom.get("topology_kind"),
+                "parallelism": A.rom.get("parallelism"),
+                "rom_devices": A.rom["device_count"],
+                "hbm_devices": A.hbm["device_count"],
+                "rom_kv_store": A.rom_kv_store,
+                "rom_token_slots": A.rom_token_slots,
+                "hbm_token_slots": A.hbm_token_slots,
+                "rom_silicon_area_mm2": A.rom["silicon_area_mm2"],
+                "hbm_silicon_area_mm2": A.hbm["silicon_area_mm2"],
+                "iso_area_ratio": (
+                    A.rom["silicon_area_mm2"] / A.hbm["silicon_area_mm2"]
+                ),
+                "analytical_feasible": A.rom.get("feasible"),
+                "rom_binding_constraint": A.rom["binding_constraint"],
+                "hbm_binding_constraint": A.hbm["binding_constraint"],
+                "rom_per_user_tokens_s": A.rom["per_user_tokens_s"],
+                "hbm_per_user_tokens_s": A.hbm["per_user_tokens_s"],
+                "iso_area_gpu_design_at_this_batch": own_comparator,
+                "comparator_is_this_batch_own": (
+                    own_comparator == chosen["hbm_design"]
+                ),
+                "base_capabilities": {"rom": rom_base, "hbm": hbm_base},
+                "base_capability_facts": _base_capability_facts(A, rom_base),
+            })
+            blockers = _v41_blockers(A, rom_base, hbm_base)
+            row["blockers"] = blockers
+            # The C2 side is reportable whether or not the machine derives: it
+            # is a statement about the registration table and the tree, not
+            # about the derivation.
+            _, rom_bind = _bind_shipped_deployment(rom_base, model_id, "rom")
+            _, hbm_bind = _bind_shipped_deployment(hbm_base, model_id, "hbm")
+            row["c2"] = {
+                "gate": "C2",
+                "deployments": {"rom": rom_bind, "hbm": hbm_bind},
+                "comparable": False if (
+                    rom_bind["status"] != "bound" or hbm_bind["status"] != "bound"
+                ) else None,
+                "required_registrations": [
+                    {
+                        "registration_id": f"<{model_id}-{role}-...>",
+                        "base_capability": base,
+                        "model_id": model_id,
+                        "pin_kind": "live",
+                        "note": (
+                            "configs/abi3/shipped_deployments.json must carry "
+                            "this (base_capability, model_id) pair before the "
+                            "cell can bind a deployment; the registration also "
+                            "needs the bundle's real deployment_sha256, which "
+                            "only exists once the bundle is built"
+                        ),
+                    }
+                    for role, base in (("rom", rom_base), ("hbm", hbm_base))
+                ],
+            }
+            if blockers:
+                row["status"] = "blocked"
+            else:
+                try:
+                    out = emit_cell(A, config_dir, artifact_dir, write=write)
+                except Exception as exc:  # noqa: BLE001 -- recorded, not raised
+                    row["status"] = "blocked"
+                    row["blockers"] = [{
+                        "input": pair_id(A),
+                        "why_needed": "the derivation itself refused",
+                        "produced_by": f"{type(exc).__name__}: {exc}",
+                    }]
+                else:
+                    drift.extend(out.get("drift") or [])
+                    row["status"] = "emitted"
+                    row["emitted"] = {
+                        k: _relative(v) for k, v in out["paths"].items()
+                    }
+                    row["comparability"] = {
+                        "parameters_compared":
+                            out["comparability"]["parameters_compared"],
+                        "permitted_differences": sorted(
+                            out["comparability"]["permitted_differences"]
+                        ),
+                        "unexpected_differences": 0,
+                    }
+                    row["c2"] = out["artifact"].get(
+                        "deployment_audit", row["c2"]
+                    )
+            if cell["engram_priced_here"]:
+                try:
+                    priced = price_engram_on_hbm(A)
+                except DerivationError as exc:
+                    row["engram_pricing"] = {
+                        "priced": False, "why_not": str(exc),
+                    }
+                else:
+                    pricing.append(priced)
+                    row["engram_pricing"] = {
+                        "priced": True,
+                        "worst_bound": priced["worst_bound"],
+                        "worst_fraction_of_step": priced[
+                            "worst_fraction_of_step"],
+                        "below_bar": priced["below_bar"],
+                        "decision": priced["decision"],
+                    }
+            else:
+                row["engram_pricing"] = {
+                    "priced": False,
+                    "why_not": (
+                        "this cell's Engram tables are not in the store the "
+                        "cycle model would price them on; see V41_CELLS"
+                    ),
+                }
+            rows.append(row)
+    emitted = [r for r in rows if r["status"] == "emitted"]
+    blocked = [r for r in rows if r["status"] != "emitted"]
+    decisions = sorted({
+        p["decision"] for p in pricing
+    })
+    body_out: dict[str, Any] = {
+        "schema": V41_CELLS_SCHEMA,
+        "generator": "tools/derive_cycle_machine.py --v41-cells",
+        "plan": (
+            "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md sections 8 and "
+            "13 WP-J, gate DS41-C2"
+        ),
+        "technology": DEFAULT_TECHNOLOGY,
+        "technology_view": TECHNOLOGY_VIEW,
+        "cells_considered": len(rows),
+        "cells_emitted": len(emitted),
+        "cells_blocked": len(blocked),
+        "cells": rows,
+        "engram_hbm_pricing": pricing,
+        "gate_ds41_c2": {
+            "c1_exits_0_with_v41_cells": {
+                "command": "python3 tools/derive_cycle_machine.py --check",
+                "note": (
+                    "C1 checks the emitted files of a cell against a fresh "
+                    "derivation.  With no V4.1 cell emitted it can only be run "
+                    "on the cells that are, which is what configs/gates/"
+                    "redesign_gates.json evaluates; every V4.1 cell above that "
+                    "reaches status emitted becomes a --check target of its own"
+                ),
+            },
+            "c2_comparable_on_every_v41_pair": {
+                "state": (
+                    "not evaluable: no V4.1 pair has a compiled deployment on "
+                    "either side"
+                )
+                if not emitted else "see each cell's c2 block",
+                "note": (
+                    "gate C2 reads deployment_audit.comparable over "
+                    "results/derived/*machine_pair*.json with require_all, so a "
+                    "V4.1 pair that emits before its deployments exist turns the "
+                    "gate RED on 'no deployment built'.  That is the gate "
+                    "working: absence is a failure, not a skip"
+                ),
+            },
+            "c3_reconciliation_recorded": {
+                "command": (
+                    "python3 tools/derive_cycle_machine.py --analytical "
+                    "<cell artifact> --rom-design <cell> --hbm-design <its iso "
+                    "comparator> --batch-size <b> --context-tokens 200000 "
+                    "--reconcile <rom run> <hbm run> --reconcile-out "
+                    "results/derived/<pair_id>_reconciliation.json"
+                ),
+                "state": (
+                    "blocked: --reconcile takes two tools/run_abi3_cycle.py run "
+                    "records, and a run needs a compiled deployment"
+                ),
+            },
+            "engram_priced_on_the_hbm_path": {
+                "priced_cells": len(pricing),
+                "decisions": decisions,
+                "bar": ENGRAM_STEP_FRACTION_BAR,
+                "worst_fraction_of_step_over_all_priced_cells": (
+                    max((p["worst_fraction_of_step"] for p in pricing),
+                        default=None)
+                ),
+                "cost_is_dominated_by": sorted({
+                    p["cost_is_dominated_by"] for p in pricing
+                }),
+                "unpriced_cells": [
+                    {
+                        "cell_id": r["cell_id"],
+                        "batch_size": r["batch_size"],
+                        "why_not": r["engram_pricing"]["why_not"],
+                    }
+                    for r in rows
+                    if not r.get("engram_pricing", {}).get("priced", True)
+                ],
+            },
+        },
+        "refusals": [
+            "not-a-tpot: nothing in this file is a token rate of a real "
+            "machine.  Every per_user_tokens_s is the analytical study's own "
+            "number and every cycle figure is a cycle-model charge; plan "
+            "section 4 forbids reading either as a TPOT.",
+            "blocked-is-not-skipped: a cell that cannot derive is recorded with "
+            "the inputs it waits for and the work package that produces each.  "
+            "It is not omitted, and it is not given a placeholder machine.",
+            "no-invented-registration: the three shipped-deployment "
+            "registrations plan section 13 WP-J asks for are ABSENT from "
+            "configs/abi3/shipped_deployments.json, because a registration "
+            "states a deployment_sha256 and no V4.1 bundle has been built.  "
+            "Each cell names the (base_capability, model_id) pair its future "
+            "registration must carry instead.",
+        ],
+    }
+    return {"body": body_out, "drift": drift}
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--analytical", default=DEFAULT_ANALYTICAL)
@@ -6567,6 +8015,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                           "be reached"))
     ap.add_argument("--matrix-out",
                     default="results/derived/n5_design_target_matrix.json")
+    ap.add_argument("--v41-cells", action="store_true",
+                    help=("derive every V4.1 cell of plan section 8 -- each from "
+                          "its own candidate study, with the artifact's own "
+                          "iso-area comparator -- price the Engram lookup on "
+                          "the HBM path, and write the gate DS41-C2 manifest; "
+                          "with --check, verify the manifest on disk against a "
+                          "fresh walk"))
+    ap.add_argument("--v41-cells-out", default=V41_CELLS_OUT,
+                    help="where --v41-cells writes its manifest")
     ap.add_argument("--audit-deployments", nargs=2, metavar=("ROM_ROOT", "HBM_ROOT"),
                     help=("compare two deployments' tensor tile shapes and "
                           "storage classes"))
@@ -6601,6 +8058,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.matrix:
         return _run_matrix(args, analytical, technology, config_dir, artifact_dir)
+
+    if args.v41_cells:
+        return _run_v41_cells(args, config_dir, artifact_dir)
 
     anchor = load_anchor(
         analytical, technology,
@@ -6739,6 +8199,48 @@ def main(argv: Sequence[str] | None = None) -> int:
           f"compared, {len(comparability['permitted_differences'])} permitted "
           f"differences, 0 unexpected")
     return 0
+
+
+def _run_v41_cells(args: Any, config_dir: Path, artifact_dir: Path) -> int:
+    """``--v41-cells``: walk the V4.1 cells and write the DS41-C2 manifest."""
+    out_path = REPO / args.v41_cells_out
+    result = v41_cell_rows(config_dir, artifact_dir, write=not args.check)
+    body, drift = result["body"], result["drift"]
+    text = canonical(body)
+    for row in body["cells"]:
+        if row["status"] == "emitted":
+            print(f"  OK      {row['cell_id']:28s} b{row['batch_size']:<3} "
+                  f"{row['pair_id']}")
+            continue
+        why = "; ".join(b["input"] for b in row.get("blockers", []))
+        print(f"  BLOCKED {row['cell_id']:28s} b{row['batch_size']:<3} "
+              f"waiting on {why or 'an unrecorded input'}")
+    for priced in body["engram_hbm_pricing"]:
+        print(f"  ENGRAM  {priced['pair_id']} b{priced['batch_size']}: worst "
+              f"bound {priced['worst_bound']} "
+              f"{priced['worst_fraction_of_step'] * 100:.4f}% of the "
+              f"{priced['step']['used_s'] * 1e6:.1f} us step "
+              f"(bar {priced['bar'] * 100:g}%) -> {priced['decision']}")
+    print(f"v41-cells: {body['cells_emitted']} emitted, "
+          f"{body['cells_blocked']} blocked, of {body['cells_considered']} "
+          f"considered; {len(body['engram_hbm_pricing'])} Engram prices")
+    if args.check:
+        if not out_path.exists():
+            drift.append(f"{_relative(out_path)} is missing")
+        elif out_path.read_text() != text:
+            drift.append(
+                f"{_relative(out_path)} does not match a fresh walk of its "
+                f"inputs; re-run --v41-cells"
+            )
+        for line in drift:
+            print(f"DRIFT: {line}", file=sys.stderr)
+        return 1 if drift else 0
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(text)
+    for line in drift:
+        print(f"DRIFT: {line}", file=sys.stderr)
+    print(f"  {_relative(out_path)}")
+    return 1 if drift else 0
 
 
 def _run_matrix(args: Any, analytical: Path, technology: Path,

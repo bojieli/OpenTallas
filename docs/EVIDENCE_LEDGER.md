@@ -32,7 +32,7 @@ document, section, literal, and optional source-line context; it carries a
 disposition and rationale, declares how many candidates it must match, and the
 audit refuses stale or overlapping rules.  The first deliberately small pass
 classifies **8** candidates as ABI norms or examples. <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="explicitly triaged normative/example prose candidates" -->
-It leaves **3,547** explicitly untriaged. <!-- figure: 3547 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="prose candidates still awaiting triage" -->
+It leaves **3,562** explicitly untriaged. <!-- figure: 3562 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="prose candidates still awaiting triage" -->
 No document-wide default is allowed, and neither the new classification nor a
 snapshot entry is evidence that a result is correct.  Produced figures still
 need resolving `figure:` annotations; external values need named sources; and
@@ -794,3 +794,33 @@ dated pages and have no numerical result. No surveyed model was run on
 OpenTallas, and OpenTallas still has no video ABI, compiler, diffusion
 scheduler, causal-frame backend, RTL, physical implementation, or silicon
 result.
+
+---
+
+# 10. DeepSeek-V4.1-Flash: what the three new targets have, and what produces nothing yet
+
+Added 2026-09-13 with
+[`DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)
+(TA-DS41-ROM-WAFER, TA-DS41-ROM-ARRAY, TA-DS41-HBM). This section exists because
+a plan for a target is the easiest place in the repository for planned behaviour
+to be read as evidence. Every row below is either a registration that exists, or
+a named absence.
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| **No DeepSeek-V4.1 token has been produced by any lane in this repository.** No V4.1 deployment is compiled, no V4.1 reference oracle has run, and the V4.1 Kernel IR is not emitted | plan sections 1 and 4.2, master plan section 3, and the `pending` status of every lock in the three comparison contracts | the finding: `tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash` exits with "the remainder of gate DS41-I2 is the node-by-node lowering itself, which this front end does not emit yet", and `build/ir-v3/deepseek-v4.1-flash/` holds only `planned_census.json` | **the finding** | **YES** |
+| Three V4.1 comparison contracts are registered, schema-valid under contract schema v2, and bound to the mandatory 200,000-token workload | `configs/abi3/comparison_contracts/deepseek_v41_{rom_wafer_2_vs_hbm_cluster,rom_array_51_vs_hbm_cluster,rom_wafer_2_vs_rom_array_51}_v1.json` | `make abi3-comparison-deepseek-v41`, which runs `tests/test_deepseek_v41_comparison_contracts.py` (36 tests); the workload digests re-derive against `results/abi3/deepseek_v41_workload_pins.json` and the materialised prompts | **`executed`, for the contracts only** | **YES — and it is a pair identity, not a comparison** |
+| The wafer-pair-versus-array silicon ratio is **0.5641968631692806**, outside the 0.02 iso-area tolerance, so that pair is the packaging control and not an iso-area result. It stays outside the tolerance at the plan's 51-node count too (0.44959437533802055), so the reading does not depend on which count survives | `…rom_wafer_2_vs_rom_array_51_v1.json#iso_area.ratio` | arithmetic on two published die areas and one derived node count: 64 × 815.0 mm² <!-- figure: 815.0 src="configs/hardware/technology.json#reticle.area_mm2.value" name="ledger reticle die area" --> against 2 × 46,225.0 mm² <!-- figure: 46,225.0 src="configs/hardware/technology.json#wafer.area_mm2.value" name="ledger wafer die area" -->, checked by `iso_area_side_arithmetic_exact` and `iso_area_ratio_exact` in `tools/abi3_comparison_boundary.py` | **`derived`** | **YES — and it is an area ratio, never a speed ratio** |
+| The iso-area array comparator for that pair is **113 dies at 92,095.0 mm²** (112, 114 and 115 also fall inside the tolerance), and **no such build exists** | the same contract's `iso_area.granularity_correction` | the same arithmetic; `built` is recorded `false` | **`derived`** | **YES** |
+| The HBM comparator's **node count is null** and its **die area is unavailable**, so both storage-class pairs publish no ratio at all | `…_vs_hbm_cluster_v1.json#targets.hbm` | partly produced and not enough: `tools/build_deepseek_v41_hbm_comparator.py comparator_sizing()` derives a capacity **floor of 3 nodes** and a smallest admissible `CLUSTER_N` of **8** from 307,527,990,600 B of on-device weights plus 178,000,000 B of session KV against 103,079,215,104 B per node, and says of itself that this is "a capacity floor, not a plan fit … the fitted count is `build_plan`'s and needs the V4.1 kernel IR". No artifact states the die area of the shared conventional accelerator chip at all; `results/abi3/comparison_deepseek_rom_array_vs_hbm.json#silicon` records the same absence for the V4 pair | **`derived` floor; the fitted count and the die area are findings** | **YES** |
+| Each published V4.1 ratio must appear beside its **binding constraint** and its **resident-session count** (gate DS41-CMP11) | the three contracts' `reporting` block | not produced: `tools/build_comparison_report.py` emits neither field, and no V4.1 execution record exists. The analytical antecedents are the roofline's `recommended.binding_constraint` and `recommended.max_resident_users` for this model, which are projections and may be quoted only in a column labelled analytical | **`prose` for the requirement; `simulated/derived` for the antecedents** | **YES as a stated requirement; NO as evidence** |
+| The V4.1 array is **64 reticles**, not the plan's 51 | plan section 3.2 names 51; `compiler/backends/rom/deepseek_v41_array.py` and `configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json` derive 64 | the plan's own whole-expert ownership rule refuses 51: 384 routed experts per layer, and 384 % 51 = 27. 64 is the smallest admissible count at or above the design point on the declared eight-by-eight fabric, and the backend records that it rounds up because rounding down would make the ROM side cheaper than the point it stands in for. No array deployment is built, so the count is a derivation and not a placement | **`derived`, superseding an `assumed` plan input** | **YES — and the plan's section 3.2 still says 51** |
+| The inter-wafer crossing is **one hop per token at an assumed 5 µs**, swept 1 to 10 µs | plan sections 3.1 and 14 risk 4 | an explicit assumption with a stated sweep; no sourced part | **`assumed`** | **YES, and it stays `assumed` until a part is sourced** |
+
+**Boundary.** Nothing in this section is a TPOT, a latency, or a throughput
+result, and the one arithmetic ratio in it divides square millimetres. The
+contracts are governed pair identities whose model binding, oracle, deployments,
+capabilities and cost tables are all `pending`; validating them proves that they
+describe their own pending state correctly and proves nothing about either
+machine. Gate DS41-CMP11 closes last, after the deployments exist, the tokens
+match the oracle, and the report tool prints both companions.

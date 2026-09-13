@@ -56,6 +56,19 @@ PINNED_VERILATOR_VERSION = "5.050"
 # WORDS than the vector set declares is refused by arithmetic rather than by a
 # number somebody remembered to update.
 STRUCTURAL_INTEGRATED_CHECKS = 189_862 - 189_440
+#: The case count the residue above was MEASURED at.  The residue is not
+#: case-independent: the comment above says the harness adds nine checks per
+#: case -- six per-family launch counts plus the selected token, its tie
+#: multiplicity and its EOS reason -- and those 36 are inside the 422.  So a
+#: vector set with a fifth case (WP-L adds the V4.1 wafer entrypoint) does NOT
+#: get +9 assumed here: the residue is re-measured from a run and this number
+#: moves with it.  Guessing the delta would put a fabricated check count in an
+#: acceptance comparison, which is worse than refusing.
+STRUCTURAL_CHECKS_MEASURED_AT_CASES = 4
+#: Where a V4.1 run is recorded, plan section 13 WP-L.  It is a separate file
+#: rather than an overwrite because the Qwen/V4 record is the evidence for a
+#: different set of targets; --output selects it.
+V41_OUTPUT = ROOT / "results/rtl/abi3_shipped_prefix_campaign_v41.json"
 
 
 def expected_integrated_checks(vectors: dict[str, Any]) -> int:
@@ -75,6 +88,20 @@ def expected_integrated_checks(vectors: dict[str, Any]) -> int:
 
     Plus one consumed-count check per case and one for the whole run.
     """
+    case_count = len(vectors["cases"])
+    if case_count != STRUCTURAL_CHECKS_MEASURED_AT_CASES:
+        raise SystemExit(
+            f"the vector set carries {case_count} cases and "
+            f"STRUCTURAL_INTEGRATED_CHECKS was measured at "
+            f"{STRUCTURAL_CHECKS_MEASURED_AT_CASES}. The residue is per-case "
+            "(nine harness checks per case sit inside it), so it has to be "
+            "re-measured from a run of THIS vector set -- run the campaign, read "
+            "the checks= the harness printed, subtract the word-scaled terms "
+            "this function computes, and set the constant to the difference. "
+            "Do not add nine per case by hand: the delta is a property of the "
+            "harness, and a fabricated check count in an acceptance comparison "
+            "is worse than a refusal."
+        )
     writes = int(vectors["result_word_count"])
     span = sum(
         int(case["bank_mapping"]["result_region_span"]) for case in vectors["cases"]
@@ -139,6 +166,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
+    "rtl/abi3/ot_a3_rope_lane_pipe.sv",
     "rtl/abi3/ot_a3_vector_rope.sv",
     # The datapaths of the six operator families the issue bridge admits in
     # addition to the original seven.  They are listed here because the bridge
@@ -693,7 +721,15 @@ def simulator_case(
     run_command: list[str],
     build: Path,
     marker: str,
+    expected_case_count: int,
 ) -> dict[str, Any]:
+    """One simulator's compile-and-run, judged against THIS vector set.
+
+    ``expected_case_count`` used to be the literal 4.  The vector set is
+    append-only and WP-L adds a fifth case for the V4.1 wafer entrypoint, so a
+    frozen 4 would have failed a correct five-case run and -- worse -- passed a
+    four-case run of a five-case vector set.  It comes from the vector set now.
+    """
     compiled = run_stage(f"{name}.compile", compile_command, build, 1800)
     executed: dict[str, Any] | None = None
     if compiled["returncode"] == 0:
@@ -705,7 +741,7 @@ def simulator_case(
         and executed is not None
         and executed["returncode"] == 0
         and marker in run_log
-        and len(observation["cases"]) == 4
+        and len(observation["cases"]) == expected_case_count
         and observation["checks"] is not None
     )
     return {
@@ -814,6 +850,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 ["./obj_p3/Vot_a3_shipped_prefix_top"],
                 build,
                 marker,
+                len(vectors["cases"]),
             )
         ]
 

@@ -934,6 +934,17 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "VOCAB_PROJECT": "tensor",
     "WEIGHT_NORMALIZE": "route_expert",
     "WINDOW_INDEX": "route_expert",
+    # AM-E10's four kinds.  The table is a *neutral-kind* namespace, not a
+    # model's, so the V4.1 kinds live here beside the V4 ones for the same
+    # reason ``graph_census`` does: one implementation, two models.  Each takes
+    # the counter group of the engine family it lowers to -- ``ROUTE`` for the
+    # two candidate-pool operators, ``DMA`` for the n-gram hash, ``VECTOR`` for
+    # the fused Engram gate -- which is the group whose events the simulator
+    # engines actually add to.
+    "BLOCK_MAX": "route_expert",
+    "CANDIDATE_MASK": "route_expert",
+    "ENGRAM_GATE": "vector_reduction",
+    "NGRAM_HASH": "memory",
 }
 
 #: Attribute keys of the source graph that carry a term ``check_neutral``

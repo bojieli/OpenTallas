@@ -114,6 +114,8 @@ def _module(name: str, relative: str):
 _admission = _module("_g1b_adm", "tools/build_a3_operator_admission_vectors.py")
 _scatter = _module("_g1b_sc", "tools/build_a3_qwen_kv_scatter_vectors.py")
 
+from tools import abi3_g1_models as ladder_models  # noqa: E402
+
 SCHEMA = "opentallas.rtl.g1b_layer_closure.v1"
 WORKLOAD = "TA-QW-EOS-1"
 DEFAULT_OUTPUT = ROOT / "results/rtl/abi3_g1b_layer_closure.json"
@@ -136,6 +138,8 @@ ADMISSION_CAMPAIGNS = (
 )
 
 # The two storage classes G1b requires, and the deployment each one names.
+# Rebound from the --model preset in main(); kept as literals so reading this
+# file tells you the default binding.
 STORAGE_CLASSES = {
     "rom": "qwen3-8b-rom-single-chip",
     "hbm": "qwen3-8b-hbm-single-chip",
@@ -1824,7 +1828,8 @@ def build(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--output", type=Path, default=None)
+    ladder_models.add_argument(parser)
     parser.add_argument(
         "--campaign",
         type=Path,
@@ -1854,7 +1859,31 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
-    summary = build(args.output, args.campaign, args.vectors, args.rerun)
+    # See tools/abi3_g1_models.py: the binding is rebound here rather than
+    # threaded through every site that reads it, and the default preset rebinds
+    # to the literals above so an existing invocation is unchanged.
+    global WORKLOAD, STORAGE_CLASSES
+    model = ladder_models.resolve(args.model)
+    WORKLOAD = model.workload_id
+    STORAGE_CLASSES = dict(model.storage_classes)
+    output = args.output or model.artifact("g1b", "layer_closure")
+    manifest_keys: set[str] = set()
+    if DEPLOYMENT_MANIFEST.exists():
+        manifest_keys = {
+            str(entry.get("key"))
+            for entry in json.loads(
+                DEPLOYMENT_MANIFEST.read_text(encoding="utf-8")
+            ).get("deployments", [])
+            if isinstance(entry, dict)
+        }
+    absent = sorted(k for k in STORAGE_CLASSES.values() if k not in manifest_keys)
+    if absent:
+        raise SystemExit(
+            f"{model.key}: {DEPLOYMENT_MANIFEST} carries no case for {absent}; "
+            "G1b replays one layer of a compiled deployment against its golden "
+            "model, so the deployment and its recorded vectors come first"
+        )
+    summary = build(output, args.campaign, args.vectors, args.rerun)
     for record in summary["records"]:
         layer = record["layer"]
         print(

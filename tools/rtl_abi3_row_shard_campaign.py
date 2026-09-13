@@ -88,6 +88,7 @@ SOURCES = (
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
     "rtl/abi3/ot_a3_engine_array.sv",
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
+    "rtl/abi3/ot_a3_rope_lane_pipe.sv",
     "rtl/abi3/ot_a3_vector_rope.sv",
     "rtl/abi3/ot_a3_fp32_div_rne.sv",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",

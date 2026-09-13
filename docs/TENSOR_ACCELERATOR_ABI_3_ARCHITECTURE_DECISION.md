@@ -274,6 +274,65 @@ device may branch on the combination. A `CLUSTER_32` capability declares
 exactly 32 nodes. The plan is
 [`DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md).
 
+**Amendment of 2026-09-13: a fifth physical profile, and two registrations under
+the fourth.** A pipeline of exactly two wafer-scale logical accelerators, with
+one inter-wafer crossing per token, is admitted as the profile of
+TA-DS41-ROM-WAFER. It is additive in both directions and retires nothing: the
+wafer-scale profile above still means exactly one logical device, and TA-DS-ROM
+is still compiled against it.
+
+The fifth profile is the conjunction of the two contracts already stated, not a
+relaxation of either:
+
+- **Each wafer separately obeys the wafer-scale contract in full.** One global
+  logical deployment, address, event, transaction, session and counter namespace
+  over its own tiles; its own distributed HBM controllers and PHY attachment
+  points; its own clock, reset, power, thermal, RAS and fault-containment
+  domains; its own bounded barriers and collectives. A wafer of the pair is a
+  wafer, not half of one.
+- **The crossing between them obeys the N-node cluster contract.** It is an
+  inter-node fabric with a versioned topology, explicit descriptors, bounded
+  credits, explicit completion, modelled latency, serialization, contention and
+  retry, and fail-stop behaviour on an unrecoverable failure.
+- **The pair is one `WAFER_LOGICAL_DEVICE` of two `WAFER`-class nodes, not a
+  `CLUSTER_N`.** The profile above is validated by feature bit 9 and says
+  nothing about node count; `runtime/abi3/capability.py` admits
+  `fabric.node_class` `WAFER` at two or more nodes and then requires bits 8 and
+  9 together, because a wafer-class node has an internal fabric *and* sits on a
+  fabric between nodes. The pair carries one deployment, one session, one event
+  and transaction namespace and one submission, which is what this section's
+  wafer contract means by "host submission to one logical accelerator".
+  `CLUSTER_N` (amendment AM-R1) names a fabric between *separately submitted*
+  devices, which this is not; a future multi-wafer machine that is separately
+  submitted per wafer is that class, and this amendment does not admit it here.
+- **Two prohibitions carry over unweakened.** The host may not sequence model
+  stages across the crossing: the compiled program issues it, and firmware may
+  report health and reset for a fresh run and nothing more. And a two-wafer
+  machine may not be reported as one wafer, as one oversized chip, or as an
+  ordinary off-package stage pipeline; a result carries the `topology_class`,
+  `node_class` and `node_count` of the target that produced it, as master plan
+  section 3 requires of every row.
+
+Two further registrations use the fourth profile unchanged. TA-DS41-ROM-ARRAY is
+a `CLUSTER_N` of 64 reticle-class ROM dies on the TA-DS-HBM fabric, each die the
+same 815.0 mm2 <!-- figure: 815.0 src="configs/hardware/technology.json#reticle.area_mm2.value" name="ADR-003 reticle die area" -->
+unit of silicon every other array target uses. The count is derived, not chosen:
+the plan's 51-node analytical design point cannot own whole experts because 384
+routed experts per layer do not divide by 51, and 64 is the smallest admissible
+count at or above it on the declared eight-by-eight fabric. `CLUSTER_N` still
+refuses exactly 32 nodes, so the class boundary with `CLUSTER_32` is untouched. TA-DS41-HBM is a `CLUSTER_N` of
+the identical conventional HBM/SRAM chip at a node count derived at gate
+DS41-P3, which is why no number appears for it here. `CLUSTER_32` continues to
+mean exactly 32 nodes, and a `CLUSTER_32` capability still declares exactly 32.
+
+Nothing in this amendment is implemented evidence. No DeepSeek-V4.1 deployment
+has been compiled and no DeepSeek-V4.1 token has been produced in this
+repository; the per-wafer die area is the published 46,225.0 mm2 <!-- figure: 46,225.0 src="configs/hardware/technology.json#wafer.area_mm2.value" name="ADR-003 wafer die area" -->
+wafer-scale die of the sourced reference envelope, and the inter-wafer hop is an
+assumed value swept across an order of magnitude rather than a sourced part. The
+plan, which does not retire, weaken or replace this document, is
+[`DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md`](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md).
+
 ### 3.4 ROM specialization
 
 Qwen-ROM and DeepSeek-ROM separately own:

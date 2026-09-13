@@ -770,11 +770,22 @@ def test_the_record_shape_is_the_shape_the_gate_reads(artifact, tmp_path,
     gates = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gates)
     monkeypatch.setattr(gates, "REPO", tmp_path)
-    gate = next(
-        g for g in json.loads(
-            (ROOT / "configs/gates/redesign_gates.json").read_text()
-        )["gates"] if g["id"] == "G1b"
-    )
+    board = json.loads(
+        (ROOT / "configs/gates/redesign_gates.json").read_text()
+    )["gates"]
+    rung = next(g for g in board if g["id"] == "G1b")
+    # G1b carries one workload binding per model since WP-L of the V4.1 plan.
+    # This test is about ONE artifact's field names matching the evaluator that
+    # reads it, so it evaluates that artifact's own binding: feeding the whole
+    # rung would fail on the other model's absent artifact and say nothing about
+    # this one's shape.  The binding is selected by the workload this tool
+    # builds for, not by position.
+    evaluator = dict(rung["evaluator"])
+    bindings = evaluator.pop("workload_bindings", None)
+    if bindings is not None:
+        binding = next(b for b in bindings if b["workload"] == "TA-QW-EOS-1")
+        evaluator.update(binding)
+    gate = {**rung, "evaluator": evaluator}
     out = tmp_path / gate["evaluator"]["artifact"]
     out.parent.mkdir(parents=True, exist_ok=True)
 

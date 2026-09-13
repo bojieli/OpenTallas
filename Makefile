@@ -1,8 +1,10 @@
 .PHONY: lint-strict abi3-tokens abi3-tokens-deepseek abi3-tokens-deepseek-rom abi3-tokens-deepseek-hbm abi3-tokens-qwen-rom abi3-tokens-qwen-hbm abi3-restart abi3-restart-qwen-hbm abi3-restart-qwen-rom abi3-restart-deepseek-hbm abi3-restart-deepseek-rom abi3-context-gate abi3-prefix-workloads abi3-hbm-qwen-deployment abi3-hbm-deepseek-deployment abi3-rom-schedule-check abi3-rom-qwen-degraded-build rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-prose-coverage check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic world-model world-model-landscape legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
-.PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-comparison-deepseek-array abi3-comparison-deepseek-wafer-array abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
+.PHONY: abi3-hbm-deepseek-v41-comparator abi3-hbm-deepseek-v41-build abi3-hbm-deepseek-v41-deployment
+.PHONY: abi3-rom-qwen-build abi3-rom-deepseek-build abi3-rom-deepseek-array-build abi3-rom-deepseek-v41-array-build abi3-rom-deepseek-v41-build abi3-hbm-qwen-build abi3-hbm-deepseek-build abi3-comparison-deepseek abi3-comparison-deepseek-array abi3-comparison-deepseek-wafer-array abi3-evidence-source-current abi3-rtl-vectors abi3-rtl-deployment-vectors abi3-rtl-deployment
 .PHONY: abi3-comparison-asap7-readiness abi3-comparison-asap7-gate
+.PHONY: abi3-comparison-deepseek-v41
 .PHONY: abi3-w10-natural-oracle abi3-w10-natural-hbm-a abi3-w10-natural-hbm-b abi3-w10-natural-rom abi3-w10-natural-check abi3-w10-stress-hbm abi3-w10-stress-rom abi3-w10-stress-check
-.PHONY: checkpoint-source-deepseek-pro
+.PHONY: checkpoint-source-deepseek-pro checkpoint-source-deepseek-v41 checkpoint-lock-deepseek-v41
 .PHONY: speculative
 .PHONY: chip-architecture-report check-chip-architecture test-chip-architecture
 
@@ -244,6 +246,19 @@ abi3-ir:
 	PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py \
 	  --output build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
 	  --census-output build/ir-v3/deepseek-v4-flash-0731/census.json
+# DeepSeek-V4.1-Flash: the plan and then the document.  The plan -- the profile,
+# the derived CSA2 mode sequence, the lowering and the per-layer census -- is
+# checkable against the released configuration without a payload byte, so it is
+# written first and on every host.  The document needs the V4.1 checkpoint lock
+# and the registry-witnessed source contract; where they are absent the second
+# command stops naming each artifact it does not have, which is why it is the
+# last one here.
+	PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py \
+	  --model deepseek-v4.1-flash --plan-only \
+	  --census-output build/ir-v3/deepseek-v4.1-flash/planned_census.json
+	PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py \
+	  --model deepseek-v4.1-flash \
+	  --census-output build/ir-v3/deepseek-v4.1-flash/census.json
 
 abi3-status:
 	PYTHONPATH=. python3 tools/build_program_status.py
@@ -319,6 +334,33 @@ abi3-rom-deepseek-array-build:
 	  --checkpoint-root $(DEEPSEEK_SNAPSHOT) \
 	  --verify --inverse --determinism
 
+# DeepSeek-V4.1-Flash on the reticle-class ROM array (plan WP-F, gate DS41-P3).
+# The node count is DERIVED, not typed: the plan's design point is 51 devices,
+# which neither 384-expert whole-expert ownership nor an 8-device NVLink domain
+# divides, so `expert_parallel_node_count` returns the smallest admissible count
+# at or above it.  `python3 -c "from compiler.backends.rom.deepseek_v41_array
+# import NODE_COUNT, TARGET_ID; print(NODE_COUNT, TARGET_ID)"` prints the pair
+# this target's output directory has to name.
+abi3-rom-deepseek-v41-array-build:
+	PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash-array \
+	  --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json \
+	  --output build/abi3/deepseek-v41-flash-rom-array-64 \
+	  --checkpoint-root $(DEEPSEEK_V41_SNAPSHOT) \
+	  --verify --inverse --determinism
+
+# DeepSeek-V4.1-Flash on two wafer-scale logical devices (plan WP-E, gate
+# DS41-P3), the primary target.  Nothing about the partition is typed here: the
+# backend derives the layer-run split from the graph's own per-run ROM inventory
+# and its shared-cache owner/reader groups, and refuses a cut that would strand a
+# reader on the other wafer.  `--determinism` is the plan's byte-identical
+# rebuild criterion; `--inverse` is the reconstruction proof.
+abi3-rom-deepseek-v41-build:
+	PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash \
+	  --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json \
+	  --output build/abi3/deepseek-v41-flash-rom-wafer-2 \
+	  --checkpoint-root $(DEEPSEEK_V41_SNAPSHOT) \
+	  --verify --inverse --determinism
+
 abi3-hbm-qwen-build:
 	PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py \
 	  --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json \
@@ -333,6 +375,36 @@ abi3-hbm-deepseek-build:
 
 abi3-hbm-qwen-deployment:
 	PYTHONPATH=. python3 tools/check_hbm_deployments.py --jobs 1 --force
+
+# DeepSeek-V4.1-Flash, the TA-DS41-HBM comparator (plan section 3.3, WP-G).
+# The backend is model-blind and is reused as is, so there is no V4.1 build rule
+# here beyond the profile: `abi3-hbm-deepseek-v41-build` is the SAME tool with
+# the same code path, given the V4.1 graph and the comparator's node count.  It
+# is commented rather than absent because the V4.1 kernel IR does not exist yet
+# (WP-D emits no graph body), and a target that cannot run is worse than a
+# target that says why.  `abi3-hbm-deepseek-v41-comparator` is what runs today:
+# the profile, the derived node count, the AM-E10 admission evidence and the
+# descriptor multiset, with the plan document's digest reported twice.
+abi3-hbm-deepseek-v41-comparator:
+	PYTHONPATH=. python3 tools/build_deepseek_v41_hbm_comparator.py --repeat
+
+abi3-hbm-deepseek-v41-build:
+	PYTHONPATH=. python3 tools/build_deepseek_v41_hbm_comparator.py \
+	  --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json --repeat
+	PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py \
+	  --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json \
+	  --profile cluster-n --nodes 8 \
+	  --out build/abi3/deepseek-v4.1-flash-hbm-cluster-n \
+	  --check-determinism
+
+abi3-hbm-deepseek-v41-deployment:
+	PYTHONPATH=. python3 tools/check_hbm_deployments.py \
+	  --case deepseek-v41-flash-hbm-cluster deepseek \
+	  build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json \
+	  build/abi3/deepseek-v4.1-flash-hbm-cluster-n \
+	  results/abi3/deepseek_v41_hbm_comparator_capability.json \
+	  --output results/abi3/hbm_deepseek_v41_deployment_certificate.json \
+	  --jobs 1 --force
 
 abi3-hbm-deepseek-deployment:
 	PYTHONPATH=. python3 tools/check_hbm_deployments.py \
@@ -372,6 +444,19 @@ DS_TOKENS ?= 4
 abi3-prefix-workloads:
 	PYTHONPATH=. python3 tools/build_deepseek_v4_prefix_workloads.py \
 	  --snapshot $(DEEPSEEK_SNAPSHOT)
+
+# DeepSeek-V4.1-Flash workloads (WP-I, plan section 10).  No --snapshot
+# variable: the builders derive the snapshot path from the committed identity
+# in configs/models/candidates and data/inventory and authenticate it by the
+# released config digest, so a Makefile constant here could only disagree with
+# it.  The token lanes that consume these (abi3-tokens-deepseek-v41-*) wait on
+# the V4.1 backends of WP-E, WP-F and WP-G.
+.PHONY: abi3-workloads-deepseek-v41 abi3-prefix-workloads-deepseek-v41
+abi3-workloads-deepseek-v41:
+	PYTHONPATH=. python3 tools/build_deepseek_v41_workloads.py --pins
+
+abi3-prefix-workloads-deepseek-v41: abi3-workloads-deepseek-v41
+	PYTHONPATH=. python3 tools/build_deepseek_v41_prefix_workloads.py
 
 abi3-tokens-deepseek-rom:
 	PYTHONPATH=. python3 tools/run_accelerator_tokens.py \
@@ -549,6 +634,46 @@ abi3-evidence-source-current:
 	$(MAKE) abi3-rtl-deployment-vectors
 	$(MAKE) abi3-rtl-deployment
 
+# DS41-CMP11, WP-N of docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md.  The
+# three V4.1 pair identities are registered and schema-valid under the v2
+# comparison-contract schema, and every lock in them is pending: no V4.1
+# deployment is built and no V4.1 token has been produced, so there is no
+# execution record to compare.  This target therefore proves the contracts and
+# refuses to fabricate a comparison from absent inputs.  The three commands that
+# produce the comparisons, once WP-E, WP-F and WP-G have built the deployments
+# and the token runner has executed them, are:
+#
+#   PYTHONPATH=. python3 tools/build_comparison_report.py \
+#     --rom results/abi3/accelerator_tokens/deepseek_v41_flash_rom_p32.json \
+#     --hbm results/abi3/accelerator_tokens/deepseek_v41_flash_hbm_p32.json \
+#     --comparison-id deepseek-v41-flash-rom-wafer-2-vs-hbm-cluster-p32 \
+#     --rom-deployment build/abi3/deepseek-v4.1-flash-rom-wafer-2 \
+#     --right-deployment build/abi3/deepseek-v4.1-flash-hbm-tokens \
+#     --output results/abi3/comparison_deepseek_v41_wafer_vs_hbm.json --force
+#
+#   PYTHONPATH=. python3 tools/build_comparison_report.py \
+#     --rom results/abi3/accelerator_tokens/deepseek_v41_flash_array_p32.json \
+#     --hbm results/abi3/accelerator_tokens/deepseek_v41_flash_hbm_p32.json \
+#     --comparison-id deepseek-v41-flash-rom-array-51-vs-hbm-cluster-p32 \
+#     --rom-deployment build/abi3/deepseek-v4.1-flash-rom-array-51 \
+#     --right-deployment build/abi3/deepseek-v4.1-flash-hbm-tokens \
+#     --output results/abi3/comparison_deepseek_v41_array_vs_hbm.json --force
+#
+#   PYTHONPATH=. python3 tools/build_comparison_report.py \
+#     --rom results/abi3/accelerator_tokens/deepseek_v41_flash_rom_p32.json \
+#     --rom-array results/abi3/accelerator_tokens/deepseek_v41_flash_array_p32.json \
+#     --comparison-id deepseek-v41-flash-rom-wafer-2-vs-rom-array-51-p32 \
+#     --rom-deployment build/abi3/deepseek-v4.1-flash-rom-wafer-2 \
+#     --right-deployment build/abi3/deepseek-v4.1-flash-rom-array-51 \
+#     --output results/abi3/comparison_deepseek_v41_wafer_vs_array.json --force
+#
+# tools/build_comparison_report.py does not yet read a contract, so it also does
+# not yet emit the binding constraint and resident-session count that gate
+# DS41-CMP11 requires beside every published ratio; the contracts declare that
+# requirement and the gate cannot close until the tool honours it.
+abi3-comparison-deepseek-v41:
+	PYTHONPATH=. python3 -m pytest -q tests/test_deepseek_v41_comparison_contracts.py
+
 # --- checkpoint/restart exactness ------------------------------------------
 # Each target runs an uninterrupted comparator, an interrupted prefix, and a
 # fresh-process resume.  The state-erased negative control and complementary
@@ -631,6 +756,28 @@ checkpoint-source-deepseek-pro:
 	  --snapshot $(DEEPSEEK_PRO_SNAPSHOT) \
 	  --registry-listing $(DEEPSEEK_PRO_REGISTRY_LISTING) \
 	  --output compiler/models/deepseek-v4-pro-0813/checkpoint_source.json
+
+# The same expectation for DeepSeek-V4.1-Flash: 88 registry-listed files,
+# 510,286,023,000 payload bytes across 48 shards.  Same cost characteristics and
+# the same rule -- invoke it by name, once, when the snapshot is complete -- so
+# it is likewise not a prerequisite of any aggregate target.
+DEEPSEEK_V41_REVISION ?= dba1be0a40aa45a94ad051997016db3960a90277
+DEEPSEEK_V41_SNAPSHOT ?= $(HOME)/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/$(DEEPSEEK_V41_REVISION)
+DEEPSEEK_V41_REGISTRY_LISTING ?= data/inventory/deepseek-v4.1-flash-registry-listing.json
+
+checkpoint-source-deepseek-v41:
+	PYTHONPATH=. python3 tools/build_checkpoint_source.py \
+	  --repository deepseek-ai/DeepSeek-V4.1-Flash \
+	  --revision $(DEEPSEEK_V41_REVISION) \
+	  --snapshot $(DEEPSEEK_V41_SNAPSHOT) \
+	  --registry-listing $(DEEPSEEK_V41_REGISTRY_LISTING) \
+	  --output compiler/models/deepseek-v4.1-flash/checkpoint_source.json
+
+checkpoint-lock-deepseek-v41:
+	PYTHONPATH=. python3 tools/build_checkpoint_lock.py \
+	  --source compiler/models/deepseek-v4.1-flash/checkpoint_source.json \
+	  --snapshot $(DEEPSEEK_V41_SNAPSHOT) \
+	  --output $(HOME)/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json
 
 # Strict lint on the redesigned datapath and control RTL: NO -Wno-fatal.
 #

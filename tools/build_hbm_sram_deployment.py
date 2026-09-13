@@ -63,8 +63,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--profile",
         default="single-chip",
-        choices=("single-chip", "cluster-32", "cluster-32-speculative"),
-        help="which shared-chip deployment profile to compile against",
+        choices=(
+            "single-chip",
+            "cluster-32",
+            "cluster-32-speculative",
+            "cluster-n",
+        ),
+        help=(
+            "which shared-chip deployment profile to compile against; "
+            "cluster-n is amendment AM-R1's class, whose node count is a "
+            "capability value and therefore needs --nodes"
+        ),
+    )
+    parser.add_argument(
+        "--nodes",
+        type=int,
+        default=None,
+        help=(
+            "node count for --profile cluster-n.  Refused for every other "
+            "profile: those name a fixed cardinality, and a count silently "
+            "ignored against one of them would build for a machine nobody "
+            "asked for"
+        ),
     )
     parser.add_argument(
         "--out",
@@ -126,7 +146,7 @@ def build(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     capability = (
         Capability.from_dict(json.loads(Path(args.capability).read_text()))
         if getattr(args, "capability", None) is not None
-        else capability_for(args.profile)
+        else capability_for(args.profile, node_count=getattr(args, "nodes", None))
     )
     tile = TileConfig(
         rows=args.tile_rows,
@@ -226,6 +246,17 @@ def main(argv: list[str] | None = None) -> int:
     try:
         report, status = build(args)
     except (PlanError, IRError) as error:
+        print(f"build failed: {error}", file=sys.stderr)
+        return 4
+    except KeyError as error:
+        # A profile/node-count mismatch, which capability_for refuses by name.
+        print(f"build failed: {error.args[0] if error.args else error}", file=sys.stderr)
+        return 4
+    except ValueError as error:
+        # A node count the topology class cannot express -- 32 under CLUSTER_N,
+        # or a count that is not a whole number of the fabric's domains.  The
+        # capability record refuses it; this reports the refusal rather than
+        # ending in a traceback.
         print(f"build failed: {error}", file=sys.stderr)
         return 4
 

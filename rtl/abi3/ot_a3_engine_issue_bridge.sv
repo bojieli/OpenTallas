@@ -132,7 +132,55 @@ module ot_a3_engine_issue_bridge #(
     //: A static gather source is then staged into the result bank too, which is
     //: a harness bank-routing choice -- architecturally there is one address
     //: space and the placement table already gives every object a base in it.
-    parameter integer GATHER_PLACEMENT_ADDRESSED = 0
+    parameter integer GATHER_PLACEMENT_ADDRESSED = 0,
+
+    //: THE LARGEST RESOLVED SEQUENCE EXTENT THIS INSTANTIATION ADMITS.
+    //:
+    //: The golden device issues the SAME 83 launches for a prefill as for a
+    //: decode; what differs is the span each one covers -- the sequencer's
+    //: resolved view extent on the sequence axis, 1 for a decode row and S for
+    //: an S-token prompt.  Sixteen admission clauses used to compare that
+    //: extent against the literal 1, which refused every span but one, and the
+    //: engine configuration below derived one row from the same literal.  Both
+    //: now read the resolved extent and are bounded by this parameter instead.
+    //:
+    //: The default is 1, so every existing instantiation admits exactly the set
+    //: it admitted before (``span >= 1 && span <= 1`` IS ``span == 1``) and
+    //: configures exactly the same single row.  Raising it costs the result
+    //: buffers the all-or-nothing engines need -- ot_a3_qwen_gqa's
+    //: MAX_QUERY_SPAN output buffer and ot_a3_vector_rms_norm's row ceiling,
+    //: both forwarded from here -- and nothing else: no datapath is sized by it.
+    parameter integer MAX_SEQUENCE_SPAN = 1,
+
+    //: IS THE INDEX OPERAND OF A GATHER OR AN EMBED LOOKUP ADDRESSED BY ITS OWN
+    //: VIEW?
+    //:
+    //: At 0 -- the default, and what every retained vector set was recorded
+    //: against -- the index address of DMA.GATHER and TENSOR.EMBED_LOOKUP is
+    //: ``cfg_index_base + real_launch_count``: a LAUNCH COUNTER, which ignores
+    //: the operator's own index view.  One index word per launch is all such a
+    //: base can name, so a span of S has nowhere to read S indices from, and
+    //: even at S=1 the word it reads is whatever the harness planted for that
+    //: launch rather than the one the view resolves to.
+    //:
+    //: At 1 the index address is the slot-0 object's placement base plus the
+    //: element offset that slot resolves to, and S consecutive index words are
+    //: read from there -- which is what makes ``DMA.GATHER`` select the row its
+    //: index view names and ``TENSOR.EMBED_LOOKUP`` embed S prompt tokens.  The
+    //: table a lookup indexes is then addressed by object with no token
+    //: pre-multiplied into it, because the mover applies the index itself.
+    parameter integer INDEX_VIEW_ADDRESSED = 0,
+
+    //: THE RMSNorm OPERATING PROFILE, forwarded.  Defaults are the engine's own
+    //: defaults, so at MAX_SEQUENCE_SPAN == 1 the forwarded values are the ones
+    //: the engine would have chosen and nothing moves.  A span of S normalises
+    //: S times as many rows in one launch, so the row ceiling and the result
+    //: buffer are the profile scaled by the span bound -- derived, not a second
+    //: hand-kept constant.
+    parameter [31:0] RMS_PROFILE_MAX_COUNT   = 32'd4096,
+    parameter [31:0] RMS_PROFILE_MAX_ROWS    = 32'd32,
+    parameter [31:0] RMS_PROFILE_MODEL_WIDTH = 32'd4096,
+    parameter [31:0] RMS_PROFILE_HEAD_WIDTH  = 32'd128
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -441,6 +489,9 @@ module ot_a3_engine_issue_bridge #(
     localparam [31:0] KV_ROW_STRIDE = 32'd2 * KV_PLANE_WORDS;
     localparam [31:0] GQA_SCALE_BITS = GQA_SCALE_CODE;
     localparam [31:0] GQA_OUTPUT_WORDS = QUERY_HEADS * HEAD_WIDTH;
+    //: The span bound as a 32-bit value, so every comparison against it is an
+    //: explicitly bounded one at the width the extents arrive at.
+    localparam [31:0] SPAN_BOUND = MAX_SEQUENCE_SPAN[31:0];
 
     localparam [4:0] S_IDLE        = 5'd0;
     localparam [4:0] S_OP_WAIT     = 5'd1;
@@ -764,6 +815,30 @@ module ot_a3_engine_issue_bridge #(
         end
     endfunction
 
+    // -- THE REQUEST'S SEQUENCE SPAN -------------------------------------
+    //
+    // One number per launch, and it is not a new descriptor field: it is the
+    // resolved extent the sequencer already emits for the operator's leading
+    // slot.  For every family whose operands carry a sequence axis that slot is
+    // slot 0 -- the model row of a MATMUL or an RMSNorm, the whole-head row of a
+    // head norm or a RoPE, the index vector of a gather, a scatter or an
+    // embedding, the query rows of an attention, the left operand of an
+    // elementwise -- so one expression serves all of them.
+    //
+    // The two SELECTION families are the exception and are span-1 by
+    // construction rather than by a pin: a prefill still selects ONE token,
+    // from the last position, so SELECTION.ARGMAX's slot-0 extent is the
+    // vocabulary it scans and not a span at all, and TOKEN_APPEND appends one
+    // id.  Naming them here is what keeps ``request_span`` meaning the same
+    // thing at every site that reads it.
+    wire [31:0] request_span =
+        (selection_argmax_q || selection_token_append_q) ? 32'd1
+                                                         : captured_extent[0];
+    // A span of zero has no rows and a span past the bound has no buffer, and
+    // both are refusals rather than clamps.  At MAX_SEQUENCE_SPAN == 1 this is
+    // exactly the ``extent == 1`` the sites below used to spell out.
+    wire span_admitted = (request_span >= 32'd1) && (request_span <= SPAN_BOUND);
+
     wire input_view_common_ok = descriptor_header_ok(
         desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
     ) &&
@@ -839,7 +914,9 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
         (desc_view_stride5 == 0) &&
         (captured_rank[0] == 2) && (captured_axis[0] == 0) &&
-        (captured_extent[0] == 1) &&
+        //: Slot 0 is where the span is READ, so the check here is the bound and
+        //: not an equality against a literal row count.
+        span_admitted &&
         (view_offset_consistent(0));
     wire head_rms_input_source_ok = rms_norm_q && head_rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
@@ -854,7 +931,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
-        (captured_extent[0] == 1) &&
+        span_admitted &&
         (view_offset_consistent(0));
     wire rope_input_source_ok = rope_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
@@ -873,7 +950,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride2 == 1) && (desc_view_stride3 == 0) &&
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
-        (captured_extent[0] == 1) &&
+        span_admitted &&
         (view_offset_consistent(0));
     wire rms_weight_source_ok = rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 1) &&
@@ -930,7 +1007,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
         (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
-        (captured_extent[0] == 1) &&
+        span_admitted &&
         (view_offset_consistent(0));
 
     wire output_view_common_ok = descriptor_header_ok(
@@ -1131,11 +1208,13 @@ module ot_a3_engine_issue_bridge #(
         (slot_tail_strides[0] == 32'd0) && (slot_tail_strides[1] == 32'd0) &&
         (slot_tail_strides[4] == 32'd0) &&
         (captured_rank[0] == 8'd2) && (captured_axis[0] == 8'd0) &&
-        (captured_extent[0] == 32'd1) &&
+        //: Slot 0 carries the span; the other two operands must agree with it
+        //: rather than each being pinned to one row of their own.
+        span_admitted &&
         (captured_rank[1] == 8'd2) && (captured_axis[1] == 8'd0) &&
-        (captured_extent[1] == 32'd1) &&
+        (captured_extent[1] == request_span) &&
         (captured_rank[4] == 8'd2) && (captured_axis[4] == 8'd0) &&
-        (captured_extent[4] == 32'd1);
+        (captured_extent[4] == request_span);
 
     wire [31:0] argmax_vocabulary = slot_dim0[0];
     wire argmax_shape_ok =
@@ -1246,14 +1325,16 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[0], slot_stride2[0], slot_tail_strides[0]
         ) &&
         (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
-        (captured_extent[0] == 32'd1) &&
+        //: The index vector IS the span: a prefill scatters S KV rows, one per
+        //: position, and reads S indices to place them.
+        span_admitted &&
         head_row_view_ok(
             slot_dtype[1], slot_rank[1], KV_HEADS, slot_dim1[1],
             slot_dim2[1], slot_tail_dims[1], slot_stride0[1],
             slot_stride1[1], slot_stride2[1], slot_tail_strides[1]
         ) &&
         (captured_rank[1] == 8'd3) && (captured_axis[1] == 8'd0) &&
-        (captured_extent[1] == 32'd1) && slot_offset_consistent(1) &&
+        (captured_extent[1] == request_span) && slot_offset_consistent(1) &&
         kv_cache_view_ok(
             slot_dtype[4], slot_rank[4], slot_dim1[4], slot_dim2[4],
             slot_tail_dims[4], slot_stride0[4], slot_stride1[4],
@@ -1271,7 +1352,8 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[0], slot_stride2[0], slot_tail_strides[0]
         ) &&
         (captured_rank[0] == 8'd3) && (captured_axis[0] == 8'd0) &&
-        (captured_extent[0] == 32'd1) && slot_offset_consistent(0) &&
+        //: The query rows are the span.
+        span_admitted && slot_offset_consistent(0) &&
         kv_cache_view_ok(
             slot_dtype[1], slot_rank[1], slot_dim1[1], slot_dim2[1],
             slot_tail_dims[1], slot_stride0[1], slot_stride1[1],
@@ -1298,14 +1380,15 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[3], slot_stride2[3], slot_tail_strides[3]
         ) &&
         (captured_rank[3] == 8'd1) && (captured_axis[3] == 8'd0) &&
-        (captured_extent[3] == 32'd1) &&
+        //: One position per query row, so the position vector spans with them.
+        (captured_extent[3] == request_span) &&
         head_row_view_ok(
             slot_dtype[4], slot_rank[4], QUERY_HEADS, slot_dim1[4],
             slot_dim2[4], slot_tail_dims[4], slot_stride0[4],
             slot_stride1[4], slot_stride2[4], slot_tail_strides[4]
         ) &&
         (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
-        (captured_extent[4] == 32'd1) && slot_offset_consistent(4);
+        (captured_extent[4] == request_span) && slot_offset_consistent(4);
 
     wire mapped_shape_ok =
         (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
@@ -1449,7 +1532,15 @@ module ot_a3_engine_issue_bridge #(
         (cfg_context_length != 32'd0) &&
         (cfg_kv_plane_rows != 32'd0) &&
         (cfg_context_length <= cfg_kv_plane_rows) &&
-        (observed_index_value + 32'd1 == cfg_context_length);
+        //: The span's LAST row ends at the context, so its FIRST row -- the
+        //: position the index view resolves to -- sits at C - S.  The
+        //: subtraction is guarded by the comparison before it rather than
+        //: written as ``observed + S == C``: a 32-bit MODULAR equality of that
+        //: shape accepted an underflowed bound in this very design, and a
+        //: refusal is the only acceptable answer to a context shorter than the
+        //: span it is asked to cover.
+        (cfg_context_length >= request_span) &&
+        (observed_index_value == cfg_context_length - request_span);
 
     integer slot;
     always @(posedge clk or negedge rst_n) begin
@@ -1860,7 +1951,10 @@ module ot_a3_engine_issue_bridge #(
                                 (desc_view_stride5 != 0) ||
                                 (captured_rank[0] != 1) ||
                                 (captured_axis[0] != 0) ||
-                                (captured_extent[0] != 1)) begin
+                                //: The index vector's extent IS the span: one
+                                //: index per gathered row, S of them for an
+                                //: S-token prompt.
+                                !span_admitted) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 4);

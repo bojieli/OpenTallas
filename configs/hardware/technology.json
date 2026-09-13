@@ -330,6 +330,12 @@
         "note": "5: the engram_host placement variant of DeepSeek-V4.1-Flash is the same model with its Engram tables in host memory; serial depth is unchanged.",
         "source": "DeepSeek-V4.1-Flash technical report sections 2.1-2.4 and pinned inference/model.py; same decoder-block enumeration as DeepSeek-V4-Flash-0731",
         "value": 5.0
+      },
+      "DeepSeek-V4.1-Flash-engram-hbm": {
+        "grade": "assumed",
+        "note": "5: the engram_hbm placement variant of DeepSeek-V4.1-Flash is the same model with its Engram tables resident in the store that holds the KV cache, so serial depth is unchanged for the same reason the engram_host variant's is. THE PLACEMENT DOES NOT ADD A PASS BOUNDARY, AND THIS IS THE ONE PLACEMENT WHERE THAT CLAIM COULD BE WRONG: the lookup now reads the same HBM the attention KV reads, so a lookup that could not be prefetched would serialise behind the KV round trip. It is charged as prefetchable here on the same evidence as the other two entries -- the row address is a function of the token ids alone (technical report sections 2.4.2 and 3.1.3), so it is available before the layer runs -- and the capacity and bandwidth the placement does cost are charged by the analytical model instead, as KV-store capacity on the stage that owns the region and as KV read bytes per token. Plan section 3.4 revisits exactly this at gate DS41-C2, when the cycle model prices the lookup with a measured transaction size; if it lands on the critical path this entry is what has to move.",
+        "source": "DeepSeek-V4.1-Flash technical report sections 2.1-2.4 and pinned inference/model.py; same decoder-block enumeration as DeepSeek-V4-Flash-0731",
+        "value": 5.0
       }
     },
     "global_wire_delay_s_per_mm": {

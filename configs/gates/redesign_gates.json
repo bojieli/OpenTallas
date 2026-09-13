@@ -55,12 +55,10 @@
       "fails_when": "Any issued class is uncovered, any word differs, any family is still trapped as CAPABILITY, or the weights are not the real checkpoint.",
       "evaluator": {
         "type": "rtl_records",
-        "artifact": "results/rtl/abi3_g1a_operator_equivalence.json",
         "require_storage_classes": [
           "rom",
           "hbm"
         ],
-        "workload": "TA-QW-EOS-1",
         "require_fields": [
           {
             "field": "coverage.every_issued_class_covered",
@@ -89,7 +87,18 @@
             "at_least": 1
           }
         ],
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. This is the base of the pyramid: bit-exact reference-model equivalence per (family, shape, numeric contract) class, which is what makes composition sound. Cost is bounded by the largest single operator, not by the network."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. This is the base of the pyramid: bit-exact reference-model equivalence per (family, shape, numeric contract) class, which is what makes composition sound. Cost is bounded by the largest single operator, not by the network.",
+        "workload_bindings": [
+          {
+            "workload": "TA-QW-EOS-1",
+            "artifact": "results/rtl/abi3_g1a_operator_equivalence.json"
+          },
+          {
+            "workload": "TA-DS41-EOS-1",
+            "artifact": "results/rtl/abi3_g1a_deepseek_v41_operator_equivalence.json",
+            "note": "SECOND WORKLOAD BINDING, docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md WP-L, gate DS41-R6. Added as a binding rather than by editing this rung's workload and artifact, because editing them would have moved the rung OFF Qwen instead of adding V4.1 beside it, and the board would then report one model's ladder in place of the other's. The evaluator runs every binding and names each verdict, so a satisfied Qwen binding stays visible next to an unsatisfied V4.1 one. Artifact names are plan section 10.2's; the producer is tools/build_abi3_g1{a,b,f}_*.py --model deepseek-v4.1-flash."
+          }
+        ]
       }
     },
     {
@@ -99,12 +108,10 @@
       "fails_when": "The layer is incomplete, any intermediate differs, or any intermediate was injected from the golden model.",
       "evaluator": {
         "type": "rtl_records",
-        "artifact": "results/rtl/abi3_g1b_layer_closure.json",
         "require_storage_classes": [
           "rom",
           "hbm"
         ],
-        "workload": "TA-QW-EOS-1",
         "require_fields": [
           {
             "field": "layer.complete",
@@ -125,7 +132,18 @@
             "at_least": 1
           }
         ],
-        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 192,937,984 MACs = 1.34 h per store at the measured integrated rate of 33,316 MACs/s. This rung proves the operator SEQUENCE within a layer, the residual plumbing, the KV write and read, and the buffer handoff -- the things a per-operator campaign cannot see."
+        "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. 192,937,984 MACs = 1.34 h per store at the measured integrated rate of 33,316 MACs/s. This rung proves the operator SEQUENCE within a layer, the residual plumbing, the KV write and read, and the buffer handoff -- the things a per-operator campaign cannot see.",
+        "workload_bindings": [
+          {
+            "workload": "TA-QW-EOS-1",
+            "artifact": "results/rtl/abi3_g1b_layer_closure.json"
+          },
+          {
+            "workload": "TA-DS41-EOS-1",
+            "artifact": "results/rtl/abi3_g1b_deepseek_v41_layer_closure.json",
+            "note": "SECOND WORKLOAD BINDING, docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md WP-L, gate DS41-R6. Added as a binding rather than by editing this rung's workload and artifact, because editing them would have moved the rung OFF Qwen instead of adding V4.1 beside it, and the board would then report one model's ladder in place of the other's. The evaluator runs every binding and names each verdict, so a satisfied Qwen binding stays visible next to an unsatisfied V4.1 one. Artifact names are plan section 10.2's; the producer is tools/build_abi3_g1{a,b,f}_*.py --model deepseek-v4.1-flash."
+          }
+        ]
       }
     },
     {
@@ -274,12 +292,10 @@
       "fails_when": "Any operation is injected from the golden model, the reduced configuration is not structurally identical to the full one, or the emitted ids differ from the reduced oracle's.",
       "evaluator": {
         "type": "rtl_records",
-        "artifact": "results/rtl/abi3_g1f_reduced_end_to_end.json",
         "require_storage_classes": [
           "rom",
           "hbm"
         ],
-        "workload": "TA-QW-EOS-1",
         "require_fields": [
           {
             "field": "configuration.reduced",
@@ -295,12 +311,25 @@
           }
         ],
         "note": "Rung of the RTL verification ladder (docs/CHIP_ARCHITECTURE_DESIGN.md section 11.5). Every rung carries the same provenance spine: a named simulator, a positive simulated_cycles, an evidence_class naming RTL simulation, and a clean worktree, for EACH of rom and hbm. Minutes. The industry's small-config regression: the tapeout configuration is verified by the pyramid, the regression configuration is run whole, nightly. It establishes control flow, composition and token emission with nothing supplied; it does NOT establish numerics at full dimension, which is what G1a-G1d are for. Its oracle is the same reference implementation at the reduced configuration. The reduced oracle does not exist yet, so this rung currently fails by naming its missing prerequisite -- which is the correct behaviour and the reason the oracle is declared here rather than left implicit. It is produced by the same reference implementation as the full oracle, at the reduced configuration, and the rung's record must reproduce its ids exactly. HARDENED 2026-09-06, and the defect was mine. This rung's three declared fields -- configuration.reduced, configuration.structurally_identical_to_full and injection.golden_injected_operation_count == 0 -- ALL PASS on an artifact whose injection.end_to_end_operations_executed is 0. They pass because nothing ran: zero injected operations over zero operations satisfies the count vacuously, and a declared-identical configuration is a property of the config file, not of a run. Only the oracle comparison added later caught it. A rung that goes green because nothing executed is precisely the not_evaluable defect this board exists to remove, so the rung now also requires at least one end-to-end operation to have executed.",
-        "oracle": "results/abi3/qwen3_reduced_reference_oracle.json",
-        "oracle_token_field": "results.TA-QW-REDUCED-EOS-1.generated_token_ids",
         "require_min": [
           {
             "field": "injection.end_to_end_operations_executed",
             "at_least": 1
+          }
+        ],
+        "workload_bindings": [
+          {
+            "workload": "TA-QW-EOS-1",
+            "artifact": "results/rtl/abi3_g1f_reduced_end_to_end.json",
+            "oracle": "results/abi3/qwen3_reduced_reference_oracle.json",
+            "oracle_token_field": "results.TA-QW-REDUCED-EOS-1.generated_token_ids"
+          },
+          {
+            "workload": "TA-DS41-EOS-1",
+            "artifact": "results/rtl/abi3_g1f_deepseek_v41_reduced_end_to_end.json",
+            "oracle": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+            "oracle_token_field": "results.TA-DS41-REDUCED-EOS-1.generated_token_ids",
+            "note": "SECOND WORKLOAD BINDING, docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md WP-L, gate DS41-R6. Added as a binding rather than by editing this rung's workload and artifact, because editing them would have moved the rung OFF Qwen instead of adding V4.1 beside it, and the board would then report one model's ladder in place of the other's. The evaluator runs every binding and names each verdict, so a satisfied Qwen binding stays visible next to an unsatisfied V4.1 one. Artifact names are plan section 10.2's; the producer is tools/build_abi3_g1{a,b,f}_*.py --model deepseek-v4.1-flash. The reduced V4.1 fixture and its workload come from tools/build_deepseek_v41_reduced_model.py; the reduced reference oracle named here does not exist yet, so this binding fails by naming its missing prerequisite -- the same behaviour, and for the same stated reason, as the Qwen binding's own oracle clause. The binding's workload is the GOVERNED id TA-DS41-EOS-1, matching the Qwen binding: this rung's record declares the governed workload it stands for and carries the reduced id beside it, so the oracle field below is what names TA-DS41-REDUCED-EOS-1."
           }
         ]
       }

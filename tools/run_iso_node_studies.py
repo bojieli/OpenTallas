@@ -63,10 +63,15 @@ MODEL_PATHS = {
     "Qwen3-8B": ROOT / "configs" / "models" / "qwen3-8b.json",
     # DeepSeek-V4.1-Flash (released 2026-09-10) is a CANDIDATE model: profiled
     # from the official checkpoint headers, never executed by any lane here,
-    # and bound to no release figure.  It is carried in both placements of its
-    # 203 GB Engram tables -- beside the weights on both sides, and in host
-    # memory on both sides as DeepSeek serves it -- because the placement
-    # moves the ROM stage count and the GPU device count together.
+    # and bound to no release figure.  It is carried in all three placements of
+    # its 203 GB Engram tables -- beside the weights on both sides, in host
+    # memory on both sides as DeepSeek serves it, and resident in the same
+    # wafer-edge HBM that holds the KV cache -- because the placement moves the
+    # ROM stage count and the GPU device count together.  The third placement is
+    # the one the primary target takes (V4.1 plan section 3.4): it is the only
+    # one that keeps the tables off the weight store without inventing a host,
+    # and it is the only one whose cost lands on a store this model already
+    # prices, so it is the only one whose KV capacity and KV bandwidth move.
     "DeepSeek-V4.1-Flash": ROOT
     / "configs"
     / "models"
@@ -77,6 +82,11 @@ MODEL_PATHS = {
     / "models"
     / "candidates"
     / "deepseek-v4.1-flash-engram_host.json",
+    "DeepSeek-V4.1-Flash-engram-hbm": ROOT
+    / "configs"
+    / "models"
+    / "candidates"
+    / "deepseek-v4.1-flash-engram_hbm.json",
 }
 CONTEXTS = (8_192, 32_768, 200_000, 1_000_000)
 
@@ -204,6 +214,22 @@ def _compact(
         "max_concurrent_users": point.max_concurrent_users,
         "max_batch_per_stage": int(
             float(point.metrics["C7_C8_max_batch_per_stage"])
+        ),
+        # Carried only where the model declares weight regions resident in its
+        # KV store, so the capacity that placement costs -- and which stage of
+        # the pipeline pays it -- is in the artifact rather than only visible as
+        # a smaller max_batch_per_stage, and so no prior row gains a zero column.
+        **(
+            {
+                "kv_store_resident_weight_bytes": float(
+                    point.metrics["C7_C8_kv_store_resident_weight_bytes"]
+                ),
+                "kv_store_resident_bytes_by_stage": str(
+                    point.metrics["C7_C8_kv_store_resident_bytes_by_stage"]
+                ),
+            }
+            if "C7_C8_kv_store_resident_weight_bytes" in point.metrics
+            else {}
         ),
         "official_packed_weight_bytes_per_step": official_weight_bytes_per_step,
         "deployed_weight_bytes_per_step": float(

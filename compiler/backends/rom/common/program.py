@@ -1101,6 +1101,16 @@ class LinkStep:
     route_class: int = 0
     group_id: int = NO_ID
     virtual_channel: int = 0
+    #: The two ABI nodes a point-to-point step joins.  Zero and zero -- the
+    #: default, and every step a one-node product issues -- says both endpoints
+    #: are the local node, which is what an on-wafer unicast between two tiles
+    #: of one logical device is.  A step that crosses a node boundary states
+    #: the crossing instead, because ``LINK.REMOTE_DMA`` resolves push from
+    #: pull by comparing these two fields with the admitted topology's
+    #: ``local_node_id`` (runtime/sim/engines/link.py), and a cross-node
+    #: transfer that left them at zero would describe a local copy.
+    source_node: int = 0
+    destination_node: int = 0
     #: Numeric contract of an arithmetic collective.  An all-reduce reduces
     #: real bytes under a real contract or it is not a reduction, so the step
     #: names one; a movement collective needs none.
@@ -5098,6 +5108,32 @@ class RomLowering:
                         "expert bound; TA-ABI3-OPCONV-1 requires aux0"
                     )
                 return [experts]
+            if sub in (int(Route.BLOCK_MAX), int(Route.CANDIDATE_MASK)):
+                # AM-E10.  Both halves of the candidate pool take the block
+                # width as a **mandatory** immediate: ``BLOCK_MAX`` reduces one
+                # score per block of that width and ``CANDIDATE_MASK`` checks
+                # every block id against the count that width implies.  It is
+                # read off the graph and never defaulted, for the reason
+                # ``EXPERT_DISPATCH`` above is never defaulted: a width the
+                # producer did not state is a reduction and a bound check over
+                # whatever happens to be in range.
+                width = int(
+                    attributes.get(
+                        "candidate_block_size",
+                        attributes.get(
+                            "block_width",
+                            attributes.get(
+                                "block_size", domain.get("candidate_block_size", 0)
+                            ),
+                        ),
+                    )
+                )
+                if width <= 0:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} is a {kernel.kind} with no "
+                        "candidate block width; AM-E10 requires aux0"
+                    )
+                return [width]
             if sub == int(Route.INDEX_TOPK):
                 return [
                     self._index_topk_capacity(kernel),
@@ -8500,9 +8536,12 @@ class RomLowering:
                 remote_object_id=remote,
                 # ``local_tile_id`` of the admitted topology is this endpoint,
                 # and it is a member of the participant set the step names, so
-                # it can be the root of a multicast, gather or scatter.
-                source_node=0,
-                destination_node=0,
+                # it can be the root of a multicast, gather or scatter.  The two
+                # node fields are the step's own (zero and zero unless it
+                # crosses a node boundary), because on a multi-node product the
+                # endpoints are a property of the traffic, not of the emitter.
+                source_node=step.source_node,
+                destination_node=step.destination_node,
                 group_id=step.group_id,
                 route_class=step.route_class,
                 byte_extent=step.byte_extent,

@@ -1,0 +1,3032 @@
+{
+  "campaign": "rtl_a3_v41_route_block_max",
+  "claim_boundary": {
+    "checks_block_max_against_an_independent_python_reference": true,
+    "compares_every_output_word_score_block_id_row_last_and_tag": true,
+    "contains_or_models_a_rom_or_sram_macro": false,
+    "covers_nan_scores_on_a_real_lane_as_a_value": false,
+    "covers_score_formats_other_than_the_seven_elaborated_shapes": false,
+    "establishes_a_frequency_a_period_or_any_physical_number": false,
+    "establishes_an_area_or_a_power_number": false,
+    "establishes_any_agreement_with_the_vendor_checkpoint_or_its_own_scores": false,
+    "establishes_operand_fetch_result_writeback_or_any_memory_port": false,
+    "establishes_the_candidate_pool_end_to_end_with_candidate_mask_or_index_topk": false,
+    "establishes_the_functional_simulator_engine_for_route_block_max": false,
+    "establishes_the_ir_lowering_or_the_admission_predicate_for_sub_opcode_0x08": false,
+    "establishes_the_numeric_contract_block_max_ordered_ieee_v1": true,
+    "executes_a_real_abi3_descriptor_or_engine_issue": false,
+    "exercises_every_structural_refusal_of_the_block": true,
+    "geometry_shapes_run": [
+      "v41_binary32_block8",
+      "binary32_block8_cmp2",
+      "binary32_block6_rows64",
+      "binary32_block16",
+      "binary32_block1",
+      "bf16_block4",
+      "fp16_block8_cmp3"
+    ],
+    "integrates_the_shipped_deployment_sequencer": false,
+    "is_placed_or_routed": false,
+    "measures_initiation_interval_and_per_output_latency": true,
+    "note": "This run establishes that one parameterised RTL block computes the reference's blockwise maximum, bit for bit, on two simulators, at one block per cycle, for seven elaborated shapes, and that it fails closed on every refusal it defines.  It establishes nothing about the block inside the engine array, nothing about the rest of the candidate pool, and nothing physical: BLOCK_MAX is not reachable from a descriptor in this run, and the frequency claim in the module header is an intent about the pipeline structure, not a measurement -- WP-M's routed record is the measurement.",
+    "reference_derived_from_the_rtl": false,
+    "runs_both_icarus_and_the_pinned_verilator_over_the_same_vectors": true,
+    "wired_into_ot_a3_engine_array_or_reachable_from_a_program": false
+  },
+  "configurations": [
+    {
+      "checks_per_simulator": {
+        "iverilog": 12283,
+        "verilator": 12283
+      },
+      "elaboration_parameters": {
+        "BLOCK": 8,
+        "CMP_STAGES": 1,
+        "EXP_W": 8,
+        "MANT_W": 23,
+        "MAX_BLOCKS": 2048,
+        "SCORE_W": 32
+      },
+      "geometry": {
+        "block": 8,
+        "cmp_stages": 1,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 23,
+        "max_blocks": 2048,
+        "output_latency_cycles": 4,
+        "pipeline_depth": 5,
+        "rate_blocks": 256,
+        "score_w": 32
+      },
+      "initiation_interval": [
+        {
+          "blocks": 256,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 256
+        }
+      ],
+      "marker": {
+        "block": 8,
+        "cases": 17,
+        "checks": 12283,
+        "cmp_stages": 1,
+        "faults": 5,
+        "outputs": 2433
+      },
+      "name": "v41_binary32_block8",
+      "note": "the DeepSeek-V4.1-Flash candidate pool: binary32 scores, blocks of 8, 2,048 blocks per row, one register stage per comparator level",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=1 cases=17 outputs=2433 faults=5",
+      "simulators": [
+        {
+          "checks": 12283,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=8 -Ptb_a3_route_block_max.SCORE_W=32 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=23 -Ptb_a3_route_block_max.MAX_BLOCKS=2048 -Ptb_a3_route_block_max.CMP_STAGES=1 -Ptb_a3_route_block_max.VEC_WORDS=48960 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=9732 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 12283,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 2433
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 6,
+              "last": 261,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=1 cases=17 outputs=2433 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "b0576ec7c78b1da5b034a8e00a19f023b88b097baa5e1f7b817dd4415cd1402e",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=6 last=261\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=1 cases=17 outputs=2433 faults=5 checks=12283",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 12283,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=8 -GSCORE_W=32 -GEXP_W=8 -GMANT_W=23 -GMAX_BLOCKS=2048 -GCMP_STAGES=1 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "3809d3aecea00d8f2ad0b4c695322db766160dbe5337896831b6c3a21d80ee02",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.146 MB in 5 C++ files needing 0.001 MB\n- Verilator: Walltime 5.836 s (elab=0.007, cvt=0.034, bld=5.775); cpu 0.028 s on 4 threads; allocated 43.199 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 12283,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 2433
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 6,
+              "last": 261,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=1 cases=17 outputs=2433 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "b0576ec7c78b1da5b034a8e00a19f023b88b097baa5e1f7b817dd4415cd1402e",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=6 last=261\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=1 cases=17 outputs=2433 faults=5 checks=12283",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 8,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 8
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 36,
+            "exp_count": 64,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 36,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 100,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 100,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 104,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 104,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 108,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 108,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 114,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 114,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 119,
+            "exp_count": 256,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 256 blocks driven back to back: initiation interval 1",
+            "vec_base": 119,
+            "vec_count": 256
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 96,
+            "exp_base": 375,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 375,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 99,
+            "exp_base": 377,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 380,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 102,
+            "exp_base": 379,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 385,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 105,
+            "exp_base": 381,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 390,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2048,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 108,
+            "exp_base": 383,
+            "exp_count": 2048,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 2048 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 395,
+            "vec_count": 2051
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 2431,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 2446,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 2433,
+          "vectors": 2448
+        },
+        "image_sha256": {
+          "bm_case.hex": "ab8799af12f2ccc0f21bc98afb914445586d5ff03cc63c95db6ec4628c4e8aa0",
+          "bm_expect.hex": "1313e3b1559598415414432056f02b0b928e63d02e176c00573f4bdd8b4e3c0c",
+          "bm_meta.hex": "7461d559fe77f70136bc05270718045b9db20ffaec8201184458b0a7a181eae3",
+          "bm_vec.hex": "104d8ac788a1d56c9498341d9134e9bad4ca113984c317736fa2cc89bbaa665d"
+        },
+        "manifest_sha256": "a96b4461b716ae37020eb250376d0707111ec143f3c2c5b46736db48ad1c386b",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 2433,
+          "faults": 5,
+          "positions": 19429,
+          "rate_cases": 1,
+          "rows": 96
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 12283,
+        "verilator": 12283
+      },
+      "elaboration_parameters": {
+        "BLOCK": 8,
+        "CMP_STAGES": 2,
+        "EXP_W": 8,
+        "MANT_W": 23,
+        "MAX_BLOCKS": 2048,
+        "SCORE_W": 32
+      },
+      "geometry": {
+        "block": 8,
+        "cmp_stages": 2,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 23,
+        "max_blocks": 2048,
+        "output_latency_cycles": 7,
+        "pipeline_depth": 8,
+        "rate_blocks": 256,
+        "score_w": 32
+      },
+      "initiation_interval": [
+        {
+          "blocks": 256,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 256
+        }
+      ],
+      "marker": {
+        "block": 8,
+        "cases": 17,
+        "checks": 12283,
+        "cmp_stages": 2,
+        "faults": 5,
+        "outputs": 2433
+      },
+      "name": "binary32_block8_cmp2",
+      "note": "the same pool with two register stages per comparator level: the latency changes, no value does, and the initiation interval stays 1",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=2 cases=17 outputs=2433 faults=5",
+      "simulators": [
+        {
+          "checks": 12283,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=8 -Ptb_a3_route_block_max.SCORE_W=32 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=23 -Ptb_a3_route_block_max.MAX_BLOCKS=2048 -Ptb_a3_route_block_max.CMP_STAGES=2 -Ptb_a3_route_block_max.VEC_WORDS=48960 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=9732 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 12283,
+            "cmp_stages": 2,
+            "faults": 5,
+            "outputs": 2433
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 9,
+              "last": 264,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=2 cases=17 outputs=2433 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "de3e75f61120faddd494ee2edf4f976f01e0a2ed0a336442393b78599b549500",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=9 last=264\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=2 cases=17 outputs=2433 faults=5 checks=12283",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 12283,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=8 -GSCORE_W=32 -GEXP_W=8 -GMANT_W=23 -GMAX_BLOCKS=2048 -GCMP_STAGES=2 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "5932b1d64d7163df137f2c3359f821311ab61fe4ede83d2fbc1b494b3e1433d2",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.160 MB in 5 C++ files needing 0.001 MB\n- Verilator: Walltime 7.375 s (elab=0.005, cvt=0.026, bld=7.329); cpu 0.024 s on 4 threads; allocated 43.203 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 12283,
+            "cmp_stages": 2,
+            "faults": 5,
+            "outputs": 2433
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 9,
+              "last": 264,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=2 cases=17 outputs=2433 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "de3e75f61120faddd494ee2edf4f976f01e0a2ed0a336442393b78599b549500",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=9 last=264\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=2 cases=17 outputs=2433 faults=5 checks=12283",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 8,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 8
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 36,
+            "exp_count": 64,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 36,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 100,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 100,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 104,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 104,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 108,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 108,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 114,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 114,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 119,
+            "exp_count": 256,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 256 blocks driven back to back: initiation interval 1",
+            "vec_base": 119,
+            "vec_count": 256
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 96,
+            "exp_base": 375,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 375,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 99,
+            "exp_base": 377,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 380,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 102,
+            "exp_base": 379,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 385,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 105,
+            "exp_base": 381,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 390,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2048,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 108,
+            "exp_base": 383,
+            "exp_count": 2048,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 2048 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 395,
+            "vec_count": 2051
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 2431,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 2446,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 2433,
+          "vectors": 2448
+        },
+        "image_sha256": {
+          "bm_case.hex": "ab8799af12f2ccc0f21bc98afb914445586d5ff03cc63c95db6ec4628c4e8aa0",
+          "bm_expect.hex": "1313e3b1559598415414432056f02b0b928e63d02e176c00573f4bdd8b4e3c0c",
+          "bm_meta.hex": "76ab290b02586e95b200e0eda9a6b7bf58faa5e4707ef56a2f042aef4a9feb4b",
+          "bm_vec.hex": "104d8ac788a1d56c9498341d9134e9bad4ca113984c317736fa2cc89bbaa665d"
+        },
+        "manifest_sha256": "784f8e13f046ed268ccc5ff50f5be02f626d151adc3d482c7297b994ce6c516c",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 2433,
+          "faults": 5,
+          "positions": 19429,
+          "rate_cases": 1,
+          "rows": 96
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 1403,
+        "verilator": 1403
+      },
+      "elaboration_parameters": {
+        "BLOCK": 6,
+        "CMP_STAGES": 1,
+        "EXP_W": 8,
+        "MANT_W": 23,
+        "MAX_BLOCKS": 64,
+        "SCORE_W": 32
+      },
+      "geometry": {
+        "block": 6,
+        "cmp_stages": 1,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 23,
+        "max_blocks": 64,
+        "output_latency_cycles": 4,
+        "pipeline_depth": 5,
+        "rate_blocks": 64,
+        "score_w": 32
+      },
+      "initiation_interval": [
+        {
+          "blocks": 64,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 64
+        }
+      ],
+      "marker": {
+        "block": 6,
+        "cases": 17,
+        "checks": 1403,
+        "cmp_stages": 1,
+        "faults": 5,
+        "outputs": 257
+      },
+      "name": "binary32_block6_rows64",
+      "note": "a NON-POWER-OF-TWO block and a small row bound: the tree is built over 8 leaves with two of them held at the padding value",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=6 cmp_stages=1 cases=17 outputs=257 faults=5",
+      "simulators": [
+        {
+          "checks": 1403,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=6 -Ptb_a3_route_block_max.SCORE_W=32 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=23 -Ptb_a3_route_block_max.MAX_BLOCKS=64 -Ptb_a3_route_block_max.CMP_STAGES=1 -Ptb_a3_route_block_max.VEC_WORDS=5440 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=1028 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 6,
+            "cases": 17,
+            "checks": 1403,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 257
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 6,
+              "last": 69,
+              "outputs": 64,
+              "window": 64
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=6 cmp_stages=1 cases=17 outputs=257 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "2285ec486572ea09452235ae05ba407046f12506d98705bf23814ad038e0a8fb",
+          "run_log_tail": "RATE: case=10 outputs=64 window=64 first=6 last=69\nPASS: A3 V41 BLOCK_MAX block=6 cmp_stages=1 cases=17 outputs=257 faults=5 checks=1403",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 1403,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=6 -GSCORE_W=32 -GEXP_W=8 -GMANT_W=23 -GMAX_BLOCKS=64 -GCMP_STAGES=1 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "7784f17c170e6189d739735a58621aeea20a3bb61b426d1376bda64055d7d731",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.138 MB in 5 C++ files needing 0.001 MB\n- Verilator: Walltime 7.063 s (elab=0.012, cvt=0.035, bld=6.995); cpu 0.028 s on 4 threads; allocated 43.199 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 6,
+            "cases": 17,
+            "checks": 1403,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 257
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 6,
+              "last": 69,
+              "outputs": 64,
+              "window": 64
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=6 cmp_stages=1 cases=17 outputs=257 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "2285ec486572ea09452235ae05ba407046f12506d98705bf23814ad038e0a8fb",
+          "run_log_tail": "RATE: case=10 outputs=64 window=64 first=6 last=69\nPASS: A3 V41 BLOCK_MAX block=6 cmp_stages=1 cases=17 outputs=257 faults=5 checks=1403",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 34,
+            "exp_count": 64,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 34,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 98,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 98,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 104,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 104,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 108,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 108,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 114,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 114,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 119,
+            "exp_count": 64,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 64 blocks driven back to back: initiation interval 1",
+            "vec_base": 119,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 96,
+            "exp_base": 183,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 183,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 99,
+            "exp_base": 185,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 188,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 102,
+            "exp_base": 187,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 193,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 105,
+            "exp_base": 189,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 198,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 64,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 108,
+            "exp_base": 191,
+            "exp_count": 64,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 64 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 203,
+            "vec_count": 67
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 255,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 270,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 257,
+          "vectors": 272
+        },
+        "image_sha256": {
+          "bm_case.hex": "9cd81f020ee31b4f8cf9f752f69c9baad30457fcd9272e3c67992bcf0c0bec2a",
+          "bm_expect.hex": "7829342175d2f386d162c570c2a5507fb32107e71a5fbce5fb6dde807d0b31af",
+          "bm_meta.hex": "35ccc0e5f6afe133f4a8b05ed60b2d54ce668b6f4c5b38ce7866e5a1bd8f473d",
+          "bm_vec.hex": "5ad786151ad0e791bcbeca31fda0d9998a5e4494ed7f007da44e1e4de468a14f"
+        },
+        "manifest_sha256": "62f0d4e3c6b10de2e019f3ef48fc662f39934f879975f3a5f12f68ba70241de1",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 257,
+          "faults": 5,
+          "positions": 1516,
+          "rate_cases": 1,
+          "rows": 96
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 2073,
+        "verilator": 2073
+      },
+      "elaboration_parameters": {
+        "BLOCK": 16,
+        "CMP_STAGES": 1,
+        "EXP_W": 8,
+        "MANT_W": 23,
+        "MAX_BLOCKS": 128,
+        "SCORE_W": 32
+      },
+      "geometry": {
+        "block": 16,
+        "cmp_stages": 1,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 23,
+        "max_blocks": 128,
+        "output_latency_cycles": 5,
+        "pipeline_depth": 6,
+        "rate_blocks": 128,
+        "score_w": 32
+      },
+      "initiation_interval": [
+        {
+          "blocks": 128,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 128
+        }
+      ],
+      "marker": {
+        "block": 16,
+        "cases": 17,
+        "checks": 2073,
+        "cmp_stages": 1,
+        "faults": 5,
+        "outputs": 391
+      },
+      "name": "binary32_block16",
+      "note": "a wider block: four comparator levels",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=16 cmp_stages=1 cases=17 outputs=391 faults=5",
+      "simulators": [
+        {
+          "checks": 2073,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=16 -Ptb_a3_route_block_max.SCORE_W=32 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=23 -Ptb_a3_route_block_max.MAX_BLOCKS=128 -Ptb_a3_route_block_max.CMP_STAGES=1 -Ptb_a3_route_block_max.VEC_WORDS=8120 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=1564 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 16,
+            "cases": 17,
+            "checks": 2073,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 391
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 7,
+              "last": 134,
+              "outputs": 128,
+              "window": 128
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=16 cmp_stages=1 cases=17 outputs=391 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "dd2c6a7fb57ada7f749c0f278080b538667d38609ba2179bddd6cc793107b98a",
+          "run_log_tail": "RATE: case=10 outputs=128 window=128 first=7 last=134\nPASS: A3 V41 BLOCK_MAX block=16 cmp_stages=1 cases=17 outputs=391 faults=5 checks=2073",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 2073,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=16 -GSCORE_W=32 -GEXP_W=8 -GMANT_W=23 -GMAX_BLOCKS=128 -GCMP_STAGES=1 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "e8c04bb5e6dc946432e4f4028581b4f28a6c077704b87176ec8e65454dd58639",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.208 MB in 5 C++ files needing 0.001 MB\n- Verilator: Walltime 7.414 s (elab=0.011, cvt=0.047, bld=7.330); cpu 0.038 s on 4 threads; allocated 44.199 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 16,
+            "cases": 17,
+            "checks": 2073,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 391
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 7,
+              "last": 134,
+              "outputs": 128,
+              "window": 128
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=16 cmp_stages=1 cases=17 outputs=391 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "dd2c6a7fb57ada7f749c0f278080b538667d38609ba2179bddd6cc793107b98a",
+          "run_log_tail": "RATE: case=10 outputs=128 window=128 first=7 last=134\nPASS: A3 V41 BLOCK_MAX block=16 cmp_stages=1 cases=17 outputs=391 faults=5 checks=2073",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 16,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 16
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 44,
+            "exp_count": 64,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 44,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 108,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 108,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 110,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 110,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 114,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 114,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 120,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 120,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 125,
+            "exp_count": 128,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 128 blocks driven back to back: initiation interval 1",
+            "vec_base": 125,
+            "vec_count": 128
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 102,
+            "exp_base": 253,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 253,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 105,
+            "exp_base": 255,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 258,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 108,
+            "exp_base": 257,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 263,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 111,
+            "exp_base": 259,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 268,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 128,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 114,
+            "exp_base": 261,
+            "exp_count": 128,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 128 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 273,
+            "vec_count": 131
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 389,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 404,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 391,
+          "vectors": 406
+        },
+        "image_sha256": {
+          "bm_case.hex": "57d0076c42bba6c322130ece8aa0f10335136176f73d20003d74346b66034b08",
+          "bm_expect.hex": "037754a3176543e18792710e9751f16c3c04249097421388fe4e0dd3941ca830",
+          "bm_meta.hex": "e1ab79f0f867d8088044e3a54019613eb8ce6f8fb6051f0bba76acbc94210721",
+          "bm_vec.hex": "0002807230be36a3f24880e2f7186a4dae0971d0a67c0aa856f69beac6bc136e"
+        },
+        "manifest_sha256": "76b23879be7099a93d35442f24842eb14185409c8dc13199f15199a34b587129",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 391,
+          "faults": 5,
+          "positions": 6185,
+          "rate_cases": 1,
+          "rows": 102
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 746,
+        "verilator": 746
+      },
+      "elaboration_parameters": {
+        "BLOCK": 1,
+        "CMP_STAGES": 1,
+        "EXP_W": 8,
+        "MANT_W": 23,
+        "MAX_BLOCKS": 32,
+        "SCORE_W": 32
+      },
+      "geometry": {
+        "block": 1,
+        "cmp_stages": 1,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 23,
+        "max_blocks": 32,
+        "output_latency_cycles": 1,
+        "pipeline_depth": 2,
+        "rate_blocks": 32,
+        "score_w": 32
+      },
+      "initiation_interval": [
+        {
+          "blocks": 32,
+          "case": 9,
+          "cycles_per_block": 1.0,
+          "window_cycles": 32
+        }
+      ],
+      "marker": {
+        "block": 1,
+        "cases": 15,
+        "checks": 746,
+        "cmp_stages": 1,
+        "faults": 4,
+        "outputs": 128
+      },
+      "name": "binary32_block1",
+      "note": "the degenerate block: no comparator level at all, the block score is the position's score, and the stream still sustains one per cycle",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=1 cmp_stages=1 cases=15 outputs=128 faults=4",
+      "simulators": [
+        {
+          "checks": 746,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=1 -Ptb_a3_route_block_max.SCORE_W=32 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=23 -Ptb_a3_route_block_max.MAX_BLOCKS=32 -Ptb_a3_route_block_max.CMP_STAGES=1 -Ptb_a3_route_block_max.VEC_WORDS=2800 -Ptb_a3_route_block_max.CASE_WORDS=150 -Ptb_a3_route_block_max.EXP_WORDS=512 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 1,
+            "cases": 15,
+            "checks": 746,
+            "cmp_stages": 1,
+            "faults": 4,
+            "outputs": 128
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 9,
+              "first": 3,
+              "last": 34,
+              "outputs": 32,
+              "window": 32
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=1 cmp_stages=1 cases=15 outputs=128 faults=4",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "0df4b01a5efa2db5a658d321b7d3666e1db05967c28f66bf50922a497cd10a7c",
+          "run_log_tail": "RATE: case=9 outputs=32 window=32 first=3 last=34\nPASS: A3 V41 BLOCK_MAX block=1 cmp_stages=1 cases=15 outputs=128 faults=4 checks=746",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 746,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=1 -GSCORE_W=32 -GEXP_W=8 -GMANT_W=23 -GMAX_BLOCKS=32 -GCMP_STAGES=1 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "e4371c40dc714ca67766a5de497205b7026570306f0c32bfd4447b3102704ca0",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.079 MB in 5 C++ files needing 0.000 MB\n- Verilator: Walltime 6.998 s (elab=0.003, cvt=0.007, bld=6.981); cpu 0.018 s on 4 threads; allocated 42.195 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 1,
+            "cases": 15,
+            "checks": 746,
+            "cmp_stages": 1,
+            "faults": 4,
+            "outputs": 128
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 9,
+              "first": 3,
+              "last": 34,
+              "outputs": 32,
+              "window": 32
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=1 cmp_stages=1 cases=15 outputs=128 faults=4",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "0df4b01a5efa2db5a658d321b7d3666e1db05967c28f66bf50922a497cd10a7c",
+          "run_log_tail": "RATE: case=9 outputs=32 window=32 first=3 last=34\nPASS: A3 V41 BLOCK_MAX block=1 cmp_stages=1 cases=15 outputs=128 faults=4 checks=746",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 10,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 10
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 22,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 22,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 25,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 25,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 27,
+            "exp_count": 1,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 27,
+            "vec_count": 1
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 28,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 30,
+            "exp_count": 16,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 30,
+            "vec_count": 16
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 46,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 46,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 50,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 50,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 56,
+            "exp_count": 32,
+            "flags": 1,
+            "id": 9,
+            "name": "rate_stream",
+            "note": "one row of 32 blocks driven back to back: initiation interval 1",
+            "vec_base": 56,
+            "vec_count": 32
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 36,
+            "exp_base": 88,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 10,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 88,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 39,
+            "exp_base": 90,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 93,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 42,
+            "exp_base": 92,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 98,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 32,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 45,
+            "exp_base": 94,
+            "exp_count": 32,
+            "flags": 2,
+            "id": 13,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 32 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 103,
+            "vec_count": 35
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 126,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 14,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 138,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 15,
+          "expects": 128,
+          "vectors": 140
+        },
+        "image_sha256": {
+          "bm_case.hex": "50508b94461dbba5adc9177008cde3fa2dc3ddc0ba51831755138c66183099c1",
+          "bm_expect.hex": "76e4fcfdcfab567312dfcd655c9a68cfdd4c20b3c539ef31332842fa0afb703b",
+          "bm_meta.hex": "fae1bafe6f3e75e134e8e8662722f83f4962a59daf6d60f970a5360af3897e42",
+          "bm_vec.hex": "91b9bcb578a94774fbafdb99f5bbc3faa402a8b7cca7bba5f80cbb146e1e345d"
+        },
+        "manifest_sha256": "0151b49c8240fb9ebbf08ba1fa00151d1a81db4294a67ac1e994e075e388a527",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 128,
+          "faults": 4,
+          "positions": 128,
+          "rate_cases": 1,
+          "rows": 36
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 4363,
+        "verilator": 4363
+      },
+      "elaboration_parameters": {
+        "BLOCK": 4,
+        "CMP_STAGES": 1,
+        "EXP_W": 8,
+        "MANT_W": 7,
+        "MAX_BLOCKS": 512,
+        "SCORE_W": 16
+      },
+      "geometry": {
+        "block": 4,
+        "cmp_stages": 1,
+        "exponent_bits": 8,
+        "lanes_max": 16,
+        "mantissa_bits": 7,
+        "max_blocks": 512,
+        "output_latency_cycles": 3,
+        "pipeline_depth": 4,
+        "rate_blocks": 256,
+        "score_w": 16
+      },
+      "initiation_interval": [
+        {
+          "blocks": 256,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 256
+        }
+      ],
+      "marker": {
+        "block": 4,
+        "cases": 17,
+        "checks": 4363,
+        "cmp_stages": 1,
+        "faults": 5,
+        "outputs": 849
+      },
+      "name": "bf16_block4",
+      "note": "BF16 scores: the order is the format's, not binary32's",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=4 cmp_stages=1 cases=17 outputs=849 faults=5",
+      "simulators": [
+        {
+          "checks": 4363,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=4 -Ptb_a3_route_block_max.SCORE_W=16 -Ptb_a3_route_block_max.EXP_W=8 -Ptb_a3_route_block_max.MANT_W=7 -Ptb_a3_route_block_max.MAX_BLOCKS=512 -Ptb_a3_route_block_max.CMP_STAGES=1 -Ptb_a3_route_block_max.VEC_WORDS=17280 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=3396 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 4,
+            "cases": 17,
+            "checks": 4363,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 849
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 5,
+              "last": 260,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=4 cmp_stages=1 cases=17 outputs=849 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "8a9ede635276fc22772de1a9e733de7436b86bf20332bfa0b995d261bb0b775c",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=5 last=260\nPASS: A3 V41 BLOCK_MAX block=4 cmp_stages=1 cases=17 outputs=849 faults=5 checks=4363",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 4363,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=4 -GSCORE_W=16 -GEXP_W=8 -GMANT_W=7 -GMAX_BLOCKS=512 -GCMP_STAGES=1 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "17f0d421a7bbeb69036c7a59b2e78268d81a86beaca72600f25b5cfd65ef72bf",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.113 MB in 5 C++ files needing 0.000 MB\n- Verilator: Walltime 4.926 s (elab=0.005, cvt=0.013, bld=4.893); cpu 0.022 s on 4 threads; allocated 42.203 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 4,
+            "cases": 17,
+            "checks": 4363,
+            "cmp_stages": 1,
+            "faults": 5,
+            "outputs": 849
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 5,
+              "last": 260,
+              "outputs": 256,
+              "window": 256
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=4 cmp_stages=1 cases=17 outputs=849 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "8a9ede635276fc22772de1a9e733de7436b86bf20332bfa0b995d261bb0b775c",
+          "run_log_tail": "RATE: case=10 outputs=256 window=256 first=5 last=260\nPASS: A3 V41 BLOCK_MAX block=4 cmp_stages=1 cases=17 outputs=849 faults=5 checks=4363",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 32,
+            "exp_count": 16,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 32,
+            "vec_count": 16
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 48,
+            "exp_count": 8,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 48,
+            "vec_count": 8
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 56,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 56,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 60,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 60,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 66,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 66,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 71,
+            "exp_count": 256,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 256 blocks driven back to back: initiation interval 1",
+            "vec_base": 71,
+            "vec_count": 256
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 48,
+            "exp_base": 327,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 327,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 51,
+            "exp_base": 329,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 332,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 54,
+            "exp_base": 331,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 337,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 57,
+            "exp_base": 333,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 342,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 512,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 60,
+            "exp_base": 335,
+            "exp_count": 512,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 512 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 347,
+            "vec_count": 515
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 847,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 862,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 849,
+          "vectors": 864
+        },
+        "image_sha256": {
+          "bm_case.hex": "40b78dec693b13c471604d590e5665488495275cb505aab5748498cf488c68fc",
+          "bm_expect.hex": "9e087490f01a9e4c1c5f891b422e758b6ca874725c0029e83dd1d8aa175d5263",
+          "bm_meta.hex": "9c37b13965c5f9dabeaeb069ab7a733d820c3099ba96e18947df6ad0d65e217d",
+          "bm_vec.hex": "bb5337fe2018e909059fea6edeac021fabbcf916fb8e02515c95560adc492e50"
+        },
+        "manifest_sha256": "e3d1b7e895fbec72bc60cf4b591980b7d73af02f0e9b8c6d8778c02d03d4a354",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 849,
+          "faults": 5,
+          "positions": 3379,
+          "rate_cases": 1,
+          "rows": 48
+        }
+      }
+    },
+    {
+      "checks_per_simulator": {
+        "iverilog": 1403,
+        "verilator": 1403
+      },
+      "elaboration_parameters": {
+        "BLOCK": 8,
+        "CMP_STAGES": 3,
+        "EXP_W": 5,
+        "MANT_W": 10,
+        "MAX_BLOCKS": 64,
+        "SCORE_W": 16
+      },
+      "geometry": {
+        "block": 8,
+        "cmp_stages": 3,
+        "exponent_bits": 5,
+        "lanes_max": 16,
+        "mantissa_bits": 10,
+        "max_blocks": 64,
+        "output_latency_cycles": 10,
+        "pipeline_depth": 11,
+        "rate_blocks": 64,
+        "score_w": 16
+      },
+      "initiation_interval": [
+        {
+          "blocks": 64,
+          "case": 10,
+          "cycles_per_block": 1.0,
+          "window_cycles": 64
+        }
+      ],
+      "marker": {
+        "block": 8,
+        "cases": 17,
+        "checks": 1403,
+        "cmp_stages": 3,
+        "faults": 5,
+        "outputs": 257
+      },
+      "name": "fp16_block8_cmp3",
+      "note": "FP16 scores with three register stages per level: a different exponent field and a deeper pipeline",
+      "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=3 cases=17 outputs=257 faults=5",
+      "simulators": [
+        {
+          "checks": 1403,
+          "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_route_block_max -Ptb_a3_route_block_max.BLOCK=8 -Ptb_a3_route_block_max.SCORE_W=16 -Ptb_a3_route_block_max.EXP_W=5 -Ptb_a3_route_block_max.MANT_W=10 -Ptb_a3_route_block_max.MAX_BLOCKS=64 -Ptb_a3_route_block_max.CMP_STAGES=3 -Ptb_a3_route_block_max.VEC_WORDS=5440 -Ptb_a3_route_block_max.CASE_WORDS=170 -Ptb_a3_route_block_max.EXP_WORDS=1028 -o bm_sim.vvp <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/tb_a3_route_block_max.sv",
+          "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compile_log_tail": "",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 1403,
+            "cmp_stages": 3,
+            "faults": 5,
+            "outputs": 257
+          },
+          "marker_present": true,
+          "name": "iverilog",
+          "rates": [
+            {
+              "case": 10,
+              "first": 12,
+              "last": 75,
+              "outputs": 64,
+              "window": 64
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=3 cases=17 outputs=257 faults=5",
+          "run_command": "/usr/bin/vvp bm_sim.vvp",
+          "run_log_sha256": "8631b0a20ab71a9bbfd14dfc27d41d75ce9ee45c1d96f90e4192ef9e711348c5",
+          "run_log_tail": "RATE: case=10 outputs=64 window=64 first=12 last=75\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=3 cases=17 outputs=257 faults=5 checks=1403",
+          "run_returncode": 0,
+          "status": "pass"
+        },
+        {
+          "checks": 1403,
+          "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top -GBLOCK=8 -GSCORE_W=16 -GEXP_W=5 -GMANT_W=10 -GMAX_BLOCKS=64 -GCMP_STAGES=3 --Mdir obj_bm <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv <ROOT>/rtl/test/a3_route_block_max_harness.cpp -CFLAGS '-std=c++17 -O2' -j 4",
+          "compile_log_sha256": "ab036ad33d730e3baf3aa452e52144bc8fce7cd4353a59ab0648e3477b850f48",
+          "compile_log_tail": "make: Entering directory '<BUILD>/obj_bm'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -Os  -c -o a3_route_block_max_harness.o <ROOT>/rtl/test/a3_route_block_max_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_route_block_max_top.cpp Vot_a3_route_block_max_top___024root__0.cpp Vot_a3_route_block_max_top___024root__Slow.cpp Vot_a3_route_block_max_top___024root__0__Slow.cpp Vot_a3_route_block_max_top__Syms__Slow.cpp > Vot_a3_route_block_max_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17 -O2   -c -o Vot_a3_route_block_max_top__ALL.o Vot_a3_route_block_max_top__ALL.cpp\ng++    a3_route_block_max_harness.o verilated.o verilated_threads.o Vot_a3_route_block_max_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_route_block_max_top\nrm Vot_a3_route_block_max_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_bm'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.105 MB sources in 4 modules, into 0.175 MB in 5 C++ files needing 0.001 MB\n- Verilator: Walltime 6.175 s (elab=0.005, cvt=0.019, bld=6.142); cpu 0.032 s on 4 threads; allocated 43.207 MB",
+          "compile_returncode": 0,
+          "first_failure": null,
+          "marker": {
+            "block": 8,
+            "cases": 17,
+            "checks": 1403,
+            "cmp_stages": 3,
+            "faults": 5,
+            "outputs": 257
+          },
+          "marker_present": true,
+          "name": "verilator",
+          "rates": [
+            {
+              "case": 10,
+              "first": 12,
+              "last": 75,
+              "outputs": 64,
+              "window": 64
+            }
+          ],
+          "required_marker_prefix": "PASS: A3 V41 BLOCK_MAX block=8 cmp_stages=3 cases=17 outputs=257 faults=5",
+          "run_command": "./obj_bm/Vot_a3_route_block_max_top +bmdir=.",
+          "run_log_sha256": "8631b0a20ab71a9bbfd14dfc27d41d75ce9ee45c1d96f90e4192ef9e711348c5",
+          "run_log_tail": "RATE: case=10 outputs=64 window=64 first=12 last=75\nPASS: A3 V41 BLOCK_MAX block=8 cmp_stages=3 cases=17 outputs=257 faults=5 checks=1403",
+          "run_returncode": 0,
+          "status": "pass"
+        }
+      ],
+      "simulators_agree": true,
+      "status": "pass",
+      "vectors": {
+        "cases": [
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 0,
+            "exp_count": 12,
+            "flags": 0,
+            "id": 0,
+            "name": "full_blocks",
+            "note": "three rows whose length is a whole number of blocks, random codes",
+            "vec_base": 0,
+            "vec_count": 12
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 12,
+            "exp_count": 11,
+            "flags": 0,
+            "id": 1,
+            "name": "partial_final_block",
+            "note": "rows whose length is not a multiple of BLOCK: the final block is reduced over its real positions and the tail is never dropped",
+            "vec_base": 12,
+            "vec_count": 11
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 23,
+            "exp_count": 3,
+            "flags": 0,
+            "id": 2,
+            "name": "all_negative",
+            "note": "a row in which every score is negative, including negative infinity: a zero pad would win here and the reference's negative-infinity pad does not",
+            "vec_base": 23,
+            "vec_count": 3
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 26,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 3,
+            "name": "all_padding_value",
+            "note": "a row of negative infinity only: every block score is negative infinity",
+            "vec_base": 26,
+            "vec_count": 2
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 28,
+            "exp_count": 8,
+            "flags": 0,
+            "id": 4,
+            "name": "max_at_each_lane",
+            "note": "one row per lane, the maximum on that lane only: every leaf of the tree is shown to reach the result",
+            "vec_base": 28,
+            "vec_count": 8
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 36,
+            "exp_count": 64,
+            "flags": 0,
+            "id": 5,
+            "name": "signed_zero",
+            "note": "every arrangement of negative and positive zero in a block, up to the block width: max(-0.0, +0.0) is +0.0 and max(-0.0, -0.0) is -0.0",
+            "vec_base": 36,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 100,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 6,
+            "name": "class_boundaries",
+            "note": "rotations of the format's class boundaries: zeros, least and greatest subnormal, least normal, one, greatest finite, both infinities",
+            "vec_base": 100,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 104,
+            "exp_count": 4,
+            "flags": 0,
+            "id": 7,
+            "name": "ties",
+            "note": "blocks whose scores are all equal, at several codes: the winning code is that code, and a tie needs no tie-break",
+            "vec_base": 104,
+            "vec_count": 4
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 108,
+            "exp_count": 6,
+            "flags": 0,
+            "id": 8,
+            "name": "idle_between_blocks",
+            "note": "the same shape as full_blocks with three idle cycles between blocks: the per-block latency is unchanged by a gap in the stream",
+            "vec_base": 108,
+            "vec_count": 6
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 114,
+            "exp_count": 5,
+            "flags": 0,
+            "id": 9,
+            "name": "nan_on_padding_lane",
+            "note": "a partial final block whose padding lanes carry a NaN: padding lanes are never inspected, so the block retires and the result is the reference's",
+            "vec_base": 114,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 119,
+            "exp_count": 64,
+            "flags": 1,
+            "id": 10,
+            "name": "rate_stream",
+            "note": "one row of 64 blocks driven back to back: initiation interval 1",
+            "vec_base": 119,
+            "vec_count": 64
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 96,
+            "exp_base": 183,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 11,
+            "name": "valid_count_zero",
+            "note": "an extent of zero is refused: the reference emits ceil(N / BLOCK) blocks and never an all-padding block",
+            "vec_base": 183,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 1,
+            "err_tag": 99,
+            "exp_base": 185,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 12,
+            "name": "valid_count_over_block",
+            "note": "an extent above BLOCK is refused rather than truncated into a legal one",
+            "vec_base": 188,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 7,
+            "err_detail": 2,
+            "err_tag": 102,
+            "exp_base": 187,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 13,
+            "name": "partial_not_row_last",
+            "note": "a short block that is not row-last is refused: only a final block is partial under the reference, and accepting an interior short block would shift every block index after it",
+            "vec_base": 193,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 2,
+            "err_code": 1,
+            "err_detail": 4,
+            "err_tag": 105,
+            "exp_base": 189,
+            "exp_count": 2,
+            "flags": 2,
+            "id": 14,
+            "name": "nan_on_real_lane",
+            "note": "a NaN on a real lane is refused: the order is not total on NaNs",
+            "vec_base": 198,
+            "vec_count": 5
+          },
+          {
+            "err_block_id": 64,
+            "err_code": 7,
+            "err_detail": 3,
+            "err_tag": 108,
+            "exp_base": 191,
+            "exp_count": 64,
+            "flags": 2,
+            "id": 15,
+            "name": "row_bound",
+            "note": "a row of exactly MAX_BLOCKS = 64 blocks retires, and the block after it is refused with DETAIL_BLOCK_MAX_ROW_BLOCKS",
+            "vec_base": 203,
+            "vec_count": 67
+          },
+          {
+            "err_block_id": 0,
+            "err_code": 0,
+            "err_detail": 0,
+            "err_tag": 0,
+            "exp_base": 255,
+            "exp_count": 2,
+            "flags": 0,
+            "id": 16,
+            "name": "after_clear",
+            "note": "a plain row after every refusal case: clear restores the block and the row's block index restarts at zero",
+            "vec_base": 270,
+            "vec_count": 2
+          }
+        ],
+        "counts": {
+          "cases": 17,
+          "expects": 257,
+          "vectors": 272
+        },
+        "image_sha256": {
+          "bm_case.hex": "cb70ba1ddffbf6e012e113dee5f4dd7f7c9dde808e69b87b943d20a834f0c808",
+          "bm_expect.hex": "0c1e996489c46ba5c86d4c9d3aa5841bc0ff764e58bd14996c7929bbc6d6fd8d",
+          "bm_meta.hex": "eb20963b606e1f762974e8c1ebd23c77abe36da0d60d52cfd41251462cbdc6df",
+          "bm_vec.hex": "bfdcb5bc37757f5fbbf5f040f407d184bfd22527e90950d1dc3c71c44e36b315"
+        },
+        "manifest_sha256": "12b2956ef7c855f17ec1a6b5c8d93bc0e21a87219055295ba2263082ba210d24",
+        "numeric_contract": "block_max_ordered_ieee_v1",
+        "reference": "runtime.reference.candidate_pool.block_max_rows",
+        "seed": 20260913,
+        "totals": {
+          "blocks": 257,
+          "faults": 5,
+          "positions": 2021,
+          "rate_cases": 1,
+          "rows": 96
+        }
+      }
+    }
+  ],
+  "engine": "ROUTE.BLOCK_MAX",
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "git": {
+    "branch": "token-path-end-to-end",
+    "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+    "dirty": true,
+    "dirty_paths": [
+      "akefile",
+      "compiler/backends/hbm_sram/capability.py",
+      "compiler/backends/hbm_sram/plan.py",
+      "compiler/backends/rom/common/check.py",
+      "compiler/backends/rom/common/program.py",
+      "compiler/backends/rom/deepseek_v41.py",
+      "compiler/backends/rom/deepseek_v41_array.py",
+      "compiler/frontend/deepseek_v4.py",
+      "compiler/frontend/deepseek_v41.py",
+      "compiler/frontend/deepseek_v41_tokenizer.py",
+      "compiler/frontend/deepseek_v4_releases.py",
+      "compiler/frontends/v3/deepseek_v41.py",
+      "compiler/ir/v3/lowering.py",
+      "compiler/models/deepseek-v4.1-flash/README.md",
+      "compiler/models/deepseek-v4.1-flash/config.json",
+      "compiler/models/deepseek-v4.1-flash/inference_config.json",
+      "compiler/workloads/deepseek_v41.py",
+      "configs/abi3/comparison_contracts/deepseek_v41_rom_array_51_vs_hbm_cluster_v1.json",
+      "configs/abi3/comparison_contracts/deepseek_v41_rom_wafer_2_vs_hbm_cluster_v1.json",
+      "configs/abi3/comparison_contracts/deepseek_v41_rom_wafer_2_vs_rom_array_51_v1.json",
+      "configs/abi3/shipped_deployments.json",
+      "configs/gates/redesign_gates.json",
+      "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+      "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+      "configs/hardware/technology.json",
+      "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+      "data/inventory/deepseek-v4.1-flash-registry-listing.json",
+      "docs/CONTRIBUTOR_TASKS.md",
+      "docs/DEEPSEEK_V41_CANDIDATE_POOL_EVIDENCE.md",
+      "docs/DEEPSEEK_V41_CSA2_SHARED_CACHE_EVIDENCE.md",
+      "docs/DEEPSEEK_V41_ENGRAM_EVIDENCE.md",
+      "docs/DEEPSEEK_V41_FP4_KV_EVIDENCE.md",
+      "docs/EVIDENCE_LEDGER.md",
+      "docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md",
+      "docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md",
+      "docs/UNIFIED_EXECUTION_CHECKLIST.md",
+      "results/abi3/deepseek-v4.1-flash.measured-widths.proposed.json",
+      "results/abi3/deepseek_v41_hbm_comparator_capability.json",
+      "results/abi3/deepseek_v41_hbm_comparator_descriptor_multiset.json",
+      "results/abi3/deepseek_v41_hbm_comparator_plan.json",
+      "results/abi3/deepseek_v41_measured_kv_widths.json",
+      "results/abi3/deepseek_v41_reference_oracle_probe.json",
+      "results/abi3/deepseek_v41_workload_pins.json",
+      "results/abi3/prose_figure_coverage.json",
+      "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
+      "results/derived/deepseek_v41_cycle_cells.json",
+      "results/iso-node/leading_node_market/REPORT.md",
+      "results/iso-node/leading_node_market/analytical.json",
+      "results/iso-node/leading_node_market/sweep.csv",
+      "results/iso-node/n7_architecture_attribution/REPORT.md",
+      "results/iso-node/n7_architecture_attribution/analytical.json",
+      "results/iso-node/n7_architecture_attribution/sweep.csv",
+      "results/physical_abi3/asap7/dma_ngram_hash/",
+      "results/physical_abi3/asap7/route_block_max/",
+      "results/physical_abi3/asap7/route_candidate_mask/",
+      "results/physical_abi3/asap7/vector_engram_gate/",
+      "results/physical_abi3/asap7/vector_fp4kv_dequant/",
+      "results/physical_abi3/sky130hd/route_block_max/",
+      "results/physical_abi3/sky130hd/route_candidate_mask/",
+      "results/physical_abi3/sky130hd/vector_fp4kv_dequant/",
+      "results/roofline/candidates/deepseek-v41-flash-engram-hbm/",
+      "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/REPORT.md",
+      "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+      "results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/REPORT.md",
+      "results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/analytical.json",
+      "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/REPORT.md",
+      "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
+      "results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/REPORT.md",
+      "results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json",
+      "results/roofline/context_ladder/n5_vs_b200/flash-1m/REPORT.md",
+      "results/roofline/context_ladder/n5_vs_b200/flash-32k/REPORT.md",
+      "results/roofline/context_ladder/n5_vs_b200/flash-8k/REPORT.md",
+      "results/roofline/context_ladder/n5_vs_b200/pro-200k/REPORT.md",
+      "results/roofline/context_ladder/n5_vs_b200/pro-32k/REPORT.md",
+      "results/roofline/context_ladder/n5_vs_b200/pro-8k/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/flash-1m/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/flash-32k/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/flash-8k/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/pro-200k/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/pro-32k/REPORT.md",
+      "results/roofline/context_ladder/n6_vs_a100/pro-8k/REPORT.md",
+      "results/roofline/n5_vs_b200/REPORT.md",
+      "results/roofline/n5_vs_b200/analytical.json",
+      "results/roofline/n6_vs_a100/REPORT.md",
+      "results/roofline/n6_vs_a100/analytical.json",
+      "results/roofline/quantised_variant/n5_vs_b200/analytical.json",
+      "results/roofline/quantised_variant/n6_vs_a100/analytical.json",
+      "results/roofline/speculative/released_dspark/REPORT.md",
+      "results/roofline/speculative/sota_block_diffusion/REPORT.md",
+      "results/rtl/a3_v41_block_max_campaign.json",
+      "results/rtl/a3_v41_candidate_mask_campaign.json",
+      "results/rtl/a3_v41_engram_gate_campaign.json",
+      "results/rtl/a3_v41_fp4kv_dequant_campaign.json",
+      "results/rtl/a3_v41_ngram_hash_campaign.json",
+      "results/rtl/a3_v41_ngram_hash_vendor_oracle.json",
+      "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+      "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+      "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+      "rtl/abi3/ot_a3_route_block_max.sv",
+      "rtl/abi3/ot_a3_route_candidate_mask.sv",
+      "rtl/abi3/ot_a3_vector_engram_gate.sv",
+      "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "rtl/test/a3_candidate_mask_harness.cpp",
+      "rtl/test/a3_candidate_mask_top.sv",
+      "rtl/test/a3_route_block_max_harness.cpp",
+      "rtl/test/a3_route_block_max_top.sv",
+      "rtl/test/tb_a3_candidate_mask.sv",
+      "rtl/test/tb_a3_rope_span.sv",
+      "rtl/test/tb_a3_route_block_max.sv",
+      "rtl/test/tb_a3_v41_engram_gate.sv",
+      "rtl/test/tb_a3_v41_fp4kv_dequant.sv",
+      "rtl/test/tb_a3_v41_ngram_hash.sv",
+      "runtime/reference/candidate_pool.py",
+      "runtime/reference/engram.py",
+      "runtime/reference/fp4_kv.py",
+      "runtime/sim/engines/dma.py",
+      "runtime/sim/engines/route.py",
+      "runtime/sim/engines/vector.py",
+      "schemas/abi3/comparison_contract_v2.schema.json",
+      "src/opentallas/analytical.py",
+      "src/opentallas/deployment.py",
+      "src/opentallas/profiling.py",
+      "src/opentallas/roofline.py",
+      "src/opentallas/workload.py",
+      "testdata/rtl/a3_v41_engram_gate/",
+      "testdata/rtl/a3_v41_fp4kv/",
+      "testdata/rtl/a3_v41_ngram_hash/",
+      "tests/abi3/test_am_e10_v41_kinds.py",
+      "tests/compiler/test_abi3_g1_ladder_second_model.py",
+      "tests/compiler/test_deepseek_v41_hbm_comparator.py",
+      "tests/compiler/test_deepseek_v41_kernel_ir.py",
+      "tests/compiler/test_deepseek_v41_release.py",
+      "tests/compiler/test_deepseek_v41_tensor_specs.py",
+      "tests/compiler/test_deepseek_v41_workload_ladder.py",
+      "tests/compiler/test_deepseek_v4_model_profiles.py",
+      "tests/test_a3_rope_span.py",
+      "tests/test_a3_v41_candidate_mask.py",
+      "tests/test_a3_v41_engram_gate.py",
+      "tests/test_a3_v41_fp4kv_blocks.py",
+      "tests/test_a3_v41_ngram_hash.py",
+      "tests/test_a3_v41_route_block_max.py",
+      "tests/test_check_redesign_gates_g1.py",
+      "tests/test_deepseek_v41_array_backend.py",
+      "tests/test_deepseek_v41_comparison_contracts.py",
+      "tests/test_deepseek_v41_profile.py",
+      "tests/test_deepseek_v41_reference_boundaries.py",
+      "tests/test_deepseek_v41_rom_backend.py",
+      "tests/test_derive_cycle_machine_v41.py",
+      "tests/test_prose_figures.py",
+      "tests/test_roofline.py",
+      "tools/abi3_comparison_boundary.py",
+      "tools/abi3_g1_models.py",
+      "tools/audit_abi3_asap7_comparison_readiness.py",
+      "tools/build_a3_v41_block_max_vectors.py",
+      "tools/build_a3_v41_candidate_mask_vectors.py",
+      "tools/build_a3_v41_engram_gate_vectors.py",
+      "tools/build_a3_v41_fp4kv_vectors.py",
+      "tools/build_a3_v41_ngram_hash_vectors.py",
+      "tools/build_abi3_cost_tables.py",
+      "tools/build_abi3_g1a_operator_equivalence.py",
+      "tools/build_abi3_g1b_layer_closure.py",
+      "tools/build_abi3_g1f_reduced_end_to_end.py",
+      "tools/build_abi3_shipped_prefix_vectors.py",
+      "tools/build_deepseek_v41_hbm_comparator.py",
+      "tools/build_deepseek_v41_prefix_workloads.py",
+      "tools/build_deepseek_v41_reduced_model.py",
+      "tools/build_deepseek_v41_workloads.py",
+      "tools/build_deepseek_v4_kernel_ir_v3.py",
+      "tools/build_hbm_sram_deployment.py",
+      "tools/build_rom_deployment.py",
+      "tools/check_a3_v41_ngram_hash_vendor_oracle.py",
+      "tools/check_prose_figures.py",
+      "tools/check_redesign_gates.py",
+      "tools/check_rom_schedules.py",
+      "tools/derive_cycle_machine.py",
+      "tools/publish_abi3_capabilities.py",
+      "tools/rtl_abi3_row_shard_campaign.py",
+      "tools/rtl_abi3_shipped_prefix_campaign.py",
+      "tools/rtl_abi3_shipped_prefix_multicast_campaign.py",
+      "tools/run_a3_operator_admission_rtl_campaign.py",
+      "tools/run_a3_v41_block_max_rtl_campaign.py",
+      "tools/run_a3_v41_candidate_mask_rtl_campaign.py",
+      "tools/run_a3_v41_engram_gate_rtl_campaign.py",
+      "tools/run_a3_v41_fp4kv_rtl_campaign.py",
+      "tools/run_a3_v41_ngram_hash_rtl_campaign.py",
+      "tools/run_deepseek_v41_reference_oracle.py",
+      "tools/run_iso_node_studies.py",
+      "tools/run_roofline_studies.py",
+      "tools/validate_kv_model_against_oracle.py"
+    ]
+  },
+  "ir_kind": "BLOCK_MAX(scores, block) -> block_scores",
+  "limitations": [
+    "BLOCK_MAX is not instantiated in ot_a3_engine_array in this run: the block is driven by the two checkers, not by an ABI3 descriptor.",
+    "No operand fetch or result writeback exists: scores arrive on a port and block scores leave on a port.",
+    "The frequency style claim (the mac-lane and tree-endpoint pipelining style that closes above 500 MHz on ASAP7) is structural, not measured here.",
+    "The candidate pool is not exercised end to end: CANDIDATE_MASK and the INDEX_TOPK mask slot are other units' work.",
+    "A NaN score is refused rather than ordered, so no NaN semantics is qualified."
+  ],
+  "numeric_contract": "block_max_ordered_ieee_v1",
+  "output": "results/rtl/a3_v41_block_max_campaign.json",
+  "pipeline": {
+    "initiation_interval_blocks_per_cycle": 1,
+    "measured": [
+      {
+        "configuration": "v41_binary32_block8",
+        "initiation_interval": [
+          {
+            "blocks": 256,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 256
+          }
+        ],
+        "output_latency_cycles": 4,
+        "stage_count": 5
+      },
+      {
+        "configuration": "binary32_block8_cmp2",
+        "initiation_interval": [
+          {
+            "blocks": 256,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 256
+          }
+        ],
+        "output_latency_cycles": 7,
+        "stage_count": 8
+      },
+      {
+        "configuration": "binary32_block6_rows64",
+        "initiation_interval": [
+          {
+            "blocks": 64,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 64
+          }
+        ],
+        "output_latency_cycles": 4,
+        "stage_count": 5
+      },
+      {
+        "configuration": "binary32_block16",
+        "initiation_interval": [
+          {
+            "blocks": 128,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 128
+          }
+        ],
+        "output_latency_cycles": 5,
+        "stage_count": 6
+      },
+      {
+        "configuration": "binary32_block1",
+        "initiation_interval": [
+          {
+            "blocks": 32,
+            "case": 9,
+            "cycles_per_block": 1.0,
+            "window_cycles": 32
+          }
+        ],
+        "output_latency_cycles": 1,
+        "stage_count": 2
+      },
+      {
+        "configuration": "bf16_block4",
+        "initiation_interval": [
+          {
+            "blocks": 256,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 256
+          }
+        ],
+        "output_latency_cycles": 3,
+        "stage_count": 4
+      },
+      {
+        "configuration": "fp16_block8_cmp3",
+        "initiation_interval": [
+          {
+            "blocks": 64,
+            "case": 10,
+            "cycles_per_block": 1.0,
+            "window_cycles": 64
+          }
+        ],
+        "output_latency_cycles": 10,
+        "stage_count": 11
+      }
+    ],
+    "output_latency_cycles_formula": "stage count - 1 (the accepting edge is the input stage's own edge)",
+    "registered_boundary": "one comparator between registers at every tree level; no combinational path walks the block",
+    "stage_count_formula": "CMP_STAGES * ceil(log2(BLOCK)) + 2"
+  },
+  "reference": "runtime.reference.candidate_pool.block_max_rows",
+  "reference_independence": "the reference orders scores by their EXACT value, computed from the format's sign, exponent and mantissa fields with fractions.Fraction and no host floating point; the RTL realises the same order with a monotone bit map and a registered comparator tree.  Neither was derived from the other.",
+  "schema": "opentallas.rtl.a3_v41_block_max_campaign.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "compiler/ir/v3/kernel_ir.py": "89f5b69b8df2810084a3e679a1901b21844a7c0de930a253a981ce2fab781fac",
+    "compiler/ir/v3/lowering.py": "fce538b334f7ba85629c2ed4e323ff84d920cb1199de2e46715828dbdcb8b28d",
+    "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md": "6f575ec54e6003081ce9230d90fe6c07bbd54e86eff155599601c7898140c1bc",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/abi3/ot_a3_route_block_max.sv": "b6f746e862a3ad8e8227702d99b95f7827e8885e798aeb7a292a660f08e3c3a4",
+    "rtl/test/a3_route_block_max_harness.cpp": "ecec2e0b293f3fffc2766c49a919cff822ceb386c817980524ca2041822bd791",
+    "rtl/test/a3_route_block_max_top.sv": "67325f80d105c9457b1e16c333361538cc92e463d0fcb04e8b0ec565b80b9f7b",
+    "rtl/test/tb_a3_route_block_max.sv": "b38cbc08645c111f105ab968286597341dd75c6bcf192d273602d83d3e7cd5b0",
+    "runtime/abi3/constants.py": "12fe95cc4389af4c3b64b9509a99600d8fdb2631b3e5bac8dff0f6d35a9f65bd",
+    "runtime/reference/candidate_pool.py": "3a4681bf78f61f2f425925599c861cf0d6ee0b665cddfcf60f3f07367ce4690a",
+    "tools/build_a3_v41_block_max_vectors.py": "ad10e2f3a770b51b4a26c88d2df7e4a7618aebe2913c96eee66614c72306c9b9",
+    "tools/run_a3_v41_block_max_rtl_campaign.py": "67aab859b23624823b3f390c3759d084a1677556b51430b270f1753a82e68861"
+  },
+  "status": "pass",
+  "sub_opcode": "0x08 (ot_a3_pkg::A3_ROUTE_BLOCK_MAX, runtime.abi3.constants.Route.BLOCK_MAX)",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/g++",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "python": {
+      "executable": "/usr/bin/python3",
+      "executable_sha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+      "version": "Python 3.10.12"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  },
+  "total_checks_across_simulators": 69108,
+  "verilator_lint": {
+    "clean": true,
+    "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-MULTIDRIVEN -Wno-UNUSEDPARAM --top-module ot_a3_route_block_max_top <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_route_block_max.sv <ROOT>/rtl/test/a3_route_block_max_top.sv",
+    "log_tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.109 MB sources in 4 modules, into 0.111 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.016 s (elab=0.003, cvt=0.008, bld=0.000); cpu 0.016 s on 1 threads; allocated 34.156 MB",
+    "returncode": 0,
+    "suppressed": [
+      "DECLFILENAME (the verification top is not its own file name)",
+      "MULTIDRIVEN (pipeline stages of one array are written by the per-stage generate blocks, disjoint elements each)",
+      "UNUSEDPARAM (ot_a3_engine_pkg declares every engine's classes)"
+    ],
+    "warnings": []
+  },
+  "work_package": "WP-K, docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 13"
+}

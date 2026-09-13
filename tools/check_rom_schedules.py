@@ -65,6 +65,15 @@ DEFAULT_CASES = (
         "build/abi3/deepseek-v4-flash-rom-array-32",
         "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
     ),
+    # DeepSeek-V4.1-Flash on two wafer-scale logical devices (plan WP-E).  Its
+    # certificate is the one that carries ``shared_state_locality``,
+    # ``resident_hbm_region``, ``candidate_pool_bound`` and ``expert_capacity``.
+    Case(
+        "deepseek-v41-flash-rom-wafer-2",
+        "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+        "build/abi3/deepseek-v41-flash-rom-wafer-2",
+        "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+    ),
 )
 
 
@@ -124,6 +133,26 @@ def _parse_cases(values: Sequence[Sequence[str]] | None) -> tuple[Case, ...]:
     return tuple(Case(*value) for value in values)
 
 
+def missing_inputs(case: Case) -> list[str]:
+    """Artifacts this case needs and this tree does not have.
+
+    A default case whose deployment has not been built yet is reported as
+    skipped rather than run: it is named here because the product exists, and a
+    campaign that silently omitted it or crashed on it would be two different
+    kinds of wrong.  A case given explicitly on the command line is always run,
+    so an absent artifact there is still an error.
+    """
+    absent: list[str] = []
+    for path in (_resolve(case.ir), _resolve(case.capability)):
+        if not path.is_file():
+            absent.append(_relative(path))
+    root = _resolve(case.deployment)
+    for name in ("deployment.json", "descriptors.bin", "program.bin"):
+        if not (root / name).is_file():
+            absent.append(_relative(root / name))
+    return absent
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -153,6 +182,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     cases = _parse_cases(args.case)
     if not cases:
         parser.error("at least one case is required")
+    skipped: list[dict[str, Any]] = []
+    if not args.case:
+        runnable: list[Case] = []
+        for case in cases:
+            absent = missing_inputs(case)
+            if absent:
+                skipped.append({"case": case.name, "absent_inputs": absent})
+            else:
+                runnable.append(case)
+        cases = tuple(runnable)
+    if not cases:
+        parser.error(
+            "every default case is missing its artifacts: "
+            + ", ".join(entry["case"] for entry in skipped)
+        )
     if args.jobs < 1:
         parser.error("--jobs must be positive")
     output = args.output if args.output.is_absolute() else Path.cwd() / args.output
@@ -176,6 +220,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "checker_schema": SCHEDULE_CHECK_SCHEMA,
         "parallel_jobs": workers,
         "case_count": len(reports),
+        "skipped": sorted(skipped, key=lambda entry: entry["case"]),
+        "skipped_count": len(skipped),
         "source": {
             "checker": {
                 "path": _relative(checker_path),
@@ -207,6 +253,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             for error in report["errors"]:
                 print(f"    ERROR: {error}")
+        for entry in campaign["skipped"]:
+            print(f"  {entry['case']:<34} skipped (absent: {entry['absent_inputs'][0]})")
         print(f"wrote {_relative(output)}")
     return 0 if campaign["status"] == "pass" else 2
 

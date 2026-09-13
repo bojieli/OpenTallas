@@ -507,6 +507,56 @@ def evaluate(gate: dict[str, Any], board: list[dict[str, Any]] | None = None) ->
             + ("; ..." if len(reasons) > 3 else "")
         )
 
+
+    if kind in ("token_record", "rtl_records") and ev.get("workload_bindings"):
+        # A rung that is bound to MORE THAN ONE workload.  The ladder was
+        # written for one model, so every rung named one ``workload`` and one
+        # ``artifact``; a second model was therefore only expressible by
+        # OVERWRITING those, which would have replaced Qwen's evidence with
+        # V4.1's rather than adding it.  ``workload_bindings`` is a list of
+        # partial evaluators, each merged over the base, and every one of them
+        # is evaluated: the rung passes only when all of them do, and the
+        # verdict names each binding, so a satisfied Qwen binding stays visible
+        # beside an unsatisfied V4.1 one instead of being displaced by it.
+        #
+        # A binding may override anything the single-workload form declares --
+        # its own artifact, oracle, oracle token field, storage classes and
+        # required fields -- because a second model's ladder does not
+        # necessarily have the same record shape.  What it may NOT do is drop
+        # the provenance spine: that lives in _rtl_record_problems and applies
+        # to every binding.
+        base = {
+            key: value for key, value in ev.items() if key != "workload_bindings"
+        }
+        verdicts: list[tuple[bool, str]] = []
+        for binding in ev["workload_bindings"]:
+            merged = dict(base)
+            merged.update(binding)
+            if "workload_bindings" in merged:
+                # Nesting would recurse; a binding is a leaf by construction.
+                return _fail(
+                    f"{gate.get('id')}: a workload binding declares its own "
+                    "workload_bindings, which is not a shape this evaluator reads"
+                )
+            label = str(merged.get("workload") or merged.get("artifact") or "?")
+            outcome = evaluate(
+                {**gate, "evaluator": {**merged, "type": kind}}, board
+            )
+            verdicts.append(
+                (outcome["status"] == "pass", f"{label}: {outcome['why']}")
+            )
+        failing = [text for ok, text in verdicts if not ok]
+        passing = [text for ok, text in verdicts if ok]
+        if failing:
+            return _fail(
+                f"{len(failing)} of {len(verdicts)} workload binding(s) fail. "
+                + " | ".join(failing)
+                + (" | also passing -- " + " | ".join(passing) if passing else "")
+            )
+        return _pass(
+            f"all {len(verdicts)} workload binding(s) pass. " + " | ".join(passing)
+        )
+
     if not paths:
         return _fail(
             f"no artifact matches {ev['glob']}"

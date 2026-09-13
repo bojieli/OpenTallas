@@ -31,8 +31,23 @@ from runtime.cycle.machine import CostTable
 REPO = Path(__file__).resolve().parents[1]
 SCHEMA = "opentallas.abi3.comparison_boundary.v1"
 CONTRACT_SCHEMA = "opentallas.abi3.comparison_contract.v1"
+#: Contract schema v2 (DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md section 11,
+#: delivered for the V4.1 pairs of DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md
+#: WP-N).  v2 is strictly additive and v1 is not retired: a v1 contract is still
+#: validated against the v1 schema and every check below behaves for it exactly
+#: as it did before.  What v2 adds is the per-side area denominator and the
+#: iso-area verdict, a node count that may be null while the deployment that
+#: fixes it does not exist, a Kernel IR binding that may be pending for the same
+#: reason, ``node_class`` for amendment AM-R1, and the reporting companions gate
+#: DS41-CMP11 requires beside every published ratio.
+CONTRACT_SCHEMA_V2 = "opentallas.abi3.comparison_contract.v2"
 BOUNDARY_SCHEMA_PATH = REPO / "schemas/abi3/comparison_boundary_v1.schema.json"
 CONTRACT_SCHEMA_PATH = REPO / "schemas/abi3/comparison_contract_v1.schema.json"
+CONTRACT_SCHEMA_PATH_V2 = REPO / "schemas/abi3/comparison_contract_v2.schema.json"
+CONTRACT_SCHEMA_PATHS = {
+    CONTRACT_SCHEMA: CONTRACT_SCHEMA_PATH,
+    CONTRACT_SCHEMA_V2: CONTRACT_SCHEMA_PATH_V2,
+}
 CONTRACT_PATHS = {
     "qwen3_rom_single_chip_vs_hbm_single_chip": (
         "configs/abi3/comparison_contracts/"
@@ -46,6 +61,18 @@ CONTRACT_PATHS = {
         "configs/abi3/comparison_contracts/"
         "deepseek_v4_rom_wafer_vs_rom_array_32_v1.json"
     ),
+    "deepseek_v41_rom_wafer_2_vs_hbm_cluster": (
+        "configs/abi3/comparison_contracts/"
+        "deepseek_v41_rom_wafer_2_vs_hbm_cluster_v1.json"
+    ),
+    "deepseek_v41_rom_array_51_vs_hbm_cluster": (
+        "configs/abi3/comparison_contracts/"
+        "deepseek_v41_rom_array_51_vs_hbm_cluster_v1.json"
+    ),
+    "deepseek_v41_rom_wafer_2_vs_rom_array_51": (
+        "configs/abi3/comparison_contracts/"
+        "deepseek_v41_rom_wafer_2_vs_rom_array_51_v1.json"
+    ),
 }
 ORACLE_PRODUCER_PATHS = {
     "qwen3_rom_single_chip_vs_hbm_single_chip": (
@@ -56,6 +83,15 @@ ORACLE_PRODUCER_PATHS = {
     ),
     "deepseek_v4_rom_wafer_vs_rom_array_32": (
         "tools/run_deepseek_v4_reference_oracle.py"
+    ),
+    "deepseek_v41_rom_wafer_2_vs_hbm_cluster": (
+        "tools/run_deepseek_v41_reference_oracle.py"
+    ),
+    "deepseek_v41_rom_array_51_vs_hbm_cluster": (
+        "tools/run_deepseek_v41_reference_oracle.py"
+    ),
+    "deepseek_v41_rom_wafer_2_vs_rom_array_51": (
+        "tools/run_deepseek_v41_reference_oracle.py"
     ),
 }
 # The storage class each target role must declare, and the two pair shapes a
@@ -196,6 +232,288 @@ def contract_target_roles(targets: object) -> tuple[str, str]:
         if keys == set(pair):
             return pair
     return TARGET_ROLE_PAIRS[0]
+
+
+def contract_schema_path(body: object) -> Path:
+    """The schema document a contract is validated against, by its own version.
+
+    An unrecognised ``schema`` value resolves to the v1 path, whose ``const``
+    then reports the unknown version as a schema error rather than letting an
+    unversioned document past the validator.
+    """
+
+    declared = _mapping(body).get("schema")
+    return CONTRACT_SCHEMA_PATHS.get(str(declared), CONTRACT_SCHEMA_PATH)
+
+
+def _is_contract_v2(body: object) -> bool:
+    return _mapping(body).get("schema") == CONTRACT_SCHEMA_V2
+
+
+def _pending_lock(lock: object) -> bool:
+    """A lock that declares itself absent: status pending and no digests."""
+
+    body = _mapping(lock)
+    return (
+        body.get("status") == "pending"
+        and body.get("digest") is None
+        and body.get("source_sha256") is None
+    )
+
+
+def _strict_positive_int(value: object) -> bool:
+    return type(value) is int and value > 0
+
+
+def _target_geometry_strict(target: Mapping[str, Any], *, contract_v2: bool) -> bool:
+    """Whether one target's declared topology geometry is well formed.
+
+    ``topology_class`` admits 0 to 3 because ``TopologyClass`` has four members
+    once amendment AM-R1's ``CLUSTER_N`` is counted; the v1 schema still caps
+    its own contracts at 2, so widening the code check cannot admit a v1
+    document the schema refuses.  ``node_count`` must be a positive integer,
+    with exactly one exception, available only to a v2 contract: a target whose
+    deployment lock is pending may carry a null node count together with a
+    ``node_count_derivation`` naming the rule, the inputs and the gate that
+    fixes it.  Deriving a node count here instead would invent the denominator
+    of every per-node figure the pair publishes.
+    """
+
+    topology = target.get("topology_class")
+    if type(topology) is not int or not 0 <= topology <= 3:
+        return False
+    if _strict_positive_int(target.get("node_count")):
+        return True
+    return (
+        contract_v2
+        and target.get("node_count") is None
+        and _pending_lock(target.get("deployment"))
+        and bool(_mapping(target.get("node_count_derivation")))
+    )
+
+
+def _index_tokenizer_sha256(index: Mapping[str, Any]) -> object:
+    """The tokenizer identity an index publishes, at either recorded location.
+
+    The DeepSeek-V4 and Qwen indexes carry ``tokenizer_sha256`` at the top
+    level.  The V4.1 index (``tools/build_deepseek_v41_workloads.py``) carries a
+    whole ``tokenizer`` object instead and records the released tokenizer digest
+    at ``tokenizer.source.tokenizer_sha256``; both spellings name the same file
+    digest, and neither is invented here.  A top-level value always wins, so no
+    existing index changes meaning.
+    """
+
+    top = index.get("tokenizer_sha256")
+    if top is not None:
+        return top
+    return _mapping(_mapping(index.get("tokenizer")).get("source")).get(
+        "tokenizer_sha256"
+    )
+
+
+
+def _finite_number(value: object) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and value == value
+        and value not in (float("inf"), float("-inf"))
+    )
+
+
+def _model_binding_consistent(model: Mapping[str, Any]) -> bool:
+    """A v2 model binding is either fully locked or explicitly pending.
+
+    Pending is the state of a model whose exporter does not emit a Kernel IR
+    yet.  It requires both digests to be null and a nonempty reason, so the
+    absence is recorded rather than filled with a forged graph_id; every
+    source-bound check that reads the IR then reports false on its own.
+    """
+
+    status = model.get("status")
+    if status == "locked":
+        return (
+            _is_sha256(model.get("graph_id"))
+            and _is_sha256(model.get("kernel_ir_source_sha256"))
+            and model.get("pending_reason") is None
+        )
+    if status == "pending":
+        return (
+            model.get("graph_id") is None
+            and model.get("kernel_ir_source_sha256") is None
+            and isinstance(model.get("pending_reason"), str)
+            and bool(model.get("pending_reason").strip())
+        )
+    return False
+
+
+def _side_area_consistent(target: Mapping[str, Any]) -> bool:
+    """silicon_area_mm2 is exactly die area per node times node count, or null.
+
+    Exact float equality is the right comparison and not a fragile one: both
+    factors are read from the same JSON document that stores the product, IEEE
+    754 multiplication is deterministic, and the whole point of the field is
+    that it is the product and not an independently rounded figure.  A side
+    missing either factor must carry a null area; no partial denominator is
+    admitted, because the denominator is what a published ratio divides by.
+    """
+
+    silicon = _mapping(target.get("silicon"))
+    die = silicon.get("die_area_mm2_per_node")
+    nodes = target.get("node_count")
+    area = silicon.get("silicon_area_mm2")
+    if die is None or nodes is None:
+        return area is None and (
+            silicon.get("die_area_grade") == "unavailable" or die is not None or nodes is None
+        )
+    return (
+        _finite_number(die)
+        and die > 0
+        and _strict_positive_int(nodes)
+        and _finite_number(area)
+        and area == die * nodes
+    )
+
+
+def _iso_area_checks(
+    body: Mapping[str, Any], roles: Sequence[str]
+) -> dict[str, bool]:
+    """The v2 iso-area and reporting governance, checked against itself.
+
+    Nothing here reads a performance number: the checks prove that the recorded
+    areas are the product of their own factors, that a recorded ratio is the
+    quotient of the two recorded areas, that the tolerance verdict is the
+    comparison it claims to be, that an out-of-tolerance pair carries the
+    granularity correction rule 2 of the iso-area rule demands, and that the
+    two companions gate DS41-CMP11 requires beside every published ratio are
+    declared per role.  A pair that cannot yet compute a ratio must say so with
+    a null ratio and a null verdict, which is what makes ``pending`` a reported
+    state instead of a silent zero.
+    """
+
+    targets = _mapping(body.get("targets"))
+    iso = _mapping(body.get("iso_area"))
+    reporting = _mapping(body.get("reporting"))
+    numerator_role = iso.get("numerator_role")
+    denominator_role = iso.get("denominator_role")
+    tolerance = iso.get("tolerance")
+    status = iso.get("status")
+    ratio = iso.get("ratio")
+    verdict = iso.get("within_tolerance")
+    correction = iso.get("granularity_correction")
+
+    checks: dict[str, bool] = {
+        "model_binding_status_consistent": _model_binding_consistent(
+            _mapping(body.get("model"))
+        ),
+        "iso_area_roles_exact": (
+            numerator_role in set(roles)
+            and denominator_role in set(roles)
+            and numerator_role != denominator_role
+        ),
+        "iso_area_tolerance_exact": tolerance == 0.02,
+        "iso_area_side_arithmetic_exact": all(
+            _side_area_consistent(_mapping(targets.get(role))) for role in roles
+        ),
+    }
+
+    numerator_area = _mapping(
+        _mapping(targets.get(str(numerator_role))).get("silicon")
+    ).get("silicon_area_mm2")
+    denominator_area = _mapping(
+        _mapping(targets.get(str(denominator_role))).get("silicon")
+    ).get("silicon_area_mm2")
+    both_areas = (
+        _finite_number(numerator_area)
+        and numerator_area > 0
+        and _finite_number(denominator_area)
+        and denominator_area > 0
+    )
+
+    if status == "locked":
+        checks["iso_area_ratio_exact"] = (
+            both_areas
+            and _finite_number(ratio)
+            and ratio == numerator_area / denominator_area
+        )
+        checks["iso_area_verdict_exact"] = (
+            _finite_number(ratio)
+            and _finite_number(tolerance)
+            and isinstance(verdict, bool)
+            and verdict == (abs(ratio - 1.0) <= tolerance)
+        )
+    elif status == "pending":
+        checks["iso_area_ratio_exact"] = (
+            ratio is None and verdict is None and not both_areas
+        )
+        checks["iso_area_verdict_exact"] = verdict is None
+    else:
+        checks["iso_area_ratio_exact"] = False
+        checks["iso_area_verdict_exact"] = False
+
+    # A correction is validated whenever one is present, not only when the
+    # verdict is False, because its content depends on the DENOMINATOR's area
+    # and the die quantum alone -- both of which a pair can know while its
+    # numerator is still pending.  It is REQUIRED when the verdict is False.
+    if isinstance(correction, Mapping):
+        entries = correction.get("admissible_node_counts")
+        quantum = correction.get("quantum_mm2")
+        nearest = correction.get("nearest_node_count")
+        corrected = correction.get("corrected_role")
+        admissible_exact = (
+            isinstance(entries, list)
+            and bool(entries)
+            and _finite_number(quantum)
+            and quantum > 0
+            and _finite_number(denominator_area)
+            and denominator_area > 0
+            and all(
+                _strict_positive_int(_mapping(entry).get("node_count"))
+                and _finite_number(_mapping(entry).get("silicon_area_mm2"))
+                and _mapping(entry).get("silicon_area_mm2")
+                == _mapping(entry).get("node_count") * quantum
+                and _finite_number(_mapping(entry).get("ratio_to_denominator"))
+                and _mapping(entry).get("ratio_to_denominator")
+                == _mapping(entry).get("silicon_area_mm2") / denominator_area
+                and abs(_mapping(entry).get("ratio_to_denominator") - 1.0) <= tolerance
+                for entry in entries
+            )
+        )
+        nearest_exact = admissible_exact and nearest == min(
+            (_mapping(entry).get("node_count") for entry in entries),
+            key=lambda count: (
+                abs(count * quantum / denominator_area - 1.0),
+                count,
+            ),
+        )
+        checks["iso_area_correction_exact"] = (
+            admissible_exact
+            and nearest_exact
+            and corrected in set(roles)
+            and corrected != denominator_role
+            and isinstance(_mapping(correction).get("built"), bool)
+        )
+    else:
+        # No correction present: admissible only while the verdict is not False.
+        checks["iso_area_correction_exact"] = verdict is not False
+
+    required = reporting.get("required_companions")
+    companions = _mapping(reporting.get("companion_sources"))
+    checks["reporting_companions_exact"] = (
+        required == ["binding_constraint", "resident_session_count"]
+        and set(companions) == set(required)
+        and all(
+            _mapping(companions.get(name)).get("per_role") is True
+            and isinstance(_mapping(companions.get(name)).get("field"), str)
+            and bool(_mapping(companions.get(name)).get("field"))
+            for name in required
+        )
+        and isinstance(reporting.get("published_ratios"), list)
+        and bool(reporting.get("published_ratios"))
+        and isinstance(reporting.get("ratio_publication_rule"), str)
+        and bool(reporting.get("ratio_publication_rule").strip())
+    )
+    return checks
 
 
 def _schema_errors(body: object, path: Path) -> list[str]:
@@ -551,7 +869,8 @@ def validate_comparison_contract(
     generation = _mapping(execution.get("generation"))
     targets = _mapping(body.get("targets"))
     roles = contract_target_roles(targets)
-    schema_errors = _schema_errors(body, CONTRACT_SCHEMA_PATH)
+    contract_v2 = _is_contract_v2(body)
+    schema_errors = _schema_errors(body, contract_schema_path(body))
     shared: dict[str, bool] = {
         "schema_valid": not schema_errors,
         "registered_path_exact": (
@@ -579,10 +898,9 @@ def validate_comparison_contract(
             and type(workload.get("max_new_tokens")) is int
             and workload.get("max_new_tokens", 0) > 0
             and all(
-                type(_mapping(targets.get(role)).get("topology_class")) is int
-                and 0 <= _mapping(targets.get(role)).get("topology_class", -1) <= 2
-                and type(_mapping(targets.get(role)).get("node_count")) is int
-                and _mapping(targets.get(role)).get("node_count", 0) > 0
+                _target_geometry_strict(
+                    _mapping(targets.get(role)), contract_v2=contract_v2
+                )
                 for role in roles
             )
         ),
@@ -683,7 +1001,7 @@ def validate_comparison_contract(
             workload_index_schema_exact=index.get("schema") == workload.get("index_schema"),
             workload_index_model_exact=index.get("model_id") == model.get("model_id"),
             tokenizer_identity_exact=(
-                index.get("tokenizer_sha256") == workload.get("tokenizer_sha256")
+                _index_tokenizer_sha256(index) == workload.get("tokenizer_sha256")
             ),
             workload_index_entry_exact=(
                 entry.get("digest") == workload.get("digest")
@@ -911,10 +1229,7 @@ def validate_comparison_contract(
         target_identity_well_formed = (
             target.get("role") == role
             and target.get("storage_class") == expected_storage
-            and type(target.get("topology_class")) is int
-            and 0 <= target.get("topology_class", -1) <= 2
-            and type(target.get("node_count")) is int
-            and target.get("node_count", 0) > 0
+            and _target_geometry_strict(target, contract_v2=contract_v2)
             and target_paths_canonical
         )
         shared[f"target_{role}_identity_well_formed"] = target_identity_well_formed
@@ -1057,6 +1372,9 @@ def validate_comparison_contract(
             != _mapping(second_target.get("deployment")).get("path")
         ),
     )
+
+    if contract_v2:
+        shared.update(_iso_area_checks(body, roles))
 
     checks = {**shared, **oracle_checks, **target_checks}
     failed = [name for name, passed in checks.items() if not passed]

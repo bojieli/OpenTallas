@@ -182,6 +182,123 @@ ROUTED_BLOCKS: tuple[dict[str, Any], ...] = (
     },
 )
 
+#: The five DeepSeek-V4.1-Flash engine blocks plan section 13 WP-J says this
+#: tool "gains entries for ... once routed", with the family each implements and
+#: where its routed record has to appear.  THEY ARE NOT IN ``ROUTED_BLOCKS`` AND
+#: MUST NOT BE UNTIL THERE IS A POST-ROUTE NUMBER TO READ.
+#:
+#: Why a declaration instead of an entry:
+#:
+#: * An entry needs ``place_and_route.metrics.fmax_hz``.  What is on disk today
+#:   is the in-flight ``physical.json`` of the characterization runs, and for
+#:   three of the ten (view, block) pairs the only frequency in it is
+#:   ``static_timing.fmax_hz``, labelled ``(pre-layout)`` by the campaign
+#:   itself.  A pre-layout number in this table would be a synthesis estimate
+#:   wearing a routed number's provenance -- and would set a CORE CLOCK, which
+#:   every time in the cycle model then divides by.
+#: * ``routed_clock`` takes the MINIMUM fmax over the routed blocks that
+#:   implement a modelled family.  Four of these five blocks are the first
+#:   routed blocks of the ``route`` and ``dma`` families, which
+#:   ``engine_families_with_no_routed_block`` currently names as the reason the
+#:   clock is an upper bound.  Adding them can therefore only LOWER the asap7
+#:   and sky130 clocks, and by how much is a question only their own closure
+#:   answers.  Guessing it would corrupt every table the program reads.
+#:
+#: So the tool declares what it is waiting for, reports the state of each on
+#: every run, and says out loud when one becomes readable.  Plan section 4.6
+#: names the records under ``a3_{fp4kv_dequant,block_max,candidate_mask,
+#: ngram_hash,engram_gate}``; the campaign in flight writes them under the block
+#: name instead, exactly as ``vector_add_unit`` and ``reduction_s8_g2`` above,
+#: so both filenames are looked for and neither is invented.
+PENDING_ROUTED_BLOCKS: tuple[dict[str, Any], ...] = tuple(
+    {
+        "view": view,
+        "block": block,
+        "family": family,
+        "rtl": f"rtl/abi3/ot_a3_{block}.sv",
+        "records": (
+            f"results/physical_abi3/{directory}/{block}/pnr.json",
+            f"results/physical_abi3/{directory}/{block}/physical.json",
+        ),
+        "field": "place_and_route.metrics.fmax_hz",
+        "produced_by": (
+            "plan section 13 WP-M (DS41-PHY10): tools/run_abi3_physical.py "
+            f"--view {directory} --top ot_a3_{block}"
+        ),
+    }
+    for view, directory in (("asap7", "asap7"), ("sky130", "sky130hd"))
+    for block, family in (
+        ("vector_fp4kv_dequant", "vector"),
+        ("route_block_max", "route"),
+        ("route_candidate_mask", "route"),
+        ("dma_ngram_hash", "dma"),
+        ("vector_engram_gate", "vector"),
+    )
+)
+
+
+def pending_state(entry: dict[str, Any]) -> dict[str, Any]:
+    """Is this pending block's routed fmax readable yet, and if not, why not?
+
+    Reads whatever is on disk at the moment of the run: these records are
+    produced by a campaign that may be running right now, so a state baked into
+    this file would be wrong by the time anyone read it.
+    """
+    for relative in entry["records"]:
+        path = REPO / relative
+        if not path.exists():
+            continue
+        body = json.loads(path.read_text())
+        pnr = body.get("place_and_route") or {}
+        metrics = pnr.get("metrics") or {}
+        fmax = metrics.get("fmax_hz")
+        design = body.get("design") or {}
+        detail = {
+            "record": relative,
+            "flow_completed": body.get("flow_completed"),
+            "closed": design.get("closed"),
+            "fmax_basis": design.get("fmax_basis"),
+            "error": body.get("error"),
+        }
+        if fmax is None:
+            detail["state"] = "no_post_route_fmax"
+            detail["why"] = (
+                f"{relative} carries no {entry['field']}; the only frequency in "
+                f"it is {design.get('fmax_hz')!r} on basis "
+                f"{design.get('fmax_basis')!r}"
+            )
+            return detail
+        if not body.get("flow_completed"):
+            detail["state"] = "flow_incomplete"
+            detail["why"] = (
+                f"{relative} has a {entry['field']} of {fmax!r} but "
+                f"flow_completed is {body.get('flow_completed')!r}"
+            )
+            return detail
+        # ``closed`` is the campaign's own stricter word: place-and-route ran
+        # AND the routed netlist carries no max-slew, max-cap or max-fanout
+        # violation.  ROUTED_BLOCKS' existing entries do not require it, so it
+        # does not change the state here, but DS41-PHY10 does require it and a
+        # reader must not have to open the record to find out.
+        detail["state"] = "routed" if design.get("closed") else "routed_not_closed"
+        detail["fmax_hz"] = fmax
+        detail["why"] = (
+            f"{relative}#{entry['field']} is {fmax!r}, the flow completed and "
+            f"design.closed is {design.get('closed')!r}"
+        )
+        return detail
+    return {
+        "record": None,
+        "state": "absent",
+        "why": "neither " + " nor ".join(entry["records"]) + " exists",
+    }
+
+
+def pending_report() -> list[dict[str, Any]]:
+    """Every pending block with the state of its record right now."""
+    return [{**entry, **pending_state(entry)} for entry in PENDING_ROUTED_BLOCKS]
+
+
 #: Engine families the cycle model times.  A family with no routed block is
 #: named on the clock parameter, because it is the reason the clock can still
 #: fall.
@@ -623,6 +740,37 @@ def main(argv: list[str] | None = None) -> int:
             f"clock {clock:,.0f} Hz  "
             f"characterized {len(body['derived_from']['characterized_parameters'])}"
             f"/{len(body['parameters'])}"
+        )
+    report = pending_report()
+    readable = [row for row in report
+                if row["state"] in ("routed", "routed_not_closed")]
+    print(
+        f"pending V4.1 blocks (plan WP-J/WP-M): {len(readable)} of "
+        f"{len(report)} (view, block) pairs have a post-route fmax; "
+        f"{len(report) - len(readable)} have none, so no cost-table entry is "
+        f"added for them"
+    )
+    for row in report:
+        print(f"  {row['state']:20s} {row['view']:8s} {row['block']:22s} "
+              f"({row['family']})  {row['why']}")
+    if readable:
+        # Not a drift and not a failure of this run: the tables on disk are
+        # still exactly what their cited artifacts say.  It IS the one moment
+        # the five entries may be added, and the entry that adds them has to be
+        # reviewed, because four of them are the first routed blocks of their
+        # families and the view's core clock is a minimum over those.
+        print(
+            "ACTION REQUIRED: "
+            + ", ".join(f"{r['view']}/{r['block']}" for r in readable)
+            + " now carry a post-route fmax ("
+            + ", ".join(f"{r['fmax_hz']:.6g} Hz" for r in readable)
+            + ").  Move them from PENDING_ROUTED_BLOCKS into ROUTED_BLOCKS and "
+            "re-run this tool without --check: the affected views' "
+            "clock.frequency_hz is the MINIMUM over routed blocks of modelled "
+            "families, so the clock can only fall and every derived time moves "
+            "with it.  DS41-PHY10 also requires DRC 0, antenna 0 and a clean "
+            "worktree on the record before it is evidence.",
+            file=sys.stderr,
         )
     if drifted:
         for line in drifted:

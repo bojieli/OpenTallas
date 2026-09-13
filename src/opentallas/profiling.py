@@ -27,6 +27,10 @@ from .schema import AttentionGroup, ModelProfile
 
 HF_BASE = "https://huggingface.co"
 USER_AGENT = "OpenTallas/0.1 checkpoint-metadata-profiler"
+#: Placement variants of the DeepSeek-V4.1 checkpoint.  ``""`` is the released
+#: placement (tables beside the weights), ``engram_host`` puts the tables in
+#: host memory and ``engram_hbm`` makes them a resident region of the KV store.
+V41_VARIANTS = ("", "engram_host", "engram_hbm")
 
 
 @dataclass(frozen=True)
@@ -37,10 +41,15 @@ class SourceSpec:
     adapter: str
     total_parameters: float
     active_parameters: float
-    #: A named placement variant of the same checkpoint.  The only one defined
-    #: is ``engram_host`` for DeepSeek-V4.1: the Engram tables live in host
-    #: memory, as DeepSeek's own serving stack places them, instead of beside
-    #: the weights.  The inventory is the checkpoint's and is shared.
+    #: A named placement variant of the same checkpoint.  Two are defined, both
+    #: for DeepSeek-V4.1, and both move only the Engram lookup tables off the
+    #: weight store: ``engram_host`` puts them in host memory, as DeepSeek's own
+    #: serving stack places them, where they cost capacity and bandwidth on
+    #: neither side of a comparison; ``engram_hbm`` makes them a resident,
+    #: load-once, read-only region of the same store that holds the KV cache, so
+    #: they cost that store's capacity on the stage that holds them and their
+    #: per-token row reads cost that store's bandwidth.  The inventory is the
+    #: checkpoint's and is shared by every variant.
     variant: str = ""
     #: Where the profile is written under ``configs/models``.  Candidate
     #: models that no release document binds a figure to live one level down,
@@ -92,6 +101,16 @@ SOURCES: tuple[SourceSpec, ...] = (
         total_parameters=552e9,
         active_parameters=16e9,
         variant="engram_host",
+        profile_dir="candidates",
+    ),
+    SourceSpec(
+        slug="deepseek-v4.1-flash-engram_hbm",
+        repo="deepseek-ai/DeepSeek-V4.1-Flash",
+        revision="dba1be0a40aa45a94ad051997016db3960a90277",
+        adapter="deepseek_v41",
+        total_parameters=552e9,
+        active_parameters=16e9,
+        variant="engram_hbm",
         profile_dir="candidates",
     ),
     SourceSpec(
@@ -755,19 +774,31 @@ def _deepseek_v41_profile(
     lookup = inventory.lookup_table_bytes
     engram_packed = int(lookup.get("engram_table_packed", 0))
     engram_expanded = int(lookup.get("engram_table_a100_bf16_expanded", 0))
-    engram_host = spec.variant == "engram_host"
-    if spec.variant not in ("", "engram_host"):
+    if spec.variant not in V41_VARIANTS:
         raise ValueError(f"unknown DeepSeek-V4.1 variant {spec.variant!r}")
+    engram_host = spec.variant == "engram_host"
+    engram_hbm = spec.variant == "engram_hbm"
+    # Both placement variants take the tables off the weight store, so both
+    # subtract the same bytes from the checkpoint that store has to hold.  They
+    # differ in where the bytes go next: host memory charges capacity and
+    # bandwidth to neither side of a comparison, while HBM residency charges
+    # the capacity of the KV store on the stage that holds them and the
+    # bandwidth of that store for every row read.
+    off_weight_store = engram_host or engram_hbm
     if engram_packed <= 0:
         raise ValueError("DeepSeek-V4.1 inventory carries no Engram table bytes")
 
-    checkpoint_bytes = inventory.checkpoint_bytes - (engram_packed if engram_host else 0)
-    resident_only = inventory.resident_only_bytes - (engram_packed if engram_host else 0)
+    checkpoint_bytes = inventory.checkpoint_bytes - (engram_packed if off_weight_store else 0)
+    resident_only = inventory.resident_only_bytes - (engram_packed if off_weight_store else 0)
     expanded = dict(inventory.deployment_storage["a100_bf16_expanded"])
-    if engram_host:
+    if off_weight_store:
         expanded["checkpoint_bytes"] = int(expanded["checkpoint_bytes"]) - engram_expanded
         expanded["resident_only_bytes"] = int(expanded["resident_only_bytes"]) - engram_expanded
-        expanded["policy"] = str(expanded["policy"]) + "; Engram tables host-resident"
+        expanded["policy"] = str(expanded["policy"]) + (
+            "; Engram tables host-resident"
+            if engram_host
+            else "; Engram tables resident in the KV store"
+        )
 
     engram_cfg = {
         "layer_ids": [int(value) for value in text["engram_layer_ids"]],
@@ -783,16 +814,96 @@ def _deepseek_v41_profile(
     engram_cfg["row_bytes_packed"] = row_bytes
     engram_cfg["lookup_bytes_per_token"] = len(engram_cfg["layer_ids"]) * hash_cols * row_bytes
 
-    name = "DeepSeek-V4.1-Flash" + ("-engram-host" if engram_host else "")
-    placement = (
-        "Engram tables in HOST memory, prefetched by RDMA as DeepSeek's serving "
-        "stack does (report sections 2.4.2, 3.1.3); they count against neither "
-        "ROM nor HBM capacity on either side of a comparison"
-        if engram_host
-        else "Engram tables resident beside the weights: in mask ROM on the ROM "
-        "side (they are immutable and read by row address, which is what a ROM "
-        "does) and in HBM on the GPU side; both sides pay the capacity"
-    )
+    # One resident region per Engram module, sized by that module's own
+    # embedding count and read at that module's own row depth.  Nothing here is
+    # written down: the bytes are num_embeddings x row_bytes and the per-token
+    # reads are rows_read_per_token_per_module x row_bytes, and both are
+    # cross-checked against the header inventory below, which is what makes the
+    # per-stage attribution in the analytical model a derivation rather than an
+    # assignment.
+    expanded_row_bytes = float(2 * engram_cfg["head_dim"])
+    regions: list[dict[str, Any]] = []
+    expanded_regions: list[dict[str, Any]] = []
+    for layer_id, count in zip(engram_cfg["layer_ids"], engram_cfg["num_embeddings"]):
+        regions.append(
+            {
+                "label": f"engram_table_l{layer_id}",
+                "layer_id": layer_id,
+                "bytes": count * row_bytes,
+                "read_bytes_per_token": hash_cols * row_bytes,
+                "rows": count,
+                "row_bytes": row_bytes,
+                "rows_read_per_token": hash_cols,
+            }
+        )
+        expanded_regions.append(
+            {
+                "label": f"engram_table_l{layer_id}",
+                "layer_id": layer_id,
+                "bytes": count * expanded_row_bytes,
+                "read_bytes_per_token": hash_cols * expanded_row_bytes,
+                "rows": count,
+                "row_bytes": expanded_row_bytes,
+                "rows_read_per_token": hash_cols,
+            }
+        )
+    for total, measured, what in (
+        (sum(region["bytes"] for region in regions), engram_packed, "packed"),
+        (
+            sum(region["bytes"] for region in expanded_regions),
+            engram_expanded,
+            "A100 BF16 expanded",
+        ),
+    ):
+        if abs(total - measured) > 1.0:
+            raise ValueError(
+                f"{what} Engram region bytes derived from the config "
+                f"({total:.0f} B) disagree with the header inventory ({measured} B)"
+            )
+
+    name = "DeepSeek-V4.1-Flash" + {
+        "": "",
+        "engram_host": "-engram-host",
+        "engram_hbm": "-engram-hbm",
+    }[spec.variant]
+    if engram_host:
+        placement = (
+            "Engram tables in HOST memory, prefetched by RDMA as DeepSeek's serving "
+            "stack does (report sections 2.4.2, 3.1.3); they count against neither "
+            "ROM nor HBM capacity on either side of a comparison"
+        )
+    elif engram_hbm:
+        placement = (
+            "Engram tables resident in the KV store -- wafer-edge HBM on the ROM "
+            "side, the same HBM on the GPU side -- as a load-once, read-only "
+            "region written at load and never at runtime (plan section 3.4). The "
+            "weight store holds none of them, so a mask ROM is sized without "
+            "them; instead they take capacity from the stage whose layers own "
+            "them (metadata.hbm_resident_regions) and their row reads take that "
+            "store's bandwidth on that stage"
+        )
+    else:
+        placement = (
+            "Engram tables resident beside the weights: in mask ROM on the ROM "
+            "side (they are immutable and read by row address, which is what a ROM "
+            "does) and in HBM on the GPU side; both sides pay the capacity"
+        )
+    resident_metadata: dict[str, Any] = {}
+    if engram_hbm:
+        resident_metadata = {
+            "hbm_resident_weight_bytes": engram_packed,
+            "hbm_resident_regions": regions,
+            "hbm_resident_policy": (
+                "immutable lookup tables held in the KV store rather than the "
+                "weight store: capacity is charged to the pipeline stage whose "
+                "layer range contains layer_id, and read_bytes_per_token is "
+                "charged to that stage's KV read traffic on every decode token. "
+                "Written once at load, so no write traffic and no per-user "
+                "storage"
+            ),
+        }
+        expanded["hbm_resident_bytes"] = engram_expanded
+        expanded["hbm_resident_regions"] = expanded_regions
     return ModelProfile(
         name=name,
         source_repo=spec.repo,
@@ -837,6 +948,7 @@ def _deepseek_v41_profile(
             "engram": engram_cfg,
             "engram_placement": placement,
             "host_resident_weight_bytes": engram_packed if engram_host else 0,
+            **resident_metadata,
             "kv_cache_policy": (
                 f"global KV shared across layers: FP4 E2M1 main latent with one E4M3 "
                 f"scale per 16 channels ({main_entry_bytes:.0f} B) plus FP4 index key "

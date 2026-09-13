@@ -69,6 +69,16 @@ from compiler.backends.rom.deepseek_v4_array import (  # noqa: E402
     deepseek_v4_array_rom_capability,
     deepseek_v4_pro_array_rom_capability,
 )
+from compiler.backends.rom.deepseek_v41_array import (  # noqa: E402
+    TARGET_ID as V41_ARRAY_TARGET_ID,
+    build_deepseek_v41_array_rom_deployment,
+    deepseek_v41_array_rom_capability,
+)
+from compiler.backends.rom.deepseek_v41 import (  # noqa: E402
+    TARGET_ID as V41_WAFER_TARGET_ID,
+    build_deepseek_v41_rom_deployment,
+    deepseek_v41_rom_capability,
+)
 from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,
     qwen3_rom_capability,
@@ -93,6 +103,16 @@ PRODUCTS = (
     # ``deepseek_v4_pro_array_rom_capability`` for the geometry and for the
     # iso-area caveat that travels with it.
     "deepseek-v4-pro-array",
+    # DeepSeek-V4.1-Flash on the reticle-class ROM array, plan WP-F.  The node
+    # count is derived from the released expert count and the declared NVLink
+    # domain size rather than typed: see ``expert_parallel_node_count``.
+    "deepseek-v4.1-flash-array",
+    # DeepSeek-V4.1-Flash on two wafer-scale logical devices, plan WP-E.  There
+    # is no V4.1 single-chip product and no one-wafer one: 307.5 GB of weights
+    # against a 192 GiB wafer ROM.  The layer partition, the pipeline depth and
+    # the cross-wafer payload are all derived from the graph and the capability
+    # (``deepseek_v41_stage_plan``), so this CLI passes no geometry.
+    "deepseek-v4.1-flash",
 )
 
 
@@ -245,6 +265,26 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             defects=defects,
             weight_storage_class=storage,
             epoch=args.epoch,
+        )
+    elif product == "deepseek-v4.1-flash-array":
+        capability = supplied or deepseek_v41_array_rom_capability()
+        deployment, plan = build_deepseek_v41_array_rom_deployment(
+            graph,
+            capability=capability,
+            defects=defects,
+            weight_storage_class=storage,
+            epoch=args.epoch,
+            target_id=args.target_id or V41_ARRAY_TARGET_ID,
+        )
+    elif product == "deepseek-v4.1-flash":
+        capability = supplied or deepseek_v41_rom_capability()
+        deployment, plan = build_deepseek_v41_rom_deployment(
+            graph,
+            capability=capability,
+            defects=defects,
+            weight_storage_class=storage,
+            epoch=args.epoch,
+            target_id=args.target_id or V41_WAFER_TARGET_ID,
         )
     elif product == "deepseek-v4-pro-array":
         capability = supplied or deepseek_v4_pro_array_rom_capability()

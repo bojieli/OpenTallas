@@ -1,0 +1,322 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "checks_per_simulator": 18439,
+  "claim_boundary": {
+    "compares_against_an_independent_python_reference": true,
+    "configuration_path_is_sequential_not_initiation_interval_one": true,
+    "dual_simulator_bit_exact": true,
+    "establishes_asap7_or_sky130_frequency": false,
+    "establishes_token_latency_or_tpot": false,
+    "executes_engram_row_read_or_gate": false,
+    "executes_the_shipped_deployment_sequencer": false,
+    "is_placed_or_routed": false,
+    "measures_area_or_power": false,
+    "reproduces_the_compressed_token_map": false,
+    "runs_inside_the_dma_engine_or_the_engine_array": false,
+    "simulator_cycles_are_verification_cost_only": true,
+    "uses_the_released_column_primes_offsets_and_multipliers": true,
+    "uses_the_released_compressed_pad_id": false,
+    "validates_the_barrett_bound_in_hardware": true,
+    "vendor_forward_executed_inside_this_campaign": false
+  },
+  "compared": [
+    "the row id of every case",
+    "the residue before the column offset",
+    "the 63-bit folded dividend",
+    "the refusal code, and a forced-zero row id on every refusal",
+    "the returned tag, order and head of every case",
+    "the configuration error flag and code of every configuration"
+  ],
+  "coverage": {
+    "every_raw_blocking_mask": true,
+    "heads_covered": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "ids_at_zero_and_compressed_maximum": true,
+    "modulus_bits_covered": [
+      2,
+      3,
+      4,
+      5,
+      7,
+      9,
+      10,
+      12,
+      17,
+      20,
+      24,
+      25,
+      31,
+      32
+    ],
+    "orders_covered": [
+      2,
+      3,
+      4
+    ],
+    "released_layers_covered": [
+      1,
+      14
+    ],
+    "sequence_start_positions": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "geometry": {
+    "all_model_numbers_are_parameters_or_operands": true,
+    "configurations_exercised": [
+      {
+        "cases": 476,
+        "expect_cfg_error": 0,
+        "modulus_bits": [
+          24
+        ],
+        "name": "released_layer_1",
+        "table_rows": 384006168
+      },
+      {
+        "cases": 476,
+        "expect_cfg_error": 0,
+        "modulus_bits": [
+          24
+        ],
+        "name": "released_layer_14",
+        "table_rows": 384016682
+      },
+      {
+        "cases": 288,
+        "expect_cfg_error": 0,
+        "modulus_bits": [
+          2,
+          3,
+          4,
+          5,
+          7,
+          9,
+          10,
+          12,
+          17,
+          20,
+          25,
+          31,
+          32
+        ],
+        "name": "modulus_probe",
+        "table_rows": 4294967291
+      },
+      {
+        "cases": 25,
+        "expect_cfg_error": 1,
+        "modulus_bits": [
+          24
+        ],
+        "name": "column_out_of_table",
+        "table_rows": 384006167
+      },
+      {
+        "cases": 12,
+        "expect_cfg_error": 1,
+        "modulus_bits": [
+          24
+        ],
+        "name": "pad_outside_vocabulary",
+        "table_rows": 384006168
+      },
+      {
+        "cases": 24,
+        "expect_cfg_error": 0,
+        "modulus_bits": [
+          24
+        ],
+        "name": "product_outside_window",
+        "table_rows": 384004168
+      }
+    ],
+    "device_parameters": {
+      "DIVIDEND_W": 63,
+      "ID_W": 32,
+      "MOD_W": 32,
+      "MULT_W": 48,
+      "NUM_COLS": 24,
+      "NUM_HEADS": 8,
+      "ORDER_MAX": 4,
+      "ORDER_MIN": 2,
+      "ROW_W": 32
+    },
+    "run_time_operands": [
+      "table row count",
+      "pad id",
+      "compressed-vocabulary extent",
+      "per-lookback multipliers",
+      "per-column modulus",
+      "per-column row offset"
+    ]
+  },
+  "identity_implemented": {
+    "fold": "XOR over (compressed id * per-lookback multiplier)",
+    "reduction": "modulo the per-(order, head) column prime",
+    "released_layout_proof": "the 24 derived column primes of each Engram layer sum to that layer's released engram_num_embeddings (384,006,168 and 384,016,682), which is checked when the vectors are built",
+    "row": "column offset + residue"
+  },
+  "limitations": [
+    "the per-column Barrett reciprocal is derived by a shared sequential divider at configuration time, which is NOT an initiation-interval-one path; only the streaming datapath is",
+    "the block is verified standalone: no instruction decode, no descriptor validation and no engine-array integration is exercised",
+    "the compressed token map of the pinned build_compressed_token_map is upstream data and is not reproduced, so a compressed id is an operand here, not a checked derivation",
+    "the pad id is an operand; the released compressed pad id needs the vendor tokenizer and is not established",
+    "the per-column reciprocal derivation cost is reported in cycles only; it is not a frequency or a wall-clock claim"
+  ],
+  "log_sha256": {
+    "iverilog": "d98517c7ebd04462be42ed69dea8157cb4e3ad5a777adb49ea7c8822693b0474",
+    "verilator": "0031f4bd97d1fb79bd7d82470e91b3b03ef58b9fb68f568a420a2aca2e5f28b6",
+    "verilator_compile": "17a5aeac5718c4f73ef5e92399b2d3f99764e2101767b1e35cd13d57c6d820ac",
+    "yosys": "b5230c91c3614323ac52381a63294a74f8a755a50cf68fa73223b8e23cf55a2f"
+  },
+  "normalized_pass": {
+    "cases": 1301,
+    "checks": 18439,
+    "configs": 6,
+    "ii_violations": 0,
+    "outputs": 2624,
+    "refusals": 98
+  },
+  "normalized_summary": {
+    "cases": 1301,
+    "cfg_errors": 2,
+    "code1": 16,
+    "code2": 0,
+    "code3": 24,
+    "code4": 24,
+    "code5": 34,
+    "code6": 0,
+    "configs": 6,
+    "expected_refusals": 98,
+    "guard_cases": 16,
+    "guard_checks": 1,
+    "latency": 34,
+    "outputs": 2624,
+    "recip_max": 2761,
+    "recip_total": 16042,
+    "refusals": 98,
+    "stalls": 1059
+  },
+  "pipeline": {
+    "initiation_interval": 1,
+    "initiation_interval_evidence": "in an unstalled burst the bench requires in_ready never to drop and the first and last of N results to be exactly N-1 cycles apart; ii_violations is zero in both simulators",
+    "latency_equals_device_info_port": true,
+    "measured_latency_cycles": 34,
+    "per_stage_arithmetic": "one MUL_DIGIT_W-bit digit folded into a carry-save accumulator plus one MUL_DIGIT_W-wide carry-propagate; no stage walks a vector, holds more than one carry chain, or contains a combinational divide",
+    "reciprocal_derivation_cycles_max": 2761,
+    "reciprocal_derivation_cycles_total": 16042,
+    "registered_boundary": "in_valid/in_ready and out_valid/out_ready"
+  },
+  "reference": {
+    "derived_from": "the pinned inference/engram.py of SRC-DSV41-FLASH-MODEL, revision dba1be0a40aa45a94ad051997016db3960a90277, source SHA-256 11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897; never from this RTL",
+    "function": "ngram_row_ids",
+    "module": "runtime/reference/engram.py",
+    "sha256": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0",
+    "vendor_cross_check": {
+      "mismatches": 0,
+      "path": "results/rtl/a3_v41_ngram_hash_vendor_oracle.json",
+      "present": true,
+      "records_compared": 5760,
+      "sha256": "6199d4c1ee61a21fa851912232a85e4bf2499840c4df59546f6cb03bdfa4de49",
+      "status": "pass",
+      "vendor_source_sha256": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897"
+    }
+  },
+  "schema": "opentallas.rtl.a3_v41_ngram_hash_campaign.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_dma_ngram_hash.sv": "10f0013db501f1ee190a2ca6fbe07ae226328f55348512f756455c4b5db20c78",
+    "rtl/test/tb_a3_v41_ngram_hash.sv": "44d2f9d6aee1511b907cfa900d47a0d2bfe10f8dd592b1cd2bcf08f322b28f95",
+    "runtime/reference/engram.py": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0",
+    "tools/build_a3_v41_ngram_hash_vectors.py": "dcaa5a6a35b19215aa7775874366a443387b793baed39ea3701c2f244a49feb1",
+    "tools/run_a3_v41_ngram_hash_rtl_campaign.py": "214a6c8a92f180850f94bf9ff1362406a1c2c7c773508fc54c48f18cc4829d40"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "cells": {
+      "$add": 93,
+      "$and": 1139,
+      "$dff": 510,
+      "$dffe": 418,
+      "$eq": 116,
+      "$ge": 14,
+      "$gt": 4,
+      "$logic_and": 21038,
+      "$logic_not": 42,
+      "$logic_or": 18,
+      "$lt": 24,
+      "$mux": 512,
+      "$ne": 16,
+      "$not": 6,
+      "$or": 796,
+      "$pmux": 28,
+      "$reduce_and": 88,
+      "$reduce_bool": 84,
+      "$reduce_or": 736,
+      "$sdff": 280,
+      "$sdffe": 42,
+      "$shr": 2,
+      "$sub": 26,
+      "$xor": 769
+    },
+    "check_problems": 0,
+    "note": "generic synthesizable elaboration only; no library mapping, no placement, no route, no frequency, no PPA claim",
+    "top": "ot_a3_dma_ngram_hash"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "unit": {
+    "engine_family": "DMA",
+    "engine_sub_opcode": 4,
+    "ir_kind": "NGRAM_HASH",
+    "numeric_contract": "ngram_hash_u32_v1",
+    "rtl": "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+    "work_package": "WP-K (DS41-R6)"
+  },
+  "vector_sha256": {
+    "cases.hex": "6551220093b95f04dc653ee75b34c7676e03f0ca77c832c37af9c78e51b26762",
+    "config.hex": "378ad07ff073f8f7825fe400a26d323bfc5943649ca99df19a100cbc3a80f853",
+    "index.json": "8712c39de2511a92681327a5162359c32de7d0428fd51a0b6813f1f3f53fa099"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.44056094507686794,
+    "iverilog_simulation": 22.202770543051884,
+    "verilator_compile": 38.83614174509421,
+    "verilator_simulation": 0.21584936999715865,
+    "yosys_elaboration": 30.32757555018179
+  }
+}

@@ -621,6 +621,7 @@ ASSUMED_INPUTS = frozenset(
         "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Flash-0731",
         "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Pro-0813",
         "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash",
+        "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-hbm",
         "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-host",
         "latency.array_pass_boundaries_per_layer_by_model.Qwen3-8B",
         "latency.global_wire_delay_s_per_mm",

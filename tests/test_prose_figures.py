@@ -98,13 +98,18 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
         if CPF.scan(document)
     }
     assert annotated_documents == CPF.REQUIRED_COVERAGE
-    # 930, not 916: docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md was added
-    # with 14 annotations, after DEEPSEEK_V41_FLASH_FEASIBILITY.md's 69 (and
-    # before that docs/CHIP_ARCHITECTURE_DESIGN.md gained ten and its floor was
-    # raised to match).  This total only ever moves UP -- a drop is the
-    # regression the floor exists to catch, and the per-document equality
-    # above catches it first.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 930
+    # 936, not 930: WP-P of the DeepSeek-V4.1 plan registered the three new
+    # targets in docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md section 3 and
+    # docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md section 3.3, which
+    # enter this map at 2 annotations each, and added two area figures to
+    # docs/EVIDENCE_LEDGER.md section 10 (42 -> 44).  Before that
+    # docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md was added with 14
+    # annotations, after DEEPSEEK_V41_FLASH_FEASIBILITY.md's 69 (and before that
+    # docs/CHIP_ARCHITECTURE_DESIGN.md gained ten and its floor was raised to
+    # match).  This total only ever moves UP -- a drop is the regression the
+    # floor exists to catch, and the per-document equality above catches it
+    # first.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 936
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

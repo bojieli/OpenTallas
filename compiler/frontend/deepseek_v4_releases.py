@@ -40,6 +40,18 @@ CHECKPOINT_LOCK_ROOT = Path.home() / ".cache/opentallas"
 MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
 
 
+#: The structures a front end resolves out of a released ``config.json``, and
+#: the key path each one sits at.  A flat release keeps all four at the root.
+CONFIG_LAYOUT_KEYS = (
+    "architecture",
+    "compress_ratios",
+    "quantization_config",
+    "rope_scaling",
+)
+_FLAT_CONFIG_LAYOUT = MappingProxyType({key: () for key in CONFIG_LAYOUT_KEYS})
+_NO_CONFIG_SECTIONS: Mapping[str, Mapping[str, Any]] = MappingProxyType({})
+
+
 class DeepSeekV4ReleaseError(RuntimeError):
     """Raised when a release is named that this front end does not carry."""
 
@@ -87,6 +99,24 @@ class DeepSeekV4Release:
     #: the graph contract's covered scope.  ``None`` where no such application
     #: has been built, because the scope list may not claim one that has not.
     canonical_application_claim: str | None = None
+    #: The pooling widths this release's ``compress_ratios`` may name.  V4
+    #: publishes window-only, ratio-4 and ratio-128 layers; V4.1's Causal
+    #: Encoder-Decoder publishes ratio 2 and ratio 1 instead.  The admissible
+    #: set is a release fact, so it is written here rather than frozen into the
+    #: predicate that checks it.
+    supported_compress_ratios: tuple[int, ...] = (0, 4, 128)
+    #: Where each pinned structure sits inside a released ``config.json``, as a
+    #: key path from the root; the empty path is the root object itself.  V4
+    #: publishes one flat object, so every default is the root.  V4.1 nests the
+    #: language model under ``text_config`` while leaving the weight
+    #: quantization at the root, and says so here instead of leaving a front end
+    #: to assume one shape or the other.
+    config_layout: Mapping[str, tuple[str, ...]] = _FLAT_CONFIG_LAYOUT
+    #: Pinned sections of the released config besides the architecture section,
+    #: keyed by the same key path joined with ``.`` (``""`` is the root).  A
+    #: multi-modal release carries its own tower and its own root identity
+    #: alongside the language model's scalars.
+    config_sections: Mapping[str, Mapping[str, Any]] = _NO_CONFIG_SECTIONS
 
     def __post_init__(self) -> None:
         layers = self.config_scalars.get("num_hidden_layers")
@@ -98,7 +128,7 @@ class DeepSeekV4Release:
         unsupported = sorted(
             set(self.main_compress_ratios) | set(self.dspark_compress_ratios)
         )
-        if any(ratio not in {0, 4, 128} for ratio in unsupported):
+        if any(ratio not in set(self.supported_compress_ratios) for ratio in unsupported):
             raise DeepSeekV4ReleaseError(
                 f"{self.model_id}: unsupported compression ratios {unsupported}"
             )
@@ -169,6 +199,43 @@ class DeepSeekV4Release:
             raise DeepSeekV4ReleaseError(
                 f"{self.model_id} has no pinned config key {key!r}"
             ) from None
+
+    def config_path_for(self, structure: str) -> tuple[str, ...]:
+        """The key path a released config keeps one pinned structure at."""
+
+        if structure not in CONFIG_LAYOUT_KEYS:
+            raise DeepSeekV4ReleaseError(
+                f"{structure!r} is not one of the located config structures "
+                + ", ".join(CONFIG_LAYOUT_KEYS)
+            )
+        return tuple(self.config_layout.get(structure, ()))
+
+    def config_section(self, config: Mapping[str, Any], structure: str) -> Any:
+        """Resolve one pinned structure's enclosing object in a released config.
+
+        ``architecture`` resolves the object ``config_scalars`` is checked
+        against; the others resolve the object their same-named field is checked
+        against.  A path that does not resolve to an object is a refusal rather
+        than a silent fall back to the root, because falling back would let a
+        nested release pass the flat release's gate.
+        """
+
+        node: Any = config
+        walked: list[str] = []
+        for key in self.config_path_for(structure):
+            if not isinstance(node, Mapping) or key not in node:
+                raise DeepSeekV4ReleaseError(
+                    f"{self.model_id}: released config has no section "
+                    f"{'.'.join([*walked, key])!r} for {structure}"
+                )
+            node = node[key]
+            walked.append(key)
+        if not isinstance(node, Mapping):
+            raise DeepSeekV4ReleaseError(
+                f"{self.model_id}: config section {'.'.join(walked) or 'root'!r} "
+                f"for {structure} is not an object"
+            )
+        return node
 
     @property
     def lock_identity_established(self) -> bool:
@@ -434,8 +501,251 @@ PRO = DeepSeekV4Release(
 )
 
 
+#: DeepSeek-V4.1-Flash, released 2026-09-10 (``SRC-DSV41-FLASH-CARD``).  The
+#: release that stops being a V4 variant: a 40-layer Causal Encoder-Decoder
+#: whose KV is published by four source layers rather than owned per layer, an
+#: Engram n-gram memory at two layers, a candidate-pool level above the sparse
+#: indexer, and a ViT tower.
+#:
+#: Three structural facts separate it from the two V4 records, and each is
+#: carried as a field rather than as a special case in a front end:
+#:
+#: * The released ``config.json`` is nested.  The language model's scalars live
+#:   under ``text_config`` and its ``rope_scaling`` with them, while the weight
+#:   quantization stays at the root -- so ``config_layout`` locates all four
+#:   pinned structures and ``config_sections`` pins the root identity and the
+#:   vision tower beside them.
+#: * ``compress_ratios`` names 2 and 1, not 4 and 128, so
+#:   ``supported_compress_ratios`` says so.
+#: * ``quantization_config.weight_block_size`` is ``[32, 32]``, not
+#:   ``[128, 128]``; ``build_official_tensor_specs`` reads it, so both the FP8
+#:   scale geometry of V4 and of V4.1 come out of one generator.
+#:
+#: Provenance of the numbers that are not read out of the config:
+#:
+#: * ``config_sha256``/``config_bytes``, ``model_card_sha256``,
+#:   ``inference_config_sha256``, ``tokenizer_sha256`` and
+#:   ``tokenizer_config_sha256`` were measured with ``sha256sum`` over the
+#:   pinned snapshot's ``config.json`` (3,311 bytes), ``README.md`` (13,110),
+#:   ``inference/config.json`` (1,982), ``tokenizer.json`` (6,367,257) and
+#:   ``tokenizer_config.json`` (801).  The first three equal the digests
+#:   ``docs/SOURCES.md`` records for ``SRC-DSV41-FLASH-CONFIG`` and ``-CARD``,
+#:   and ``config_sha256`` equals ``data/inventory/deepseek-v4.1-flash.json``'s.
+#:   ``tokenizer_config_sha256`` is byte-for-byte the V4 Flash and Pro file;
+#:   ``tokenizer.json`` is new to this release.
+#: * ``index_sha256`` was measured over the snapshot's
+#:   ``model.safetensors.index.json`` (7,470,294 bytes) and equals both
+#:   ``SRC-DSV41-FLASH-INDEX`` and the governed inventory's ``index_sha256``.
+#: * ``tensor_count``, ``payload_bytes`` and ``tensor_structure_sha256`` are what
+#:   ``compiler/frontend/deepseek_v41.build_official_tensor_specs`` derives from
+#:   this record, confronted with the 48 pinned shard headers cached under
+#:   ``.cache/hf/headers/`` -- every tensor name, dtype and shape equal -- and
+#:   with the released index's ``metadata.total_size`` of 510,286,023,000.
+#:   ``tensor_structure_evidence`` says so.
+#: * ``checkpoint_source_pending`` is ``False``: the complete 48-shard snapshot
+#:   arrived and ``tools/build_checkpoint_source.py`` (``make
+#:   checkpoint-source-deepseek-v41``) digested all 88 registry-listed files
+#:   against the committed witness
+#:   ``data/inventory/deepseek-v4.1-flash-registry-listing.json``.  52 of the 88
+#:   carry an LFS SHA-256, all 48 shards among them; the other 36 -- including
+#:   ``model.safetensors.index.json`` and ``config.json`` -- are plain Git
+#:   objects, which the tool reports as witnessed by size alone and whose
+#:   published ``blobId`` the release test recomputes locally.  Two local
+#:   ``__pycache__`` files the registry does not list are reported and not bound.
+#:   Re-running the tool over the same snapshot reproduced the committed
+#:   ``checkpoint_source.json`` byte for byte
+#:   (sha256 ``da289c466ef00c225f2f1e4458affa5af79021bed22ccbc4bcc90aa947f9f8e4``).
+#: * ``checkpoint_lock_id`` and ``tensor_content_sha256`` are outputs of
+#:   ``tools/build_checkpoint_lock.py`` (``make checkpoint-lock-deepseek-v41``)
+#:   over the complete snapshot: 510,286,023,000 payload bytes across 96,085
+#:   tensors in 48 shards, every shard header parsed and every tensor payload
+#:   hashed.  ``compiler.frontend.checkpoint.verify_checkpoint_lock`` then rebuilt
+#:   the lock from those same bytes and required canonical equality, which held in
+#:   568 s -- so the pinned ``lock_id`` is reproducible on this snapshot and not
+#:   merely the output of one pass.  The lock's 96,085 tensor names, dtypes and
+#:   shapes and its payload total also equal what
+#:   ``build_official_tensor_specs`` derives from the config alone, which is an
+#:   agreement between a byte-level read and a header-free derivation.
+
+#: SRC-DSV41-FLASH-REPORT section 2.2: the encoder is two window-only layers
+#: then three groups of six CSA2 layers at ratio 2, and the decoder is five
+#: groups of four at ratio 1 -- 20 + 20, the Causal Encoder-Decoder split the
+#: model card states.  The DSpark stages are window-only as in both V4 records.
+_V41_WINDOW_ONLY_LAYERS = 2
+_V41_ENCODER_GROUPS, _V41_ENCODER_GROUP_LAYERS = 3, 6
+_V41_DECODER_GROUPS, _V41_DECODER_GROUP_LAYERS = 5, 4
+_V41_FLASH_MAIN_RATIOS = (
+    (0,) * _V41_WINDOW_ONLY_LAYERS
+    + (2,) * (_V41_ENCODER_GROUPS * _V41_ENCODER_GROUP_LAYERS)
+    + (1,) * (_V41_DECODER_GROUPS * _V41_DECODER_GROUP_LAYERS)
+)
+
+#: V4.1 keeps FP8 E4M3 weights with UE8M0 scales and FP4 experts, but halves the
+#: scale block from 128 to 32 in both dimensions, and carries ``expert_dtype``
+#: inside the quantization object rather than at the config root.
+_V41_QUANTIZATION_CONFIG = MappingProxyType(
+    {
+        "activation_scheme": "dynamic",
+        "expert_dtype": "fp4",
+        "quant_method": "fp8",
+        "scale_fmt": "ue8m0",
+        "weight_block_size": [32, 32],
+    }
+)
+#: The same YaRN interpolation as both V4 releases, under the key name
+#: ``rope_type`` that V4 spells ``type``.
+_V41_ROPE_SCALING = MappingProxyType(
+    {
+        "beta_fast": 32,
+        "beta_slow": 1,
+        "factor": 16,
+        "original_max_position_embeddings": 65536,
+        "rope_type": "yarn",
+    }
+)
+
+V41_FLASH = DeepSeekV4Release(
+    model_id="deepseek-v4.1-flash",
+    repository="deepseek-ai/DeepSeek-V4.1-Flash",
+    revision="dba1be0a40aa45a94ad051997016db3960a90277",
+    config_sha256="8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+    config_bytes=3_311,
+    index_sha256="74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    shard_count=48,
+    tensor_count=96_085,
+    payload_bytes=510_286_023_000,
+    tensor_structure_sha256=(
+        "834a3fd1840230036c63b3edf4467d9356784f69bcc4a7fb156ffec536b8ef2c"
+    ),
+    tensor_structure_evidence="shard_header_inventory",
+    inference_config_sha256=(
+        "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+    ),
+    model_card_sha256="347c9db4e5506acb531cbc3b724407ab88e9af8781679152f0823d7bac16d251",
+    tokenizer_sha256="c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b",
+    tokenizer_config_sha256=(
+        "6ac8c8dc065ed118161d02dd532749ae3f52c243deac27872134fae2f50d8547"
+    ),
+    main_compress_ratios=_V41_FLASH_MAIN_RATIOS,
+    dspark_compress_ratios=_DSPARK_RATIOS,
+    config_scalars=MappingProxyType(
+        {
+            "attention_bias": False,
+            "attention_dropout": 0.0,
+            "candidate_block_size": 8,
+            "candidate_source_layer_id": 20,
+            "candidate_topk_blocks": 2048,
+            "compress_rope_theta": 160000,
+            "dspark_block_size": 5,
+            "dspark_markov_rank": 256,
+            "dspark_n_routed_experts": 128,
+            "dspark_noise_token_id": 128799,
+            "dspark_num_experts_per_tok": 3,
+            "dspark_target_layer_ids": [37, 38, 39],
+            "engram_compressed_vocab_size": 99092,
+            "engram_head_dim": 256,
+            "engram_layer_ids": [1, 14],
+            "engram_max_ngram_size": 4,
+            "engram_n_heads": 8,
+            "engram_num_embeddings": [384_006_168, 384_016_682],
+            "engram_pad_token_id": 2,
+            "engram_vocab_size": 16_000_000,
+            "hc_eps": 1e-6,
+            "hc_mult": 4,
+            "hc_sinkhorn_iters": 20,
+            "head_dim": 512,
+            "hidden_act": "silu",
+            "hidden_size": 5120,
+            "index_head_dim": 128,
+            "index_n_heads": 32,
+            "index_source_layer_ids": [2, 8, 14, 20, 24, 28, 32, 36],
+            "index_topk": 512,
+            "initializer_range": 0.02,
+            "kv_source_layer_ids": [2, 8, 14, 20],
+            "max_position_embeddings": 1_048_576,
+            "model_type": "deepseek_v41_text",
+            "moe_intermediate_size": 2304,
+            "n_routed_experts": 384,
+            "n_shared_experts": 1,
+            "norm_topk_prob": True,
+            "num_attention_heads": 64,
+            "num_experts_per_tok": 6,
+            "num_hidden_layers": 40,
+            "num_key_value_heads": 1,
+            # Unlike both V4 records, the root config and the official inference
+            # config agree here: three DSpark stages, three trailing ratios.
+            "num_nextn_predict_layers": 3,
+            "o_groups": 8,
+            "o_lora_rank": 1024,
+            "q_lora_rank": 1280,
+            "qk_rope_head_dim": 64,
+            # Not 1e-6: V4.1 lowers the RMS epsilon by fourteen orders of
+            # magnitude, which AM-E10's raisable RMS profile exists to carry.
+            "rms_norm_eps": 1e-20,
+            "rope_theta": 10000,
+            "routed_scaling_factor": 1.5,
+            "scoring_func": "sqrtsoftplus",
+            "sliding_window": 128,
+            "swiglu_limit": 10.0,
+            "tie_word_embeddings": False,
+            "topk_method": "noaux_tc",
+            "use_cache": True,
+            "vocab_size": 129280,
+        }
+    ),
+    quantization_config=_V41_QUANTIZATION_CONFIG,
+    rope_scaling=_V41_ROPE_SCALING,
+    checkpoint_lock_id=(
+        "3035f90f54bdb46150c7c45a0fa8224c459583d0849c51d2c24fdb055e627a53"
+    ),
+    tensor_content_sha256=(
+        "312df8e2f3f7abf5868da7403cfb0e9c54c3f58736c35fb3d4ade344efcd53e6"
+    ),
+    checkpoint_source_pending=False,
+    supported_compress_ratios=(0, 1, 2),
+    config_layout=MappingProxyType(
+        {
+            "architecture": ("text_config",),
+            "compress_ratios": ("text_config",),
+            "quantization_config": (),
+            "rope_scaling": ("text_config",),
+        }
+    ),
+    config_sections=MappingProxyType(
+        {
+            "": MappingProxyType(
+                {
+                    "architectures": ["DeepseekV41ForCausalLM"],
+                    "bos_token_id": 0,
+                    "dtype": "bfloat16",
+                    "eos_token_id": 1,
+                    "image_token_id": 129264,
+                    "model_type": "deepseek_v41",
+                    "pad_token_id": 2,
+                }
+            ),
+            "vision_config": MappingProxyType(
+                {
+                    "downsample_ratio": 3,
+                    "hidden_size": 1024,
+                    "intermediate_size": 2816,
+                    "max_image_tokens": 1024,
+                    "max_wh_ratio": None,
+                    "min_pixels": 295936,
+                    "model_type": "deepseek_v41_vision",
+                    "num_attention_heads": 16,
+                    "num_hidden_layers": 32,
+                    "patch_size": 14,
+                    "rope_theta": 10000,
+                }
+            ),
+        }
+    ),
+)
+
+
 RELEASES: Mapping[str, DeepSeekV4Release] = MappingProxyType(
-    {release.model_id: release for release in (FLASH, PRO)}
+    {release.model_id: release for release in (FLASH, PRO, V41_FLASH)}
 )
 
 
@@ -455,11 +765,13 @@ def resolve_release(model: str | DeepSeekV4Release) -> DeepSeekV4Release:
 
 __all__ = [
     "CHECKPOINT_LOCK_ROOT",
+    "CONFIG_LAYOUT_KEYS",
     "FLASH",
     "HUGGINGFACE_HUB",
     "MODELS_DIR",
     "PRO",
     "RELEASES",
+    "V41_FLASH",
     "DeepSeekV4Release",
     "DeepSeekV4ReleaseError",
     "resolve_release",

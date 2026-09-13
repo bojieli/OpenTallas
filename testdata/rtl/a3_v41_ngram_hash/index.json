@@ -1,0 +1,634 @@
+{
+  "claim_boundary": {
+    "compressed_token_map_reproduced": false,
+    "engram_gate_executed": false,
+    "engram_row_read_executed": false,
+    "pad_id_is_the_released_compressed_pad_id": false,
+    "vector_expectations_come_from_the_reference_only": true
+  },
+  "configurations": [
+    {
+      "case_count": 476,
+      "expect_cfg_error": 0,
+      "expect_cfg_error_code": 0,
+      "first_case_refuse": 0,
+      "guard_prefix_refuse": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "multipliers": [
+        76632096046245,
+        4839876093313,
+        35959672319349,
+        73987337458391
+      ],
+      "name": "released_layer_1",
+      "note": "the released V4.1-Flash Engram layer: 24 column primes above engram_vocab_size-1 summing to the released row count, prefix-sum offsets, and the layer's own four look-back multipliers",
+      "offsets": [
+        0,
+        16000057,
+        32000136,
+        48000217,
+        64000314,
+        80000435,
+        96000564,
+        112000697,
+        128000880,
+        144001069,
+        160001276,
+        176001487,
+        192001740,
+        208002017,
+        224002306,
+        240002613,
+        256002934,
+        272003273,
+        288003654,
+        304004047,
+        320004446,
+        336004849,
+        352005258,
+        368005705
+      ],
+      "pad_id": 2,
+      "primes": [
+        [
+          16000057,
+          16000079,
+          16000081,
+          16000097,
+          16000121,
+          16000129,
+          16000133,
+          16000183
+        ],
+        [
+          16000189,
+          16000207,
+          16000211,
+          16000253,
+          16000277,
+          16000289,
+          16000307,
+          16000321
+        ],
+        [
+          16000339,
+          16000381,
+          16000393,
+          16000399,
+          16000403,
+          16000409,
+          16000447,
+          16000463
+        ]
+      ],
+      "refusal_case_count": 10,
+      "table_rows": 384006168,
+      "vocab": 99092
+    },
+    {
+      "case_count": 476,
+      "expect_cfg_error": 0,
+      "expect_cfg_error_code": 0,
+      "first_case_refuse": 0,
+      "guard_prefix_refuse": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "multipliers": [
+        67716810739261,
+        51510806800915,
+        30921347202721,
+        82619226485591
+      ],
+      "name": "released_layer_14",
+      "note": "the released V4.1-Flash Engram layer: 24 column primes above engram_vocab_size-1 summing to the released row count, prefix-sum offsets, and the layer's own four look-back multipliers",
+      "offsets": [
+        0,
+        16000477,
+        32000964,
+        48001463,
+        64001970,
+        80002481,
+        96003054,
+        112003663,
+        128004290,
+        144004957,
+        160005626,
+        176006319,
+        192007016,
+        208007727,
+        224008456,
+        240009215,
+        256009984,
+        272010765,
+        288011564,
+        304012377,
+        320013196,
+        336014037,
+        352014914,
+        368015793
+      ],
+      "pad_id": 0,
+      "primes": [
+        [
+          16000477,
+          16000487,
+          16000499,
+          16000507,
+          16000511,
+          16000573,
+          16000609,
+          16000627
+        ],
+        [
+          16000667,
+          16000669,
+          16000693,
+          16000697,
+          16000711,
+          16000729,
+          16000759,
+          16000769
+        ],
+        [
+          16000781,
+          16000799,
+          16000813,
+          16000819,
+          16000841,
+          16000877,
+          16000879,
+          16000889
+        ]
+      ],
+      "refusal_case_count": 10,
+      "table_rows": 384016682,
+      "vocab": 99092
+    },
+    {
+      "case_count": 288,
+      "expect_cfg_error": 0,
+      "expect_cfg_error_code": 0,
+      "first_case_refuse": 0,
+      "guard_prefix_refuse": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "multipliers": [
+        76632096046245,
+        4839876093313,
+        35959672319349,
+        73987337458391
+      ],
+      "name": "modulus_probe",
+      "note": "one bucket range per column, every range based at row 0: a MODULUS probe, not a released layout.  It drives the reduction at the MOD_W extremes -- the largest prime below 2**32, powers of two, and a modulus of two -- which the released 24-bit primes never reach",
+      "offsets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pad_id": 5,
+      "primes": [
+        [
+          4294967291,
+          4294967279,
+          4294967231,
+          2147483647,
+          2147483648,
+          16777259,
+          16777216,
+          1000003
+        ],
+        [
+          99991,
+          65537,
+          65536,
+          4093,
+          1021,
+          257,
+          256,
+          127
+        ],
+        [
+          64,
+          31,
+          17,
+          13,
+          7,
+          5,
+          3,
+          2
+        ]
+      ],
+      "refusal_case_count": 0,
+      "table_rows": 4294967291,
+      "vocab": 99092
+    },
+    {
+      "case_count": 25,
+      "expect_cfg_error": 1,
+      "expect_cfg_error_code": 5,
+      "first_case_refuse": 5,
+      "guard_prefix_refuse": [
+        5,
+        5,
+        5,
+        5,
+        0,
+        0,
+        0,
+        0
+      ],
+      "multipliers": [
+        76632096046245,
+        4839876093313,
+        35959672319349,
+        73987337458391
+      ],
+      "name": "column_out_of_table",
+      "note": "the released layer-1 layout with the table one row short, so the LAST column's bucket range ends outside it.  The device must refuse that column and keep serving every other one",
+      "offsets": [
+        0,
+        16000057,
+        32000136,
+        48000217,
+        64000314,
+        80000435,
+        96000564,
+        112000697,
+        128000880,
+        144001069,
+        160001276,
+        176001487,
+        192001740,
+        208002017,
+        224002306,
+        240002613,
+        256002934,
+        272003273,
+        288003654,
+        304004047,
+        320004446,
+        336004849,
+        352005258,
+        368005705
+      ],
+      "pad_id": 2,
+      "primes": [
+        [
+          16000057,
+          16000079,
+          16000081,
+          16000097,
+          16000121,
+          16000129,
+          16000133,
+          16000183
+        ],
+        [
+          16000189,
+          16000207,
+          16000211,
+          16000253,
+          16000277,
+          16000289,
+          16000307,
+          16000321
+        ],
+        [
+          16000339,
+          16000381,
+          16000393,
+          16000399,
+          16000403,
+          16000409,
+          16000447,
+          16000463
+        ]
+      ],
+      "refusal_case_count": 4,
+      "table_rows": 384006167,
+      "vocab": 99092
+    },
+    {
+      "case_count": 12,
+      "expect_cfg_error": 1,
+      "expect_cfg_error_code": 4,
+      "first_case_refuse": 5,
+      "guard_prefix_refuse": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "multipliers": [
+        76632096046245,
+        4839876093313,
+        35959672319349,
+        73987337458391
+      ],
+      "name": "pad_outside_vocabulary",
+      "note": "the pad id is at the compressed-vocabulary extent, so no beat can be served: every case must be refused, and the configuration must say why",
+      "offsets": [
+        0,
+        16000057,
+        32000136,
+        48000217,
+        64000314,
+        80000435,
+        96000564,
+        112000697,
+        128000880,
+        144001069,
+        160001276,
+        176001487,
+        192001740,
+        208002017,
+        224002306,
+        240002613,
+        256002934,
+        272003273,
+        288003654,
+        304004047,
+        320004446,
+        336004849,
+        352005258,
+        368005705
+      ],
+      "pad_id": 99092,
+      "primes": [
+        [
+          16000057,
+          16000079,
+          16000081,
+          16000097,
+          16000121,
+          16000129,
+          16000133,
+          16000183
+        ],
+        [
+          16000189,
+          16000207,
+          16000211,
+          16000253,
+          16000277,
+          16000289,
+          16000307,
+          16000321
+        ],
+        [
+          16000339,
+          16000381,
+          16000393,
+          16000399,
+          16000403,
+          16000409,
+          16000447,
+          16000463
+        ]
+      ],
+      "refusal_case_count": 12,
+      "table_rows": 384006168,
+      "vocab": 99092
+    },
+    {
+      "case_count": 24,
+      "expect_cfg_error": 0,
+      "expect_cfg_error_code": 0,
+      "first_case_refuse": 0,
+      "guard_prefix_refuse": [
+        0,
+        4,
+        0,
+        4,
+        0,
+        4,
+        0,
+        4
+      ],
+      "multipliers": [
+        140737488355327,
+        8796093022209,
+        3,
+        5
+      ],
+      "name": "product_outside_window",
+      "note": "look-back 0 carries a multiplier near 2**47, so an id above 2**63/multiplier takes the product past the DIVIDEND_W exactness window that the pinned int64 bound guarantees.  Small ids still compute; large ones must be refused, never wrapped",
+      "offsets": [
+        0,
+        16000057,
+        32000136,
+        48000217,
+        64000314,
+        80000417,
+        96000538,
+        112000671,
+        128000810,
+        144000951,
+        160001110,
+        176001273,
+        192001454,
+        208001647,
+        224001846,
+        240002047,
+        256002254,
+        272002467,
+        288002690,
+        304002921,
+        320003158,
+        336003399,
+        352003648,
+        368003901
+      ],
+      "pad_id": 1,
+      "primes": [
+        [
+          16000057,
+          16000079,
+          16000081,
+          16000097,
+          16000103,
+          16000121,
+          16000133,
+          16000139
+        ],
+        [
+          16000141,
+          16000159,
+          16000163,
+          16000181,
+          16000193,
+          16000199,
+          16000201,
+          16000207
+        ],
+        [
+          16000213,
+          16000223,
+          16000231,
+          16000237,
+          16000241,
+          16000249,
+          16000253,
+          16000267
+        ]
+      ],
+      "refusal_case_count": 12,
+      "table_rows": 384004168,
+      "vocab": 1048576
+    }
+  ],
+  "coverage": {
+    "every_raw_blocking_mask": true,
+    "heads_covered": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "ids_at_zero_and_compressed_maximum": true,
+    "modulus_bits_covered": [
+      2,
+      3,
+      4,
+      5,
+      7,
+      9,
+      10,
+      12,
+      17,
+      20,
+      24,
+      25,
+      31,
+      32
+    ],
+    "orders_covered": [
+      2,
+      3,
+      4
+    ],
+    "released_layers_covered": [
+      1,
+      14
+    ],
+    "sequence_start_positions": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "device_parameters": {
+    "DIVIDEND_W": 63,
+    "ID_W": 32,
+    "MOD_W": 32,
+    "MULT_W": 48,
+    "NUM_COLS": 24,
+    "NUM_HEADS": 8,
+    "ORDER_MAX": 4,
+    "ORDER_MIN": 2,
+    "ROW_W": 32
+  },
+  "engine": {
+    "family": "DMA",
+    "ir_kind": "NGRAM_HASH",
+    "sub_opcode": 4
+  },
+  "expected_pass": {
+    "bench_write_guard_prefix": 8,
+    "cases": 1301,
+    "configs": 6,
+    "refusals": {
+      "code_0": 1253,
+      "code_1": 8,
+      "code_3": 12,
+      "code_4": 12,
+      "code_5": 16
+    }
+  },
+  "file_format": {
+    "case_hex_words": 20816,
+    "case_words": 16,
+    "config_header_words": 8,
+    "config_words": 392,
+    "file_header_words": 8,
+    "magic": 1313294385
+  },
+  "numeric_contract": "ngram_hash_u32_v1",
+  "pinned_config": {
+    "engram_compressed_vocab_size": 99092,
+    "engram_head_dim": 256,
+    "engram_layer_ids": [
+      1,
+      14
+    ],
+    "engram_max_ngram_size": 4,
+    "engram_n_heads": 8,
+    "engram_num_embeddings": [
+      384006168,
+      384016682
+    ],
+    "engram_pad_token_id": 2,
+    "engram_vocab_size": 16000000
+  },
+  "reference": {
+    "function": "ngram_row_ids",
+    "module": "runtime/reference/engram.py",
+    "multiplier_derivation": "re-derived with NumPy 2.2.6",
+    "pinned_config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+    "pinned_engram_source_sha256": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897"
+  },
+  "schema": "opentallas.rtl.a3_v41_ngram_hash_vectors.v1",
+  "unit": "rtl/abi3/ot_a3_dma_ngram_hash.sv"
+}

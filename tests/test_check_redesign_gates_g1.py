@@ -355,11 +355,37 @@ def test_the_g1d_oracle_path_resolves_in_this_repository():
 
 
 def test_every_ladder_rung_declares_both_storage_classes_and_the_workload():
+    """Every rung names its storage classes and every workload it is bound to.
+
+    A rung declares its workload either directly, as ``workload`` with one
+    ``artifact``, or -- since WP-L of the V4.1 plan -- as a
+    ``workload_bindings`` list, one entry per model, each with its own workload
+    and artifact.  Both forms are checked here for the same property: no rung
+    may leave its workload implicit, because a record for some other workload
+    would then satisfy it.  What a bindings rung may NOT do is carry a bare
+    ``workload`` as well, which would be a third, unbound piece of evidence.
+    """
     for gid in ("G1a", "G1b", "G1c", "G1d", "G1e", "G1f"):
         ev = _spec_gate(gid)["evaluator"]
         assert ev["type"] == "rtl_records", gid
         assert sorted(ev["require_storage_classes"]) == ["hbm", "rom"], gid
-        assert ev["workload"], gid
+        bindings = ev.get("workload_bindings")
+        if bindings is None:
+            assert ev["workload"], gid
+            assert ev["artifact"], gid
+        else:
+            assert bindings, f"{gid} declares an empty binding list"
+            assert "workload" not in ev, f"{gid} has both a binding list and a workload"
+            assert "artifact" not in ev, f"{gid} has both a binding list and an artifact"
+            for index, binding in enumerate(bindings):
+                assert binding.get("workload"), f"{gid} binding {index}"
+                assert binding.get("artifact"), f"{gid} binding {index}"
+            workloads = [b["workload"] for b in bindings]
+            artifacts = [b["artifact"] for b in bindings]
+            assert len(set(artifacts)) == len(artifacts), (
+                f"{gid} binds two workloads to one artifact: {artifacts}"
+            )
+            assert len(workloads) == len(bindings)
         assert ev.get("require_fields"), f"{gid} asserts nothing of its own"
 
 

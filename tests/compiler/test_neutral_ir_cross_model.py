@@ -38,7 +38,10 @@ from compiler.ir.v3.lowering import (
 )
 
 REPO = Path(__file__).resolve().parents[2]
-MODELS = ("qwen3-8b", "deepseek-v4-flash-0731")
+#: Every model whose neutral IR is emitted.  DeepSeek-V4.1-Flash joins the pair
+#: as a third *exporter* output, which is what this file is for: three models,
+#: two front ends, one schema and one lowering table.
+MODELS = ("qwen3-8b", "deepseek-v4-flash-0731", "deepseek-v4.1-flash")
 
 
 def _ir(model: str) -> dict:
@@ -228,8 +231,14 @@ def test_a_declared_absent_operand_is_checked_against_the_frozen_row() -> None:
     ``in1`` and the ratio in ``in2``.  A backend that packed them down would
     hand the engine a window block where the scores belong.  Which slots may be
     empty is frozen, so an exporter cannot widen it privately.
+
+    AM-E10 added the fourth slot, the candidate-pool mask, and made the frozen
+    row four views wide to match; this expectation named the three A19/A20 slots
+    and is widened with it, not past it.  DeepSeek-V4.1-Flash is what reads the
+    fourth: a Reindex layer states where its mask is, and a Full layer states
+    that it has none.
     """
-    assert OPTIONAL_INPUT_SLOTS["INDEX_TOPK"] == frozenset({0, 1, 2})
+    assert OPTIONAL_INPUT_SLOTS["INDEX_TOPK"] == frozenset({0, 1, 2, 3})
     assert check_operand_slots("INDEX_TOPK", ("window", "ratio"), {}) == []
     assert (
         check_operand_slots(
@@ -242,9 +251,9 @@ def test_a_declared_absent_operand_is_checked_against_the_frozen_row() -> None:
     assert refused and "does not make them optional" in refused[0]
     # And the slots plus the operands may not exceed the row.
     too_many = check_operand_slots(
-        "INDEX_TOPK", ("a", "b", "c"), {"absent_operands": [0]}
+        "INDEX_TOPK", ("a", "b", "c", "d"), {"absent_operands": [0]}
     )
-    assert too_many and "3 input slots" in too_many[0]
+    assert too_many and "4 input slots" in too_many[0]
     # A slot named twice is a malformed statement, not a duplicate no-op.
     twice = check_operand_slots("INDEX_TOPK", ("w",), {"absent_operands": [0, 0]})
     assert twice and "names a slot twice" in twice[0]

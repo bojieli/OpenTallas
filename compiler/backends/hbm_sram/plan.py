@@ -55,6 +55,7 @@ contraction, and the plan records which collectives must reassemble it.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Container, Mapping, Sequence
@@ -1060,6 +1061,44 @@ REQUEST_EXTENT: Mapping[str, RequestExtent] = {
 }
 
 
+#: The ``ratio`` grammar the two ``*_groups_ratioN`` families above spell out.
+#:
+#: The table names V4's two compression ratios, 4 and 128, and a model whose
+#: ratio is neither is not a model this backend may resolve wrongly.  It did:
+#: DeepSeek-V4.1-Flash's candidate pool reduces the index scores in blocks of
+#: eight, so its block-score axis is ``context_groups_ratio8``, which the table
+#: does not have -- and an absent entry is read as "no context-sized axis", so
+#: the operand kept its declared maximum and a ``[span, context/8]`` view was
+#: planned 512 columns wide where 64 belong.  The eightfold error is invisible
+#: at compile time and lands as a descriptor fault at issue, which is the
+#: failure A18 exists to remove and is exactly the shape of defect a model
+#: constant inside a model-blind table produces.
+#:
+#: So the ratio is READ FROM THE NAME rather than enumerated.  The grammar is
+#: the one the existing entries already use -- the trailing integer IS the unit
+#: -- and nothing else matches: a symbol outside this shape still resolves to
+#: ``None`` and still keeps its declared maximum, because a name whose function
+#: nobody has written down is still not an invitation to guess one.
+_GROUP_RATIO_SYMBOL = re.compile(r"^(span|context)_groups_ratio(\d+)$")
+
+
+def request_extent_for(symbol: str) -> RequestExtent | None:
+    """The A18 function of one runtime symbol, or ``None`` if it has none."""
+    named = REQUEST_EXTENT.get(symbol)
+    if named is not None:
+        return named
+    match = _GROUP_RATIO_SYMBOL.match(symbol)
+    if match is None:
+        return None
+    scope, ratio = match.group(1), int(match.group(2))
+    if ratio < 1:
+        return None
+    return RequestExtent(
+        unit=ratio,
+        symbol="span_tokens" if scope == "span" else "context_length",
+    )
+
+
 #: Engine operators whose operand row states an axis the *context* sizes
 #: beside one the span sizes.  ``VECTOR.INDEX_SCORE``'s scores are
 #: ``[B, S, C]``: two request-determined extents on one view, which amendment
@@ -1093,7 +1132,7 @@ def context_axis_of(
     for axis, extent in enumerate(tensor.shape):
         if not isinstance(extent, Symbolic):
             continue
-        base = REQUEST_EXTENT.get(extent.symbol)
+        base = request_extent_for(extent.symbol)
         if base is None or base.symbol == "span_tokens":
             continue
         resolved = RequestExtent(
@@ -1376,7 +1415,7 @@ def symbol_condition(condition: str) -> tuple[Symbol, Comparison, int]:
             "in particular no modulus"
         )
     name, operator, literal = parts
-    extent = REQUEST_EXTENT.get(name)
+    extent = request_extent_for(name)
     if extent is None:
         raise PlanError(
             f"predicate condition {condition!r} names {name!r}, which is not "
@@ -1613,7 +1652,7 @@ def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
     if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
         return None
     lead = tensor.shape[0]
-    base = REQUEST_EXTENT.get(lead.symbol)
+    base = request_extent_for(lead.symbol)
     if base is None:
         return None
     extent = RequestExtent(
@@ -3904,6 +3943,12 @@ _OPTIONAL_INPUTS: Mapping[str, int] = {
     "HEAD_RMS_NORM": 1,
     # VECTOR.SCALE sub-case 0 takes its constant from the numeric profile.
     "SCALE": 1,
+    # AM-E10's dead-position flags, the trailing slot 3 of ``DMA.NGRAM_HASH``.
+    "NGRAM_HASH": 1,
+    # AM-E10's candidate mask, the trailing slot 3 of ``ROUTE.INDEX_TOPK``.
+    # The frozen row admits four operands and the mask is the optional one, so
+    # the three-operand V4 forms -- ranked and dense -- still fill the row.
+    "INDEX_TOPK": 1,
     # The dense and grouped attention mask, and the sparse index and sink
     # arrays, which amendment A6 nonetheless requires for SPARSE.
     "ATTENTION_DENSE": 1,
@@ -4164,6 +4209,39 @@ def _aux_ids(
                 int(attributes.get("mask_mode", 0)),
                 int(Symbol.CONTEXT_LENGTH),
             ]
+        elif sub in (int(Route.BLOCK_MAX), int(Route.CANDIDATE_MASK)):
+            # AM-E10.  Both halves of the candidate pool state the block width
+            # in ``aux_id_0`` and both engines make it **mandatory**
+            # (``runtime.sim.engines.route._block_width``): it is what turns a
+            # position into a block ID and back, and deriving it from the two
+            # extents would read ``[span, 17] -> [span, 3]`` as a width of six
+            # with one column never read.  So it is refused here rather than
+            # left ``NO_ID`` -- an operator with no block width is admitted by
+            # the verifier and traps at issue, which is the failure this branch
+            # exists to move forward to compile time.
+            name = Route(sub).name
+            block = attributes.get("block", attributes.get("block_size"))
+            if not block or int(block) <= 0:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id} lowers to ROUTE.{name}, which "
+                    "states its block width in aux0, and the graph declares "
+                    f"block={attributes.get('block')!r} "
+                    f"block_size={attributes.get('block_size')!r}.  It may not "
+                    "be derived from the operand extents: a candidate axis that "
+                    "does not tile would become a tiling nobody declared"
+                )
+            aux = [int(block)]
+            if sub == int(Route.CANDIDATE_MASK):
+                # ``aux_id_1`` is optional: the admitted-population bound the
+                # plan's ``candidate_pool_bound`` check states.  Absent, the
+                # engine bounds the plane by its own two numbers; declared, a
+                # plane above it faults in the engine that builds it rather
+                # than in whatever later reads it.
+                bound = attributes.get(
+                    "population_bound", attributes.get("max_population")
+                )
+                if bound is not None and int(bound) > 0:
+                    aux.append(int(bound))
         elif sub == int(Route.DSPARK_WINDOW_INDEX):
             # Amendment A30.  Both immediates are required and neither has the
             # fallback above.  This output is ``window + block`` wide, so the
@@ -4202,6 +4280,39 @@ def _aux_ids(
                 or _domain_extent(kernel, ("experts",), span_max)
                 or groups
             ]
+    elif family == int(Major.DMA):
+        if sub == int(Dma.NGRAM_HASH):
+            # AM-E10.  One operator per n-gram ORDER: ``aux_id_0`` the order it
+            # computes, ``aux_id_1`` the pad ID substituted for a blocked
+            # lookback, ``aux_id_2`` the compressed vocabulary size every ID is
+            # range-checked against, ``aux_id_3`` the first order the column
+            # table covers (``NO_ID`` meaning the released layout's two).  The
+            # first three are mandatory in
+            # ``runtime.sim.engines.dma.ngram_hash``; none of them is model
+            # geometry -- the multipliers, primes and offsets are operands, and
+            # these three are what the graph says about the operator it emitted.
+            missing = [
+                key
+                for key in ("order", "pad_id", "compressed_vocabulary")
+                if attributes.get(key) is None
+            ]
+            if missing:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id} lowers to DMA.NGRAM_HASH, "
+                    "which states its n-gram order in aux0, its pad ID in aux1 "
+                    "and its compressed vocabulary in aux2, and the graph "
+                    f"declares no {', '.join(missing)}.  None may be derived: "
+                    "the order selects the column the row lands in, the pad ID "
+                    "is a token value and the vocabulary is the range check"
+                )
+            aux = [
+                int(attributes["order"]),
+                int(attributes["pad_id"]),
+                int(attributes["compressed_vocabulary"]),
+            ]
+            first = attributes.get("first_order")
+            if first is not None:
+                aux.append(int(first))
     elif family == int(Major.REDUCTION):
         if sub == int(Reduction.PARTITION_SUM):
             # TA-ABI3-OPCONV-1: this ``aux0`` is a runtime *symbol*, not an

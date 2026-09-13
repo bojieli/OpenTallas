@@ -71,6 +71,8 @@ from tools.build_qwen3_reduced_model import (  # noqa: E402
     budget,
 )
 
+from tools import abi3_g1_models as ladder_models  # noqa: E402
+
 SCHEMA = "opentallas.rtl.abi3_g1f_reduced_end_to_end.v1"
 GATE = "G1f (configs/gates/redesign_gates.json)"
 GOVERNED_WORKLOAD_ID = "TA-QW-EOS-1"
@@ -1022,17 +1024,68 @@ def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str
 # ---------------------------------------------------------------------------
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
-    parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
-    parser.add_argument("--workload-dir", type=Path, default=DEFAULT_WORKLOAD_DIR)
-    parser.add_argument(
-        "--model-dir", type=Path, default=ROOT / "compiler/models/qwen3-reduced-v1"
-    )
-    parser.add_argument("--oracle", type=Path, default=ORACLE_PATH)
+    parser.add_argument("--snapshot", type=Path, default=None)
+    parser.add_argument("--lock", type=Path, default=None)
+    parser.add_argument("--workload-dir", type=Path, default=None)
+    parser.add_argument("--model-dir", type=Path, default=None)
+    parser.add_argument("--oracle", type=Path, default=None)
     parser.add_argument("--work", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--skip-lowering", action="store_true")
+    ladder_models.add_argument(parser)
     arguments = parser.parse_args()
+
+    model = ladder_models.resolve(arguments.model)
+    if arguments.snapshot is None:
+        arguments.snapshot = ROOT / model.reduced_snapshot
+    if arguments.lock is None:
+        arguments.lock = ROOT / model.reduced_lock
+    if arguments.workload_dir is None:
+        arguments.workload_dir = ROOT / model.reduced_workload_dir
+    if arguments.model_dir is None:
+        arguments.model_dir = ROOT / f"compiler/models/{model.reduced_model_id}"
+    if arguments.oracle is None:
+        arguments.oracle = ROOT / model.reduced_oracle
+    if arguments.output is None:
+        arguments.output = model.artifact("g1f", "reduced_end_to_end")
+    global GOVERNED_WORKLOAD_ID, WORKLOAD_ID
+    GOVERNED_WORKLOAD_ID = model.workload_id
+    WORKLOAD_ID = model.reduced_workload_id
+    ladder_models.require_present(
+        model,
+        {
+            "reduced snapshot": arguments.snapshot,
+            "checkpoint lock": arguments.lock,
+            "reduced workload": arguments.workload_dir / f"{WORKLOAD_ID}.json",
+            "reduced reference oracle": arguments.oracle,
+        },
+        "G1f runs the whole reduced workload with nothing injected, so the "
+        "fixture, its lock, its workload and its oracle are all prerequisites",
+        {
+            "reduced reference oracle": (
+                model.reduced_oracle_producer or "the reduced oracle tool"
+            )
+        },
+    )
+    if model.key != ladder_models.DEFAULT_MODEL:
+        # structural_identity() below reads Qwen3's config schema directly --
+        # REDUCTION's field names, max_window_layers, bos/eos_token_id -- and a
+        # V4.1 reduced fixture is described by a flat vendor ModelArgs object
+        # with a 43-entry compress_ratios sequence instead.  Running it anyway
+        # would classify every V4.1 field as "unexpected" and then report a
+        # structural verdict about a comparison that did not happen, which is
+        # precisely the not_evaluable defect this rung was hardened against on
+        # 2026-09-06.  So it refuses and names what is missing.
+        raise SystemExit(
+            f"{model.key}: this rung's structural_identity() is written against "
+            "Qwen3's config schema (tools/build_qwen3_reduced_model.REDUCTION, "
+            "max_window_layers, bos/eos_token_id). The V4.1 reduction rule is "
+            "recorded in results/abi3/deepseek_v41_reduced_model.json under "
+            "reduction.kept_exactly / block_widths / counts / derived, and a "
+            "V4.1 structural check has to compare against THAT. Until it does, "
+            "this rung refuses rather than reporting a verdict about a "
+            "comparison it did not make."
+        )
 
     full = json.loads(FULL_CONFIG.read_text(encoding="utf-8"))
     reduced = json.loads(

@@ -169,6 +169,7 @@ from .operations import operation_inventory
 from .schema import ModelProfile, ValidationError
 from .workload import (
     expected_engaged_devices,
+    hbm_resident_weight_bytes,
     kv_traffic,
     weight_traffic,
 )
@@ -3116,15 +3117,27 @@ def evaluate(
     resident_kv_bytes = kv.storage_bytes_per_user * batch_size
 
     # -- capacity ---------------------------------------------------------
-    if stored_weight_bytes > budget.weight_capacity_bytes + CAPACITY_TOLERANCE_BYTES:
+    # A region the model declares resident in its KV store is already out of
+    # ``checkpoint_bytes``, so the weight store is sized without it and its
+    # released packing is unaffected by ``weight_bits_per_parameter`` -- the ROM
+    # representation is a choice about what the ROM holds, and the ROM holds none
+    # of this.  A design whose two stores are the same store pays it once, on both
+    # sides of the same comparison.
+    resident_kv_store_bytes = hbm_resident_weight_bytes(model)
+    weight_store_demand = stored_weight_bytes + (
+        resident_kv_store_bytes if budget.shared_memory_path else 0.0
+    )
+    if weight_store_demand > budget.weight_capacity_bytes + CAPACITY_TOLERANCE_BYTES:
         reasons.append(
-            f"CAPACITY: stored weights {stored_weight_bytes:,.0f} B exceed weight "
+            f"CAPACITY: stored weights {weight_store_demand:,.0f} B exceed weight "
             f"capacity {budget.weight_capacity_bytes:,.0f} B"
         )
     if budget.shared_memory_path:
-        remaining = budget.kv_capacity_bytes - stored_weight_bytes
+        remaining = (
+            budget.kv_capacity_bytes - stored_weight_bytes - resident_kv_store_bytes
+        )
     else:
-        remaining = budget.kv_capacity_bytes
+        remaining = budget.kv_capacity_bytes - resident_kv_store_bytes
     if resident_kv_bytes > remaining + CAPACITY_TOLERANCE_BYTES:
         reasons.append(
             f"CAPACITY: resident KV {resident_kv_bytes:,.0f} B exceeds available KV "
@@ -3427,6 +3440,13 @@ def evaluate(
         "max_resident_users": float(max_resident_users),
         "weight_capacity_bytes": budget.weight_capacity_bytes,
         "kv_capacity_bytes": budget.kv_capacity_bytes,
+        # Present only for a model that declares one, so a design evaluated
+        # against a model with no resident region gains no zero column.
+        **(
+            {"kv_store_resident_weight_bytes": resident_kv_store_bytes}
+            if resident_kv_store_bytes
+            else {}
+        ),
         "graded_derivations": {
             key: value.to_dict()
             for key, value in {

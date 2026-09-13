@@ -1,6 +1,6 @@
 """VECTOR engine: normalisation, rotation, elementwise and activation kernels.
 
-Ten frozen subopcodes live here.  Each names one numeric contract, and each
+Eleven frozen subopcodes live here.  Each names one numeric contract, and each
 contract is executed by an implementation that already exists in this
 repository rather than by fresh arithmetic:
 
@@ -37,6 +37,11 @@ subopcode             numeric contract and implementation
 ``SQRT_SOFTPLUS``     ``runtime.reference.sqrt_softplus`` exactly
 ``HADAMARD``          the 128-point normalised transform of
                       ``runtime.reference.hadamard``
+``ENGRAM_GATE``       ``engram_gate_fp32_v1`` -- amendment AM-E10: the
+                      normalised dot, the 1e-6 clamp, the signed square root,
+                      the sigmoid and the gated residual add of
+                      ``runtime.reference.engram.engram_gate`` exactly, fused so
+                      the whole gate is one auditable contract
 ===================== ==========================================================
 
 Every operation reduces over, or is elementwise on, the view's **last** axis;
@@ -89,6 +94,10 @@ from runtime.reference.normalization import (
 )
 from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
 from runtime.reference.hyper_connection import binary32_sigmoid_rne
+from runtime.reference.engram import (
+    ENGRAM_GATE_NUMERIC_CONTRACT,
+    engram_gate,
+)
 from runtime.reference.swiglu import (
     OFFICIAL_NEGATIVE_SWIGLU_LIMIT_BINARY32,
     OFFICIAL_SWIGLU_LIMIT_BINARY32,
@@ -1864,3 +1873,161 @@ def _vector_hadamard(ctx: EngineContext, sub: int, operator: Descriptor) -> None
     ctx.write(output_view, narrowed.reshape(output_view.dims))
     ctx.counters.add("vector.elements", int(codes.size))
     ctx.counters.add("vector.conversions", int(codes.size))
+# ---------------------------------------------------------------------------
+# VECTOR.ENGRAM_GATE
+# ---------------------------------------------------------------------------
+#: The numeric contract this sub-op executes, and the module that *is* that
+#: contract.  ``runtime.reference.engram.engram_gate`` states every step of the
+#: gate as an exact rational computation with one named rounding, so this engine
+#: calls it rather than restating the arithmetic: a second statement of a
+#: contract is a second thing to get wrong.
+ENGRAM_GATE_CONTRACT = ENGRAM_GATE_NUMERIC_CONTRACT
+
+#: ``EngramGateResult.refusal_stage`` values, by name, so a trap message can
+#: attribute a refusal to one line of the contract rather than to "the gate
+#: failed".  The reference's numbering is the RTL's ``refusal_stage`` port.
+_ENGRAM_GATE_REFUSALS: dict[int, str] = {
+    1: "operand shape",
+    2: "a nonfinite q or k",
+    3: "a product outside the reduction's exactness window",
+    4: "rounding the exact dot",
+    5: "rounding an exact squared norm",
+    6: "the norm square root",
+    7: "the clamped denominator",
+    8: "the normalising division",
+    9: "the signed square root",
+    10: "the sigmoid",
+    11: "a nonfinite h, key or value in the combine",
+    12: "the combine's range",
+}
+
+
+def _engram_gate_codes(
+    ctx: EngineContext, view: ResolvedView, width: int, label: str
+) -> np.ndarray:
+    """Read a binary32 operand of the gate as ``[rows, width]`` of codes."""
+    _unscaled(view, f"ENGRAM_GATE {label}")
+    _require(
+        view.dtype == DType.FP32,
+        f"ENGRAM_GATE {label} view {view.descriptor_id} stores "
+        f"{DType(view.dtype).name}; the {ENGRAM_GATE_CONTRACT} contract is "
+        "binary32 throughout",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    values = _read_rows(ctx, view, width)
+    return np.ascontiguousarray(values, dtype=np.float32).view(np.uint32)
+
+
+@register(Major.VECTOR, Vector.ENGRAM_GATE)
+def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """The Engram gated residual: ``engram_gate_fp32_v1``.
+
+    ``in0`` is the residual stream ``h``, ``[rows, width]``.  ``in1`` is the
+    Engram key/value projection: the plan's operand row names ``key`` and
+    ``value`` separately and they are the two halves of one projection output,
+    so they arrive as one ``[2, width]`` view -- or ``[rows, 2, width]`` when
+    each row has its own -- with plane 0 the key and plane 1 the value.  ``in2``
+    and ``in3`` are the gate's query and key rows ``q`` and ``k``.  ``out0`` is
+    ``h'``.  Five operands into four input views is the ABI's ceiling, and the
+    pair that shares a view is the pair the model already computes together.
+
+    Per row, exactly :func:`runtime.reference.engram.engram_gate`::
+
+        dot   = rne(exact sum of q_i k_i)          nq2, nk2 likewise
+        denom = max(rne(sqrt(nq2) * sqrt(nk2)), epsilon)
+        gate  = sigmoid(sign(dot/denom) * sqrt(|dot/denom|))
+        h'_i  = rne(h_i + rne(gate * rne(key_i * value_i)))
+
+    The reduction is *exact* before its single rounding, so the result does not
+    depend on a reduction order and this operator does not read one from its
+    profile -- a registered tree and a serial accumulator give the same code.
+    The clamp floor is the profile's epsilon, which the released model sets to
+    ``1e-6``; a profile that declares none is refused rather than given the
+    reference's default, because a silently supplied clamp is a numeric contract
+    nobody wrote down.  Nothing about the model's shape appears here: rows, the
+    width, and whether the key/value pair is shared all come from the views.
+
+    A refusal the contract defines -- a nonfinite operand, a product outside the
+    exactness window, a transcendental the reference will not certify -- becomes
+    a trap naming the site, so a campaign can predict which line fired.
+    """
+    profile = _profile(ctx, operator)
+    state_view = ctx.input_view(operator, 0)
+    kv_view = ctx.input_view(operator, 1)
+    query_view = ctx.input_view(operator, 2)
+    gate_key_view = ctx.input_view(operator, 3)
+    out_view = ctx.output_view(operator, 0)
+    _check_dtype(state_view, profile.input_dtype, "ENGRAM_GATE state")
+    _check_dtype(kv_view, profile.second_input_dtype, "ENGRAM_GATE key/value")
+    _check_dtype(out_view, profile.output_dtype, "ENGRAM_GATE output")
+    _same_shape(state_view, out_view, "ENGRAM_GATE output shape")
+    _same_shape(state_view, query_view, "ENGRAM_GATE query shape")
+    _same_shape(state_view, gate_key_view, "ENGRAM_GATE gate-key shape")
+    _require(
+        profile.epsilon_bits != 0,
+        f"numeric profile {profile.descriptor_id} declares no epsilon; the "
+        f"{ENGRAM_GATE_CONTRACT} clamp floor is a declared value, not one this "
+        "engine may supply",
+        TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
+    )
+    width = int(state_view.dims[-1])
+    _require(width > 0, "ENGRAM_GATE state row is empty")
+    rows = _rows(state_view.dims)
+
+    state = _engram_gate_codes(ctx, state_view, width, "state")
+    query = _engram_gate_codes(ctx, query_view, width, "query")
+    gate_key = _engram_gate_codes(ctx, gate_key_view, width, "gate key")
+    _require(
+        len(kv_view.dims) >= 2 and int(kv_view.dims[-2]) == 2,
+        f"ENGRAM_GATE key/value view {kv_view.descriptor_id} is {kv_view.dims}; "
+        f"the key and the value are the two planes of a [2, {width}] view, or "
+        f"of a [rows, 2, {width}] one",
+    )
+    pairs = _engram_gate_codes(ctx, kv_view, width, "key/value").reshape(-1, 2, width)
+    _require(
+        pairs.shape[0] in (1, rows),
+        f"ENGRAM_GATE key/value view {kv_view.descriptor_id} holds "
+        f"{pairs.shape[0]} pair(s) for {rows} state row(s); a retrieved pair is "
+        "shared by every row or given one each",
+    )
+
+    epsilon_code = int(profile.epsilon_bits)
+    results = np.empty((rows, width), dtype=np.uint32)
+    gates: list[int] = []
+    for row in range(rows):
+        pair = pairs[0] if pairs.shape[0] == 1 else pairs[row]
+        with _numeric_guard(ENGRAM_GATE_CONTRACT):
+            outcome = engram_gate(
+                [int(code) for code in state[row]],
+                [int(code) for code in pair[0]],
+                [int(code) for code in pair[1]],
+                [int(code) for code in query[row]],
+                [int(code) for code in gate_key[row]],
+                epsilon_code=epsilon_code,
+                # The admitted width is the operand's own, so no model geometry
+                # bounds this operator from inside the engine.
+                max_width=width,
+            )
+        if outcome.refusal_stage != 0:
+            site = _ENGRAM_GATE_REFUSALS.get(
+                int(outcome.refusal_stage), "an unnumbered site"
+            )
+            ctx.counters.add("vector.exceptional_values", 1)
+            raise EngineError(
+                f"ENGRAM_GATE row {row} refused at site "
+                f"{int(outcome.refusal_stage)} ({site}), engine error code "
+                f"{int(outcome.error_code)}, after "
+                f"{int(outcome.written_words)} of {width} output word(s)",
+                trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+            )
+        results[row] = np.asarray(outcome.output_codes, dtype=np.uint32)
+        gates.append(int(outcome.gate_code))
+
+    ctx.write(out_view, results.view(np.float32).reshape(out_view.dims))
+    # Two normalisations and one sigmoid per row, as the V4.1 operator
+    # accounting charges an Engram module.
+    ctx.counters.add("vector.norm_rows", 2 * rows)
+    ctx.counters.add("vector.activation_elements", rows)
+    ctx.counters.add("vector.elements", int(results.size))
+    notes = ctx.notes.setdefault("engram_gate", {})
+    notes["gate_codes"] = tuple(gates)

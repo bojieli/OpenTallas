@@ -26,8 +26,10 @@ from .workload import (
     WeightTraffic,
     draft_weight_traffic,
     expected_engaged_devices,
+    hbm_resident_weight_bytes,
     kv_traffic,
     linear_partition,
+    per_layer_hbm_resident_bytes,
     per_layer_kv_read_write,
     per_layer_kv_storage,
     rho_one,
@@ -181,17 +183,27 @@ def _capacity(
     stages: int,
     context_tokens: int,
     partitions: tuple[tuple[int, int], ...],
-) -> tuple[int, tuple[float, ...], list[str]]:
+) -> tuple[int, tuple[float, ...], tuple[float, ...], list[str]]:
     reasons: list[str] = []
+    # Part of the checkpoint may be declared resident in the KV store rather
+    # than the weight store -- DeepSeek-V4.1's Engram tables in wafer-edge HBM.
+    # Those bytes are already out of ``checkpoint_bytes``, so the weight store is
+    # sized without them; the store that does hold them loses the capacity, on
+    # the stage whose layer range owns the region and nowhere else.
+    resident_kv_store_bytes = hbm_resident_weight_bytes(model)
     if arch.kind == "gpu":
         total_weight_capacity = (
             arch.device_count
             * arch.weight_capacity_bytes_per_device
             * arch.hbm_capacity_utilization
         )
-        if model.checkpoint_bytes > total_weight_capacity:
+        # A GPU has one store, so a region resident in it is charged against the
+        # same capacity as the weights regardless of which store the ROM side
+        # would have used.
+        weight_demand = model.checkpoint_bytes + resident_kv_store_bytes
+        if weight_demand > total_weight_capacity:
             reasons.append(
-                f"C7: checkpoint requires {model.checkpoint_bytes:.3g} B but GPU capacity is "
+                f"C7: checkpoint requires {weight_demand:.3g} B but GPU capacity is "
                 f"{total_weight_capacity:.3g} B"
             )
         # GPU weights and KV share HBM. ``kv_capacity`` may be set below physical
@@ -201,6 +213,7 @@ def _capacity(
             * arch.kv_capacity_bytes_per_device
             * arch.hbm_capacity_utilization
             - model.checkpoint_bytes
+            - resident_kv_store_bytes
         )
         users = (
             max(0, math.floor(available / kv.storage_bytes_per_user))
@@ -208,6 +221,7 @@ def _capacity(
             else 0
         )
         stage_storage = (kv.storage_bytes_per_user,)
+        stage_resident = (resident_kv_store_bytes,)
     else:
         # HBM is physically local to each wafer edge. Every long-lived session
         # has a persistent layer shard on every stage, including while a different
@@ -217,21 +231,33 @@ def _capacity(
         stage_storage = tuple(
             sum(layer_storage[start:end]) for start, end in partitions
         )
+        usable_per_stage = (
+            arch.kv_capacity_bytes_per_device * arch.hbm_capacity_utilization
+        )
+        layer_resident = per_layer_hbm_resident_bytes(model)
+        stage_resident = tuple(
+            sum(layer_resident[start:end]) for start, end in partitions
+        )
+        stage_available = tuple(
+            usable_per_stage - value for value in stage_resident
+        )
         if len(stage_storage) != stages or any(value <= 0 for value in stage_storage):
             reasons.append("C8/C9: invalid or empty stage-local KV partition")
             users = 0
+        elif any(value <= 0 for value in stage_available):
+            reasons.append(
+                f"C8: {max(stage_resident):.3g} B of KV-store-resident weights on one "
+                f"stage exceed its {usable_per_stage:.3g} B of usable KV capacity"
+            )
+            users = 0
         else:
             users = min(
-                math.floor(
-                    arch.kv_capacity_bytes_per_device
-                    * arch.hbm_capacity_utilization
-                    / value
-                )
-                for value in stage_storage
+                math.floor(available / value)
+                for available, value in zip(stage_available, stage_storage)
             )
     if users == 0:
         reasons.append("C7/C8: no complete user KV cache fits after weight allocation")
-    return users, stage_storage, reasons
+    return users, stage_storage, stage_resident, reasons
 
 
 def _binding(component_times: dict[str, float], thermal_scale: float) -> str:
@@ -449,7 +475,7 @@ class AnalyticalSimulator:
                 + sum(model.layer_routed_weight_bytes),
             )
             exact_layer_inventory = bool(model.layer_dense_weight_bytes)
-        max_users, stage_kv_storage, reasons = _capacity(
+        max_users, stage_kv_storage, stage_kv_resident, reasons = _capacity(
             model,
             arch,
             kv,
@@ -1012,6 +1038,18 @@ class AnalyticalSimulator:
             "C7_C8_resident_users_required": float(resident_users_required),
             "C7_C8_max_batch_per_stage": float(max_users // stages),
             "C7_C8_stage_kv_storage_bytes_per_user": str(stage_kv_storage),
+            # Only a model that declares KV-store-resident weight regions carries
+            # these two, exactly as only a wafer carries the spatial-allreduce
+            # communication keys: a key set that varies with what the model
+            # declares, so no result that declares nothing gains a zero column.
+            **(
+                {
+                    "C7_C8_kv_store_resident_weight_bytes": sum(stage_kv_resident),
+                    "C7_C8_kv_store_resident_bytes_by_stage": str(stage_kv_resident),
+                }
+                if any(stage_kv_resident)
+                else {}
+            ),
             "C9_pipeline_stages": float(stages),
             "C9_exact_layer_weight_inventory": exact_layer_inventory,
             "C9_layer_storage_bytes_by_stage": str(stage_layer_storage),

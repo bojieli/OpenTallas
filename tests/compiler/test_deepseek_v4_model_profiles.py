@@ -80,18 +80,49 @@ def pro_contract() -> dict:
 
 @pytest.mark.parametrize("release", sorted(RELEASES.values(), key=lambda r: r.model_id))
 def test_the_record_is_the_committed_config_byte_for_byte(release) -> None:
+    """Every registered record equals the config bytes committed beside it.
+
+    Each pinned structure is resolved through the record's own
+    ``config_layout`` rather than assumed to sit at the root: the two V4
+    releases publish one flat object and V4.1 nests its language model under
+    ``text_config``, and a test that assumed either shape would have to be
+    edited for the next release rather than reading where it says it is.
+    """
+
     payload = release.config_path.read_bytes()
     assert hashlib.sha256(payload).hexdigest() == release.config_sha256
     assert len(payload) == release.config_bytes
     config = json.loads(payload)
+
+    architecture = release.config_section(config, "architecture")
     for key, expected in release.config_scalars.items():
-        assert key in config, key
-        assert config[key] == expected, key
-        assert type(config[key]) is type(expected), key
-    assert config["quantization_config"] == release.quantization_config
-    assert config["rope_scaling"] == release.rope_scaling
-    assert config["compress_ratios"] == release.compress_ratios
-    assert len(release.main_compress_ratios) == config["num_hidden_layers"]
+        assert key in architecture, key
+        assert architecture[key] == expected, key
+        assert type(architecture[key]) is type(expected), key
+    assert (
+        release.config_section(config, "quantization_config")["quantization_config"]
+        == release.quantization_config
+    )
+    assert (
+        release.config_section(config, "rope_scaling")["rope_scaling"]
+        == release.rope_scaling
+    )
+    assert (
+        release.config_section(config, "compress_ratios")["compress_ratios"]
+        == release.compress_ratios
+    )
+    assert len(release.main_compress_ratios) == architecture["num_hidden_layers"]
+
+    # Whatever else the record pins outside the architecture section -- a
+    # multi-modal release's root identity and its vision tower -- is checked the
+    # same way, and a record that pins nothing else checks nothing else.
+    for path, pinned in release.config_sections.items():
+        section = config
+        for key in filter(None, path.split(".")):
+            assert key in section, f"{path}: {key}"
+            section = section[key]
+        for key, expected in pinned.items():
+            assert section[key] == expected, f"{path}.{key}"
 
 
 def test_the_two_releases_differ_in_exactly_twelve_config_keys() -> None:

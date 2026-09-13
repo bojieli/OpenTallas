@@ -109,7 +109,22 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "COMPRESS_PROJECT": EngineOp(Major.VECTOR, Vector.COMPRESS, 3, 1),
     # AM-E10.  h, key, value, q, k in; the gated residual out.  Fused so one
     # numeric contract covers the normalised dot, signed sqrt, sigmoid and add.
-    "ENGRAM_GATE": EngineOp(Major.VECTOR, Vector.ENGRAM_GATE, 5, 1),
+    #
+    # FOUR input views, not five.  The mechanism names five operands and an ABI
+    # 3.0 operator payload has exactly four ``input_view_`` fields
+    # (``runtime/abi3/descriptors.py::OPERATOR_PAYLOAD``), so ``key`` and
+    # ``value`` -- the two halves of ONE projection output, which the model
+    # already computes together -- arrive as one ``[2, width]`` or
+    # ``[rows, 2, width]`` view in ``in1``.  That is exactly what
+    # ``runtime.sim.engines.vector._vector_engram_gate`` reads, and this row was
+    # the only row in the table that exceeded the operator's four views: with 5
+    # here, the packing the engine executes is refused at plan time
+    # ("binds 4 input views where VECTOR.13 requires 5") while the 5-operand
+    # form is truncated to four by the backend's own operand convention and
+    # refused as well.  So the row could not be satisfied by any graph.  The
+    # arity is a statement about the ABI operator, and the semantic count lives
+    # in the plan and in the engine's docstring.
+    "ENGRAM_GATE": EngineOp(Major.VECTOR, Vector.ENGRAM_GATE, 4, 1),
     "COMPRESS_POOL": EngineOp(Major.VECTOR, Vector.COMPRESS, 2, 1),
     "COMPRESS_STATE_UPDATE": EngineOp(Major.VECTOR, Vector.COMPRESS, 2, 2),
     "HYPER_CONNECT_PRE": EngineOp(Major.VECTOR, Vector.MHC, 4, 2),
@@ -126,14 +141,30 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "BLOCK_MAX": EngineOp(Major.ROUTE, Route.BLOCK_MAX, 1, 1),
     "CANDIDATE_MASK": EngineOp(Major.ROUTE, Route.CANDIDATE_MASK, 1, 1),
     # AM-E10.  Token ids in, Engram row ids out: integer multiply-modulo,
-    # one row id per hash head and n-gram order.
-    "NGRAM_HASH": EngineOp(Major.DMA, Dma.NGRAM_HASH, 1, 1),
+    # one row id per hash head, for the one n-gram order the operator names.
+    #
+    # FOUR input slots, because nothing about the hash is a constant of this
+    # machine: ``in0`` the compressed token ids, ``in1`` the per-lookback
+    # multipliers (whose extent IS the maximum n-gram size), ``in2`` the column
+    # table ``[2, orders, heads]`` of prime bucket sizes and base rows, and
+    # ``in3`` an OPTIONAL per-position dead-position flag view.  That is exactly
+    # the row ``runtime.sim.engines.dma.ngram_hash`` reads.  With one slot here
+    # a graph could not name the multipliers or the primes at all -- the two
+    # released Engram tables differ in every one of their 24 column primes, so
+    # a row that cannot carry them is a row that cannot address either table.
+    "NGRAM_HASH": EngineOp(Major.DMA, Dma.NGRAM_HASH, 4, 1),
     # Amendment A19: INDEX_TOPK selects, rebases and joins.  in0 the index
     # scores, in1 the sliding-window index block it is joined to, in2 the
     # one-element compression ratio of the candidate axis.  Amendment A20 makes
     # in0 optional -- see ``OPTIONAL_INPUT_SLOTS`` -- so the same operator, with
     # the ranking removed, is the dense compressed-index family.
-    "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 3, 1),
+    # AM-E10 adds the fourth slot, the candidate mask: ``OPTIONAL_INPUT_SLOTS``
+    # already names slot 3, and ``check_operand_slots`` bounds the accounted
+    # operands by this number, so while it read 3 a kernel that *stated* where
+    # the mask is -- present or absent -- was refused by the very rule that was
+    # meant to admit it.  The slot is optional, so the three-operand V4 forms
+    # are unchanged.
+    "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 4, 1),
     "WEIGHT_NORMALIZE": EngineOp(Major.ROUTE, Route.WEIGHT_NORMALIZE, 1, 1),
     # Two outputs: the dispatched activations and the expert IDs they were
     # dispatched under. Re-emitting the IDs keeps the dataflow into
@@ -202,6 +233,10 @@ PHASE_INPUTS = "phase_inputs"
 #: rule admits in ascending group order, which is the released
 #: ``get_compress_topk_idxs``.
 OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
+    #: AM-E10.  ``DMA.NGRAM_HASH``'s ``in3`` is the dead-position flag view an
+    #: image span needs and a text-only request does not have; absent means no
+    #: position is dead.  The three operands before it are mandatory.
+    "NGRAM_HASH": frozenset({3}),
     #: AM-E10 adds slot 3, the candidate mask.  A mask OPERAND keeps the
     #: top-k engine unchanged: the reference masks scores to -inf inside the
     #: candidate blocks, which is an input to selection, not a new selector.

@@ -2,7 +2,7 @@
 
 Routing is where a MoE model decides *what work exists*, so every decision here
 is made from device memory and is deterministic down to the tie break.  Two
-rules hold across all eight subopcodes:
+rules hold across all ten subopcodes:
 
 * a rank order is by descending key, and equal keys resolve to the lower index,
   so a re-run of the same scores selects the same experts in the same slots;
@@ -42,7 +42,11 @@ rules hold across all eight subopcodes:
     ``k`` by score; ``input_view_1`` the sliding-window index block
     ``[span, window]`` U32 this selection is joined to, or ``NO_ID`` for no
     join; ``input_view_2`` a one-element U32 view naming the **compression
-    ratio** of the candidate axis, or ``NO_ID`` for an uncompressed axis.
+    ratio** of the candidate axis, or ``NO_ID`` for an uncompressed axis;
+    ``input_view_3`` -- amendment AM-E10 -- the candidate admission plane
+    ``[span, candidates]`` a ``ROUTE.CANDIDATE_MASK`` wrote, or ``NO_ID`` for an
+    unrestricted axis, in which case every check, count and result is what it
+    was before the slot existed.
     ``output_view_0`` U32 KV rows ``[span, window + k]``, **compacted and
     sorted ascending**, tail-padded with ``0xffffffff``, so that
     ATTENTION.SPARSE gathers in address order and never executes a pad.
@@ -66,12 +70,57 @@ rules hold across all eight subopcodes:
     fixed circular-window capacity.  There is never a phase whose sparse KV
     operand contains both current rows and a second copy of the window.
 
+    Amendment AM-E10 restricts *which* candidates the horizon admits without
+    changing what selection means.  An admission plane in ``in3`` removes the
+    columns its flag clears from consideration; ranking, rebasing, joining,
+    compaction and the tie break are untouched, and with the slot absent the
+    operator is the one that shipped.  The plane is an operand rather than a
+    rewritten score because the score this device can hold is finite: masking a
+    column to minus infinity would still let a selection *return* that column
+    once fewer than ``k`` columns are admitted, and a returned candidate is a KV
+    row that gets attended.  Exclusion cannot do that, and the two readings
+    agree exactly whenever at least ``k`` columns are admitted.
+
     That horizon is the *whole* of the dense form.  ``Indexer.forward`` is
     ``get_compress_topk_idxs`` with a ranking in front of it: both count groups
     with ``(p + 1) // r``, both add the same ``offset``, and both end at the
     same concatenation in ``Attention.forward``.  So the dense path is this
     operator with ``in0`` removed, and the span it can no longer read off the
     score view it reads off ``output_view_0`` instead.
+
+``ROUTE.BLOCK_MAX``
+    Amendment AM-E10, the first half of the candidate pool.  ``input_view_0``
+    index scores ``[span, candidates]`` (or ``[candidates]``),
+    ``output_view_0`` one score per block ``[span, blocks]``, ``aux_id_0`` the
+    **mandatory** immediate block width.  ``blocks`` must be exactly the number
+    of blocks the candidate axis has at that width, tail included, so a view
+    pair that does not tile is a descriptor fault rather than a reduction over
+    whatever happens to be in range.
+
+    A tail block shorter than the block width reduces over its own valid
+    columns.  That *is* the reference's minus-infinity padding: the maximum of a
+    block padded with minus infinity is the maximum of its valid entries.  The
+    padding is not reproduced as a value because this device's shared narrowing
+    site refuses an infinity outright, which is also why eligibility leaves this
+    engine as ``ROUTE.CANDIDATE_MASK``'s flag plane rather than as a rewritten
+    score.
+
+``ROUTE.CANDIDATE_MASK``
+    Amendment AM-E10, the second half.  ``input_view_0`` U32 block IDs
+    ``[span, chosen]`` -- ``0xffffffff`` in a slot names no block, so a selector
+    that filled fewer slots than it has needs no second shape --
+    ``output_view_0`` the U8 or U32 admission plane ``[span, width]``, one flag
+    per candidate position, ``1`` admitted and ``0`` not.  ``aux_id_0`` is the
+    **mandatory** immediate block width, and every block ID is checked against
+    the ``width``-derived block count: an ID outside it is counted in
+    ``route.rejected_ids`` and faults.
+
+    A repeated block ID is legal and idempotent, which is what makes a pinned
+    block cheap for a producer to add: appending the last block's ID to a
+    selection cannot change the plane if it is already there.  The pinning rule
+    itself is *not* in this engine -- it belongs to whatever produces the block
+    IDs -- because an operator that quietly admitted a block nobody selected
+    would be unauditable.
 
 ``ROUTE.HASH_ROUTE``
     ``input_view_0`` U32/U64 keys ``[n]``, ``input_view_1`` a U32 route table
@@ -135,6 +184,10 @@ MASK_FULL = 1
 
 PAD_INDEX = NO_ID
 """Tail padding written into an index output that has fewer entries than slots."""
+
+#: The unsigned integer type of a storage element of each byte width, used to
+#: read a score view as codes without widening it to binary32.
+_UNSIGNED_OF_WIDTH = {2: np.uint16, 4: np.uint32}
 
 
 def _require(condition: bool, message: str, trap_class: int = 3) -> None:
@@ -446,6 +499,7 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     score_view = ctx.optional_input(descriptor, 0)
     window_view = ctx.optional_input(descriptor, 1)
     ratio_view = ctx.optional_input(descriptor, 2)
+    mask_view = ctx.optional_input(descriptor, 3)
     out_view = ctx.output_view(descriptor, 0)
     _u32_out(out_view, "index")
     out_span, slots = _groups(out_view, "index")
@@ -559,6 +613,36 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         else 0
     )
 
+    # -- the candidate admission plane (AM-E10 in3) ----------------------
+    # Read after ``capacity`` is settled: the plane covers the candidate axis,
+    # and what states that axis is the score view when there is one and the
+    # compressed segment's own capacity when there is not.  Both numbers are
+    # already derived above, so the mask adds no third statement of the same
+    # extent.
+    admission: np.ndarray | None = None
+    if mask_view is not None:
+        _require(
+            mask_view.dtype in (int(DType.U8), int(DType.U32)),
+            f"ROUTE.INDEX_TOPK candidate mask view {mask_view.descriptor_id} is "
+            f"dtype {mask_view.dtype:#04x}, expected U8 or U32",
+        )
+        mask_span, mask_width = _groups(mask_view, "candidate mask")
+        _require(
+            mask_span == span and mask_width == capacity,
+            f"ROUTE.INDEX_TOPK candidate mask view {mask_view.descriptor_id} "
+            f"dims {mask_view.dims} differ from the {(span, capacity)} candidate "
+            "axis this operator selects over",
+        )
+        admission = np.asarray(ctx.read(mask_view), dtype=np.uint64).reshape(
+            span, capacity
+        )
+        _require(
+            bool(np.all(admission <= np.uint64(1))),
+            f"ROUTE.INDEX_TOPK candidate mask view {mask_view.descriptor_id} "
+            "holds a value other than 0 or 1; an admission flag has no third "
+            "state",
+        )
+
     scores: np.ndarray | None = None
     if score_view is not None:
         if candidates:
@@ -617,10 +701,29 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             f"ROUTE.INDEX_TOPK: query {row} at absolute position "
             f"{query_position} sees {limit} of {candidates} candidates",
         )
-        considered += limit
-        take = min(topk_count, limit)
+        # AM-E10: with a plane bound, the columns this query may select from
+        # are the admitted ones inside its horizon, ascending.  Without one,
+        # ``admitted`` stays None and every count and branch below is the one
+        # that shipped.
+        admitted: np.ndarray | None = None
+        if admission is not None:
+            admitted = np.nonzero(admission[row, :limit])[0].astype(np.int64)
+        considered += limit if admitted is None else int(admitted.size)
+        take = min(topk_count, limit if admitted is None else int(admitted.size))
         if not take:
             chosen = np.zeros(0, dtype=np.int64)
+        elif admitted is not None:
+            if scores is None:
+                # The dense form's ascending admitted prefix: the mask removes
+                # columns, it does not reorder what remains.
+                chosen = admitted[:take] + rebase
+            else:
+                # Rank within the admitted columns and map back to the column
+                # the score belonged to.  ``admitted`` is ascending, so the
+                # stable descending sort still resolves a tie to the lower
+                # candidate index.
+                order = _rank_descending(scores[row, admitted])[:take]
+                chosen = admitted[order].astype(np.int64) + rebase
         elif scores is None:
             # A20's dense case.  ``take == limit`` here -- the causal rule has
             # already been clamped to ``candidates`` and ``candidates`` cannot
@@ -649,6 +752,249 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         selected[row, : joined.size] = joined.astype(np.uint32)
     ctx.write(out_view, selected.reshape(out_view.dims))
     ctx.counters.add("route.topk_candidates", considered)
+
+
+# ---------------------------------------------------------------------------
+# BLOCK_MAX and CANDIDATE_MASK, the candidate pool (AM-E10)
+#
+# The reference for both is ``runtime/reference/candidate_pool.py``: the exact
+# total order on score codes for the first, and the admission plane including
+# the pinned last block for the second.  This engine reproduces those semantics
+# with integer operations on the operand's own codes.
+# ---------------------------------------------------------------------------
+#: The numeric contracts these two sub-ops execute.  ``BLOCK_MAX`` selects a
+#: code and rounds nothing, so its contract names an order, not an arithmetic;
+#: ``CANDIDATE_MASK`` is exact integer work with no rounding at all.
+BLOCK_MAX_CONTRACT = "block_max_ordered_ieee_v1"
+CANDIDATE_MASK_CONTRACT = "candidate_mask_v1"
+
+#: ``(exponent bits, mantissa bits)`` of each score format this engine orders.
+#: A table rather than a constant: the same block maximum is defined for every
+#: interchange format the index scores can arrive in, and the order is derived
+#: from the pair rather than from one assumed width.
+_SCORE_FORMATS: dict[int, tuple[int, int]] = {
+    int(DType.BF16): (8, 7),
+    int(DType.FP16): (5, 10),
+    int(DType.FP32): (8, 23),
+}
+
+
+def _monotone_keys(codes: np.ndarray, dtype: int, where: str) -> np.ndarray:
+    """Map score codes onto an unsigned order isomorphic to the exact one.
+
+    The reference orders codes by ``(tier, exact value, zero rank)`` using
+    rational arithmetic.  For a sign-magnitude interchange format that order is
+    exactly the order of the standard monotone transform -- negatives inverted,
+    non-negatives raised above them -- which is what this returns: minus
+    infinity is the least key, plus infinity the greatest, and negative zero
+    sits immediately below positive zero, so ``max(-0.0, +0.0)`` selects
+    ``+0.0`` as the reference requires.  Being a bijection, the winning key maps
+    back to the winning *code*: this operator selects and rounds nothing.
+
+    A NaN has no place in a total order and the candidate conventions disagree
+    about it, so a NaN score is refused rather than resolved.
+    """
+    exponent_bits, mantissa_bits = _SCORE_FORMATS[dtype]
+    width = 1 + exponent_bits + mantissa_bits
+    sign = np.uint64(1) << np.uint64(width - 1)
+    mask = (np.uint64(1) << np.uint64(width)) - np.uint64(1)
+    raw = np.asarray(codes, dtype=np.uint64)
+    exponent = (raw >> np.uint64(mantissa_bits)) & np.uint64(
+        (1 << exponent_bits) - 1
+    )
+    mantissa = raw & np.uint64((1 << mantissa_bits) - 1)
+    if bool(np.any((exponent == np.uint64((1 << exponent_bits) - 1)) & (mantissa != 0))):
+        raise EngineError(
+            f"{where}: a NaN score has no place in the block order, and the "
+            "conventions for resolving one disagree",
+            trap_class=6,
+        )
+    negative = (raw & sign) != np.uint64(0)
+    return np.where(negative, (~raw) & mask, raw | sign).astype(np.uint64)
+
+
+def _codes_from_keys(keys: np.ndarray, dtype: int) -> np.ndarray:
+    """Invert :func:`_monotone_keys`."""
+    exponent_bits, mantissa_bits = _SCORE_FORMATS[dtype]
+    width = 1 + exponent_bits + mantissa_bits
+    sign = np.uint64(1) << np.uint64(width - 1)
+    mask = (np.uint64(1) << np.uint64(width)) - np.uint64(1)
+    raised = (keys & sign) != np.uint64(0)
+    return np.where(raised, keys & ~sign, (~keys) & mask).astype(np.uint64)
+
+
+def _block_width(descriptor: Descriptor, where: str) -> int:
+    """Read the mandatory immediate block width.
+
+    Mandatory for the reason ``EXPERT_DISPATCH``'s expert count is: the block
+    width is what turns a position into a block ID and back, and an engine that
+    cannot state it cannot prove either direction. Deriving it from the two
+    extents instead would make ``[span, 17]`` into ``[span, 3]`` mean a width of
+    six with one column never read -- a tiling nobody declared.
+    """
+    block = _aux(descriptor, 0)
+    _require(
+        block is not None,
+        f"operator {descriptor.descriptor_id}: {where} declares no block width "
+        "in aux_id_0, so no position it names can be tied to a block",
+    )
+    assert block is not None
+    _require(
+        block > 0,
+        f"{where}: block width {block} is not positive",
+    )
+    return int(block)
+
+
+def _block_count(width: int, block: int, where: str) -> int:
+    _require(
+        width > 0,
+        f"{where}: the candidate axis is empty",
+    )
+    return (width + block - 1) // block
+
+
+@register(Major.ROUTE, Route.BLOCK_MAX)
+def block_max(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    """One score per block of the candidate axis: ``block_max_ordered_ieee_v1``.
+
+    The block width, the candidate count and the block count are three
+    parameters read from the descriptor and from the two views; none of them is
+    a constant here.  The V4.1 candidate pool happens to use blocks of eight,
+    and this engine has no way of knowing that.
+
+    A short tail block reduces over its own valid columns, which *is* the
+    reference's minus-infinity padding: minus infinity is the identity of the
+    maximum, so a block padded with it has the maximum of its real positions.
+    Minus infinity is admitted as an input too -- a masked score is exactly that
+    -- and the winning code is written through unchanged, because the output
+    dtype must equal the input's.  The operator selects; it does not convert,
+    and it does not round.
+    """
+    _check_operator(descriptor, int(Route.BLOCK_MAX))
+    score_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    _require(
+        score_view.dtype in _SCORE_FORMATS,
+        f"ROUTE.BLOCK_MAX candidate score view {score_view.descriptor_id} is "
+        f"dtype {score_view.dtype:#04x}; the block order is defined on the "
+        "binary16, bfloat16 and binary32 score formats",
+    )
+    _require(
+        out_view.dtype == score_view.dtype,
+        f"ROUTE.BLOCK_MAX writes {score_view.dtype:#04x} codes into a "
+        f"{out_view.dtype:#04x} view; the block maximum is a selection, so a "
+        "storage conversion would have to be an explicit VECTOR.CONVERT",
+    )
+    span, width = _groups(score_view, "candidate score")
+    out_span, blocks = _groups(out_view, "block score")
+    _require(
+        out_span == span,
+        f"ROUTE.BLOCK_MAX output view {out_view.descriptor_id} covers "
+        f"{out_span} query rows, expected {span}",
+    )
+    block = _block_width(descriptor, "ROUTE.BLOCK_MAX")
+    expected = _block_count(width, block, "ROUTE.BLOCK_MAX")
+    _require(
+        blocks == expected,
+        f"ROUTE.BLOCK_MAX reduces {width} candidates in blocks of {block}, "
+        f"which is {expected} block(s), but output view "
+        f"{out_view.descriptor_id} holds {blocks}",
+    )
+    codes = np.ascontiguousarray(ctx.read(score_view)).reshape(span, width)
+    raw = codes.view(_UNSIGNED_OF_WIDTH[codes.dtype.itemsize])
+    keys = _monotone_keys(
+        raw,
+        score_view.dtype,
+        f"ROUTE.BLOCK_MAX candidate score view {score_view.descriptor_id}",
+    )
+    starts = np.arange(0, width, block, dtype=np.intp)
+    winners = _codes_from_keys(
+        np.maximum.reduceat(keys, starts, axis=1), score_view.dtype
+    )
+    ctx.write(
+        out_view,
+        winners.astype(raw.dtype).view(codes.dtype).reshape(out_view.dims),
+    )
+    ctx.counters.add("route.topk_candidates", span * width)
+
+
+@register(Major.ROUTE, Route.CANDIDATE_MASK)
+def candidate_mask(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    """Selected block IDs back to a per-position admission plane.
+
+    ``1`` admits the position and ``0`` excludes it -- the polarity the
+    reference fixes from the pool's own population bound -- and the plane is
+    what ``ROUTE.INDEX_TOPK`` reads in its slot 3.  ``aux_id_1``, when present,
+    is the admitted-population bound of the plan's ``candidate_pool_bound``
+    check, and a plane above it faults here rather than at whatever reads it.
+
+    Four properties are the reference's, not this engine's inventions:
+
+    * a ``0xffffffff`` slot names no block, so a selector that filled fewer
+      slots than it has does not need a second output shape to say so;
+    * IDs are a set: a repeated ID admits its block once and order does not
+      matter, which is what makes the pinned block free to append;
+    * **the last block is always admitted.**  Its block maximum was taken over
+      a partially filled block whose absent tail is minus-infinity padding, so
+      its score is not comparable with a full block's, and the released indexer
+      is applied identically in training and inference, where the current block
+      is always visible.  It is not an option;
+    * a block ID outside the axis is a fault, counted first in
+      ``route.rejected_ids``.  The bound is derived from this operator's own two
+      numbers -- the mask width and the block width -- so it holds for any
+      candidate geometry rather than for one model's.
+    """
+    _check_operator(descriptor, int(Route.CANDIDATE_MASK))
+    id_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    _u32_out(id_view, "candidate block ID")
+    _require(
+        out_view.dtype in (int(DType.U8), int(DType.U32)),
+        f"ROUTE.CANDIDATE_MASK output view {out_view.descriptor_id} is dtype "
+        f"{out_view.dtype:#04x}, expected U8 or U32",
+    )
+    span, chosen = _groups(id_view, "candidate block ID")
+    out_span, width = _groups(out_view, "candidate mask")
+    _require(
+        out_span == span,
+        f"ROUTE.CANDIDATE_MASK output view {out_view.descriptor_id} covers "
+        f"{out_span} query rows, expected {span}",
+    )
+    block = _block_width(descriptor, "ROUTE.CANDIDATE_MASK")
+    blocks = _block_count(width, block, "ROUTE.CANDIDATE_MASK")
+    population_bound = _aux(descriptor, 1)
+    ids = np.asarray(ctx.read(id_view), dtype=np.uint64).reshape(span, chosen)
+    named = ids != np.uint64(PAD_INDEX)
+    outside = named & (ids >= np.uint64(blocks))
+    rejected = int(np.count_nonzero(outside))
+    if rejected:
+        ctx.counters.add("route.rejected_ids", rejected)
+        offender = int(np.max(ids[outside]))
+        raise EngineError(
+            f"ROUTE.CANDIDATE_MASK block ID view {id_view.descriptor_id} names "
+            f"block {offender}, outside the {blocks} block(s) that {width} "
+            f"candidates form at a block width of {block}",
+            trap_class=3,
+        )
+    mask = np.zeros((span, width), dtype=out_view.numpy_dtype)
+    pinned = blocks - 1
+    for row in range(span):
+        for identifier in sorted({int(value) for value in ids[row][named[row]]} | {pinned}):
+            start = identifier * block
+            mask[row, start : min(start + block, width)] = 1
+    population = int(np.count_nonzero(mask))
+    if population_bound is not None:
+        _require(
+            population <= population_bound,
+            f"ROUTE.CANDIDATE_MASK admits {population} positions, above the "
+            f"declared bound of {population_bound}",
+        )
+    ctx.write(out_view, mask.reshape(out_view.dims))
+    # The admitted positions are the candidates a later selection considers,
+    # which is what ``route.topk_candidates`` counts; the frozen registry has no
+    # event of its own for the plane.
+    ctx.counters.add("route.topk_candidates", population)
 
 
 @register(Major.ROUTE, Route.WINDOW_INDEX)
@@ -858,10 +1204,14 @@ def hash_route(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
 
 
 __all__ = [
+    "BLOCK_MAX_CONTRACT",
+    "CANDIDATE_MASK_CONTRACT",
     "MASK_CAUSAL",
     "MASK_FULL",
     "PAD_INDEX",
     "biased_topk",
+    "block_max",
+    "candidate_mask",
     "dspark_window_index",
     "expert_dispatch",
     "hash_route",

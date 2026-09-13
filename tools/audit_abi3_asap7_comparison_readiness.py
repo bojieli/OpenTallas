@@ -172,6 +172,26 @@ CAPABILITY_PATHS = (
     "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
 )
 
+#: The comparisons THIS gate requires.  TA-CMP-7-ASAP7 is the governed
+#: comparison of the four-target release, and its required set is the three
+#: contracts of that release.  ``CONTRACT_PATHS`` is the registry of every
+#: contract the boundary tool knows, which since WP-N of
+#: docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md also holds the three
+#: DeepSeek-V4.1 pairs.  Those belong to gate DS41-CMP11 and are deliberately
+#: NOT pulled in here: a later target may not enlarge this gate's required set,
+#: turn its source-valid verdict false, or otherwise change what closing it
+#: means.  A new contract joins this tuple only when the board adds it to this
+#: gate.
+REQUIRED_COMPARISON_IDS = (
+    "qwen3_rom_single_chip_vs_hbm_single_chip",
+    "deepseek_v4_rom_wafer_vs_hbm_cluster_32",
+    "deepseek_v4_rom_wafer_vs_rom_array_32",
+)
+REQUIRED_CONTRACT_PATHS = {
+    comparison_id: CONTRACT_PATHS[comparison_id]
+    for comparison_id in REQUIRED_COMPARISON_IDS
+}
+
 SOURCE_PATHS = (
     "Makefile",
     "tools/audit_abi3_asap7_comparison_readiness.py",
@@ -183,7 +203,7 @@ SOURCE_PATHS = (
     "configs/pdk/asap7_physical_lock.json",
     "schemas/abi3/comparison_boundary_v1.schema.json",
     "schemas/abi3/comparison_contract_v1.schema.json",
-    *CONTRACT_PATHS.values(),
+    *REQUIRED_CONTRACT_PATHS.values(),
     "docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md",
     "docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md",
 )
@@ -353,7 +373,7 @@ def _contract_summary(
 
 def _load_authoritative_contracts(repo: Path) -> tuple[dict[str, Any], ...]:
     contracts: list[dict[str, Any]] = []
-    for comparison_id, relative in CONTRACT_PATHS.items():
+    for comparison_id, relative in REQUIRED_CONTRACT_PATHS.items():
         path = repo / relative
         try:
             body, validation, path = load_comparison_contract(

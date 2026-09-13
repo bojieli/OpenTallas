@@ -41,6 +41,7 @@ from runtime.abi3.constants import (
     Link,
     Major,
     NO_ID,
+    NO_NODE,
     ParticipantScope,
     Permission,
     Reduction,
@@ -86,6 +87,18 @@ _ENGINE_KEY: Mapping[int, str] = {
     int(Major.STATE): "state",
     int(Major.LINK): "link",
 }
+
+#: Topology classes that place ROM by ``(node, bank)`` rather than by
+#: ``(reticle, tile)``: every node is its own placement target and the
+#: reticle/tile axes are unused.  ``CLUSTER_32`` is the 32-node array;
+#: ``CLUSTER_N`` (amendment AM-R1) is the same machine shape at a node count
+#: the capability declares, which is what the DeepSeek-V4.1 ROM array is.  A
+#: class missing from this set is checked as a single placed device, which for
+#: a multi-node ROM array refuses every shard on a node other than zero --
+#: found while lowering ``deepseek_v41_array`` onto ``CLUSTER_N``.
+_NODE_PLACED_TOPOLOGY_CLASSES = frozenset(
+    {int(TopologyClass.CLUSTER_32), int(TopologyClass.CLUSTER_N)}
+)
 
 _WEIGHT_ROLES = frozenset({"weight", "constant"})
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT"})
@@ -563,7 +576,7 @@ def check_rom_schedule(
             )
             reticle_count = max(int(topology.get("reticle_count", 0)), 1)
             tiles_per_reticle = max(int(topology.get("tiles_per_reticle", 0)), 1)
-            if topology_class == int(TopologyClass.CLUSTER_32):
+            if topology_class in _NODE_PLACED_TOPOLOGY_CLASSES:
                 # A conventional-chip cluster places by (node, bank): every
                 # node is a placement target and the reticle/tile axes are
                 # unused.  Node identity is what the array's expert ownership
@@ -572,8 +585,18 @@ def check_rom_schedule(
                 node_count = max(int(topology.get("node_count", 0)), 1)
                 inside = 0 <= node < node_count and reticle == 0 and tile == 0
             else:
+                # A wafer places by (node, reticle, tile).  The reticle and tile
+                # axes are *per device*, so the bound is one wafer's grid
+                # whatever the machine's node count is; the node axis is every
+                # wafer the topology declares.  A one-wafer machine declares one
+                # node and its ``local_node_id`` is zero, so this is the rule
+                # that was here, restated for a machine that has a second
+                # wafer: the V4.1 pipeline puts the encoder on node 0 and the
+                # decoder on node 1, and ``node == local_node_id`` would have
+                # refused every region of the second stage.
+                node_count = max(int(topology.get("node_count", 0)), 1)
                 inside = (
-                    node == int(topology.get("local_node_id", 0))
+                    0 <= node < node_count
                     and 0 <= reticle < reticle_count
                     and 0 <= tile < reticle_count * tiles_per_reticle
                     and (
@@ -868,6 +891,31 @@ def check_rom_schedule(
     # writing a REMOTE participant array.  Its consumers then have to wait on
     # the unpack: a wait on the contraction's own event would read the
     # owner-partial rows before the other 31 owners' contributions arrived.
+    # Which routed contractions *need* one.  A multi-node machine is not by
+    # itself a reason: the reduction exists because an expert bank is split by
+    # owner (A28 ``node_segments``), so each node computes only its own
+    # experts' rows.  A layer-pipelined machine -- the V4.1 two-wafer target,
+    # whose wafers hold whole layers with all their experts -- shards no bank,
+    # has no owner-partial rows, and must not be required to sum any.  The
+    # distinction is read off the emitted object's own source kind, which is the
+    # thing that decides whether a node's image is the whole bank or a slice of
+    # it.
+    node_sharded_objects = {
+        object_id
+        for object_id, source in getattr(deployment, "objects", {}).items()
+        if getattr(source, "kind", "") == "node_segments"
+    }
+    node_sharded_routed: set[int] = set()
+    if node_sharded_objects:
+        for kernel in graph.kernels:
+            if kernel.kind != "ROUTED_MATMUL":
+                continue
+            for _index, _instruction, operator in by_source.get(kernel.index, []):
+                for view in _operator_views(
+                    operator, "input_view_", 4, views, require
+                ):
+                    if int(view.primary_object_id) in node_sharded_objects:
+                        node_sharded_routed.add(kernel.index)
     reductions = _data_bearing_reductions(
         graph=graph,
         instructions=instructions,
@@ -878,6 +926,7 @@ def check_rom_schedule(
         waits=waits,
         topology=topology,
         representative_ids=representative_ids,
+        node_sharded_routed=frozenset(node_sharded_routed),
         require=require,
     )
     reduction_moves: set[int] = set()
@@ -1200,6 +1249,284 @@ def check_rom_schedule(
                 "the context-position capability",
             )
 
+    # -- two-wafer pipeline placement, reconstructed from the descriptors --
+    # A V4.1-class ROM machine is two wafer-scale logical devices carrying one
+    # program (plan sections 6.1 and 6.2).  Every rule below reads the node a
+    # MEMORY_OBJECT declares -- the field the device and the frozen verifier
+    # act on -- and never the producer's own placement notes, so agreement is
+    # evidence.  On a one-node product every band maps to node 0 and the rules
+    # are satisfied without saying anything, which is correct: there is no
+    # second wafer for a reader to be stranded on.
+    def _rom_object_nodes(operator: Any) -> set[int]:
+        """Nodes of the immutable ROM operands one operator addresses."""
+        nodes: set[int] = set()
+        for prefix, count in (("input_view_", 4), ("output_view_", 2)):
+            for view in _operator_views(operator, prefix, count, views, require):
+                obj = objects.get(int(view.primary_object_id))
+                if obj is None:
+                    continue
+                if int(obj.payload["storage_class"]) != int(StorageClass.ROM):
+                    continue
+                node = int(obj.payload["node_id"])
+                if node != NO_NODE:
+                    nodes.add(node)
+        return nodes
+
+    node_of_kernel: dict[int, int] = {}
+    for source, emitted in by_source.items():
+        nodes: set[int] = set()
+        for _index, _instruction, operator in emitted:
+            nodes |= _rom_object_nodes(operator)
+        if len(nodes) == 1:
+            node_of_kernel[source] = next(iter(nodes))
+        elif len(nodes) > 1:
+            require(
+                "one_node_per_kernel",
+                False,
+                f"kernel {source} reads immutable ROM on nodes {sorted(nodes)}; "
+                "one operator cannot address two devices' mask ROM",
+            )
+    require("one_node_per_kernel", True, "")
+
+    def _own_node(kernel_index: int) -> int | None:
+        """The node of ``kernel_index``'s own mask ROM, via its representative."""
+        representative = canonical.get(kernel_index, kernel_index)
+        node = node_of_kernel.get(representative)
+        return node if node is not None else node_of_kernel.get(kernel_index)
+
+    band_node: dict[int, int | None] = {}
+    node_of_layer: dict[int, int] = {}
+    for position, band in enumerate(bands):
+        nodes = {
+            node
+            for kernel in band.body
+            if (node := _own_node(kernel.index)) is not None
+        }
+        require(
+            "one_node_per_band",
+            len(nodes) <= 1,
+            f"layer band beginning {band.first_layer} reads mask ROM on nodes "
+            f"{sorted(nodes)}; a pipeline stage is a span of layers on one wafer",
+        )
+        band_node[position] = next(iter(nodes)) if len(nodes) == 1 else None
+        if band_node[position] is not None:
+            for layer in band.layers:
+                node_of_layer[int(layer)] = band_node[position]
+    require("one_node_per_band", True, "")
+
+    def _node_of(kernel_index: int) -> int | None:
+        """The device that executes ``kernel_index``.
+
+        A kernel with a weight operand says where it runs itself.  One without
+        -- a sparse attention reading only activations and a cache, which is
+        exactly the reader a shared-cache rule is about -- runs where its
+        *layer* runs, and the layer's device is the one its band's mask ROM
+        declares.  Without that step the rule would be blind to the only kernels
+        it exists to constrain.
+        """
+        own = _own_node(kernel_index)
+        if own is not None:
+            return own
+        kernel = graph.kernels[kernel_index]
+        if kernel.layer is None:
+            return None
+        return node_of_layer.get(int(kernel.layer))
+
+    # ``shared_state_locality`` (plan section 6.3).  A global KV cache written
+    # by one layer and read by later ones is a placement constraint the wafer
+    # backend never had before: the reader cannot reach a cache that lives in
+    # another device's memory.  The rule is stated over the graph's own state
+    # effects and the emitted node of every kernel that touches them, so a
+    # partition that stranded a reader fails here rather than at run time.
+    state_writer_nodes: dict[str, set[int]] = {}
+    state_reader_nodes: dict[str, set[int]] = {}
+    for kernel in graph.kernels:
+        if kernel.kind in _TRANSACTION_KINDS:
+            continue
+        node = _node_of(kernel.index)
+        if node is None:
+            continue
+        for state_id in kernel.state_writes:
+            state_writer_nodes.setdefault(state_id, set()).add(node)
+        for state_id in kernel.state_reads:
+            state_reader_nodes.setdefault(state_id, set()).add(node)
+    for state_id in sorted(set(state_writer_nodes) | set(state_reader_nodes)):
+        writers = state_writer_nodes.get(state_id, set())
+        readers = state_reader_nodes.get(state_id, set())
+        require(
+            "shared_state_locality",
+            len(writers | readers) <= 1,
+            f"state resource {state_id!r} is written on node(s) {sorted(writers)} "
+            f"and read on node(s) {sorted(readers)}; every reader of a shared "
+            "cache must sit on the device that owns it",
+        )
+    require("shared_state_locality", True, "")
+
+    # ``resident_hbm_region`` (plan section 6.3).  A table a layer reads every
+    # token and nothing ever writes -- the Engram row table and its compressed
+    # id map -- is a load-once region.  The rule is what "load once" means on
+    # the wire: the objects behind it are immutable, no STATE descriptor holds
+    # them, and no DMA.SCATTER writes into them.  A layered embedding lookup is
+    # the structural signature; the prologue's token embedding has no layer and
+    # is an ordinary model weight.
+    resident_tensors = {
+        name
+        for kernel in graph.kernels
+        if kernel.kind == "EMBEDDING_LOOKUP" and kernel.layer is not None
+        for name in kernel.inputs
+        if name in graph_tensors and graph_tensors[name].role in _WEIGHT_ROLES
+    }
+    resident_objects: set[int] = set()
+    for kernel in graph.kernels:
+        if kernel.kind != "EMBEDDING_LOOKUP" or kernel.layer is None:
+            continue
+        for _index, _instruction, operator in by_source.get(
+            canonical.get(kernel.index, kernel.index), []
+        ):
+            for view in _operator_views(operator, "input_view_", 4, views, require):
+                obj = objects.get(int(view.primary_object_id))
+                if obj is None:
+                    continue
+                if int(obj.permissions) == int(Permission.READ | Permission.IMMUTABLE):
+                    resident_objects.add(obj.descriptor_id)
+    if resident_tensors:
+        require(
+            "resident_hbm_region",
+            bool(resident_objects),
+            f"{len(resident_tensors)} layered lookup table(s) are declared and no "
+            "immutable object backs them",
+        )
+        state_bound = {
+            int(descriptor.payload[field])
+            for descriptor in states.values()
+            for field in ("committed_object_id", "prepared_object_id")
+        }
+        require(
+            "resident_hbm_region",
+            not (resident_objects & state_bound),
+            "a load-once resident table is bound to a STATE descriptor, so it is "
+            "committed rather than resident",
+        )
+        for index, instruction, operator in instruction_operators:
+            if (instruction.major, instruction.sub) != (
+                int(Major.DMA),
+                int(Dma.SCATTER),
+            ):
+                continue
+            written = {
+                int(view.primary_object_id)
+                for view in _operator_views(
+                    operator, "output_view_", 2, views, require
+                )
+            }
+            require(
+                "resident_hbm_region",
+                not (written & resident_objects),
+                f"DMA.SCATTER at instruction {index} writes into the load-once "
+                "resident table region",
+            )
+    require("resident_hbm_region", True, "")
+
+    # ``candidate_pool_bound`` (plan section 6.3).  CSA2's block selection
+    # publishes a candidate pool, and every index top-k after it scans that
+    # pool and not the whole context.  The bound is read off the capability --
+    # ``max_candidate_positions`` -- because a literal here would be the model
+    # constant mirrored into a checker that this plan forbids; a capability that
+    # declares no pool is a machine with no candidate stage and the rule is
+    # vacuous.
+    candidate_bound = int(capability.limits.get("max_candidate_positions", 0))
+    candidate_sources = [
+        kernel for kernel in graph.kernels if kernel.kind == "CANDIDATE_MASK"
+    ]
+    if candidate_sources:
+        require(
+            "candidate_pool_bound",
+            candidate_bound > 0,
+            "the graph publishes a candidate pool and the capability declares no "
+            "max_candidate_positions to bound it",
+        )
+        mask_tensors: dict[str, int] = {}
+        for kernel in candidate_sources:
+            for name in kernel.outputs:
+                tensor = graph_tensors.get(name)
+                if tensor is None:
+                    continue
+                population = 1
+                for dim in tensor.shape:
+                    population *= 1 if isinstance(dim, Symbolic) else max(int(dim), 1)
+                mask_tensors[name] = population
+                require(
+                    "candidate_pool_bound",
+                    population <= candidate_bound,
+                    f"candidate mask {name!r} declares a population of "
+                    f"{population}, over the capability's {candidate_bound}",
+                )
+        mask_states = {
+            state_id
+            for kernel in candidate_sources
+            for state_id in kernel.state_writes
+        }
+        first_source = min(kernel.index for kernel in candidate_sources)
+        mask_views = set(mask_tensors)
+        for kernel in graph.kernels:
+            if kernel.kind == "STATE_READ" and (
+                set(kernel.state_reads) & mask_states
+            ):
+                mask_views.update(kernel.outputs)
+        for kernel in graph.kernels:
+            if kernel.kind != "INDEX_TOPK" or kernel.index <= first_source:
+                continue
+            carried = [name for name in kernel.inputs if name in mask_views]
+            require(
+                "candidate_pool_bound",
+                bool(carried),
+                f"INDEX_TOPK kernel {kernel.index} runs after the candidate "
+                f"source and carries no candidate mask (reads {list(kernel.inputs)})",
+            )
+    require("candidate_pool_bound", True, "")
+
+    # ``expert_capacity`` (plan section 6.3).  V4.1 routes among 384 experts and
+    # selects six; V4's record admits 256 and eight.  Every routed operator
+    # states the population it selects among and the width it selects, and both
+    # are checked against the capability the deployment is admitted on.
+    expert_limit = int(capability.limits["max_expert_ids"])
+    topk_limit = int(capability.limits["max_topk"])
+    for kernel in graph.kernels:
+        declared = _first_int(
+            kernel.attributes, "expert_count", default=_domain_int(kernel, "expert_count", 0)
+        )
+        if declared:
+            require(
+                "expert_capacity",
+                declared <= expert_limit,
+                f"kernel {kernel.index} ({kernel.kind}) routes among {declared} "
+                f"experts; the capability admits {expert_limit}",
+            )
+        # The selection width is the trailing extent of the routing operator's
+        # *index* output: a biased top-k and an expert dispatch both publish one
+        # integer expert id per selected expert per token, so that extent is the
+        # top-k and nothing else in the graph has to say so.
+        if kernel.kind not in {"BIASED_TOPK", "EXPERT_DISPATCH"}:
+            continue
+        for name in kernel.outputs:
+            tensor = graph_tensors.get(name)
+            if tensor is None or tensor.dtype not in {"u32", "i32"}:
+                continue
+            dims = [dim for dim in tensor.shape if not isinstance(dim, Symbolic)]
+            if not dims:
+                continue
+            width = int(dims[-1])
+            if width <= 0:
+                continue
+            require(
+                "expert_capacity",
+                width <= topk_limit,
+                f"kernel {kernel.index} ({kernel.kind}) selects {width} experts "
+                f"per token in {name!r}; the capability admits max_topk "
+                f"{topk_limit}",
+            )
+    require("expert_capacity", True, "")
+
     # -- local/on-wafer paths, collectives, credits, and retry buffers -----
     link_instructions = [
         (index, instruction)
@@ -1353,6 +1680,8 @@ def check_rom_schedule(
             f"fabric schedule uses route classes {sorted(route_classes)}, topology "
             f"declares {sorted(expected_classes)}",
         )
+        band_position = {id(band): index for index, band in enumerate(bands)}
+        previous_node: int | None = None
         for band, descriptor in matched_band_loops:
             start = int(descriptor.payload["body_start"])
             end = int(descriptor.payload["body_end"])
@@ -1361,11 +1690,28 @@ def check_rom_schedule(
                 for instruction in instructions[start:end]
                 if instruction.major == int(Major.LINK)
             ]
-            expected_subs = [int(Link.MULTICAST), int(Link.GATHER)]
+            expected_subs: list[int] = []
+            # A band that opens a new device is a pipeline stage boundary, and
+            # the residual it consumes has to cross the package: exactly one
+            # endpoint-initiated remote transfer, ahead of the band's own
+            # on-wafer traffic.  The boundary is derived from the node the
+            # band's mask ROM declares, so a program that claimed a two-wafer
+            # partition and moved nothing between the wafers fails here.
+            this_node = band_node.get(band_position.get(id(band), -1))
+            crosses = (
+                this_node is not None
+                and previous_node is not None
+                and this_node != previous_node
+            )
+            if crosses:
+                expected_subs.append(int(Link.REMOTE_DMA))
+            if this_node is not None:
+                previous_node = this_node
+            expected_subs.extend([int(Link.MULTICAST), int(Link.GATHER)])
             if any(kernel.kind == "EXPERT_DISPATCH" for kernel in band.body):
                 expected_subs.append(int(Link.SCATTER))
             collectives = 1
-            if topology_class == int(TopologyClass.CLUSTER_32):
+            if topology_class in _NODE_PLACED_TOPOLOGY_CLASSES:
                 # A multi-node ROM sums owner partials once per routed group:
                 # every EXPERT_REDUCE fed by a routed contraction is one
                 # data-bearing collective, and a band with none keeps the
@@ -3063,16 +3409,19 @@ def _data_bearing_reductions(
     waits: Mapping[int, Any],
     topology: Mapping[str, Any],
     representative_ids: Any,
+    node_sharded_routed: Any,
     require: Callable[..., bool],
 ) -> dict[int, tuple[set[int], set[int]]]:
     """Reconstruct every data-bearing expert reduction and prove its chain.
 
     Returns ``{routed kernel index: ({unpack signal events}, {instruction
     indices the chain explains})}``.  On a one-node topology there are none and
-    nothing is required.
+    nothing is required, and the same is true of a multi-node topology that
+    shards no expert bank by owner: ``node_sharded_routed`` is the set of routed
+    contractions whose bank is split, and only those have partial rows to sum.
     """
     node_count = int(topology.get("node_count", 1))
-    if node_count <= 1:
+    if node_count <= 1 or not node_sharded_routed:
         return {}
     # Only representative kernels have instructions; a compressed run's later
     # layers ride the representative's body and its reduction.
@@ -3290,7 +3639,7 @@ def _data_bearing_reductions(
         if kernel.index not in representative_ids:
             continue
         if kernel.kind == "ROUTED_MATMUL":
-            last_routed = kernel.index
+            last_routed = kernel.index if kernel.index in node_sharded_routed else None
         elif kernel.kind == "EXPERT_REDUCE" and last_routed is not None:
             required.add(last_routed)
             last_routed = None

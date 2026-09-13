@@ -213,6 +213,103 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
     return read, write, storage, detail
 
 
+HBM_RESIDENT_REGIONS = "hbm_resident_regions"
+HBM_RESIDENT_WEIGHT_BYTES = "hbm_resident_weight_bytes"
+
+
+def hbm_resident_regions(model: ModelProfile) -> tuple[dict[str, float | str], ...]:
+    """Immutable weight regions the model holds in its KV store, not its weight store.
+
+    A model may declare that part of its checkpoint is resident in the same
+    memory that holds the KV cache -- DeepSeek-V4.1's 202.8 GB of Engram lookup
+    tables in wafer-edge HBM are the case this was written for.  Such a region
+    is not streamed with the weights and is not per-user state: it takes
+    capacity from whichever pipeline stage owns its layer, once, and it is read
+    by row on every token, which costs that stage's KV bandwidth.
+
+    Each region declares its own ``layer_id``, so the stage that pays is
+    derived from the same layer partition as everything else rather than named.
+    A model that declares none -- every profile that predates this -- gets an
+    empty tuple and is untouched.
+    """
+
+    declared = model.metadata.get(HBM_RESIDENT_REGIONS) or ()
+    if not isinstance(declared, (list, tuple)):
+        raise ValueError(f"metadata.{HBM_RESIDENT_REGIONS} must be a list of regions")
+    regions: list[dict[str, float | str]] = []
+    for index, region in enumerate(declared):
+        if not isinstance(region, dict):
+            raise ValueError(f"metadata.{HBM_RESIDENT_REGIONS}[{index}] must be a mapping")
+        try:
+            layer_id = int(region["layer_id"])
+            resident = float(region["bytes"])
+            read = float(region["read_bytes_per_token"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(
+                f"metadata.{HBM_RESIDENT_REGIONS}[{index}] requires layer_id, bytes "
+                "and read_bytes_per_token"
+            ) from exc
+        if not 0 <= layer_id < model.num_layers:
+            raise ValueError(
+                f"metadata.{HBM_RESIDENT_REGIONS}[{index}] layer_id {layer_id} is "
+                f"outside the {model.num_layers} layers of {model.name}"
+            )
+        if resident < 0 or read < 0:
+            raise ValueError(
+                f"metadata.{HBM_RESIDENT_REGIONS}[{index}] bytes and "
+                "read_bytes_per_token must not be negative"
+            )
+        regions.append(
+            {
+                "label": str(region.get("label", f"hbm_resident_l{layer_id}")),
+                "layer_id": float(layer_id),
+                "bytes": resident,
+                "read_bytes_per_token": read,
+            }
+        )
+    return tuple(regions)
+
+
+def hbm_resident_weight_bytes(model: ModelProfile) -> float:
+    """Total declared KV-store-resident weight bytes, checked against the regions.
+
+    The scalar is what the profile advertises and the regions are what the
+    capacity model spends; if they ever disagree the profile is wrong and says
+    so here rather than silently charging a different number to each.
+    """
+
+    regions = hbm_resident_regions(model)
+    total = sum(float(region["bytes"]) for region in regions)
+    declared = float(model.metadata.get(HBM_RESIDENT_WEIGHT_BYTES, 0.0))
+    if abs(declared - total) > 1.0:
+        raise ValueError(
+            f"{model.name}: metadata.{HBM_RESIDENT_WEIGHT_BYTES} is {declared:,.0f} B "
+            f"but metadata.{HBM_RESIDENT_REGIONS} sum to {total:,.0f} B"
+        )
+    return declared
+
+
+def _per_layer_hbm_resident(
+    model: ModelProfile, field_name: str
+) -> tuple[float, ...]:
+    values = [0.0] * model.num_layers
+    for region in hbm_resident_regions(model):
+        values[int(region["layer_id"])] += float(region[field_name])
+    return tuple(values)
+
+
+def per_layer_hbm_resident_bytes(model: ModelProfile) -> tuple[float, ...]:
+    """KV-store capacity each ordered layer's resident regions occupy."""
+
+    return _per_layer_hbm_resident(model, "bytes")
+
+
+def per_layer_hbm_resident_read_bytes(model: ModelProfile) -> tuple[float, ...]:
+    """KV-store read bytes each ordered layer's resident regions cost per token."""
+
+    return _per_layer_hbm_resident(model, "read_bytes_per_token")
+
+
 def kv_traffic(model: ModelProfile, context_tokens: int) -> KVTraffic:
     """Compute exact profile-defined C2 KV traffic for one user/token."""
 
@@ -230,6 +327,27 @@ def kv_traffic(model: ModelProfile, context_tokens: int) -> KVTraffic:
         writes += write
         storage += stored
         breakdown.append(detail)
+    # Resident lookup regions share the KV store's read path, so their rows are
+    # KV read bytes.  They are written at load and are not per-user, so they add
+    # nothing to writes and nothing to storage_bytes_per_user.
+    for region in hbm_resident_regions(model):
+        read = float(region["read_bytes_per_token"])
+        reads += read
+        breakdown.append(
+            {
+                "kind": "hbm_resident_lookup",
+                "label": region["label"],
+                "layer_id": region["layer_id"],
+                "resident_bytes": region["bytes"],
+                "read_bytes": read,
+                "write_bytes": 0.0,
+                "storage_bytes_per_user": 0.0,
+                "evidence": (
+                    "immutable region resident in the KV store, read by row on "
+                    "every decode token; metadata.hbm_resident_regions"
+                ),
+            }
+        )
     return KVTraffic(reads, writes, storage, tuple(breakdown))
 
 
@@ -268,19 +386,25 @@ def layer_groups(model: ModelProfile) -> tuple[AttentionGroup, ...]:
 
 
 def per_layer_kv_transfer(model: ModelProfile, context_tokens: int) -> tuple[float, ...]:
-    return tuple(
-        sum(_group_traffic(group, context_tokens)[:2]) for group in layer_groups(model)
-    )
+    return tuple(read + write for read, write in per_layer_kv_read_write(model, context_tokens))
 
 
 def per_layer_kv_read_write(
     model: ModelProfile, context_tokens: int
 ) -> tuple[tuple[float, float], ...]:
-    """Return algorithmic KV read/write bytes for each ordered model layer."""
+    """Return algorithmic KV read/write bytes for each ordered model layer.
 
-    return tuple(
-        _group_traffic(group, context_tokens)[:2] for group in layer_groups(model)
-    )
+    A layer that owns a resident lookup region in the KV store reads that
+    region's rows out of the same store on every token, so those bytes belong to
+    this layer's KV read and therefore to whichever pipeline stage holds it.
+    """
+
+    resident_read = per_layer_hbm_resident_read_bytes(model)
+    layers: list[tuple[float, float]] = []
+    for group, resident in zip(layer_groups(model), resident_read):
+        read, write = _group_traffic(group, context_tokens)[:2]
+        layers.append((read + resident, write))
+    return tuple(layers)
 
 
 def per_layer_kv_storage(model: ModelProfile, context_tokens: int) -> tuple[float, ...]:

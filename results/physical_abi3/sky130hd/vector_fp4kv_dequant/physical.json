@@ -1,0 +1,454 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.3312095413901702,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 231,
+        "setup_wns_ns": -3.099774746844163,
+        "stage": "static_timing"
+      },
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.312062,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 5.2639,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-13T17:11:53.504657+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "antenna": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "area_basis": "place_and_route.metrics.standard_cell_area_um2",
+    "area_um2": 106739,
+    "block": "ot_a3_vector_fp4kv_dequant",
+    "cells": 13561,
+    "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
+    "clock_period_ns": 12.0,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_area_um2": 253693,
+    "description": "ad-hoc block supplied on the command line",
+    "drc": 0,
+    "false_path_from_ports": [],
+    "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
+    "fmax_hz": 148454000.0,
+    "hold_wns_ns": 0.312062,
+    "parameters": {},
+    "setup_wns_ns": 5.2639,
+    "signal_integrity_clean": true,
+    "signal_integrity_violations": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0
+    },
+    "sources": [
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+        "sha256": "99f862fac0d90f1d236a936bd902bdb2971513b75245032c8e03f76362fbccd7",
+        "size_bytes": 47276
+      }
+    ],
+    "top": "ot_a3_vector_fp4kv_dequant",
+    "utilization_fraction": 0.420739
+  },
+  "elapsed_seconds": 1059.889,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-09-13T16:54:13.615349+00:00",
+  "git": {
+    "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/abi3/deepseek-v4.1-flash.measured-widths.proposed.json",
+      "results/abi3/deepseek_v41_hbm_comparator_capability.json",
+      "results/abi3/deepseek_v41_hbm_comparator_descriptor_multiset.json",
+      "results/abi3/deepseek_v41_hbm_comparator_plan.json",
+      "results/abi3/deepseek_v41_measured_kv_widths.json",
+      "results/abi3/deepseek_v41_reduced_checkpoint.lock.json",
+      "results/abi3/deepseek_v41_reduced_model.json",
+      "results/abi3/deepseek_v41_reduced_seed_search/",
+      "results/abi3/deepseek_v41_reference_oracle_probe.json",
+      "results/abi3/deepseek_v41_workload_pins.json",
+      "results/derived/deepseek_v41_cycle_cells.json",
+      "results/physical_abi3/asap7/dma_ngram_hash/",
+      "results/physical_abi3/asap7/route_block_max/",
+      "results/physical_abi3/asap7/route_candidate_mask/",
+      "results/physical_abi3/asap7/vector_engram_gate/",
+      "results/physical_abi3/asap7/vector_fp4kv_dequant/",
+      "results/physical_abi3/sky130hd/dma_ngram_hash/",
+      "results/physical_abi3/sky130hd/route_block_max/",
+      "results/physical_abi3/sky130hd/route_candidate_mask/",
+      "results/physical_abi3/sky130hd/vector_engram_gate/",
+      "results/physical_abi3/sky130hd/vector_fp4kv_dequant/",
+      "results/roofline/candidates/deepseek-v41-flash-engram-hbm/",
+      "results/rtl/a3_v41_block_max_campaign.json",
+      "results/rtl/a3_v41_candidate_mask_campaign.json",
+      "results/rtl/a3_v41_engram_gate_campaign.json",
+      "results/rtl/a3_v41_fp4kv_dequant_campaign.json",
+      "results/rtl/a3_v41_ngram_hash_vendor_oracle.json"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M Makefile",
+      " M compiler/backends/hbm_sram/capability.py",
+      " M compiler/backends/hbm_sram/plan.py",
+      " M compiler/backends/rom/common/check.py",
+      " M compiler/backends/rom/common/program.py",
+      " M compiler/frontend/deepseek_v4.py",
+      " M compiler/frontend/deepseek_v4_releases.py",
+      " M compiler/frontends/v3/deepseek_v4.py",
+      " M compiler/ir/v3/lowering.py",
+      " M configs/abi3/shipped_deployments.json",
+      " M configs/gates/redesign_gates.json",
+      " M configs/hardware/technology.json",
+      " M docs/CONTRIBUTOR_TASKS.md",
+      " M docs/EVIDENCE_LEDGER.md",
+      " M docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md",
+      " M docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md",
+      " M docs/UNIFIED_EXECUTION_CHECKLIST.md",
+      " M results/abi3/prose_figure_coverage.json",
+      " M results/iso-node/leading_node_market/REPORT.md",
+      " M results/iso-node/leading_node_market/analytical.json",
+      " M results/iso-node/leading_node_market/sweep.csv",
+      " M results/iso-node/n7_architecture_attribution/REPORT.md",
+      " M results/iso-node/n7_architecture_attribution/analytical.json",
+      " M results/iso-node/n7_architecture_attribution/sweep.csv",
+      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/REPORT.md",
+      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/REPORT.md",
+      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/analytical.json",
+      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/REPORT.md",
+      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
+      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/REPORT.md",
+      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json",
+      " M results/roofline/context_ladder/n5_vs_b200/flash-1m/REPORT.md",
+      " M results/roofline/context_ladder/n5_vs_b200/flash-32k/REPORT.md",
+      " M results/roofline/context_ladder/n5_vs_b200/flash-8k/REPORT.md",
+      " M results/roofline/context_ladder/n5_vs_b200/pro-200k/REPORT.md",
+      " M results/roofline/context_ladder/n5_vs_b200/pro-32k/REPORT.md",
+      " M results/roofline/context_ladder/n5_vs_b200/pro-8k/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/flash-1m/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/flash-32k/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/flash-8k/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/pro-200k/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/pro-32k/REPORT.md",
+      " M results/roofline/context_ladder/n6_vs_a100/pro-8k/REPORT.md",
+      " M results/roofline/n5_vs_b200/REPORT.md",
+      " M results/roofline/n5_vs_b200/analytical.json",
+      " M results/roofline/n6_vs_a100/REPORT.md",
+      " M results/roofline/n6_vs_a100/analytical.json",
+      " M results/roofline/quantised_variant/n5_vs_b200/analytical.json",
+      " M results/roofline/quantised_variant/n6_vs_a100/analytical.json"
+    ]
+  },
+  "place_and_route": {
+    "artifact_dir": "results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts",
+    "artifacts": {
+      "1_2_yosys.v": {
+        "retained": true,
+        "sha256": "957fa2ffd8b9464b6a9344b4427cf313d495ebeab55183f0f7fc0ca9009d134a",
+        "size_bytes": 1521938
+      },
+      "5_route_drc.rpt": {
+        "retained": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "6_final.def": {
+        "retained": false,
+        "sha256": "4e8d7ddd1ba1153742746e34c80757ffa57d7187876eaff2198f0f69ed4a41ee",
+        "size_bytes": 12187740
+      },
+      "6_final.gds": {
+        "retained": false,
+        "sha256": "16adb0240ae57a7f45858f6db4f71ab04a4518d34715fd3dcf8a767c521af305",
+        "size_bytes": 13000318
+      },
+      "6_final.odb": {
+        "retained": false,
+        "sha256": "e60f6ec9309ff99f8af0f56ac3dce0e1ad6b2e2aab24edb104590137ba773c9c",
+        "size_bytes": 25608859
+      },
+      "6_final.spef": {
+        "retained": false,
+        "sha256": "163a4dd51ebb8dac94b6b7c811d3a028988cdac14a232a872370e9642b1bc2a4",
+        "size_bytes": 10751889
+      },
+      "6_final.v": {
+        "retained": true,
+        "sha256": "31a85cff4d5d59f72342fed19911bc37886ba3a648656676fc2840a013da954f",
+        "size_bytes": 1326321
+      },
+      "6_finish.rpt": {
+        "retained": true,
+        "sha256": "49c92ebd9bdafa029898e50c82944666297eb70da11cd86df4ab836c932ba06b",
+        "size_bytes": 37223
+      },
+      "config.mk": {
+        "retained": true,
+        "sha256": "81e5dadb43e4b0f3ae0c6dcbfaa63d374b1e4a09956e183c0a46337b8f5786be",
+        "size_bytes": 726
+      },
+      "constraint.sdc": {
+        "retained": true,
+        "sha256": "4fe8277cbc1390a005f62cc4309c7025c58a7a14ab73588d7129337b373d866b",
+        "size_bytes": 338
+      },
+      "metadata.json": {
+        "retained": true,
+        "sha256": "02318eb7f7317c0d8fff8356d1d52f76ec32c0c5cf385553ef6b6ce593f291ef",
+        "size_bytes": 24513
+      }
+    },
+    "clock_period_ns": 12.0,
+    "core_utilization_percent": 35,
+    "design_nickname": "opentallas_ot_a3_vector_fp4kv_dequant_sky130hd",
+    "metrics": {
+      "antenna_violating_nets": 0,
+      "antenna_violating_pins": 0,
+      "clock_count": 1,
+      "core_area_um2": 253693,
+      "die_area_um2": 258649,
+      "drc_errors": 0,
+      "flow_error_counts": {
+        "cts__flow__errors__count": 0,
+        "detailedplace__flow__errors__count": 0,
+        "detailedroute__flow__errors__count": 0,
+        "finish__flow__errors__count": 0,
+        "floorplan__flow__errors__count": 0,
+        "globalplace__flow__errors__count": 0,
+        "globalroute__flow__errors__count": 0,
+        "placeopt__flow__errors__count": 0,
+        "synth__flow__errors__count": 0
+      },
+      "fmax_hz": 148454000.0,
+      "hold_tns_ns": 0.0,
+      "hold_violations": 0,
+      "hold_wns_ns": 0.312062,
+      "instance_count": 38499,
+      "library_time_unit_ns": 1.0,
+      "macro_area_um2": 0,
+      "macro_count": 0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "missing_metadata_keys": [],
+      "power_total_w": 0.025946,
+      "raw_timing_library_units": {
+        "hold_tns_ns": 0,
+        "hold_wns_ns": 0.312062,
+        "setup_tns_ns": 0,
+        "setup_wns_ns": 5.2639
+      },
+      "routed_nets": 10719,
+      "routed_wirelength_um": 289387,
+      "sequential_area_um2": 40839.2,
+      "sequential_cell_count": 1631,
+      "setup_tns_ns": 0.0,
+      "setup_violations": 0,
+      "setup_wns_ns": 5.2639,
+      "standard_cell_area_um2": 106739,
+      "standard_cell_count": 13561,
+      "utilization_fraction": 0.420739,
+      "vias": 72583
+    },
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "957fa2ffd8b9464b6a9344b4427cf313d495ebeab55183f0f7fc0ca9009d134a",
+      "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
+      "raw_netlist_sha256": "957fa2ffd8b9464b6a9344b4427cf313d495ebeab55183f0f7fc0ca9009d134a",
+      "signed_declarations_stripped": 0
+    },
+    "place_density": 0.6,
+    "platform": "sky130hd",
+    "platform_file_sha256": {
+      "config.mk": "1a36b8fbd58ee4b6b961bc14f3ca44e7b44a4ea47faf6f116f827eb5177509d5",
+      "lef/sky130_fd_sc_hd.tlef": "8e99b4e8b016db0713029ebcae6b2cc2aedd9c2c49682e2f23521dd0b1a2085e",
+      "lef/sky130_fd_sc_hd_merged.lef": "44180aaa0068b1fcb0789f128b090304c01ad48f511d3f7afa66c90b3e176ec5",
+      "lef/sky130io_fill.lef": "8c398d048875934de75cd3c0054b8049390c4d33afee84b9ca72b4acac58df83",
+      "lib/sky130_dummy_io.lib": "6b7589ec90fb90deffe4a79eb24e1f9bf127cf2238887101ee15e3dda25c6be2",
+      "lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    },
+    "sdc_clock_period_library_units": 12.0,
+    "signal_integrity_constraints": {
+      "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+      "sdc_lines": [
+        "set_max_fanout 32 [current_design]"
+      ],
+      "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit",
+      "slew_margin_percent": 30.0
+    },
+    "toolchain": {
+      "binary_sha256": {
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+        "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+      },
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+      "image_id_matches_archived_asap7_lock": true,
+      "image_reference": "openroad/orfs:latest",
+      "openroad_version": "26Q3-1510-g6cb3f2b704",
+      "repo_digests": [
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "openroad/orfs@sha256:d995618be9f2bcdfa5538b885123463070dfbf178bea1818716d4652fe0fa380"
+      ],
+      "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
+    }
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--top",
+      "ot_a3_vector_fp4kv_dequant",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "--clock-period-ns",
+      "12.0",
+      "--stages",
+      "synth,sta,pnr",
+      "--purpose",
+      "signoff_target",
+      "--slew-margin-percent",
+      "30",
+      "--force",
+      "--output",
+      "results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json"
+    ],
+    "driver": {
+      "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta",
+    "pnr"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta",
+    "pnr"
+  ],
+  "static_timing": {
+    "clock_period_ns": 12.0,
+    "critical_path_ns": 15.099774746844163,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 66226153.48675972,
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.3312095413901702,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.3312095413901702,
+      "setup_tns": -512.9159748774287,
+      "setup_wns": -3.099774746844163
+    },
+    "sdc_clock_period_library_units": 12.0,
+    "setup_tns_ns": -512.9159748774287,
+    "setup_violating_paths": 231,
+    "setup_wns_ns": -3.099774746844163,
+    "timing_met": false
+  },
+  "status": "not_met",
+  "synthesis": {
+    "abc_delay_target_ps": 12000.0,
+    "cell_area_um2": 74985.57,
+    "cell_count": 7300,
+    "cell_types_used": 70,
+    "chip_area_um2": 75038.2176,
+    "combinational_cell_count": 5674,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "6dd4427dbc49e766d2e943e65ef022b0d721759dc893311d353523a4e65164fc",
+      "raw_netlist_sha256": "6dd4427dbc49e766d2e943e65ef022b0d721759dc893311d353523a4e65164fc",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 40672.665,
+    "sequential_cell_count": 1626,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 12.0,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-13T14:21:49.536093+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_a3_vector_engram_gate",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+        "sha256": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+        "size_bytes": 21865
+      },
+      {
+        "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+        "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+        "size_bytes": 12418
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+        "sha256": "a80fcae168fa258dc60fd6075ced1ee260db94424d93e5396998f4672c0007d3",
+        "size_bytes": 13370
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+        "sha256": "0402d3189194eaaf11bc54a19f74682b3bcd0a2786c396840eedaf7d5f554dc6",
+        "size_bytes": 11678
+      },
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "size_bytes": 30130
+      },
+      {
+        "path": "rtl/abi3/ot_a3_pkg.sv",
+        "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "size_bytes": 19703
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_vector_engram_gate.sv",
+        "sha256": "0a14360f50a121a1e83ea975aee1cd12dd8c2960a8b70f70d3fb96b1e53b4533",
+        "size_bytes": 43826
+      }
+    ],
+    "top": "ot_a3_vector_engram_gate"
+  },
+  "error": "TimeoutExpired: Command '['/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys', '-s', '/tmp/abi3-physical-m058wipp/synth.ys']' timed out after 7200 seconds",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-13T12:21:47.535637+00:00",
+  "git": {
+    "commit": "86c0ea7b0c191c9f6ad12fb12bfe954f5f8c36c0",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/rtl/a3_v41_block_max_campaign.json",
+      "results/rtl/a3_v41_candidate_mask_campaign.json",
+      "results/rtl/a3_v41_engram_gate_campaign.json",
+      "results/rtl/a3_v41_fp4kv_dequant_campaign.json",
+      "results/rtl/a3_v41_ngram_hash_campaign.json",
+      "results/rtl/a3_v41_ngram_hash_vendor_oracle.json"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M rtl/abi3/ot_a3_qwen_gqa.sv",
+      " M rtl/abi3/ot_a3_vector_rope.sv",
+      " M rtl/test/tb_a3_qwen_gqa_geometry.sv",
+      " M runtime/sim/engines/dma.py",
+      " M runtime/sim/engines/route.py",
+      " M runtime/sim/engines/vector.py",
+      " M tests/test_a3_qwen_gqa_geometry.py",
+      " M tools/rtl_abi3_row_shard_campaign.py",
+      " M tools/rtl_abi3_shipped_prefix_campaign.py",
+      " M tools/rtl_abi3_shipped_prefix_multicast_campaign.py",
+      " M tools/run_a3_operator_admission_rtl_campaign.py",
+      "?? rtl/abi3/ot_a3_dma_ngram_hash.sv",
+      "?? rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+      "?? rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+      "?? rtl/abi3/ot_a3_rope_lane_pipe.sv",
+      "?? rtl/abi3/ot_a3_route_block_max.sv",
+      "?? rtl/abi3/ot_a3_route_candidate_mask.sv",
+      "?? rtl/abi3/ot_a3_vector_engram_gate.sv",
+      "?? rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "?? rtl/test/a3_candidate_mask_harness.cpp",
+      "?? rtl/test/a3_candidate_mask_top.sv",
+      "?? rtl/test/a3_route_block_max_harness.cpp",
+      "?? rtl/test/a3_route_block_max_top.sv",
+      "?? rtl/test/tb_a3_candidate_mask.sv",
+      "?? rtl/test/tb_a3_rope_span.sv",
+      "?? rtl/test/tb_a3_route_block_max.sv",
+      "?? rtl/test/tb_a3_v41_engram_gate.sv",
+      "?? rtl/test/tb_a3_v41_fp4kv_dequant.sv",
+      "?? rtl/test/tb_a3_v41_ngram_hash.sv",
+      "?? runtime/reference/candidate_pool.py",
+      "?? runtime/reference/engram.py",
+      "?? runtime/reference/fp4_kv.py",
+      "?? testdata/rtl/a3_v41_engram_gate/",
+      "?? testdata/rtl/a3_v41_fp4kv/",
+      "?? testdata/rtl/a3_v41_ngram_hash/",
+      "?? tests/abi3/test_am_e10_v41_kinds.py",
+      "?? tests/test_a3_rope_span.py",
+      "?? tests/test_a3_v41_candidate_mask.py",
+      "?? tests/test_a3_v41_engram_gate.py",
+      "?? tests/test_a3_v41_fp4kv_blocks.py",
+      "?? tests/test_a3_v41_ngram_hash.py",
+      "?? tests/test_a3_v41_route_block_max.py",
+      "?? tools/build_a3_v41_block_max_vectors.py",
+      "?? tools/build_a3_v41_candidate_mask_vectors.py",
+      "?? tools/build_a3_v41_engram_gate_vectors.py",
+      "?? tools/build_a3_v41_fp4kv_vectors.py",
+      "?? tools/build_a3_v41_ngram_hash_vectors.py",
+      "?? tools/check_a3_v41_ngram_hash_vendor_oracle.py",
+      "?? tools/run_a3_v41_block_max_rtl_campaign.py",
+      "?? tools/run_a3_v41_candidate_mask_rtl_campaign.py"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_a3_vector_engram_gate",
+      "--source",
+      "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "--source",
+      "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_vector_engram_gate.sv",
+      "--clock-period-ns",
+      "1.0",
+      "--fmax-search",
+      "--stages",
+      "synth,sta,pnr",
+      "--output",
+      "results/physical_abi3/asap7/vector_engram_gate/physical.json"
+    ],
+    "driver": {
+      "commit": "86c0ea7b0c191c9f6ad12fb12bfe954f5f8c36c0",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "sta",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
