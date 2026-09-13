@@ -23,6 +23,9 @@ MODEL_PATHS = (
     ROOT / "configs/models/deepseek-v4-flash-0731.json",
     ROOT / "configs/models/deepseek-v4-pro-0813.json",
     ROOT / "configs/models/kimi-k3.json",
+    # Candidate, profiled 2026-09-13 from the official checkpoint headers;
+    # both Engram placements carry identical traffic, so only one is screened.
+    ROOT / "configs/models/candidates/deepseek-v4.1-flash.json",
 )
 CONTEXTS = (8_192, 32_768, 200_000, 1_000_000)
 BATCHES = (1, 8, 32, 64)

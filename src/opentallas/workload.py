@@ -134,6 +134,10 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
     elif group.kind in {"compressed_sparse", "compressed_dense"}:
         compressed_entries = math.ceil(context_tokens / group.compression_ratio)
         main_entries = compressed_entries
+        # A layer that shares another layer's cache (DeepSeek-V4.1 CSA2
+        # Reindex/Reuse) reads it but writes and stores nothing of it.
+        owner = group.kv_owner
+        window_entry = group.effective_window_entry_bytes
         if group.kind == "compressed_sparse":
             main_entries = min(group.top_k, compressed_entries)
             # A profile may declare a compressed-entry count below which its
@@ -144,23 +148,47 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
             # context measured, 1,001 through 200,001. Zero is the unconditional
             # scan and is what every profile sets. See the retraction under
             # metadata.index_scan_threshold in each DeepSeek profile.
-            scans_index = compressed_entries >= group.index_scan_min_compressed_entries
+            scans_index = (
+                group.scans_index
+                and compressed_entries >= group.index_scan_min_compressed_entries
+            )
             scanned = compressed_entries if scans_index else 0
+            if scanned and group.index_scan_entries_cap:
+                # Hierarchical indexer: only the candidate pool is scored.
+                scanned = min(scanned, group.index_scan_entries_cap)
             index_read = count * scanned * group.index_entry_bytes
-            index_write = count * group.index_entry_bytes / group.compression_ratio
-            index_storage = count * compressed_entries * group.index_entry_bytes
+            index_write = (
+                count * group.index_entry_bytes / group.compression_ratio if owner else 0.0
+            )
+            index_storage = (
+                count * compressed_entries * group.index_entry_bytes if owner else 0.0
+            )
             detail["index_scanned"] = scans_index
             read += index_read
             write += index_write
             storage += index_storage
             detail["index_entries_scanned_per_layer"] = float(scanned)
             detail["index_read_bytes"] = index_read
-        read += count * (window + main_entries) * group.entry_bytes
-        # One full-resolution window entry plus an amortized compressed entry.
-        write += count * group.entry_bytes * (1.0 + 1.0 / group.compression_ratio)
-        storage += count * (window + compressed_entries) * group.entry_bytes
+        if owner and window_entry == group.entry_bytes:
+            # The original arithmetic, kept verbatim so every profile that
+            # predates cross-layer sharing reproduces byte for byte.
+            read += count * (window + main_entries) * group.entry_bytes
+            # One full-resolution window entry plus an amortized compressed entry.
+            write += count * group.entry_bytes * (1.0 + 1.0 / group.compression_ratio)
+            storage += count * (window + compressed_entries) * group.entry_bytes
+        else:
+            read += count * window * window_entry + count * main_entries * group.entry_bytes
+            write += count * window_entry
+            storage += count * window * window_entry
+            if owner:
+                write += count * group.entry_bytes / group.compression_ratio
+                storage += count * compressed_entries * group.entry_bytes
+        if not owner:
+            detail["kv_owner"] = False
         detail["main_entries_read_per_layer"] = float(window + main_entries)
-        detail["compressed_entries_stored_per_layer"] = float(compressed_entries)
+        detail["compressed_entries_stored_per_layer"] = float(
+            compressed_entries if owner else 0
+        )
 
     elif group.kind in {"dense_mla", "dense_kv"}:
         read = count * context_tokens * group.entry_bytes

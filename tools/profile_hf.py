@@ -34,8 +34,10 @@ def main() -> int:
         print(f"profiling {source.repo}@{source.revision}", flush=True)
         config, inventory = profile_checkpoint(source, args.cache_dir, workers=args.workers)
         profile = build_profile(source, config, inventory)
-        inventory_path = inventory_dir / f"{slug}.json"
-        profile_path = model_dir / f"{slug}.json"
+        inventory_path = inventory_dir / f"{source.inventory_slug}.json"
+        profile_path = model_dir / source.profile_dir / f"{slug}.json"
+        profile_path.parent.mkdir(parents=True, exist_ok=True)
+        # A placement variant shares its checkpoint's inventory verbatim.
         inventory_path.write_text(
             json.dumps(inventory.to_dict(), indent=2, sort_keys=True) + "\n",
             encoding="utf-8",

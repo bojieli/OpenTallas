@@ -153,7 +153,12 @@ def test_report_exposes_audit_and_central_aggressive_component_times(
                 runner._aggressive_name(study_id),
             }
         ]
-        assert len(component_rows) == len(expected) == 16
+        # Two envelopes x four batches for every DeepSeek model in the study;
+        # Qwen3-8B has no 200K point.
+        deepseek_models = sum(
+            1 for summary in result["model_summaries"] if "DeepSeek" in summary["model"]
+        )
+        assert len(component_rows) == len(expected) == 8 * deepseek_models
         for point in expected:
             assert set(point["resource_utilization"]) == {
                 "weight_or_shared_hbm",
@@ -170,7 +175,7 @@ def test_report_exposes_audit_and_central_aggressive_component_times(
             ]
         if study_id == "leading_node_market":
             sensitivity = result["b300_fp32_roof_sensitivity"]
-            assert len(sensitivity) == 2 * 4 * 4
+            assert len(sensitivity) == deepseek_models * 4 * 4
             assert {
                 row["fp32_roof_ops_s_per_gpu"] for row in sensitivity
             } == set(runner.B300_FP32_ROOF_SWEEP_OPS_S_PER_DEVICE)

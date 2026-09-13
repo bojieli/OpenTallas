@@ -68,8 +68,32 @@ class AttentionGroup:
     index_scan_min_compressed_entries: int = 0
     recurrent_state_bytes: float = 0.0
     recurrent_write_bytes: float | None = None
+    #: Cross-layer cache sharing, as DeepSeek-V4.1's CSA2 does it.  A layer
+    #: that does not own its compressed main cache reads one that a preceding
+    #: Full-mode layer wrote: it stores and writes no compressed main entry
+    #: and no index entry.  Its sliding window is always its own.  ``True``
+    #: for every profile that predates the field.
+    kv_owner: bool = True
+    #: Whether the layer runs the sparse index scan at all.  A CSA2 Reuse-mode
+    #: layer takes the top-k selection its Full or Reindex predecessor made and
+    #: scans nothing.  ``True`` for every profile that predates the field.
+    scans_index: bool = True
+    #: Upper bound on the compressed entries one query scores; 0 is unbounded.
+    #: DeepSeek-V4.1's Hierarchical Sparse Indexer lets a decoder Reindex layer
+    #: score only the candidate pool the decoder's Full layer built -- 2,048
+    #: blocks of 8 positions, 16,384 entries -- so its scan stops growing with
+    #: context.  The Full layer itself still scans everything.
+    index_scan_entries_cap: int = 0
+    #: Bytes of one sliding-window entry when the window is kept at a
+    #: different precision from the compressed main cache (V4.1: FP8 window,
+    #: FP4 main).  0 means the window entry is ``entry_bytes`` wide.
+    window_entry_bytes: float = 0.0
     label: str = ""
     evidence: str = "assumed"
+
+    @property
+    def effective_window_entry_bytes(self) -> float:
+        return self.window_entry_bytes if self.window_entry_bytes > 0 else self.entry_bytes
 
     def __post_init__(self) -> None:
         allowed = {
@@ -88,11 +112,27 @@ class AttentionGroup:
             raise ValidationError(f"{self.kind} requires positive entry_bytes")
         if self.kind == "recurrent" and self.recurrent_state_bytes <= 0:
             raise ValidationError("recurrent attention requires state bytes")
-        if self.kind.startswith("compressed") and self.compression_ratio <= 1:
-            raise ValidationError("compressed attention requires ratio > 1")
+        if self.kind == "compressed_dense" and self.compression_ratio <= 1:
+            raise ValidationError("compressed_dense attention requires ratio > 1")
+        if self.kind == "compressed_sparse" and self.compression_ratio < 1:
+            # Ratio 1 is CSA2's "uncompressed main KV" special case: one
+            # latent per token, still read through a top-k index.
+            raise ValidationError("compressed_sparse attention requires ratio >= 1")
         if self.kind == "compressed_sparse":
             if self.top_k <= 0 or self.index_entry_bytes <= 0:
                 raise ValidationError("compressed_sparse requires top_k and index_entry_bytes")
+        if not self.kv_owner and not self.kind.startswith("compressed"):
+            raise ValidationError("only a compressed cache can be shared from another layer")
+        if not self.scans_index and self.kind != "compressed_sparse":
+            raise ValidationError("scans_index applies to compressed_sparse layers only")
+        if self.index_scan_entries_cap < 0:
+            raise ValidationError("index_scan_entries_cap cannot be negative")
+        if self.index_scan_entries_cap and self.kind != "compressed_sparse":
+            raise ValidationError("index_scan_entries_cap applies to compressed_sparse layers only")
+        if self.window_entry_bytes < 0:
+            raise ValidationError("window_entry_bytes cannot be negative")
+        if self.window_entry_bytes and not self.window_tokens:
+            raise ValidationError("window_entry_bytes requires a sliding window")
 
 
 @dataclass(frozen=True)
@@ -251,7 +291,25 @@ class ModelProfile:
             return cls.from_dict(json.load(handle))
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        # The cross-layer sharing fields were added for DeepSeek-V4.1.  At their
+        # defaults they are omitted so every profile written before them
+        # round-trips byte for byte.
+        defaults = AttentionGroup(kind="window", count=1, entry_bytes=1.0)
+        data["attention_groups"] = [
+            {
+                key: value
+                for key, value in group.items()
+                if key not in _SHARING_FIELDS or value != getattr(defaults, key)
+            }
+            for group in data["attention_groups"]
+        ]
+        return data
+
+
+_SHARING_FIELDS = frozenset(
+    {"kv_owner", "scans_index", "index_scan_entries_cap", "window_entry_bytes"}
+)
 
 
 @dataclass(frozen=True)

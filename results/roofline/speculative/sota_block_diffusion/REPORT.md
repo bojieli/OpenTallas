@@ -7,12 +7,12 @@
 
 ## What this layer says
 
-1. **Every term the speculative arithmetic needs is already in the published artifact, exactly.** 31,809 feasible points across 16 studies were rebuilt from their own five critical-path terms and every one reproduced its published step time to 1e-9 relative. Nothing here re-ran the machine model, and the layer is additive by construction rather than by promise.
-2. **The headline is a break-even, not a speedup.** `tau* = T_cycle / step_time_s`, and `tau <= gamma+1` always. Of 53,617 (point, draft-placement) pairs where this profile's drafter applies, 3,808 (7.1%) cannot be sped up by speculation at ANY acceptance rate, at any block size on the ladder, even charging the drafter no KV traffic at all.
+1. **Every term the speculative arithmetic needs is already in the published artifact, exactly.** 38,983 feasible points across 20 studies were rebuilt from their own five critical-path terms and every one reproduced its published step time to 1e-9 relative. Nothing here re-ran the machine model, and the layer is additive by construction rather than by promise.
+2. **The headline is a break-even, not a speedup.** `tau* = T_cycle / step_time_s`, and `tau <= gamma+1` always. Of 65,597 (point, draft-placement) pairs where this profile's drafter applies, 6,028 (9.2%) cannot be sped up by speculation at ANY acceptance rate, at any block size on the ladder, even charging the drafter no KV traffic at all.
 3. **The ROM-versus-GPU ratio under speculation carries no acceptance rate.** It is `T_cycle(GPU) / T_cycle(ROM)`: `tau` is a property of the model and its drafter, not of the machine, so it is identical on both sides and cancels. Every movement this report shows is a machine effect and nothing else, which is why it can be published without inventing an acceptance rate.
-4. **The ratio moves, and which way it moves depends on the machine.** Across 320 model-context-batch-class rows, 139 move the ROM-versus-GPU per-user ratio DOWN under speculation and 181 move it UP, spanning 0.069x to 13.447x. The ROM advantage does not compress on most operating points.
-5. **At batch 1 the two extremes are opposite in sign, and they are the result.** Qwen3-8B on `array` silicon goes from 6.08x to 0.42x -- a 0.069x movement -- while DeepSeek-V4-Flash-0731 on `wafer` silicon goes from 6.51x to 14.60x, a 2.243x movement. A layer that multiplied both sides by `tau` would have reported neither.
-6. **A moving ratio is not a win for either side, and the report says so on every table.** At the most favourable sourced acceptance (7.87) speculation is worth having on 253 of 320 ROM class rows and 232 of 320 GPU rows; everywhere else the design runs SLOWER with a drafter than without one. Where both sides lose, a rising ratio means only that the comparator lost more.
+4. **The ratio moves, and which way it moves depends on the machine.** Across 384 model-context-batch-class rows, 171 move the ROM-versus-GPU per-user ratio DOWN under speculation and 213 move it UP, spanning 0.069x to 13.447x. The ROM advantage does not compress on most operating points.
+5. **At batch 1 the two extremes are opposite in sign, and they are the result.** Qwen3-8B on `array` silicon goes from 6.08x to 0.42x -- a 0.069x movement -- while DeepSeek-V4.1-Flash-engram-host on `wafer` silicon goes from 5.66x to 13.03x, a 2.303x movement. A layer that multiplied both sides by `tau` would have reported neither.
+6. **A moving ratio is not a win for either side, and the report says so on every table.** At the most favourable sourced acceptance (7.87) speculation is worth having on 290 of 384 ROM class rows and 278 of 384 GPU rows; everywhere else the design runs SLOWER with a drafter than without one. Where both sides lose, a rising ratio means only that the comparator lost more.
 7. **Compute is never a gain and always a loss.** A verification pass over `n` positions charges `n` times the arithmetic exactly, so per accepted token compute costs `(n/tau) >= 1` times what it did. A compute-bound design cannot be sped up by speculation at any acceptance rate; it can only be slowed. That is where the recommended ROM designs live, because the sizing rule gives them just enough compute for one token per sweep.
 8. **On a mask-ROM machine the draft pass costs a full array sweep, and that is the load-bearing assumption of the whole ROM verdict.** `stored/peak` is a technology constant in `src/opentallas/roofline.py`, so a pass reading only the drafter's region takes as long as sweeping the entire array. The alternative -- holding the drafter in the KV store -- is priced beside it on every ROM row and has NOT been costed in silicon area.
 9. **The overhead factor lands below the only published measurement of it, and the gap is reported as a residual.** This layer models 1.208 on `b200_sxm-x3-tensor` against a published 1.26-1.32 measured on an H200 with the authors' own kernels. The named causes are the drafter's unsourced KV traffic at the bottom of its band, no sampler or scheduler cost anywhere in this model, and a different part. It is a band check and it validates nothing about the machine.
@@ -86,6 +86,10 @@ Before any speculative arithmetic runs, every feasible point in every study is r
 
 | study | feasible points checked | failures |
 | --- | ---: | ---: |
+| `n5_vs_b200-deepseek-v41-flash` | 1,804 | 0 |
+| `n6_vs_a100-deepseek-v41-flash` | 1,642 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | 1,822 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | 1,906 | 0 |
 | `n5_vs_b200-flash-1m` | 1,810 | 0 |
 | `n5_vs_b200-flash-32k` | 1,880 | 0 |
 | `n5_vs_b200-flash-8k` | 1,894 | 0 |
@@ -111,6 +115,40 @@ Counted at the LOW end of the unsourced drafter-KV band, which is the most favou
 
 | study | model | family | draft placement | binds on (autoregressive) | points | cannot pay at any gamma | tau* min | tau* median | tau* max |
 | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 192 | 10 | 2.79 | 8.10 | 17.68 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 400 | 3 | 2.45 | 5.12 | 18.02 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 21 | 21 | 23.02 | 25.78 | 38.43 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 497 | 152 | 1.62 | 12.02 | 448.71 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 694 | 400 | 5.07 | 17.81 | 1,480.34 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 21 | 19 | 16.02 | 23.85 | 38.43 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 497 | 51 | 1.28 | 5.46 | 25.08 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 694 | 138 | 1.62 | 3.71 | 60.40 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 183 | 11 | 2.68 | 8.20 | 17.39 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 385 | 0 | 2.54 | 4.09 | 15.01 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 63 | 63 | 21.77 | 41.03 | 274.78 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 442 | 137 | 1.51 | 12.31 | 401.93 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 569 | 398 | 3.60 | 24.63 | 1,068.61 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 63 | 62 | 16.59 | 40.45 | 61.81 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 442 | 57 | 1.28 | 6.07 | 22.75 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 569 | 127 | 1.62 | 4.21 | 54.42 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 176 | 5 | 2.66 | 7.52 | 17.67 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 368 | 0 | 1.46 | 3.44 | 7.10 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 37 | 8 | 10.83 | 14.86 | 18.94 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 526 | 28 | 1.27 | 4.15 | 18.41 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 715 | 54 | 1.15 | 2.55 | 38.42 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 37 | 8 | 10.81 | 14.87 | 17.76 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 526 | 39 | 1.27 | 4.58 | 25.19 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 715 | 115 | 1.62 | 2.11 | 34.04 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 215 | 6 | 2.57 | 7.71 | 17.35 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 449 | 0 | 1.97 | 3.06 | 6.65 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 36 | 18 | 11.07 | 17.07 | 17.12 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `kv_read` | 6 | 0 | 7.37 | 11.53 | 13.27 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 558 | 52 | 1.28 | 5.34 | 18.63 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 642 | 51 | 1.22 | 2.94 | 28.02 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 36 | 18 | 11.12 | 17.12 | 17.36 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `kv_read` | 6 | 0 | 7.23 | 11.27 | 13.11 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 558 | 63 | 1.27 | 5.57 | 22.82 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 642 | 106 | 1.62 | 2.01 | 34.04 |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 174 | 2 | 2.38 | 6.09 | 17.34 |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 354 | 0 | 1.56 | 3.18 | 5.10 |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 85 | 10 | 10.34 | 15.94 | 17.53 |
@@ -321,6 +359,106 @@ Counted at the LOW end of the unsourced drafter-KV band, which is the most favou
 Each row is that class's **fastest** feasible design at that batch, read against the iso-area GPU comparator the published study already chose for it. The `densest` pick of every class is in `analytical.json` beside it.
 
 **The ROM-versus-GPU ratio under speculation is `T_cycle(GPU) / T_cycle(ROM)` and carries no `tau` at all.** The acceptance length is a property of the model and its drafter, not of the machine, so it is the same on both sides and cancels out of the ratio. Every movement in the last column is therefore a machine effect and nothing else.
+
+### `n5_vs_b200-deepseek-v41-flash`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 4.24-7.87) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-tensor-x352-romfill` | 1,686.2 | 2,645.0-4,909.5 | 2.70 | yes | `b200_sxm-x179-tensor` | 1,411.0 | 2,022.7-3,754.4 | 2.96 | yes | 1.195x | 1.308x | 1.094x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 4,069.8 | 7,524.1-13,965.7 | 2.29 | yes | `b200_sxm-x58-tensor` | 1,356.9 | 1,623.9-3,014.3 | 3.54 | yes | 2.999x | 4.633x | 1.545x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-tensor-x352-romfill` | 1,554.1 | 1,643.6-3,050.7 | 4.01 | yes | `b200_sxm-x179-tensor` | 1,275.2 | 1,340.3-2,487.7 | 4.03 | yes | 1.219x | 1.226x | 1.006x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 4,069.8 | 7,332.5-13,610.0 | 2.35 | yes | `b200_sxm-x58-tensor` | 1,194.7 | 1,136.9-2,110.3 | 4.46 | yes | 3.407x | 6.449x | 1.893x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x91` | 1,452.3 | 163.3-303.2 | 37.70 | **no** | `b200_sxm-x46-tensor` | 976.6 | 715.1-1,327.4 | 5.79 | yes | 1.487x | 0.228x | 0.154x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 4,068.7 | 5,745.4-10,664.3 | 3.00 | yes | `b200_sxm-x58-tensor` | 993.9 | 735.0-1,364.3 | 5.73 | yes | 4.094x | 7.817x | 1.909x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x91` | 1,452.3 | 163.3-303.2 | 37.70 | **no** | `b200_sxm-x46-tensor` | 751.9 | 443.5-823.2 | 7.19 | yes | 1.931x | 0.368x | 0.191x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 4,066.4 | 4,044.5-7,507.1 | 4.26 | yes | `b200_sxm-x58-tensor` | 767.0 | 446.1-828.0 | 7.29 | yes | 5.302x | 9.066x | 1.710x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 1,298.1 | 968.0-1,796.7 | 5.69 | yes | `b200_sxm-x56-tensor` | 544.8 | 259.3-481.2 | 8.91 | **no** | 2.383x | 3.734x | 1.567x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 4,061.9 | 2,506.1-4,651.6 | 6.87 | yes | `b200_sxm-x58-tensor` | 543.6 | 255.9-475.0 | 9.01 | **no** | 7.472x | 9.793x | 1.311x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 1,288.5 | 679.7-1,261.7 | 8.04 | **no** | `b200_sxm-x56-hybrid` | 405.0 | 321.2-596.1 | 5.35 | yes | 3.182x | 2.117x | 0.665x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 3,722.8 | 1,385.6-2,571.8 | 11.39 | **no** | `b200_sxm-x58-hybrid` | 382.7 | 299.4-555.8 | 5.42 | yes | 9.729x | 4.628x | 0.476x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 1,269.6 | 427.9-794.3 | 12.58 | **no** | `b200_sxm-x56-hybrid` | 295.4 | 278.1-516.2 | 4.50 | yes | 4.298x | 1.539x | 0.358x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 3,662.7 | 1,562.7-2,900.7 | 9.94 | **no** | `b200_sxm-x87-hybrid` | 277.5 | 262.7-487.7 | 4.48 | yes | 13.200x | 5.948x | 0.451x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x132` | 1,030.0 | 240.8-447.0 | 18.14 | **no** | `b200_sxm-x67-hybrid` | 145.0 | 217.7-404.2 | 2.82 | yes | 7.101x | 1.106x | 0.156x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,022.3 | 1,409.6-2,616.4 | 9.09 | **no** | `b200_sxm-x347-hybrid` | 102.0 | 145.5-270.1 | 2.97 | yes | 29.640x | 9.688x | 0.327x |
+
+**Does the ratio compress?** Of 16 class rows in this study, 8 move the ROM-versus-GPU ratio DOWN under speculation and 8 move it UP. The movement spans 0.154x to 1.909x. The ratio does not compress on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (7.87) speculation is worth having on 8 of 16 ROM rows and 14 of 16 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 4.24-7.87) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-tensor-x315-romfill` | 1,160.7 | 1,479.4-2,746.0 | 3.33 | yes | `a100_sxm_80gb-x311-tensor` | 751.8 | 954.4-1,771.5 | 3.34 | yes | 1.544x | 1.550x | 1.004x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 4,069.8 | 1,858.8-3,450.1 | 9.28 | **no** | `a100_sxm_80gb-x112-tensor` | 719.2 | 757.9-1,406.8 | 4.02 | yes | 5.659x | 2.452x | 0.433x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-tensor-x143` | 1,027.6 | 829.0-1,538.7 | 5.26 | yes | `a100_sxm_80gb-x141-tensor` | 627.3 | 549.6-1,020.1 | 4.84 | yes | 1.638x | 1.508x | 0.921x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,069.8 | 1,621.2-3,009.1 | 10.64 | **no** | `a100_sxm_80gb-x112-tensor` | 612.2 | 522.3-969.5 | 4.97 | yes | 6.647x | 3.104x | 0.467x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 974.9 | 137.1-254.4 | 30.15 | **no** | `a100_sxm_80gb-x116-tensor` | 480.4 | 337.2-625.9 | 6.04 | yes | 2.029x | 0.407x | 0.200x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,059.7 | 1,174.7-2,180.3 | 14.65 | **no** | `a100_sxm_80gb-x112-tensor` | 478.7 | 335.7-623.0 | 6.05 | yes | 8.480x | 3.500x | 0.413x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 974.9 | 137.1-254.4 | 30.15 | **no** | `a100_sxm_80gb-x116-tensor` | 360.2 | 204.2-379.1 | 7.48 | yes | 2.706x | 0.671x | 0.248x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 3,456.6 | 4,611.7-8,560.0 | 3.18 | yes | `a100_sxm_80gb-x168-tensor` | 376.9 | 211.2-392.1 | 7.56 | yes | 9.172x | 21.833x | 2.380x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 974.0 | 133.3-247.4 | 30.99 | **no** | `a100_sxm_80gb-x116-tensor` | 248.6 | 117.2-217.6 | 8.99 | **no** | 3.919x | 1.137x | 0.290x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 3,452.3 | 3,061.7-5,682.9 | 4.78 | yes | `a100_sxm_80gb-x168-tensor` | 260.3 | 118.8-220.4 | 9.29 | **no** | 13.262x | 25.783x | 1.944x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x143` | 862.8 | 482.8-896.1 | 7.58 | yes | `a100_sxm_80gb-x141-tensor` | 164.8 | 63.7-118.2 | 10.97 | **no** | 5.236x | 7.578x | 1.447x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 3,443.6 | 1,793.0-3,328.1 | 8.14 | **no** | `a100_sxm_80gb-x168-tensor` | 168.2 | 63.7-118.2 | 11.20 | **no** | 20.475x | 28.154x | 1.375x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x143` | 844.5 | 315.6-585.7 | 11.35 | **no** | `a100_sxm_80gb-x141-tensor` | 100.8 | 33.0-61.3 | 12.94 | **no** | 8.376x | 9.550x | 1.140x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 3,169.3 | 1,495.5-2,775.9 | 8.99 | **no** | `a100_sxm_80gb-x224-tensor` | 105.0 | 32.8-60.8 | 13.59 | **no** | 30.173x | 45.651x | 1.513x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x170` | 676.3 | 172.4-320.0 | 16.63 | **no** | `a100_sxm_80gb-x168-hybrid` | 35.0 | 48.3-89.6 | 3.07 | yes | 19.316x | 3.570x | 0.185x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,715.4 | 1,069.0-1,984.2 | 10.77 | **no** | `a100_sxm_80gb-x672-tensor` | 33.8 | 8.2-15.3 | 17.39 | **no** | 80.414x | 129.822x | 1.614x |
+
+**Does the ratio compress?** Of 16 class rows in this study, 8 move the ROM-versus-GPU ratio DOWN under speculation and 8 move it UP. The movement spans 0.185x to 2.380x. The ratio does not compress on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (7.87) speculation is worth having on 5 of 16 ROM rows and 9 of 16 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-deepseek-v41-flash-engram-host`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 4.24-7.87) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hybrid-x51` | 2,058.0 | 858.1-1,592.8 | 10.17 | **no** | `b200_sxm-x26-tensor` | 1,276.3 | 1,856.8-3,446.4 | 2.91 | yes | 1.612x | 0.462x | 0.287x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | 5,037.3 | 11,866.5-22,025.9 | 1.80 | yes | `b200_sxm-x29-tensor` | 1,291.8 | 1,905.3-3,536.5 | 2.87 | yes | 3.899x | 6.228x | 1.597x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 2,058.0 | 839.8-1,558.8 | 10.39 | **no** | `b200_sxm-x28-tensor` | 1,120.7 | 1,240.5-2,302.6 | 3.83 | yes | 1.836x | 0.677x | 0.369x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | 5,037.3 | 8,183.8-15,190.3 | 2.61 | yes | `b200_sxm-x29-tensor` | 1,125.8 | 1,251.2-2,322.4 | 3.81 | yes | 4.475x | 6.541x | 1.462x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 2,058.0 | 839.8-1,558.8 | 10.39 | **no** | `b200_sxm-x28-hybrid` | 948.0 | 1,089.5-2,022.2 | 3.69 | yes | 2.171x | 0.771x | 0.355x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | 5,019.4 | 5,189.3-9,632.0 | 4.10 | yes | `b200_sxm-x29-hybrid` | 958.7 | 1,110.1-2,060.6 | 3.66 | yes | 5.236x | 4.674x | 0.893x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 1,927.3 | 744.2-1,381.4 | 10.98 | **no** | `b200_sxm-x28-hybrid` | 734.2 | 751.2-1,394.4 | 4.14 | yes | 2.625x | 0.991x | 0.377x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,401.1 | 9,406.6-17,459.8 | 1.98 | yes | `b200_sxm-x58-tensor` | 767.0 | 472.9-877.9 | 6.88 | yes | 5.738x | 19.889x | 3.466x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x57` | 1,885.8 | 735.0-1,364.2 | 10.88 | **no** | `b200_sxm-x29-hybrid` | 558.6 | 550.4-1,021.6 | 4.30 | yes | 3.376x | 1.335x | 0.396x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,395.9 | 6,490.5-12,047.2 | 2.87 | yes | `b200_sxm-x58-tensor` | 543.6 | 264.5-491.0 | 8.71 | **no** | 8.086x | 24.536x | 3.034x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x68` | 1,732.3 | 1,192.2-2,213.0 | 6.16 | yes | `b200_sxm-x35-hybrid` | 395.5 | 422.8-784.8 | 3.97 | yes | 4.380x | 2.820x | 0.644x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,385.3 | 4,006.4-7,436.5 | 4.64 | yes | `b200_sxm-x58-hybrid` | 382.7 | 430.7-799.4 | 3.77 | yes | 11.460x | 9.302x | 0.812x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x68` | 1,690.4 | 650.2-1,206.8 | 11.02 | **no** | `b200_sxm-x35-hybrid` | 278.1 | 362.9-673.5 | 3.25 | yes | 6.078x | 1.792x | 0.295x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 4,186.5 | 3,113.5-5,779.1 | 5.70 | yes | `b200_sxm-x87-hybrid` | 277.5 | 348.0-646.0 | 3.38 | yes | 15.087x | 8.946x | 0.593x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x216-romfill` | 1,340.0 | 773.2-1,435.1 | 7.35 | yes | `b200_sxm-x110-hybrid` | 144.4 | 251.7-467.2 | 2.43 | yes | 9.281x | 3.072x | 0.331x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,369.2 | 2,554.0-4,740.5 | 5.59 | yes | `b200_sxm-x347-hybrid` | 102.0 | 168.4-312.6 | 2.57 | yes | 33.042x | 15.164x | 0.459x |
+
+**Does the ratio compress?** Of 16 class rows in this study, 12 move the ROM-versus-GPU ratio DOWN under speculation and 4 move it UP. The movement spans 0.287x to 3.466x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (7.87) speculation is worth having on 10 of 16 ROM rows and 15 of 16 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash-engram-host`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 4.24-7.87) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hybrid-x66` | 1,279.8 | 635.5-1,179.6 | 8.54 | **no** | `a100_sxm_80gb-x65-tensor` | 686.7 | 864.6-1,604.9 | 3.37 | yes | 1.864x | 0.735x | 0.394x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 4,069.8 | 12,286.5-22,805.4 | 1.40 | yes | `a100_sxm_80gb-x112-tensor` | 719.2 | 942.6-1,749.6 | 3.23 | yes | 5.659x | 13.035x | 2.303x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 1,279.8 | 764.1-1,418.3 | 7.10 | yes | `a100_sxm_80gb-x71-tensor` | 578.3 | 567.1-1,052.6 | 4.32 | yes | 2.213x | 1.347x | 0.609x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,069.8 | 12,286.5-22,805.4 | 1.40 | yes | `a100_sxm_80gb-x112-tensor` | 612.2 | 603.9-1,120.9 | 4.30 | yes | 6.647x | 20.346x | 3.061x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 1,279.8 | 764.1-1,418.3 | 7.10 | yes | `a100_sxm_80gb-x71-tensor` | 453.2 | 349.8-649.3 | 5.49 | yes | 2.824x | 2.184x | 0.773x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,068.7 | 10,230.3-18,988.8 | 1.69 | yes | `a100_sxm_80gb-x112-tensor` | 478.7 | 367.5-682.2 | 5.52 | yes | 8.499x | 27.834x | 3.275x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 1,279.8 | 764.1-1,418.3 | 7.10 | yes | `a100_sxm_80gb-x71-tensor` | 334.5 | 209.5-388.9 | 6.77 | yes | 3.826x | 3.647x | 0.953x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,066.4 | 7,545.5-14,005.4 | 2.29 | yes | `a100_sxm_80gb-x112-tensor` | 358.7 | 215.2-399.4 | 7.07 | yes | 11.335x | 35.063x | 3.093x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 1,152.1 | 1,486.3-2,758.7 | 3.29 | yes | `a100_sxm_80gb-x86-tensor` | 237.7 | 120.7-224.0 | 8.35 | **no** | 4.847x | 12.314x | 2.540x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,061.9 | 4,948.3-9,184.6 | 3.48 | yes | `a100_sxm_80gb-x112-tensor` | 247.6 | 121.0-224.6 | 8.68 | **no** | 16.406x | 40.902x | 2.493x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 1,130.8 | 883.5-1,639.9 | 5.43 | yes | `a100_sxm_80gb-x86-tensor` | 154.0 | 65.5-121.6 | 9.96 | **no** | 7.345x | 13.486x | 1.836x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4,052.9 | 2,930.7-5,439.8 | 5.86 | yes | `a100_sxm_80gb-x112-tensor` | 160.1 | 65.0-120.7 | 10.44 | **no** | 25.310x | 45.077x | 1.781x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 1,090.4 | 487.8-905.5 | 9.48 | **no** | `a100_sxm_80gb-x86-tensor` | 95.3 | 34.2-63.6 | 11.80 | **no** | 11.437x | 14.247x | 1.246x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 3,808.0 | 2,946.6-5,469.3 | 5.48 | yes | `a100_sxm_80gb-x224-tensor` | 105.0 | 33.0-61.2 | 13.50 | **no** | 36.254x | 89.329x | 2.464x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x340-romfill` | 817.6 | 622.9-1,156.3 | 5.57 | yes | `a100_sxm_80gb-x335-tensor` | 33.5 | 8.3-15.4 | 17.05 | **no** | 24.434x | 74.875x | 3.064x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,038.3 | 2,026.4-3,761.2 | 6.36 | yes | `a100_sxm_80gb-x672-tensor` | 33.8 | 8.3-15.3 | 17.35 | **no** | 89.979x | 245.525x | 2.729x |
+
+**Does the ratio compress?** Of 16 class rows in this study, 4 move the ROM-versus-GPU ratio DOWN under speculation and 12 move it UP. The movement spans 0.394x to 3.275x. The ratio does not compress on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (7.87) speculation is worth having on 14 of 16 ROM rows and 8 of 16 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-flash-1m`
 
@@ -794,6 +932,70 @@ The same rule is what makes a SEQUENTIAL draft step expensive here. A per-positi
 
 | study | model | ctx | batch | class | design | tau* draft in ROM | tau* draft in KV store | KV placement feasible | why not |
 | --- | --- | ---: | ---: | --- | --- | ---: | ---: | --- | --- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-tensor-x352-romfill` | 2.70 | 3.26 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 2.29 | 96.76 | NO | the KV store has no room for it |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-tensor-x352-romfill` | 4.01 | 4.51 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 2.35 | 25.26 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x91` | 37.70 | 37.70 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 3.00 | 25.69 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x91` | 37.70 | 37.70 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 4.26 | 26.54 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 5.69 | 12.49 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 6.87 | 28.23 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 8.04 | 14.05 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 11.39 | 29.03 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x110` | 12.58 | 17.09 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 9.94 | 27.89 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x132` | 18.14 | 22.69 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 9.09 | 29.33 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-tensor-x315-romfill` | 3.33 | 16.90 | NO | the KV store has no room for it |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 9.28 | 98.65 | NO | the KV store has no room for it |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-tensor-x143` | 5.26 | 5.86 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 10.64 | 62.45 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 30.15 | 30.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 14.65 | 64.96 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 30.15 | 30.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 3.18 | 51.88 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x118` | 30.99 | 30.99 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 4.78 | 52.90 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x143` | 7.58 | 16.84 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3` | 8.14 | 54.94 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x143` | 11.35 | 19.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 8.99 | 51.57 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x170` | 16.63 | 21.70 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 10.77 | 46.33 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hybrid-x51` | 10.17 | 12.20 | NO | the KV store has no room for it |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | 1.80 | 2.44 | NO | the KV store has no room for it |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 10.39 | 10.22 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | 2.61 | 2.85 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 10.39 | 10.22 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | 4.10 | 4.34 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x55` | 10.98 | 10.83 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 1.98 | 2.13 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x57` | 10.88 | 10.53 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 2.87 | 3.01 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x68` | 6.16 | 5.74 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4.64 | 4.78 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x68` | 11.02 | 10.61 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 5.70 | 5.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x216-romfill` | 7.35 | 7.11 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5.59 | 5.79 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hybrid-x66` | 8.54 | 10.16 | NO | the KV store has no room for it |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 1.40 | 2.55 | NO | the KV store has no room for it |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 7.10 | 6.96 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 1.40 | 1.99 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 7.10 | 6.96 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 1.69 | 2.27 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x72` | 7.10 | 6.96 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 2.29 | 2.87 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 3.29 | 3.08 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 3.48 | 4.07 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 5.43 | 5.22 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 5.86 | 6.45 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x87` | 9.48 | 9.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5.48 | 6.02 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hybrid-x340-romfill` | 5.57 | 5.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 6.36 | 6.79 | yes | -- |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x37` | 6.94 | 6.66 | yes | -- |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 1.80 | 1.68 | NO | the KV store has no room for it |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x37` | 6.94 | 6.66 | yes | -- |
@@ -1121,6 +1323,14 @@ Every evaluated ROM design carries `weight_capacity_bytes == stored_weight_bytes
 
 | study | model | design | drafter already in the checkpoint | extra stored bytes | extra array mm2 | as a fraction of the design | sweep inflation if area is held fixed |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-array-tensor-x352-romfill` | no | 850,275,640 | 90.7 | 0.0% | 1.0017x |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | no | 850,275,640 | 90.7 | 0.1% | 1.0017x |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-array-tensor-x315-romfill` | no | 850,275,640 | 116.6 | 0.0% | 1.0017x |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | no | 850,275,640 | 116.6 | 0.1% | 1.0017x |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-SRAMKV-array-hybrid-x51` | no | 850,275,640 | 90.7 | 0.2% | 1.0028x |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | no | 850,275,640 | 90.7 | 0.2% | 1.0028x |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-SRAMKV-array-hybrid-x66` | no | 850,275,640 | 116.6 | 0.2% | 1.0028x |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | no | 850,275,640 | 116.6 | 0.1% | 1.0028x |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-array-hybrid-x37` | no | 686,957,240 | 73.2 | 0.2% | 1.0041x |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | no | 686,957,240 | 73.2 | 0.2% | 1.0041x |
 | `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hybrid-x29` | no | 686,957,240 | 73.2 | 0.3% | 1.0041x |
@@ -1168,6 +1378,10 @@ A re-ranking of designs the study already evaluated, under the study's own selec
 
 | study | model | published recommendation | rule reproduces it | under speculation, draft in ROM | draft in KV store | moves |
 | --- | --- | --- | --- | --- | --- | --- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | `ROM-N5-native-HBMKV-array-tensor-x110` | yes |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | `ROM-N6-native-HBMKV-array-tensor-x143` | yes |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-HBMKV-wafer-tensor-x1` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | yes |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | no |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | yes |
 | `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hybrid-x29` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | yes |
 | `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hybrid-x28` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | `ROM-N5-native-HBMKV-wafer-tensor-x1-romfill` | yes |
@@ -1189,7 +1403,7 @@ A re-ranking of designs the study already evaluated, under the study's own selec
 | `n5_vs_b200-quantised_variant` | Qwen3-8B | `ROM-N5-q4p25-SRAMKV-array-pipeline-x2` | yes | `ROM-N5-q4p25-SRAMKV-array-tensor-x3` | `ROM-N5-q4p25-HBMKV-array-tensor-x4` | yes |
 | `n6_vs_a100-quantised_variant` | Qwen3-8B | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3-romfill` | yes | `ROM-N6-q4p25-SRAMKV-array-tensor-x3` | `ROM-N6-q4p25-HBMKV-array-tensor-x5` | yes |
 
-**The rule reproduces the published autoregressive recommendation on 20 of 20 model-and-study rows.** Of the 20 rows where it reproduces and the drafter applies, verifying a block moves the chosen rung on 18. Where it moves, it moves toward machines with compute headroom for a block, which is exactly what the arithmetic predicts: a verification pass raises arithmetic intensity by the block size, and a machine sized with just enough compute for one token per sweep has no room for it. **This is a re-ranking of rungs that already exist. The speculative-optimal design has not been computed: that would need the area split re-solved, which is `balanced_area_split`'s job and not this layer's.**
+**The rule reproduces the published autoregressive recommendation on 24 of 24 model-and-study rows.** Of the 24 rows where it reproduces and the drafter applies, verifying a block moves the chosen rung on 21. Where it moves, it moves toward machines with compute headroom for a block, which is exactly what the arithmetic predicts: a verification pass raises arithmetic intensity by the block size, and a machine sized with just enough compute for one token per sweep has no room for it. **This is a re-ranking of rungs that already exist. The speculative-optimal design has not been computed: that would need the area split re-solved, which is `balanced_area_split`'s job and not this layer's.**
 
 ## Gate: the DFlash overhead factor
 

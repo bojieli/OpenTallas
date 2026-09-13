@@ -917,7 +917,7 @@ the measurement of what that would cost rather than an argument about it.
 | `band_low` | 0.5000 | yes | 11.53 us | 6.35x | 6.51x | 6.21x |
 | `stated` | 1.0000 | yes | 6.82 us | 6.52x | 6.64x | 6.29x |
 | `band_high` | 2.0000 | yes | 4.46 us | 6.62x | 6.71x | 6.33x |
-| `asap7_reduction_s8_g2` | 0.4553 | **no** | 12.46 us | 6.31x | 6.49x | 6.20x |
+| `asap7_reduction_s8_g2` | 1.2874 | yes | 5.77 us | 6.56x | 6.67x | 6.30x |
 | `asap7_add_bf16_sram_engine` | 0.2391 | **no** | 21.83 us | 6.00x | 6.25x | 6.05x |
 | `asap7_matmul_bf16_sram_engine` | 0.0580 | **no** | 83.47 us | 4.60x | 5.08x | 5.27x |
 
@@ -2195,7 +2195,7 @@ Why the infeasible points are infeasible:
 | measured | 4 |
 | published | 70 |
 | derived | 41 |
-| assumed | 57 |
+| assumed | 59 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -2226,6 +2226,8 @@ failure mode this program exists to prevent:
 - `latency.array_pass_boundaries_per_layer`
 - `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Flash-0731`
 - `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Pro-0813`
+- `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash`
+- `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-host`
 - `latency.array_pass_boundaries_per_layer_by_model.Qwen3-8B`
 - `latency.global_wire_delay_s_per_mm`
 - `latency.layer_barrier_s`

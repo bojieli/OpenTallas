@@ -160,6 +160,43 @@ def context_ladder_output_root(output_root: Path) -> Path:
     return output_root / "context_ladder"
 
 
+CANDIDATE_MODELS: tuple[tuple[str, str, Path, int], ...] = (
+    (
+        "deepseek-v41-flash",
+        "DeepSeek-V4.1-Flash",
+        ROOT / "configs" / "models" / "candidates" / "deepseek-v4.1-flash.json",
+        200_000,
+    ),
+    (
+        "deepseek-v41-flash-engram-host",
+        "DeepSeek-V4.1-Flash-engram-host",
+        ROOT
+        / "configs"
+        / "models"
+        / "candidates"
+        / "deepseek-v4.1-flash-engram_host.json",
+        200_000,
+    ),
+)
+"""Candidate models, each run as a single-model study in its own tree.
+
+A candidate is a model profiled from its official checkpoint that no lane in
+this repository has executed and no release document binds a figure to.  It is
+kept out of ``STUDY_MODELS`` for the same reason the context ladder is: adding
+a model to the primary studies moves the byte-identity of every figure bound to
+them.  Each candidate is written under
+``results/roofline/candidates/<slug>/<study>/`` by the same rule on the same
+code path as the primary, at the DeepSeek-V4-Flash primary context.
+
+DeepSeek-V4.1-Flash (2026-09-10) is carried twice: with its 203 GB of Engram
+n-gram tables stored beside the weights on both sides, and with them in host
+memory on both sides as DeepSeek's own serving stack places them."""
+
+
+def candidates_output_root(output_root: Path) -> Path:
+    return output_root / "candidates"
+
+
 def context_rung_label(model_name: str, context: int) -> str:
     """``flash-8k``, ``pro-200k``, ``flash-1m``: a path segment, not a title."""
 
@@ -1858,7 +1895,7 @@ def _headline_rows(result: dict[str, Any]) -> list[dict[str, Any]]:
             row["rom_per_user_tokens_s"] > current["rom_per_user_tokens_s"]
         ):
             best[key] = row
-    order = {name: index for index, (name, _, _) in enumerate(STUDY_MODELS)}
+    order = _model_order(result)
     return sorted(
         best.values(),
         key=lambda row: (order[row["model"]], row["rom_silicon_area_mm2"]),
@@ -2221,6 +2258,25 @@ def _iso_area_by_batch(
                 record["array_at_wafer_area"] = paired
         rows.append(record)
     return rows
+
+
+def _model_order(result: dict[str, Any]) -> dict[str, int]:
+    """Report order of the models in ONE study's result.
+
+    The primary studies list their models in ``STUDY_MODELS`` order, so this is
+    that order for them to the byte.  A single-model tree -- a context-ladder
+    rung, a candidate model -- lists its own model, which ``STUDY_MODELS`` may
+    not know; ordering by the result's own summaries is what lets the same
+    renderer serve both without a candidate being refused at the report stage.
+    """
+
+    order = {
+        str(summary["model"]): index
+        for index, summary in enumerate(result.get("model_summaries", ()))
+    }
+    for name, _path, _context in STUDY_MODELS:
+        order.setdefault(name, len(order))
+    return order
 
 
 def _design_selection(
@@ -7427,7 +7483,7 @@ def _engagement_rows(result: dict[str, Any]) -> list[dict[str, Any]]:
     """
 
     rows: list[dict[str, Any]] = []
-    order = {name: index for index, (name, _, _) in enumerate(STUDY_MODELS)}
+    order = _model_order(result)
     for model_name in order:
         candidates = [
             row
@@ -7477,7 +7533,7 @@ def _best_comparisons(result: dict[str, Any]) -> list[dict[str, Any]]:
         chosen.append({**fastest, "selection": "fastest"})
         if smallest["rom_design"] != fastest["rom_design"]:
             chosen.append({**smallest, "selection": "smallest silicon"})
-    order = {name: index for index, (name, _, _) in enumerate(STUDY_MODELS)}
+    order = _model_order(result)
     return sorted(
         chosen,
         key=lambda row: (
@@ -7803,6 +7859,47 @@ def run_all(
                     )
                 )
 
+    # --- candidate models, each in its own tree ---------------------------
+    for study_id in STUDIES:
+        for slug, model_name, model_path, context in CANDIDATE_MODELS:
+            config = dict(STUDIES[study_id])
+            config["models"] = ((model_name, model_path, context),)
+            config["contract"] = (
+                f"CANDIDATE MODEL under {study_id}: {model_name} at "
+                f"{context:,} tokens. "
+                + str(STUDIES[study_id]["contract"])
+                + " Same rule, same code path as the primary; the model is "
+                "profiled from its official checkpoint headers and has been "
+                "executed by no lane in this repository. The primary artifact "
+                "is unchanged."
+            )
+            candidate = _simulate_study(
+                study_id, technology, with_sensitivity=False, config=config
+            )
+            candidate["study_id"] = f"{study_id}-{slug}"
+            candidate["primary_study_id"] = study_id
+            candidate["candidate_model"] = {
+                "model": model_name,
+                "slug": slug,
+                "context_tokens": context,
+                "profile": str(model_path.relative_to(ROOT)),
+            }
+            candidate["validation_gates"] = anchors
+            destination = candidates_output_root(output_root) / slug / study_id
+            planned.append(
+                (
+                    destination / "analytical.json",
+                    json.dumps(candidate, indent=2, sort_keys=True, allow_nan=False)
+                    + "\n",
+                )
+            )
+            planned.append(
+                (
+                    destination / "REPORT.md",
+                    render_report(candidate, anchors).rstrip() + "\n",
+                )
+            )
+
     existing = [path for path, _ in planned if path.exists()]
     if existing and not force:
         raise SystemExit(
@@ -7871,6 +7968,19 @@ def main(argv: list[str] | None = None) -> int:
                         ).resolve()
                     )
                 )
+    for study_id in STUDIES:
+        for slug, _model_name, _path, _context in CANDIDATE_MODELS:
+            print(
+                f"candidate model {slug}/{study_id}: "
+                + str(
+                    (
+                        candidates_output_root(args.output)
+                        / slug
+                        / study_id
+                        / "REPORT.md"
+                    ).resolve()
+                )
+            )
     gates = next(iter(results.values()))["validation_gates"]
     for name in (
         "taalas_hc1",

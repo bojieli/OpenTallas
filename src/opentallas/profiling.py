@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import math
@@ -37,6 +37,20 @@ class SourceSpec:
     adapter: str
     total_parameters: float
     active_parameters: float
+    #: A named placement variant of the same checkpoint.  The only one defined
+    #: is ``engram_host`` for DeepSeek-V4.1: the Engram tables live in host
+    #: memory, as DeepSeek's own serving stack places them, instead of beside
+    #: the weights.  The inventory is the checkpoint's and is shared.
+    variant: str = ""
+    #: Where the profile is written under ``configs/models``.  Candidate
+    #: models that no release document binds a figure to live one level down,
+    #: as the anchor does, so the legacy glob over ``configs/models/*.json``
+    #: and the artifacts it feeds are untouched.
+    profile_dir: str = ""
+
+    @property
+    def inventory_slug(self) -> str:
+        return self.slug[: -len(f"-{self.variant}")] if self.variant else self.slug
 
 
 SOURCES: tuple[SourceSpec, ...] = (
@@ -55,6 +69,30 @@ SOURCES: tuple[SourceSpec, ...] = (
         adapter="deepseek_v4",
         total_parameters=1.6e12,
         active_parameters=49e9,
+    ),
+    # DeepSeek-V4.1-Flash, released 2026-09-10.  Published counts: 552B
+    # backbone plus 196B Engram, 16B activated per decode token (8B per
+    # prefill token under the causal encoder-decoder).  The header inventory
+    # reproduces them: 551.88B backbone, 196.61B Engram, 16.13B streamed per
+    # decode token including the untied head.
+    SourceSpec(
+        slug="deepseek-v4.1-flash",
+        repo="deepseek-ai/DeepSeek-V4.1-Flash",
+        revision="dba1be0a40aa45a94ad051997016db3960a90277",
+        adapter="deepseek_v41",
+        total_parameters=552e9,
+        active_parameters=16e9,
+        profile_dir="candidates",
+    ),
+    SourceSpec(
+        slug="deepseek-v4.1-flash-engram_host",
+        repo="deepseek-ai/DeepSeek-V4.1-Flash",
+        revision="dba1be0a40aa45a94ad051997016db3960a90277",
+        adapter="deepseek_v41",
+        total_parameters=552e9,
+        active_parameters=16e9,
+        variant="engram_host",
+        profile_dir="candidates",
     ),
     SourceSpec(
         slug="kimi-k3",
@@ -103,9 +141,23 @@ class Inventory:
     index_sha256: str
     config_sha256: str
     deployment_storage: dict[str, Any]
+    #: Exact element counts by decode role, from the pinned shapes.  A packed
+    #: I8 routed-expert byte holds two MXFP4 values; block-scale tensors carry
+    #: no parameters.  Populated for every adapter profiled after 2026-09-13;
+    #: older inventories omit it.
+    parameter_counts: dict[str, int] = field(default_factory=dict)
+    #: Bytes of lookup tables that are read sparsely per token rather than
+    #: streamed -- today only DeepSeek-V4.1's Engram tables -- in released
+    #: packing and in the A100 BF16 expansion.
+    lookup_table_bytes: dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        if not self.parameter_counts:
+            data.pop("parameter_counts")
+        if not self.lookup_table_bytes:
+            data.pop("lookup_table_bytes")
+        return data
 
 
 def _request_bytes(url: str, byte_range: tuple[int, int] | None = None, retries: int = 4) -> bytes:
@@ -162,6 +214,23 @@ def _shard_header(repo: str, revision: str, shard: str, cache_dir: Path) -> dict
 
 
 _LAYER_RE = re.compile(r"(?:^|\.)layers\.(\d+)(?:\.|$)")
+_ENGRAM_TABLE_RE = re.compile(r"^layers\.\d+\.engram\.embed\.(weight|scale)$")
+DEEPSEEK_ADAPTERS = frozenset({"deepseek_v4", "deepseek_v41"})
+
+
+def _parameter_count(name: str, dtype: str, shape: list[int]) -> int:
+    """Elements a released tensor holds, packed I8 MXFP4 counted as two."""
+
+    if name.endswith(".scale"):
+        return 0
+    count = 1
+    for extent in shape:
+        count *= int(extent)
+    if dtype == "I8":
+        if not (_is_routed(name) and name.endswith(".weight")):
+            raise RuntimeError(f"unexpected I8 tensor {name!r}")
+        return 2 * count
+    return count
 
 
 def _is_routed(name: str) -> bool:
@@ -183,6 +252,24 @@ def _weight_role(adapter: str, name: str) -> str:
         if name.startswith("mtp."):
             return "draft_routed" if _is_routed(name) else "draft_dense"
         if name == "embed.weight" or ".tid2eid" in name:
+            return "resident_only"
+    elif adapter == "deepseek_v41":
+        # DSpark draft blocks are read only under speculation.  The input
+        # embedding, the vision encoder with its projector and image
+        # delimiters, and the two Engram n-gram tables are looked up rather
+        # than streamed: an Engram module reads 24 rows of 264 bytes per token
+        # (inference/engram.py), which the profile records as auxiliary
+        # traffic.  The Engram key/value projection, the untied head and
+        # everything else is streamed on every decode token.
+        if name.startswith("mtp."):
+            return "draft_routed" if _is_routed(name) else "draft_dense"
+        if (
+            name == "embed.weight"
+            or name.startswith("vision.")
+            or name.startswith("aligner.")
+            or name in {"image_start", "image_end", "image_newline"}
+            or _ENGRAM_TABLE_RE.search(name)
+        ):
             return "resident_only"
     elif adapter == "kimi_k3":
         if (
@@ -252,6 +339,8 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
     deployment_roles: dict[str, int] = defaultdict(int)
     deployment_layer_dense: dict[str, int] = defaultdict(int)
     deployment_layer_routed: dict[str, int] = defaultdict(int)
+    parameter_counts: dict[str, int] = defaultdict(int)
+    lookup_packed = lookup_expanded = 0
     names: set[str] = set()
     for shard in shards:
         for name, tensor in headers[shard].items():
@@ -280,7 +369,10 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
                 if layer is not None:
                     layer_dense[layer] += storage
             role = _weight_role(spec.adapter, name)
-            if spec.adapter == "deepseek_v4":
+            parameter_counts[role] += _parameter_count(
+                name, dtype, list(tensor.get("shape", ()))
+            )
+            if spec.adapter in DEEPSEEK_ADAPTERS:
                 deployed = _deepseek_a100_bf16_storage_bytes(
                     name, dtype, storage
                 )
@@ -289,6 +381,12 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
                     deployment_layer_dense[layer] += deployed
                 elif layer is not None and role == "decode_routed":
                     deployment_layer_routed[layer] += deployed
+                if _ENGRAM_TABLE_RE.search(name):
+                    lookup_packed += storage
+                    lookup_expanded += deployed
+                    parameter_counts["engram_table"] += _parameter_count(
+                        name, dtype, list(tensor.get("shape", ()))
+                    )
             if role == "decode_dense":
                 decode_dense += storage
                 if layer is not None:
@@ -370,7 +468,16 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
                     ),
                 }
             }
-            if spec.adapter == "deepseek_v4"
+            if spec.adapter in DEEPSEEK_ADAPTERS
+            else {}
+        ),
+        parameter_counts=dict(sorted(parameter_counts.items())),
+        lookup_table_bytes=(
+            {
+                "engram_table_packed": lookup_packed,
+                "engram_table_a100_bf16_expanded": lookup_expanded,
+            }
+            if lookup_packed
             else {}
         ),
     )
@@ -507,6 +614,317 @@ def _deepseek_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> M
                 "pinned DeepSeek inference/model.py"
             ),
             "deployment_storage": inventory.deployment_storage,
+        },
+    )
+
+
+def _csa2_layer_modes(text: dict[str, Any], layers: int) -> list[dict[str, Any]]:
+    """One record per backbone layer, read the way ``inference/model.py`` does.
+
+    ``compress_ratios[l] == 0`` is sliding-window-only.  Otherwise the layer is
+    CSA2: it owns a compressed main cache only if it is a ``kv_source_layer``
+    (Full mode); it runs an indexer only if it is an ``index_source_layer``
+    (Full when it also owns the cache, Reindex otherwise); every other CSA2
+    layer is Reuse mode and takes the latest top-k from its predecessor.  An
+    indexer strictly after ``candidate_source_layer_id`` scores only the
+    candidate pool that layer built.
+    """
+
+    ratios = [int(value) for value in text["compress_ratios"][:layers]]
+    kv_sources = {int(value) for value in text["kv_source_layer_ids"]}
+    index_sources = {int(value) for value in text["index_source_layer_ids"]}
+    candidate_source = int(text.get("candidate_source_layer_id", -1))
+    pool = int(text.get("candidate_topk_blocks", 0)) * int(
+        text.get("candidate_block_size", 0)
+    )
+    records: list[dict[str, Any]] = []
+    for layer, ratio in enumerate(ratios):
+        if ratio == 0:
+            records.append({"layer": layer, "ratio": 0, "mode": "swa", "label": "swa"})
+            continue
+        owner = layer in kv_sources
+        indexes = layer in index_sources
+        if owner and indexes:
+            mode = "full"
+        elif indexes:
+            mode = "reindex"
+        elif owner:
+            raise ValueError(f"layer {layer} owns a cache but never indexes it")
+        else:
+            mode = "reuse"
+        uses_pool = indexes and 0 <= candidate_source < layer
+        records.append(
+            {
+                "layer": layer,
+                "ratio": ratio,
+                "mode": mode,
+                "label": f"csa2-{ratio}-{mode}",
+                "kv_owner": owner,
+                "scans_index": indexes,
+                "index_scan_entries_cap": pool if uses_pool else 0,
+                "is_candidate_source": layer == candidate_source,
+            }
+        )
+    return records
+
+
+def _deepseek_v41_profile(
+    spec: SourceSpec, config: dict, inventory: Inventory
+) -> ModelProfile:
+    """DeepSeek-V4.1-Flash: CED backbone, CSA2 with cross-layer KV sharing.
+
+    Every byte width below is read off the pinned ``inference/model.py`` and
+    the technical report, not measured by running the model here:
+
+    * main KV latent: E2M1 over ``head_dim`` channels with one E4M3 scale per
+      16 channels (report section 2.4.4; ``fp4_act_quant(latent, 16, ...,
+      scale_dtype=float8_e4m3fn)`` in ``Attention._compress_kv``);
+    * indexer key: E2M1 over ``index_head_dim`` with one E8M0 scale per 32
+      (``fp4_act_quant(k, fp4_block_size, True)`` in ``Indexer.forward``);
+    * sliding-window KV: E4M3 over ``head_dim`` with one E8M0 scale per 32
+      (``act_quant(kv, fp8_block_size, ...)`` in ``Attention._window_kv``);
+      the report keeps the window at FP8 "due to its sensitivity".
+
+    With ``head_dim = 512`` and ``index_head_dim = 128`` that is 288 + 68
+    bytes per owned global entry; three encoder owners at ratio 2 and one
+    decoder owner at ratio 1 give 890 bytes of global KV per token, which is
+    the figure the model card and report publish.
+    """
+
+    text = config["text_config"]
+    layers = int(text["num_hidden_layers"])
+    head_dim = int(text["head_dim"])
+    rope_dim = int(text["qk_rope_head_dim"])
+    index_dim = int(text["index_head_dim"])
+    window = int(text["sliding_window"])
+    quant = config.get("quantization_config", {})
+    fp8_block = int(quant.get("weight_block_size", [32, 32])[1])
+    main_entry_bytes = head_dim / 2 + head_dim / 16  # E2M1 + E4M3 per 16
+    index_entry_bytes = index_dim / 2 + index_dim / 32  # E2M1 + E8M0 per 32
+    window_entry_bytes = head_dim + head_dim / fp8_block  # E4M3 + E8M0 per block
+
+    records = _csa2_layer_modes(text, layers)
+    groups: list[AttentionGroup] = []
+    seen: dict[str, int] = {}
+    for record in records:
+        seen[record["label"]] = seen.get(record["label"], 0) + 1
+    for record in records:
+        label = record["label"]
+        if label not in seen:
+            continue
+        count = seen.pop(label)
+        if record["mode"] == "swa":
+            groups.append(
+                AttentionGroup(
+                    kind="window",
+                    count=count,
+                    entry_bytes=window_entry_bytes,
+                    window_tokens=window,
+                    label=label,
+                    evidence=(
+                        "official config compress_ratios == 0; FP8 window entry "
+                        "read off pinned inference/model.py Attention._window_kv"
+                    ),
+                )
+            )
+            continue
+        groups.append(
+            AttentionGroup(
+                kind="compressed_sparse",
+                count=count,
+                entry_bytes=main_entry_bytes,
+                window_tokens=window,
+                window_entry_bytes=window_entry_bytes,
+                compression_ratio=int(record["ratio"]),
+                top_k=int(text["index_topk"]),
+                index_entry_bytes=index_entry_bytes,
+                kv_owner=bool(record["kv_owner"]),
+                scans_index=bool(record["scans_index"]),
+                index_scan_entries_cap=int(record["index_scan_entries_cap"]),
+                label=label,
+                evidence=(
+                    f"CSA2 {record['mode']} mode from official config kv_source_layer_ids / "
+                    "index_source_layer_ids / candidate_source_layer_id as pinned "
+                    "inference/model.py reads them; FP4 main and index entries per "
+                    "technical report section 2.4.4"
+                ),
+            )
+        )
+    sequence = [record["label"] for record in records]
+
+    lookup = inventory.lookup_table_bytes
+    engram_packed = int(lookup.get("engram_table_packed", 0))
+    engram_expanded = int(lookup.get("engram_table_a100_bf16_expanded", 0))
+    engram_host = spec.variant == "engram_host"
+    if spec.variant not in ("", "engram_host"):
+        raise ValueError(f"unknown DeepSeek-V4.1 variant {spec.variant!r}")
+    if engram_packed <= 0:
+        raise ValueError("DeepSeek-V4.1 inventory carries no Engram table bytes")
+
+    checkpoint_bytes = inventory.checkpoint_bytes - (engram_packed if engram_host else 0)
+    resident_only = inventory.resident_only_bytes - (engram_packed if engram_host else 0)
+    expanded = dict(inventory.deployment_storage["a100_bf16_expanded"])
+    if engram_host:
+        expanded["checkpoint_bytes"] = int(expanded["checkpoint_bytes"]) - engram_expanded
+        expanded["resident_only_bytes"] = int(expanded["resident_only_bytes"]) - engram_expanded
+        expanded["policy"] = str(expanded["policy"]) + "; Engram tables host-resident"
+
+    engram_cfg = {
+        "layer_ids": [int(value) for value in text["engram_layer_ids"]],
+        "num_embeddings": [int(value) for value in text["engram_num_embeddings"]],
+        "max_ngram_size": int(text["engram_max_ngram_size"]),
+        "n_heads": int(text["engram_n_heads"]),
+        "head_dim": int(text["engram_head_dim"]),
+        "compressed_vocab_size": int(text["engram_compressed_vocab_size"]),
+    }
+    hash_cols = (engram_cfg["max_ngram_size"] - 1) * engram_cfg["n_heads"]
+    row_bytes = engram_cfg["head_dim"] + engram_cfg["head_dim"] / fp8_block
+    engram_cfg["rows_read_per_token_per_module"] = hash_cols
+    engram_cfg["row_bytes_packed"] = row_bytes
+    engram_cfg["lookup_bytes_per_token"] = len(engram_cfg["layer_ids"]) * hash_cols * row_bytes
+
+    name = "DeepSeek-V4.1-Flash" + ("-engram-host" if engram_host else "")
+    placement = (
+        "Engram tables in HOST memory, prefetched by RDMA as DeepSeek's serving "
+        "stack does (report sections 2.4.2, 3.1.3); they count against neither "
+        "ROM nor HBM capacity on either side of a comparison"
+        if engram_host
+        else "Engram tables resident beside the weights: in mask ROM on the ROM "
+        "side (they are immutable and read by row address, which is what a ROM "
+        "does) and in HBM on the GPU side; both sides pay the capacity"
+    )
+    return ModelProfile(
+        name=name,
+        source_repo=spec.repo,
+        source_revision=spec.revision,
+        total_parameters=spec.total_parameters,
+        active_parameters=spec.active_parameters,
+        checkpoint_bytes=checkpoint_bytes,
+        dense_weight_bytes=inventory.decode_dense_bytes,
+        routed_weight_bytes=inventory.decode_routed_bytes,
+        dense_compute_format="fp8_e4m3_x_fp8_e4m3",
+        routed_compute_format="mxfp4_e2m1_x_fp8_e4m3",
+        draft_dense_weight_bytes=inventory.draft_dense_bytes,
+        draft_routed_weight_bytes=inventory.draft_routed_bytes,
+        resident_only_weight_bytes=resident_only,
+        num_layers=layers,
+        num_experts=int(text["n_routed_experts"]),
+        experts_per_token=int(text["num_experts_per_tok"]),
+        hidden_size=int(text["hidden_size"]),
+        max_context_tokens=int(text["max_position_embeddings"]),
+        attention_groups=tuple(groups),
+        layer_dense_weight_bytes=tuple(
+            inventory.decode_layer_dense_bytes.get(str(layer), 0)
+            for layer in range(layers)
+        ),
+        layer_routed_weight_bytes=tuple(
+            inventory.decode_layer_routed_bytes.get(str(layer), 0)
+            for layer in range(layers)
+        ),
+        router_trace_status="synthetic; no production activations",
+        metadata={
+            "adapter": "deepseek_v41",
+            "variant": spec.variant,
+            "architecture": (
+                "Causal Encoder-Decoder: 20 encoder layers whose final hidden "
+                "state is projected into the decoder's single shared global KV "
+                "(layer 20, CSA2 Full, ratio 1); 20 decoder layers; every layer "
+                "keeps its own 128-token FP8 sliding window"
+            ),
+            "attention_sequence": sequence,
+            "csa2_layer_modes": records,
+            "checkpoint_inventory": f"data/inventory/{spec.inventory_slug}.json",
+            "engram": engram_cfg,
+            "engram_placement": placement,
+            "host_resident_weight_bytes": engram_packed if engram_host else 0,
+            "kv_cache_policy": (
+                f"global KV shared across layers: FP4 E2M1 main latent with one E4M3 "
+                f"scale per 16 channels ({main_entry_bytes:.0f} B) plus FP4 index key "
+                f"with one E8M0 scale per 32 ({index_entry_bytes:.0f} B), owned by "
+                f"layers {sorted(int(v) for v in text['kv_source_layer_ids'])}; "
+                f"FP8 sliding-window KV ({window_entry_bytes:.0f} B) per layer, "
+                f"{window} entries, never persisted (SWA Bounded Replay)"
+            ),
+            "kv_cache_policy_status": (
+                "published (model card, report section 2.4.4) and read off pinned "
+                "inference/model.py; NOT measured by executing the model in this "
+                "repository. 890 B/token global reproduces the published figure"
+            ),
+            "global_kv_bytes_per_token": sum(
+                (main_entry_bytes + index_entry_bytes) / record["ratio"]
+                for record in records
+                if record["mode"] == "full"
+            ),
+            "prefill": {
+                "active_parameters_published": 8e9,
+                "policy": (
+                    "under CED only the 20 encoder layers plus the decoder's KV "
+                    "projection run over the prompt; the decoder replays the last "
+                    "128 tokens (Decoder SWA Bounded Replay). Prefill is outside "
+                    "the decode-only scope of this program's studies"
+                ),
+            },
+            "weight_storage_policy": (
+                "routed experts MXFP4 E2M1 with E8M0 microscaling (32x32 blocks); "
+                "dense/shared/Engram-projection matrices FP8 E4M3 with E8M0 block "
+                "scales; Engram tables FP8 E4M3 rows with E8M0 per 32; embeddings, "
+                "head, vision encoder, compressor and indexer-key projections BF16; "
+                "mHC coefficients FP32"
+            ),
+            "compute_precision_policy": (
+                "routed expert GEMMs use MXFP4 weights x FP8 activations; "
+                "dense/shared GEMMs use FP8 weights x FP8 activations"
+            ),
+            "compute_precision_status": "published DeepSeek report and pinned config",
+            "weight_traffic_policy": (
+                "all 40 backbone layers and the untied head streamed on every "
+                "decode token; DSpark draft charged only under speculation; input "
+                "embedding, vision encoder, projector and Engram tables resident-only "
+                "(each Engram module reads 24 rows of 264 B per token, recorded "
+                "under metadata.engram.lookup_bytes_per_token)"
+            ),
+            "parameter_counts": dict(inventory.parameter_counts),
+            "index_heads": int(text["index_n_heads"]),
+            "index_head_dim": index_dim,
+            "index_topk": int(text["index_topk"]),
+            "operator_config": {
+                "vocab_size": int(text["vocab_size"]),
+                "hidden_size": int(text["hidden_size"]),
+                "moe_intermediate_size": int(text["moe_intermediate_size"]),
+                "num_attention_heads": int(text["num_attention_heads"]),
+                "head_dim": head_dim,
+                "rope_head_dim": rope_dim,
+                "q_lora_rank": int(text["q_lora_rank"]),
+                "o_groups": int(text["o_groups"]),
+                "o_lora_rank": int(text["o_lora_rank"]),
+                "num_routed_experts": int(text["n_routed_experts"]),
+                "num_shared_experts": int(text["n_shared_experts"]),
+                "experts_per_token": int(text["num_experts_per_tok"]),
+                "index_heads": int(text["index_n_heads"]),
+                "index_head_dim": index_dim,
+                "index_topk": int(text["index_topk"]),
+                "window_tokens": window,
+                "hc_mult": int(text["hc_mult"]),
+                "hc_sinkhorn_iters": int(text["hc_sinkhorn_iters"]),
+                "compress_ratios": [int(v) for v in text["compress_ratios"][:layers]],
+                "kv_source_layer_ids": sorted(int(v) for v in text["kv_source_layer_ids"]),
+                "index_source_layer_ids": sorted(
+                    int(v) for v in text["index_source_layer_ids"]
+                ),
+                "candidate_source_layer_id": int(text["candidate_source_layer_id"]),
+                "candidate_topk_blocks": int(text["candidate_topk_blocks"]),
+                "candidate_block_size": int(text["candidate_block_size"]),
+                "engram_layer_ids": engram_cfg["layer_ids"],
+                "engram_hash_columns": hash_cols,
+                "engram_head_dim": engram_cfg["head_dim"],
+                "fp8_weight_block": fp8_block,
+            },
+            "operator_accounting_source": (
+                "official config, pinned safetensors tensor shapes/dtypes, pinned "
+                "DeepSeek inference/model.py and inference/engram.py, and the "
+                "DeepSeek-V4.1-Flash technical report"
+            ),
+            "deployment_storage": {"a100_bf16_expanded": expanded},
         },
     )
 
@@ -678,6 +1096,8 @@ def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Mode
 def build_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
     if spec.adapter == "deepseek_v4":
         return _deepseek_profile(spec, config, inventory)
+    if spec.adapter == "deepseek_v41":
+        return _deepseek_v41_profile(spec, config, inventory)
     if spec.adapter == "kimi_k3":
         return _kimi_profile(spec, config, inventory)
     if spec.adapter == "qwen3":

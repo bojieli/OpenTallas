@@ -42,11 +42,12 @@ def test_traffic_screen_is_deterministic_and_checked_in(generated) -> None:
 
 def test_traffic_screen_matrix_and_identities(generated) -> None:
     runner, result, _, _ = generated
-    assert len(result["rows"]) == 3 * 4 * 4
+    assert len(result["rows"]) == 4 * 4 * 4
     assert {row["model"] for row in result["rows"]} == {
         "DeepSeek-V4-Flash-0731",
         "DeepSeek-V4-Pro-0813",
         "Kimi-K3",
+        "DeepSeek-V4.1-Flash",
     }
     for row in result["rows"]:
         assert row["weight_to_kv_read_ratio"] == pytest.approx(

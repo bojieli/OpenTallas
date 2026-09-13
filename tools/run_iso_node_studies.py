@@ -61,6 +61,22 @@ MODEL_PATHS = {
     # the lane that produces real tokens has no current performance study --
     # which is the break in the analytical-to-simulation loop.
     "Qwen3-8B": ROOT / "configs" / "models" / "qwen3-8b.json",
+    # DeepSeek-V4.1-Flash (released 2026-09-10) is a CANDIDATE model: profiled
+    # from the official checkpoint headers, never executed by any lane here,
+    # and bound to no release figure.  It is carried in both placements of its
+    # 203 GB Engram tables -- beside the weights on both sides, and in host
+    # memory on both sides as DeepSeek serves it -- because the placement
+    # moves the ROM stage count and the GPU device count together.
+    "DeepSeek-V4.1-Flash": ROOT
+    / "configs"
+    / "models"
+    / "candidates"
+    / "deepseek-v4.1-flash.json",
+    "DeepSeek-V4.1-Flash-engram-host": ROOT
+    / "configs"
+    / "models"
+    / "candidates"
+    / "deepseek-v4.1-flash-engram_host.json",
 }
 CONTEXTS = (8_192, 32_768, 200_000, 1_000_000)
 

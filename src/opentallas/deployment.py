@@ -9,6 +9,11 @@ from .schema import AttentionGroup, ModelProfile, ValidationError
 
 
 OFFICIAL_PACKED = "official_packed"
+#: Adapters whose released FP8/MXFP4 packing the two A100 policies know how to
+#: expand.  DeepSeek-V4.1 packs exactly as V4 does (FP8 dense, MXFP4 experts,
+#: E8M0 block scales) and adds an FP8 Engram table, which expands like any
+#: other FP8 tensor.
+DEEPSEEK_ADAPTERS = frozenset({"deepseek_v4", "deepseek_v41"})
 A100_BF16_EXPANDED = "a100_bf16_expanded"
 A100_PACKED_BF16_EXECUTE = "a100_packed_hbm_bf16_execute"
 
@@ -72,9 +77,9 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
                     ),
                 },
             )
-        if model.metadata.get("adapter") != "deepseek_v4":
+        if model.metadata.get("adapter") not in DEEPSEEK_ADAPTERS:
             raise ValidationError(
-                "A100 packed-to-BF16 execution is currently defined only for DeepSeek V4"
+                "A100 packed-to-BF16 execution is currently defined only for DeepSeek V4/V4.1"
             )
         return replace(
             model,
@@ -109,8 +114,8 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
                 ),
             },
         )
-    if model.metadata.get("adapter") != "deepseek_v4":
-        raise ValidationError("A100 BF16 expansion is currently defined only for DeepSeek V4")
+    if model.metadata.get("adapter") not in DEEPSEEK_ADAPTERS:
+        raise ValidationError("A100 BF16 expansion is currently defined only for DeepSeek V4/V4.1")
 
     deployments = model.metadata.get("deployment_storage")
     if not isinstance(deployments, dict):
@@ -134,6 +139,9 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
         updates: dict[str, float] = {"entry_bytes": float(2 * head_dim)}
         if group.kind == "compressed_sparse":
             updates["index_entry_bytes"] = float(2 * index_dim)
+        if group.window_entry_bytes:
+            # An FP8 window expands to the same BF16 width as the main latent.
+            updates["window_entry_bytes"] = 0.0
         groups.append(replace(group, **updates))
 
     metadata = dict(model.metadata)

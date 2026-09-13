@@ -318,7 +318,19 @@
         "source": "Qwen3 decoder block structure: QKV, attention output, gate/up, down",
         "value": 4.0
       },
-      "purpose": "Per-model serial matrix-pass depth. Applied by tools/run_roofline_studies.py to BOTH sides of every comparison -- the fixed per-layer latency budget is charged to the GPU designs and the ROM designs identically -- so this is a model property, never a family property."
+      "purpose": "Per-model serial matrix-pass depth. Applied by tools/run_roofline_studies.py to BOTH sides of every comparison -- the fixed per-layer latency budget is charged to the GPU designs and the ROM designs identically -- so this is a model property, never a family property.",
+      "DeepSeek-V4.1-Flash": {
+        "grade": "assumed",
+        "note": "5, by the same reading of the decoder block as DeepSeek-V4-Flash-0731: QKV, attention output, router score, expert gate/up, expert down. V4.1's layer adds nothing serial to that chain on the critical path: the Engram lookup at layers 1 and 14 is addressed by token ids, so DeepSeek prefetches it before the layer runs (technical report sections 2.4.2 and 3.1.3), and the CSA2 index scan on Full/Reindex layers is charged separately by latency.sparse_index_dependency_s on exactly the layers that scan. Graded `assumed` for the same reason as the Flash entry: a graph reading, not a measurement of serial depth.",
+        "source": "DeepSeek-V4.1-Flash technical report sections 2.1-2.4 and pinned inference/model.py; same decoder-block enumeration as DeepSeek-V4-Flash-0731",
+        "value": 5.0
+      },
+      "DeepSeek-V4.1-Flash-engram-host": {
+        "grade": "assumed",
+        "note": "5: the engram_host placement variant of DeepSeek-V4.1-Flash is the same model with its Engram tables in host memory; serial depth is unchanged.",
+        "source": "DeepSeek-V4.1-Flash technical report sections 2.1-2.4 and pinned inference/model.py; same decoder-block enumeration as DeepSeek-V4-Flash-0731",
+        "value": 5.0
+      }
     },
     "global_wire_delay_s_per_mm": {
       "grade": "assumed",

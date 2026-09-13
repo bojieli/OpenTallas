@@ -456,6 +456,385 @@ def _deepseek_v4_inventory(
     )
 
 
+def _deepseek_v41_inventory(
+    model: ModelProfile, context_tokens: int
+) -> OperationInventory:
+    """DeepSeek-V4.1-Flash decode work for one token, from pinned shapes.
+
+    Read off the official config and ``inference/model.py`` at the pinned
+    revision.  What differs from the V4 inventory, and why:
+
+    * every one of the 40 layers runs on a decode token -- the causal
+      encoder-decoder halves *prefill*, not decode -- so all 40 attention
+      blocks, shared experts, six routed experts and mHC projections are
+      charged;
+    * the compressor runs only on the four ``kv_source_layers`` (CSA2 Full
+      mode); at ratio 2 it is a KV projection plus a softmax gate projection,
+      at ratio 1 (the decoder's shared cache, projected from the encoder's
+      final hidden state) it is the KV projection alone;
+    * the indexer key is a projection of the owner's latent, not a second
+      compression path from the hidden state (report section 2.3), charged
+      once per compressed entry, i.e. ``1/ratio`` per token;
+    * only the eight ``index_source_layers`` compute an indexer query and
+      score keys; the four decoder Reindex layers score the candidate pool of
+      ``candidate_topk_blocks * candidate_block_size`` entries rather than the
+      whole context (Hierarchical Sparse Indexer, section 2.3.2), while the
+      encoder's three Full layers and the decoder's Full layer scan everything
+      visible.  The other 28 CSA2 layers reuse a selection and score nothing;
+    * the two Engram modules add an FP8 key/value projection of the 24 looked-up
+      rows and a gate; the row lookups themselves are auxiliary traffic;
+    * the attention core is charged at the FP8 roof over the whole head: the
+      window key is FP8-quantized post-RoPE, RoPE tail included
+      (``Attention._window_kv``), and the FP4 main entries are dequantized
+      before attention (section 2.4.4), so no BF16 RoPE path remains;
+    * there is no final mHC head projection tensor in this checkpoint.
+    """
+
+    raw_config = model.metadata.get("operator_config")
+    if not isinstance(raw_config, dict):
+        raise ValidationError(
+            f"{model.name} is a DeepSeek V4.1 profile without operator_config"
+        )
+    config: dict[str, Any] = raw_config
+
+    vocab = _required_int(config, "vocab_size")
+    dim = _required_int(config, "hidden_size")
+    moe_dim = _required_int(config, "moe_intermediate_size")
+    heads = _required_int(config, "num_attention_heads")
+    head_dim = _required_int(config, "head_dim")
+    rope_dim = _required_int(config, "rope_head_dim")
+    q_rank = _required_int(config, "q_lora_rank")
+    output_groups = _required_int(config, "o_groups")
+    output_rank = _required_int(config, "o_lora_rank")
+    experts = _required_int(config, "num_routed_experts")
+    shared_experts = _required_int(config, "num_shared_experts")
+    experts_per_token = _required_int(config, "experts_per_token")
+    index_heads = _required_int(config, "index_heads")
+    index_dim = _required_int(config, "index_head_dim")
+    index_topk = _required_int(config, "index_topk")
+    window = _required_int(config, "window_tokens")
+    hc_mult = _required_int(config, "hc_mult")
+    sinkhorn_iterations = _required_int(config, "hc_sinkhorn_iters")
+    candidate_blocks = _required_int(config, "candidate_topk_blocks")
+    candidate_block = _required_int(config, "candidate_block_size")
+    engram_columns = _required_int(config, "engram_hash_columns")
+    engram_dim = _required_int(config, "engram_head_dim")
+    fp8_block = _required_int(config, "fp8_weight_block")
+    candidate_source = int(config.get("candidate_source_layer_id", -1))
+    kv_sources = {int(value) for value in config.get("kv_source_layer_ids", ())}
+    index_sources = {int(value) for value in config.get("index_source_layer_ids", ())}
+    engram_layers = {int(value) for value in config.get("engram_layer_ids", ())}
+    ratios_raw = config.get("compress_ratios")
+    if not isinstance(ratios_raw, list) or len(ratios_raw) != model.num_layers:
+        raise ValidationError(
+            "DeepSeek operator_config compress_ratios must cover every layer"
+        )
+    ratios = tuple(int(value) for value in ratios_raw)
+    if any(value < 0 for value in ratios):
+        raise ValidationError("compression ratios cannot be negative")
+    if dim != model.hidden_size or experts != model.num_experts:
+        raise ValidationError(
+            "operator_config conflicts with top-level model dimensions"
+        )
+    if experts_per_token != model.experts_per_token:
+        raise ValidationError(
+            "operator_config conflicts with top-level routing dimensions"
+        )
+    if rope_dim >= head_dim:
+        raise ValidationError("rope_head_dim must be smaller than head_dim")
+    if heads % output_groups:
+        raise ValidationError("attention heads must divide evenly into output groups")
+    if shared_experts != 1:
+        raise ValidationError(
+            "the released DeepSeek V4.1 implementation requires one shared expert"
+        )
+    if not kv_sources <= index_sources:
+        raise ValidationError("every CSA2 cache owner must also be an index source")
+    if any(ratios[layer] == 0 for layer in index_sources):
+        raise ValidationError("a sliding-window-only layer cannot be an index source")
+
+    components: list[OperationComponent] = []
+    per_layer: list[dict[str, float]] = [dict() for _ in range(model.num_layers)]
+    unlayered: dict[str, float] = {}
+    per_layer_auxiliary: list[dict[str, float]] = [
+        dict() for _ in range(model.num_layers)
+    ]
+    unlayered_auxiliary: dict[str, float] = {}
+    auxiliary: dict[str, float] = {
+        "attention_score_elements": 0.0,
+        "compressor_pool_elements": 0.0,
+        "index_score_elements": 0.0,
+        "normalization_elements": 0.0,
+        "nonlinear_elements": 0.0,
+        "topk_candidates": 0.0,
+        "topk_selected": 0.0,
+        "candidate_block_scores": 0.0,
+        "engram_lookup_rows": 0.0,
+        "engram_lookup_bytes": 0.0,
+        "sinkhorn_matrix_elements_per_iteration": 0.0,
+    }
+
+    def add(
+        name: str,
+        numeric_format: str,
+        operations: float,
+        layer_index: int | None,
+        formula: str,
+        evidence: str,
+    ) -> None:
+        if operations < 0 or not math.isfinite(operations):
+            raise ValidationError(f"invalid operation count for {name}: {operations}")
+        if operations == 0:
+            return
+        component = OperationComponent(
+            name=name,
+            numeric_format=numeric_format,
+            operations=float(operations),
+            layer_index=layer_index,
+            formula=formula,
+            evidence=evidence,
+        )
+        components.append(component)
+        target = unlayered if layer_index is None else per_layer[layer_index]
+        target[numeric_format] = target.get(numeric_format, 0.0) + operations
+
+    def add_auxiliary(name: str, elements: float, layer_index: int | None) -> None:
+        if elements < 0 or not math.isfinite(elements):
+            raise ValidationError(f"invalid auxiliary count for {name}: {elements}")
+        if elements == 0:
+            return
+        auxiliary[name] = auxiliary.get(name, 0.0) + elements
+        target = (
+            unlayered_auxiliary
+            if layer_index is None
+            else per_layer_auxiliary[layer_index]
+        )
+        target[name] = target.get(name, 0.0) + elements
+
+    official_shapes = (
+        "official config and pinned checkpoint tensor shapes; multiply-add = 2 ops"
+    )
+    attention_projection_terms = (
+        ("attention_wq_a", 2 * dim * q_rank, "2*d*q_lora_rank"),
+        (
+            "attention_wq_b",
+            2 * q_rank * heads * head_dim,
+            "2*q_lora_rank*n_heads*head_dim",
+        ),
+        ("attention_wkv", 2 * dim * head_dim, "2*d*head_dim (sliding-window KV)"),
+        (
+            "attention_wo_a_grouped",
+            2 * heads * head_dim * output_rank,
+            "2*n_heads*head_dim*o_lora_rank",
+        ),
+        (
+            "attention_wo_b",
+            2 * output_groups * output_rank * dim,
+            "2*o_groups*o_lora_rank*d",
+        ),
+    )
+    shared_expert_ops = 6 * dim * moe_dim * shared_experts
+    routed_expert_ops = 6 * dim * moe_dim * experts_per_token
+    router_ops = 2 * dim * experts
+    mhc_projection_ops = 2 * (2 * (hc_mult * dim) * ((2 + hc_mult) * hc_mult))
+    engram_projection_ops = 2 * (engram_columns * engram_dim) * (dim * (hc_mult + 1))
+    engram_row_bytes = engram_dim + engram_dim / fp8_block
+    candidate_pool = candidate_blocks * candidate_block
+
+    visible_tokens = context_tokens + 1
+    window_entries = min(window, visible_tokens)
+
+    for layer, ratio in enumerate(ratios):
+        for name, operations, formula in attention_projection_terms:
+            add(name, FP8_X_FP8, operations, layer, formula, official_shapes)
+        add(
+            "shared_expert_swiglu",
+            FP8_X_FP8,
+            shared_expert_ops,
+            layer,
+            "6*d*moe_intermediate*n_shared_experts",
+            official_shapes,
+        )
+        add(
+            "routed_expert_swiglu",
+            MXFP4_X_FP8,
+            routed_expert_ops,
+            layer,
+            "6*d*moe_intermediate*experts_per_token",
+            "pinned I8-packed MXFP4 expert tensors with E8M0 scales; FP8 activations",
+        )
+        add(
+            "router_projection",
+            BF16_X_BF16,
+            router_ops,
+            layer,
+            "2*d*n_routed_experts",
+            "pinned BF16 gate tensor",
+        )
+        add(
+            "mhc_pre_projections",
+            FP32_X_FP32,
+            mhc_projection_ops,
+            layer,
+            "2 paths * 2*(hc_mult*d)*((2+hc_mult)*hc_mult)",
+            "pinned FP32 hc_attn_fn/hc_ffn_fn [24, 20480] tensors",
+        )
+        if layer in engram_layers:
+            add(
+                "engram_kv_projection",
+                FP8_X_FP8,
+                engram_projection_ops,
+                layer,
+                "2*(hash_columns*engram_head_dim)*(d*(hc_mult+1))",
+                "pinned FP8 engram.wkv [25600, 6144] tensor and inference/engram.py",
+            )
+            add_auxiliary("engram_lookup_rows", engram_columns, layer)
+            add_auxiliary("engram_lookup_bytes", engram_columns * engram_row_bytes, layer)
+            add_auxiliary("normalization_elements", 2 * hc_mult * dim, layer)
+            add_auxiliary("nonlinear_elements", hc_mult, layer)
+
+        if ratio == 0:
+            selected_entries = 0
+        else:
+            selected_entries = min(index_topk, visible_tokens // ratio)
+        attention_entries = window_entries + selected_entries
+        add(
+            "attention_core",
+            FP8_X_FP8,
+            4 * heads * head_dim * attention_entries,
+            layer,
+            "4*n_heads*head_dim*(window + selected) entries",
+            "FP8 post-RoPE window key (Attention._window_kv) and FP4 main KV "
+            "dequantized before attention (report 2.4.4); sparse_attn QK+AV",
+        )
+        add_auxiliary("attention_score_elements", heads * attention_entries, layer)
+
+        if ratio and layer in kv_sources:
+            projections = 2 if ratio > 1 else 1
+            add(
+                "main_compressor_projections",
+                BF16_X_BF16,
+                projections * 2 * dim * head_dim,
+                layer,
+                "(2 if ratio>1 else 1) projections * 2*d*head_dim",
+                "pinned BF16 compressor wkv (+ wgate at ratio 2) tensors; ratio 1 is a plain projection",
+            )
+            if ratio > 1:
+                add_auxiliary("compressor_pool_elements", head_dim, layer)
+            add(
+                "indexer_key_projection",
+                BF16_X_BF16,
+                2 * head_dim * index_dim / ratio,
+                layer,
+                "2*head_dim*index_head_dim / ratio",
+                "pinned BF16 indexer.wk [128, 512]: index key projected from the owner's latent, once per compressed entry",
+            )
+            add_auxiliary("normalization_elements", head_dim + index_dim / ratio, layer)
+
+        if ratio and layer in index_sources:
+            scanned = visible_tokens // ratio
+            uses_pool = 0 <= candidate_source < layer
+            if uses_pool:
+                scanned = min(scanned, candidate_pool)
+            add(
+                "indexer_query_up_projection",
+                FP8_X_FP8,
+                2 * q_rank * index_heads * index_dim,
+                layer,
+                "2*q_lora_rank*index_heads*index_head_dim",
+                official_shapes,
+            )
+            add(
+                "indexer_weight_projection",
+                BF16_X_BF16,
+                2 * dim * index_heads,
+                layer,
+                "2*d*index_heads",
+                "pinned BF16 indexer weights_proj tensor",
+            )
+            add(
+                "indexer_qk_scan",
+                FP4_X_FP4,
+                2 * index_heads * index_dim * scanned,
+                layer,
+                "2*index_heads*index_head_dim*scanned; scanned = floor((context+1)/ratio), "
+                "capped at candidate_topk_blocks*candidate_block_size on Reindex layers",
+                "FP4 indexer Q and K (Indexer.forward fp4_act_quant); candidate pool per report 2.3.2",
+            )
+            add_auxiliary("index_score_elements", index_heads * scanned, layer)
+            add_auxiliary("topk_candidates", scanned, layer)
+            add_auxiliary("topk_selected", min(index_topk, scanned), layer)
+            if layer == candidate_source:
+                blocks = math.ceil(scanned / candidate_block)
+                add_auxiliary("candidate_block_scores", blocks, layer)
+                add_auxiliary("topk_candidates", blocks, layer)
+                add_auxiliary("topk_selected", min(candidate_blocks, blocks), layer)
+
+        add_auxiliary(
+            "normalization_elements",
+            2 * dim + q_rank + head_dim,
+            layer,
+        )
+        add_auxiliary(
+            "nonlinear_elements",
+            (experts_per_token + shared_experts) * moe_dim + experts,
+            layer,
+        )
+        add_auxiliary(
+            "sinkhorn_matrix_elements_per_iteration",
+            2 * hc_mult * hc_mult,
+            layer,
+        )
+
+    add(
+        "final_vocabulary_head",
+        BF16_X_BF16,
+        2 * dim * vocab,
+        None,
+        "2*d*vocab_size",
+        "pinned BF16 head tensor shape",
+    )
+    add_auxiliary("normalization_elements", dim, None)
+    auxiliary["sinkhorn_iterations"] = float(sinkhorn_iterations)
+
+    operations_by_format = _sum_formats(per_layer + [unlayered])
+    return OperationInventory(
+        model=model.name,
+        context_tokens=context_tokens,
+        method="deepseek_v41_official_operator_inventory_v1",
+        components=tuple(components),
+        operations_by_format=operations_by_format,
+        per_layer_operations_by_format=tuple(
+            {key: value for key, value in sorted(item.items()) if value > 0}
+            for item in per_layer
+        ),
+        unlayered_operations_by_format={
+            key: value for key, value in sorted(unlayered.items()) if value > 0
+        },
+        auxiliary_counts={
+            key: float(value) for key, value in sorted(auxiliary.items())
+        },
+        per_layer_auxiliary_counts=tuple(
+            {key: float(value) for key, value in sorted(item.items()) if value > 0}
+            for item in per_layer_auxiliary
+        ),
+        unlayered_auxiliary_counts={
+            key: float(value)
+            for key, value in sorted(unlayered_auxiliary.items())
+            if value > 0
+        },
+        evidence=(
+            str(
+                model.metadata.get(
+                    "operator_accounting_source", "official DeepSeek sources"
+                )
+            ),
+            "DeepSeek-V4.1-Flash technical report sections 2.2-2.4 arithmetic/storage precision policy",
+            "no calibration to the report FLOP curve",
+        ),
+    )
+
+
 def _active_parameter_fallback(
     model: ModelProfile, context_tokens: int
 ) -> OperationInventory:
@@ -523,4 +902,6 @@ def operation_inventory(model: ModelProfile, context_tokens: int) -> OperationIn
         raise ValidationError("context_tokens exceeds model maximum")
     if model.metadata.get("adapter") == "deepseek_v4":
         return _deepseek_v4_inventory(model, context_tokens)
+    if model.metadata.get("adapter") == "deepseek_v41":
+        return _deepseek_v41_inventory(model, context_tokens)
     return _active_parameter_fallback(model, context_tokens)

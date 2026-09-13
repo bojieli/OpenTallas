@@ -1,8 +1,8 @@
 {
-  "artifacts_drifted_only_by_recent_work": 11,
+  "artifacts_drifted_only_by_recent_work": 17,
   "artifacts_pinning_source_sha256": 91,
-  "artifacts_with_drift": 65,
-  "drift_fraction": 0.7143,
+  "artifacts_with_drift": 63,
+  "drift_fraction": 0.6923,
   "drifted": [
     {
       "artifact": "results/rtl/abi3_deployment_campaign.json",
@@ -188,6 +188,32 @@
       "unresolvable_by_design": []
     },
     {
+      "artifact": "results/rtl/abi3_row_shard_campaign.json",
+      "binding_fields": [
+        "bound_sources"
+      ],
+      "entries_checked": 40,
+      "missing": [],
+      "pinned_sources": 40,
+      "stale": [
+        "rtl/abi3/ot_a3_engine_array.sv",
+        "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+        "rtl/abi3/ot_a3_qwen_gqa.sv",
+        "rtl/abi3/ot_a3_vector_rms_norm.sv",
+        "rtl/abi3/ot_a3_vector_rope.sv",
+        "rtl/ot_fp32_rne_pkg.sv",
+        "rtl/ot_ta_rope_bf16_sram_engine.sv",
+        "testdata/compiler/abi3_deployment/a3_descriptor.hex",
+        "testdata/compiler/abi3_deployment/a3_program.hex",
+        "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+        "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+        "tools/build_abi3_row_shard_vectors.py",
+        "tools/rtl_abi3_row_shard_campaign.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
       "artifact": "results/rtl/abi3_campaign.json",
       "binding_fields": [
         "source_sha256"
@@ -347,7 +373,7 @@
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
       ],
-      "stale_only_from_recent_work": false,
+      "stale_only_from_recent_work": true,
       "unresolvable_by_design": []
     },
     {
@@ -389,31 +415,7 @@
         "testdata/compiler/abi3_deployment/a3_program.hex",
         "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
       ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/rtl/abi3_row_shard_campaign.json",
-      "binding_fields": [
-        "bound_sources"
-      ],
-      "entries_checked": 40,
-      "missing": [],
-      "pinned_sources": 40,
-      "stale": [
-        "rtl/abi3/ot_a3_engine_array.sv",
-        "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-        "rtl/abi3/ot_a3_qwen_gqa.sv",
-        "rtl/abi3/ot_a3_vector_rms_norm.sv",
-        "rtl/abi3/ot_a3_vector_rope.sv",
-        "rtl/ot_fp32_rne_pkg.sv",
-        "rtl/ot_ta_rope_bf16_sram_engine.sv",
-        "testdata/compiler/abi3_deployment/a3_descriptor.hex",
-        "testdata/compiler/abi3_deployment/a3_program.hex",
-        "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-        "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json"
-      ],
-      "stale_only_from_recent_work": false,
+      "stale_only_from_recent_work": true,
       "unresolvable_by_design": []
     },
     {
@@ -435,28 +437,6 @@
         "runtime/sim/engines/deepseek_vector.py",
         "runtime/sim/engines/tensor.py",
         "tools/bisect_deepseek_lane_activations.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 55,
-      "missing": [],
-      "pinned_sources": 55,
-      "stale": [
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "compiler/backends/rom/qwen3.py",
-        "compiler/backends/schedule_rule.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/sim/device.py",
-        "runtime/sim/engines/link.py"
       ],
       "stale_only_from_recent_work": false,
       "unresolvable_by_design": []
@@ -484,63 +464,21 @@
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "entries_checked": 56,
+      "entries_checked": 55,
       "missing": [],
-      "pinned_sources": 56,
+      "pinned_sources": 55,
       "stale": [
-        "compiler/backends/numeric_contracts.py",
         "compiler/backends/rom/common/program.py",
-        "compiler/backends/rom/deepseek_v4_array.py",
-        "compiler/backends/schedule_rule.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
-        "runtime/sim/engines/link.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 54,
-      "missing": [],
-      "pinned_sources": 54,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/numeric_contracts.py",
+        "compiler/backends/rom/qwen3.py",
         "compiler/backends/schedule_rule.py",
         "runtime/abi3/capability.py",
         "runtime/abi3/constants.py",
         "runtime/abi3/verifier.py",
         "runtime/sim/device.py",
-        "runtime/sim/engines/link.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 60,
-      "missing": [],
-      "pinned_sources": 60,
-      "stale": [
-        "compiler/backends/hbm_sram/lower.py",
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "compiler/backends/rom/deepseek_v4_array.py",
-        "runtime/abi3/capability.py",
-        "runtime/abi3/constants.py",
-        "runtime/abi3/verifier.py",
         "runtime/sim/engines/link.py"
       ],
       "stale_only_from_recent_work": false,
@@ -563,6 +501,66 @@
         "rtl/abi3/ot_a3_shared_divider.sv",
         "rtl/abi3/ot_a3_view_resolver.sv",
         "rtl/ot_fp32_rne_pkg.sv"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 56,
+      "missing": [],
+      "pinned_sources": 56,
+      "stale": [
+        "compiler/backends/rom/common/program.py",
+        "compiler/backends/rom/deepseek_v4_array.py",
+        "compiler/backends/schedule_rule.py",
+        "runtime/abi3/capability.py",
+        "runtime/abi3/constants.py",
+        "runtime/abi3/verifier.py",
+        "runtime/sim/engines/link.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 54,
+      "missing": [],
+      "pinned_sources": 54,
+      "stale": [
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/schedule_rule.py",
+        "runtime/abi3/capability.py",
+        "runtime/abi3/constants.py",
+        "runtime/abi3/verifier.py",
+        "runtime/sim/device.py",
+        "runtime/sim/engines/link.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 60,
+      "missing": [],
+      "pinned_sources": 60,
+      "stale": [
+        "compiler/backends/hbm_sram/lower.py",
+        "compiler/backends/rom/common/program.py",
+        "compiler/backends/rom/deepseek_v4_array.py",
+        "runtime/abi3/capability.py",
+        "runtime/abi3/constants.py",
+        "runtime/abi3/verifier.py",
+        "runtime/sim/engines/link.py"
       ],
       "stale_only_from_recent_work": false,
       "unresolvable_by_design": []
@@ -665,6 +663,24 @@
       "unresolvable_by_design": []
     },
     {
+      "artifact": "results/rtl/a3_link_campaign.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 83,
+      "missing": [],
+      "pinned_sources": 83,
+      "stale": [
+        "build/abi3/deepseek-v4-flash-rom/deployment.json",
+        "build/abi3/deepseek-v4-flash-rom/descriptors.bin",
+        "build/abi3/deepseek-v4-flash-rom/program.bin",
+        "rtl/ot_fp32_rne_pkg.sv",
+        "src/opentallas/roofline.py"
+      ],
+      "stale_only_from_recent_work": false,
+      "unresolvable_by_design": []
+    },
+    {
       "artifact": "results/rtl/a3_qwen_gqa_campaign.json",
       "binding_fields": [
         "source_sha256",
@@ -721,23 +737,6 @@
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/rtl/a3_link_campaign.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 83,
-      "missing": [],
-      "pinned_sources": 83,
-      "stale": [
-        "build/abi3/deepseek-v4-flash-rom/deployment.json",
-        "build/abi3/deepseek-v4-flash-rom/descriptors.bin",
-        "build/abi3/deepseek-v4-flash-rom/program.bin",
-        "rtl/ot_fp32_rne_pkg.sv"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
       "artifact": "results/rtl/abi3_tile64.json",
       "binding_fields": [
         "source_sha256"
@@ -771,22 +770,6 @@
         "rtl/abi3/ot_a3_microsequencer.sv",
         "rtl/test/a3_shipped_prefix_top.sv",
         "tools/build_abi3_shipped_prefix_vectors.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 55,
-      "missing": [],
-      "pinned_sources": 55,
-      "stale": [
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py",
-        "compiler/backends/rom/qwen3.py"
       ],
       "stale_only_from_recent_work": false,
       "unresolvable_by_design": []
@@ -923,22 +906,7 @@
       ]
     },
     {
-      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32_t16.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 56,
-      "missing": [],
-      "pinned_sources": 56,
-      "stale": [
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py"
-      ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "artifact": "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
       "binding_fields": [
         "source_sha256"
       ],
@@ -946,25 +914,10 @@
       "missing": [],
       "pinned_sources": 55,
       "stale": [
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py"
+        "compiler/backends/rom/common/program.py",
+        "compiler/backends/rom/qwen3.py"
       ],
-      "stale_only_from_recent_work": false,
-      "unresolvable_by_design": []
-    },
-    {
-      "artifact": "results/abi3/deepseek_v4_context_gate.json",
-      "binding_fields": [
-        "source_sha256"
-      ],
-      "entries_checked": 60,
-      "missing": [],
-      "pinned_sources": 60,
-      "stale": [
-        "compiler/backends/numeric_contracts.py",
-        "compiler/backends/rom/common/program.py"
-      ],
-      "stale_only_from_recent_work": false,
+      "stale_only_from_recent_work": true,
       "unresolvable_by_design": []
     },
     {
@@ -1101,31 +1054,45 @@
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32_t16.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "entries_checked": 54,
+      "entries_checked": 56,
       "missing": [],
-      "pinned_sources": 54,
+      "pinned_sources": 56,
       "stale": [
-        "compiler/backends/numeric_contracts.py"
+        "compiler/backends/rom/common/program.py"
       ],
-      "stale_only_from_recent_work": false,
+      "stale_only_from_recent_work": true,
       "unresolvable_by_design": []
     },
     {
-      "artifact": "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
       "binding_fields": [
         "source_sha256"
       ],
-      "entries_checked": 54,
+      "entries_checked": 55,
       "missing": [],
-      "pinned_sources": 54,
+      "pinned_sources": 55,
       "stale": [
-        "compiler/backends/numeric_contracts.py"
+        "compiler/backends/rom/common/program.py"
       ],
-      "stale_only_from_recent_work": false,
+      "stale_only_from_recent_work": true,
+      "unresolvable_by_design": []
+    },
+    {
+      "artifact": "results/abi3/deepseek_v4_context_gate.json",
+      "binding_fields": [
+        "source_sha256"
+      ],
+      "entries_checked": 60,
+      "missing": [],
+      "pinned_sources": 60,
+      "stale": [
+        "compiler/backends/rom/common/program.py"
+      ],
+      "stale_only_from_recent_work": true,
       "unresolvable_by_design": []
     },
     {
@@ -1337,7 +1304,7 @@
   "generated_by": "tools/audit_source_currency_drift.py",
   "generated_by_sha256": "0318c94d5f3a8e0f8f1906e24f76844d47353f44cc4c141f422ed2697203005d",
   "git": {
-    "commit": "7308f916ddf24d52ff0b0ff8b5302d17b6839d49",
+    "commit": "f6afec5b99d164feefb374487ba2ea4d6bfa1327",
     "worktree_dirty": true
   },
   "most_common_missing_sources": [
@@ -1370,10 +1337,6 @@
     {
       "artifacts_staled": 29,
       "source": "rtl/ot_fp32_rne_pkg.sv"
-    },
-    {
-      "artifacts_staled": 16,
-      "source": "compiler/backends/numeric_contracts.py"
     },
     {
       "artifacts_staled": 15,
@@ -1414,6 +1377,10 @@
     {
       "artifacts_staled": 8,
       "source": "rtl/abi3/ot_a3_microsequencer.sv"
+    },
+    {
+      "artifacts_staled": 7,
+      "source": "runtime/abi3/capability.py"
     }
   ],
   "question": "of the artifacts that pin source digests, how many still bind the sources on disk?",
@@ -1438,6 +1405,10 @@
       "source": "rtl/ot_fp32_rne_pkg.sv"
     },
     {
+      "artifacts_staled": 15,
+      "source": "compiler/backends/rom/common/program.py"
+    },
+    {
       "artifacts_staled": 10,
       "source": "testdata/compiler/abi3_deployment/a3_descriptor.hex"
     },
@@ -1450,8 +1421,20 @@
       "source": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json"
     },
     {
+      "artifacts_staled": 8,
+      "source": "rtl/abi3/ot_a3_loop_stack.sv"
+    },
+    {
       "artifacts_staled": 7,
       "source": "rtl/abi3/ot_a3_engine_array.sv"
+    },
+    {
+      "artifacts_staled": 7,
+      "source": "rtl/abi3/ot_a3_view_resolver.sv"
+    },
+    {
+      "artifacts_staled": 6,
+      "source": "rtl/ot_ta_rope_bf16_sram_engine.sv"
     },
     {
       "artifacts_staled": 5,
@@ -1468,6 +1451,10 @@
     {
       "artifacts_staled": 5,
       "source": "rtl/abi3/ot_a3_vector_rms_norm.sv"
+    },
+    {
+      "artifacts_staled": 5,
+      "source": "rtl/abi3/ot_a3_vector_rope.sv"
     },
     {
       "artifacts_staled": 5,
@@ -1532,6 +1519,18 @@
     {
       "artifacts_staled": 1,
       "source": "testdata/compiler/abi3_deployment/a3_deployment_view.hex"
+    },
+    {
+      "artifacts_staled": 1,
+      "source": "rtl/test/a3_g1e_control_harness.cpp"
+    },
+    {
+      "artifacts_staled": 1,
+      "source": "tools/rtl_abi3_row_shard_campaign.py"
+    },
+    {
+      "artifacts_staled": 1,
+      "source": "rtl/test/a3_shipped_prefix_harness.cpp"
     }
   ]
 }

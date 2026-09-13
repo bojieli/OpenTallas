@@ -1113,11 +1113,14 @@ def layer_fixed_latency(
     traversal_mm = math.sqrt(reticle.value)
     traversal_s = traversal_mm * wire_per_mm.value
 
+    # The scan-to-top-k-to-gather dependency exists only on a layer that runs
+    # its own index scan.  A DeepSeek-V4.1 CSA2 Reuse-mode layer takes its
+    # predecessor's selection and has no such dependency.
     sparse_layers = float(
         sum(
             group.count
             for group in model.attention_groups
-            if group.kind == "compressed_sparse"
+            if group.kind == "compressed_sparse" and group.scans_index
         )
     )
     layers = float(model.num_layers)
@@ -1238,11 +1241,12 @@ def kv_access_granularity(
             else 0.0
         )
         entry = float(group.entry_bytes)
+        window_entry = float(group.effective_window_entry_bytes)
         if group.kind == "window":
             sequential += count * window * entry
         elif group.kind in {"compressed_sparse", "compressed_dense"}:
             compressed = float(math.ceil(context_tokens / group.compression_ratio))
-            sequential += count * window * entry
+            sequential += count * window * window_entry
             if group.kind == "compressed_sparse":
                 gathered = float(min(group.top_k, compressed))
                 native = count * gathered * entry
@@ -1258,7 +1262,12 @@ def kv_access_granularity(
                         "granule_factor": factor,
                     }
                 )
-                index_native = count * compressed * float(group.index_entry_bytes)
+                # A Reuse-mode layer scans nothing; a Reindex-mode layer scans
+                # only the candidate pool (see AttentionGroup).
+                scanned = compressed if group.scans_index else 0.0
+                if scanned and group.index_scan_entries_cap:
+                    scanned = min(scanned, float(group.index_scan_entries_cap))
+                index_native = count * scanned * float(group.index_entry_bytes)
                 if layout == "interleaved":
                     index_factor = _granule_factor(
                         float(group.index_entry_bytes), grain
@@ -1273,7 +1282,7 @@ def kv_access_granularity(
                         "group": group.label or group.kind,
                         "stream": "sparse_index_scan",
                         "entry_bytes": float(group.index_entry_bytes),
-                        "entries_per_layer": compressed,
+                        "entries_per_layer": scanned,
                         "bytes": index_native,
                         "granule_factor": index_factor,
                     }
@@ -1289,8 +1298,13 @@ def kv_access_granularity(
         if group.kind == "window":
             write = count * entry
         elif group.kind in {"compressed_sparse", "compressed_dense"}:
-            write = count * entry * (1.0 + 1.0 / group.compression_ratio)
-            if group.kind == "compressed_sparse":
+            if group.kv_owner and window_entry == entry:
+                write = count * entry * (1.0 + 1.0 / group.compression_ratio)
+            else:
+                write = count * window_entry
+                if group.kv_owner:
+                    write += count * entry / group.compression_ratio
+            if group.kind == "compressed_sparse" and group.kv_owner:
                 write += count * float(group.index_entry_bytes) / group.compression_ratio
         elif group.kind == "recurrent":
             write = count * float(
