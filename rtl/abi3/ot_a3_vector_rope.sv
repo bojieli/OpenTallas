@@ -14,7 +14,17 @@
 // qualified core performs its two BF16-rounded products and BF16-rounded sum.
 // One BF16 code occupies the low half of each 32-bit verification-bank word.
 // ---------------------------------------------------------------------------
-module ot_a3_vector_rope (
+module ot_a3_vector_rope #(
+    //: MODEL GEOMETRY.  These three were localparams frozen to Qwen3-8B, and
+    //: through them so was every expected count in the completion check below
+    //: and the 512-bit core command literal.  A RoPE rotation is the same
+    //: arithmetic at any head width; nothing in the datapath required 128.
+    //: Defaults reproduce the shipped values bit-for-bit, including the
+    //: command record's CRC.
+    parameter [31:0] QUERY_HEADS = 32'd32,
+    parameter [31:0] KEY_HEADS   = 32'd8,
+    parameter [31:0] HEAD_WIDTH  = 32'd128
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        start,
@@ -42,6 +52,10 @@ module ot_a3_vector_rope (
     output reg  [31:0] saturation_count,
     output reg  [31:0] work_count
 );
+    //: Set +OT_ROPE_TRACE=1 to report which shape check rejected.
+    reg trace_rope = 1'b0;
+    initial if ($test$plusargs("OT_ROPE_TRACE")) trace_rope = 1'b1;
+
     localparam [7:0] ERR_NONE = ot_a3_engine_pkg::ERR_NONE;
     localparam [7:0] ERR_OPERAND_NONFINITE =
         ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;
@@ -49,10 +63,12 @@ module ot_a3_vector_rope (
         ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;
     localparam [7:0] ERR_SHAPE = ot_a3_engine_pkg::ERR_SHAPE;
 
-    localparam [31:0] QUERY_HEADS = 32'd32;
-    localparam [31:0] KEY_HEADS = 32'd8;
-    localparam [31:0] HEAD_WIDTH = 32'd128;
-    localparam [31:0] COEFFICIENT_COUNT = 32'd256;
+    //: One cosine and one sine per column.
+    localparam [31:0] COEFFICIENT_COUNT = 32'd2 * HEAD_WIDTH;
+    //: Every rotated element, queries and keys together.
+    localparam [31:0] QUERY_ELEMENTS = QUERY_HEADS * HEAD_WIDTH;
+    localparam [31:0] KEY_ELEMENTS = KEY_HEADS * HEAD_WIDTH;
+    localparam [31:0] TOTAL_ELEMENTS = QUERY_ELEMENTS + KEY_ELEMENTS;
 
     // The internal byte-address spaces are deliberately disjoint.  They are
     // decoded here and never escape onto an ABI-visible memory port.
@@ -61,15 +77,64 @@ module ot_a3_vector_rope (
     localparam [63:0] CORE_QUERY_OUTPUT_BASE = 64'h0000_0000_0003_0000;
     localparam [63:0] CORE_KEY_OUTPUT_BASE = 64'h0000_0000_0004_0000;
     localparam [63:0] CORE_COEFFICIENT_BASE = 64'h0000_0000_0005_0000;
-    localparam [63:0] CORE_QUERY_BYTES = 64'd8192;
-    localparam [63:0] CORE_KEY_BYTES = 64'd2048;
-    localparam [63:0] CORE_COEFFICIENT_BYTES = 64'd512;
+    //: Two bytes per BF16 element.
+    localparam [63:0] CORE_QUERY_BYTES = 64'd2 * {32'd0, QUERY_ELEMENTS};
+    localparam [63:0] CORE_KEY_BYTES = 64'd2 * {32'd0, KEY_ELEMENTS};
+    localparam [63:0] CORE_COEFFICIENT_BYTES = 64'd2 * {32'd0, COEFFICIENT_COUNT};
 
     // ABI 2.2 is private to this adapter.  The record contains ROPE_BF16,
     // vector engine 3, index/kernel 0, the five internal bases above,
     // 32/8/128 geometry, and reflected IEEE CRC32 0xdb8405f0.
-    localparam [511:0] CORE_COMMAND =
+    localparam [511:0] CORE_COMMAND_SHIPPED =
         512'hdb8405f0000500000000008000000008000000200000000000040000000000000003000000000000000200000000000000010000000000000000000000000321;
+
+    //: The record above carries its own geometry in size0/size1/size2 and a
+    //: reflected IEEE CRC32 over its first fifteen words.  Retargeting it to a
+    //: different head count therefore means rewriting three words and
+    //: RECOMPUTING that CRC -- which is why the literal had frozen the model.
+    //: Doing both at elaboration keeps the shipped record as the witness: at
+    //: the default parameters the three words are already 32/8/128, so the
+    //: recomputed CRC is the literal's own and CORE_COMMAND is bit-identical.
+    function automatic [31:0] crc32_ieee_word;
+        input [31:0] crc_in;
+        input [31:0] payload_word;
+        integer bit_index;
+        reg [31:0] crc;
+        reg        feedback;
+        begin
+            crc = crc_in;
+            for (bit_index = 0; bit_index < 32; bit_index = bit_index + 1) begin
+                feedback = crc[0] ^ payload_word[bit_index];
+                crc = crc >> 1;
+                if (feedback) crc = crc ^ 32'hedb8_8320;
+            end
+            crc32_ieee_word = crc;
+        end
+    endfunction
+
+    function automatic [511:0] retarget_command;
+        input [511:0] base;
+        input [31:0]  query_heads;
+        input [31:0]  key_heads;
+        input [31:0]  head_width;
+        reg [511:0] record;
+        reg [31:0]  crc;
+        integer     word_index;
+        begin
+            record = base;
+            record[383:352] = query_heads;   // size0
+            record[415:384] = key_heads;     // size1
+            record[447:416] = head_width;    // size2
+            crc = 32'hffff_ffff;
+            for (word_index = 0; word_index < 15; word_index = word_index + 1)
+                crc = crc32_ieee_word(crc, record[word_index * 32 +: 32]);
+            record[511:480] = ~crc;
+            retarget_command = record;
+        end
+    endfunction
+
+    localparam [511:0] CORE_COMMAND =
+        retarget_command(CORE_COMMAND_SHIPPED, QUERY_HEADS, KEY_HEADS, HEAD_WIDTH);
 
     localparam [1:0] S_IDLE = 2'd0;
     localparam [1:0] S_DISPATCH = 2'd1;
@@ -179,7 +244,12 @@ module ot_a3_vector_rope (
 
     ot_ta_rope_bf16_sram_engine #(
         .PROFILE_COMMAND_INDEX(32'd0),
-        .PROFILE_KERNEL_INDEX(32'd0)
+        .PROFILE_KERNEL_INDEX(32'd0),
+        //: The core was already parameterised; only this wrapper was not, so
+        //: the geometry stopped here and the core never heard about it.
+        .PROFILE_QUERY_HEADS(QUERY_HEADS),
+        .PROFILE_KEY_HEADS(KEY_HEADS),
+        .PROFILE_HEAD_WIDTH(HEAD_WIDTH)
     ) qualified_rope (
         .clk(clk),
         .rst_n(rst_n),
@@ -285,6 +355,10 @@ module ot_a3_vector_rope (
                             !((cfg_rows == QUERY_HEADS) ||
                               (cfg_rows == KEY_HEADS)) ||
                             (cfg_count != cfg_rows * cfg_cols)) begin
+                            if (trace_rope)
+                                $display("OT_ROPE_CFG_SHAPE rows=%0d cols=%0d count=%0d (want cols=%0d rows in {%0d,%0d} count=rows*cols)",
+                                         cfg_rows, cfg_cols, cfg_count,
+                                         HEAD_WIDTH, QUERY_HEADS, KEY_HEADS);
                             error_code <= ERR_SHAPE;
                             state <= S_DONE;
                         end else begin
@@ -308,14 +382,34 @@ module ot_a3_vector_rope (
                                  (core_done_command_index != 0) ||
                                  (core_done_coefficient_reads !=
                                   COEFFICIENT_COUNT) ||
-                                 (core_done_query_reads != 32'd4096) ||
-                                 (core_done_key_reads != 32'd1024) ||
-                                 (core_done_writes != 32'd5120) ||
-                                 (core_done_elements != 32'd5120) ||
-                                 (core_done_multiplications != 32'd10240) ||
-                                 (core_done_additions != 32'd5120) ||
+                                 //: Each of these was a Qwen3-8B constant:
+                                 //: 4096 = 32x128, 1024 = 8x128, 5120 their
+                                 //: sum, 10240 two multiplies per element.
+                                 //: They are the same identities at any
+                                 //: geometry, so state them that way.
+                                 (core_done_query_reads != QUERY_ELEMENTS) ||
+                                 (core_done_key_reads != KEY_ELEMENTS) ||
+                                 (core_done_writes != TOTAL_ELEMENTS) ||
+                                 (core_done_elements != TOTAL_ELEMENTS) ||
+                                 (core_done_multiplications !=
+                                  (32'd2 * TOTAL_ELEMENTS)) ||
+                                 (core_done_additions != TOTAL_ELEMENTS) ||
                                  (selected_write_count != count_q))
+                        begin
+                            if (trace_rope)
+                                $display("OT_ROPE_DONE_SHAPE err=%0d fault=%0b cmdidx=%0d coef=%0d/%0d q=%0d/%0d k=%0d/%0d w=%0d/%0d el=%0d/%0d mul=%0d/%0d add=%0d/%0d sel=%0d/%0d",
+                                         core_done_error, address_fault,
+                                         core_done_command_index,
+                                         core_done_coefficient_reads, COEFFICIENT_COUNT,
+                                         core_done_query_reads, QUERY_ELEMENTS,
+                                         core_done_key_reads, KEY_ELEMENTS,
+                                         core_done_writes, TOTAL_ELEMENTS,
+                                         core_done_elements, TOTAL_ELEMENTS,
+                                         core_done_multiplications, 32'd2 * TOTAL_ELEMENTS,
+                                         core_done_additions, TOTAL_ELEMENTS,
+                                         selected_write_count, count_q);
                             error_code <= ERR_SHAPE;
+                        end
                         else begin
                             error_code <= ERR_NONE;
                             result_count <= count_q;

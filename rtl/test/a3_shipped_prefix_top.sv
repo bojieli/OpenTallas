@@ -30,6 +30,17 @@ module ot_a3_shipped_prefix_top #(
     parameter integer GQA_KV_HEADS    = 8,
     parameter integer GQA_HEAD_WIDTH  = 128,
     parameter [31:0]  GQA_SCALE_CODE  = 32'h3db5_0000,
+    //: Embedding geometry, forwarded the same way.  Defaults are the shipped
+    //: values, so every existing elaboration of this top is unchanged.
+    parameter [31:0]  EMBEDDING_WIDTH     = 32'd4096,
+    parameter [31:0]  QWEN_VOCABULARY     = 32'd151936,
+    parameter [31:0]  DEEPSEEK_VOCABULARY = 32'd129280,
+    //: Forwarded: 0 keeps the retained vectors' launch-counter
+    //: embedding base, 1 makes the lookup read its token id.
+    parameter integer EMBEDDING_TOKEN_INDEXED = 0,
+    //: Forwarded: 1 addresses a gather's source by object and reads it
+    //: from the result bank.
+    parameter integer GATHER_PLACEMENT_ADDRESSED = 0,
     parameter integer PROGRAM_WORDS = 4096,
     parameter integer DESC_WORDS = 8192,
     parameter integer INDEX_WORDS = 64,
@@ -461,6 +472,14 @@ module ot_a3_shipped_prefix_top #(
         for (clear_word = 0; clear_word < RESULT_WORDS;
              clear_word = clear_word + 1)
             result_mem[clear_word] = 32'hdead_beef;
+        //: AFTER the poison, not before.  The result bank is written by the
+        //: program, but an operand the program reads through a port that
+        //: resolves to it -- a gather selecting a computed row, whose STATIC
+        //: sibling table lands in the same bank -- has to be there before the
+        //: first instruction.  The image is always written by the stager, so the
+        //: read always succeeds; for the retained vector sets it is empty and
+        //: every word keeps its poison, exactly as before.
+        $readmemh("p3_result.hex", result_mem);
     end
 
     // -- control stores behind the device top's store boundaries ---------
@@ -1385,7 +1404,12 @@ module ot_a3_shipped_prefix_top #(
         .GQA_QUERY_HEADS(GQA_QUERY_HEADS),
         .GQA_KV_HEADS(GQA_KV_HEADS),
         .GQA_HEAD_WIDTH(GQA_HEAD_WIDTH),
-        .GQA_SCALE_CODE(GQA_SCALE_CODE)
+        .GQA_SCALE_CODE(GQA_SCALE_CODE),
+        .EMBEDDING_WIDTH(EMBEDDING_WIDTH),
+        .QWEN_VOCABULARY(QWEN_VOCABULARY),
+        .DEEPSEEK_VOCABULARY(DEEPSEEK_VOCABULARY),
+        .EMBEDDING_TOKEN_INDEXED(EMBEDDING_TOKEN_INDEXED),
+        .GATHER_PLACEMENT_ADDRESSED(GATHER_PLACEMENT_ADDRESSED)
     ) bridge (
         .clk(clk),
         .rst_n(rst_n),

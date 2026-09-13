@@ -103,6 +103,10 @@ module ot_a3_loop_stack
     output reg  [31:0] iteration_count,
     output wire [3:0]  depth
 );
+    //: Set +OT_LOOP_TRACE=1 to report loop setup outcomes.
+    reg trace_loops = 1'b0;
+    initial if ($test$plusargs("OT_LOOP_TRACE")) trace_loops = 1'b1;
+
     localparam [1:0] ACTION_PUSH    = 2'd0;
     localparam [1:0] ACTION_SKIP    = 2'd1;
     localparam [1:0] ACTION_ITERATE = 2'd2;
@@ -354,6 +358,12 @@ module ot_a3_loop_stack
                         busy <= 1'b0;
                         done <= 1'b1;
                         state <= S_IDLE;
+                        //: Set +OT_LOOP_TRACE=1 to report each setup's outcome.
+                        if (trace_loops)
+                            $display("OT_LOOP_SETUP id=%0d trip=%0d max=%0d sp=%0d kind=%0d sym=%0d div=%0d bs=%0d be=%0d",
+                                     hold_loop_id, hold_trip, hold_max, stack_pointer,
+                                     hold_kind, hold_symbolic, hold_divisor,
+                                     hold_body_start, hold_body_end);
                         if (hold_trip > hold_max) begin
                             trap_valid <= 1'b1;
                             trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;

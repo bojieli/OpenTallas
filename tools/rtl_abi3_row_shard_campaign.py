@@ -73,6 +73,10 @@ SOURCES = (
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_mac_lane.sv",
+    #: ot_a3_engine_array instantiates BOTH lanes and selects between them,
+    #: so a source list with only the legacy one cannot elaborate it.
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",

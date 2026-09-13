@@ -81,7 +81,58 @@ module ot_a3_engine_issue_bridge #(
     parameter integer GQA_QUERY_HEADS = 32,
     parameter integer GQA_KV_HEADS    = 8,
     parameter integer GQA_HEAD_WIDTH  = 128,
-    parameter [31:0]  GQA_SCALE_CODE  = 32'h3db5_0000
+    parameter [31:0]  GQA_SCALE_CODE  = 32'h3db5_0000,
+
+    //: MODEL GEOMETRY, not a property of this bridge.
+    //:
+    //: These four were localparams frozen to the two shipped checkpoints, which
+    //: made the admission rule reject any other model's embedding table on
+    //: shape alone -- a control-path limit with no datapath reason behind it.
+    //: A vocabulary size is a deployment fact; the engine that moves the row
+    //: does not care what it is.  Defaults reproduce the shipped values exactly,
+    //: so every existing instantiation is unchanged.
+    parameter [31:0]  EMBEDDING_WIDTH     = 32'd4096,
+    //: Two admitted vocabularies, because one bridge serves both shipped
+    //: checkpoints.  A deployment that needs only one may set both alike.
+    parameter [31:0]  QWEN_VOCABULARY     = 32'd151936,
+    parameter [31:0]  DEEPSEEK_VOCABULARY = 32'd129280,
+
+    //: DOES TENSOR.EMBED_LOOKUP ACTUALLY LOOK ANYTHING UP?
+    //:
+    //: With this at 0 -- the default, and what every retained vector set was
+    //: recorded against -- the embedding row address is
+    //: ``cfg_embedding_source_base + embedding_launch_count * EMBEDDING_WIDTH``:
+    //: a legacy unkeyed base advanced by a LAUNCH COUNTER.  The row that comes
+    //: back is whichever one the harness planted for that launch, so the
+    //: operator verifies a row movement and the token id is never read.  Feed
+    //: the same program two different token ids and it emits the same logits.
+    //:
+    //: With it at 1 the row is ``<table object's placement base> + token *
+    //: EMBEDDING_WIDTH``, where ``token`` is the value the operator's own index
+    //: view resolves to, read from memory before the engine starts.  That is an
+    //: embedding lookup.  It is opt-in because the retained vectors place rows
+    //: for the counter form and would otherwise all move at once.
+    parameter integer EMBEDDING_TOKEN_INDEXED = 0,
+
+    //: WHERE DOES A GATHER READ FROM?
+    //:
+    //: At 0 -- the default, and what every retained vector set was recorded
+    //: against -- a DMA.GATHER's source address is
+    //: ``cfg_source_base + dma_gather_launch_count * cfg_source_launch_stride``:
+    //: the same legacy unkeyed base as the embedding's, advanced by a launch
+    //: counter, and it ignores the placement table entirely.  The object the
+    //: operator's own view names is validated and then not used to address
+    //: anything.  A harness that plants the right rows at those strides gets
+    //: right answers; one that does not reads whatever is at the base.
+    //:
+    //: At 1 the source address is the slot-1 object's placement base plus the
+    //: offset its view resolves to, and the read is routed to the result bank.
+    //: Both halves are needed together: a gather that selects a row the program
+    //: just computed must address it by object AND find it where results live.
+    //: A static gather source is then staged into the result bank too, which is
+    //: a harness bank-routing choice -- architecturally there is one address
+    //: space and the placement table already gives every object a base in it.
+    parameter integer GATHER_PLACEMENT_ADDRESSED = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -288,6 +339,14 @@ module ot_a3_engine_issue_bridge #(
     output reg  [7:0]    last_response_sub,
     output reg  [31:0]   last_response_descriptor_id
 );
+    //: Set +OT_BRIDGE_TRACE=1 to report which descriptor check rejected.
+    //: Sites are numbered in source order, so `grep 'site=%0d", <n>'` lands
+    //: on the check that refused.  Several sites also print the fields they
+    //: latched, because twice a predicate looked satisfiable on paper and the
+    //: register feeding it was a state behind.
+    reg trace_bridge = 1'b0;
+    initial if ($test$plusargs("OT_BRIDGE_TRACE")) trace_bridge = 1'b1;
+
     localparam [31:0] NO_ID = 32'hffff_ffff;
     localparam [31:0] DESC_MAGIC = 32'h4433_4154;
     localparam [7:0] TYPE_MAJOR = 8'd1;
@@ -363,38 +422,48 @@ module ot_a3_engine_issue_bridge #(
     // qwen3_gqa_fp32_softmax_bf16_v1
     localparam [255:0] CONTRACT_QWEN_GQA_RAW =
         256'h81e12c87d89ead473983a0898c3fbfe08d7b0a3864b55fb1f0171a4698f53a62;
-    localparam [31:0] QWEN_VOCABULARY = 32'd151936;
-    localparam [31:0] DEEPSEEK_VOCABULARY = 32'd129280;
-    localparam [31:0] EMBEDDING_WIDTH = 32'd4096;
-    localparam [31:0] HEAD_WIDTH = 32'd128;
-    localparam [31:0] MAX_HEAD_ROWS = 32'd32;
+    //: ADMISSION USED ITS OWN COPY OF THE GEOMETRY.
+    //:
+    //: The datapath instances below are handed GQA_QUERY_HEADS, GQA_KV_HEADS,
+    //: GQA_HEAD_WIDTH and GQA_SCALE_CODE.  The admission predicates read these
+    //: localparams instead, which were frozen at 32/8/128 and 0x3db50000 -- so
+    //: the bridge would reject shapes the engines behind it could compute, and
+    //: two knobs had to be kept in step by hand.  One source of truth: the
+    //: parameters.  The defaults are the shipped values, so nothing moves.
+    localparam [31:0] HEAD_WIDTH = GQA_HEAD_WIDTH[31:0];
+    //: The head-RMS row bound is the query head count.
+    localparam [31:0] MAX_HEAD_ROWS = GQA_QUERY_HEADS[31:0];
     localparam [31:0] RMS_EPSILON = 32'h3586_37bd;
     localparam [31:0] TRANSFER_COPIES = 32'd4;
-    localparam [31:0] QUERY_HEADS = 32'd32;
-    localparam [31:0] KV_HEADS = 32'd8;
+    localparam [31:0] QUERY_HEADS = GQA_QUERY_HEADS[31:0];
+    localparam [31:0] KV_HEADS = GQA_KV_HEADS[31:0];
     localparam [31:0] KV_PLANE_WORDS = KV_HEADS * HEAD_WIDTH;
     localparam [31:0] KV_ROW_STRIDE = 32'd2 * KV_PLANE_WORDS;
-    localparam [31:0] GQA_SCALE_BITS = 32'h3db5_0000;
+    localparam [31:0] GQA_SCALE_BITS = GQA_SCALE_CODE;
     localparam [31:0] GQA_OUTPUT_WORDS = QUERY_HEADS * HEAD_WIDTH;
 
-    localparam [3:0] S_IDLE        = 4'd0;
-    localparam [3:0] S_OP_WAIT     = 4'd1;
-    localparam [3:0] S_INDEX_WAIT  = 4'd2;
-    localparam [3:0] S_SOURCE_WAIT = 4'd3;
-    localparam [3:0] S_OUTPUT_WAIT = 4'd4;
-    localparam [3:0] S_NUM_WAIT    = 4'd5;
-    localparam [3:0] S_START       = 4'd6;
-    localparam [3:0] S_ENGINE_WAIT = 4'd7;
-    localparam [3:0] S_RESPONSE    = 4'd8;
-    localparam [3:0] S_RMS_INPUT_WAIT = 4'd9;
+    localparam [4:0] S_IDLE        = 5'd0;
+    localparam [4:0] S_OP_WAIT     = 5'd1;
+    localparam [4:0] S_INDEX_WAIT  = 5'd2;
+    localparam [4:0] S_SOURCE_WAIT = 5'd3;
+    localparam [4:0] S_OUTPUT_WAIT = 5'd4;
+    localparam [4:0] S_NUM_WAIT    = 5'd5;
+    localparam [4:0] S_START       = 5'd6;
+    localparam [4:0] S_ENGINE_WAIT = 5'd7;
+    localparam [4:0] S_RESPONSE    = 5'd8;
+    localparam [4:0] S_RMS_INPUT_WAIT = 5'd9;
     // The mapped families walk one shared admission path instead of one
     // state chain each.
-    localparam [3:0] S_MAP_VIEW_WAIT   = 4'd10;
-    localparam [3:0] S_MAP_NUM_WAIT    = 4'd11;
-    localparam [3:0] S_MAP_POLICY_WAIT = 4'd12;
-    localparam [3:0] S_MAP_INDEX_ISSUE = 4'd13;
-    localparam [3:0] S_MAP_INDEX_WAIT  = 4'd14;
-    localparam [3:0] S_MAP_ADMIT       = 4'd15;
+    localparam [4:0] S_MAP_VIEW_WAIT   = 5'd10;
+    localparam [4:0] S_MAP_NUM_WAIT    = 5'd11;
+    localparam [4:0] S_MAP_POLICY_WAIT = 5'd12;
+    localparam [4:0] S_MAP_INDEX_ISSUE = 5'd13;
+    localparam [4:0] S_MAP_INDEX_WAIT  = 5'd14;
+    localparam [4:0] S_MAP_ADMIT       = 5'd15;
+    //: The embedding's own index probe.  The four-bit state field was full, so
+    //: adding a real lookup meant widening it.
+    localparam [4:0] S_EMBED_INDEX_ISSUE = 5'd16;
+    localparam [4:0] S_EMBED_INDEX_WAIT  = 5'd17;
 
     // -- the object placement table ---------------------------------------
     // One table, consulted by every operand slot and every result slot of
@@ -503,7 +572,7 @@ module ot_a3_engine_issue_bridge #(
     end
     wire placement_table_unique = placement_unique_r;
 
-    reg [3:0] state;
+    reg [4:0] state;
     reg       response_fault;
     reg [15:0] response_trap;
     reg       engine_start;
@@ -574,6 +643,18 @@ module ot_a3_engine_issue_bridge #(
     reg [31:0] slot_stride2 [0:5];
     reg [31:0] slot_tail_dims [0:5];
     reg [31:0] slot_tail_strides [0:5];
+    //: A slot's OWN static offset and term count, so the resolved offset
+    //: can be checked against what the view declares instead of against
+    //: zero.  Comparing to zero admits only the first iteration of any
+    //: indexed loop, which for a transformer means layer 0 alone.
+    reg [63:0] slot_offset [0:5];
+    //: The embedding's resolved index address, its table base, and the token id
+    //: read back from that address.
+    reg [31:0] embed_index_addr_q;
+    reg [31:0] embed_table_base_q;
+    reg [31:0] embed_token_q;
+    //: A gather's source, addressed by object rather than by launch counter.
+    reg [31:0] gather_source_base_q;
     reg [2:0]  slot_cursor;
 
     reg [31:0] op_input2;
@@ -651,6 +732,38 @@ module ot_a3_engine_issue_bridge #(
     wire [32:0] desc_place = place_lookup(desc_primary_object);
     wire        desc_object_placed = desc_place[32];
 
+    //: A VIEW WITH A DYNAMIC TERM DOES NOT RESOLVE TO ITS STATIC OFFSET.
+    //:
+    //: Nine admission clauses asserted ``captured_offset[slot] ==
+    //: desc_view_offset``, which says the resolver contributed nothing -- true
+    //: of an unindexed view, and true of an indexed one only on its first
+    //: iteration.  A transformer's per-layer weights are indexed by the layer
+    //: loop, so layer 0 was admitted and layer 1 was refused.  The invariant
+    //: that actually holds is stated by the view's own term count: no terms
+    //: means exactly the static offset, and terms mean at or beyond it, since
+    //: every stride in these views is non-negative.  An offset that resolves
+    //: past the end of its object is caught where the object's size is known,
+    //: which is the bank bound at the read, not here.
+    //: The slot-array form of view_offset_consistent, for the mapped
+    //: families whose shape predicates run after every slot is captured.
+    function automatic slot_offset_consistent;
+        input integer slot;
+        begin
+            slot_offset_consistent = (slot_terms[slot] == 8'd0)
+                ? (captured_offset[slot] == slot_offset[slot])
+                : (captured_offset[slot] >= slot_offset[slot]);
+        end
+    endfunction
+
+    function automatic view_offset_consistent;
+        input integer slot;
+        begin
+            view_offset_consistent = (desc_view_terms == 0)
+                ? (captured_offset[slot] == desc_view_offset)
+                : (captured_offset[slot] >= desc_view_offset);
+        end
+    endfunction
+
     wire input_view_common_ok = descriptor_header_ok(
         desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
     ) &&
@@ -699,24 +812,35 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride5 == 0) &&
         (captured_rank[1] == 2) && (captured_axis[1] == 0) &&
         (captured_extent[1] == desc_view_dim0) &&
-        (captured_offset[1] == desc_view_offset) &&
+        (view_offset_consistent(1)) &&
         (!embedding_q || ((desc_view_dim1 == EMBEDDING_WIDTH) &&
          ((desc_view_dim0 == QWEN_VOCABULARY) ||
           (desc_view_dim0 == DEEPSEEK_VOCABULARY))));
+    //: A MATMUL'S REDUCTION LENGTH IS NOT THE EMBEDDING WIDTH.
+    //:
+    //: This row and the weight below were both pinned to EMBEDDING_WIDTH, which
+    //: is true of the attention projections and false of the MLP: a gate
+    //: projection is [intermediate, hidden] and a down projection reduces over
+    //: the intermediate width.  The shipped prefix fail-stops before the MLP,
+    //: so the pin was never contradicted -- it was never reached.  What the
+    //: datapath requires is that the weight's reduction axis equal the input
+    //: row's width, whatever that width is, and that both fit the 16-bit
+    //: cfg_cols/cfg_depth fields the engine array is configured through.
     wire model_row_input_source_ok =
         (matmul_q || (rms_norm_q && !head_rms_norm_q)) &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 2) &&
         (desc_view_terms <= 4) &&
-        (desc_view_dim0 != 0) && (desc_view_dim1 == EMBEDDING_WIDTH) &&
+        (desc_view_dim0 != 0) &&
+        (desc_view_dim1 != 0) && (desc_view_dim1 <= 32'hffff) &&
         (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&
         (desc_view_dim4 == 0) && (desc_view_dim5 == 0) &&
-        (desc_view_stride0 == EMBEDDING_WIDTH) &&
+        (desc_view_stride0 == desc_view_dim1) &&
         (desc_view_stride1 == 1) && (desc_view_stride2 == 0) &&
         (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
         (desc_view_stride5 == 0) &&
         (captured_rank[0] == 2) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
-        (captured_offset[0] == desc_view_offset);
+        (view_offset_consistent(0));
     wire head_rms_input_source_ok = rms_norm_q && head_rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) &&
@@ -731,12 +855,16 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
-        (captured_offset[0] == desc_view_offset);
+        (view_offset_consistent(0));
     wire rope_input_source_ok = rope_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) &&
         (desc_view_dim0 != 0) &&
-        ((desc_view_dim1 == 32'd32) || (desc_view_dim1 == 32'd8)) &&
+        //: A RoPE view covers either the query heads or the key heads.  These
+        //: were the literals 32 and 8, so a model whose key count was neither
+        //: was refused -- and one whose query count happened to equal 8 was
+        //: admitted by coincidence.
+        ((desc_view_dim1 == QUERY_HEADS) || (desc_view_dim1 == KV_HEADS)) &&
         (desc_view_dim2 == HEAD_WIDTH) &&
         (desc_view_dim3 == 0) && (desc_view_dim4 == 0) &&
         (desc_view_dim5 == 0) &&
@@ -746,7 +874,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
-        (captured_offset[0] == desc_view_offset);
+        (view_offset_consistent(0));
     wire rms_weight_source_ok = rms_norm_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 1) &&
         (desc_view_terms <= 4) &&
@@ -759,7 +887,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride5 == 0) &&
         (captured_rank[1] == 1) && (captured_axis[1] == 0) &&
         (captured_extent[1] == source_trailing) &&
-        (captured_offset[1] == desc_view_offset);
+        (view_offset_consistent(1));
     wire rope_coefficient_source_ok = rope_q &&
         (desc_view_dtype == FMT_FP32) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) &&
@@ -774,21 +902,22 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[1] == 3) && (captured_axis[1] == 0) &&
         (captured_extent[1] == captured_extent[0]) &&
-        (captured_offset[1] == desc_view_offset);
+        (view_offset_consistent(1));
     wire matmul_weight_source_ok = matmul_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 2) &&
         (desc_view_terms <= 4) &&
-        (desc_view_dim0 != 0) && (desc_view_dim0 <= EMBEDDING_WIDTH) &&
-        (desc_view_dim1 == EMBEDDING_WIDTH) &&
+        (desc_view_dim0 != 0) && (desc_view_dim0 <= 32'hffff) &&
+        //: source_trailing holds the input row's width, captured one state ago.
+        (desc_view_dim1 == source_trailing) &&
         (desc_view_dim2 == 0) && (desc_view_dim3 == 0) &&
         (desc_view_dim4 == 0) && (desc_view_dim5 == 0) &&
-        (desc_view_stride0 == EMBEDDING_WIDTH) &&
+        (desc_view_stride0 == desc_view_dim1) &&
         (desc_view_stride1 == 1) && (desc_view_stride2 == 0) &&
         (desc_view_stride3 == 0) && (desc_view_stride4 == 0) &&
         (desc_view_stride5 == 0) &&
         (captured_rank[1] == 2) && (captured_axis[1] == 0) &&
         (captured_extent[1] == desc_view_dim0) &&
-        (captured_offset[1] == desc_view_offset);
+        (view_offset_consistent(1));
     wire transfer_source_ok = dma_transfer_q &&
         (desc_view_dtype == FMT_BF16) && (desc_view_rank == 3) &&
         (desc_view_terms <= 4) && (desc_view_dim0 != 0) &&
@@ -802,7 +931,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride5 == 0) &&
         (captured_rank[0] == 3) && (captured_axis[0] == 0) &&
         (captured_extent[0] == 1) &&
-        (captured_offset[0] == desc_view_offset);
+        (view_offset_consistent(0));
 
     wire output_view_common_ok = descriptor_header_ok(
         desc_data, desc_fault, DESC_TENSOR_VIEW, 32'd192, 32'd128
@@ -849,7 +978,7 @@ module ot_a3_engine_issue_bridge #(
         (desc_view_stride4 == 0) && (desc_view_stride5 == 0) &&
         (captured_rank[4] == 3) && (captured_axis[4] == 0) &&
         (captured_extent[4] == captured_extent[0]) &&
-        (captured_offset[4] == desc_view_offset);
+        (view_offset_consistent(4));
     wire matmul_output_ok = matmul_q &&
         (desc_view_rank == 2) && (desc_view_dim0 == index_raw_dim0) &&
         (desc_view_dim1 == source_rows) &&
@@ -1124,7 +1253,7 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[1], slot_stride2[1], slot_tail_strides[1]
         ) &&
         (captured_rank[1] == 8'd3) && (captured_axis[1] == 8'd0) &&
-        (captured_extent[1] == 32'd1) && (captured_offset[1] == 64'd0) &&
+        (captured_extent[1] == 32'd1) && slot_offset_consistent(1) &&
         kv_cache_view_ok(
             slot_dtype[4], slot_rank[4], slot_dim1[4], slot_dim2[4],
             slot_tail_dims[4], slot_stride0[4], slot_stride1[4],
@@ -1133,7 +1262,7 @@ module ot_a3_engine_issue_bridge #(
         (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
         (captured_extent[4] == slot_dim0[4]) &&
         (slot_dim0[4] >= cfg_kv_plane_rows) &&
-        ((captured_offset[4] == 64'd0) || scatter_plane_is_value);
+        (slot_offset_consistent(4) || scatter_plane_is_value);
 
     wire gqa_shape_ok =
         head_row_view_ok(
@@ -1142,19 +1271,24 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[0], slot_stride2[0], slot_tail_strides[0]
         ) &&
         (captured_rank[0] == 8'd3) && (captured_axis[0] == 8'd0) &&
-        (captured_extent[0] == 32'd1) && (captured_offset[0] == 64'd0) &&
+        (captured_extent[0] == 32'd1) && slot_offset_consistent(0) &&
         kv_cache_view_ok(
             slot_dtype[1], slot_rank[1], slot_dim1[1], slot_dim2[1],
             slot_tail_dims[1], slot_stride0[1], slot_stride1[1],
             slot_stride2[1], slot_tail_strides[1]
         ) &&
-        (captured_offset[1] == 64'd0) &&
+        slot_offset_consistent(1) &&
         kv_cache_view_ok(
             slot_dtype[2], slot_rank[2], slot_dim1[2], slot_dim2[2],
             slot_tail_dims[2], slot_stride0[2], slot_stride1[2],
             slot_stride2[2], slot_tail_strides[2]
         ) &&
-        (captured_offset[2] == {32'd0, KV_PLANE_WORDS}) &&
+        //: The value plane sits one KV plane above the key plane.  That is a
+        //: RELATIVE fact, and writing it as an absolute constant asserted the
+        //: key plane starts at zero -- true only of layer 0.  Stated relatively
+        //: it is the same check at layer 0 and the right one at every other.
+        (captured_offset[2] ==
+         captured_offset[1] + {32'd0, KV_PLANE_WORDS}) &&
         (slot_object[1] == slot_object[2]) &&
         (slot_dim0[1] == slot_dim0[2]) &&
         (slot_dim0[1] >= cfg_kv_plane_rows) &&
@@ -1171,7 +1305,7 @@ module ot_a3_engine_issue_bridge #(
             slot_stride1[4], slot_stride2[4], slot_tail_strides[4]
         ) &&
         (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
-        (captured_extent[4] == 32'd1) && (captured_offset[4] == 64'd0);
+        (captured_extent[4] == 32'd1) && slot_offset_consistent(4);
 
     wire mapped_shape_ok =
         (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
@@ -1331,6 +1465,10 @@ module ot_a3_engine_issue_bridge #(
             issue_descriptor_q <= NO_ID;
             issue_index_q <= NO_ID;
             embedding_q <= 1'b0;
+            embed_index_addr_q <= 32'd0;
+            embed_table_base_q <= 32'd0;
+            embed_token_q <= 32'd0;
+            gather_source_base_q <= 32'd0;
             rms_norm_q <= 1'b0;
             head_rms_norm_q <= 1'b0;
             rope_q <= 1'b0;
@@ -1410,6 +1548,7 @@ module ot_a3_engine_issue_bridge #(
             for (slot = 0; slot < 6; slot = slot + 1) begin
                 slot_view_id[slot] <= NO_ID;
                 slot_dtype[slot] <= 8'd0;
+                slot_offset[slot] <= 64'd0;
                 slot_rank[slot] <= 8'd0;
                 slot_terms[slot] <= 8'd0;
                 slot_object[slot] <= NO_ID;
@@ -1529,6 +1668,8 @@ module ot_a3_engine_issue_bridge #(
                                 // otherwise is refused before anything is
                                 // fetched, decoded or launched.
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 1);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else if (!(((issue_family == FAMILY_DMA) &&
@@ -1613,6 +1754,8 @@ module ot_a3_engine_issue_bridge #(
                             // The six mapped families take the shared walk.
                             if (!mapped_operator_ok) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 2);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1669,6 +1812,8 @@ module ot_a3_engine_issue_bridge #(
                                  (captured_id[1] != desc_data[767:736])) ||
                                 (captured_id[4] != desc_data[863:832])) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 3);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1717,10 +1862,15 @@ module ot_a3_engine_issue_bridge #(
                                 (captured_axis[0] != 0) ||
                                 (captured_extent[0] != 1)) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 4);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
                                 index_raw_dim0 <= desc_view_dim0;
+                                //: Where the token id lives, for the lookup below.
+                                embed_index_addr_q <= desc_place[31:0] +
+                                    captured_offset[0][31:0];
                                 desc_req <= 1'b1;
                                 desc_id <= op_input1;
                                 state <= S_SOURCE_WAIT;
@@ -1743,6 +1893,8 @@ module ot_a3_engine_issue_bridge #(
                                 (head_rms_norm_q &&
                                  (op_aux0 != desc_view_dim1))) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 5);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1750,8 +1902,9 @@ module ot_a3_engine_issue_bridge #(
                                 source_rows <= (head_rms_norm_q || rope_q)
                                     ? desc_view_dim1
                                     : (matmul_q ? 32'd0 : 32'd1);
+                                //: The reduction length the weight must match.
                                 source_trailing <= (head_rms_norm_q || rope_q)
-                                    ? desc_view_dim2 : EMBEDDING_WIDTH;
+                                    ? desc_view_dim2 : desc_view_dim1;
                                 source_dtype <= FMT_BF16;
                                 rms_input_base_q <= desc_place[31:0] +
                                     captured_offset[0][31:0];
@@ -1774,11 +1927,14 @@ module ot_a3_engine_issue_bridge #(
                         if (desc_valid) begin
                             if (!mapped_view_header_ok) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 6);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
                                 slot_view_id[slot_cursor] <= desc_id;
                                 slot_dtype[slot_cursor] <= desc_view_dtype;
+                                slot_offset[slot_cursor] <= desc_view_offset;
                                 slot_rank[slot_cursor] <= desc_view_rank;
                                 slot_terms[slot_cursor] <= desc_view_terms;
                                 slot_object[slot_cursor] <= desc_primary_object;
@@ -1812,6 +1968,15 @@ module ot_a3_engine_issue_bridge #(
                         if (desc_valid) begin
                             if (!mapped_numeric_ok) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) begin
+                                    $display("OT_BRIDGE_DESC_TRAP site=%0d gqa=%0b in=0x%0h second=0x%0h out=0x%0h scale=0x%08h want_scale=0x%08h",
+                                             7, attention_gqa_q, numeric_input_dtype,
+                                             numeric_second_dtype, numeric_output_dtype,
+                                             desc_data[639:608], GQA_SCALE_BITS);
+                                    $display("  contract=0x%h", desc_data[1023:768]);
+                                    $display("  want    =0x%h", CONTRACT_QWEN_GQA_RAW);
+                                end
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1833,6 +1998,8 @@ module ot_a3_engine_issue_bridge #(
                                     state <= S_RESPONSE;
                                 end else if (!mapped_shape_ok) begin
                                     response_fault <= 1'b1;
+                                    //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                    if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 8);
                                     response_trap <= TRAP_DESCRIPTOR;
                                     state <= S_RESPONSE;
                                 end else if (selection_token_append_q) begin
@@ -1853,6 +2020,8 @@ module ot_a3_engine_issue_bridge #(
                         if (desc_valid) begin
                             if (!policy_record_ok) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 9);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1888,6 +2057,12 @@ module ot_a3_engine_issue_bridge #(
                         if ((dma_scatter_q || attention_gqa_q) &&
                             !mapped_context_ok) begin
                             response_fault <= 1'b1;
+                            //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                            if (trace_bridge)
+                                $display("OT_BRIDGE_DESC_TRAP site=%0d ctxlen=%0d planerows=%0d observed=%0d | slot0_map=%0d found=%0b off0=%0d slot0_base=%0d obj0=%0d",
+                                         10, cfg_context_length, cfg_kv_plane_rows,
+                                         observed_index_value, slot0_map[31:0], slot0_map[32],
+                                         captured_offset[0][31:0], slot0_base, slot_object[0]);
                             response_trap <= TRAP_DESCRIPTOR;
                             state <= S_RESPONSE;
                         end else begin
@@ -1942,6 +2117,22 @@ module ot_a3_engine_issue_bridge #(
                                 ((matmul_q || rms_norm_q || rope_q) &&
                                  !desc_object_placed)) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) begin
+                                    $display("OT_BRIDGE_DESC_TRAP site=%0d common=%0b dense=%0b rmsw=%0b rope=%0b mmw=%0b xfer=%0b placed=%0b emb=%0b",
+                                             11, input_view_common_ok, dense_row_source_ok,
+                                             rms_weight_source_ok, rope_coefficient_source_ok,
+                                             matmul_weight_source_ok, transfer_source_ok,
+                                             desc_object_placed, embedding_q);
+                                    $display("  regs: source_rows=%0d source_trailing=%0d rms=%0b hrms=%0b matmul=%0b rope=%0b",
+                                             source_rows, source_trailing, rms_norm_q,
+                                             head_rms_norm_q, matmul_q, rope_q);
+                                    $display("  view: rank=%0d dtype=0x%0h terms=%0d dims=%0d,%0d,%0d,%0d strides=%0d,%0d obj=%0d perm=0x%0h",
+                                             desc_view_rank, desc_view_dtype, desc_view_terms,
+                                             desc_view_dim0, desc_view_dim1, desc_view_dim2,
+                                             desc_view_dim3, desc_view_stride0, desc_view_stride1,
+                                             desc_primary_object, desc_permissions);
+                                end
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1961,6 +2152,13 @@ module ot_a3_engine_issue_bridge #(
                                     source_rows <= desc_view_dim0;
                                     source_trailing <= desc_view_dim1;
                                     source_dtype <= desc_view_dtype;
+                                    if (embedding_q)
+                                        embed_table_base_q <= desc_place[31:0] +
+                                            captured_offset[1][31:0];
+                                    else if (!matmul_q)
+                                        gather_source_base_q <=
+                                            desc_place[31:0] +
+                                            captured_offset[1][31:0];
                                     if (matmul_q)
                                         matmul_weight_base_q <=
                                             desc_place[31:0] +
@@ -1988,6 +2186,8 @@ module ot_a3_engine_issue_bridge #(
                                 // write to wherever the last one ended.
                                 !desc_object_placed) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 12);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2010,6 +2210,8 @@ module ot_a3_engine_issue_bridge #(
                                   matmul_numeric_ok ||
                                   transfer_numeric_ok)) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+                                if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 13);
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2019,9 +2221,26 @@ module ot_a3_engine_issue_bridge #(
                                     desc_data[527:520],
                                     desc_data[519:512]
                                 };
-                                state <= S_START;
+                                state <= (embedding_q &&
+                                          (EMBEDDING_TOKEN_INDEXED != 0))
+                                    ? S_EMBED_INDEX_ISSUE : S_START;
                             end
                         end
+                    end
+
+                    //: One registered read of the resolved index, then start.
+                    //: Two states because the bank answers on the cycle after
+                    //: the address, exactly as the mapped families' probe does.
+                    S_EMBED_INDEX_ISSUE: state <= S_EMBED_INDEX_WAIT;
+
+                    S_EMBED_INDEX_WAIT: begin
+                        embed_token_q <= m0_rd_data;
+                        if (trace_bridge)
+                            $display("OT_BRIDGE_EMBED addr=%0d token=%0d table_base=%0d row=%0d",
+                                     embed_index_addr_q, m0_rd_data,
+                                     embed_table_base_q,
+                                     embed_table_base_q + m0_rd_data * EMBEDDING_WIDTH);
+                        state <= S_START;
                     end
 
                     S_START: begin
@@ -2035,6 +2254,14 @@ module ot_a3_engine_issue_bridge #(
                                 (engine_result_count != expected_result_count) ||
                                 (engine_work_count != expected_work_count)) begin
                                 response_fault <= 1'b1;
+                                //: Set +OT_BRIDGE_TRACE=1 to see which of the
+                                //: three completion conditions failed.
+                                if (trace_bridge)
+                                    $display("OT_BRIDGE_ENGINE_FAULT err=%0d results=%0d/%0d work=%0d/%0d fam=0x%0h sub=0x%0h rows=%0d trailing=%0d",
+                                             engine_error_code, engine_result_count,
+                                             expected_result_count, engine_work_count,
+                                             expected_work_count, issue_family_q,
+                                             issue_sub_q, source_rows, source_trailing);
                                 response_trap <= mapped_capability_refusal
                                     ? TRAP_CAPABILITY : TRAP_ENGINE;
                             end else begin
@@ -2260,7 +2487,10 @@ module ot_a3_engine_issue_bridge #(
 
     // The index read the bridge itself performs before a scatter or an
     // attention: the position is architecture, not configuration.
-    wire bridge_index_read = (state == S_MAP_INDEX_ISSUE);
+    wire bridge_index_read = (state == S_MAP_INDEX_ISSUE) ||
+                             (state == S_EMBED_INDEX_ISSUE);
+    wire [31:0] bridge_index_addr = (state == S_EMBED_INDEX_ISSUE)
+        ? embed_index_addr_q : mapped_index_slot_base;
 
     assign m0_rd_en = bridge_index_read ? 1'b1
         : rope_q ? rope_input_rd_en
@@ -2268,7 +2498,7 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_a_rd_en
         : selection_token_append_q ? append_a_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
-    assign m0_rd_addr = bridge_index_read ? mapped_index_slot_base
+    assign m0_rd_addr = bridge_index_read ? bridge_index_addr
         : rope_q ? rope_input_rd_addr
         : rms_norm_q ? rms_input_rd_addr
         : vector_silu_mul_q ? silu_a_rd_addr
@@ -2314,8 +2544,11 @@ module ot_a3_engine_issue_bridge #(
         : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q);
+    wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
+                        (issue_sub_q == DMA_GATHER);
     assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
-        vector_silu_mul_q || dma_scatter_q;
+        vector_silu_mul_q || dma_scatter_q ||
+        ((GATHER_PLACEMENT_ADDRESSED != 0) && dma_gather_q);
     assign m1_reads_matmul_weight = matmul_q;
 
     wire [31:0] launch_index_base = dma_transfer_q
@@ -2324,10 +2557,14 @@ module ot_a3_engine_issue_bridge #(
     wire [31:0] launch_source_base = dma_transfer_q
         ? cfg_transfer_source_base
         : embedding_q
-            ? (cfg_embedding_source_base +
-               embedding_launch_count * EMBEDDING_WIDTH)
-            : (cfg_source_base +
-               dma_gather_launch_count * cfg_source_launch_stride);
+            ? ((EMBEDDING_TOKEN_INDEXED != 0)
+                ? (embed_table_base_q + embed_token_q * EMBEDDING_WIDTH)
+                : (cfg_embedding_source_base +
+                   embedding_launch_count * EMBEDDING_WIDTH))
+            : ((GATHER_PLACEMENT_ADDRESSED != 0)
+                ? gather_source_base_q
+                : (cfg_source_base +
+                   dma_gather_launch_count * cfg_source_launch_stride));
     wire [31:0] launch_output_base = launch_output_base_q;
 
     ot_a3_vector_rms_norm rms_norm (
@@ -2358,7 +2595,13 @@ module ot_a3_engine_issue_bridge #(
         .work_count(rms_work_count)
     );
 
-    ot_a3_vector_rope rope (
+    ot_a3_vector_rope #(
+        //: RoPE rotates the same heads attention then reads, so its geometry
+        //: is the bridge's attention geometry and not a second opinion.
+        .QUERY_HEADS(GQA_QUERY_HEADS[31:0]),
+        .KEY_HEADS(GQA_KV_HEADS[31:0]),
+        .HEAD_WIDTH(GQA_HEAD_WIDTH[31:0])
+    ) rope (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & rope_q),

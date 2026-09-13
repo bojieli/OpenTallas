@@ -52,6 +52,7 @@ from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from compiler.backends.activation_liveness import LiveBuffer, allocate_live_buffers
+from compiler.backends.attention_scale import attention_scale_bf16_code
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
     reduction_order_for,
@@ -2049,6 +2050,23 @@ class RomLowering:
                 "scale",
             ),
         )
+        #: A kernel that states BOTH a scale code and the head width it came
+        #: from must state them consistently.  They disagreed in the reduced
+        #: Qwen deployment -- denominator 16, code 1/sqrt(128) -- and because
+        #: the code is read first, the engine was configured with another
+        #: model's softmax scale.  Nothing downstream can detect that: the
+        #: value is finite, positive and plausible.  Checking it here costs one
+        #: comparison and turns a silent numerical error into a build failure.
+        denominator = attributes.get("scale_denominator_sqrt")
+        declared_code = attributes.get("scale_bf16_code")
+        if denominator is not None and declared_code is not None:
+            expected = attention_scale_bf16_code(int(denominator))
+            if int(declared_code) != expected:
+                raise RomLoweringError(
+                    f"{kernel.kind}: scale_bf16_code 0x{int(declared_code):04x} is "
+                    f"not 1/sqrt(scale_denominator_sqrt={int(denominator)}), which "
+                    f"is 0x{expected:04x}"
+                )
         input_dtype = self._dtype(first)
         second_dtype = self._dtype(second)
         output_dtype = self._dtype(result)

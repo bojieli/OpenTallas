@@ -381,11 +381,20 @@ std::vector<Result> read_results(const std::string& path) {
 }
 
 // -- the device ------------------------------------------------------------
+// This harness owns its own VerilatedContext, so the legacy global
+// Verilated::commandArgs in main() sets arguments on the DEFAULT context and
+// never on this one. Any $test$plusargs inside the model then aborts. Hand the
+// real arguments to the context that owns the model.
+static int g_argc = 0;
+static char** g_argv = nullptr;
+
 struct Model {
     VerilatedContext context;
     Vot_a3_shipped_prefix_top dut{&context};
 
     Model() {
+        if (g_argv != nullptr)
+            context.commandArgs(g_argc, g_argv);
         dut.clk = 0;
         dut.rst_n = 0;
         dut.start = 0;
@@ -588,6 +597,8 @@ extern "C" unsigned int ot_a3_weight_window_halfword(
 }
 
 int main(int argc, char** argv) {
+    g_argc = argc;
+    g_argv = argv;
     Verilated::commandArgs(argc, argv);
     try {
         const auto meta = read_hex("g1e_meta.hex");

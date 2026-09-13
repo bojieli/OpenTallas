@@ -217,12 +217,28 @@ int main(int argc, char** argv) {
     dut.start = 1; tick(); dut.start = 0;
 
     const std::uint64_t guard = 400ull * 1000 * 1000;
-    while (!dut.done && !dut.trapped && cycles < guard) tick();
-    for (int i = 0; i < 8; ++i) tick();
+    // `done` and `complete` are pulses. Sampling them after the drain ticks
+    // below read them back as zero on a run that had in fact completed, which
+    // made a correct execution print FAIL.
+    unsigned done_seen = 0, complete_seen = 0, trapped_seen = 0;
+    while (!dut.done && !dut.trapped && cycles < guard) {
+        tick();
+        done_seen |= dut.done;
+        complete_seen |= dut.complete;
+        trapped_seen |= dut.trapped;
+    }
+    const bool hit_guard = !done_seen && !trapped_seen;
+    for (int i = 0; i < 8; ++i) {
+        tick();
+        complete_seen |= dut.complete;
+    }
+    if (hit_guard)
+        std::printf("  NOTE: stopped at the %llu-cycle guard, not on done\n",
+                    (unsigned long long)guard);
 
     std::printf("  cycles              %llu\n", (unsigned long long)cycles);
-    std::printf("  done                %u\n", (unsigned)dut.done);
-    std::printf("  complete            %u\n", (unsigned)dut.complete);
+    std::printf("  done                %u\n", done_seen);
+    std::printf("  complete            %u\n", complete_seen);
     std::printf("  trapped             %u  trap_class=%u\n",
                 (unsigned)dut.trapped, (unsigned)dut.trap_class);
     std::printf("  fetched/retired     %u / %u\n",
@@ -242,7 +258,29 @@ int main(int argc, char** argv) {
     std::printf("  wait_events         %u\n", (unsigned)dut.count_wait_events);
     std::printf("  result_write_oob    %u\n", (unsigned)dut.result_write_oob);
 
-    const bool ok = dut.done && dut.complete && !dut.trapped &&
+    // +DUMP=<base>,<count> prints result-bank words after the run, so a chain
+    // that produces a constant can be bisected operator by operator instead of
+    // guessed at.
+    for (int i = 1; i < argc; ++i) {
+        const std::string a(argv[i]);
+        if (a.rfind("+DUMP=", 0) != 0) continue;
+        const std::string spec = a.substr(6);
+        const std::size_t comma = spec.find(',');
+        const std::uint32_t base =
+            static_cast<std::uint32_t>(std::strtoull(spec.c_str(), nullptr, 10));
+        const unsigned count = comma == std::string::npos
+            ? 8u
+            : static_cast<unsigned>(std::strtoul(spec.c_str() + comma + 1, nullptr, 10));
+        std::printf("  result[%u..%u]:", base, base + count - 1);
+        for (unsigned w = 0; w < count; ++w) {
+            dut.result_read_addr = base + w;
+            dut.eval();
+            std::printf(" %08x", (unsigned)dut.result_read_data);
+        }
+        std::printf("\n");
+    }
+
+    const bool ok = done_seen && complete_seen && !trapped_seen &&
                     dut.count_retired == get("golden_retired") &&
                     dut.count_issued == get("golden_issued");
     std::printf("%s reduced end-to-end: retired %u vs golden %llu, issued %u vs %llu\n",

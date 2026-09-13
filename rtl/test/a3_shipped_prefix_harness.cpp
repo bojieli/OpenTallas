@@ -856,11 +856,22 @@ struct Checker {
     }
 };
 
+// This harness owns its own VerilatedContext, so the legacy global
+// Verilated::commandArgs in main() sets arguments on the DEFAULT context and
+// never on this one. Any $test$plusargs inside the model then aborts with
+// "called $test$plusargs without testbench C first calling
+// Verilated::commandArgs". Keeping the real arguments here and handing them to
+// the context that actually owns the model is what makes a plusarg readable.
+static int g_argc = 0;
+static char** g_argv = nullptr;
+
 struct Model {
     VerilatedContext context;
     Vot_a3_shipped_prefix_top dut{&context};
 
     Model() {
+        if (g_argv != nullptr)
+            context.commandArgs(g_argc, g_argv);
         dut.clk = 0;
         dut.rst_n = 0;
         dut.start = 0;
@@ -1346,6 +1357,8 @@ extern "C" void ot_a3_geometry_declare(
 }
 
 int main(int argc, char** argv) {
+    g_argc = argc;
+    g_argv = argv;
     Verilated::commandArgs(argc, argv);
     try {
         const auto cases = read_hex("p3_case.hex");

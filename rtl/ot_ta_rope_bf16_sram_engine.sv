@@ -61,15 +61,33 @@ module ot_ta_rope_bf16_sram_engine #(
     localparam [7:0] ERR_ARITHMETIC_OVERFLOW = 8'd10;
     localparam [1:0] FP_ERR_NONE = 2'd0;
 
-    localparam integer COEFFICIENT_ELEMENTS = 256;
-    localparam integer HEAD_ELEMENTS = 128;
-    localparam integer QUERY_ELEMENTS = 4096;
-    localparam integer KEY_ELEMENTS = 1024;
-    localparam integer OUTPUT_ELEMENTS = 5120;
-    localparam [7:0] LAST_COEFFICIENT_INDEX = 8'd255;
-    localparam [6:0] LAST_COLUMN_INDEX = 7'd127;
-    localparam [12:0] FIRST_KEY_OUTPUT_INDEX = 13'd4096;
-    localparam [12:0] LAST_OUTPUT_INDEX = 13'd5119;
+    //: GEOMETRY.  These nine were Qwen3-8B constants -- 256, 128, 4096, 1024,
+    //: 5120 and their last indices -- which is why the profile check below had
+    //: to pin the parameters that were supposed to set them.  Every one is an
+    //: identity over (query heads, key heads, head width), so state the
+    //: identities and let the parameters mean something.  At the default
+    //: 32/8/128 each expression reproduces the constant it replaced.
+    localparam integer HEAD_ELEMENTS = PROFILE_HEAD_WIDTH;
+    localparam integer HALF_HEAD = HEAD_ELEMENTS / 2;
+    localparam integer COEFFICIENT_ELEMENTS = 2 * HEAD_ELEMENTS;
+    localparam integer QUERY_ELEMENTS = PROFILE_QUERY_HEADS * HEAD_ELEMENTS;
+    localparam integer KEY_ELEMENTS = PROFILE_KEY_HEADS * HEAD_ELEMENTS;
+    localparam integer OUTPUT_ELEMENTS = QUERY_ELEMENTS + KEY_ELEMENTS;
+    localparam integer TOTAL_HEADS = PROFILE_QUERY_HEADS + PROFILE_KEY_HEADS;
+
+    //: Index widths, sized to the geometry rather than written down.  At
+    //: 32/8/128 these are 8, 7, 6 and 13 -- the widths the registers had.
+    localparam integer CIW = $clog2(COEFFICIENT_ELEMENTS);
+    localparam integer CLW = $clog2(HEAD_ELEMENTS);
+    localparam integer HIW = $clog2(TOTAL_HEADS);
+    localparam integer OIW = $clog2(OUTPUT_ELEMENTS);
+
+    localparam [CIW-1:0] LAST_COEFFICIENT_INDEX = COEFFICIENT_ELEMENTS - 1;
+    localparam [CLW-1:0] LAST_COLUMN_INDEX = HEAD_ELEMENTS - 1;
+    localparam [CLW-1:0] HALF_HEAD_INDEX = HALF_HEAD;
+    localparam [HIW-1:0] LAST_HEAD_INDEX = TOTAL_HEADS - 1;
+    localparam [OIW-1:0] FIRST_KEY_OUTPUT_INDEX = QUERY_ELEMENTS;
+    localparam [OIW-1:0] LAST_OUTPUT_INDEX = OUTPUT_ELEMENTS - 1;
 
     localparam [3:0] STATE_IDLE = 4'd0;
     localparam [3:0] STATE_COEFFICIENT_REQ = 4'd1;
@@ -83,10 +101,10 @@ module ot_ta_rope_bf16_sram_engine #(
     reg [15:0] coefficient_buffer [0:COEFFICIENT_ELEMENTS-1];
     reg [15:0] head_buffer [0:HEAD_ELEMENTS-1];
     reg [15:0] output_buffer [0:OUTPUT_ELEMENTS-1];
-    reg [7:0] coefficient_index;
-    reg [5:0] head_index;
-    reg [6:0] column_index;
-    reg [12:0] write_index;
+    reg [CIW-1:0] coefficient_index;
+    reg [HIW-1:0] head_index;
+    reg [CLW-1:0] column_index;
+    reg [OIW-1:0] write_index;
     reg [63:0] query_base;
     reg [63:0] key_base;
     reg [63:0] query_destination_base;
@@ -112,10 +130,15 @@ module ot_ta_rope_bf16_sram_engine #(
     wire [31:0] decoder_size3;
     wire decoder_out_ready = (state == STATE_IDLE) && !done_valid;
 
+    //: What the datapath actually requires, in place of the model it used to
+    //: name: RoPE rotates each column against its partner half a head away,
+    //: so the head width must be even and non-zero, and there must be at
+    //: least one head of each kind to rotate.
     wire static_profile_legal =
-        (PROFILE_QUERY_HEADS == 32'd32) &&
-        (PROFILE_KEY_HEADS == 32'd8) &&
-        (PROFILE_HEAD_WIDTH == 32'd128);
+        (PROFILE_HEAD_WIDTH >= 32'd2) &&
+        ((PROFILE_HEAD_WIDTH & 32'd1) == 32'd0) &&
+        (PROFILE_QUERY_HEADS != 32'd0) &&
+        (PROFILE_KEY_HEADS != 32'd0);
     wire command_profile_legal =
         static_profile_legal &&
         (decoder_index == PROFILE_COMMAND_INDEX) &&
@@ -140,28 +163,34 @@ module ot_ta_rope_bf16_sram_engine #(
     wire write_fire = sram_write_valid && sram_write_ready;
     wire reading_coefficients = (state == STATE_COEFFICIENT_REQ) ||
                                 (state == STATE_COEFFICIENT_WAIT);
-    wire reading_query = head_index < PROFILE_QUERY_HEADS[5:0];
-    wire [5:0] source_head_index = reading_query
-        ? head_index : head_index - PROFILE_QUERY_HEADS[5:0];
-    wire [12:0] source_element_index =
-        {source_head_index, 7'b0} + {6'b0, column_index};
-    wire [12:0] output_element_index =
-        {head_index, 7'b0} + {6'b0, column_index};
-    wire [63:0] source_element_offset =
-        {50'b0, source_element_index, 1'b0};
-    wire [63:0] coefficient_offset =
-        {55'b0, coefficient_index, 1'b0};
+    wire reading_query = head_index < PROFILE_QUERY_HEADS[HIW-1:0];
+    wire [HIW-1:0] source_head_index = reading_query
+        ? head_index : head_index - PROFILE_QUERY_HEADS[HIW-1:0];
+    //: These were shifts by seven, which is only a multiply by the head width
+    //: when that width is 128.
+    wire [OIW-1:0] source_element_index =
+        (source_head_index * HEAD_ELEMENTS) + column_index;
+    wire [OIW-1:0] output_element_index =
+        (head_index * HEAD_ELEMENTS) + column_index;
+    //: Two bytes per BF16 element.
+    wire [63:0] source_element_offset = 64'd2 * {{(64-OIW){1'b0}}, source_element_index};
+    wire [63:0] coefficient_offset = 64'd2 * {{(64-CIW){1'b0}}, coefficient_index};
 
-    wire [6:0] rotated_column = column_index[6]
-        ? column_index - 7'd64 : column_index + 7'd64;
+    //: The partner column is half a head away.  Testing bit 6 and adding 64
+    //: said the same thing only at a head width of 128.
+    wire column_upper = column_index >= HALF_HEAD_INDEX;
+    wire [CLW-1:0] rotated_column = column_upper
+        ? column_index - HALF_HEAD_INDEX : column_index + HALF_HEAD_INDEX;
     wire [15:0] input_code = head_buffer[column_index];
     wire [15:0] rotated_raw_code = head_buffer[rotated_column];
     wire rotated_nonzero = rotated_raw_code[14:0] != 0;
-    wire [15:0] rotated_code = !column_index[6]
+    wire [15:0] rotated_code = !column_upper
         ? (rotated_nonzero ? rotated_raw_code ^ 16'h8000 : 16'h0000)
         : rotated_raw_code;
+    //: Cosines occupy the first head width of the table, sines the second.
     wire [15:0] cosine_code = coefficient_buffer[{1'b0, column_index}];
-    wire [15:0] sine_code = coefficient_buffer[8'd128 + column_index];
+    wire [15:0] sine_code =
+        coefficient_buffer[HEAD_ELEMENTS[CIW-1:0] + {1'b0, column_index}];
     wire [33:0] direct_product = ot_fp32_rne_pkg::fp32_mul_rne(
         {input_code, 16'b0}, {cosine_code, 16'b0}
     );
@@ -189,9 +218,9 @@ module ot_ta_rope_bf16_sram_engine #(
         (output_bf16[18:17] != FP_ERR_NONE);
     wire [1:0] multiplication_saturation_increment =
         {1'b0, direct_bf16[16]} + {1'b0, rotated_bf16[16]};
-    wire [12:0] key_write_index = write_index - FIRST_KEY_OUTPUT_INDEX;
-    wire [63:0] query_write_offset = {50'b0, write_index, 1'b0};
-    wire [63:0] key_write_offset = {50'b0, key_write_index, 1'b0};
+    wire [OIW-1:0] key_write_index = write_index - FIRST_KEY_OUTPUT_INDEX;
+    wire [63:0] query_write_offset = 64'd2 * {{(64-OIW){1'b0}}, write_index};
+    wire [63:0] key_write_offset = 64'd2 * {{(64-OIW){1'b0}}, key_write_index};
 
     assign cmd_ready = decoder_in_ready && (state == STATE_IDLE) && !done_valid;
     assign sram_read_valid = (state == STATE_COEFFICIENT_REQ) ||
@@ -357,8 +386,7 @@ module ot_ta_rope_bf16_sram_engine #(
                     if (column_index == LAST_COLUMN_INDEX) begin
                         column_index <= 0;
                         if (head_index ==
-                            PROFILE_QUERY_HEADS[5:0] +
-                            PROFILE_KEY_HEADS[5:0] - 1'b1) begin
+                            LAST_HEAD_INDEX) begin
                             write_index <= 0;
                             state <= STATE_WRITE;
                         end else begin

@@ -31,11 +31,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import struct
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+from compiler.backends.attention_scale import attention_scale_bf16_code
 from compiler.frontend.checkpoint import (
     CheckpointError,
     LockedCheckpointReader,
@@ -193,6 +195,7 @@ KERNEL_CENSUS: Mapping[str, int] = {
     "VOCAB_PROJECT": 1,
 }
 KERNEL_COUNT = sum(KERNEL_CENSUS.values())
+
 
 
 def kernel_census_for(layers: int) -> dict[str, int]:
@@ -1081,7 +1084,11 @@ def export_qwen3_kernel_graph(
                 "causal_mask_bf16_code": 0xFF7F,
                 "probability_dtype": "bf16",
                 "query_heads_per_key_value_head": query_heads // kv_heads,
-                "scale_bf16_code": 0x3DB5,
+                #: 1/sqrt(head_dim) in BF16.  This was the literal 0x3DB5
+                #: sitting beside a head_dim-derived denominator, so the two
+                #: agreed only at Qwen3-8B's head width of 128 and the engine
+                #: was handed the 8B softmax scale for any other model.
+                "scale_bf16_code": attention_scale_bf16_code(head_dim),
                 "scale_denominator_sqrt": head_dim,
                 "score_reduction_order": "strictly_increasing_head_dimension",
                 "sliding_window": False,

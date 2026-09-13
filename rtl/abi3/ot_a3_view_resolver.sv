@@ -221,6 +221,13 @@ module ot_a3_view_resolver
     input  wire [63:0]   div_quot,
     input  wire [63:0]   div_rem
 );
+    //: Set +OT_RESOLVER_TRACE=1 to report which fail-closed site fired.
+    //: Sites are numbered in source order, so `grep 'site=%0d", <n>'` lands
+    //: on the check that refused.  A bare trap class does not distinguish
+    //: them, and narrowing by reading descriptors is guesswork.
+    reg trace_resolver_faults = 1'b0;
+    initial if ($test$plusargs("OT_RESOLVER_TRACE")) trace_resolver_faults = 1'b1;
+
     // -- TENSOR_VIEW payload view (runtime/abi3/descriptors.TENSOR_VIEW_PAYLOAD)
     // dtype@0 rank@1 layout_class@2 dynamic_term_count@3, element_offset@16,
     // dim{i}@24+4i, stride{i}@48+4i, term{i} = {kind u16, index u16,
@@ -564,6 +571,12 @@ module ot_a3_view_resolver
                             // ``if rank and ...``.
                             if ((view_rank != 8'd0) &&
                                 (view_extent_axis >= view_rank)) begin
+                                //: Which of the resolver's fail-closed sites fired is the only thing
+                                //: that separates four different configuration mistakes. Reporting it
+                                //: under a plusarg costs nothing and turns a bare trap class into an
+                                //: answer.
+                                if (trace_resolver_faults)
+                                    $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 1, term_index, term_kind);
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else if (FAST_WALK_ON) begin
                                 // What S_SELECT would decide next cycle, made
@@ -610,6 +623,12 @@ module ot_a3_view_resolver
                     S_EDGE_READ: begin
                         if (!loop_query_active) begin
                             // "view N: edge-mask loop M is not active"
+                            //: Which of the resolver's fail-closed sites fired is the only thing
+                            //: that separates four different configuration mistakes. Reporting it
+                            //: under a plusarg costs nothing and turns a bare trap class into an
+                            //: answer.
+                            if (trace_resolver_faults)
+                                $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 2, term_index, term_kind);
                             fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end else begin
                             value <= loop_query_value;
@@ -643,6 +662,12 @@ module ot_a3_view_resolver
                         if (term_kind == {8'd0, ot_a3_pkg::A3_SELECTOR_LOOP_INDUCTION}) begin
                             if (!loop_query_active) begin
                                 // "view N: loop M is not active"
+                                //: Which of the resolver's fail-closed sites fired is the only thing
+                                //: that separates four different configuration mistakes. Reporting it
+                                //: under a plusarg costs nothing and turns a bare trap class into an
+                                //: answer.
+                                if (trace_resolver_faults)
+                                    $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 3, term_index, term_kind);
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= loop_query_value;
@@ -659,6 +684,12 @@ module ot_a3_view_resolver
                             if (({16'd0, term_index} >= ot_a3_pkg::A3_SYMBOL_COUNT) ||
                                 !sym_bound) begin
                                 // "view N: symbol S is unbound"
+                                //: Which of the resolver's fail-closed sites fired is the only thing
+                                //: that separates four different configuration mistakes. Reporting it
+                                //: under a plusarg costs nothing and turns a bare trap class into an
+                                //: answer.
+                                if (trace_resolver_faults)
+                                    $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 4, term_index, term_kind);
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= sym_value[31:0];
@@ -671,6 +702,12 @@ module ot_a3_view_resolver
                         end else begin
                             // "view N: bad selector kind K".  CONSTANT lands
                             // here, exactly as the reference resolver does.
+                            //: Which of the resolver's fail-closed sites fired is the only thing
+                            //: that separates four different configuration mistakes. Reporting it
+                            //: under a plusarg costs nothing and turns a bare trap class into an
+                            //: answer.
+                            if (trace_resolver_faults)
+                                $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 5, term_index, term_kind);
                             fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end
                     end
