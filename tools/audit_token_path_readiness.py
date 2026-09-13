@@ -203,6 +203,31 @@ def main() -> int:
             "read selected_token off the vehicle's port and compare it against the "
             "oracle's [1073, 382, 93]",
         ],
+        "why_the_placement_step_needs_the_builder": {
+            "finding": (
+                "The placement bases are PER-BANK COMPACT allocations, not a global "
+                "layout derivable from the deployment's object table. Read out of "
+                "the committed p3_case.hex, the shipped table has objects 4 and 55 "
+                "BOTH at base 8448, and objects 8 and 64 both at 12544 -- legal "
+                "because the bridge chooses the bank from the reading slot, so two "
+                "objects in different banks may share a base value. And the spacing "
+                "does not follow the declared sizes: object 8 is 9,216 bytes and "
+                "object 10 sits 128 units later."
+            ),
+            "consequence": (
+                "A standalone planner cannot reproduce this from deployment.json. "
+                "The allocation follows the builder's operator walk, which knows "
+                "each view's slot and therefore its bank. Reconstructing it from "
+                "thirteen sample rows would be guessing, and a guessed placement "
+                "that happened to emit a token id would be worse than no token: it "
+                "would read the wrong bytes and still select something."
+            ),
+            "so_the_next_step_is": (
+                "extend tools/build_abi3_shipped_prefix_vectors.py with a reduced "
+                "target and let its existing allocator assign the bases, rather "
+                "than writing a second allocator that has to agree with it."
+            ),
+        },
         "met_count": len(met),
         "unmet_count": len(unmet),
         "previously_listed_blockers_now_met": [c["id"] for c in stale],
