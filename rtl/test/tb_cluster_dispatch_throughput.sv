@@ -36,6 +36,21 @@ module tb_cluster_dispatch_throughput;
     wire [31:0] descs, passes, cl_cycles, starved;
     wire [63:0] unit_busy;
 
+    //: OPERAND LOAD PORTS. The first version of this bench left these tied off, so
+    //: sixteen compute units walked UNINITIALISED weight SRAM. The utilisation
+    //: numbers were still valid -- they are a timing property and the gates were
+    //: real -- but nothing checked that a unit driven by a broadcast start and a
+    //: scoreboarded done produces the RIGHT answer. A dispatcher that launched
+    //: every unit correctly and one that corrupted half of them would have scored
+    //: the same 99.1 %.
+    reg                wr_en = 0, act_we = 0;
+    reg [7:0]          wr_addr = 0;
+    reg [16*LANES-1:0] wr_data = 0;
+    reg [8:0]          act_waddr = 0;
+    reg [15:0]         act_wdata = 0;
+    reg [4:0]          res_sel = 0;
+    wire [ACC_W-1:0]   res_data [0:UNITS-1];
+
     ot_cluster_dispatcher #(.UNITS(UNITS), .QUEUE_LOG2(3), .PASS_W(PASS_W)) disp (
         .clk(clk), .rst_n(rst_n),
         .desc_valid(desc_valid), .desc_ready(desc_ready),
@@ -60,12 +75,78 @@ module tb_cluster_dispatch_throughput;
                 .clk(clk), .rst_n(rst_n),
                 .start(cu_start), .cfg_k(cu_cfg_k), .cfg_scale(cu_cfg_scale),
                 .busy(cu_busy[g]), .done(cu_done[g]),
-                .wr_en(1'b0), .wr_addr(8'b0), .wr_data({16*LANES{1'b0}}),
-                .act_we(1'b0), .act_waddr(9'b0), .act_wdata(16'b0),
+                .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
+                .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
                 .refill_valid(1'b1), .refill_ready(rr), .stalled(st),
-                .res_sel(5'b0), .res_data(res), .dropped_mask(drop));
+                .res_sel(res_sel), .res_data(res), .dropped_mask(drop));
+            assign res_data[g] = res;
         end
     endgenerate
+
+    //: ---- functional check: every lane of every unit, against the reference ----
+    localparam integer KF = 32;
+    reg [15:0] act_mem [0:1023];
+    reg [15:0] wgt_mem [0:16383];
+    reg [39:0] exp_mem [0:LANES-1];
+    integer kk, ll, uu, mism;
+
+    task load_and_verify;
+        begin
+            $readmemh("testdata/rtl/a3_mac_tile/act.hex", act_mem);
+            $readmemh("testdata/rtl/a3_mac_tile/wgt.hex", wgt_mem);
+            $readmemh("testdata/rtl/a3_mac_tile/expected.hex", exp_mem);
+
+            rst_n = 0; desc_valid = 0;
+            repeat (4) @(negedge clk);
+            rst_n = 1;
+            @(negedge clk);
+
+            //: One write port drives all sixteen units, so every unit holds the
+            //: same tile and must produce the same sixteen results.
+            for (kk = 0; kk < KF; kk = kk + 1) begin
+                wr_en = 1'b1; wr_addr = kk[7:0];
+                for (ll = 0; ll < LANES; ll = ll + 1)
+                    wr_data[16*ll +: 16] = wgt_mem[kk*LANES + ll];
+                @(negedge clk);
+            end
+            wr_en = 1'b0;
+            for (kk = 0; kk < KF; kk = kk + 1) begin
+                act_we = 1'b1; act_waddr = kk[8:0]; act_wdata = act_mem[kk];
+                @(negedge clk);
+            end
+            act_we = 1'b0;
+
+            //: One descriptor, three passes. Each pass clears and re-walks the same
+            //: K columns, so the final accumulator must equal a single walk -- which
+            //: also checks that a multi-pass descriptor does not double-accumulate.
+            desc_k = KF[8:0]; desc_scale = 8'd240; desc_passes = 3;
+            desc_valid = 1'b1;
+            @(negedge clk);
+            while (!desc_ready) @(negedge clk);
+            desc_valid = 1'b0;
+            while (descs == 32'd0) @(negedge clk);
+            repeat (8) @(negedge clk);
+
+            mism = 0;
+            for (ll = 0; ll < LANES; ll = ll + 1) begin
+                res_sel = ll[4:0];
+                @(negedge clk);
+                for (uu = 0; uu < UNITS; uu = uu + 1)
+                    if (res_data[uu] !== exp_mem[ll]) begin
+                        if (mism < 6)
+                            $display("FAIL unit %0d lane %0d: %010x expected %010x",
+                                     uu, ll, res_data[uu], exp_mem[ll]);
+                        mism = mism + 1;
+                    end
+            end
+            if (mism == 0)
+                $display("PASS cluster functional: %0d units x %0d lanes = %0d results bit-identical to the reference, 3-pass descriptor",
+                         UNITS, LANES, UNITS*LANES);
+            else
+                $display("FAIL cluster functional: %0d of %0d results wrong",
+                         mism, UNITS*LANES);
+        end
+    endtask
 
     task run_case(input integer k, input integer np, input integer interval,
                   input integer ndesc);
@@ -99,6 +180,9 @@ module tb_cluster_dispatch_throughput;
 
     initial begin
         $display("16 real compute units, real cluster dispatcher, control modelled at its measured rate");
+        $display("  -- functional first: do all 16 units produce correct results? --");
+        load_and_verify;
+        wr_en = 0; act_we = 0; res_sel = 0;
         $display("  interval 567 datapath cycles = 116.4 sequencer cycles at 265 MHz seen from 1290 MHz");
         $display("  -- fan-out only, one K-pass per descriptor: the audit predicts ~48%% --");
         run_case(256, 1, 567, 30);
