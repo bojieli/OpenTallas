@@ -107,6 +107,9 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     ),
     # compression and hyper-connections
     "COMPRESS_PROJECT": EngineOp(Major.VECTOR, Vector.COMPRESS, 3, 1),
+    # AM-E10.  h, key, value, q, k in; the gated residual out.  Fused so one
+    # numeric contract covers the normalised dot, signed sqrt, sigmoid and add.
+    "ENGRAM_GATE": EngineOp(Major.VECTOR, Vector.ENGRAM_GATE, 5, 1),
     "COMPRESS_POOL": EngineOp(Major.VECTOR, Vector.COMPRESS, 2, 1),
     "COMPRESS_STATE_UPDATE": EngineOp(Major.VECTOR, Vector.COMPRESS, 2, 2),
     "HYPER_CONNECT_PRE": EngineOp(Major.VECTOR, Vector.MHC, 4, 2),
@@ -117,6 +120,14 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "TOPK": EngineOp(Major.ROUTE, Route.TOPK, 1, 2),
     "BIASED_TOPK": EngineOp(Major.ROUTE, Route.BIASED_TOPK, 2, 2),
     "HASH_ROUTE": EngineOp(Major.ROUTE, Route.HASH_ROUTE, 2, 1),
+    # AM-E10.  BLOCK_MAX takes the score row and emits one score per block;
+    # CANDIDATE_MASK takes the chosen block ids and emits the per-position
+    # mask INDEX_TOPK now accepts in slot 3.
+    "BLOCK_MAX": EngineOp(Major.ROUTE, Route.BLOCK_MAX, 1, 1),
+    "CANDIDATE_MASK": EngineOp(Major.ROUTE, Route.CANDIDATE_MASK, 1, 1),
+    # AM-E10.  Token ids in, Engram row ids out: integer multiply-modulo,
+    # one row id per hash head and n-gram order.
+    "NGRAM_HASH": EngineOp(Major.DMA, Dma.NGRAM_HASH, 1, 1),
     # Amendment A19: INDEX_TOPK selects, rebases and joins.  in0 the index
     # scores, in1 the sliding-window index block it is joined to, in2 the
     # one-element compression ratio of the candidate axis.  Amendment A20 makes
@@ -191,7 +202,10 @@ PHASE_INPUTS = "phase_inputs"
 #: rule admits in ascending group order, which is the released
 #: ``get_compress_topk_idxs``.
 OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
-    "INDEX_TOPK": frozenset({0, 1, 2}),
+    #: AM-E10 adds slot 3, the candidate mask.  A mask OPERAND keeps the
+    #: top-k engine unchanged: the reference masks scores to -inf inside the
+    #: candidate blocks, which is an input to selection, not a new selector.
+    "INDEX_TOPK": frozenset({0, 1, 2, 3}),
 }
 
 

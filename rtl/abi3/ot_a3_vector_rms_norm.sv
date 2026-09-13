@@ -18,7 +18,21 @@
 // are both inside it.  One BF16 code occupies the low half of each 32-bit
 // verification-bank word.
 // ---------------------------------------------------------------------------
-module ot_a3_vector_rms_norm (
+module ot_a3_vector_rms_norm #(
+    //: THE OPERATING PROFILE, as parameters rather than localparams.
+    //:
+    //: These four were fixed constants, and the index registers below were sized
+    //: to match them by hand.  A 16-token prefill normalises 16 x heads rows at
+    //: once, which is 128 rows against a 32-row ceiling -- and because
+    //: ``row_index`` was hand-sized to 6 bits for that ceiling, raising the
+    //: ceiling alone would have made the row terminator never match and the
+    //: engine HANG rather than refuse.  Deriving the register widths from the
+    //: parameters is what makes the ceiling safe to raise.
+    parameter [31:0] PROFILE_MAX_COUNT   = 32'd4096,
+    parameter [31:0] PROFILE_MAX_ROWS    = 32'd32,
+    parameter [31:0] PROFILE_MODEL_WIDTH = 32'd4096,
+    parameter [31:0] PROFILE_HEAD_WIDTH  = 32'd128
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        start,
@@ -55,10 +69,6 @@ module ot_a3_vector_rms_norm (
     localparam [7:0] ERR_SHAPE = ot_a3_engine_pkg::ERR_SHAPE;
     localparam [1:0] FP_ERR_NONE = 2'd0;
 
-    localparam [31:0] PROFILE_MAX_COUNT = 32'd4096;
-    localparam [31:0] PROFILE_MAX_ROWS = 32'd32;
-    localparam [31:0] PROFILE_MODEL_WIDTH = 32'd4096;
-    localparam [31:0] PROFILE_HEAD_WIDTH = 32'd128;
     localparam [31:0] PROFILE_EPSILON = 32'h3586_37bd;
     // The two widths the shipped Qwen deployment issues, kept as named
     // constants because the shape check and the census both cite them.
@@ -99,7 +109,17 @@ module ot_a3_vector_rms_norm (
             is_power_of_two = (width != 32'd0) && ((width & (width - 32'd1)) == 32'd0);
         end
     endfunction
-    localparam integer BUFFER_ELEMENTS = 4096;
+    //: One element per admitted count, so the buffer follows the ceiling.
+    localparam integer BUFFER_ELEMENTS = PROFILE_MAX_COUNT;
+    //: Enough to index 0 .. BUFFER_ELEMENTS, and 0 .. PROFILE_MAX_ROWS-1.  The
+    //: +1 on the element width is the one the old [12:0] carried for 4,096.
+    localparam integer EIW = $clog2(BUFFER_ELEMENTS) + 1;
+    localparam integer CIW = $clog2(PROFILE_MODEL_WIDTH);
+    localparam integer RIW = $clog2(PROFILE_MAX_ROWS);
+    //: The buffer address width.  Every comparison below is done at 32 bits
+    //: against the cfg_* inputs instead of against a hand-sized literal, so no
+    //: width in this module has to be kept in step with the profile by hand.
+    localparam integer BIW = $clog2(BUFFER_ELEMENTS);
 
     localparam [3:0] S_IDLE         = 4'd0;
     localparam [3:0] S_INPUT_ISSUE  = 4'd1;
@@ -120,12 +140,12 @@ module ot_a3_vector_rms_norm (
     reg [15:0] input_buffer [0:BUFFER_ELEMENTS-1];
     reg [15:0] output_buffer [0:BUFFER_ELEMENTS-1];
     reg [31:0] reduction_buffer [0:BUFFER_ELEMENTS-1];
-    reg [12:0] element_index;
-    reg [11:0] column_index;
-    reg [12:0] row_base_index;
-    reg [5:0]  row_index;
-    reg [11:0] reduction_pair_index;
-    reg [12:0] reduction_count;
+    reg [EIW-1:0] element_index;
+    reg [CIW-1:0] column_index;
+    reg [EIW-1:0] row_base_index;
+    reg [RIW-1:0] row_index;
+    reg [CIW-1:0] reduction_pair_index;
+    reg [EIW-1:0] reduction_count;
     reg [31:0] mean_square_code;
     reg [31:0] inverse_rms_code;
 
@@ -135,15 +155,15 @@ module ot_a3_vector_rms_norm (
     wire weight_nonfinite = weight_code[14:7] == 8'hff;
     wire [31:0] input_fp32_code = {input_code, 16'b0};
     wire [31:0] buffered_input_fp32_code = {
-        input_buffer[element_index[11:0]], 16'b0
+        input_buffer[element_index[BIW-1:0]], 16'b0
     };
     wire [31:0] weight_fp32_code = {weight_code, 16'b0};
 
     wire [33:0] input_square = ot_fp32_rne_pkg::fp32_mul_rne(
         input_fp32_code, input_fp32_code
     );
-    wire [11:0] reduction_left_index = reduction_pair_index << 1;
-    wire [11:0] reduction_right_index = reduction_left_index + 1'b1;
+    wire [CIW-1:0] reduction_left_index = reduction_pair_index << 1;
+    wire [CIW-1:0] reduction_right_index = reduction_left_index + 1'b1;
     wire [33:0] reduction_add =
         ot_fp32_rne_pkg::fp32_add_positive_rne(
             reduction_buffer[reduction_left_index],
@@ -236,7 +256,7 @@ module ot_a3_vector_rms_norm (
                         row_base_index <= 0;
                         row_index <= 0;
                         reduction_pair_index <= 0;
-                        reduction_count <= cfg_cols[12:0];
+                        reduction_count <= cfg_cols[EIW-1:0];
                         mean_square_code <= 0;
                         inverse_rms_code <= 0;
                         if ((cfg_count == 0) ||
@@ -274,12 +294,12 @@ module ot_a3_vector_rms_norm (
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else begin
-                        input_buffer[element_index[11:0]] <= input_code;
+                        input_buffer[element_index[BIW-1:0]] <= input_code;
                         reduction_buffer[column_index] <= input_square[31:0];
-                        if ({1'b0, column_index} + 13'd1 ==
-                            cfg_cols[12:0]) begin
+                        if (({{(32-CIW){1'b0}}, column_index} + 32'd1) ==
+                            cfg_cols) begin
                             reduction_pair_index <= 0;
-                            reduction_count <= cfg_cols[12:0];
+                            reduction_count <= cfg_cols[EIW-1:0];
                             state <= S_REDUCE;
                         end else begin
                             element_index <= element_index + 1'b1;
@@ -366,12 +386,13 @@ module ot_a3_vector_rms_norm (
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else begin
-                        output_buffer[element_index[11:0]] <= output_bf16[15:0];
+                        output_buffer[element_index[BIW-1:0]] <= output_bf16[15:0];
                         saturation_count <= saturation_count +
                             normalized_bf16[16] + output_bf16[16];
-                        if ({1'b0, column_index} + 13'd1 ==
-                            cfg_cols[12:0]) begin
-                            if ({26'd0, row_index} + 1'b1 == cfg_rows) begin
+                        if (({{(32-CIW){1'b0}}, column_index} + 32'd1) ==
+                            cfg_cols) begin
+                            if (({{(32-RIW){1'b0}}, row_index} + 32'd1) ==
+                                cfg_rows) begin
                                 result_count <= cfg_count;
                                 work_count <= cfg_count;
                                 element_index <= 0;
@@ -379,12 +400,12 @@ module ot_a3_vector_rms_norm (
                             end else begin
                                 row_index <= row_index + 1'b1;
                                 row_base_index <= row_base_index +
-                                    cfg_cols[12:0];
+                                    cfg_cols[EIW-1:0];
                                 element_index <= row_base_index +
-                                    cfg_cols[12:0];
+                                    cfg_cols[EIW-1:0];
                                 column_index <= 0;
                                 reduction_pair_index <= 0;
-                                reduction_count <= cfg_cols[12:0];
+                                reduction_count <= cfg_cols[EIW-1:0];
                                 state <= S_INPUT_ISSUE;
                             end
                         end else begin
@@ -398,8 +419,9 @@ module ot_a3_vector_rms_norm (
                 S_WRITE: begin
                     out_we <= 1'b1;
                     out_addr <= cfg_output_base + {19'b0, element_index};
-                    out_data <= {16'b0, output_buffer[element_index[11:0]]};
-                    if (element_index + 13'd1 == cfg_count[12:0]) begin
+                    out_data <= {16'b0, output_buffer[element_index[BIW-1:0]]};
+                    if (({{(32-EIW){1'b0}}, element_index} + 32'd1) ==
+                        cfg_count) begin
                         element_index <= 0;
                         state <= S_DONE;
                     end else begin

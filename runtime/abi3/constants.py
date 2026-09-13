@@ -96,6 +96,9 @@ class Dma(enum.IntEnum):
     FILL = 0x01
     GATHER = 0x02
     SCATTER = 0x03
+    #: AM-E10.  Engram n-gram row ids: integer multiply-modulo over compressed
+    #: token ids.  A mover, not a lookup -- the lookup is TENSOR.EMBED_LOOKUP.
+    NGRAM_HASH = 0x04
 
 
 class Tensor(enum.IntEnum):
@@ -119,6 +122,9 @@ class Vector(enum.IntEnum):
     HADAMARD = 0x0A
     INDEX_SCORE = 0x0B
     SQRT_SOFTPLUS = 0x0C
+    #: AM-E10.  The Engram gated residual: normalised dot, signed sqrt, sigmoid
+    #: and add, fused under one numeric contract.
+    ENGRAM_GATE = 0x0D
 
 
 class Attention(enum.IntEnum):
@@ -145,6 +151,12 @@ class Route(enum.IntEnum):
     # has ``WINDOW_INDEX = 0x01`` against this one's 0x06) and aligning them
     # would move a frozen wire value.
     DSPARK_WINDOW_INDEX = 0x07
+    #: AM-E10, the DeepSeek-V4.1-Flash candidate pool.  BLOCK_MAX reduces a
+    #: score row to one score per block; CANDIDATE_MASK expands chosen block ids
+    #: back to a per-position mask.  Neither is a parameterisation of INDEX_TOPK,
+    #: which selects positions rather than blocks.
+    BLOCK_MAX = 0x08
+    CANDIDATE_MASK = 0x09
 
 
 class Reduction(enum.IntEnum):

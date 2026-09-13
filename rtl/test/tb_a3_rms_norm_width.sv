@@ -13,7 +13,14 @@
 // Driven by tests/test_a3_rms_norm_width.py, which supplies the operands and
 // makes the comparison.  Both shipped Qwen widths are positive controls, so a
 // regression at 4,096 or 128 fails here too.
-module tb_a3_rms_norm_width;
+// MAX_ROWS is forwarded so the raised profile can be proved by the same bench.
+// A prefill normalises tokens x heads rows in one launch -- 128 for the reduced
+// model -- and the engine's row ceiling was 32 with its row index hand-sized to
+// match, so raising the ceiling without deriving the width would have made the
+// row terminator never match and the engine hang.
+module tb_a3_rms_norm_width #(
+    parameter integer MAX_ROWS = 32
+);
     reg clk = 1'b0;
     always #5 clk = ~clk;
     reg rst_n = 1'b0;
@@ -37,7 +44,7 @@ module tb_a3_rms_norm_width;
         if (out_we) omem[out_addr[12:0]] <= out_data;
     end
 
-    ot_a3_vector_rms_norm rms (
+    ot_a3_vector_rms_norm #(.PROFILE_MAX_ROWS(MAX_ROWS)) rms (
         .clk(clk), .rst_n(rst_n), .start(start),
         .cfg_count(cnt), .cfg_rows(rows), .cfg_cols(cols),
         .cfg_epsilon_bits(32'h3586_37bd),

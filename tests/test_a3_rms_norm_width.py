@@ -46,6 +46,14 @@ SOURCES = (
 # the last two the shipped Qwen ones, kept as positive controls.
 GEOMETRIES = ((8, 16), (1, 128), (32, 128), (1, 4096))
 
+#: (max_rows, rows, cols) for the RAISED profile.  128 rows is what a 16-token
+#: prefill of the reduced model asks of the head-wise normaliser: 16 tokens x 8
+#: heads.  At the default 32-row ceiling this geometry is refused; the case
+#: exists because raising the ceiling used to be unsafe -- the row index was
+#: hand-sized to 6 bits, so a 128-row launch would have run forever instead of
+#: terminating.  Deriving the index widths from the profile is what this proves.
+RAISED_GEOMETRIES = ((128, 128, 16),)
+
 WIDEST = 4096
 
 
@@ -87,7 +95,34 @@ def test_rms_norm_is_bit_exact_at_every_admitted_width(tmp_path):
     )
     assert build.returncode == 0, build.stderr
 
-    for rows, cols in GEOMETRIES:
+    _run_geometries(binary, tmp_path, GEOMETRIES, inputs, weights)
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None or shutil.which("vvp") is None,
+    reason="iverilog/vvp not available",
+)
+def test_rms_norm_is_bit_exact_at_a_raised_row_ceiling(tmp_path):
+    rng = random.Random(0x5150_4F54)
+    inputs = [_bf16(rng.uniform(-2.0, 2.0)) for _ in range(WIDEST)]
+    weights = [_bf16(rng.uniform(0.5, 1.5)) for _ in range(WIDEST)]
+    (tmp_path / "in.hex").write_text("".join(f"{c:08x}\n" for c in inputs))
+    (tmp_path / "w.hex").write_text("".join(f"{c:08x}\n" for c in weights))
+
+    for max_rows, rows, cols in RAISED_GEOMETRIES:
+        binary = tmp_path / f"rms_rows{max_rows}.vvp"
+        build = subprocess.run(
+            ["iverilog", "-g2012",
+             f"-Ptb_a3_rms_norm_width.MAX_ROWS={max_rows}",
+             "-o", str(binary), *SOURCES],
+            cwd=REPO_ROOT, capture_output=True, text=True, timeout=900,
+        )
+        assert build.returncode == 0, build.stderr
+        _run_geometries(binary, tmp_path, ((rows, cols),), inputs, weights)
+
+
+def _run_geometries(binary, tmp_path, geometries, inputs, weights):
+    for rows, cols in geometries:
         run = subprocess.run(
             ["vvp", str(binary), f"+rows={rows}", f"+cols={cols}"],
             cwd=tmp_path,

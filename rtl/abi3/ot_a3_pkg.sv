@@ -79,6 +79,15 @@ package ot_a3_pkg;
     localparam [7:0] A3_MAJOR_OBSERVATION = 8'ha0;
     localparam [7:0] A3_MAJOR_RECOVERY    = 8'hb0;
 
+    //: AM-E10 sub-opcodes, DeepSeek-V4.1-Flash.  Named here rather than written
+    //: as literals in each block, because a sub-opcode that appears only as a
+    //: number in one engine and one admission predicate is the shape that lets
+    //: the two disagree silently.
+    localparam [7:0] A3_DMA_NGRAM_HASH      = 8'h04;
+    localparam [7:0] A3_VECTOR_ENGRAM_GATE  = 8'h0d;
+    localparam [7:0] A3_ROUTE_BLOCK_MAX     = 8'h08;
+    localparam [7:0] A3_ROUTE_CANDIDATE_MASK = 8'h09;
+
     localparam [7:0] A3_CONTROL_NOP        = 8'h00;
     localparam [7:0] A3_CONTROL_BRANCH     = 8'h01;
     localparam [7:0] A3_CONTROL_LOOP_SETUP = 8'h02;
@@ -241,11 +250,11 @@ package ot_a3_pkg;
         begin
             case (major)
                 A3_MAJOR_CONTROL:     a3_major_sub_bound = {1'b1, 8'h08};
-                A3_MAJOR_DMA:         a3_major_sub_bound = {1'b1, 8'h03};
+                A3_MAJOR_DMA:         a3_major_sub_bound = {1'b1, 8'h04};   // AM-E10
                 A3_MAJOR_TENSOR:      a3_major_sub_bound = {1'b1, 8'h03};
-                A3_MAJOR_VECTOR:      a3_major_sub_bound = {1'b1, 8'h0c};
+                A3_MAJOR_VECTOR:      a3_major_sub_bound = {1'b1, 8'h0d};   // AM-E10
                 A3_MAJOR_ATTENTION:   a3_major_sub_bound = {1'b1, 8'h02};
-                A3_MAJOR_ROUTE:       a3_major_sub_bound = {1'b1, 8'h07};   // AM-E6
+                A3_MAJOR_ROUTE:       a3_major_sub_bound = {1'b1, 8'h09};   // AM-E10
                 A3_MAJOR_REDUCTION:   a3_major_sub_bound = {1'b1, 8'h04};
                 A3_MAJOR_SELECTION:   a3_major_sub_bound = {1'b1, 8'h02};
                 A3_MAJOR_STATE:       a3_major_sub_bound = {1'b1, 8'h04};

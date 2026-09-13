@@ -69,6 +69,11 @@ DTYPES = frozenset(
         "fp8_e4m3fn",
         "fp8_e5m2",
         "mxfp4_e2m1",
+        #: AM-E10.  E2M1 elements with ONE E4M3 scale PER 16, which is not
+        #: mxfp4_e2m1: that is E8M0 per 32.  Both the scale format and the
+        #: group size differ, so a shared name would let a deployment pass a
+        #: table quantised one way to an engine expecting the other.
+        "fp4_e2m1_s16_e4m3",
         "e8m0",
         "i8",
         "u8",
@@ -133,12 +138,26 @@ OPERATION_KINDS = frozenset(
         "HYPER_CONNECT_PRE",
         "HYPER_CONNECT_POST",
         "HYPER_CONNECT_HEAD",
+        #: AM-E10.  Normalised dot, signed sqrt, sigmoid and residual add,
+        #: fused so the numeric contract engram_gate_fp32_v1 covers one
+        #: auditable operator instead of four compositions.
+        "ENGRAM_GATE",
         # routing
         "ROUTER_SCORE",
         "TOPK",
         "BIASED_TOPK",
         "HASH_ROUTE",
+        #: AM-E10.  An integer multiply-modulo over compressed token ids,
+        #: which produces row ids rather than reading a table -- the lookup
+        #: that follows is EMBEDDING_LOOKUP and stays unchanged.
+        "NGRAM_HASH",
         "INDEX_TOPK",
+        #: AM-E10.  BLOCK_MAX reduces a score row to one score per block of
+        #: `block`; CANDIDATE_MASK turns chosen block ids back into a
+        #: per-position mask.  INDEX_TOPK selects POSITIONS, so neither is a
+        #: parameterisation of it.
+        "BLOCK_MAX",
+        "CANDIDATE_MASK",
         "WEIGHT_NORMALIZE",
         "EXPERT_DISPATCH",
         "EXPERT_REDUCE",
