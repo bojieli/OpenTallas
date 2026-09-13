@@ -1,0 +1,63 @@
+{
+  "architectures": {
+    "hbm_weights": {
+      "hbm_seconds_per_token": 0.009243030000980873,
+      "host_bytes_per_token": 607752,
+      "host_is_bottleneck": false,
+      "host_seconds_per_token": 1.9293714285714286e-05,
+      "host_share": 3.224636782941693e-05,
+      "host_vs_offchip_ratio": 31010.244593189327,
+      "state_bytes_per_token": 3623882752,
+      "state_share": 0.19227753457277258,
+      "total_bytes_per_token": 18847145924,
+      "weight_bytes_per_token": 15222655420,
+      "weight_share": 0.807690219059398
+    },
+    "rom_weights": {
+      "hbm_seconds_per_token": 0.0017772843315350662,
+      "host_bytes_per_token": 607752,
+      "host_is_bottleneck": false,
+      "host_seconds_per_token": 1.9293714285714286e-05,
+      "host_share": 0.0001676792915664375,
+      "host_vs_offchip_ratio": 5962.765654411668,
+      "state_bytes_per_token": 3623882752,
+      "state_share": 0.9998323207084335,
+      "total_bytes_per_token": 3624490504,
+      "weight_bytes_per_token": 0,
+      "weight_share": 0.0
+    }
+  },
+  "git": {
+    "commit": "107afa658b13b419703be4f0c8850ed9afa55771",
+    "worktree_dirty": true
+  },
+  "graph_upload": {
+    "amortised_over_tokens": 1024,
+    "bytes_per_instruction_assumed": 16,
+    "graph_bytes": 33680,
+    "instructions": 2105,
+    "per_token_if_reuploaded": 33680,
+    "per_token_if_uploaded_once": 32.890625,
+    "reupload_penalty_factor": 1024.0
+  },
+  "links": {
+    "hbm_bytes_s": 2039000000000.0,
+    "host_link_bytes_s": 31500000000.0,
+    "host_link_note": "PCIe 4.0 x16 one direction. An ASSUMPTION; this repository measures no host link."
+  },
+  "model": {
+    "active_parameters": 7568405504,
+    "name": "qwen3-8b",
+    "weight_bytes_bf16": 15136811008.0
+  },
+  "question": "Per generated token, does host-side control traffic dominate, or does weight and state movement?",
+  "refusals": [
+    "host-link-rate-is-assumed: nothing in this repository measures a host interconnect. The 31.5 GB/s is a PCIe 4.0 x16 figure taken as an assumption, and every host-seconds number scales inversely with it.",
+    "counters-are-a-cycle-model: host.bytes_read/written and hbm.bytes_read come from the cycle model's architectural counters, which are identical across cost tables and were checked as such -- but they are a model of the shipped program, not a measurement of a host driver.",
+    "rom-column-is-subtraction: the ROM architecture is priced by removing the weight term and changing nothing else. A real mask-ROM design also changes the on-die fabric and the refill path, which this does not model.",
+    "no-prefill-and-no-batching: one decode token at batch 1. Prefill moves far more per step and batching amortises weight traffic across requests, which is exactly the regime where the ROM advantage narrows.",
+    "graph-size-is-derived-not-measured: 16 bytes per instruction is a conservative stand-in for the encoded descriptor stream, not a measurement of the deployed image."
+  ],
+  "schema": "opentallas.audit.host_path_traffic.v1",
+  "source": "results/abi3/cycle_characterization_feedback.json"
+}
