@@ -98,12 +98,13 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
         if CPF.scan(document)
     }
     assert annotated_documents == CPF.REQUIRED_COVERAGE
-    # 916, not 847: docs/DEEPSEEK_V41_FLASH_FEASIBILITY.md was added with 69
-    # annotations (before that, docs/CHIP_ARCHITECTURE_DESIGN.md gained ten and
-    # its floor was raised to match).  This total only ever moves UP -- a drop
-    # is the regression the floor exists to catch, and the per-document
-    # equality above catches it first.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 916
+    # 930, not 916: docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md was added
+    # with 14 annotations, after DEEPSEEK_V41_FLASH_FEASIBILITY.md's 69 (and
+    # before that docs/CHIP_ARCHITECTURE_DESIGN.md gained ten and its floor was
+    # raised to match).  This total only ever moves UP -- a drop is the
+    # regression the floor exists to catch, and the per-document equality
+    # above catches it first.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 930
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

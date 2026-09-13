@@ -246,6 +246,9 @@ bounded Qwen operations, not a complete controller.
 | TA-DS-ROM-ARRAY-FLASH | DeepSeek-V4 Flash | mask ROM plus node-local HBM/SRAM buffers | exactly 32 reticle-class ROM chips over the TA-DS-HBM NVLink-class fabric | DeepSeek-specific conventional ROM netlist and masks, one die replicated | the same DeepSeek workload contract |
 | TA-DS-HBM-PRO | DeepSeek-V4 Pro | node-local external HBM with SRAM tiling | N accelerator nodes over a two-level fabric (`CLUSTER_N`) | N copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
 | TA-DS-ROM-ARRAY-PRO | DeepSeek-V4 Pro | mask ROM plus node-local HBM/SRAM buffers | N reticle-class ROM chips over a two-level fabric (`CLUSTER_N`) | DeepSeek-Pro-specific conventional ROM netlist and masks, one die replicated | the same Pro workload contract |
+| TA-DS41-ROM-WAFER | DeepSeek-V4.1 Flash | distributed mask ROM plus live HBM buffers; Engram tables resident in wafer-edge HBM | two wafer-scale logical accelerators in a pipeline, one crossing per token | DeepSeek-V4.1-specific wafer-scale netlist, stitching, and masks | exactly 200,000 natural prompt tokens (`TA-DS41-CTX-200K-1`); plan `DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md` |
+| TA-DS41-ROM-ARRAY | DeepSeek-V4.1 Flash | mask ROM plus node-local HBM/SRAM buffers | 51 reticle-class ROM chips over the TA-DS-HBM NVLink-class fabric (`CLUSTER_N`) | DeepSeek-V4.1-specific conventional ROM netlist and masks, one die replicated | the same V4.1 workload contract |
+| TA-DS41-HBM | DeepSeek-V4.1 Flash | node-local external HBM with SRAM tiling; Engram tables in host memory | N accelerator nodes over an NVLink-class fabric | N copies of the identical TA-QW-HBM chip/netlist | the same V4.1 workload contract |
 
 The two HBM rows use one conventional accelerator-chip design. Qwen uses one
 node; DeepSeek uses exactly 32 identical nodes. The chip therefore contains the

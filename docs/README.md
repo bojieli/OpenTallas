@@ -183,6 +183,9 @@ not promote planned behavior into implemented evidence.
   compiler, simulator, validation, and production execution program.
 - [Shared HBM/SRAM implementation plan](HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md)
   — conventional accelerator backend and distributed dataflow work.
+- [DeepSeek-V4.1-Flash ROM machine plan](DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)
+  — two-wafer primary target, reticle-array controlled experiment and HBM
+  comparator for the 2026-09-10 release; gates DS41-A0 to DS41-REL12.
 - [Qwen3 ROM hardware plan](QWEN3_ROM_HARDWARE_IMPLEMENTATION_PLAN.md) — Qwen
   model-specific ROM target.
 - [DeepSeek-V4-Flash ROM hardware plan](DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md)

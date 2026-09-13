@@ -56,7 +56,7 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
     # equality above -- that the report covers exactly README plus every
     # docs/*.md -- and this now restates it in a form that cannot go stale.
     assert report["totals"]["documents"] == len(expected_paths)
-    assert report["totals"]["annotations"] == 916
+    assert report["totals"]["annotations"] == 930
     assert report["totals"]["zero_candidate_documents"] > 0
     assert report["totals"]["classifications"]["unbound"] > 0
 
