@@ -57,12 +57,14 @@ from compiler.backends.rom.deepseek_v41_array import (
     compare_descriptor_multisets,
     deepseek_v41_array_rom_capability,
     engram_residency,
+    engram_shard_feasibility,
     engram_table_bytes,
     engram_tables_are_off_rom,
     expert_parallel_node_count,
     v41_array_geometry,
 )
 from compiler.backends.rom.common.image import plan_resident_regions
+from compiler.frontends.v3.deepseek_v41 import V41_FLASH_PROFILE
 from compiler.backends.rom.deepseek_v41_array import (
     BANK_BYTES as BANK_BYTES_DECLARED,
     DENSE_BANKS as DENSE_BANKS_DECLARED,
@@ -315,34 +317,127 @@ def test_the_engram_table_bytes_are_derived_and_equal_the_inventory():
     )
 
 
-def test_a_replicated_engram_table_does_not_fit_one_node_and_is_refused():
+def test_neither_on_device_engram_placement_is_expressible_and_both_refuse():
+    """The two device placements are refused, each by its own arithmetic.
+
+    ``replicated_hbm`` asks every node for the whole table and a node attaches
+    less than that.  ``node_local_hbm`` -- plan WP-F's request -- asks for a
+    row-sharded region, and the released row counts have no symmetric whole-row
+    split over the derived node count, which ABI 3.0 gives no way to express
+    asymmetrically (amendment A28).  Both numbers are read off the released
+    profile.
+    """
+    table = engram_table_bytes()
     with pytest.raises(DeepSeekV41ArrayError) as refusal:
         engram_residency("replicated_hbm")
+    assert "resident HBM per node" in str(refusal.value)
+    with pytest.raises(DeepSeekV41ArrayError) as refusal:
+        engram_residency("node_local_hbm")
     message = str(refusal.value)
-    assert "resident HBM per node" in message
-    plan = engram_residency(DEFAULT_ENGRAM_PLACEMENT)
-    assert plan["options"]["replicated_hbm"]["admitted"] is False
-    # the admitted node-local form is row-sharded, and it is a ceiling because
-    # the released row counts do not divide by the node count
-    total = plan["table"]["total_bytes"]
-    assert plan["resident_bytes_per_node"] == -(-total // NODE_COUNT)
-    assert engram_residency("host")["resident_bytes_per_node"] == 0
+    assert "not expressible on" in message
+    assert "A28" in message
+    priced = engram_residency(DEFAULT_ENGRAM_PLACEMENT)
+    assert priced["placement"] == "host"
+    assert priced["options"]["replicated_hbm"]["admitted"] is False
+    assert priced["options"]["node_local_hbm"]["admitted"] is False
+    # the host image is the whole table, once, and no node reserves HBM for it
+    assert priced["resident_bytes_per_node"] == 0
+    assert priced["host_region_bytes"] == int(table["total_bytes"])
 
 
-def test_the_capability_declares_the_resident_engram_region():
+def test_the_ceiling_the_capability_used_to_declare_was_not_a_row_granular_share():
+    """Why ``ceil(total / nodes)`` was itself the defect, not a rounding taste.
+
+    A node image of a row-sharded table is a whole number of every addressing
+    row it holds.  The ceiling is not: for the released tables it is odd, so it
+    is not a whole number even of the 8-byte scale row, and therefore no split
+    of any shape could have produced it.  A capability number no placement can
+    reach is a number nothing checks.
+    """
+    table = engram_table_bytes()
+    ceiling = -(-int(table["total_bytes"]) // NODE_COUNT)
+    scale_row = int(table["scale_columns"])
+    assert ceiling % scale_row != 0
+    assert ceiling % int(table["head_dim"]) != 0
+    # and it is not what the capability declares any more
+    assert (
+        deepseek_v41_array_rom_capability().memory["hbm"]["resident_region_bytes"]
+        != ceiling
+    )
+
+
+def test_no_admissible_node_count_divides_the_engram_row_counts():
+    """Why "a node count that divides the row counts" is not an option either.
+
+    Every admissible count is a multiple of the declared NVLink domain size and
+    divides the released expert count.  One released row count is 2 mod 4, so no
+    multiple of 4 -- let alone of 8 -- divides it, at any device count.
+    """
+    rows = [int(module["rows"]) for module in engram_table_bytes()["modules"]]
+    admissible = admissible_node_counts(
+        ROUTED_EXPERTS, domain_size=DOMAIN_SIZE, limit=ROUTED_EXPERTS
+    )
+    assert NODE_COUNT in admissible
+    assert not [n for n in admissible if all(count % n == 0 for count in rows)]
+    assert any(count % 4 == 2 for count in rows)
+
+
+def test_the_shard_feasibility_predicate_still_admits_a_table_that_divides():
+    """The refusal is a predicate, not a pin: a divisible table is admitted.
+
+    The stand-in carries the released rows with their remainder removed, so the
+    only thing that differs from the refused case is the arithmetic the rule is
+    about.  Without this the refusal could be a constant that happens to say no.
+    """
+
+    class _Divisible:
+        """The released Engram geometry with row counts the node count divides."""
+
+        engram_layers = V41_FLASH_PROFILE.engram_layers
+        engram_rows = tuple(
+            rows - rows % NODE_COUNT for rows in V41_FLASH_PROFILE.engram_rows
+        )
+        engram_head_dim = V41_FLASH_PROFILE.engram_head_dim
+        weight_scale_block = V41_FLASH_PROFILE.weight_scale_block
+        engram_max_ngram = V41_FLASH_PROFILE.engram_max_ngram
+        engram_heads = V41_FLASH_PROFILE.engram_heads
+
+    released = engram_shard_feasibility()
+    assert released["divides"] is False
+    assert [m["remainder_rows"] for m in released["modules"]] == [24, 42]
+    stand_in = engram_shard_feasibility(profile=_Divisible())
+    assert stand_in["divides"] is True
+    admitted = engram_residency("node_local_hbm", profile=_Divisible())
+    # the admitted reserve is the node image -- rows a node x row bytes -- and
+    # not a ceiling over the whole table
+    table = engram_table_bytes(_Divisible())
+    per_row = int(table["head_dim"]) + int(table["scale_columns"])
+    assert admitted["resident_bytes_per_node"] == sum(
+        module["rows_a_node"] * per_row for module in stand_in["modules"]
+    )
+
+
+def test_the_capability_prices_the_store_the_placement_uses():
     array = deepseek_v41_array_rom_capability()
     residency = engram_residency(DEFAULT_ENGRAM_PLACEMENT)
-    assert (
-        array.memory["hbm"]["resident_region_bytes"]
-        == residency["resident_bytes_per_node"]
+    # nothing in node-attached HBM: the double count is gone in both directions
+    assert array.memory["hbm"]["resident_region_bytes"] == 0
+    assert array.memory["host"]["resident_region_bytes"] == (
+        residency["host_region_bytes"]
     )
-    assert (
-        array.memory["hbm"]["resident_region_bytes"]
-        < array.memory["hbm"]["physical_bytes"]
+    assert array.memory["host"]["resident_region_bytes"] == int(
+        residency["table"]["total_bytes"]
     )
-    host = deepseek_v41_array_rom_capability(engram_placement="host")
-    assert host.memory["hbm"]["resident_region_bytes"] == 0
-    assert host.digest != array.digest
+    # host memory is not this device's, so the record declares no host capacity
+    assert set(array.memory["host"]) == {"resident_region_bytes"}
+    # and a capability that priced both stores is refused by the builder
+    both = Capability.from_dict(json.loads(canonical_json(array.to_dict()).decode()))
+    both.memory["hbm"]["resident_region_bytes"] = 1 << 20
+    with pytest.raises(DeepSeekV41ArrayError) as refusal:
+        # The graph is never reached: the capability contradiction is refused
+        # before anything is read out of it.
+        build_deepseek_v41_array_rom_deployment(None, capability=both)
+    assert "counts those bytes twice" in str(refusal.value)
 
 
 def test_the_engram_table_marker_is_the_adapters_own_tensor_name():

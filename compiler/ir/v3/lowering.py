@@ -241,6 +241,30 @@ OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
     #: top-k engine unchanged: the reference masks scores to -inf inside the
     #: candidate blocks, which is an input to selection, not a new selector.
     "INDEX_TOPK": frozenset({0, 1, 2, 3}),
+    #: AM-E10.  ``VECTOR.COMPRESS``'s operand row is (hidden, projection_0,
+    #: projection_1), and DeepSeek-V4.1-Flash has compressor layers with ONE
+    #: projection: SRC-DSV41-FLASH-MODEL's "a ratio-1 compressor is a plain BF16
+    #: projection", which has a key/value matrix and no gate.  Slot 2 is
+    #: therefore optional and slots 0 and 1 are not -- a compressor with no
+    #: key/value projection is not a compressor.  The V4 forms bind all three and
+    #: are unchanged.
+    "COMPRESS_PROJECT": frozenset({2}),
+    #: ``VECTOR.COMPRESS`` sub-case 2's operand row is (candidates, projection,
+    #: position_embedding).  ``in1`` is the projection matrix, which a state
+    #: update never has -- every form leaves it empty, which is why the ROM and
+    #: HBM lanes each carry a private seed for it -- so an exporter may now say
+    #: so itself.  ``in2``, the absolute position embedding the released V4
+    #: compressor adds to its gate scores, is NOT listed: it is the trailing
+    #: slot, so a form that has none states that by not binding it, exactly as
+    #: ``COMPRESS_PROJECT``'s ratio-1 form states its missing gate, and this
+    #: kind's operand arity above is two.  DeepSeek-V4.1-Flash's compressor is
+    #: that form: SRC-DSV41-FLASH-MODEL's ``Compressor`` holds ``norm``, ``wkv``
+    #: and ``wgate``, its forward is ``kv, score = self.wkv(x), self.wgate(x)``
+    #: with no positional term, and the released checkpoint index carries zero
+    #: ``.ape`` tensors against V4's one per compressor layer.  Slot 0, the
+    #: projected candidates, stays mandatory -- a state update with nothing to
+    #: carry is not a state update.
+    "COMPRESS_STATE_UPDATE": frozenset({1}),
 }
 
 
@@ -476,6 +500,41 @@ def abi_input_slots(
             slots.append(remaining.pop(0))
         position += 1
     return slots
+
+
+#: Destination-row maps whose names are two spellings of ONE map.
+#:
+#: ``cache_row`` is a neutral attribute, so the vocabulary two exporters write
+#: into it belongs here rather than being re-decided per lane.  The DeepSeek-V4
+#: export writes ``completed_absolute_position_floor_div_ratio`` and the
+#: DeepSeek-V4.1 export writes ``compressed_group_index`` for the same physical
+#: operation.  Neither a backend nor a checker may take that on trust -- a row
+#: map a lane does not implement must never become the identity, and a proof
+#: that filters on a spelling it has not met would silently prove nothing about
+#: the model that uses the other spelling.  What settles it is that the two
+#: spellings appear on kernels carrying the SAME NUMERIC CONTRACT,
+#: ``compressed_kv_write_bf16_v1``, and that each destination extent is that
+#: kernel's own ``context_length // ratio``: V4's
+#: ``main.layer02.compress_kv_write`` declares ratio 4 into a 65,536-row cache,
+#: V4.1's ``main.layer02.attention.compressor.write`` ratio 2 into 131,072 and
+#: its ``main.layer20...write`` ratio 1 into 262,144, all of one 262,144-position
+#: request.  One contract, one row arithmetic: the alias is a naming fact, not a
+#: semantic assumption.
+#:
+#: Resolving a spelling is NOT admitting a map: each lane still refuses any name
+#: outside its own implemented set, which is why this function does not raise.
+CACHE_ROW_ALIASES: Mapping[str, str] = {
+    "compressed_group_index": "completed_absolute_position_floor_div_ratio",
+}
+
+
+def canonical_cache_row(attributes: Mapping[str, object]) -> str:
+    """The canonical spelling of a ``cache_row`` attribute, or ``""``."""
+    declared = attributes.get("cache_row")
+    if declared is None:
+        return ""
+    name = str(declared)
+    return CACHE_ROW_ALIASES.get(name, name)
 
 
 def check_index_family(kind: str, attributes: Mapping[str, object]) -> list[str]:

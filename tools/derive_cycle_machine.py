@@ -7135,7 +7135,7 @@ def _engram_bound(rows: int, row_bytes: int, hbm: Any, address_stride: int,
 
 def engram_resident_region(anchor: Anchor, shape: Mapping[str, Any],
                            ) -> dict[str, Any]:
-    """The HBM region the ROM base record reserves, against the tables' bytes.
+    """The load-once region the ROM base record reserves, against the tables' bytes.
 
     The registry states each Engram module's row count (``num_embeddings``) and
     the packed row width, so the bytes a resident region has to hold is
@@ -7144,9 +7144,19 @@ def engram_resident_region(anchor: Anchor, shape: Mapping[str, Any],
     statement with a number behind it, and it is the only check in this tool
     that connects the model registry to a compiled product.
 
-    Whether ``memory.hbm.resident_region_bytes`` is per node or per machine is
-    not stated by the schema, so BOTH readings are reported and the region is
-    refused only if neither covers the tables.
+    Whether ``resident_region_bytes`` is per node or per machine is not stated
+    by the schema, so BOTH readings are reported and the region is refused only
+    if neither covers the tables.
+
+    Which STORE the region is in is read off the record rather than assumed to
+    be HBM.  A record may reserve the region in node-attached HBM
+    (``memory.hbm.resident_region_bytes``) or in host memory
+    (``memory.host.resident_region_bytes``) -- the V4.1 array declares the
+    latter, because the released row counts have no symmetric whole-row shard
+    over its derived node count and ABI 3.0 amendment A28 gives no way to
+    declare an asymmetric one.  The store is part of the verdict: a table in
+    host memory is a host round trip, and pricing it as an HBM read would be the
+    wrong cost with the right number.
     """
     registry = model_registry()[str(anchor.rom["model"])]
     body = json.loads((REPO / registry["config"]).read_text())
@@ -7173,18 +7183,50 @@ def engram_resident_region(anchor: Anchor, shape: Mapping[str, Any],
         )
         return out
     cap = json.loads((REPO / rom_base).read_text())
-    declared = ((cap.get("memory") or {}).get("hbm") or {}).get(
-        "resident_region_bytes")
-    nodes = int((cap.get("limits") or {}).get("max_nodes", 1) or 1)
-    out.update({"declared": declared, "base_capability_max_nodes": nodes})
-    if declared is None:
+    memory = cap.get("memory") or {}
+    #: A DECLARED ZERO IS NOT AN ABSENT KEY.
+    #:
+    #: `if value:` treated `resident_region_bytes: 0` as "no declaration", so a
+    #: record that priced the region at zero took the absent-key early return and
+    #: skipped the covers-the-requirement test entirely -- the check could not
+    #: fail on the one value most likely to be wrong.  Presence and magnitude are
+    #: separate questions and are asked separately.
+    #:
+    #: Declaring the region in BOTH stores is refused rather than resolved by
+    #: taking the first: compiler/backends/rom/common/check.py and the array
+    #: builder both refuse it, and a reader that silently disagreed with them
+    #: would report a coverage verdict about the wrong store.
+    declared = None
+    store = None
+    present = [
+        candidate
+        for candidate in ("hbm", "host")
+        if (memory.get(candidate) or {}).get("resident_region_bytes") is not None
+    ]
+    if len(present) > 1:
+        out["declared"] = None
         out["verdict"] = (
-            f"{rom_base} declares no memory.hbm.resident_region_bytes; the "
-            f"placement is priced but nothing in the built record reserves the "
-            f"region it needs"
+            f"{rom_base} declares resident_region_bytes in more than one store "
+            f"({', '.join(present)}); a region is resident in exactly one, and "
+            f"the backend refuses this record too"
         )
         return out
-    declared = int(declared)
+    if present:
+        store = present[0]
+        declared = int((memory.get(store) or {})["resident_region_bytes"])
+    nodes = int((cap.get("limits") or {}).get("max_nodes", 1) or 1)
+    out.update({
+        "declared": declared,
+        "declared_store": store,
+        "base_capability_max_nodes": nodes,
+    })
+    if declared is None:
+        out["verdict"] = (
+            f"{rom_base} declares no resident_region_bytes in memory.hbm or "
+            f"memory.host; the placement is priced but nothing in the built "
+            f"record reserves the region it needs"
+        )
+        return out
     as_machine = declared
     as_per_node = declared * nodes
     out.update({
@@ -7204,9 +7246,9 @@ def engram_resident_region(anchor: Anchor, shape: Mapping[str, Any],
             f"built for"
         )
     out["verdict"] = (
-        "exact: the reserved region is the tables, byte for byte"
+        f"exact in {store}: the reserved region is the tables, byte for byte"
         if out["exact_as_whole_machine"] else
-        f"covers: {declared} B reserved"
+        f"covers in {store}: {declared} B reserved"
         + (f" per node x {nodes} nodes = {as_per_node} B" if not
            out["covers_as_whole_machine"] else "")
         + f" against {required} B of tables"

@@ -139,7 +139,7 @@ from compiler.ir.v3.kernel_ir import (
     Symbolic,
     check_neutral,
 )
-from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
+from compiler.ir.v3.lowering import ABSENT_OPERANDS, KERNEL_TO_ENGINE
 from compiler.ir.v3.numeric import CONTRACT_PATTERN
 
 #: The V4 front end owns the census reader, the graph accumulator, the checkpoint
@@ -971,6 +971,10 @@ _ATTENTION_MODE_SOURCE_KINDS: Mapping[str, tuple[str, ...]] = {
         "ROPE_APPLY",
         "FP4_INDEX_QDQ",
         "INDEX_KEY_WRITE",
+        # The readable prefix of the index key cache, published as its own
+        # operand: the scorer's candidate axis is the groups this request has
+        # completed, not the cache's capacity.
+        "COMPRESSED_KV_VALID_VIEW",
         "INDEX_QUERY_PROJECT",
         "ROPE_APPLY",
         "FP4_INDEX_QDQ",
@@ -2764,8 +2768,24 @@ def export_deepseek_v41_kernel_graph(
         ratio = mode.ratio
         groups = span_groups(ratio) if ratio else None
         committed = context_groups(ratio) if ratio else None
+        # Every kernel of the compressed path AFTER the carry runs exactly when
+        # the carry says the group completed, so each names the carry's computed
+        # predicate rather than restating a comparison.
+        #
+        # The comparison this used to be, ``span_groups_ratioN > 0``, is the
+        # PREFILL condition only.  During decode ``span_tokens`` is one and
+        # ``span_groups_ratio2`` is zero, so a chain predicated on it never fires
+        # on the step that has something to pool -- the decode boundary -- and
+        # the released compressor pools exactly there
+        # (``should_compress = (start_pos + 1) % ratio == 0``).  Naming the
+        # carry's predicate is also what makes a backend treat these kernels as
+        # the carry's consumers: the ROM lane then emits the two-phase chain and
+        # orders it on the carry's own events, where a symbol comparison left the
+        # pool reading the histories the carry had not finished writing.
         group_predicate = (
-            _nonempty(groups) if ratio > 1 else ""
+            f"main.layer{layer:02d}.attention.compressor.carry.should_compress"
+            if ratio > 1 and mode.kv_owner
+            else ""
         )
         committed_predicate = _nonempty(committed) if ratio > 1 else ""
 
@@ -3172,6 +3192,18 @@ def export_deepseek_v41_kernel_graph(
                     # comparison registry cannot state, so it is a computed
                     # predicate rather than a symbol comparison.
                     attributes={
+                        # ``VECTOR.COMPRESS`` sub-case 2 reads (candidates,
+                        # projection, position_embedding).  A state update has no
+                        # projection matrix, so ``in1`` is a hole, and this
+                        # export states it rather than leaving each backend to
+                        # seed one privately.  ``in2``, the absolute position
+                        # embedding, is not bound at all: ``Compressor.forward``
+                        # computes ``score = self.wgate(x)`` and adds nothing to
+                        # it, and the released checkpoint has no ``.ape`` tensor
+                        # for any layer.  A backend reads that absence off the
+                        # operand row, and the numeric attributes an added
+                        # position would need are correspondingly absent here.
+                        ABSENT_OPERANDS: [1],
                         "conditional_outputs": {
                             "pool_key_value": f"{op}.should_compress",
                             "pool_scores": f"{op}.should_compress",
@@ -3183,6 +3215,27 @@ def export_deepseek_v41_kernel_graph(
                         "predicate_output": f"{op}.should_compress",
                         "ratio": ratio,
                     },
+                    # The carry is a read-modify-write of both histories, not a
+                    # write.  ``Compressor.forward``'s decode branch fills one
+                    # slot -- ``self.kv_state[:bsz, slot] = kv.squeeze(1)`` --
+                    # and then, on the step that completes the group, pools
+                    # ``self.kv_state[:bsz] * self.score_state[:bsz].softmax(1)``
+                    # over the *whole* buffer, so the rows earlier steps wrote
+                    # are read back; the prefill branch's remainder split writes
+                    # slots that only a later decode step reads.  Declaring the
+                    # writes alone would hide a real read from the stage
+                    # partition, the schedule certificate's
+                    # ``shared_state_locality`` rule and the inverse proof, all
+                    # three of which reason from ``state_reads``.  A ratio-1
+                    # compressor has no such buffer to read -- the released
+                    # module registers ``kv_state``/``score_state`` only when
+                    # ``compress_ratio > 1`` -- and correspondingly emits no
+                    # carry kernel at all, which is why the invariant is
+                    # unconditional here rather than a predicate on the ratio.
+                    state_reads=(
+                        compressor_state(layer, "kv"),
+                        compressor_state(layer, "score"),
+                    ),
                     state_writes=(
                         compressor_state(layer, "kv"),
                         compressor_state(layer, "score"),
@@ -3309,7 +3362,42 @@ def export_deepseek_v41_kernel_graph(
                 },
                 state_writes=(index_key_state(layer),),
             )
-            published_index_key[layer] = index_key_view
+            # The append addresses the cache's CAPACITY; a reader must not.  The
+            # scorer's operand row is ``in1 [B, C, D]`` against ``out0 [B, S, C]``
+            # with one C, and C is the groups this request has completed, so the
+            # readable plane is published as its own valid prefix -- the same
+            # STATE_READ re-presentation this file already emits for the main
+            # compressed cache below, and the same one the V4 export emits for
+            # both planes (``main.layer02.index_compress_kv_valid_view``).
+            #
+            # Handing the scorer the append's destination instead states a
+            # capacity where a request extent belongs, and that is not a
+            # cosmetic difference: an operand that presents its declared maximum
+            # scores 131,072 rows of a mostly-unwritten cache and the rows it
+            # reads are legally zero, so nothing traps.  This graph said the
+            # compressed context on the score's own candidate axis and in its
+            # iteration domain, and only its key operand did not.
+            op = start("COMPRESSED_KV_VALID_VIEW", "attention.indexer.key_view", layer)
+            index_key_valid = view(f"{op}.valid", "bf16", (committed, INDEX_HEAD_DIM))
+            key_view_attributes: dict[str, Any] = {
+                "capacity_rows_exposed": False,
+                "output": "active_batch_contiguous_valid_prefix_only",
+                "projection_scope": "indexer",
+                "published_by_layer": layer,
+                "ratio": ratio,
+            }
+            if committed_predicate:
+                key_view_attributes["execution_predicate"] = committed_predicate
+            emit(
+                op,
+                "STATE_READ",
+                (index_key_view,),
+                (index_key_valid,),
+                iteration_domain={"rows": committed, "width": INDEX_HEAD_DIM},
+                attributes=key_view_attributes,
+                state_reads=(index_key_state(layer),),
+            )
+            published_index_key[layer] = index_key_valid
 
         selection = ""
         if mode.index_source:

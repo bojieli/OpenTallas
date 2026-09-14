@@ -707,8 +707,53 @@ def deepseek_v41_rom_capability(
             "max_loop_depth": 4,
             "max_loop_trip": 4096,
             "max_retired_work": 1 << 26,
-            "max_events": 512,
-            "max_event_id": 1023,
+            # The event scoreboard, derived from this machine's own instruction
+            # store rather than copied from the single-wafer V4 record.
+            #
+            # Wire format section on A23: "a scoreboard addressed by ID holds
+            # ``max_event_id + 1`` entries and therefore cannot carry more than
+            # that many distinct signalled events", and ``max_events <=
+            # max_event_id + 1``.  An instruction signals at most one event, so a
+            # program that fills a declared ``max_instructions`` store can demand
+            # exactly that many distinct events: a smaller scoreboard makes part
+            # of the store it also declares unusable, which is a machine that
+            # cannot run the program it advertises room for.
+            #
+            # V4's 512-event board is not a smaller design, it is a smaller
+            # program: 1,323 instructions signalling 512 events.  The two-wafer
+            # V4.1 program is 4,343 instructions signalling 1,490 events, top ID
+            # 1,489 -- measured, from ``tools/build_rom_deployment.py
+            # deepseek-v4.1-flash --verify`` -- so the V4 number refuses this
+            # deployment twice over ("program signals 1458 distinct events,
+            # capability admits 512"; "program names event ID 1457, capability
+            # admits IDs up to 1023", from the build that first reached the
+            # verifier).
+            # A23 answered the same shape of question the same way once before,
+            # raising the shipped boards from 512 to 1,024 when the DeepSeek HBM
+            # program measured 596: a capability increase, no field layout or
+            # execution rule touched, and the cost is the scoreboard's two bits
+            # per entry with its index width following its entry count.
+            # BOUNDED BY THE HARDWARE, not by the instruction store.
+            #
+            # An earlier revision set these to 8,192 / 8,191, reasoning from the
+            # 8,192-instruction store: an instruction signals at most one event,
+            # so the store bounds the board.  That is true and irrelevant -- the
+            # scoreboard that has to hold the board is
+            # rtl/abi3/ot_a3_event_scoreboard.sv, whose entry count follows
+            # ot_a3_pkg.sv's A3_EVENT_COUNT = 2048, and its index width follows
+            # that.  Declaring 8,191 states a bound the implemented hardware
+            # cannot express, which makes the verifier's event check unfailable
+            # rather than satisfied: results/rtl/abi3_deployment_campaign.json
+            # puts it plainly -- "a bound nothing expresses cannot be refused at
+            # admission".
+            #
+            # The program measures 1,490 distinct events with a top id of 1,489,
+            # so the implemented 2,048 covers it with margin and the check stays
+            # able to fail.  Every other shipped capability declares 1,023 here;
+            # this is the first program that genuinely needs more, and it needs
+            # 1,490, not 8,192.
+            "max_events": 2048,
+            "max_event_id": 2047,
             "max_outstanding_per_queue": 32,
             "max_context_positions": max_context_positions,
             # The candidate pool CSA2's block selection publishes.  It is a

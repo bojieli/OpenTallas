@@ -70,6 +70,7 @@ from compiler.ir.v3.lowering import (
     EngineOp,
     KERNEL_TO_ENGINE,
     abi_input_slots as _shared_input_slots,
+    canonical_cache_row,
     phase_inputs as _phase_inputs,
 )
 from compiler.backends.schedule_rule import (
@@ -114,6 +115,7 @@ from runtime.abi3.descriptors import (
     Comparison,
     iteration_extent,
     LayoutClass,
+    MAX_DYNAMIC_TERMS,
     MAX_RANK,
     Phase,
     PredicateKind,
@@ -157,6 +159,13 @@ from .image import (
 MAX_OPERATOR_INPUTS = 4
 MAX_OPERATOR_OUTPUTS = 2
 MAX_WAIT_PRODUCERS = 12
+
+#: The widest element stride a tensor view's dynamic term can carry.  Wire
+#: format section 12.1: a term is ``{uint16 selector_kind, uint16
+#: selector_index, uint32 element_stride}``, and ``runtime/abi3/descriptors.py``
+#: encodes the field as four bytes.  It is a property of the ABI, so it is
+#: stated once here and read wherever a stride has to fit it.
+MAX_DYNAMIC_TERM_STRIDE = 0xFFFFFFFF
 
 WEIGHT_ROLES = frozenset({"weight", "constant"})
 
@@ -1354,6 +1363,9 @@ class RomLowering:
         self._substituted_inputs: dict[str, str] = {}
         self._position_input_cache: frozenset[str] | None = None
         self._state_owner: dict[str, str] = {}
+        #: Next free byte of the explicit HBM map; zero until the first object
+        #: is placed.  See :meth:`_hbm_address`.
+        self._hbm_cursor = 0
         self._event_of_tensor: dict[str, int] = {}
         # Qwen's append results and attention-history operands have different
         # tensor IDs even though they address the same physical KV group.  This
@@ -1697,7 +1709,13 @@ class RomLowering:
                 )
             in_resident = all(in_hbm)
             target = resident_requests if in_resident else requests
-            emitted_key = f"hbm.{key.split('.', 1)[1]}" if in_resident else key
+            # The prefix is the store the policy declares, not the word "hbm":
+            # a key that said ``hbm.`` for a table the deployment holds in host
+            # memory would be the second record this naming rule exists to
+            # spare the reader.
+            emitted_key = (
+                f"{resident.residency}.{key.split('.', 1)[1]}" if in_resident else key
+            )
             emitted_keys[key] = emitted_key
             target.append(
                 RegionRequest.striped(
@@ -2738,6 +2756,56 @@ class RomLowering:
         base = self._base_buffer_key(tensor_id)
         return self._buffer_root.get(base, base)
 
+    def _hbm_address(self, size: int, *, alignment: int = 1 << 12) -> int:
+        """The next explicit HBM base for a device-placed object, or zero.
+
+        ``hbm_address_map_disjoint`` (``runtime/abi3/verifier.py``) reads the map
+        this way: every base of zero means the backend left HBM placement to
+        activation, and ANY nonzero base switches the whole space to the explicit
+        packed interpretation, where the objects must not overlap.  Counting
+        distinct bases would not do -- several objects at one nonzero base are
+        exactly the overlap the proof exists to reject.
+
+        A deployment with a load-once resident region has no choice about the
+        first half of that: the resident window is pinned, because a manifest
+        binds an address range and a reader of the record has to know which
+        bytes those are.  So in such a deployment every OTHER HBM object is
+        placed too, packed above the window.  Leaving them at zero was not a
+        smaller claim, it was a false one -- the device would be free to put a
+        scratch buffer on top of an Engram table and the record would say
+        nothing -- and it is what the V4.1 wafer deployment's verification
+        reported: ``explicit HBM address map contains overlapping object pairs``
+        over its 107 activation-placed objects.
+
+        A deployment that pins nothing keeps placing nothing: Qwen's and V4's
+        ROM deployments have no resident region, every HBM base stays zero, the
+        map stays implicit, and their digests do not move.
+        """
+        if self.plan is None:
+            return 0
+        resident = [
+            region
+            for region in getattr(self.plan, "resident_regions", ())
+            if region.residency == "hbm"
+        ]
+        if not resident:
+            return 0
+        if self._hbm_cursor == 0:
+            window = max(
+                region.base_address + region.total_bytes for region in resident
+            )
+            self._hbm_cursor = -(-int(window) // alignment) * alignment
+        base = -(-self._hbm_cursor // alignment) * alignment
+        declared = int(self.capability.memory.get("hbm", {}).get("bytes", 0))
+        if declared and base + int(size) > declared:
+            raise RomLoweringError(
+                f"the explicit HBM address map needs {base + int(size)} bytes "
+                f"and the capability declares {declared}; the resident window "
+                "and the device-placed objects do not both fit"
+            )
+        self._hbm_cursor = base + int(size)
+        return base
+
     def _buffer(self, tensor_id: str) -> int:
         key = self._buffer_key(tensor_id)
         if key in self._buffer_object:
@@ -2765,6 +2833,9 @@ class RomLowering:
             source=ObjectSource.zeros(size),
             permissions=permissions,
             bank_or_tile=port,
+            base_address=(
+                self._hbm_address(size) if storage is StorageClass.HBM else 0
+            ),
             key=key,
         )
         self._buffer_object[key] = object_id
@@ -2949,15 +3020,22 @@ class RomLowering:
 
             if _is_direct_buffer_state(members[0].state_class):
                 source = self._direct_state_source(members[0], total)
+                direct_storage = self._direct_state_storage(
+                    members[0].state_class, total, group_key
+                )
                 direct = self.builder.memory_object(
-                    storage_class=self._direct_state_storage(
-                        members[0].state_class, total, group_key),
+                    storage_class=direct_storage,
                     size_bytes=total,
                     source=source,
                     permissions=int(Permission.READ | Permission.WRITE),
                     alignment_log2=12,
                     integrity_mode=IntegrityMode.CRC_AND_ECC,
                     content_digest=source.authenticated_content_digest(),
+                    base_address=(
+                        self._hbm_address(total)
+                        if direct_storage is StorageClass.HBM
+                        else 0
+                    ),
                     key=f"obj.{group_key}",
                 )
                 self._state_object[group_key] = direct
@@ -2975,11 +3053,18 @@ class RomLowering:
                 self._state_class_aliases[members[0].state_class] = (
                     STATE_CLASS_ALIASES[members[0].state_class]
                 )
+            # Transactional STATE shares the node-local HBM address space
+            # (``runtime/abi3/verifier.py::_verify_memory_placement``), so where
+            # that space is explicit these are placed in it like any other
+            # object -- and the committed and prepared images are two distinct
+            # ranges, never one: a transaction attends the rows it prepared
+            # while the commit record stays readable.
             committed = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
                 size_bytes=total,
                 source=ObjectSource.zeros(total),
                 permissions=int(Permission.READ | Permission.STATE_COMMIT),
+                base_address=self._hbm_address(total),
                 key=f"obj.{group_key}.committed",
             )
             prepared = self.builder.memory_object(
@@ -2987,6 +3072,7 @@ class RomLowering:
                 size_bytes=total,
                 source=ObjectSource.zeros(total),
                 permissions=int(Permission.READ | Permission.STATE_PREPARE),
+                base_address=self._hbm_address(total),
                 key=f"obj.{group_key}.prepared",
             )
             view = self._view(
@@ -3427,6 +3513,21 @@ class RomLowering:
             return None, int(axis.multiplier or 1), IDENTITY_AXIS
         return int(request.symbol), int(axis.multiplier or 1), request
 
+    def _axis_at(self, tensor: Tensor, index: int) -> RequestAxis | None:
+        """The request axis a tensor's ``index``-th extent states, or ``None``.
+
+        ``None`` is "this extent states no request axis", which is never a
+        default to fill in: an extent the request decides and the graph states
+        statically resolves to its declared maximum, which is how an operand
+        comes to present a whole cache for a four-token request.
+        """
+        if index >= len(tensor.shape):
+            return None
+        extent = tensor.shape[index]
+        if not isinstance(extent, Symbolic):
+            return None
+        return request_axis(extent.symbol)
+
     def _principal(self, kernel: Kernel) -> Tensor | None:
         """The operand whose leading extent sets this operator's row geometry.
 
@@ -3775,6 +3876,27 @@ class RomLowering:
         }
     )
 
+    def _canonical_cache_row(self, kernel: Kernel) -> str:
+        """The canonical name of ``kernel``'s destination-row map, or ``""``.
+
+        Spelling is resolved by the neutral vocabulary
+        (``compiler/ir/v3/lowering.py::CACHE_ROW_ALIASES``, which states why the
+        two names are one map) and admission stays here: a map this backend does
+        not implement is refused rather than taken as the identity, which the
+        identity being itself one of the maps would otherwise hide.
+        """
+        if kernel.attributes.get("cache_row") is None:
+            return ""
+        name = canonical_cache_row(kernel.attributes)
+        if name not in self.CACHE_ROW_MAPS:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares destination-row map "
+                f"{str(kernel.attributes.get('cache_row'))!r}, which this "
+                "backend does not implement; the frozen maps are "
+                f"{', '.join(sorted(self.CACHE_ROW_MAPS))}"
+            )
+        return name
+
     def _cache_row_modulus(self, kernel: Kernel) -> int | None:
         """The ring modulus a movement's destination-row map declares, if any.
 
@@ -3786,16 +3908,9 @@ class RomLowering:
         indexes it from the start of the request.  Anything else is refused
         rather than silently taken as the identity.
         """
-        declared = kernel.attributes.get("cache_row")
-        if declared is None:
+        name = self._canonical_cache_row(kernel)
+        if not name:
             return None
-        name = str(declared)
-        if name not in self.CACHE_ROW_MAPS:
-            raise RomLoweringError(
-                f"kernel {kernel.kernel_id!r} declares destination-row map "
-                f"{name!r}, which this backend does not implement; the frozen "
-                f"maps are {', '.join(sorted(self.CACHE_ROW_MAPS))}"
-            )
         if name != "absolute_position_mod_window":
             return None
         window = int(kernel.attributes.get("window_size", 0))
@@ -3809,16 +3924,7 @@ class RomLowering:
     def _cache_row_divisor(self, kernel: Kernel) -> int | None:
         """The divisor of a compressed-cache destination-row map, if any."""
 
-        declared = kernel.attributes.get("cache_row")
-        if declared is None:
-            return None
-        name = str(declared)
-        if name not in self.CACHE_ROW_MAPS:
-            raise RomLoweringError(
-                f"kernel {kernel.kernel_id!r} declares destination-row map "
-                f"{name!r}, which this backend does not implement; the frozen "
-                f"maps are {', '.join(sorted(self.CACHE_ROW_MAPS))}"
-            )
+        name = self._canonical_cache_row(kernel)
         if name != "completed_absolute_position_floor_div_ratio":
             return None
         divisor = int(kernel.attributes.get("ratio", 0) or 0)
@@ -3857,6 +3963,11 @@ class RomLowering:
             alignment_log2=12,
             integrity_mode=IntegrityMode.CRC_AND_ECC,
             content_digest=bytes.fromhex(digest),
+            base_address=(
+                self._hbm_address(int(payload.nbytes))
+                if self.weight_storage_class is StorageClass.HBM
+                else 0
+            ),
             key=f"obj.rom.ring.{modulus}",
         )
         self._generated_objects[key] = object_id
@@ -3905,6 +4016,11 @@ class RomLowering:
             alignment_log2=12,
             integrity_mode=IntegrityMode.CRC_AND_ECC,
             content_digest=bytes.fromhex(digest),
+            base_address=(
+                self._hbm_address(int(payload.nbytes))
+                if self.weight_storage_class is StorageClass.HBM
+                else 0
+            ),
             key=f"obj.rom.floor_div.{divisor}",
         )
         self._generated_objects[key] = object_id
@@ -3934,6 +4050,11 @@ class RomLowering:
             alignment_log2=12,
             integrity_mode=IntegrityMode.CRC_AND_ECC,
             content_digest=bytes.fromhex(digest),
+            base_address=(
+                self._hbm_address(int(payload.nbytes))
+                if self.weight_storage_class is StorageClass.HBM
+                else 0
+            ),
             key=f"obj.rom.positions.{tensor_id}",
         )
         self._generated_objects[tensor_id] = object_id
@@ -4708,16 +4829,74 @@ class RomLowering:
 
         inputs = [per_token(contributions, [count, width], writable=False)]
         if weights is not None:
-            span = 1
-            for extent in self._dims(self.tensors[weights])[1:]:
-                span *= extent
-            inputs.append(per_token(weights, [max(span, 1)], writable=False))
+            inputs.append(
+                self._expert_sum_weight_view(
+                    weights, shape, run, loop, count, per_token
+                )
+            )
         elif base is not None:
             inputs.append(NO_ID)
         if base is not None:
             inputs.append(per_token(base, [out_width], writable=False))
         outputs = [per_token(kernel.outputs[0], [out_width], writable=True)]
         return inputs, outputs
+
+    def _expert_sum_weight_view(
+        self,
+        name: str,
+        shape: KernelShape,
+        run: LayerRun | None,
+        loop: int,
+        count: int,
+        per_token: Callable[..., int],
+    ) -> int:
+        """``REDUCTION.EXPERT_SUM``'s weight operand: per token, or shared.
+
+        Two forms are legal and the operand itself says which.  A weight the
+        REQUEST decides leads with the token axis and holds one row per token,
+        so its row is the product of its trailing extents and the token loop
+        walks it -- every routed reduction in either DeepSeek graph and both of
+        DeepSeek-V4.1's own per-token rows.  A weight the DEPLOYMENT decides has
+        no token axis at all: V4.1's mHC identity branch is a generated one-hot
+        over the four hyper streams, the same four numbers for every token, so
+        the view is those four numbers with no loop term and reads the constant's
+        own mask-programmed object.
+
+        Walking a shared weight per token instead did both halves wrong at once,
+        and the ABI verifier caught the addressing half: ``view 1146: maximum
+        element 4095 needs 16384 bytes but object 1145 is 16 bytes``.  The other
+        half was silent -- ``_buffer`` had handed the operand a zero-filled
+        scratch buffer rather than the generated constant, so the reduction would
+        have weighted every stream by zero and retired.
+        """
+        tensor = self.tensors[name]
+        symbol, _multiplier, _axis = self._leading_symbol(tensor)
+        dims = self._dims(tensor)
+        if symbol is not None:
+            span = 1
+            for extent in dims[1:]:
+                span *= extent
+            return per_token(name, [max(span, 1)], writable=False)
+        total = 1
+        for extent in dims:
+            total *= extent
+        if total != count:
+            raise RomLoweringError(
+                f"weight operand {name!r} is token-invariant and holds {total} "
+                f"elements against {count} contributions per token; a shared "
+                "weight row states exactly one weight per contribution"
+            )
+        if tensor.role in WEIGHT_ROLES:
+            return self._weight_view(name, run=run, slot=1)
+        return self._buffer_view(
+            tensor,
+            dims=[count],
+            strides=[1],
+            shape=shape,
+            loop=loop,
+            writable=False,
+            blocked=False,
+        )
 
     def _operand_view(
         self,
@@ -4868,23 +5047,28 @@ class RomLowering:
                 writable=writable,
                 blocked=False,
             )
-        if shape.contraction and direction == "in" and slot == 0:
-            return self._buffer_view(
-                tensor,
-                dims=[shape.rows, shape.depth],
-                strides=[shape.depth, 1],
-                shape=shape,
-                loop=loop,
-                writable=False,
+        if shape.contraction and slot == 0 and direction in ("in", "out"):
+            # ``leading_extent`` reaches a contraction too.  It is the caller
+            # saying how many rows THIS path has -- the rolling compressor's
+            # decode path has exactly one completed group -- and a contraction
+            # that ignored it presented the whole group capacity on a path that
+            # has one row, which the schedule checker states as ``rolling
+            # consumer N decode path is not a static one-group view``.  The
+            # reduction width and the output width are the operator's, not the
+            # path's, so only the row count is clamped.
+            rows = (
+                shape.rows
+                if leading_extent is None
+                else min(int(leading_extent), shape.rows)
             )
-        if shape.contraction and direction == "out" and slot == 0:
+            trailing = shape.depth if direction == "in" else shape.cols
             return self._buffer_view(
                 tensor,
-                dims=[shape.rows, shape.cols],
-                strides=[shape.cols, 1],
+                dims=[rows, trailing],
+                strides=[trailing, 1],
                 shape=shape,
                 loop=loop,
-                writable=True,
+                writable=direction == "out",
             )
         dims = self._blocked_dims(tensor, shape)
         if leading_extent is not None and dims:
@@ -5172,13 +5356,7 @@ class RomLowering:
                     f"not divide into {region_shards} node shards"
                 )
             stride = region.slot_element_stride // region_shards * ratio
-            if stride > 0xFFFFFFFF:
-                raise RomLoweringError(
-                    f"region {key!r} needs a per-layer element stride of {stride}, "
-                    "which does not fit the 32-bit dynamic-term stride field of "
-                    "ABI 3.0 tensor views; split the region"
-                )
-            dynamic.append(DynamicTerm.loop(loop, stride))
+            dynamic.extend(self._loop_stride_terms(loop, stride, key))
         else:
             element_offset = (
                 region_slot * (region.slot_element_stride // region_shards) * ratio
@@ -5198,6 +5376,59 @@ class RomLowering:
             scale_block_rows=row_block,
             label="view.rom",
         )
+
+    def _loop_stride_terms(
+        self, loop: int, stride: int, key: str
+    ) -> list[DynamicTerm]:
+        """One loop's element stride, carried by the terms the field can hold.
+
+        A view's element offset is the SUM of its dynamic terms -- wire format
+        section 12.1: each contributes ``selector_value * element_stride``, and
+        nothing distinguishes the selectors two terms name -- so a stride wider
+        than the 32-bit field is carried by several terms on the same loop whose
+        strides sum to it.  Every iteration then advances by the same total and
+        the resolved offset is, element for element, the number a wider field
+        would have produced: the block-scale index (amendment A15 reads the
+        resolved offset), the object bound and the inverse proof all see exactly
+        what they saw before.
+
+        The alternative was re-laying the region so a slot's own stride is
+        smaller -- interleaving the layers inside it -- and that is not
+        available to a *block-scaled* operand, which is what every region that
+        overflows here is: A15 indexes the scale object by the view's own
+        logical row, so a weight view whose leading axis is strided reads
+        another slot's exponents, and no interleaving of the scale region fixes
+        it (``s + e == e * slots + s`` has no solution but ``slots == 1``).
+        Summing terms changes no byte's address, which is why it is what this
+        does.
+
+        DeepSeek-V4.1-Flash's routed expert bank is the case: 384 experts of
+        2,304 x 5,120 MXFP4 elements is 4,529,848,320 per layer, 1.05x the
+        field, and two terms of 2,264,924,160 state it exactly.  A stride that
+        needs more terms than a view has is still refused -- it is the same
+        wall, moved out by the four slots the ABI gives and no further.
+        """
+        if stride <= MAX_DYNAMIC_TERM_STRIDE:
+            return [DynamicTerm.loop(loop, stride)]
+        count = -(-stride // MAX_DYNAMIC_TERM_STRIDE)
+        if count > MAX_DYNAMIC_TERMS:
+            raise RomLoweringError(
+                f"region {key!r} needs a per-layer element stride of {stride}, "
+                f"which {MAX_DYNAMIC_TERMS} dynamic terms of at most "
+                f"{MAX_DYNAMIC_TERM_STRIDE} cannot sum to; ABI 3.0 tensor views "
+                "cannot address this region from one loop"
+            )
+        share, remainder = divmod(stride, count)
+        terms = [
+            DynamicTerm.loop(loop, share + (1 if index < remainder else 0))
+            for index in range(count)
+        ]
+        if sum(term.stride for term in terms) != stride:
+            raise RomLoweringError(
+                f"region {key!r}: split of element stride {stride} into "
+                f"{count} terms does not sum back to it"
+            )
+        return terms
 
     def _scale_binding(self, region_key: str) -> tuple[int, int, int]:
         """The immutable block-scale object that scales ``region_key``."""
@@ -5415,13 +5646,26 @@ class RomLowering:
                 # ``EXPERT_DISPATCH`` above is never defaulted: a width the
                 # producer did not state is a reduction and a bound check over
                 # whatever happens to be in range.
+                #
+                # ``block`` is the spelling the DeepSeek-V4.1 export writes and
+                # ``compiler/backends/hbm_sram/plan.py`` already reads for this
+                # same AM-E10 pair (``attributes.get("block",
+                # attributes.get("block_size"))``); the two lanes accepted
+                # different spellings of one mandatory immediate, so this one
+                # refused a graph the other admitted.  Accepting the spelling is
+                # not defaulting the value: an absent or non-positive width is
+                # still refused below.
                 width = int(
                     attributes.get(
                         "candidate_block_size",
                         attributes.get(
                             "block_width",
                             attributes.get(
-                                "block_size", domain.get("candidate_block_size", 0)
+                                "block_size",
+                                attributes.get(
+                                    "block",
+                                    domain.get("candidate_block_size", 0),
+                                ),
                             ),
                         ),
                     )
@@ -5810,14 +6054,36 @@ class RomLowering:
         result = self.tensors[kernel.outputs[0]]
         heads, head_dim = self._dims(query)[1], self._dims(query)[2]
         candidates = self._dims(result)[1]
-        _symbol, _multiplier, key_axis = self._leading_symbol(key)
-        unit = key_axis.unit
-        if unit <= 1:
+        # The key plane and the scored candidate axis are ONE axis -- the
+        # operand row is ``in1 [B, C, D]`` against ``out0 [B, S, C]`` -- and
+        # where the kernel also declares a ratio, that ratio is the axis's unit.
+        # Confronting the statements the graph makes is what the ratio test alone
+        # could not do: it refuses a key that states no request axis at all
+        # (which would present the whole cache), a key naming a different axis
+        # from the one being scored, and a declared ratio the axis contradicts,
+        # while admitting a ratio-1 index source -- a released form, V4.1-Flash
+        # scores the decoder's uncompressed latents at layers 20 and above, which
+        # a ``unit > 1`` test read as a missing ratio and refused.
+        key_axis = self._axis_at(key, 0)
+        candidate_axis = self._axis_at(result, 1)
+        if key_axis is None or key_axis != candidate_axis:
             raise RomLoweringError(
                 f"kernel {kernel.kernel_id!r}: the index key leads with "
-                f"{key.shape[0]!r}, which states no compression ratio; "
-                "VECTOR.INDEX_SCORE scores compressed groups"
+                f"{key.shape[0]!r} and the scores' candidate axis is "
+                f"{result.shape[1] if len(result.shape) > 1 else None!r}; "
+                "VECTOR.INDEX_SCORE scores one axis and its operand row states "
+                "it twice -- ``in1 [B, C, D]`` against ``out0 [B, S, C]`` -- so "
+                "the two have to be the same request axis"
             )
+        declared = kernel.attributes.get("ratio")
+        if declared is not None and int(declared) != key_axis.unit:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares compression ratio "
+                f"{int(declared)} and addresses {key.tensor_id!r} in groups of "
+                f"{key_axis.unit} ({key.shape[0]!r}); the ratio it declares and "
+                "the axis it scores are one number"
+            )
+        unit = key_axis.unit
         shape = self._shape_of(kernel, EngineOp(Major.VECTOR, Vector.INDEX_SCORE, 3, 1))
         token = self._open_token_loop(kernel)
         context = self._open_context_loop(kernel, candidates, key_axis)
@@ -6846,15 +7112,72 @@ class RomLowering:
         return descriptor
 
     def _declared_join_axis(self, name: str, axis: int) -> RequestAxis | None:
-        """The A18 function the graph declares for one tensor's join axis."""
+        """The A18 function the graph declares for one tensor's join axis.
+
+        A neutral extent is a registered or derived axis name TIMES the
+        ``Symbolic.multiplier`` the graph writes beside it, and A18's affine form
+        carries that in its numerator -- ``numerator * value / unit + bias`` --
+        so the two compose rather than conflicting.  Reading the multiplier is
+        what lets a join declare ``2 * span_tokens`` without inventing a name
+        for it, which is how DeepSeek-V4.1-Flash's twenty ratio-1 decoder layers
+        state a fused row space of the request's window beside its equally long
+        compressed prefix.
+
+        Dropping it, as this did, was not conservative: a multiplied
+        declaration became *no* declaration, so the derived sum had nothing to
+        be confronted with -- the phase path refused the graph outright and the
+        unphased path reported a static declaration that was never written.
+        """
         tensor = self.tensors[name]
         entry = tensor.shape[axis] if axis < len(tensor.shape) else None
         if not isinstance(entry, Symbolic):
             return None
         request = request_axis(entry.symbol)
-        if request is None or int(entry.multiplier or 1) != 1:
+        if request is None:
             return None
-        return request
+        multiplier = int(entry.multiplier or 1)
+        if multiplier < 1:
+            return None
+        if multiplier == 1:
+            return request
+        return RequestAxis(
+            request.symbol,
+            request.unit,
+            request.numerator * multiplier,
+            request.bias,
+        )
+
+    def _phase_layout_needs_context(self, kernel: Kernel) -> bool:
+        """Does this kernel's OWN phase layout need the context loop?
+
+        Exactly the case :meth:`_view_for_phase_extent` resolves through that
+        loop: a phase whose output row space is a function of ``CONTEXT_LENGTH``
+        and is not the extent the output tensor already declares.  A join that
+        binds a request-sized state plane gets the loop from the plane, and a
+        producer feeding a phase-split consumer gets it from the consumer; a join
+        whose own decode row space is context-bound had neither, and there is no
+        third thing to read it off.
+
+        DeepSeek-V4.1-Flash's ratio-1 decoder layers are that join.  Their fused
+        KV row space is the window beside the whole compressed prefix, which at
+        ratio 1 is one row per context position -- ``CONTEXT_LENGTH + 128`` in
+        decode against ``2 * SPAN_TOKENS`` declared for prefill -- and the
+        compressed plane they read is published as a value rather than as a
+        plane of the cache, so ``_request_sized_planes`` names nothing.  The
+        condition is the consumer's own, asked of the kernel itself.
+        """
+        if not kernel.outputs:
+            return False
+        extents = self._phase_layout_extents(kernel)
+        if not extents:
+            return False
+        declared = self._declared_join_axis(kernel.outputs[0], 0)
+        return any(
+            extent is not None
+            and declared != extent
+            and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
+            for extent, _static in extents.values()
+        )
 
     def _phase_layout_extents(
         self, kernel: Kernel
@@ -7427,6 +7750,7 @@ class RomLowering:
             source=ObjectSource.zeros(4),
             permissions=int(Permission.READ | Permission.WRITE),
             bank_or_tile=port,
+            base_address=self._hbm_address(4),
             key=f"obj.compressor.boundary_ratio{ratio}",
         )
         self._compressor_boundary_objects[int(ratio)] = object_id
@@ -7536,12 +7860,87 @@ class RomLowering:
         self._compressor_boundary_predicates[ratio] = predicate
         return predicate
 
+    def _compressor_overlap(self, kernel: Kernel, ratio: int, width: int) -> int:
+        """How many ratio-wide groups one pooled group holds, from the graph.
+
+        Some released compressors pool the previous group together with the
+        current one: the projection packs two head-width planes per token and a
+        group's candidate axis is twice its ratio.  Others pool their own group
+        alone.  Which one a kernel is is *model geometry* -- V4-Flash overlaps
+        at ratio 4 and does not at ratio 128, V4.1-Flash does not at ratio 2 --
+        so it is read off this kernel's own declared shapes instead of being
+        recognised from a ratio, which is how a lowering acquires one model's
+        constants.
+
+        Three independent statements of the same fact have to agree, which is
+        what separates a derivation from a guess:
+
+        *   the candidate axis of both pooled operands, ``[groups, candidates,
+            head_dim]``, gives ``candidates``;
+        *   the iteration domain's ``candidates`` extent, where the graph
+            declares one, must equal it; and
+        *   the packed projection row ``width`` must be exactly ``coefficient *
+            head_dim`` -- the planes the previous/current halves are cut from.
+
+        A disagreement is refused rather than resolved, because each of the
+        three is separately load-bearing downstream: ``candidates`` sizes the
+        pool's operand rows, ``head_dim`` the column stride of a boundary
+        gather, and ``width`` the raw history row.
+        """
+
+        if len(kernel.outputs) != 2:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: a rolling compressor publishes a "
+                f"pooled key/value and a pooled score, not {len(kernel.outputs)} "
+                "operands"
+            )
+        pooled: list[tuple[int, ...]] = []
+        for name in kernel.outputs:
+            dims = self._dims(self.tensors[name])
+            if len(dims) != 3:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: pooled operand {name!r} is "
+                    f"rank {len(dims)}, not [groups,candidates,head_dim]"
+                )
+            pooled.append(dims[1:])
+        if len(set(pooled)) != 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: the pooled key/value and score "
+                f"operands disagree on candidate geometry {sorted(set(pooled))}"
+            )
+        candidates, head_dim = pooled[0]
+        declared = kernel.iteration_domain.get("candidates")
+        if declared is not None and self._extent(declared) != candidates:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: iteration domain declares "
+                f"{self._extent(declared)} candidates per group and its pooled "
+                f"operands carry {candidates}"
+            )
+        if candidates < ratio or candidates % ratio:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: {candidates} candidates per group "
+                f"is not a whole number of ratio-{ratio} groups"
+            )
+        coefficient = candidates // ratio
+        if coefficient not in (1, 2):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: a group of {candidates} candidates "
+                f"is {coefficient} ratio-{ratio} groups wide; this lowering pools "
+                "one group, or a previous/current pair, and has no addressing for "
+                "a deeper window"
+            )
+        if coefficient * head_dim != width:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: packed projection row {width} is "
+                f"not the {coefficient} x {head_dim} its pooled operands need"
+            )
+        return coefficient
+
     def _compressor_states(
-        self, kernel: Kernel, ratio: int, width: int
+        self, kernel: Kernel, ratio: int, width: int, coefficient: int
     ) -> tuple[str, str, int]:
         """Return ``(kv, score, slots)`` for one exact raw-history pair."""
 
-        coefficient = 2 if ratio == 4 else 1
         slots = coefficient * ratio
         if len(kernel.state_reads) != 2 or set(kernel.state_reads) != set(
             kernel.state_writes
@@ -7622,15 +8021,10 @@ class RomLowering:
                 "[S,2,W]"
             )
         width = int(packed_dims[2])
-        coefficient = 2 if ratio == 4 else 1
-        if width % coefficient:
-            raise RomLoweringError(
-                f"kernel {kernel.kernel_id!r}: width {width} is not divisible "
-                f"by overlap coefficient {coefficient}"
-            )
+        coefficient = self._compressor_overlap(kernel, ratio, width)
         head_dim = width // coefficient
         kv_state, score_state, slots = self._compressor_states(
-            kernel, ratio, width
+            kernel, ratio, width, coefficient
         )
         boundary = self._emit_compressor_boundary_flag(kernel, ratio)
         prefill_phase = self._phase_predicate("prefill")
@@ -7743,60 +8137,108 @@ class RomLowering:
             extent_unit=1,
             extent_numerator=1,
         )
-        score_terms = self._buffer_view(
-            packed,
-            dims=[1, token_rows, width],
-            strides=[token_rows * 2 * width, 2 * width, 1],
-            shape=shape,
-            loop=loop,
-            writable=False,
-            element_offset=width,
-            term=packed_term,
-            extent_axis=1,
-            extent_unit=1,
-            extent_numerator=1,
-        )
-        score_tensor = self.tensors[kernel.outputs[1]]
-        score_scratch = self._buffer_view(
-            score_tensor,
-            dims=[token_rows, width],
-            strides=[width, 1],
-            shape=shape,
-            loop=loop,
-            writable=True,
-            term=DynamicTerm.loop(loop, token_rows * width),
-            extent_unit=1,
-            extent_numerator=1,
-        )
-        ape_indices = self._compressor_ring_view(
-            ratio,
-            token_rows,
-            symbol=Symbol.POSITION_START,
-            loop=loop,
-            loop_stride=token_rows,
-            extent_unit=1,
-        )
-        ape = self._weight_view(kernel.inputs[1], run=run)
-        ape_ready = self._emit_aux_operator(
-            kernel,
-            Major.DMA,
-            int(Dma.GATHER),
-            [ape_indices, ape],
-            [score_scratch],
-            suffix="ape_gather",
-            schedule_rows=token_rows,
-        )
         packed_event = self._event_of_tensor.get(kernel.inputs[0], NO_ID)
-        biased_ready = self._emit_aux_operator(
-            kernel,
-            Major.REDUCTION,
-            int(Reduction.ORDERED_SUM),
-            [score_terms, score_scratch],
-            [score_scratch],
-            suffix="score_plus_ape",
-            wait_events=[ape_ready, packed_event],
-            schedule_rows=token_rows,
+        # Whether a position is added to the gate score is model geometry, and
+        # the operand row is where this graph states it: ABI ``in2`` of
+        # ``VECTOR.COMPRESS`` sub-case 2 is the absolute position embedding, and
+        # a kernel that has none declares the slot absent.  V4-Flash binds a
+        # ``layers.N.attn.compressor.ape`` table there; V4.1-Flash's released
+        # ``Compressor.forward`` is ``kv, score = self.wkv(x), self.wgate(x)``
+        # with no positional term and its checkpoint has no such tensor.
+        #
+        # Reading the slot rather than ``inputs[1]`` is what makes this a
+        # derivation: the two declarations have to agree or the build stops.  A
+        # kernel that declares the binary32 positional add and brings no table
+        # would silently drop the position, and one that brings a table this
+        # path ignored would silently drop it too; both are refused, so the add
+        # is skipped only where the graph says there is nothing to add.
+        ape_slot = self._abi_input_slots(kernel, order)
+        ape_input = ape_slot[2] if len(ape_slot) > 2 else None
+        positional = sorted(
+            key
+            for key in ("ape_shape", "positional_score_add_rounding")
+            if key in kernel.attributes
         )
+        if (ape_input is None) != (not positional):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: the operand row "
+                f"{'binds' if ape_input is not None else 'leaves empty'} the "
+                f"absolute position embedding and the kernel declares "
+                f"{positional or 'no positional score addition'}; a rolling "
+                "compressor either adds a position to its gate scores and says "
+                "with what, or does neither"
+            )
+        if ape_input is not None:
+            score_terms = self._buffer_view(
+                packed,
+                dims=[1, token_rows, width],
+                strides=[token_rows * 2 * width, 2 * width, 1],
+                shape=shape,
+                loop=loop,
+                writable=False,
+                element_offset=width,
+                term=packed_term,
+                extent_axis=1,
+                extent_unit=1,
+                extent_numerator=1,
+            )
+            score_tensor = self.tensors[kernel.outputs[1]]
+            score_scratch = self._buffer_view(
+                score_tensor,
+                dims=[token_rows, width],
+                strides=[width, 1],
+                shape=shape,
+                loop=loop,
+                writable=True,
+                term=DynamicTerm.loop(loop, token_rows * width),
+                extent_unit=1,
+                extent_numerator=1,
+            )
+            ape_indices = self._compressor_ring_view(
+                ratio,
+                token_rows,
+                symbol=Symbol.POSITION_START,
+                loop=loop,
+                loop_stride=token_rows,
+                extent_unit=1,
+            )
+            ape = self._weight_view(kernel.inputs[ape_input], run=run)
+            ape_ready = self._emit_aux_operator(
+                kernel,
+                Major.DMA,
+                int(Dma.GATHER),
+                [ape_indices, ape],
+                [score_scratch],
+                suffix="ape_gather",
+                schedule_rows=token_rows,
+            )
+            biased_ready = self._emit_aux_operator(
+                kernel,
+                Major.REDUCTION,
+                int(Reduction.ORDERED_SUM),
+                [score_terms, score_scratch],
+                [score_scratch],
+                suffix="score_plus_ape",
+                wait_events=[ape_ready, packed_event],
+                schedule_rows=token_rows,
+            )
+        else:
+            # No bias to apply, so no scratch round trip either: the raw score
+            # plane of the packed projection is the history row, addressed
+            # exactly as the key/value plane above is and offset by one plane.
+            score_scratch = self._buffer_view(
+                packed,
+                dims=[token_rows, width],
+                strides=[2 * width, 1],
+                shape=shape,
+                loop=loop,
+                writable=False,
+                element_offset=width,
+                term=packed_term,
+                extent_unit=1,
+                extent_numerator=1,
+            )
+            biased_ready = packed_event
 
         history_indices = self._compressor_ring_view(
             slots,
@@ -7848,7 +8290,9 @@ class RomLowering:
             ("kv", kv_state, kernel.outputs[0]),
             ("scores", score_state, kernel.outputs[1]),
         ):
-            if ratio == 4:
+            # A doubled candidate axis is the previous/current pair, and it is
+            # the coefficient the operands stated that says so -- not a ratio.
+            if coefficient == 2:
                 halves = (
                     ("previous", 0, 0),
                     ("current", head_dim, ratio * head_dim),
@@ -8283,11 +8727,14 @@ class RomLowering:
             context = self._open_context_loop(
                 kernel, self._dims(plane)[0], plane_axis
             )
-        elif consumer_paths is not None and any(
-            extent is not None
-            and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
-            for _slot, phases in consumer_paths.items()
-            for extent, _static in phases.values()
+        elif self._phase_layout_needs_context(kernel) or (
+            consumer_paths is not None
+            and any(
+                extent is not None
+                and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
+                for _slot, phases in consumer_paths.items()
+                for extent, _static in phases.values()
+            )
         ):
             # A consumer of a phase-split join reads a *context*-sized row
             # space in one phase and a span-sized one in the other, and A18
@@ -9295,6 +9742,7 @@ class RomLowering:
             size_bytes=nbytes,
             source=ObjectSource.zeros(nbytes),
             permissions=int(Permission.READ | Permission.WRITE),
+            base_address=self._hbm_address(nbytes),
             key=f"obj.link.local.{index:02d}",
         )
         remote = self.builder.memory_object(
@@ -9302,6 +9750,7 @@ class RomLowering:
             size_bytes=nbytes,
             source=ObjectSource.zeros(nbytes),
             permissions=int(Permission.READ | Permission.WRITE | Permission.REMOTE),
+            base_address=self._hbm_address(nbytes),
             key=f"obj.link.remote.{index:02d}",
         )
         self._link_endpoint_objects[nbytes] = (local, remote)

@@ -22,7 +22,7 @@ from math import ceil, prod
 from typing import Any, Callable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
-from compiler.ir.v3.lowering import engine_for
+from compiler.ir.v3.lowering import canonical_cache_row, engine_for
 from compiler.backends.schedule_rule import (
     COLUMN_LANE_FAMILIES,
     E9_TILE_COLS,
@@ -428,6 +428,7 @@ def check_rom_schedule(
         objects=objects,
         views=views,
         numerics=numerics,
+        operators=operators,
         predicates=predicates,
         waits=waits,
         states=states,
@@ -440,8 +441,13 @@ def check_rom_schedule(
     # stated by the graph.  Merely reproducing a generated object's own digest
     # would not prove that it is the right generated object for this operand.
     for kernel in expected_order:
+        # The canonical spelling, not the literal attribute: two exporters
+        # write two names for this one map (the neutral vocabulary's
+        # ``CACHE_ROW_ALIASES`` says why), and a proof that filtered on one of
+        # them would quietly prove nothing at all about a graph carrying the
+        # other -- the failure mode this loop exists to prevent.
         if (
-            str(kernel.attributes.get("cache_row", ""))
+            canonical_cache_row(kernel.attributes)
             != "completed_absolute_position_floor_div_ratio"
         ):
             continue
@@ -1398,8 +1404,27 @@ def check_rom_schedule(
                     continue
                 if int(obj.permissions) == int(Permission.READ | Permission.IMMUTABLE):
                     resident_objects.add(obj.descriptor_id)
-    declared_resident = int(
-        capability.memory.get("hbm", {}).get("resident_region_bytes", 0)
+    # Which store the capability prices the tables in, read off the record.
+    # A machine may price node-attached HBM (the row-sharded or wafer-edge
+    # form) or host memory (one image every node reaches over the host
+    # interface); pricing neither is the V4 wafer and the single chip, whose
+    # tables are ROM bytes and for which this half of the rule is vacuous.
+    declared_by_store = {
+        store: int(capability.memory.get(store, {}).get("resident_region_bytes", 0))
+        for store in ("hbm", "host")
+    }
+    declared_resident = declared_by_store["hbm"] or declared_by_store["host"]
+    expected_storage = (
+        StorageClass.HBM if declared_by_store["hbm"] else StorageClass.HOST
+    )
+    expected_residency = "hbm" if declared_by_store["hbm"] else "host"
+    require(
+        "resident_hbm_region",
+        not (declared_by_store["hbm"] and declared_by_store["host"]),
+        f"the capability prices {declared_by_store['hbm']} bytes of resident "
+        f"HBM and {declared_by_store['host']} bytes of resident host memory for "
+        "the same tables; one placement is priced twice and the deployment can "
+        "only be in one of them",
     )
     resident_plan = (
         plan.get("resident_regions", []) if isinstance(plan, Mapping) else []
@@ -1421,10 +1446,10 @@ def check_rom_schedule(
                 obj = objects[object_id]
                 require(
                     "resident_hbm_region",
-                    int(obj.payload["storage_class"]) == int(StorageClass.HBM),
+                    int(obj.payload["storage_class"]) == int(expected_storage),
                     f"the capability prices {declared_resident} bytes of "
-                    f"load-once resident HBM and lookup table object {object_id} "
-                    f"declares storage class "
+                    f"load-once resident {expected_storage.name} and lookup "
+                    f"table object {object_id} declares storage class "
                     f"{StorageClass(int(obj.payload['storage_class'])).name}; the "
                     "same bytes would be paid for twice",
                 )
@@ -1435,8 +1460,15 @@ def check_rom_schedule(
                     "resident region of the plan owns it, so nothing binds its "
                     "bytes to the checkpoint",
                 )
+            # The reserve is computed only over the regions that sit in the
+            # store the capability prices.  A node's HBM window and the host
+            # image are different address spaces, so summing them into one
+            # "worst node" would charge a node for bytes it does not hold and
+            # would let either store hide inside the other's declaration.
             reserved = {}
             for region in resident_plan:
+                if str(region.get("residency", "hbm")) != expected_residency:
+                    continue
                 for shard in region.get("shards", []):
                     if not isinstance(shard, (list, tuple)) or len(shard) < 7:
                         continue
@@ -1447,9 +1479,17 @@ def check_rom_schedule(
             worst = max(reserved.values(), default=0)
             require(
                 "resident_hbm_region",
+                bool(reserved),
+                f"the capability prices {declared_resident} bytes of load-once "
+                f"resident {expected_storage.name} and the plan places no "
+                f"{expected_residency}-resident region to hold them",
+            )
+            require(
+                "resident_hbm_region",
                 worst <= declared_resident,
-                f"the resident regions reserve {worst} bytes on one node and the "
-                f"capability declares {declared_resident}",
+                f"the {expected_residency}-resident regions reserve {worst} "
+                f"bytes on one {'node' if expected_residency == 'hbm' else 'host image'} "
+                f"and the capability declares {declared_resident}",
             )
         state_bound = {
             int(descriptor.payload[field])
@@ -1522,6 +1562,19 @@ def check_rom_schedule(
             for state_id in kernel.state_writes
         }
         first_source = min(kernel.index for kernel in candidate_sources)
+        # "After the candidate source" is a statement about LAYERS, and the
+        # released rule is strict: ``Indexer.uses_candidates`` is
+        # ``0 <= candidate_source_layer < layer_id``, so the source layer's own
+        # selection ranks the scores it just produced and carries no mask -- it
+        # is the layer that publishes one.  Read as an emission-order bound it
+        # also caught that selection, because the mask is written earlier in the
+        # same layer, and the deployment was refused for obeying the source.
+        source_layers = {
+            int(kernel.layer)
+            for kernel in candidate_sources
+            if kernel.layer is not None
+        }
+        first_source_layer = min(source_layers) if source_layers else None
         mask_views = set(mask_tensors)
         for kernel in graph.kernels:
             if kernel.kind == "STATE_READ" and (
@@ -1529,7 +1582,14 @@ def check_rom_schedule(
             ):
                 mask_views.update(kernel.outputs)
         for kernel in graph.kernels:
-            if kernel.kind != "INDEX_TOPK" or kernel.index <= first_source:
+            if kernel.kind != "INDEX_TOPK":
+                continue
+            if first_source_layer is None:
+                # A graph that numbers no layer states its order only by
+                # emission, and the bound is the one this had.
+                if kernel.index <= first_source:
+                    continue
+            elif kernel.layer is None or int(kernel.layer) <= first_source_layer:
                 continue
             carried = [name for name in kernel.inputs if name in mask_views]
             require(
@@ -2073,6 +2133,7 @@ def _check_rolling_compressor(
     objects: Mapping[int, Any],
     views: Mapping[int, Any],
     numerics: Mapping[int, Any],
+    operators: Mapping[int, Any],
     predicates: Mapping[int, Any],
     waits: Mapping[int, Any],
     states: Mapping[int, Any],
@@ -2090,6 +2151,20 @@ def _check_rolling_compressor(
     updates = [kernel for kernel in expected_order if kernel.kind == "COMPRESS_STATE_UPDATE"]
     if not updates:
         return {}
+
+    # The ratios this graph's own axes are counted in.  A compression ratio is
+    # model geometry -- V4-Flash's released ``compress_ratios`` are 4 and 128,
+    # V4.1-Flash's are 1, 2 and 8 -- so a checker that pinned ``{4, 128}``
+    # refused every V4.1 compressor while proving nothing extra about V4's.  The
+    # bound that means something is the graph's own: a kernel may not claim a
+    # ratio no derived axis of the graph it belongs to is counted in, because its
+    # operands could not be addressed at the rate it claims.  Derived here rather
+    # than imported, because this proof is independent of the lowering.
+    declared_ratios = {1}
+    for symbol in graph.symbols:
+        head, marker, suffix = str(symbol.name).rpartition("_ratio")
+        if head and marker and suffix.isdigit() and int(suffix) >= 1:
+            declared_ratios.add(int(suffix))
 
     tensor_by_id = {tensor.tensor_id: tensor for tensor in graph.tensors}
     state_by_id = {state.state_id: state for state in graph.states}
@@ -2156,12 +2231,10 @@ def _check_rolling_compressor(
         },
         "rolling compressor metadata is not the frozen direct-HBM ABI 3.0 profile",
     )
-    require(
-        "rolling_no_state_descriptors",
-        not states
-        and not any(instruction.major == int(Major.STATE) for instruction in instructions),
-        "rolling compressor emitted ABI STATE records instead of ordinary HBM",
-    )
+    #: Every object a compressor history is bound to, collected as the proof
+    #: below discovers them, so the STATE-record prohibition can name the
+    #: resources it is about.  See ``rolling_no_state_descriptors``.
+    history_object_ids: set[int] = set()
 
     for kernel in updates:
         ratio = int(kernel.attributes.get("ratio", 0) or 0)
@@ -2170,8 +2243,10 @@ def _check_rolling_compressor(
         conditions = dict(conditions) if isinstance(conditions, Mapping) else {}
         require(
             "rolling_ratio",
-            ratio in {4, 128},
-            f"compressor kernel {kernel.index} uses unpinned ratio {ratio}",
+            ratio in declared_ratios,
+            f"compressor kernel {kernel.index} uses ratio {ratio}, which no "
+            f"derived axis of this graph is counted in; it declares "
+            f"{sorted(declared_ratios)}",
         )
         require(
             "rolling_predicate_contract",
@@ -2190,8 +2265,38 @@ def _check_rolling_compressor(
         packed = tensor_by_id[kernel.inputs[0]]
         packed_dims = tuple(_extent(value) for value in packed.shape)
         width = packed_dims[-1] if len(packed_dims) == 3 else 0
-        slots = ratio * (2 if ratio == 4 else 1)
-        head_dim = width // (2 if ratio == 4 else 1) if width else 0
+        # How many ratio-wide groups one pooled group holds -- one, or the
+        # previous group beside the current one -- read off the pooled operands'
+        # own candidate axis rather than recognised from a ratio.  V4-Flash
+        # overlaps at ratio 4 and does not at 128, V4.1-Flash does not at 2, and
+        # ``2 if ratio == 4 else 1`` states that as one model's arithmetic; the
+        # graph states it as ``candidates == coefficient * ratio`` on both of the
+        # kernel's outputs, with the packed row ``coefficient * head_dim`` wide.
+        pooled_axes = {
+            tuple(_extent(value) for value in tensor_by_id[name].shape)[1:]
+            for name in kernel.outputs
+        }
+        candidates = 0
+        head_dim = 0
+        coefficient = 0
+        if len(pooled_axes) == 1:
+            axes = next(iter(pooled_axes))
+            if len(axes) == 2:
+                candidates, head_dim = int(axes[0]), int(axes[1])
+                if ratio and candidates % ratio == 0:
+                    coefficient = candidates // ratio
+        require(
+            "rolling_pooled_geometry",
+            coefficient in {1, 2}
+            and width == coefficient * head_dim
+            and candidates == coefficient * ratio,
+            f"compressor kernel {kernel.index} pools {candidates} candidates of "
+            f"{head_dim} against a packed row of {width} at ratio {ratio}; one "
+            "pooled group is one ratio-wide group or a previous/current pair",
+        )
+        if coefficient not in {1, 2} or width != coefficient * head_dim:
+            continue
+        slots = coefficient * ratio
         named_states = [state_by_id.get(name) for name in kernel.state_reads]
         require(
             "rolling_state_pair",
@@ -2250,6 +2355,7 @@ def _check_rolling_compressor(
             int(kv_history.primary_object_id),
             int(score_history.primary_object_id),
         }
+        history_object_ids.update(history_objects)
         require(
             "rolling_history_objects_distinct",
             len(history_objects) == 2
@@ -2269,69 +2375,96 @@ def _check_rolling_compressor(
             and storage(_operator_view(item[2], views, "input_view_1"))
             == int(StorageClass.ROM)
         ]
+        # Whether a position is added to the gate scores is model geometry, and
+        # the kernel's operand row says it: an absolute position embedding is a
+        # ROM-resident table this kernel binds beside its packed projection.
+        # V4-Flash binds one per compressor layer; V4.1-Flash's released
+        # ``Compressor.forward`` is ``kv, score = self.wkv(x), self.wgate(x)``
+        # with no positional term and its checkpoint has no such tensor, so the
+        # gather and the binary32 add are absent BY the graph -- requiring one
+        # unconditionally proved nothing about V4 and refused V4.1 for obeying
+        # its own source.
+        position_tables = [
+            name
+            for name in kernel.inputs[1:]
+            if tensor_by_id[name].role in {"weight", "constant"}
+        ]
+        expected_ape = len(position_tables)
         require(
             "rolling_ape_gather_count",
-            len(ape_rows) == 1,
-            f"compressor kernel {kernel.index} has {len(ape_rows)} APE gathers",
+            len(ape_rows) == expected_ape,
+            f"compressor kernel {kernel.index} has {len(ape_rows)} APE gathers "
+            f"against {expected_ape} position table(s) in its operand row",
         )
         sums = emitted(kernel, Major.REDUCTION, int(Reduction.ORDERED_SUM))
         scatters = emitted(kernel, Major.DMA, int(Dma.SCATTER))
         pools = emitted(kernel, Major.VECTOR, int(Vector.COMPRESS))
         require(
             "rolling_primitive_counts",
-            len(sums) == 1 and len(scatters) == 2 and len(pools) == 1,
-            f"compressor kernel {kernel.index} does not emit one sum, two scatters and one pool",
+            len(sums) == expected_ape and len(scatters) == 2 and len(pools) == 1,
+            f"compressor kernel {kernel.index} does not emit {expected_ape} sum(s), "
+            "two scatters and one pool",
         )
-        if len(ape_rows) != 1 or len(sums) != 1 or len(scatters) != 2 or len(pools) != 1:
+        if (
+            len(ape_rows) != expected_ape
+            or len(sums) != expected_ape
+            or len(scatters) != 2
+            or len(pools) != 1
+        ):
             continue
 
-        ape_at, ape_instruction, ape_operator = ape_rows[0]
-        ape_index = _operator_view(ape_operator, views, "input_view_0")
-        ape_source = _operator_view(ape_operator, views, "input_view_1")
-        ape_output = _operator_view(ape_operator, views, "output_view_0")
-        require(
-            "rolling_ape_geometry",
-            generated(ape_index, "ring_indices_v1", "modulus", ratio)
-            and runtime_term(ape_index, Symbol.POSITION_START)
-            and _view_dims(ape_source) == (ratio, width)
-            and _view_strides(ape_source) == (width, 1)
-            and int(ape_source.payload["dtype"]) == int(DType.FP32)
-            and _view_dims(ape_output)[-1:] == (width,)
-            and _view_strides(ape_output)[-1:] == (1,)
-            and int(ape_output.payload["dtype"]) == int(DType.FP32),
-            f"compressor kernel {kernel.index} APE gather is not the ratio-{ratio} ring",
-        )
-
-        sum_at, sum_instruction, sum_operator = sums[0]
-        score_terms = _operator_view(sum_operator, views, "input_view_0")
-        score_scratch = _operator_view(sum_operator, views, "input_view_1")
-        sum_output = _operator_view(sum_operator, views, "output_view_0")
-        numeric = numerics.get(int(sum_operator.payload["numeric_profile_id"]))
-        numeric_payload = numeric.payload if numeric is not None else {}
-        require(
-            "rolling_score_add_fp32_rne",
-            score_scratch is not None
-            and sum_output is not None
-            and score_scratch.descriptor_id == sum_output.descriptor_id
-            and score_terms is not None
-            and int(score_terms.payload["dtype"]) == int(DType.FP32)
-            and int(score_scratch.payload["dtype"]) == int(DType.FP32)
-            and numeric is not None
-            and all(
-                int(numeric_payload.get(field, -1)) == int(DType.FP32)
-                for field in (
-                    "input_dtype",
-                    "second_input_dtype",
-                    "accumulator_dtype",
-                    "output_dtype",
-                )
+        ape_instruction = None
+        sum_instruction = None
+        score_terms = None
+        score_scratch = None
+        if expected_ape:
+            ape_at, ape_instruction, ape_operator = ape_rows[0]
+            ape_index = _operator_view(ape_operator, views, "input_view_0")
+            ape_source = _operator_view(ape_operator, views, "input_view_1")
+            ape_output = _operator_view(ape_operator, views, "output_view_0")
+            require(
+                "rolling_ape_geometry",
+                generated(ape_index, "ring_indices_v1", "modulus", ratio)
+                and runtime_term(ape_index, Symbol.POSITION_START)
+                and _view_dims(ape_source) == (ratio, width)
+                and _view_strides(ape_source) == (width, 1)
+                and int(ape_source.payload["dtype"]) == int(DType.FP32)
+                and _view_dims(ape_output)[-1:] == (width,)
+                and _view_strides(ape_output)[-1:] == (1,)
+                and int(ape_output.payload["dtype"]) == int(DType.FP32),
+                f"compressor kernel {kernel.index} APE gather is not the ratio-{ratio} ring",
             )
-            and int(numeric_payload.get("rounding_mode", -1))
-            == int(RoundingMode.NEAREST_EVEN)
-            and ape_instruction.signal_event_id
-            in _wait_events(sum_instruction, waits, require),
-            f"compressor kernel {kernel.index} score plus APE is not binary32 RNE",
-        )
+
+            sum_at, sum_instruction, sum_operator = sums[0]
+            score_terms = _operator_view(sum_operator, views, "input_view_0")
+            score_scratch = _operator_view(sum_operator, views, "input_view_1")
+            sum_output = _operator_view(sum_operator, views, "output_view_0")
+            numeric = numerics.get(int(sum_operator.payload["numeric_profile_id"]))
+            numeric_payload = numeric.payload if numeric is not None else {}
+            require(
+                "rolling_score_add_fp32_rne",
+                score_scratch is not None
+                and sum_output is not None
+                and score_scratch.descriptor_id == sum_output.descriptor_id
+                and score_terms is not None
+                and int(score_terms.payload["dtype"]) == int(DType.FP32)
+                and int(score_scratch.payload["dtype"]) == int(DType.FP32)
+                and numeric is not None
+                and all(
+                    int(numeric_payload.get(field, -1)) == int(DType.FP32)
+                    for field in (
+                        "input_dtype",
+                        "second_input_dtype",
+                        "accumulator_dtype",
+                        "output_dtype",
+                    )
+                )
+                and int(numeric_payload.get("rounding_mode", -1))
+                == int(RoundingMode.NEAREST_EVEN)
+                and ape_instruction.signal_event_id
+                in _wait_events(sum_instruction, waits, require),
+                f"compressor kernel {kernel.index} score plus APE is not binary32 RNE",
+            )
 
         scatter_by_object = {
             int(_operator_view(item[2], views, "output_view_0").primary_object_id): item
@@ -2352,6 +2485,14 @@ def _check_rolling_compressor(
         score_index = _operator_view(score_scatter[2], views, "input_view_0")
         kv_values = _operator_view(kv_scatter[2], views, "input_view_1")
         score_values = _operator_view(score_scatter[2], views, "input_view_1")
+        # Where a position is added, the appended score rows are the sum's own
+        # output; where none is, they are the packed projection's second plane
+        # read straight through -- the ``rolling_packed_split`` proof below holds
+        # the plane to that relationship either way, so the two forms differ in
+        # one clause and not in the proof.
+        if score_scratch is None:
+            score_scratch = score_values
+            score_terms = score_values
         require(
             "rolling_history_ring_append",
             kv_index is not None
@@ -2368,13 +2509,22 @@ def _check_rolling_compressor(
             and score_values.descriptor_id == score_scratch.descriptor_id,
             f"compressor kernel {kernel.index} history append is not the {slots}-row absolute ring",
         )
+        # The two planes of one ``[S, 2, W]`` projection: the same object, the
+        # same row stride of ``2 * W``, one plane of ``W`` elements after the
+        # other.  The score plane is named by a rank-3 view where a position is
+        # added (the addend the sum reads) and by a rank-2 one where none is (the
+        # rows the append moves); the relationship proved is the same, so the
+        # rank is read off the view rather than pinned to one of the two forms.
         require(
             "rolling_packed_split",
             kv_values is not None
             and score_terms is not None
             and int(kv_values.primary_object_id) == int(score_terms.primary_object_id)
-            and len(_view_dims(score_terms)) == 3
-            and _view_dims(score_terms)[0] == 1
+            and len(_view_dims(score_terms)) in {2, 3}
+            and (
+                len(_view_dims(score_terms)) == 2
+                or _view_dims(score_terms)[0] == 1
+            )
             and _view_dims(score_terms)[-1] == width
             and _view_strides(score_terms)[-2:] == (2 * width, 1)
             and int(score_terms.payload["element_offset"])
@@ -2385,8 +2535,12 @@ def _check_rolling_compressor(
         require(
             "rolling_history_write_order",
             int(kv_scatter[1].signal_event_id) in score_waits
-            and int(sum_instruction.signal_event_id) in score_waits,
-            f"compressor kernel {kernel.index} score history does not follow KV and APE writes",
+            and (
+                sum_instruction is None
+                or int(sum_instruction.signal_event_id) in score_waits
+            ),
+            f"compressor kernel {kernel.index} score history does not follow KV "
+            "and APE writes",
         )
         raw_history_events.update(
             {
@@ -2454,7 +2608,10 @@ def _check_rolling_compressor(
             and storage(_operator_view(item[2], views, "input_view_1"))
             == int(StorageClass.HBM)
         ]
-        expected_boundary_rows = 4 if ratio == 4 else 2
+        # Two rows per plane when the pooled group is a previous/current pair,
+        # one per plane otherwise: the coefficient the operands stated, not a
+        # ratio this checker recognises.
+        expected_boundary_rows = 2 * coefficient
         boundary_ids = {int(item[1].predicate_id) for item in boundary_rows}
         require(
             "rolling_boundary_gather_count",
@@ -2696,6 +2853,54 @@ def _check_rolling_compressor(
         "rolling_boundary_objects_distinct",
         len(boundary_objects) == len(boundary_by_ratio),
         "different compression ratios alias one boundary flag",
+    )
+
+    # A rolling history is an ordinary mutable HBM buffer, not a transactional
+    # state record: that is what makes its ring a no-copy scatter and its reset a
+    # predicated fill, and a committed/prepared pair would double the rows and
+    # leave every reader addressing the half nothing appends to.  The
+    # prohibition is on THOSE objects, named by the histories this proof has just
+    # bound.  Stated as "this deployment holds no STATE records at all" it also
+    # refused every other state a graph may legitimately hold transactionally --
+    # DeepSeek-V4.1-Flash's candidate mask and published index selection are
+    # ``scratch`` and its token ring a ``token_ring``, none of them a compressor
+    # history -- and it passed for V4 only because every state class V4 declares
+    # happens to lower as a direct buffer.
+    transactional_histories = sorted(
+        descriptor.descriptor_id
+        for descriptor in states.values()
+        if {
+            int(descriptor.payload["committed_object_id"]),
+            int(descriptor.payload["prepared_object_id"]),
+        }
+        & history_object_ids
+    )
+    state_engine_rows: list[int] = []
+    for index, instruction in enumerate(instructions):
+        if instruction.major != int(Major.STATE):
+            continue
+        operator = operators.get(int(instruction.descriptor_id))
+        if operator is None:
+            continue
+        if any(
+            (view := _operator_view(operator, views, field)) is not None
+            and int(view.primary_object_id) in history_object_ids
+            for field in (
+                "input_view_0",
+                "input_view_1",
+                "input_view_2",
+                "input_view_3",
+                "output_view_0",
+                "output_view_1",
+            )
+        ):
+            state_engine_rows.append(index)
+    require(
+        "rolling_no_state_descriptors",
+        not transactional_histories and not state_engine_rows,
+        "rolling compressor emitted ABI STATE records instead of ordinary HBM: "
+        f"state descriptors {transactional_histories} bind a history object and "
+        f"STATE instructions {state_engine_rows} address one",
     )
 
     # Every should-compress consumer has a many-row prefill path and a static

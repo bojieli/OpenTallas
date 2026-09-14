@@ -61,17 +61,55 @@ priced by the analytical point this target stands in for -- that point is the
 ``engram-host`` candidate -- and the notes say so.
 
 The bytes now go where that pricing says, rather than being priced in HBM and
-placed in ROM as well: the tables are planned as ``residency="hbm"`` regions of
-the same region plan (``ResidentHbmPolicy`` with ``node_shards`` = the node
-count), proved by the same inverse proof, and kept out of ``rom_bytes``.  What
-the released model then refuses is arithmetic, and it is the row rule: a shard
-must be a whole number of the table's addressing rows, because a row split
-across two nodes has no owner, and 384,006,168 and 384,016,682 rows over 64
-nodes leave 24 and 42.  The admissible forms are a bulk-plus-tail split -- whose
-tail node then reserves 3,168,111,408 bytes against the 3,168,094,257 this
-capability declares, because that number is ``ceil(total / nodes)`` and assumes
-an even division -- or a node count that divides the row counts.  Both are
-capability re-derivations, so neither is taken here.
+placed in ROM as well: the tables are planned as resident regions of the same
+region plan, proved by the same inverse proof, and kept out of ``rom_bytes``.
+**Which store holds them is decided by arithmetic, and node-local HBM loses.**
+
+The row rule first: a node's share of a row-sharded region must be a whole
+number of the table's addressing rows, because a row split across two nodes has
+no owner, and 384,006,168 and 384,016,682 rows over 64 nodes leave 24 and 42.
+That leaves three candidate shapes, and all three are refused:
+
+* **a node count that divides the row counts.**  There is none.  An admissible
+  count is a multiple of the declared 8-device NVLink domain and divides the 384
+  released experts; 384,016,682 is 2 mod 4, so no multiple of 4 divides it at
+  any device count.  ``admissible_node_counts`` returns (8, 16, 24, 48, 64, 96,
+  128, 192, 384) and not one of them divides both row counts.
+* **a bulk-plus-tail split**, most nodes taking ``floor(rows / nodes)`` rows and
+  the tail node the remainder.  Measured, that tail node reserves
+  3,168,111,408 bytes against the 3,168,094,257 this capability used to declare
+  -- but the 17,151-byte gap is not the defect and re-deriving the declaration
+  does not fix it.  ABI 3.0 amendment A28 (wire format section 12.19) says a
+  ``node_segments`` object carries one segment list per admitted topology node
+  and "every list must cover exactly the descriptor's ``size_bytes``", because
+  the symmetric ``MEMORY_OBJECT`` states one node-local size and one object id
+  for every node, and the generic verifier rejects asymmetric coverage.  One
+  table is one object -- a tensor is placed exactly once, and an ABI 3.0 tensor
+  view addresses one object -- so a fat tail is not a capability number, it is a
+  wire field that does not exist.  ``ObjectSource`` refuses it whichever size is
+  declared, and ``tests/test_rom_host_resident_region.py`` measures that.
+* **column sharding**, every node holding a slice of each row.  The scale table
+  ends it: an 8-byte scale row over 64 nodes is 0.125 bytes a node.
+
+The declared number was itself a symptom rather than the cause.
+``ceil(total / nodes)`` = 3,168,094,257 is odd, so it is not a whole number even
+of the 8-byte scale row: no row-granular split of any shape could have produced
+it, and a capability number no placement can reach is a number nothing checks.
+The reserve of an admitted sharded region is now derived as the node image --
+``rows_a_node * row_bytes``, summed over the regions a node holds -- and
+``engram_shard_feasibility`` refuses the placement when no such image exists.
+The predicate is arithmetic on the profile's own row counts, so a checkpoint
+whose rows do divide is admitted by the same code.
+
+What is left is the placement the analytical design point this target stands in
+for was priced with all along: ``host``, one load-once image every node reaches
+over the host interface, declared as ``memory.host.resident_region_bytes`` and
+planned as a ``residency="host"`` region held to every rule the HBM one is --
+members tiling the region, one authenticated content digest, ``READ |
+IMMUTABLE``, the same inverse proof, and no byte also in the ROM image.  WP-F's
+node-local HBM is not deferred by taste here; it is inexpressible for the
+released row counts, and a checkpoint or a node count that changed the
+arithmetic would admit it without a change to this module.
 
 **3.  The topology is ``CLUSTER_N`` and the fabric is declared beside it.**
 ``CLUSTER_32`` means exactly 32 nodes and cannot be widened (four shipped
@@ -110,6 +148,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from compiler.backends.rom.common.image import (
     DefectRecord,
+    RESIDENT_STORAGE_CLASS,
     ResidentHbmPolicy,
     RomImagePlan,
 )
@@ -150,6 +189,7 @@ from compiler.ir.v3.kernel_ir import KernelGraph
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     NO_ID,
+    NO_NODE,
     NodeClass,
     StorageClass,
     TopologyClass,
@@ -347,11 +387,12 @@ NUMERIC_CONTRACTS = tuple(sorted(set(_V4_NUMERIC_CONTRACTS) | set(V41_NUMERIC_CO
 
 #: Where the Engram tables live.  ``host`` is the placement the analytical
 #: design point this target stands in for was priced with (the
-#: ``deepseek-v4.1-flash-engram-host`` candidate); ``node_local_hbm`` is what
-#: plan WP-F asks for and is admissible only row-sharded; ``replicated_hbm``
-#: is refused for V4.1 because one module's table exceeds one node's HBM.
+#: ``deepseek-v4.1-flash-engram-host`` candidate) and is the one this backend
+#: builds; ``node_local_hbm`` is what plan WP-F asks for and is refused for the
+#: released row counts by :func:`engram_shard_feasibility`; ``replicated_hbm``
+#: is refused because one module's table exceeds one node's HBM.
 ENGRAM_PLACEMENTS = ("node_local_hbm", "host", "replicated_hbm")
-DEFAULT_ENGRAM_PLACEMENT = "node_local_hbm"
+DEFAULT_ENGRAM_PLACEMENT = "host"
 
 #: ``semantic_role`` of the two Engram table operands in
 #: ``compiler.frontend.deepseek_v41._add_engram``, and the tensor-name marker
@@ -407,6 +448,67 @@ def engram_table_bytes(profile: DeepSeekV41Profile = V41_FLASH_PROFILE) -> dict[
     }
 
 
+def engram_shard_feasibility(
+    *,
+    node_count: int = NODE_COUNT,
+    profile: DeepSeekV41Profile = V41_FLASH_PROFILE,
+) -> dict[str, Any]:
+    """Can the Engram tables be row-sharded into ``node_count`` node images?
+
+    One predicate decides it and it is arithmetic on the released row counts:
+    ``rows % node_count == 0``, for every module.  A node's image is
+    ``rows * row_bytes / node_count`` bytes and has to be a whole number of the
+    table's addressing rows -- a row split across two nodes has no owner --
+    which is true exactly when the node count divides the row count, whatever
+    the row width is.  The scale table shares its weight table's rows, so the
+    same predicate covers both.
+
+    Why an uneven split has no admissible form either, rather than a bigger
+    tail node: ABI 3.0 amendment A28 (wire format section 12.19) says a
+    ``node_segments`` object carries "one non-empty ordered segment list per
+    admitted topology node" and "every list must cover exactly the descriptor's
+    ``size_bytes``", because the symmetric ``MEMORY_OBJECT`` states one
+    node-local size and one object id for every node, and the generic verifier
+    rejects asymmetric coverage.  One table is one object -- a tensor is placed
+    exactly once and an ABI 3.0 tensor view addresses one object -- so a
+    bulk-plus-tail split is not a capability re-derivation, it is a wire change.
+
+    Nothing here is written down: the rows come from the profile and the node
+    count from the caller, so a checkpoint whose rows do divide is admitted by
+    the same code that refuses this one.
+    """
+    count = int(node_count)
+    if count < 1:
+        raise DeepSeekV41ArrayError(
+            f"a row-sharded table needs at least one node image; got {count}"
+        )
+    modules = [
+        {
+            "layer": int(layer),
+            "rows": int(rows),
+            "remainder_rows": int(rows) % count,
+            "rows_a_node": int(rows) // count,
+        }
+        for layer, rows in zip(profile.engram_layers, profile.engram_rows)
+    ]
+    divides = all(module["remainder_rows"] == 0 for module in modules)
+    return {
+        "node_count": count,
+        "modules": tuple(modules),
+        "divides": divides,
+        "rule": (
+            "a node image is a whole number of the table's addressing rows "
+            "exactly when the node count divides the row count"
+        ),
+        "why_an_uneven_split_is_not_admissible": (
+            "ABI 3.0 amendment A28: a node_segments object declares one segment "
+            "list per admitted topology node and every list must cover exactly "
+            "the descriptor's size_bytes, so the symmetric MEMORY_OBJECT cannot "
+            "state a bigger tail node's image"
+        ),
+    }
+
+
 def engram_residency(
     placement: str = DEFAULT_ENGRAM_PLACEMENT,
     *,
@@ -430,19 +532,46 @@ def engram_residency(
     table = engram_table_bytes(profile)
     total = int(table["total_bytes"])
     largest = int(table["largest_module_bytes"])
-    # Rows do not divide evenly by the node count, so the row-sharded share is
-    # the ceiling: the last node holds fewer rows and every node reserves the
-    # same region, which is what a declared resident region means.
-    sharded = -(-total // max(node_count, 1))
+    feasibility = engram_shard_feasibility(node_count=node_count, profile=profile)
+    # A node-sharded region is symmetric: every node's image is the same size
+    # and a whole number of rows, so the per-node reserve is the node image, not
+    # ``ceil(total / nodes)``.  The two agree only when the rows divide -- which
+    # is the case this target is not in, and stating the reserve as a ceiling is
+    # what hid that: 3,168,094,257 is odd and is therefore not a whole number
+    # even of the 8-byte scale row, so no row-granular split of any shape could
+    # have produced it.
+    sharded = (
+        sum(
+            module["rows_a_node"] * row
+            for module in feasibility["modules"]
+            for row in (int(table["head_dim"]), int(table["scale_columns"]))
+        )
+        if feasibility["divides"]
+        else -(-total // max(node_count, 1))
+    )
+    remainders = {
+        module["layer"]: module["remainder_rows"]
+        for module in feasibility["modules"]
+        if module["remainder_rows"]
+    }
     options = {
         "node_local_hbm": {
             "resident_bytes_per_node": sharded,
-            "admitted": sharded <= hbm_bytes_per_node,
+            "admitted": sharded <= hbm_bytes_per_node and feasibility["divides"],
             "form": "row_sharded_across_the_array",
+            "refusal": (
+                None
+                if feasibility["divides"]
+                else (
+                    f"{node_count} nodes leave {remainders} rows over, so no "
+                    "symmetric whole-row node image exists, and ABI 3.0's A28 "
+                    "node map cannot state an asymmetric one"
+                )
+            ),
             "rule": (
                 "the table is row-sharded over the nodes; every node reserves "
-                "ceil(total / nodes) and holds its own rows, load-once and "
-                "read-only"
+                "its own node image -- a whole number of addressing rows -- "
+                "and holds its own rows, load-once and read-only"
             ),
             "unpriced_consequence": (
                 "a lookup whose n-gram hash lands on another node's rows is a "
@@ -454,6 +583,7 @@ def engram_residency(
         },
         "host": {
             "resident_bytes_per_node": 0,
+            "host_region_bytes": total,
             "admitted": True,
             "form": "host_memory_as_deepseek_serves_it",
             "rule": (
@@ -474,6 +604,16 @@ def engram_residency(
     }
     chosen = options[placement]
     if not chosen["admitted"]:
+        if chosen.get("refusal"):
+            raise DeepSeekV41ArrayError(
+                f"Engram placement {placement!r} is not expressible on "
+                f"{node_count} nodes: {chosen['refusal']}.  The released row "
+                f"counts are "
+                f"{[m['rows'] for m in feasibility['modules']]} and a node "
+                f"image would be "
+                f"{[m['rows_a_node'] for m in feasibility['modules']]} rows "
+                f"plus {remainders} left over"
+            )
         raise DeepSeekV41ArrayError(
             f"Engram placement {placement!r} needs "
             f"{chosen['resident_bytes_per_node']} bytes of resident HBM per "
@@ -484,6 +624,8 @@ def engram_residency(
         "placement": placement,
         "table": table,
         "resident_bytes_per_node": int(chosen["resident_bytes_per_node"]),
+        "host_region_bytes": int(chosen.get("host_region_bytes", 0)),
+        "shard_feasibility": feasibility,
         "options": options,
     }
 
@@ -613,6 +755,8 @@ def v41_array_geometry(
                 "placement": engram["placement"],
                 "table_bytes": engram["table"]["total_bytes"],
                 "resident_bytes_per_node": engram["resident_bytes_per_node"],
+                "host_region_bytes": engram["host_region_bytes"],
+                "shard_feasibility": engram["shard_feasibility"],
                 "lookup_bytes_per_token": engram["table"]["lookup_bytes_per_token"],
                 "options": engram["options"],
             },
@@ -707,6 +851,21 @@ def deepseek_v41_array_rom_capability(
                     geometry["engram"]["resident_bytes_per_node"]
                 ),
             },
+            # Host memory is not this device's, so it declares no capacity here
+            # -- only the load-once region the machine reads its Engram tables
+            # from, which is what ``check.resident_hbm_region`` holds the
+            # emitted objects to.  Absent when the tables are on the device.
+            **(
+                {
+                    "host": {
+                        "resident_region_bytes": int(
+                            geometry["engram"]["host_region_bytes"]
+                        )
+                    }
+                }
+                if geometry["engram"]["host_region_bytes"]
+                else {}
+            ),
         },
         link=cluster_n_link(node_count=node_count, domain_count=domains),
         fabric={
@@ -922,25 +1081,45 @@ def build_deepseek_v41_array_rom_deployment(
             f"asked for {node_count}"
         )
     hbm_bytes_per_node = int(capability.memory["hbm"]["bytes"])
-    resident = int(capability.memory["hbm"].get("resident_region_bytes", 0))
+    resident_hbm_bytes = int(capability.memory["hbm"].get("resident_region_bytes", 0))
+    resident_host_bytes = int(
+        capability.memory.get("host", {}).get("resident_region_bytes", 0)
+    )
+    if resident_hbm_bytes and resident_host_bytes:
+        raise DeepSeekV41ArrayError(
+            f"the capability prices {resident_hbm_bytes} bytes of resident HBM "
+            f"and {resident_host_bytes} bytes of resident host memory for the "
+            "same Engram tables; one store holds them, and pricing both counts "
+            "those bytes twice"
+        )
     # The Engram tables are off ROM (plan section 3.2), and "off ROM" has to
-    # name where they are instead.  When the capability prices a resident
-    # region, that is where: the tables are row-sharded across the array as
-    # load-once read-only HBM regions of the same plan, one node's rows on one
-    # node.  The set is derived structurally by the wafer backend's own
-    # ``resident_hbm_region`` -- a checkpoint-bound weight of a *layered*
-    # embedding lookup -- rather than by the tensor-name marker, so the two
-    # targets recognise the same tables by the same rule; the marker stays as
-    # ``engram_tables_are_off_rom``'s independent second opinion.
+    # name where they are instead.  The capability is what names it, and the
+    # two stores it can name are the two a load-once region may live in:
+    # node-attached HBM -- the tables row-sharded across the array, one node's
+    # rows on one node, which the released row counts refuse (see
+    # ``engram_shard_feasibility``) -- or host memory, one image every node
+    # reaches, which is the placement the analytical design point this target
+    # stands in for was priced with.  The set of tables is derived structurally
+    # by the wafer backend's own ``resident_hbm_region`` -- a checkpoint-bound
+    # weight of a *layered* embedding lookup -- rather than by the tensor-name
+    # marker, so the two targets recognise the same tables by the same rule;
+    # the marker stays as ``engram_tables_are_off_rom``'s independent second
+    # opinion.
     residency = resident_hbm_region(graph)
+    resident = resident_hbm_bytes or resident_host_bytes
+    resident_store = "hbm" if resident_hbm_bytes else "host"
     resident_policy = (
         ResidentHbmPolicy(
             tensors=frozenset(
                 member["tensor_id"] for member in residency["members"]
             ),
-            node_shards=node_count,
+            # A host image is one image, not one per node: amendment A28's node
+            # map gives each node its OWN bytes and host memory holds one copy.
+            node_shards=node_count if resident_store == "hbm" else 1,
+            node_id=NO_NODE,
             declared_bytes_per_node=resident,
             alignment_bytes=alignment_bytes,
+            residency=resident_store,
         )
         if resident and residency["members"]
         else None
@@ -1082,28 +1261,46 @@ def build_deepseek_v41_array_rom_deployment(
     lowering.builder.notes["array_geometry"] = geometry
     lowering.builder.notes["resident_hbm_region"] = {
         **residency,
-        "declared_bytes_per_node": resident,
-        "node_shards": node_count if resident_policy else 0,
+        "declared_bytes": resident,
+        "declared_store": resident_store if resident_policy else "none",
+        "node_shards": (
+            (node_count if resident_store == "hbm" else 1) if resident_policy else 0
+        ),
         "placement": (
-            "row_sharded_node_local_hbm" if resident_policy else engram_placement
+            {
+                "hbm": "row_sharded_node_local_hbm",
+                "host": "one_host_image_every_node_reads",
+            }[resident_store]
+            if resident_policy
+            else engram_placement
         ),
         "planned_bytes": plan.resident_bytes,
         "planned_bytes_per_node": {
             str(node): used for node, used in plan.resident_bytes_per_node.items()
         },
+        "planned_host_bytes": plan.host_bytes,
         "planned_region_count": len(plan.resident_regions),
         "rom_bytes_without_it": plan.rom_bytes,
-        "storage_class": StorageClass.HBM.name if resident_policy else "host",
+        "storage_class": (
+            RESIDENT_STORAGE_CLASS[resident_store].name if resident_policy else "none"
+        ),
+        "node_local_hbm_refusal": geometry["engram"]["options"]["node_local_hbm"][
+            "refusal"
+        ],
     }
     deployment = lowering.build()
     footprint = deployment.notes.get("memory_footprint", {})
     session = int(footprint.get("session_bytes_in_hbm", 0))
     physical = int(capability.memory["hbm"].get("physical_bytes", hbm_bytes_per_node))
-    if session + resident > physical:
+    # Only bytes the NODE holds are charged to the node's stacks.  A host image
+    # is the host's memory; charging a node for it would refuse a placement the
+    # node does not pay for, and crediting a node's HBM reserve to the host
+    # would let a table exceed the stacks it is actually in.
+    if session + resident_hbm_bytes > physical:
         raise DeepSeekV41ArrayError(
             f"one node's session state needs {session} bytes of HBM and the "
-            f"Engram resident region {resident}; together they exceed the "
-            f"{physical} bytes a node physically attaches"
+            f"Engram resident region {resident_hbm_bytes}; together they exceed "
+            f"the {physical} bytes a node physically attaches"
         )
     return deployment, plan
 
