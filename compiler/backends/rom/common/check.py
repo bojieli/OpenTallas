@@ -1369,6 +1369,15 @@ def check_rom_schedule(
     # them, and no DMA.SCATTER writes into them.  A layered embedding lookup is
     # the structural signature; the prologue's token embedding has no layer and
     # is an ordinary model weight.
+    #
+    # Where the bytes live is the second half of the rule, and it is read off
+    # the capability rather than assumed.  A machine that declares
+    # ``memory.hbm.resident_region_bytes`` has priced those bytes in HBM; if the
+    # mask image also carried them they would be counted twice, so on such a
+    # machine every table object must be an HBM object and the resident regions
+    # of the plan must be what owns them.  A machine that declares no resident
+    # region -- the V4 wafer, the single chip -- keeps its tables in ROM and the
+    # residency half of the rule is vacuous for it.
     resident_tensors = {
         name
         for kernel in graph.kernels
@@ -1389,6 +1398,17 @@ def check_rom_schedule(
                     continue
                 if int(obj.permissions) == int(Permission.READ | Permission.IMMUTABLE):
                     resident_objects.add(obj.descriptor_id)
+    declared_resident = int(
+        capability.memory.get("hbm", {}).get("resident_region_bytes", 0)
+    )
+    resident_plan = (
+        plan.get("resident_regions", []) if isinstance(plan, Mapping) else []
+    )
+    resident_plan_objects = {
+        int(region["object_id"])
+        for region in resident_plan
+        if isinstance(region, Mapping) and "object_id" in region
+    }
     if resident_tensors:
         require(
             "resident_hbm_region",
@@ -1396,6 +1416,41 @@ def check_rom_schedule(
             f"{len(resident_tensors)} layered lookup table(s) are declared and no "
             "immutable object backs them",
         )
+        if declared_resident:
+            for object_id in sorted(resident_objects):
+                obj = objects[object_id]
+                require(
+                    "resident_hbm_region",
+                    int(obj.payload["storage_class"]) == int(StorageClass.HBM),
+                    f"the capability prices {declared_resident} bytes of "
+                    f"load-once resident HBM and lookup table object {object_id} "
+                    f"declares storage class "
+                    f"{StorageClass(int(obj.payload['storage_class'])).name}; the "
+                    "same bytes would be paid for twice",
+                )
+                require(
+                    "resident_hbm_region",
+                    object_id in resident_plan_objects,
+                    f"lookup table object {object_id} is HBM-resident and no "
+                    "resident region of the plan owns it, so nothing binds its "
+                    "bytes to the checkpoint",
+                )
+            reserved = {}
+            for region in resident_plan:
+                for shard in region.get("shards", []):
+                    if not isinstance(shard, (list, tuple)) or len(shard) < 7:
+                        continue
+                    node = int(shard[0])
+                    reserved[node] = max(
+                        reserved.get(node, 0), int(shard[6]) + int(shard[5])
+                    )
+            worst = max(reserved.values(), default=0)
+            require(
+                "resident_hbm_region",
+                worst <= declared_resident,
+                f"the resident regions reserve {worst} bytes on one node and the "
+                f"capability declares {declared_resident}",
+            )
         state_bound = {
             int(descriptor.payload[field])
             for descriptor in states.values()
@@ -3199,12 +3254,23 @@ def _route_class(
 def _resource_bound(
     family: int, input_views: Sequence[Any], objects: Mapping[int, Any]
 ) -> int:
-    has_rom = any(
+    # ``ROM_READ`` is the bound of a contraction that reads immutable model
+    # content, and immutability is the property that decides it -- not the
+    # storage class.  The producer's own rule keys on the operand being a
+    # declared model weight; a load-once resident table is exactly that, and
+    # reading it out of HBM instead of the mask does not turn the operator into
+    # a memory-port-bound one.  Every ROM object is IMMUTABLE, so this is the
+    # same answer as before for a product with no resident region.
+    reads_immutable_content = any(
         (obj := objects.get(int(view.primary_object_id))) is not None
-        and int(obj.payload["storage_class"]) == int(StorageClass.ROM)
+        and bool(int(obj.permissions) & int(Permission.IMMUTABLE))
         for view in input_views
     )
-    bound = _ROM_READ if has_rom and family == int(Major.TENSOR) else _MEMORY_PORT
+    bound = (
+        _ROM_READ
+        if reads_immutable_content and family == int(Major.TENSOR)
+        else _MEMORY_PORT
+    )
     if family == int(Major.ROUTE):
         return _TENSOR_LANES
     if family == int(Major.SELECTION):

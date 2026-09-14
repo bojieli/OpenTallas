@@ -62,6 +62,7 @@ from compiler.backends.rom.deepseek_v41_array import (
     expert_parallel_node_count,
     v41_array_geometry,
 )
+from compiler.backends.rom.common.image import plan_resident_regions
 from compiler.backends.rom.deepseek_v41_array import (
     BANK_BYTES as BANK_BYTES_DECLARED,
     DENSE_BANKS as DENSE_BANKS_DECLARED,
@@ -357,6 +358,113 @@ def test_the_engram_table_marker_is_the_adapters_own_tensor_name():
     assert len(tables) == modules * len(ENGRAM_TABLE_ROLES)
     assert all(ENGRAM_TABLE_TENSOR_MARKER in s.name for s in tables)
     assert set(ENGRAM_TABLE_ROLES) == {s.semantic_role for s in tables}
+
+
+def test_a_row_sharded_resident_table_must_divide_into_whole_rows():
+    """The released tables do not row-shard over 64 nodes, and the refusal says so.
+
+    Every number here is read from the released profile through
+    ``engram_table_bytes``: the module row counts, the FP8 row width and the
+    node count the fabric rule derives.  A node's share of a row-sharded region
+    has to be a whole number of table rows -- a row split across two nodes has
+    no owner and one lookup becomes two reads -- and 384,006,168 rows over 64
+    nodes leaves 24.
+    """
+    from compiler.backends.rom.common.image import (
+        RegionRequest,
+        ResidentHbmPolicy,
+        RomImageError,
+    )
+
+    table = engram_table_bytes()
+    head_dim = int(table["head_dim"])
+    rows = [int(module["rows"]) for module in table["modules"]]
+    assert rows and any(count % NODE_COUNT for count in rows), (
+        "this test is about the case where the rows do not divide; if the "
+        "released row counts ever do, it is the arithmetic that changed"
+    )
+    payload = rows[0] * head_dim
+    request = RegionRequest.striped(
+        "hbm.engram.weight",
+        "layer_weight",
+        "fp8_e4m3fn",
+        [[("layers.1.engram.embed.weight", payload, "shard.safetensors", 0, "0" * 64)]],
+        rows[0] * head_dim,
+        row_bytes=head_dim,
+    )
+    policy = ResidentHbmPolicy(
+        tensors=frozenset({"layers.1.engram.embed.weight"}),
+        node_shards=NODE_COUNT,
+        declared_bytes_per_node=int(table["total_bytes"]),
+        alignment_bytes=head_dim,
+    )
+    with pytest.raises(RomImageError) as refusal:
+        plan_resident_regions(
+            requests=(request,),
+            policy=policy,
+            seen_keys=set(),
+            placed={},
+            first_region_id=0,
+        )
+    message = str(refusal.value)
+    assert f"{head_dim}-byte addressing rows" in message
+    assert "has no owner" in message
+    # and the arithmetic the refusal is about, stated independently
+    assert payload % NODE_COUNT == 0, "the bytes divide"
+    assert (payload // NODE_COUNT) % head_dim != 0, "the rows do not"
+
+
+def test_a_row_count_that_divides_the_node_count_shards_into_whole_rows():
+    """The positive side of the same rule, so it is a rule and not a refusal.
+
+    The shard geometry is admitted when the rows divide; what the released model
+    then still needs, and what this deliberately does not fake, is an
+    authenticated digest per shard -- the checkpoint lock names whole tensors,
+    so a sub-tensor range has no content identity until the bytes are read.
+    """
+    from compiler.backends.rom.common.image import (
+        RegionRequest,
+        ResidentHbmPolicy,
+        plan_resident_regions,
+        row_sharded_region_source,
+        RomImageError,
+    )
+
+    head_dim = 256
+    rows = NODE_COUNT * 3
+    payload = rows * head_dim
+    request = RegionRequest.striped(
+        "hbm.engram.weight",
+        "layer_weight",
+        "fp8_e4m3fn",
+        [[("table.weight", payload, "shard.safetensors", 0, "ab" * 32)]],
+        payload,
+        row_bytes=head_dim,
+    )
+    regions = plan_resident_regions(
+        requests=(request,),
+        policy=ResidentHbmPolicy(
+            tensors=frozenset({"table.weight"}),
+            node_shards=NODE_COUNT,
+            declared_bytes_per_node=payload,
+            alignment_bytes=head_dim,
+        ),
+        seen_keys=set(),
+        placed={},
+        first_region_id=0,
+    )
+    assert len(regions) == 1
+    region = regions[0]
+    assert region.residency == "hbm"
+    assert region.node_shards == NODE_COUNT
+    assert len(region.shards) == NODE_COUNT
+    assert {shard.bytes for shard in region.shards} == {payload // NODE_COUNT}
+    assert (payload // NODE_COUNT) % head_dim == 0
+    assert sum(shard.bytes for shard in region.shards) == payload
+    # the object source refuses to name an unauthenticated sub-range
+    with pytest.raises(RomImageError) as refusal:
+        row_sharded_region_source(region, NODE_COUNT)
+    assert "carries no authenticated digest" in str(refusal.value)
 
 
 def test_an_engram_table_that_reached_the_rom_plan_is_refused(build):

@@ -960,7 +960,60 @@ def test_the_resident_region_is_the_layered_lookup_tables(build, graph):
     assert resident["table_count"] == 1
     assert resident["layers"] == [1]
     assert resident["bytes"] == ENGRAM_ROWS * HIDDEN * 2
-    assert deployment.notes["resident_hbm_region"] == resident
+    note = deployment.notes["resident_hbm_region"]
+    assert {key: note[key] for key in resident} == resident
+
+
+def test_the_resident_tables_are_in_hbm_and_not_in_the_rom_image(build, graph):
+    """The double count, refused: a resident byte is not also a ROM byte.
+
+    The tables are declared in ``memory.hbm.resident_region_bytes`` *and* were
+    placed in the ROM image, so every one of these bytes was paid for twice.
+    What proves the fix is not a smaller number but a partition: the tensors are
+    in the resident region list, they are in no ROM region, the objects behind
+    them declare HBM, and the ROM total is the image without them.
+    """
+    deployment, plan = build
+    resident = resident_hbm_region(graph)
+    names = {member["tensor_id"] for member in resident["members"]}
+    assert names
+
+    rom_placed = {m.tensor_id for r in plan.regions for m in r.members}
+    hbm_placed = {m.tensor_id for r in plan.resident_regions for m in r.members}
+    assert names <= hbm_placed
+    assert not (names & rom_placed)
+    assert not (rom_placed & hbm_placed)
+
+    assert plan.resident_payload_bytes == resident["bytes"]
+    assert [r.residency for r in plan.resident_regions] == ["hbm"] * len(
+        plan.resident_regions
+    )
+    # every resident region's object is an immutable HBM object
+    objects = {
+        d.descriptor_id: d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    }
+    for region in plan.resident_regions:
+        obj = objects[region.object_id]
+        assert obj.payload["storage_class"] == int(StorageClass.HBM)
+        assert obj.permissions == int(Permission.READ | Permission.IMMUTABLE)
+    for region in plan.regions:
+        assert objects[region.object_id].payload["storage_class"] == int(
+            StorageClass.ROM
+        )
+
+    note = deployment.notes["resident_hbm_region"]
+    assert note["storage_class"] == StorageClass.HBM.name
+    assert note["planned_bytes"] >= resident["bytes"]
+    assert note["rom_bytes_without_it"] == plan.rom_bytes
+    # and the plan record says so, which is what the inverse proof reads
+    body = plan.to_dict()
+    assert len(body["resident_regions"]) == len(plan.resident_regions)
+    assert body["totals"]["resident_payload_bytes"] == resident["bytes"]
+    assert "resident_regions" not in {
+        r["key"] for r in body["regions"]
+    }, "the ROM region list must not name the resident regions"
 
 
 def test_a_resident_region_larger_than_the_capability_is_refused(graph):
@@ -1073,7 +1126,7 @@ def test_the_checker_refuses_a_writable_resident_table(build, graph, capability)
     assert names
     targets = [
         region.object_id
-        for region in plan.regions
+        for region in plan.resident_regions
         if {member.tensor_id for member in region.members} & names
     ]
     assert targets, "the resident region names no planned object"
@@ -1095,11 +1148,49 @@ def test_the_checker_refuses_a_writable_resident_table(build, graph, capability)
 # Inverse proof and byte-identical rebuild (the plan's exit criteria)
 # ---------------------------------------------------------------------------
 def test_inverse_proof_passes(build, workspace):
-    deployment, _plan = build
+    deployment, plan = build
     proof = check_rom_inverse(deployment, root=workspace)
     assert proof["status"] == "pass", proof
     assert proof["all_padding_zero"] is True
     assert proof["placed_tensor_count"] > 0
+
+
+def test_the_inverse_proof_covers_the_resident_bytes(build, workspace, graph):
+    """The resident region is proved, not excused.
+
+    Moving bytes out of the ROM image must not move them out of the proof.  The
+    independent checker reconstructs them from the checkpoint bit for bit, the
+    same standard the mask image is held to, and reports them separately so a
+    reader can see they were not quietly folded into the ROM total.
+    """
+    deployment, plan = build
+    resident = resident_hbm_region(graph)
+    proof = check_rom_inverse(deployment, root=workspace)
+    assert proof["resident_region_count"] == len(plan.resident_regions) > 0
+    assert proof["resident_payload_bytes"] == resident["bytes"]
+    assert proof["rom_bytes"] == plan.rom_bytes
+    assert proof["bit_identical"] is True
+    # the resident tensors are among the reconstructed ones
+    assert proof["placed_tensor_count"] == sum(
+        len(r.members) for r in (*plan.regions, *plan.resident_regions)
+    )
+
+
+def test_the_inverse_proof_refuses_a_resident_region_left_in_rom(build, workspace):
+    """The double count, as a refusal: a ROM object cannot back a resident region.
+
+    The failure this guards is the one the fix is for -- the same bytes declared
+    resident and carried by the mask.  Re-pointing a resident region at a ROM
+    object is the smallest expression of it, and the proof must not accept it.
+    """
+    deployment, plan = build
+    candidate = copy.deepcopy(deployment)
+    body = candidate.notes["rom_plan"]
+    rom_object = body["regions"][0]["object_id"]
+    body["resident_regions"][0]["object_id"] = rom_object
+    with pytest.raises(Exception) as excinfo:
+        check_rom_inverse(candidate, root=workspace)
+    assert "resident HBM memory object" in str(excinfo.value)
 
 
 def test_rebuild_is_byte_identical(graph, capability, build):

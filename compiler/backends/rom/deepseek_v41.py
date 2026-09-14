@@ -60,15 +60,29 @@ What is new, and why each piece is derived rather than written down
     admitted topology's ``local_node_id``.
 
 *   **The Engram tables.**  Plan section 3.4 puts them in wafer-edge HBM as a
-    load-once, read-only resident region.  This backend declares that region --
-    its bytes in the capability's ``memory.hbm.resident_region_bytes`` and its
-    derivation in the deployment notes -- and the ``resident_hbm_region``
-    checker rule proves the objects that back it are never committed to and
-    never scattered into.  It does **not** yet move them out of the ROM image:
-    :mod:`compiler.backends.rom.common.inverse` requires every region of the
-    plan to name an immutable ``StorageClass.ROM`` object, so a region placed in
-    HBM would fail the inverse proof that is this gate's own exit criterion.
-    Moving them is a change to the inverse proof's contract, not to a backend.
+    load-once, read-only resident region, and that is where this backend places
+    them: :func:`resident_hbm_region` derives the set structurally, the bytes
+    are planned as ``residency="hbm"`` regions of the same region plan, and the
+    emitted objects are ``StorageClass.HBM`` with the same ``READ | IMMUTABLE``
+    permissions a ROM object carries.  They are therefore counted **once**.
+    Before this they were declared in the capability's
+    ``memory.hbm.resident_region_bytes`` *and* placed in the ROM image, which
+    for the released model is 202,758,032,400 bytes paid for twice -- enough on
+    its own to take the image from 72.4% of the two-wafer ROM to 121.6% of it.
+
+    Moving them was a contract change in three places, not a backend edit, and
+    none of the three lost a rule:
+    :mod:`compiler.backends.rom.common.inverse` now proves a resident region
+    under the identical tiling, reconstruction, digest, padding and
+    placement-uniqueness rules and substitutes only the storage class, and
+    additionally proves no object backs both stores;
+    :mod:`compiler.backends.rom.common.check`'s ``resident_hbm_region`` rule
+    now also requires -- on a machine whose capability prices a resident
+    region -- that the table objects be HBM objects owned by a resident region
+    of the plan, and that the reserve fit what the capability declares; and
+    :mod:`compiler.backends.rom.common.image` plans, places and digest-binds
+    the resident regions beside the ROM ones while keeping them out of
+    ``rom_bytes``.
 """
 
 from __future__ import annotations
@@ -82,6 +96,7 @@ from runtime.abi3.constants import (
     DTYPE_BITS,
     Feature,
     Link,
+    NO_NODE,
     NodeClass,
     ParticipantScope,
     StorageClass,
@@ -93,6 +108,7 @@ from runtime.abi3.descriptors import CollectiveOp
 from .common.image import (
     DTYPE_BY_NAME,
     DefectRecord,
+    ResidentHbmPolicy,
     RomCoordinate,
     RomImagePlan,
     RomLayoutPolicy,
@@ -1013,6 +1029,7 @@ def deepseek_v41_rom_policy(
     epoch: int = 1,
     chunk_bytes: int = 1 << 16,
     target_id: str = TARGET_ID,
+    resident_hbm: ResidentHbmPolicy | None = None,
     notes: Mapping[str, Any] | None = None,
 ) -> RomTargetPolicy:
     geometry = wafer_geometry(
@@ -1049,6 +1066,7 @@ def deepseek_v41_rom_policy(
         link_plan=_wafer_link_plan_factory(
             chunk_bytes=chunk_bytes, stage_plan=stage_plan
         ),
+        resident_hbm=resident_hbm,
         notes={
             "host_submission": "one submission targets both wafers",
             "partition": "layer_pipelined_expert_and_role_striped_tile_rom",
@@ -1155,6 +1173,20 @@ def build_deepseek_v41_rom_deployment(
         alignment_bytes=alignment_bytes,
         epoch=epoch,
         target_id=target_id,
+        # Every wafer holds the same wafer-edge copy, which is what the
+        # capability declares: ``resident_region_bytes`` is per node, and it is
+        # the whole table rather than a share of it.  Replication is also what
+        # makes every Engram lookup local on whichever stage reads it, so the
+        # stage partition never has to place a reader away from its table.
+        resident_hbm=ResidentHbmPolicy(
+            tensors=frozenset(
+                member["tensor_id"] for member in resident["members"]
+            ),
+            node_shards=1,
+            node_id=NO_NODE,
+            declared_bytes_per_node=declared_resident,
+            alignment_bytes=alignment_bytes,
+        ),
         notes=notes,
     )
     lowering = RomLowering(
@@ -1231,7 +1263,19 @@ def build_deepseek_v41_rom_deployment(
     }
     lowering.builder.notes["wafer_geometry"] = geometry
     lowering.builder.notes["stage_plan"] = stage_plan.to_dict()
-    lowering.builder.notes["resident_hbm_region"] = resident
+    lowering.builder.notes["resident_hbm_region"] = {
+        **resident,
+        "declared_bytes_per_node": declared_resident,
+        "placement": "replicated_wafer_edge_hbm",
+        "planned_bytes": plan.resident_bytes,
+        "planned_bytes_per_node": {
+            str(node): used
+            for node, used in plan.resident_bytes_per_node.items()
+        },
+        "planned_region_count": len(plan.resident_regions),
+        "rom_bytes_without_it": plan.rom_bytes,
+        "storage_class": StorageClass.HBM.name,
+    }
     return lowering.build(), plan
 
 

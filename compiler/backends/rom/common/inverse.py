@@ -38,6 +38,19 @@ What it proves
 8.  The repair map is internally consistent: every activated spare belongs to a
     declared bank, spare indices are inside the declared inventory, and no
     logical row or column is repaired twice.
+9.  Every **load-once resident region** is held to rules 1 to 3, 5, 6 and 7 with
+    one substitution and nothing else relaxed: its object declares
+    ``StorageClass.HBM`` rather than ``StorageClass.ROM``, because HBM is where
+    the deployment says those bytes live.  It still declares exactly
+    ``READ | IMMUTABLE``; its members still tile its payload; it still
+    reconstructs bit-identically from the checkpoint the plan binds; its padding
+    is still declared zero bytes; its content digest still recomputes under this
+    module's own implementation of the binding rule; and its shards still tile
+    the region in order without overlapping inside a node's resident window.
+    A resident byte is never also a ROM byte: the two region lists are disjoint,
+    every tensor is placed exactly once across both, and the ROM totals this
+    proof reconstructs are the mask image alone.  That is the whole difference
+    between a resident region and a hole in the image.
 
 The reconstruction is streamed, so proving a 16 GB or 156 GB image costs no
 temporary storage and never materialises a private copy.
@@ -260,10 +273,23 @@ def check_rom_inverse(
     regions = plan.get("regions")
     _require(isinstance(regions, list) and bool(regions), "the plan places no region")
 
+    resident_regions = plan.get("resident_regions", [])
+    _require(
+        isinstance(resident_regions, list),
+        "the plan's resident region list is malformed",
+    )
+
     table = deployment.table
     rom_objects = {}
+    hbm_objects = {}
     for descriptor in table.descriptors():
         if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
+            continue
+        if descriptor.payload["storage_class"] == int(StorageClass.HBM):
+            # Gathered without a permission requirement: HBM also holds the
+            # session's mutable state, and only the objects a resident region
+            # names are held to the immutable contract, below.
+            hbm_objects[descriptor.descriptor_id] = descriptor
             continue
         if descriptor.payload["storage_class"] != int(StorageClass.ROM):
             continue
@@ -282,22 +308,53 @@ def check_rom_inverse(
 
     placed: dict[str, str] = {}
     occupied: dict[tuple[int, int, int, int], list[tuple[int, int, str]]] = {}
+    resident_occupied: dict[int, list[tuple[int, int, str]]] = {}
     payload_bytes = 0
     padding_bytes = 0
+    resident_payload_bytes = 0
+    resident_padding_bytes = 0
     reconstructed: list[dict[str, Any]] = []
     referenced: set[int] = set()
+    resident_referenced: set[int] = set()
 
-    for record in regions:
+    ordered_records = [(False, record) for record in regions]
+    ordered_records += [(True, record) for record in resident_regions]
+    for is_resident, record in ordered_records:
+        objects_here = hbm_objects if is_resident else rom_objects
+        where = "resident HBM" if is_resident else "immutable ROM"
         _require(isinstance(record, Mapping), "a region record is malformed")
         key = str(record["key"])
+        if is_resident:
+            _require(
+                str(record.get("residency")) == "hbm",
+                f"resident region {key!r} does not declare HBM residency",
+            )
+        else:
+            _require(
+                "residency" not in record or str(record["residency"]) == "rom",
+                f"ROM region {key!r} declares residency "
+                f"{record.get('residency')!r}; a region of the mask image is "
+                "ROM-resident by definition",
+            )
         object_id = _integer(record.get("object_id"), f"{key} object_id")
         _require(
-            object_id in rom_objects,
-            f"region {key!r} names object {object_id}, which is not an immutable "
-            "ROM memory object",
+            object_id in objects_here,
+            f"region {key!r} names object {object_id}, which is not an "
+            f"{where} memory object",
         )
-        referenced.add(object_id)
-        descriptor = rom_objects[object_id]
+        (resident_referenced if is_resident else referenced).add(object_id)
+        descriptor = objects_here[object_id]
+        if is_resident:
+            # A resident object is held to the identical immutable contract: it
+            # is read-only model content that the machine loads once, and the
+            # only thing its storage class changes is where it is read from.
+            permissions = descriptor.permissions
+            _require(
+                permissions == int(Permission.READ | Permission.IMMUTABLE),
+                f"resident region {key!r} object {object_id} declares "
+                f"permissions {permissions:#04x}; a load-once resident region "
+                "is exactly READ|IMMUTABLE",
+            )
         declared_payload = _integer(record.get("payload_bytes"), f"{key} payload", 1)
         pad = _integer(record.get("pad_bytes"), f"{key} pad")
         source = deployment.objects.get(object_id)
@@ -392,7 +449,10 @@ def check_rom_inverse(
                 expected.hexdigest() == expected_digest,
                 f"checkpoint bytes for {tensor_id!r} do not match the binding digest",
             )
-            payload_bytes += length
+            if is_resident:
+                resident_payload_bytes += length
+            else:
+                payload_bytes += length
             reconstructed.append(
                 {
                     "bytes": length,
@@ -410,12 +470,14 @@ def check_rom_inverse(
         pad_object_id = record.get("pad_object_id")
         if pad:
             _require(
-                isinstance(pad_object_id, int) and pad_object_id in rom_objects,
+                isinstance(pad_object_id, int) and pad_object_id in objects_here,
                 f"region {key!r} declares {pad} pad bytes but no immutable pad "
-                "object owns them",
+                f"object of the {where} store owns them",
             )
-            referenced.add(int(pad_object_id))
-            pad_descriptor = rom_objects[int(pad_object_id)]
+            (resident_referenced if is_resident else referenced).add(
+                int(pad_object_id)
+            )
+            pad_descriptor = objects_here[int(pad_object_id)]
             _require(
                 pad_descriptor.payload["size_bytes"] == pad,
                 f"region {key!r} pad object is "
@@ -449,11 +511,14 @@ def check_rom_inverse(
                 f"region {key!r} pad descriptor does not carry the zero-source "
                 "content sentinel",
             )
-            padding_bytes += pad
+            if is_resident:
+                resident_padding_bytes += pad
+            else:
+                padding_bytes += pad
         else:
             _require(
                 pad_object_id in (None, 0xFFFFFFFF)
-                or pad_object_id not in rom_objects,
+                or pad_object_id not in objects_here,
                 f"region {key!r} declares no padding but owns a pad object",
             )
 
@@ -498,6 +563,31 @@ def check_rom_inverse(
                 f"region {key!r} shards do not tile the region in order",
             )
             covered += extent
+            if is_resident:
+                # A resident shard names a node and an offset in that node's
+                # resident window.  Uniqueness is proved in that window, and in
+                # a namespace of its own: a node's HBM window and a tile's ROM
+                # bank are different address spaces, and proving them in one map
+                # would invent an overlap.
+                _require(
+                    reticle == tile == bank == 0,
+                    f"resident region {key!r} shard names a ROM resource "
+                    f"({reticle}, {tile}, {bank}); a resident shard is a node "
+                    "and an offset in that node's resident window",
+                )
+                for other_start, other_end, other_key in resident_occupied.get(
+                    node, ()
+                ):
+                    if address < other_end and other_start < address + extent:
+                        raise InverseProofError(
+                            f"resident region {key!r} overlaps {other_key!r} in "
+                            f"node {node}'s resident window at [{address}, "
+                            f"{address + extent})"
+                        )
+                resident_occupied.setdefault(node, []).append(
+                    (address, address + extent, key)
+                )
+                continue
             slot = (node, reticle, tile, bank)
             for other_start, other_end, other_key in occupied.get(slot, ()):
                 if address < other_end and other_start < address + extent:
@@ -532,6 +622,57 @@ def check_rom_inverse(
         _integer(totals.get("padding_bytes"), "totals.padding_bytes") == padding_bytes,
         "the plan's padding total does not match the proved padding",
     )
+    resident_per_node: dict[str, int] = {}
+    if resident_regions:
+        _require(
+            _integer(
+                totals.get("resident_payload_bytes"), "totals.resident_payload_bytes"
+            )
+            == resident_payload_bytes,
+            "the plan's resident payload total does not match the reconstructed "
+            "resident payload",
+        )
+        _require(
+            _integer(
+                totals.get("resident_padding_bytes"), "totals.resident_padding_bytes"
+            )
+            == resident_padding_bytes,
+            "the plan's resident padding total does not match the proved padding",
+        )
+        _require(
+            _integer(totals.get("resident_region_count"), "resident_region_count")
+            == len(resident_regions),
+            "the plan's resident region count does not match its region list",
+        )
+        # Recomputed here, from the shards this proof has just tiled, rather
+        # than read: the per-node reserve is what the capability's declared
+        # resident region has to cover, so it must not be the producer's word.
+        resident_per_node = {
+            str(node): max(end for _start, end, _key in spans)
+            for node, spans in sorted(resident_occupied.items())
+        }
+        _require(
+            {
+                str(k): int(v)
+                for k, v in (totals.get("resident_bytes_per_node") or {}).items()
+            }
+            == resident_per_node,
+            "the plan's per-node resident reserve does not match the shards it "
+            f"places; the proof derives {resident_per_node}",
+        )
+        _require(
+            _integer(totals.get("resident_bytes"), "totals.resident_bytes")
+            == resident_payload_bytes + resident_padding_bytes,
+            "the plan's resident byte total does not match its payload plus pad",
+        )
+        # The double count, stated as a rule rather than trusted: no tensor and
+        # no object is in both stores.
+        both = sorted(resident_referenced & referenced)
+        _require(
+            not both,
+            f"objects {both} back both a ROM region and a resident region; those "
+            "bytes would be counted twice",
+        )
 
     return {
         "all_padding_zero": True,
@@ -554,6 +695,11 @@ def check_rom_inverse(
         "generated_object_count": generated["count"],
         "region_count": len(regions),
         "repair": repair,
+        "resident_bytes": resident_payload_bytes + resident_padding_bytes,
+        "resident_bytes_per_node": resident_per_node,
+        "resident_padding_bytes": resident_padding_bytes,
+        "resident_payload_bytes": resident_payload_bytes,
+        "resident_region_count": len(resident_regions),
         "rom_bytes": payload_bytes + padding_bytes,
         "schema": INVERSE_REPORT_SCHEMA,
         "status": "pass",

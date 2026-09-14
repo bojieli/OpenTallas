@@ -121,16 +121,30 @@ from runtime.abi3.descriptors import (
     SelectorKind,
     Symbol,
 )
-# The frozen compression ratios, from the module that defines them rather than
-# restated here: ``VECTOR.COMPRESS``'s ``aux_id_1`` must name one of them and
-# the engine refuses anything else.
-from runtime.reference.compression_pool import PINNED_COMPRESSION_RATIOS
+# ``runtime.reference.compression_pool.PINNED_COMPRESSION_RATIOS`` used to be
+# imported here to gate ``VECTOR.COMPRESS``'s ``aux_id_1``.  It is not imported
+# any more, and the reason is a measurement: that tuple is ``(4, 128)``, which is
+# *DeepSeek-V4-Flash's* released ``compress_ratios``, and gating a lowering
+# shared by every ROM product on one model's ratios froze the compiler to that
+# model.  Lowering the released DeepSeek-V4.1-Flash kernel IR -- whose ratios are
+# 1, 2 and 8 -- refused with
+#
+#     kernel 'main.layer02.attention.compressor.carry': compressor predicate
+#     names unpinned ratio 2
+#
+# with nothing wrong with the graph, the target or the arithmetic.  What the
+# lowering actually needs of a ratio is not membership of a list but agreement:
+# that the number the kernel declares is the number its own operand shapes are
+# built on, and that the graph declares a derived axis in those units.  That is
+# what :meth:`RomLowering._admissible_compression_ratios` and
+# :meth:`RomLowering._compressor_ratio` check, from the graph, every build.
 
 from .image import (
     DTYPE_BY_NAME,
     DefectRecord,
     ROM_PERMISSIONS,
     RegionRequest,
+    ResidentHbmPolicy,
     RomCoordinate,
     RomImagePlan,
     RomLayoutPolicy,
@@ -677,6 +691,91 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     "selected_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 1, 128),
 }
 
+
+#: The A18 derived-axis *grammar*, and the reason there is one.
+#:
+#: ``span_groups_ratio4`` is not a new runtime symbol -- ``RequestAxis`` says
+#: why: it is an affine image of a symbol the registry already carries.  The
+#: number in the name is a **model's** compression ratio, so a registry that
+#: enumerates the names it accepts is a registry frozen to one model's geometry.
+#: That is not hypothetical: DeepSeek-V4-Flash compresses at 4 and 128 and
+#: DeepSeek-V4.1-Flash at 1, 2 and 8, and the first attempt to lower the
+#: released V4.1 kernel IR through this module refused with
+#:
+#:     predicate condition 'span_groups_ratio2 > 0' names 'span_groups_ratio2',
+#:     which is not a runtime symbol this backend resolves
+#:
+#: with nothing wrong with either the graph or the target.  So the ratio is
+#: parsed out of the name and the affine image is *derived* from it, and the
+#: derivation is then confronted with the graph's own declared maximum for that
+#: name by :meth:`RomLowering._check_derived_axes` -- a derivation plus a bounded
+#: check, never a list of one model's numbers.
+#:
+#: Each entry is a prefix and the affine image a ratio ``N`` names:
+#:
+#: ``span_groups_ratioN`` / ``context_groups_ratioN``
+#:     one element per ``N`` tokens of the span, or of the context: ``S // N``.
+#: ``attention_rows_ratioN``
+#:     the KV join's prefill rows -- the current span plus the compressed
+#:     prefix it produces, ``S + S // N``, stated as ``(N + 1) * S // N``.
+#: ``selected_rows_ratioN``
+#:     a selection that carries one row per group plus a whole group of
+#:     window rows, ``S // N + N``.
+_DERIVED_AXIS_FORMS: Mapping[str, Any] = {
+    "span_groups_ratio": lambda n: RequestAxis(Symbol.SPAN_TOKENS, n),
+    "context_groups_ratio": lambda n: RequestAxis(Symbol.CONTEXT_LENGTH, n),
+    "attention_rows_ratio": lambda n: RequestAxis(Symbol.SPAN_TOKENS, n, n + 1),
+    "selected_rows_ratio": lambda n: RequestAxis(Symbol.SPAN_TOKENS, n, 1, n),
+}
+
+
+def derived_axis(name: str) -> RequestAxis | None:
+    """The affine image a derived axis name states, or None if it states none.
+
+    Only the ratio is read from the name, and only as a positive integer.  A
+    name whose suffix is not one -- ``span_groups_ratioN`` with a symbolic N, a
+    ratio of zero -- resolves to nothing rather than to a guess, because an axis
+    resolved wrongly is silently the operand's declared maximum.
+    """
+    for prefix, form in _DERIVED_AXIS_FORMS.items():
+        if not name.startswith(prefix):
+            continue
+        suffix = name[len(prefix) :]
+        if not suffix.isdigit():
+            return None
+        ratio = int(suffix)
+        if ratio < 1:
+            return None
+        return form(ratio)
+    return None
+
+
+def request_axis(name: str) -> RequestAxis | None:
+    """Resolve a neutral axis name: a registered symbol, or a derived image."""
+    registered = SYMBOL_BY_NAME.get(name)
+    if registered is not None:
+        return registered
+    return derived_axis(name)
+
+
+def _confront_registry_with_the_grammar() -> None:
+    """The enumerated derived entries and the grammar state one rule; compare them.
+
+    Both are in this module and both are edited by hand, so leaving them to agree
+    by inspection is leaving them to drift.  Every ratio-suffixed name the
+    registry enumerates must be exactly what the grammar derives.
+    """
+    for name, enumerated in SYMBOL_BY_NAME.items():
+        derived = derived_axis(name)
+        if derived is not None and derived != enumerated:
+            raise RuntimeError(
+                f"derived axis {name!r} is enumerated as {enumerated} and "
+                f"derived as {derived}; the grammar and the registry disagree"
+            )
+
+
+_confront_registry_with_the_grammar()
+
 #: Amendment A3's frozen ``comparisons`` registry, as the exporter's
 #: symbol-comparison grammar spells it.  ``"<symbol> <op> <integer>"`` is the
 #: whole grammar; an operator outside this table is refused rather than guessed
@@ -1170,6 +1269,15 @@ class RomTargetPolicy:
     #: refusing every build, states the smaller budget it does honour.  The
     #: clamp is recorded in the deployment notes.  ``None`` keeps the IR's.
     new_token_budget_cap: int | None = None
+    #: How this target holds its load-once resident regions, or ``None`` when
+    #: it declares none and every immutable byte is a byte of the ROM image.
+    #: A target that declares one names the tensors whose home is HBM -- the
+    #: backend derives that set from the graph's own structure -- and the bytes
+    #: are then planned, digest-bound, proved and placed as resident HBM
+    #: regions instead of ROM ones.  They are never both: a byte the capability
+    #: prices in ``memory.hbm.resident_region_bytes`` and the mask also carries
+    #: is counted twice, and the split here is what makes that impossible.
+    resident_hbm: ResidentHbmPolicy | None = None
     notes: dict[str, Any] = dc_field(default_factory=dict)
 
 
@@ -1197,6 +1305,10 @@ class RomLowering:
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.states = {s.state_id: s for s in graph.states}
         self.analysis = analyze(graph)
+        self._compression_ratios: frozenset[int] | None = None
+        # Before anything resolves an operand: every derived axis name this
+        # backend parses is confronted with the bound the graph declares for it.
+        self._check_derived_axes()
         self._generated_objects: dict[str, int] = {}
         self.builder = DeploymentBuilder(
             target_id=policy.target_id,
@@ -1311,6 +1423,133 @@ class RomLowering:
             )
         return dims
 
+    # -- compression ratios, derived from the graph (never enumerated) -------
+    def _admissible_compression_ratios(self) -> frozenset[int]:
+        """The ratios *this graph* declares a derived axis in, plus one.
+
+        A compression ratio is model geometry: V4-Flash's released
+        ``compress_ratios`` are 4 and 128, V4.1-Flash's are 1, 2 and 8.  A
+        shared lowering must not carry either set, so the admissible set is read
+        off the graph's own runtime-symbol table: every derived axis name that
+        states a ratio contributes it.  One is always admissible because a
+        ratio-1 compressor pools nothing and needs no group axis to exist.
+
+        A graph that declares no derived group axis at all therefore admits only
+        ratio 1, which is the honest answer: a kernel claiming to pool four
+        tokens into one, in a graph with no axis counted in fours, is a kernel
+        whose operands cannot be addressed at the rate it claims.
+        """
+        if self._compression_ratios is None:
+            ratios = {1}
+            for symbol in self.graph.symbols:
+                axis = derived_axis(symbol.name)
+                if axis is not None:
+                    ratios.add(int(axis.unit))
+            self._compression_ratios = frozenset(ratios)
+        return self._compression_ratios
+
+    def _compressor_ratio(self, kernel: Kernel) -> int:
+        """A compressor kernel's ratio, confronted with its own operands.
+
+        Two bounded checks, neither of them a list of one model's numbers:
+
+        1.  the ratio is a positive integer the graph declares a derived axis in
+            (:meth:`_admissible_compression_ratios`), and
+        2.  every group-count axis this kernel actually names is counted in
+            exactly that ratio's units.
+
+        The second is the one that catches a real defect.  ``VECTOR.COMPRESS``
+        publishes the ratio in ``aux_id_1`` and the pool and the state update
+        read it to know how many candidates a group holds; a kernel whose
+        ``ratio`` attribute and whose operand shapes disagree produces a program
+        that issues, addresses the wrong stride, and retires.  A projection that
+        names no group axis makes no claim about grouping and is checked only by
+        rule 1.
+        """
+        declared = kernel.attributes.get("ratio")
+        if isinstance(declared, bool) or not isinstance(declared, int) or declared < 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares compression ratio "
+                f"{declared!r}; a ratio is a positive integer"
+            )
+        admissible = self._admissible_compression_ratios()
+        if declared not in admissible:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares compression ratio "
+                f"{declared}, which no derived axis of this graph is counted "
+                f"in; the graph's runtime symbols state {sorted(admissible)}"
+            )
+        for name in tuple(kernel.inputs) + tuple(kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or not tensor.shape:
+                continue
+            leading = tensor.shape[0]
+            if not isinstance(leading, Symbolic):
+                continue
+            # Only a *group count* says what a group holds.  A row count such as
+            # ``attention_rows_ratioN`` is a join's output extent and names the
+            # ratio of the cache it reads, not of the operator being lowered.
+            if "groups_ratio" not in str(leading.symbol):
+                continue
+            axis = derived_axis(str(leading.symbol))
+            if axis is None:
+                continue
+            if int(axis.unit) != declared:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} declares compression ratio "
+                    f"{declared} and addresses {name!r} in groups of "
+                    f"{axis.unit} ({leading.symbol!r}); the ratio the operator "
+                    "publishes and the stride its operands are addressed at are "
+                    "the same number"
+                )
+        return declared
+
+    def _check_derived_axes(self) -> None:
+        """Confront every derived axis this backend resolves with the graph's.
+
+        A18 states an axis as ``numerator * S // unit + bias``.  The backend
+        derives that from the axis's *name*; the graph independently declares the
+        axis's *maximum*.  Two statements of one thing, so they are compared:
+        the image of the bound symbol's declared maximum must be the declared
+        maximum of the derived symbol, exactly.
+
+        This is the check that makes name-parsing safe.  An axis resolved to the
+        wrong affine function does not fail -- it silently presents the operand's
+        declared maximum, which is how a 4-token request came to address 262,144
+        rows.  A bounded comparison against a number the front end wrote is what
+        refuses that instead.
+        """
+        for symbol in self.graph.symbols:
+            axis = derived_axis(symbol.name)
+            if axis is None:
+                continue
+            bound = next(
+                (
+                    entry
+                    for entry in self.graph.symbols
+                    if entry.binding == "request"
+                    and SYMBOL_BY_NAME.get(entry.name) is not None
+                    and SYMBOL_BY_NAME[entry.name].symbol == axis.symbol
+                ),
+                None,
+            )
+            if bound is None:
+                raise RomLoweringError(
+                    f"derived axis {symbol.name!r} images runtime symbol "
+                    f"{axis.symbol.name}, which this graph does not declare; "
+                    "the bound of a derived axis is the bound of the symbol it "
+                    "images and cannot be assumed"
+                )
+            expected = axis.numerator * int(bound.maximum) // axis.unit + axis.bias
+            if expected != int(symbol.maximum):
+                raise RomLoweringError(
+                    f"derived axis {symbol.name!r} resolves to "
+                    f"{axis.numerator} * {bound.name} // {axis.unit} + "
+                    f"{axis.bias}, which at {bound.name} = {bound.maximum} is "
+                    f"{expected}; the graph declares its maximum as "
+                    f"{symbol.maximum}"
+                )
+
     def _dtype(self, name: str) -> DType:
         resolved = DTYPE_ALIASES.get(name, name)
         try:
@@ -1388,7 +1627,14 @@ class RomLowering:
           lets expert dispatch enable only the tiles that hold them.
         """
         requests: list[RegionRequest] = []
+        resident_requests: list[RegionRequest] = []
         placed: set[str] = set()
+        resident = self.policy.resident_hbm
+        resident_tensors = frozenset(resident.tensors) if resident else frozenset()
+        #: Requested key -> the key the region was actually emitted under.  A
+        #: resident region's key says where its bytes live, because a reader of
+        #: the plan must not have to consult a second record to find out.
+        emitted_keys: dict[str, str] = {}
 
         def coordinate(key: str, role: str, size: int) -> RomCoordinate:
             if self.policy.place_region is None:
@@ -1436,19 +1682,40 @@ class RomLowering:
                 for column in columns
             ]
             size = sum(entry[1] for slot in slots for entry in slot)
-            requests.append(
+            # Residency is decided per region and must be unanimous.  A region
+            # that mixed a resident table with a ROM weight would have to live
+            # in two storage classes at once; the front end groups an operand
+            # slot across a run's layers, so the only way that arises is a
+            # graph in which the same operand slot is a lookup table in one
+            # layer and a model weight in another, and that is a refusal.
+            in_hbm = [name in resident_tensors for name in names]
+            if any(in_hbm) and not all(in_hbm):
+                raise RomLoweringError(
+                    f"region {key!r} mixes load-once resident tables with ROM "
+                    f"weights: {sorted(n for n, r in zip(names, in_hbm) if r)} "
+                    "are declared HBM-resident and the rest are not"
+                )
+            in_resident = all(in_hbm)
+            target = resident_requests if in_resident else requests
+            emitted_key = f"hbm.{key.split('.', 1)[1]}" if in_resident else key
+            emitted_keys[key] = emitted_key
+            target.append(
                 RegionRequest.striped(
-                    key,
+                    emitted_key,
                     role,
                     dtype,
                     slots,
                     elements,
-                    coordinate(key, role, size),
+                    RomCoordinate() if in_resident else coordinate(key, role, size),
+                    row_bytes=self._row_bytes(columns[0][0]) if in_resident else 0,
                 )
             )
             for slot_index, column in enumerate(columns):
                 for tensor in column:
-                    self._region_of_tensor[tensor.tensor_id] = (key, slot_index)
+                    self._region_of_tensor[tensor.tensor_id] = (
+                        emitted_key,
+                        slot_index,
+                    )
 
         def place_operand(
             key: str, role: str, columns: Sequence[Sequence[Tensor]]
@@ -1491,8 +1758,8 @@ class RomLowering:
                 scales,
                 sum(self._elements(t) for t in scales[0]),
             )
-            self._scale_of_region[key] = (
-                f"{key}.scale",
+            self._scale_of_region[emitted_keys.get(key, key)] = (
+                emitted_keys.get(f"{key}.scale", f"{key}.scale"),
                 int(head.scale_block_elements or 0),
                 self._scale_block_rows(head),
             )
@@ -1539,6 +1806,14 @@ class RomLowering:
                 f"{len(unplaced)} weight tensor(s) are never read by a kernel and "
                 f"would have no ROM placement: {unplaced[:4]}"
             )
+        if resident_requests and resident is None:  # pragma: no cover
+            raise RomLoweringError("resident requests without a resident policy")
+        missing = sorted(resident_tensors - placed)
+        if missing:
+            raise RomLoweringError(
+                f"{len(missing)} tensor(s) are declared HBM-resident and are "
+                f"read by no kernel, so nothing places them: {missing[:4]}"
+            )
         self.plan = plan_rom_image(
             model_id=self.graph.model_id,
             product=self.policy.product,
@@ -1546,8 +1821,23 @@ class RomLowering:
             policy=self.policy.layout,
             defects=self.policy.defects,
             notes=self.policy.notes,
+            resident_requests=tuple(resident_requests),
+            resident_policy=resident,
         )
         return self.plan
+
+    def _row_bytes(self, tensor: Tensor) -> int:
+        """The indivisible addressing row of a table operand, in bytes.
+
+        Derived from the operand's own trailing extent and element type, which
+        is what one lookup reads: a row of an ``[N, D]`` table is ``D``
+        elements.  A rank-1 operand has no row structure and returns ``0``.
+        """
+        dims = self._dims(tensor)
+        if len(dims) < 2:
+            return 0
+        bits = DTYPE_BITS[self._dtype(tensor.dtype)]
+        return (int(dims[-1]) * bits + 7) // 8
 
     def _elements(self, tensor: Tensor) -> int:
         elements = 1
@@ -1587,6 +1877,20 @@ class RomLowering:
         scale_rows = 1
         for extent in scale_dims[:-1]:
             scale_rows *= extent
+        if scale_rows >= rows:
+            # The scale has at least as many rows as the operand, so it is not a
+            # coarser covering of this operand's rows -- it is the same row
+            # space, addressed the same way.  That is what an Engram row lookup
+            # is: ``EMBEDDING_LOOKUP`` gathers rows of the FP8 table and the
+            # ``DEQUANTIZE`` beside it reads the *table's* scale rows under the
+            # same row identifiers (the kernel says so:
+            # ``scale_rows: addressed_by_the_same_row_identifiers``).  One code
+            # row per data row, which is the same ``scale_block_rows`` the
+            # table's own weight view carries, so the gathered rows are scaled
+            # exactly as the rows they came from.  The last-axis blocking was
+            # already confronted above and is what makes this checkable rather
+            # than assumed.
+            return 1
         if scale_rows <= 0 or rows % scale_rows:
             raise RomLoweringError(
                 f"weight {tensor.tensor_id!r} has {rows} rows and its scale "
@@ -3118,7 +3422,7 @@ class RomLowering:
         if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
             return None, 1, IDENTITY_AXIS
         axis = tensor.shape[0]
-        request = SYMBOL_BY_NAME.get(axis.symbol)
+        request = request_axis(axis.symbol)
         if request is None:
             return None, int(axis.multiplier or 1), IDENTITY_AXIS
         return int(request.symbol), int(axis.multiplier or 1), request
@@ -5017,13 +5321,7 @@ class RomLowering:
                 # operator's arity does not bind them, so an unbound ``aux2``
                 # would let a decode step read the guard as position zero and
                 # execute anyway.
-                ratio = int(attributes.get("ratio", 0))
-                if ratio not in PINNED_COMPRESSION_RATIOS:
-                    raise RomLoweringError(
-                        f"kernel {kernel.kernel_id!r} declares compression ratio "
-                        f"{attributes.get('ratio')!r}; VECTOR.COMPRESS pins the "
-                        f"ratio to one of {sorted(PINNED_COMPRESSION_RATIOS)}"
-                    )
+                ratio = self._compressor_ratio(kernel)
                 return [
                     COMPRESS_SUBCASE[kernel.kind],
                     ratio,
@@ -5651,12 +5949,7 @@ class RomLowering:
             name = str(kernel.attributes.get("predicate_output", ""))
             if not name:
                 continue
-            ratio = int(kernel.attributes.get("ratio", 0) or 0)
-            if ratio not in PINNED_COMPRESSION_RATIOS:
-                raise RomLoweringError(
-                    f"kernel {kernel.kernel_id!r}: compressor predicate names "
-                    f"unpinned ratio {ratio}"
-                )
+            ratio = self._compressor_ratio(kernel)
             conditions = kernel.attributes.get("predicate_condition")
             if not isinstance(conditions, Mapping):
                 raise RomLoweringError(
@@ -5729,7 +6022,7 @@ class RomLowering:
                 "payload and in particular no modulus"
             )
         name, operator, literal = parts
-        axis = SYMBOL_BY_NAME.get(name)
+        axis = request_axis(name)
         if axis is None:
             raise RomLoweringError(
                 f"predicate condition {condition!r} names {name!r}, which is "
@@ -6113,7 +6406,7 @@ class RomLowering:
             if not isinstance(entry, Symbolic):
                 bias += int(self._dims(tensor)[axis])
                 continue
-            request = SYMBOL_BY_NAME.get(entry.symbol)
+            request = request_axis(entry.symbol)
             if request is None or int(entry.multiplier or 1) != 1:
                 raise RomLoweringError(
                     f"join operand {name!r} leads on axis {axis} with "
@@ -6209,7 +6502,7 @@ class RomLowering:
             if not isinstance(entry, Symbolic):
                 bias += int(self._dims(tensor)[axis])
                 continue
-            request = SYMBOL_BY_NAME.get(entry.symbol)
+            request = request_axis(entry.symbol)
             if request is None or int(entry.multiplier or 1) != 1:
                 raise RomLoweringError(
                     f"join operand {name!r} leads on axis {axis} with "
@@ -6558,7 +6851,7 @@ class RomLowering:
         entry = tensor.shape[axis] if axis < len(tensor.shape) else None
         if not isinstance(entry, Symbolic):
             return None
-        request = SYMBOL_BY_NAME.get(entry.symbol)
+        request = request_axis(entry.symbol)
         if request is None or int(entry.multiplier or 1) != 1:
             return None
         return request
@@ -9118,6 +9411,12 @@ class RomLowering:
 
     def _node_shards_of(self, region: RomRegion) -> int | None:
         """How many node shards ``region`` is split into, or ``None`` for whole."""
+        if region.residency != "rom":
+            # A resident region states its own node sharding: the table is
+            # row-sharded across the machine or it is not, and that is a
+            # property of the region, not of the expert-bank role rule.
+            shards = int(region.node_shards or 1)
+            return shards if shards > 1 else None
         shards = int(self.policy.bank_shards or 1)
         if shards > 1 and region.role in self.policy.node_sharded_roles:
             return shards

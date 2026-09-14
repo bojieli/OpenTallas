@@ -145,6 +145,63 @@ class RomLayoutPolicy:
 
 
 @dataclass(frozen=True, slots=True)
+class ResidentHbmPolicy:
+    """How a target holds its load-once resident HBM regions.
+
+    A resident region is model content the machine reads every token and never
+    writes, whose declared home is HBM rather than the ROM image.  It is not a
+    hole in the immutable image: it keeps the region record, the content-digest
+    rule, the inverse proof and the immutable READ-only object; what changes is
+    the storage class and the placement.
+
+    ``node_shards`` is the whole rule for how the bytes reach the machine.  One
+    means every node holds the same image -- the wafer product's wafer-edge
+    copy.  ``N`` means the region is row-sharded across ``N`` nodes and each
+    node holds its own contiguous rows, which is the only admissible node-local
+    form for a table larger than one node's HBM.  A shard must be a whole
+    number of the region's addressing rows: a row split across two nodes has no
+    owner.
+    """
+
+    #: Tensor ids whose regions are resident rather than ROM.  Derived by the
+    #: backend from the graph's own structure; this policy only carries it.
+    tensors: frozenset[str] = frozenset()
+    #: Node images the region is split into (see the class docstring).
+    node_shards: int = 1
+    #: The node that holds an unsharded resident region, or ``NO_NODE`` when
+    #: every node holds the same copy.
+    node_id: int = NO_NODE
+    #: Bytes of resident region one node declares, from the capability.  Zero
+    #: means the target declares no resident region and none may be planned.
+    declared_bytes_per_node: int = 0
+    #: Region base alignment inside a node's resident window, for a region
+    #: with no row structure of its own.  A region that *has* an addressing row
+    #: is aligned to that row instead, because the row is the granularity the
+    #: machine reads a resident table at and a row-aligned base is what a row
+    #: lookup needs.  It is also the only alignment that does not inflate the
+    #: reserve: a ROM region pads to the macro row because every byte of the
+    #: mask address space must be a declared immutable object, and a node's HBM
+    #: window carries no such obligation, so padding a resident region to 4 KiB
+    #: would make the machine reserve bytes the model does not have.
+    alignment_bytes: int = 4096
+
+    def validate(self) -> None:
+        if self.node_shards < 1:
+            raise RomImageError("a resident region needs at least one node image")
+        if self.alignment_bytes <= 0 or self.alignment_bytes & (
+            self.alignment_bytes - 1
+        ):
+            raise RomImageError(
+                "the resident region alignment must be a positive power of two"
+            )
+        if self.tensors and self.declared_bytes_per_node <= 0:
+            raise RomImageError(
+                "a resident HBM region was requested and the capability declares "
+                "no resident region; the bytes would have no declared home"
+            )
+
+
+@dataclass(frozen=True, slots=True)
 class RomCoordinate:
     """Where a byte range physically sits.
 
@@ -230,6 +287,13 @@ class RegionRequest:
     slot_bytes: int
     element_count_per_slot: int
     coordinate_hint: RomCoordinate = RomCoordinate()
+    #: The indivisible addressing row of this payload, in bytes, when it has
+    #: one: a lookup table's row is read whole, so a shard boundary that fell
+    #: inside one would make a single lookup two reads and would leave the
+    #: row's owner undefined.  Derived by the caller from the operand's own
+    #: trailing extent and element type -- never written down -- and ``0``
+    #: when the payload has no row structure the planner must respect.
+    row_bytes: int = 0
 
     @staticmethod
     def striped(
@@ -239,6 +303,7 @@ class RegionRequest:
         slots: Sequence[Sequence[tuple[str, int, str, int, str]]],
         element_count_per_slot: int,
         coordinate_hint: "RomCoordinate | None" = None,
+        row_bytes: int = 0,
     ) -> "RegionRequest":
         """Build a request from per-slot ``(tensor_id, bytes, path, offset, sha)``."""
         members: list[RomMember] = []
@@ -275,6 +340,7 @@ class RegionRequest:
             slot_bytes=slot_bytes,
             element_count_per_slot=element_count_per_slot,
             coordinate_hint=coordinate_hint or RomCoordinate(),
+            row_bytes=int(row_bytes),
         )
 
 
@@ -300,6 +366,20 @@ class RomRegion:
     pad_digest: bytes
     object_id: int = NO_ID
     pad_object_id: int = NO_ID
+    #: ``"rom"`` for a region of the immutable ROM image, ``"hbm"`` for a
+    #: load-once resident region: bytes the machine reads from HBM every token
+    #: and never writes.  A resident region is the same first-class, checked,
+    #: digest-bound record as a ROM one -- the same members, the same content
+    #: digest rule, the same inverse proof -- and differs in exactly where the
+    #: bytes live, so its ``shards`` name a node and an offset in that node's
+    #: resident window instead of a bank and a ROM address.
+    residency: str = "rom"
+    #: The region's indivisible addressing row, carried through from the
+    #: request so the shard rule and the plan record state the same number.
+    row_bytes: int = 0
+    #: Node images this region is split into: ``1`` when every node holds the
+    #: same bytes, ``shards`` when it is row-sharded across the machine.
+    node_shards: int = 1
 
     @property
     def total_bytes(self) -> int:
@@ -317,7 +397,7 @@ class RomRegion:
         return self.slot_bytes * 8 // bits
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        body = {
             "alignment": self.alignment,
             "base_address": self.base_address,
             "content_sha256": self.content_digest.hex(),
@@ -337,6 +417,14 @@ class RomRegion:
             "slot_count": self.slot_count,
             "slot_elements": self.slot_elements,
         }
+        if self.residency != "rom":
+            # Only a resident region states these.  A ROM-only plan's record --
+            # and therefore its plan id and the deployment digest that binds it
+            # -- is exactly what it was before residency existed.
+            body["node_shards"] = self.node_shards
+            body["residency"] = self.residency
+            body["row_bytes"] = self.row_bytes
+        return body
 
 
 # ---------------------------------------------------------------------------
@@ -590,6 +678,7 @@ DTYPE_BY_NAME: Mapping[str, DType] = {
     "fp8_e4m3fn": DType.FP8_E4M3FN,
     "fp8_e5m2": DType.FP8_E5M2,
     "mxfp4_e2m1": DType.MXFP4_E2M1,
+    "fp4_e2m1_s16_e4m3": DType.FP4_E2M1_S16_E4M3,
     "e8m0": DType.E8M0_SCALE,
     "i8": DType.I8,
     "u8": DType.U8,
@@ -649,6 +738,11 @@ class RomImagePlan:
     regions: tuple[RomRegion, ...]
     repair_map: RepairMap
     notes: dict[str, Any] = dc_field(default_factory=dict)
+    #: Load-once regions whose declared residency is HBM, not the ROM image.
+    #: They are *not* in ``regions``: ``rom_bytes`` is the image the mask
+    #: carries, and counting a byte in both is the double count this field
+    #: exists to make impossible.
+    resident_regions: tuple[RomRegion, ...] = ()
 
     @property
     def payload_bytes(self) -> int:
@@ -661,6 +755,39 @@ class RomImagePlan:
     @property
     def rom_bytes(self) -> int:
         return self.payload_bytes + self.padding_bytes
+
+    @property
+    def resident_payload_bytes(self) -> int:
+        return sum(r.payload_bytes for r in self.resident_regions)
+
+    @property
+    def resident_padding_bytes(self) -> int:
+        return sum(r.pad_bytes for r in self.resident_regions)
+
+    @property
+    def resident_bytes(self) -> int:
+        return self.resident_payload_bytes + self.resident_padding_bytes
+
+    @property
+    def resident_bytes_per_node(self) -> dict[int, int]:
+        """Resident bytes each node holds, keyed by node id.
+
+        A node-sharded region contributes its own shard to its own node; an
+        unsharded one contributes to every node that holds a copy, which for
+        ``NO_NODE`` is the machine and is reported under that key.
+        """
+        used: dict[int, int] = {}
+        for region in self.resident_regions:
+            for shard in region.shards:
+                node = shard.coordinate.node_id
+                used[node] = max(
+                    used.get(node, 0), shard.resource_address + shard.bytes
+                )
+        return dict(sorted(used.items()))
+
+    @property
+    def resident_bytes_worst_node(self) -> int:
+        return max(self.resident_bytes_per_node.values(), default=0)
 
     @property
     def region_count(self) -> int:
@@ -695,7 +822,7 @@ class RomImagePlan:
         )
 
     def region(self, key: str) -> RomRegion:
-        for candidate in self.regions:
+        for candidate in (*self.regions, *self.resident_regions):
             if candidate.key == key:
                 return candidate
         raise RomImageError(f"no ROM region named {key!r}")
@@ -727,8 +854,237 @@ class RomImagePlan:
                 "rom_bytes": self.rom_bytes,
             },
         }
+        if self.resident_regions:
+            # Conditional on purpose.  A product with no resident region emits
+            # exactly the record it emitted before residency existed, so its
+            # plan id -- and the deployment digest that binds it -- cannot move.
+            body["resident_regions"] = [r.to_dict() for r in self.resident_regions]
+            body["totals"]["resident_bytes"] = self.resident_bytes
+            body["totals"]["resident_bytes_per_node"] = {
+                str(node): used
+                for node, used in self.resident_bytes_per_node.items()
+            }
+            body["totals"]["resident_padding_bytes"] = self.resident_padding_bytes
+            body["totals"]["resident_payload_bytes"] = self.resident_payload_bytes
+            body["totals"]["resident_region_count"] = len(self.resident_regions)
         body["plan_id"] = hashlib.sha256(canonical_json(body)).hexdigest()
         return body
+
+
+def _validate_region_request(
+    request: RegionRequest,
+    seen_keys: set[str],
+    placed: dict[str, str],
+) -> int:
+    """Check one request's members tile its slots, and return its payload bytes.
+
+    Shared by the ROM image and the resident HBM regions on purpose: a resident
+    region is held to the identical tiling, slot-stride and place-once rules,
+    because the only thing residency changes is where the bytes live.
+    """
+    if request.key in seen_keys:
+        raise RomImageError(f"duplicate ROM region key {request.key!r}")
+    seen_keys.add(request.key)
+    if not request.members:
+        raise RomImageError(f"ROM region {request.key!r} places no payload")
+    if request.dtype not in DTYPE_BY_NAME:
+        raise RomImageError(
+            f"ROM region {request.key!r} has unrepresentable dtype "
+            f"{request.dtype!r}"
+        )
+    slot_bytes = request.slot_bytes
+    if slot_bytes <= 0 or request.slot_count <= 0:
+        raise RomImageError(f"ROM region {request.key!r} has an empty slot")
+    covered = 0
+    for member in request.members:
+        if member.bytes <= 0:
+            raise RomImageError(
+                f"ROM region {request.key!r} member {member.tensor_id!r} is empty"
+            )
+        if member.offset_bytes != covered:
+            raise RomImageError(
+                f"ROM region {request.key!r} member {member.tensor_id!r} sits at "
+                f"{member.offset_bytes}, expected {covered}; members must tile "
+                "the region without gaps or overlap"
+            )
+        if member.slot != member.offset_bytes // slot_bytes:
+            raise RomImageError(
+                f"ROM region {request.key!r} member {member.tensor_id!r} declares "
+                f"slot {member.slot} but sits in slot "
+                f"{member.offset_bytes // slot_bytes}"
+            )
+        if (member.offset_bytes + member.bytes - 1) // slot_bytes != member.slot:
+            raise RomImageError(
+                f"ROM region {request.key!r} member {member.tensor_id!r} straddles "
+                "a slot boundary"
+            )
+        if member.tensor_id in placed:
+            raise RomImageError(
+                f"tensor {member.tensor_id!r} is placed twice: in "
+                f"{placed[member.tensor_id]!r} and {request.key!r}"
+            )
+        placed[member.tensor_id] = request.key
+        covered += member.bytes
+    if covered != slot_bytes * request.slot_count:
+        raise RomImageError(
+            f"ROM region {request.key!r} members cover {covered} bytes but "
+            f"{request.slot_count} slots of {slot_bytes} need "
+            f"{slot_bytes * request.slot_count}"
+        )
+    return slot_bytes * request.slot_count
+
+
+def plan_resident_regions(
+    *,
+    requests: Sequence[RegionRequest],
+    policy: ResidentHbmPolicy,
+    seen_keys: set[str],
+    placed: dict[str, str],
+    first_region_id: int,
+) -> tuple[RomRegion, ...]:
+    """Lay out the load-once resident HBM regions of one deployment.
+
+    The rules a resident region is held to, all of them checkable from the
+    emitted record by :func:`~compiler.backends.rom.common.inverse.check_rom_inverse`:
+
+    *   its members tile its slots exactly, as a ROM region's do;
+    *   its shards tile the region in order and do not overlap inside a node's
+        resident window, as a ROM region's do inside a bank;
+    *   a sharded region's node image is a whole number of addressing rows, so
+        one lookup is one node's read and the row has an owner; and
+    *   every node's image is the same size, because ABI 3.0's MEMORY_OBJECT is
+        symmetric -- one object id and one node-local size for every node.
+    """
+    policy.validate()
+    regions: list[RomRegion] = []
+    shards_count = int(policy.node_shards)
+    cursor: dict[int, int] = {}
+    # Packed in descending alignment order, then by key.  A node's resident
+    # window is one allocation, and laying a strictly-aligned region after a
+    # loosely-aligned one makes its base skip the tail: for the released model
+    # that is 64 bytes, which is 64 bytes of HBM the machine would have to
+    # reserve beyond the table it holds.  Sorting is deterministic and changes
+    # only the order bytes are packed in, never which region owns them.
+    ordered = sorted(
+        requests,
+        key=lambda request: (
+            -(int(request.row_bytes) or policy.alignment_bytes),
+            request.key,
+        ),
+    )
+    for offset, request in enumerate(ordered):
+        payload_bytes = _validate_region_request(request, seen_keys, placed)
+        row = int(request.row_bytes)
+        alignment = row or policy.alignment_bytes
+        if row and payload_bytes % row:
+            raise RomImageError(
+                f"resident region {request.key!r} of {payload_bytes} bytes is "
+                f"not a whole number of its {row}-byte addressing rows"
+            )
+        total = _align_up(payload_bytes, alignment)
+        pad_bytes = total - payload_bytes
+        if shards_count > 1:
+            if payload_bytes % shards_count:
+                raise RomImageError(
+                    f"resident region {request.key!r} of {payload_bytes} bytes "
+                    f"does not divide into {shards_count} equal node images; ABI "
+                    "3.0's MEMORY_OBJECT states one node-local size for every "
+                    "node"
+                )
+            per_node = payload_bytes // shards_count
+            row = int(request.row_bytes)
+            if row and per_node % row:
+                raise RomImageError(
+                    f"resident region {request.key!r} shards into {per_node} "
+                    f"bytes a node, which is not a whole number of its "
+                    f"{row}-byte addressing rows; a row split across two nodes "
+                    "has no owner"
+                )
+            if pad_bytes:
+                raise RomImageError(
+                    f"resident region {request.key!r} needs {pad_bytes} pad bytes "
+                    f"and is sharded {shards_count} ways; a sharded region's pad "
+                    "would sit on one node and break the symmetric node image"
+                )
+            nodes = range(shards_count)
+        else:
+            per_node = total
+            nodes = (int(policy.node_id),)
+        shards: list[RomShard] = []
+        region_offset = 0
+        for node in nodes:
+            start = _align_up(cursor.get(node, 0), alignment)
+            extent = per_node if shards_count > 1 else total
+            shards.append(
+                RomShard(
+                    coordinate=RomCoordinate(node_id=node),
+                    region_offset=region_offset,
+                    bytes=extent,
+                    resource_address=start,
+                )
+            )
+            cursor[node] = start + extent
+            if shards_count > 1:
+                region_offset += extent
+        if len({shard.resource_address for shard in shards}) != 1:
+            # ABI 3.0's MEMORY_OBJECT carries ONE base address for every node,
+            # so a sharded region has to sit at the same offset in every node's
+            # resident window.  It does by construction -- every node takes the
+            # same extent from every region, in the same order -- and this is
+            # the assertion that keeps a future placement rule from quietly
+            # breaking it.
+            raise RomImageError(
+                f"resident region {request.key!r} lands at different offsets on "
+                "different nodes; the symmetric MEMORY_OBJECT states one base "
+                "address for every node"
+            )
+        regions.append(
+            RomRegion(
+                region_id=first_region_id + offset,
+                key=request.key,
+                role=request.role,
+                dtype=request.dtype,
+                coordinate=shards[0].coordinate,
+                base_address=shards[0].resource_address,
+                payload_bytes=payload_bytes,
+                pad_bytes=pad_bytes,
+                alignment=alignment,
+                slot_count=request.slot_count,
+                slot_bytes=request.slot_bytes,
+                slot_elements=request.element_count_per_slot,
+                members=request.members,
+                shards=tuple(shards),
+                content_digest=region_content_digest(
+                    key=request.key,
+                    payload_bytes=payload_bytes,
+                    pad_bytes=pad_bytes,
+                    slot_count=request.slot_count,
+                    slot_bytes=request.slot_bytes,
+                    members=request.members,
+                ),
+                pad_digest=_sha256(bytes(pad_bytes)),
+                residency="hbm",
+                row_bytes=int(request.row_bytes),
+                node_shards=shards_count,
+            )
+        )
+    worst = max(
+        (
+            max(
+                (s.resource_address + s.bytes for s in region.shards),
+                default=0,
+            )
+            for region in regions
+        ),
+        default=0,
+    )
+    if worst > policy.declared_bytes_per_node:
+        raise RomImageError(
+            f"the load-once resident HBM regions need {worst} bytes on one node "
+            f"and the capability declares a resident region of "
+            f"{policy.declared_bytes_per_node}"
+        )
+    return tuple(regions)
 
 
 def plan_rom_image(
@@ -739,8 +1095,17 @@ def plan_rom_image(
     policy: RomLayoutPolicy,
     defects: Sequence[DefectRecord] = (),
     notes: Mapping[str, Any] | None = None,
+    resident_requests: Sequence[RegionRequest] = (),
+    resident_policy: "ResidentHbmPolicy | None" = None,
 ) -> RomImagePlan:
-    """Lay out ``requests`` into aligned, sharded, digest-bound ROM regions."""
+    """Lay out ``requests`` into aligned, sharded, digest-bound ROM regions.
+
+    ``resident_requests`` are the load-once regions whose declared home is HBM.
+    They are planned by :func:`plan_resident_regions` into a separate list and
+    are deliberately *not* part of ``rom_bytes``: the whole point of the split
+    is that a byte priced in the capability's resident HBM region is not also a
+    byte of the mask image.
+    """
     policy.validate()
     seen_keys: set[str] = set()
     placed: dict[str, str] = {}
@@ -750,57 +1115,8 @@ def plan_rom_image(
     resources: dict[tuple[int, int, int, int], RomCoordinate] = {}
 
     for index, request in enumerate(requests):
-        if request.key in seen_keys:
-            raise RomImageError(f"duplicate ROM region key {request.key!r}")
-        seen_keys.add(request.key)
-        if not request.members:
-            raise RomImageError(f"ROM region {request.key!r} places no payload")
-        if request.dtype not in DTYPE_BY_NAME:
-            raise RomImageError(
-                f"ROM region {request.key!r} has unrepresentable dtype "
-                f"{request.dtype!r}"
-            )
+        payload_bytes = _validate_region_request(request, seen_keys, placed)
         slot_bytes = request.slot_bytes
-        if slot_bytes <= 0 or request.slot_count <= 0:
-            raise RomImageError(f"ROM region {request.key!r} has an empty slot")
-        covered = 0
-        for member in request.members:
-            if member.bytes <= 0:
-                raise RomImageError(
-                    f"ROM region {request.key!r} member {member.tensor_id!r} is empty"
-                )
-            if member.offset_bytes != covered:
-                raise RomImageError(
-                    f"ROM region {request.key!r} member {member.tensor_id!r} sits at "
-                    f"{member.offset_bytes}, expected {covered}; members must tile "
-                    "the region without gaps or overlap"
-                )
-            if member.slot != member.offset_bytes // slot_bytes:
-                raise RomImageError(
-                    f"ROM region {request.key!r} member {member.tensor_id!r} declares "
-                    f"slot {member.slot} but sits in slot "
-                    f"{member.offset_bytes // slot_bytes}"
-                )
-            if (member.offset_bytes + member.bytes - 1) // slot_bytes != member.slot:
-                raise RomImageError(
-                    f"ROM region {request.key!r} member {member.tensor_id!r} straddles "
-                    "a slot boundary"
-                )
-            if member.tensor_id in placed:
-                raise RomImageError(
-                    f"tensor {member.tensor_id!r} is placed twice: in "
-                    f"{placed[member.tensor_id]!r} and {request.key!r}"
-                )
-            placed[member.tensor_id] = request.key
-            covered += member.bytes
-        if covered != slot_bytes * request.slot_count:
-            raise RomImageError(
-                f"ROM region {request.key!r} members cover {covered} bytes but "
-                f"{request.slot_count} slots of {slot_bytes} need "
-                f"{slot_bytes * request.slot_count}"
-            )
-
-        payload_bytes = slot_bytes * request.slot_count
         total = _align_up(payload_bytes, policy.alignment_bytes)
         pad_bytes = total - payload_bytes
 
@@ -841,6 +1157,20 @@ def plan_rom_image(
             )
         )
 
+    resident_regions: tuple[RomRegion, ...] = ()
+    if resident_requests:
+        if resident_policy is None:
+            raise RomImageError(
+                "resident HBM regions were requested and the target declares no "
+                "resident placement policy"
+            )
+        resident_regions = plan_resident_regions(
+            requests=resident_requests,
+            policy=resident_policy,
+            seen_keys=seen_keys,
+            placed=placed,
+            first_region_id=len(regions),
+        )
     repair_map = plan_repair_map(regions, policy, defects)
     quarantined = {q.coordinate.resource_id for q in repair_map.quarantine}
     for region in regions:
@@ -858,6 +1188,7 @@ def plan_rom_image(
         regions=tuple(regions),
         repair_map=repair_map,
         notes=dict(notes or {}),
+        resident_regions=resident_regions,
     )
 
 
@@ -1012,6 +1343,78 @@ def node_sharded_region_source(region: RomRegion, shards: int) -> ObjectSource:
     return ObjectSource("node_segments", local, node_segments=tuple(node_segments))
 
 
+def row_sharded_region_source(
+    region: RomRegion,
+    shards: int,
+    *,
+    shard_digests: "Mapping[tuple[int, int], str] | None" = None,
+) -> ObjectSource:
+    """A28 ``node_segments`` source for a region split by *rows* across nodes.
+
+    ``node_sharded_region_source`` splits a region by whole *members*, which is
+    what a routed expert bank is: one member per expert.  A lookup table is one
+    member per slot and is divided inside it, so this splits each slot's byte
+    range into ``shards`` equal contiguous pieces, each a whole number of the
+    region's addressing rows.  The order is the region's own -- slot-major,
+    owner-minor -- which is the order
+    :func:`compiler.backends.rom.common.inverse._object_segments` reconstructs
+    a node-sharded object in, so the two derivations meet on the same bytes.
+    """
+    if shards <= 1:
+        return region_object_source(region)
+    slot_count = max(region.slot_count, 1)
+    if len(region.members) != slot_count:
+        raise RomImageError(
+            f"resident region {region.key!r} has {len(region.members)} members "
+            f"over {slot_count} slots; a row-sharded table is one member a slot"
+        )
+    if region.slot_bytes % shards:
+        raise RomImageError(
+            f"resident region {region.key!r} slot of {region.slot_bytes} bytes "
+            f"does not divide into {shards} equal node images"
+        )
+    per_node_per_slot = region.slot_bytes // shards
+    row = int(region.row_bytes)
+    if row and per_node_per_slot % row:
+        raise RomImageError(
+            f"resident region {region.key!r} would give a node "
+            f"{per_node_per_slot} bytes of a {row}-byte row table"
+        )
+    ordered = sorted(region.members, key=lambda m: m.offset_bytes)
+    node_segments: list[tuple[Segment, ...]] = []
+    for node in range(shards):
+        segments: list[Segment] = []
+        for slot, member in enumerate(ordered):
+            digest = (shard_digests or {}).get((slot, node))
+            if digest is None:
+                # A shard of a tensor is a byte range the checkpoint lock does
+                # not name: the lock authenticates whole tensors.  An
+                # unauthenticated range has no honest content identity, and
+                # ``ObjectSource.authenticated_content_digest`` refuses one, so
+                # the caller must supply the digest of every shard it asks for.
+                raise RomImageError(
+                    f"resident region {region.key!r} shard (slot {slot}, node "
+                    f"{node}) is a sub-range of tensor {member.tensor_id!r} and "
+                    "carries no authenticated digest; the checkpoint lock names "
+                    "whole tensors, so a row-sharded table must be authenticated "
+                    "range by range from the checkpoint bytes"
+                )
+            segments.append(
+                Segment(
+                    path=member.source_path,
+                    offset=member.source_offset + node * per_node_per_slot,
+                    bytes=per_node_per_slot,
+                    sha256=digest,
+                )
+            )
+        node_segments.append(tuple(segments))
+    return ObjectSource(
+        "node_segments",
+        per_node_per_slot * slot_count,
+        node_segments=tuple(node_segments),
+    )
+
+
 def emit_rom_objects(
     builder: DeploymentBuilder,
     plan: RomImagePlan,
@@ -1091,6 +1494,76 @@ def emit_rom_objects(
             )
             region.pad_object_id = pad_id
             ids[f"{region.key}.pad"] = pad_id
+    ids.update(
+        emit_resident_hbm_objects(builder, plan, permissions=permissions)
+    )
+    return ids
+
+
+def emit_resident_hbm_objects(
+    builder: DeploymentBuilder,
+    plan: RomImagePlan,
+    *,
+    permissions: int = ROM_PERMISSIONS,
+) -> dict[str, int]:
+    """Emit one immutable HBM memory object per resident region, plus its pad.
+
+    The storage class is the only thing that differs from a ROM region's
+    object.  The permissions are the same ``READ | IMMUTABLE`` -- load once,
+    never written, never committed to -- the content digest binds the same
+    ordered authenticated segments, and the region record the inverse proof
+    reads is the same record.  A resident region is a declared, checked,
+    digest-bound part of the deployment whose residency is HBM; it is not a
+    hole in the immutable image.
+    """
+    if permissions & (
+        Permission.WRITE | Permission.STATE_PREPARE | Permission.STATE_COMMIT
+    ):
+        raise RomImageError(
+            "a load-once resident object must not declare a write permission"
+        )
+    ids: dict[str, int] = {}
+    for region in plan.resident_regions:
+        shards = max(int(region.node_shards), 1)
+        if shards > 1:
+            source = row_sharded_region_source(region, shards)
+            size_bytes = region.payload_bytes // shards
+            node_id = NO_NODE
+        else:
+            source = region_object_source(region)
+            size_bytes = region.payload_bytes
+            node_id = region.coordinate.node_id
+        object_id = builder.memory_object(
+            storage_class=StorageClass.HBM,
+            size_bytes=size_bytes,
+            source=source,
+            permissions=permissions,
+            node_id=node_id,
+            bank_or_tile=NO_NODE,
+            base_address=region.base_address,
+            alignment_log2=max(region.alignment.bit_length() - 1, 0),
+            integrity_mode=IntegrityMode.CRC_AND_ECC,
+            content_digest=source.authenticated_content_digest(),
+            key=region.key,
+        )
+        region.object_id = object_id
+        ids[region.key] = object_id
+        if region.pad_bytes:
+            pad_id = builder.memory_object(
+                storage_class=StorageClass.HBM,
+                size_bytes=region.pad_bytes,
+                source=ObjectSource.zeros(region.pad_bytes),
+                permissions=permissions,
+                node_id=node_id,
+                bank_or_tile=NO_NODE,
+                base_address=region.base_address + region.payload_bytes,
+                alignment_log2=0,
+                integrity_mode=IntegrityMode.CRC_AND_ECC,
+                content_digest=bytes(32),
+                key=f"{region.key}.pad",
+            )
+            region.pad_object_id = pad_id
+            ids[f"{region.key}.pad"] = pad_id
     return ids
 
 
@@ -1126,10 +1599,14 @@ __all__ = [
     "RomLayoutPolicy",
     "RomMember",
     "RomRegion",
+    "ResidentHbmPolicy",
     "RomShard",
+    "emit_resident_hbm_objects",
     "emit_rom_objects",
     "plan_repair_map",
+    "plan_resident_regions",
     "plan_rom_image",
     "region_content_digest",
     "region_object_source",
+    "row_sharded_region_source",
 ]

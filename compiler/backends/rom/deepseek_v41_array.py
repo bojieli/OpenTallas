@@ -60,6 +60,19 @@ in the notes.  The off-node lookup a row-sharded table implies is NOT
 priced by the analytical point this target stands in for -- that point is the
 ``engram-host`` candidate -- and the notes say so.
 
+The bytes now go where that pricing says, rather than being priced in HBM and
+placed in ROM as well: the tables are planned as ``residency="hbm"`` regions of
+the same region plan (``ResidentHbmPolicy`` with ``node_shards`` = the node
+count), proved by the same inverse proof, and kept out of ``rom_bytes``.  What
+the released model then refuses is arithmetic, and it is the row rule: a shard
+must be a whole number of the table's addressing rows, because a row split
+across two nodes has no owner, and 384,006,168 and 384,016,682 rows over 64
+nodes leave 24 and 42.  The admissible forms are a bulk-plus-tail split -- whose
+tail node then reserves 3,168,111,408 bytes against the 3,168,094,257 this
+capability declares, because that number is ``ceil(total / nodes)`` and assumes
+an even division -- or a node count that divides the row counts.  Both are
+capability re-derivations, so neither is taken here.
+
 **3.  The topology is ``CLUSTER_N`` and the fabric is declared beside it.**
 ``CLUSTER_32`` means exactly 32 nodes and cannot be widened (four shipped
 capability records name it), so the class is AM-R1's ``CLUSTER_N``; its
@@ -97,6 +110,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from compiler.backends.rom.common.image import (
     DefectRecord,
+    ResidentHbmPolicy,
     RomImagePlan,
 )
 from compiler.backends.rom.common.program import (
@@ -110,7 +124,7 @@ from compiler.backends.rom.deepseek_v4 import (
 #: The wafer and the array are two TARGETS of one product, exactly as they are
 #: for V4, so the product string has one owner: WP-E's wafer backend.  The V4
 #: array imports ``PRODUCT`` from ``deepseek_v4`` for the same reason.
-from compiler.backends.rom.deepseek_v41 import PRODUCT
+from compiler.backends.rom.deepseek_v41 import PRODUCT, resident_hbm_region
 from compiler.backends.rom.deepseek_v4_array import (
     CAPABILITY_FEATURES,
     CLUSTER_ENGINES,
@@ -797,6 +811,7 @@ def deepseek_v41_array_rom_policy(
     engram_placement: str = DEFAULT_ENGRAM_PLACEMENT,
     hbm_bytes_per_node: int = HBM_BYTES,
     new_token_budget_cap: int | None = None,
+    resident_hbm: ResidentHbmPolicy | None = None,
     target_id: str = TARGET_ID,
     notes: Mapping[str, Any] | None = None,
 ) -> tuple[RomTargetPolicy, _ArrayPlacer]:
@@ -855,6 +870,7 @@ def deepseek_v41_array_rom_policy(
         bank_shards=node_count,
         node_sharded_roles=SHARDED_ROLES,
         new_token_budget_cap=new_token_budget_cap,
+        resident_hbm=resident_hbm,
         notes={
             "host_submission": f"one submission targets the whole {node_count}-node array",
             "partition": geometry["partition"],
@@ -907,6 +923,28 @@ def build_deepseek_v41_array_rom_deployment(
         )
     hbm_bytes_per_node = int(capability.memory["hbm"]["bytes"])
     resident = int(capability.memory["hbm"].get("resident_region_bytes", 0))
+    # The Engram tables are off ROM (plan section 3.2), and "off ROM" has to
+    # name where they are instead.  When the capability prices a resident
+    # region, that is where: the tables are row-sharded across the array as
+    # load-once read-only HBM regions of the same plan, one node's rows on one
+    # node.  The set is derived structurally by the wafer backend's own
+    # ``resident_hbm_region`` -- a checkpoint-bound weight of a *layered*
+    # embedding lookup -- rather than by the tensor-name marker, so the two
+    # targets recognise the same tables by the same rule; the marker stays as
+    # ``engram_tables_are_off_rom``'s independent second opinion.
+    residency = resident_hbm_region(graph)
+    resident_policy = (
+        ResidentHbmPolicy(
+            tensors=frozenset(
+                member["tensor_id"] for member in residency["members"]
+            ),
+            node_shards=node_count,
+            declared_bytes_per_node=resident,
+            alignment_bytes=alignment_bytes,
+        )
+        if resident and residency["members"]
+        else None
+    )
     policy, _placer = deepseek_v41_array_rom_policy(
         defects=defects,
         node_count=node_count,
@@ -920,6 +958,7 @@ def build_deepseek_v41_array_rom_deployment(
         routed_experts=int(capability.limits["max_expert_ids"]),
         engram_placement=engram_placement,
         hbm_bytes_per_node=hbm_bytes_per_node,
+        resident_hbm=resident_policy,
         notes=notes,
         target_id=target_id,
     )
@@ -1041,6 +1080,21 @@ def build_deepseek_v41_array_rom_deployment(
         "engram": geometry["engram"],
     }
     lowering.builder.notes["array_geometry"] = geometry
+    lowering.builder.notes["resident_hbm_region"] = {
+        **residency,
+        "declared_bytes_per_node": resident,
+        "node_shards": node_count if resident_policy else 0,
+        "placement": (
+            "row_sharded_node_local_hbm" if resident_policy else engram_placement
+        ),
+        "planned_bytes": plan.resident_bytes,
+        "planned_bytes_per_node": {
+            str(node): used for node, used in plan.resident_bytes_per_node.items()
+        },
+        "planned_region_count": len(plan.resident_regions),
+        "rom_bytes_without_it": plan.rom_bytes,
+        "storage_class": StorageClass.HBM.name if resident_policy else "host",
+    }
     deployment = lowering.build()
     footprint = deployment.notes.get("memory_footprint", {})
     session = int(footprint.get("session_bytes_in_hbm", 0))
