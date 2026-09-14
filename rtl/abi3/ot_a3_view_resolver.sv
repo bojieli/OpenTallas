@@ -226,7 +226,12 @@ module ot_a3_view_resolver
     //: on the check that refused.  A bare trap class does not distinguish
     //: them, and narrowing by reading descriptors is guesswork.
     reg trace_resolver_faults = 1'b0;
+`ifndef YOSYS
+    // Yosys 0.68 has no $test$plusargs and refuses the whole file on it, so
+    // the simulation-only plusarg probe is hidden from synthesis; trace_resolver_faults
+    // keeps its 1'b0 initialiser there and every trace branch folds away.
     initial if ($test$plusargs("OT_RESOLVER_TRACE")) trace_resolver_faults = 1'b1;
+`endif
 
     // -- TENSOR_VIEW payload view (runtime/abi3/descriptors.TENSOR_VIEW_PAYLOAD)
     // dtype@0 rank@1 layout_class@2 dynamic_term_count@3, element_offset@16,
@@ -575,8 +580,11 @@ module ot_a3_view_resolver
                                 //: that separates four different configuration mistakes. Reporting it
                                 //: under a plusarg costs nothing and turns a bare trap class into an
                                 //: answer.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                                 if (trace_resolver_faults)
                                     $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 1, term_index, term_kind);
+`endif
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else if (FAST_WALK_ON) begin
                                 // What S_SELECT would decide next cycle, made
@@ -627,8 +635,11 @@ module ot_a3_view_resolver
                             //: that separates four different configuration mistakes. Reporting it
                             //: under a plusarg costs nothing and turns a bare trap class into an
                             //: answer.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_resolver_faults)
                                 $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 2, term_index, term_kind);
+`endif
                             fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end else begin
                             value <= loop_query_value;
@@ -666,8 +677,11 @@ module ot_a3_view_resolver
                                 //: that separates four different configuration mistakes. Reporting it
                                 //: under a plusarg costs nothing and turns a bare trap class into an
                                 //: answer.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                                 if (trace_resolver_faults)
                                     $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 3, term_index, term_kind);
+`endif
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= loop_query_value;
@@ -688,8 +702,11 @@ module ot_a3_view_resolver
                                 //: that separates four different configuration mistakes. Reporting it
                                 //: under a plusarg costs nothing and turns a bare trap class into an
                                 //: answer.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                                 if (trace_resolver_faults)
                                     $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 4, term_index, term_kind);
+`endif
                                 fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                             end else begin
                                 value <= sym_value[31:0];
@@ -706,8 +723,11 @@ module ot_a3_view_resolver
                             //: that separates four different configuration mistakes. Reporting it
                             //: under a plusarg costs nothing and turns a bare trap class into an
                             //: answer.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_resolver_faults)
                                 $display("OT_RESOLVER_FAULT site=%0d term=%0d kind=%0d", 5, term_index, term_kind);
+`endif
                             fail_closed(ot_a3_pkg::A3_TRAP_MEMORY);
                         end
                     end

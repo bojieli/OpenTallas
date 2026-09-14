@@ -157,6 +157,18 @@ module ot_a3_lane_pipelined #(
     localparam [2:0]   L3 = ADDER_STAGES;
     localparam [3:0]   L_WAIT = ADDER_STAGES - 1;
 
+    // In-flight lane-ops are bounded by the pipeline itself, not by the
+    // address space: a token occupies exactly one of the eight front-end
+    // registers (tok_i, tok_r, tok_u, tok_m, tok_ge, tok_ga, tok_gs, tok_g)
+    // or one of the L adder-stage registers tok_a[0..L-1], counted from the
+    // cycle it enters tok_i to the cycle it leaves tok_a[L-1], so the count
+    // never exceeds STAGE_COUNT.  The counter is sized from that bound; it
+    // was 32 bits wide, and the 32-bit borrow chain of
+    // inflight - 1 + can_issue was the second-longest path in the lane
+    // (about 32 MAJx2 carry cells, 1,320 ps, OpenSTA report_checks).
+    localparam integer STAGE_COUNT   = 8 + L;
+    localparam integer INFLIGHT_BITS = $clog2(STAGE_COUNT + 1);
+
     localparam [7:0] ERR_NONE  = ot_a3_lane_pkg::ERR_NONE;
     localparam [7:0] ERR_SHAPE = ot_a3_lane_pkg::ERR_SHAPE;
     localparam [7:0] DETAIL_NONE             = ot_a3_lane_pkg::DETAIL_NONE;
@@ -193,18 +205,32 @@ module ot_a3_lane_pipelined #(
     reg [1:0]  group_shift;     // log2(group)
     reg        swap_ab;         // E2M1 operand is B: it takes the narrow side
     reg [15:0] depth_words;     // ceil(depth / group)
-    reg [15:0] kg_count;        // k-groups per column
     reg [2:0]  tail_valid;      // elements valid in the last k-group
+    // Every bound the issue walk compares against is latched once per
+    // operation, so its decrement is latched with it and the per-cycle
+    // comparison is a register-against-register equality instead of an
+    // increment feeding a comparator.  Each removed increment was a 16-bit
+    // carry chain in series with the decision cascade it feeds; the cascade
+    // was this lane's critical path once the flush fanout was cut (58 gates,
+    // 2,039 ps, OpenSTA report_checks on the mapped netlist).  shape_ok
+    // refuses rows, cols or depth equal to zero, so kg_count, rows_r and
+    // cols_r are at least one whenever the walk runs and the decrement does
+    // not underflow; bw_a and bw_b are zero for an unscaled side and carry
+    // their own non-zero flag, which is what the old one-bit-wider compare
+    // expressed.
+    reg [15:0] kg_count_m1;     // kg_count - 1
+    reg [15:0] rows_r_m1;       // rows_r - 1
+    reg [15:0] rpb_a_m1, rpb_b_m1;
+    reg [15:0] bw_a_m1, bw_b_m1;
+    reg        bw_a_nz, bw_b_nz;
     reg        faulted;
     reg [7:0]  dtype_a_r, dtype_b_r;
     reg        scale_a_r, scale_b_r, out_fp32_r;
-    reg [15:0] rows_r, cols_r;
+    reg [15:0] cols_r;
     reg [31:0] b_base_r, scale_a_base_r, scale_b_base_r;
 
     // -- scale geometry, from the admission unit ---------------------------------
-    reg [15:0] rpb_a, rpb_b;    // rows (columns) per scale block, >= 1
     reg [15:0] cpr_a, cpr_b;    // codes per row of blocks: depth / block (0 when unscaled)
-    reg [15:0] bw_a, bw_b;      // k-groups per scale block: block / g (0 when unscaled)
 
     // -- admission divider: depth / block, restoring, one bit per cycle ----------
     reg [4:0]  div_step;
@@ -215,11 +241,15 @@ module ot_a3_lane_pipelined #(
     // -- issue counters ----------------------------------------------------------
     reg [15:0] row;
     reg [15:0] pass_col0;
+    // cols_r - pass_col0 carried as state rather than subtracted every cycle:
+    // the subtraction was the first carry chain of the issue decision cascade
+    // and fed both n_active and the end-of-row test.
+    reg [15:0] cols_left;
     reg [15:0] kg;
     reg [2:0]  col_i;
     reg        issue_active;
     reg [3:0]  slot_wait [0:ACC_SLOTS-1];
-    reg [31:0] inflight;
+    reg [INFLIGHT_BITS-1:0] inflight;
 
     // -- address walk (adders only) ----------------------------------------------
     reg [31:0] a_row_base;                  // cfg_a_base + row * depth_words
@@ -332,9 +362,16 @@ module ot_a3_lane_pipelined #(
     // ---------------------------------------------------------------------------
     // Issue
     // ---------------------------------------------------------------------------
-    wire [15:0] cols_left = cols_r - pass_col0;
     wire [2:0]  n_active  = (cols_left >= L16) ? L3 : cols_left[2:0];
-    wire        last_kg   = (kg + 16'd1 == kg_count);
+    wire        last_kg   = (kg == kg_count_m1);
+    // End of row.  It was (pass_col0 + n_active >= cols_r), an adder whose
+    // carry chain started at n_active, which itself started at the
+    // cols_r - pass_col0 subtraction: three chains in series.  It is exactly
+    // (cols_left <= L).  When cols_left >= L, n_active = L and
+    // pass_col0 + L >= cols_r reduces to L >= cols_left, i.e. cols_left == L;
+    // when cols_left < L, n_active = cols_left and pass_col0 + cols_left is
+    // cols_r, so the test is true, and cols_left <= L holds as well.
+    wire        row_end   = (cols_left <= L16);
     wire [15:0] column    = pass_col0 + {13'b0, col_i};
     wire        open_col  = (kg == 16'd0);   // first k-group: the column is opened from the cursor
     wire        can_issue = (state == S_RUN) && issue_active && !faulted &&
@@ -343,10 +380,10 @@ module ot_a3_lane_pipelined #(
     wire [31:0] b_col_now     = open_col ? b_col_cursor    : b_col_base[col_idx];
     wire [31:0] col_scale_now = open_col ? col_cur_scale_b : col_scale_b[col_idx];
     // Counter wraps, compared one bit wider so that a zero bound never wraps.
-    wire        row_wrap_a = ({1'b0, row_in_block_a} + 17'd1) == {1'b0, rpb_a};
-    wire        col_wrap_b = ({1'b0, col_cur_in_block_b} + 17'd1) == {1'b0, rpb_b};
-    wire        kg_wrap_a  = ({1'b0, kg_in_block_a} + 17'd1) == {1'b0, bw_a};
-    wire        kg_wrap_b  = ({1'b0, kg_in_block_b} + 17'd1) == {1'b0, bw_b};
+    wire        row_wrap_a = (row_in_block_a == rpb_a_m1);
+    wire        col_wrap_b = (col_cur_in_block_b == rpb_b_m1);
+    wire        kg_wrap_a  = bw_a_nz && (kg_in_block_a == bw_a_m1);
+    wire        kg_wrap_b  = bw_b_nz && (kg_in_block_b == bw_b_m1);
 
     // tok_ge, tok_ga and tok_gs are the group block's three internal stages;
     // tok_g is still the token at the group registers the adder reads.
@@ -878,7 +915,14 @@ module ot_a3_lane_pipelined #(
             group_shift <= 2'd0;
             swap_ab <= 1'b0;
             depth_words <= 16'b0;
-            kg_count <= 16'b0;
+            kg_count_m1 <= 16'hffff;
+            rows_r_m1 <= 16'hffff;
+            rpb_a_m1 <= 16'b0;
+            rpb_b_m1 <= 16'b0;
+            bw_a_m1 <= 16'b0;
+            bw_b_m1 <= 16'b0;
+            bw_a_nz <= 1'b0;
+            bw_b_nz <= 1'b0;
             tail_valid <= 3'd1;
             faulted <= 1'b0;
             dtype_a_r <= 8'b0;
@@ -886,17 +930,12 @@ module ot_a3_lane_pipelined #(
             scale_a_r <= 1'b0;
             scale_b_r <= 1'b0;
             out_fp32_r <= 1'b0;
-            rows_r <= 16'b0;
             cols_r <= 16'b0;
             b_base_r <= 32'b0;
             scale_a_base_r <= 32'b0;
             scale_b_base_r <= 32'b0;
-            rpb_a <= 16'd1;
-            rpb_b <= 16'd1;
             cpr_a <= 16'b0;
             cpr_b <= 16'b0;
-            bw_a <= 16'b0;
-            bw_b <= 16'b0;
             div_step <= 5'b0;
             div_n <= 16'b0;
             div_r_a <= 16'b0;
@@ -905,10 +944,11 @@ module ot_a3_lane_pipelined #(
             div_q_b <= 16'b0;
             row <= 16'b0;
             pass_col0 <= 16'b0;
+            cols_left <= 16'b0;
             kg <= 16'b0;
             col_i <= 3'b0;
             issue_active <= 1'b0;
-            inflight <= 32'b0;
+            inflight <= {INFLIGHT_BITS{1'b0}};
             a_row_base <= 32'b0;
             out_row_base <= 32'b0;
             b_col_cursor <= 32'b0;
@@ -1058,7 +1098,7 @@ module ot_a3_lane_pipelined #(
                                     out_row_base + {16'b0, column},
                                     DETAIL_NONE);
                 slot_wait[col_i] <= L_WAIT;
-                inflight <= inflight + 32'd1;
+                inflight <= inflight + {{(INFLIGHT_BITS-1){1'b0}}, 1'b1};
                 if (open_col) begin
                     // The column is opened: keep its bases for the later
                     // k-groups and step the cursor to the next column.
@@ -1080,14 +1120,15 @@ module ot_a3_lane_pipelined #(
                         kg_in_block_b <= 16'd0;
                         k_scale_a <= 16'd0;
                         k_scale_b <= 16'd0;
-                        if (pass_col0 + {13'b0, n_active} >= cols_r) begin
+                        if (row_end) begin
                             // End of the row: the column cursor returns to
                             // column 0 (this overrides the step above).
                             pass_col0 <= 16'd0;
+                            cols_left <= cols_r;
                             b_col_cursor <= b_base_r;
                             col_cur_in_block_b <= 16'd0;
                             col_cur_scale_b <= 32'b0;
-                            if (row + 16'd1 == rows_r) begin
+                            if (row == rows_r_m1) begin
                                 issue_active <= 1'b0;
                             end else begin
                                 row <= row + 16'd1;
@@ -1102,6 +1143,7 @@ module ot_a3_lane_pipelined #(
                             end
                         end else begin
                             pass_col0 <= pass_col0 + {13'b0, n_active};
+                            cols_left <= cols_left - {13'b0, n_active};
                         end
                     end else begin
                         kg <= kg + 16'd1;
@@ -1130,17 +1172,30 @@ module ot_a3_lane_pipelined #(
                     error_code <= ot_a3_lane_pkg::error_code_of_detail(wb_detail);
                     error_detail <= wb_detail;
                     issue_active <= 1'b0;
-                    inflight <= 32'b0;
-                    tok_i <= {TOKEN_BITS{1'b0}};
-                    tok_r <= {TOKEN_BITS{1'b0}};
-                    tok_u <= {TOKEN_BITS{1'b0}};
-                    tok_m <= {TOKEN_BITS{1'b0}};
-                    tok_ge <= {TOKEN_BITS{1'b0}};
-                    tok_ga <= {TOKEN_BITS{1'b0}};
-                    tok_gs <= {TOKEN_BITS{1'b0}};
-                    tok_g <= {TOKEN_BITS{1'b0}};
+                    inflight <= {INFLIGHT_BITS{1'b0}};
+                    // The flush kills every token in flight by clearing its
+                    // VALID bit alone, not all TOKEN_BITS of it.  A token
+                    // whose valid bit is zero is inert: every consumer of a
+                    // token's slot, first, last, nvalid, address and detail
+                    // fields is gated by token_valid (writeback, the output
+                    // port, every counter) or by !faulted (issue), so the
+                    // stale payload that now rides the dead token cannot
+                    // reach an output.  Clearing one bit per token register
+                    // instead of TOKEN_BITS puts 11 loads on the flush term
+                    // where all TOKEN_BITS x 11 of them used to be; that net
+                    // was this lane's critical path (a NOR2x1 driving 443
+                    // loads, 1,796 ps of the 2,331 ps path, measured by
+                    // OpenSTA report_checks on the mapped netlist).
+                    tok_i[TOKEN_BITS-1] <= 1'b0;
+                    tok_r[TOKEN_BITS-1] <= 1'b0;
+                    tok_u[TOKEN_BITS-1] <= 1'b0;
+                    tok_m[TOKEN_BITS-1] <= 1'b0;
+                    tok_ge[TOKEN_BITS-1] <= 1'b0;
+                    tok_ga[TOKEN_BITS-1] <= 1'b0;
+                    tok_gs[TOKEN_BITS-1] <= 1'b0;
+                    tok_g[TOKEN_BITS-1] <= 1'b0;
                     for (si = 0; si < L; si = si + 1)
-                        tok_a[si] <= {TOKEN_BITS{1'b0}};
+                        tok_a[si][TOKEN_BITS-1] <= 1'b0;
                     a_rd_en <= 1'b0;
                     b_rd_en <= 1'b0;
                     s_rd_en <= 1'b0;
@@ -1151,7 +1206,8 @@ module ot_a3_lane_pipelined #(
                     mac_count <= mac_count + 32'd1;
                     product_count <= product_count + {29'b0, token_nvalid(wb_token)};
                     op_retire <= 1'b1;
-                    inflight <= inflight - 32'd1 + (can_issue ? 32'd1 : 32'd0);
+                    inflight <= inflight - {{(INFLIGHT_BITS-1){1'b0}}, 1'b1}
+                                + {{(INFLIGHT_BITS-1){1'b0}}, can_issue};
                     if (token_last(wb_token)) begin
                         out_we <= 1'b1;
                         out_addr <= token_address(wb_token);
@@ -1178,9 +1234,10 @@ module ot_a3_lane_pipelined #(
                         faulted <= 1'b0;
                         row <= 16'b0;
                         pass_col0 <= 16'b0;
+                        cols_left <= cfg_cols;
                         kg <= 16'b0;
                         col_i <= 3'b0;
-                        inflight <= 32'b0;
+                        inflight <= {INFLIGHT_BITS{1'b0}};
                         for (si = 0; si < ACC_SLOTS; si = si + 1)
                             slot_wait[si] <= 4'd0;
                         // Sample the configuration; the divisibility rules
@@ -1190,7 +1247,7 @@ module ot_a3_lane_pipelined #(
                         scale_a_r <= cfg_scale_a;
                         scale_b_r <= cfg_scale_b;
                         out_fp32_r <= cfg_out_fp32;
-                        rows_r <= cfg_rows;
+                        rows_r_m1 <= cfg_rows - 16'd1;
                         cols_r <= cfg_cols;
                         b_base_r <= cfg_b_base;
                         scale_a_base_r <= cfg_scale_a_base;
@@ -1199,19 +1256,19 @@ module ot_a3_lane_pipelined #(
                             8'd2: begin
                                 mode <= 2'd1; group <= 3'd2; group_shift <= 2'd1;
                                 depth_words <= (cfg_depth + 16'd1) >> 1;
-                                kg_count <= (cfg_depth + 16'd1) >> 1;
+                                kg_count_m1 <= ((cfg_depth + 16'd1) >> 1) - 16'd1;
                                 tail_valid <= (cfg_depth[0] == 1'b0) ? 3'd2 : 3'd1;
                             end
                             8'd4: begin
                                 mode <= 2'd2; group <= 3'd4; group_shift <= 2'd2;
                                 depth_words <= (cfg_depth + 16'd3) >> 2;
-                                kg_count <= (cfg_depth + 16'd3) >> 2;
+                                kg_count_m1 <= ((cfg_depth + 16'd3) >> 2) - 16'd1;
                                 tail_valid <= (cfg_depth[1:0] == 2'b00) ? 3'd4 : {1'b0, cfg_depth[1:0]};
                             end
                             default: begin
                                 mode <= 2'd0; group <= 3'd1; group_shift <= 2'd0;
                                 depth_words <= cfg_depth;
-                                kg_count <= cfg_depth;
+                                kg_count_m1 <= cfg_depth - 16'd1;
                                 tail_valid <= 3'd1;
                             end
                         endcase
@@ -1245,12 +1302,16 @@ module ot_a3_lane_pipelined #(
                     end else begin
                         // Registered geometry for the walk; an unscaled side
                         // holds its scale address at the base.
-                        rpb_a <= (cfg_block_rows_a == 16'd0) ? 16'd1 : cfg_block_rows_a;
-                        rpb_b <= (cfg_block_rows_b == 16'd0) ? 16'd1 : cfg_block_rows_b;
+                        rpb_a_m1 <= ((cfg_block_rows_a == 16'd0)
+                                     ? 16'd1 : cfg_block_rows_a) - 16'd1;
+                        rpb_b_m1 <= ((cfg_block_rows_b == 16'd0)
+                                     ? 16'd1 : cfg_block_rows_b) - 16'd1;
                         cpr_a <= cfg_scale_a ? div_q_a : 16'd0;
                         cpr_b <= cfg_scale_b ? div_q_b : 16'd0;
-                        bw_a <= cfg_scale_a ? (cfg_block_a >> group_shift) : 16'd0;
-                        bw_b <= cfg_scale_b ? (cfg_block_b >> group_shift) : 16'd0;
+                        bw_a_m1 <= (cfg_scale_a ? (cfg_block_a >> group_shift) : 16'd0) - 16'd1;
+                        bw_b_m1 <= (cfg_scale_b ? (cfg_block_b >> group_shift) : 16'd0) - 16'd1;
+                        bw_a_nz <= cfg_scale_a && ((cfg_block_a >> group_shift) != 16'd0);
+                        bw_b_nz <= cfg_scale_b && ((cfg_block_b >> group_shift) != 16'd0);
                         a_row_base <= cfg_a_base;
                         out_row_base <= cfg_out_base;
                         b_col_cursor <= cfg_b_base;
@@ -1268,7 +1329,7 @@ module ot_a3_lane_pipelined #(
                 end
 
                 S_RUN: begin
-                    if (!issue_active && (inflight == 32'd0) && !faulted &&
+                    if (!issue_active && (inflight == {INFLIGHT_BITS{1'b0}}) && !faulted &&
                         !wb_valid && !can_issue)
                         state <= S_DONE;
                 end

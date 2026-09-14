@@ -120,10 +120,10 @@ module ot_a3_lq8 #(
     output wire [LANES-1:0]   lane_done,
     output wire [LANES-1:0]   op_retire,   // one pulse per lane per retired lane-op
     output reg  [$clog2(LANES+1)-1:0] retire_count,  // lanes retiring this cycle
-    output reg  [31:0] out_count,          // sums over the lanes
-    output reg  [31:0] saturation_count,
-    output reg  [31:0] mac_count,
-    output reg  [31:0] product_count
+    output wire [31:0] out_count,          // sums over the lanes
+    output wire [31:0] saturation_count,
+    output wire [31:0] mac_count,
+    output wire [31:0] product_count
 );
     localparam integer LOG_LANES = $clog2(LANES);
 
@@ -187,7 +187,16 @@ module ot_a3_lq8 #(
                 .cfg_scale_a(cfg_scale_a), .cfg_scale_b(cfg_scale_b),
                 .cfg_block_a(cfg_block_a), .cfg_block_b(cfg_block_b),
                 .cfg_block_rows_a(cfg_block_rows_a), .cfg_block_rows_b(16'd0),
-                .cfg_scale_a_base(cfg_scale_a_base), .cfg_scale_b_base(32'b0),
+                // The weight-scale table base goes to the lanes, not to an
+                // adder on the block's output.  The lane already forms
+                // scale_b_base_r + col_scale_b + k_scale_b into a register, so
+                // ws_rd_addr becomes the selected lane's own t_rd_addr and the
+                // 32-bit add that used to sit after the request select
+                // disappears; addition is associative modulo 2^32, so the
+                // address sequence is unchanged.  That output path measured
+                // 1,761 ps, the worst of the block's outputs (OpenSTA
+                // report_checks on the mapped netlist).
+                .cfg_scale_a_base(cfg_scale_a_base), .cfg_scale_b_base(cfg_ws_base),
                 .cfg_out_base(cfg_out_base), .cfg_out_fp32(cfg_out_fp32),
                 .a_rd_en(l_a_en[gi]), .a_rd_addr(l_a_addr[32*gi +: 32]), .a_rd_data(a_rd_data),
                 .b_rd_en(l_b_en[gi]), .b_rd_addr(l_b_addr[32*gi +: 32]),
@@ -217,21 +226,26 @@ module ot_a3_lq8 #(
     /* verilator lint_on UNUSEDSIGNAL */
 
     // -- shared request: the lowest-numbered requesting lane speaks for all ------
+    // The selection was a descending priority for-loop, which elaborates to
+    // LANES levels of 32-bit multiplexer in series and cannot be rebalanced
+    // because a priority chain is not associative.  It is the same function as
+    // a one-hot AND-OR read: isolate the lowest set bit of the request vector
+    // (l_a_en & -l_a_en, an LANES-bit carry chain off the critical path), mask
+    // each lane's address with its own bit and OR the masked terms.  OR is
+    // associative, so the synthesiser is free to build a LOG_LANES-deep tree.
+    wire [LANES-1:0] a_en_lowest = l_a_en & (~l_a_en + {{(LANES-1){1'b0}}, 1'b1});
     reg         sel_valid;
     reg  [31:0] sel_a_addr, sel_s_addr, sel_t_addr;
     integer     li;
     always @* begin
-        sel_valid = 1'b0;
+        sel_valid = |l_a_en;
         sel_a_addr = 32'b0;
         sel_s_addr = 32'b0;
         sel_t_addr = 32'b0;
-        for (li = LANES - 1; li >= 0; li = li - 1) begin
-            if (l_a_en[li]) begin
-                sel_valid = 1'b1;
-                sel_a_addr = l_a_addr[32*li +: 32];
-                sel_s_addr = l_s_addr[32*li +: 32];
-                sel_t_addr = l_t_addr[32*li +: 32];
-            end
+        for (li = 0; li < LANES; li = li + 1) begin
+            sel_a_addr = sel_a_addr | ({32{a_en_lowest[li]}} & l_a_addr[32*li +: 32]);
+            sel_s_addr = sel_s_addr | ({32{a_en_lowest[li]}} & l_s_addr[32*li +: 32]);
+            sel_t_addr = sel_t_addr | ({32{a_en_lowest[li]}} & l_t_addr[32*li +: 32]);
         end
     end
 
@@ -242,32 +256,49 @@ module ot_a3_lq8 #(
     assign w_rd_en    = sel_valid;
     assign w_rd_addr  = w_ptr;
     assign ws_rd_en   = sel_valid && cfg_scale_b;
-    assign ws_rd_addr = cfg_ws_base + sel_t_addr;
+    assign ws_rd_addr = sel_t_addr;   // the lane already added cfg_ws_base
 
     // -- block counters: sums of the lanes' registered counters ------------------
     // The lanes clear their counters and classes only when they are started;
     // after a block-level refusal they still hold the previous operation's
     // values, so everything read from them is gated by lanes_started and a
     // refused operation reports zero counters and no lane class.
+    //
+    // Each sum was an accumulating for-loop: LANES 32-bit additions in series,
+    // so LANES - 1 carry chains end to end on a block output.  Measured on the
+    // mapped netlist, those four paths arrived at 1,556 to 1,657 ps, second
+    // only to the weight-scale address.  The same sum as a balanced tree is
+    // LOG_LANES carry chains deep; integer addition is associative, so every
+    // bit of the total is unchanged.  The tree lives in a heap array: leaf
+    // LANES + i holds lane i, node n holds node 2n + node 2n+1, and node 1 is
+    // the total.
+    wire [31:0] oc_t [1:2*LANES-1];
+    wire [31:0] sc_t [1:2*LANES-1];
+    wire [31:0] mc_t [1:2*LANES-1];
+    wire [31:0] pc_t [1:2*LANES-1];
+    wire [LOG_LANES:0] rc_t [1:2*LANES-1];
+    generate
+        for (gi = LANES; gi < 2 * LANES; gi = gi + 1) begin : gen_sum_leaf
+            assign oc_t[gi] = l_out_count[32*(gi-LANES) +: 32];
+            assign sc_t[gi] = l_saturation_count[32*(gi-LANES) +: 32];
+            assign mc_t[gi] = l_mac_count[32*(gi-LANES) +: 32];
+            assign pc_t[gi] = l_product_count[32*(gi-LANES) +: 32];
+            assign rc_t[gi] = {{LOG_LANES{1'b0}}, op_retire[gi-LANES]};
+        end
+        for (gi = 1; gi < LANES; gi = gi + 1) begin : gen_sum_node
+            assign oc_t[gi] = oc_t[2*gi] + oc_t[2*gi+1];
+            assign sc_t[gi] = sc_t[2*gi] + sc_t[2*gi+1];
+            assign mc_t[gi] = mc_t[2*gi] + mc_t[2*gi+1];
+            assign pc_t[gi] = pc_t[2*gi] + pc_t[2*gi+1];
+            assign rc_t[gi] = rc_t[2*gi] + rc_t[2*gi+1];
+        end
+    endgenerate
+    assign out_count        = lanes_started ? oc_t[1] : 32'b0;
+    assign saturation_count = lanes_started ? sc_t[1] : 32'b0;
+    assign mac_count        = lanes_started ? mc_t[1] : 32'b0;
+    assign product_count    = lanes_started ? pc_t[1] : 32'b0;
     always @* begin
-        out_count = 32'b0;
-        saturation_count = 32'b0;
-        mac_count = 32'b0;
-        product_count = 32'b0;
-        retire_count = {$clog2(LANES+1){1'b0}};
-        for (li = 0; li < LANES; li = li + 1) begin
-            out_count = out_count + l_out_count[32*li +: 32];
-            saturation_count = saturation_count + l_saturation_count[32*li +: 32];
-            mac_count = mac_count + l_mac_count[32*li +: 32];
-            product_count = product_count + l_product_count[32*li +: 32];
-            retire_count = retire_count + {{($clog2(LANES+1)-1){1'b0}}, op_retire[li]};
-        end
-        if (!lanes_started) begin
-            out_count = 32'b0;
-            saturation_count = 32'b0;
-            mac_count = 32'b0;
-            product_count = 32'b0;
-        end
+        retire_count = rc_t[1];
     end
     assign lane_error_code   = lanes_started ? l_error_code   : {8*LANES{1'b0}};
     assign lane_error_detail = lanes_started ? l_error_detail : {8*LANES{1'b0}};

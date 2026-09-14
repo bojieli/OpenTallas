@@ -393,7 +393,12 @@ module ot_a3_engine_issue_bridge #(
     //: latched, because twice a predicate looked satisfiable on paper and the
     //: register feeding it was a state behind.
     reg trace_bridge = 1'b0;
+`ifndef YOSYS
+    // Yosys 0.68 has no $test$plusargs and refuses the whole file on it, so
+    // the simulation-only plusarg probe is hidden from synthesis; trace_bridge
+    // keeps its 1'b0 initialiser there and every trace branch folds away.
     initial if ($test$plusargs("OT_BRIDGE_TRACE")) trace_bridge = 1'b1;
+`endif
 
     localparam [31:0] NO_ID = 32'hffff_ffff;
     localparam [31:0] DESC_MAGIC = 32'h4433_4154;
@@ -1839,7 +1844,9 @@ module ot_a3_engine_issue_bridge #(
                                 // fetched, decoded or launched.
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 1);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else if (!(((issue_family == FAMILY_DMA) &&
@@ -1925,7 +1932,9 @@ module ot_a3_engine_issue_bridge #(
                             if (!mapped_operator_ok) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 2);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -1983,7 +1992,9 @@ module ot_a3_engine_issue_bridge #(
                                 (captured_id[4] != desc_data[863:832])) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 3);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2036,7 +2047,9 @@ module ot_a3_engine_issue_bridge #(
                                 !span_admitted) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 4);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2067,7 +2080,9 @@ module ot_a3_engine_issue_bridge #(
                                  (op_aux0 != desc_view_dim1))) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 5);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2101,7 +2116,9 @@ module ot_a3_engine_issue_bridge #(
                             if (!mapped_view_header_ok) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 6);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2142,6 +2159,7 @@ module ot_a3_engine_issue_bridge #(
                             if (!mapped_numeric_ok) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) begin
                                     $display("OT_BRIDGE_DESC_TRAP site=%0d gqa=%0b in=0x%0h second=0x%0h out=0x%0h scale=0x%08h want_scale=0x%08h",
                                              7, attention_gqa_q, numeric_input_dtype,
@@ -2150,6 +2168,7 @@ module ot_a3_engine_issue_bridge #(
                                     $display("  contract=0x%h", desc_data[1023:768]);
                                     $display("  want    =0x%h", CONTRACT_QWEN_GQA_RAW);
                                 end
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2172,7 +2191,9 @@ module ot_a3_engine_issue_bridge #(
                                 end else if (!mapped_shape_ok) begin
                                     response_fault <= 1'b1;
                                     //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                     if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 8);
+`endif
                                     response_trap <= TRAP_DESCRIPTOR;
                                     state <= S_RESPONSE;
                                 end else if (selection_token_append_q) begin
@@ -2194,7 +2215,9 @@ module ot_a3_engine_issue_bridge #(
                             if (!policy_record_ok) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 9);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2231,11 +2254,14 @@ module ot_a3_engine_issue_bridge #(
                             !mapped_context_ok) begin
                             response_fault <= 1'b1;
                             //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_bridge)
                                 $display("OT_BRIDGE_DESC_TRAP site=%0d ctxlen=%0d planerows=%0d observed=%0d | slot0_map=%0d found=%0b off0=%0d slot0_base=%0d obj0=%0d",
                                          10, cfg_context_length, cfg_kv_plane_rows,
                                          observed_index_value, slot0_map[31:0], slot0_map[32],
                                          captured_offset[0][31:0], slot0_base, slot_object[0]);
+`endif
                             response_trap <= TRAP_DESCRIPTOR;
                             state <= S_RESPONSE;
                         end else begin
@@ -2319,6 +2345,7 @@ module ot_a3_engine_issue_bridge #(
                                  !desc_object_placed)) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) begin
                                     $display("OT_BRIDGE_DESC_TRAP site=%0d common=%0b dense=%0b rmsw=%0b rope=%0b mmw=%0b xfer=%0b placed=%0b emb=%0b",
                                              11, input_view_common_ok, dense_row_source_ok,
@@ -2334,6 +2361,7 @@ module ot_a3_engine_issue_bridge #(
                                              desc_view_dim3, desc_view_stride0, desc_view_stride1,
                                              desc_primary_object, desc_permissions);
                                 end
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2388,7 +2416,9 @@ module ot_a3_engine_issue_bridge #(
                                 !desc_object_placed) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 12);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2412,7 +2442,9 @@ module ot_a3_engine_issue_bridge #(
                                   transfer_numeric_ok)) begin
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to name which admission check rejected.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display text into the mapped netlist
                                 if (trace_bridge) $display("OT_BRIDGE_DESC_TRAP site=%0d", 13);
+`endif
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
@@ -2436,11 +2468,14 @@ module ot_a3_engine_issue_bridge #(
 
                     S_EMBED_INDEX_WAIT: begin
                         embed_token_q <= m0_rd_data;
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                         if (trace_bridge)
                             $display("OT_BRIDGE_EMBED addr=%0d token=%0d table_base=%0d row=%0d",
                                      embed_index_addr_q, m0_rd_data,
                                      embed_table_base_q,
                                      embed_table_base_q + m0_rd_data * EMBEDDING_WIDTH);
+`endif
                         state <= S_START;
                     end
 
@@ -2457,12 +2492,15 @@ module ot_a3_engine_issue_bridge #(
                                 response_fault <= 1'b1;
                                 //: Set +OT_BRIDGE_TRACE=1 to see which of the
                                 //: three completion conditions failed.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                                 if (trace_bridge)
                                     $display("OT_BRIDGE_ENGINE_FAULT err=%0d results=%0d/%0d work=%0d/%0d fam=0x%0h sub=0x%0h rows=%0d trailing=%0d",
                                              engine_error_code, engine_result_count,
                                              expected_result_count, engine_work_count,
                                              expected_work_count, issue_family_q,
                                              issue_sub_q, source_rows, source_trailing);
+`endif
                                 response_trap <= mapped_capability_refusal
                                     ? TRAP_CAPABILITY : TRAP_ENGINE;
                             end else begin

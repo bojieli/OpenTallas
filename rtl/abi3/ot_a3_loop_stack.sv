@@ -105,7 +105,12 @@ module ot_a3_loop_stack
 );
     //: Set +OT_LOOP_TRACE=1 to report loop setup outcomes.
     reg trace_loops = 1'b0;
+`ifndef YOSYS
+    // Yosys 0.68 has no $test$plusargs and refuses the whole file on it, so
+    // the simulation-only plusarg probe is hidden from synthesis; trace_loops
+    // keeps its 1'b0 initialiser there and every trace branch folds away.
     initial if ($test$plusargs("OT_LOOP_TRACE")) trace_loops = 1'b1;
+`endif
 
     localparam [1:0] ACTION_PUSH    = 2'd0;
     localparam [1:0] ACTION_SKIP    = 2'd1;
@@ -359,11 +364,14 @@ module ot_a3_loop_stack
                         done <= 1'b1;
                         state <= S_IDLE;
                         //: Set +OT_LOOP_TRACE=1 to report each setup's outcome.
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                         if (trace_loops)
                             $display("OT_LOOP_SETUP id=%0d trip=%0d max=%0d sp=%0d kind=%0d sym=%0d div=%0d bs=%0d be=%0d",
                                      hold_loop_id, hold_trip, hold_max, stack_pointer,
                                      hold_kind, hold_symbolic, hold_divisor,
                                      hold_body_start, hold_body_end);
+`endif
                         if (hold_trip > hold_max) begin
                             trap_valid <= 1'b1;
                             trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;

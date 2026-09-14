@@ -54,6 +54,13 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_format_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_mac_lane.sv",
+    # ccf0d83 put ot_a3_mac_lane_pipe inside ot_a3_engine_array but left it
+    # out of this list, so the campaign has not compiled since: Icarus
+    # reports "Unknown module type: ot_a3_mac_lane_pipe" at
+    # rtl/abi3/ot_a3_engine_array.sv:574.  The pipelined lane and its
+    # package come with it.
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",

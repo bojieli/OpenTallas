@@ -119,7 +119,12 @@ module ot_a3_vector_rope #(
 );
     //: Set +OT_ROPE_TRACE=1 to report which shape check rejected.
     reg trace_rope = 1'b0;
+`ifndef YOSYS
+    // Yosys 0.68 has no $test$plusargs and refuses the whole file on it, so
+    // the simulation-only plusarg probe is hidden from synthesis; trace_rope
+    // keeps its 1'b0 initialiser there and every trace branch folds away.
     initial if ($test$plusargs("OT_ROPE_TRACE")) trace_rope = 1'b1;
+`endif
 
     localparam [7:0] ERR_NONE = ot_a3_engine_pkg::ERR_NONE;
     localparam [7:0] ERR_OPERAND_NONFINITE =
@@ -521,10 +526,13 @@ module ot_a3_vector_rope #(
                             //: One comparator, and it keeps the refusal on the
                             //: cycle this engine has always refused on.
                             (cfg_count < cfg_rows * cfg_cols)) begin
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_rope)
                                 $display("OT_ROPE_CFG_SHAPE rows=%0d cols=%0d count=%0d (want cols=%0d rows in {%0d,%0d} count=span*rows*cols)",
                                          cfg_rows, cfg_cols, cfg_count,
                                          HEAD_WIDTH, QUERY_HEADS, KEY_HEADS);
+`endif
                             error_code <= ERR_SHAPE;
                             state <= S_DONE;
                         //: ONE POSITION.  Byte for byte the check this engine
@@ -576,6 +584,8 @@ module ot_a3_vector_rope #(
                                  (core_done_additions != TOTAL_ELEMENTS) ||
                                  (selected_write_count != count_q))
                         begin
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_rope)
                                 $display("OT_ROPE_DONE_SHAPE err=%0d fault=%0b cmdidx=%0d coef=%0d/%0d q=%0d/%0d k=%0d/%0d w=%0d/%0d el=%0d/%0d mul=%0d/%0d add=%0d/%0d sel=%0d/%0d",
                                          core_done_error, address_fault,
@@ -588,6 +598,7 @@ module ot_a3_vector_rope #(
                                          core_done_multiplications, 32'd2 * TOTAL_ELEMENTS,
                                          core_done_additions, TOTAL_ELEMENTS,
                                          selected_write_count, count_q);
+`endif
                             error_code <= ERR_SHAPE;
                         end
                         else begin
@@ -602,9 +613,12 @@ module ot_a3_vector_rope #(
                 S_SPAN: begin
                     if (span_remaining >= block_q) begin
                         if (span_q == MAX_POSITION_SPAN) begin
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_rope)
                                 $display("OT_ROPE_SPAN_BOUND count=%0d block=%0d bound=%0d",
                                          count_q, block_q, MAX_POSITION_SPAN);
+`endif
                             error_code <= ERR_SHAPE;
                             state <= S_DONE;
                         end else begin
@@ -615,9 +629,12 @@ module ot_a3_vector_rope #(
                     //: refused BEFORE anything is read or written, which is the
                     //: fail-closed point the single-position check had.
                     end else if (span_remaining != 32'd0) begin
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                         if (trace_rope)
                             $display("OT_ROPE_SPAN_SHAPE count=%0d block=%0d remainder=%0d",
                                      count_q, block_q, span_remaining);
+`endif
                         error_code <= ERR_SHAPE;
                         state <= S_DONE;
                     end else begin
@@ -642,10 +659,13 @@ module ot_a3_vector_rope #(
                         //: reporting success over a short destination.
                         if ((lane_error_code != ERR_NONE) ||
                             (lane_result_count != count_q)) begin
+`ifndef YOSYS   // simulation-only trace; Yosys carries the $display
+                //: text into the mapped netlist, where OpenSTA cannot parse it
                             if (trace_rope)
                                 $display("OT_ROPE_LANE_DONE err=%0d wrote=%0d/%0d span=%0d rows=%0d cols=%0d",
                                          lane_error_code, lane_result_count,
                                          count_q, span_q, rows_q, cols_q);
+`endif
                             error_code <= (lane_error_code != ERR_NONE)
                                 ? lane_error_code : ERR_SHAPE;
                         end else begin
