@@ -113,8 +113,16 @@
 module ot_a3_route_candidate_mask #(
     //: Positions per candidate block.  V4.1: 8.
     parameter integer BLOCK = 8,
-    //: Largest position axis this elaboration masks.  V4.1 context: 1,048,576.
-    parameter integer MAX_WIDTH = 1048576,
+    //: Largest position axis this elaboration masks.
+    //:
+    //: 16,384 is the CANDIDATE POOL, which is what this operator masks: 2,048
+    //: blocks of 8, and the capability's own max_candidate_positions.  It was
+    //: 1,048,576 -- the whole V4.1 CONTEXT -- which over-provisions the set
+    //: bitmap by 64x: MAX_BLOCKS/WORD_BITS words of storage, so 4,096 words of
+    //: 32 bits rather than 64.  A Reindex layer scores only inside the pool, so
+    //: the wider axis was never the one being masked.  Still a parameter: an
+    //: instance that must mask a whole context is one override.
+    parameter integer MAX_WIDTH = 16384,
     //: Largest chosen-block count.  V4.1 pool: 2,048 blocks.
     parameter integer MAX_IDS = 2048,
     //: Positions per packed mask word.  The machine word, not model geometry;
@@ -213,6 +221,9 @@ module ot_a3_route_candidate_mask #(
 
     // -- the block set: one bit per candidate block ---------------------------
     reg [WORD_BITS-1:0] set_mem [0:SET_WORDS-1];
+    //: False until a clear has covered the whole bitmap.  One flip-flop in
+    //: place of a reset on every bit of set_mem.
+    reg                 set_primed;
 
     // -- setup registers -----------------------------------------------------
     reg [31:0] r_width, r_id_count, r_max_pop, r_ids_base, r_out_base;
@@ -221,6 +232,32 @@ module ot_a3_route_candidate_mask #(
     reg [31:0] r_set_used;        // ceil(block_count / WORD_BITS)
     reg [31:0] r_grp_used;        // ceil(mask_words / BLOCK)
     reg [31:0] r_clear_words;
+
+    //: WHY THERE IS A SEQUENTIAL DIVIDER HERE.
+    //:
+    //: ceil(x / BLOCK) was written as a 32-bit `/` because BLOCK is deliberately
+    //: allowed to be a non-power-of-two -- WORD_BITS gets a shift, BLOCK cannot.
+    //: Two such divides and one 32-bit multiply sat in the setup states, and a
+    //: combinational 32-bit divider is a multi-nanosecond path: after the bitmap
+    //: was fixed this block still measured 187 MHz on a 5.343 ns path.
+    //:
+    //: These divisions happen ONCE PER RUN, against an emit loop of thousands of
+    //: beats, so ~32 cycles of restoring division is free.  One implementation
+    //: rather than a power-of-two fast path beside a general slow one, because a
+    //: fast path that every elaboration takes leaves the slow one untested.
+    //:
+    //: The remainder is not waste either: it IS the last block's length, which
+    //: removes the `r_width - (r_block_count - 1) * BLOCK` multiply as well.
+    localparam integer DIV_W = 32;
+    reg [DIV_W-1:0] dv_n;      // dividend, shifted out most-significant first
+    reg [DIV_W-1:0] dv_q;      // quotient
+    reg [DIV_W:0]   dv_r;      // remainder, one bit wider so rem+bit cannot wrap
+    reg [5:0]       dv_i;      // bits remaining
+    //: One comparison and one conditional subtract per cycle; the borrow out of
+    //: `dv_r - BLOCK` IS the comparison, so there is no separate compare chain.
+    wire [DIV_W:0]  dv_shift = {dv_r[DIV_W-1:0], dv_n[DIV_W-1]};
+    wire [DIV_W:0]  dv_diff  = dv_shift - {1'b0, BLOCK[DIV_W-1:0]};
+    wire            dv_fits  = !dv_diff[DIV_W];
     reg [31:0] r_last_block;
     reg [31:0] r_tail_len;        // positions in the short last block
     reg [WORD_BITS-1:0] r_tail_mask;
@@ -266,6 +303,9 @@ module ot_a3_route_candidate_mask #(
     localparam [3:0] S_EMIT   = 4'd8;
     localparam [3:0] S_DRAIN  = 4'd9;
     localparam [3:0] S_DONE   = 4'd10;
+    //: The two ceil-divisions by BLOCK, one sequential divider run twice.
+    localparam [3:0] S_DIV1   = 4'd11;
+    localparam [3:0] S_DIV2   = 4'd12;
     reg [3:0] state;
 
     // ----------------------------------------------------------------------
@@ -340,8 +380,20 @@ module ot_a3_route_candidate_mask #(
             wr_valid <= 1'b0;
             s1_valid <= 1'b0;
             emit_gap <= 32'd0;
-            for (rst_i = 0; rst_i < SET_WORDS; rst_i = rst_i + 1)
-                set_mem[rst_i] <= {WORD_BITS{1'b0}};
+            //: SET_MEM TAKES NO RESET.
+            //:
+            //: Resetting it swept every word, so rst_n drove SET_WORDS *
+            //: WORD_BITS flip-flops -- 131,072 at the old default width -- and
+            //: that fan-out, not the arithmetic, was the critical path: the
+            //: block measured 0.1 MHz over 629,186 cells.  The sweep was also
+            //: REDUNDANT: S_CLEAR already zeroes the words a run touches before
+            //: S_INGEST reads any of them, so no run ever depended on reset
+            //: having done it.  What reset genuinely has to establish is that
+            //: the FIRST run cannot read a word no run has written, and one
+            //: flag does that: set_primed below makes the first clear cover the
+            //: whole bitmap and every later one cover only what was used.
+            set_primed <= 1'b0;
+            dv_i <= 6'd0;
         end else begin
             done <= 1'b0;
             out_we <= 1'b0;
@@ -403,23 +455,57 @@ module ot_a3_route_candidate_mask #(
                         end
                     end
                 end
-                // -- setup, two cycles, all division by parameters here -------
+                // -- setup: the shifts here, the divisions in S_DIV1/S_DIV2 ---
                 S_SETUP1: begin
-                    r_block_count <= (r_width + BLOCK[31:0] - 32'd1) / BLOCK[31:0];
                     r_mask_words <= (r_width + WORD_BITS[31:0] - 32'd1) >>
                                     LOG2_WORD_BITS;
                     r_tail_mask <= (r_width[LOG2_WORD_BITS-1:0] == {LOG2_WORD_BITS{1'b0}})
                         ? {WORD_BITS{1'b1}}
                         : ~({WORD_BITS{1'b1}} << r_width[LOG2_WORD_BITS-1:0]);
-                    state <= S_SETUP2;
+                    //: width / BLOCK.  The quotient and remainder together give
+                    //: both the block count and the tail length.
+                    dv_n <= r_width;
+                    dv_q <= 32'd0;
+                    dv_r <= {(DIV_W+1){1'b0}};
+                    dv_i <= DIV_W[5:0];
+                    state <= S_DIV1;
+                end
+                S_DIV1: begin
+                    if (dv_i != 6'd0) begin
+                        dv_r <= dv_fits ? dv_diff : dv_shift;
+                        dv_q <= {dv_q[DIV_W-2:0], dv_fits};
+                        dv_n <= {dv_n[DIV_W-2:0], 1'b0};
+                        dv_i <= dv_i - 6'd1;
+                    end else begin
+                        //: ceil, and the last block's length in one step: a zero
+                        //: remainder means the axis divides exactly, so the last
+                        //: block is full.
+                        r_block_count <= dv_q + ((dv_r != 0) ? 32'd1 : 32'd0);
+                        r_tail_len <= (dv_r != 0) ? dv_r[31:0] : BLOCK[31:0];
+                        //: mask_words / BLOCK, the second and last division.
+                        dv_n <= r_mask_words;
+                        dv_q <= 32'd0;
+                        dv_r <= {(DIV_W+1){1'b0}};
+                        dv_i <= DIV_W[5:0];
+                        state <= S_DIV2;
+                    end
+                end
+                S_DIV2: begin
+                    if (dv_i != 6'd0) begin
+                        dv_r <= dv_fits ? dv_diff : dv_shift;
+                        dv_q <= {dv_q[DIV_W-2:0], dv_fits};
+                        dv_n <= {dv_n[DIV_W-2:0], 1'b0};
+                        dv_i <= dv_i - 6'd1;
+                    end else begin
+                        r_grp_used <= dv_q + ((dv_r != 0) ? 32'd1 : 32'd0);
+                        state <= S_SETUP2;
+                    end
                 end
                 S_SETUP2: begin
                     r_set_used <= (r_block_count + WORD_BITS[31:0] - 32'd1) >>
                                   LOG2_WORD_BITS;
-                    r_grp_used <= (r_mask_words + BLOCK[31:0] - 32'd1) / BLOCK[31:0];
                     r_last_block <= r_block_count - 32'd1;
                     r_last_word <= r_mask_words - 32'd1;
-                    r_tail_len <= r_width - (r_block_count - 32'd1) * BLOCK[31:0];
                     state <= S_SETUP3;
                 end
                 S_SETUP3: begin
@@ -427,8 +513,12 @@ module ot_a3_route_candidate_mask #(
                     //: emit can read, and not one more: the clear cost is
                     //: ceil(blocks/WORD_BITS), never the whole elaborated
                     //: bitmap.
-                    r_clear_words <= (r_set_used > r_grp_used) ? r_set_used
-                                                              : r_grp_used;
+                    //: Until the bitmap has been covered once, clear all of
+                    //: it: a word no run has written holds no defined value,
+                    //: and the dedup test reads before it writes.
+                    r_clear_words <= !set_primed
+                        ? SET_WORDS[31:0]
+                        : ((r_set_used > r_grp_used) ? r_set_used : r_grp_used);
                     clr_index <= 32'd0;
                     state <= S_CLEAR;
                 end
@@ -438,6 +528,7 @@ module ot_a3_route_candidate_mask #(
                         set_mem[clr_index[SET_AW-1:0]] <= {WORD_BITS{1'b0}};
                     clr_index <= clr_index + 32'd1;
                     if (clr_index + 32'd1 >= r_clear_words) begin
+                        set_primed <= 1'b1;
                         ing_issued <= 32'd0;
                         ing_retired <= 32'd0;
                         state <= (PIN_LAST_BLOCK != 0) ? S_PIN : S_INGEST;

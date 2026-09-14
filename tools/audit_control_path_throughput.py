@@ -39,6 +39,20 @@ Both are reported. The per-unit column is what a naive design gets; the fan-out
 column is what the design must do; the ratio between them is the fan-out factor
 the hardware has to supply, and it is the specification for the cluster
 dispatcher.
+
+IS THAT FAN-OUT BUILT? THE COLUMN THIS TOOL USED TO ASSUME
+---------------------------------------------------------
+``utilisation_with_fanout`` is only reachable if some block actually expands one
+descriptor onto every compute unit, and for a long time this tool asserted that
+requirement without ever checking whether such a block existed at the required
+width. It does now: ``fanout_implementation`` scans the place-and-route records
+for descriptor-distribution blocks, reads the width each one was characterised
+at out of its own parameters, and reports per capability whether a CLOSED routed
+record covers that capability's compute-unit count.
+
+A capability with no routed record at its width gets ``fanout_routed`` false and
+its utilisation figure is flagged as conditional -- which is the honest state of
+a design whose control path only works given hardware nobody has laid out.
 """
 
 from __future__ import annotations
@@ -69,6 +83,37 @@ KERNEL_BUSY_CYCLES = {256: 270, 64: 78, 16: 30}
 #: Place-and-routed fmax of ot_compute_unit, cu_0p8: 1,290 MHz, status pass,
 #: signal integrity clean.
 DATAPATH_FMAX_HZ = 1.290e9
+
+#: Where place-and-route records live, and which top modules are descriptor
+#: distributors.  ``width_param`` is the parameter whose value is the number of
+#: compute units one descriptor reaches; ``width_default`` is used when the
+#: wrapper hardcoded it and the record's ``parameters`` block is therefore empty.
+PHYSICAL_DIR = ROOT / "results/physical_abi3/asap7"
+#: ``width_params`` multiply: ot_dispatch_tree serves LEAVES * GROUP compute
+#: units, so a record at LEAVES=68 GROUP=16 is a 1,088-unit record and reading
+#: LEAVES alone would understate it by sixteen times.
+DISTRIBUTOR_BLOCKS = {
+    "ot_probe_cluster_disp": {"structure": "flat",
+                              "width_params": ("UNITS",), "width_default": 16,
+                              "module": "ot_cluster_dispatcher"},
+    "ot_probe_flat_disp_wide": {"structure": "flat",
+                                "width_params": ("UNITS",), "width_default": None,
+                                "module": "ot_cluster_dispatcher"},
+    "ot_probe_dispatch_tree": {"structure": "tree",
+                               "width_params": ("LEAVES", "GROUP"),
+                               "width_default": None,
+                               "module": "ot_dispatch_tree"},
+    #: the distributor modules characterised bare, with their unit interface at
+    #: the block boundary. Useful for area attribution; never post-route, because
+    #: at width the interface is tens of thousands of pins.
+    "ot_cluster_dispatcher": {"structure": "flat",
+                              "width_params": ("UNITS",), "width_default": None,
+                              "module": "ot_cluster_dispatcher"},
+    "ot_probe_dtree_bare": {"structure": "tree",
+                            "width_params": ("LEAVES", "GROUP"),
+                            "width_default": None,
+                            "module": "ot_dispatch_tree"},
+}
 
 
 def git_state() -> dict[str, Any]:
@@ -116,6 +161,56 @@ def sequencer_clocks() -> dict[str, Any]:
                         for s in (body.get("design") or {}).get("sources", [])],
         }
     return out
+
+
+def distributor_records(physical_dir: Path) -> list[dict[str, Any]]:
+    """Every place-and-route record of a descriptor-distribution block.
+
+    The width is read from the record's own ``design.parameters``, so a record
+    cannot claim a width it was not elaborated at.  ``closed`` is the record's
+    own post-route verdict: place-and-route ran, the routed netlist carries no
+    max-slew/max-cap/max-fanout violation, and setup and hold met with zero
+    violating paths, zero DRC and zero antenna violations.
+    """
+    rows = []
+    if not physical_dir.exists():
+        return rows
+    for path in sorted(physical_dir.glob("*/*.json")):
+        try:
+            body = json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        design = body.get("design") or {}
+        spec = DISTRIBUTOR_BLOCKS.get(design.get("block"))
+        if spec is None:
+            continue
+        params = design.get("parameters") or {}
+        named = [k for k in spec["width_params"] if k in params]
+        if named:
+            width = 1
+            for k in spec["width_params"]:
+                width *= int(params.get(k, 1))
+            basis = "design.parameters." + " * ".join(named)
+        else:
+            width = spec["width_default"]
+            basis = "wrapper hardcodes it"
+        pnr_ran = bool((body.get("place_and_route") or {}).get("metrics"))
+        rows.append({
+            "record": str(path.relative_to(ROOT)),
+            "block": design.get("block"),
+            "distributor_module": spec["module"],
+            "structure": spec["structure"],
+            "fanout_width": int(width) if width is not None else None,
+            "width_basis": basis,
+            "post_route": pnr_ran,
+            "closed": bool(design.get("closed")),
+            "fmax_hz": design.get("fmax_hz"),
+            "core_area_um2": design.get("core_area_um2"),
+            "standard_cell_area_um2": design.get("area_um2"),
+            "clock_period_ns": design.get("clock_period_ns"),
+            "status": body.get("acceptance", {}).get("status"),
+        })
+    return rows
 
 
 def models() -> list[dict[str, Any]]:
@@ -170,6 +265,10 @@ def main() -> int:
     ap.add_argument("--control-clock", choices=("full", "frontend_only"),
                     default="full",
                     help="which place-and-routed sequencer clock to charge")
+    ap.add_argument("--physical-dir", type=Path, default=PHYSICAL_DIR,
+                    help=("directory of place-and-route records to look for a "
+                          "descriptor distributor in (default "
+                          "results/physical_abi3/asap7)"))
     ap.add_argument("--output", type=Path)
     args = ap.parse_args()
 
@@ -195,9 +294,19 @@ def main() -> int:
     unit_seconds = busy / DATAPATH_FMAX_HZ
     per_unit_rate = 1.0 / unit_seconds
 
+    dist = distributor_records(args.physical_dir)
+    closed_widths = sorted(r["fanout_width"] for r in dist
+                           if r["closed"] and r["fanout_width"])
+
     rows = []
     for acc in accelerators():
         units = acc["compute_units"]
+        #: the fan-out the hardware must SUPPLY is `units`: one descriptor has to
+        #: reach every compute unit.  required_fanout above is the RATE factor,
+        #: and it exceeds `units` exactly when fan-out alone is not enough.
+        covering = [r for r in dist
+                    if r["closed"] and r["fanout_width"]
+                    and r["fanout_width"] >= units]
         need_per_unit = per_unit_rate * units        # a descriptor each, per unit
         need_fanout = per_unit_rate                 # one descriptor for the array
         rows.append({
@@ -214,6 +323,13 @@ def main() -> int:
             #: `busy` cycles but can only be handed one every `interval`, so the
             #: duty cycle is the ratio, capped at 1.
             "utilisation_with_fanout": min(1.0, busy / ctrl_interval_datapath_cycles),
+            #: --- is the fan-out this row assumes actually built? -------------
+            "fanout_width_required": units,
+            "fanout_routed": bool(covering),
+            "fanout_routed_records": [r["record"] for r in covering],
+            "fanout_routed_structures": sorted({r["structure"] for r in covering}),
+            "widest_closed_fanout_record": max(closed_widths) if closed_widths else None,
+            "utilisation_is_conditional_on_unbuilt_fanout": not bool(covering),
         })
 
     #: ---- end to end: a whole decode step, not one kernel -------------------
@@ -284,6 +400,19 @@ def main() -> int:
             "descriptors_per_second_per_unit": per_unit_rate,
         },
         "accelerators": rows,
+        "fanout_implementation": {
+            "question": ("does a place-and-routed block exist that expands one "
+                         "descriptor onto as many compute units as each "
+                         "capability has?"),
+            "searched": str(args.physical_dir.relative_to(ROOT)
+                            if args.physical_dir.is_relative_to(ROOT)
+                            else args.physical_dir),
+            "records": dist,
+            "widest_closed_fanout": max(closed_widths) if closed_widths else None,
+            "capabilities_with_routed_fanout":
+                sum(1 for r in rows if r["fanout_routed"]),
+            "capabilities_total": len(rows),
+        },
         "end_to_end_decode": e2e,
         "refusals": [
             "no-single-verdict: whether control is the bottleneck depends on "
@@ -312,6 +441,23 @@ def main() -> int:
             "cache and no interconnect. A real decode step is usually "
             "memory-bound at batch 1, so the datapath time is a LOWER bound and "
             "the control headroom a lower bound with it.",
+            "fanout-must-be-built-not-assumed: the utilisation_with_fanout "
+            "column is reachable only if a block expands one descriptor onto "
+            "every compute unit. fanout_implementation reports whether a CLOSED "
+            "post-route record exists at each capability's width; where it does "
+            "not, utilisation_is_conditional_on_unbuilt_fanout is set and the "
+            "figure is an architectural target, not an achievable operating "
+            "point.",
+            "required-fanout-is-a-rate-not-a-width: required_fanout is "
+            "per_unit_rate*units/control_rate, a RATE factor. The width a "
+            "distributor must physically reach is compute_units. required_fanout "
+            "exceeding compute_units is exactly the case where fan-out alone is "
+            "insufficient and the descriptor must also be coarsened.",
+            "fanout-record-width-is-not-a-whole-chip-route: a routed record at "
+            "width N is a record for a distributor block, not for N compute "
+            "units placed around it. The distributor's own timing and area are "
+            "measured; the array's floorplan and the wire length from a leaf to "
+            "its unit are not.",
             "decoupling-is-required-not-assumed: tokens_per_second_decoupled is "
             "valid only because ot_cluster_dispatcher puts a descriptor queue "
             "between the two clock domains. The serialised column is what a "
@@ -331,14 +477,30 @@ def main() -> int:
           f"{busy} cycles -> {per_unit_rate/1e6:.2f} M descriptors/s per unit\n")
 
     print(f"  {'capability':<40} {'units':>6} {'per-unit short':>15} "
-          f"{'fan-out req':>12} {'util w/fanout':>14}")
+          f"{'fan-out req':>12} {'util w/fanout':>14} {'fanout built':>13}")
     for r in rows:
         util = r["utilisation_with_fanout"]
         verdict = "OK" if r["sufficient_with_fanout"] else "SHORT"
+        built = "ROUTED" if r["fanout_routed"] else "NOT ROUTED"
         print(f"  {r['capability']:<40} {r['compute_units']:>6} "
               f"{r['shortfall_factor_without_fanout']:>13.0f}x "
               f"{r['required_fanout']:>12} "
-              f"{util*100:>11.1f}% {verdict}")
+              f"{util*100:>11.1f}% {verdict:<6} {built:>12}")
+
+    print("\n  NOTE required_fanout is a RATE factor -- how many times faster "
+          "than the control\n  plane the array wants descriptors. The WIDTH a "
+          "distributor has to reach is the\n  compute-unit count, and 'fanout "
+          "built' asks whether a CLOSED post-route record\n  exists at that "
+          "width.")
+    print(f"\n  descriptor distributors with a place-and-route record:")
+    if not dist:
+        print("    none -- every utilisation figure above is conditional on "
+              "hardware nobody has laid out")
+    for r in sorted(dist, key=lambda x: (x["structure"], x["fanout_width"] or 0)):
+        print(f"    {r['block']:<26} {r['structure']:<5} width={str(r['fanout_width']):>5} "
+              f"closed={str(r['closed']):<5} "
+              f"fmax={(r['fmax_hz'] or 0)/1e6:>7.0f} MHz "
+              f"core={r['core_area_um2']} um2  {r['record']}")
 
     any_short = any(not r["sufficient_with_fanout"] for r in rows)
     print()
