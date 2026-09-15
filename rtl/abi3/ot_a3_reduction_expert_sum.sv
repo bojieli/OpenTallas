@@ -221,8 +221,9 @@ module ot_a3_reduction_expert_sum #(
                 end
                 S_DRAIN: begin
                     busy <= 1'b1;
-                    // read(2) + leaf(1) + LEVELS + trailing add(1) + narrow(1)
-                    if (drain >= (LEVELS[31:0] + 32'd5)) begin
+                    // read(2) + leaf(1) + LEVELS + trailing add(1) +
+                    // narrow(1) + the output register
+                    if (drain >= (LEVELS[31:0] + 32'd6)) begin
                         // ONE OWNER FOR error_code.  A numeric fault is latched
                         // by the pipeline in ``first_err`` and folded in here,
                         // rather than in a second always block.  Two blocks
@@ -403,16 +404,40 @@ module ot_a3_reduction_expert_sum #(
         end
     end
 
-    // -- trailing base add, then one narrowing ------------------------------
+    // -- trailing base add, THEN, one cycle later, the narrowing ------------
+    // These were one combinational stage and ASAP7 said so: the worst path ran
+    // n_trail[4] -> fp32_add_rne -> fp32_to_bf16_rne -> saturation_count and
+    // missed a 1.2 ns target by 5.45 ns, because a full IEEE add and a full
+    // IEEE narrowing in series is roughly 6.6 ns of logic.  Each is now its own
+    // stage.  The initiation interval is unchanged -- this adds one cycle of
+    // latency, not one cycle per element.
     wire [33:0] with_trail = ot_fp32_rne_pkg::fp32_add_rne(
         node[LEVELS][0], n_trail[LEVELS]);
-    wire [31:0] total = (n_trail[LEVELS] != 32'd0) ? with_trail[31:0]
-                                                   : node[LEVELS][0];
-    wire [1:0]  total_err =
-        (n_err[LEVELS] != E_OK) ? n_err[LEVELS]
-        : ((n_trail[LEVELS] != 32'd0) && (with_trail[33:32] != 2'd0)) ? E_ACCUM
-        : E_OK;
-    wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(total);
+
+    reg        f_valid_q;
+    reg [31:0] f_addr_q;
+    reg [31:0] f_total_q;
+    reg [1:0]  f_err_q;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            f_valid_q <= 1'b0;
+            f_addr_q <= 32'd0;
+            f_total_q <= 32'd0;
+            f_err_q <= E_OK;
+        end else begin
+            f_valid_q <= n_valid[LEVELS];
+            f_addr_q <= n_addr[LEVELS];
+            f_total_q <= (n_trail[LEVELS] != 32'd0) ? with_trail[31:0]
+                                                    : node[LEVELS][0];
+            f_err_q <=
+                (n_err[LEVELS] != E_OK) ? n_err[LEVELS]
+                : ((n_trail[LEVELS] != 32'd0) && (with_trail[33:32] != 2'd0))
+                  ? E_ACCUM : E_OK;
+        end
+    end
+
+    wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(f_total_q);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -426,9 +451,9 @@ module ot_a3_reduction_expert_sum #(
             if (start) begin
                 out_count <= 32'd0;
                 saturation_count <= 32'd0;
-            end else if (n_valid[LEVELS]) begin
+            end else if (f_valid_q) begin
                 out_we <= 1'b1;
-                out_addr <= n_addr[LEVELS];
+                out_addr <= f_addr_q;
                 out_data <= {16'b0, narrowed[15:0]};
                 out_count <= out_count + 32'd1;
                 if (narrowed[16])
@@ -444,9 +469,9 @@ module ot_a3_reduction_expert_sum #(
             first_err <= E_OK;
         else if (start)
             first_err <= E_OK;
-        else if (n_valid[LEVELS] && first_err == E_OK) begin
-            if (total_err != E_OK)
-                first_err <= total_err;
+        else if (f_valid_q && first_err == E_OK) begin
+            if (f_err_q != E_OK)
+                first_err <= f_err_q;
             else if (narrowed[18:17] != 2'd0)
                 first_err <= E_ACCUM;
         end
