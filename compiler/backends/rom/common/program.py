@@ -2445,7 +2445,19 @@ class RomLowering:
         keeps binary32.  This mirrors ``_epsilon_bits`` in
         ``compiler/backends/hbm_sram/lower.py``: one convention, two backends.
         """
-        bits = _binary32_bits(kernel.attributes, ("epsilon_bits", "epsilon"))
+        # ``hyper_connection_epsilon`` is searched ahead of the generic
+        # ``epsilon`` because a hyper-connection kernel carries both and they are
+        # different numbers: the model's norm epsilon (1e-20) and the frozen
+        # hyper-connection contract's own (1e-06).  Taking the generic one put
+        # 0x1e3ce508 in a profile the engine checks against 0x358637bd and
+        # trapped V4.1 at PC 13.  Ordered by attribute rather than gated on
+        # ``kernel.kind`` so it cannot drift when a kind is renamed -- only a
+        # hyper-connection kernel states this attribute, so no other kernel is
+        # affected by its presence in the search.
+        bits = _binary32_bits(
+            kernel.attributes,
+            ("epsilon_bits", "hyper_connection_epsilon", "epsilon"),
+        )
         if kernel.kind != "HEAD_RMS_NORM" or not bits or len(kernel.inputs) != 1:
             return bits
         return _narrow_bf16_rne(bits)
@@ -4994,6 +5006,16 @@ class RomLowering:
                 slot=slot,
                 bank=self._expert_bank_extent(kernel, tensor),
                 narrow_dtype=self._narrowed_read(kernel, tensor),
+                # Keyed on the operator, never on the kernel's name: the
+                # neighbouring narrowing was keyed on ``kind == "HASH_ROUTE"``
+                # and silently stopped applying when the exporter renamed that
+                # kind.  A rank requirement is a property of the operator that
+                # reads the operand.
+                unit_width=(
+                    (family == Major.TENSOR)
+                    and (sub == int(TensorOp.EMBED_LOOKUP))
+                    and (slot == 1)
+                ),
             )
         if kernel.kind == "ROUTED_MATMUL" and tensor.dtype in INDEX_DTYPES:
             # TA-ABI3-OPCONV-1 section 2: the expert-ID operand is
@@ -5252,6 +5274,7 @@ class RomLowering:
         bank: int = 0,
         narrow_dtype: DType | None = None,
         row_step: int = 1,
+        unit_width: bool = False,
     ) -> int:
         """One weight operand's view.
 
@@ -5275,6 +5298,17 @@ class RomLowering:
         dims: Sequence[int] = self._dims(tensor)
         strides: Sequence[int] | None = None
         group_offset = 0
+        if unit_width and len(dims) == 1:
+            # A width-one table is ``[rows, 1]``, not ``[rows]``.  The operator
+            # that reads it -- TENSOR.EMBED_LOOKUP -- is specified over
+            # ``[vocabulary, width]`` and faults on a rank-1 table, and its own
+            # output view is already rank 2 with a unit feature axis, so the
+            # two operands disagreed about the same table.  This is the same
+            # shape as the pre-dispatched expert-ID operand below: a frozen
+            # matrix with a single column, stated rather than reshaped, so no
+            # movement and no relayout is involved.
+            dims = [dims[0], 1]
+            strides = [1, 1]
         # A node-sharded region presents its local image: ``E/N`` experts of
         # every slot, at a local slot stride.  The global expert bound stays
         # in the operator's ``aux0`` (``_aux``), which is what makes the
@@ -5589,10 +5623,40 @@ class RomLowering:
                     int(Symbol.POSITION_START),
                 ]
             if sub == int(Vector.MHC):
+                # The exporter names the hyper-connection multiplier
+                # ``post_width``: it is the number of residual streams, so the
+                # post coefficients are ``m`` wide and the combination matrix is
+                # ``m * m``.  Reading ``hc_mult`` and defaulting to 1 made the
+                # aux disagree with the operands the same attribute had already
+                # shaped -- "operator 1126: aux_id_2 declares hc_mult 1, the
+                # operands carry 4" at V4.1 PC 13 -- and a default is what hid
+                # it, because 1 is a legal multiplier.  Both names are accepted
+                # and neither is invented: an MHC kernel that states no
+                # multiplier is refused, since the engine's guard is only real
+                # if the aux is the graph's own number.
+                multiplier = attributes.get("hc_mult", attributes.get("post_width"))
+                if multiplier is None:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} is a {kernel.kind} whose "
+                        "attributes state neither hc_mult nor post_width, so "
+                        "the hyper-connection multiplier its operands are "
+                        "shaped by cannot be put in aux_id_2; the engine "
+                        "compares the two and a default would make that "
+                        "comparison vacuous"
+                    )
+                combination = attributes.get("combination_width")
+                if combination is not None and int(combination) != int(multiplier) ** 2:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} states multiplier "
+                        f"{int(multiplier)} and combination width "
+                        f"{int(combination)}; a hyper-connection combines "
+                        f"{int(multiplier)} streams, so the matrix is "
+                        f"{int(multiplier) ** 2} wide"
+                    )
                 return [
                     MHC_SUBCASE[kernel.kind],
                     int(attributes.get("sinkhorn_iterations", 0)),
-                    int(attributes.get("hc_mult", 1)),
+                    int(multiplier),
                 ]
             if sub == int(Vector.SCALE):
                 # ``VECTOR.SCALE`` has three sub-cases and the kind name
