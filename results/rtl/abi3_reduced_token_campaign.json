@@ -1,0 +1,360 @@
+{
+  "certificate": {
+    "every_case_reached_completion": true,
+    "prefill_token_matches_oracle": true,
+    "result_injection_disabled": true
+  },
+  "checkpoint": "build/models/qwen3-reduced-v1",
+  "deployment": "build/abi3/qwen3-reduced-rom",
+  "does_not_establish": [
+    "numerics at shipped dimension: this is the reduced fixture at hidden 128 and vocabulary 4,096, and one shipped Qwen3 token is about 13.9 days of cycle-accurate simulation at this project's measured 39,915 MACs/s",
+    "the decode case's token as an oracle id: that case is entered on a staged KV cache rather than the prefill's own output, so it is recorded and not asserted",
+    "any of the other eight cells of the model x store matrix",
+    "a rate: the cycle counts are a cost measurement, not a TPOT"
+  ],
+  "establishes": [
+    "the reduced Qwen3 deployment executes to CONTROL.COMPLETE in cycle-accurate RTL over the production engines, with result injection disabled, and emits a token id",
+    "that id equals the first generated token of the reduced reference oracle, which a separate process produced by reading the fixture's shard off disk and running the released reference implementation"
+  ],
+  "git": {
+    "commit": "01db1d544443d3498b21ccb44b803f16770b3a48",
+    "worktree_dirty": true
+  },
+  "oracle": {
+    "generated_token_ids": [
+      1073,
+      382,
+      93
+    ],
+    "path": "results/abi3/qwen3_reduced_reference_oracle.json",
+    "sha256": "6cbcdd53ced4d4dc07d0109c67e007bd0ae6cadb540b2d5138769631337a9ca5",
+    "workload_id": "TA-QW-REDUCED-EOS-1"
+  },
+  "records": [
+    {
+      "agrees_with_oracle": true,
+      "case": "qwen3-reduced-rom-single-chip/prefill",
+      "elaboration": {
+        "banks": {
+          "index_words": 33920,
+          "result_words": 16865536,
+          "source_words": 525568,
+          "weight_bytes": 2555904
+        },
+        "parameters": [
+          "GQA_QUERY_HEADS=8",
+          "GQA_KV_HEADS=2",
+          "GQA_HEAD_WIDTH=16",
+          "GQA_SCALE_CODE=0x3e800000",
+          "EMBEDDING_WIDTH=128",
+          "QWEN_VOCABULARY=4096",
+          "DEEPSEEK_VOCABULARY=4096",
+          "EMBEDDING_TOKEN_INDEXED=1",
+          "GATHER_PLACEMENT_ADDRESSED=1",
+          "ENABLE_RESULT_INJECTION=0",
+          "MAX_SEQUENCE_SPAN=16",
+          "INDEX_VIEW_ADDRESSED=1",
+          "INDEX_WORDS=33920",
+          "SOURCE_WORDS=525568",
+          "RESULT_WORDS=16865536",
+          "MATMUL_WEIGHT_BYTES=2555904"
+        ]
+      },
+      "execution": {
+        "counters": {
+          "argmax_launches": "1",
+          "complete": "1",
+          "cycles": "23021210",
+          "done": "1",
+          "fetched_retired": "248 / 248",
+          "first_fault_instr": "4294967295",
+          "issued": "83",
+          "loop_iterations": "83",
+          "operand_read_oob": "0",
+          "place_bound_count": "32  (twice=0 overflow=0 conflict=0)",
+          "placement": "32 bindings on the 32-port surface",
+          "result_write_oob": "0",
+          "selected_token": "1073",
+          "session_retired": "1",
+          "trapped": "0  trap_class=0",
+          "views_resolved": "255",
+          "wait_events": "81"
+        },
+        "log_sha256": "b344a8f716f82dbbb02949f2b1b3a0365a7818f96ae84999d6a7670fd89ed5bc",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              23021210\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "returncode": 0,
+        "selected_token": 1073,
+        "self_check": {
+          "golden_issued": 83,
+          "golden_retired": 248,
+          "issued": 83,
+          "retired": 248,
+          "verdict": "PASS"
+        }
+      },
+      "expected_token": 1073,
+      "name": "prefill",
+      "selected_token": 1073,
+      "token_is_asserted": true,
+      "why": "the first generated token of the workload: the span-16 prefill over the prompt the oracle records"
+    },
+    {
+      "agrees_with_oracle": null,
+      "case": "qwen3-reduced-rom-single-chip/decode",
+      "elaboration": {
+        "banks": {
+          "index_words": 33920,
+          "result_words": 16865536,
+          "source_words": 525568,
+          "weight_bytes": 2555904
+        },
+        "parameters": [
+          "GQA_QUERY_HEADS=8",
+          "GQA_KV_HEADS=2",
+          "GQA_HEAD_WIDTH=16",
+          "GQA_SCALE_CODE=0x3e800000",
+          "EMBEDDING_WIDTH=128",
+          "QWEN_VOCABULARY=4096",
+          "DEEPSEEK_VOCABULARY=4096",
+          "EMBEDDING_TOKEN_INDEXED=1",
+          "GATHER_PLACEMENT_ADDRESSED=1",
+          "ENABLE_RESULT_INJECTION=0",
+          "INDEX_WORDS=33920",
+          "SOURCE_WORDS=525568",
+          "RESULT_WORDS=16865536",
+          "MATMUL_WEIGHT_BYTES=2555904"
+        ]
+      },
+      "execution": {
+        "counters": {
+          "argmax_launches": "1",
+          "complete": "1",
+          "cycles": "7919910",
+          "done": "1",
+          "fetched_retired": "248 / 248",
+          "first_fault_instr": "4294967295",
+          "issued": "83",
+          "loop_iterations": "83",
+          "operand_read_oob": "0",
+          "place_bound_count": "32  (twice=0 overflow=0 conflict=0)",
+          "placement": "32 bindings on the 32-port surface",
+          "result_write_oob": "0",
+          "selected_token": "652",
+          "session_retired": "1",
+          "trapped": "0  trap_class=0",
+          "views_resolved": "255",
+          "wait_events": "81"
+        },
+        "log_sha256": "e5eec0700f993cf626f990e31c5fa58d77c407126b15f5c0bb9d7a391dba71e8",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              7919910\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "returncode": 0,
+        "selected_token": 652,
+        "self_check": {
+          "golden_issued": 83,
+          "golden_retired": 248,
+          "issued": 83,
+          "retired": 248,
+          "verdict": "PASS"
+        }
+      },
+      "expected_token": null,
+      "name": "decode",
+      "selected_token": 652,
+      "token_is_asserted": false,
+      "why": "a decode step entered on a STAGED KV cache rather than on the prefill's own output, so its id is not the oracle's second token and is recorded without being asserted"
+    }
+  ],
+  "schema": "opentallas.rtl.abi3_reduced_token_campaign.v1",
+  "simulator": {
+    "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "version": "5.050"
+  },
+  "sources": [
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+    },
+    {
+      "path": "rtl/ot_fp32_rsqrt_rne.sv",
+      "sha256": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b"
+    },
+    {
+      "path": "rtl/ot_ta_command_decoder.sv",
+      "sha256": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908"
+    },
+    {
+      "path": "rtl/ot_ta_rope_bf16_sram_engine.sv",
+      "sha256": "964ceb0f043941315565c35b62c3e2a4d132ab8679a7e605c3f1a194589248dd"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_format_pkg.sv",
+      "sha256": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_instruction_decoder.sv",
+      "sha256": "7cabe54def8fa53d0a7c85c716487e7848dfe1bb2fa703e2f56928daf9386a15"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_program_header.sv",
+      "sha256": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_shared_divider.sv",
+      "sha256": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_symbol_file.sv",
+      "sha256": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_loop_stack.sv",
+      "sha256": "cbe7590d32f08145d3039343713f6868b818594d1bbff91f5e48e89d5d90bbc5"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_view_resolver.sv",
+      "sha256": "1ed236afcbbfba09d59e7d0437cd48a4ecf73b91ae42f3175268a75f0d265ba8"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_resolver_bank.sv",
+      "sha256": "0473c9723a9ea4819b336d07b369d921e4c00dd52ef8614cc844754dcc0bd6f4"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_event_scoreboard.sv",
+      "sha256": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_issue_record_store.sv",
+      "sha256": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_dependence_table.sv",
+      "sha256": "84613e989c9b4aa1a899f92944a2dfd77b9d519b22b42a8cb282d94dee3b9f3e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_state_controller.sv",
+      "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_microsequencer.sv",
+      "sha256": "82f430c4638007b9d68a2c8e1b93fd88bbf7c6a95f6dd816f0b979d2650fd080"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_device_top.sv",
+      "sha256": "b0a1728672e646ad10d58e48d5fb3bacd831cf4ff0a376914c5a8cc4404dadbc"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_mac_lane.sv",
+      "sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37"
+    },
+    {
+      "path": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+      "sha256": "a2af0b4f4e5e9c841a142dc0971d599899015cd20f402d40ead68e01b98dbed5"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_mac_lane_pipe.sv",
+      "sha256": "9fa13df6e934783b2bd5a7fb5348e33f262322381c87a926145d9bfef41bb454"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_selection_argmax.sv",
+      "sha256": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_dma_index_mover.sv",
+      "sha256": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_add.sv",
+      "sha256": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_convert.sv",
+      "sha256": "a8586be6018ad8d1cb81904f37a1a00f1099b1978c9b79327678719b704d5fda"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_scale.sv",
+      "sha256": "42063b0ae30faa3f9de063e825e1f7e14468bb5a0fb2eefc23f121c77c800d71"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_hadamard.sv",
+      "sha256": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_index_score.sv",
+      "sha256": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_compress_project.sv",
+      "sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_mhc_post.sv",
+      "sha256": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_array.sv",
+      "sha256": "3d3ed3333516d592c17c023ef9c2cdaa6d08f5d5c512ea7de8146fc395dec9f5"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_rms_norm.sv",
+      "sha256": "12ed12b1fc2adf97588ef96c670fed07115b27e753f5357280eab39f11c6b297"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_rope.sv",
+      "sha256": "4f010e3829542b9624e97890bcd174a49171534408651a949e483f8cbf40404a"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_rope_lane_pipe.sv",
+      "sha256": "5473a7a506053f8501c79dc042bac3ca142677ed51ebe4c0cf5542c9ae6a0ebe"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_qwen_gqa.sv",
+      "sha256": "f4abf66c4e623053328186987034fce4e0c438cd28d658745e86ac1fab5614ff"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_silu_mul.sv",
+      "sha256": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_selection_token_append.sv",
+      "sha256": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_place_table.sv",
+      "sha256": "e99b729ea55ab4cbc073dd4e93bc73dcd3eba1f9926f0be6aa1bdcf720d10adf"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+      "sha256": "24dcaff10c692e67c467c21cc2726809b31ff43c04a1dd64da90cc9f51b86bf7"
+    },
+    {
+      "path": "rtl/test/a3_engine_completion_adapter.sv",
+      "sha256": "7af21879c1a0cb1d047543ed65282f174db09e7319c6a8f8e17304437adb8fb2"
+    },
+    {
+      "path": "rtl/test/a3_shipped_prefix_top.sv",
+      "sha256": "ff1f4641c29d9dbed4235d42a2de1307fdfe4f8ba3c277711accae464791d0a0"
+    },
+    {
+      "path": "rtl/test/a3_reduced_token_driver.cpp",
+      "sha256": "50cbdea5cf3be3cbe3c4ee376ff4f01d9612d23a287f85ac023f3ecf521aabd8"
+    }
+  ],
+  "status": "pass",
+  "vehicle": "rtl/test/a3_shipped_prefix_top.sv"
+}
