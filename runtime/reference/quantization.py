@@ -286,6 +286,18 @@ def fp4_qdq_bf16(
     )
 
 
+#: The block lengths this operator is QUALIFIED at, each established by
+#: ``tests/runtime/test_deepseek_v4_fp8_qdq.py`` against an independent scalar
+#: recomputation rather than by permission.  64 is DeepSeek-V4-Flash's; 32 is
+#: DeepSeek-V4.1-Flash's ``quantization_config.weight_block_size``, and V4.1
+#: refused at PC 64 of its own program because the engine compared against the
+#: single constant.  The arithmetic does not depend on the length -- the scale
+#: is a per-block amax with a binary32 1e-4 floor, one multiply by RN(1/448) and
+#: a ceil(log2) -- but a length is admitted here only once it is checked, never
+#: because the formula looks general.
+FP8_QDQ_QUALIFIED_BLOCK_SIZES: tuple[int, ...] = (32, FP8_QDQ_BLOCK_SIZE)
+
+
 def fp8_qdq_bf16(
     input_codes: Sequence[Sequence[int]],
     *,
@@ -304,10 +316,11 @@ def fp8_qdq_bf16(
     if (
         isinstance(block_size, bool)
         or not isinstance(block_size, int)
-        or block_size != FP8_QDQ_BLOCK_SIZE
+        or block_size not in FP8_QDQ_QUALIFIED_BLOCK_SIZES
     ):
         raise QuantizationReferenceError(
-            f"block_size must equal the qualified value {FP8_QDQ_BLOCK_SIZE}"
+            "block_size must be one of the qualified values "
+            f"{FP8_QDQ_QUALIFIED_BLOCK_SIZES}"
         )
     values = _finite_bf16_matrix(input_codes)
     width = len(values[0])

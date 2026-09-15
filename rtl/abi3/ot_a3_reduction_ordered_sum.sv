@@ -17,12 +17,23 @@
 // combine needs it; building a second copy here for no shipped operator would
 // be untested machinery whose only effect is to make a wrong order look right.
 //
-// INACTIVE STAGES PASS THROUGH, THEY DO NOT ADD ZERO.  The accumulator is a
-// chain of MAX_TERMS registered adders so the initiation interval is 1 for any
-// term count.  A stage past the run's term count forwards its input unchanged
-// instead of adding +0.0: -0.0 + 0.0 is +0.0, so a padded stage can turn a
-// negative zero into a positive one and disagree with the reference on a value
-// it is supposed to reproduce exactly.
+// THE ACCUMULATOR IS THE QUALIFIED PIPELINED MAC, NOT A COMBINATIONAL ADD.
+// Built first on ot_fp32_rne_pkg::fp32_add_rne -- one call per stage, which
+// looks like one adder -- it closed at 155.3 MHz on ASAP7, missing 1.5 ns by
+// 4.94 ns, and the path report named exactly one combinational binary32 add:
+// term[63] -> fp32_add_rne -> acc[8].  That function is about 6.4 ns of logic.
+// ot_mac_bf16_fp32_pipe is the same arithmetic in five balanced stages at one
+// result per cycle, and it is qualified bit-identical to
+// bf16_bf16_fp32_product_add_rne over 901,440 cases, so the chain is built out
+// of it: stage k computes RN(term_k * 1.0 + acc), which is RN(term_k + acc)
+// because the product is exact.
+//
+// AND AN INACTIVE STAGE ADDS MINUS ZERO, WHICH IS THE IDENTITY.  A stage past
+// the run's term count must not change the accumulator.  Feeding +0.0 is
+// almost right: (+0.0) + (-0.0) is +0.0 under RNE, so a padded stage turns a
+// negative zero positive.  Feeding -0.0 is exact for every finite accumulator
+// including both signed zeros -- (-0.0) + (-0.0) = -0.0 and (-0.0) + (+0.0) =
+// +0.0 -- so every stage stays identical and no bypass path is needed.
 // ---------------------------------------------------------------------------
 module ot_a3_reduction_ordered_sum #(
     parameter integer MAX_TERMS = 8
@@ -156,8 +167,8 @@ module ot_a3_reduction_ordered_sum #(
                 end
                 S_DRAIN: begin
                     busy <= 1'b1;
-                    // read(2) + seed(1) + MAX_TERMS stages + narrow(1)
-                    if (drain >= (MAX_TERMS[31:0] + 32'd4)) begin
+                    // read(2) + seed(1) + MAC_LAT per stage + narrow(1) + out(1)
+                    if (drain >= (MAC_LAT[31:0] * MAX_TERMS[31:0] + 32'd5)) begin
                         // ONE OWNER for error_code: the pipeline latches its
                         // first numeric fault and it is folded in here, because
                         // a second always block assigning the same reg lints as
@@ -184,7 +195,13 @@ module ot_a3_reduction_ordered_sum #(
         end
     end
 
-    // -- widen, then seed the accumulator ------------------------------------
+    // -- widen, seed, then the MAC chain ------------------------------------
+    //: The MAC's own latency; its valid_in reaches valid_out through s1..s4.
+    localparam integer MAC_LAT = 5;
+    //: BF16 +1.0 and BF16 -0.0.
+    localparam [15:0] BF16_ONE = 16'h3F80;
+    localparam [15:0] BF16_NEG_ZERO = 16'h8000;
+
     wire [33:0] decoded [0:MAX_TERMS-1];
     generate
         for (gk = 0; gk < MAX_TERMS; gk = gk + 1) begin : g_lane
@@ -194,85 +211,116 @@ module ot_a3_reduction_ordered_sum #(
     endgenerate
     wire [33:0] base_decoded = ot_a3_format_pkg::decode_bf16(base_rd_data[15:0]);
 
-    //: acc[0] is the seed; acc[k+1] is stage k's output.
-    reg        acc_valid [0:MAX_TERMS];
-    reg [31:0] acc_addr  [0:MAX_TERMS];
-    reg [31:0] acc       [0:MAX_TERMS];
-    reg [1:0]  acc_err   [0:MAX_TERMS];
-    //: Each stage needs the term it adds, so the whole widened rank travels.
-    reg [31:0] term      [0:MAX_TERMS][0:MAX_TERMS-1];
-    reg [1:0]  term_err  [0:MAX_TERMS][0:MAX_TERMS-1];
-    reg [7:0]  acc_terms [0:MAX_TERMS];
-    reg        acc_based [0:MAX_TERMS];
+    //: Stage k is fed MAC_LAT*k cycles after the seed, so lane k's BF16 code is
+    //: delayed by exactly that much.  Staggering the reads instead would save
+    //: these registers and couple every lane's address counter to the MAC's
+    //: latency; 16 bits per cycle of delay is the cheaper coupling.
+    localparam integer TERM_DELAY = MAC_LAT * MAX_TERMS;
+    reg [15:0] term_delay [0:MAX_TERMS-1][0:TERM_DELAY];
+    reg [1:0]  term_derr  [0:MAX_TERMS-1][0:TERM_DELAY];
 
-    wire [33:0] stage_sum [0:MAX_TERMS-1];
-    generate
-        for (gk = 0; gk < MAX_TERMS; gk = gk + 1) begin : g_stage
-            assign stage_sum[gk] =
-                ot_fp32_rne_pkg::fp32_add_rne(acc[gk], term[gk][gk]);
-        end
-    endgenerate
+    //: The seed: the base if there is one, else term 0.
+    reg        seed_valid;
+    reg [31:0] seed_acc;
+    reg [1:0]  seed_err;
+    reg [7:0]  seed_terms;
+    reg        seed_based;
 
+    //: One addr per element in flight, aligned to the chain's total latency.
+    //: An element's address enters at ``addr_pipe[0]`` on the same cycle the
+    //: seed takes it, so it sits at ``addr_pipe[MAC_LAT*MAX_TERMS]`` exactly
+    //: when the last stage's ``valid_out`` presents that element's result.
+    //: Indexing one shallower writes every value to its successor's address,
+    //: which is what the first run of the testbench showed: all seven values
+    //: right and all seven addresses off by one.
+    localparam integer ADDR_DEPTH = MAC_LAT * MAX_TERMS;
+    reg [31:0] addr_pipe [0:ADDR_DEPTH];
+    reg [1:0]  err_pipe  [0:ADDR_DEPTH];
+
+    integer d;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            for (k = 0; k <= MAX_TERMS; k = k + 1) begin
-                acc_valid[k] <= 1'b0;
-                acc_addr[k] <= 32'd0;
-                acc[k] <= 32'd0;
-                acc_err[k] <= E_OK;
-                acc_terms[k] <= 8'd0;
-                acc_based[k] <= 1'b0;
-                for (i = 0; i < MAX_TERMS; i = i + 1) begin
-                    term[k][i] <= 32'd0;
-                    term_err[k][i] <= E_OK;
+            seed_valid <= 1'b0;
+            seed_acc <= 32'd0;
+            seed_err <= E_OK;
+            seed_terms <= 8'd0;
+            seed_based <= 1'b0;
+            for (k = 0; k < MAX_TERMS; k = k + 1)
+                for (d = 0; d <= TERM_DELAY; d = d + 1) begin
+                    term_delay[k][d] <= 16'd0;
+                    term_derr[k][d] <= E_OK;
                 end
+            for (d = 0; d <= ADDR_DEPTH; d = d + 1) begin
+                addr_pipe[d] <= 32'd0;
+                err_pipe[d] <= E_OK;
             end
         end else begin
-            // -- the seed: the base if there is one, else term 0 -------------
-            acc_valid[0] <= b_valid;
-            acc_addr[0] <= b_addr_out;
-            acc_terms[0] <= cfg_terms;
-            acc_based[0] <= cfg_has_base;
-            acc[0] <= cfg_has_base ? base_decoded[31:0] : decoded[0][31:0];
-            acc_err[0] <= (cfg_has_base && base_decoded[33:32] != 2'd0) ? E_NONFINITE
-                        : ((!cfg_has_base && decoded[0][33:32] != 2'd0) ? E_NONFINITE
-                        : E_OK);
-            for (i = 0; i < MAX_TERMS; i = i + 1) begin
-                term[0][i] <= decoded[i][31:0];
-                term_err[0][i] <= (decoded[i][33:32] != 2'd0) ? E_NONFINITE : E_OK;
-            end
-
-            // -- one registered adder per term --------------------------------
+            seed_valid <= b_valid;
+            seed_terms <= cfg_terms;
+            seed_based <= cfg_has_base;
+            seed_acc <= cfg_has_base ? base_decoded[31:0] : decoded[0][31:0];
+            seed_err <= (cfg_has_base && base_decoded[33:32] != 2'd0) ? E_NONFINITE
+                      : ((!cfg_has_base && decoded[0][33:32] != 2'd0) ? E_NONFINITE
+                      : E_OK);
             for (k = 0; k < MAX_TERMS; k = k + 1) begin
-                acc_valid[k+1] <= acc_valid[k];
-                acc_addr[k+1] <= acc_addr[k];
-                acc_terms[k+1] <= acc_terms[k];
-                acc_based[k+1] <= acc_based[k];
-                for (i = 0; i < MAX_TERMS; i = i + 1) begin
-                    term[k+1][i] <= term[k][i];
-                    term_err[k+1][i] <= term_err[k][i];
+                term_delay[k][0] <= val_rd_data[k*32 +: 16];
+                term_derr[k][0] <= (decoded[k][33:32] != 2'd0) ? E_NONFINITE : E_OK;
+                for (d = 0; d < TERM_DELAY; d = d + 1) begin
+                    term_delay[k][d+1] <= term_delay[k][d];
+                    term_derr[k][d+1] <= term_derr[k][d];
                 end
-                // Stage k adds term k -- except term 0 when there is no base,
-                // which already seeded the accumulator; and except any stage at
-                // or past the run's term count, which forwards unchanged.
-                if ((!acc_based[k] && (k == 0)) ||
-                    ({24'd0, k[7:0]} >= {24'd0, acc_terms[k]})) begin
-                    acc[k+1] <= acc[k];
-                    acc_err[k+1] <= acc_err[k];
-                end else begin
-                    acc[k+1] <= stage_sum[k][31:0];
-                    acc_err[k+1] <=
-                        (acc_err[k] != E_OK) ? acc_err[k]
-                        : (term_err[k][k] != E_OK) ? term_err[k][k]
-                        : (stage_sum[k][33:32] != 2'd0) ? E_ACCUM : E_OK;
-                end
+            end
+            addr_pipe[0] <= b_addr_out;
+            err_pipe[0] <= E_OK;
+            for (d = 0; d < ADDR_DEPTH; d = d + 1) begin
+                addr_pipe[d+1] <= addr_pipe[d];
+                err_pipe[d+1] <= err_pipe[d];
             end
         end
     end
 
+    //: The chain.  Stage k's accumulator input is stage k-1's output, and its
+    //: valid follows the same path, so the whole thing is one long pipeline
+    //: with an initiation interval of 1.
+    wire [31:0] mac_y     [0:MAX_TERMS-1];
+    wire [1:0]  mac_err   [0:MAX_TERMS-1];
+    wire        mac_valid [0:MAX_TERMS-1];
+    wire [31:0] mac_c     [0:MAX_TERMS-1];
+    wire        mac_vin   [0:MAX_TERMS-1];
+    wire [15:0] mac_a     [0:MAX_TERMS-1];
+
+    generate
+        for (gk = 0; gk < MAX_TERMS; gk = gk + 1) begin : g_mac
+            //: Stage 0 adds term 0 only when a base seeded the accumulator;
+            //: without a base term 0 *is* the seed and must not be added twice.
+            wire stage_active = ({24'd0, gk[7:0]} < {24'd0, seed_terms}) &&
+                                !((gk == 0) && !seed_based);
+            assign mac_a[gk] = stage_active
+                             ? term_delay[gk][MAC_LAT*gk]
+                             : BF16_NEG_ZERO;
+            assign mac_c[gk] = (gk == 0) ? seed_acc : mac_y[gk-1];
+            assign mac_vin[gk] = (gk == 0) ? seed_valid : mac_valid[gk-1];
+            ot_mac_bf16_fp32_pipe stage (
+                .clk(clk),
+                .rst_n(rst_n),
+                .valid_in(mac_vin[gk]),
+                .a(mac_a[gk]),
+                .b(BF16_ONE),
+                .c(mac_c[gk]),
+                .y(mac_y[gk]),
+                .err(mac_err[gk]),
+                .valid_out(mac_valid[gk])
+            );
+        end
+    endgenerate
+
+    //: Any stage's range fault, and any operand's nonfiniteness, latched for
+    //: the element as it leaves the chain.
+    wire chain_err_any = (mac_err[MAX_TERMS-1] != 2'd0);
+
     // -- one narrowing at the output ----------------------------------------
     wire [18:0] narrowed =
-        ot_fp32_rne_pkg::fp32_to_bf16_rne(acc[MAX_TERMS]);
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(mac_y[MAX_TERMS-1]);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -286,9 +334,9 @@ module ot_a3_reduction_ordered_sum #(
             if (start) begin
                 out_count <= 32'd0;
                 saturation_count <= 32'd0;
-            end else if (acc_valid[MAX_TERMS]) begin
+            end else if (mac_valid[MAX_TERMS-1]) begin
                 out_we <= 1'b1;
-                out_addr <= acc_addr[MAX_TERMS];
+                out_addr <= addr_pipe[ADDR_DEPTH];
                 out_data <= {16'b0, narrowed[15:0]};
                 out_count <= out_count + 32'd1;
                 if (narrowed[16])
@@ -304,9 +352,11 @@ module ot_a3_reduction_ordered_sum #(
             first_err <= E_OK;
         else if (start)
             first_err <= E_OK;
-        else if (acc_valid[MAX_TERMS] && first_err == E_OK) begin
-            if (acc_err[MAX_TERMS] != E_OK)
-                first_err <= acc_err[MAX_TERMS];
+        else if (mac_valid[MAX_TERMS-1] && first_err == E_OK) begin
+            if (seed_err != E_OK)
+                first_err <= seed_err;
+            else if (chain_err_any)
+                first_err <= E_ACCUM;
             else if (narrowed[18:17] != 2'd0)
                 first_err <= E_ACCUM;
         end

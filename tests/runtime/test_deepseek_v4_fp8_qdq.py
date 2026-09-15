@@ -17,6 +17,7 @@ from runtime.reference.quantization import (
     FP8_QDQ_MAXIMUM,
     KERNEL_SOURCE_SHA256,
     QuantizationReferenceError,
+    FP8_QDQ_QUALIFIED_BLOCK_SIZES,
     fp8_qdq_bf16,
 )
 
@@ -77,6 +78,9 @@ def test_fp8_qdq_source_and_profile_are_pinned() -> None:
         "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2"
     )
     assert FP8_QDQ_BLOCK_SIZE == 64
+    # 32 is DeepSeek-V4.1-Flash's quantization_config.weight_block_size; each
+    # entry is qualified below against an independent scalar recomputation.
+    assert FP8_QDQ_QUALIFIED_BLOCK_SIZES == (32, 64)
     assert FP8_QDQ_MAXIMUM == 448
     assert encode_binary32_rne(FP8_QDQ_AMAX_FLOOR) == 0x38D1B717
     assert encode_binary32_rne(Fraction(1, 448)) == 0x3B124925
@@ -211,6 +215,53 @@ def test_fp8_qdq_matches_independent_randomized_multiblock_composition() -> None
     assert result.values == tuple(item[2] for item in expected)
 
 
+def test_fp8_qdq_block32_matches_independent_randomized_composition() -> None:
+    """Qualify DeepSeek-V4.1-Flash's 32-element block, not merely permit it.
+
+    The independent recomputation in ``_independent_qdq_row`` takes the block
+    length and derives every scale from its own block's amax, so running it at
+    32 is a second implementation rather than the same one re-parameterised.
+    Four blocks per row keeps the composition question -- each block's scale is
+    its own -- which is what a single-block check would not ask.
+    """
+    generator = random.Random(0x4453_5634_4650_3332)
+    rows = []
+    for _ in range(32):
+        row = []
+        for _ in range(128):
+            magnitude = generator.randrange(0x6000)
+            sign = 0x8000 if generator.getrandbits(1) else 0
+            row.append(sign | magnitude)
+        rows.append(tuple(row))
+
+    result = fp8_qdq_bf16(tuple(rows), block_size=32)
+    expected = tuple(_independent_qdq_row(row, block_size=32) for row in rows)
+    assert result.scale_codes == tuple(item[0] for item in expected)
+    assert result.e4m3fn_codes == tuple(item[1] for item in expected)
+    assert result.values == tuple(item[2] for item in expected)
+    # Four blocks of 32 across a 128-wide row, so the scales are per 32 and not
+    # one row-wide scale wearing four names.
+    assert all(len(item[0]) == 4 for item in expected)
+
+
+def test_fp8_qdq_block32_and_block64_disagree_on_the_same_row() -> None:
+    """The block length changes the answer, so the qualification is not vacuous.
+
+    If a 32-block run and a 64-block run of the same row agreed, then either
+    length would have been checking the other's arithmetic and adding 32 to the
+    qualified set would prove nothing.  They differ because each block's scale
+    comes from its own amax.
+    """
+    generator = random.Random(0x4453_5634_4650_3364)
+    row = tuple(
+        (0x8000 if generator.getrandbits(1) else 0) | generator.randrange(0x6000)
+        for _ in range(128)
+    )
+    at_32 = fp8_qdq_bf16((row,), block_size=32)
+    at_64 = fp8_qdq_bf16((row,), block_size=64)
+    assert at_32.values != at_64.values
+
+
 def test_fp8_qdq_fails_closed_on_nonfinite_and_intermediate_overflow() -> None:
     with pytest.raises(QuantizationReferenceError, match="must be finite BF16"):
         fp8_qdq_bf16(((0x7F80,) * 64,))
@@ -227,8 +278,8 @@ def test_fp8_qdq_fails_closed_on_nonfinite_and_intermediate_overflow() -> None:
         (((),), 64, "at least one element"),
         (((0,) * 63,), 64, "divisible"),
         (((0,) * 64, (0,) * 128), 64, "rectangular"),
-        (((0,) * 64,), 32, "qualified value 64"),
-        (((0,) * 64,), True, "qualified value 64"),
+        (((0,) * 64,), 48, "qualified values"),
+        (((0,) * 64,), True, "qualified values"),
         (((False,) * 64,), 64, "16-bit BF16"),
         (((1 << 16,) * 64,), 64, "16-bit BF16"),
     ],

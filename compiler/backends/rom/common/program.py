@@ -2380,6 +2380,18 @@ class RomLowering:
                 # finite binary32, so an unrecognised spelling is not a missing
                 # optimisation -- it is an operator that cannot be issued.
                 "head_weight_scale_binary32",
+                # ``ATTENTION.SPARSE``'s softmax scale, as the V4.1 exporter
+                # spells it.  Absent from this tuple the search returned 0 and
+                # the engine refused at V4.1 PC 77 -- "attention scale bits
+                # 0x00000000 are not a positive finite binary32 value" -- for a
+                # kernel that was carrying the right number all along
+                # (0x3d3504f3, which is 1/sqrt(512) at the released head width).
+                # Third spelling mismatch of the same shape on this walk, after
+                # ``post_width`` and ``hyper_connection_epsilon``: the exporter
+                # names a field specifically and the backend searches for the
+                # generic name.  A missing spelling is never a missing
+                # optimisation here; it is a zero where a scale has to be.
+                "softmax_scale_bits",
                 "scale_bf16_code",
                 "scale",
             ),

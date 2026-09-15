@@ -529,12 +529,162 @@ def _quantize_fp4_qdq_blocks(
     return nibbles, scale_codes.astype(np.uint8), clamps
 
 
+#: ``6 * v`` for every E4M3FN positive encoding and every midpoint between
+#: neighbours.  The AM-E10 scale is ``RNE_E4M3(amax / 6)``, and dividing an exact
+#: BF16 amax by six is not exact in any binary format -- but the rounding
+#: DECISION is a set of comparisons ``amax / 6  <=>  t``, each of which is
+#: ``amax  <=>  6 * t``, and every ``6 * t`` here IS exact in binary64: an E4M3FN
+#: encoding carries four significand bits and a midpoint five, so six times one
+#: needs at most seven.  Scaling the thresholds instead of the operand is what
+#: makes this quantiser exact rather than merely close.
+_E4M3FN_TABLE_TIMES_SIX = _E4M3FN_TABLE * np.float64(6.0)
+_E4M3FN_MIDPOINTS_TIMES_SIX = _E4M3FN_MIDPOINTS * np.float64(6.0)
+#: ``amax / 6 > 448``, the point at which the E4M3FN scale saturates.
+_E4M3FN_MAXIMUM_TIMES_SIX = np.float64(448.0) * np.float64(6.0)
+
+
+def _round_to_table_rne(
+    magnitudes: np.ndarray, table: np.ndarray, midpoints: np.ndarray
+) -> np.ndarray:
+    """Round non-negative ``magnitudes`` to the nearest entry of ``table``.
+
+    ``table`` is ascending in ENCODING order and ``midpoints`` holds the
+    midpoint between each adjacent pair, so the returned index is the storage
+    code.  Ties go to the even code, which is the significand parity the two
+    reference encoders name.  Extracted because three quantisers now perform
+    exactly this search and a fourth copy of it would be a fourth chance to get
+    the tie wrong.
+    """
+    index = np.searchsorted(table, magnitudes, side="left")
+    hit = (index < table.size) & (table[np.minimum(index, table.size - 1)] == magnitudes)
+    lower_code = np.clip(index - 1, 0, midpoints.size - 1)
+    midpoint = midpoints[lower_code]
+    upper_code = lower_code + 1
+    rounded = np.where(
+        magnitudes < midpoint,
+        lower_code,
+        np.where(
+            magnitudes > midpoint,
+            upper_code,
+            np.where(lower_code % 2 == 0, lower_code, upper_code),
+        ),
+    )
+    return np.where(hit, np.minimum(index, table.size - 1), rounded)
+
+
+def _quantize_fp4_s16_e4m3_blocks(
+    codes: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, int]:
+    """AM-E10 BF16 -> E2M1 elements with one E4M3 scale, over whole blocks.
+
+    ``codes`` is ``[blocks, group]`` of BF16 encodings -- the group is 16 for
+    DeepSeek-V4.1-Flash's main latent, and it is the caller's, not a constant
+    here.  The result is the ``[blocks, group]`` E2M1 nibbles, the ``[blocks]``
+    E4M3FN scale codes, and the number of elements the clamp moved.
+
+    This is ``runtime.reference.fp4_kv.quantize_group_to_fp4`` step for step:
+    ``scale = RNE_E4M3(amax / 6)``, then ``clamp(value / scale, +-6)`` rounded to
+    E2M1 ties-to-even, with an all-zero group emitting scale code 0 and all-zero
+    elements, and a group whose amax underflows every E4M3FN scale REFUSED
+    rather than committed as zeros.
+
+    It is a DIFFERENT RULE from ``_quantize_fp4_qdq_blocks`` above, not a block
+    size of it.  That one derives an E8M0 power-of-two scale from
+    ``ceil(log2(amax * RN(1/6)))``; this one rounds ``amax / 6`` to an E4M3FN
+    scale with a four-bit significand, so the two disagree on the scale for
+    almost every block.  Sharing a code path between them is exactly the
+    confusion the separate ``DType.FP4_E2M1_S16_E4M3`` exists to prevent.
+
+    Exact, and by the same device throughout: every rounding decision is a
+    comparison against a threshold, and each threshold is multiplied into the
+    operand's own scale so that both sides are exact binary64 values.  The scale
+    search compares ``amax`` against ``6 * t`` (at most seven significand bits);
+    the element search compares ``|value|`` against ``scale * t`` (at most seven)
+    and ``scale * m`` (at most eight).  Nothing is divided, so nothing rounds
+    before the one rounding each step is allowed.
+
+    WHAT THIS DOES NOT ESTABLISH.  The reference's own docstring says it: the
+    rule is the one ``docs/SOURCES.md`` records for the V4.1 compressor
+    (SRC-DSV41-FLASH-MODEL, "the main latent is quantized after RoPE in groups of
+    16 with E4M3 scales"), but the pinned ``model.py`` is absent from this
+    checkout, so the exact scale-selection micro-path -- any floor constant, and
+    whether the vendor multiplies by a rounded reciprocal of six rather than
+    dividing -- is NOT confirmed against the vendor.  The forward direction is
+    therefore the documented rule, not a vendor-qualified one; the INVERSE
+    (``fp4_kv.dequantize_to_fp8``) is exact and is what the dual-simulator
+    campaign in ``results/rtl/a3_v41_fp4kv_dequant_campaign.json`` qualified.
+    """
+    values = widen_bf16(codes)
+    if not bool(np.all(np.isfinite(values))):
+        raise exact.NumericReferenceError(
+            "activation BF16 element is NaN or infinity"
+        )
+    magnitudes = np.abs(values).astype(np.float64)
+    amax = magnitudes.max(axis=1)
+    empty = amax == 0.0
+
+    saturating = amax > _E4M3FN_MAXIMUM_TIMES_SIX
+    scale_codes = _round_to_table_rne(
+        np.where(saturating | empty, np.float64(0.0), amax),
+        _E4M3FN_TABLE_TIMES_SIX,
+        _E4M3FN_MIDPOINTS_TIMES_SIX,
+    ).astype(np.int64)
+    scale_codes = np.where(saturating, np.int64(0x7E), scale_codes)
+    underflowed = (~empty) & (scale_codes == 0)
+    if bool(np.any(underflowed)):
+        raise exact.NumericReferenceError(
+            "FP4 E2M1/E4M3-per-group scale underflows every E4M3FN code"
+        )
+    scale = np.where(
+        empty, np.float64(1.0), _E4M3FN_TABLE[np.minimum(scale_codes, 0x7E)]
+    )
+
+    ceiling = scale * np.float64(6.0)
+    clamped = np.minimum(magnitudes, ceiling[:, None])
+    clamps = int(np.count_nonzero(clamped != magnitudes))
+    # The element thresholds differ PER BLOCK, because each block has its own
+    # scale, so this cannot be one ``np.searchsorted`` over a shared table.  The
+    # E2M1 table has eight entries, so the insertion point is counted directly:
+    # ``searchsorted(t, m, "left")`` is the number of entries strictly below
+    # ``m``, and that is a sum over eight comparisons.
+    element_thresholds = scale[:, None, None] * _E2M1_TABLE[None, None, :]
+    element_midpoints = scale[:, None, None] * _E2M1_MIDPOINTS[None, None, :]
+    target = clamped[:, :, None]
+    index = np.count_nonzero(element_thresholds < target, axis=2)
+    hit = np.any(element_thresholds == target, axis=2)
+    lower_code = np.clip(index - 1, 0, _E2M1_MIDPOINTS.size - 1)
+    midpoint = np.take_along_axis(
+        element_midpoints, lower_code[:, :, None], axis=2
+    )[:, :, 0]
+    upper_code = lower_code + 1
+    rounded = np.where(
+        clamped < midpoint,
+        lower_code,
+        np.where(
+            clamped > midpoint,
+            upper_code,
+            np.where(lower_code % 2 == 0, lower_code, upper_code),
+        ),
+    )
+    selected = np.where(
+        hit, np.minimum(index, _E2M1_TABLE.size - 1), rounded
+    ).astype(np.uint8)
+    negative = (values < 0) & (selected != 0)
+    nibbles = np.where(negative, selected | np.uint8(0x8), selected).astype(np.uint8)
+    nibbles = np.where(empty[:, None], np.uint8(0), nibbles).astype(np.uint8)
+    scale_out = np.where(empty, np.int64(0), scale_codes).astype(np.uint8)
+    return nibbles, scale_out, clamps
+
+
 def _quantize_fp8_qdq_blocks(
     codes: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, int]:
-    """The pinned block-64 ``FP8_QDQ`` quantise half, code for code.
+    """The ``FP8_QDQ`` quantise half, code for code, at any qualified block.
 
-    ``codes`` is ``[blocks, 64]`` of BF16 encodings.  The result is E4M3FN
+    ``codes`` is ``[blocks, block]`` of BF16 encodings; the length is the
+    operator's and every scale below comes from its own row of that array, so
+    nothing here reads the block length as a constant.  The qualified lengths
+    are ``FP8_QDQ_QUALIFIED_BLOCK_SIZES`` and the caller checks them.  The result is E4M3FN
     codes, one E8M0 code per block, and the number of elements the contract's
     clamp moved.  Unlike NUM-3.3's generic activation quantiser, this rule
     derives its scale with one binary32 multiply by ``RN(1 / 448)`` and
@@ -1451,15 +1601,32 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         TrapClass.CAPABILITY_OR_RESOURCE,
     )
     _require(
-        code_view.dtype in (DType.FP8_E4M3FN, DType.MXFP4_E2M1),
+        code_view.dtype
+        in (DType.FP8_E4M3FN, DType.MXFP4_E2M1, DType.FP4_E2M1_S16_E4M3),
         f"QUANTIZE code view {code_view.descriptor_id} stores "
-        f"{DType(code_view.dtype).name}; expected FP8_E4M3FN or MXFP4_E2M1",
+        f"{DType(code_view.dtype).name}; expected FP8_E4M3FN, MXFP4_E2M1 or "
+        "FP4_E2M1_S16_E4M3",
     )
-    _require(
-        scale_view.dtype in (DType.E8M0_SCALE, DType.U8),
-        f"QUANTIZE scale view {scale_view.descriptor_id} stores "
-        f"{DType(scale_view.dtype).name}; expected an E8M0 scale",
-    )
+    # AM-E10's format carries an E4M3FN scale, and the other two carry an E8M0
+    # one.  The scale view's dtype is checked against the CODE view's format
+    # rather than against a single permitted set, because a group of E2M1
+    # elements beside an E8M0 scale is ``MXFP4_E2M1`` and the same elements
+    # beside an E4M3FN scale are ``FP4_E2M1_S16_E4M3``: the scale is what tells
+    # the two apart, so accepting either scale for either format would make the
+    # storage codes decorative.
+    if code_view.dtype == DType.FP4_E2M1_S16_E4M3:
+        _require(
+            scale_view.dtype == DType.FP8_E4M3FN,
+            f"QUANTIZE scale view {scale_view.descriptor_id} stores "
+            f"{DType(scale_view.dtype).name}; FP4_E2M1_S16_E4M3 is defined with "
+            "an E4M3FN scale",
+        )
+    else:
+        _require(
+            scale_view.dtype in (DType.E8M0_SCALE, DType.U8),
+            f"QUANTIZE scale view {scale_view.descriptor_id} stores "
+            f"{DType(scale_view.dtype).name}; expected an E8M0 scale",
+        )
     _same_shape(source_view, code_view, "QUANTIZE code shape")
     width = int(source_view.dims[-1])
     rows = _rows(source_view.dims)
@@ -1477,7 +1644,16 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     # distinguish two different rules over the same storage formats.
     fp4 = code_view.dtype == DType.MXFP4_E2M1
     contract = declared_contract(ctx.table, operator.payload["numeric_profile_id"])
-    if fp4:
+    if code_view.dtype == DType.FP4_E2M1_S16_E4M3:
+        # The group is the operator's, taken from the scale view, not a constant:
+        # the format's name says 16 because that is DeepSeek-V4.1-Flash's main
+        # latent group, and a different deployment of the same format would state
+        # a different one in its own descriptors.
+        with _numeric_guard("fp4_e2m1_s16_e4m3_to_fp8_quantize_v1"):
+            flat_codes, flat_scales, saturations = _quantize_fp4_s16_e4m3_blocks(
+                source
+            )
+    elif fp4:
         _require(
             block == exact_quantization.FP4_QDQ_BLOCK_SIZE,
             f"QUANTIZE code view {code_view.descriptor_id} is MXFP4_E2M1 with a "
@@ -1487,11 +1663,24 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         with _numeric_guard("quantization_fp4_qdq_bf16_quantize_v1"):
             flat_codes, flat_scales, saturations = _quantize_fp4_qdq_blocks(source)
     elif contract == CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE:
+        # The block is the operator's, and it is checked against the lengths the
+        # reference is QUALIFIED at rather than against one constant.  Comparing
+        # to a single value refused DeepSeek-V4.1-Flash at PC 64 of its own
+        # program for declaring the 32-element block its
+        # quantization_config.weight_block_size states, while the arithmetic --
+        # a per-block amax with a binary32 1e-4 floor, one multiply by
+        # RN(1/448) and a ceil(log2) -- never depended on the length.  The set
+        # is a qualification, not a permission: each entry is established in
+        # tests/runtime/test_deepseek_v4_fp8_qdq.py against an independent
+        # scalar recomputation, and the two lengths are shown to disagree on the
+        # same row so neither is checking the other's arithmetic.  The sibling
+        # FP4_E2M1_S16_E4M3 branch above already takes its group from the
+        # operator's own scale view for the same reason.
         _require(
-            block == exact_quantization.FP8_QDQ_BLOCK_SIZE,
+            block in exact_quantization.FP8_QDQ_QUALIFIED_BLOCK_SIZES,
             f"QUANTIZE code view {code_view.descriptor_id} names {contract} with "
-            f"a {block}-element block; the qualified FP8 block is "
-            f"{exact_quantization.FP8_QDQ_BLOCK_SIZE}",
+            f"a {block}-element block; the qualified FP8 blocks are "
+            f"{exact_quantization.FP8_QDQ_QUALIFIED_BLOCK_SIZES}",
         )
         with _numeric_guard(contract):
             flat_codes, flat_scales, saturations = _quantize_fp8_qdq_blocks(source)
