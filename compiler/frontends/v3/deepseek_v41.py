@@ -1096,9 +1096,20 @@ def source_kind_plan(
         # a released module are ``engram_max_ngram_size - 1`` operators of
         # ``engram_n_heads`` columns each.  A single kernel covering all 24
         # could not say which order any column carried.
+        # NO LOOKBACK GATHER.  The plan used to lead with one, and the emitter
+        # produced a (span, max_ngram) window for NGRAM_HASH to consume.  The
+        # operator owns that lookback: its RTL declares the IR kind
+        # ``NGRAM_HASH(token_ids, order, head) -> row_ids`` and forms
+        # ``t_j = pad_id when blocked, else the compressed id`` itself; the
+        # functional engine requires one token id per output position, not a
+        # window per position; and the contract's authority,
+        # ``runtime.reference.engram.ngram_row_ids``, takes ``token_ids`` and
+        # indexes ``compressed[p - j]`` with the sticky blocked rule.  The window
+        # was also not describable as a movement -- the lookback descends while a
+        # view's strides are unsigned, and a blocked lookback substitutes a pad
+        # instead of addressing anything -- which is what V4.1 PC 241 reported.
         "ENGRAM_NGRAM_HASH": (
-            ("GATHER",)
-            + ("NGRAM_HASH",) * (profile.engram_max_ngram - 1)
+            ("NGRAM_HASH",) * (profile.engram_max_ngram - 1)
             + ("CONCAT",)
         ),
         # ``ParallelEngramEmbedding.forward`` keeps the table FP8 and
@@ -2819,26 +2830,30 @@ def export_deepseek_v41_kernel_graph(
                     "orders": ENGRAM_ORDERS,
                 },
             )
-            lookback = act(
-                f"{op}.lookback_ids", "u32", (span, profile.engram_max_ngram)
-            )
-            emit(
-                f"{op}.lookback",
-                "GATHER",
-                (position_offset, compressed_ids),
-                (lookback,),
-                step="lookback_ids",
-                iteration_domain={
-                    "tokens": span,
-                    "width": profile.engram_max_ngram,
-                },
-                attributes={
-                    "blocked_lookback_identity": profile.engram_pad_token,
-                    "lookback": profile.engram_max_ngram,
-                    "lookback_bound": "sequence_start_and_any_blocked_position",
-                    "selector": "input.position_offset",
-                },
-            )
+            # THE LOOKBACK BELONGS TO NGRAM_HASH, NOT TO A MOVEMENT AHEAD OF IT.
+            # This used to emit a GATHER producing a (span, max_ngram) lookback
+            # window and feed that window to NGRAM_HASH.  Three independent
+            # authorities say the operator owns the lookback instead:
+            #
+            #   * rtl/abi3/ot_a3_dma_ngram_hash.sv declares its IR kind as
+            #     ``NGRAM_HASH(token_ids, order, head) -> row_ids`` and computes
+            #     "t_j = pad_id when the lookback is blocked, else the compressed
+            #     id" itself, fully pipelined at II 1;
+            #   * runtime/sim/engines/dma.py requires
+            #     ``id_view.element_count == positions`` -- one token id per
+            #     output position, not a window per position; and
+            #   * runtime.reference.engram.ngram_row_ids, the contract's own
+            #     authority, takes ``token_ids`` and forms ``compressed[p - j]``
+            #     with the sticky blocked rule internally.
+            #
+            # And the window was not expressible as a movement in any case: the
+            # lookback runs *descending* (t_0 is position p, t_1 is p-1) while a
+            # tensor view's strides are unsigned, and a blocked lookback
+            # substitutes a pad rather than addressing anything.  V4.1 refused at
+            # PC 241 with "DMA.GATHER output view dims (1, 4) differ from the
+            # gathered shape (1,)", which is the ABI declining to describe it.
+            # Passing the compressed ids straight through is what all three
+            # authorities read.
             order_rows: list[str] = []
             for index in range(ENGRAM_ORDERS):
                 order = index + 2
@@ -2850,7 +2865,7 @@ def export_deepseek_v41_kernel_graph(
                 emit(
                     f"{op}.order{order}",
                     "NGRAM_HASH",
-                    (lookback, multipliers, columns),
+                    (compressed_ids, multipliers, columns),
                     (rows,),
                     step=f"order{order}",
                     iteration_domain={"tokens": span, "heads": ENGRAM_HEADS},

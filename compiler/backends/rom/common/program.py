@@ -5586,6 +5586,47 @@ class RomLowering:
             dims = self._dims(tensor)
             return dims[axis] if -len(dims) <= axis < len(dims) else default
 
+        if family is Major.DMA:
+            if sub == int(Dma.NGRAM_HASH):
+                # AM-E10, and the same three mandatory auxiliaries
+                # ``compiler/backends/hbm_sram/plan.py`` states: ``aux_id_0`` the
+                # n-gram ORDER this operator computes, ``aux_id_1`` the pad ID
+                # substituted for a blocked lookback, ``aux_id_2`` the compressed
+                # vocabulary size every ID is range-checked against, and
+                # ``aux_id_3`` the first order the column table covers (absent
+                # meaning the released layout's two).
+                #
+                # This backend had no DMA branch at all, so a V4.1 ROM
+                # deployment carried an Engram hash with no order: "operator
+                # 1692: DMA.NGRAM_HASH declares no the n-gram order in aux_id_0"
+                # at PC 241.  One convention, two backends -- the same property
+                # ``_epsilon_bits`` states about itself -- so this mirrors the
+                # HBM text rather than inventing a second reading.  None of the
+                # three may be derived: the order selects which column the row
+                # lands in, the pad ID is a token value and the vocabulary is
+                # the range check.
+                missing = [
+                    key
+                    for key in ("order", "pad_id", "compressed_vocabulary")
+                    if attributes.get(key) is None
+                ]
+                if missing:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} lowers to DMA.NGRAM_HASH, "
+                        "which states its n-gram order in aux0, its pad ID in "
+                        "aux1 and its compressed vocabulary in aux2, and the "
+                        f"graph declares no {', '.join(missing)}"
+                    )
+                aux = [
+                    int(attributes["order"]),
+                    int(attributes["pad_id"]),
+                    int(attributes["compressed_vocabulary"]),
+                ]
+                first = attributes.get("first_order")
+                if first is not None:
+                    aux.append(int(first))
+                return aux
+
         if family is Major.TENSOR:
             if sub == int(TensorOp.GROUPED_MATMUL):
                 return [int(attributes.get("group_count", domain.get("groups", 1)))]
