@@ -159,6 +159,30 @@ module ot_a3_dependence_table #(
     wire [6:0]  merge_index_full = merge_index_wide[6:0];
     wire [6:0]  free_index_full  = free_index_wide[6:0];
 
+    // -- the merge comparison, BEFORE the index mux ------------------------
+    // The worst path of the whole microsequencer ran
+    // ``issue_slot_q -> deps.range_hi``: the merge search picks an index, a
+    // 128-way 40-bit mux reads that range's bound, a 40-bit comparison decides
+    // whether to widen it, and a 128-way demux writes it back -- mux, then
+    // compare, then write, all in one cycle.  At a 2.9 ns target that path had
+    // 2 ps of slack, so this reduction *was* the control plane's clock.
+    //
+    // The comparison does not depend on which index wins, so it is done for
+    // every range in parallel and only its one-bit result is muxed.  The path
+    // becomes max(merge search, 40-bit compare) -> 1-bit mux -> write enable
+    // instead of merge search -> 40-bit mux -> 40-bit compare -> write.
+    // Semantics are untouched: same widening rule, same cycle, same latency,
+    // no interlock and no new hazard -- only the order of a mux and a compare.
+    wire [TOTAL-1:0] merge_lo_lt;
+    wire [TOTAL-1:0] merge_hi_gt;
+    genvar gc;
+    generate
+        for (gc = 0; gc < TOTAL; gc = gc + 1) begin : g_merge_cmp
+            assign merge_lo_lt[gc] = insert_lo < range_lo[gc];
+            assign merge_hi_gt[gc] = insert_hi > range_hi[gc];
+        end
+    endgenerate
+
     reg [7:0] used;
     integer c;
     always @* begin
@@ -201,9 +225,9 @@ module ot_a3_dependence_table #(
                 if (insert_valid) begin
                     entry_valid[insert_slot] <= 1'b1;
                     if (ins_merge) begin
-                        if (insert_lo < range_lo[merge_index_full])
+                        if (merge_lo_lt[merge_index_full])
                             range_lo[merge_index_full] <= insert_lo;
-                        if (insert_hi > range_hi[merge_index_full])
+                        if (merge_hi_gt[merge_index_full])
                             range_hi[merge_index_full] <= insert_hi;
                         range_write[merge_index_full] <=
                             range_write[merge_index_full] | insert_write;
