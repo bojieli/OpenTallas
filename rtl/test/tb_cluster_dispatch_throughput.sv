@@ -71,13 +71,22 @@ module tb_cluster_dispatch_throughput;
             wire [ACC_W-1:0] res;
             wire [LANES-1:0] drop;
             wire rr, st;
+            wire [8:0] rcol;
+                //: THE OPERAND-DELIVERY PORTS. This bench runs the unit at
+                //: its default REFILL_DECOUPLED=0, where refill_valid is a pure
+                //: token and the weight image comes from the host port, so the
+                //: payload is tied off and refill_col is observed and unused.
+                //: Connected rather than left off: a missing pin on this module
+                //: once cost four commits of a bench hanging to its guard.
             ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256)) cu (
                 .clk(clk), .rst_n(rst_n),
                 .start(cu_start), .cfg_k(cu_cfg_k), .cfg_scale(cu_cfg_scale),
+                .wgt_reload(1'b1),
                 .busy(cu_busy[g]), .done(cu_done[g]),
                 .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
                 .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
-                .refill_valid(1'b1), .refill_ready(rr), .stalled(st),
+                .refill_valid(1'b1), .refill_data({(16*LANES){1'b0}}),
+                .refill_col(rcol), .refill_ready(rr), .stalled(st),
                 .res_sel(res_sel), .res_data(res), .dropped_mask(drop));
             assign res_data[g] = res;
         end

@@ -57,14 +57,20 @@ module tb_kernel_dispatch_throughput;
     wire [ACC_W-1:0] res_data;
     wire [LANES-1:0] dropped;
     wire refill_ready, stalled;
+    wire [8:0] refill_col;
 
     ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256)) cu (
         .clk(clk), .rst_n(rst_n),
         .start(cu_start), .cfg_k(cu_cfg_k), .cfg_scale(cu_cfg_scale),
+        //: default REFILL_DECOUPLED=0: refill_valid is a token, so the payload is
+        //: tied off and wgt_reload is high on every start.  This bench isolates
+        //: CONTROL and checks no results, so the weight store is never written.
+        .wgt_reload(1'b1),
         .busy(cu_busy), .done(cu_done),
         .wr_en(1'b0), .wr_addr(8'b0), .wr_data({16*LANES{1'b0}}),
         .act_we(1'b0), .act_waddr(9'b0), .act_wdata(16'b0),
-        .refill_valid(1'b1), .refill_ready(refill_ready), .stalled(stalled),
+        .refill_valid(1'b1), .refill_data({16*LANES{1'b0}}),
+        .refill_col(refill_col), .refill_ready(refill_ready), .stalled(stalled),
         .res_sel(5'b0), .res_data(res_data), .dropped_mask(dropped));
 
 

@@ -107,6 +107,11 @@ module ot_probe_dispatch_tree #(
 );
     localparam integer UNITS = LEAVES * GROUP;
     wire [LEAVES-1:0]        cu_start;
+    //: the per-leaf new-tile flag.  It reaches a unit model's `obs` term below
+    //: rather than being left dangling, because an unconnected output would let
+    //: synthesis delete the leaf flop that drives it and the routed area would
+    //: then understate the distributor by exactly the thing being added.
+    wire [LEAVES-1:0]        cu_wgt_reload;
     wire [UNITS-1:0]         cu_done, cu_obs;
     wire [LEAVES*K_W-1:0]    cu_cfg_k;
     wire [LEAVES*SC_W-1:0]   cu_cfg_scale;
@@ -119,7 +124,8 @@ module ot_probe_dispatch_tree #(
         .desc_valid(desc_valid), .desc_ready(desc_ready),
         .desc_k(desc_k), .desc_scale(desc_scale), .desc_passes(desc_passes),
         .desc_tile_base(desc_tile_base),
-        .cu_start(cu_start), .cu_cfg_k(cu_cfg_k), .cu_cfg_scale(cu_cfg_scale),
+        .cu_start(cu_start), .cu_wgt_reload(cu_wgt_reload),
+        .cu_cfg_k(cu_cfg_k), .cu_cfg_scale(cu_cfg_scale),
         .cu_tile_base(cu_tile), .cu_done(cu_done), .cu_obs(cu_obs),
         .descriptors_retired(descriptors_retired),
         .passes_launched(passes_launched),
@@ -139,7 +145,9 @@ module ot_probe_dispatch_tree #(
                                       .TILE_W(TILE_W)) u_m (
                     .clk(clk), .rst_n(rst_n),
                     .start(cu_start[g]), .cfg_k(cu_cfg_k[g*K_W +: K_W]),
-                    .cfg_scale(cu_cfg_scale[g*SC_W +: SC_W]),
+                    .cfg_scale({cu_cfg_scale[g*SC_W +: SC_W-1],
+                                cu_cfg_scale[g*SC_W + SC_W-1]
+                                ^ cu_wgt_reload[g]}),
                     .tile(cu_tile[g*TILE_W +: TILE_W]),
                     .busy(), .done(cu_done[g*GROUP + j]),
                     .obs(cu_obs[g*GROUP + j]));
@@ -188,6 +196,7 @@ module ot_probe_dtree_bare #(
     input  wire [PASS_W-1:0]         desc_passes,
     input  wire [TILE_W-1:0]         desc_tile_base,
     output wire [LEAVES-1:0]         cu_start,
+    output wire [LEAVES-1:0]         cu_wgt_reload,
     output wire [LEAVES*K_W-1:0]     cu_cfg_k,
     output wire [LEAVES*SC_W-1:0]    cu_cfg_scale,
     output wire [LEAVES*TILE_W-1:0]  cu_tile,
@@ -208,7 +217,8 @@ module ot_probe_dtree_bare #(
         .desc_valid(desc_valid), .desc_ready(desc_ready),
         .desc_k(desc_k), .desc_scale(desc_scale), .desc_passes(desc_passes),
         .desc_tile_base(desc_tile_base),
-        .cu_start(cu_start), .cu_cfg_k(cu_cfg_k), .cu_cfg_scale(cu_cfg_scale),
+        .cu_start(cu_start), .cu_wgt_reload(cu_wgt_reload),
+        .cu_cfg_k(cu_cfg_k), .cu_cfg_scale(cu_cfg_scale),
         .cu_tile_base(cu_tile), .cu_done(cu_done), .cu_obs(cu_obs),
         .descriptors_retired(descriptors_retired),
         .passes_launched(passes_launched),

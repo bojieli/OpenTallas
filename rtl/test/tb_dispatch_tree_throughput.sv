@@ -45,9 +45,33 @@
 //           the place-and-route records.
 //  SKEW     0 every unit always fed; 1 every unit slowed a little and by a
 //           different amount; 2 STRAGGLERS -- one unit in sixteen at a 50 %
-//           refill duty. Results must stay bit-identical in every regime,
-//           because a stalled refill holds the accumulators rather than dropping
-//           a column.
+//           refill duty; 3 one unit in sixteen at a 25 % duty; 4 EVERY unit at a
+//           50 % duty. Results must stay bit-identical in every regime, because a
+//           stalled refill holds the accumulators rather than dropping a column.
+//           3 and 4 exist because the operand-delivery fix has a NEW bound -- one
+//           tile fetch per descriptor rather than one column fetch per column
+//           consumed -- and a regime that does not cross that bound would only
+//           show the fix winning. 3 crosses it; 4 does not, at these passes.
+//
+// TWO PARAMETERS REACH THE COMPUTE UNITS, so the operand-delivery change is
+// measured on the same bench, the same vectors and the same control model as the
+// baseline it replaces:
+//   REFILL_DECOUPLED  0 lockstep handshake (the baseline: 99.13 % at skew 0,
+//                     54.13 % at skew 2), 1 the fill frontier.
+//   WGT_BANKS         1 single buffer, 2 double buffer.
+//
+// THE REFILL PORT CARRIES DATA under REFILL_DECOUPLED=1: each unit asks for a
+// column index and the bench supplies that column of the SAME tile the expected
+// results were generated from. The host image port writes bank 0 only, so under
+// WGT_BANKS=2 the walk reads a bank the host never touched and every one of the
+// UNITS x LANES checked accumulators depends on the fill frontier having
+// delivered the right column to the right bank. A residency or bank-select fault
+// is a wrong result here, not an unverifiable cycle count.
+//
+// FLAT=1 CANNOT SUPPLY THE FLAG. ot_cluster_dispatcher has no per-pass output, so
+// its units are given wgt_wgt_reload=1 -- a fetch charged on every pass. The flat
+// structure is therefore only comparable to the tree at REFILL_DECOUPLED=0, and
+// the campaign does not run it decoupled.
 // ---------------------------------------------------------------------------
 module tb_dispatch_tree_throughput #(
     parameter integer LEAVES  = 16,   // token buffers, one per group
@@ -60,7 +84,9 @@ module tb_dispatch_tree_throughput #(
     parameter integer SC_W    = 8,
     parameter integer PASS_W  = 6,
     parameter integer FLAT    = 0,
-    parameter integer SKEW    = 0
+    parameter integer SKEW    = 0,
+    parameter integer REFILL_DECOUPLED = 0,
+    parameter integer WGT_BANKS        = 1
 );
     localparam integer UNITS  = LEAVES * GROUP;
     localparam integer TILE_W = $clog2(UNITS);
@@ -76,6 +102,7 @@ module tb_dispatch_tree_throughput #(
     reg  [TILE_W-1:0]  desc_base;
 
     wire [LEAVES-1:0]        lf_start;
+    wire [LEAVES-1:0]        lf_reload;
     wire [LEAVES*K_W-1:0]    lf_k;
     wire [LEAVES*SC_W-1:0]   lf_scale;
     wire [LEAVES*TILE_W-1:0] lf_tile;
@@ -94,7 +121,8 @@ module tb_dispatch_tree_throughput #(
             .desc_valid(desc_valid), .desc_ready(desc_ready),
             .desc_k(desc_k), .desc_scale(desc_scale), .desc_passes(desc_passes),
             .desc_tile_base(desc_base),
-            .cu_start(lf_start), .cu_cfg_k(lf_k), .cu_cfg_scale(lf_scale),
+            .cu_start(lf_start), .cu_wgt_reload(lf_reload),
+            .cu_cfg_k(lf_k), .cu_cfg_scale(lf_scale),
             .cu_tile_base(lf_tile), .cu_done(cu_done), .cu_obs(cu_obs),
             .descriptors_retired(descs), .passes_launched(passes),
             .unit_completions(completions), .root_stall_cycles(root_stall),
@@ -119,6 +147,9 @@ module tb_dispatch_tree_throughput #(
             .unit_busy_cycles(f_busy_cycles), .cluster_cycles(cl_cycles),
             .starved_cycles(starved));
         assign lf_start    = {LEAVES{f_start}};
+        //: no per-pass output exists on the flat dispatcher; every pass is charged
+        //: a fresh tile.  See the header.
+        assign lf_reload   = {LEAVES{1'b1}};
         assign completions = 32'b0;
         assign root_stall  = 32'b0;
         assign signature   = 1'b0;
@@ -131,6 +162,13 @@ module tb_dispatch_tree_throughput #(
     end
     endgenerate
 
+    //: the operand vectors, declared ahead of the unit array because the refill
+    //: payload is sourced from them.
+    localparam integer KF = 32;
+    reg [15:0] act_mem [0:1023];
+    reg [15:0] wgt_mem [0:16383];
+    reg [39:0] exp_mem [0:LANES-1];
+
     // ---- operand load ports, broadcast so every unit holds the same tile ----
     reg                wr_en = 0, act_we = 0;
     reg [7:0]          wr_addr = 0;
@@ -142,6 +180,7 @@ module tb_dispatch_tree_throughput #(
     //: per-unit refill duty, deterministic so the comparison between structures
     //: is repeatable.  See the header for the three regimes.
     wire [UNITS-1:0]  refill_v;
+    wire [UNITS-1:0]  cu_grant;      // columns accepted, per unit, per cycle
     reg  [15:0]       skew_cnt  [0:UNITS-1];
     wire [ACC_W-1:0]  res_data  [0:UNITS-1];
     reg  [TILE_W-1:0] seen_tile [0:LEAVES-1];
@@ -166,16 +205,32 @@ module tb_dispatch_tree_throughput #(
                 wire [ACC_W-1:0] res;
                 wire [LANES-1:0] drop;
                 wire rr, st;
-                ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256)) cu (
+                wire [8:0] rcol;
+                //: the operand-delivery payload.  Column rcol of the same tile the
+                //: expected results came from, wrapped at KF so every delivered
+                //: column is real data rather than an unwritten vector slot.
+                reg [16*LANES-1:0] rdata;
+                integer rl;
+                always @* begin
+                    rdata = {(16*LANES){1'b0}};
+                    for (rl = 0; rl < LANES; rl = rl + 1)
+                        rdata[16*rl +: 16] = wgt_mem[(rcol % KF)*LANES + rl];
+                end
+                ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256),
+                                  .REFILL_DECOUPLED(REFILL_DECOUPLED),
+                                  .WGT_BANKS(WGT_BANKS)) cu (
                     .clk(clk), .rst_n(rst_n),
                     .start(lf_start[g]), .cfg_k(lf_k[g*K_W +: K_W]),
                     .cfg_scale(lf_scale[g*SC_W +: SC_W]),
+                    .wgt_reload(lf_reload[g]),
                     .busy(cu_busy[U]), .done(cu_done[U]),
                     .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
                     .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
-                    .refill_valid(refill_v[U]), .refill_ready(rr), .stalled(st),
+                    .refill_valid(refill_v[U]), .refill_data(rdata),
+                    .refill_col(rcol), .refill_ready(rr), .stalled(st),
                     .res_sel(res_sel), .res_data(res), .dropped_mask(drop));
                 assign res_data[U] = res;
+                assign cu_grant[U] = rr && refill_v[U];
 
                 //: the one-bit descriptor signature a unit returns to its leaf,
                 //: which the tree XOR-reduces. The probe's unit model computes
@@ -198,30 +253,37 @@ module tb_dispatch_tree_throughput #(
                 assign refill_v[U] =
                     (SKEW == 0) ? 1'b1 :
                     (SKEW == 1) ? (skew_cnt[U] != 16'b0) :
-                    ((U % 16) != 0) ? 1'b1 : skew_cnt[U][0];
+                    (SKEW == 4) ? skew_cnt[U][0] :
+                    ((U % 16) != 0) ? 1'b1 :
+                    (SKEW == 3) ? (skew_cnt[U][1:0] == 2'b00) : skew_cnt[U][0];
             end
         end
     endgenerate
 
     // ---- utilisation accounting, bench-side so it costs the design nothing ----
     integer ii;
-    reg [63:0] busy_acc;
-    reg [31:0] busy_now;
+    reg [63:0] busy_acc, grant_acc;
+    reg [31:0] busy_now, grant_now;
     always @* begin
         busy_now = 32'b0;
-        for (ii = 0; ii < UNITS; ii = ii + 1)
-            busy_now = busy_now + {31'b0, cu_busy[ii]};
+        grant_now = 32'b0;
+        for (ii = 0; ii < UNITS; ii = ii + 1) begin
+            busy_now  = busy_now  + {31'b0, cu_busy[ii]};
+            grant_now = grant_now + {31'b0, cu_grant[ii]};
+        end
     end
     reg acct;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) busy_acc <= 64'b0;
-        else if (acct) busy_acc <= busy_acc + {32'b0, busy_now};
+        if (!rst_n) begin busy_acc <= 64'b0; grant_acc <= 64'b0; end
+        else if (acct) begin
+            busy_acc  <= busy_acc  + {32'b0, busy_now};
+            //: WEIGHT COLUMNS FETCHED.  The term reuse is meant to divide: at
+            //: three passes per descriptor a unit that re-fetched a resident tile
+            //: would show three times this.
+            grant_acc <= grant_acc + {32'b0, grant_now};
+        end
 
     // ---- functional phase ---------------------------------------------------
-    localparam integer KF = 32;
-    reg [15:0] act_mem [0:1023];
-    reg [15:0] wgt_mem [0:16383];
-    reg [39:0] exp_mem [0:LANES-1];
     integer kk, ll, uu, gg, mism, tmism, guard;
     reg [TILE_W-1:0] want;
 
@@ -337,10 +399,11 @@ module tb_dispatch_tree_throughput #(
                  ? 100.0 * busy_acc / (1.0 * UNITS * cl_cycles) : 0.0;
             starve_frac = (cl_cycles > 0) ? 100.0 * starved / cl_cycles : 0.0;
             stall_frac  = (cl_cycles > 0) ? 100.0 * root_stall / cl_cycles : 0.0;
-            $display("UTIL units=%0d leaves=%0d group=%0d radix=%0d flat=%0d skew=%0d K=%0d passes=%0d interval=%0d descs=%0d passes_launched=%0d completions=%0d cycles=%0d util=%0.2f starved=%0.2f rootstall=%0.2f timeout=%0d",
+            $display("UTIL units=%0d leaves=%0d group=%0d radix=%0d flat=%0d skew=%0d K=%0d passes=%0d interval=%0d descs=%0d passes_launched=%0d completions=%0d cycles=%0d util=%0.2f starved=%0.2f rootstall=%0.2f timeout=%0d grants=%0d decoupled=%0d banks=%0d",
                      UNITS, LEAVES, GROUP, RADIX, FLAT, SKEW, k, np, interval,
                      descs, passes, completions, cl_cycles, util, starve_frac,
-                     stall_frac, (gd >= maxcyc) ? 1 : 0);
+                     stall_frac, (gd >= maxcyc) ? 1 : 0, grant_acc,
+                     REFILL_DECOUPLED, WGT_BANKS);
         end
     endtask
 
@@ -349,6 +412,7 @@ module tb_dispatch_tree_throughput #(
         if (!$value$plusargs("interval=%d", iv)) iv = 567;
         if (!$value$plusargs("ndesc=%d", nd))    nd = 12;
         if (!$value$plusargs("func_only=%d", only_func)) only_func = 0;
+        $display("operand delivery: REFILL_DECOUPLED=%0d WGT_BANKS=%0d", REFILL_DECOUPLED, WGT_BANKS);
         $display("dispatch %0s: UNITS=%0d LEAVES=%0d GROUP=%0d RADIX=%0d CREDITS=%0d SKEW=%0d, real ot_compute_unit at every unit",
                  (FLAT == 0) ? "tree" : "FLAT (ot_cluster_dispatcher)",
                  UNITS, LEAVES, GROUP, RADIX, CREDITS, SKEW);

@@ -95,7 +95,8 @@ UTIL_RE = re.compile(
     r"UTIL units=(\d+) leaves=(\d+) group=(\d+) radix=(\d+) flat=(\d+) "
     r"skew=(\d+) K=(\d+) passes=(\d+) interval=(\d+) descs=(\d+) "
     r"passes_launched=(\d+) completions=(\d+) cycles=(\d+) util=([\d.]+) "
-    r"starved=([\d.]+) rootstall=([\d.]+) timeout=(\d+)")
+    r"starved=([\d.]+) rootstall=([\d.]+) timeout=(\d+) grants=(\d+) "
+    r"decoupled=(\d+) banks=(\d+)")
 
 #: The audit's own required_fanout column, so the widths this campaign runs are
 #: the widths the capabilities ask for and not a round number of my choosing.
@@ -139,8 +140,10 @@ def verilator_version() -> str:
 
 
 def build(workdir: Path, leaves: int, radix: int, credits: int,
-          jobs: int, flat: int = 0, skew: int = 0, group: int = 1) -> Path:
-    tag = f"l{leaves}_g{group}_r{radix}_c{credits}_f{flat}_s{skew}"
+          jobs: int, flat: int = 0, skew: int = 0, group: int = 1,
+          decoupled: int = 0, banks: int = 1) -> Path:
+    tag = (f"l{leaves}_g{group}_r{radix}_c{credits}_f{flat}_s{skew}"
+           f"_d{decoupled}_b{banks}")
     obj = workdir / f"obj_{tag}"
     exe = obj / f"sim_{tag}"
     if exe.exists():
@@ -151,6 +154,7 @@ def build(workdir: Path, leaves: int, radix: int, credits: int,
            "--top-module", TOP,
            f"-GLEAVES={leaves}", f"-GRADIX={radix}", f"-GCREDITS={credits}",
            f"-GFLAT={flat}", f"-GSKEW={skew}", f"-GGROUP={group}",
+           f"-GREFILL_DECOUPLED={decoupled}", f"-GWGT_BANKS={banks}",
            "-o", exe.name, "--Mdir", str(obj), "-j", str(jobs),
            *[str(ROOT / s) for s in SOURCES]]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -160,6 +164,7 @@ def build(workdir: Path, leaves: int, radix: int, credits: int,
 
 
 def run_one(exe: Path, ndesc: int, units: int, flat: int) -> dict[str, Any]:
+    units_seen = units
     r = subprocess.run([str(exe), f"+ndesc={ndesc}"], cwd=ROOT,
                        capture_output=True, text=True)
     lines = r.stdout.splitlines()
@@ -188,6 +193,18 @@ def run_one(exe: Path, ndesc: int, units: int, flat: int) -> dict[str, Any]:
             #: makes it an occupancy figure; this is the work figure.
             "pass_rate_per_unit_cycles": (int(g[12]) / int(g[10])
                                           if int(g[10]) else None),
+            #: WEIGHT COLUMNS FETCHED over the refill port, summed over units.
+            #: The reuse factor the fill frontier is supposed to buy is
+            #: measurable as the ratio of this between the two flow-control
+            #: modes at the same passes-per-descriptor: a lockstep unit fetches
+            #: one column per column CONSUMED, a decoupled one fetches one per
+            #: column RESIDENT.
+            "refill_grants": int(g[17]),
+            "refill_grants_per_unit_pass_column": (
+                int(g[17]) / (int(units_seen) * int(g[10]) * int(g[6]))
+                if (int(g[10]) and units_seen) else None),
+            "refill_decoupled": int(g[18]),
+            "weight_banks": int(g[19]),
         })
     #: WORK CONSERVATION, checked and not assumed: a token must reach EVERY unit
     #: exactly once, so the root's unit-completion total has to be UNITS times the
@@ -229,9 +246,21 @@ def main() -> int:
                     help="tree (ot_dispatch_tree) or flat (ot_cluster_dispatcher), "
                          "repeatable; default tree only")
     ap.add_argument("--skew", action="append", type=int, default=None,
-                    choices=(0, 1, 2),
+                    choices=(0, 1, 2, 3, 4),
                     help="0: identical units; 1: per-unit refill duty so units "
-                         "finish at different times. Repeatable; default 0")
+                         "finish at different times; 2: one unit in sixteen at a "
+                         "50%% duty; 3: one in sixteen at 25%%; 4: EVERY unit at "
+                         "50%%. Repeatable; default 0")
+    ap.add_argument("--decoupled", action="append", type=int, default=None,
+                    choices=(0, 1),
+                    help="ot_compute_unit REFILL_DECOUPLED: 0 is the lockstep "
+                         "handshake the published stall table and the 54.13%% "
+                         "skew-2 utilisation were measured on, 1 is the fill "
+                         "frontier. Repeatable; default 0")
+    ap.add_argument("--banks", action="append", type=int, default=None,
+                    help="ot_compute_unit WGT_BANKS: 1 single buffer (the fill "
+                         "and the walk share one macro port), 2 double buffer at "
+                         "one extra macro pair. Repeatable; default 1")
     ap.add_argument("--ndesc", type=int, default=12,
                     help="descriptors per utilisation case")
     ap.add_argument("--jobs", type=int, default=6)
@@ -253,18 +282,43 @@ def main() -> int:
     structures = args.structure or ["tree"]
     skews = args.skew if args.skew is not None else [0]
     groups = args.group or [1]
+    #: (REFILL_DECOUPLED, WGT_BANKS) pairs.  Zipped rather than crossed when the
+    #: caller gives the same number of each, because 1/1 and 1/2 are different
+    #: designs and 0/2 is a build nobody needs.
+    decs = args.decoupled if args.decoupled is not None else [0]
+    bnks = args.banks if args.banks is not None else [1]
+    if len(bnks) == 1:
+        modes = [(d, bnks[0]) for d in decs]
+    elif len(decs) == 1:
+        modes = [(decs[0], b) for b in bnks]
+    elif len(decs) == len(bnks):
+        modes = list(zip(decs, bnks))
+    else:
+        raise SystemExit("--decoupled and --banks must be equal in number, or "
+                         "one of them given once")
 
     records = []
     for structure in structures:
+      for (decoupled, banks) in modes:
         for skew in skews:
           for radix in radices:
            for gsz in groups:
             for n in leaves:
                 flat = 1 if structure == "flat" else 0
+                if flat and decoupled:
+                    #: ot_cluster_dispatcher has no per-pass output, so its units
+                    #: cannot be told which pass brings a new tile.  Refused
+                    #: rather than measured with a flag that means nothing.
+                    print("  skip flat + decoupled: the flat dispatcher cannot "
+                          "supply wgt_reload", flush=True)
+                    continue
                 exe = build(args.workdir, n, radix, args.credits, args.jobs,
-                            flat=flat, skew=skew, group=gsz)
+                            flat=flat, skew=skew, group=gsz,
+                            decoupled=decoupled, banks=banks)
                 res = run_one(exe, args.ndesc, n * gsz, flat)
                 rec = {
+                    "refill_decoupled": decoupled,
+                    "weight_banks": banks,
                     "leaves": n,
                     "group": gsz,
                     "compute_units": n * gsz,
@@ -294,7 +348,8 @@ def main() -> int:
                 records.append(rec)
                 best = max((r["array_utilisation_percent"]
                             for r in res["utilisation"]), default=0.0)
-                print(f"  {structure:<4} skew={skew} units={n*gsz:>5} "
+                print(f"  {structure:<4} d={decoupled} b={banks} "
+                      f"skew={skew} units={n*gsz:>5} "
                       f"leaves={n:>5} group={gsz:>3} "
                       f"radix={str(rec['radix']):>4} "
                       f"depth={rec['tree_depth_levels']} "
@@ -324,6 +379,24 @@ def main() -> int:
         },
         "records": records,
         "refusals": [
+            "refill-write-is-charged-only-in-the-decoupled-mode: under "
+            "REFILL_DECOUPLED=0 a granted refill writes NOTHING -- the weight "
+            "image is preloaded through the host port and refill_valid is a pure "
+            "token, so the baseline stall numbers charge for waiting but not for "
+            "storing. Under REFILL_DECOUPLED=1 the grant carries the column and "
+            "writes the macro, which costs a port slot whenever the fill and the "
+            "walk are in the same bank. The two modes are therefore NOT equal "
+            "fidelity on the write side, and the decoupled mode is the stricter "
+            "of the two.",
+            "flat-cannot-be-decoupled: ot_cluster_dispatcher has no per-pass "
+            "output, so it cannot tell a unit which pass brings a new weight "
+            "tile. Flat rows are measured at REFILL_DECOUPLED=0 only; a flat "
+            "row with the flag tied high would charge a tile fetch per pass and "
+            "would not be comparable to the tree.",
+            "activation-delivery-not-modelled: the fill frontier covers the "
+            "WEIGHT path. Activations are written through a bench port with no "
+            "rate limit at all, so nothing here says what an activation-starved "
+            "array would do.",
             "utilisation-requires-correctness: a configuration whose functional, "
             "sub-range or work-conservation check fails has its utilisation "
             "refused, not reported.",

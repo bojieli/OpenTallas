@@ -258,6 +258,13 @@ module ot_dispatch_leaf #(
 
     // ---- the GROUP of compute units this leaf owns ----
     output reg                 cu_start,     // one pulse, all GROUP units
+    //: THIS PASS BRINGS A NEW WEIGHT TILE.  A descriptor's later passes re-walk
+    //: the tile already resident in the unit, so only the FIRST pass of a
+    //: descriptor may charge an operand fetch.  Derived from the last-pass flag
+    //: the payload already carries -- the pass after a `last` one starts a new
+    //: descriptor -- so it costs one flop per leaf and not one payload bit per
+    //: buffer slot at every level of the tree.
+    output reg                 cu_wgt_reload,
     output reg  [K_W-1:0]      cu_cfg_k,
     output reg  [SC_W-1:0]     cu_cfg_scale,
     //: this GROUP's sub-range origin.  Unit j of the group works on
@@ -297,6 +304,9 @@ module ot_dispatch_leaf #(
     //: when units finish at different times -- which they do as soon as their
     //: memory paths are not identical, even though they are given identical work.
     reg pending, last_r;
+    //: the next token this leaf launches begins a descriptor.  True out of reset
+    //: and after every last-pass token.
+    reg first_pend;
     reg [GROUP-1:0] done_mask;
     wire all_done = pending && ((done_mask | cu_done) == {GROUP{1'b1}});
     //: `|| all_done` is worth one cycle per pass and it is not free rhetoric:
@@ -321,12 +331,17 @@ module ot_dispatch_leaf #(
             rp <= {(PTR_W+1){1'b0}};
             cu_start <= 1'b0; cu_cfg_k <= {K_W{1'b0}};
             cu_cfg_scale <= {SC_W{1'b0}}; cu_tile_base <= {TILE_W{1'b0}};
+            cu_wgt_reload <= 1'b0; first_pend <= 1'b1;
             pending <= 1'b0; last_r <= 1'b0; in_cred_ret <= 1'b0;
             done_mask <= {GROUP{1'b0}};
         end else begin
             cu_start    <= launch;
             in_cred_ret <= launch;
+            //: registered alongside cu_start, so a unit sees the flag on exactly
+            //: the cycle it sees its start pulse.
+            cu_wgt_reload <= launch && first_pend;
             if (launch) begin
+                first_pend   <= h_last;
                 cu_cfg_k     <= h_k;
                 cu_cfg_scale <= h_sc;
                 //: the sub-range: the descriptor's grid origin plus this leaf's
@@ -398,6 +413,8 @@ module ot_dispatch_tree #(
 
     // ---- the leaves' compute units: LEAVES groups of GROUP each ----
     output wire [LEAVES-1:0]         cu_start,
+    //: per leaf: this start begins a descriptor, so its weight tile is new.
+    output wire [LEAVES-1:0]         cu_wgt_reload,
     output wire [LEAVES*K_W-1:0]     cu_cfg_k,
     output wire [LEAVES*SC_W-1:0]    cu_cfg_scale,
     output wire [LEAVES*TILE_W-1:0]  cu_tile_base,
@@ -602,6 +619,7 @@ module ot_dispatch_tree #(
                                 .up_cmpl(l_up_cmpl[LID]), .up_lcmpl(l_up_lcmpl[LID]),
                                 .up_obs(l_up_obs[LID]),
                                 .cu_start(cu_start[LID]),
+                                .cu_wgt_reload(cu_wgt_reload[LID]),
                                 .cu_cfg_k(cu_cfg_k[LID*K_W +: K_W]),
                                 .cu_cfg_scale(cu_cfg_scale[LID*SC_W +: SC_W]),
                                 .cu_tile_base(cu_tile_base[LID*TILE_W +: TILE_W]),

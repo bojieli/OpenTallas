@@ -26,9 +26,12 @@ place and both profiles move together.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Mapping
 
 from compiler.ir.v3.numeric import (
+    comparator_union_contract_ids,
     require_implemented,
     speculative_union_contract_ids,
     union_contract_ids,
@@ -217,6 +220,7 @@ def _shared_capability(
     link: Mapping[str, int],
     numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
     fabric: Mapping[str, Any] | None = None,
+    memory: Mapping[str, Mapping[str, Any]] = SHARED_MEMORY,
 ) -> Capability:
     limits = dict(SHARED_LIMITS)
     limits["max_nodes"] = node_count
@@ -227,7 +231,7 @@ def _shared_capability(
         limits=limits,
         numeric_contracts=tuple(numeric_contracts),
         engines={name: dict(spec) for name, spec in SHARED_ENGINES.items()},
-        memory={name: dict(spec) for name, spec in SHARED_MEMORY.items()},
+        memory={name: dict(spec) for name, spec in memory.items()},
         link=dict(link),
         # A record that declares no fabric publishes no ``fabric`` key, which is
         # what keeps the two shipped digests where the committed evidence quotes
@@ -360,6 +364,7 @@ def cluster_n_capability(
     node_count: int,
     domain_size: int = CLUSTER_DOMAIN_SIZE,
     numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
+    memory: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> Capability:
     """The shared chip at ``node_count`` nodes under amendment AM-R1.
 
@@ -394,7 +399,97 @@ def cluster_n_capability(
         link=cluster_n_link(node_count=nodes, domain_count=domains),
         numeric_contracts=numeric_contracts,
         fabric=cluster_n_fabric(node_count=nodes, domain_count=domains),
+        memory=SHARED_MEMORY if memory is None else memory,
     )
+
+
+def comparator_numeric_contracts() -> tuple[str, ...]:
+    """The shared union widened by a comparator model's contracts.
+
+    A *comparator* model is one with no deployment in any store yet.  Its graph
+    is deliberately held out of :data:`compiler.ir.v3.numeric.SHIPPED_GRAPH_STEMS`
+    for the reason :func:`cluster32_speculative_capability` gives at length: the
+    shipped union is what the shipped HBM capability digests are computed over,
+    and widening it as a side effect of an export appearing on disk would
+    invalidate every deployment already admitted against them.
+
+    The chip does not change.  Same feature bits, engines, memory, limits and
+    technology view; this widens a DECLARATION, and
+    :func:`compiler.ir.v3.numeric.require_implemented` re-checks every added name
+    against an implementation, so the function cannot become a way to declare an
+    operation nothing in the tree executes.
+    """
+    union = set(SHARED_NUMERIC_CONTRACTS) | set(comparator_union_contract_ids())
+    return require_implemented(union, what="the comparator capability")
+
+
+#: The comparison's other side.  The DS41-P3 comparator exists to be measured
+#: against the ROM array on ONE model, and the array's published record is where
+#: the host attachment of that comparison is already stated:
+#: ``memory.host.resident_region_bytes``, planned by
+#: ``compiler.backends.rom.common.image.plan_resident_regions`` as a
+#: ``residency="host"`` region and proved by the array's inverse proof.  Reading
+#: it is what keeps the number out of this file: a comparator that gave itself a
+#: *different* host image than the side it is compared against would not be a
+#: comparison, and a released change that moved the array's reserve would move
+#: this one with it instead of leaving the two silently disagreeing.
+COMPARATOR_HOST_RESERVE_RECORD = (
+    Path(__file__).resolve().parents[3]
+    / "configs"
+    / "hardware"
+    / "abi3_capability"
+    / "rom_deepseek_v41_array_64.json"
+)
+
+
+def comparator_host_reserve_bytes() -> int:
+    """Bytes of load-once host image this machine declares it can serve.
+
+    Read as the array record's two LOAD-ONCE stores added together:
+    ``memory.rom.bytes`` plus ``memory.host.resident_region_bytes``.  The
+    argument is that this machine has no ROM store at all -- ``SHARED_MEMORY``
+    declares ``hbm`` and ``sram`` and nothing else -- so every immutable byte the
+    array holds outside its own HBM has to be held here either in node HBM or in
+    the host image.  Declaring the host image as the sum states that this machine
+    can serve from one store what the array serves from two, which is the weakest
+    declaration under which the two sides can deploy the same model at all, and
+    it stays load-bearing: a table set larger than that sum is still refused, by
+    ``compiler.backends.hbm_sram.plan``'s ``host_resident_fits`` proof.
+
+    Refuses a record that declares neither store.  Zero would silently mean "this
+    machine has no host image", which is a different machine, and the refusal
+    names the file that has to state it.
+    """
+    record = json.loads(COMPARATOR_HOST_RESERVE_RECORD.read_text())
+    memory = record.get("memory") or {}
+    host = memory.get("host") or {}
+    rom = memory.get("rom") or {}
+    reserve = int(host.get("resident_region_bytes", 0) or 0) + int(
+        rom.get("bytes", 0) or 0
+    )
+    if reserve <= 0:
+        raise KeyError(
+            f"{COMPARATOR_HOST_RESERVE_RECORD} declares neither "
+            "memory.host.resident_region_bytes nor memory.rom.bytes, so the "
+            "comparison's other side states no load-once store for this one to "
+            "match"
+        )
+    return reserve
+
+
+def comparator_memory() -> Mapping[str, Mapping[str, Any]]:
+    """The shared per-node memory plus the comparison's host store.
+
+    Per-node HBM, SRAM, channels and burst are untouched -- the chip does not
+    change -- and a ``host`` store is declared beside them.  It is a separate
+    key rather than a larger ``hbm.bytes`` because the two are different physical
+    stores with different latencies, and inflating HBM to cover a host image
+    would make every capacity proof in the backend report a node footprint no
+    node has.
+    """
+    memory = {name: dict(spec) for name, spec in SHARED_MEMORY.items()}
+    memory["host"] = {"resident_region_bytes": comparator_host_reserve_bytes()}
+    return memory
 
 
 #: Factories, one per named profile.  Kept private so that ``PROFILES`` can be
@@ -411,6 +506,13 @@ _FACTORIES: dict[str, Any] = {
 #: has no ``_FACTORIES`` entry because a factory takes no arguments and this
 #: record is not one machine.
 CLUSTER_N_PROFILE = "cluster-n"
+
+#: The same machine as :data:`CLUSTER_N_PROFILE`, declaring the comparator
+#: union as well.  It is a separate profile NAME rather than a flag so that a
+#: build against the widened declaration is visible in the build report and in
+#: the shell history, and so that no shipped profile can reach the widened tuple
+#: by accident.
+CLUSTER_N_COMPARATOR_PROFILE = "cluster-n-comparator"
 
 #: The profiles that describe a shipped product.  :func:`profile_difference`
 #: reports on exactly these, so adding a research profile above does not
@@ -432,11 +534,17 @@ def capability_for(profile: str, *, node_count: int | None = None) -> Capability
     names a fixed cardinality, and silently ignoring a count against one of them
     would hand back a record for a machine the caller did not ask for.
     """
-    if profile == CLUSTER_N_PROFILE:
+    if profile in (CLUSTER_N_PROFILE, CLUSTER_N_COMPARATOR_PROFILE):
         if node_count is None:
             raise KeyError(
                 f"profile {profile!r} is a node count, not a cardinality; pass "
                 "node_count"
+            )
+        if profile == CLUSTER_N_COMPARATOR_PROFILE:
+            return cluster_n_capability(
+                node_count=int(node_count),
+                numeric_contracts=comparator_numeric_contracts(),
+                memory=comparator_memory(),
             )
         return cluster_n_capability(node_count=int(node_count))
     if node_count is not None:
@@ -449,7 +557,7 @@ def capability_for(profile: str, *, node_count: int | None = None) -> Capability
     except KeyError:
         raise KeyError(
             f"unknown capability profile {profile!r}; known profiles are "
-            f"{sorted(_FACTORIES) + [CLUSTER_N_PROFILE]}"
+            f"{sorted(_FACTORIES) + [CLUSTER_N_PROFILE, CLUSTER_N_COMPARATOR_PROFILE]}"
         ) from None
     return factory()
 

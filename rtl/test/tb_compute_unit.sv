@@ -39,10 +39,13 @@ module tb_compute_unit;
     integer k, l, mism, dmism, guard;
 
     wire refill_ready, stalled;
+    wire [8:0] refill_col;
 
     ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_k(cfg_k),
-        .cfg_scale(cfg_scale), .busy(busy), .done(done),
+        //: wgt_reload high: every start is treated as bringing a new weight tile,
+        //: which is what the default REFILL_DECOUPLED=0 handshake always did.
+        .cfg_scale(cfg_scale), .wgt_reload(1'b1), .busy(busy), .done(done),
         .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
         .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
         //: refill_valid MUST be driven.  It was added to ot_compute_unit for the
@@ -54,7 +57,8 @@ module tb_compute_unit;
         //: anyone reading it.
         //: Tied high here: this bench checks the datapath and operand delivery,
         //: and the starvation behaviour is tb_kernel_rom_vs_hbm's subject.
-        .refill_valid(1'b1), .refill_ready(refill_ready), .stalled(stalled),
+        .refill_valid(1'b1), .refill_data({(16*LANES){1'b0}}),
+        .refill_col(refill_col), .refill_ready(refill_ready), .stalled(stalled),
         .res_sel(res_sel), .res_data(res_data), .dropped_mask(dropped_mask)
     );
 

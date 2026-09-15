@@ -55,6 +55,8 @@ contraction, and the plan records which collectives must reassemble it.
 
 from __future__ import annotations
 
+import importlib
+
 import re
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -118,6 +120,9 @@ DTYPE_MAP: Mapping[str, DType] = {
     "fp8_e4m3fn": DType.FP8_E4M3FN,
     "fp8_e5m2": DType.FP8_E5M2,
     "mxfp4_e2m1": DType.MXFP4_E2M1,
+    # AM-E10: E2M1 elements with one E4M3 scale per 16.  Its own storage code,
+    # because its scale format and group size both differ from mxfp4_e2m1's.
+    "fp4_e2m1_s16_e4m3": DType.FP4_E2M1_S16_E4M3,
     "e8m0": DType.E8M0_SCALE,
     "i8": DType.I8,
     "u8": DType.U8,
@@ -300,7 +305,7 @@ class WeightGroup:
     file_start: int
     file_end: int
     segments: tuple[PlacedSegment, ...]
-    residency: str = "replicated"  # replicated | node_sharded | mixed
+    residency: str = "replicated"  # replicated | node_sharded | mixed | host_resident
     # A cluster memory-object descriptor is symmetric: every node sees the
     # same object ID and the same local byte extent.  When complete
     # authenticated segments can be partitioned across nodes, these are the
@@ -309,7 +314,7 @@ class WeightGroup:
     # present exactly once.
     local_size_bytes: int = 0
     node_segments: tuple[tuple[PlacedSegment, ...], ...] = ()
-    materialization: str = "replicated"  # replicated | node_sharded | mixed
+    materialization: str = "replicated"  # replicated | node_sharded | mixed | host_resident
 
     @property
     def materialized_size_bytes(self) -> int:
@@ -431,15 +436,28 @@ class HbmPlacement:
     size_bytes: int
     channel: int
     alignment_log2: int
+    #: Which physical address space the base belongs to.  ``"hbm"`` is the
+    #: node-local space every object used before a weight could be host
+    #: resident; ``"host"`` is the separate space the host-visible windows
+    #: already used.  Recorded per placement rather than inferred from the key
+    #: prefix so that the node-local span, and therefore the capacity proof,
+    #: cannot accidentally count a window that is not in node HBM.
+    space: str = "hbm"
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        body = {
             "key": self.key,
             "base_address": self.base_address,
             "size_bytes": self.size_bytes,
             "channel": self.channel,
             "alignment_log2": self.alignment_log2,
         }
+        if self.space != "hbm":
+            # Absent for a node-local object, so a plan with no host-resident
+            # weight writes exactly the record it wrote before residency
+            # reached this backend.
+            body["space"] = self.space
+        return body
 
 
 @dataclass(frozen=True, slots=True)
@@ -1899,6 +1917,10 @@ def build_plan(
     groups, placements = _assign_weight_residency(
         groups, placements, kernel_plans, node_count
     )
+    groups, placements, warn_host = _assign_host_residency(
+        graph, groups, placements, capability
+    )
+    warnings.extend(warn_host)
     groups, placements = _materialize_node_local_weights(
         graph, groups, placements, kernel_plans, node_count
     )
@@ -1942,6 +1964,12 @@ def build_plan(
             "physical HBM plan requires "
             f"{proofs['hbm_bytes_per_node']} bytes per node, capability "
             f"provides {proofs['hbm_available_per_node']}"
+        )
+    if not bool(proofs.get("host_resident_fits", True)):
+        raise PlanError(
+            "physical host-resident weight image requires "
+            f"{proofs['host_resident_bytes']} bytes, capability declares a "
+            f"resident region of {proofs['host_resident_available']}"
         )
     if not bool(proofs["sram_fits"]):
         raise PlanError(
@@ -2119,13 +2147,98 @@ FLOOR_DIV_INDEX_PREFIX = "generated.floor_div_indices."
 #: backend does not implement is a compile error rather than an identity: the
 #: identity is itself one of the maps, so guessing it is indistinguishable from
 #: implementing it.
+#: Destination-row maps whose names are two spellings of ONE map.
+#:
+#: The DeepSeek-V4 export writes ``completed_absolute_position_floor_div_ratio``
+#: and the DeepSeek-V4.1 export writes ``compressed_group_index`` for the same
+#: physical operation, and this backend may not take that on trust -- a row map
+#: it does not implement must not become the identity.  What settles it is that
+#: the two spellings appear on kernels carrying the SAME NUMERIC CONTRACT:
+#: ``compressed_kv_write_bf16_v1``, whose one reference is
+#: ``runtime.reference.compressed_kv.compressed_kv_write_bf16``.  V4's
+#: ``main.layer02.compress_kv_write`` names the long spelling and V4.1's
+#: ``main.layer02.attention.compressor.write`` names the short one, and both
+#: carry a positive ``ratio`` and a destination extent of
+#: ``context_length // ratio`` rows.  One contract, one reference, one map: the
+#: alias is a naming fact, not a semantic assumption.
+#:
+#: The alias is recorded here rather than by widening the frozenset so that the
+#: divisor and ring rules below are reached through the canonical name and there
+#: is exactly one place a third spelling would have to be justified.
+CACHE_ROW_ALIASES: Mapping[str, str] = {
+    "compressed_group_index": "completed_absolute_position_floor_div_ratio",
+}
+
 CACHE_ROW_MAPS = frozenset(
     {
         "absolute_position",
         "absolute_position_mod_window",
         "completed_absolute_position_floor_div_ratio",
+        *CACHE_ROW_ALIASES,
     }
 )
+
+
+def canonical_cache_row(kernel: Kernel) -> str:
+    """The canonical name of ``kernel``'s destination-row map, or ``""``.
+
+    Refuses a map this backend does not implement.  The refusal names the
+    canonical maps only: an alias is a spelling of one of them, so listing the
+    aliases as alternatives would suggest there are more maps than there are.
+    """
+    declared = kernel.attributes.get("cache_row")
+    if declared is None:
+        return ""
+    name = str(declared)
+    if name not in CACHE_ROW_MAPS:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: destination-row map {name!r} is not "
+            f"one of {', '.join(sorted(CACHE_ROW_MAPS - set(CACHE_ROW_ALIASES)))}"
+            "; a map this backend does not implement must not be taken as the "
+            "identity"
+        )
+    return CACHE_ROW_ALIASES.get(name, name)
+
+
+#: Numeric contracts that FIX the sparse gather block width, mapped to the
+#: reference constant that states it.  A block width is a property of the
+#: contract and not of a model: ``sparse_attention_bf16_v1`` gathers 64-slot
+#: blocks because that is what the contract says, which is why
+#: ``runtime/reference/sparse_attention.py`` declares
+#: ``SPARSE_ATTENTION_BLOCK_SIZE`` as a module constant rather than taking it as
+#: an argument.  So a graph that names the contract and does not repeat the
+#: number is not under-specified, and reading the number from the CONTRACT is the
+#: opposite of freezing model geometry into the backend: the DeepSeek-V4 export
+#: states ``block_size: 64`` on the kernel and the DeepSeek-V4.1 export does not,
+#: both name this one contract, and the attribute still wins wherever it is
+#: present so nothing already admitted changes.
+_CONTRACT_BLOCK_WIDTH: Mapping[str, str] = {
+    "sparse_attention_bf16_v1": (
+        "runtime.reference.sparse_attention.SPARSE_ATTENTION_BLOCK_SIZE"
+    ),
+}
+
+
+def contract_block_width(kernel: Kernel) -> int:
+    """The gather block width ``kernel``'s numeric contract fixes, or 0.
+
+    Zero means "this contract does not fix one", which is a refusal for the
+    caller to raise rather than a default for this function to invent.
+    """
+    contract = kernel.numeric_contract
+    if not contract:
+        return 0
+    site = _CONTRACT_BLOCK_WIDTH.get(canonical_contract_id(contract))
+    if site is None:
+        return 0
+    module_name, _, attribute = site.rpartition(".")
+    module = importlib.import_module(module_name)
+    width = int(getattr(module, attribute))
+    if width <= 0:
+        raise PlanError(
+            f"contract {contract!r} names block width {site}, which is {width}"
+        )
+    return width
 
 
 def ring_modulus(kernel: Kernel) -> int:
@@ -2137,16 +2250,7 @@ def ring_modulus(kernel: Kernel) -> int:
     ``completed_absolute_position_floor_div_ratio`` because a compressed
     group's row *is* its group ordinal, counted from the start of the request.
     """
-    declared = kernel.attributes.get("cache_row")
-    if declared is None:
-        return 0
-    name = str(declared)
-    if name not in CACHE_ROW_MAPS:
-        raise PlanError(
-            f"kernel {kernel.kernel_id}: destination-row map {name!r} is not "
-            f"one of {', '.join(sorted(CACHE_ROW_MAPS))}; a map this backend "
-            "does not implement must not be taken as the identity"
-        )
+    name = canonical_cache_row(kernel)
     if name != "absolute_position_mod_window":
         return 0
     window = int(kernel.attributes.get("window_size", 0) or 0)
@@ -2167,16 +2271,7 @@ def floor_divisor(kernel: Kernel) -> int:
     positive whenever this row map is selected.
     """
 
-    declared = kernel.attributes.get("cache_row")
-    if declared is None:
-        return 0
-    name = str(declared)
-    if name not in CACHE_ROW_MAPS:
-        raise PlanError(
-            f"kernel {kernel.kernel_id}: destination-row map {name!r} is not "
-            f"one of {', '.join(sorted(CACHE_ROW_MAPS))}; a map this backend "
-            "does not implement must not be taken as the identity"
-        )
+    name = canonical_cache_row(kernel)
     if name != "completed_absolute_position_floor_div_ratio":
         return 0
     divisor = int(kernel.attributes.get("ratio", 0) or 0)
@@ -2483,6 +2578,27 @@ def _place_weights(
     # order, so that the weight object's address space divided by the block is
     # the scale object's.
     for role_key, members in weight_roles(graph, bands):
+        if any(member in placed for member in members):
+            # A tensor is placed ONCE.  A role whose member is already in an
+            # object -- in practice a block-scale plane that its data role
+            # already placed as a companion, and which a later kernel also binds
+            # as a direct operand -- names no new payload, and grouping it again
+            # puts the same checkpoint range in two objects.  Two things then go
+            # wrong and neither is visible in the address map: the bytes are
+            # reserved twice in every node's HBM, and ``_assign_weight_residency``
+            # builds ``placement_by_tensor`` as a dict keyed on ``tensor_id``, so
+            # one of the two placements silently wins and the residency the
+            # engine addresses the tensor through is whichever came last.
+            #
+            # Skipping the role is not a new policy; it is the rule this
+            # backend's independent checker already applies.
+            # ``compiler.backends.hbm_sram.check._reconstruct_weight_groups``
+            # abandons a role the moment a member ``in claimed`` and lets the
+            # unclaimed remainder fall to the adjacency pass, so a planner that
+            # grouped it anyway disagreed with its own ``weight_grouping_agrees``
+            # and ``zero_copy_weights`` rules -- the second of which says in its
+            # own words that "a zero-copy placement never duplicates a byte".
+            continue
         _group(f"wr{len(weight_groups):04d}", members, role_key)
         scale_run = _scale_run(members)
         if scale_run is not None:
@@ -4008,6 +4124,27 @@ def index_topk_capacity(kernel: Kernel, slots: int, window: int) -> int:
     return int(slots) - int(window)
 
 
+def _optional_input_count(kernel: Kernel) -> int:
+    """How many trailing ABI input slots this KERNEL may leave empty.
+
+    Usually a property of the kind alone, read from :data:`_OPTIONAL_INPUTS`.
+    ``COMPRESS_PROJECT`` is the exception, and it has to be: its row is (hidden,
+    projection_0, projection_1) and the gate projection exists or not according
+    to the compressor, so a blanket "the third slot is optional" would let a
+    gated compressor lose its gate without a word.  The graph states which it is
+    -- ``projections``, beside ``ratio`` -- and that statement is what is
+    honoured here.  A kernel that binds two operands while declaring two
+    projections is still a fault, which is the point of reading the attribute
+    instead of widening the table.
+    """
+    if kernel.kind != "COMPRESS_PROJECT":
+        return int(_OPTIONAL_INPUTS.get(kernel.kind, 0))
+    declared = kernel.attributes.get("projections")
+    if declared is None:
+        return 0
+    return 1 if int(declared) == 1 else 0
+
+
 def _check_operand_arity(
     kernel: Kernel, engine: Any, bound: Sequence[int]
 ) -> str | None:
@@ -4039,7 +4176,7 @@ def _check_operand_arity(
     was this check reading a stated hole as an unfilled mandatory slot.
     """
     limit = int(engine.inputs)
-    optional = int(_OPTIONAL_INPUTS.get(kernel.kind, 0))
+    optional = _optional_input_count(kernel)
     required = limit - optional
     count = len(bound) + len(_declared_holes(kernel))
     if count > limit:
@@ -4157,10 +4294,14 @@ def _aux_ids(
                 or 0
             )
             if aux[1] <= 0:
+                aux[1] = contract_block_width(kernel)
+            if aux[1] <= 0:
                 raise PlanError(
                     f"kernel {kernel.kernel_id}: ATTENTION.SPARSE must declare "
-                    "its block width; the engine checks it against the frozen "
-                    "contract and cannot infer it from the operands"
+                    "its block width, and its numeric contract "
+                    f"{kernel.numeric_contract!r} does not fix one; the engine "
+                    "checks the width against the frozen contract and cannot "
+                    "infer it from the operands"
                 )
     elif family == int(Major.ROUTE):
         if sub in (int(Route.TOPK), int(Route.BIASED_TOPK)):
@@ -4337,6 +4478,20 @@ def _aux_ids(
             head_count = int(attributes.get("head_count", 0)) or _domain_extent(
                 kernel, ("heads",), span_max
             )
+            if head_count <= 0:
+                # A head count is not DEFAULTED here -- a wrong one silently
+                # normalises over the wrong group -- but it is DERIVED when the
+                # graph determines it.  The iteration domain's ``width`` is the
+                # reduction group; the principal operand's last dimension is the
+                # whole row.  When the two are equal the row IS one group, so the
+                # head count is one, and that is a fact about this kernel rather
+                # than an assumption about the model.  When they differ, or when
+                # the width divides the row unevenly, the count is genuinely
+                # unstated and the refusal below stands.
+                group = _domain_extent(kernel, ("width",), span_max)
+                row = in_cols(0)
+                if group > 0 and row > 0 and row % group == 0:
+                    head_count = row // group
             if head_count <= 0:
                 raise PlanError(
                     f"kernel {kernel.kernel_id}: HEAD_RMS_NORM must declare "
@@ -4980,6 +5135,195 @@ def _plan_kernels(
     return tuple(plans), warnings
 
 
+#: ABI kinds that resolve their table's ROW from a runtime index operand rather
+#: than from the loop nest.  ``EMBEDDING_LOOKUP`` is the one such kind in the
+#: wire format (``Major.TENSOR`` / ``TensorOp.EMBED_LOOKUP``): its semantics are
+#: "read the rows named by the index operand out of the table operand", so the
+#: bytes a request touches are the selected rows and not the object.  That is a
+#: property of the ABI and of nothing else -- no model names a kind -- which is
+#: what makes the classification below model-blind.
+ROW_LOOKUP_KINDS = frozenset({"EMBEDDING_LOOKUP"})
+
+
+def row_lookup_tables(graph: KernelGraph) -> frozenset[str]:
+    """Every bound weight tensor whose every use is a row-indexed table read.
+
+    A tensor qualifies when it is used at least once and *every* use is as the
+    table operand of a :data:`ROW_LOOKUP_KINDS` kernel.  One use that is not --
+    a matmul operand, a scatter destination, anything -- disqualifies it, which
+    is the same conservative direction :func:`_assign_weight_residency` already
+    takes for node sharding: one replicated use makes the whole tensor
+    replicated.
+
+    Which operand is the table is *derived*, not a slot number.  A row lookup's
+    other operand is the index stream, which is an activation; the table is the
+    operand that carries a checkpoint binding.  So "the bound weight operand of
+    a row-lookup kernel" names the table without freezing an operand order, and
+    an exporter that reordered the row would not silently reclassify anything.
+
+    A block-scale plane is *not* matched here and does not need to be: its rows
+    are addressed by the same identifiers as its data operand's -- the released
+    graph says exactly that, ``scale_rows:
+    addressed_by_the_same_row_identifiers`` -- and the rule this backend already
+    applies to a scale is that it "is implicit in its data operand and inherits
+    exactly the data role's decision".  :func:`_assign_host_residency` inherits
+    it through ``scale_tensor_id``, so the classification has one source of
+    truth and a scale can never be classified against its own table.
+    """
+    uses: dict[str, int] = {}
+    lookup_uses: dict[str, int] = {}
+    tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
+    for kernel in graph.kernels:
+        is_lookup = kernel.kind in ROW_LOOKUP_KINDS
+        for name in kernel.inputs:
+            tensor = tensors.get(name)
+            if tensor is None or tensor.binding is None:
+                continue
+            if tensor.role not in {"weight", "constant"}:
+                continue
+            uses[name] = uses.get(name, 0) + 1
+            if is_lookup:
+                lookup_uses[name] = lookup_uses.get(name, 0) + 1
+    return frozenset(
+        name
+        for name, count in uses.items()
+        if count > 0 and lookup_uses.get(name, 0) == count
+    )
+
+
+def host_resident_reserve(capability: Capability) -> int:
+    """Bytes of load-once host image this machine declares, or ``0``.
+
+    Zero -- which is what every profile that does not declare a host store
+    reports, because ``memory`` has no ``host`` key at all there -- means this
+    backend places every weight in node HBM exactly as it did before host
+    residency existed, so no deployment already admitted can move.  The
+    capability is the switch, which is the same discipline the ROM backends
+    adopted for their resident regions: a declaration the record has to carry,
+    not a heuristic the compiler applies when it runs short of room.
+    """
+    host = capability.memory.get("host") or {}
+    return max(int(host.get("resident_region_bytes", 0) or 0), 0)
+
+
+def _assign_host_residency(
+    graph: KernelGraph,
+    groups: Sequence[WeightGroup],
+    placements: Sequence[WeightPlacement],
+    capability: Capability,
+) -> tuple[tuple[WeightGroup, ...], tuple[WeightPlacement, ...], list[str]]:
+    """Move whole row-lookup table objects out of node HBM into the host image.
+
+    Why a lookup table and nothing else may move.  A replicated matmul weight is
+    read in full on every token, so putting it behind the host interface would
+    move the whole object across that interface per token; a row lookup reads the
+    rows a request names, so what crosses is those rows.  That is the difference
+    between a placement and a bandwidth catastrophe, and it is why "move the
+    largest replicated groups until the node fits" is not implemented here: it
+    would silently put arbitrary weights behind the host interface, and the
+    largest object is chosen by size rather than by how it is addressed.
+
+    Why the whole object or none of it.  A memory object carries one storage
+    class, so a group whose tensors do not agree cannot be split without
+    re-grouping.  Such a group stays in node HBM and is reported in the returned
+    warnings, because a partially classified object is a fact about the graph
+    worth surfacing rather than a case to resolve silently in either direction.
+    """
+    warnings: list[str] = []
+    reserve = host_resident_reserve(capability)
+    if reserve <= 0:
+        return tuple(groups), tuple(placements), warnings
+
+    tables = set(row_lookup_tables(graph))
+    # A block-scale plane inherits its data operand's decision, exactly as
+    # ``_assign_weight_residency`` states for node sharding.
+    for tensor in graph.tensors:
+        scale_id = tensor.scale_tensor_id
+        if scale_id and tensor.tensor_id in tables:
+            tables.add(scale_id)
+
+    group_members: dict[str, set[str]] = {}
+    for group in groups:
+        group_members.setdefault(group.group_id, set()).update(
+            segment.tensor_id for segment in group.segments
+        )
+
+    candidates: set[str] = set()
+    for group in groups:
+        members = group_members[group.group_id]
+        if not members:
+            continue
+        inside = members & tables
+        if not inside:
+            continue
+        if inside != members:
+            warnings.append(
+                f"weight object {group.group_id} holds "
+                f"{len(inside)} row-lookup table tensors and "
+                f"{len(members - inside)} that are not, so it stays in node "
+                "HBM: one memory object carries one storage class"
+            )
+            continue
+        candidates.add(group.group_id)
+
+    # All of the tables or none of them, decided by whether the SET can be node
+    # resident at all.  Every table is replicated -- any row may be named, so
+    # every node needs the whole table -- which makes the set's cost per node its
+    # full size.  When that fits, the tables stay in the fast store and nothing
+    # pays a host round trip for a row it could have read locally.  When it does
+    # not fit, node residency is not a choice the deployment has.
+    #
+    # The set is the unit, not the object, and the difference matters: ranking the
+    # objects and moving them "until it fits" would let a capacity accident decide
+    # which weights sit behind the host interface, which is precisely the greedy
+    # rule this backend must not have.  Here the graph's addressing decides which
+    # objects are eligible and one declared capacity decides whether any move, so
+    # the outcome is a function of two published numbers and no ordering.
+    table_bytes = sum(
+        group.materialized_size_bytes
+        for group in groups
+        if group.group_id in candidates
+    )
+    hbm_per_node = int(capability.memory["hbm"]["bytes"])
+    host_groups = candidates if table_bytes > hbm_per_node else set()
+    if candidates and not host_groups:
+        warnings.append(
+            f"{len(candidates)} row-lookup table objects totalling "
+            f"{table_bytes} bytes fit in the node's {hbm_per_node}-byte HBM, so "
+            "they stay in the fast store and the declared host image is unused"
+        )
+
+    if not host_groups:
+        return tuple(groups), tuple(placements), warnings
+
+    updated_groups = tuple(
+        replace(
+            group,
+            residency="host_resident",
+            materialization="host_resident",
+            # A host image is ONE image every node reaches, so a node-local
+            # source map would be describing a partition that does not exist.
+            local_size_bytes=0,
+            node_segments=(),
+        )
+        if group.group_id in host_groups
+        else group
+        for group in groups
+    )
+    updated_placements = tuple(
+        replace(
+            placement,
+            residency="host_resident",
+            materialization="host_resident",
+            shard_count=1,
+        )
+        if placement.group_id in host_groups
+        else placement
+        for placement in placements
+    )
+    return updated_groups, updated_placements, warnings
+
+
 def _assign_weight_residency(
     groups: Sequence[WeightGroup],
     placements: Sequence[WeightPlacement],
@@ -5614,9 +5958,48 @@ def _allocate_hbm(
         cursor = base + size
         index += 1
 
+    host_cursor = 0
+    host_index = 0
+
+    def place_host(
+        key: str, size: int, alignment_log2: int, *, space: str
+    ) -> None:
+        """Allocate in the separate host space the host windows already use.
+
+        ``space`` is the caller's because the host input and output windows are a
+        FIXED POINT: their records predate this field, they are already excluded
+        from the node-local span by their key prefix, and ``plan_id`` is inside
+        the deployment digest -- so stamping a new field on them would move every
+        shipped deployment digest to say something the key already said.  A
+        host-resident weight has no such history and carries the field.
+        """
+        nonlocal host_cursor, host_index
+        alignment = 1 << alignment_log2
+        base = round_up(host_cursor, alignment)
+        out[key] = HbmPlacement(
+            key=key,
+            base_address=base,
+            size_bytes=size,
+            channel=host_index % channels,
+            alignment_log2=alignment_log2,
+            space=space,
+        )
+        host_cursor = base + size
+        host_index += 1
+
     # Immutable first: weights and derived constants are resident for the life
-    # of the deployment, so they never fragment the mutable region.
+    # of the deployment, so they never fragment the mutable region.  A
+    # host-resident table is not in node HBM at all, so it is allocated from the
+    # host space instead of reserving a node window it does not occupy.
     for group in groups:
+        if group.residency == "host_resident":
+            place_host(
+                f"weight.{group.group_id}",
+                group.materialized_size_bytes,
+                12,
+                space="host",
+            )
+            continue
         place(f"weight.{group.group_id}", group.materialized_size_bytes, 12)
     for constant in generated:
         place(f"generated.{constant.tensor_id}", constant.size_bytes, 12)
@@ -5629,20 +6012,10 @@ def _allocate_hbm(
     for slot in arenas:
         place(f"arena.{slot.slot_id}", slot.size_bytes, 12)
 
-    host_cursor = 0
-    host_index = 0
     for key in sorted(host_objects):
-        size = int(host_objects[key]["size_bytes"])
-        base = round_up(host_cursor, 4096)
-        out[f"host.{key}"] = HbmPlacement(
-            key=f"host.{key}",
-            base_address=base,
-            size_bytes=size,
-            channel=host_index % channels,
-            alignment_log2=12,
+        place_host(
+            f"host.{key}", int(host_objects[key]["size_bytes"]), 12, space="hbm"
         )
-        host_cursor = base + size
-        host_index += 1
     return out
 
 
@@ -5662,6 +6035,12 @@ def _prove(
     hbm_map: Mapping[str, HbmPlacement],
 ) -> dict[str, Any]:
     weight_bytes = sum(g.size_bytes for g in groups)
+    host_resident_groups = tuple(
+        group for group in groups if group.residency == "host_resident"
+    )
+    host_resident_ids = {group.group_id for group in host_resident_groups}
+    host_resident_bytes = sum(g.size_bytes for g in host_resident_groups)
+    host_resident_available = host_resident_reserve(capability)
     placement_by_tensor = {
         placement.tensor_id: placement for placement in placements
     }
@@ -5691,7 +6070,14 @@ def _prove(
                 materialized_node_sharded_weight_bytes += size
             elif shard_count > 1:
                 fallback_replicated_weight_bytes += size
-    weight_bytes_per_node = sum(group.materialized_size_bytes for group in groups)
+    # Per node means per node.  A host-resident object is one image the nodes
+    # reach over the host interface, so counting it here would report a node
+    # footprint no node has.
+    weight_bytes_per_node = sum(
+        group.materialized_size_bytes
+        for group in groups
+        if group.group_id not in host_resident_ids
+    )
     generated_constant_bytes = sum(constant.size_bytes for constant in generated)
     arena_bytes = sum(a.size_bytes for a in arenas)
     state_bytes = sum(
@@ -5726,6 +6112,8 @@ def _prove(
         resident_payload += size
 
     for group in groups:
+        if group.group_id in host_resident_ids:
+            continue
         reserve(group.materialized_size_bytes)
     for constant in generated:
         reserve(constant.size_bytes)
@@ -5754,10 +6142,15 @@ def _prove(
         masks.append(region.bank_mask)
 
     proved_layers = sum(b.layer_count * b.period for b in bands)
-    return {
+    body: dict[str, Any] = {
+        # Both conditions, and neither is redundant.  The key prefix is what
+        # excluded the host input and output windows before a weight could be
+        # host resident, and it keeps excluding them without their records having
+        # to change; ``space`` excludes a host-resident weight, whose key is a
+        # ``weight.`` key like any other.
         "hbm_address_span": max(
             (p.base_address + p.size_bytes for p in hbm_map.values()
-             if not p.key.startswith("host.")),
+             if p.space == "hbm" and not p.key.startswith("host.")),
             default=0,
         ),
         "hbm_channels": int(capability.memory["hbm"].get("channels", 1)),
@@ -5815,6 +6208,36 @@ def _prove(
         "capability_loop_depth": int(capability.limits["max_loop_depth"]),
         "zero_copy_weights": True,
     }
+    if host_resident_available > 0:
+        # Added only when the capability DECLARES a host store.  ``plan_id`` sits
+        # inside the deployment digest, so a proof key that appeared
+        # unconditionally would move every shipped digest to report a store the
+        # machine does not have -- the same reason amendment A3's predicate notes
+        # are emitted only when non-empty.  A machine with no host store reaches
+        # the ``proofs.get("host_resident_fits", True)`` default in
+        # :func:`build_plan`, which is the statement that the case does not arise.
+        body.update(
+            {
+                "host_resident_bytes": host_resident_bytes,
+                "host_resident_available": host_resident_available,
+                # ``<=`` against a declared reserve, so the capability's number is
+                # load-bearing and this proof can fail.
+                "host_resident_fits": (
+                    host_resident_bytes <= host_resident_available
+                ),
+                "host_resident_objects": len(host_resident_groups),
+                "host_resident_group_ids": sorted(host_resident_ids),
+                "host_address_span": max(
+                    (
+                        p.base_address + p.size_bytes
+                        for p in hbm_map.values()
+                        if p.space == "host"
+                    ),
+                    default=0,
+                ),
+            }
+        )
+    return body
 
 
 def _communication_scratch_bytes(

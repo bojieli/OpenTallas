@@ -182,6 +182,7 @@ _DTYPE_FEATURE: Mapping[int, Feature] = {
     int(DType.FP8_E5M2): Feature.FP8_E4M3FN_TENSOR,
     int(DType.MXFP4_E2M1): Feature.MXFP4_E2M1_E8M0,
     int(DType.E8M0_SCALE): Feature.MXFP4_E2M1_E8M0,
+    int(DType.FP4_E2M1_S16_E4M3): Feature.FP4_E2M1_S16_E4M3_TENSOR,
 }
 
 #: Input slots whose rank the operand convention states outright, so they are
@@ -836,11 +837,24 @@ class _Emitter:
                 )
             )
             base, channel = self._address(f"weight.{group.group_id}")
+            host_resident = group.residency == "host_resident"
             self._weight_object[group.group_id] = builder.memory_object(
-                storage_class=StorageClass.HBM,
+                # The storage class is the group's declared residency.  A
+                # host-resident table is the same authenticated, immutable model
+                # content with the same segments and the same content digest --
+                # the only thing residency changes is where the bytes live -- so
+                # HOST_VISIBLE is added and no write permission is, and the
+                # integrity mode stays what an immutable weight object declares.
+                storage_class=(
+                    StorageClass.HOST if host_resident else StorageClass.HBM
+                ),
                 size_bytes=size_bytes,
                 source=source,
-                permissions=int(Permission.READ | Permission.IMMUTABLE),
+                permissions=int(
+                    Permission.READ | Permission.IMMUTABLE | Permission.HOST_VISIBLE
+                    if host_resident
+                    else Permission.READ | Permission.IMMUTABLE
+                ),
                 base_address=base,
                 bank_or_tile=channel,
                 alignment_log2=12,
@@ -1540,10 +1554,25 @@ class _Emitter:
             if not name:
                 continue
             ratio = int(kernel.attributes.get("ratio", 0) or 0)
-            if ratio not in (4, 128):
+            # The bound is what the predicate's MATERIALISATION needs, not a list
+            # of the ratios the models shipped so far happened to use.  The decode
+            # condition is ``context_length % ratio == 0`` and it is read out of
+            # ``ring_indices_v1(modulus=ratio)``, whose table is
+            # ``context_max + headroom`` entries wide for every modulus -- so any
+            # ratio of two or more is expressible and none of them is special.
+            #
+            # Two is the floor because ratio one is not a rolling compression: the
+            # modulus-one ring is the all-zero table, so the predicate would be
+            # true at every position, and the released compressors register no
+            # history at that ratio at all.  Naming (4, 128) here instead froze
+            # DeepSeek-V4-Flash's two ratios into a model-blind backend and
+            # refused DeepSeek-V4.1-Flash's ratio 2 on a list rather than on a
+            # bound.
+            if ratio < 2:
                 raise LoweringError(
                     f"kernel {kernel.kernel_id}: compressor predicate names "
-                    f"unsupported ratio {ratio}"
+                    f"ratio {ratio}; a rolling compression has a ratio of two "
+                    "or more, and modulus one is a predicate that is always true"
                 )
             conditions = kernel.attributes.get("predicate_condition")
             if not isinstance(conditions, Mapping):
@@ -3685,6 +3714,86 @@ class _Emitter:
         )
         return event
 
+    def _compressor_coefficient(
+        self, plan: KernelPlan, kernel: Kernel, ratio: int
+    ) -> int:
+        """How many ratio-wide groups one pooled group holds, read off the graph.
+
+        Some released compressors pool the previous group together with the
+        current one, so a group's candidate axis is twice its ratio and the
+        projection packs two head-width planes per token; others pool their own
+        group alone.  Which one a kernel is is *model geometry* -- V4-Flash
+        overlaps at ratio 4 and does not at ratio 128, V4.1-Flash does not at
+        ratio 2 -- so it is derived from this kernel's own pooled operands rather
+        than recognised from its ratio.  Recognising it from the ratio is how this
+        lowering had acquired one model's constants: ``overlap != (ratio == 4)``
+        was a tautology on V4-Flash, where ratio 4 is exactly the overlapping
+        compressor, and could therefore never fail on the model it was written
+        for while refusing every other.
+
+        This is the same derivation, over the same three statements, that
+        ``compiler.backends.rom.common.program.RomProgram._compressor_overlap``
+        already applies -- deliberately, so the two backends agree on the geometry
+        of one kernel by reading one thing rather than by two rules that happen to
+        coincide.  Here the pooled operands are the planned output views, and the
+        declared iteration domain's ``candidates`` extent is the cross-check.
+        """
+        pooled: list[tuple[int, int]] = []
+        for name in kernel.outputs:
+            # The GRAPH's declared shape, not the planned view: a planned view
+            # carries the backend's own leading axes, and what is being read here
+            # is the exporter's statement about the pooled group.
+            shape = self.tensors[name].shape
+            if len(shape) != 3:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: pooled operand {name!r} is rank "
+                    f"{len(shape)}, not [groups, candidates, head_dim]"
+                )
+            axes: list[int] = []
+            for value in shape[1:]:
+                if isinstance(value, Symbolic):
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: pooled operand {name!r} has a "
+                        f"symbolic {value.symbol!r} where a group's candidate and "
+                        "head extents must be static"
+                    )
+                axes.append(int(value))
+            pooled.append((axes[0], axes[1]))
+        if len(pooled) != 2:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a rolling compressor publishes a "
+                f"pooled key/value and a pooled score, not {len(pooled)} operands"
+            )
+        if len(set(pooled)) != 1:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: the pooled key/value and score "
+                f"operands disagree on candidate geometry {sorted(set(pooled))}"
+            )
+        candidates, _head_dim = pooled[0]
+        declared = kernel.iteration_domain.get("candidates")
+        if declared is not None:
+            extent = int(declared) if not isinstance(declared, Symbolic) else 0
+            if extent and extent != candidates:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: iteration domain declares "
+                    f"{extent} candidates per group and its pooled operands "
+                    f"carry {candidates}"
+                )
+        if candidates < ratio or candidates % ratio:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: {candidates} candidates per group is "
+                f"not a whole number of ratio-{ratio} groups"
+            )
+        coefficient = candidates // ratio
+        if coefficient not in (1, 2):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a group of {candidates} candidates is "
+                f"{coefficient} ratio-{ratio} groups wide; this lowering pools "
+                "one group, or a previous/current pair, and has no addressing "
+                "for a deeper window"
+            )
+        return coefficient
+
     def _emit_compressor_transition(
         self,
         plan: KernelPlan,
@@ -3703,12 +3812,19 @@ class _Emitter:
         """
 
         ratio = int(kernel.attributes.get("ratio", 0) or 0)
-        overlap = bool(kernel.attributes.get("overlap"))
-        slots = 2 * ratio if overlap else ratio
-        if ratio not in (4, 128) or overlap != (ratio == 4):
+        if ratio < 2:
             raise LoweringError(
-                f"kernel {plan.kernel_id}: unsupported compressor geometry "
-                f"ratio={ratio}, overlap={overlap}"
+                f"kernel {plan.kernel_id}: compressor ratio {ratio} is not a "
+                "rolling compression"
+            )
+        coefficient = self._compressor_coefficient(plan, kernel, ratio)
+        overlap = coefficient == 2
+        slots = coefficient * ratio
+        if slots > int(self.capability.limits["max_loop_trip"]):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a {slots}-slot raw history exceeds "
+                f"the capability's max_loop_trip "
+                f"{self.capability.limits['max_loop_trip']}"
             )
         if len(kernel.state_reads) != 2 or tuple(kernel.state_reads) != tuple(
             kernel.state_writes
@@ -3735,11 +3851,25 @@ class _Emitter:
             )
         span = int(packed_dims[1])
         width = int(packed_dims[3])
-        head_dim = width // (2 if overlap else 1)
-        if head_dim <= 0 or int(kernel.attributes.get("head_dim", 0)) != head_dim:
+        head_dim = width // coefficient
+        declared_head_dim = int(kernel.attributes.get("head_dim", 0) or 0)
+        # The width is DERIVED from the packed projection row and the coefficient
+        # the pooled operands state.  A graph that also declares ``head_dim`` is
+        # checked against it -- three independent statements of one fact, the way
+        # the ROM lowering holds them -- and a graph that does not declare it is
+        # not thereby under-specified: DeepSeek-V4.1-Flash's compressor omits the
+        # attribute, and requiring it read an absent key as zero and refused a
+        # geometry the operands state completely.
+        if head_dim <= 0 or width != coefficient * head_dim:
             raise LoweringError(
-                f"kernel {plan.kernel_id}: projected width {width} disagrees "
-                f"with head_dim {kernel.attributes.get('head_dim')}"
+                f"kernel {plan.kernel_id}: packed projection row {width} is not "
+                f"the {coefficient} x {head_dim} its pooled operands need"
+            )
+        if declared_head_dim and declared_head_dim != head_dim:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: projected width {width} over "
+                f"{coefficient} planes is head_dim {head_dim}, but the kernel "
+                f"declares {declared_head_dim}"
             )
 
         packed = self._operand_view(plan, packed_operand, loops, writable=False)

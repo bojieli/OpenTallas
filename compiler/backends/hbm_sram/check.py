@@ -568,11 +568,19 @@ def check_deployment(
                     kv_writers.setdefault(state_id, set()).add(index)
 
     # -- 2/3. zero-copy weights and role stacks ---------------------------
+    # Keyed on IMMUTABLE rather than on one storage class: a host-resident
+    # weight is still immutable model content, and it is exactly the object whose
+    # coverage must not quietly lapse.  Scanning HBM alone would have let a table
+    # moved to the host image drop out of ``every_weight_placed``,
+    # ``zero_copy_weights`` and ``weight_grouping_agrees`` at once -- a check that
+    # stops covering a placement rather than failing on it.  The host input and
+    # output windows are READ|WRITE and never IMMUTABLE, so they stay out.
     immutable = [
         d
         for d in objects
         if d.permissions & Permission.IMMUTABLE
-        and d.payload["storage_class"] == int(StorageClass.HBM)
+        and int(d.payload["storage_class"])
+        in {int(StorageClass.HBM), int(StorageClass.HOST)}
     ]
     generated = [
         d
