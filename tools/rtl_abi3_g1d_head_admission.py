@@ -142,11 +142,20 @@ MAPPED_FAMILY_OPCODES = frozenset(
         (int(Major.SELECTION), int(Selection.TOKEN_APPEND)),
     }
 )
-# The bridge's admitted MATMUL weight bound, as ``dim0 <= EMBEDDING_WIDTH``.
-# It is NOT read from the source here: it is the value the bracket brackets,
-# and the campaign refuses to publish it unless the arm at the value launches
-# and the arm one row above it refuses.
-BRACKET_ROWS = 4096
+# The bridge's admitted MATMUL weight bound.  It is NOT read from the source
+# here: it is the value the bracket brackets, and the campaign refuses to
+# publish it unless the arm at the value launches and the arm one row above it
+# refuses.
+#
+# WAS 4096, WHICH WENT STALE.  That was ``dim0 <= EMBEDDING_WIDTH`` and
+# EMBEDDING_WIDTH defaults to the 4,096 hidden width.  ``f6afec5`` generalised
+# ``matmul_weight_source_ok`` to ``desc_view_dim0 <= 32'hffff`` -- the 16-bit
+# cfg_cols/cfg_depth fields the engine array is configured through -- and the
+# committed artifact's own commit (315af74) is an ancestor of that change, so
+# its published 4,096 measured the pre-fix bridge.  The bracket moves to the
+# bound the current predicate states; if the arm at 65,535 does not launch or
+# the arm at 65,536 does, the campaign says so instead of publishing either.
+BRACKET_ROWS = 65535
 BRACKET_OVER_ROWS = BRACKET_ROWS + 1
 # The width the argmax arms rewrite the head to.  It is NOT the bracket: the
 # bracket's job is the bound and it costs 16.8 x 10^6 multiply-accumulates a
