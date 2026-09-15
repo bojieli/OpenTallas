@@ -51,6 +51,7 @@ from compiler.backends.schedule_rule import (
     staging_bank_mask,
     surface_rows as _e9_surface_rows,
 )
+from compiler.backends.attention_scale import attention_scale_bf16_code
 from compiler.backends.numeric_contracts import (
     EXECUTION_CONTRACT,
     reduction_order_for,
@@ -5767,7 +5768,14 @@ class _Emitter:
             reduction_order=reduction_order_for(
                 contract, plan.kind, kernel.attributes
             ),
-            scale_bits=_binary32_bits(
+            scale_bits=self._scale_bits(kernel),
+            epsilon_bits=self._epsilon_bits(plan, kernel),
+        )
+
+    def _scale_bits(self, kernel: Kernel) -> int:
+        """The operator's scale, after checking it against its own head width."""
+        self._check_attention_scale(kernel)
+        return _binary32_bits(
                 kernel.attributes,
                 # Every spelling the released exporters use for "the constant
                 # this operation scales by".  An unrecognised one is not a
@@ -5785,9 +5793,36 @@ class _Emitter:
                     "scale_bf16_code",
                     "scale",
                 ),
-            ),
-            epsilon_bits=self._epsilon_bits(plan, kernel),
         )
+
+    def _check_attention_scale(self, kernel: Kernel) -> None:
+        """A kernel stating both a scale code and its head width must agree.
+
+        ``compiler/backends/attention_scale`` exists because the two used to
+        disagree: the frontend wrote ``scale_bf16_code`` as the literal 0x3DB5
+        beside a ``scale_denominator_sqrt`` taken from ``head_dim``, so the pair
+        matched only at Qwen3-8B's head width of 128 and every other model was
+        handed the 8B softmax scale.  Nothing downstream detects that -- the
+        value is finite, positive and plausible.
+
+        The ROM backend has checked this since the module was written; this one
+        did not, and a locally stale reduced HBM deployment carried 0x3DB5
+        (1/sqrt 128) on a head of width 16 until the GQA engine refused it at
+        instruction 38.  One convention, two backends -- the property
+        ``_epsilon_bits`` states about itself -- so the check belongs on both
+        sides rather than on whichever happened to be exercised.
+        """
+        denominator = kernel.attributes.get("scale_denominator_sqrt")
+        declared = kernel.attributes.get("scale_bf16_code")
+        if denominator is None or declared is None:
+            return
+        expected = attention_scale_bf16_code(int(denominator))
+        if int(declared) != expected:
+            raise LoweringError(
+                f"{kernel.kind}: scale_bf16_code 0x{int(declared):04x} is not "
+                f"1/sqrt(scale_denominator_sqrt={int(denominator)}), which is "
+                f"0x{expected:04x}"
+            )
 
     def _epsilon_bits(self, plan: KernelPlan, kernel: Kernel) -> int:
         """The numeric descriptor's epsilon, in the encoding its opcode reads.

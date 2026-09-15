@@ -2,10 +2,22 @@
   "certificate": {
     "every_case_reached_completion": true,
     "prefill_token_matches_oracle": true,
-    "result_injection_disabled": true
+    "result_injection_disabled": true,
+    "stores_agree": true
   },
   "checkpoint": "build/models/qwen3-reduced-v1",
-  "deployment": "build/abi3/qwen3-reduced-rom",
+  "deployments": {
+    "hbm": {
+      "descriptors_sha256": "9fd81472e891c59794427885a4712d5f93c91f7991b28e249553cbbacf75d7e1",
+      "path": "build/abi3/qwen3-reduced-hbm",
+      "program_sha256": "b09cfe8e8586023717baa7082a899abfff76cc40dc9592607789d18c89d87e18"
+    },
+    "rom": {
+      "descriptors_sha256": "8fbe8799d67bd58ad7f69635aad67569f313a5612139c99906dda4c2af2e58e9",
+      "path": "build/abi3/qwen3-reduced-rom",
+      "program_sha256": "014514c58f393b7a5b22e89dfe7f891474f7c2e8b1c85c635f413851eebb3026"
+    }
+  },
   "does_not_establish": [
     "numerics at shipped dimension: this is the reduced fixture at hidden 128 and vocabulary 4,096, and one shipped Qwen3 token is about 13.9 days of cycle-accurate simulation at this project's measured 39,915 MACs/s",
     "the decode case's token as an oracle id: that case is entered on a staged KV cache rather than the prefill's own output, so it is recorded and not asserted",
@@ -17,7 +29,7 @@
     "that id equals the first generated token of the reduced reference oracle, which a separate process produced by reading the fixture's shard off disk and running the released reference implementation"
   ],
   "git": {
-    "commit": "01db1d544443d3498b21ccb44b803f16770b3a48",
+    "commit": "81347d7f70abcb37169504aa512b22b945eb870e",
     "worktree_dirty": true
   },
   "oracle": {
@@ -34,6 +46,7 @@
     {
       "agrees_with_oracle": true,
       "case": "qwen3-reduced-rom-single-chip/prefill",
+      "deployment": "build/abi3/qwen3-reduced-rom",
       "elaboration": {
         "banks": {
           "index_words": 33920,
@@ -93,14 +106,16 @@
         }
       },
       "expected_token": 1073,
-      "name": "prefill",
+      "name": "rom-prefill",
       "selected_token": 1073,
+      "store": "rom",
       "token_is_asserted": true,
-      "why": "the first generated token of the workload: the span-16 prefill over the prompt the oracle records"
+      "why": "the workload's first generated token: the span-16 prefill over the prompt the oracle records, from this store"
     },
     {
       "agrees_with_oracle": null,
       "case": "qwen3-reduced-rom-single-chip/decode",
+      "deployment": "build/abi3/qwen3-reduced-rom",
       "elaboration": {
         "banks": {
           "index_words": 33920,
@@ -158,8 +173,145 @@
         }
       },
       "expected_token": null,
-      "name": "decode",
+      "name": "rom-decode",
       "selected_token": 652,
+      "store": "rom",
+      "token_is_asserted": false,
+      "why": "a decode step entered on a STAGED KV cache rather than on the prefill's own output, so its id is not the oracle's second token and is recorded without being asserted"
+    },
+    {
+      "agrees_with_oracle": true,
+      "case": "qwen3-reduced-rom-single-chip/prefill",
+      "deployment": "build/abi3/qwen3-reduced-hbm",
+      "elaboration": {
+        "banks": {
+          "index_words": 541248,
+          "result_words": 17135872,
+          "source_words": 1049856,
+          "weight_bytes": 3604480
+        },
+        "parameters": [
+          "GQA_QUERY_HEADS=8",
+          "GQA_KV_HEADS=2",
+          "GQA_HEAD_WIDTH=16",
+          "GQA_SCALE_CODE=0x3e800000",
+          "EMBEDDING_WIDTH=128",
+          "QWEN_VOCABULARY=4096",
+          "DEEPSEEK_VOCABULARY=4096",
+          "EMBEDDING_TOKEN_INDEXED=1",
+          "GATHER_PLACEMENT_ADDRESSED=1",
+          "ENABLE_RESULT_INJECTION=0",
+          "MAX_SEQUENCE_SPAN=16",
+          "INDEX_VIEW_ADDRESSED=1",
+          "INDEX_WORDS=541248",
+          "SOURCE_WORDS=1049856",
+          "RESULT_WORDS=17135872",
+          "MATMUL_WEIGHT_BYTES=3604480"
+        ]
+      },
+      "execution": {
+        "counters": {
+          "argmax_launches": "1",
+          "complete": "1",
+          "cycles": "23021225",
+          "done": "1",
+          "fetched_retired": "248 / 248",
+          "first_fault_instr": "4294967295",
+          "issued": "83",
+          "loop_iterations": "83",
+          "operand_read_oob": "0",
+          "place_bound_count": "30  (twice=0 overflow=0 conflict=0)",
+          "placement": "30 bindings on the 32-port surface",
+          "result_write_oob": "0",
+          "selected_token": "1073",
+          "session_retired": "1",
+          "trapped": "0  trap_class=0",
+          "views_resolved": "255",
+          "wait_events": "81"
+        },
+        "log_sha256": "168636432a545ba9c7a0de27dd555bdc685c17a64581659cc2a75673479e711c",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              23021225\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "returncode": 0,
+        "selected_token": 1073,
+        "self_check": {
+          "golden_issued": 83,
+          "golden_retired": 248,
+          "issued": 83,
+          "retired": 248,
+          "verdict": "PASS"
+        }
+      },
+      "expected_token": 1073,
+      "name": "hbm-prefill",
+      "selected_token": 1073,
+      "store": "hbm",
+      "token_is_asserted": true,
+      "why": "the workload's first generated token: the span-16 prefill over the prompt the oracle records, from this store"
+    },
+    {
+      "agrees_with_oracle": null,
+      "case": "qwen3-reduced-rom-single-chip/decode",
+      "deployment": "build/abi3/qwen3-reduced-hbm",
+      "elaboration": {
+        "banks": {
+          "index_words": 541248,
+          "result_words": 17135872,
+          "source_words": 1049856,
+          "weight_bytes": 3604480
+        },
+        "parameters": [
+          "GQA_QUERY_HEADS=8",
+          "GQA_KV_HEADS=2",
+          "GQA_HEAD_WIDTH=16",
+          "GQA_SCALE_CODE=0x3e800000",
+          "EMBEDDING_WIDTH=128",
+          "QWEN_VOCABULARY=4096",
+          "DEEPSEEK_VOCABULARY=4096",
+          "EMBEDDING_TOKEN_INDEXED=1",
+          "GATHER_PLACEMENT_ADDRESSED=1",
+          "ENABLE_RESULT_INJECTION=0",
+          "INDEX_WORDS=541248",
+          "SOURCE_WORDS=1049856",
+          "RESULT_WORDS=17135872",
+          "MATMUL_WEIGHT_BYTES=3604480"
+        ]
+      },
+      "execution": {
+        "counters": {
+          "argmax_launches": "1",
+          "complete": "1",
+          "cycles": "7919922",
+          "done": "1",
+          "fetched_retired": "248 / 248",
+          "first_fault_instr": "4294967295",
+          "issued": "83",
+          "loop_iterations": "83",
+          "operand_read_oob": "0",
+          "place_bound_count": "30  (twice=0 overflow=0 conflict=0)",
+          "placement": "30 bindings on the 32-port surface",
+          "result_write_oob": "0",
+          "selected_token": "652",
+          "session_retired": "1",
+          "trapped": "0  trap_class=0",
+          "views_resolved": "255",
+          "wait_events": "81"
+        },
+        "log_sha256": "f0cdfbd4d5514d4ba33f4bb108a8a21aa7c2c3da9710c6e0ac637d44c726df96",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              7919922\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "returncode": 0,
+        "selected_token": 652,
+        "self_check": {
+          "golden_issued": 83,
+          "golden_retired": 248,
+          "issued": 83,
+          "retired": 248,
+          "verdict": "PASS"
+        }
+      },
+      "expected_token": null,
+      "name": "hbm-decode",
+      "selected_token": 652,
+      "store": "hbm",
       "token_is_asserted": false,
       "why": "a decode step entered on a STAGED KV cache rather than on the prefill's own output, so its id is not the oracle's second token and is recorded without being asserted"
     }

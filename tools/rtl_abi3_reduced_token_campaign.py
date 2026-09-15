@@ -46,7 +46,13 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "opentallas.rtl.abi3_reduced_token_campaign.v1"
 ORACLE = ROOT / "results/abi3/qwen3_reduced_reference_oracle.json"
 WORKLOAD_ID = "TA-QW-REDUCED-EOS-1"
-DEPLOYMENT = "build/abi3/qwen3-reduced-rom"
+#: One reduced fixture, two weight stores.  The same program, the same oracle,
+#: the same vehicle: what differs is where a weight column comes from, which is
+#: the whole point of running both.
+DEPLOYMENTS: dict[str, str] = {
+    "rom": "build/abi3/qwen3-reduced-rom",
+    "hbm": "build/abi3/qwen3-reduced-hbm",
+}
 CHECKPOINT = "build/models/qwen3-reduced-v1"
 DRIVER = "rtl/test/a3_reduced_token_driver.cpp"
 
@@ -130,27 +136,47 @@ GEOMETRY: tuple[str, ...] = (
 #: TRAP_DESCRIPTOR after resolving three views -- which is what a rebuild at the
 #: decode parameters looks like, and cost an hour to recognise as a missing
 #: parameter rather than a regression.
-CASES: tuple[dict[str, object], ...] = (
-    {
-        "name": "prefill",
-        "case": "qwen3-reduced-rom-single-chip/prefill",
-        "params": ("MAX_SEQUENCE_SPAN=16", "INDEX_VIEW_ADDRESSED=1"),
-        "prompt_tokens": str(ORACLE),
-        "token_is_asserted": True,
-        "why": ("the first generated token of the workload: the span-16 prefill "
-                "over the prompt the oracle records"),
-    },
-    {
-        "name": "decode",
-        "case": "qwen3-reduced-rom-single-chip/decode",
-        "params": (),
-        "prompt_tokens": None,
-        "token_is_asserted": False,
-        "why": ("a decode step entered on a STAGED KV cache rather than on the "
-                "prefill's own output, so its id is not the oracle's second "
-                "token and is recorded without being asserted"),
-    },
-)
+def _cases() -> tuple[dict[str, object], ...]:
+    """Both stores, both entrypoints.
+
+    PREFILL IS A SPAN-16 BUILD and the bridge has to be elaborated for it.
+    Without MAX_SEQUENCE_SPAN and INDEX_VIEW_ADDRESSED the span-16 prefill
+    refuses at instruction 1 with TRAP_DESCRIPTOR after resolving three views --
+    which reads exactly like a regression and is a missing parameter.
+    """
+    out: list[dict[str, object]] = []
+    for store, deployment in DEPLOYMENTS.items():
+        out.append({
+            "name": f"{store}-prefill",
+            "store": store,
+            "deployment": deployment,
+            "case": "qwen3-reduced-rom-single-chip/prefill",
+            "params": ("MAX_SEQUENCE_SPAN=16", "INDEX_VIEW_ADDRESSED=1"),
+            "prompt_tokens": str(ORACLE),
+            "token_is_asserted": True,
+            "why": ("the workload's first generated token: the span-16 prefill "
+                    "over the prompt the oracle records, from this store"),
+        })
+        out.append({
+            "name": f"{store}-decode",
+            "store": store,
+            "deployment": deployment,
+            "case": "qwen3-reduced-rom-single-chip/decode",
+            "params": (),
+            "prompt_tokens": None,
+            "token_is_asserted": False,
+            "why": ("a decode step entered on a STAGED KV cache rather than on "
+                    "the prefill's own output, so its id is not the oracle's "
+                    "second token and is recorded without being asserted"),
+        })
+    return tuple(out)
+
+
+#: The case record supplies the REQUEST -- entrypoint id, phase, symbol bindings
+#: -- and never the store; ``entry_pc`` and the generation policy come from each
+#: deployment's own manifest.  So one committed case drives both stores, which is
+#: why the HBM rows name a rom-single-chip case and are not mislabelled.
+CASES: tuple[dict[str, object], ...] = _cases()
 
 COUNTER_RE = re.compile(r"^\s{2}(?P<key>[a-z_/ ]+?)\s{2,}(?P<value>.+)$", re.M)
 PASS_RE = re.compile(r"^(?P<verdict>PASS|FAIL) reduced end-to-end: "
@@ -187,10 +213,10 @@ def bank_sizes(driver: Path) -> dict[str, int]:
 def stage(case: dict[str, object], out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     subprocess.run([sys.executable, "tools/pack_reduced_deployment_images.py",
-                    "--deployment", DEPLOYMENT, "--out-dir", str(out_dir)],
+                    "--deployment", str(case["deployment"]), "--out-dir", str(out_dir)],
                    cwd=ROOT, check=True, capture_output=True)
     argv = [sys.executable, "tools/stage_reduced_token_run.py",
-            "--deployment", DEPLOYMENT, "--checkpoint", CHECKPOINT,
+            "--deployment", str(case["deployment"]), "--checkpoint", CHECKPOINT,
             "--case", str(case["case"]), "--out-dir", str(out_dir)]
     if case["prompt_tokens"]:
         argv += ["--prompt-tokens", str(case["prompt_tokens"])]
@@ -281,6 +307,8 @@ def main() -> int:
             "expected_token": expected,
             "name": case["name"],
             "selected_token": emitted,
+            "store": case["store"],
+            "deployment": case["deployment"],
             "token_is_asserted": bool(case["token_is_asserted"]),
             "why": case["why"],
         })
@@ -295,13 +323,24 @@ def main() -> int:
         "certificate": {
             "prefill_token_matches_oracle":
                 bool(asserted and all(r["agrees_with_oracle"] for r in asserted)),
+            "stores_agree": (
+                len({r["selected_token"] for r in asserted}) == 1
+                if asserted else False
+            ),
             "every_case_reached_completion":
                 all((r["execution"]["self_check"] or {}).get("verdict") == "PASS"
                     for r in records),
             "result_injection_disabled": True,
         },
         "checkpoint": CHECKPOINT,
-        "deployment": DEPLOYMENT,
+        "deployments": {
+            store: {
+                "path": path,
+                "program_sha256": sha256(ROOT / path / "program.bin"),
+                "descriptors_sha256": sha256(ROOT / path / "descriptors.bin"),
+            }
+            for store, path in DEPLOYMENTS.items()
+        },
         "does_not_establish": [
             "numerics at shipped dimension: this is the reduced fixture at "
             "hidden 128 and vocabulary 4,096, and one shipped Qwen3 token is "
@@ -344,7 +383,7 @@ def main() -> int:
         mark = ("matches oracle" if r["agrees_with_oracle"]
                 else ("recorded, not asserted" if not r["token_is_asserted"]
                       else "DOES NOT MATCH"))
-        print(f"  {r['name']:8s} token={r['selected_token']} "
+        print(f"  {r['name']:14s} token={r['selected_token']} "
               f"retired={sc.get('retired')}/{sc.get('golden_retired')} "
               f"issued={sc.get('issued')}/{sc.get('golden_issued')} "
               f"{sc.get('verdict')}  {mark}")
