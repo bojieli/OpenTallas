@@ -97,8 +97,37 @@ module tb_a3_ordered_sum;
             errors = errors + 1;
         end
 
+        // -- signed zero, pinned because the RTL and the reference DISAGREE ---
+        // This repository's binary32 adder ends with "if (result[30:0] == 0)
+        // result = 0", so every zero result canonicalises to +0.  numpy does
+        // not: runtime.sim.engines.reduction.ordered_sum over negative zeros
+        // returns 0x80000000.  The divergence is reachable -- every
+        // contribution to a reduction being a signed zero -- and it is a
+        // property of fp32_add_rne, not of this block, so it is pinned here
+        // rather than left for someone to rediscover as a mismatch.
+        for (j = 0; j < 256; j = j + 1) vmem[j] = 32'h00008000;   // BF16 -0.0
+        for (j = 0; j < 64; j = j + 1) begin
+            bmem[j] = 32'h00008000; got[j] = 32'hdead_beef;
+        end
+        cfg_terms = 8'd4; cfg_count = 32'd4; cfg_in_base = 0; cfg_stride = 32'd4;
+        cfg_has_base = 1'b1; cfg_base_base = 0; cfg_reduction_order = 8'd0;
+        cfg_out_base = 0; writes = 0;
+        @(negedge clk); start = 1; @(negedge clk); start = 0;
+        wait (done); @(negedge clk);
+        if (error_code !== 8'd0) begin
+            $display("FAIL signed zero: error=%0d", error_code); errors = errors + 1;
+        end
+        // +0.0, which is what this RTL produces; the numpy reference would say
+        // 0x8000.  Asserting the RTL's own answer keeps the difference visible.
+        if (got[0][15:0] !== 16'h0000) begin
+            $display("FAIL signed zero: all -0.0 gave %04x, this RTL canonicalises to 0000",
+                     got[0][15:0]);
+            errors = errors + 1;
+        end else
+            $display("note: all -0.0 reduces to +0.0 here; the numpy reference says 8000");
+
         if (errors == 0)
-            $display("PASS: ordered_sum, %0d reference cases, II=1, order refusal", ncases);
+            $display("PASS: ordered_sum, %0d reference cases, II=1, order refusal, signed zero pinned", ncases);
         else $display("FAIL: %0d errors", errors);
         $finish;
     end
