@@ -59,7 +59,21 @@ EXECUTION_CONTRACT: Final[Mapping[str, str]] = MappingProxyType(
         # released composite.  Without the substitution the vector engine
         # refuses the descriptor outright, which is correct of it: A8 has it
         # dispatch RMSNorm on the contract and never infer one.
-        "dspark_main_project_bf16_conditioning_norm_v1": DEEPSEEK_RMSNORM_CONTRACT,
+        # The V4.1 front end composes a contract identity as ``{base}_{step}_v1``
+    # and lowers RoPE as two steps: ``rope_apply_bf16_coefficient_rows_v1``
+    # builds the phasor table and ``rope_apply_bf16_rotate_v1`` applies it.  The
+    # rotate step IS the runtime's rotary contract, established by the operands
+    # rather than by the shared base name: ``rope_apply_bf16_v1`` takes
+    # ``input 1`` as ``cos[rotary] || sin[rotary]`` in binary32 with the rotary
+    # width in ``aux_id_0``, and the step carries a [span, 128] FP32
+    # coefficient operand against ``rotary_width: 64`` -- 128 is 2 x 64, the
+    # same cosine-then-sine layout read channel-for-channel.  Listed, never
+    # inferred: the two rotary contracts differ in which channels move, which
+    # channel each pairs with, and where the arithmetic rounds, so a guess
+    # between them corrupts whichever model does not get its own.
+    "rope_apply_bf16_rotate_v1": "rope_apply_bf16_v1",
+    "rope_inverse_bf16_rotate_v1": "rope_inverse_bf16_v1",
+    "dspark_main_project_bf16_conditioning_norm_v1": DEEPSEEK_RMSNORM_CONTRACT,
         "dspark_prefill_kv_bf16_key_value_norm_v1": DEEPSEEK_RMSNORM_CONTRACT,
     }
 )
