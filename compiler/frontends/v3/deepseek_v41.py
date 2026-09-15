@@ -3898,7 +3898,18 @@ def export_deepseek_v41_kernel_graph(
         )
 
         op = start("ROPE_INVERSE", "attention.output_rotation", layer)
-        unrotated = act(f"{op}.output", "bf16", (span, HEADS * HEAD_DIM))
+        # RANK-3, LIKE ITS INPUT.  This was ``(span, HEADS * HEAD_DIM)``, the
+        # rank-2 form the grouped projection contracts against, on the reasoning
+        # that ``o.view(bsz, seqlen, n_groups, -1)`` reads the head axis as one
+        # row and nothing moves.  Nothing does move -- but VECTOR.ROPE is
+        # shape-preserving and the engine checks it, so a rank-2 output against
+        # a rank-3 input refused V4.1 at PC 80: "view 1299 is (1, 64, 512) and
+        # view 1301 is (1, 32768)".  The two described the same bytes at the
+        # same stride.  ABI 3.0 views are per-operand, so the tensor is declared
+        # at the rank the operator that writes it requires and the consumer
+        # below presents whatever rank it contracts against; the flattening is a
+        # property of a reader, not of the tensor.
+        unrotated = act(f"{op}.output", "bf16", (span, HEADS, HEAD_DIM))
         # ``apply_rotary_emb(o, freqs_cis, True)`` conjugates *the query's own*
         # coefficient rows -- the same positions, the same table, the same rotary
         # profile -- so the inverse reads the rows the query rotation already
