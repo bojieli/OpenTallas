@@ -1353,6 +1353,8 @@ class RomLowering:
         self._view_cache: dict[tuple[Any, ...], int] = {}
         self._wait_cache: dict[tuple[int, ...], int] = {}
         self._loop_of_run: dict[int, int] = {}
+        #: State views whose placement loop was not open where they were built.
+        self._state_loop_suppressed: list[dict[str, Any]] = []
         self._state_descriptor: dict[str, int] = {}
         self._state_object: dict[str, int] = {}
         self._state_slot: dict[str, tuple[str, int]] = {}
@@ -3479,6 +3481,34 @@ class RomLowering:
         if placement is None:
             return None, 1
         loop = self._loop_of_run.get(placement[0])
+        # A loop term is only addressable where that loop is open.  The
+        # placement names the run whose *body* holds this tensor, which is not
+        # always the run being emitted: a prologue or epilogue kernel runs with
+        # no loop open at all, and a kernel in one run may read a state operand
+        # another run placed.  Emitting the placement's loop regardless produces
+        # a view that both the resolver and ``runtime.sim.memory`` refuse --
+        # "loop M is not active" -- at the first instruction that resolves it,
+        # so the deployment passes static admission and then traps on the
+        # device.  Outside its run there is no iteration to advance over, and
+        # the base offset the caller keeps (the representative layer's starting
+        # slot) is already the whole address, so the term is dropped and the
+        # drop is recorded rather than taken silently.
+        if loop is not None and loop not in {
+            open_loop for open_loop, _ in self.builder.open_loop_stack()
+        }:
+            self._state_loop_suppressed.append(
+                {
+                    "emitting_run": None if run is None else int(run.index),
+                    "open_loops": [
+                        int(open_loop)
+                        for open_loop, _ in self.builder.open_loop_stack()
+                    ],
+                    "placement_run": int(placement[0]),
+                    "suppressed_loop": int(loop),
+                    "tensor_id": str(tensor_id),
+                }
+            )
+            return None, 1
         names = self.analysis.body_operand.get(placement)
         if names is None or len(names) < 2:
             if run is None or run.groups < 2:
@@ -10034,6 +10064,14 @@ class RomLowering:
                 if self._sram_kv_used:
                     note["storage_class"] = StorageClass.SRAM.name
             builder.notes["rom_lowering"]["direct_buffer_state"] = note
+        if self._state_loop_suppressed:
+            builder.notes["rom_lowering"]["state_loop_terms_suppressed"] = sorted(
+                self._state_loop_suppressed,
+                key=lambda record: (
+                    record["suppressed_loop"],
+                    record["tensor_id"],
+                ),
+            )
         return builder.finish()
 
 

@@ -716,6 +716,10 @@ class Verifier:
                         self._fail(
                             f"instruction {index}: COMPLETE inside an open loop body"
                         )
+            else:
+                self._verify_loop_terms_live(
+                    index, instruction, {entry[0] for entry in stack}
+                )
             work += multiplier
         self._check("loops_closed", not stack, "program ends with an open loop")
         self._check(
@@ -737,6 +741,64 @@ class Verifier:
             f"proved retired work {work} exceeds the declared bound "
             f"{self.header.max_retired_work}",
         )
+
+    #: An operator descriptor's view slots, in the order the payload lays them out.
+    _VIEW_SLOTS: tuple[str, ...] = (
+        "input_view_0",
+        "input_view_1",
+        "input_view_2",
+        "input_view_3",
+        "output_view_0",
+        "output_view_1",
+    )
+
+    def _verify_loop_terms_live(
+        self, index: int, instruction: Instruction, live: set[int]
+    ) -> None:
+        """A LOOP_INDUCTION term may only name a loop that is open here.
+
+        ``_loop_trip`` holds every loop the program sets up anywhere, so every
+        check written against it answers "is this a declared loop?" -- which a
+        forward reference passes.  The device asks a different question: the
+        resolver queries its loop stack, and a loop that has not been pushed
+        has no induction value to give, so it fails closed on A3_TRAP_MEMORY at
+        the first instruction that resolves the view.  A program that ships
+        this way verifies clean and then traps on hardware, which is the worst
+        of the two outcomes, so liveness is checked here against the same stack
+        the loop nesting and work bound are proved from.
+        """
+        if instruction.descriptor_id == NO_ID:
+            return
+        try:
+            descriptor = self.deployment.table[instruction.descriptor_id]
+        except Exception:  # _verify_descriptors reports a bad reference
+            return
+        payload = descriptor.payload
+        if "input_view_0" not in payload:
+            return
+        for slot_name in self._VIEW_SLOTS:
+            view_id = int(payload.get(slot_name, NO_ID))
+            if view_id == NO_ID:
+                continue
+            try:
+                view = self.deployment.table[view_id]
+            except Exception:
+                continue
+            view_payload = view.payload
+            if "dynamic_term_count" not in view_payload:
+                continue
+            for term in range(int(view_payload["dynamic_term_count"])):
+                if view_payload[f"term{term}_kind"] != SelectorKind.LOOP_INDUCTION:
+                    continue
+                loop_id = int(view_payload[f"term{term}_index"])
+                if loop_id in live:
+                    continue
+                self._fail(
+                    f"instruction {index} ({instruction.mnemonic}): "
+                    f"{slot_name}={view_id} term{term} induces on loop {loop_id}, "
+                    f"which is not open here (open: "
+                    f"{sorted(live) if live else 'none'})"
+                )
 
     def _loop_trip_count(self, index: int, descriptor: Descriptor) -> int:
         payload = descriptor.payload

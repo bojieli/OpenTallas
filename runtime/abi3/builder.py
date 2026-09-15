@@ -841,6 +841,16 @@ class DeploymentBuilder:
         self._loop_stack.append((loop_descriptor_id, index))
         return index
 
+    def open_loop_stack(self) -> tuple[tuple[int, int], ...]:
+        """The loops open at this point, outermost first, as (loop id, setup index).
+
+        A backend that attaches a LOOP_INDUCTION term to a view needs to know
+        which loops are actually open where the view is built: a term naming a
+        loop that is not open is refused by both the view resolver and
+        ``runtime.sim.memory``, and static admission does not catch it.
+        """
+        return tuple(self._loop_stack)
+
     def close_loop(self) -> int:
         """Emit LOOP_NEXT, patching the loop descriptor's body extent."""
         if not self._loop_stack:

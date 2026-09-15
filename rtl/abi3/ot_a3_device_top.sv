@@ -83,7 +83,14 @@ module ot_a3_device_top #(
     parameter integer CRC_CACHE_ENTRIES = 2048,
     // Front-end request scheduling; passed through to the microsequencer.
     // 0 rebuilds the pre-parameter front end exactly.
-    parameter integer FAST_FRONT_END = 0
+    parameter integer FAST_FRONT_END = 0,
+    // The resolver's two optional walk shortcuts.  The microsequencer has
+    // carried them since the resolver gained them, but this top did not pass
+    // them down, so a harness that swept the matrix through the device top
+    // could not elaborate at all -- the parameter it named did not exist here.
+    // Both default to 0, which is the shipped build.
+    parameter integer FAST_SCAN = 0,
+    parameter integer FAST_WALK = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -469,7 +476,9 @@ module ot_a3_device_top #(
         .CRC_CACHE(CRC_CACHE),
         .CRC_PERIOD(CRC_PERIOD),
         .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
-        .FAST_FRONT_END(FAST_FRONT_END)
+        .FAST_FRONT_END(FAST_FRONT_END),
+        .FAST_SCAN(FAST_SCAN),
+        .FAST_WALK(FAST_WALK)
     ) sequencer (
         .clk(clk),
         .rst_n(rst_n),

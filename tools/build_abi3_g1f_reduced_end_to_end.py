@@ -232,6 +232,315 @@ def _traced_operator_sequences(
     }
 
 
+#: The V4.1 reduction rule, as recorded by the fixture builder.  This file does
+#: not restate it: every classification below is read out of this artifact, so a
+#: change to the reduction is a change to one record rather than to two.
+V41_REDUCTION_RECORD = ROOT / "results/abi3/deepseek_v41_reduced_model.json"
+
+#: Per-layer selectors in the V4.1 configuration.  Each decides which code path
+#: the vendor's ``Block`` takes at a given layer index, so together they are the
+#: model's operator sequence expressed as data.  All of them are in the
+#: reduction's ``kept_exactly`` set, which is what makes the sequence checkable
+#: by comparison instead of by tracing a forward.
+V41_PER_LAYER_SELECTORS = (
+    "compress_ratios",
+    "candidate_source_layer",
+    "engram_layer_ids",
+    "index_source_layers",
+    "kv_source_layers",
+    "dspark_target_layer_ids",
+)
+
+
+def _v41_module_paths(vendor: Any, tokenizer: Any, body: dict[str, Any]) -> list[str]:
+    """Module paths of one vendor ``Transformer`` built on the meta device.
+
+    The meta device allocates no storage, so the released configuration -- whose
+    routed-expert stack is about 27 GB of parameters in a single layer -- can be
+    built and walked on the same host as the reduced one.  Layer indices are
+    normalised to ``N`` and the first occurrence of each normalised path is
+    kept, so a 40-layer model and a 40-layer model are compared by shape rather
+    than by repetition count.
+    """
+    import torch
+
+    torch.set_default_dtype(torch.bfloat16)
+    with torch.device("meta"):
+        model = vendor.Transformer(vendor.ModelArgs(**body), tokenizer)
+    seen: set[str] = set()
+    paths: list[str] = []
+    for name, _module in model.named_modules():
+        normalised = re.sub(r"\.\d+\.", ".N.", name)
+        normalised = re.sub(r"\.\d+$", ".N", normalised)
+        if normalised not in seen:
+            seen.add(normalised)
+            paths.append(normalised)
+    return paths
+
+
+def structural_identity_v41(
+    full: dict[str, Any], reduced: dict[str, Any], reduction: dict[str, Any]
+) -> dict[str, Any]:
+    """Is the reduced V4.1 fixture the released architecture at smaller widths?
+
+    Three dimensions, each measured rather than asserted:
+
+    *Configuration.*  Every key of either configuration is classified against
+    the recorded reduction -- ``block_widths`` and ``counts`` are the reduced
+    ones, ``derived`` follow from them, ``kept_exactly`` must be byte-equal, and
+    the ``vision_*`` keys are the recorded exclusion.  A key in no bucket, or a
+    ``kept_exactly`` key that differs, is an unexpected difference.  The
+    ``block_widths`` and ``counts`` entries additionally have to agree with the
+    values the two configurations actually carry, so the record cannot drift
+    away from the fixture it describes.
+
+    *Module tree.*  Both configurations are built as the release's own
+    ``Transformer`` on the meta device and their normalised module paths are
+    compared.  The vision tower is excluded, which the record declares as an
+    exclusion rather than a reduction, so it is subtracted explicitly and what
+    remains has to match exactly.
+
+    *Operator sequence.*  Qwen3's rung traces a forward because
+    ``transformers`` branches on configuration fields.  Here both models are the
+    same vendor ``model.py``, and what varies per layer is data: the compress
+    ratio, and whether the layer is an Engram, index-source, KV-source or DSpark
+    layer.  Every one of those selectors is in ``kept_exactly``, so the per-layer
+    branch vector is compared exactly, for all 40 layers, instead of tracing one
+    layer at released widths -- which no host here can hold.
+    """
+    block_widths = reduction["block_widths"]
+    counts = reduction["counts"]
+    derived = set(reduction["derived"])
+    kept = set(reduction["kept_exactly"])
+    excluded_prefix = "vision_"
+
+    fields: dict[str, Any] = {}
+    unexpected: list[str] = []
+    record_disagreements: list[dict[str, Any]] = []
+    for key in sorted(set(full) | set(reduced)):
+        left, right = full.get(key), reduced.get(key)
+        if key in block_widths or key in counts:
+            kind = "reduced"
+            entry = block_widths.get(key) or counts[key]
+            if left is not None and int(entry["released"]) != int(left):
+                record_disagreements.append(
+                    {"field": key, "record_released": entry["released"],
+                     "config_released": left}
+                )
+            if right is not None and int(entry["reduced"]) != int(right):
+                record_disagreements.append(
+                    {"field": key, "record_reduced": entry["reduced"],
+                     "config_reduced": right}
+                )
+        elif key in derived:
+            kind = "derived_from_reduction"
+        elif key in kept:
+            kind = "identical" if left == right else "differs_unexpectedly"
+            if left != right:
+                unexpected.append(key)
+        elif key.startswith(excluded_prefix):
+            kind = "vision_excluded" if left == right else "differs_unexpectedly"
+            if left != right:
+                unexpected.append(key)
+        elif left == right:
+            kind = "identical"
+        else:
+            kind = "differs_unexpectedly"
+            unexpected.append(key)
+        fields[key] = {"full": left, "reduced": right, "classification": kind}
+
+    def _layers(body: dict[str, Any]) -> int:
+        return int(body["n_layers"])
+
+    def _invariants(body: dict[str, Any]) -> dict[str, bool]:
+        layers = _layers(body)
+        widths = [
+            int(body[name]) for name in sorted(block_widths) if name in body
+        ]
+        granule = int(reduction["quantization_block"])
+        return {
+            # The release's own act_quant asserts N % block_size == 0, so this
+            # is the floor and the granularity of every width at both scales.
+            "every_reduced_width_is_a_quantization_block_multiple": all(
+                width % granule == 0 for width in widths
+            ),
+            "activated_experts_within_routed": (
+                int(body["n_activated_experts"]) <= int(body["n_routed_experts"])
+            ),
+            "dspark_activated_within_routed": (
+                int(body["dspark_n_activated_experts"])
+                <= int(body["dspark_n_routed_experts"])
+            ),
+            "compress_ratios_cover_every_layer_and_mtp": (
+                len(body["compress_ratios"])
+                == layers + int(body["n_mtp_layers"])
+            ),
+            "candidate_source_layer_in_range": (
+                0 <= int(body["candidate_source_layer"]) < layers
+            ),
+            "engram_layers_in_range": all(
+                0 <= int(index) < layers for index in body["engram_layer_ids"]
+            ),
+            "index_source_layers_in_range": all(
+                0 <= int(index) < layers for index in body["index_source_layers"]
+            ),
+            "kv_source_layers_in_range": all(
+                0 <= int(index) < layers for index in body["kv_source_layers"]
+            ),
+            "dspark_target_layers_in_range": all(
+                0 <= int(index) < layers for index in body["dspark_target_layer_ids"]
+            ),
+            "one_embedding_table_per_engram_layer": (
+                len(body["engram_num_embeddings"]) == len(body["engram_layer_ids"])
+            ),
+        }
+
+    full_invariants = _invariants(full)
+    reduced_invariants = _invariants(reduced)
+    invariants = {
+        name: {
+            "full": full_invariants[name],
+            "reduced": reduced_invariants[name],
+            "held": bool(full_invariants[name] and reduced_invariants[name]),
+        }
+        for name in sorted(full_invariants)
+    }
+    config_ok = (
+        not unexpected
+        and not record_disagreements
+        and all(item["held"] for item in invariants.values())
+    )
+
+    from transformers import AutoTokenizer
+
+    from tools.build_deepseek_v41_reduced_model import (
+        import_vendor,
+        released_snapshot,
+    )
+
+    released = released_snapshot()
+    vendor, _engram = import_vendor(released)
+    tokenizer = AutoTokenizer.from_pretrained(str(released))
+    full_tree = _v41_module_paths(vendor, tokenizer, full)
+    reduced_tree = _v41_module_paths(vendor, tokenizer, reduced)
+    vision_only = [path for path in full_tree if path.split(".")[0] == "vision"]
+    full_tree_text = [path for path in full_tree if path.split(".")[0] != "vision"]
+    reduced_tree_text = [
+        path for path in reduced_tree if path.split(".")[0] != "vision"
+    ]
+    reduced_has_vision = [
+        path for path in reduced_tree if path.split(".")[0] == "vision"
+    ]
+    tree_ok = full_tree_text == reduced_tree_text and not reduced_has_vision
+
+    def _branch_vector(body: dict[str, Any]) -> list[dict[str, Any]]:
+        ratios = list(body["compress_ratios"])
+        engram = {int(index) for index in body["engram_layer_ids"]}
+        index_source = {int(index) for index in body["index_source_layers"]}
+        kv_source = {int(index) for index in body["kv_source_layers"]}
+        dspark = {int(index) for index in body["dspark_target_layer_ids"]}
+        candidate = int(body["candidate_source_layer"])
+        return [
+            {
+                "compress_ratio": int(ratios[layer]),
+                "engram": layer in engram,
+                "index_source": layer in index_source,
+                "kv_source": layer in kv_source,
+                "dspark": layer in dspark,
+                "candidate_source": layer == candidate,
+            }
+            for layer in range(_layers(body))
+        ]
+
+    full_branches = _branch_vector(full)
+    reduced_branches = _branch_vector(reduced)
+    sequence_ok = full_branches == reduced_branches
+    selectors_kept = sorted(
+        name for name in V41_PER_LAYER_SELECTORS if name in kept
+    )
+
+    def _first_difference(
+        left: list[Any], right: list[Any]
+    ) -> dict[str, Any] | None:
+        for index, (one, other) in enumerate(zip(left, right)):
+            if one != other:
+                return {"index": index, "full": one, "reduced": other}
+        if len(left) != len(right):
+            return {
+                "index": min(len(left), len(right)),
+                "full": None,
+                "reduced": None,
+            }
+        return None
+
+    return {
+        "structurally_identical": bool(config_ok and tree_ok and sequence_ok),
+        "checked_not_claimed": True,
+        "model": "deepseek-v4.1-flash",
+        "reduction_record": str(V41_REDUCTION_RECORD.relative_to(ROOT)),
+        "dimensions_compared": ["config", "module_tree", "operator_sequence"],
+        "config_comparison": {
+            "passed": config_ok,
+            "how": (
+                "every key of either configuration classified against the "
+                "recorded reduction; block_widths and counts additionally "
+                "reconciled against the values both configurations carry"
+            ),
+            "unexpected_differences": unexpected,
+            "record_disagreements": record_disagreements,
+            "invariants": invariants,
+            "fields": fields,
+        },
+        "module_tree_comparison": {
+            "passed": tree_ok,
+            "how": (
+                "the release's own inference/model.py Transformer built on the "
+                "meta device at each configuration; every module path with its "
+                "layer index normalised to N, first occurrence kept, compared "
+                "in order with the recorded vision exclusion subtracted"
+            ),
+            "full_module_paths": len(full_tree),
+            "reduced_module_paths": len(reduced_tree),
+            "full_text_only_paths": len(full_tree_text),
+            "reduced_text_only_paths": len(reduced_tree_text),
+            "vision_paths_excluded": len(vision_only),
+            "vision_exclusion": reduction["vision_excluded"],
+            "reduced_carries_vision_modules": bool(reduced_has_vision),
+            "first_difference": _first_difference(
+                full_tree_text, reduced_tree_text
+            ),
+            "full_layer_count": _layers(full),
+            "reduced_layer_count": _layers(reduced),
+        },
+        "operator_sequence_comparison": {
+            "passed": sequence_ok,
+            "how": (
+                "the per-layer branch vector -- compress ratio and whether the "
+                "layer is an Engram, index-source, KV-source, DSpark or "
+                "candidate-source layer -- computed from both configurations "
+                "and compared for every layer. Not a traced forward: both "
+                "models are the same vendor model.py, so what differs per "
+                "layer is data, and every selector carrying it is in the "
+                "reduction's kept_exactly set"
+            ),
+            "why_not_traced": (
+                "a single layer at released widths holds a routed-expert stack "
+                "of about 27 GB of parameters, so the full-dimension trace "
+                "Qwen3's rung performs is not runnable here; the selectors are "
+                "compared exactly instead, over all layers rather than one"
+            ),
+            "per_layer_selectors": list(V41_PER_LAYER_SELECTORS),
+            "selectors_in_kept_exactly": selectors_kept,
+            "all_selectors_kept_exactly": (
+                len(selectors_kept) == len(V41_PER_LAYER_SELECTORS)
+            ),
+            "layers_compared": _layers(reduced),
+            "first_difference": _first_difference(
+                full_branches, reduced_branches
+            ),
+        },
+    }
+
 def structural_identity(full: dict[str, Any], reduced: dict[str, Any]) -> dict[str, Any]:
     fields: dict[str, Any] = {}
     unexpected: list[str] = []
@@ -1067,30 +1376,42 @@ def main() -> int:
             )
         },
     )
-    if model.key != ladder_models.DEFAULT_MODEL:
-        # structural_identity() below reads Qwen3's config schema directly --
-        # REDUCTION's field names, max_window_layers, bos/eos_token_id -- and a
-        # V4.1 reduced fixture is described by a flat vendor ModelArgs object
-        # with a 43-entry compress_ratios sequence instead.  Running it anyway
-        # would classify every V4.1 field as "unexpected" and then report a
-        # structural verdict about a comparison that did not happen, which is
-        # precisely the not_evaluable defect this rung was hardened against on
-        # 2026-09-06.  So it refuses and names what is missing.
-        raise SystemExit(
-            f"{model.key}: this rung's structural_identity() is written against "
-            "Qwen3's config schema (tools/build_qwen3_reduced_model.REDUCTION, "
-            "max_window_layers, bos/eos_token_id). The V4.1 reduction rule is "
-            "recorded in results/abi3/deepseek_v41_reduced_model.json under "
-            "reduction.kept_exactly / block_widths / counts / derived, and a "
-            "V4.1 structural check has to compare against THAT. Until it does, "
-            "this rung refuses rather than reporting a verdict about a "
-            "comparison it did not make."
+    # Each model's structural check reads its OWN reduction rule.  Qwen3's is
+    # REDUCTION plus the transformers config schema; V4.1's is the record its
+    # fixture builder wrote, and the two configurations are the release's flat
+    # vendor ModelArgs rather than a transformers config.  Sharing one function
+    # across both would classify every V4.1 field as unexpected and then report
+    # a verdict about a comparison that did not happen, which is the
+    # not_evaluable defect this rung was hardened against on 2026-09-06.
+    if model.key == ladder_models.DEFAULT_MODEL:
+        full = json.loads(FULL_CONFIG.read_text(encoding="utf-8"))
+        reduced = json.loads(
+            (arguments.model_dir / "config.json").read_text(encoding="utf-8")
         )
+        identity_of = lambda: structural_identity(full, reduced)  # noqa: E731
+    else:
+        from tools.build_deepseek_v41_reduced_model import released_snapshot
 
-    full = json.loads(FULL_CONFIG.read_text(encoding="utf-8"))
-    reduced = json.loads(
-        (arguments.model_dir / "config.json").read_text(encoding="utf-8")
-    )
+        reduction = json.loads(
+            V41_REDUCTION_RECORD.read_text(encoding="utf-8")
+        )["reduction"]
+        # The released side is the pinned snapshot's own inference_config.json,
+        # which is the same schema as the fixture's -- comparing it against
+        # config.json would compare two different record shapes and call the
+        # difference a reduction.
+        full = json.loads(
+            (released_snapshot() / "inference_config.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        reduced = json.loads(
+            (arguments.snapshot / "inference_config.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        identity_of = lambda: structural_identity_v41(  # noqa: E731
+            full, reduced, reduction
+        )
     workload_path = arguments.workload_dir / f"{WORKLOAD_ID}.json"
     workload = json.loads(workload_path.read_text(encoding="utf-8"))
     oracle_bytes = arguments.oracle.read_bytes()
@@ -1099,7 +1420,7 @@ def main() -> int:
     oracle_ids = [int(token) for token in oracle_case["generated_token_ids"]]
     oracle_digest = hashlib.sha256(oracle_bytes).hexdigest()
 
-    identity = structural_identity(full, reduced)
+    identity = identity_of()
     lowering = (
         {"attempted": False, "reason": "--skip-lowering"}
         if arguments.skip_lowering
