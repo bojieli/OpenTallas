@@ -180,7 +180,25 @@ module ot_a3_engine_issue_bridge #(
     parameter [31:0] RMS_PROFILE_MAX_COUNT   = 32'd4096,
     parameter [31:0] RMS_PROFILE_MAX_ROWS    = 32'd32,
     parameter [31:0] RMS_PROFILE_MODEL_WIDTH = 32'd4096,
-    parameter [31:0] RMS_PROFILE_HEAD_WIDTH  = 32'd128
+    parameter [31:0] RMS_PROFILE_HEAD_WIDTH  = 32'd128,
+
+    //: HOW MANY OBJECTS THIS INSTANTIATION CAN PLACE.
+    //:
+    //: The placement table is a memory, not a register file, and this is its
+    //: depth.  It must be a power of two.  64 is the default because the 32
+    //: legacy configuration ports below can bind at most 32 objects and an
+    //: open-addressed table wants headroom: measured over Qwen3-reduced's own
+    //: 32 object ids, 32 entries is a 100%-loaded table whose worst probe is
+    //: 21 and whose mean is 3.62, while 64 entries probe 5 in the worst case
+    //: and 1.28 on average.  So the default admits exactly the set the 32
+    //: ports could ever express and no existing elaboration says anything.
+    //:
+    //: A DeepSeek deployment says something.  Measured from the certified
+    //: images, deepseek-v41-flash-rom-wafer-2 places 675 distinct objects
+    //: (ids 1..9,442), deepseek-v41-flash-rom-array-64 678, and
+    //: deepseek-v4-flash-rom 264, against Qwen3-reduced's 32.  2,048 holds
+    //: any of them at or below 33% load.
+    parameter integer PLACE_ENTRIES = 64
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -218,9 +236,16 @@ module ot_a3_engine_issue_bridge #(
     // Immutable descriptor-store read port, one-cycle response.
     output reg           desc_req,
     output reg  [31:0]   desc_id,
-    input  wire          desc_valid,
-    input  wire          desc_fault,
-    input  wire [1535:0] desc_data,
+    //: The RAW port.  Admission does not look at it directly: a descriptor
+    //: names an object, the object's base now comes from a memory read rather
+    //: than from a combinational compare against 32 ports, and the checks
+    //: below need both at once.  So the record is HELD and the placement probe
+    //: is launched from it; ``desc_valid`` / ``desc_data`` / ``desc_fault``
+    //: further down are the held record, presented the cycle the probe
+    //: answers.  Every admission clause reads those and is unchanged.
+    input  wire          desc_rd_valid,
+    input  wire          desc_rd_fault,
+    input  wire [1535:0] desc_rd_data,
 
     // Per-transaction compact verification-bank placement.  The first
     // supported operation uses one index word.  Gathers advance through the
@@ -325,6 +350,30 @@ module ot_a3_engine_issue_bridge #(
     input  wire [31:0]   cfg_place_base_30,
     input  wire [31:0]   cfg_place_object_31,
     input  wire [31:0]   cfg_place_base_31,
+
+    // -- the placement table's LOAD PORT ---------------------------------
+    // The 32 ports above cannot express a model.  A deployment with more
+    // objects than that loads its bindings here, one per accepted cycle, the
+    // way the program store, the descriptor store and the symbol file are
+    // loaded -- and into THE SAME TABLE, through the same hash, the same
+    // probe and the same uniqueness detection.  There is no second lookup
+    // surface, which is the failure this module's header note is about.
+    //
+    // A load is accepted on ``place_ld_en && place_ld_ready``.  The FIRST
+    // accepted load LOCKS the surface: from then on the legacy ports are not
+    // consulted and must read NO_ID, because a table built from both at once
+    // is two statements about one object's base.  A non-NO_ID legacy port
+    // after a load sets ``place_surface_conflict`` and the bridge refuses the
+    // transaction exactly as it refuses a table that names an object twice.
+    input  wire          place_ld_en,
+    input  wire [31:0]   place_ld_object,
+    input  wire [31:0]   place_ld_base,
+    output wire          place_ld_ready,
+    // Observability: bindings the table holds, and why it was refused.
+    output wire [31:0]   place_bound_count,
+    output wire          place_bound_twice,
+    output wire          place_overflowed,
+    output wire          place_surface_conflict,
 
     // The request's active context length, checked against the position the
     // scatter and attention index views actually resolve to; the compact KV
@@ -523,8 +572,15 @@ module ot_a3_engine_issue_bridge #(
 
     // -- the object placement table ---------------------------------------
     // One table, consulted by every operand slot and every result slot of
-    // every family.  The ports are scalar so the surface can be counted from
-    // the module's own declaration; they are gathered here once.
+    // every family.  It is a MEMORY now (ot_a3_place_table): hashed by object
+    // id, read through a registered port, and sized by PLACE_ENTRIES.  What
+    // used to be here was a function that compared an object id against all
+    // 32 entries combinationally, in front of every operand address.
+    //
+    // The 32 scalar ports remain, so the surface can still be counted from
+    // this module's declaration and every shipped vehicle drives what it
+    // always drove.  They are not a second mechanism: they are SEEDED into
+    // the table below, through the same load port a host uses.
     localparam integer PLACE_SLOTS = 32;
     wire [31:0] place_object [0:PLACE_SLOTS-1];
     wire [31:0] place_base   [0:PLACE_SLOTS-1];
@@ -593,40 +649,247 @@ module ot_a3_engine_issue_bridge #(
     assign place_object[31] = cfg_place_object_31;
     assign place_base[31]   = cfg_place_base_31;
 
-    // {found, base}.  Descending order leaves entry 0 as the final
-    // assignment, but a table that names an object twice never reaches this
-    // function: admission refuses such a table first, so "entry 0 wins" is a
-    // tie-break that cannot be exercised rather than a policy for resolving a
-    // contradiction.
-    function automatic [32:0] place_lookup;
-        input [31:0] object_id;
-        integer scan;
-        begin
-            place_lookup = 33'd0;
-            for (scan = PLACE_SLOTS - 1; scan >= 0; scan = scan - 1)
-                if ((object_id != NO_ID) &&
-                    (object_id == place_object[scan]))
-                    place_lookup = {1'b1, place_base[scan]};
+    // -- the table instance ------------------------------------------------
+    wire        place_flush_w;
+    wire        place_flushing;
+    wire        place_ld_en_w;
+    wire [31:0] place_ld_object_w;
+    wire [31:0] place_ld_base_w;
+    wire        place_ld_ready_w;
+    wire        place_lk_req_w;
+    wire [31:0] place_lk_object_w;
+    wire        place_lk_done_w;
+    wire        place_lk_found_w;
+    wire [31:0] place_lk_base_w;
+
+    ot_a3_place_table #(
+        .ENTRIES(PLACE_ENTRIES)
+    ) u_place_table (
+        .clk(clk),
+        .rst_n(rst_n),
+        .flush(place_flush_w),
+        .flushing(place_flushing),
+        .ld_en(place_ld_en_w),
+        .ld_object(place_ld_object_w),
+        .ld_base(place_ld_base_w),
+        .ld_ready(place_ld_ready_w),
+        .bound_twice(place_bound_twice),
+        .overflowed(place_overflowed),
+        .bound_count(place_bound_count),
+        .lk_req(place_lk_req_w),
+        .lk_object(place_lk_object_w),
+        .lk_done(place_lk_done_w),
+        .lk_found(place_lk_found_w),
+        .lk_base(place_lk_base_w)
+    );
+
+    // -- ONE WAY IN: the seeder ------------------------------------------
+    // The legacy ports are a CONTINUOUS surface and the table is a loaded
+    // store, so the two are reconciled by replaying the ports into the store.
+    // ``clear`` is the trigger, because ``clear`` is what a testbench pulses
+    // between two cases that carry different placements
+    // (rtl/test/tb_a3_operator_admission.sv drives cfg_map_object/base per
+    // case and pulses clear between them, without a reset), and in the
+    // shipped verification top ``clear`` is tied to ``start``.  A seed is a
+    // flush plus at most 32 accepted loads, which is why it is cheap enough
+    // to redo per transaction: measured below against a run of 7.9 M cycles.
+    //
+    // Once the host load port has been used the seed is RETIRED, because the
+    // host's bindings are an image that must survive the next ``start`` just
+    // as the program image does.
+    localparam [1:0] SEED_FLUSH = 2'd0;
+    localparam [1:0] SEED_WALK  = 2'd1;
+    localparam [1:0] SEED_DONE  = 2'd2;
+    reg [1:0] seed_state;
+    // Counts 0..PLACE_SLOTS, so it is one bit wider than an index into them --
+    // derived from PLACE_SLOTS rather than written as a literal, and compared
+    // against a constant of its own width so the comparison cannot be the
+    // 32-bit one an integer parameter silently promotes it to.
+    localparam integer SEED_W = $clog2(PLACE_SLOTS) + 1;
+    /* verilator lint_off WIDTHTRUNC */
+    localparam [SEED_W-1:0] SEED_SLOTS = PLACE_SLOTS;
+    /* verilator lint_on WIDTHTRUNC */
+    reg [SEED_W-1:0] seed_index;
+    reg       place_host_locked;
+    reg       place_surface_conflict_r;
+    reg       seed_flush_pulse;
+
+    // The legacy port the seeder is presenting.  A mux from a registered
+    // index, not a compare against all of them.
+    wire seed_index_in_range = (seed_index < SEED_SLOTS);
+    wire [31:0] seed_object = seed_index_in_range
+        ? place_object[seed_index[SEED_W-2:0]] : NO_ID;
+    wire [31:0] seed_base = seed_index_in_range
+        ? place_base[seed_index[SEED_W-2:0]] : 32'd0;
+
+    // Any legacy port still naming an object after the host has loaded one is
+    // two surfaces disagreeing, and it is refused rather than resolved.  This
+    // is 32 equality comparisons feeding one flop's D input -- not the 1,024
+    // the pairwise uniqueness check used to make, and not on an address path.
+    reg  legacy_any_named_r;
+    integer legacy_i;
+    always @* begin
+        legacy_any_named_r = 1'b0;
+        for (legacy_i = 0; legacy_i < PLACE_SLOTS; legacy_i = legacy_i + 1)
+            if (place_object[legacy_i] != NO_ID)
+                legacy_any_named_r = 1'b1;
+    end
+
+    assign place_flush_w = seed_flush_pulse;
+    // The seeder owns the load port until it is done; then the host does.
+    assign place_ld_en_w = (seed_state == SEED_WALK)
+        ? seed_index_in_range
+        : (place_ld_en && !place_flushing);
+    assign place_ld_object_w = (seed_state == SEED_WALK) ? seed_object
+                                                         : place_ld_object;
+    assign place_ld_base_w = (seed_state == SEED_WALK) ? seed_base
+                                                       : place_ld_base;
+    assign place_ld_ready = (seed_state == SEED_DONE) && place_ld_ready_w;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            //: NOT SEED_FLUSH.  Reset leaves the table EMPTY and the load port
+            //: open, and the legacy surface is seeded on the first ``clear``.
+            //: Seeding at reset instead read the configuration ports before
+            //: anything had driven them -- 32 copies of object 0 -- and the
+            //: table's own uniqueness detection correctly refused the second
+            //: of them, so a perfectly good deployment came up refused.  An
+            //: empty table is the honest state before a transaction is
+            //: configured: it names no object, and an object it does not name
+            //: is a trap rather than a guess.
+            seed_state <= SEED_DONE;
+            seed_index <= {SEED_W{1'b0}};
+            seed_flush_pulse <= 1'b0;
+            place_host_locked <= 1'b0;
+            place_surface_conflict_r <= 1'b0;
+        end else begin
+            seed_flush_pulse <= 1'b0;
+            if (place_ld_en && place_ld_ready)
+                place_host_locked <= 1'b1;
+            if (place_host_locked && legacy_any_named_r)
+                place_surface_conflict_r <= 1'b1;
+
+            if (clear && !place_host_locked) begin
+                seed_state <= SEED_FLUSH;
+                seed_index <= {SEED_W{1'b0}};
+                seed_flush_pulse <= 1'b1;
+            end else begin
+                case (seed_state)
+                    SEED_FLUSH: begin
+                        // wait out the table's own flush sweep
+                        if (!place_flushing && !seed_flush_pulse)
+                            seed_state <= SEED_WALK;
+                    end
+                    SEED_WALK: begin
+                        if (!seed_index_in_range)
+                            seed_state <= SEED_DONE;
+                        else if (place_ld_ready_w)
+                            seed_index <= seed_index + {{(SEED_W-1){1'b0}}, 1'b1};
+                    end
+                    default: ;   // SEED_DONE: the host owns the port
+                endcase
+            end
         end
-    endfunction
+    end
+
+    assign place_surface_conflict = place_surface_conflict_r;
 
     // An object bound twice is a configuration that cannot be honoured: two
     // entries disagree about where one object is, and every rule in this
     // module assumes an object has one place.  NO_ID is the empty entry and
-    // may repeat.
-    reg placement_unique_r;
-    integer place_i;
-    integer place_j;
-    always @* begin
-        placement_unique_r = 1'b1;
-        for (place_i = 0; place_i < PLACE_SLOTS; place_i = place_i + 1)
-            for (place_j = 0; place_j < PLACE_SLOTS; place_j = place_j + 1)
-                if ((place_j > place_i) &&
-                    (place_object[place_i] != NO_ID) &&
-                    (place_object[place_i] == place_object[place_j]))
-                    placement_unique_r = 1'b0;
+    // may repeat.  The check is no longer an O(N^2) comparison of the ports
+    // against each other -- 1,024 comparisons at 32 entries and 4 million at
+    // 2,048 -- it is the ONE insertion path every binding passes through,
+    // which sees the collision by probing to its own key.  A binding that
+    // finds no free entry is refused for the same reason: a table that cannot
+    // hold the program's objects must not place some of them and guess the
+    // rest.  A surface conflict is refused with them.
+    wire placement_table_unique = !place_bound_twice && !place_overflowed &&
+                                  !place_surface_conflict;
+
+    //: AND IT IS ONLY A VERDICT ONCE THE TABLE IS BUILT.  The refusal above
+    //: used to be a combinational function of the 32 ports, so it was true or
+    //: false the instant a request arrived.  It is now the residue of a seed
+    //: that takes a flush plus one accepted load per binding, and a request
+    //: admitted while that seed is still running would be judged against a
+    //: half-built table -- both a refusal missed and a base read before it was
+    //: written.  So S_IDLE waits.  The sequencer holds ``issue_valid`` until
+    //: the bridge answers, which is the handshake every instantiation already
+    //: implements, and the wait is bounded by PLACE_ENTRIES + 3*32 cycles.
+    //: AND THE TABLE MUST BE QUIESCENT, not merely finished ACCEPTING.
+    //:
+    //: SEED_DONE is reached when the LAST legacy binding is accepted at the load
+    //: port, but that binding's probe walk (T_ISSUE -> T_CMP) is still in flight
+    //: for a further cycle or more, and place_bound_twice / place_overflowed are
+    //: only set when it lands.  Gating on SEED_DONE alone therefore released the
+    //: held request inside exactly that window -- and because this gate is what
+    //: had been holding the sequencer, the first issue arrived precisely there.
+    //: Measured: a duplicate seeded into an early legacy slot refused at the
+    //: first launch, while the same duplicate in the LAST slot was not refused
+    //: at all, because its bound_twice had not yet been raised.
+    //:
+    //: place_ld_ready_w is the table's own ``tstate == T_IDLE``, so requiring it
+    //: here means no probe is outstanding and every flag the seed can raise has
+    //: been raised.  The wait stays bounded: one walk is a fixed few cycles.
+    wire placement_table_ready = (seed_state == SEED_DONE) && !place_flushing &&
+                                 place_ld_ready_w;
+
+    // -- THE HELD DESCRIPTOR AND ITS PLACEMENT PROBE ----------------------
+    // The descriptor port is registered and so is the placement table, so an
+    // admission clause that needs a record AND the base of the object it
+    // names needs both to have arrived.  The record is held, the probe is
+    // launched from it, and ``desc_valid`` is presented for exactly one cycle
+    // when the probe answers -- so every admission clause below reads the same
+    // ``desc_data`` / ``desc_valid`` / ``desc_fault`` names it always read and
+    // is textually unchanged.
+    reg  [1535:0] desc_hold_q;
+    reg           desc_hold_fault_q;
+    reg           desc_hold_pending;
+    reg           desc_place_done_q;
+    reg           desc_place_found_q;
+    reg  [31:0]   desc_place_base_q;
+
+    wire [1535:0] desc_data  = desc_hold_q;
+    wire          desc_fault = desc_hold_fault_q;
+    wire          desc_valid = desc_hold_pending && desc_place_done_q;
+
+    assign place_lk_req_w = desc_rd_valid;
+    assign place_lk_object_w = desc_rd_data[159:128];
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            desc_hold_q <= {1536{1'b0}};
+            desc_hold_fault_q <= 1'b0;
+            desc_hold_pending <= 1'b0;
+            desc_place_done_q <= 1'b0;
+            desc_place_found_q <= 1'b0;
+            desc_place_base_q <= 32'd0;
+        end else if (clear) begin
+            desc_hold_pending <= 1'b0;
+            desc_place_done_q <= 1'b0;
+        end else begin
+            //: A newly read record always wins: it invalidates any probe
+            //: answer still in flight for the previous one.
+            if (desc_rd_valid) begin
+                desc_hold_q <= desc_rd_data;
+                desc_hold_fault_q <= desc_rd_fault;
+                desc_hold_pending <= 1'b1;
+                desc_place_done_q <= 1'b0;
+            end else begin
+                if (desc_hold_pending && desc_place_done_q) begin
+                    //: presented for one cycle and consumed; every wait state
+                    //: below acts on ``desc_valid`` unconditionally
+                    desc_hold_pending <= 1'b0;
+                    desc_place_done_q <= 1'b0;
+                end
+                if (place_lk_done_w) begin
+                    desc_place_done_q <= 1'b1;
+                    desc_place_found_q <= place_lk_found_w;
+                    desc_place_base_q <= place_lk_base_w;
+                end
+            end
+        end
     end
-    wire placement_table_unique = placement_unique_r;
 
     reg [4:0] state;
     reg       response_fault;
@@ -690,6 +953,11 @@ module ot_a3_engine_issue_bridge #(
     reg [7:0]  slot_rank [0:5];
     reg [7:0]  slot_terms [0:5];
     reg [31:0] slot_object [0:5];
+    //: WHERE THAT SLOT'S OBJECT LIVES, captured from the same registered table
+    //: probe the record itself was held for.  The base is not re-derived at
+    //: admission: a second lookup is a second chance to disagree.
+    reg [31:0] slot_place_base [0:5];
+    reg        slot_place_found [0:5];
     reg [31:0] slot_permissions [0:5];
     reg [31:0] slot_dim0 [0:5];
     reg [31:0] slot_dim1 [0:5];
@@ -784,8 +1052,10 @@ module ot_a3_engine_issue_bridge #(
     wire [31:0] desc_permissions = desc_data[287:256];
     wire [31:0] desc_primary_object = desc_data[159:128];
     // Where this descriptor's object lives, for whichever slot is being
-    // fetched.  One rule for every role that used to have its own port.
-    wire [32:0] desc_place = place_lookup(desc_primary_object);
+    // fetched.  One rule for every role that used to have its own port -- and
+    // it is now a REGISTERED table read, answered before this record is
+    // presented, rather than a combinational compare against 32 ports.
+    wire [32:0] desc_place = {desc_place_found_q, desc_place_base_q};
     wire        desc_object_placed = desc_place[32];
 
     //: A VIEW WITH A DYNAMIC TERM DOES NOT RESOLVE TO ITS STATIC OFFSET.
@@ -1576,12 +1846,17 @@ module ot_a3_engine_issue_bridge #(
         mapped_operator_arity_ok &&
         (captured_valid == expected_slot_mask);
 
-    // -- the base map, evaluated over the captured slots ------------------
-    wire [32:0] slot0_map = place_lookup(slot_object[0]);
-    wire [32:0] slot1_map = place_lookup(slot_object[1]);
-    wire [32:0] slot2_map = place_lookup(slot_object[2]);
-    wire [32:0] slot3_map = place_lookup(slot_object[3]);
-    wire [32:0] slot4_map = place_lookup(slot_object[4]);
+    // -- the base map, CAPTURED WITH EACH SLOT ---------------------------
+    // A slot's object and the object's base arrive together: the probe for a
+    // view's primary object is launched from the view record itself, so
+    // S_MAP_VIEW_WAIT stores the answer beside everything else it stores about
+    // that slot.  Five combinational 32-way scans became five register reads,
+    // and at PLACE_ENTRIES = 2,048 they would have been five 2,048-way ones.
+    wire [32:0] slot0_map = {slot_place_found[0], slot_place_base[0]};
+    wire [32:0] slot1_map = {slot_place_found[1], slot_place_base[1]};
+    wire [32:0] slot2_map = {slot_place_found[2], slot_place_base[2]};
+    wire [32:0] slot3_map = {slot_place_found[3], slot_place_base[3]};
+    wire [32:0] slot4_map = {slot_place_found[4], slot_place_base[4]};
     wire mapped_bases_found =
         slot0_map[32] && slot4_map[32] &&
         (!expected_slot_mask[1] || slot1_map[32]) &&
@@ -1828,7 +2103,7 @@ module ot_a3_engine_issue_bridge #(
 
                 case (state)
                     S_IDLE: begin
-                        if (issue_valid) begin
+                        if (issue_valid && placement_table_ready) begin
                             issue_family_q <= issue_family;
                             issue_sub_q <= issue_sub;
                             issue_descriptor_q <= issue_descriptor_id;
@@ -2128,6 +2403,8 @@ module ot_a3_engine_issue_bridge #(
                                 slot_rank[slot_cursor] <= desc_view_rank;
                                 slot_terms[slot_cursor] <= desc_view_terms;
                                 slot_object[slot_cursor] <= desc_primary_object;
+                                slot_place_base[slot_cursor] <= desc_place[31:0];
+                                slot_place_found[slot_cursor] <= desc_object_placed;
                                 slot_permissions[slot_cursor] <= desc_permissions;
                                 slot_dim0[slot_cursor] <= desc_view_dim0;
                                 slot_dim1[slot_cursor] <= desc_view_dim1;

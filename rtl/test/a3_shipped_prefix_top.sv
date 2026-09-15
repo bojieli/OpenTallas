@@ -58,6 +58,11 @@ module ot_a3_shipped_prefix_top #(
     parameter [31:0]  RMS_PROFILE_MAX_ROWS    = 32'd32,
     parameter [31:0]  RMS_PROFILE_MODEL_WIDTH = 32'd4096,
     parameter [31:0]  RMS_PROFILE_HEAD_WIDTH  = 32'd128,
+    //: THE PLACEMENT TABLE'S DEPTH, forwarded to the bridge.  64 is the
+    //: bridge's own default and is what the 32 configuration ports can express;
+    //: a DeepSeek deployment needs 675 or 678 placed objects and elaborates
+    //: this at 1,024 or more.  Must be a power of two.
+    parameter integer PLACE_ENTRIES = 64,
     parameter integer PROGRAM_WORDS = 4096,
     parameter integer DESC_WORDS = 8192,
     parameter integer INDEX_WORDS = 64,
@@ -183,6 +188,23 @@ module ot_a3_shipped_prefix_top #(
     input  wire [31:0] cfg_place_base_29,
     input  wire [31:0] cfg_place_object_30,
     input  wire [31:0] cfg_place_base_30,
+    // -- the placement table's load path ---------------------------------
+    // A deployment with more than 32 placed objects loads its bindings here,
+    // one per accepted cycle, before ``start`` -- the same way the program,
+    // descriptor and symbol images are loaded through host_we/host_sel.  They
+    // land in the SAME table the 32 ports seed, through the same hash and the
+    // same uniqueness detection, and they survive the next ``start`` the way a
+    // loaded image does.  The first accepted load retires the 32-port surface:
+    // after it, a port still naming an object raises
+    // ``place_surface_conflict`` and the bridge refuses the transaction.
+    input  wire        place_ld_en,
+    input  wire [31:0] place_ld_object,
+    input  wire [31:0] place_ld_base,
+    output wire        place_ld_ready,
+    output wire [31:0] place_bound_count,
+    output wire        place_bound_twice,
+    output wire        place_overflowed,
+    output wire        place_surface_conflict,
     input  wire [31:0] cfg_place_object_31,
     input  wire [31:0] cfg_place_base_31,
     // The request's active context length, checked inside the bridge against
@@ -1348,6 +1370,15 @@ module ot_a3_shipped_prefix_top #(
                     m0_rd_data <= index_mem[m0_rd_addr];
                 else begin
                     m0_rd_data <= 32'd0;
+                    // WHICH read overran, once.  `operand_read_oob` is one bit
+                    // for four ports and three banks, so a failing run used to
+                    // say only that something was out of range; the address and
+                    // the bank it was measured against are what locate it.
+                    if (!operand_read_oob)
+                        $display("  OOB m0 %s addr=%0d limit=%0d",
+                                 m0_reads_result ? "result" : "index",
+                                 m0_rd_addr,
+                                 m0_reads_result ? RESULT_WORDS : INDEX_WORDS);
                     operand_read_oob <= 1'b1;
                 end
             end
@@ -1365,6 +1396,10 @@ module ot_a3_shipped_prefix_top #(
                             ot_a3_weight_window_halfword(m1_weight_halfword);
                     else begin
                         m1_rd_data <= 32'd0;
+                        if (!operand_read_oob)
+                            $display("  OOB m1 weight halfword=%0d limit=%0d",
+                                     m1_weight_halfword,
+                                     (MATMUL_WEIGHT_BYTES >> 1));
                         operand_read_oob <= 1'b1;
                     end
                 end
@@ -1374,11 +1409,18 @@ module ot_a3_shipped_prefix_top #(
                     m1_rd_data <= source_mem[m1_rd_addr];
                 else begin
                     m1_rd_data <= 32'd0;
+                    if (!operand_read_oob)
+                        $display("  OOB m1 %s addr=%0d limit=%0d",
+                                 m1_reads_result ? "result" : "source",
+                                 m1_rd_addr,
+                                 m1_reads_result ? RESULT_WORDS : SOURCE_WORDS);
                     operand_read_oob <= 1'b1;
                 end
             end
             if (m2_rd_en) begin
                 m2_rd_data <= 32'd0;
+                if (!m1_reads_matmul_weight && !operand_read_oob)
+                    $display("  OOB m2 scale port read with no matmul weight");
                 // ot_a3_mac_lane drives both scale ports for every reduction
                 // step.  This exact Qwen descriptor declares both operands
                 // unscaled, so zero is the architectural don't-care responder
@@ -1388,6 +1430,8 @@ module ot_a3_shipped_prefix_top #(
             end
             if (m3_rd_en) begin
                 m3_rd_data <= 32'd0;
+                if (!m1_reads_matmul_weight && !operand_read_oob)
+                    $display("  OOB m3 scale port read with no matmul weight");
                 if (!m1_reads_matmul_weight)
                     operand_read_oob <= 1'b1;
             end
@@ -1432,7 +1476,8 @@ module ot_a3_shipped_prefix_top #(
         .RMS_PROFILE_MAX_COUNT(RMS_PROFILE_MAX_COUNT),
         .RMS_PROFILE_MAX_ROWS(RMS_PROFILE_MAX_ROWS),
         .RMS_PROFILE_MODEL_WIDTH(RMS_PROFILE_MODEL_WIDTH),
-        .RMS_PROFILE_HEAD_WIDTH(RMS_PROFILE_HEAD_WIDTH)
+        .RMS_PROFILE_HEAD_WIDTH(RMS_PROFILE_HEAD_WIDTH),
+        .PLACE_ENTRIES(PLACE_ENTRIES)
     ) bridge (
         .clk(clk),
         .rst_n(rst_n),
@@ -1456,9 +1501,9 @@ module ot_a3_shipped_prefix_top #(
         .view_rank(view_rank),
         .desc_req(bridge_desc_req),
         .desc_id(bridge_desc_id),
-        .desc_valid(bridge_desc_valid),
-        .desc_fault(bridge_desc_fault),
-        .desc_data(bridge_desc_data),
+        .desc_rd_valid(bridge_desc_valid),
+        .desc_rd_fault(bridge_desc_fault),
+        .desc_rd_data(bridge_desc_data),
         .cfg_index_base(cfg_index_base),
         .cfg_source_base(cfg_source_base),
         .cfg_source_launch_stride(cfg_source_launch_stride),
@@ -1530,6 +1575,14 @@ module ot_a3_shipped_prefix_top #(
         .cfg_place_base_30(cfg_place_base_30),
         .cfg_place_object_31(cfg_place_object_31),
         .cfg_place_base_31(cfg_place_base_31),
+        .place_ld_en(place_ld_en),
+        .place_ld_object(place_ld_object),
+        .place_ld_base(place_ld_base),
+        .place_ld_ready(place_ld_ready),
+        .place_bound_count(place_bound_count),
+        .place_bound_twice(place_bound_twice),
+        .place_overflowed(place_overflowed),
+        .place_surface_conflict(place_surface_conflict),
         .cfg_context_length(cfg_context_length),
         .cfg_kv_plane_rows(cfg_kv_plane_rows),
         .cfg_generation_policy_id(cfg_generation_policy_id),

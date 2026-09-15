@@ -204,8 +204,24 @@ int main(int argc, char** argv) {
     dut.inj_result_valid = 0; dut.inj_write_en = 0;
     dut.result_read_addr = 0;
 
+    // -- the placement table -------------------------------------------
+    // TWO WAYS TO STATE THE SAME TABLE, and which one is used depends only on
+    // how many objects the deployment places.  Both end up in the same hashed
+    // memory inside the bridge, through the same load port; what differs is
+    // who drives it.
+    //
+    //   <= 32 objects: the 32 legacy configuration ports.  The bridge seeds
+    //   them into the table on every ``start``.  Qwen3-reduced places exactly
+    //   32, so the shipped control takes this path unchanged.
+    //
+    //   > 32 objects: the load port, one binding per accepted cycle, before
+    //   ``start``.  The legacy ports are driven to NO_ID, because the first
+    //   accepted load retires them and the bridge refuses a table stated
+    //   twice.
+    const bool use_load_port = plan.places.size() > 32;
+
 #define PLACE_SLOT(n)                                                        \
-    if (plan.places.size() > (n)) {                                          \
+    if (!use_load_port && plan.places.size() > (n)) {                        \
         dut.cfg_place_object_##n = plan.places[(n)].first;                    \
         dut.cfg_place_base_##n = plan.places[(n)].second;                     \
     } else {                                                                 \
@@ -221,6 +237,52 @@ int main(int argc, char** argv) {
     PLACE_SLOT(24) PLACE_SLOT(25) PLACE_SLOT(26) PLACE_SLOT(27)
     PLACE_SLOT(28) PLACE_SLOT(29) PLACE_SLOT(30) PLACE_SLOT(31)
 #undef PLACE_SLOT
+
+    dut.place_ld_en = 0;
+    dut.place_ld_object = 0xFFFFFFFFu;
+    dut.place_ld_base = 0;
+    tick();
+    if (use_load_port) {
+        // The seed of the (all-NO_ID) legacy surface has to finish before the
+        // port is offered; ``place_ld_ready`` says so.
+        std::uint64_t waited = 0;
+        for (const auto& pb : plan.places) {
+            while (!dut.place_ld_ready && waited < 1000000) { tick(); ++waited; }
+            if (!dut.place_ld_ready) {
+                std::printf("FAIL: the placement load port never became ready\n");
+                return 3;
+            }
+            dut.place_ld_en = 1;
+            dut.place_ld_object = pb.first;
+            dut.place_ld_base = pb.second;
+            tick();
+            dut.place_ld_en = 0;
+        }
+        while (!dut.place_ld_ready && waited < 1000000) { tick(); ++waited; }
+        std::printf("  placement           %u bindings loaded through the load port"
+                    " (bound_count=%u)\n",
+                    (unsigned)plan.places.size(), (unsigned)dut.place_bound_count);
+    } else {
+        std::printf("  placement           %u bindings on the 32-port surface\n",
+                    (unsigned)plan.places.size());
+    }
+    tick();
+    // The 32-port surface is seeded on ``start``, so its sticky refusals are
+    // only final after the run -- they are reported with the rest of the run
+    // below and folded into the verdict.  A load-port table is final NOW,
+    // because the load retired the seed.
+    if (use_load_port &&
+        (dut.place_bound_twice || dut.place_overflowed ||
+         dut.place_surface_conflict)) {
+        std::printf("FAIL: the placement table was refused before start "
+                    "(bound_twice=%u overflowed=%u surface_conflict=%u, "
+                    "bound_count=%u)\n",
+                    (unsigned)dut.place_bound_twice,
+                    (unsigned)dut.place_overflowed,
+                    (unsigned)dut.place_surface_conflict,
+                    (unsigned)dut.place_bound_count);
+        return 4;
+    }
 
     tick();
     dut.start = 1; tick(); dut.start = 0;
@@ -266,6 +328,11 @@ int main(int argc, char** argv) {
     std::printf("  engine_result_count %u\n", (unsigned)dut.engine_result_count);
     std::printf("  wait_events         %u\n", (unsigned)dut.count_wait_events);
     std::printf("  result_write_oob    %u\n", (unsigned)dut.result_write_oob);
+    std::printf("  place_bound_count   %u  (twice=%u overflow=%u conflict=%u)\n",
+                (unsigned)dut.place_bound_count,
+                (unsigned)dut.place_bound_twice,
+                (unsigned)dut.place_overflowed,
+                (unsigned)dut.place_surface_conflict);
 
     // +DUMP=<base>,<count> prints result-bank words after the run, so a chain
     // that produces a constant can be bisected operator by operator instead of

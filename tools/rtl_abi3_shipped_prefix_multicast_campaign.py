@@ -82,6 +82,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_rms_norm.sv",
     "rtl/abi3/ot_a3_rope_lane_pipe.sv",
     "rtl/abi3/ot_a3_vector_rope.sv",
+    "rtl/abi3/ot_a3_place_table.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/abi3/ot_a3_communication_decoder.sv",
     "rtl/abi3/ot_a3_link_channel.sv",

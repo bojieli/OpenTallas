@@ -224,9 +224,9 @@ module tb_a3_operator_admission;
         .view_rank(view_rank),
         .desc_req(desc_req),
         .desc_id(desc_id),
-        .desc_valid(desc_valid),
-        .desc_fault(desc_fault),
-        .desc_data(desc_data),
+        .desc_rd_valid(desc_valid),
+        .desc_rd_fault(desc_fault),
+        .desc_rd_data(desc_data),
         .cfg_index_base(32'd0),
         .cfg_source_base(32'd0),
         .cfg_source_launch_stride(32'd0),
@@ -304,6 +304,12 @@ module tb_a3_operator_admission;
         .cfg_place_base_30(cfg_map_base[30]),
         .cfg_place_object_31(cfg_map_object[31]),
         .cfg_place_base_31(cfg_map_base[31]),
+        // This bench states its placement through the 32-port surface, which
+        // the bridge seeds into the table on every ``clear``.  The load path
+        // is unused, and using it would retire the ports this bench drives.
+        .place_ld_en(1'b0),
+        .place_ld_object(32'hffff_ffff),
+        .place_ld_base(32'd0),
         .cfg_context_length(cfg_context_length),
         .cfg_kv_plane_rows(cfg_kv_plane_rows),
         .cfg_generation_policy_id(cfg_generation_policy_id),

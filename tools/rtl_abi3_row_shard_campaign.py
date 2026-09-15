@@ -95,6 +95,7 @@ SOURCES = (
     "rtl/abi3/ot_a3_qwen_gqa.sv",
     "rtl/abi3/ot_a3_vector_silu_mul.sv",
     "rtl/abi3/ot_a3_selection_token_append.sv",
+    "rtl/abi3/ot_a3_place_table.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/test/tb_a3_row_shard.sv",
     "rtl/test/a3_row_shard_dpi.cpp",

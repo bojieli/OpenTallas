@@ -51,7 +51,21 @@ from runtime.abi3.descriptors import Symbol  # noqa: E402
 from runtime.sim.generators import generate_bytes, digest_of  # noqa: E402
 
 NO_OBJECT = 0xFFFFFFFF
-PLACE_TABLE_ENTRIES = 32
+#: THE BRIDGE'S PLACEMENT TABLE DEPTH, and it is a bound on the deployment, not
+#: on the surface.  It used to be 32 because the table WAS 32 configuration
+#: ports; it is now the ``PLACE_ENTRIES`` parameter of
+#: rtl/abi3/ot_a3_place_table.sv, a hashed memory.  Bindings past the 32nd go in
+#: through the table's load port rather than through a port per entry, so the
+#: only thing this number has to agree with is the depth the vehicle is
+#: ELABORATED at -- pass --place-entries to state it, and a deployment that
+#: needs more is refused here rather than silently losing objects.
+#:
+#: 2,048 is what a DeepSeek deployment wants: measured from the certified
+#: images, deepseek-v41-flash-rom-wafer-2 places 675 distinct objects,
+#: deepseek-v41-flash-rom-array-64 678 and deepseek-v4-flash-rom 264, and 675
+#: in 2,048 entries is a 33.0%-loaded open-addressed table whose worst probe is
+#: 4.  64 is the bridge's default and is what the legacy surface can express.
+DEFAULT_PLACE_TABLE_ENTRIES = 2048
 
 
 #: WHICH BANK EACH PORT READS, per engine family.
@@ -327,6 +341,11 @@ def main() -> int:
                           "record derived beside it without regenerating that "
                           "file, which would restate four shipped targets' "
                           "image bases."))
+    ap.add_argument("--place-entries", type=int,
+                    default=DEFAULT_PLACE_TABLE_ENTRIES,
+                    help=("the PLACE_ENTRIES depth the vehicle is elaborated at; "
+                          "a deployment with more placed objects than this is "
+                          "refused rather than partly placed"))
     ap.add_argument("--case", default=None,
                     help=("a case name in the deployment vector set whose symbols and "
                           "entrypoint to bind, e.g. "
@@ -339,10 +358,17 @@ def main() -> int:
     sources = {int(o["object_id"]): o["source"] for o in manifest["objects"]}
 
     banks, element_bytes, read_objects = object_banks(table)
-    if len(banks) > PLACE_TABLE_ENTRIES:
+    place_entries = args.place_entries
+    if place_entries < 2 or (place_entries & (place_entries - 1)) != 0:
         raise SystemExit(
-            f"{len(banks)} objects are referenced and the bridge's placement table "
-            f"holds {PLACE_TABLE_ENTRIES}"
+            f"--place-entries {place_entries} is not a power of two >= 2; the "
+            f"table hashes an object id into log2(ENTRIES) bits"
+        )
+    if len(banks) > place_entries:
+        raise SystemExit(
+            f"{len(banks)} objects are referenced and the bridge's placement "
+            f"table is elaborated at {place_entries} entries. Raise "
+            f"-GPLACE_ENTRIES and --place-entries together."
         )
 
     #: One cursor PER BANK.  The banks are separate address spaces in the
@@ -501,6 +527,7 @@ def main() -> int:
         "source_words": source_words,
         "result_words": result_words,
         "weight_bytes": len(weight_bytes),
+        "place_entries": place_entries,
         "placement": plan,
         "deployment_sha256": deployment.deployment_digest.hex(),
     }
@@ -591,7 +618,8 @@ def main() -> int:
 
     staged = sum(e["staged_bytes"] for e in plan)
     declared = sum(e["size_bytes"] for e in plan)
-    print(f"  objects            {len(plan)} (table holds {PLACE_TABLE_ENTRIES})")
+    print(f"  objects            {len(plan)} (table holds {place_entries}, "
+          f"{100.0 * len(plan) / place_entries:.1f}% load)")
     print(f"  declared bytes     {declared:,}")
     print(f"  staged bytes       {staged:,}  "
           f"({100.0 * staged / declared:.1f}% -- the rest declares zeros)")
