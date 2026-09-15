@@ -39,9 +39,11 @@ What it proves
     declared bank, spare indices are inside the declared inventory, and no
     logical row or column is repaired twice.
 9.  Every **load-once resident region** is held to rules 1 to 3, 5, 6 and 7 with
-    one substitution and nothing else relaxed: its object declares
-    ``StorageClass.HBM`` rather than ``StorageClass.ROM``, because HBM is where
-    the deployment says those bytes live.  It still declares exactly
+    one substitution and nothing else relaxed: its object declares the storage
+    class its record's ``residency`` names -- ``StorageClass.HBM`` for a
+    node-attached region, ``StorageClass.HOST`` for one host-memory image every
+    node reaches -- rather than ``StorageClass.ROM``, because that is where the
+    deployment says those bytes live.  It still declares exactly
     ``READ | IMMUTABLE``; its members still tile its payload; it still
     reconstructs bit-identically from the checkpoint the plan binds; its padding
     is still declared zero bytes; its content digest still recomputes under this
@@ -282,6 +284,7 @@ def check_rom_inverse(
     table = deployment.table
     rom_objects = {}
     hbm_objects = {}
+    host_objects = {}
     for descriptor in table.descriptors():
         if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
             continue
@@ -290,6 +293,12 @@ def check_rom_inverse(
             # session's mutable state, and only the objects a resident region
             # names are held to the immutable contract, below.
             hbm_objects[descriptor.descriptor_id] = descriptor
+            continue
+        if descriptor.payload["storage_class"] == int(StorageClass.HOST):
+            # Likewise: host memory also holds the token ring and the request
+            # windows, which are writable by design.  Only what a resident
+            # region names is held to the immutable contract.
+            host_objects[descriptor.descriptor_id] = descriptor
             continue
         if descriptor.payload["storage_class"] != int(StorageClass.ROM):
             continue
@@ -309,6 +318,11 @@ def check_rom_inverse(
     placed: dict[str, str] = {}
     occupied: dict[tuple[int, int, int, int], list[tuple[int, int, str]]] = {}
     resident_occupied: dict[int, list[tuple[int, int, str]]] = {}
+    # The host image is one address space, not one per node, so it is proved
+    # unique in a namespace of its own for the same reason a node's HBM window
+    # is: proving two different address spaces in one map would invent an
+    # overlap.
+    host_occupied: list[tuple[int, int, str]] = []
     payload_bytes = 0
     padding_bytes = 0
     resident_payload_bytes = 0
@@ -317,17 +331,23 @@ def check_rom_inverse(
     referenced: set[int] = set()
     resident_referenced: set[int] = set()
 
+    resident_stores = {"hbm": hbm_objects, "host": host_objects}
     ordered_records = [(False, record) for record in regions]
     ordered_records += [(True, record) for record in resident_regions]
     for is_resident, record in ordered_records:
-        objects_here = hbm_objects if is_resident else rom_objects
-        where = "resident HBM" if is_resident else "immutable ROM"
         _require(isinstance(record, Mapping), "a region record is malformed")
+        residency = str(record.get("residency")) if is_resident else "rom"
+        is_host = residency == "host"
+        objects_here = resident_stores.get(residency, {}) if is_resident else rom_objects
+        where = (
+            f"resident {residency.upper()}" if is_resident else "immutable ROM"
+        )
         key = str(record["key"])
         if is_resident:
             _require(
-                str(record.get("residency")) == "hbm",
-                f"resident region {key!r} does not declare HBM residency",
+                residency in resident_stores,
+                f"resident region {key!r} declares residency {residency!r}; a "
+                f"load-once region lives in one of {sorted(resident_stores)}",
             )
         else:
             _require(
@@ -568,25 +588,25 @@ def check_rom_inverse(
                 # resident window.  Uniqueness is proved in that window, and in
                 # a namespace of its own: a node's HBM window and a tile's ROM
                 # bank are different address spaces, and proving them in one map
-                # would invent an overlap.
+                # would invent an overlap.  A host image is one more such
+                # space, shared by every node rather than owned by one.
                 _require(
                     reticle == tile == bank == 0,
                     f"resident region {key!r} shard names a ROM resource "
                     f"({reticle}, {tile}, {bank}); a resident shard is a node "
                     "and an offset in that node's resident window",
                 )
-                for other_start, other_end, other_key in resident_occupied.get(
-                    node, ()
-                ):
+                spans = host_occupied if is_host else resident_occupied.setdefault(
+                    node, []
+                )
+                window = "the host image" if is_host else f"node {node}'s resident window"
+                for other_start, other_end, other_key in spans:
                     if address < other_end and other_start < address + extent:
                         raise InverseProofError(
                             f"resident region {key!r} overlaps {other_key!r} in "
-                            f"node {node}'s resident window at [{address}, "
-                            f"{address + extent})"
+                            f"{window} at [{address}, {address + extent})"
                         )
-                resident_occupied.setdefault(node, []).append(
-                    (address, address + extent, key)
-                )
+                spans.append((address, address + extent, key))
                 continue
             slot = (node, reticle, tile, bank)
             for other_start, other_end, other_key in occupied.get(slot, ()):
@@ -665,6 +685,22 @@ def check_rom_inverse(
             == resident_payload_bytes + resident_padding_bytes,
             "the plan's resident byte total does not match its payload plus pad",
         )
+        # A host image is not a node's HBM reserve.  It is recomputed here for
+        # the same reason the per-node reserve is -- the capability prices it --
+        # and kept in its own total so neither number can absorb the other.
+        host_bytes = max((end for _start, end, _key in host_occupied), default=0)
+        if host_occupied:
+            _require(
+                _integer(totals.get("host_bytes"), "totals.host_bytes") == host_bytes,
+                "the plan's host image total does not match the host-resident "
+                f"shards it places; the proof derives {host_bytes}",
+            )
+        else:
+            _require(
+                "host_bytes" not in totals,
+                "the plan declares a host image total and places no "
+                "host-resident region",
+            )
         # The double count, stated as a rule rather than trusted: no tensor and
         # no object is in both stores.
         both = sorted(resident_referenced & referenced)
@@ -674,7 +710,7 @@ def check_rom_inverse(
             "bytes would be counted twice",
         )
 
-    return {
+    report = {
         "all_padding_zero": True,
         "bit_identical": bool(require_bit_identical),
         "model_id": plan.get("model_id"),
@@ -704,6 +740,17 @@ def check_rom_inverse(
         "schema": INVERSE_REPORT_SCHEMA,
         "status": "pass",
     }
+    if host_occupied:
+        # Reported only when the deployment places a host-resident region, so a
+        # product without one gets exactly the report it got before host
+        # residency existed.
+        report["host_bytes"] = max(end for _start, end, _key in host_occupied)
+        report["host_region_count"] = sum(
+            1
+            for record in resident_regions
+            if isinstance(record, Mapping) and str(record.get("residency")) == "host"
+        )
+    return report
 
 
 def _check_generated(

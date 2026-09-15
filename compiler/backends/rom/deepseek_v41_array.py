@@ -338,6 +338,16 @@ MAX_CONTEXT_POSITIONS = int(
     dict(V41_FLASH_PROFILE.architecture_pins)["max_position_embeddings"]
 )
 
+#: ``candidate_topk_blocks * candidate_block_size`` = the bound the schedule
+#: checker's ``candidate_pool_bound`` rule reads out of the capability.  Read
+#: from the released profile (``candidate_pool_entries``) rather than typed, for
+#: the reason the wafer record gives: the rule has to read its bound from
+#: somewhere the deployment is admitted against, and a literal in the checker
+#: would be a model constant mirrored into a predicate.  The array is the same
+#: model on different packaging, so it is the same number the two-wafer record
+#: declares; deriving it means a released change moves both.
+CANDIDATE_POSITIONS = V41_FLASH_PROFILE.candidate_pool_entries
+
 NODE_COUNT = expert_parallel_node_count(ROUTED_EXPERTS)
 DOMAIN_COUNT = NODE_COUNT // DOMAIN_SIZE
 EXPERTS_PER_NODE = ROUTED_EXPERTS // NODE_COUNT
@@ -779,6 +789,7 @@ def v41_array_geometry(
 def deepseek_v41_array_rom_capability(
     *,
     max_context_positions: int = MAX_CONTEXT_POSITIONS,
+    candidate_positions: int = CANDIDATE_POSITIONS,
     vocabulary_size: int = VOCABULARY_SIZE,
     expert_count: int = ROUTED_EXPERTS,
     experts_per_token: int = EXPERTS_PER_TOKEN,
@@ -818,10 +829,40 @@ def deepseek_v41_array_rom_capability(
             "max_loop_depth": 4,
             "max_loop_trip": 4096,
             "max_retired_work": 1 << 26,
-            "max_events": 1024,
-            "max_event_id": 1023,
+            # The event scoreboard.  1,024 was inherited from the V4 array
+            # record, where it is not a smaller design but a smaller program:
+            # the V4 array signals well inside it.  The V4.1 array program is
+            # 4,429 instructions signalling 1,544 distinct events with a top id
+            # of 1,543 -- measured, from ``tools/build_rom_deployment.py
+            # deepseek-v4.1-flash-array --verify``, which refused this
+            # deployment twice over against 1,024 ("program signals 1544
+            # distinct events, capability admits 1024"; "program names event ID
+            # 1543, capability admits IDs up to 1023").
+            #
+            # BOUNDED BY THE HARDWARE, not by the 8,192-instruction store.  The
+            # scoreboard that has to hold the board is
+            # rtl/abi3/ot_a3_event_scoreboard.sv, whose entry count follows
+            # ot_a3_pkg.sv's A3_EVENT_COUNT = 2048 and whose index width follows
+            # that, so 2,048 is the largest board the implemented hardware
+            # expresses.  Reasoning from the instruction store instead would
+            # give 8,192 -- true and irrelevant, and a bound nothing expresses
+            # cannot be refused at admission.  ``deepseek_v41.py`` reached the
+            # same 2,048 for the two-wafer record by the same argument at a
+            # measured 1,490 events; this is the same machine's board, and the
+            # check stays able to fail at 1,544.
+            "max_events": 2048,
+            "max_event_id": 2047,
             "max_outstanding_per_queue": 32,
             "max_context_positions": int(max_context_positions),
+            # The candidate pool CSA2's block selection publishes.  Absent, the
+            # schedule checker refused this deployment: "the graph publishes a
+            # candidate pool and the capability declares no
+            # max_candidate_positions to bound it" and "candidate mask
+            # 'main.layer20.attention.indexer.pool.admission' declares a
+            # population of 1, over the capability's 0" -- an absent limit read
+            # as zero, which is a bound no admissible program can satisfy rather
+            # than a bound that is missing.
+            "max_candidate_positions": int(candidate_positions),
             # 384 expert ids and top-6, against the V4 array's 256 and 8.  Both
             # come from the released configuration, not from this module.
             "max_expert_ids": int(expert_count),

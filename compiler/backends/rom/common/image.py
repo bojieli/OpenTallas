@@ -144,6 +144,13 @@ class RomLayoutPolicy:
             raise RomImageError("spare inventories must be non-negative")
 
 
+#: The stores a load-once region may declare, beside the ROM image itself.
+#: ``"hbm"`` is node-attached HBM; ``"host"`` is host memory reached over the
+#: host interface.  A region of the mask image declares ``"rom"`` and is not
+#: planned by :func:`plan_resident_regions` at all.
+RESIDENCIES = ("hbm", "host")
+
+
 @dataclass(frozen=True, slots=True)
 class ResidentHbmPolicy:
     """How a target holds its load-once resident HBM regions.
@@ -161,6 +168,18 @@ class ResidentHbmPolicy:
     form for a table larger than one node's HBM.  A shard must be a whole
     number of the region's addressing rows: a row split across two nodes has no
     owner.
+
+    ``residency`` says which store the load-once bytes live in.  ``"hbm"`` is
+    node-attached HBM the device reads directly; ``"host"`` is one host-memory
+    image every node reaches over the host interface, which is the placement a
+    table too large to shard symmetrically has left.  A host image is one image
+    by definition and is never node-sharded: ``node_segments`` (amendment A28)
+    exists to give each node its *own* local bytes, and there is one host copy,
+    not one per node.  Everything else a resident region is held to is the same
+    for both -- the members tile the region, the content digest binds the
+    ordered authenticated segments, the object is ``READ | IMMUTABLE``, the
+    inverse proof reconstructs it from the checkpoint, and the bytes are not
+    also in the ROM image.
     """
 
     #: Tensor ids whose regions are resident rather than ROM.  Derived by the
@@ -184,10 +203,24 @@ class ResidentHbmPolicy:
     #: window carries no such obligation, so padding a resident region to 4 KiB
     #: would make the machine reserve bytes the model does not have.
     alignment_bytes: int = 4096
+    #: The store the load-once bytes live in: see the class docstring.
+    residency: str = "hbm"
 
     def validate(self) -> None:
+        if self.residency not in RESIDENCIES:
+            raise RomImageError(
+                f"a resident region's residency is one of {list(RESIDENCIES)}; "
+                f"got {self.residency!r}"
+            )
         if self.node_shards < 1:
             raise RomImageError("a resident region needs at least one node image")
+        if self.residency == "host" and self.node_shards != 1:
+            raise RomImageError(
+                f"a host-resident region is one host image every node reaches "
+                f"and cannot be split into {self.node_shards} node images; "
+                "amendment A28's node map gives each node its own local bytes, "
+                "and host memory holds one copy"
+            )
         if self.alignment_bytes <= 0 or self.alignment_bytes & (
             self.alignment_bytes - 1
         ):
@@ -770,20 +803,46 @@ class RomImagePlan:
 
     @property
     def resident_bytes_per_node(self) -> dict[int, int]:
-        """Resident bytes each node holds, keyed by node id.
+        """Resident **HBM** bytes each node holds, keyed by node id.
 
         A node-sharded region contributes its own shard to its own node; an
         unsharded one contributes to every node that holds a copy, which for
         ``NO_NODE`` is the machine and is reported under that key.
+
+        A host-resident region is deliberately not here.  This number is what a
+        node's HBM has to reserve, and it is what the capability's
+        ``memory.hbm.resident_region_bytes`` is checked against; host memory is
+        not the node's, so counting a host image in a node's reserve would
+        charge the device for bytes it does not hold.  Host bytes are
+        :attr:`host_bytes`.
         """
         used: dict[int, int] = {}
         for region in self.resident_regions:
+            if region.residency != "hbm":
+                continue
             for shard in region.shards:
                 node = shard.coordinate.node_id
                 used[node] = max(
                     used.get(node, 0), shard.resource_address + shard.bytes
                 )
         return dict(sorted(used.items()))
+
+    @property
+    def host_regions(self) -> tuple[RomRegion, ...]:
+        """Load-once regions whose declared home is host memory."""
+        return tuple(r for r in self.resident_regions if r.residency == "host")
+
+    @property
+    def host_bytes(self) -> int:
+        """Bytes of the one host image the machine reads its tables from."""
+        return max(
+            (
+                shard.resource_address + shard.bytes
+                for region in self.host_regions
+                for shard in region.shards
+            ),
+            default=0,
+        )
 
     @property
     def resident_bytes_worst_node(self) -> int:
@@ -867,6 +926,12 @@ class RomImagePlan:
             body["totals"]["resident_padding_bytes"] = self.resident_padding_bytes
             body["totals"]["resident_payload_bytes"] = self.resident_payload_bytes
             body["totals"]["resident_region_count"] = len(self.resident_regions)
+            if self.host_regions:
+                # Conditional for the same reason the block around it is: a
+                # product whose resident regions are all HBM emits exactly the
+                # record it emitted before host residency existed.
+                body["totals"]["host_bytes"] = self.host_bytes
+                body["totals"]["host_region_count"] = len(self.host_regions)
         body["plan_id"] = hashlib.sha256(canonical_json(body)).hexdigest()
         return body
 
@@ -1063,7 +1128,7 @@ def plan_resident_regions(
                     members=request.members,
                 ),
                 pad_digest=_sha256(bytes(pad_bytes)),
-                residency="hbm",
+                residency=policy.residency,
                 row_bytes=int(request.row_bytes),
                 node_shards=shards_count,
             )
@@ -1079,9 +1144,12 @@ def plan_resident_regions(
         default=0,
     )
     if worst > policy.declared_bytes_per_node:
+        where = (
+            "bytes on one node" if policy.residency == "hbm" else "bytes of host image"
+        )
         raise RomImageError(
-            f"the load-once resident HBM regions need {worst} bytes on one node "
-            f"and the capability declares a resident region of "
+            f"the load-once resident {policy.residency.upper()} regions need "
+            f"{worst} {where} and the capability declares a resident region of "
             f"{policy.declared_bytes_per_node}"
         )
     return tuple(regions)
@@ -1500,6 +1568,14 @@ def emit_rom_objects(
     return ids
 
 
+#: The storage class each residency presents on the wire.  ROM is absent on
+#: purpose: a region of the mask image is emitted by :func:`emit_rom_objects`.
+RESIDENT_STORAGE_CLASS = {
+    "hbm": StorageClass.HBM,
+    "host": StorageClass.HOST,
+}
+
+
 def emit_resident_hbm_objects(
     builder: DeploymentBuilder,
     plan: RomImagePlan,
@@ -1525,6 +1601,23 @@ def emit_resident_hbm_objects(
     ids: dict[str, int] = {}
     for region in plan.resident_regions:
         shards = max(int(region.node_shards), 1)
+        # The storage class is the region's own declared residency, not this
+        # function's opinion: a table the deployment says lives in host memory
+        # must present a HOST object, or the capability would price one store
+        # and the wire would name another.
+        storage_class = RESIDENT_STORAGE_CLASS.get(region.residency)
+        if storage_class is None:
+            raise RomImageError(
+                f"resident region {region.key!r} declares residency "
+                f"{region.residency!r}; a load-once region lives in one of "
+                f"{list(RESIDENCIES)}"
+            )
+        if shards > 1 and region.residency != "hbm":
+            raise RomImageError(
+                f"resident region {region.key!r} is {region.residency}-resident "
+                f"and declares {shards} node images; only a node-attached store "
+                "has one image per node"
+            )
         if shards > 1:
             source = row_sharded_region_source(region, shards)
             size_bytes = region.payload_bytes // shards
@@ -1534,7 +1627,7 @@ def emit_resident_hbm_objects(
             size_bytes = region.payload_bytes
             node_id = region.coordinate.node_id
         object_id = builder.memory_object(
-            storage_class=StorageClass.HBM,
+            storage_class=storage_class,
             size_bytes=size_bytes,
             source=source,
             permissions=permissions,
@@ -1550,7 +1643,7 @@ def emit_resident_hbm_objects(
         ids[region.key] = object_id
         if region.pad_bytes:
             pad_id = builder.memory_object(
-                storage_class=StorageClass.HBM,
+                storage_class=storage_class,
                 size_bytes=region.pad_bytes,
                 source=ObjectSource.zeros(region.pad_bytes),
                 permissions=permissions,
@@ -1599,6 +1692,8 @@ __all__ = [
     "RomLayoutPolicy",
     "RomMember",
     "RomRegion",
+    "RESIDENCIES",
+    "RESIDENT_STORAGE_CLASS",
     "ResidentHbmPolicy",
     "RomShard",
     "emit_resident_hbm_objects",

@@ -1,0 +1,205 @@
+{
+  "blockers": [
+    {
+      "cause": "compiler/backends/rom/common/program.py imported runtime.reference.compression_pool.PINNED_COMPRESSION_RATIOS == (4, 128), which is DeepSeek-V4-Flash's released compress_ratios, and gated every ROM product on it.  V4.1-Flash's ratios are 1, 2 and 8.",
+      "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+      "disposition": "FIXED in this unit: the admissible set is derived from the graph's own declared derived-axis symbols, and each compressor kernel's ratio is additionally cross-checked against the group stride its own operands are addressed at.",
+      "evidence_class": "tool_refusal",
+      "id": "rom-lowering-pinned-v4-compression-ratios",
+      "message": "compiler.backends.rom.common.program.RomLoweringError: kernel 'main.layer02.attention.compressor.carry': compressor predicate names unpinned ratio 2",
+      "target": [
+        "rom wafer x2",
+        "rom array x64"
+      ]
+    },
+    {
+      "cause": "SYMBOL_BY_NAME enumerated only the ratio-4 and ratio-128 derived axis names, so the A18 registry was frozen to one model's compression ratios.  RequestAxis's own docstring already says these are affine images and not new symbols.",
+      "disposition": "FIXED in this unit: the ratio is parsed from the name and the affine image derived from it, and the derivation is then confronted with the maximum the graph declares for that symbol (RomLowering._check_derived_axes).  The grammar is checked at import to reproduce every enumerated entry exactly.",
+      "evidence_class": "tool_refusal",
+      "id": "rom-lowering-enumerated-derived-axis-names",
+      "message": "compiler.backends.rom.common.program.RomLoweringError: predicate condition 'span_groups_ratio2 > 0' names 'span_groups_ratio2', which is not a runtime symbol this backend resolves; an unrecognised name would silently predicate nothing",
+      "target": [
+        "rom wafer x2",
+        "rom array x64"
+      ]
+    },
+    {
+      "cause": "AM-E10 adds the dtype to compiler/ir/v3/kernel_ir.py DTYPES and there is no runtime.abi3.constants.DType for it, so no backend can place a view of it.  Already recorded in results/abi3/deepseek_v41_hbm_comparator_plan.json#known_gaps, owner WP-C / AM-E10, and tests/compiler/test_deepseek_v41_hbm_comparator.py asserts the refusal.",
+      "disposition": "NOT fixed here: adding a DType code is an ABI amendment that also reaches runtime/abi3, both backends, the sim engines and rtl/abi3/ot_a3_lane_pkg.sv (FMT_* table); a compiler-only half of it would be an unqualified amendment.",
+      "evidence_class": "tool_refusal",
+      "id": "am-e10-dtype-has-no-abi-storage-type",
+      "message": "compiler.backends.rom.common.program.RomLoweringError: dtype 'fp4_e2m1_s16_e4m3' has no ABI 3.0 storage type",
+      "target": [
+        "rom wafer x2",
+        "rom array x64",
+        "hbm cluster-n"
+      ]
+    },
+    {
+      "cause": "Both capabilities declare the layered Engram row tables as an HBM-resident region -- rom_deepseek_v41_wafer.json memory.hbm.resident_region_bytes is 202758032400, which equals the measured size of that set to the byte -- and both backends still place the same bytes in the ROM image.  compiler/backends/rom/deepseek_v41.py says so in its own module docstring and attributes the deferral to compiler/backends/rom/common/inverse.py requiring every plan region to name an immutable StorageClass.ROM object.",
+      "disposition": "NOT fixed here: it is a change to the inverse proof's contract, the resident_hbm_region checker rule (which today requires READ|IMMUTABLE objects behind those tables), and the array placer's ownership of a row-sharded HBM table.",
+      "evidence_class": "tool_refusal_plus_measured_inventory",
+      "id": "engram-tables-are-declared-hbm-resident-and-placed-in-rom",
+      "messages": [
+        "compiler.backends.rom.deepseek_v41.DeepSeekV41RomError: the DeepSeek-V4.1 ROM image needs 501383192576 bytes but the two-wafer capability declares 412316860416",
+        "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: node 0 has no dense bank with room for region 'rom.r1.p005.s1'; 12 banks of 1073741824 bytes are full"
+      ],
+      "target": [
+        "rom wafer x2",
+        "rom array x64"
+      ]
+    },
+    {
+      "cause": "18 of the 39 are implemented and merely undeclared by the profile.  The other 21 are named by the emitted V4.1 kernel IR and nothing in the tree implements them, so compiler/ir/v3/numeric.py require_implemented refuses to let any capability declare them.  The front end is ahead of its numeric references.",
+      "command": "PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json --profile cluster-n --nodes 64 --json",
+      "disposition": "NOT fixed here: 21 reference implementations plus their qualification are WP-H / DS41-N5 work.",
+      "evidence_class": "tool_refusal",
+      "id": "hbm-capability-cannot-declare-21-unimplemented-contracts",
+      "measured": {
+        "contracts_named_by_the_graph": 81,
+        "missing_from_the_cluster_n_profile": 39,
+        "of_those_with_no_reference_anywhere_in_the_tree": 21
+      },
+      "message": "build failed: capability does not implement the numeric contracts [39 names]; ADR-003 section 14 forbids silent emulation, so this must be fixed by characterising the contract, never by substituting a different one",
+      "target": [
+        "hbm cluster-n"
+      ]
+    },
+    {
+      "cause": "compiler/frontends/v3/deepseek_v41.py emits cache_row 'compressed_group_index' beside a 'ratio' attribute.  compiler/backends/hbm_sram/plan.py CACHE_ROW_MAPS implements 'completed_absolute_position_floor_div_ratio', which reads like the same map under a different name -- but the backend's own rule forbids assuming that, and this unit did not check the two against a reference.",
+      "disposition": "NOT fixed here.  It also contradicts plan section 3.3's claim that the HBM/SRAM backend is reused with 'none beyond the new IR kinds' required of it.",
+      "evidence_class": "probe_refusal",
+      "id": "hbm-backend-has-no-compressed_group_index-row-map",
+      "measured": {
+        "kernels_declaring_it": 8
+      },
+      "message": "compiler.backends.hbm_sram.plan.PlanError: kernel main.layer02.attention.indexer.key_write: destination-row map 'compressed_group_index' is not one of absolute_position, absolute_position_mod_window, completed_absolute_position_floor_div_ratio; a map this backend does not implement must not be taken as the identity",
+      "probe_note": "found behind the contract refusal by widening the cluster-n capability's numeric_contracts in memory past what the tree implements; the widened record is NOT a deployable capability",
+      "target": [
+        "hbm cluster-n"
+      ]
+    }
+  ],
+  "claim": "an attempt to build the three DeepSeek-V4.1-Flash deployments from the REAL kernel IR, with every refusal quoted verbatim from the run that produced it",
+  "claim_boundary": {
+    "does_not_establish": [
+      "any V4.1 deployment: none of the three was built, no digest exists, no inverse proof ran, no schedule certificate ran, no descriptor multiset was compared",
+      "that moving the resident Engram region out of the ROM image would make either ROM target build: the arithmetic fits, and arithmetic is not a build",
+      "anything about execution, numerics or rate for V4.1 on any target"
+    ],
+    "establishes": [
+      "which refusal each of the three targets stops at, quoted from the tool that raised it",
+      "that two of those refusals were frozen V4-Flash model geometry in the shared ROM lowering, and that removing them advances the real V4.1 IR past both (measured: the wafer build now reaches the AM-E10 dtype gap instead of the ratio gate)",
+      "that the DeepSeek-V4-Flash wafer ROM and Qwen3-8B ROM deployments rebuild byte-identically after that change",
+      "the ROM region inventory of the real V4.1 IR by role, and each target's fit against its own declared capability"
+    ]
+  },
+  "gate": "DS41-P3 (docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)",
+  "measured_rom_region_inventory": {
+    "by_role": {
+      "expert_bank": 271790899200,
+      "expert_bank_scale": 16986931200,
+      "global_weight": 2647664640,
+      "layer_weight": 203806195648,
+      "layer_weight_scale": 6150859280
+    },
+    "declared_resident_engram_set": {
+      "bytes": 202758032400,
+      "delta": 0,
+      "tensors": [
+        "layers.1.engram.embed.weight",
+        "layers.14.engram.embed.weight",
+        "layers.1.engram.embed.scale",
+        "layers.14.engram.embed.scale"
+      ],
+      "wafer_capability_declares": 202758032400
+    },
+    "fit": {
+      "array_x64_expert_banks_per_node": {
+        "bank_bytes": 1073741824,
+        "banks": 6,
+        "budget": 6442450944,
+        "per_node_bytes": 4512153600,
+        "percent": 70.0,
+        "verdict": "FITS"
+      },
+      "array_x64_node0_dense_banks": {
+        "as_built": "REFUSED",
+        "as_built_bytes": 212604719568,
+        "bank_bytes": 1073741824,
+        "banks": 12,
+        "budget": 12884901888,
+        "resident_moved": "FITS",
+        "resident_moved_bytes": 9846687168,
+        "resident_moved_percent": 76.4
+      },
+      "wafer_x2": {
+        "as_built": "REFUSED",
+        "as_built_percent": 121.6,
+        "capability_rom_bytes": 412316860416,
+        "resident_moved": "FITS",
+        "resident_moved_percent": 72.4
+      }
+    },
+    "producer": "compiler.backends.rom.common.image.plan_rom_image request set, intercepted; AM-E10's dtype stood in at 4 bits in memory so the inventory could be measured at all (probe)",
+    "rom_bytes_if_the_resident_set_moved": 298624517568,
+    "weight_bytes_total": 501382549968
+  },
+  "provenance": {
+    "changed_source": {
+      "compiler/backends/rom/common/program.py": "e5613838ebbcafff7f31e2fcb8928e5b77ce2f23f4ad94564cb8d7a243f12856"
+    },
+    "git_commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
+    "kernel_ir": {
+      "graph_id": "9d348505b8ee59fb0c32eee3bdbd4f967e2c86d9cdf743a85d33b03866bb28e4",
+      "kernels": 3243,
+      "path": "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+      "sha256": "1c4490a0f9761cc057541cf4e8541bd92809505cb43742120785779b0862c45d",
+      "tensors": 5825,
+      "weight_tensors": 2018
+    },
+    "worktree_dirty": true,
+    "worktree_dirty_note": "57 porcelain entries at the time of the run, from concurrent work in other sessions; the file this unit changed is compiler/backends/rom/common/program.py and nothing else"
+  },
+  "regression_of_the_landed_fix": {
+    "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py <product> --ir <ir> --json",
+    "deepseek-v4-flash (wafer)": {
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "descriptors": 3135,
+      "identical": true,
+      "instructions": 1323,
+      "shipped_deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9"
+    },
+    "deepseek-v4-flash-array": {
+      "deployment_sha256_at_head_without_the_fix": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "deployment_sha256_with_the_fix": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "note": "the shipped array artifact differs from what HEAD builds (3165 descriptors versus 3158) with and without this change alike, so that drift is pre-existing and not attributable here",
+      "shipped_deployment_sha256": "bcf4d82bb5231c4304239b2bc0b6d2f530d231f9e8ae0501d7553bb649fcb546"
+    },
+    "negative_controls": [
+      "a derived axis whose graph-declared maximum disagrees with the affine image its name states is refused: \"derived axis 'span_groups_ratio2' resolves to 1 * span_tokens // 2 + 0, which at span_tokens = 262144 is 131072; the graph declares its maximum as 131073\"",
+      "a compressor whose ratio attribute disagrees with the group stride of its own operands is refused: \"kernel 'main.layer02.attention.compressor.carry' declares compression ratio 8 and addresses ... in groups of 2\"",
+      "a ratio no derived axis of the graph is counted in is refused: \"declares compression ratio 16, which no derived axis of this graph is counted in; the graph's runtime symbols state [1, 2, 8]\"",
+      "a derived name that states no positive integer ratio resolves to nothing rather than to a guess"
+    ],
+    "pytest": {
+      "tests/compiler/test_rom_backend.py": {
+        "at_head": "the same 5 tests fail",
+        "note": "pre-existing; test_the_derived_group_names_resolve_to_a_symbol_and_a_ratio expects attention_rows_window bias 128 and the source states bias 0",
+        "with_the_fix": "5 failed, 123 passed"
+      },
+      "tests/compiler/test_rom_backend.py + tests/test_deepseek_v41_rom_backend.py + tests/test_deepseek_v41_array_backend.py": "5 failed, 179 passed, 1 skipped",
+      "tests/runtime/test_deepseek_v4_compression_state.py + test_deepseek_v4_compressed_kv.py + tests/abi3/test_am_e10_v41_kinds.py + tests/compiler/test_deepseek_v41_hbm_comparator.py": "248 passed",
+      "tests/test_deepseek_v41_rom_backend.py + tests/test_deepseek_v41_array_backend.py": "56 passed, 1 skipped"
+    },
+    "qwen3-8b": {
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "descriptors": 215,
+      "identical": true,
+      "instructions": 74,
+      "shipped_deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a"
+    }
+  },
+  "schema": "opentallas.deepseek_v41.ds41_p3_build_attempt.v1",
+  "status": "not_built"
+}

@@ -184,19 +184,49 @@ def object_banks(table: Any) -> dict[int, str]:
             if obj is not None:
                 demand(obj, "result", f"op{op_id} out{slot}", dtype)
 
-    banks: dict[int, str] = {}
+    banks: dict[int, tuple[str, ...]] = {}
     for obj, wants in sorted(demands.items()):
+        wanted = set(wants)
         #: A produced value read back later is in result_mem for both, so
-        #: "result" absorbs a co-occurring read of the same object.
-        if len(wants) > 1 and set(wants) - {"result"} != set(wants):
-            wants = {k: v for k, v in wants.items() if k == "result"}
-        if len(wants) != 1:
-            detail = "; ".join(f"{b} ({', '.join(w)})" for b, w in sorted(wants.items()))
-            raise SystemExit(
-                f"object {obj} is read from more than one bank: {detail}. The "
-                f"bridge admits one object in one bank only."
-            )
-        banks[obj] = next(iter(wants))
+        #: "result" absorbs a co-occurring SOURCE read of the same object.
+        #: It does NOT absorb an index read: index_mem is a different array and
+        #: a read that resolves to it does not see what the result port wrote.
+        #: Collapsing {index, result} to result is what sent the token table's
+        #: embed-lookup read to index-bank word 14,747,840 of a 270,848-word
+        #: bank -- the overrun the harness now names.
+        if {"result", "source"} <= wanted:
+            wanted.discard("source")
+        if len(wanted) == 1:
+            banks[obj] = (next(iter(wanted)),)
+            continue
+        #: THE MULTI-BANK CASES THE BRIDGE ADMITS, and the reason the header note
+        #: talks about "same base, two images".  The banks are DIFFERENT ADDRESS
+        #: SPACES that read the same placement entry, in their own units, so one
+        #: base serves both and the object's bytes are staged into both images.
+        #:
+        #: source+weight: a model with tied embeddings lowers the embedding table
+        #: and the LM-head weight to ONE object (the HBM lowering of the reduced
+        #: Qwen3 does -- object 12 is TENSOR.EMBED_LOOKUP slot 1 and
+        #: TENSOR.MATMUL slot 1).
+        #:
+        #: index+result: the token-id table is read by TENSOR.EMBED_LOOKUP
+        #: through the index port and written by SELECTION.TOKEN_APPEND through
+        #: the result port (object 35 of the same lowering).  One base in both is
+        #: correct for a transaction in which no read of the object follows the
+        #: write, which is every single-token request -- the appended token is
+        #: observed on ``selected_token``, not re-read.  It would be WRONG for a
+        #: multi-token loop inside one transaction, so plan.json records the pair
+        #: instead of hiding it.
+        if wanted in ({"source", "weight"}, {"index", "result"}):
+            banks[obj] = tuple(sorted(wanted))
+            continue
+        detail = "; ".join(f"{b} ({', '.join(w)})" for b, w in sorted(wants.items()))
+        raise SystemExit(
+            f"object {obj} is read from more than one bank: {detail}. The "
+            f"bridge admits one object in one bank only, except the "
+            f"source+weight and index+result pairs that one placement base "
+            f"serves in two images."
+        )
 
     #: Objects some operator READS.  A result-bank object of this kind whose
     #: declared source is zeros must be staged as zeros: the verification top
@@ -289,6 +319,14 @@ def main() -> int:
                     help=("comma-separated token ids to plant in the embed-lookup "
                           "index object, or the path to a reference oracle whose "
                           "prompt_token_ids are used"))
+    ap.add_argument("--vectors", type=Path, default=None,
+                    help=("where --case is looked up; the default is the committed "
+                          "testdata/compiler/abi3_deployment/"
+                          "abi3_deployment_rtl_vectors.json.  A deployment the "
+                          "committed campaign does not cover can bind a case "
+                          "record derived beside it without regenerating that "
+                          "file, which would restate four shipped targets' "
+                          "image bases."))
     ap.add_argument("--case", default=None,
                     help=("a case name in the deployment vector set whose symbols and "
                           "entrypoint to bind, e.g. "
@@ -316,8 +354,16 @@ def main() -> int:
     staged: dict[str, list[tuple[int, bytes, int]]] = {
         "index": [], "source": [], "result": [], "weight": [],
     }
-    for obj in sorted(banks):
-        bank = banks[obj]
+    #: MULTI-BANK OBJECTS FIRST.  Their base has to be free in every bank they
+    #: are read from, so allocating them before the single-bank objects keeps
+    #: that shared number small; allocated last, a token table shared with the
+    #: result bank would put its index-bank copy 14.7 M words up and size
+    #: index_mem at 59 MB for 1 MB of content.  Deployments with no multi-bank
+    #: object are unaffected -- the order is otherwise unchanged.
+    order = sorted(banks, key=lambda o: (len(banks[o]) == 1, o))
+    for obj in order:
+        obj_banks = banks[obj]
+        bank = obj_banks[0]
         source = sources[obj]
         size = int(source.get("size_bytes") or 0)
         #: EACH BANK IS ADDRESSED IN ITS OWN UNIT.  index/source/result are
@@ -331,14 +377,27 @@ def main() -> int:
         #: object of N elements needs N words whatever its element width.
         elem = element_bytes[obj]
         elements = (size + elem - 1) // elem
-        slots_needed = (size + 1) // 2 if bank == "weight" else elements
-        base = cursors[bank]
-        cursors[bank] += max(slots_needed, 1)
-        cursors[bank] += (-cursors[bank]) % args.align_words
+
+        def slots(bank_name: str) -> int:
+            #: the weight window counts HALFWORDS of a flat byte image; every
+            #: other bank counts 32-bit words holding ONE element each
+            return (size + 1) // 2 if bank_name == "weight" else elements
+
+        #: ONE BASE FOR EVERY BANK THE OBJECT IS READ FROM.  The placement table
+        #: holds one base per object, so a source+weight object needs a number
+        #: that is free in both address spaces: take the furthest cursor, then
+        #: advance each bank past its own requirement from that shared base.
+        base = max(cursors[b] for b in obj_banks)
+        base += (-base) % args.align_words
+        for bank_name in obj_banks:
+            end = base + max(slots(bank_name), 1)
+            end += (-end) % args.align_words
+            cursors[bank_name] = max(cursors[bank_name], end)
         blob = materialise(source, args.checkpoint)
         plan.append({
             "object_id": obj,
-            "bank": bank,
+            "bank": "+".join(obj_banks),
+            "banks": list(obj_banks),
             "element_bytes": elem,
             "elements": elements,
             "base": base,
@@ -346,13 +405,21 @@ def main() -> int:
             "kind": source.get("kind"),
             "staged_bytes": len(blob) if blob else 0,
         })
-        if blob is None and bank == "result" and obj in read_objects:
+        #: Only the RESULT bank needs declared zeros made explicit: it is the
+        #: only one the top poisons (0xdeadbeef) before loading the image.
+        #: index_mem and source_mem come up at zero, so an object declaring
+        #: zeros there reads as zeros with nothing staged.
+        if blob is None and "result" in obj_banks and obj in read_objects:
             #: Declared zeros, and something reads it: say so explicitly rather
             #: than inheriting the bank's poison.
             blob = bytes(size)
-        if blob and bank in staged:
-            #: base is already a halfword index for the weight window
-            staged[bank].append((base, blob, elem if bank != "weight" else 0))
+        if blob:
+            for bank_name in obj_banks:
+                if bank_name not in staged:
+                    continue
+                #: base is already a halfword index for the weight window
+                staged[bank_name].append(
+                    (base, blob, elem if bank_name != "weight" else 0))
 
     index_words = max(cursors["index"], 1)
     source_words = max(cursors["source"], 1)
@@ -382,7 +449,7 @@ def main() -> int:
     if prompt_tokens:
         token_obj = token_id_object(table)
         entry = next(e for e in plan if e["object_id"] == token_obj)
-        if entry["bank"] != "index":
+        if "index" not in entry["banks"]:
             raise SystemExit(
                 f"token-id object {token_obj} is in the {entry['bank']} bank, not index"
             )
@@ -474,10 +541,11 @@ def main() -> int:
         raise SystemExit("no DMA.SCATTER destination found; cannot state KV plane rows")
     lines.append(f"kv_plane_rows {kv_plane_rows}")
     if args.case:
-        vectors = json.loads(
-            (ROOT / "testdata/compiler/abi3_deployment"
-             / "abi3_deployment_rtl_vectors.json").read_text()
+        vectors_path = args.vectors or (
+            ROOT / "testdata/compiler/abi3_deployment"
+            / "abi3_deployment_rtl_vectors.json"
         )
+        vectors = json.loads(vectors_path.read_text())
         cases = [c for c in vectors["cases"] if c["name"] == args.case]
         if len(cases) != 1:
             raise SystemExit(f"{args.case!r} names {len(cases)} cases, expected one")
