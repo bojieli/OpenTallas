@@ -222,10 +222,27 @@ module ot_a3_reduction_expert_sum #(
                 S_DRAIN: begin
                     busy <= 1'b1;
                     // read(2) + leaf(1) + LEVELS + trailing add(1) + narrow(1)
-                    if (drain >= (LEVELS[31:0] + 32'd5))
+                    if (drain >= (LEVELS[31:0] + 32'd5)) begin
+                        // ONE OWNER FOR error_code.  A numeric fault is latched
+                        // by the pipeline in ``first_err`` and folded in here,
+                        // rather than in a second always block.  Two blocks
+                        // assigning one reg lint as a mere warning and stop the
+                        // ROM flow dead: "multiple conflicting drivers for
+                        // ...error_code[0]", and then an internal assert in the
+                        // pinned Yosys 0.68 OPT passes at 39,159 cells.
+                        // Synthesis is the only place this showed up.
+                        if (error_code == ERR_NONE) begin
+                            case (first_err)
+                                E_NONFINITE: error_code <= ERR_OPERAND_NONFINITE;
+                                E_PRODUCT:   error_code <= ERR_PRODUCT_RANGE;
+                                E_ACCUM:     error_code <= ERR_ACCUMULATE_RANGE;
+                                default:     error_code <= ERR_NONE;
+                            endcase
+                        end
                         state <= S_DONE;
-                    else
+                    end else begin
                         drain <= drain + 32'd1;
+                    end
                 end
                 S_DONE: begin
                     busy <= 1'b0;
@@ -432,20 +449,6 @@ module ot_a3_reduction_expert_sum #(
                 first_err <= total_err;
             else if (narrowed[18:17] != 2'd0)
                 first_err <= E_ACCUM;
-        end
-    end
-    //: error_code is driven by the walk for a shape refusal; a numeric fault
-    //: found in the pipeline is reported here, once the run has drained.
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            // nothing: error_code's reset is in the walk block
-        end else if (state == S_DONE && error_code == ERR_NONE) begin
-            case (first_err)
-                E_NONFINITE: error_code <= ERR_OPERAND_NONFINITE;
-                E_PRODUCT:   error_code <= ERR_PRODUCT_RANGE;
-                E_ACCUM:     error_code <= ERR_ACCUMULATE_RANGE;
-                default:     error_code <= ERR_NONE;
-            endcase
         end
     end
 endmodule
