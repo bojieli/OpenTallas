@@ -178,6 +178,8 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_qwen_gqa.sv",
     "rtl/abi3/ot_a3_vector_silu_mul.sv",
     "rtl/abi3/ot_a3_selection_token_append.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/abi3/ot_a3_route_weight_normalize.sv",
     "rtl/abi3/ot_a3_place_table.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
