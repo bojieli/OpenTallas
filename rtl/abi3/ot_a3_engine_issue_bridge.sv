@@ -170,6 +170,10 @@ module ot_a3_engine_issue_bridge #(
     //: is a control-path limit with no datapath reason behind it.
     parameter integer WINDOW_INDEX_MAX_SLOTS = 128,
 
+    //: ROUTE.BIASED_TOPK's k, bounded by ot_a3_route_biased_topk's own MAX_K.
+    //: The shipped gate selects 6 of 256 (V4.1: 6 of 384).
+    parameter integer BIASED_TOPK_MAX_K = 8,
+
     //: IS THE INDEX OPERAND OF A GATHER OR AN EMBED LOOKUP ADDRESSED BY ITS OWN
     //: VIEW?
     //:
@@ -495,6 +499,7 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] FAMILY_SELECTION = 8'h70;
     localparam [7:0] ROUTE_WEIGHT_NORMALIZE = 8'h02;
     localparam [7:0] ROUTE_WINDOW_INDEX = 8'h06;
+    localparam [7:0] ROUTE_BIASED_TOPK = 8'h01;
     localparam [7:0] DMA_SCATTER = 8'h03;
     localparam [7:0] VECTOR_ADD = 8'h03;
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
@@ -555,6 +560,9 @@ module ot_a3_engine_issue_bridge #(
     //: deepseek-v41-flash-rom-array-64.
     localparam [255:0] CONTRACT_WINDOW_INDEX_RAW =
         256'h8afab2aedbd62798bcbab3568e9f75a1e333df6db9f32c70d87a23d1eb224bf5;
+    //: The contract every shipped ROUTE.BIASED_TOPK carries.
+    localparam [255:0] CONTRACT_BIASED_TOPK_RAW =
+        256'h01377eb4aa1a4fe0d58f7b60e68b8a5a769537f50a1e1fc25918f743163479b5;
     // bf16_byte_preserving_state_v1
     localparam [255:0] CONTRACT_KV_SCATTER_RAW =
         256'h6fe100be19c00c87797983af8409335999bfd793cdcf3862af5ba6bdcc9bf355;
@@ -986,11 +994,12 @@ module ot_a3_engine_issue_bridge #(
     reg        selection_token_append_q;
     reg        route_weight_normalize_q;
     reg        route_window_index_q;
+    reg        route_biased_topk_q;
     wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
                                  dma_scatter_q | attention_gqa_q |
                                  selection_argmax_q | selection_token_append_q |
                                  route_weight_normalize_q |
-                                 route_window_index_q;
+                                 route_window_index_q | route_biased_topk_q;
 
     // Per-slot capture of every bound TENSOR_VIEW record, filled by the shared
     // admission walk in slot order.  Flat arrays rather than a packed struct:
@@ -1505,7 +1514,10 @@ module ot_a3_engine_issue_bridge #(
     endfunction
 
     wire [5:0] expected_slot_mask =
-        attention_gqa_q ? 6'b011111
+        //: The first mask to name slot 5: scores, bias, selected ids and the
+        //: selected weights that ride beside them.
+        route_biased_topk_q ? 6'b110011
+      : attention_gqa_q ? 6'b011111
       : (selection_argmax_q || selection_token_append_q ||
          route_weight_normalize_q || route_window_index_q) ? 6'b010001
       : 6'b010011;
@@ -1854,12 +1866,67 @@ module ot_a3_engine_issue_bridge #(
         //: reference, so it is refused here.
         (!window_index_mask_full || (op_aux2 != NO_ID));
 
+    //: ROUTE.BIASED_TOPK: [span, experts] FP32 scores, an [experts] FP32 bias,
+    //: [span, k] U32 selected ids and [span, k] FP32 UNBIASED selected weights.
+    //: Slot 0 IS the sequence axis -- one routing group per token position.
+    //:
+    //: k COMES FROM aux_id_0 AND MUST AGREE WITH THE OUTPUT VIEW. The reference
+    //: takes k from aux_id_0 when present and from the output extent otherwise,
+    //: and requires topk == slots; checking both and their equality is what
+    //: stops a k that indexes past the ids the program allocated.
+    wire [31:0] biased_topk_experts = slot_dim1[0];
+    wire [31:0] biased_topk_slots = slot_dim1[4];
+    wire [31:0] biased_topk_k =
+        (op_aux0 == NO_ID) ? biased_topk_slots : op_aux0;
+    wire biased_topk_shape_ok =
+        (slot_dtype[0] == FMT_FP32) && (slot_rank[0] == 8'd2) &&
+        (slot_terms[0] == 8'd0) &&
+        (biased_topk_experts != 32'd0) &&
+        (slot_dim2[0] == 32'd0) && (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == biased_topk_experts) &&
+        (slot_stride1[0] == 32'd1) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd2) && (captured_axis[0] == 8'd0) &&
+        span_admitted && slot_offset_consistent(0) &&
+        //: The bias broadcasts over every group, so it is rank 1 [experts].
+        (slot_dtype[1] == FMT_FP32) && (slot_rank[1] == 8'd1) &&
+        (slot_dim0[1] == biased_topk_experts) &&
+        (slot_dim1[1] == 32'd0) && (slot_dim2[1] == 32'd0) &&
+        (slot_tail_dims[1] == 32'd0) &&
+        (slot_stride0[1] == 32'd1) && (slot_stride1[1] == 32'd0) &&
+        (slot_stride2[1] == 32'd0) && (slot_tail_strides[1] == 32'd0) &&
+        (captured_rank[1] == 8'd1) && (captured_axis[1] == 8'd0) &&
+        (captured_extent[1] == biased_topk_experts) &&
+        slot_offset_consistent(1) &&
+        (slot_dtype[4] == FMT_U32) && (slot_rank[4] == 8'd2) &&
+        (biased_topk_slots != 32'd0) &&
+        (biased_topk_slots <= BIASED_TOPK_MAX_K) &&
+        (biased_topk_slots <= biased_topk_experts) &&
+        (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == biased_topk_slots) &&
+        (slot_stride1[4] == 32'd1) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd2) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == request_span) && slot_offset_consistent(4) &&
+        //: The weights are FP32 and cover exactly the ids.
+        (slot_dtype[5] == FMT_FP32) && (slot_rank[5] == 8'd2) &&
+        (slot_dim1[5] == biased_topk_slots) &&
+        (slot_dim2[5] == 32'd0) && (slot_tail_dims[5] == 32'd0) &&
+        (slot_stride0[5] == biased_topk_slots) &&
+        (slot_stride1[5] == 32'd1) &&
+        (slot_stride2[5] == 32'd0) && (slot_tail_strides[5] == 32'd0) &&
+        (captured_rank[5] == 8'd2) && (captured_axis[5] == 8'd0) &&
+        (captured_extent[5] == request_span) && slot_offset_consistent(5) &&
+        //: k is the declared one AND the allocated one, or it is refused.
+        (biased_topk_k == biased_topk_slots);
+
     wire mapped_shape_ok =
         (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
       : selection_argmax_q ? argmax_shape_ok
       : selection_token_append_q ? token_append_shape_ok
       : route_weight_normalize_q ? weight_normalize_shape_ok
       : route_window_index_q ? window_index_shape_ok
+      : route_biased_topk_q ? biased_topk_shape_ok
       : dma_scatter_q ? scatter_shape_ok
       : gqa_shape_ok;
 
@@ -1924,6 +1991,15 @@ module ot_a3_engine_issue_bridge #(
           (numeric_output_dtype == FMT_U32) &&
           (desc_data[639:608] == 32'd0) &&
           (desc_data[1023:768] == CONTRACT_WINDOW_INDEX_RAW)) ||
+         (route_biased_topk_q &&
+          (numeric_input_dtype == FMT_FP32) &&
+          (numeric_second_dtype == FMT_FP32) &&
+          (numeric_accumulator_dtype == FMT_FP32) &&
+          //: The profile's output dtype is the ID view's -- U32. The weights'
+          //: FP32 is stated by slot 5 and checked there.
+          (numeric_output_dtype == FMT_U32) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_BIASED_TOPK_RAW)) ||
          (dma_scatter_q &&
           (((numeric_input_dtype == FMT_BF16) &&
             (numeric_second_dtype == FMT_U32)) ||
@@ -1974,7 +2050,7 @@ module ot_a3_engine_issue_bridge #(
     //: Which families may bind output_view_1. Deliberately an explicit list and
     //: not a default: an operator that gains a second output without saying so
     //: here is refused, which is the direction a mistake should fall.
-    wire mapped_second_output_allowed = 1'b0;
+    wire mapped_second_output_allowed = route_biased_topk_q;
 
     wire mapped_operator_arity_ok =
         ((vector_add_q || vector_silu_mul_q || dma_scatter_q) &&
@@ -1989,6 +2065,16 @@ module ot_a3_engine_issue_bridge #(
         //: fourth unbound, so it needs its own leg rather than a relaxation of
         //: theirs -- widening the shared leg would stop refusing an aux nobody
         //: reads on six other operators.
+        //: input_view_1 BOUND (the bias), 2 and 3 unbound, aux_id_0 BOUND (k)
+        //: and the other three unbound. output_view_1 is bound and permitted by
+        //: mapped_second_output_allowed, which names this family.
+        (route_biased_topk_q &&
+         (desc_data[767:736] != NO_ID) &&
+         (desc_data[799:768] == NO_ID) &&
+         (desc_data[831:800] == NO_ID) &&
+         (desc_data[895:864] != NO_ID) &&
+         (desc_data[927:896] != NO_ID) && (desc_data[959:928] == NO_ID) &&
+         (desc_data[991:960] == NO_ID) && (desc_data[1023:992] == NO_ID)) ||
         (route_window_index_q &&
          (desc_data[767:736] == NO_ID) &&
          (desc_data[799:768] == NO_ID) &&
@@ -2108,6 +2194,7 @@ module ot_a3_engine_issue_bridge #(
             selection_token_append_q <= 1'b0;
             route_weight_normalize_q <= 1'b0;
             route_window_index_q <= 1'b0;
+            route_biased_topk_q <= 1'b0;
             slot_bound <= 6'd0;
             slot_cursor <= 3'd0;
             op_input2 <= NO_ID;
@@ -2220,6 +2307,7 @@ module ot_a3_engine_issue_bridge #(
                 selection_token_append_q <= 1'b0;
                 route_weight_normalize_q <= 1'b0;
                 route_window_index_q <= 1'b0;
+                route_biased_topk_q <= 1'b0;
                 slot_bound <= 6'd0;
                 slot_cursor <= 3'd0;
                 op_input2 <= NO_ID;
@@ -2333,7 +2421,8 @@ module ot_a3_engine_issue_bridge #(
                                       (issue_sub == SELECTION_TOKEN_APPEND))) ||
                                     ((issue_family == FAMILY_ROUTE) &&
                                      ((issue_sub == ROUTE_WEIGHT_NORMALIZE) ||
-                                      (issue_sub == ROUTE_WINDOW_INDEX))))))) begin
+                                      (issue_sub == ROUTE_WINDOW_INDEX) ||
+                                      (issue_sub == ROUTE_BIASED_TOPK))))))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
@@ -2388,6 +2477,10 @@ module ot_a3_engine_issue_bridge #(
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ROUTE) &&
                                     (issue_sub == ROUTE_WINDOW_INDEX);
+                                route_biased_topk_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_ROUTE) &&
+                                    (issue_sub == ROUTE_BIASED_TOPK);
                                 observed_index_value <= 32'hffff_ffff;
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
@@ -2801,6 +2894,11 @@ module ot_a3_engine_issue_bridge #(
                                 //: padding included -- the engine's out_count.
                                 : route_window_index_q
                                 ? (request_span * window_index_slots)
+                                //: The IDS only. The weights are a second view
+                                //: and the engine counts ids, so counting both
+                                //: here would refuse a correct launch.
+                                : route_biased_topk_q
+                                ? (request_span * biased_topk_slots)
                                 : 32'd1;
                             mapped_work_words <=
                                 vector_add_q
@@ -2818,6 +2916,9 @@ module ot_a3_engine_issue_bridge #(
                                 //: rows it selected, padding excluded -- which
                                 //: is not the same as the words it wrote.
                                 : route_window_index_q ? widx_candidates
+                                //: Every expert is ranked, not just the winners.
+                                : route_biased_topk_q
+                                ? (request_span * biased_topk_experts)
                                 : 32'd1;
                             state <= S_START;
                         end
@@ -3168,6 +3269,29 @@ module ot_a3_engine_issue_bridge #(
             gqa_mem_rsp_valid <= gqa_mem_req_valid & attention_gqa_q;
     end
 
+    wire btk_score_rd_en;
+    wire [31:0] btk_score_rd_addr;
+    wire btk_bias_rd_en;
+    wire [31:0] btk_bias_rd_addr;
+    wire btk_id_we;
+    wire [31:0] btk_id_addr;
+    wire [31:0] btk_id_data;
+    wire btk_wgt_we;
+    wire [31:0] btk_wgt_addr;
+    wire [31:0] btk_wgt_data;
+    wire btk_busy;
+    wire btk_done;
+    wire [7:0] btk_error_code;
+    wire [31:0] btk_selected;
+    wire [31:0] btk_candidates;
+    //: THE ENGINE EMITS IN TWO PASSES, so exactly one of these is high on any
+    //: cycle and the bridge's single result port carries both views. The
+    //: engine's own testbench fails on any cycle where both fire, which is what
+    //: makes this mux sound rather than lucky.
+    wire btk_out_we = btk_id_we | btk_wgt_we;
+    wire [31:0] btk_out_addr = btk_id_we ? btk_id_addr : btk_wgt_addr;
+    wire [31:0] btk_out_data = btk_id_we ? btk_id_data : btk_wgt_data;
+
     wire widx_pos_rd_en;
     wire [31:0] widx_pos_rd_addr;
     wire widx_out_we;
@@ -3210,6 +3334,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_done
         : route_weight_normalize_q ? norm_done
         : route_window_index_q ? widx_done
+        : route_biased_topk_q ? btk_done
         : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
         : rms_norm_q ? rms_busy
@@ -3217,6 +3342,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_busy
         : route_weight_normalize_q ? norm_busy
         : route_window_index_q ? widx_busy
+        : route_biased_topk_q ? btk_busy
         : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
         : rms_norm_q ? rms_error_code
@@ -3224,6 +3350,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_error_code
         : route_weight_normalize_q ? norm_error_code
         : route_window_index_q ? widx_error_code
+        : route_biased_topk_q ? btk_error_code
         : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
         : rms_norm_q ? rms_result_count
@@ -3231,6 +3358,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_result_count
         : route_weight_normalize_q ? norm_result_count
         : route_window_index_q ? widx_out_count
+        : route_biased_topk_q ? btk_selected
         : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
         : rms_norm_q ? rms_work_count
@@ -3238,6 +3366,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_work_count
         : route_weight_normalize_q ? norm_result_count
         : route_window_index_q ? widx_candidates
+        : route_biased_topk_q ? btk_candidates
         : attention_gqa_q ? gqa_work_count : array_work_count;
     //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
     //: correct 16-row launch used to come back as TRAP_ENGINE.
@@ -3294,6 +3423,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_a_rd_en
         : route_weight_normalize_q ? norm_wgt_rd_en
         : route_window_index_q ? widx_pos_rd_en
+        : route_biased_topk_q ? btk_score_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
     assign m0_rd_addr = bridge_index_read ? bridge_index_addr
         : rope_q ? rope_input_rd_addr
@@ -3302,16 +3432,19 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_a_rd_addr
         : route_weight_normalize_q ? norm_wgt_rd_addr
         : route_window_index_q ? widx_pos_rd_addr
+        : route_biased_topk_q ? btk_score_rd_addr
         : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
         : rms_norm_q ? rms_weight_rd_en
         : vector_silu_mul_q ? silu_b_rd_en
+        : route_biased_topk_q ? btk_bias_rd_en
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 1'b0
         : array_m1_rd_en;
     assign m1_rd_addr = rope_q ? rope_coefficient_rd_addr
         : rms_norm_q ? rms_weight_rd_addr
         : vector_silu_mul_q ? silu_b_rd_addr
+        : route_biased_topk_q ? btk_bias_rd_addr
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 32'd0
         : array_m1_rd_addr;
@@ -3329,6 +3462,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_out_we
         : route_weight_normalize_q ? norm_out_we
         : route_window_index_q ? widx_out_we
+        : route_biased_topk_q ? btk_out_we
         : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
         : rms_norm_q ? rms_out_addr
@@ -3336,6 +3470,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_out_addr
         : route_weight_normalize_q ? norm_out_addr
         : route_window_index_q ? widx_out_addr
+        : route_biased_topk_q ? btk_out_addr
         : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
         : rms_norm_q ? rms_out_data
@@ -3343,6 +3478,7 @@ module ot_a3_engine_issue_bridge #(
         : selection_token_append_q ? append_out_data
         : route_weight_normalize_q ? norm_out_data
         : route_window_index_q ? widx_out_data
+        : route_biased_topk_q ? btk_out_data
         : attention_gqa_q ? gqa_out_data : array_out_data;
     // The bridge's own index read and the scatter's index read address the
     // index bank; every other mapped operand and result is a plane of the
@@ -3351,11 +3487,12 @@ module ot_a3_engine_issue_bridge #(
         : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q ||
-           route_weight_normalize_q || route_window_index_q);
+           route_weight_normalize_q || route_window_index_q ||
+           route_biased_topk_q);
     wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
                         (issue_sub_q == DMA_GATHER);
     assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
-        vector_silu_mul_q || dma_scatter_q ||
+        vector_silu_mul_q || dma_scatter_q || route_biased_topk_q ||
         ((GATHER_PLACEMENT_ADDRESSED != 0) && dma_gather_q);
     assign m1_reads_matmul_weight = matmul_q;
 
@@ -3664,6 +3801,50 @@ module ot_a3_engine_issue_bridge #(
     //: visibility unless aux_id_2 is bound, and CONTRACT_WINDOW_INDEX_RAW pins
     //: the operator whose context that symbol names. A bridge that grows symbol
     //: access should read it there instead and drop this note.
+    //: ROUTE.BIASED_TOPK.
+    ot_a3_route_biased_topk #(
+        .MAX_K(BIASED_TOPK_MAX_K)
+    ) biased_topk (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & route_biased_topk_q),
+        .cfg_groups(request_span),
+        .cfg_experts(biased_topk_experts),
+        .cfg_topk(biased_topk_slots),
+        //: input_view_1 is bound in every shipped operator and the arity leg
+        //: requires it, so the bias is always present here.
+        .cfg_has_bias(1'b1),
+        //: Rank 1 [experts], which biased_topk_shape_ok requires, so it
+        //: broadcasts over every group.
+        .cfg_bias_broadcast(1'b1),
+        //: FP32 operands, which the numeric contract and slot 0 both require.
+        .cfg_operand_fp32(1'b1),
+        .cfg_score_base(mapped_left_base),
+        .cfg_bias_base(slot1_base),
+        .cfg_id_out_base(mapped_output_base),
+        .cfg_has_weight_out(1'b1),
+        //: Slot 5 is FP32, so the weight is stored as the binary32 code.
+        .cfg_weight_fp32(1'b1),
+        .cfg_weight_out_base(slot5_base),
+        .score_rd_en(btk_score_rd_en),
+        .score_rd_addr(btk_score_rd_addr),
+        .score_rd_data(m0_rd_data),
+        .bias_rd_en(btk_bias_rd_en),
+        .bias_rd_addr(btk_bias_rd_addr),
+        .bias_rd_data(m1_rd_data),
+        .id_we(btk_id_we),
+        .id_addr(btk_id_addr),
+        .id_data(btk_id_data),
+        .wgt_we(btk_wgt_we),
+        .wgt_addr(btk_wgt_addr),
+        .wgt_data(btk_wgt_data),
+        .busy(btk_busy),
+        .done(btk_done),
+        .error_code(btk_error_code),
+        .selected_experts(btk_selected),
+        .candidates(btk_candidates)
+    );
+
     ot_a3_route_window_index window_index (
         .clk(clk),
         .rst_n(rst_n),
@@ -3698,7 +3879,7 @@ module ot_a3_engine_issue_bridge #(
         .start(engine_start & !rms_norm_q & !rope_q &
                !vector_silu_mul_q & !attention_gqa_q &
                !selection_token_append_q & !route_weight_normalize_q &
-               !route_window_index_q),
+               !route_window_index_q & !route_biased_topk_q),
         .cfg_family(matmul_q ? FAMILY_TENSOR
                   : vector_add_q ? FAMILY_VECTOR
                   : selection_argmax_q ? FAMILY_SELECTION
