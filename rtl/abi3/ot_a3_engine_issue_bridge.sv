@@ -506,7 +506,7 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] ROUTE_WINDOW_INDEX = 8'h06;
     localparam [7:0] ROUTE_BIASED_TOPK = 8'h01;
     localparam [7:0] FAMILY_REDUCTION = 8'h60;
-    localparam [7:0] REDUCTION_EXPERT_SUM = 8'h05;
+    localparam [7:0] REDUCTION_EXPERT_SUM = 8'h01;
     localparam [7:0] DMA_SCATTER = 8'h03;
     localparam [7:0] VECTOR_ADD = 8'h03;
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
