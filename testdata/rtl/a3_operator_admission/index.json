@@ -1809,9 +1809,9 @@
   "target": "qwen3-8b-rom-single-chip",
   "upstream_dependency": {
     "deployment_manifest": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
-    "deployment_manifest_sha256": "dcbee360748f3151492403b896ef482fe76799ead5f7f694fb7a0183c990c1cb",
+    "deployment_manifest_sha256": "06679cce0d33bdb4a043060f0aa7f3000ac94cd4d417fd64edb9f8089e447a5c",
     "descriptor_image": "testdata/compiler/abi3_deployment/a3_descriptor.hex",
-    "descriptor_image_sha256": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
+    "descriptor_image_sha256": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb",
     "prefix_expected": "testdata/compiler/abi3_shipped_prefix/p3_expect.hex",
     "prefix_expected_sha256": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "prefix_source": "testdata/compiler/abi3_shipped_prefix/p3_source.hex",
@@ -1819,6 +1819,6 @@
     "prefix_writes": "testdata/compiler/abi3_shipped_prefix/p3_writes.hex",
     "prefix_writes_sha256": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
     "program_image": "testdata/compiler/abi3_deployment/a3_program.hex",
-    "program_image_sha256": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88"
+    "program_image_sha256": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c"
   }
 }
