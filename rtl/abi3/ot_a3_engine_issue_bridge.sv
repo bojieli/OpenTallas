@@ -164,6 +164,12 @@ module ot_a3_engine_issue_bridge #(
     //: the small-area default.
     parameter integer WEIGHT_NORMALIZE_DIVIDERS = 1,
 
+    //: ROUTE.WINDOW_INDEX's slots per query row -- the sliding window's width in
+    //: the output view. The shipped operators carry 128. Parameterised for the
+    //: same reason every other geometry here is: a pin at the one shipped value
+    //: is a control-path limit with no datapath reason behind it.
+    parameter integer WINDOW_INDEX_MAX_SLOTS = 128,
+
     //: IS THE INDEX OPERAND OF A GATHER OR AN EMBED LOOKUP ADDRESSED BY ITS OWN
     //: VIEW?
     //:
@@ -488,6 +494,7 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] FAMILY_ROUTE = 8'h50;
     localparam [7:0] FAMILY_SELECTION = 8'h70;
     localparam [7:0] ROUTE_WEIGHT_NORMALIZE = 8'h02;
+    localparam [7:0] ROUTE_WINDOW_INDEX = 8'h06;
     localparam [7:0] DMA_SCATTER = 8'h03;
     localparam [7:0] VECTOR_ADD = 8'h03;
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
@@ -543,6 +550,11 @@ module ot_a3_engine_issue_bridge #(
     //: admits, and the only one the shipped operators declare.
     localparam [255:0] CONTRACT_WEIGHT_NORMALIZE_RAW =
         256'h2b0b65aecc1a32791670f069fd0e71850d941ff8fba8913fe10984834d88c3c2;
+    //: The contract every shipped ROUTE.WINDOW_INDEX carries -- identical across
+    //: all 4 operators in deepseek-v4-flash-rom and all 16 in
+    //: deepseek-v41-flash-rom-array-64.
+    localparam [255:0] CONTRACT_WINDOW_INDEX_RAW =
+        256'h8afab2aedbd62798bcbab3568e9f75a1e333df6db9f32c70d87a23d1eb224bf5;
     // bf16_byte_preserving_state_v1
     localparam [255:0] CONTRACT_KV_SCATTER_RAW =
         256'h6fe100be19c00c87797983af8409335999bfd793cdcf3862af5ba6bdcc9bf355;
@@ -944,6 +956,13 @@ module ot_a3_engine_issue_bridge #(
     reg [31:0] op_output0;
     reg [31:0] op_numeric;
     reg [31:0] op_aux0;
+    //: ROUTE.WINDOW_INDEX is the first admitted operator to carry aux BEYOND
+    //: slot 0: aux_id_1 is its mask mode and aux_id_2 names the context symbol.
+    //: Both are IMMEDIATES in the operator record, not descriptor ids -- the
+    //: reference uses aux_id_0 directly as the window width -- so capturing the
+    //: fields is the whole of reading them.
+    reg [31:0] op_aux1;
+    reg [31:0] op_aux2;
     reg [31:0] index_raw_dim0;
     reg [31:0] source_rows;
     reg [31:0] source_trailing;
@@ -966,10 +985,12 @@ module ot_a3_engine_issue_bridge #(
     reg        selection_argmax_q;
     reg        selection_token_append_q;
     reg        route_weight_normalize_q;
+    reg        route_window_index_q;
     wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
                                  dma_scatter_q | attention_gqa_q |
                                  selection_argmax_q | selection_token_append_q |
-                                 route_weight_normalize_q;
+                                 route_weight_normalize_q |
+                                 route_window_index_q;
 
     // Per-slot capture of every bound TENSOR_VIEW record, filled by the shared
     // admission walk in slot order.  Flat arrays rather than a packed struct:
@@ -1486,7 +1507,7 @@ module ot_a3_engine_issue_bridge #(
     wire [5:0] expected_slot_mask =
         attention_gqa_q ? 6'b011111
       : (selection_argmax_q || selection_token_append_q ||
-         route_weight_normalize_q) ? 6'b010001
+         route_weight_normalize_q || route_window_index_q) ? 6'b010001
       : 6'b010011;
 
     wire [2:0] next_slot_w = next_bound_slot(slot_bound, slot_cursor);
@@ -1794,11 +1815,51 @@ module ot_a3_engine_issue_bridge #(
         (captured_extent[4] == captured_extent[0]) &&
         slot_offset_consistent(4);
 
+    //: ROUTE.WINDOW_INDEX presents [span] U32 absolute positions and writes
+    //: [span, slots] U32 KV rows padded with 0xffffffff. Slot 0 IS the sequence
+    //: axis -- one position per query row -- so it needs no span special case.
+    //:
+    //: THE WINDOW IS AN AUX IMMEDIATE, not a view dimension, and the reference
+    //: requires 0 < window <= slots. aux_id_1 is the mask mode, and the
+    //: reference refuses full-visibility mode unless aux_id_2 names the context
+    //: symbol, so that pairing is checked here rather than left to the engine.
+    wire [31:0] window_index_slots = slot_dim1[4];
+    wire [31:0] window_index_window =
+        (op_aux0 == NO_ID) ? window_index_slots : op_aux0;
+    wire        window_index_mask_full = (op_aux1 != 32'd0) && (op_aux1 != NO_ID);
+    wire window_index_shape_ok =
+        (slot_dtype[0] == FMT_U32) && (slot_rank[0] == 8'd1) &&
+        (slot_terms[0] == 8'd0) &&
+        (slot_dim1[0] == 32'd0) && (slot_dim2[0] == 32'd0) &&
+        (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == 32'd1) && (slot_stride1[0] == 32'd0) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd1) && (captured_axis[0] == 8'd0) &&
+        span_admitted && slot_offset_consistent(0) &&
+        (slot_dtype[4] == FMT_U32) && (slot_rank[4] == 8'd2) &&
+        (window_index_slots != 32'd0) &&
+        (window_index_slots <= WINDOW_INDEX_MAX_SLOTS) &&
+        (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == window_index_slots) &&
+        (slot_stride1[4] == 32'd1) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd2) && (captured_axis[4] == 8'd0) &&
+        //: One output row per query position.
+        (captured_extent[4] == request_span) &&
+        slot_offset_consistent(4) &&
+        //: The reference's own bound on the window.
+        (window_index_window != 32'd0) &&
+        (window_index_window <= window_index_slots) &&
+        //: Full visibility without a named context symbol is refused by the
+        //: reference, so it is refused here.
+        (!window_index_mask_full || (op_aux2 != NO_ID));
+
     wire mapped_shape_ok =
         (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
       : selection_argmax_q ? argmax_shape_ok
       : selection_token_append_q ? token_append_shape_ok
       : route_weight_normalize_q ? weight_normalize_shape_ok
+      : route_window_index_q ? window_index_shape_ok
       : dma_scatter_q ? scatter_shape_ok
       : gqa_shape_ok;
 
@@ -1855,6 +1916,14 @@ module ot_a3_engine_issue_bridge #(
           //: the engine's own ERR_SCALE_RANGE ever has to fire.
           (desc_data[639:608] == 32'd0) &&
           (desc_data[1023:768] == CONTRACT_WEIGHT_NORMALIZE_RAW)) ||
+         (route_window_index_q &&
+          //: I32 in, I32 second, U32 out -- an index operator carries no
+          //: floating-point operand at all.
+          (numeric_input_dtype == FMT_I32) &&
+          (numeric_second_dtype == FMT_I32) &&
+          (numeric_output_dtype == FMT_U32) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_WINDOW_INDEX_RAW)) ||
          (dma_scatter_q &&
           (((numeric_input_dtype == FMT_BF16) &&
             (numeric_second_dtype == FMT_U32)) ||
@@ -1902,6 +1971,18 @@ module ot_a3_engine_issue_bridge #(
          (desc_data[831:800] == NO_ID) &&
          (desc_data[927:896] == NO_ID) && (desc_data[959:928] == NO_ID) &&
          (desc_data[991:960] == NO_ID) && (desc_data[1023:992] == NO_ID)) ||
+        //: THE FIRST ADMITTED OPERATOR WITH AUX BEYOND SLOT 0. Every other
+        //: mapped family requires all four aux fields unbound; this one requires
+        //: the first three BOUND (window, mask mode, context symbol) and the
+        //: fourth unbound, so it needs its own leg rather than a relaxation of
+        //: theirs -- widening the shared leg would stop refusing an aux nobody
+        //: reads on six other operators.
+        (route_window_index_q &&
+         (desc_data[767:736] == NO_ID) &&
+         (desc_data[799:768] == NO_ID) &&
+         (desc_data[831:800] == NO_ID) &&
+         (desc_data[927:896] != NO_ID) && (desc_data[959:928] != NO_ID) &&
+         (desc_data[991:960] != NO_ID) && (desc_data[1023:992] == NO_ID)) ||
         ((selection_argmax_q || selection_token_append_q ||
           route_weight_normalize_q) &&
          (desc_data[767:736] == NO_ID) &&
@@ -2006,6 +2087,7 @@ module ot_a3_engine_issue_bridge #(
             selection_argmax_q <= 1'b0;
             selection_token_append_q <= 1'b0;
             route_weight_normalize_q <= 1'b0;
+            route_window_index_q <= 1'b0;
             slot_bound <= 6'd0;
             slot_cursor <= 3'd0;
             op_input2 <= NO_ID;
@@ -2034,6 +2116,8 @@ module ot_a3_engine_issue_bridge #(
             op_output0 <= NO_ID;
             op_numeric <= NO_ID;
             op_aux0 <= NO_ID;
+            op_aux1 <= NO_ID;
+            op_aux2 <= NO_ID;
             index_raw_dim0 <= 32'd0;
             source_rows <= 32'd0;
             source_trailing <= 32'd0;
@@ -2115,6 +2199,7 @@ module ot_a3_engine_issue_bridge #(
                 selection_argmax_q <= 1'b0;
                 selection_token_append_q <= 1'b0;
                 route_weight_normalize_q <= 1'b0;
+                route_window_index_q <= 1'b0;
                 slot_bound <= 6'd0;
                 slot_cursor <= 3'd0;
                 op_input2 <= NO_ID;
@@ -2143,6 +2228,8 @@ module ot_a3_engine_issue_bridge #(
                 rope_coefficient_base_q <= 32'd0;
                 matmul_weight_base_q <= 32'd0;
                 op_aux0 <= NO_ID;
+                op_aux1 <= NO_ID;
+                op_aux2 <= NO_ID;
                 launch_output_base_q <= 32'd0;
                 real_launch_count <= 32'd0;
                 dma_gather_launch_count <= 32'd0;
@@ -2225,7 +2312,8 @@ module ot_a3_engine_issue_bridge #(
                                      ((issue_sub == SELECTION_ARGMAX) ||
                                       (issue_sub == SELECTION_TOKEN_APPEND))) ||
                                     ((issue_family == FAMILY_ROUTE) &&
-                                     (issue_sub == ROUTE_WEIGHT_NORMALIZE)))))) begin
+                                     ((issue_sub == ROUTE_WEIGHT_NORMALIZE) ||
+                                      (issue_sub == ROUTE_WINDOW_INDEX))))))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
@@ -2276,6 +2364,10 @@ module ot_a3_engine_issue_bridge #(
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ROUTE) &&
                                     (issue_sub == ROUTE_WEIGHT_NORMALIZE);
+                                route_window_index_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_ROUTE) &&
+                                    (issue_sub == ROUTE_WINDOW_INDEX);
                                 observed_index_value <= 32'hffff_ffff;
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
@@ -2361,6 +2453,8 @@ module ot_a3_engine_issue_bridge #(
                                 op_input1 <= desc_data[767:736];
                                 op_output0 <= desc_data[863:832];
                                 op_aux0 <= desc_data[927:896];
+                                op_aux1 <= desc_data[959:928];
+                                op_aux2 <= desc_data[991:960];
                                 desc_req <= 1'b1;
                                 desc_id <= desc_data[735:704];
                                 state <= (rms_norm_q || matmul_q || rope_q)
@@ -2683,6 +2777,10 @@ module ot_a3_engine_issue_bridge #(
                                 //: reduction.elements for this operator.
                                 : route_weight_normalize_q
                                 ? (request_span * weight_normalize_slots)
+                                //: Every slot of every query row is written,
+                                //: padding included -- the engine's out_count.
+                                : route_window_index_q
+                                ? (request_span * window_index_slots)
                                 : 32'd1;
                             mapped_work_words <=
                                 vector_add_q
@@ -2696,6 +2794,10 @@ module ot_a3_engine_issue_bridge #(
                                 : dma_scatter_q ? request_span
                                 : route_weight_normalize_q
                                 ? (request_span * weight_normalize_slots)
+                                //: The engine counts CANDIDATES -- the real KV
+                                //: rows it selected, padding excluded -- which
+                                //: is not the same as the words it wrote.
+                                : route_window_index_q ? widx_candidates
                                 : 32'd1;
                             state <= S_START;
                         end
@@ -3046,6 +3148,17 @@ module ot_a3_engine_issue_bridge #(
             gqa_mem_rsp_valid <= gqa_mem_req_valid & attention_gqa_q;
     end
 
+    wire widx_pos_rd_en;
+    wire [31:0] widx_pos_rd_addr;
+    wire widx_out_we;
+    wire [31:0] widx_out_addr;
+    wire [31:0] widx_out_data;
+    wire widx_busy;
+    wire widx_done;
+    wire [7:0] widx_error_code;
+    wire [31:0] widx_out_count;
+    wire [31:0] widx_candidates;
+
     wire norm_wgt_rd_en;
     wire [31:0] norm_wgt_rd_addr;
     wire norm_out_we;
@@ -3076,30 +3189,35 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_done
         : selection_token_append_q ? append_done
         : route_weight_normalize_q ? norm_done
+        : route_window_index_q ? widx_done
         : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
         : rms_norm_q ? rms_busy
         : vector_silu_mul_q ? silu_busy
         : selection_token_append_q ? append_busy
         : route_weight_normalize_q ? norm_busy
+        : route_window_index_q ? widx_busy
         : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
         : rms_norm_q ? rms_error_code
         : vector_silu_mul_q ? silu_error_code
         : selection_token_append_q ? append_error_code
         : route_weight_normalize_q ? norm_error_code
+        : route_window_index_q ? widx_error_code
         : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
         : rms_norm_q ? rms_result_count
         : vector_silu_mul_q ? silu_result_count
         : selection_token_append_q ? append_result_count
         : route_weight_normalize_q ? norm_result_count
+        : route_window_index_q ? widx_out_count
         : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
         : rms_norm_q ? rms_work_count
         : vector_silu_mul_q ? silu_work_count
         : selection_token_append_q ? append_work_count
         : route_weight_normalize_q ? norm_result_count
+        : route_window_index_q ? widx_candidates
         : attention_gqa_q ? gqa_work_count : array_work_count;
     //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
     //: correct 16-row launch used to come back as TRAP_ENGINE.
@@ -3155,6 +3273,7 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_a_rd_en
         : selection_token_append_q ? append_a_rd_en
         : route_weight_normalize_q ? norm_wgt_rd_en
+        : route_window_index_q ? widx_pos_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
     assign m0_rd_addr = bridge_index_read ? bridge_index_addr
         : rope_q ? rope_input_rd_addr
@@ -3162,18 +3281,19 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_a_rd_addr
         : selection_token_append_q ? append_a_rd_addr
         : route_weight_normalize_q ? norm_wgt_rd_addr
+        : route_window_index_q ? widx_pos_rd_addr
         : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
         : rms_norm_q ? rms_weight_rd_en
         : vector_silu_mul_q ? silu_b_rd_en
         : (selection_token_append_q || attention_gqa_q ||
-           route_weight_normalize_q) ? 1'b0
+           route_weight_normalize_q || route_window_index_q) ? 1'b0
         : array_m1_rd_en;
     assign m1_rd_addr = rope_q ? rope_coefficient_rd_addr
         : rms_norm_q ? rms_weight_rd_addr
         : vector_silu_mul_q ? silu_b_rd_addr
         : (selection_token_append_q || attention_gqa_q ||
-           route_weight_normalize_q) ? 32'd0
+           route_weight_normalize_q || route_window_index_q) ? 32'd0
         : array_m1_rd_addr;
     assign m2_rd_en = (rms_norm_q || rope_q || mapped_family_q)
         ? 1'b0 : array_m2_rd_en;
@@ -3188,18 +3308,21 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_out_we
         : selection_token_append_q ? append_out_we
         : route_weight_normalize_q ? norm_out_we
+        : route_window_index_q ? widx_out_we
         : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
         : rms_norm_q ? rms_out_addr
         : vector_silu_mul_q ? silu_out_addr
         : selection_token_append_q ? append_out_addr
         : route_weight_normalize_q ? norm_out_addr
+        : route_window_index_q ? widx_out_addr
         : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
         : rms_norm_q ? rms_out_data
         : vector_silu_mul_q ? silu_out_data
         : selection_token_append_q ? append_out_data
         : route_weight_normalize_q ? norm_out_data
+        : route_window_index_q ? widx_out_data
         : attention_gqa_q ? gqa_out_data : array_out_data;
     // The bridge's own index read and the scatter's index read address the
     // index bank; every other mapped operand and result is a plane of the
@@ -3208,7 +3331,7 @@ module ot_a3_engine_issue_bridge #(
         : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q ||
-           route_weight_normalize_q);
+           route_weight_normalize_q || route_window_index_q);
     wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
                         (issue_sub_q == DMA_GATHER);
     assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
@@ -3515,12 +3638,47 @@ module ot_a3_engine_issue_bridge #(
         .saturation_count(norm_saturation_count)
     );
 
+    //: ROUTE.WINDOW_INDEX. The context comes from the device's own
+    //: cfg_context_length rather than by resolving aux_id_2's symbol: this
+    //: bridge has no symbol file, the shape check already refuses full
+    //: visibility unless aux_id_2 is bound, and CONTRACT_WINDOW_INDEX_RAW pins
+    //: the operator whose context that symbol names. A bridge that grows symbol
+    //: access should read it there instead and drop this note.
+    ot_a3_route_window_index window_index (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & route_window_index_q),
+        .cfg_span(request_span),
+        .cfg_slots(window_index_slots),
+        .cfg_window(window_index_window),
+        .cfg_mask_full(window_index_mask_full),
+        .cfg_context(cfg_context_length),
+        //: Prefill: the output is absolute KV rows. A decode step's circular
+        //: window is a different addressing mode and no shipped operator
+        //: declares it, so it is not offered here rather than guessed.
+        .cfg_decode(1'b0),
+        .cfg_pos_base(mapped_left_base),
+        .cfg_out_base(mapped_output_base),
+        .pos_rd_en(widx_pos_rd_en),
+        .pos_rd_addr(widx_pos_rd_addr),
+        .pos_rd_data(m0_rd_data),
+        .out_we(widx_out_we),
+        .out_addr(widx_out_addr),
+        .out_data(widx_out_data),
+        .busy(widx_busy),
+        .done(widx_done),
+        .error_code(widx_error_code),
+        .out_count(widx_out_count),
+        .candidates(widx_candidates)
+    );
+
     ot_a3_engine_array engines (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & !rms_norm_q & !rope_q &
                !vector_silu_mul_q & !attention_gqa_q &
-               !selection_token_append_q & !route_weight_normalize_q),
+               !selection_token_append_q & !route_weight_normalize_q &
+               !route_window_index_q),
         .cfg_family(matmul_q ? FAMILY_TENSOR
                   : vector_add_q ? FAMILY_VECTOR
                   : selection_argmax_q ? FAMILY_SELECTION

@@ -68,6 +68,8 @@ BRIDGE_SOURCES = (
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_mac_lane.sv",
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
     "rtl/abi3/ot_a3_vector_add.sv",
@@ -88,6 +90,7 @@ BRIDGE_SOURCES = (
     "rtl/abi3/ot_a3_selection_token_append.sv",
     "rtl/proto/ot_fp32_add_rne_pipe.sv",
     "rtl/abi3/ot_a3_route_weight_normalize.sv",
+    "rtl/abi3/ot_a3_route_window_index.sv",
     "rtl/abi3/ot_a3_place_table.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
@@ -104,6 +107,7 @@ APPEND_SOURCES = (
     "rtl/abi3/ot_a3_selection_token_append.sv",
     "rtl/proto/ot_fp32_add_rne_pipe.sv",
     "rtl/abi3/ot_a3_route_weight_normalize.sv",
+    "rtl/abi3/ot_a3_route_window_index.sv",
 )
 BENCHES = (
     {
