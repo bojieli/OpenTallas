@@ -174,6 +174,11 @@ module ot_a3_engine_issue_bridge #(
     //: The shipped gate selects 6 of 256 (V4.1: 6 of 384).
     parameter integer BIASED_TOPK_MAX_K = 8,
 
+    //: REDUCTION.EXPERT_SUM's expert count, bounded by this bridge's FOUR
+    //: operand read ports rather than by the engine, which is parameterised
+    //: wider. Raising it requires a wider operand surface, not a bigger number.
+    parameter integer EXPERT_SUM_MAX_EXPERTS = 4,
+
     //: IS THE INDEX OPERAND OF A GATHER OR AN EMBED LOOKUP ADDRESSED BY ITS OWN
     //: VIEW?
     //:
@@ -500,6 +505,8 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] ROUTE_WEIGHT_NORMALIZE = 8'h02;
     localparam [7:0] ROUTE_WINDOW_INDEX = 8'h06;
     localparam [7:0] ROUTE_BIASED_TOPK = 8'h01;
+    localparam [7:0] FAMILY_REDUCTION = 8'h60;
+    localparam [7:0] REDUCTION_EXPERT_SUM = 8'h05;
     localparam [7:0] DMA_SCATTER = 8'h03;
     localparam [7:0] VECTOR_ADD = 8'h03;
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
@@ -563,6 +570,12 @@ module ot_a3_engine_issue_bridge #(
     //: The contract every shipped ROUTE.BIASED_TOPK carries.
     localparam [255:0] CONTRACT_BIASED_TOPK_RAW =
         256'h01377eb4aa1a4fe0d58f7b60e68b8a5a769537f50a1e1fc25918f743163479b5;
+    //: The contract every shipped REDUCTION.EXPERT_SUM carries. It declares
+    //: PAIRWISE_TREE, which ot_a3_reduction_expert_sum is BY CONSTRUCTION -- it
+    //: has no order port -- so the digest is what makes that agreement checked
+    //: rather than assumed.
+    localparam [255:0] CONTRACT_EXPERT_SUM_RAW =
+        256'h202e8be635a9cf690f3d81f322698168c72912faf735bd5b76fd29fd462cd586;
     // bf16_byte_preserving_state_v1
     localparam [255:0] CONTRACT_KV_SCATTER_RAW =
         256'h6fe100be19c00c87797983af8409335999bfd793cdcf3862af5ba6bdcc9bf355;
@@ -995,11 +1008,13 @@ module ot_a3_engine_issue_bridge #(
     reg        route_weight_normalize_q;
     reg        route_window_index_q;
     reg        route_biased_topk_q;
+    reg        reduction_expert_sum_q;
     wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
                                  dma_scatter_q | attention_gqa_q |
                                  selection_argmax_q | selection_token_append_q |
                                  route_weight_normalize_q |
-                                 route_window_index_q | route_biased_topk_q;
+                                 route_window_index_q | route_biased_topk_q |
+                                 reduction_expert_sum_q;
 
     // Per-slot capture of every bound TENSOR_VIEW record, filled by the shared
     // admission walk in slot order.  Flat arrays rather than a packed struct:
@@ -1175,9 +1190,15 @@ module ot_a3_engine_issue_bridge #(
     //                        of one embedding row, and its slot-0 extent is not
     //                        a sequence span.  Admitting a span here would have
     //                        scaled counts the staged region cannot supply.
+    //:   REDUCTION.EXPERT_SUM  its slot-0 extent is the EXPERT COUNT and its
+    //:                        output is one row of the view's width, so slot 0
+    //:                        is not a sequence axis either. Like ARGMAX, its
+    //:                        own predicate compares slot 0 against the expert
+    //:                        count and never consults ``span_admitted``.
     wire span_is_one_by_construction = selection_argmax_q ||
                                       selection_token_append_q ||
-                                      dma_transfer_q;
+                                      dma_transfer_q ||
+                                      reduction_expert_sum_q;
     wire [31:0] slot0_extent = captured_extent[0];
     //: The largest slot-0 extent this family may present.  Explicitly bounded,
     //: not arithmetic: ``<= span_limit`` cannot wrap the way a subtraction can.
@@ -1920,6 +1941,55 @@ module ot_a3_engine_issue_bridge #(
         //: k is the declared one AND the allocated one, or it is refused.
         (biased_topk_k == biased_topk_slots);
 
+    //: REDUCTION.EXPERT_SUM: [experts, width] BF16 contributions, an [experts]
+    //: FP32 routing-weight vector, and one [width] BF16 row out. Slot 0's axis
+    //: is the EXPERT axis, so span_admitted is not consulted -- the extent is
+    //: compared against the expert count here, exactly as argmax compares slot 0
+    //: against its vocabulary.
+    //:
+    //: THE EXPERT COUNT IS BOUNDED BY THE BRIDGE'S OPERAND PORTS, not by the
+    //: engine. ot_a3_reduction_expert_sum reads one bank per term -- val_rd_en
+    //: is [EXPERTS-1:0] -- and this bridge has four (m0..m3). Four experts fit
+    //: exactly and a fifth has nowhere to read from, so a wider operator is
+    //: REFUSED rather than silently reading one expert's row twice. Every
+    //: shipped V4-Flash instance is 4; V4.1's wafer program has instances at 6,
+    //: and those need a wider operand surface before they can be admitted.
+    wire [31:0] expert_sum_experts = slot_dim0[0];
+    wire [31:0] expert_sum_width = slot_dim1[0];
+    wire expert_sum_shape_ok =
+        (slot_dtype[0] == FMT_BF16) && (slot_rank[0] == 8'd2) &&
+        (slot_terms[0] == 8'd0) &&
+        (expert_sum_experts != 32'd0) &&
+        (expert_sum_experts <= EXPERT_SUM_MAX_EXPERTS) &&
+        (expert_sum_width != 32'd0) &&
+        (slot_dim2[0] == 32'd0) && (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == expert_sum_width) &&
+        (slot_stride1[0] == 32'd1) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd2) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == expert_sum_experts) &&
+        slot_offset_consistent(0) &&
+        //: One FP32 routing weight per expert.
+        (slot_dtype[1] == FMT_FP32) && (slot_rank[1] == 8'd1) &&
+        (slot_dim0[1] == expert_sum_experts) &&
+        (slot_dim1[1] == 32'd0) && (slot_dim2[1] == 32'd0) &&
+        (slot_tail_dims[1] == 32'd0) &&
+        (slot_stride0[1] == 32'd1) && (slot_stride1[1] == 32'd0) &&
+        (slot_stride2[1] == 32'd0) && (slot_tail_strides[1] == 32'd0) &&
+        (captured_rank[1] == 8'd1) && (captured_axis[1] == 8'd0) &&
+        (captured_extent[1] == expert_sum_experts) &&
+        slot_offset_consistent(1) &&
+        //: ONE row out, of the contributions' own width.
+        (slot_dtype[4] == FMT_BF16) && (slot_rank[4] == 8'd1) &&
+        (slot_dim0[4] == expert_sum_width) &&
+        (slot_dim1[4] == 32'd0) && (slot_dim2[4] == 32'd0) &&
+        (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == 32'd1) && (slot_stride1[4] == 32'd0) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd1) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == expert_sum_width) &&
+        slot_offset_consistent(4);
+
     wire mapped_shape_ok =
         (vector_add_q || vector_silu_mul_q) ? elementwise_shape_ok
       : selection_argmax_q ? argmax_shape_ok
@@ -1927,6 +1997,7 @@ module ot_a3_engine_issue_bridge #(
       : route_weight_normalize_q ? weight_normalize_shape_ok
       : route_window_index_q ? window_index_shape_ok
       : route_biased_topk_q ? biased_topk_shape_ok
+      : reduction_expert_sum_q ? expert_sum_shape_ok
       : dma_scatter_q ? scatter_shape_ok
       : gqa_shape_ok;
 
@@ -2000,6 +2071,15 @@ module ot_a3_engine_issue_bridge #(
           (numeric_output_dtype == FMT_U32) &&
           (desc_data[639:608] == 32'd0) &&
           (desc_data[1023:768] == CONTRACT_BIASED_TOPK_RAW)) ||
+         (reduction_expert_sum_q &&
+          (numeric_input_dtype == FMT_BF16) &&
+          //: The routing weights are FP32 while the contributions are BF16,
+          //: which is why the weighting needed a real binary32 multiplier.
+          (numeric_second_dtype == FMT_FP32) &&
+          (numeric_accumulator_dtype == FMT_FP32) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_EXPERT_SUM_RAW)) ||
          (dma_scatter_q &&
           (((numeric_input_dtype == FMT_BF16) &&
             (numeric_second_dtype == FMT_U32)) ||
@@ -2053,7 +2133,8 @@ module ot_a3_engine_issue_bridge #(
     wire mapped_second_output_allowed = route_biased_topk_q;
 
     wire mapped_operator_arity_ok =
-        ((vector_add_q || vector_silu_mul_q || dma_scatter_q) &&
+        ((vector_add_q || vector_silu_mul_q || dma_scatter_q ||
+          reduction_expert_sum_q) &&
          (desc_data[767:736] != NO_ID) &&
          (desc_data[799:768] == NO_ID) &&
          (desc_data[831:800] == NO_ID) &&
@@ -2195,6 +2276,7 @@ module ot_a3_engine_issue_bridge #(
             route_weight_normalize_q <= 1'b0;
             route_window_index_q <= 1'b0;
             route_biased_topk_q <= 1'b0;
+            reduction_expert_sum_q <= 1'b0;
             slot_bound <= 6'd0;
             slot_cursor <= 3'd0;
             op_input2 <= NO_ID;
@@ -2308,6 +2390,7 @@ module ot_a3_engine_issue_bridge #(
                 route_weight_normalize_q <= 1'b0;
                 route_window_index_q <= 1'b0;
                 route_biased_topk_q <= 1'b0;
+                reduction_expert_sum_q <= 1'b0;
                 slot_bound <= 6'd0;
                 slot_cursor <= 3'd0;
                 op_input2 <= NO_ID;
@@ -2422,7 +2505,9 @@ module ot_a3_engine_issue_bridge #(
                                     ((issue_family == FAMILY_ROUTE) &&
                                      ((issue_sub == ROUTE_WEIGHT_NORMALIZE) ||
                                       (issue_sub == ROUTE_WINDOW_INDEX) ||
-                                      (issue_sub == ROUTE_BIASED_TOPK))))))) begin
+                                      (issue_sub == ROUTE_BIASED_TOPK))) ||
+                                    ((issue_family == FAMILY_REDUCTION) &&
+                                     (issue_sub == REDUCTION_EXPERT_SUM)))))) begin
                                 // No speculative launch and no shape guess.
                                 response_fault <= 1'b1;
                                 response_trap <= TRAP_CAPABILITY;
@@ -2481,6 +2566,10 @@ module ot_a3_engine_issue_bridge #(
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ROUTE) &&
                                     (issue_sub == ROUTE_BIASED_TOPK);
+                                reduction_expert_sum_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_REDUCTION) &&
+                                    (issue_sub == REDUCTION_EXPERT_SUM);
                                 observed_index_value <= 32'hffff_ffff;
                                 desc_req <= 1'b1;
                                 desc_id <= issue_descriptor_id;
@@ -2899,6 +2988,9 @@ module ot_a3_engine_issue_bridge #(
                                 //: here would refuse a correct launch.
                                 : route_biased_topk_q
                                 ? (request_span * biased_topk_slots)
+                                //: One row of the view's width. request_span is
+                                //: one by construction for this family.
+                                : reduction_expert_sum_q ? expert_sum_width
                                 : 32'd1;
                             mapped_work_words <=
                                 vector_add_q
@@ -2919,6 +3011,7 @@ module ot_a3_engine_issue_bridge #(
                                 //: Every expert is ranked, not just the winners.
                                 : route_biased_topk_q
                                 ? (request_span * biased_topk_experts)
+                                : reduction_expert_sum_q ? expert_sum_width
                                 : 32'd1;
                             state <= S_START;
                         end
@@ -3269,6 +3362,29 @@ module ot_a3_engine_issue_bridge #(
             gqa_mem_rsp_valid <= gqa_mem_req_valid & attention_gqa_q;
     end
 
+    wire [EXPERT_SUM_MAX_EXPERTS-1:0]    esum_val_rd_en;
+    wire [EXPERT_SUM_MAX_EXPERTS*32-1:0] esum_val_rd_addr;
+    wire esum_wgt_rd_en;
+    wire [31:0] esum_wgt_rd_addr;
+    wire esum_base_rd_en;
+    wire [31:0] esum_base_rd_addr;
+    wire esum_out_we;
+    wire [31:0] esum_out_addr;
+    wire [31:0] esum_out_data;
+    wire esum_busy;
+    wire esum_done;
+    wire [7:0] esum_error_code;
+    wire [31:0] esum_out_count;
+    wire [31:0] esum_saturation_count;
+    //: THE WEIGHT READ AND THE VALUE WALK DO NOT OVERLAP IN TIME.  The engine
+    //: asserts wgt_rd_en only in S_WEIGHT and val_rd_en only in S_WALK, so m0
+    //: carries the weight vector first and expert 0's row afterwards. That is
+    //: what lets a four-expert reduction fit four ports when it nominally wants
+    //: five; the engine's own testbench fails on any cycle where both fire.
+    wire esum_m0_rd_en = esum_wgt_rd_en | esum_val_rd_en[0];
+    wire [31:0] esum_m0_rd_addr =
+        esum_wgt_rd_en ? esum_wgt_rd_addr : esum_val_rd_addr[31:0];
+
     wire btk_score_rd_en;
     wire [31:0] btk_score_rd_addr;
     wire btk_bias_rd_en;
@@ -3335,6 +3451,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_done
         : route_window_index_q ? widx_done
         : route_biased_topk_q ? btk_done
+        : reduction_expert_sum_q ? esum_done
         : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
         : rms_norm_q ? rms_busy
@@ -3343,6 +3460,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_busy
         : route_window_index_q ? widx_busy
         : route_biased_topk_q ? btk_busy
+        : reduction_expert_sum_q ? esum_busy
         : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
         : rms_norm_q ? rms_error_code
@@ -3351,6 +3469,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_error_code
         : route_window_index_q ? widx_error_code
         : route_biased_topk_q ? btk_error_code
+        : reduction_expert_sum_q ? esum_error_code
         : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
         : rms_norm_q ? rms_result_count
@@ -3359,6 +3478,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_result_count
         : route_window_index_q ? widx_out_count
         : route_biased_topk_q ? btk_selected
+        : reduction_expert_sum_q ? esum_out_count
         : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
         : rms_norm_q ? rms_work_count
@@ -3367,6 +3487,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_result_count
         : route_window_index_q ? widx_candidates
         : route_biased_topk_q ? btk_candidates
+        : reduction_expert_sum_q ? esum_out_count
         : attention_gqa_q ? gqa_work_count : array_work_count;
     //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
     //: correct 16-row launch used to come back as TRAP_ENGINE.
@@ -3424,6 +3545,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_wgt_rd_en
         : route_window_index_q ? widx_pos_rd_en
         : route_biased_topk_q ? btk_score_rd_en
+        : reduction_expert_sum_q ? esum_m0_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
     assign m0_rd_addr = bridge_index_read ? bridge_index_addr
         : rope_q ? rope_input_rd_addr
@@ -3433,11 +3555,13 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_wgt_rd_addr
         : route_window_index_q ? widx_pos_rd_addr
         : route_biased_topk_q ? btk_score_rd_addr
+        : reduction_expert_sum_q ? esum_m0_rd_addr
         : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
         : rms_norm_q ? rms_weight_rd_en
         : vector_silu_mul_q ? silu_b_rd_en
         : route_biased_topk_q ? btk_bias_rd_en
+        : reduction_expert_sum_q ? esum_val_rd_en[1]
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 1'b0
         : array_m1_rd_en;
@@ -3445,17 +3569,21 @@ module ot_a3_engine_issue_bridge #(
         : rms_norm_q ? rms_weight_rd_addr
         : vector_silu_mul_q ? silu_b_rd_addr
         : route_biased_topk_q ? btk_bias_rd_addr
+        : reduction_expert_sum_q ? esum_val_rd_addr[63:32]
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 32'd0
         : array_m1_rd_addr;
-    assign m2_rd_en = (rms_norm_q || rope_q || mapped_family_q)
-        ? 1'b0 : array_m2_rd_en;
-    assign m2_rd_addr = (rms_norm_q || rope_q || mapped_family_q)
-        ? 32'd0 : array_m2_rd_addr;
-    assign m3_rd_en = (rms_norm_q || rope_q || mapped_family_q)
-        ? 1'b0 : array_m3_rd_en;
-    assign m3_rd_addr = (rms_norm_q || rope_q || mapped_family_q)
-        ? 32'd0 : array_m3_rd_addr;
+    //: m2 and m3 exist for EXPERT_SUM's third and fourth expert rows. Every
+    //: other mapped family still leaves them idle, which is what they did
+    //: before -- the condition is narrowed, not inverted.
+    assign m2_rd_en = reduction_expert_sum_q ? esum_val_rd_en[2]
+        : (rms_norm_q || rope_q || mapped_family_q) ? 1'b0 : array_m2_rd_en;
+    assign m2_rd_addr = reduction_expert_sum_q ? esum_val_rd_addr[95:64]
+        : (rms_norm_q || rope_q || mapped_family_q) ? 32'd0 : array_m2_rd_addr;
+    assign m3_rd_en = reduction_expert_sum_q ? esum_val_rd_en[3]
+        : (rms_norm_q || rope_q || mapped_family_q) ? 1'b0 : array_m3_rd_en;
+    assign m3_rd_addr = reduction_expert_sum_q ? esum_val_rd_addr[127:96]
+        : (rms_norm_q || rope_q || mapped_family_q) ? 32'd0 : array_m3_rd_addr;
     assign out_we = rope_q ? rope_out_we
         : rms_norm_q ? rms_out_we
         : vector_silu_mul_q ? silu_out_we
@@ -3463,6 +3591,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_out_we
         : route_window_index_q ? widx_out_we
         : route_biased_topk_q ? btk_out_we
+        : reduction_expert_sum_q ? esum_out_we
         : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
         : rms_norm_q ? rms_out_addr
@@ -3471,6 +3600,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_out_addr
         : route_window_index_q ? widx_out_addr
         : route_biased_topk_q ? btk_out_addr
+        : reduction_expert_sum_q ? esum_out_addr
         : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
         : rms_norm_q ? rms_out_data
@@ -3479,6 +3609,7 @@ module ot_a3_engine_issue_bridge #(
         : route_weight_normalize_q ? norm_out_data
         : route_window_index_q ? widx_out_data
         : route_biased_topk_q ? btk_out_data
+        : reduction_expert_sum_q ? esum_out_data
         : attention_gqa_q ? gqa_out_data : array_out_data;
     // The bridge's own index read and the scatter's index read address the
     // index bank; every other mapped operand and result is a plane of the
@@ -3488,11 +3619,12 @@ module ot_a3_engine_issue_bridge #(
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q ||
-           route_biased_topk_q);
+           route_biased_topk_q || reduction_expert_sum_q);
     wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
                         (issue_sub_q == DMA_GATHER);
     assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
         vector_silu_mul_q || dma_scatter_q || route_biased_topk_q ||
+        reduction_expert_sum_q ||
         ((GATHER_PLACEMENT_ADDRESSED != 0) && dma_gather_q);
     assign m1_reads_matmul_weight = matmul_q;
 
@@ -3801,6 +3933,50 @@ module ot_a3_engine_issue_bridge #(
     //: visibility unless aux_id_2 is bound, and CONTRACT_WINDOW_INDEX_RAW pins
     //: the operator whose context that symbol names. A bridge that grows symbol
     //: access should read it there instead and drop this note.
+    //: REDUCTION.EXPERT_SUM. EXPERTS is the bridge's operand-port budget, and
+    //: expert_sum_shape_ok refuses any operator that declares more.
+    ot_a3_reduction_expert_sum #(
+        .EXPERTS(EXPERT_SUM_MAX_EXPERTS)
+    ) expert_sum (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & reduction_expert_sum_q),
+        .cfg_experts(expert_sum_experts[7:0]),
+        .cfg_count(expert_sum_width),
+        .cfg_in_base(mapped_left_base),
+        //: Elements between one expert's row and the next, which slot 0's
+        //: stride0 states and the shape check ties to the width.
+        .cfg_stride(expert_sum_width),
+        //: input_view_1 is bound in every shipped operator and the arity leg
+        //: requires it, so the routing weights are always present.
+        .cfg_has_weights(1'b1),
+        .cfg_weight_base(slot1_base),
+        //: input_view_2 is unbound in every shipped operator, so there is no
+        //: base leaf and no base row read -- which is also what frees m1..m3 to
+        //: carry experts 1 through 3.
+        .cfg_has_base(1'b0),
+        .cfg_base_base(32'd0),
+        .cfg_base_after_terms(1'b0),
+        .cfg_out_base(mapped_output_base),
+        .val_rd_en(esum_val_rd_en),
+        .val_rd_addr(esum_val_rd_addr),
+        .val_rd_data({m3_rd_data, m2_rd_data, m1_rd_data, m0_rd_data}),
+        .wgt_rd_en(esum_wgt_rd_en),
+        .wgt_rd_addr(esum_wgt_rd_addr),
+        .wgt_rd_data(m0_rd_data),
+        .base_rd_en(esum_base_rd_en),
+        .base_rd_addr(esum_base_rd_addr),
+        .base_rd_data(32'd0),
+        .out_we(esum_out_we),
+        .out_addr(esum_out_addr),
+        .out_data(esum_out_data),
+        .busy(esum_busy),
+        .done(esum_done),
+        .error_code(esum_error_code),
+        .out_count(esum_out_count),
+        .saturation_count(esum_saturation_count)
+    );
+
     //: ROUTE.BIASED_TOPK.
     ot_a3_route_biased_topk #(
         .MAX_K(BIASED_TOPK_MAX_K)
@@ -3879,7 +4055,8 @@ module ot_a3_engine_issue_bridge #(
         .start(engine_start & !rms_norm_q & !rope_q &
                !vector_silu_mul_q & !attention_gqa_q &
                !selection_token_append_q & !route_weight_normalize_q &
-               !route_window_index_q & !route_biased_topk_q),
+               !route_window_index_q & !route_biased_topk_q &
+               !reduction_expert_sum_q),
         .cfg_family(matmul_q ? FAMILY_TENSOR
                   : vector_add_q ? FAMILY_VECTOR
                   : selection_argmax_q ? FAMILY_SELECTION
@@ -4040,6 +4217,7 @@ module ot_a3_engine_issue_bridge #(
         silu_saturation_count, silu_activation_saturation_count,
         gqa_memory_read_count, gqa_exponential_count,
         gqa_value_multiply_count, gqa_saturation_count, gqa_failed,
-        norm_saturation_count,
+        norm_saturation_count, esum_saturation_count,
+        esum_base_rd_en, esum_base_rd_addr,
         slot_view_id[0], slot_terms[1], mapped_vocabulary};
 endmodule

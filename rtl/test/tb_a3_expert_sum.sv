@@ -23,6 +23,12 @@ module tb_a3_expert_sum;
     reg [31:0] got  [0:63];
 
     integer ncases, c, k, j, errors = 0, writes;
+    //: THE WEIGHT READ AND THE VALUE WALK MUST NOT OVERLAP.  A caller with a
+    //: fixed operand-port budget -- ot_a3_engine_issue_bridge has four -- can
+    //: only fit an N-expert reduction in N ports by giving the weight vector
+    //: the port expert 0 will use later. That is sound exactly while these two
+    //: never assert on the same cycle, so it is counted rather than assumed.
+    integer port_overlap = 0;
     integer experts, width, hw, hb, bat;
     integer fh, code;
     reg [1023:0] path;
@@ -55,6 +61,8 @@ module tb_a3_expert_sum;
                 val_rd_data[k*32 +: 32] <= vmem[lane_addr[10:0]];
             end
         if (wgt_rd_en)  wgt_rd_data  <= wmem[wgt_rd_addr[5:0]];
+        if (rst_n && wgt_rd_en && (val_rd_en != {EXPERTS{1'b0}}))
+            port_overlap = port_overlap + 1;
         if (base_rd_en) base_rd_data <= bmem[base_rd_addr[5:0]];
     end
     always @(posedge clk)
@@ -122,6 +130,16 @@ module tb_a3_expert_sum;
         wait (done); @(negedge clk);
         if (error_code === 8'd0) begin
             $display("FAIL zero stride accepted"); errors = errors + 1;
+        end
+
+        if (port_overlap != 0) begin
+
+            $display("FAIL wgt_rd_en overlapped val_rd_en on %0d cycles; a four-port caller would lose a read",
+
+                     port_overlap);
+
+            errors = errors + 1;
+
         end
 
         if (errors == 0)

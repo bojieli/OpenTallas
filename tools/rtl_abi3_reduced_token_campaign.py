@@ -111,6 +111,8 @@ VEHICLE_SOURCES: tuple[str, ...] = (
     "rtl/abi3/ot_a3_route_weight_normalize.sv",
     "rtl/abi3/ot_a3_route_window_index.sv",
     "rtl/abi3/ot_a3_route_biased_topk.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "rtl/abi3/ot_a3_reduction_expert_sum.sv",
     "rtl/abi3/ot_a3_place_table.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/test/a3_engine_completion_adapter.sv",
