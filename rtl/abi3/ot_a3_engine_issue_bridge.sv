@@ -2663,6 +2663,15 @@ module ot_a3_engine_issue_bridge #(
                                 ? (request_span * elementwise_width)
                                 : selection_argmax_q ? argmax_vocabulary
                                 : 32'd1;
+                            //: AN OPERATOR THAT WRITES MORE THAN ONE WORD MUST
+                            //: SAY SO HERE.  The fallthrough is 32'd1, and the
+                            //: bridge refuses an engine whose own counters
+                            //: disagree with this expectation -- so a new mapped
+                            //: family that omits its leg is admitted, runs
+                            //: correctly, and is then failed by its own bridge
+                            //: with TRAP_ENGINE. The prefix regression cannot
+                            //: catch it, because no Qwen3 program issues the
+                            //: operator whose leg is missing.
                             mapped_result_words <=
                                 (vector_add_q || vector_silu_mul_q)
                                 ? (request_span * elementwise_width)
@@ -2670,6 +2679,10 @@ module ot_a3_engine_issue_bridge #(
                                 ? (request_span * KV_PLANE_WORDS)
                                 : attention_gqa_q
                                 ? (request_span * GQA_OUTPUT_WORDS)
+                                //: groups x slots, which is the reference's own
+                                //: reduction.elements for this operator.
+                                : route_weight_normalize_q
+                                ? (request_span * weight_normalize_slots)
                                 : 32'd1;
                             mapped_work_words <=
                                 vector_add_q
@@ -2681,6 +2694,8 @@ module ot_a3_engine_issue_bridge #(
                                 ? (request_span * cfg_context_length *
                                    QUERY_HEADS * HEAD_WIDTH)
                                 : dma_scatter_q ? request_span
+                                : route_weight_normalize_q
+                                ? (request_span * weight_normalize_slots)
                                 : 32'd1;
                             state <= S_START;
                         end
