@@ -32,6 +32,12 @@ module tb_a3_route_biased_topk;
     reg [31:0] gid  [0:255];
     reg [31:0] gwgt [0:255];
     integer j, errors = 0, idw, wgw, reorder_seen = 0;
+    //: THE TWO WRITE PORTS MUST NEVER FIRE TOGETHER.  That is the whole reason
+    //: the engine emits in two passes: the issue bridge has ONE result write
+    //: port, so a caller muxing id_we and wgt_we onto it would silently drop one
+    //: of the two if they ever coincided. Counted over every case and every
+    //: refusal, not asserted per case.
+    integer collisions = 0;
     integer ncases, c, groups, experts, topk, hasb, bcast, wfp32, ofp32;
     integer fh, code; reg [1023:0] name, path;
 
@@ -62,6 +68,7 @@ module tb_a3_route_biased_topk;
     always @(posedge clk) if (bias_rd_en)  bias_rd_data  <= bmem[bias_rd_addr[7:0]];
     always @(posedge clk) if (id_we)  begin gid[id_addr[7:0]]   <= id_data;  idw = idw + 1; end
     always @(posedge clk) if (wgt_we) begin gwgt[wgt_addr[7:0]] <= wgt_data; wgw = wgw + 1; end
+    always @(posedge clk) if (rst_n && id_we && wgt_we) collisions = collisions + 1;
 
     task go; begin
         idw = 0; wgw = 0;
@@ -128,6 +135,12 @@ module tb_a3_route_biased_topk;
                      name, groups, experts, topk, ofp32, idw, candidates);
         end
         $fclose(fh);
+
+        if (collisions != 0) begin
+            $display("FAIL id_we and wgt_we fired together on %0d cycles; a one-port caller would lose writes",
+                     collisions);
+            errors = errors + 1;
+        end
 
         //: The suite must contain the case that makes the unbiased-weight rule
         //: non-vacuous, or every check above passes on a biased-weight engine.

@@ -1963,7 +1963,19 @@ module ot_a3_engine_issue_bridge #(
         (desc_data[223:192] == desc_data[671:640]) &&
         (desc_data[735:704] != NO_ID) &&
         (desc_data[863:832] != NO_ID) &&
-        (desc_data[895:864] == NO_ID);
+        //: A SECOND OUTPUT VIEW IS NO LONGER FORBIDDEN OUTRIGHT.  This was
+        //: ``== NO_ID`` for every mapped family, which refused ROUTE.BIASED_TOPK
+        //: and ROUTE.EXPERT_DISPATCH on their frame before any predicate of
+        //: theirs ran. Whether it may be bound is now a per-family question,
+        //: answered by mapped_operator_arity_ok's own legs -- which still
+        //: require it UNBOUND for all seven families that do not declare one, so
+        //: nothing is weakened for them.
+        (mapped_second_output_allowed || (desc_data[895:864] == NO_ID));
+    //: Which families may bind output_view_1. Deliberately an explicit list and
+    //: not a default: an operator that gains a second output without saying so
+    //: here is refused, which is the direction a mistake should fall.
+    wire mapped_second_output_allowed = 1'b0;
+
     wire mapped_operator_arity_ok =
         ((vector_add_q || vector_silu_mul_q || dma_scatter_q) &&
          (desc_data[767:736] != NO_ID) &&
@@ -2013,11 +2025,18 @@ module ot_a3_engine_issue_bridge #(
     wire [32:0] slot2_map = {slot_place_found[2], slot_place_base[2]};
     wire [32:0] slot3_map = {slot_place_found[3], slot_place_base[3]};
     wire [32:0] slot4_map = {slot_place_found[4], slot_place_base[4]};
+    //: SLOT 5 IS output_view_1, and its placement was already being looked up --
+    //: slot_place_base and slot_place_found are both [0:5] and the admission walk
+    //: fills every bound slot -- it simply had no name here, because no admitted
+    //: operator bound a second output. ROUTE.BIASED_TOPK and
+    //: ROUTE.EXPERT_DISPATCH both do.
+    wire [32:0] slot5_map = {slot_place_found[5], slot_place_base[5]};
     wire mapped_bases_found =
         slot0_map[32] && slot4_map[32] &&
         (!expected_slot_mask[1] || slot1_map[32]) &&
         (!expected_slot_mask[2] || slot2_map[32]) &&
-        (!expected_slot_mask[3] || slot3_map[32]);
+        (!expected_slot_mask[3] || slot3_map[32]) &&
+        (!expected_slot_mask[5] || slot5_map[32]);
     wire [31:0] kv_plane_span = cfg_kv_plane_rows * KV_PLANE_WORDS;
     wire [31:0] slot0_base = slot0_map[31:0] + captured_offset[0][31:0];
     wire [31:0] slot1_base = slot1_map[31:0] + captured_offset[1][31:0];
@@ -2038,6 +2057,7 @@ module ot_a3_engine_issue_bridge #(
         ? (slot4_map[31:0] + slot4_dynamic_offset +
            (scatter_plane_is_value ? kv_plane_span : 32'd0))
         : (slot4_map[31:0] + captured_offset[4][31:0]);
+    wire [31:0] slot5_base = slot5_map[31:0] + captured_offset[5][31:0];
     wire [31:0] mapped_index_slot_base =
         attention_gqa_q ? slot3_base : slot0_base;
 

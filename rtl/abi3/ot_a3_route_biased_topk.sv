@@ -110,6 +110,12 @@ module ot_a3_route_biased_topk #(
     reg [31:0] grp;
     reg [31:0] expert;
     reg [31:0] emit_slot;
+    //: TWO EMIT PASSES, so the two write ports never fire in the same cycle.
+    //: The engine's natural shape is to write an id and its weight together, and
+    //: the issue bridge has ONE result write port -- so a caller with one port
+    //: can mux the two, and a caller with two loses nothing by the ordering.
+    //: Pass 0 writes the U32 ids, pass 1 the unbiased weights.
+    reg        emit_pass;
     reg [31:0] score_row;     //: advanced by experts, never grp*experts
     reg [31:0] bias_row;      //: held at 0 while the bias broadcasts
     reg [31:0] id_row;        //: advanced by topk
@@ -266,6 +272,7 @@ module ot_a3_route_biased_topk #(
         if (!rst_n) begin
             state <= S_IDLE;
             grp <= 32'd0; expert <= 32'd0; emit_slot <= 32'd0;
+            emit_pass <= 1'b0;
             score_row <= 32'd0; bias_row <= 32'd0; id_row <= 32'd0;
             drain <= 32'd0; fault_nonfinite <= 1'b0; rd_id <= 32'd0;
             score_rd_en <= 1'b0; score_rd_addr <= 32'd0;
@@ -353,6 +360,7 @@ module ot_a3_route_biased_topk #(
                             busy <= 1'b0; done <= 1'b1; state <= S_DONE;
                         end else begin
                             emit_slot <= 32'd0;
+                            emit_pass <= 1'b0;
                             state <= S_EMIT;
                         end
                     end else begin
@@ -360,20 +368,28 @@ module ot_a3_route_biased_topk #(
                     end
                 end
                 S_EMIT: begin
-                    id_we <= 1'b1;
-                    id_addr <= cfg_id_out_base + id_row + emit_slot;
-                    id_data <= top_id[emit_slot[2:0]];
-                    selected_experts <= selected_experts + 32'd1;
-                    if (cfg_has_weight_out) begin
+                    if (!emit_pass) begin
+                        id_we <= 1'b1;
+                        id_addr <= cfg_id_out_base + id_row + emit_slot;
+                        id_data <= top_id[emit_slot[2:0]];
+                        selected_experts <= selected_experts + 32'd1;
+                    end else begin
                         wgt_we <= 1'b1;
                         wgt_addr <= cfg_weight_out_base + id_row + emit_slot;
                         //: The UNBIASED score, which is the contract's point.
                         wgt_data <= emit_weight;
                     end
-                    if (emit_slot + 32'd1 >= cfg_topk)
-                        state <= S_NEXT;
-                    else
+                    if (emit_slot + 32'd1 >= cfg_topk) begin
+                        emit_slot <= 32'd0;
+                        //: The weight pass runs only when a weight view is
+                        //: bound; the reference makes output_view_1 optional.
+                        if (!emit_pass && cfg_has_weight_out)
+                            emit_pass <= 1'b1;
+                        else
+                            state <= S_NEXT;
+                    end else begin
                         emit_slot <= emit_slot + 32'd1;
+                    end
                 end
                 S_NEXT: begin
                     if (grp + 32'd1 >= cfg_groups) begin
