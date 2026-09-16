@@ -869,8 +869,10 @@
       "max_slew_violations": 0
     },
     "source_currency": {
-      "all_current": true,
-      "drifted": [],
+      "all_current": false,
+      "drifted": [
+        "rtl/proto/ot_compute_unit.sv"
+      ],
       "files": [
         {
           "current": true,
@@ -885,8 +887,8 @@
           "recorded_sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724"
         },
         {
-          "current": true,
-          "current_sha256": "22de7d7922d430d204d2d8ea9606aaf126c8e225d4c53296fe27f30d5007d9ea",
+          "current": false,
+          "current_sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
           "path": "rtl/proto/ot_compute_unit.sv",
           "recorded_sha256": "22de7d7922d430d204d2d8ea9606aaf126c8e225d4c53296fe27f30d5007d9ea"
         }
@@ -1506,24 +1508,27 @@
     ]
   },
   "git": {
-    "any_input_dirty": true,
+    "any_input_dirty": false,
     "branch": "token-path-end-to-end",
-    "commit": "b24b4e303297826134b5816711448e040dba723b",
-    "dirty_input_paths": [
-      "results/derived/abi3_iso_area_three_level_audit.json"
-    ],
-    "dirty_path_count": 92,
-    "input_path_count": 22,
+    "commit": "58bb7d655b9480d599c539f8e949837dea60e235",
+    "dirty_input_paths": [],
+    "dirty_path_count": 86,
+    "input_path_count": 27,
     "input_paths": [
       "configs/hardware/technology.json",
       "configs/hardware/technology_inputs.json",
       "results/derived/abi3_iso_area_three_level_audit.json",
       "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
       "results/physical_abi3/asap7/compute_unit/pnr.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks1_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks2_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_lockstep_control_0p8.json",
       "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l32_0p8.json",
       "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l68_0p8.json",
       "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l68_1p2.json",
       "results/rtl/dispatch_tree_campaign.json",
+      "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "results/rtl/dispatch_tree_campaign_frontier_only.json",
       "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
       "rtl/abi3/ot_probe_cluster_disp.sv",
       "rtl/abi3/ot_probe_dispatch_tree.sv",
@@ -1555,7 +1560,16 @@
       "ratio_at_skew2_occupancy": 1.1243276112389553,
       "reading": "the headline holds only while every unit is fed every cycle. With one unit in sixteen at a 50% refill duty the same array at the same width and the same descriptor coarseness falls to 1.124x on occupancy and 1.006x on MAC-active work -- at or barely above parity with the A100. The band between those two numbers is the size of the operand-delivery problem, and it is not closed by anything in the control path.",
       "skew0_meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
-      "skew2_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty"
+      "skew2_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "skew2_with_the_best_measured_refill_regime": {
+        "basis": "lockstep skew-2 sustained ratio x (best regime work per unit area / lockstep work per unit area), both at 16 units, K=256, 3 passes",
+        "derived_not_measured": "the sustained pipeline was not re-run with this regime's own campaign and fmax; this is the recoverable gap, not a second measurement",
+        "regime": "frontier_double_buffer",
+        "rescaled_ratio_at_skew2_mac_active": 1.4254731508241418,
+        "rescaled_ratio_at_skew2_occupancy": 1.59244747033549,
+        "weight_banks": 2,
+        "work_per_area_gain_vs_lockstep_at_skew2": 1.4163553882490612
+      }
     },
     "sustained_array_level_ratio_vs_a100_logic_mac_active": 1.9523142183681381,
     "sustained_array_level_ratio_vs_a100_logic_occupancy": 2.05901710885124,
@@ -1581,6 +1595,200 @@
     "why_they_differ": "the three-level audit's L1 is ot_mac_tile with NO operand storage, which is why it reaches 4.6x; this audit's denominator is the same arithmetic plus the two weight SRAM macros, the activation register file and the K-walking sequencer that keep it fed, plus the distributor. The drop from 4.6x to 2.1x is the cost of INCLUSION, not a regression, and it is the same drop the three-level audit records between its L1 and its L2."
   },
   "question": "what is the SUSTAINED array-level iso-area throughput against the A100 when the utilisation term comes from a width-resolved measurement on real compute units instead of a one-unit figure multiplied onto a wide array?",
+  "refill_regime_comparison": {
+    "best_per_skew": {
+      "0": {
+        "mac_active_per_unit_area": 0.9402162823913487,
+        "regime": "lockstep",
+        "weight_banks": 1
+      },
+      "1": {
+        "mac_active_per_unit_area": 0.8289260658391797,
+        "regime": "lockstep",
+        "weight_banks": 1
+      },
+      "2": {
+        "mac_active_per_unit_area": 0.6863927674240599,
+        "regime": "frontier_double_buffer",
+        "weight_banks": 2
+      }
+    },
+    "kernel_depth_k": 256,
+    "metric": "mac_active_utilisation / (unit core area / the lockstep control's unit core area)",
+    "passes_per_descriptor": 3,
+    "question": "charging each refill regime's own placed core area, which one retires the most work per unit area at each measured straggler level?",
+    "refusals": [
+      "no-single-recommendation: the winner changes with the straggler model, so this reports a table and a per-skew best rather than one operating point.",
+      "one-width-only: every regime was measured at 16 compute units, and no regime row is extrapolated to a width it was not elaborated at.",
+      "skew0-not-measured-for-the-mitigations: the two decoupled campaigns carry skew 1 and skew 2 only, so no regime comparison is made at skew 0 -- where by construction there is nothing for them to fix."
+    ],
+    "rows": [
+      {
+        "area_multiplier_vs_lockstep": 1.0,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_lockstep_control_0p8.json",
+        "area_record_sha256": "d41413ea76a387874ee3a582909b91bb0068d446b61c8ee1cf99cdc93186beb2",
+        "campaign": "results/rtl/dispatch_tree_campaign.json",
+        "campaign_sha256": "1db4f229100da09d12ed94ed3201121bd60ffa1c96bd032716819df6ad713727",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 9802,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.9402162823913487,
+        "mac_active_utilisation": 0.9402162823913487,
+        "occupancy_per_unit_area": 0.9915999999999999,
+        "occupancy_utilisation": 0.9915999999999999,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 0,
+        "refill_skew": 0,
+        "refill_skew_meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
+        "regime": "lockstep",
+        "unit_completions": 576,
+        "unit_core_area_um2": 31774.5,
+        "weight_banks": 1
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.0,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_lockstep_control_0p8.json",
+        "area_record_sha256": "d41413ea76a387874ee3a582909b91bb0068d446b61c8ee1cf99cdc93186beb2",
+        "campaign": "results/rtl/dispatch_tree_campaign.json",
+        "campaign_sha256": "1db4f229100da09d12ed94ed3201121bd60ffa1c96bd032716819df6ad713727",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 11118,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.8289260658391797,
+        "mac_active_utilisation": 0.8289260658391797,
+        "occupancy_per_unit_area": 0.9567,
+        "occupancy_utilisation": 0.9567,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 0,
+        "refill_skew": 1,
+        "refill_skew_meaning": "every unit slowed a little and by a different amount",
+        "regime": "lockstep",
+        "unit_completions": 576,
+        "unit_core_area_um2": 31774.5,
+        "weight_banks": 1
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.0,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_lockstep_control_0p8.json",
+        "area_record_sha256": "d41413ea76a387874ee3a582909b91bb0068d446b61c8ee1cf99cdc93186beb2",
+        "campaign": "results/rtl/dispatch_tree_campaign.json",
+        "campaign_sha256": "1db4f229100da09d12ed94ed3201121bd60ffa1c96bd032716819df6ad713727",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 19017,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.4846190250828206,
+        "mac_active_utilisation": 0.4846190250828206,
+        "occupancy_per_unit_area": 0.5414,
+        "occupancy_utilisation": 0.5414,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 0,
+        "refill_skew": 2,
+        "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+        "regime": "lockstep",
+        "unit_completions": 576,
+        "unit_core_area_um2": 31774.5,
+        "weight_banks": 1
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.0012116634408095,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks1_0p8.json",
+        "area_record_sha256": "c1e1bbe8136ce48ea788557e614817bb01eea16cadb3e7bfe539324fd3707123",
+        "campaign": "results/rtl/dispatch_tree_campaign_frontier_only.json",
+        "campaign_sha256": "6d44815abccde26f0cadd8f66f7b11fdf4ee488a1b062365fe88a17acc9db945",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 13312,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.6914698635536028,
+        "mac_active_utilisation": 0.6923076923076923,
+        "occupancy_per_unit_area": 0.9828091660641877,
+        "occupancy_utilisation": 0.9840000000000001,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 1,
+        "refill_skew": 1,
+        "refill_skew_meaning": "every unit slowed a little and by a different amount",
+        "regime": "fill_frontier",
+        "unit_completions": 576,
+        "unit_core_area_um2": 31813.0,
+        "weight_banks": 1
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.0012116634408095,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks1_0p8.json",
+        "area_record_sha256": "c1e1bbe8136ce48ea788557e614817bb01eea16cadb3e7bfe539324fd3707123",
+        "campaign": "results/rtl/dispatch_tree_campaign_frontier_only.json",
+        "campaign_sha256": "6d44815abccde26f0cadd8f66f7b11fdf4ee488a1b062365fe88a17acc9db945",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 15945,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.5772873517482321,
+        "mac_active_utilisation": 0.5779868297271872,
+        "occupancy_per_unit_area": 0.8133145365102317,
+        "occupancy_utilisation": 0.8143,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 1,
+        "refill_skew": 2,
+        "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+        "regime": "fill_frontier",
+        "unit_completions": 576,
+        "unit_core_area_um2": 31813.0,
+        "weight_banks": 1
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.3019213520275694,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks2_0p8.json",
+        "area_record_sha256": "fb34df037af80222abdd22b9bb90173ea4bd1401496196803fab41593119492a",
+        "campaign": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+        "campaign_sha256": "cdfb335338fa70fe045e73f40ef0a60cfa47f3eeda4f251aa8b9a0eafebd60fa",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 10094,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.7012847840741361,
+        "mac_active_utilisation": 0.9130176342381613,
+        "occupancy_per_unit_area": 0.7610290732669532,
+        "occupancy_utilisation": 0.9908,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 1,
+        "refill_skew": 1,
+        "refill_skew_meaning": "every unit slowed a little and by a different amount",
+        "regime": "frontier_double_buffer",
+        "unit_completions": 576,
+        "unit_core_area_um2": 41367.9,
+        "weight_banks": 2
+      },
+      {
+        "area_multiplier_vs_lockstep": 1.3019213520275694,
+        "area_record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks2_0p8.json",
+        "area_record_sha256": "fb34df037af80222abdd22b9bb90173ea4bd1401496196803fab41593119492a",
+        "campaign": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+        "campaign_sha256": "cdfb335338fa70fe045e73f40ef0a60cfa47f3eeda4f251aa8b9a0eafebd60fa",
+        "compute_units": 16,
+        "control_interval_datapath_cycles": 567,
+        "elapsed_cycles": 10313,
+        "kernel_depth_k": 256,
+        "mac_active_per_unit_area": 0.6863927674240599,
+        "mac_active_utilisation": 0.893629399786677,
+        "occupancy_per_unit_area": 0.7442077806705198,
+        "occupancy_utilisation": 0.9689,
+        "passes_per_descriptor": 3,
+        "refill_decoupled": 1,
+        "refill_skew": 2,
+        "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+        "regime": "frontier_double_buffer",
+        "unit_completions": 576,
+        "unit_core_area_um2": 41367.9,
+        "weight_banks": 2
+      }
+    ],
+    "same_work_basis": "every row retires the same unit_completions, so the regimes differ in elapsed cycles alone",
+    "why_not_occupancy": "occupancy counts a unit as busy while it stalls on an unbacked refill, which is the very thing these regimes remove, so it flatters all of them",
+    "width": 16
+  },
   "refusals": [
     "not-a-silicon-claim: ASAP7 is a predictive, non-manufacturable PDK. Every frequency and area here comes from it, and the A100 comparator is TSMC N7 silicon, so this is a predictive-PDK design against a shipped part.",
     "peak-is-arithmetic-only: the numerator is lanes x 2 x clock x utilisation. It charges no weight traffic beyond what the weight SRAM macros in the denominator supply, no attention over a KV cache and no interconnect. A real decode step at batch 1 is usually memory-bound, so this is an upper bound on sustained throughput.",
@@ -1842,8 +2050,12 @@
       "version": "5.050"
     },
     "source_currency": {
-      "all_current": true,
-      "drifted": [],
+      "all_current": false,
+      "drifted": [
+        "rtl/proto/ot_compute_unit.sv",
+        "rtl/proto/ot_dispatch_tree.sv",
+        "rtl/test/tb_dispatch_tree_throughput.sv"
+      ],
       "files": [
         {
           "current": true,
@@ -1864,14 +2076,14 @@
           "recorded_sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724"
         },
         {
-          "current": true,
-          "current_sha256": "22de7d7922d430d204d2d8ea9606aaf126c8e225d4c53296fe27f30d5007d9ea",
+          "current": false,
+          "current_sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
           "path": "rtl/proto/ot_compute_unit.sv",
           "recorded_sha256": "22de7d7922d430d204d2d8ea9606aaf126c8e225d4c53296fe27f30d5007d9ea"
         },
         {
-          "current": true,
-          "current_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b",
+          "current": false,
+          "current_sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
           "path": "rtl/proto/ot_dispatch_tree.sv",
           "recorded_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b"
         },
@@ -1882,8 +2094,8 @@
           "recorded_sha256": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31"
         },
         {
-          "current": true,
-          "current_sha256": "130903ffbd65e83eb165a7fabc8b128fe80468cc7e3d1ee99374f0762d2811d7",
+          "current": false,
+          "current_sha256": "56d8b1385a930161e79b4a6d4717469a4e088d1c2bcc57eeec042586d279d860",
           "path": "rtl/test/tb_dispatch_tree_throughput.sv",
           "recorded_sha256": "130903ffbd65e83eb165a7fabc8b128fe80468cc7e3d1ee99374f0762d2811d7"
         }
@@ -7372,18 +7584,21 @@
           "max_slew_violations": 0
         },
         "source_currency": {
-          "all_current": true,
-          "drifted": [],
+          "all_current": false,
+          "drifted": [
+            "rtl/proto/ot_dispatch_tree.sv",
+            "rtl/abi3/ot_probe_dispatch_tree.sv"
+          ],
           "files": [
             {
-              "current": true,
-              "current_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b",
+              "current": false,
+              "current_sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
               "path": "rtl/proto/ot_dispatch_tree.sv",
               "recorded_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b"
             },
             {
-              "current": true,
-              "current_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d",
+              "current": false,
+              "current_sha256": "2dc1f8dd73789ba20ee0117000902d2bf311b18e2ef88bb0fa64ec076cac2fdf",
               "path": "rtl/abi3/ot_probe_dispatch_tree.sv",
               "recorded_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d"
             }
@@ -7835,18 +8050,21 @@
           "max_slew_violations": 0
         },
         "source_currency": {
-          "all_current": true,
-          "drifted": [],
+          "all_current": false,
+          "drifted": [
+            "rtl/proto/ot_dispatch_tree.sv",
+            "rtl/abi3/ot_probe_dispatch_tree.sv"
+          ],
           "files": [
             {
-              "current": true,
-              "current_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b",
+              "current": false,
+              "current_sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
               "path": "rtl/proto/ot_dispatch_tree.sv",
               "recorded_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b"
             },
             {
-              "current": true,
-              "current_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d",
+              "current": false,
+              "current_sha256": "2dc1f8dd73789ba20ee0117000902d2bf311b18e2ef88bb0fa64ec076cac2fdf",
               "path": "rtl/abi3/ot_probe_dispatch_tree.sv",
               "recorded_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d"
             }
@@ -8298,18 +8516,21 @@
           "max_slew_violations": 0
         },
         "source_currency": {
-          "all_current": true,
-          "drifted": [],
+          "all_current": false,
+          "drifted": [
+            "rtl/proto/ot_dispatch_tree.sv",
+            "rtl/abi3/ot_probe_dispatch_tree.sv"
+          ],
           "files": [
             {
-              "current": true,
-              "current_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b",
+              "current": false,
+              "current_sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
               "path": "rtl/proto/ot_dispatch_tree.sv",
               "recorded_sha256": "8e372b010d5574ed50ab7f58b0dc1166ed902af8b876e4197427b89b70ed497b"
             },
             {
-              "current": true,
-              "current_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d",
+              "current": false,
+              "current_sha256": "2dc1f8dd73789ba20ee0117000902d2bf311b18e2ef88bb0fa64ec076cac2fdf",
               "path": "rtl/abi3/ot_probe_dispatch_tree.sv",
               "recorded_sha256": "df189891bef539e6fe57958d796ac37376098f2e2faaef06d42f5c39f1bc501d"
             }
