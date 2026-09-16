@@ -44,10 +44,16 @@ module tb_a3_expert_sum;
 
     always #1 clk = ~clk;
     // Every port is registered: one cycle of memory latency.
+    //: The lane address goes through a named reg: indexing a part-select is
+    //: something Verilator accepts and Icarus 11 rejects outright, so the
+    //: bench would only ever have run under one of the two simulators.
+    reg [31:0] lane_addr;
     always @(posedge clk) begin
         for (k = 0; k < EXPERTS; k = k + 1)
-            if (val_rd_en[k])
-                val_rd_data[k*32 +: 32] <= vmem[val_rd_addr[k*32 +: 32][10:0]];
+            if (val_rd_en[k]) begin
+                lane_addr = val_rd_addr[k*32 +: 32];
+                val_rd_data[k*32 +: 32] <= vmem[lane_addr[10:0]];
+            end
         if (wgt_rd_en)  wgt_rd_data  <= wmem[wgt_rd_addr[5:0]];
         if (base_rd_en) base_rd_data <= bmem[base_rd_addr[5:0]];
     end

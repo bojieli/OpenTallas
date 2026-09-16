@@ -221,9 +221,18 @@ module ot_a3_reduction_expert_sum #(
                 end
                 S_DRAIN: begin
                     busy <= 1'b1;
-                    // read(2) + leaf(1) + LEVELS + trailing add(1) +
-                    // narrow(1) + the output register
-                    if (drain >= (LEVELS[31:0] + 32'd6)) begin
+                    //: read(2) + leaf(1) + the tree + trailing add(1) +
+                    //: narrow(1) + write(1), with a cycle of slack.
+                    //:
+                    //: A RANK COSTS ADD_LAT + 1, NOT ADD_LAT.  The adder samples
+                    //: rank l and raises valid_out ADD_LAT cycles later; rank
+                    //: l+1 is written on the edge AFTER that. Sizing the drain
+                    //: at ADD_LAT per level is short by exactly one element --
+                    //: the engine reports done with the last one still inside,
+                    //: and it then surfaces as the FIRST element of the next
+                    //: transaction, which is how it was found.
+                    if (drain >= ((LEVELS[31:0] * (ADD_LAT[31:0] + 32'd1)) +
+                                  MUL_LAT[31:0] + ADD_LAT[31:0] + 32'd6)) begin
                         // ONE OWNER FOR error_code.  A numeric fault is latched
                         // by the pipeline in ``first_err`` and folded in here,
                         // rather than in a second always block.  Two blocks
@@ -288,16 +297,84 @@ module ot_a3_reduction_expert_sum #(
     end
 
     // -- leaf stage: widen, weight, and place the base leaf if there is one --
+    //: THE WEIGHTING IS PIPELINED TOO, and it has to be or the tree's new clock
+    //: is wasted.  This was a combinational ot_fp32_rne_pkg::fp32_mul_rne -- a
+    //: full IEEE multiply, 24x24 significands and all, in the same stage as the
+    //: BF16 widen -- so once the adders came out of the critical path it became
+    //: the binding one.  ot_fp32_mul_rne_pipe is the same arithmetic, qualified
+    //: bit-identical to that authority over 898,081 cases, at MUL_LAT stages and
+    //: one result per cycle.
+    //:
+    //: MUL_LAT + 1 IS THE LEAF'S DEPTH, for the same reason a rank costs
+    //: ADD_LAT + 1: the multiplier raises valid_out MUL_LAT cycles after it
+    //: samples, and node[0] is written on the edge after that.
+    localparam integer MUL_LAT = 5;
+
     wire [33:0] decoded [0:EXPERTS-1];
     wire [33:0] product [0:EXPERTS-1];
+    wire [EXPERTS-1:0] product_valid_bus;
     generate
         for (gi = 0; gi < EXPERTS; gi = gi + 1) begin : g_lane
             assign decoded[gi] =
                 ot_a3_format_pkg::decode_bf16(val_rd_data[gi*32 +: 16]);
-            assign product[gi] =
-                ot_fp32_rne_pkg::fp32_mul_rne(decoded[gi][31:0], weight[gi]);
+            wire [31:0] lane_y;
+            wire [1:0]  lane_err;
+            wire        lane_v;
+            ot_fp32_mul_rne_pipe lane_weight (
+                .clk(clk), .rst_n(rst_n),
+                .valid_in(b_valid),
+                .a(decoded[gi][31:0]), .b(weight[gi]),
+                .y(lane_y), .err(lane_err), .valid_out(lane_v)
+            );
+            assign product[gi] = {lane_err, lane_y};
+            assign product_valid_bus[gi] = lane_v;
         end
     endgenerate
+    //: Every lane shares valid_in, so lane 0 speaks for the leaf rank.
+    wire product_vout = product_valid_bus[0];
+
+    //: The unweighted path and the operand's own nonfinite flag have to travel
+    //: the multiplier's latency as well, or a weighted transaction would take
+    //: its values from MUL_LAT elements later than its control.
+    reg [31:0] lf_value [0:EXPERTS-1][0:MUL_LAT-1];
+    reg [EXPERTS-1:0] lf_nonfinite [0:MUL_LAT-1];
+    reg [31:0] lf_addr  [0:MUL_LAT-1];
+    reg [31:0] lf_trail [0:MUL_LAT-1];
+    reg [31:0] lf_base  [0:MUL_LAT-1];
+    reg [MUL_LAT-1:0] lf_base_nonfinite;
+    integer lm, le;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            lf_base_nonfinite <= {MUL_LAT{1'b0}};
+            for (lm = 0; lm < MUL_LAT; lm = lm + 1) begin
+                lf_nonfinite[lm] <= {EXPERTS{1'b0}};
+                lf_addr[lm] <= 32'd0;
+                lf_trail[lm] <= 32'd0;
+                lf_base[lm] <= 32'd0;
+                for (le = 0; le < EXPERTS; le = le + 1)
+                    lf_value[le][lm] <= 32'd0;
+            end
+        end else begin
+            lf_addr[0] <= b_addr_out;
+            lf_trail[0] <= (cfg_has_base && cfg_base_after_terms)
+                           ? base_decoded[31:0] : 32'd0;
+            lf_base[0] <= base_decoded[31:0];
+            lf_base_nonfinite[0] <= (base_decoded[33:32] != 2'd0);
+            for (le = 0; le < EXPERTS; le = le + 1) begin
+                lf_value[le][0] <= decoded[le][31:0];
+                lf_nonfinite[0][le] <= (decoded[le][33:32] != 2'd0);
+            end
+            for (lm = 0; lm < MUL_LAT-1; lm = lm + 1) begin
+                lf_addr[lm+1] <= lf_addr[lm];
+                lf_trail[lm+1] <= lf_trail[lm];
+                lf_base[lm+1] <= lf_base[lm];
+                lf_base_nonfinite[lm+1] <= lf_base_nonfinite[lm];
+                lf_nonfinite[lm+1] <= lf_nonfinite[lm];
+                for (le = 0; le < EXPERTS; le = le + 1)
+                    lf_value[le][lm+1] <= lf_value[le][lm];
+            end
+        end
+    end
     wire [33:0] base_decoded = ot_a3_format_pkg::decode_bf16(base_rd_data[15:0]);
 
     //: node[0] is the leaf rank; node[l+1] is level l's output.
@@ -319,20 +396,88 @@ module ot_a3_reduction_expert_sum #(
         end
     endgenerate
 
-    //: Level l's pair sums, combinational between two registered ranks.
+    //: EVERY LEVEL'S ADD IS PIPELINED, and that is the whole of this engine's
+    //: clock.  These were combinational ot_fp32_rne_pkg::fp32_add_rne calls
+    //: between two registered ranks -- one full IEEE add per stage -- and ASAP7
+    //: closed the block at 157.6 MHz, the worst figure in the engine set by a
+    //: factor of four.  ot_fp32_add_rne_pipe is the same arithmetic, qualified
+    //: bit-identical to that authority over 898,081 cases, cut into five stages
+    //: at one result per cycle.
+    //:
+    //: THE INITIATION INTERVAL IS UNCHANGED.  A level now costs ADD_LAT cycles
+    //: of LATENCY instead of one, so the tree is ADD_LAT * LEVELS deep rather
+    //: than LEVELS -- but every stage still accepts an element every cycle, so
+    //: the engine's throughput is set by the clock alone, and the clock is what
+    //: went up.
+    localparam integer ADD_LAT = 5;
+
     wire [33:0] pair [0:LEVELS-1][0:LEAVES-1];
+    wire        pair_vout [0:LEVELS-1];
     generate
         for (gl = 0; gl < LEVELS; gl = gl + 1) begin : g_level
+            wire [LEAVES-1:0] pair_valid_bus;
             for (gi = 0; gi < LEAVES/2 + 1; gi = gi + 1) begin : g_pair
                 if (2*gi + 1 < LEAVES) begin : g_real
-                    assign pair[gl][gi] = ot_fp32_rne_pkg::fp32_add_rne(
-                        node[gl][2*gi], node[gl][2*gi+1]);
+                    wire [31:0] sum_y;
+                    wire [1:0]  sum_err;
+                    wire        sum_v;
+                    ot_fp32_add_rne_pipe level_add (
+                        .clk(clk), .rst_n(rst_n),
+                        .valid_in(n_valid[gl]),
+                        .a(node[gl][2*gi]), .b(node[gl][2*gi+1]),
+                        .y(sum_y), .err(sum_err), .valid_out(sum_v)
+                    );
+                    assign pair[gl][gi] = {sum_err, sum_y};
+                    assign pair_valid_bus[gi] = sum_v;
                 end else begin : g_none
                     assign pair[gl][gi] = 34'd0;
+                    assign pair_valid_bus[gi] = 1'b0;
+                end
+            end
+            //: Every instance on a level shares valid_in, so their valid_outs
+            //: are the same signal; slot 0 speaks for the level.
+            assign pair_vout[gl] = pair_valid_bus[0];
+        end
+    endgenerate
+
+    //: THE CONTROL AND THE ODD TAIL MUST TRAVEL THE ADDER'S LATENCY TOO.  The
+    //: address, the trailing base, the error class and the pass-through term of
+    //: an odd level all used to advance one rank per cycle alongside a
+    //: one-cycle add.  Left that way they would arrive ADD_LAT-1 cycles before
+    //: the sums they belong to, which is the registered-operand off-by-one in
+    //: its most expensive form: every value right and every one attached to the
+    //: wrong element.
+    reg [31:0] lv_addr  [0:LEVELS-1][0:ADD_LAT-1];
+    reg [31:0] lv_trail [0:LEVELS-1][0:ADD_LAT-1];
+    reg [1:0]  lv_err   [0:LEVELS-1][0:ADD_LAT-1];
+    reg [31:0] lv_tail  [0:LEVELS-1][0:ADD_LAT-1];
+    integer lv, ls;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            for (lv = 0; lv < LEVELS; lv = lv + 1)
+                for (ls = 0; ls < ADD_LAT; ls = ls + 1) begin
+                    lv_addr[lv][ls] <= 32'd0;
+                    lv_trail[lv][ls] <= 32'd0;
+                    lv_err[lv][ls] <= E_OK;
+                    lv_tail[lv][ls] <= 32'd0;
+                end
+        end else begin
+            for (lv = 0; lv < LEVELS; lv = lv + 1) begin
+                //: Stage 0 is loaded on the same edge the adders sample, so the
+                //: chain's tail and their valid_out land in the same cycle.
+                lv_addr[lv][0] <= n_addr[lv];
+                lv_trail[lv][0] <= n_trail[lv];
+                lv_err[lv][0] <= n_err[lv];
+                lv_tail[lv][0] <= node[lv][level_last_sel[lv]];
+                for (ls = 0; ls < ADD_LAT-1; ls = ls + 1) begin
+                    lv_addr[lv][ls+1] <= lv_addr[lv][ls];
+                    lv_trail[lv][ls+1] <= lv_trail[lv][ls];
+                    lv_err[lv][ls+1] <= lv_err[lv][ls];
+                    lv_tail[lv][ls+1] <= lv_tail[lv][ls];
                 end
             end
         end
-    endgenerate
+    end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -345,59 +490,70 @@ module ot_a3_reduction_expert_sum #(
                     node[l][i] <= 32'd0;
             end
         end else begin
-            // -- the leaf rank ------------------------------------------------
-            n_valid[0] <= b_valid;
-            n_addr[0] <= b_addr_out;
+            // -- the leaf rank, MUL_LAT + 1 behind the operand read ----------
+            //: Everything here reads the DELAYED copies, never the live
+            //: ``decoded``/``base_decoded``: the multiplier's results are
+            //: MUL_LAT cycles old by the time they land, and pairing them with
+            //: operands that have moved on is the registered-operand
+            //: off-by-one in the form where every value is right and every one
+            //: belongs to a different element.
+            n_valid[0] <= product_vout;
+            n_addr[0] <= lf_addr[MUL_LAT-1];
             //: The trailing base, held until every level has retired.
-            n_trail[0] <= (cfg_has_base && cfg_base_after_terms)
-                          ? base_decoded[31:0] : 32'd0;
+            n_trail[0] <= lf_trail[MUL_LAT-1];
             n_err[0] <= E_OK;
             for (i = 0; i < LEAVES; i = i + 1)
                 node[0][i] <= 32'd0;
             if (base_is_leaf)
-                node[0][0] <= base_decoded[31:0];
+                node[0][0] <= lf_base[MUL_LAT-1];
             for (i = 0; i < EXPERTS; i = i + 1) begin
                 if ({24'd0, i[7:0]} < {24'd0, cfg_experts}) begin
                     node[0][i + (base_is_leaf ? 1 : 0)] <=
-                        cfg_has_weights ? product[i][31:0] : decoded[i][31:0];
+                        cfg_has_weights ? product[i][31:0]
+                                        : lf_value[i][MUL_LAT-1];
                 end
             end
             // One error class for the whole leaf rank: a nonfinite operand
             // outranks an overflowed product, because the product of a
             // nonfinite is not a range fault about the weighting.
-            if (b_valid) begin
+            if (product_vout) begin
                 n_err[0] <= E_OK;
                 for (i = 0; i < EXPERTS; i = i + 1) begin
                     if ({24'd0, i[7:0]} < {24'd0, cfg_experts}) begin
-                        if (decoded[i][33:32] != 2'd0)
+                        if (lf_nonfinite[MUL_LAT-1][i])
                             n_err[0] <= E_NONFINITE;
                         else if (cfg_has_weights && product[i][33:32] != 2'd0 &&
                                  n_err[0] != E_NONFINITE)
                             n_err[0] <= E_PRODUCT;
                     end
                 end
-                if (cfg_has_base && base_decoded[33:32] != 2'd0)
+                if (cfg_has_base && lf_base_nonfinite[MUL_LAT-1])
                     n_err[0] <= E_NONFINITE;
             end
 
-            // -- one registered rank per level --------------------------------
+            // -- one rank per level, ADD_LAT cycles behind the one before ----
+            //: Advanced on the ADDERS' valid_out and from the DELAYED control,
+            //: never from n_*[l] directly: that rank moved on ADD_LAT-1 cycles
+            //: ago and its address belongs to a later element.
             for (l = 0; l < LEVELS; l = l + 1) begin
-                n_valid[l+1] <= n_valid[l];
-                n_addr[l+1] <= n_addr[l];
-                n_trail[l+1] <= n_trail[l];
-                n_err[l+1] <= n_err[l];
+                n_valid[l+1] <= pair_vout[l];
+                n_addr[l+1] <= lv_addr[l][ADD_LAT-1];
+                n_trail[l+1] <= lv_trail[l][ADD_LAT-1];
+                n_err[l+1] <= lv_err[l][ADD_LAT-1];
                 for (i = 0; i < LEAVES; i = i + 1)
                     node[l+1][i] <= 32'd0;
                 for (i = 0; i < LEAVES/2 + 1; i = i + 1) begin
                     if ({23'd0, i[8:0]} < {23'd0, (level_count[l] >> 1)}) begin
                         node[l+1][i] <= pair[l][i][31:0];
-                        if (pair[l][i][33:32] != 2'd0 && n_err[l] == E_OK)
+                        if (pair[l][i][33:32] != 2'd0 &&
+                            lv_err[l][ADD_LAT-1] == E_OK)
                             n_err[l+1] <= E_ACCUM;
                     end else if (level_count[l][0] &&
                                  ({23'd0, i[8:0]} == {23'd0, (level_count[l] >> 1)})) begin
                         // The odd tail passes through untouched; folding a
                         // +0.0 into it here is what would lose a signed zero.
-                        node[l+1][i] <= node[l][level_last_sel[l]];
+                        // It rides the same ADD_LAT delay as the sums it joins.
+                        node[l+1][i] <= lv_tail[l][ADD_LAT-1];
                     end
                 end
             end
@@ -411,8 +567,55 @@ module ot_a3_reduction_expert_sum #(
     // IEEE narrowing in series is roughly 6.6 ns of logic.  Each is now its own
     // stage.  The initiation interval is unchanged -- this adds one cycle of
     // latency, not one cycle per element.
-    wire [33:0] with_trail = ot_fp32_rne_pkg::fp32_add_rne(
-        node[LEVELS][0], n_trail[LEVELS]);
+    //: THE TRAILING BASE ADD WAS THE LAST COMBINATIONAL IEEE OPERATION, and it
+    //: alone set the clock once the tree and the weighting were pipelined.  The
+    //: header already named it -- n_trail -> fp32_add_rne -> fp32_to_bf16_rne
+    //: was ~6.6 ns and was split into two stages -- but splitting a 6.6 ns pair
+    //: into two 3.3 ns halves still leaves 3.3 ns, and measured on ASAP7 the
+    //: block closed at 160.0 MHz with wns -4.85 at a 1.40 ns target: a 6.25 ns
+    //: path, which is one full IEEE add. Pipelining the other two and leaving
+    //: this one bought NOTHING, which is the useful lesson: a datapath's clock
+    //: is its slowest remaining stage, not its average one.
+    wire [31:0] trail_y;
+    wire [1:0]  trail_err;
+    wire        trail_vout;
+    ot_fp32_add_rne_pipe trail_add (
+        .clk(clk), .rst_n(rst_n),
+        .valid_in(n_valid[LEVELS]),
+        .a(node[LEVELS][0]), .b(n_trail[LEVELS]),
+        .y(trail_y), .err(trail_err), .valid_out(trail_vout)
+    );
+
+    //: The same ADD_LAT-deep companion the levels use, for the three things the
+    //: trailing add does not itself carry: the address, the error class the
+    //: tree already decided, and whether there WAS a trailing base -- which
+    //: selects between the sum and the bare total.
+    reg [31:0] tr_addr  [0:ADD_LAT-1];
+    reg [31:0] tr_total [0:ADD_LAT-1];
+    reg [1:0]  tr_err   [0:ADD_LAT-1];
+    reg [ADD_LAT-1:0] tr_has_base;
+    integer tm;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            tr_has_base <= {ADD_LAT{1'b0}};
+            for (tm = 0; tm < ADD_LAT; tm = tm + 1) begin
+                tr_addr[tm] <= 32'd0;
+                tr_total[tm] <= 32'd0;
+                tr_err[tm] <= E_OK;
+            end
+        end else begin
+            tr_addr[0] <= n_addr[LEVELS];
+            tr_total[0] <= node[LEVELS][0];
+            tr_err[0] <= n_err[LEVELS];
+            tr_has_base[0] <= (n_trail[LEVELS] != 32'd0);
+            for (tm = 0; tm < ADD_LAT-1; tm = tm + 1) begin
+                tr_addr[tm+1] <= tr_addr[tm];
+                tr_total[tm+1] <= tr_total[tm];
+                tr_err[tm+1] <= tr_err[tm];
+                tr_has_base[tm+1] <= tr_has_base[tm];
+            end
+        end
+    end
 
     reg        f_valid_q;
     reg [31:0] f_addr_q;
@@ -426,13 +629,13 @@ module ot_a3_reduction_expert_sum #(
             f_total_q <= 32'd0;
             f_err_q <= E_OK;
         end else begin
-            f_valid_q <= n_valid[LEVELS];
-            f_addr_q <= n_addr[LEVELS];
-            f_total_q <= (n_trail[LEVELS] != 32'd0) ? with_trail[31:0]
-                                                    : node[LEVELS][0];
+            f_valid_q <= trail_vout;
+            f_addr_q <= tr_addr[ADD_LAT-1];
+            f_total_q <= tr_has_base[ADD_LAT-1] ? trail_y
+                                                : tr_total[ADD_LAT-1];
             f_err_q <=
-                (n_err[LEVELS] != E_OK) ? n_err[LEVELS]
-                : ((n_trail[LEVELS] != 32'd0) && (with_trail[33:32] != 2'd0))
+                (tr_err[ADD_LAT-1] != E_OK) ? tr_err[ADD_LAT-1]
+                : (tr_has_base[ADD_LAT-1] && (trail_err != 2'd0))
                   ? E_ACCUM : E_OK;
         end
     end
