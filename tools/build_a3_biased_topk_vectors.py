@@ -49,34 +49,54 @@ def widen(codes: np.ndarray) -> np.ndarray:
     return (codes.astype(np.uint32) << 16).view(np.float32)
 
 
-#: (name, groups, experts, topk, has_bias, bias_broadcast, weight_fp32, seed)
+#: THE SHIPPED FRAME IS FP32, which this engine first got wrong.  Read off the
+#: descriptor tables at HEAD: every shipped ROUTE.BIASED_TOPK carries FP32
+#: scores, an FP32 [experts] bias, U32 selected ids and FP32 selected weights,
+#: at 256 experts and k=6 (V4.1: 384 experts, same k).  The BF16 cases stay
+#: because the engine admits both operand widths, and the widening is the one
+#: place a signed zero can be lost.
+#:
+#: (name, groups, experts, topk, has_bias, bias_broadcast, weight_fp32,
+#:  operand_fp32, seed)
 CASES = (
-    ("basic",          2,  8, 3, 1, 1, 0, 11),
-    ("bias_reorders",  1,  8, 3, 1, 1, 0,  0),   # built explicitly below
-    ("tie_lower_id",   1,  8, 4, 1, 1, 0,  0),   # built explicitly below
-    ("negatives",      3, 12, 4, 1, 1, 0, 23),
-    ("per_group_bias", 3, 12, 4, 1, 0, 0, 29),
-    ("k_eq_experts",   2,  6, 6, 1, 1, 0, 31),
-    ("no_bias",        2, 10, 4, 0, 0, 0, 37),
-    ("weights_fp32",   2, 10, 4, 1, 1, 1, 41),
-    #: The shipped gate's k at a legible expert count (V4-Flash ships 256, V4.1
-    #: 384; the walk is one expert per cycle either way, so 32 exercises it).
-    #: Minus zero, whose handling differs between the two weight dtypes. Both
+    ("basic",            2,  8, 3, 1, 1, 0, 0, 11),
+    ("bias_reorders",    1,  8, 3, 1, 1, 0, 0,  0),   # built explicitly below
+    ("tie_lower_id",     1,  8, 4, 1, 1, 0, 0,  0),   # built explicitly below
+    ("negatives",        3, 12, 4, 1, 1, 0, 0, 23),
+    ("per_group_bias",   3, 12, 4, 1, 0, 0, 0, 29),
+    ("k_eq_experts",     2,  6, 6, 1, 1, 0, 0, 31),
+    ("no_bias",          2, 10, 4, 0, 0, 0, 0, 37),
+    ("weights_fp32",     2, 10, 4, 1, 1, 1, 0, 41),
+    #: Minus zero, whose handling differs between the two WEIGHT dtypes. Both
     #: variants select it, so each pins its own dtype's rule.
-    ("signed_zero",      1,  4, 2, 0, 0, 0,  0),   # built explicitly below
-    ("signed_zero_fp32", 1,  4, 2, 0, 0, 1,  0),   # built explicitly below
-    ("shipped_k6",     4, 32, 6, 1, 1, 0, 43),
+    ("signed_zero",      1,  4, 2, 0, 0, 0, 0,  0),   # built explicitly below
+    ("signed_zero_fp32", 1,  4, 2, 0, 0, 1, 0,  0),   # built explicitly below
+    #: The shipped gate's k at a legible expert count; the walk is one expert
+    #: per cycle either way, so 32 exercises it exactly as 256 would.
+    ("shipped_k6",       4, 32, 6, 1, 1, 0, 0, 43),
+    #: THE SHIPPED FRAME ITSELF: FP32 in, FP32 bias, FP32 weights out, k=6.
+    ("shipped_fp32",     4, 32, 6, 1, 1, 1, 1, 47),
+    ("fp32_negatives",   3, 16, 4, 1, 1, 1, 1, 53),
+    ("fp32_per_group",   3, 16, 4, 1, 0, 1, 1, 59),
+    ("fp32_no_bias",     2, 12, 4, 0, 0, 1, 1, 61),
+    #: An FP32 score whose BF16 narrowing is a REAL rounding, so the weight path
+    #: is not the identity it is on every BF16-operand case.
+    ("fp32_bf16_out",    2, 12, 4, 1, 1, 0, 1, 67),
+    #: A -0 score under FP32 operands: the key must not be turned into +0 by an
+    #: identity add, and the FP32 weight must keep the sign.
+    ("fp32_signed_zero", 1,  4, 2, 0, 0, 1, 1,  0),   # built explicitly below
 )
 
 
-def operands(name, groups, experts, has_bias, bias_broadcast, seed):
-    """BF16 codes for the scores and the bias, as the engine will read them."""
+def operands(name, groups, experts, has_bias, bias_broadcast, operand_fp32,
+             seed):
+    """The score and bias codes, in whichever width the frame declares."""
     if name == "bias_reorders":
         #: Expert 5 has the lowest score of the three the bias promotes, so the
         #: emitted weight ordering is NOT the key ordering.
         scores = np.array([[0.5, 0.25, 0.75, 0.125, 1.5, 0.0625, 0.375, 0.875]])
         bias = np.array([[0.0, 0.0, 0.0, 0.0, -2.0, 4.0, 0.0, 0.0]])
-    elif name.startswith("signed_zero"):
+    elif name.endswith("signed_zero") or name.startswith("signed_zero"):
         #: -0 at index 0 and +0 at index 1 compare EQUAL, so the tie rule puts
         #: -0 first and k=2 selects both. The emitted weights then contain a -0
         #: on the FP32 path and a canonicalised +0 on the BF16 path.
@@ -94,14 +114,21 @@ def operands(name, groups, experts, has_bias, bias_broadcast, seed):
                            size=(1 if bias_broadcast else groups, experts))
     if not has_bias:
         bias = np.zeros((1, experts))
+    if operand_fp32:
+        #: The binary32 code itself, which is what the shipped views carry: no
+        #: rounding happens on the way in, unlike the BF16 path.
+        return (np.ascontiguousarray(scores, dtype=np.float32).view(np.uint32),
+                np.ascontiguousarray(bias, dtype=np.float32).view(np.uint32))
     return bf16(scores), bf16(bias)
 
 
-def expected(score_codes, bias_codes, topk, has_bias):
+def expected(score_codes, bias_codes, topk, has_bias, operand_fp32):
     """The reference's own two lines, on the widened codes."""
-    scores = widen(score_codes)
+    lift = (lambda c: np.ascontiguousarray(c, dtype=np.uint32).view(np.float32)) \
+        if operand_fp32 else widen
+    scores = lift(score_codes)
     if has_bias:
-        bias = widen(bias_codes)
+        bias = lift(bias_codes)
         keys = np.add(scores, bias, dtype=np.float32)
     else:
         keys = scores.copy()
@@ -120,10 +147,11 @@ def main() -> int:
     lines = [str(len(CASES))]
     reorder_proof = None
     for index, (name, groups, experts, topk, has_bias, bcast, wfp32,
-                seed) in enumerate(CASES):
+                ofp32, seed) in enumerate(CASES):
         score_codes, bias_codes = operands(name, groups, experts, has_bias,
-                                           bcast, seed)
-        order, selected = expected(score_codes, bias_codes, topk, has_bias)
+                                           bcast, ofp32, seed)
+        order, selected = expected(score_codes, bias_codes, topk, has_bias,
+                                   ofp32)
 
         if name == "bias_reorders":
             #: Prove the case does what it claims, or the suite is decorative.
@@ -158,7 +186,7 @@ def main() -> int:
             "\n".join(f"{int(v):08x}" for v in codes) + "\n")
 
         lines.append(f"{name} {groups} {experts} {topk} {has_bias} {bcast} "
-                     f"{wfp32}")
+                     f"{wfp32} {ofp32}")
 
     (args.out / "cases.txt").write_text("\n".join(lines) + "\n")
     assert reorder_proof and all(reorder_proof.values()), \

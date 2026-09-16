@@ -23,11 +23,20 @@
 // refused before this matters, so the map needs no NaN case and the selection
 // needs no floating-point comparator at all.
 //
-// THE KEY ADD USES THE QUALIFIED PIPELINED MAC.  ``score + bias`` is
-// ``RN(bias * 1.0 + score)`` on ot_mac_bf16_fp32_pipe -- exact, because the
-// product is -- at five stages and one result per cycle.  A combinational
-// ot_fp32_rne_pkg::fp32_add_rne here would cap the block near 155 MHz, which is
-// what it did to two reduction engines before they were rebuilt on this MAC.
+// THE SHIPPED OPERANDS ARE FP32, WHICH THIS FIRST GOT WRONG.  Read off the
+// descriptor tables at HEAD, every shipped ROUTE.BIASED_TOPK carries FP32
+// scores, an FP32 bias, U32 selected ids and FP32 selected weights -- not the
+// BF16 operands this engine was originally built against.  A BF16 operand
+// cannot be ruled out for a future deployment, so the width is a config bit and
+// both are admitted: a BF16 code is widened BY SHIFT, which is what the
+// reference's ``widen`` does and is exact.
+//
+// THE KEY ADD IS THEREFORE A REAL BINARY32 ADD, on ot_fp32_add_rne_pipe -- five
+// stages, one result per cycle, qualified bit-identical to
+// ot_fp32_rne_pkg::fp32_add_rne over 898,081 cases.  ot_mac_bf16_fp32_pipe with
+// b = BF16 1.0 was the original choice and only works while both operands are
+// BF16.  The combinational authority in this position would cap the block near
+// 155 MHz, which is what it did to two reduction engines.
 //
 // FULLY PIPELINED THROUGH THE SCAN: one expert per cycle, with the k-entry
 // insertion consuming the MAC's output five cycles behind the read.
@@ -45,6 +54,10 @@ module ot_a3_route_biased_topk #(
     input  wire        cfg_has_bias,
     //: 1 when the bias is [experts] and broadcasts over every group.
     input  wire        cfg_bias_broadcast,
+    //: 0 reads BF16 score and bias codes, 1 reads binary32. The shipped
+    //: operators are 1; the BF16 path widens by shift, never by decode_bf16,
+    //: because that canonicalises minus zero and the reference's widen does not.
+    input  wire        cfg_operand_fp32,
     input  wire [31:0] cfg_score_base,
     input  wire [31:0] cfg_bias_base,
     input  wire [31:0] cfg_id_out_base,
@@ -83,8 +96,6 @@ module ot_a3_route_biased_topk #(
     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;
     localparam [7:0] ERR_SHAPE = ot_a3_engine_pkg::ERR_SHAPE;
 
-    localparam [15:0] BF16_ONE = 16'h3F80;
-
     localparam [2:0] S_IDLE  = 3'd0;
     localparam [2:0] S_SCAN  = 3'd1;
     localparam [2:0] S_DRAIN = 3'd2;
@@ -115,18 +126,28 @@ module ot_a3_route_biased_topk #(
                    (cfg_topk == 32'd0) || (cfg_topk > MAX_K[31:0]) ||
                    (cfg_topk > cfg_experts);
 
-    //: The key: RN(bias + score) in binary32, or the score alone with no bias.
-    wire [33:0] score_wide = ot_a3_format_pkg::decode_bf16(score_rd_data[15:0]);
-    wire [15:0] mac_a = cfg_has_bias ? bias_rd_data[15:0] : 16'h0000;
-    wire        mac_vin;
-    wire [31:0] mac_y;
-    wire [1:0]  mac_err;
-    wire        mac_vout;
+    //: Widened by SHIFT for BF16, taken as-is for binary32. Exact both ways.
+    wire [31:0] score_value = cfg_operand_fp32 ? score_rd_data
+                                               : {score_rd_data[15:0], 16'h0000};
+    wire [31:0] bias_value = cfg_operand_fp32 ? bias_rd_data
+                                              : {bias_rd_data[15:0], 16'h0000};
+    wire        score_nonfinite = (score_value[30:23] == 8'hff);
+    wire        bias_nonfinite = (bias_value[30:23] == 8'hff);
 
-    ot_mac_bf16_fp32_pipe key_add (
-        .clk(clk), .rst_n(rst_n), .valid_in(mac_vin),
-        .a(mac_a), .b(BF16_ONE), .c(score_wide[31:0]),
-        .y(mac_y), .err(mac_err), .valid_out(mac_vout)
+    //: The key: RN(score + bias), or the score ALONE when there is no bias.
+    //: Adding a zero is not a safe stand-in for the no-bias case: the authority
+    //: returns +0 for (-0) + (+0), so a -0 score would come back as +0 and sort
+    //: above itself. The reference's no-bias path is ``keys = scores.copy()``,
+    //: so the adder is bypassed rather than fed an identity.
+    wire        add_vin;
+    wire [31:0] add_y;
+    wire [1:0]  add_err;
+    wire        add_vout;
+
+    ot_fp32_add_rne_pipe key_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_vin),
+        .a(score_value), .b(bias_value),
+        .y(add_y), .err(add_err), .valid_out(add_vout)
     );
 
     //: THE ID MUST BE CAPTURED WITH THE ADDRESS, NOT AFTER IT.  ``expert``
@@ -148,13 +169,11 @@ module ot_a3_route_biased_topk #(
             d_id <= rd_id;
         end
     end
-    assign mac_vin = d_valid;
-    //: Refused on the operand rather than the result: the MAC's own ``err``
-    //: reports a nonfinite it was GIVEN, but only once the result emerges, and a
-    //: nonfinite score with no bias would never reach the multiplier at all.
+    assign add_vin = d_valid & cfg_has_bias;
+    //: Refused on the OPERAND, not the result: with no bias the adder is
+    //: bypassed entirely, so its ``err`` would never see a nonfinite score.
     wire operand_nonfinite = d_valid &&
-        ((score_wide[33:32] != 2'd0) ||
-         (cfg_has_bias && (bias_rd_data[14:7] == 8'hff)));
+        (score_nonfinite || (cfg_has_bias && bias_nonfinite));
 
     //: The MAC's own latency carries the id and the unbiased score alongside the
     //: key, so the insertion sees a matched triple.  FIVE registrations --
@@ -164,14 +183,17 @@ module ot_a3_route_biased_topk #(
     localparam integer MAC_LAT = 5;
     reg [31:0] lat_id    [0:MAC_LAT-1];
     reg [31:0] lat_score [0:MAC_LAT-1];
+    reg [MAC_LAT-1:0] lat_valid;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            lat_valid <= {MAC_LAT{1'b0}};
             for (i = 0; i < MAC_LAT; i = i + 1) begin
                 lat_id[i] <= 32'd0; lat_score[i] <= 32'd0;
             end
         end else begin
+            lat_valid <= {lat_valid[MAC_LAT-2:0], d_valid};
             lat_id[0] <= d_id;
-            lat_score[0] <= score_rd_data;
+            lat_score[0] <= score_value;
             for (i = 0; i < MAC_LAT-1; i = i + 1) begin
                 lat_id[i+1] <= lat_id[i];
                 lat_score[i+1] <= lat_score[i];
@@ -180,15 +202,28 @@ module ot_a3_route_biased_topk #(
     end
     wire [31:0] cand_id    = lat_id[MAC_LAT-1];
     wire [31:0] cand_score = lat_score[MAC_LAT-1];
+    //: The candidate is live when the adder retires it, or -- with no bias --
+    //: when the companion pipe's own valid reaches the same depth.
+    wire        cand_valid = cfg_has_bias ? add_vout : lat_valid[MAC_LAT-1];
+    wire [31:0] cand_key   = cfg_has_bias ? add_y : cand_score;
+    wire [1:0]  cand_err   = cfg_has_bias ? add_err : 2'd0;
 
     //: Finite IEEE codes compare as unsigned integers under this map.
     function automatic [31:0] monotonic;
         input [31:0] code;
         begin
-            monotonic = code[31] ? ~code : (code | 32'h8000_0000);
+            //: EVERY ZERO MAPS TO ONE POINT.  Float comparison holds -0 == +0,
+            //: so a map that ordered them apart would rank +0 above -0 and take
+            //: the tie away from the lower index -- which is what it did, on
+            //: exactly the three signed-zero cases and nowhere else. The MAC
+            //: this engine used to add through hid the bug by canonicalising its
+            //: own output; bypassing it for the no-bias walk exposed it.
+            monotonic = (code[30:0] == 31'd0)
+                        ? 32'h8000_0000
+                        : (code[31] ? ~code : (code | 32'h8000_0000));
         end
     endfunction
-    wire [31:0] cand_ord = monotonic(mac_y);
+    wire [31:0] cand_ord = monotonic(cand_key);
     //: STRICT greater-than, which is the tie rule: the scan visits ascending
     //: ids, so an equal key must not displace the earlier expert.
     wire [MAX_K-1:0] beats;
@@ -215,22 +250,17 @@ module ot_a3_route_biased_topk #(
         end
     end
 
-    //: THE TWO WEIGHT DTYPES DISAGREE ON MINUS ZERO, and in the direction that
-    //: is easy to get backwards.  The reference writes
-    //: ``narrow(selected, weight_view)``, and runtime/sim/formats.py resolves that
-    //: to narrow_bf16_rne for a BF16 view -- which CANONICALISES -0 to +0 -- and
-    //: to a plain binary32 cast for an FP32 view, which PRESERVES it:
-    //:
-    //:     narrow(BF16, -0.0) -> 0x0000        narrow(FP32, -0.0) -> 0x80000000
-    //:
-    //: So BF16 forces the sign off a zero and FP32 keeps the code, widened by
-    //: shift.  Writing the stored code on both paths is wrong on BF16; using
-    //: ot_a3_format_pkg::decode_bf16 on both is wrong on FP32.
-    wire [15:0] emit_code = top_score[emit_slot[2:0]][15:0];
-    wire        emit_zero = (emit_code[14:0] == 15'd0);
-    wire [31:0] emit_weight =
-        cfg_weight_fp32 ? {emit_code, 16'h0000}
-                        : {16'h0000, emit_zero ? 16'h0000 : emit_code};
+    //: THE WEIGHT IS ``narrow(selected, weight_view)``, done by the real
+    //: narrowing function rather than by moving code bits around. The two dtypes
+    //: disagree on minus zero -- runtime/sim/formats.py resolves narrow(BF16,
+    //: -0.0) to 0x0000 because narrow_bf16_rne CANONICALISES, and narrow(FP32,
+    //: -0.0) to 0x80000000 because a plain cast PRESERVES -- and calling
+    //: ot_fp32_rne_pkg::fp32_to_bf16_rne gets that right for free instead of
+    //: needing a hand-written zero rule that was first written backwards.
+    wire [31:0] emit_value = top_score[emit_slot[2:0]];
+    wire [18:0] emit_narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(emit_value);
+    wire [31:0] emit_weight = cfg_weight_fp32 ? emit_value
+                                              : {16'h0000, emit_narrowed[15:0]};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -259,9 +289,9 @@ module ot_a3_route_biased_topk #(
             if (operand_nonfinite)
                 fault_nonfinite <= 1'b1;
 
-            if (mac_vout) begin
+            if (cand_valid) begin
                 candidates <= candidates + 32'd1;
-                if (mac_err != 2'd0)
+                if (cand_err != 2'd0)
                     fault_nonfinite <= 1'b1;
                 else if (ins_any) begin
                     for (i = MAX_K-1; i > 0; i = i - 1) begin

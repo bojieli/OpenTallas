@@ -17,6 +17,7 @@ module tb_a3_route_biased_topk;
     reg clk = 0, rst_n = 0, start = 0;
     reg [31:0] cfg_groups, cfg_experts, cfg_topk;
     reg        cfg_has_bias, cfg_bias_broadcast, cfg_has_weight_out, cfg_weight_fp32;
+    reg        cfg_operand_fp32;
     reg [31:0] cfg_score_base, cfg_bias_base, cfg_id_out_base, cfg_weight_out_base;
     wire score_rd_en, bias_rd_en; wire [31:0] score_rd_addr, bias_rd_addr;
     reg [31:0] score_rd_data, bias_rd_data;
@@ -31,13 +32,14 @@ module tb_a3_route_biased_topk;
     reg [31:0] gid  [0:255];
     reg [31:0] gwgt [0:255];
     integer j, errors = 0, idw, wgw, reorder_seen = 0;
-    integer ncases, c, groups, experts, topk, hasb, bcast, wfp32;
+    integer ncases, c, groups, experts, topk, hasb, bcast, wfp32, ofp32;
     integer fh, code; reg [1023:0] name, path;
 
     ot_a3_route_biased_topk dut (
         .clk(clk), .rst_n(rst_n), .start(start),
         .cfg_groups(cfg_groups), .cfg_experts(cfg_experts), .cfg_topk(cfg_topk),
         .cfg_has_bias(cfg_has_bias), .cfg_bias_broadcast(cfg_bias_broadcast),
+        .cfg_operand_fp32(cfg_operand_fp32),
         .cfg_score_base(cfg_score_base), .cfg_bias_base(cfg_bias_base),
         .cfg_id_out_base(cfg_id_out_base),
         .cfg_has_weight_out(cfg_has_weight_out),
@@ -77,8 +79,8 @@ module tb_a3_route_biased_topk;
         rst_n = 0; @(negedge clk); @(negedge clk); rst_n = 1;
 
         for (c = 0; c < ncases; c = c + 1) begin
-            code = $fscanf(fh, "%s %d %d %d %d %d %d\n", name, groups, experts,
-                           topk, hasb, bcast, wfp32);
+            code = $fscanf(fh, "%s %d %d %d %d %d %d %d\n", name, groups,
+                           experts, topk, hasb, bcast, wfp32, ofp32);
             for (j = 0; j < 256; j = j + 1) begin
                 smem[j] = 0; bmem[j] = 0; eid[j] = 0; ewgt[j] = 0;
             end
@@ -90,6 +92,7 @@ module tb_a3_route_biased_topk;
             cfg_groups = groups; cfg_experts = experts; cfg_topk = topk;
             cfg_has_bias = hasb[0]; cfg_bias_broadcast = bcast[0];
             cfg_has_weight_out = 1'b1; cfg_weight_fp32 = wfp32[0];
+            cfg_operand_fp32 = ofp32[0];
             cfg_score_base = 0; cfg_bias_base = 0;
             cfg_id_out_base = 0; cfg_weight_out_base = 0;
             go;
@@ -121,8 +124,8 @@ module tb_a3_route_biased_topk;
                 end
             end
             if (name == "bias_reorders") reorder_seen = 1;
-            $display("  %0s: %0d groups x %0d experts, k=%0d -> %0d ids, %0d candidates",
-                     name, groups, experts, topk, idw, candidates);
+            $display("  %0s: %0d groups x %0d experts, k=%0d, fp32=%0d -> %0d ids, %0d candidates",
+                     name, groups, experts, topk, ofp32, idw, candidates);
         end
         $fclose(fh);
 
@@ -136,7 +139,7 @@ module tb_a3_route_biased_topk;
         // -- Refusals. A shape the contract forbids must fail closed, not clamp.
         cfg_groups = 2; cfg_experts = 8; cfg_topk = 9;   //: topk > MAX_K
         cfg_has_bias = 1; cfg_bias_broadcast = 1; cfg_has_weight_out = 0;
-        cfg_weight_fp32 = 0; go;
+        cfg_weight_fp32 = 0; cfg_operand_fp32 = 0; go;
         if (error_code !== ot_a3_engine_pkg::ERR_SHAPE) begin
             $display("FAIL topk>MAX_K gave %0h", error_code); errors = errors + 1;
         end
@@ -156,19 +159,33 @@ module tb_a3_route_biased_topk;
         cfg_groups = 1; cfg_experts = 4; cfg_topk = 2;
         cfg_has_bias = 1; cfg_bias_broadcast = 1;
         for (j = 0; j < 8; j = j + 1) begin smem[j] = 32'h00003f80; bmem[j] = 0; end
-        bmem[2] = 32'h00007f80;                          //: +inf bias
+        bmem[2] = 32'h00007f80;                          //: +inf bias, BF16 code
         go;
         if (error_code !== ot_a3_engine_pkg::ERR_OPERAND_NONFINITE) begin
             $display("FAIL nonfinite bias gave %0h", error_code); errors = errors + 1;
         end
-        bmem[2] = 0; smem[1] = 32'h00007fc0;             //: NaN score
+        bmem[2] = 0; smem[1] = 32'h00007fc0;             //: NaN score, BF16 code
         cfg_has_bias = 0; go;
         if (error_code !== ot_a3_engine_pkg::ERR_OPERAND_NONFINITE) begin
             $display("FAIL nonfinite score gave %0h", error_code); errors = errors + 1;
         end
+        //: The same two refusals under binary32 operands, where the nonfinite
+        //: field sits eight bits higher and a BF16-shaped check would miss it.
+        cfg_operand_fp32 = 1'b1; cfg_has_bias = 1'b1;
+        for (j = 0; j < 8; j = j + 1) begin smem[j] = 32'h3f80_0000; bmem[j] = 0; end
+        bmem[2] = 32'h7f80_0000;                         //: +inf bias, FP32 code
+        go;
+        if (error_code !== ot_a3_engine_pkg::ERR_OPERAND_NONFINITE) begin
+            $display("FAIL fp32 nonfinite bias gave %0h", error_code); errors = errors + 1;
+        end
+        bmem[2] = 0; smem[1] = 32'h7fc0_0000;            //: NaN score, FP32 code
+        cfg_has_bias = 0; go;
+        if (error_code !== ot_a3_engine_pkg::ERR_OPERAND_NONFINITE) begin
+            $display("FAIL fp32 nonfinite score gave %0h", error_code); errors = errors + 1;
+        end
 
         if (errors == 0)
-            $display("PASS a3_route_biased_topk: %0d cases match the reference rule, ids and unbiased weights, and 5 refusals fail closed", ncases);
+            $display("PASS a3_route_biased_topk: %0d cases match the reference rule, ids and unbiased weights, and 7 refusals fail closed", ncases);
         else
             $display("FAIL a3_route_biased_topk: %0d errors", errors);
         $finish;
