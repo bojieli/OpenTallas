@@ -274,6 +274,30 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def synth_timeout_seconds() -> int:
+    """The Yosys wall-clock ceiling, overridable for a genuinely large block.
+
+    The fixed two hours is right for every block characterised so far and wrong for
+    at least one: ``ot_a3_vector_sqrt_softplus`` at FRAC_BITS 224 carries 448-bit
+    products and a 455-iteration divider, and its synthesis was killed at 7,200 s
+    having produced nothing. A block that legitimately needs longer should be able
+    to ask rather than be reported as an error, so the ceiling reads
+    ``OT_SYNTH_TIMEOUT_SECONDS`` when it is set.
+    """
+    import os
+
+    raw = os.environ.get("OT_SYNTH_TIMEOUT_SECONDS")
+    if not raw:
+        return 7200
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise SystemExit(f"OT_SYNTH_TIMEOUT_SECONDS is not an integer: {raw!r}") from exc
+    if value <= 0:
+        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be positive")
+    return value
+
+
 def run(cmd: list[str], *, cwd: Path | None = None, timeout: int = 7200) -> subprocess.CompletedProcess:
     proc = subprocess.run(
         cmd,
@@ -539,7 +563,7 @@ def run_synthesis(
         encoding="utf-8",
     )
 
-    proc = run([str(YOSYS), "-s", str(script)], timeout=7200)
+    proc = run([str(YOSYS), "-s", str(script)], timeout=synth_timeout_seconds())
     require_success(proc, "yosys synthesis")
     (work / "yosys.log").write_text((proc.stdout or "") + (proc.stderr or ""), encoding="utf-8")
     if not raw_netlist.is_file():
