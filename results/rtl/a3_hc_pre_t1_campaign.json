@@ -5,22 +5,22 @@
     "position": 0,
     "token_id": 18042
   },
-  "checks_per_simulator": 1379450,
+  "checks_per_simulator": 1576034,
   "descriptor_binding": {
     "hbm_pc14": {
       "active_tokens": 1,
-      "config_u32le_sha256": "d42b88613c9032ab1c6b4bfd2c025205e337813ebfeabb5e06b87d83e697e702",
-      "deployment_sha256": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
-      "instruction_sha256": "1495e79701542b0ef97e414465a67b323fa24c8d793a58b176dd3ee2d164c8ec",
-      "operator_descriptor_id": 545,
+      "config_u32le_sha256": "0594fb509c2825c6917fa6d907d6b2aa948eaed2fe77df13f8169ac81c307e1b",
+      "deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "instruction_sha256": "0bd7117d6ad041f84244f234b7cc425933578cec3b75822c975be968d153c1b1",
+      "operator_descriptor_id": 547,
       "profile": 1,
       "program_counter": 14,
-      "wait_set_descriptor_id": 546
+      "wait_set_descriptor_id": 548
     },
     "rom_pc15": {
       "active_tokens": 1,
-      "config_u32le_sha256": "85bd9604acd7b34b5f96a969835e0505e22bb30b410ddc7cfe165b122786666c",
-      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "config_u32le_sha256": "69bc63f4ce139d76c30ff5d83d4653f935f9ac4d85fe3627c00dfda745589a55",
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
       "instruction_sha256": "bc5a265299499d7851804b9730ea32ce8f4c1597e0f9ea3884984a6fd85c44ab",
       "operator_descriptor_id": 381,
       "profile": 0,
@@ -38,16 +38,16 @@
     "total": 4112
   },
   "log_sha256": {
-    "iverilog": "5cc4540f812eb87730b05c04675fdb51a7af26d1deb5d229991f6e1f905f9404",
+    "iverilog": "5e6ddbaa6d1b31c4242a66752ca2b86a70b32795129417b9b742cc73a863ca8b",
     "iverilog_compile": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "verilator": "6faca85b0c708d114aa0e57e0a7135ba70a558f76e752b3babba469f65651a0d",
-    "verilator_compile": "d8255f6b912dc62e63e60a09267ff3050a259868e242f84f41ccde584785fdbb",
-    "yosys": "507fa723de0d457ca7fdf3f33996b6ea07dedc4b62c8df235a613a0921891b61"
+    "verilator": "e50d495eecbb82226601b95441b7fafbc9df74ec0a218f96e0aba219fdc1ab9e",
+    "verilator_compile": "892eb1e1298ec7c02ddb1e7dd266a6462a0dceeefccdde6a942fb899060f43b6",
+    "yosys": "eb80c55f7092edfd65fda38e92b74afcb82865873887eb9fcf732b050eb4fa21"
   },
   "normalized_summary": {
     "active_resets": 1,
     "arithmetic_errors": 2,
-    "atomic_private_checks": 685335,
+    "atomic_private_checks": 783627,
     "checkpoint_words": 148,
     "coefficient_error_cycles": 213034,
     "descriptor_errors": 1,
@@ -71,8 +71,8 @@
     "balanced_16384_element_rms": true,
     "busy_input_refusal_and_input_latching": true,
     "checkpoint_token_id": 18042,
-    "current_hbm_pc14_descriptor_545_execution": true,
-    "current_rom_pc15_descriptor_381_execution": true,
+    "current_hbm_pc14_execution": true,
+    "current_rom_pc15_execution": true,
     "dual_simulator": true,
     "eight_lane_24_row_projection": true,
     "eos": false,
@@ -96,7 +96,7 @@
   "source_sha256": {
     "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
     "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
-    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "005ff4d9237548ed76d732b097616523ebec755d86ccbd7417f66baf1452f175",
     "rtl/abi3/ot_a3_hc_coefficients_rne.sv": "7251ffaa8a77691c61b4b31d435ca5f7c238ef78c9b4859cf958bd50e6e98ae0",
     "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv": "474fbd53b38c6740ff53d54ff9742d65172f835c77aaef3c2ccd80033af55a3b",
     "rtl/abi3/ot_a3_hc_projection_pkg.sv": "d3591df9b9bde7997922756734d61eec5ed32245e4e3a718a2a43b42e9468d6a",
@@ -104,22 +104,22 @@
     "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv": "a935cd5b6a82d1be73ff396ec86d9c60bfc58d31dd0012fd7c4b8bcaaa63524e",
     "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv": "1040b68ea7824e3d495c6cc4255983ce94ca376dff69bd56e21e81af658b85dd",
     "rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv": "b4a9f659cf4e69e73a688a24b126426f29263366257b6b2ae104479eb1293da3",
-    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "7354eacf3f6c171f784bf2da4109e281fd0ae5135d09d7afd5396a97e65725a6",
-    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "af29f8b8f83597bf1a8c9a657a9dd79fbb04b399781895b48f4efaa2b8c5b864",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
     "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
-    "rtl/test/tb_a3_hc_pre_t1.sv": "a607b81a7e101d7c196f80d2d7d4dda9635aad803b5b1b399393bfc24acd95bf",
+    "rtl/test/tb_a3_hc_pre_t1.sv": "1ff854ddae6015a38ca3e688add514c5c1cef9cd4aa52bffd2c801a6d594fe6f",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
     "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
-    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06679cce0d33bdb4a043060f0aa7f3000ac94cd4d417fd64edb9f8089e447a5c",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_weights.u32le": "f4d046389962e663ae789177c9e86f2643df701270d5b385ab9840f7c6148a63",
     "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1",
-    "tools/build_a3_hc_pre_t1_vectors.py": "e4e2e0544d8a159adfdf0e995131bab685e1df6bf01b9ad8686b772ab8c082dd",
-    "tools/build_a3_mhc_pre_tile_vectors.py": "013e096d5486d59f072249c95be06e1840f9fa2ce1f385037b53fc8cf8e1469a",
+    "tools/build_a3_hc_pre_t1_vectors.py": "79cf66020acb1a0495368df709c9154c343485febe3048ec2a33c868591cf865",
+    "tools/build_a3_mhc_pre_tile_vectors.py": "d75dd0efbc2e561234374d6b7ba88ec21517afc13adf063f83855dd57b67ed71",
     "tools/extract_a3_hc_pre_t1_checkpoint.py": "70b754d9d94473a63ab414852977f45761b9126a85f50423e76803c0da08b035",
-    "tools/run_a3_hc_pre_t1_rtl_campaign.py": "e8421b9d2497e0f9afdf16adf34808b723af3f2bb78a71ecb31e07312affec5d"
+    "tools/run_a3_hc_pre_t1_rtl_campaign.py": "f88691ab49ac7d91085bee368d7317a49a7f968247a764a9b433969b66e1810f"
   },
   "status": "pass",
   "synthesis_frontend": {
@@ -151,10 +151,10 @@
   "vector_sha256": {
     "testdata/rtl/a3_hc_pre_t1/expected.hex": "4c5d44fcd0d92516c6fa6bb2b24d2fd2c52f6cc729c0a05a9e90e22d7c9fc4f1",
     "testdata/rtl/a3_hc_pre_t1/fma_cases.hex": "4d10c558789f49bb71c991073a79eccaa51bad72f95a7379c626c2e82f0e71e7",
-    "testdata/rtl/a3_hc_pre_t1/hbm_config.hex": "7233d2289ea2010249c06cd59a3cba436da9d6c7d84d2646ec018dc03e26b42d",
-    "testdata/rtl/a3_hc_pre_t1/index.json": "a7effe068eb914981d3c77ddf574d41e36ff9113a7e464811797b1b36623cfb6",
+    "testdata/rtl/a3_hc_pre_t1/hbm_config.hex": "070a89414c318226f1964ba87496b531712038eb8bc9061a227fafd5aa427856",
+    "testdata/rtl/a3_hc_pre_t1/index.json": "44e9d27d6d128a7edae62580e44ae28624898520c67a829c02f05793c41e9fda",
     "testdata/rtl/a3_hc_pre_t1/meta.hex": "caa67ec523dd23ec65d84323d66bfbc474c882f8a466bab3f98aa5947f35124b",
-    "testdata/rtl/a3_hc_pre_t1/rom_config.hex": "fa678931c9bed0aafd0b6579ba38b9f9a72d0ebde240e718bba12df252b5d697",
+    "testdata/rtl/a3_hc_pre_t1/rom_config.hex": "8389cc3d5d446995abfa186693e95cf59b2ddac496dc230df059a5bcb3be7c8d",
     "testdata/rtl/a3_hc_pre_t1_checkpoint/base.hex": "a8d9a1f9a1b714499a3f43b2b9ed48445370a418bf1219960562a9ef3203063b",
     "testdata/rtl/a3_hc_pre_t1_checkpoint/hidden.hex": "b6c73f0f29f553cd5d88b169989accac6d3554a35becbe66b6411db8690c53dd",
     "testdata/rtl/a3_hc_pre_t1_checkpoint/index.json": "b9eb9f2ff0c5917f4eedecd04e4d5f4249c8d885096494199a098f30cc75731b",
@@ -162,11 +162,11 @@
     "testdata/rtl/a3_hc_pre_t1_checkpoint/scale.hex": "5ef82263570509b9bf53f08a0288724f9717b7e0724c23c4047ea7a6303b45b5"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.060416878084652126,
-    "iverilog_simulation": 420.3885549879633,
-    "verilator_compile": 27.516031938022934,
-    "verilator_simulation": 7.215751074953005,
-    "yosys_elaboration": 56.655338197015226
+    "iverilog_compile": 0.035479343961924314,
+    "iverilog_simulation": 268.2968404239509,
+    "verilator_compile": 21.579094497021288,
+    "verilator_simulation": 4.620336259016767,
+    "yosys_elaboration": 42.7188129699789
   },
   "witness": {
     "coefficient_u32le_sha256": "230486960b73611968868cb0999567ec2085a3e6e37cca0fe8d063c174d61a02",

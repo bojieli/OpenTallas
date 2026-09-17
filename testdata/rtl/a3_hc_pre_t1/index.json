@@ -23,18 +23,18 @@
   "descriptors": {
     "hbm_pc14": {
       "active_tokens": 1,
-      "config_u32le_sha256": "d42b88613c9032ab1c6b4bfd2c025205e337813ebfeabb5e06b87d83e697e702",
-      "deployment_sha256": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
-      "instruction_sha256": "1495e79701542b0ef97e414465a67b323fa24c8d793a58b176dd3ee2d164c8ec",
-      "operator_descriptor_id": 545,
+      "config_u32le_sha256": "0594fb509c2825c6917fa6d907d6b2aa948eaed2fe77df13f8169ac81c307e1b",
+      "deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "instruction_sha256": "0bd7117d6ad041f84244f234b7cc425933578cec3b75822c975be968d153c1b1",
+      "operator_descriptor_id": 547,
       "profile": 1,
       "program_counter": 14,
-      "wait_set_descriptor_id": 546
+      "wait_set_descriptor_id": 548
     },
     "rom_pc15": {
       "active_tokens": 1,
-      "config_u32le_sha256": "85bd9604acd7b34b5f96a969835e0505e22bb30b410ddc7cfe165b122786666c",
-      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "config_u32le_sha256": "69bc63f4ce139d76c30ff5d83d4653f935f9ac4d85fe3627c00dfda745589a55",
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
       "instruction_sha256": "bc5a265299499d7851804b9730ea32ce8f4c1597e0f9ea3884984a6fd85c44ab",
       "operator_descriptor_id": 381,
       "profile": 0,
@@ -55,7 +55,7 @@
     },
     "hbm_config.hex": {
       "bytes": 1152,
-      "sha256": "7233d2289ea2010249c06cd59a3cba436da9d6c7d84d2646ec018dc03e26b42d",
+      "sha256": "070a89414c318226f1964ba87496b531712038eb8bc9061a227fafd5aa427856",
       "words": 128
     },
     "meta.hex": {
@@ -65,7 +65,7 @@
     },
     "rom_config.hex": {
       "bytes": 1152,
-      "sha256": "fa678931c9bed0aafd0b6579ba38b9f9a72d0ebde240e718bba12df252b5d697",
+      "sha256": "8389cc3d5d446995abfa186693e95cf59b2ddac496dc230df059a5bcb3be7c8d",
       "words": 128
     }
   },
@@ -96,15 +96,15 @@
     },
     "testdata/compiler/abi3_deployment/a3_descriptor.hex": {
       "bytes": 3153920,
-      "sha256": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616"
+      "sha256": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb"
     },
     "testdata/compiler/abi3_deployment/a3_program.hex": {
       "bytes": 266240,
-      "sha256": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505"
+      "sha256": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c"
     },
     "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": {
-      "bytes": 353271,
-      "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
+      "bytes": 362723,
+      "sha256": "06679cce0d33bdb4a043060f0aa7f3000ac94cd4d417fd64edb9f8089e447a5c"
     },
     "testdata/rtl/a3_hc_pre_t1_checkpoint/index.json": {
       "bytes": 4186,
@@ -123,16 +123,16 @@
       "sha256": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1"
     },
     "tools/build_a3_hc_pre_t1_vectors.py": {
-      "bytes": 21385,
-      "sha256": "e4e2e0544d8a159adfdf0e995131bab685e1df6bf01b9ad8686b772ab8c082dd"
+      "bytes": 22550,
+      "sha256": "79cf66020acb1a0495368df709c9154c343485febe3048ec2a33c868591cf865"
     },
     "tools/build_a3_mhc_pre_tile_vectors.py": {
-      "bytes": 25744,
-      "sha256": "013e096d5486d59f072249c95be06e1840f9fa2ce1f385037b53fc8cf8e1469a"
+      "bytes": 28052,
+      "sha256": "d75dd0efbc2e561234374d6b7ba88ec21517afc13adf063f83855dd57b67ed71"
     }
   },
   "status": "exact_checkpoint_and_descriptor_vectors",
-  "vector_set_id": "b06709d11c47fb6742c42823a95047d1d1b2c61ca356fddea9d5af958d206759",
+  "vector_set_id": "3b84678bb7653eff77c69f8fce5d48a3a4afa9f953df5dc499e68e8642724097",
   "witness": {
     "coefficient_u32le_sha256": "230486960b73611968868cb0999567ec2085a3e6e37cca0fe8d063c174d61a02",
     "counters": {

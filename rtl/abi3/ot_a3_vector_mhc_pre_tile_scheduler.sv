@@ -134,8 +134,8 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
     reg instruction_hbm;
     always @* instruction_hbm =
         (cfg(config_words, 2) == 32'd14) &&
-        (cfg(config_words, 4) == 32'd545) &&
-        (cfg(config_words, 5) == 32'd546) &&
+        (cfg(config_words, 4) == 32'd547) &&
+        (cfg(config_words, 5) == 32'd548) &&
         (cfg(config_words, 7) == 32'd4);
     wire instruction_supported =
         profile_known && instruction_common &&
@@ -172,15 +172,15 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
         (cfg(config_words, 23) == 32'd377);
     reg operator_hbm;
     always @* operator_hbm =
-        (cfg(config_words, 15) == 32'd535) &&
-        (cfg(config_words, 16) == 32'd543) &&
-        (cfg(config_words, 17) == 32'd544) &&
-        (cfg(config_words, 18) == 32'd537) &&
-        (cfg(config_words, 19) == 32'd538) &&
-        (cfg(config_words, 20) == 32'd539) &&
-        (cfg(config_words, 21) == 32'd540) &&
-        (cfg(config_words, 22) == 32'd541) &&
-        (cfg(config_words, 23) == 32'd542);
+        (cfg(config_words, 15) == 32'd537) &&
+        (cfg(config_words, 16) == 32'd545) &&
+        (cfg(config_words, 17) == 32'd546) &&
+        (cfg(config_words, 18) == 32'd539) &&
+        (cfg(config_words, 19) == 32'd540) &&
+        (cfg(config_words, 20) == 32'd541) &&
+        (cfg(config_words, 21) == 32'd542) &&
+        (cfg(config_words, 22) == 32'd543) &&
+        (cfg(config_words, 23) == 32'd544);
     wire operator_supported =
         operator_common &&
         ((profile == PROFILE_ROM && operator_rom) ||
@@ -220,24 +220,24 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
         (cfg(config_words, 63) == 0);
     reg schedule_rom;
     always @* schedule_rom =
-        (cfg(config_words, 54) == 32'd32) &&
-        (cfg(config_words, 55) == 32'd128) &&
-        (cfg(config_words, 56) == 32'd4096) &&
-        (cfg(config_words, 57) == 32'd1024) &&
-        (cfg(config_words, 58) == 32'h4000_0000) &&
-        (cfg(config_words, 59) == 32'd56) &&
+        (cfg(config_words, 54) == 32'd1) &&
+        (cfg(config_words, 55) == 32'd131072) &&
+        (cfg(config_words, 56) == 32'd4) &&
+        (cfg(config_words, 57) == 32'd1) &&
+        (cfg(config_words, 58) == 32'd8) &&
+        (cfg(config_words, 59) == 32'd3) &&
         (cfg(config_words, 61) == 32'd3) &&
-        (cfg(config_words, 62) == 32'd32);
+        (cfg(config_words, 62) == 32'd1);
     reg schedule_hbm;
     always @* schedule_hbm =
-        (cfg(config_words, 54) == 32'd2) &&
-        (cfg(config_words, 55) == 32'd64) &&
-        (cfg(config_words, 56) == 32'd8) &&
+        (cfg(config_words, 54) == 32'd1) &&
+        (cfg(config_words, 55) == 32'd512) &&
+        (cfg(config_words, 56) == 32'd4) &&
         (cfg(config_words, 57) == 32'd1) &&
         (cfg(config_words, 58) == 32'd8) &&
         (cfg(config_words, 59) == 32'd3) &&
         (cfg(config_words, 61) == 32'd128) &&
-        (cfg(config_words, 62) == 32'd64);
+        (cfg(config_words, 62) == 32'd1);
     wire schedule_supported =
         schedule_common &&
         ((profile == PROFILE_ROM && schedule_rom) ||

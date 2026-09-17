@@ -286,11 +286,31 @@ module tb_a3_hc_pre_t1;
             expect64("scheduler logical FMAs", scheduler_logical_fmas, 393216);
             expect64("scheduler logical outputs", scheduler_logical_outputs, 24);
             if (profile == 0) begin
-                expect64("ROM projection tiles", scheduler_projection_tiles, 16);
-                expect64("ROM commit tiles", scheduler_commit_tiles, 2);
+                //: AM-E9 TILE COUNTS, AND THEY ARE THE SAME ON BOTH STORES.
+                //:
+                //: These were 16 and 2 on ROM against 49,152 and 3 on HBM -- a
+                //: 3,072x difference in what the cycle model charges for
+                //: IDENTICAL work, which is the asymmetry AM-E9 exists to remove
+                //: (CHIP_ARCHITECTURE_DESIGN section 7.2: one graph lowered
+                //: through two private tile policies handed the ROM side a 2x
+                //: tensor-lane and 16x column-group advantage).
+                //:
+                //: Under the shared rule in compiler/backends/schedule_rule.py
+                //: both stores now carry tile_cols 4 and tile_depth 1 with
+                //: tile_rows equal to the surface, so both walk
+                //: ceil(1/tile_rows) * ceil(24/4) * ceil(16384/1) = 98,304
+                //: projection tiles and ceil(8/4) + ceil(16/4) = 6 commit tiles.
+                //: The engine's walk was already right; these numbers were the
+                //: pre-amendment ones.
+                //:
+                //: The logical work is unchanged and still checked above --
+                //: 393,216 FMAs and 24 outputs -- so this is a change in tiling
+                //: granularity and not in what the engine computes.
+                expect64("ROM projection tiles", scheduler_projection_tiles, 98304);
+                expect64("ROM commit tiles", scheduler_commit_tiles, 6);
             end else begin
-                expect64("HBM projection tiles", scheduler_projection_tiles, 49152);
-                expect64("HBM commit tiles", scheduler_commit_tiles, 3);
+                expect64("HBM projection tiles", scheduler_projection_tiles, 98304);
+                expect64("HBM commit tiles", scheduler_commit_tiles, 6);
                 for (word = 0; word < 8; word = word + 1) begin
                     expect32("ROM/HBM weight parity",
                              result_weight_codes[32*word +: 32],

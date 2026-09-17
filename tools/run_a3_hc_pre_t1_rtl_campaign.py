@@ -363,8 +363,13 @@ def campaign(output: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
                 "checkpoint_token_id": 18_042,
                 "all_74_numeric_boundary_words_exact": True,
                 "qualified_t512_first_24_output_words_exact": True,
-                "current_rom_pc15_descriptor_381_execution": True,
-                "current_hbm_pc14_descriptor_545_execution": True,
+                # Keyed on the PROGRAM COUNTER, which is the program's own
+                # identity for this operator, and not on a descriptor id, which is
+                # a position every earlier removal shifts. The HBM operator was
+                # 545 when these keys were written and is 547 now, so a key naming
+                # the id would have reported a stale number as a passing check.
+                "current_rom_pc15_execution": True,
+                "current_hbm_pc14_execution": True,
                 "rom_hbm_output_parity": True,
                 "busy_input_refusal_and_input_latching": True,
                 "active_reset": True,
