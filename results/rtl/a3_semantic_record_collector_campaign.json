@@ -1,0 +1,109 @@
+{
+  "does_not_establish": [
+    "that the collector is connected to ot_a3_microsequencer's descriptor port: it is driven by a bench here",
+    "any token, any engine execution, and any timing or area claim",
+    "that a descriptor arriving before the operator is handled -- it is not, by design: the record simply never completes, because nothing can recognise a view by id before reading the descriptor that names it"
+  ],
+  "establishes": [
+    "the collector produces, from raw descriptor bytes, exactly the 128-word record config_words produces from decoded descriptors -- on both shipped stores and under both simulators",
+    "roles are matched by descriptor identity: the ten non-operator descriptors are presented in an order that is neither role order nor the sequencer's",
+    "the field slices are generated from the ABI's own offset tables, so the RTL and the Python reference cannot disagree about where a field lives"
+  ],
+  "presentation_order": [
+    "operator",
+    "output1",
+    "numeric",
+    "input2",
+    "wait",
+    "schedule",
+    "input0",
+    "output0",
+    "counter",
+    "input3",
+    "input1"
+  ],
+  "results": {
+    "icarus": {
+      "errors": 0,
+      "pass": true,
+      "stores": 2,
+      "words_checked": 256
+    },
+    "verilator": {
+      "errors": 0,
+      "pass": true,
+      "stores": 2,
+      "words_checked": 256
+    }
+  },
+  "schema": "opentallas.a3_semantic_record_collector.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_semantic_record_collector.sv": "acde446572eda6ed895b4c3b58a8801bc180dcd6d19143e288cb4c95c41048ce",
+    "rtl/abi3/ot_a3_semantic_record_slices.svh": "30e635779cd89099613c3790c3c877af2ccc99529e06ba1d7ee55835d471e4ca",
+    "rtl/test/tb_a3_semantic_record_collector.sv": "5f5936498b711bde95df7db6aef2a251ecf785ef46cb93cd55465947af1e32ac",
+    "tools/run_a3_semantic_record_collector_campaign.py": "edb1038ab5b006ea5d61cc8673cba4fda80bf054331c3b94450ef20bdf5f1e38"
+  },
+  "status": "pass",
+  "stores": {
+    "hbm": {
+      "deployment_sha256": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "descriptor_ids_in_presentation_order": [
+        547,
+        544,
+        545,
+        541,
+        548,
+        546,
+        539,
+        543,
+        537,
+        542,
+        540
+      ],
+      "expected_record_sha256": "0594fb509c2825c6917fa6d907d6b2aa948eaed2fe77df13f8169ac81c307e1b",
+      "files": {
+        "hbm_descriptors.hex": "beb547d8cd2e29fbdb9a26aa76a7aa0031c95cb33bea724707e8e38753e76a18",
+        "hbm_expected.hex": "070a89414c318226f1964ba87496b531712038eb8bc9061a227fafd5aa427856",
+        "hbm_meta.hex": "d3794fae25211bbf32a53a8f05afcc2cb281402da027f937908b128cfd47c1a6"
+      },
+      "key": "deepseek-v4-flash-hbm-cluster",
+      "operator_descriptor_id": 547,
+      "program_counter": 14
+    },
+    "rom": {
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "descriptor_ids_in_presentation_order": [
+        381,
+        377,
+        378,
+        372,
+        382,
+        379,
+        370,
+        375,
+        380,
+        373,
+        371
+      ],
+      "expected_record_sha256": "69bc63f4ce139d76c30ff5d83d4653f935f9ac4d85fe3627c00dfda745589a55",
+      "files": {
+        "rom_descriptors.hex": "ee1aee137ecd7e932329a9d1597a42384527f5fcf212ec5a984aaab1df7fd93f",
+        "rom_expected.hex": "8389cc3d5d446995abfa186693e95cf59b2ddac496dc230df059a5bcb3be7c8d",
+        "rom_meta.hex": "f683fde30812fae7dbd213e5617e37b20d5d1aee4349da6e7efe6d19d8b50967"
+      },
+      "key": "deepseek-v4-flash-rom-wafer",
+      "operator_descriptor_id": 381,
+      "program_counter": 15
+    }
+  },
+  "vector_sha256": {
+    "hbm_descriptors.hex": "beb547d8cd2e29fbdb9a26aa76a7aa0031c95cb33bea724707e8e38753e76a18",
+    "hbm_expected.hex": "070a89414c318226f1964ba87496b531712038eb8bc9061a227fafd5aa427856",
+    "hbm_meta.hex": "d3794fae25211bbf32a53a8f05afcc2cb281402da027f937908b128cfd47c1a6",
+    "index.json": "241c4a0fc9590c2f5253cf02b2eb78d2ce768587d7d7eda49aa94388869cd38e",
+    "rom_descriptors.hex": "ee1aee137ecd7e932329a9d1597a42384527f5fcf212ec5a984aaab1df7fd93f",
+    "rom_expected.hex": "8389cc3d5d446995abfa186693e95cf59b2ddac496dc230df059a5bcb3be7c8d",
+    "rom_meta.hex": "f683fde30812fae7dbd213e5617e37b20d5d1aee4349da6e7efe6d19d8b50967"
+  }
+}
