@@ -70,8 +70,31 @@ def test_release_is_registered_under_its_own_model_id() -> None:
     assert resolve_release(MODEL_ID) is V41_FLASH
     assert resolve_release(V41_FLASH) is V41_FLASH
     assert MODEL_ID == "deepseek-v4.1-flash"
-    # The two V4 records are still reachable and unchanged in identity.
-    assert set(RELEASES) == {FLASH.model_id, PRO.model_id, V41_FLASH.model_id}
+    # The two V4 records are still reachable and unchanged in identity, and the
+    # reduced regression fixture sits beside them as its own pinned record --
+    # a SECOND contract rather than a weakened one, the way
+    # compiler/qwen3/adapter.py carries its own.
+    from compiler.frontend.deepseek_v4_releases import V41_FLASH_REDUCED
+
+    assert set(RELEASES) == {
+        FLASH.model_id,
+        PRO.model_id,
+        V41_FLASH.model_id,
+        V41_FLASH_REDUCED.model_id,
+    }
+    assert V41_FLASH_REDUCED is not V41_FLASH
+    assert resolve_release(V41_FLASH_REDUCED.model_id) is V41_FLASH_REDUCED
+    # It has no tokenizer and no model card, and says so rather than borrowing
+    # the release's digests: its checkpoint source lists four files and not one
+    # of them is either.
+    assert V41_FLASH_REDUCED.tokenizer_sha256 is None
+    assert V41_FLASH_REDUCED.tokenizer_config_sha256 is None
+    assert V41_FLASH_REDUCED.model_card_sha256 is None
+    assert V41_FLASH.tokenizer_sha256 is not None
+    # And it pins the vision tower ABSENT, which is a statement the validator
+    # checks, not a silence.
+    assert V41_FLASH_REDUCED.config_sections["vision_config"] is None
+    assert V41_FLASH.config_sections["vision_config"] is not None
 
 
 def test_committed_config_is_byte_exact_official_source() -> None:

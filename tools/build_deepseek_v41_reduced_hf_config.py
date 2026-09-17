@@ -42,6 +42,7 @@ naming correspondence is supported by a pair that IS tested,
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Mapping
@@ -248,6 +249,37 @@ def build_reduced_root() -> dict[str, Any]:
     return root
 
 
+def register_in_checkpoint_source(config_path: Path) -> dict[str, Any]:
+    """Add this config to the fixture's own source contract.
+
+    ``load_official_config`` authenticates the config bytes against the release
+    record AND against the checkpoint source contract wherever that contract is
+    committed, so a config the contract does not list is refused with a bare
+    KeyError on 'config.json'. The reduced fixture's contract is written by
+    tools/build_deepseek_v41_reduced_model.py, which emits the runtime config
+    and not this one, so this file registers itself -- idempotently, since the
+    builder rewrites the contract whenever the fixture is regenerated.
+    """
+
+    path = REDUCED / "checkpoint_source.json"
+    contract = json.loads(path.read_text())
+    payload = config_path.read_bytes()
+    entry = {
+        "path": "config.json",
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "size_bytes": len(payload),
+    }
+    files = [f for f in contract["expected_files"] if f.get("path") != "config.json"]
+    files.append(entry)
+    contract["expected_files"] = sorted(files, key=lambda f: f["path"])
+    if "config.json" not in contract.get("required_files", []):
+        contract["required_files"] = sorted(
+            set(contract.get("required_files", [])) | {"config.json"}
+        )
+    path.write_text(json.dumps(contract, indent=2, sort_keys=True) + "\n")
+    return entry
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--output", type=Path, default=REDUCED / "config.json")
@@ -266,6 +298,9 @@ def main() -> int:
         return 0
     args.output.write_text(text)
     print(f"wrote {args.output} ({len(text)} bytes)")
+    entry = register_in_checkpoint_source(args.output)
+    print(f"registered in checkpoint_source.json: {entry['sha256'][:16]} "
+          f"over {entry['size_bytes']} bytes")
     architecture = root["text_config"]
     for key in ("hidden_size", "num_hidden_layers", "num_attention_heads",
                 "num_key_value_heads", "head_dim", "moe_intermediate_size",

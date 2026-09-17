@@ -77,9 +77,17 @@ class DeepSeekV4Release:
     tensor_structure_sha256: str
     tensor_structure_evidence: str
     inference_config_sha256: str
-    model_card_sha256: str
-    tokenizer_sha256: str
-    tokenizer_config_sha256: str
+    #: ``None`` where the model HAS no such artefact. A released model always
+    #: has all three; a committed regression fixture has none of them -- its
+    #: checkpoint source lists four files and not one is a tokenizer or a card.
+    #:
+    #: The annotation widens rather than gaining a default on purpose: every
+    #: caller still has to say what it means, so a released record cannot grow a
+    #: silent None by omission, and a fixture's None is a statement rather than
+    #: an oversight.
+    model_card_sha256: str | None
+    tokenizer_sha256: str | None
+    tokenizer_config_sha256: str | None
     main_compress_ratios: tuple[int, ...]
     dspark_compress_ratios: tuple[int, ...]
     config_scalars: Mapping[str, Any]
@@ -759,8 +767,169 @@ V41_FLASH = DeepSeekV4Release(
 )
 
 
+#: The reduced V4.1 regression fixture, pinned as its own release.
+#:
+#: A SECOND PINNED RECORD, not a weakened pin -- the principle
+#: compiler/qwen3/adapter.py states for its own reduced contract. Every
+#: check the released path makes is made here against this fixture's own
+#: digests and its own shape facts, and a config matching neither record is
+#: still refused.
+#:
+#: Three fields are None because the fixture HAS no such artefact: its
+#: checkpoint source lists four files -- the runtime config, one shard, the
+#: index and parameter_formats -- and not one is a tokenizer or a model
+#: card. ``config_sections`` pins the vision tower ABSENT for the same
+#: reason, which is a statement the validator checks rather than a silence.
+V41_FLASH_REDUCED = DeepSeekV4Release(
+    model_id="deepseek-v4.1-flash-reduced-v1",
+    repository="opentallas/deepseek-v4.1-flash-reduced-v1",
+    revision="08dc6a7b6fcca3313acffed7ae2991b82b1a09dd",
+    config_sha256=(
+        "2089a4019f5d445798fdcf287c158a64fd7869a06ebe188aac3145c4e3d3b718"
+    ),
+    config_bytes=2938,
+    index_sha256=(
+        "18458ac663386b63726134a9b14c822802b19e7a3847f84da6536d0a02f0ba18"
+    ),
+    shard_count=1,
+    tensor_count=4_264,
+    payload_bytes=40_258_841,
+    #: Derived by build_official_tensor_specs from this record's own config
+    #: and corroborated against the checkpoint index: 4,264 names agreeing
+    #: one for one, no shape or dtype differing, and the same payload total.
+    tensor_structure_sha256=(
+        "c139eb41d40edc68494f7bca62391cf827d5d220fa59b68464e6f34bdfbe2552"
+    ),
+    tensor_structure_evidence="derived_and_confronted_with_checkpoint_index",
+    inference_config_sha256=(
+        "fa73a0ccb4f4ea4c6a13b31551cac7996dae65eb29d79de7fcbb8dc3f538f8fd"
+    ),
+    #: No model card and no tokenizer: this fixture has neither.
+    model_card_sha256=None,
+    tokenizer_sha256=None,
+    tokenizer_config_sha256=None,
+    main_compress_ratios=(0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    dspark_compress_ratios=(0, 0, 0),
+    config_scalars=MappingProxyType(
+        {
+            "attention_bias": False,
+            "attention_dropout": 0.0,
+            "candidate_block_size": 8,
+            "candidate_source_layer_id": 20,
+            "candidate_topk_blocks": 64,
+            "compress_rope_theta": 160000,
+            "dspark_block_size": 5,
+            "dspark_markov_rank": 32,
+            "dspark_n_routed_experts": 4,
+            "dspark_noise_token_id": 128799,
+            "dspark_num_experts_per_tok": 3,
+            "dspark_target_layer_ids": [37, 38, 39],
+            "engram_compressed_vocab_size": 99092,
+            "engram_head_dim": 32,
+            "engram_layer_ids": [1, 14],
+            "engram_max_ngram_size": 4,
+            "engram_n_heads": 8,
+            "engram_num_embeddings": [189998, 195592],
+            "engram_pad_token_id": 2,
+            "engram_vocab_size": 7812,
+            "hc_eps": 1e-06,
+            "hc_mult": 4,
+            "hc_sinkhorn_iters": 20,
+            "head_dim": 32,
+            "hidden_act": "silu",
+            "hidden_size": 160,
+            "index_head_dim": 32,
+            "index_n_heads": 32,
+            "index_source_layer_ids": [2, 8, 14, 20, 24, 28, 32, 36],
+            "index_topk": 16,
+            "initializer_range": 0.02,
+            "kv_source_layer_ids": [2, 8, 14, 20],
+            "max_position_embeddings": 24,
+            "model_type": "deepseek_v41_text",
+            "moe_intermediate_size": 64,
+            "n_routed_experts": 12,
+            "n_shared_experts": 1,
+            "norm_topk_prob": True,
+            "num_attention_heads": 64,
+            "num_experts_per_tok": 6,
+            "num_hidden_layers": 40,
+            "num_key_value_heads": 1,
+            "num_nextn_predict_layers": 3,
+            "o_groups": 8,
+            "o_lora_rank": 32,
+            "q_lora_rank": 32,
+            "qk_rope_head_dim": 4,
+            "rms_norm_eps": 1e-20,
+            "rope_theta": 10000,
+            "routed_scaling_factor": 1.5,
+            "scoring_func": "sqrtsoftplus",
+            "sliding_window": 128,
+            "swiglu_limit": 10.0,
+            "tie_word_embeddings": False,
+            "topk_method": "noaux_tc",
+            "use_cache": True,
+            "vocab_size": 4040,
+        }
+    ),
+    quantization_config=MappingProxyType(
+        {
+            "activation_scheme": "dynamic",
+            "expert_dtype": "fp4",
+            "quant_method": "fp8",
+            "scale_fmt": "ue8m0",
+            "weight_block_size": [32, 32],
+        }
+    ),
+    rope_scaling=MappingProxyType(
+        {
+            "beta_fast": 32,
+            "beta_slow": 1,
+            "factor": 16,
+            "original_max_position_embeddings": 65536,
+            "rope_type": "yarn",
+        }
+    ),
+    tensor_content_sha256=(
+        "09b0308369f0dac4c833d348e9aa8d1a632b8ffde340d01da66b806d1c4a31f3"
+    ),
+    checkpoint_lock_id=(
+        "0c2881c91799c131a0773808114b3e1e640e4cfa39610f7e5955ef289ada8e07"
+    ),
+    supported_compress_ratios=(0, 1, 2),
+    config_layout=MappingProxyType(
+        {
+            "architecture": ("text_config",),
+            "rope_scaling": ("text_config",),
+            "compress_ratios": ("text_config",),
+            "quantization_config": (),
+        }
+    ),
+    config_sections=MappingProxyType(
+        {
+            "": MappingProxyType(
+                {
+                    "architectures": ["DeepseekV41ForCausalLM"],
+                    "bos_token_id": 0,
+                    "dtype": "bfloat16",
+                    "eos_token_id": 1,
+                    "image_token_id": 129264,
+                    "model_type": "deepseek_v41",
+                    "pad_token_id": 2,
+                }
+            ),
+            #: PINNED ABSENT: the workload is text only and the reduction
+            #: excludes the tower, so a config that carries one is refused.
+            "vision_config": None,
+        }
+    ),
+)
+
+
 RELEASES: Mapping[str, DeepSeekV4Release] = MappingProxyType(
-    {release.model_id: release for release in (FLASH, PRO, V41_FLASH)}
+    {
+        release.model_id: release
+        for release in (FLASH, PRO, V41_FLASH, V41_FLASH_REDUCED)
+    }
 )
 
 
@@ -787,6 +956,7 @@ __all__ = [
     "PRO",
     "RELEASES",
     "V41_FLASH",
+    "V41_FLASH_REDUCED",
     "DeepSeekV4Release",
     "DeepSeekV4ReleaseError",
     "resolve_release",

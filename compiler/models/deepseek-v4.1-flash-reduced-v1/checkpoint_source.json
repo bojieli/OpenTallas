@@ -1,2 +1,39 @@
-{"checkpoint_index":"model.safetensors.index.json","expected_files":[{"path":"inference_config.json","sha256":"fa73a0ccb4f4ea4c6a13b31551cac7996dae65eb29d79de7fcbb8dc3f538f8fd","size_bytes":2159},{"path":"model-00001-of-00001.safetensors","sha256":"b079aacc019242dfa6bc67611ad4b25ac1721b0ff89fa21d837a045bd6db6722","size_bytes":40688625},{"path":"model.safetensors.index.json","sha256":"18458ac663386b63726134a9b14c822802b19e7a3847f84da6536d0a02f0ba18","size_bytes":318274},{"path":"parameter_formats.json","sha256":"3d2590e4ff12da5b04a9e05a53776bf3ddf471e70f1b5cd21488fa6fc9b03c0e","size_bytes":464561}],"remote_code_policy":"disabled","repository":"opentallas/deepseek-v4.1-flash-reduced-v1","required_files":["inference_config.json","parameter_formats.json"],"revision":"08dc6a7b6fcca3313acffed7ae2991b82b1a09dd","schema":"opentallas.checkpoint_source.v1"}
-
+{
+  "checkpoint_index": "model.safetensors.index.json",
+  "expected_files": [
+    {
+      "path": "config.json",
+      "sha256": "2089a4019f5d445798fdcf287c158a64fd7869a06ebe188aac3145c4e3d3b718",
+      "size_bytes": 2938
+    },
+    {
+      "path": "inference_config.json",
+      "sha256": "fa73a0ccb4f4ea4c6a13b31551cac7996dae65eb29d79de7fcbb8dc3f538f8fd",
+      "size_bytes": 2159
+    },
+    {
+      "path": "model-00001-of-00001.safetensors",
+      "sha256": "b079aacc019242dfa6bc67611ad4b25ac1721b0ff89fa21d837a045bd6db6722",
+      "size_bytes": 40688625
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "sha256": "18458ac663386b63726134a9b14c822802b19e7a3847f84da6536d0a02f0ba18",
+      "size_bytes": 318274
+    },
+    {
+      "path": "parameter_formats.json",
+      "sha256": "3d2590e4ff12da5b04a9e05a53776bf3ddf471e70f1b5cd21488fa6fc9b03c0e",
+      "size_bytes": 464561
+    }
+  ],
+  "remote_code_policy": "disabled",
+  "repository": "opentallas/deepseek-v4.1-flash-reduced-v1",
+  "required_files": [
+    "config.json",
+    "inference_config.json",
+    "parameter_formats.json"
+  ],
+  "revision": "08dc6a7b6fcca3313acffed7ae2991b82b1a09dd",
+  "schema": "opentallas.checkpoint_source.v1"
+}

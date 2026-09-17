@@ -119,7 +119,7 @@ from typing import Any, Mapping, Sequence
 
 from compiler.frontend.checkpoint import CheckpointError, load_checkpoint_lock
 from compiler.frontend.deepseek_v4 import TensorSpec
-from compiler.frontend.deepseek_v4_releases import V41_FLASH, DeepSeekV4Release
+from compiler.frontend.deepseek_v4_releases import V41_FLASH, DeepSeekV4Release, V41_FLASH_REDUCED
 from compiler.frontend.deepseek_v41 import (
     DeepSeekV41AdapterError,
     build_official_tensor_specs,
@@ -185,6 +185,19 @@ ENGRAM_SOURCE_SHA256 = (
 #: V4 front end spells this constant the same way; unlike V4's, this one is not
 #: a literal, because a capacity written twice is a capacity that can drift.
 ARCHITECTURAL_MAX_CONTEXT = int(V41_FLASH.scalar("max_position_embeddings"))
+
+
+def architectural_max_context(profile: "DeepSeekV41Profile") -> int:
+    """One profile's published capacity, read from ITS OWN release record.
+
+    ``ARCHITECTURAL_MAX_CONTEXT`` above reads the released record, and its own
+    comment gives the reason a capacity should not be written twice: it can
+    drift. The same argument says a SECOND model must not inherit the first's
+    capacity, which is what a module constant does -- the reduced fixture
+    publishes 24 and was refused against the release's 1,048,576.
+    """
+
+    return int(profile.release.scalar("max_position_embeddings"))
 
 #: Deployment maximum this export targets, as for V4: the next power of two
 #: above the 200,000-token DeepSeek acceptance run of ADR-003 section 18.  It is
@@ -723,7 +736,7 @@ class DeepSeekV41Profile:
             ("engram_compressed_vocab_size", self.engram_compressed_vocabulary),
             ("engram_pad_token_id", self.engram_pad_token),
             ("engram_vocab_size", self.engram_bucket_base),
-            ("max_position_embeddings", ARCHITECTURAL_MAX_CONTEXT),
+            ("max_position_embeddings", architectural_max_context(self)),
             # The scalars the emitted kernels carry rather than are sized by.
             # They are pinned for the reason the V4 front end pins its route
             # scale: a wrong one has no downstream witness at all.  1.5 applied
@@ -749,10 +762,25 @@ V41_FLASH_PROFILE = DeepSeekV41Profile(
     generation_policy_id="deepseek_v41_flash_greedy_argmax_v1",
 )
 
+#: The reduced regression fixture, as its own profile.
+#:
+#: Its own numeric-profile and generation-policy identities, for the reason the
+#: released profiles state: two models must not share either, because a graph
+#: that did could not be told apart from the other in the numeric qualification
+#: ledger. Every width is still a property reading the released configuration --
+#: this profile just reads a different one, and ``architecture_pins`` confronts
+#: it with that config before anything is emitted.
+V41_FLASH_REDUCED_PROFILE = DeepSeekV41Profile(
+    release=V41_FLASH_REDUCED,
+    numeric_profile="deepseek_v41_flash_reduced_target_precision_v1",
+    generation_policy_id="deepseek_v41_flash_reduced_greedy_argmax_v1",
+)
+
 MODEL_ID = V41_FLASH_PROFILE.model_id
 
 MODEL_PROFILES: Mapping[str, DeepSeekV41Profile] = {
-    profile.model_id: profile for profile in (V41_FLASH_PROFILE,)
+    profile.model_id: profile
+    for profile in (V41_FLASH_PROFILE, V41_FLASH_REDUCED_PROFILE)
 }
 
 DEFAULT_SNAPSHOT = V41_FLASH.snapshot
@@ -926,10 +954,41 @@ def confront_layer_modes(
             if mode.index_source and mode.uses_candidates
             else 0
         )
-        if cap != derived_cap:
+        #: THE COMMITTED TABLE IS THE RELEASED MODEL'S, so for any other
+        #: profile the cap is confronted twice rather than not at all: the
+        #: committed number must be the RELEASED pool, which is what proves the
+        #: table is the one it claims to be, and the derived number must be THIS
+        #: profile's pool. For the released profile the two collapse into the
+        #: single equality this check has always made.
+        #:
+        #: The cap is the candidate pool when a layer scans, and a reduction
+        #: that narrows the pool narrows the cap with it -- the released 16,384
+        #: against the reduced fixture's 512. Comparing the reduced derivation
+        #: with the released table directly refused a model whose mode sequence
+        #: is identical, which is the one thing the reduction keeps exactly.
+        released_cap = (
+            V41_FLASH_PROFILE.candidate_pool_entries
+            if mode.index_source and mode.uses_candidates
+            else 0
+        )
+        if cap != released_cap:
+            raise DeepSeekV41KernelIRError(
+                f"layer {mode.layer}'s committed index scan cap {cap} is not "
+                f"the released model's {released_cap}, so the committed table "
+                f"is not the one this check confronts"
+            )
+        if profile.model_id == V41_FLASH_PROFILE.model_id and cap != derived_cap:
             raise DeepSeekV41KernelIRError(
                 f"layer {mode.layer} derives an index scan cap of {derived_cap} "
                 f"against the committed {cap}"
+            )
+        if derived_cap != (
+            profile.candidate_pool_entries
+            if mode.index_source and mode.uses_candidates
+            else 0
+        ):  # pragma: no cover - derived_cap is that expression
+            raise DeepSeekV41KernelIRError(
+                f"layer {mode.layer}'s derived cap is not its own profile's pool"
             )
     return derived
 
@@ -1672,10 +1731,11 @@ def export_deepseek_v41_kernel_graph(
         else Path(checkpoint_lock_path)
     )
 
-    if context_tokens < 1 or context_tokens > ARCHITECTURAL_MAX_CONTEXT:
+    capacity = architectural_max_context(profile)
+    if context_tokens < 1 or context_tokens > capacity:
         raise DeepSeekV41KernelIRError(
-            f"deployment context {context_tokens} is outside the architectural "
-            f"capacity 1..{ARCHITECTURAL_MAX_CONTEXT}"
+            f"deployment context {context_tokens} is outside "
+            f"{profile.model_id}'s architectural capacity 1..{capacity}"
         )
     if context_tokens % profile.sliding_window:
         raise DeepSeekV41KernelIRError(
@@ -4869,6 +4929,7 @@ __all__ = [
     "MAIN_LATENT_DTYPE",
     "MODEL_ID",
     "MODEL_PROFILES",
+    "V41_FLASH_REDUCED_PROFILE",
     "MODEL_SOURCE_SHA256",
     "SPECULATIVE_SOURCE_KINDS",
     "V41_FLASH_PROFILE",
