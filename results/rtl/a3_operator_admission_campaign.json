@@ -134,18 +134,18 @@
     "still_refused": [
       "VECTOR.SOFTMAX, checked in this campaign: an opcode with no datapath is still a CAPABILITY trap",
       "PC 68's DMA.GATHER is NO LONGER refused: it was, on a dense-row source dtype pinned to FP32 by the one gather the predicate had been written against, and it is issued as a passing case in this campaign now",
-      "the three MLP projections of the governed layer, PCs 50, 53 and 59, checked in this campaign: the admitted TENSOR.MATMUL weight view is [n <= 4096, 4096] and theirs are [12288, 4096], [12288, 4096] and [4096, 12288], so each is a DESCRIPTOR trap and the three weight objects they name can be resolved by no run of this design.  The refusal is the admission predicate's and not the datapath's -- ot_a3_mac_lane takes N and K on 16-bit ports, which 12288 fits, and ABI 3.0 section 2 bounds neither -- but widening a predicate is not evidence until a run pays for it, and each of the three is 50.3 x 10^6 MACs against the admitted pair's 4.2",
+      "the three MLP projections of the governed layer, PCs 50, 53 and 59, are NO LONGER REFUSED and are no longer checked here.  They were, on an admitted TENSOR.MATMUL weight view of [n <= 4096, 4096] against their [12288, 4096], [12288, 4096] and [4096, 12288]; f6afec5 raised that bound to desc_view_dim0 <= 65535 so the reduced decode's head could run unpartitioned, which put all three inside it.  The three refusal cases were retired rather than repaired: they cannot become passing cases without staging a 12,288 x 4,096 projection this vehicle does not carry -- 50.3 x 10^6 MACs against the admitted pair's 4.2 -- and they cannot be re-aimed past 65,535 because a case's weight dims come from the deployment's own descriptor records and no shipped operator declares one above it.  The consequence is that NOTHING IN THIS CAMPAIGN NOW EXERCISES THE MATMUL WEIGHT-ROW BOUND, which the vector manifest records as uncovered_after_bound_change",
       "any of the six, on an instance that has not bound its operand banks: cfg_extended_placement_valid low keeps the previous TRAP_CAPABILITY exactly, which is what leaves an unwired integration's behaviour unchanged"
     ]
   },
   "aggregate": {
-    "admission_case_count": 33,
-    "admission_negative_case_count": 10,
+    "admission_case_count": 30,
+    "admission_negative_case_count": 7,
     "admission_positive_case_count": 23,
-    "admission_words_compared": 62213,
+    "admission_words_compared": 62021,
     "admission_write_beats": 139523,
     "append_case_count": 13,
-    "checks_per_simulator": 64507,
+    "checks_per_simulator": 64234,
     "silu_case_count": 5,
     "silu_elements_compared": 1217
   },
@@ -155,17 +155,17 @@
   ],
   "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
   "log_sha256": {
-    "ot_a3_selection_token_append_yosys": "28b964cde65a9b49502b838ea628a96a87944a572d95a7288b7b9c1d4c46dd66",
-    "ot_a3_vector_silu_mul_yosys": "244559247c9d8cd79d78600c50a49ca770c5b6da18e50251c5247ce4c6010134",
-    "tb_a3_operator_admission_iverilog": "77bbc560bb9dfabc67ab95c673ac972d2fe7b0ac6d9131760d6b91d85947217d",
-    "tb_a3_operator_admission_verilator": "d36c0030768455ce5db4a006877f85a75054366964d2ba54c10e1e9045dbb5a0",
-    "tb_a3_operator_admission_verilator_compile": "743e9082e981d8b347a1bd4e889d5892486ec43a9bba24ee16f90fb7af227420",
+    "ot_a3_selection_token_append_yosys": "9c82e55de9a7e793b512ea71e57d183df83888aa4ef004d69867c7b0083c24c6",
+    "ot_a3_vector_silu_mul_yosys": "1e0bb82003b23fef2da7347ac0668f9fd8d7c1def5eb8c5bca36dc6ea8d1a96a",
+    "tb_a3_operator_admission_iverilog": "55e6e283c8bd6bbc026504aec41af3217797b2229511cbd3c87b9bdb0261e48e",
+    "tb_a3_operator_admission_verilator": "b363c29473c13655a989a2d36a364544a311a60cced59fd62c9e52aa7728f3fd",
+    "tb_a3_operator_admission_verilator_compile": "f97f063a6c5aa3c2d3b7edbfa579effb1fec0a8482576b7046bf881b755beea5",
     "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
-    "tb_a3_selection_token_append_verilator": "7eae7bc74db75a8e5a646b724f8d37dac6de3e1a3dc6875cee8b3711f035e113",
-    "tb_a3_selection_token_append_verilator_compile": "e756ca8c98d54d4d40008abc1dfcd08cd7432f6979dca12b293fe47e6b242f2f",
+    "tb_a3_selection_token_append_verilator": "0902fba6b6622e1657ce974bfd75a25f54a447318b3878d000c8745bdc3d864c",
+    "tb_a3_selection_token_append_verilator_compile": "583feae16fe1ec28d07f7aa7c686b46d0f9894896641bb69141e698551e7322f",
     "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
-    "tb_a3_vector_silu_mul_verilator": "a56a35ccd539df4bcdafc5b16f95e27d4ebd173782b9ec635b8e52b02533e843",
-    "tb_a3_vector_silu_mul_verilator_compile": "a52efbb5b09f497272e5c22246f3b029565f5a6a3e3559570a7b8631151e6fc9"
+    "tb_a3_vector_silu_mul_verilator": "d3c0ed43bd9df66293525cdc65724f3f6d04b1219d90a0bd5f1bcb09a8c5329f",
+    "tb_a3_vector_silu_mul_verilator_compile": "24e1fde323aaf74a82da0ebe532584904d083db8fadfe869fa7c1717943ba238"
   },
   "normalized": {
     "tb_a3_operator_admission": {
@@ -178,7 +178,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 32818,
+          "verification_cycles": 32986,
           "work": 4096,
           "writes": 4096
         },
@@ -190,7 +190,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 20972560,
+          "verification_cycles": 4196797,
           "work": 4194304,
           "writes": 1024
         },
@@ -202,7 +202,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 20972560,
+          "verification_cycles": 4196801,
           "work": 4194304,
           "writes": 1024
         },
@@ -214,7 +214,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 33903,
+          "verification_cycles": 34076,
           "work": 4096,
           "writes": 4096
         },
@@ -226,7 +226,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 8487,
+          "verification_cycles": 8660,
           "work": 1024,
           "writes": 1024
         },
@@ -238,7 +238,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 21025,
+          "verification_cycles": 21198,
           "work": 4096,
           "writes": 4096
         },
@@ -250,7 +250,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 21025,
+          "verification_cycles": 21198,
           "work": 1024,
           "writes": 1024
         },
@@ -262,7 +262,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 61465,
+          "verification_cycles": 61638,
           "work": 1,
           "writes": 20480
         },
@@ -274,7 +274,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 61465,
+          "verification_cycles": 61642,
           "work": 1,
           "writes": 20480
         },
@@ -286,7 +286,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 327380,
+          "verification_cycles": 327559,
           "work": 69632,
           "writes": 4096
         },
@@ -298,7 +298,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 16401,
+          "verification_cycles": 16574,
           "work": 4096,
           "writes": 4096
         },
@@ -310,7 +310,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 32818,
+          "verification_cycles": 32991,
           "work": 4096,
           "writes": 4096
         },
@@ -322,7 +322,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 1339342,
+          "verification_cycles": 1339515,
           "work": 24576,
           "writes": 12288
         },
@@ -334,7 +334,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 16401,
+          "verification_cycles": 16574,
           "work": 4096,
           "writes": 4096
         },
@@ -346,7 +346,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 32818,
+          "verification_cycles": 32991,
           "work": 4096,
           "writes": 4096
         },
@@ -358,7 +358,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 12310,
+          "verification_cycles": 12483,
           "work": 1,
           "writes": 4096
         },
@@ -370,7 +370,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 790,
+          "verification_cycles": 963,
           "work": 1,
           "writes": 256
         },
@@ -382,7 +382,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 61465,
+          "verification_cycles": 61638,
           "work": 1,
           "writes": 20480
         },
@@ -394,7 +394,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 61465,
+          "verification_cycles": 61642,
           "work": 1,
           "writes": 20480
         },
@@ -406,7 +406,7 @@
           "ties": 0,
           "token": 0,
           "trap": 0,
-          "verification_cycles": 364630,
+          "verification_cycles": 364809,
           "work": 77824,
           "writes": 4096
         },
@@ -418,7 +418,7 @@
           "ties": 2,
           "token": 151645,
           "trap": 0,
-          "verification_cycles": 455824,
+          "verification_cycles": 456002,
           "work": 151936,
           "writes": 1
         },
@@ -430,7 +430,7 @@
           "ties": 0,
           "token": 151645,
           "trap": 0,
-          "verification_cycles": 20,
+          "verification_cycles": 207,
           "work": 1,
           "writes": 1
         },
@@ -442,7 +442,7 @@
           "ties": 0,
           "token": 12345,
           "trap": 0,
-          "verification_cycles": 20,
+          "verification_cycles": 207,
           "work": 1,
           "writes": 1
         },
@@ -454,7 +454,7 @@
           "ties": 0,
           "token": 0,
           "trap": 4,
-          "verification_cycles": 1,
+          "verification_cycles": 99,
           "work": 151936,
           "writes": 0
         },
@@ -466,7 +466,7 @@
           "ties": 0,
           "token": 0,
           "trap": 3,
-          "verification_cycles": 11,
+          "verification_cycles": 130,
           "work": 151936,
           "writes": 0
         },
@@ -478,7 +478,7 @@
           "ties": 0,
           "token": 0,
           "trap": 4,
-          "verification_cycles": 11,
+          "verification_cycles": 128,
           "work": 151936,
           "writes": 0
         },
@@ -490,7 +490,7 @@
           "ties": 0,
           "token": 0,
           "trap": 4,
-          "verification_cycles": 1,
+          "verification_cycles": 99,
           "work": 151936,
           "writes": 0
         },
@@ -502,7 +502,7 @@
           "ties": 0,
           "token": 0,
           "trap": 3,
-          "verification_cycles": 18,
+          "verification_cycles": 145,
           "work": 77824,
           "writes": 0
         },
@@ -514,7 +514,7 @@
           "ties": 0,
           "token": 0,
           "trap": 8,
-          "verification_cycles": 19,
+          "verification_cycles": 138,
           "work": 0,
           "writes": 0
         },
@@ -526,53 +526,17 @@
           "ties": 0,
           "token": 0,
           "trap": 4,
-          "verification_cycles": 16,
+          "verification_cycles": 135,
           "work": 0,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 30,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 7,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 31,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 7,
-          "work": 151936,
-          "writes": 0
-        },
-        {
-          "eos": 0,
-          "fault": 1,
-          "index": 32,
-          "result": 1,
-          "ties": 0,
-          "token": 0,
-          "trap": 3,
-          "verification_cycles": 5,
-          "work": 151936,
           "writes": 0
         }
       ],
       "geometry": {
         "bank_words": 247426,
         "case_words": 128,
-        "cases": 33,
+        "cases": 30,
         "descriptor_records": 218,
-        "expected_words": 62213,
+        "expected_words": 62021,
         "index_words": 64,
         "map_base": 64,
         "map_entries": 32,
@@ -583,10 +547,10 @@
         "weight_words": 8388608
       },
       "pass": {
-        "cases": 33,
-        "checks": 63110,
+        "cases": 30,
+        "checks": 62837,
         "positive": 23,
-        "words": 62213
+        "words": 62021
       }
     },
     "tb_a3_selection_token_append": {
@@ -837,7 +801,7 @@
   },
   "placement": {
     "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-    "bridge_sha256": "bd25338f8bc398b7ff70566723d991cc71b742e0bdfc446c4fce05fb2e156a57",
+    "bridge_sha256": "d9e75aa87969a52076755f68b3c4bf259fbd8ea2f800022e7dbfcf3c39e9fa5f",
     "cases_credited": [
       "vector_rms_norm_attention_input",
       "tensor_matmul_key_projection",
@@ -923,7 +887,7 @@
     "vector_format_entries": 32,
     "vector_format_entries_note": "how many entries the CASE RECORD can carry, echoed by the run's own GEOMETRY line and checked against the vector manifest. It is a bound on the measurement below, never a substitute for it",
     "vehicle": "rtl/test/tb_a3_operator_admission.sv",
-    "vehicle_sha256": "7d8eb39e100c974b8c965b092662f4ba35703fe1a6be790343a4d4ea83dee67b"
+    "vehicle_sha256": "fc99a559fc67fbb7078067238f4f04b1deffc1a01304d74090095dc324bc6335"
   },
   "schema": "opentallas.rtl.a3_operator_admission_campaign.v1",
   "scope": {
@@ -953,49 +917,59 @@
   "simulators_agree": true,
   "source_sha256": {
     "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
-    "rtl/abi3/ot_a3_engine_array.sv": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a",
-    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "bd25338f8bc398b7ff70566723d991cc71b742e0bdfc446c4fce05fb2e156a57",
+    "rtl/abi3/ot_a3_engine_array.sv": "3d3ed3333516d592c17c023ef9c2cdaa6d08f5d5c512ea7de8146fc395dec9f5",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "d9e75aa87969a52076755f68b3c4bf259fbd8ea2f800022e7dbfcf3c39e9fa5f",
     "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
-    "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+    "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
     "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
     "rtl/abi3/ot_a3_mac_lane.sv": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
-    "rtl/abi3/ot_a3_pkg.sv": "99cb99b3b5044ad669a5927455f50ca5fe2672c197c97770e1709e794e402e4e",
-    "rtl/abi3/ot_a3_qwen_gqa.sv": "9fad7a0839e5e4efba94b4e40ebf5f2ce1244424504a62ba8ee7698fc9c24422",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv": "9fa13df6e934783b2bd5a7fb5348e33f262322381c87a926145d9bfef41bb454",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/abi3/ot_a3_place_table.sv": "e99b729ea55ab4cbc073dd4e93bc73dcd3eba1f9926f0be6aa1bdcf720d10adf",
+    "rtl/abi3/ot_a3_qwen_gqa.sv": "f4abf66c4e623053328186987034fce4e0c438cd28d658745e86ac1fab5614ff",
+    "rtl/abi3/ot_a3_reduction_expert_sum.sv": "16bec8d8d5c1b8d583a685664566e756a43065f8a0373279fa454c7c4b39e086",
+    "rtl/abi3/ot_a3_rope_lane_pipe.sv": "5473a7a506053f8501c79dc042bac3ca142677ed51ebe4c0cf5542c9ae6a0ebe",
+    "rtl/abi3/ot_a3_route_biased_topk.sv": "46e93ff4c3c5522155fbb2f69ee83c335fd80a06d16f89e137b66e1cee93e124",
+    "rtl/abi3/ot_a3_route_weight_normalize.sv": "5533fbceb04a8176b68630466356c6ec1ecd9b884c8aab0fd15f764147b22620",
+    "rtl/abi3/ot_a3_route_window_index.sv": "b2432ad9934709aa278dd62aaa3861c93a735654c6599412bc5025e480cad748",
     "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
     "rtl/abi3/ot_a3_selection_token_append.sv": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227",
     "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",
     "rtl/abi3/ot_a3_vector_compress_project.sv": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2",
-    "rtl/abi3/ot_a3_vector_convert.sv": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6",
+    "rtl/abi3/ot_a3_vector_convert.sv": "a8586be6018ad8d1cb81904f37a1a00f1099b1978c9b79327678719b704d5fda",
     "rtl/abi3/ot_a3_vector_hadamard.sv": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162",
     "rtl/abi3/ot_a3_vector_index_score.sv": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb",
     "rtl/abi3/ot_a3_vector_mhc_post.sv": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071",
-    "rtl/abi3/ot_a3_vector_rms_norm.sv": "7c1d174a678d2cd3bc6301b049fffb11d56862224fbf140105ed2aee0bed6769",
-    "rtl/abi3/ot_a3_vector_rope.sv": "59cf5fa16c0079ef90e7a21fa051b44c1c5e9f7ce9df0db6df2e3bdd3019c5be",
-    "rtl/abi3/ot_a3_vector_scale.sv": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4",
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": "12ed12b1fc2adf97588ef96c670fed07115b27e753f5357280eab39f11c6b297",
+    "rtl/abi3/ot_a3_vector_rope.sv": "4f010e3829542b9624e97890bcd174a49171534408651a949e483f8cbf40404a",
+    "rtl/abi3/ot_a3_vector_scale.sv": "42063b0ae30faa3f9de063e825e1f7e14468bb5a0fb2eefc23f121c77c800d71",
     "rtl/abi3/ot_a3_vector_silu_mul.sv": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4",
-    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
     "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
     "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
-    "rtl/ot_ta_rope_bf16_sram_engine.sv": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
-    "rtl/test/tb_a3_operator_admission.sv": "7d8eb39e100c974b8c965b092662f4ba35703fe1a6be790343a4d4ea83dee67b",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": "964ceb0f043941315565c35b62c3e2a4d132ab8679a7e605c3f1a194589248dd",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv": "a2af0b4f4e5e9c841a142dc0971d599899015cd20f402d40ead68e01b98dbed5",
+    "rtl/test/tb_a3_operator_admission.sv": "fc99a559fc67fbb7078067238f4f04b1deffc1a01304d74090095dc324bc6335",
     "rtl/test/tb_a3_selection_token_append.sv": "d8d980a9d6d81f44555d40680f64be92e2588f7ec617a6a20f6737e5f6914ec9",
     "rtl/test/tb_a3_vector_silu_mul.sv": "faa0f7283193c353eecd1d536e04ca10e0a617e83cbf691eb6a2d92151ce5e6c",
     "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
-    "runtime/reference/tensor_accelerator_attention.py": "72153848bf51ef8a6f2a61456ffa222fbf37150de05305c1ea4bfbaf955abf68",
+    "runtime/reference/tensor_accelerator_attention.py": "beecc3c76b3cc9ba69ddcd5661acebdffbb7c2547dcb509ff861032de53ead0c",
     "runtime/reference/tensor_accelerator_elementwise.py": "e15b1855c30ad9a49fbcf1c9d7d1fd751e995e30fa21e98ce407e00511bf6f4d",
     "runtime/reference/tensor_accelerator_rmsnorm.py": "a9e5cb021251f39269ba3a5703cd91aa428b9726316b05c88676607e6e79f6ae",
     "runtime/reference/tensor_accelerator_rope.py": "be71d1a65ba0fc3d98d52ad50e1783b326e9874d9a949b97acb75245454c51a7",
     "runtime/sim/engines/selection.py": "751240f24f79e48a25ff055908fa82592ad74fd98d48c63e71624069feca1708",
-    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "697831fe0845ba6f3dabb2cafb2ba09e168a33526320471f04d4144365685d26",
-    "testdata/compiler/abi3_deployment/a3_program.hex": "02e763e225229420e3f9f5f89054aee4d89286880de54525f7cd6e5833f5ed88",
-    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "dcbee360748f3151492403b896ef482fe76799ead5f7f694fb7a0183c990c1cb",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06679cce0d33bdb4a043060f0aa7f3000ac94cd4d417fd64edb9f8089e447a5c",
     "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
     "testdata/compiler/abi3_shipped_prefix/p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
     "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
-    "tools/build_a3_operator_admission_vectors.py": "e0b22d19d97a31481e253fa692a184e85c67c392ce6aa115577a310a9c424030",
+    "tools/build_a3_operator_admission_vectors.py": "679cc537b4a791c1b8df3a5e6b9390f867e2e26d5ebed6a9c1f7c9aff60c4eb0",
     "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
-    "tools/run_a3_operator_admission_rtl_campaign.py": "0a77919d63da0a1b799225eeb091acad0a48fd2ea39da39c7921568f5a473ada"
+    "tools/run_a3_operator_admission_rtl_campaign.py": "3281f8085cb9f74554d226787f6675bec68b5f8510825351602164f4d3f4c380"
   },
   "status": "pass",
   "storage_class": "rom",
@@ -1042,14 +1016,14 @@
   },
   "vector_sha256": {
     "a3_operator_admission/bank.hex": "aefaf27a75ca9ecfded9a3a051d1b9ec6ba56c547d58de860c1ebe6d3a4ac815",
-    "a3_operator_admission/cases.hex": "e3af9047a374d86a601ac177c900fc18fff09281211b3fbc71dec634368f3464",
+    "a3_operator_admission/cases.hex": "85af952bb64764853b2589f6d3a1bca9b8e3318b7f4dffab4d462b917ccd4fe6",
     "a3_operator_admission/descriptors.hex": "0787952ceba50aed8cc23abb0543c8c594963132041135671b8697197386879e",
-    "a3_operator_admission/expected.hex": "3eda81f0c7f86b9b0a43744c023e5b6f2d559e725e33237891bf3933c715eaa5",
+    "a3_operator_admission/expected.hex": "f3d84d6eb0978d2ab6db3ed04dc06bc2d0e8aad761e259a17268d43c0d002b8c",
     "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
-    "a3_operator_admission/index.json": "84c48d18b626359d4912d15ff28b765c8704d2baaf3f78bcff0645fd91208622",
+    "a3_operator_admission/index.json": "e61273e2d17b4dd1dc633c190f6cf20d09c011ae2dabd93f450edf6576c8a9b4",
     "a3_operator_admission/preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
     "a3_operator_admission/source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
-    "a3_operator_admission/views.hex": "83c63f9a1c18a5058358c149fbc362ac662650ea803a688c5949eb68c68f8f8f",
+    "a3_operator_admission/views.hex": "e3c7e1d6398587ab551b16a1a5c4ab21e77e53a712dce7b9f5d9a61e0a5d3571",
     "a3_operator_admission/weights.hex": "14a41091f0303795889f44a95774fb0672e287ad5d8421eb39c09dd0a71449e9",
     "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
     "a3_operator_units/index.json": "c2ed9527772d7ef32474f6881935b9b25c71802533765c95b31b17a5683f9d17",
@@ -1059,19 +1033,19 @@
     "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
   },
   "verification_wall_seconds": {
-    "ot_a3_selection_token_append_yosys_elaboration": 0.016621747985482216,
-    "ot_a3_vector_silu_mul_yosys_elaboration": 10.925065432908013,
-    "tb_a3_operator_admission_iverilog_compile": 0.11107574310153723,
-    "tb_a3_operator_admission_iverilog_simulation": 16551.80936434702,
-    "tb_a3_operator_admission_verilator_compile": 14.39291884494014,
-    "tb_a3_operator_admission_verilator_simulation": 261.9678102200851,
-    "tb_a3_selection_token_append_iverilog_compile": 0.013680523028597236,
-    "tb_a3_selection_token_append_iverilog_simulation": 0.006453579990193248,
-    "tb_a3_selection_token_append_verilator_compile": 3.9791437049861997,
-    "tb_a3_selection_token_append_verilator_simulation": 0.0012085309717804193,
-    "tb_a3_vector_silu_mul_iverilog_compile": 0.014832467073574662,
-    "tb_a3_vector_silu_mul_iverilog_simulation": 18.52227433398366,
-    "tb_a3_vector_silu_mul_verilator_compile": 6.787026437930763,
-    "tb_a3_vector_silu_mul_verilator_simulation": 0.2892218101769686
+    "ot_a3_selection_token_append_yosys_elaboration": 0.01745685702189803,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 10.804907534038648,
+    "tb_a3_operator_admission_iverilog_compile": 0.0997129010502249,
+    "tb_a3_operator_admission_iverilog_simulation": 10408.828455654904,
+    "tb_a3_operator_admission_verilator_compile": 17.33171511394903,
+    "tb_a3_operator_admission_verilator_simulation": 64.24669144698419,
+    "tb_a3_selection_token_append_iverilog_compile": 0.005553320050239563,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.0038268098141998053,
+    "tb_a3_selection_token_append_verilator_compile": 3.449162645963952,
+    "tb_a3_selection_token_append_verilator_simulation": 0.001427376875653863,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.015149154933169484,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 18.55465570790693,
+    "tb_a3_vector_silu_mul_verilator_compile": 6.424017753917724,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.2606136850081384
   }
 }
