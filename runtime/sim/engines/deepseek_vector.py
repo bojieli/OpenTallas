@@ -160,7 +160,7 @@ from runtime.reference.hyper_connection import (
 from runtime.reference.transcendental import binary32_exp_general_rne
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.tensor_accelerator.sparse_attention import exp_cr32
-from runtime.sim.formats import narrow, narrow_bf16_rne, widen_bf16
+from runtime.sim.formats import narrow_bf16_rne, widen_bf16
 from runtime.sim.memory import ResolvedView
 
 #: Sub-case selectors carried in ``aux_id_0``.
@@ -556,13 +556,23 @@ def _write_project(ctx: EngineContext, view, values: np.ndarray) -> int:
         ctx.write(view, np.ascontiguousarray(
             values, dtype=np.float32).reshape(view.dims))
         return int(values.size)
-    with _numeric_guard("COMPRESS_PROJECT output"):
-        narrowed, saturations = narrow(view.dtype, values.reshape(-1))
+    #: ``narrow_bf16_rne`` is this module's own narrowing -- the same one the
+    #: attention and route paths above use -- so the rounding is the one the
+    #: rest of the file performs rather than a second spelling of it.
+    _require(
+        view.dtype == DType.BF16,
+        f"COMPRESS_PROJECT output view {view.descriptor_id} stores "
+        f"{DType(view.dtype).name}; the projection writes FP32 for the packed "
+        "pair the pool consumes and BF16 for the ratio-1 latent",
+    )
+    codes, saturations = narrow_bf16_rne(
+        np.ascontiguousarray(values, dtype=np.float32).reshape(-1)
+    )
     if saturations:
         ctx.counters.add("vector.saturations", int(saturations))
-    ctx.write(view, np.ascontiguousarray(narrowed).reshape(view.dims))
-    ctx.counters.add("vector.conversions", int(narrowed.size))
-    return int(narrowed.size)
+    ctx.write(view, np.ascontiguousarray(codes).reshape(view.dims))
+    ctx.counters.add("vector.conversions", int(codes.size))
+    return int(codes.size)
 
 
 def _compress_project(
