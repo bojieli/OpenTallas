@@ -1270,16 +1270,21 @@ def geometry_verdict(probe: dict[str, Any], reduced: dict[str, Any]) -> dict[str
         },
         "positive_controls_admitted": controls,
         "reduced_cases_refused": refused,
-        "reduced_model_row_admission_is_a_coincidence": {
+        "reduced_model_row_admission": {
             "case": "reduced_model_row",
             "admitted": by_case.get("reduced_model_row", {}).get("admitted"),
             "why": (
-                "the reduced hidden size is 128, which is numerically equal to "
-                "the FULL model's per-head width, and the normalisation engine "
-                "admits a 128-wide row because that is one of the two profiles "
-                "it was built for.  The reduced head width, 16, is refused.  "
-                "The admission is therefore an accident of the numbers and not "
-                "evidence that the engine is parameterised over row width"
+                "the normalisation engine derives its mean reciprocal from the "
+                "row width -- exact_reciprocal_code, 2**-k for a power-of-two "
+                "width -- so it admits any power of two its profile bounds "
+                "allow rather than selecting between two hardcoded constants.  "
+                "This field previously said the 128-wide admission was an "
+                "accident of 128 equalling the FULL model's per-head width, "
+                "and that the reduced head width of 16 was refused.  Both "
+                "statements are stale: tb_a3_rms_norm_width drives rows=8 "
+                "cols=16 count=128 to error_code 0 with 128 results, and "
+                "tests/test_a3_rms_norm_width.py compares the values word for "
+                "word against runtime/reference/tensor_accelerator_rmsnorm.py"
             ),
         },
         "attention_engine": {
@@ -1670,28 +1675,44 @@ def main() -> int:
                         "should be read as a result"
                     ),
                     "in_order": [
-                        "the compiler must admit a Qwen3 configuration other "
-                        "than the pinned 8B release: lowering.refusal_chain "
-                        "names the config digest pin, the field-by-field "
-                        "comparison behind it, and the frozen census, tensor "
-                        "total and layer count",
-                        "ot_a3_qwen_gqa must take its query-head count, KV-head "
-                        "count and head width the way it already takes "
-                        "MAX_CONTEXT -- as parameters of the verification "
-                        "instance -- together with the 1/sqrt(head_dim) scale "
-                        "code that goes with them",
-                        "ot_a3_vector_rms_norm must take its row width and the "
-                        "matching mean scale as parameters rather than "
-                        "selecting between two fixed profiles",
+                        "an integrated vehicle elaborated at the reduced "
+                        "geometry and driven by the reduced program.  This is "
+                        "the one item left and it is what blocking_in_order "
+                        "MEASURES: the probe drives three engines in "
+                        "isolation, and reduced_cases_refused is empty, so "
+                        "nothing the reduced configuration asks for is refused "
+                        "any more -- there is simply no top that runs the "
+                        "whole workload at that geometry",
+                    ],
+                    "closed_since_this_list_was_first_written": [
+                        "the compiler admitting a Qwen3 configuration other "
+                        "than the pinned 8B release: compiler/qwen3/adapter.py "
+                        "carries a SECOND pinned contract, "
+                        "REDUCED_SOURCE_CONTRACT, rather than a weakened pin, "
+                        "and lowering.kernel_ir.produced_ir is now true.  "
+                        "lowering.refusal_chain still records a refusal "
+                        "because it deliberately calls the LEGACY "
+                        "compiler.qwen3.graph entry points, which is a "
+                        "different measurement from whether the v3 front end "
+                        "admits the model",
+                        "ot_a3_qwen_gqa taking its head counts, head width and "
+                        "scale as elaboration parameters: it does, and "
+                        "geometry.attention_engine.reduced_elaboration "
+                        "measures that second elaboration reading 4,224 "
+                        "operand words and writing 128 -- the reduced model's "
+                        "own row, matched exactly",
+                        "ot_a3_vector_rms_norm taking its row width and mean "
+                        "scale as parameters: the width is a parameter and the "
+                        "reciprocal is DERIVED from it, so 16 is admitted and "
+                        "numerically checked, not refused",
                     ],
                     "why_it_is_worth_doing": (
-                        "without the last two, the cheapest reduction this RTL "
-                        "can express keeps the whole attention block at full "
-                        "size, and rtl_expressible_alternative measures what "
-                        "that costs: more than a day per store at one layer, "
-                        "against the ten minutes the budget configuration was "
-                        "derived to hit.  A nightly regression that takes "
-                        "longer than a working day is not a nightly regression"
+                        "the reduced geometry is now expressible, so the "
+                        "day-per-store cost rtl_expressible_alternative "
+                        "measures is no longer what this rung would pay -- it "
+                        "is what it would pay if the integrated vehicle were "
+                        "elaborated at the SHIPPED geometry, which is the "
+                        "thing left to avoid"
                     ),
                 },
             }
