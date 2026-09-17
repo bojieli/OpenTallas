@@ -65,14 +65,21 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="single-chip",
         choices=(
             "single-chip",
+            "single-chip-comparator",
             "cluster-32",
             "cluster-32-speculative",
             "cluster-n",
+            "cluster-n-comparator",
         ),
         help=(
             "which shared-chip deployment profile to compile against; "
             "cluster-n is amendment AM-R1's class, whose node count is a "
-            "capability value and therefore needs --nodes"
+            "capability value and therefore needs --nodes.  "
+            "cluster-n-comparator is the same machine declaring the comparator "
+            "contract union as well, for a model with no deployment in any "
+            "store yet; it also needs --nodes.  single-chip-comparator is that "
+            "same widened declaration on ONE chip, which is where a comparator "
+            "model's data path is exercised without the fabric's lowering paths"
         ),
     )
     parser.add_argument(
@@ -80,7 +87,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=int,
         default=None,
         help=(
-            "node count for --profile cluster-n.  Refused for every other "
+            "node count for --profile cluster-n(-comparator).  Refused for "
+            "every other "
             "profile: those name a fixed cardinality, and a count silently "
             "ignored against one of them would build for a machine nobody "
             "asked for"

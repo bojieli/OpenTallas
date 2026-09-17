@@ -896,17 +896,31 @@ def test_capability_lookup_rejects_unknown_profiles():
 
 
 def test_profiles_map_to_capability_records_not_factories():
-    from compiler.backends.hbm_sram.capability import PROFILES
+    from compiler.backends.hbm_sram.capability import (
+        PROFILES,
+        SHARED_NUMERIC_CONTRACTS,
+        SHIPPED_PROFILES,
+    )
     from runtime.abi3.capability import Capability
 
+    # Two of these are shipped and two widen the contract declaration for a
+    # model with no deployment in any store yet -- ``cluster-32-speculative``
+    # for DSpark, ``single-chip-comparator`` for V4.1, which is exercised on one
+    # chip because a comparator's first deployment is a test of the data path
+    # and not of the fabric.  ``SHIPPED_PROFILES`` is what separates them, and
+    # neither widened record may move a shipped digest.
     assert set(PROFILES) == {
         "single-chip",
+        "single-chip-comparator",
         "cluster-32",
         "cluster-32-speculative",
     }
     for name, profile in PROFILES.items():
         assert isinstance(profile, Capability), name
         assert profile.digest == capability_for(name).digest
+    assert set(SHIPPED_PROFILES) == {"single-chip", "cluster-32"}
+    for name in SHIPPED_PROFILES:
+        assert PROFILES[name].numeric_contracts == SHARED_NUMERIC_CONTRACTS
 
 
 # ---------------------------------------------------------------------------

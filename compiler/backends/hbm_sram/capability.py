@@ -496,8 +496,37 @@ def comparator_memory() -> Mapping[str, Mapping[str, Any]]:
 #: a mapping of *capabilities* rather than of callables: a consumer that writes
 #: ``PROFILES["single-chip"]`` should get the record, not something it has to
 #: know to call.
+def single_chip_comparator_capability() -> Capability:
+    """One chip, declaring the comparator union as well.
+
+    Same defence as :func:`cluster32_speculative_capability`: this is a separate
+    record rather than a widened :data:`SHARED_NUMERIC_CONTRACTS`, because
+    widening the shared tuple would move both shipped capability digests and so
+    invalidate every deployment already admitted against them.
+
+    Why one chip needs its own comparator record.  A comparator model's first
+    deployment is an exercise of the *token data path*, not of the fabric, and a
+    multi-node record drags in lowering paths that have nothing to do with
+    whether the arithmetic is right -- a conditional rolling-compressor path
+    that also has to carry an ``activation_transfer`` across nodes is refused
+    outright, and that refusal says nothing about the model.  One chip has no
+    peer, so no cross-node transfer exists to conflict with, and what remains
+    under test is exactly the graph.  ``comparator_memory`` is the same
+    single-node memory the cluster record uses per node, so this differs from
+    :func:`single_chip_capability` in one field, ``numeric_contracts``.
+    """
+    return _shared_capability(
+        topology_class=TopologyClass.SINGLE_CHIP,
+        node_count=1,
+        link=SINGLE_CHIP_LINK,
+        numeric_contracts=comparator_numeric_contracts(),
+        memory=comparator_memory(),
+    )
+
+
 _FACTORIES: dict[str, Any] = {
     "single-chip": single_chip_capability,
+    "single-chip-comparator": single_chip_comparator_capability,
     "cluster-32": cluster32_capability,
     "cluster-32-speculative": cluster32_speculative_capability,
 }

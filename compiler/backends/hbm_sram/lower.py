@@ -1879,6 +1879,42 @@ class _Emitter:
             return generated, 0
         if operand.residence == "host":
             return self._host_object[operand.key], 0
+        if operand.residence == "state":
+            # A state-resident operand read as an ordinary source.  Every other
+            # state path here builds its own view (``_state_view``,
+            # ``_state_member_view``, ``_state_window``) because it also needs
+            # the row geometry; a consumer that already knows its own geometry
+            # and wants only the object needs this.
+            #
+            # V4.1's sparse attention is the case that needs it.  V4-Flash
+            # materialises its fused KV with a CONCAT into an arena, so its
+            # gather sources an activation; V4.1 appends into the transactional
+            # window and reads it IN PLACE, naming the KV_APPEND's commit token
+            # as the ordering input.  Reaching here at all used to be the
+            # "no arena slot" refusal, which is why no V4.1 graph -- released or
+            # reduced -- had ever been deployed on this backend.
+            #
+            # The member offset is not optional.  This window is a POOLED
+            # resource: eighteen layers' bands share one object, so a base that
+            # dropped ``member`` would address layer 0's history for every
+            # layer -- legal offsets, no trap, the wrong KV.  ``_state_window``
+            # carries the same warning for the write side.
+            #
+            # ``prepared`` is the second position, which is what every other
+            # read path takes: a consumer ordered after this step's append has
+            # to see that append, and the committed image is the previous step's.
+            # For a state that took the direct-object path both positions are
+            # the same object and the choice is moot.
+            mapping = self.plan.state_of_tensor.get(operand.tensor_id)
+            if mapping is None:
+                raise LoweringError(
+                    f"operand {operand.tensor_id} is state-resident but binds "
+                    "no declared state resource"
+                )
+            physical_id, member = mapping[0], int(mapping[1])
+            state = self.plan.state(physical_id)
+            _committed, prepared = self._state_objects[physical_id]
+            return prepared, member * state.capacity_rows * state.row_elements
         slot = self.plan.arena_of_key.get(operand.key)
         if slot is None:
             raise LoweringError(
@@ -3841,7 +3877,15 @@ class _Emitter:
         in_operands = {o.slot: o for o in plan.operands if o.direction == "in"}
         out_operands = {o.slot: o for o in plan.operands if o.direction == "out"}
         packed_operand = in_operands[0]
-        ape_operand = in_operands[2]
+        # The absolute position encoding is OPTIONAL, and V4.1 is why.  V4-Flash
+        # biases each raw pooling score by a gathered APE row
+        # (``layers.N.attn.compressor.ape`` in ``in2``); V4.1's compressor is
+        # ``norm(wkv(x))`` at ratio 1 and a softmax pooling of ``wkv`` by
+        # ``wgate`` above it, with no position term anywhere -- so its graph
+        # carries one input and the APE slot is simply not there.  Reading
+        # ``in_operands[2]`` unconditionally raised ``KeyError: 2`` on every
+        # V4.1 graph, released and reduced alike.
+        ape_operand = in_operands.get(2)
         pool_kv_operand = out_operands[0]
         pool_score_operand = out_operands[1]
         packed_dims, packed_strides, _ = self._declared_view(plan, packed_operand)
@@ -3924,77 +3968,89 @@ class _Emitter:
             loop_stride=span,
         )
 
-        ape_object, ape_base = self._object_for(ape_operand)
-        ape_terms: list[DynamicTerm] = []
-        if "layer" in ape_operand.terms and self._layer_loop is not None:
-            placement = self.plan.placement(ape_operand.tensor_id)
-            ape_terms.append(
-                DynamicTerm.loop(self._layer_loop, placement.layer_stride_elements)
-            )
-        ape_source = self._view(
-            object_id=ape_object,
-            dtype=DType.FP32,
-            dims=[ratio, width],
-            strides=[width, 1],
-            element_offset=ape_base,
-            dynamic=ape_terms,
-        )
-        ape_scratch = self._compress_scratch_view(
-            plan,
-            pool_kv_operand,
-            loops,
-            dims=[span, width],
-            strides=[width, 1],
-            writable=True,
-            extent_axis=0,
-        )
-        biased_scores = self._compress_scratch_view(
-            plan,
-            pool_score_operand,
-            loops,
-            dims=[span, width],
-            strides=[width, 1],
-            writable=True,
-            extent_axis=0,
-        )
         producer_events = self._producer_events(kernel)
-        ape_event = self._emit_operator_instruction(
-            plan=plan,
-            family=Major.DMA,
-            sub=Dma.GATHER,
-            inputs=[ape_indices, ape_source],
-            outputs=[ape_scratch],
-            waits=producer_events,
-            key=f"op.k{plan.index}.compress.ape",
-        )
-        # ORDERED_SUM's optional base enters first.  With one gathered APE term
-        # this is exactly one FP32 RNE addition: raw score + APE.
-        ape_term = self._compress_scratch_view(
-            plan,
-            pool_kv_operand,
-            loops,
-            dims=[1, span, width],
-            strides=[0, width, 1],
-            writable=False,
-            extent_axis=1,
-        )
-        score_numeric = self._numeric_profile(
-            kernel.numeric_contract,
-            DType.FP32,
-            DType.FP32,
-            DType.FP32,
-            reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
-        )
-        bias_event = self._emit_operator_instruction(
-            plan=plan,
-            family=Major.REDUCTION,
-            sub=Reduction.ORDERED_SUM,
-            inputs=[ape_term, score_values],
-            outputs=[biased_scores],
-            waits=[ape_event, *producer_events],
-            numeric_profile_id=score_numeric,
-            key=f"op.k{plan.index}.compress.bias",
-        )
+        if ape_operand is None:
+            # No position term, so there is no addition to make: the scores this
+            # step appends to the history ARE the raw ``wgate(x)`` values, which
+            # is what the release pools (``kv_state * score_state.softmax(1)``).
+            # Emitting an ORDERED_SUM against a zero would be an extra FP32
+            # rounding step the reference does not take.
+            biased_scores = score_values
+            score_waits = list(producer_events)
+        else:
+            ape_object, ape_base = self._object_for(ape_operand)
+            ape_terms: list[DynamicTerm] = []
+            if "layer" in ape_operand.terms and self._layer_loop is not None:
+                placement = self.plan.placement(ape_operand.tensor_id)
+                ape_terms.append(
+                    DynamicTerm.loop(
+                        self._layer_loop, placement.layer_stride_elements
+                    )
+                )
+            ape_source = self._view(
+                object_id=ape_object,
+                dtype=DType.FP32,
+                dims=[ratio, width],
+                strides=[width, 1],
+                element_offset=ape_base,
+                dynamic=ape_terms,
+            )
+            ape_scratch = self._compress_scratch_view(
+                plan,
+                pool_kv_operand,
+                loops,
+                dims=[span, width],
+                strides=[width, 1],
+                writable=True,
+                extent_axis=0,
+            )
+            biased_scores = self._compress_scratch_view(
+                plan,
+                pool_score_operand,
+                loops,
+                dims=[span, width],
+                strides=[width, 1],
+                writable=True,
+                extent_axis=0,
+            )
+            ape_event = self._emit_operator_instruction(
+                plan=plan,
+                family=Major.DMA,
+                sub=Dma.GATHER,
+                inputs=[ape_indices, ape_source],
+                outputs=[ape_scratch],
+                waits=producer_events,
+                key=f"op.k{plan.index}.compress.ape",
+            )
+            # ORDERED_SUM's optional base enters first.  With one gathered APE
+            # term this is exactly one FP32 RNE addition: raw score + APE.
+            ape_term = self._compress_scratch_view(
+                plan,
+                pool_kv_operand,
+                loops,
+                dims=[1, span, width],
+                strides=[0, width, 1],
+                writable=False,
+                extent_axis=1,
+            )
+            score_numeric = self._numeric_profile(
+                kernel.numeric_contract,
+                DType.FP32,
+                DType.FP32,
+                DType.FP32,
+                reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
+            )
+            bias_event = self._emit_operator_instruction(
+                plan=plan,
+                family=Major.REDUCTION,
+                sub=Reduction.ORDERED_SUM,
+                inputs=[ape_term, score_values],
+                outputs=[biased_scores],
+                waits=[ape_event, *producer_events],
+                numeric_profile_id=score_numeric,
+                key=f"op.k{plan.index}.compress.bias",
+            )
+            score_waits = [bias_event]
 
         state_rows = [slots, width]
         state_strides = [width, 1]
@@ -4060,7 +4116,7 @@ class _Emitter:
             sub=Dma.SCATTER,
             inputs=[state_indices, biased_scores],
             outputs=[score_history],
-            waits=[bias_event, kv_event],
+            waits=[*score_waits, kv_event],
             key=f"op.k{plan.index}.compress.score_append",
         )
 
@@ -4073,9 +4129,17 @@ class _Emitter:
             plan=plan,
             family=Major.VECTOR,
             sub=Vector.COMPRESS,
-            inputs=[packed, NO_ID, self._operand_view(
-                plan, ape_operand, loops, writable=False
-            )],
+            inputs=[
+                packed,
+                NO_ID,
+                (
+                    NO_ID
+                    if ape_operand is None
+                    else self._operand_view(
+                        plan, ape_operand, loops, writable=False
+                    )
+                ),
+            ],
             outputs=[
                 self._operand_view(plan, pool_kv_operand, loops, writable=True),
                 self._operand_view(plan, pool_score_operand, loops, writable=True),
@@ -6462,7 +6526,9 @@ class _Emitter:
             walk_loop = int(context_loop)
             walk_step = int(step)
             fixed_edge = NO_ID
-        elif plan.row_loop is None and "row" not in kv.terms:
+        elif "row" not in kv.terms and (
+            plan.row_loop is None or int(plan.row_loop.trip) == 1
+        ):
             static_rows = True
             # A fused-KV row space that is neither phase-bound nor walked.
             # DSpark's is the released example: its attention joins the 128
@@ -6473,9 +6539,19 @@ class _Emitter:
             # above already encodes -- the same DMA, the same all-gather, and
             # ``walk_loop = None`` because there is no loop to walk.  The error
             # this replaces read the absent row loop as a broken walked gather;
-            # the two are distinguished here rather than conflated, and an
-            # operand that DOES carry a ``row`` term without a loop to walk it
-            # still fails below.
+            # the two are distinguished here rather than conflated.
+            #
+            # What decides this branch is whether the operand's ADDRESS walks --
+            # ``"row" in kv.terms`` -- and not whether a loop object exists.  A
+            # deployment whose whole context is one sliding window emits a row
+            # loop of trip ONE over an operand with no row term: the reduced
+            # V4.1 vehicle (max_seq_len 128, window_size 128) is that case, and
+            # reading its degenerate loop as a walk refused a graph that names
+            # exactly one block.  One trip over a non-walking operand addresses
+            # the same single block the absent-loop form does, so it lowers the
+            # same way.  A row loop with MORE than one trip over an operand that
+            # carries no row term is a different thing entirely -- every trip
+            # would re-read one block -- and still fails below.
             rows = int(kv.tile_rows)
             if rows <= 0:
                 raise LoweringError(
@@ -6490,9 +6566,11 @@ class _Emitter:
         else:
             row_loop = loops.get("row")
             if row_loop is None or "row" not in kv.terms:
+                trip = None if plan.row_loop is None else int(plan.row_loop.trip)
                 raise LoweringError(
                     f"kernel {plan.kernel_id}: sparse gather needs a walked "
-                    "fused-KV block"
+                    f"fused-KV block; the operand carries terms {tuple(kv.terms)} "
+                    f"and the row loop has trip {trip}"
                 )
             if phase_extent is None:
                 rows = max(kv.tile_rows, 1)

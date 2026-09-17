@@ -2962,13 +2962,29 @@ def export_deepseek_v41_kernel_graph(
             op = start("ENGRAM_ROW_LOOKUP", "engram.row_lookup", layer)
             table = declare_weight(table_spec)
             table_scale = declare_weight(scale_of[table_spec.name])
+            # The gathered codes carry NO tensor-level scale declaration, and
+            # that is deliberate.  A declared block scale is addressed by the
+            # data view's own element offsets -- amendments A8 and A15 put the
+            # code for ``(row, col)`` at ``(row // row_block) * (cols // block)
+            # + col // block`` of that view's row-major space -- and these rows
+            # were *gathered*, so their scales are at the hashed table rows and
+            # nowhere near the arena offsets this block holds.  Declaring it
+            # anyway asked the backend to divide 3,072 gathered rows by the
+            # table's 189,998 scale rows, which it refused.
+            #
+            # The release dequantizes on lookup and gathers the scale with the
+            # SAME indices (``ParallelEngramEmbedding.forward``:
+            # ``scales = F.embedding(local_indices, self.scale)``).  That is what
+            # the reconstruct kernel below states: it takes ``table_scale`` as an
+            # explicit operand and declares ``scale_rows`` addressed by the same
+            # row identifiers.  The provenance is therefore recorded where it is
+            # actionable, on the kernel that applies it, instead of as a tensor
+            # declaration no addressing rule can satisfy.
             rows_payload = builder.tensor(
                 f"{op}.rows",
                 "fp8_e4m3fn",
                 (span, ENGRAM_COLUMNS, ENGRAM_HEAD_DIM),
                 "activation",
-                scale_tensor_id=table_scale,
-                scale_block_elements=WEIGHT_BLOCK,
             )
             emit(
                 f"{op}.read",
