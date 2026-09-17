@@ -174,6 +174,12 @@ LINK_CLASSES = (
 )
 
 
+#: ``aux_id_1`` of ``REDUCTION.GROUPED_CONCAT``: the join compacts PAD_INDEX to a
+#: trailing run.  Mirrors ``runtime.sim.engines.reduction``'s own constant and the
+#: ROM lane's; one convention, two backends.
+_JOIN_COMPACTS_PADDING = 1
+
+
 class PlanError(ValueError):
     """Raised when the neutral IR cannot be placed on this chip."""
 
@@ -4383,8 +4389,37 @@ def _aux_ids(
             elif kernel.kind != "SIGMOID":
                 aux = [0]
         elif sub == int(Vector.MHC):
+            # THE EXPORTER NAMES THE MULTIPLIER ``post_width``, not ``hc_mult``:
+            # it is the number of residual streams, so the post coefficients are
+            # ``m`` wide and the combination matrix ``m * m``.  Reading only
+            # ``hc_mult`` left aux_id_2 at NO_ID, and the engine refused the
+            # operator one dispatch later -- "operator 1678: aux_id_2 declares
+            # hc_mult 4294967295, the operands carry 4" at instruction 14 of the
+            # V4.1 HBM prefill.  ``compiler/backends/rom/common/program.py``
+            # accepts both spellings and refuses a kernel that states neither;
+            # this lane accepted one, which is why only this lane stopped.  A
+            # default is what would hide it: the engine's guard is only real if
+            # the aux is the graph's own number.
+            multiplier = attributes.get("hc_mult", attributes.get("post_width"))
+            if multiplier is None:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id!r} is a {kernel.kind} whose "
+                    "attributes state neither hc_mult nor post_width, so the "
+                    "hyper-connection multiplier its operands are shaped by "
+                    "cannot be put in aux_id_2; the engine compares the two and "
+                    "a default would make that comparison vacuous"
+                )
+            combination = attributes.get("combination_width")
+            if combination is not None and int(combination) != int(multiplier) ** 2:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id!r} states multiplier "
+                    f"{int(multiplier)} and combination width "
+                    f"{int(combination)}; a hyper-connection combines "
+                    f"{int(multiplier)} streams, so the matrix is "
+                    f"{int(multiplier) ** 2} wide"
+                )
             aux.append(int(attributes.get("sinkhorn_iterations", NO_ID)))
-            aux.append(int(attributes.get("hc_mult", NO_ID)))
+            aux.append(int(multiplier))
         elif sub == int(Vector.COMPRESS):
             aux.append(int(attributes.get("ratio", NO_ID)))
     elif family == int(Major.ATTENTION):
@@ -4579,7 +4614,21 @@ def _aux_ids(
             # join and silently the wrong operation for the two index joins
             # and the block-diagonal projection this model emits.  Emitting it
             # is the whole of what A17 asks a backend to do.
+            #
+            # A join whose graph declares ``padding_index`` joins operands that
+            # CARRY padding, and its result must present one trailing run of it.
+            # The segments are fixed-width, so an early prefill query fills two of
+            # a 128-slot window and a plain concatenation puts 126 pads ahead of
+            # the compressed segment's valid entries -- and ATTENTION.SPARSE
+            # refuses interior padding, at query 0 of the V4.1 HBM prefill.  The
+            # second word is a flag, not the pad code: the code is the
+            # architecture's single NO_ID, which is also what an unnamed aux slot
+            # holds.  Only a graph declaring the attribute emits it, so no
+            # deployment whose graph does not changes by a byte -- Qwen emits no
+            # joins at all and V4-Flash declares this on none of its 172.
             aux = [int(attributes.get("axis", 0))]
+            if "padding_index" in attributes:
+                aux.append(_JOIN_COMPACTS_PADDING)
     elif family == int(Major.VECTOR):
         if sub == int(Vector.ROPE):
             aux = [int(attributes.get("rotary_width", in_cols(1)))]

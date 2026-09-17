@@ -8,16 +8,16 @@
       "agrees_with_oracle": false,
       "distribution": {},
       "emitted_token_ids": [],
-      "failure": "prefill failed: operator 1678: aux_id_2 declares hc_mult 4294967295, the operands carry 4",
+      "failure": "prefill failed: operator references NO_ID as a view",
       "identity": {
         "capability": "results/abi3/deepseek_v41_hbm_comparator_capability.json",
         "capability_sha256": "f85b4c0daa7e91f4ef5e19f94a1394b9ed59fb744248b84c89bd9fc1bc2dc7cc",
         "deployment": "build/abi3/deepseek-v41-reduced-hbm",
-        "deployment_sha256": "60ba60119e700481921e2ae78862073828ca9661f54f8b7aabe6a852cddcdf6f",
+        "deployment_sha256": "afbee5a53e55ab17691ad98c54abd5146f9b98e76d7a37a2dd4d379b01f81038",
         "descriptor_count": 9122,
         "instruction_count": 3760
       },
-      "retired_work": 14,
+      "retired_work": 5511,
       "stop_reason": "failed"
     },
     "rom_wafer": {
@@ -72,7 +72,7 @@
         "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
         "capability_sha256": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
         "deployment": "build/abi3/deepseek-v41-reduced-rom",
-        "deployment_sha256": "fedcd05d1b850b72384b6aff80d016267ea64052fffba2fd061e566c0cb295f5",
+        "deployment_sha256": "691690d684c3dea5b925ecd6dba427456bbbb5049865e91d7b20114bbf7f3fc6",
         "descriptor_count": 9772,
         "instruction_count": 4385
       },
@@ -106,7 +106,7 @@
   },
   "producer": {
     "git": {
-      "commit": "4260e9cd032d2bca6b56199ce1a26706fe44feaf",
+      "commit": "112dce41da24e304f37f57c46bf801e8191bdf1a",
       "worktree_dirty": true
     },
     "sha256": "f97180a589efa8914f6ffcc34e47611576c5420a54ae5531d0cd9199072ff777",

@@ -4429,6 +4429,17 @@ def export_deepseek_v41_kernel_graph(
                 "width": HIDDEN,
             },
             attributes={
+                # THE BOUND THE OPERATOR CHECKS ITS IDS AGAINST, stated rather
+                # than left to each backend to guess.  ``ROUTE.EXPERT_DISPATCH``
+                # rejects an id outside its aux0 count -- an unbounded expert id
+                # is a memory-safety problem, not a routing detail -- and this
+                # kernel declared none, so the two lanes guessed differently: ROM
+                # fell back to the capability's ``max_expert_ids`` (permissive but
+                # working) and HBM inferred 1 from a routed contraction and
+                # refused 42 of its own ids.  The expert SWIGLU immediately below
+                # has always declared the same number; the operator that
+                # bound-checks against it had not.
+                "expert_count": ROUTED_EXPERTS,
                 "row_order": "ascending_token_then_ascending_selection",
                 "routed_row_expert_output": True,
             },

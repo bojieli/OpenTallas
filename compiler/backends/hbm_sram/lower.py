@@ -5866,6 +5866,17 @@ class _Emitter:
                     "scale_bits",
                     "score_scale_binary32",
                     "head_weight_scale_binary32",
+                    # ``ATTENTION.SPARSE``'s softmax scale, as the V4.1 exporter
+                    # spells it.  Absent here the search returned 0 and the
+                    # engine refused at instruction 92 of the V4.1 HBM prefill --
+                    # "attention scale bits 0x00000000 are not a positive finite
+                    # binary32 value" -- for a kernel carrying the right number
+                    # all along.  Fourth spelling mismatch of this exact shape on
+                    # this walk, after ``post_width``,
+                    # ``hyper_connection_epsilon`` and the rank-1 lookup table:
+                    # the exporter names a field specifically, one backend
+                    # learned the name and the other did not.
+                    "softmax_scale_bits",
                     "scale_bf16_code",
                     "scale",
                 ),
@@ -5913,7 +5924,22 @@ class _Emitter:
         that distinguishes the two head-norm contracts is known.  The weighted
         head norm -- Qwen's, which passes a gain vector -- keeps binary32.
         """
-        bits = _binary32_bits(kernel.attributes, ("epsilon_bits", "epsilon"))
+        # ``hyper_connection_epsilon`` is searched ahead of the generic
+        # ``epsilon`` because a hyper-connection kernel carries BOTH and they are
+        # different numbers: the model's norm epsilon (1e-20) and the frozen
+        # hyper-connection contract's own (1e-06).  Taking the generic one put
+        # 0x1e3ce508 in a profile the engine checks against 0x358637bd and
+        # stopped the V4.1 HBM prefill at instruction 14.  The ROM lane's own
+        # docstring says it mirrors this method -- "one convention, two backends"
+        # -- and that was true of the narrowing below and not of this search: the
+        # ROM lane gained the spelling and this one did not, so the two lanes
+        # disagreed about the same kernel.  Ordered by attribute rather than
+        # gated on the kind so it cannot drift when a kind is renamed; only a
+        # hyper-connection kernel states this attribute.
+        bits = _binary32_bits(
+            kernel.attributes,
+            ("epsilon_bits", "hyper_connection_epsilon", "epsilon"),
+        )
         if plan.kind != "HEAD_RMS_NORM" or not bits:
             return bits
         if sum(1 for o in plan.operands if o.direction == "in") != 1:
