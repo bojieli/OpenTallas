@@ -160,7 +160,7 @@ from runtime.reference.hyper_connection import (
 from runtime.reference.transcendental import binary32_exp_general_rne
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.tensor_accelerator.sparse_attention import exp_cr32
-from runtime.sim.formats import narrow_bf16_rne, widen_bf16
+from runtime.sim.formats import narrow, narrow_bf16_rne, widen_bf16
 from runtime.sim.memory import ResolvedView
 
 #: Sub-case selectors carried in ``aux_id_0``.
@@ -544,34 +544,93 @@ def _ratio(descriptor: Descriptor) -> int:
     return int(ratio)
 
 
+def _write_project(ctx: EngineContext, view, values: np.ndarray) -> int:
+    """Write a compressor projection into its destination's declared rank.
+
+    The output dtype is the graph's: FP32 for the packed pair the pool consumes,
+    and BF16 for the ratio-1 latent, whose consumer is an RMSNorm whose contract
+    is BF16 in and BF16 out.  So the narrowing is chosen by the view rather than
+    asserted, and it is the operation's only rounding boundary.
+    """
+    if view.dtype == DType.FP32:
+        ctx.write(view, np.ascontiguousarray(
+            values, dtype=np.float32).reshape(view.dims))
+        return int(values.size)
+    with _numeric_guard("COMPRESS_PROJECT output"):
+        narrowed, saturations = narrow(view.dtype, values.reshape(-1))
+    if saturations:
+        ctx.counters.add("vector.saturations", int(saturations))
+    ctx.write(view, np.ascontiguousarray(narrowed).reshape(view.dims))
+    ctx.counters.add("vector.conversions", int(narrowed.size))
+    return int(narrowed.size)
+
+
 def _compress_project(
     ctx: EngineContext, descriptor: Descriptor, profile: NumericProfile
 ) -> None:
     hidden_view = ctx.input_view(descriptor, 0)
     kv_view = ctx.input_view(descriptor, 1)
-    gate_view = ctx.input_view(descriptor, 2)
+    #: THE GATE PROJECTION IS OPTIONAL, because a ratio-1 compressor has none.
+    #: ``Compressor.__init__`` registers ``wgate`` only under ``if compress_ratio
+    #: > 1``, and its ratio-1 forward branch is ``return self.norm(self.wkv(x))``
+    #: -- one projection, no learned pooling score, so there is nothing to pack a
+    #: second plane with.  Reading slot 2 unconditionally trapped on NO_ID at
+    #: instruction 2,439 of the V4.1 HBM prefill: that lane issues the ratio-1
+    #: projection as this operator's own sub-case, where the ROM lane overrides it
+    #: to TENSOR.MATMUL.  Both spellings are legal and this one has to work,
+    #: because the HBM checker requires the kind to lower to its table row.
+    gate_view = (
+        ctx.input_view(descriptor, 2)
+        if int(descriptor.payload["input_view_2"]) != NO_ID
+        else None
+    )
     out_view = ctx.output_view(descriptor, 0)
     batch, span, width = _dims(hidden_view, 3, "COMPRESS_PROJECT hidden")
     outputs, kv_width = _dims(kv_view, 2, "COMPRESS_PROJECT KV projection")
-    gate_outputs, gate_width = _dims(gate_view, 2, "COMPRESS_PROJECT gate projection")
     _require(
-        kv_width == width and gate_width == width,
-        "COMPRESS_PROJECT projections are "
-        f"{kv_width} and {gate_width} columns wide; the hidden row is {width}",
+        kv_width == width,
+        f"COMPRESS_PROJECT projection is {kv_width} columns wide; the hidden row "
+        f"is {width}",
     )
-    _require(
-        gate_outputs == outputs,
-        f"COMPRESS_PROJECT gate projection has {gate_outputs} output features "
-        f"and the KV projection has {outputs}; the frozen contract projects both "
-        "to the same width",
-    )
-    _require(
-        _dims(out_view, 4, "COMPRESS_PROJECT output") == (batch, span, 2, outputs),
-        f"COMPRESS_PROJECT output view {out_view.descriptor_id} is "
-        f"{out_view.dims}; the packed KV-then-gate result is "
-        f"{(batch, span, 2, outputs)}",
-    )
-    _dtype(out_view, DType.FP32, "COMPRESS_PROJECT output")
+    if gate_view is None:
+        #: One projection, so the result is the latent itself rather than the
+        #: packed pair -- and its leading axes are whatever the graph declares
+        #: over ``batch * span`` rows of ``outputs``, which is the same
+        #: row-major extent the packed form has with its plane axis removed.
+        produced = 1
+        out_rows = 1
+        for extent in tuple(out_view.dims)[:-1]:
+            out_rows *= int(extent)
+        _require(
+            len(out_view.dims) >= 2
+            and int(out_view.dims[-1]) == outputs
+            and out_rows == batch * span,
+            f"COMPRESS_PROJECT output view {out_view.descriptor_id} is "
+            f"{out_view.dims}; with no gate projection the result is "
+            f"{batch * span} row(s) of {outputs}",
+        )
+    else:
+        produced = 2
+        gate_outputs, gate_width = _dims(
+            gate_view, 2, "COMPRESS_PROJECT gate projection"
+        )
+        _require(
+            gate_width == width,
+            f"COMPRESS_PROJECT gate projection is {gate_width} columns wide; the "
+            f"hidden row is {width}",
+        )
+        _require(
+            gate_outputs == outputs,
+            f"COMPRESS_PROJECT gate projection has {gate_outputs} output features "
+            f"and the KV projection has {outputs}; the frozen contract projects "
+            "both to the same width",
+        )
+        _require(
+            _dims(out_view, 4, "COMPRESS_PROJECT output") == (batch, span, 2, outputs),
+            f"COMPRESS_PROJECT output view {out_view.descriptor_id} is "
+            f"{out_view.dims}; the packed KV-then-gate result is "
+            f"{(batch, span, 2, outputs)}",
+        )
     _require(
         profile.reduction_order == int(ReductionOrder.SEQUENTIAL_ASCENDING),
         f"numeric profile {profile.descriptor_id} declares reduction order "
@@ -584,24 +643,38 @@ def _compress_project(
         batch * span, width
     )
     kv_weights = widen_bf16(_bf16(ctx, kv_view, "COMPRESS_PROJECT KV projection"))
-    gate_weights = widen_bf16(_bf16(ctx, gate_view, "COMPRESS_PROJECT gate projection"))
+    gate_weights = (
+        widen_bf16(_bf16(ctx, gate_view, "COMPRESS_PROJECT gate projection"))
+        if gate_view is not None
+        else None
+    )
 
     previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
     try:
         kv = _finite(
             _ordered_product_add(rows, kv_weights), "COMPRESS_PROJECT KV projection"
         )
-        scores = _finite(
-            _ordered_product_add(rows, gate_weights),
-            "COMPRESS_PROJECT gate projection",
+        scores = (
+            _finite(
+                _ordered_product_add(rows, gate_weights),
+                "COMPRESS_PROJECT gate projection",
+            )
+            if gate_weights is not None
+            else None
         )
     finally:
         np.seterr(**previous)
 
-    packed = np.stack((kv, scores), axis=1).reshape(batch, span, 2, outputs)
-    ctx.write(out_view, np.ascontiguousarray(packed, dtype=np.float32))
+    if scores is None:
+        packed = kv
+    else:
+        packed = np.stack((kv, scores), axis=1)
+    #: The destination's own dims, whatever rank the graph gave them: the
+    #: row-major extent is ``batch * span * produced`` rows of ``outputs`` either
+    #: way, and the write is the same bytes in the same order.
+    written = _write_project(ctx, out_view, packed)
     ctx.counters.add("vector.compress_rows", batch * span)
-    ctx.counters.add("vector.elements", int(packed.size))
+    ctx.counters.add("vector.elements", int(written))
 
 
 def _exponentials(delta: np.ndarray) -> np.ndarray:

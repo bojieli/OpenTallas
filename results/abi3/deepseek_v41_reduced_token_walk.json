@@ -6,19 +6,62 @@
   "cases": {
     "hbm_single_chip": {
       "agrees_with_oracle": false,
-      "distribution": {},
-      "emitted_token_ids": [],
-      "failure": "prefill failed: operator references NO_ID as a view",
+      "distribution": {
+        "oracle_token": {
+          "logit": -0.02227891981601715,
+          "of": 4040,
+          "rank": 2170,
+          "token_id": 1638
+        },
+        "top": [
+          {
+            "logit": 0.9374982118606567,
+            "token_id": 459
+          },
+          {
+            "logit": 0.8520801067352295,
+            "token_id": 2750
+          },
+          {
+            "logit": 0.7891331911087036,
+            "token_id": 2284
+          },
+          {
+            "logit": 0.7658098936080933,
+            "token_id": 2610
+          },
+          {
+            "logit": 0.7591448426246643,
+            "token_id": 566
+          },
+          {
+            "logit": 0.7546936869621277,
+            "token_id": 4033
+          },
+          {
+            "logit": 0.7523229122161865,
+            "token_id": 3254
+          },
+          {
+            "logit": 0.6968774795532227,
+            "token_id": 2479
+          }
+        ]
+      },
+      "emitted_token_ids": [
+        459
+      ],
+      "failure": null,
       "identity": {
         "capability": "results/abi3/deepseek_v41_hbm_comparator_capability.json",
         "capability_sha256": "f85b4c0daa7e91f4ef5e19f94a1394b9ed59fb744248b84c89bd9fc1bc2dc7cc",
         "deployment": "build/abi3/deepseek-v41-reduced-hbm",
-        "deployment_sha256": "afbee5a53e55ab17691ad98c54abd5146f9b98e76d7a37a2dd4d379b01f81038",
+        "deployment_sha256": "e28df84b09a914e310472b8adbedee277c6820301400f4ddc7c2c7fec46c9123",
         "descriptor_count": 9122,
         "instruction_count": 3760
       },
-      "retired_work": 5511,
-      "stop_reason": "failed"
+      "retired_work": 10694,
+      "stop_reason": "max_new_tokens"
     },
     "rom_wafer": {
       "agrees_with_oracle": false,
@@ -106,7 +149,7 @@
   },
   "producer": {
     "git": {
-      "commit": "112dce41da24e304f37f57c46bf801e8191bdf1a",
+      "commit": "f5af6b9dae4d495181617a609e21362f634bd67a",
       "worktree_dirty": true
     },
     "sha256": "f97180a589efa8914f6ffcc34e47611576c5420a54ae5531d0cd9199072ff777",
@@ -115,11 +158,11 @@
   "prompt_dependence": {
     "distinct_outputs": 3,
     "output_depends_on_input": true,
-    "probed_store": "rom_wafer",
+    "probed_store": "hbm_single_chip",
     "probes": {
       "constant": {
         "emitted_token_ids": [
-          2800
+          2959
         ],
         "failure": null,
         "prompt_token_ids": [
@@ -135,7 +178,7 @@
       },
       "oracle_prompt": {
         "emitted_token_ids": [
-          2750
+          459
         ],
         "failure": null,
         "prompt_token_ids": [
@@ -151,7 +194,7 @@
       },
       "reversed": {
         "emitted_token_ids": [
-          2301
+          1219
         ],
         "failure": null,
         "prompt_token_ids": [
