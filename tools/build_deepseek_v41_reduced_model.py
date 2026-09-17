@@ -884,6 +884,66 @@ def _repo_relative(path: Path) -> str:
         return str(path)
 
 
+
+def _store_wo_a_quantized(
+    state: dict[str, Any], logical: dict[str, str], torch: Any
+) -> tuple[dict[str, Any], dict[str, str]]:
+    """Rewrite every ``attn.wo_a.weight`` into the release's storage shape.
+
+    The inverse of ``convert.py``'s dequantization: that reads a 32x32-blocked
+    E8M0 scale and multiplies, so this divides by a power-of-two scale chosen
+    per block and stores the quotient as F8_E4M3.  E8M0 carries an exponent
+    only, and the reduced builder's own format record states its convention --
+    "byte 0x7F, a scale of exactly 2**0" -- so the byte is 127 + exponent.
+    """
+
+    block = 32
+    #: float8_e4m3fn's largest finite magnitude.
+    fp8_max = 448.0
+    out: dict[str, Any] = {}
+    for name, tensor in state.items():
+        if not name.endswith("attn.wo_a.weight"):
+            out[name] = tensor
+            continue
+        rows, columns = int(tensor.shape[0]), int(tensor.shape[1])
+        if rows % block or columns % block:
+            raise ReducedModelError(
+                f"{name} is {rows}x{columns}, which the release's {block}-wide "
+                "weight scale block does not divide; the reduced widths are "
+                "chosen to be divisible by it, so this is a configuration error"
+            )
+        blocked = (
+            tensor.float()
+            .unflatten(0, (rows // block, block))
+            .unflatten(-1, (columns // block, block))
+        )
+        magnitude = blocked.abs().amax(dim=(1, 3))
+        #: A power-of-two scale that brings each block inside fp8's range, and
+        #: exactly 2**0 for an all-zero block.
+        exponent = torch.where(
+            magnitude > 0,
+            torch.ceil(torch.log2(magnitude / fp8_max)),
+            torch.zeros_like(magnitude),
+        )
+        exponent = exponent.clamp(-127.0, 127.0)
+        scale = torch.pow(torch.tensor(2.0), exponent)
+        quotient = blocked / scale[:, None, :, None]
+        weight = (
+            quotient.flatten(2, 3).flatten(0, 1).to(torch.float8_e4m3fn).contiguous()
+        )
+        out[name] = weight
+        logical[name] = "float8_e4m3fn"
+        scale_name = name.replace(".weight", ".scale")
+        #: THE SCALE'S VALUE, not its exponent. E8M0 carries no mantissa and
+        #: its byte is 127 + exponent, so 2**0 stores as 0x7F -- which is the
+        #: convention this builder's own format record states. Casting the
+        #: exponent itself put -6 where 2**-6 belonged and the round trip came
+        #: back four orders of magnitude out.
+        out[scale_name] = scale.to(torch.float8_e8m0fnu).contiguous()
+        logical[scale_name] = "float8_e8m0fnu"
+    return out, logical
+
+
 def write_snapshot(
     model: Any,
     snapshot: Path,
@@ -931,6 +991,32 @@ def write_snapshot(
         if tensor.dtype == torch.float4_e2m1fn_x2:
             tensor = tensor.view(torch.int8)
         state[name] = tensor
+
+    # wo_a IS WRITTEN IN THE RELEASE'S STORAGE SHAPE, not its runtime one.
+    #
+    # The vendor module declares it ``ColumnParallelLinear(..., dtype=
+    # torch.bfloat16)`` while every sibling projection takes the default fp8,
+    # and it says why beside the einsum that consumes it: "wo_a is
+    # block-diagonal over groups (each projects only its own heads), hence
+    # einsum not Linear.  convert.py dequantizes it to bf16; an fp8 grouped
+    # GEMM would halve the memory."  So bf16 is what the RUNTIME holds after
+    # conversion -- the released CHECKPOINT stores fp8 with a scale, which its
+    # own shard header confirms: layers.0.attn.wo_a.weight is F8_E4M3
+    # [8192, 4096] beside wo_a.scale F8_E8M0 [256, 128].
+    #
+    # Writing named_parameters() straight out therefore produced a fixture in
+    # the runtime shape, missing 43 ``attn.wo_a.scale`` tensors that this
+    # release's storage shape has -- which
+    # tools/audit_deepseek_v41_reduced_tensor_structure.py measures, and which
+    # kept the model from being pinnable by a front end that models storage.
+    #
+    # This is the inverse of convert.py's own dequantization, block sizes and
+    # all: per 32x32 block a power-of-two scale, E8M0 as the release's
+    # ``scale_fmt: ue8m0`` asks, with the weight stored as F8_E4M3.  The
+    # round trip is lossy, exactly as it is for the release, so the fixture's
+    # numerics now match what the release actually computes rather than being
+    # more precise than it.
+    state, logical = _store_wo_a_quantized(state, logical, torch)
     shard = "model-00001-of-00001.safetensors"
     save_file(state, str(snapshot / shard), metadata={"format": "pt"})
     total = sum(
