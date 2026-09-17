@@ -2400,13 +2400,24 @@ def export_deepseek_v41_kernel_graph(
         # per query row and lives for the query block, which is what makes plan
         # section 6.1's locality rule a *placement* clause -- every reader is on
         # the node that owns it -- rather than a residency one.
+        #
+        # THE QUERY BLOCK IS THE CAPACITY, and the sentence above is why.  This
+        # was ``capacity_rows = 1``, which is one query ROW, and it only looks
+        # right for decode.  A backend that bands by layer runs the whole query
+        # block through this kernel before the next layer reads any of it, so a
+        # one-row store keeps the last token's selection and every Reuse layer
+        # reads a selection that is not its own.  The HBM lowering said so ten
+        # times over -- ``view 2904: maximum element 18447 needs 73792 bytes but
+        # object 1638 is 9216 bytes`` -- once a state-resident operand could be
+        # bound at all.  ``span.maximum`` is ``context_tokens``, so this is the
+        # block the schedule actually presents.
         return ensure_state(
             StateResource(
                 state_id=f"index_selection.main.layer.{layer}",
                 state_class="scratch",
                 dtype="u32",
                 row_elements=WINDOW + INDEX_TOPK_WIDTH,
-                capacity_rows=1,
+                capacity_rows=context_tokens,
                 initialization="zero",
             )
         )
@@ -2418,7 +2429,8 @@ def export_deepseek_v41_kernel_graph(
                 state_class="scratch",
                 dtype="u8",
                 row_elements=context_tokens // ratios[layer],
-                capacity_rows=1,
+                # The query block, for the reason index_selection_state gives.
+                capacity_rows=context_tokens,
                 initialization="zero",
             )
         )
