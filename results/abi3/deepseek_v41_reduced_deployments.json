@@ -2,22 +2,22 @@
   "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
   "hbm_single_chip": {
     "capability_digest": "2f41529361302f00ff44960595bdd577d4b5e6246fe158c3868093004b774ce7",
-    "checker_findings": 12,
-    "finding_shapes": {
-      "generated_constant_not_declared_by_the_graph": 2,
-      "verifier_rejected_the_deployment": 1,
-      "view_axis_extent_exceeds_one_loop_iteration": 8,
-      "view_exceeds_object": 1
-    },
+    "checker_findings": 0,
+    "checker_ok": true,
+    "deployment_digest": "663db5450cd6a56236bff4c7fba4041297ebcbc3761a046d65f478729557c3d7",
     "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
-    "note": "Down from 26. The nine view overruns that traced to the indexer's selection scratch are gone: the exporter now sizes it at the query block, which is what its own comment always said it held. The eight remaining are one cause -- the phase-split fused-KV join gives a 128-row window view the compressed loop's 64-row stride, so consecutive iterations overlap -- and the last is a member offset advanced by two loop terms in the indexer's score view. Both are composition bugs in the lowering, not declarations.",
-    "plan_id": "3457743265df569c06dea5227d60e488b2403af74d39a0b3b882575c13818507",
+    "neutrality_errors": 0,
+    "note": "26 findings at first lowering, then 0. The five causes were all general: a scratch sized at one query row instead of the query block; a token-block round-up applied to a context-resolved leading axis, in the plan and in the emitter both; a cache_row spelling the HBM checker compared raw while the ROM checker already resolved it through CACHE_ROW_ALIASES; and a pooled state member map that recorded the LAST window of a repeated resource where the layer term walks from the first. None of them is model-specific and both shipped plan digests are unchanged.",
+    "numeric_contract_substitutions": 12,
+    "plan_id": "2f14d7b22782dc2fc0e8267ca83ee39a7b2110b5c1e2879f7f00e378caec1d9d",
     "profile": "single-chip-comparator",
-    "status": "lowers; legality findings outstanding"
+    "status": "admitted",
+    "verifier_findings": 0,
+    "warnings": 3
   },
   "model_id": "deepseek-v4.1-flash-reduced-v1",
   "rom_array_64": {
-    "reason": "region 'rom.r0.p059.s1' has 12 members per slot, which do not divide into 64 owners. The reduction scales n_routed_experts by the width factor, 192/16 = 12, and a 64-owner array needs the expert count to divide by 64. This is a property of the reduced vehicle's shape, not of the array backend: the released 192 divides 64 three ways.",
+    "reason": "region 'rom.r0.p059.s1' has 12 members per slot, which do not divide into 64 owners. The reduction scales n_routed_experts by the width factor, 192/16 = 12. This is a property of the reduced vehicle, not of the array backend -- the released 192 divides 64 three ways -- and it is a reduction-rule choice: an expert count is an ownership unit as well as a size, so a vehicle intended for an N-owner array has to keep it divisible by N, which at 64 owners means a width factor of at most 3 rather than 16.",
     "status": "refused"
   },
   "rom_wafer": {
@@ -56,5 +56,5 @@
     "verifier_checks_total": 63
   },
   "schema": "opentallas.deepseek_v41_reduced_deployments.v1",
-  "what_this_is": "The first deployments of any DeepSeek-V4.1-Flash graph on either store. The vehicle is the reduced fixture (dim 160, vocab 4,040, 40 layers, window 128), so these are shape-reduced deployments of the full operator set, not shipped dimensions."
+  "what_this_is": "The first admitted deployments of any DeepSeek-V4.1-Flash graph, on two of the three stores. The vehicle is the reduced fixture (dim 160, vocab 4,040, 40 layers, window 128, 12 routed experts), so these are shape-reduced deployments of the full operator set at shipped arithmetic, not shipped dimensions. Neither is a token: a token additionally needs the RTL issue bridge to admit the operations the graph names, which is measured in deepseek_v41_reduced_rtl_token_gap.json."
 }

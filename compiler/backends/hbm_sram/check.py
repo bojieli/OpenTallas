@@ -39,7 +39,12 @@ from compiler.ir.v3.kernel_ir import (
     Symbolic,
     Tensor,
 )
-from compiler.ir.v3.lowering import ABSENT_OPERANDS, abi_input_slots, engine_for
+from compiler.ir.v3.lowering import (
+    ABSENT_OPERANDS,
+    abi_input_slots,
+    canonical_cache_row,
+    engine_for,
+)
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Control,
@@ -1123,8 +1128,21 @@ def _floor_divisors(graph: KernelGraph) -> set[int]:
 
     divisors: set[int] = set()
     for kernel in graph.kernels:
+        # Through the alias, not the raw string.  ``cache_row`` is a NEUTRAL
+        # attribute, so ``CACHE_ROW_ALIASES`` owns the vocabulary two exporters
+        # write into it -- "belongs here rather than being re-decided per lane",
+        # as ``compiler/ir/v3/lowering.py`` puts it, with the warrant that both
+        # spellings sit on kernels carrying the same ``compressed_kv_write_bf16_v1``
+        # contract and the same ``context_length // ratio`` row arithmetic.  The
+        # ROM checker already resolves it; this one filtered on V4's spelling, so
+        # a V4.1 graph -- which writes ``compressed_group_index`` -- produced an
+        # EMPTY divisor set, and the plan's floor-division tables then fell through
+        # to the "no constant in the graph declares it" branch.  That is the exact
+        # failure the alias comment warns of: "a proof that filters on a spelling
+        # it has not met would silently prove nothing about the model that uses the
+        # other spelling."
         if (
-            str(kernel.attributes.get("cache_row", ""))
+            canonical_cache_row(kernel.attributes)
             != "completed_absolute_position_floor_div_ratio"
         ):
             continue
@@ -1786,7 +1804,7 @@ def _check_floor_div_index_views(
     for kernel_index in sorted(emitted_kernels):
         kernel = graph.kernels[kernel_index]
         if (
-            str(kernel.attributes.get("cache_row", ""))
+            canonical_cache_row(kernel.attributes)
             != "completed_absolute_position_floor_div_ratio"
         ):
             continue

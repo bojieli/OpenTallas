@@ -116,6 +116,7 @@ from .plan import (
     is_row_gather,
     kernels_by_layer_key,
     matrix_shape,
+    _leads_with_context_axis,
     position_inputs,
     ring_modulus,
     round_up as _round_up,
@@ -2602,7 +2603,18 @@ class _Emitter:
         if not extents:
             extents = [1]
         lead_symbolic = bool(tensor.shape) and isinstance(tensor.shape[0], Symbolic)
-        if lead_symbolic:
+        # The same narrowing ``_operand_plan`` applies, for the same reason and
+        # necessarily in both places: the plan sizes the buffer and this sizes the
+        # view of it, so rounding in one and not the other would describe a view
+        # the buffer does not have.  A leading axis the CONTEXT sizes, in a kernel
+        # that opens a context loop, is resolved by that loop in one iteration and
+        # is not walked in token blocks -- rounding it up claimed 128 rows of a
+        # 64-row compressed prefix while the loop advanced 64, and the verifier
+        # reported the overlap eight times.
+        context_resolved = plan.context_loop is not None and _leads_with_context_axis(
+            tensor
+        )
+        if lead_symbolic and not context_resolved:
             extents[0] = _round_up(extents[0], plan.block_rows)
         strides = [1] * len(extents)
         running = 1

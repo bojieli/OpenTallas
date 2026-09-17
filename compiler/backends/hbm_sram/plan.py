@@ -1212,6 +1212,19 @@ def touches_single_row_state(
     return False
 
 
+def _leads_with_context_axis(tensor: Tensor) -> bool:
+    """True when this tensor's LEADING axis is one the context sizes.
+
+    Distinct from :func:`context_axis_of`, which finds such an axis wherever it
+    sits: an operand whose leading axis is span-sized still wants the token-block
+    round-up even if a trailing axis is context-sized.
+    """
+    if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
+        return False
+    base = request_extent_for(tensor.shape[0].symbol)
+    return base is not None and base.symbol != "span_tokens"
+
+
 def context_axis_of(
     tensor: Tensor, span_max: int
 ) -> tuple[int, RequestExtent] | None:
@@ -3815,7 +3828,25 @@ def _pool_states(
             members: list[str] = []
             for placement in lane:
                 offset_base = len(members)
+                # Scoped to this placement, NOT to the whole map: the pre-pool
+                # per-band placements have already written their own ids here and
+                # this pass must replace them.
+                claimed: set[str] = set()
                 for offset, member in enumerate(placement.members):
+                    # THE FIRST OCCURRENCE IS THE BASE.  A placement may hold one
+                    # resource in several consecutive windows -- the V4.1 indexer's
+                    # ``index_key_value.main.layer.20`` occupies four, one per
+                    # consuming layer of its band -- and this docstring's own rule
+                    # is that "a band's layer induction variable still walks its
+                    # own members by adding one window per iteration to that
+                    # placement's base".  Writing every occurrence in turn left the
+                    # LAST offset in the map, which is the top of the band, so the
+                    # layer term walked off the end of the pool: ``view 8330:
+                    # maximum element 32767 needs 65536 bytes but object 1628 is
+                    # 40960 bytes``, base at member 4 of 0..4 plus three more.
+                    if member in claimed:
+                        continue
+                    claimed.add(member)
                     state_of_resource[member] = [physical_id, offset_base + offset]
                 members.extend(placement.members)
             bands = {p.band_id for p in lane}
@@ -5751,7 +5782,30 @@ def _operand_plan(
 ) -> OperandPlan:
     tensor = tensors[name]
     rows, cols, symbolic = matrix_shape(tensor, span_max)
-    if symbolic:
+    if symbolic and not (context and _leads_with_context_axis(tensor)):
+        # The round-up makes a block-wise walk cover whole blocks, and the walk
+        # it serves is the TOKEN-BLOCK loop.  A leading axis the *context* sizes
+        # is resolved by the context loop instead, which covers the whole axis in
+        # one iteration, so rounding it to the token block does not describe
+        # anything -- and when the axis is SMALLER than the block it inflates the
+        # view past the rows the loop advances.
+        #
+        # The reduced V4.1 vehicle is where that shows: its compressed prefix is
+        # ``context_groups_ratio2`` = 64 rows at a 128-row block, so the view
+        # claimed 128 rows while one iteration advanced 64, and consecutive
+        # iterations overlapped.  The verifier reported it eight times --
+        # ``axis-0 extent 128 exceeds the 64 element(s) one iteration of loop
+        # 2972 covers``.
+        #
+        # BOTH conditions are needed, and Qwen is why.  Its KV histories lead
+        # with ``context_tokens`` at 8,256 rows, which is NOT a whole number of
+        # 128-row blocks, and they ARE walked in token blocks -- so for them the
+        # round-up to 8,320 is load-bearing and dropping it under-allocates the
+        # last partial block.  Keying on the axis alone moved Qwen's plan digest.
+        # ``context`` is true only where the KERNEL opens a context loop, which is
+        # the loop that resolves such an axis in one iteration; Qwen's appends do
+        # not, so they keep the round-up and their digest holds.  Verified against
+        # both shipped plan digests.
         rows = round_up(rows, block)
     placement = placement_by_tensor.get(name)
     if placement is not None:
