@@ -449,6 +449,13 @@ class Feature(enum.IntEnum):
     INTEGRITY_RETRY = 10
     SIGNED_DEPLOYMENT = 11
     DATA_BEARING_TIMING = 12
+    #: AM-E10.  A four-bit E2M1 element stream scaled by ONE E4M3 PER 16.
+    #: Not implied by :data:`MXFP4_E2M1_E8M0` and not implied by
+    #: :data:`FP8_E4M3FN_TENSOR`: a chip may decode E2M1 elements at a group of
+    #: 32 with an E8M0 scale, and decode E4M3 tensors, and still have no path
+    #: that applies an E4M3 scale to a group of 16.  Declaring it separately is
+    #: what lets a capability say which of the two it actually has.
+    FP4_E2M1_S16_E4M3_TENSOR = 13
 
 
 FEATURE_VECTOR_BYTES: Final = 32
@@ -521,6 +528,15 @@ class DType(enum.IntEnum):
     FP8_E5M2 = 0x21
     MXFP4_E2M1 = 0x30
     E8M0_SCALE = 0x31
+    #: AM-E10.  E2M1 elements with ONE E4M3 scale PER 16.  Deliberately NOT
+    #: ``MXFP4_E2M1``: that format's scale is E8M0 and its group is 32, so a
+    #: shared storage code would let a view quantised one way be read by an
+    #: engine configured for the other -- undetectably, because both are
+    #: four-bit E2M1 element streams.  The ELEMENT encoding is identical to
+    #: ``MXFP4_E2M1``'s (sign, 2-bit exponent bias 1, 1-bit fraction, subnormals
+    #: at 2**-1); what this code carries that the other does not is the promise
+    #: about the scale VIEW that accompanies it.
+    FP4_E2M1_S16_E4M3 = 0x32
 
 
 DTYPE_BITS: Final[dict[int, int]] = {
@@ -540,6 +556,7 @@ DTYPE_BITS: Final[dict[int, int]] = {
     DType.FP8_E5M2: 8,
     DType.MXFP4_E2M1: 4,
     DType.E8M0_SCALE: 8,
+    DType.FP4_E2M1_S16_E4M3: 4,
 }
 
 

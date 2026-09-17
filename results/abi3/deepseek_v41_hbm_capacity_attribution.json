@@ -1,0 +1,259 @@
+{
+ "a_regression_this_unit_caused_and_closed": {
+  "cause": "source_identity.plan_id is INSIDE the deployment digest body, so adding host_resident_* keys to the physical plan's proofs - and stamping HbmPlacement.space on the pre-existing host windows - moved the digest of a machine that has no host store",
+  "fix": "the new proof keys are added only when the capability declares a host store, and the host input/output windows keep their historical record and continue to be excluded from the node-local span by their key prefix; HbmPlacement.space is non-default only for a host-resident weight, and to_dict omits it otherwise",
+  "reading": "the same discipline the file already states for amendment A3's predicate notes - 'notes sit inside the deployment digest, so a graph that declares no predicate says nothing here' - now applies to the capacity proof",
+  "what": "both shipped HBM deployment digests moved (qwen3-8b 3e99df5f -> 407bc673, deepseek-v4-flash e9a79c60 -> faec0f9f)"
+ },
+ "defect_1_double_count": {
+  "already_forbidden_by_this_backend": "compiler/backends/hbm_sram/check.py's zero_copy_weights rule states 'a zero-copy placement never duplicates a byte', and _reconstruct_weight_groups abandons a role whose member is already `in claimed`. The planner disagreed with its own independent checker; the fix applies the checker's rule.",
+  "bytes_placed_twice_per_node": 6144182800,
+  "measured_effect": {
+   "difference": 6144188416,
+   "note": "6,144,182,800 payload plus 5,616 bytes of 4 KiB alignment, at context 131,072 / 64 nodes",
+   "per_node_after": 336131203072,
+   "per_node_before": 342275391488
+  },
+  "mechanism": "compiler/backends/hbm_sram/plan.py _group_weights placed each scale plane TWICE: once as the companion scale object its data role builds (ws0408/ws0050) and once as a weight role of its own, because the DEQUANTIZE kernel also binds it as a direct operand (wr0409/wr0051). The two placements share (path, file_offset, bytes, sha256) exactly.",
+  "second_failure_it_caused": "_assign_weight_residency builds placement_by_tensor as a dict keyed on tensor_id, so one of the two placements silently won and the residency the engine addresses the tensor through was whichever came last",
+  "tensors": [
+   "layers.1.engram.embed.scale",
+   "layers.14.engram.embed.scale"
+  ]
+ },
+ "defect_2_row_tables_held_node_resident": {
+  "arithmetic": "98,305,579,008 + 98,308,270,592 (row tables) + 3,072,049,344 + 3,072,133,456 (scale planes) = 202,758,032,400, equal to the stated Engram table bytes to the byte",
+  "bytes_replicated_on_every_node": 202758032400,
+  "how_they_are_addressed": "each table is the weight operand of exactly one EMBEDDING_LOOKUP whose other operand is a runtime row-identifier stream; each scale plane is the companion of its table and the graph says its rows are 'addressed_by_the_same_row_identifiers'",
+  "node_local_sharding_is_not_available": "384,006,168 and 384,016,682 rows leave 24 and 42 over 64 nodes, so no symmetric whole-row node image exists and ABI 3.0's A28 node map cannot state an asymmetric one (measured by the array lane)",
+  "tensors": [
+   "layers.1.engram.embed.weight",
+   "layers.1.engram.embed.scale",
+   "layers.14.engram.embed.weight",
+   "layers.14.engram.embed.scale"
+  ],
+  "what_was_missing": "compiler/backends/hbm_sram had no host-resident WEIGHT store: a weight group was replicated or node_sharded and nothing else, and every weight object was emitted StorageClass.HBM"
+ },
+ "descriptor_multiset_equality": {
+  "array_side_on_disk": {
+   "capability_digest": "1cbad0031feb90b5ad224fb028a10a836a441fd6aab23d17aacfc4c6dd24d0e9",
+   "context_tokens": 131072,
+   "deployment_sha256": "c3cee997f27aa3e88a7a653aebe75a2f7f020aed894a42d328c92a786180288f",
+   "descriptor_count": 9612,
+   "path": "build/abi3/deepseek-v41-flash-rom-array-64"
+  },
+  "note_on_context": "the array side on disk is at context 131,072, and the HBM plan refuses there on the activation arena. A matched pair therefore has to be built at a context both admit; 8,192 is such a context (the array admits it at 9,438,988,420 of 180,000,000,000 and the HBM plan closes at 24,008,503,296 of 103,079,215,104)",
+  "reason": "it needs two deployments of one IR and the HBM one does not exist; the remaining refusal above is what blocks it",
+  "required_by": "gate DS41-P3: 'the descriptor multiset of the array equals the HBM cluster's'",
+  "status": "NOT RUN"
+ },
+ "gate": "DS41-P3 (docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 3.3, WP-G)",
+ "measured_after_the_fix": {
+  "command": "PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py --ir <ir> --profile cluster-n-comparator --nodes <n> --out <dir>",
+  "context_131072_nodes_64": {
+   "activation_arena_bytes": 115021312008,
+   "plan": "REFUSED",
+   "reading": "the capacity gap this unit was given is closed - weights per node fell from 223,261,055,968 to 13,035,013,568 - and what binds at the shipped-ladder context is now the ACTIVATION ARENA, 115,021,312,008 of the 132,049,334,272 the node needs. That is a different constraint in a different subsystem, and it is node-invariant: the arena does not shard across nodes.",
+   "refusal": "physical HBM plan requires 132049334272 bytes per node, capability provides 103079215104",
+   "weight_bytes_per_node": 13035013568
+  },
+  "context_8192_nodes_64": {
+   "activation_arena_bytes": 8825401352,
+   "hbm_available_per_node": 103079215104,
+   "hbm_bytes_per_node": 24008503296,
+   "host_resident_available": 222085385232,
+   "host_resident_bytes": 204081859600,
+   "host_resident_objects": 5,
+   "percent_of_node": 23.3,
+   "plan": "CLOSES",
+   "plan_id": "fa15f5e9b3196a81f02c5c7ab263e9e2661850338c55fd6e000a517a04a0083a",
+   "weight_bytes_per_node": 13035013568
+  },
+  "context_8192_nodes_8": {
+   "hbm_bytes_per_node": 53831970816,
+   "plan": "CLOSES",
+   "plan_id": "5bbff7df8b1365f5819bd376c9aab641e00983f7cbc38931e4cd3197f2295f6a"
+  }
+ },
+ "negative_controls": [
+  {
+   "control": "host reserve declared too small (100,000,000,000)",
+   "proves": "the new capability number is load-bearing and the new proof can fail",
+   "result": "build failed: physical host-resident weight image requires 204081859600 bytes, capability declares a resident region of 100000000000"
+  },
+  {
+   "control": "node HBM declared 1,000,000,000,000",
+   "proves": "the set-level rule turns on the declared HBM capacity, and a model whose tables fit keeps them in the fast store",
+   "result": "host_resident_objects 0, warning '5 row-lookup table objects totalling 204081859600 bytes fit in the node's 1000000000000-byte HBM, so they stay in the fast store and the declared host image is unused'"
+  }
+ ],
+ "pre_existing_failures_not_caused_here": {
+  "method": "reproduced in a pinned worktree at this branch's base commit 7832b66 with a clean tree",
+  "tests": [
+   "tests/compiler/test_hbm_distributed_dataflow.py::test_deepseek_capacity_counts_replication_constants_and_rolling_queries (generated_constant_bytes 281,018,380 vs expected 272,629,772)",
+   "tests/compiler/test_hbm_distributed_dataflow.py::test_shared_exchange_scratch_uses_one_dedicated_one_credit_queue (triple_count 37 vs 36)",
+   "tests/abi3/test_wire_format.py::test_opcode_registry_matches_the_document (AM-E10 opcodes not in the document)",
+   "tests/abi3/test_topology_amendment_r1.py::test_every_committed_capability_record_still_validates (a committed n5_design_target record declares a fabric with 1 node)"
+  ]
+ },
+ "provenance": {
+  "base_commit": "7832b66da385db178384ef9668f427d97fd47d6f",
+  "branch": "token-path-end-to-end",
+  "ir_built_here": {
+   "command": "PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash --context-tokens 8192 --verify-bindings 0 --output build/ir-v3/deepseek-v4.1-flash-c8192/kernel_ir.v3.json",
+   "path": "build/ir-v3/deepseek-v4.1-flash-c8192/kernel_ir.v3.json",
+   "sha256": "a54369f0182dc79a01a2b32d3f901213e2c3570fbf395667d99c9d6b209f30a5"
+  },
+  "source": {
+   "compiler/backends/hbm_sram/capability.py": {
+    "sha256": "3092965af2202eacf954b085660504e748dcd538b879dc60c207c3f54f044f8c"
+   },
+   "compiler/backends/hbm_sram/check.py": {
+    "sha256": "5f02e74061589e3227eb5116f77005fc0bc1103e34999e1cb04eb745214f0e57"
+   },
+   "compiler/backends/hbm_sram/lower.py": {
+    "sha256": "8a0a58b4f34ca4938c9057e9bc4720e5e11b04a8619beb07347122d8042fc0cb"
+   },
+   "compiler/backends/hbm_sram/plan.py": {
+    "sha256": "6eb58e97627f303134386954a8505972e74453fda174b2dbfab0d6750f0d1c27"
+   }
+  },
+  "worktree_dirty": true,
+  "worktree_note": "the tree carries concurrent work from other sessions (AM-E10 dtype, numeric contract union, RTL packages, physical_abi3 artifacts); this unit changed exactly four files, all under compiler/backends/hbm_sram/"
+ },
+ "question": "the V4.1 HBM comparator refused on capacity; is the PLAN placing bytes per node that should not be there, or is the per-node CAPACITY the wrong number?",
+ "remaining_refusal": {
+  "diagnosis": "V4-Flash declares its fused KV as a materialised arena tensor spanning the context, carrying a `row` term under a context loop, and the walked branch lowers it. V4.1 declares it as the committed-window STATE resource (128 rows, no row term, no context loop) and states the row space in attributes['phase_key_value_rows'] = {'prefill': 'the_current_request_rows_of_this_resource', 'decode': 'the_committed_window'}.",
+  "not_a_frozen_constant": true,
+  "site": "compiler/backends/hbm_sram/lower.py _emit_sparse_input",
+  "static_branch_is_not_the_answer": "the adjacent `plan.row_loop is None and 'row' not in kv.terms` branch treats a fixed block as static; firing it here would pin the KV block at the 128 committed window rows, which is right on decode and wrong on prefill, where the declaration says the rows are the request's own",
+  "the_gap": "`grep -rn phase_key_value_rows compiler/` matches ONE line - compiler/frontends/v3/deepseek_v41.py:3879, which WRITES it. No backend reads it. The operand therefore reaches the sparse gather with neither a row term nor a context loop, and the lowering refuses rather than guessing which rows the prefill path gathers.",
+  "verbatim": "build failed: kernel main.layer00.attention.sparse: sparse gather needs a walked fused-KV block",
+  "why_not_fixed_here": "deciding it means choosing the prefill KV extent and its phase predicate; getting it wrong attends to the wrong KV rows and RETIRES SUCCESSFULLY rather than refusing. That is WP-D/WP-G exporter/ABI interface work, not the capacity question this unit was given."
+ },
+ "schema": "opentallas.deepseek_v41.hbm_capacity_attribution.v1",
+ "shipped_digests_rebuilt_not_asserted": {
+  "deepseek-v4-flash_hbm_cluster_32": {
+   "digest": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+   "verdict": "unchanged"
+  },
+  "deepseek-v4-flash_rom": {
+   "determinism": {
+    "descriptor_table_identical": true,
+    "manifest_identical": true,
+    "plan_identical": true,
+    "program_identical": true
+   },
+   "got": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+   "inverse": "pass",
+   "want": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9"
+  },
+  "hbm_single_chip_capability_digest": {
+   "digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+   "verdict": "unchanged"
+  },
+  "independent_deployment_certificate": {
+   "cases": [
+    "qwen3-8b-hbm",
+    "deepseek-v4-flash-hbm"
+   ],
+   "status": "pass",
+   "tool": "tools/check_hbm_deployments.py"
+  },
+  "qwen3-8b_hbm_single_chip": {
+   "digest": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+   "verdict": "unchanged"
+  },
+  "qwen3-8b_rom": {
+   "determinism": {
+    "descriptor_table_identical": true,
+    "manifest_identical": true,
+    "plan_identical": true,
+    "program_identical": true
+   },
+   "got": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+   "want": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a"
+  }
+ },
+ "tests_passing": [
+  "tests/compiler/test_hbm_sram_backend.py 112 passed",
+  "tests/compiler/test_deepseek_v41_hbm_comparator.py 26 passed",
+  "tests/compiler/test_tensor_accelerator_production_capability.py + test_tensor_accelerator_hbm_shards.py + test_hbm_compressor_checker.py + test_hbm_sram_state_pooling.py 29 passed"
+ ],
+ "the_fix": {
+  "capability_gate": "plan.host_resident_reserve reads capability.memory['host']['resident_region_bytes']; zero (every shipped profile, which declares no host key) means the backend behaves exactly as before, which is why no admitted deployment can move",
+  "files": [
+   "compiler/backends/hbm_sram/plan.py",
+   "compiler/backends/hbm_sram/lower.py",
+   "compiler/backends/hbm_sram/check.py",
+   "compiler/backends/hbm_sram/capability.py"
+  ],
+  "model_blind_rule": "plan.row_lookup_tables(graph): a bound weight tensor qualifies when it is used at least once and EVERY use is as the bound-weight operand of a ROW_LOOKUP_KINDS ('EMBEDDING_LOOKUP') kernel. The table is derived as 'the operand carrying a checkpoint binding', not as a slot number. Block-scale planes inherit through scale_tensor_id, which is the rule _assign_weight_residency already applies to a scale.",
+  "reserve_derivation": "capability.comparator_host_reserve_bytes() reads the comparison's other side, configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json: memory.rom.bytes 19,327,352,832 + memory.host.resident_region_bytes 202,758,032,400 = 222,085,385,232. This machine declares no ROM store, so every load-once immutable byte the array holds outside its own HBM has to be held here in node HBM or in the host image.",
+  "set_level_decision": "all of the tables or none, decided by whether the SET fits one node's declared HBM. Every table is replicated, so the set's per-node cost is its full size; when it fits the tables stay in the fast store. Not a greedy 'move the largest until it fits' - the graph's addressing decides eligibility and one declared capacity decides whether any move, so the outcome is a function of two published numbers and no ordering."
+ },
+ "third_defect_found_and_fixed_frozen_compressor_ratios": {
+  "derivation": "coefficient = candidates // ratio from the two pooled output operands' declared [groups, candidates, head_dim]; overlap = (coefficient == 2); head_dim = width // coefficient, cross-checked against the attribute where declared. Same derivation as compiler/backends/rom/common/program.RomProgram._compressor_overlap, deliberately.",
+  "reading": "the derivation reproduces every declared attribute exactly where one exists and supplies it where V4.1 omits it",
+  "refusal_cleared": "kernel main.layer02.attention.compressor.carry: compressor predicate names unsupported ratio 2",
+  "two_sites": [
+   "lower.py _discover_compressor_predicates: `if ratio not in (4, 128)`",
+   "lower.py _emit_compressor_transition: `if ratio not in (4, 128) or overlap != (ratio == 4)`"
+  ],
+  "validated_against_every_released_case": [
+   {
+    "candidates": 2,
+    "coefficient": 1,
+    "declared_overlap": null,
+    "head_dim": 512,
+    "model": "V4.1",
+    "packed_width": 512,
+    "ratio": 2
+   },
+   {
+    "candidates": 8,
+    "coefficient": 2,
+    "declared_overlap": true,
+    "head_dim": 512,
+    "model": "V4-Flash",
+    "packed_width": 1024,
+    "ratio": 4
+   },
+   {
+    "candidates": 8,
+    "coefficient": 2,
+    "declared_overlap": true,
+    "head_dim": 128,
+    "model": "V4-Flash",
+    "packed_width": 256,
+    "ratio": 4
+   },
+   {
+    "candidates": 128,
+    "coefficient": 1,
+    "declared_overlap": false,
+    "head_dim": 512,
+    "model": "V4-Flash",
+    "packed_width": 512,
+    "ratio": 128
+   }
+  ],
+  "why_the_second_could_never_fail": "V4-Flash overlaps at exactly ratio 4 and not at 128, so `overlap != (ratio == 4)` is a tautology on the only model it was written for"
+ },
+ "verdict": "THE PLAN WAS WRONG AND THE CAPABILITY IS RIGHT, in two separable defects",
+ "why_the_capability_is_right": {
+  "declared_per_node": 103079215104,
+  "is_exactly": "96 GiB",
+  "node_count_is_not_a_lever_measured": {
+   "at_HEAD_nodes_16": 560527179776,
+   "at_HEAD_nodes_64": 548500668416,
+   "at_HEAD_nodes_8": 578475130880,
+   "reading": "8 -> 64 nodes moves the per-node figure by 5.2% because the dominant term is replicated and node-invariant by construction"
+  },
+  "the_plan_document_already_agrees": {
+   "arithmetic": "510,286,023,000 checkpoint - 202,758,032,400 Engram tables = 307,527,990,600",
+   "on_device_weight_bytes": 307527990600,
+   "reading": "the comparator plan's own sizing EXCLUDES the Engram set from on-device bytes and derives capacity_floor_nodes 3 from 307,705,990,600 / 103,079,215,104 = 2.985; a plan that then places the tables per node contradicts its own floor"
+  }
+ }
+}

@@ -285,7 +285,8 @@ module ot_a3_communication_decoder #(
                 ot_a3_link_pkg::DTYPE_FP8_E4M3FN,
                 ot_a3_link_pkg::DTYPE_FP8_E5M2,
                 ot_a3_link_pkg::DTYPE_MXFP4_E2M1,
-                ot_a3_link_pkg::DTYPE_E8M0_SCALE: dtype_legal = 1'b1;
+                ot_a3_link_pkg::DTYPE_E8M0_SCALE,
+                ot_a3_link_pkg::DTYPE_FP4_E2M1_S16_E4M3: dtype_legal = 1'b1;
                 default: dtype_legal = 1'b0;
             endcase
         end

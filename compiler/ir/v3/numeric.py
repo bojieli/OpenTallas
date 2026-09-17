@@ -156,6 +156,16 @@ SPECULATIVE_GRAPH_STEMS: tuple[str, ...] = (
 )
 
 
+#: Graphs exported for a model that has no deployment in any store yet.  These
+#: are held out of the shipped union for exactly the reason
+#: :data:`SPECULATIVE_GRAPH_STEMS` is: adding a stem here would widen the shipped
+#: HBM capability's contract tuple, move its digest, and invalidate every
+#: deployment already admitted against it -- as a side effect of an export
+#: appearing on disk.  A comparator deployment is built against a record that
+#: names this union deliberately instead.
+COMPARATOR_GRAPH_STEMS: tuple[str, ...] = ("deepseek-v4.1-flash",)
+
+
 def _graph_paths(stems: Iterable[str]) -> list[Path]:
     root = REPO / "build" / "ir-v3"
     return [
@@ -203,6 +213,27 @@ def speculative_union_contract_ids() -> tuple[str, ...]:
     return tuple(load_speculative_union()["contracts"])
 
 
+def comparator_graph_paths() -> list[Path]:
+    """The graphs of models with no deployment in any store yet."""
+    return _graph_paths(COMPARATOR_GRAPH_STEMS)
+
+
+def comparator_union_path() -> Path:
+    return REPO / "spec" / "abi3" / "numeric_contract_union_comparator.json"
+
+
+def load_comparator_union() -> dict[str, Any]:
+    """Load the published comparator union, or derive it if unpublished."""
+    published = comparator_union_path()
+    if published.exists():
+        return json.loads(published.read_text())
+    return capability_union(comparator_graph_paths())
+
+
+def comparator_union_contract_ids() -> tuple[str, ...]:
+    return tuple(load_comparator_union()["contracts"])
+
+
 # -- implementation, as distinct from declaration ---------------------------
 #
 # ADR-003 section 14 forbids silent emulation, and a capability that merely
@@ -230,6 +261,146 @@ FROZEN_CONTRACT_IMPLEMENTATIONS: Mapping[str, str] = {
     "bf16_payload_lookup_v1": "runtime.reference.lookup.bf16_token_embedding",
     "exact_token_append_eos_v1": "runtime.sim.engines.selection.token_append",
     "greedy_lowest_token_id_argmax_v1": "runtime.sim.engines.selection.argmax",
+    # -- DeepSeek-V4.1-Flash (AM-E10) -----------------------------------------
+    #
+    # The V4.1 exporter names a contract after the SOURCE OPERATION it came from
+    # and appends the sub-operation, so most of its names cannot be recovered
+    # from a module path: `candidate_mask_block_maximum_v1` is one step of
+    # `CANDIDATE_BLOCK_SELECT`, and the reference that executes it is named after
+    # the arithmetic (`block_max_rows`), not after the source operator.  Each
+    # entry below was established by reading the kernel out of
+    # `build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json` -- kind, iteration
+    # domain, operands and every attribute -- and then reading the named
+    # reference.  Where the evidence is an attribute-for-attribute identity with
+    # a kernel whose contract already has a reference, that is said so, because
+    # "same operation, different name" is the only honest ground for pointing two
+    # contract names at one implementation.
+    #
+    # ENGRAM n-gram hash.  `runtime.reference.engram.ngram_row_ids` computes, per
+    # position and per (order, head) column: the STICKY look-back window
+    # (`tokens`/`blocked`, contract `..._lookback_ids_v1`, the GATHER kernel's
+    # `lookback_bound: sequence_start_and_any_blocked_position`), the XOR fold of
+    # `order` products and its modulus (`..._order2/3/4_v1`, one contract per
+    # `order` attribute), and the column's position in the flattened
+    # ngram-major/head-minor layout plus that column's prefix-sum `offset`
+    # (`..._column_join_v1`, the CONCAT kernel's
+    # `segment_order: ascending_ngram_order_then_hash_head`).  One reference, five
+    # named steps of it.
+    "ngram_hash_u32_lookback_ids_v1": "runtime.reference.engram.ngram_row_ids",
+    "ngram_hash_u32_order2_v1": "runtime.reference.engram.ngram_row_ids",
+    "ngram_hash_u32_order3_v1": "runtime.reference.engram.ngram_row_ids",
+    "ngram_hash_u32_order4_v1": "runtime.reference.engram.ngram_row_ids",
+    "ngram_hash_u32_column_join_v1": "runtime.reference.engram.ngram_row_ids",
+    #
+    # FP4 main-latent quantize/dequantize.  `runtime.reference.fp4_kv` is the
+    # reference for E2M1 elements with one E4M3 scale per 16 -- its own
+    # `DEFAULT_SCALE_GROUP` is 16 and its `CONTRACT` constant is
+    # `fp4_e2m1_s16_e4m3_to_fp8_v1`, the base both kernels' contracts extend.
+    # The QUANTIZE kernel declares `block_size: 16`, `output_dtype:
+    # fp4_e2m1_s16_e4m3`, `scale_format: e4m3`; the DEQUANTIZE kernel declares
+    # the same block and scale format.
+    #
+    # THE TWO DIRECTIONS ARE NOT EQUALLY ESTABLISHED, and the difference is
+    # recorded here rather than left to be discovered.  `dequantize_to_fp8` is
+    # exact and vendor-independent -- it decodes two released storage formats and
+    # multiplies, and `results/rtl/a3_v41_fp4kv_dequant_campaign.json` qualified
+    # it against RTL.  `quantize_to_fp4` implements the rule
+    # `docs/SOURCES.md` records for the V4.1 compressor (SRC-DSV41-FLASH-MODEL:
+    # "the main latent is quantized after RoPE in groups of 16 with E4M3
+    # scales") -- scale = RNE_E4M3(amax / 6), clamp to +-6, round E2M1 -- but its
+    # own docstring says the pinned `model.py` is absent from this checkout, so
+    # any floor constant and whether the vendor multiplies by a rounded
+    # reciprocal of six rather than dividing are NOT confirmed.  Declaring the
+    # contract therefore says "this chip implements the documented forward rule",
+    # and does NOT yet say "bit-identical to DeepSeek's".  A capability consumer
+    # that needs the stronger claim must wait on that qualification.
+    "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1": "runtime.reference.fp4_kv.quantize_to_fp4",
+    "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1": (
+        "runtime.reference.fp4_kv.dequantize_to_fp8"
+    ),
+    #
+    # CANDIDATE_BLOCK_SELECT, three kernels of one source operator.
+    # `block_max_rows` is the blockwise maximum under the ordered-IEEE contract
+    # with -inf padding (BLOCK_MAX, `block: 8`, `padding_value:
+    # negative_infinity`); `select_candidate_blocks` is the block top-k under
+    # `score_descending_then_index_ascending` with the newest block pinned
+    # (INDEX_TOPK, `k: 2048`, `pinned_block:
+    # the_block_holding_the_newest_position`); `select_candidate_mask` expands the
+    # chosen ids into the admission plane (CANDIDATE_MASK, `polarity:
+    # one_admits_the_position`, `population_bound: 16384`).
+    "candidate_mask_block_maximum_v1": (
+        "runtime.reference.candidate_pool.block_max_rows"
+    ),
+    "candidate_mask_block_top_k_v1": (
+        "runtime.reference.candidate_pool.select_candidate_blocks"
+    ),
+    "candidate_mask_admission_plane_v1": (
+        "runtime.reference.candidate_pool.select_candidate_mask"
+    ),
+    "candidate_mask_view_v1": (
+        "runtime.reference.candidate_pool.candidate_mask_view"
+    ),
+    #
+    # SAMPLE.  The V4.1 front end's own comment says "IR3-GAP-1 unchanged from
+    # V4", and the three emitted kernels bear it out: V4.1's SCALE/ARGMAX/
+    # TOKEN_APPEND carry a strict SUBSET of V4's attributes -- identical `kind`,
+    # identical iteration domain (`rows: 1, width: 129280`; `rows: 1`), identical
+    # `operation: reciprocal_temperature_product`, identical `scale_bits`
+    # 1065353216 (0x3F800000), identical `tie_rule: lowest_token_id`, identical
+    # `eos_token_id: 1`, with V4 additionally carrying provenance attributes that
+    # name no arithmetic.  Same three operations, renamed by the per-model
+    # contract prefix, so the V4 reference is the implementation.
+    "sampling_deepseek_v41_sample_binary32_temperature_v1": (
+        "runtime.reference.sampling.deepseek_v4_sample_binary32"
+    ),
+    "sampling_deepseek_v41_sample_binary32_greedy_argmax_v1": (
+        "runtime.reference.sampling.deepseek_v4_sample_binary32"
+    ),
+    "sampling_deepseek_v41_sample_binary32_token_append_v1": (
+        "runtime.reference.sampling.deepseek_v4_sample_binary32"
+    ),
+    #
+    # HC_FINAL_COLLAPSE.  `main.hyper_connection_collapse` is
+    # attribute-for-attribute the same EXPERT_REDUCE as every layer's
+    # `hyper_connection.<sublayer>.collapse`, whose contract
+    # `hyper_connection_hc_pre_bf16_branch_collapse_v1` already resolves to
+    # `hc_pre_bf16`: same kind, same iteration domain (4 hyper streams, width
+    # 5120), same `reduction_axis: 1`, `reduction_order: pairwise_tree`,
+    # `routing_weight_application: applied_at_the_reduction`,
+    # `contribution_row_order: ascending_hyper_stream`, `stream_count: 4`.  The
+    # two differ only in `weight_source`, which names WHICH tensor supplies the
+    # branch weights, not what is computed with them -- the pinned
+    # `Transformer.forward` ends `h = layer.hc_pre(h, pre_mix)`, i.e. the epilogue
+    # IS one more hc_pre collapse.
+    "hyper_connection_hc_collapse_bf16_v1": (
+        "runtime.reference.hyper_connection.hc_pre_bf16"
+    ),
+    #
+    # INDEX_KEY_WRITE.  The indexer key append is attribute-for-attribute the
+    # compressed-KV append beside it -- both KV_APPEND, both `cache_row:
+    # compressed_group_index`, both `ratio: 2`, both predicated on
+    # `span_groups_ratio2 > 0`, same `capacity` 131072 -- differing only in the
+    # row width, 128 against 512.  The compressed-KV append's contract
+    # `compressed_kv_write_bf16_v1` already resolves to
+    # `compressed_kv.compressed_kv_write_bf16`, whose `value_width` is a state
+    # parameter and whose own `PINNED_INDEX_HEAD_DIM` is 128: the same
+    # transaction, at the index row width.
+    "index_key_write_bf16_v1": (
+        "runtime.reference.compressed_kv.compressed_kv_write_bf16"
+    ),
+    #
+    # SHARED_INDEX_REUSE's join.  `main.layerNN.attention.indexer.reuse.index_join`
+    # is attribute-for-attribute `main.layerNN.attention.indexer.select.index_join`
+    # -- both CONCAT, `axis: 1`, `padding_index: -1`, `segment_order:
+    # window_then_rebased_compressed`, `segment_widths: [128, 512]` -- and the
+    # latter's contract already resolves to `selection.index_topk_indices`.  One
+    # join, reached from two producers.  (The STATE_READ that feeds it is a
+    # different question and has its own reference,
+    # `selection.shared_index_view`, which this table does not need because its
+    # name derives from that module path.)
+    "selection_shared_index_view_window_then_compressed_v1": (
+        "runtime.reference.selection.index_topk_indices"
+    ),
 }
 
 #: Modules scanned for contract names declared as module constants.  These carry
@@ -257,6 +428,28 @@ def _index_implementations() -> dict[str, dict[str, str]]:
 
     exact: dict[str, str] = dict(FROZEN_CONTRACT_IMPLEMENTATIONS)
     bases: dict[str, str] = {}
+
+    # A frozen entry is a *claim* that a named module attribute executes the
+    # contract, and a claim about a name is cheap: a typo, or a reference that
+    # was renamed or deleted, would leave the contract resolving to a site that
+    # does not exist -- and `require_implemented` would then admit a declaration
+    # backed by nothing, which is precisely the failure this module exists to
+    # prevent.  So every entry is resolved here, and an entry that does not
+    # resolve is an error in this table rather than a silently permissive one.
+    for contract, site in FROZEN_CONTRACT_IMPLEMENTATIONS.items():
+        module_name, _, attribute = site.rpartition(".")
+        try:
+            module = importlib.import_module(module_name)
+        except Exception as error:  # pragma: no cover - a broken table
+            raise NumericContractError(
+                f"contract {contract!r} names implementation {site!r}, whose "
+                f"module could not be imported: {error}"
+            ) from error
+        if not hasattr(module, attribute):
+            raise NumericContractError(
+                f"contract {contract!r} names implementation {site!r}, which "
+                f"{module_name} does not define"
+            )
 
     def _record_strings(value: Any, site: str) -> None:
         items = (

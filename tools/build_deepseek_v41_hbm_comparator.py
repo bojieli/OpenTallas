@@ -809,11 +809,18 @@ def build_document(
     missing = missing_ir_artifacts(
         V41_FLASH_PROFILE, V41_FLASH_PROFILE.release.snapshot, DEFAULT_CHECKPOINT_LOCK
     )
-    # The new dtype, on its own.  AM-E10 adds ``fp4_e2m1_s16_e4m3`` to the
-    # neutral ``DTYPES`` and there is no ABI 3.0 ``DType`` for it, so no backend
-    # can place a view of it -- this records the refusal verbatim rather than
-    # mapping the format onto ``MXFP4_E2M1``, which would hand an E4M3-per-16
-    # table to an engine expecting E8M0-per-32.
+    # The new dtype, on its own.  AM-E10 added ``fp4_e2m1_s16_e4m3`` to the
+    # neutral ``DTYPES``, and for a while there was no ABI 3.0 ``DType`` for it,
+    # so no backend could place a view of it and this probe recorded the refusal
+    # verbatim -- deliberately, rather than mapping the format onto
+    # ``MXFP4_E2M1``, which would hand an E4M3-per-16 table to an engine
+    # expecting E8M0-per-32.  ``DType.FP4_E2M1_S16_E4M3 = 0x32`` has since landed
+    # with its own storage code, its own feature bit
+    # (``Feature.FP4_E2M1_S16_E4M3_TENSOR``), its own ``FMT_`` identifier in the
+    # RTL packages and its own quantiser in the simulator's vector engine, so the
+    # probe now records the placement.  It is kept as a PROBE either way: what it
+    # measures is whether the backend can place the view, and asserting the
+    # answer here instead of measuring it is what made the old refusal invisible.
     dtype_probe: dict[str, Any] = {"dtype": MAIN_LATENT_DTYPE}
     try:
         lower(am_e10_probe_graph(engram_rows=engram_rows), nodes)
@@ -869,14 +876,24 @@ def build_document(
         "new_dtype": dtype_probe,
         "known_gaps": [
             {
-                "id": "am-e10-dtype-has-no-abi-storage-type",
+                "id": "am-e10-dtype-storage-type-forward-rule-unqualified",
                 "owner": "WP-C / AM-E10",
                 "statement": (
-                    "fp4_e2m1_s16_e4m3 is in the neutral DTYPES and there is no "
-                    "runtime.abi3.constants.DType for it, so no backend can "
-                    "place a view of it.  Mapping it onto MXFP4_E2M1 would hand "
-                    "an E4M3-per-16 table to an engine expecting E8M0-per-32, "
-                    "which is what the separate neutral name exists to prevent"
+                    "fp4_e2m1_s16_e4m3 now has a storage type -- "
+                    "DType.FP4_E2M1_S16_E4M3 = 0x32, four bits, with "
+                    "Feature.FP4_E2M1_S16_E4M3_TENSOR, both ABI dtype maps, the "
+                    "simulator's carrier/widening/quantiser, and FMT_ entries in "
+                    "ot_a3_lane_pkg, ot_a3_format_pkg, ot_a3_link_pkg and "
+                    "ot_a3_vector_convert -- so a view of it places.  What "
+                    "remains open is the FORWARD rule: "
+                    "runtime/reference/fp4_kv.py implements the scale selection "
+                    "docs/SOURCES.md records for the V4.1 compressor "
+                    "(RNE_E4M3(amax / 6), clamp to +-6, E2M1 RNE) and says in its "
+                    "own docstring that the pinned model.py is absent from this "
+                    "checkout, so any floor constant and whether the vendor "
+                    "multiplies by a rounded reciprocal of six are not confirmed. "
+                    "The INVERSE is exact and is what "
+                    "results/rtl/a3_v41_fp4kv_dequant_campaign.json qualified"
                 ),
                 "measured": dtype_probe,
             },

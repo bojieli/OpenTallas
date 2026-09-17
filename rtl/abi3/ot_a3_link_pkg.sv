@@ -91,6 +91,7 @@ package ot_a3_link_pkg;
     localparam [7:0] DTYPE_FP8_E5M2   = 8'h21;
     localparam [7:0] DTYPE_MXFP4_E2M1 = 8'h30;
     localparam [7:0] DTYPE_E8M0_SCALE = 8'h31;
+    localparam [7:0] DTYPE_FP4_E2M1_S16_E4M3 = 8'h32;
     localparam [7:0] ROUND_NEAREST_EVEN = 8'd0;
     localparam [7:0] ROUND_TOWARD_ZERO  = 8'd1;
     localparam [7:0] ROUND_STOCHASTIC   = 8'd2;

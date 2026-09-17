@@ -108,11 +108,11 @@ layer, or a framework callback.
 | Major | Family | Frozen subopcodes |
 |---:|---|---|
 | `0x00` | control | `NOP=0x00`, `BRANCH=0x01`, `LOOP_SETUP=0x02`, `LOOP_NEXT=0x03`, `WAIT=0x04`, `FENCE=0x05`, `ASSERT=0x06`, `COMPLETE=0x07`, `TRAP=0x08` |
-| `0x10` | DMA | `TRANSFER=0x00`, `FILL=0x01`, `GATHER=0x02`, `SCATTER=0x03` |
+| `0x10` | DMA | `TRANSFER=0x00`, `FILL=0x01`, `GATHER=0x02`, `SCATTER=0x03`, `NGRAM_HASH=0x04` (AM-E10) |
 | `0x20` | tensor | `MATMUL=0x00`, `GROUPED_MATMUL=0x01`, `ROUTED_MATMUL=0x02`, `EMBED_LOOKUP=0x03` |
-| `0x30` | vector | `RMS_NORM=0x00`, `HEAD_RMS_NORM=0x01`, `ROPE=0x02`, `ADD=0x03`, `SILU_MUL=0x04`, `CONVERT=0x05`, `SCALE=0x06`, `SOFTMAX=0x07`, `COMPRESS=0x08`, `MHC=0x09`, `HADAMARD=0x0a`, `INDEX_SCORE=0x0b`, `SQRT_SOFTPLUS=0x0c` |
+| `0x30` | vector | `RMS_NORM=0x00`, `HEAD_RMS_NORM=0x01`, `ROPE=0x02`, `ADD=0x03`, `SILU_MUL=0x04`, `CONVERT=0x05`, `SCALE=0x06`, `SOFTMAX=0x07`, `COMPRESS=0x08`, `MHC=0x09`, `HADAMARD=0x0a`, `INDEX_SCORE=0x0b`, `SQRT_SOFTPLUS=0x0c`, `ENGRAM_GATE=0x0d` (AM-E10) |
 | `0x40` | attention | `DENSE=0x00`, `GQA=0x01`, `SPARSE=0x02` |
-| `0x50` | route | `TOPK=0x00`, `BIASED_TOPK=0x01`, `WEIGHT_NORMALIZE=0x02`, `EXPERT_DISPATCH=0x03`, `INDEX_TOPK=0x04`, `HASH_ROUTE=0x05`, `WINDOW_INDEX=0x06`, `DSPARK_WINDOW_INDEX=0x07` (A30) |
+| `0x50` | route | `TOPK=0x00`, `BIASED_TOPK=0x01`, `WEIGHT_NORMALIZE=0x02`, `EXPERT_DISPATCH=0x03`, `INDEX_TOPK=0x04`, `HASH_ROUTE=0x05`, `WINDOW_INDEX=0x06`, `DSPARK_WINDOW_INDEX=0x07` (A30), `BLOCK_MAX=0x08` (AM-E10), `CANDIDATE_MASK=0x09` (AM-E10) |
 | `0x60` | reduction | `ORDERED_SUM=0x00`, `EXPERT_SUM=0x01`, `VOCAB_GATHER=0x02`, `GROUPED_CONCAT=0x03`, `PARTITION_SUM=0x04` |
 | `0x70` | selection | `ARGMAX=0x00`, `TOKEN_APPEND=0x01`, `SAMPLE=0x02` |
 | `0x80` | state | `READ=0x00`, `PREPARE=0x01`, `COMMIT=0x02`, `DISCARD=0x03`, `GENERATION_ADVANCE=0x04` |
@@ -389,8 +389,13 @@ The program-header feature vector assigns:
 | 10 | bounded integrity retry/replay |
 | 11 | signed deployment and measured-boot security |
 | 12 | data-bearing timing execution |
+| 13 | FP4 E2M1 with E4M3 scales |
 
-Unassigned bits are reserved. Qwen HBM still advertises bit 8 because the same
+Unassigned bits are reserved.  Bit 13 is deliberately separate from bit 5: both
+describe four-bit E2M1 element streams, and they differ in the SCALE that
+accompanies them -- E8M0 per 32 against E4M3 per 16 -- so a chip that has one
+decode path does not thereby have the other, and one bit for both would let a
+deployment quantised one way be admitted by a machine built for the other. Qwen HBM still advertises bit 8 because the same
 chip/netlist is used in the 32-node DeepSeek system, although a one-node Qwen
 deployment does not require link instructions. Program requirements are
 operation-derived: declaring a `STATE` descriptor requires bit 6, and declaring

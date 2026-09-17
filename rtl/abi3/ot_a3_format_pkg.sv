@@ -35,6 +35,9 @@ package ot_a3_format_pkg;
     localparam [7:0] FMT_FP8_E4M3FN = 8'h20;
     localparam [7:0] FMT_MXFP4_E2M1 = 8'h30;
     localparam [7:0] FMT_E8M0_SCALE = 8'h31;
+    // AM-E10.  Same four-bit E2M1 element field as FMT_MXFP4_E2M1; the two part
+    // company at the scale view, which decode_element never sees.
+    localparam [7:0] FMT_FP4_E2M1_S16_E4M3 = 8'h32;
 
     // -- BF16 -> binary32.  Exact: the architectural pattern is the high half.
     function automatic [33:0] decode_bf16;
@@ -161,7 +164,9 @@ package ot_a3_format_pkg;
                 FMT_BF16:       decode_element = decode_bf16(word[15:0]);
                 FMT_FP32:       decode_element = decode_fp32(word);
                 FMT_FP8_E4M3FN: decode_element = decode_e4m3fn(word[7:0]);
-                FMT_MXFP4_E2M1: decode_element = decode_e2m1(word[3:0]);
+                FMT_MXFP4_E2M1,
+                FMT_FP4_E2M1_S16_E4M3:
+                                decode_element = decode_e2m1(word[3:0]);
                 FMT_E8M0_SCALE: decode_element = decode_e8m0(word[7:0]);
                 default:        decode_element = {FMT_ERR_NONFINITE, 32'b0};
             endcase

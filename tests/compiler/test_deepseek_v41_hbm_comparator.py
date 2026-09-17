@@ -32,11 +32,21 @@ from compiler.backends.hbm_sram.capability import (
     cluster_n_capability,
     profile_difference,
 )
-from compiler.backends.hbm_sram.plan import PlanError
+from compiler.backends.hbm_sram.lower import _DTYPE_FEATURE
+from compiler.backends.hbm_sram.plan import DTYPE_MAP, PlanError
 from compiler.ir.v3.kernel_ir import check_neutral
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE, OPTIONAL_INPUT_SLOTS
 from runtime.abi3.capability import canonical_json
-from runtime.abi3.constants import Dma, Major, Route, TopologyClass, Vector
+from runtime.abi3.constants import (
+    DTYPE_BITS,
+    Dma,
+    DType,
+    Feature,
+    Major,
+    Route,
+    TopologyClass,
+    Vector,
+)
 from runtime.reference.engram import NGRAM_HASH_NUMERIC_CONTRACT
 
 from tools.build_deepseek_v41_hbm_comparator import (
@@ -333,24 +343,38 @@ def test_the_plan_document_states_its_known_gaps() -> None:
     )
     gaps = {gap["id"] for gap in document["known_gaps"]}
     assert gaps == {
-        "am-e10-dtype-has-no-abi-storage-type",
+        "am-e10-dtype-storage-type-forward-rule-unqualified",
         "block-max-context-axis-not-resolved-by-a-loop",
         "deployment-check-case-does-not-cover-the-new-kinds",
     }
 
 
-def test_the_new_dtype_has_no_abi_storage_type_yet() -> None:
-    """AM-E10 added the neutral dtype and no ABI ``DType`` for it.
+def test_the_new_dtype_now_has_its_own_abi_storage_type() -> None:
+    """AM-E10's dtype places, under its OWN storage code and feature bit.
 
-    Recorded as an expectation because the alternative -- mapping it onto
-    ``MXFP4_E2M1``, whose scale is E8M0 per 32 -- would hand an E4M3-per-16
-    table to an engine expecting the other format, which is exactly what the
-    separate neutral name exists to prevent.  This test flips when the storage
-    type lands; it does not need the comparator to change.
+    This test is the flipped form of the refusal it replaces.  The refusal was
+    recorded rather than worked around because the cheap alternative -- mapping
+    ``fp4_e2m1_s16_e4m3`` onto ``MXFP4_E2M1``, whose scale is E8M0 per 32 --
+    would hand an E4M3-per-16 table to an engine expecting the other format,
+    which is exactly what the separate neutral name exists to prevent.  So the
+    assertions here are about the SEPARATION, not merely about admission: a
+    distinct storage code, four bits wide, and a feature bit of its own that
+    neither of the two formats it is adjacent to implies.
     """
     graph = am_e10_probe_graph(engram_rows=PROBE_ROWS, latent_dtype=MAIN_LATENT_DTYPE)
-    with pytest.raises(PlanError, match="has no ABI 3.0 storage type"):
-        lower(graph, NODES)
+    lower(graph, NODES)  # no refusal: the view places
+
+    assert DTYPE_MAP[MAIN_LATENT_DTYPE] is DType.FP4_E2M1_S16_E4M3
+    assert DTYPE_MAP[MAIN_LATENT_DTYPE] is not DType.MXFP4_E2M1
+    assert DTYPE_BITS[DType.FP4_E2M1_S16_E4M3] == 4
+    assert (
+        _DTYPE_FEATURE[int(DType.FP4_E2M1_S16_E4M3)]
+        is Feature.FP4_E2M1_S16_E4M3_TENSOR
+    )
+    assert (
+        _DTYPE_FEATURE[int(DType.MXFP4_E2M1)]
+        is not Feature.FP4_E2M1_S16_E4M3_TENSOR
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -368,5 +392,6 @@ def test_the_plan_document_rebuilds_byte_identically() -> None:
         hashlib.sha256(canonical_json(second)).hexdigest()
     )
     assert first["deployment"]["status"] == "not_built"
-    assert first["new_dtype"]["placed"] is False
+    assert first["new_dtype"]["placed"] is True
+    assert first["new_dtype"]["error"] is None
     assert first["lowering"]["admitted"]

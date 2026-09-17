@@ -64,6 +64,7 @@ WIDENABLE = frozenset(
         int(DType.FP32),
         int(DType.FP8_E4M3FN),
         int(DType.MXFP4_E2M1),
+        int(DType.FP4_E2M1_S16_E4M3),
         int(DType.E8M0_SCALE),
     }
 )
@@ -140,6 +141,15 @@ def widen(dtype: int, array: np.ndarray) -> np.ndarray:
     if dtype == DType.FP8_E4M3FN:
         return decode_e4m3fn(array)
     if dtype == DType.MXFP4_E2M1:
+        return decode_mxfp4_nibble(array)
+    if dtype == DType.FP4_E2M1_S16_E4M3:
+        # AM-E10.  The ELEMENT decode is E2M1 and is shared with MXFP4_E2M1 --
+        # both are the same four-bit field.  What the two formats do not share
+        # is the scale, and widening an element applies no scale at all (the
+        # docstring of this function says so), so there is exactly one decode
+        # here and no place for the group size or the scale format to be
+        # assumed.  The engine that applies the scale reads the scale view's own
+        # dtype, which is where the two formats part company.
         return decode_mxfp4_nibble(array)
     if dtype == DType.E8M0_SCALE:
         return decode_e8m0(array)

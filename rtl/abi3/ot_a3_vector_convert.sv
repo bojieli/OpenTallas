@@ -51,6 +51,7 @@ module ot_a3_vector_convert #(
     localparam [7:0] FMT_FP8_E4M3FN = 8'h20;
     localparam [7:0] FMT_MXFP4_E2M1 = 8'h30;
     localparam [7:0] FMT_E8M0_SCALE = 8'h31;
+    localparam [7:0] FMT_FP4_E2M1_S16_E4M3 = 8'h32;
 
     localparam [3:0] S_IDLE        = 4'd0;
     localparam [3:0] S_SCAN_ISSUE  = 4'd1;
@@ -72,6 +73,7 @@ module ot_a3_vector_convert #(
         (cfg_input_dtype == FMT_FP32) ||
         (cfg_input_dtype == FMT_FP8_E4M3FN) ||
         (cfg_input_dtype == FMT_MXFP4_E2M1) ||
+        (cfg_input_dtype == FMT_FP4_E2M1_S16_E4M3) ||
         (cfg_input_dtype == FMT_E8M0_SCALE)
     );
     wire numeric_input =
@@ -79,6 +81,7 @@ module ot_a3_vector_convert #(
         (cfg_input_dtype == FMT_FP32) ||
         (cfg_input_dtype == FMT_FP8_E4M3FN) ||
         (cfg_input_dtype == FMT_MXFP4_E2M1) ||
+        (cfg_input_dtype == FMT_FP4_E2M1_S16_E4M3) ||
         (cfg_input_dtype == FMT_E8M0_SCALE);
     wire conversion_supported = !identity && numeric_input &&
         ((cfg_output_dtype == FMT_BF16) ||
@@ -102,7 +105,7 @@ module ot_a3_vector_convert #(
         case (cfg_input_dtype)
             FMT_U8, FMT_FP8_E4M3FN, FMT_E8M0_SCALE:
                 identity_word = {24'b0, a_rd_data[7:0]};
-            FMT_MXFP4_E2M1:
+            FMT_MXFP4_E2M1, FMT_FP4_E2M1_S16_E4M3:
                 identity_word = {28'b0, a_rd_data[3:0]};
             FMT_BF16:
                 identity_word = {16'b0, a_rd_data[15:0]};

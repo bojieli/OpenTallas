@@ -70,9 +70,15 @@ NUMPY_DTYPE: dict[int, np.dtype] = {
     DType.FP8_E5M2: np.dtype(np.uint8),
     DType.MXFP4_E2M1: np.dtype(np.uint8),   # two elements per byte
     DType.E8M0_SCALE: np.dtype(np.uint8),
+    # AM-E10: four-bit elements, so two per byte, exactly as MXFP4_E2M1.  The
+    # difference between the two is the scale view, which is a separate object
+    # with its own dtype, never a property of these bytes.
+    DType.FP4_E2M1_S16_E4M3: np.dtype(np.uint8),
 }
 
-SUB_BYTE_DTYPES = frozenset({int(DType.MXFP4_E2M1)})
+SUB_BYTE_DTYPES = frozenset(
+    {int(DType.MXFP4_E2M1), int(DType.FP4_E2M1_S16_E4M3)}
+)
 
 # Authentication must be bounded independently of checkpoint size.  Feeding a
 # complete 156 GB memmap to OpenSSL in one call leaves every faulted page in the

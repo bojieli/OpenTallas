@@ -79,6 +79,14 @@ package ot_a3_lane_pkg;
     localparam [7:0] FMT_BF16       = 8'h10;
     localparam [7:0] FMT_FP8_E4M3FN = 8'h20;
     localparam [7:0] FMT_MXFP4_E2M1 = 8'h30;
+    // AM-E10.  E2M1 elements with one E4M3 scale per 16.  The ELEMENT field is
+    // bit-for-bit MXFP4_E2M1's, so every function below that describes an
+    // element treats the two alike; the scale format and the group size, which
+    // are what distinguish them, are properties of the SCALE VIEW and of the
+    // operator's block size, neither of which this package sees.  Giving the
+    // format its own code is what lets a descriptor say which scale view it
+    // comes with instead of leaving that to be inferred.
+    localparam [7:0] FMT_FP4_E2M1_S16_E4M3 = 8'h32;
 
     function automatic [7:0] error_code_of_detail;
         input [7:0] detail;
@@ -119,7 +127,8 @@ package ot_a3_lane_pkg;
             case (format)
                 FMT_BF16:       element_width = 16;
                 FMT_FP8_E4M3FN: element_width = 8;
-                FMT_MXFP4_E2M1: element_width = 4;
+                FMT_MXFP4_E2M1,
+                FMT_FP4_E2M1_S16_E4M3: element_width = 4;
                 default:        element_width = 16;
             endcase
         end
@@ -132,7 +141,8 @@ package ot_a3_lane_pkg;
             case (format)
                 FMT_BF16:       significand_width = 8;
                 FMT_FP8_E4M3FN: significand_width = 4;
-                FMT_MXFP4_E2M1: significand_width = 2;
+                FMT_MXFP4_E2M1,
+                FMT_FP4_E2M1_S16_E4M3: significand_width = 2;
                 default:        significand_width = 8;
             endcase
         end
@@ -194,7 +204,8 @@ package ot_a3_lane_pkg;
                         zero = 1'b0;
                     end
                 end
-                FMT_MXFP4_E2M1: begin
+                FMT_MXFP4_E2M1,
+                FMT_FP4_E2M1_S16_E4M3: begin
                     sign = code[3];
                     if (code[2:1] == 2'b00) begin
                         mag = {7'b0, code[0]};

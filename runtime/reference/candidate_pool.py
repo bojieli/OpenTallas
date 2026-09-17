@@ -27,7 +27,7 @@ axis, which is the part the machine has to materialise.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, Mapping
 
 
 #: SRC-DSV41-FLASH-MODEL, the pinned ``inference/model.py``.
@@ -506,4 +506,116 @@ def select_candidate_blocks(
         "mask": tuple(bool(bit) for bit in positions),
         "population": sum(positions),
         "tie_at_threshold": tie_at_threshold,
+    }
+
+
+# ---------------------------------------------------------------------------
+# CANDIDATE_MASK_READ, the later layers' view of the published admission plane.
+# Numeric contract `candidate_mask_view_v1`.
+#
+# `select_candidate_mask` above is the layer that BUILDS the plane -- V4.1's
+# `candidate_source_layer_id` 20.  Every Reindex layer after it does not rebuild
+# it: the pinned `Indexer` "masks scores to the candidate pool when
+# 0 <= candidate_source_layer < layer_id", one plane shared by layers 24, 28, 32
+# and 36.  That read is its own kernel (`STATE_READ`) and its own contract,
+# because what it has to get right is not arithmetic on values but IDENTITY over
+# a lifetime: the plane a later layer masks with must be bit-for-bit the plane
+# layer 20 published, and it must still be the current one.
+#
+# So this reference is an identity with preconditions, and the preconditions are
+# the whole content: a view that silently returned a plane from the wrong
+# publisher, or one whose population exceeded the pool the deployment sized its
+# score buffers for, is exactly the failure a "it is just a copy" implementation
+# cannot detect.  Each is refused here.
+#
+# NOT ESTABLISHED: which blocks the plane admits (that is
+# `select_candidate_blocks` and `select_candidate_mask` above), and what the
+# consumer does with an admitted position.
+# ---------------------------------------------------------------------------
+
+
+def candidate_mask_view(
+    published: Mapping[str, Any],
+    *,
+    published_by_layer: int,
+    reading_layer: int,
+    population_bound: int,
+    width: int | None = None,
+) -> dict[str, Any]:
+    """Read a published candidate admission plane -- ``candidate_mask_view_v1``.
+
+    ``published`` is a record returned by :func:`select_candidate_mask`.  The
+    result carries the SAME packed ``words`` object, so a caller that mutates
+    the view mutates the publication and a caller that compares them compares
+    identity, not a re-derivation.
+
+    Refused, rather than answered:
+
+    * a read by a layer at or before the publisher -- the pinned condition is
+      ``candidate_source_layer < layer_id``, strictly, and a layer that read its
+      own or an earlier layer's plane would be reading a plane that does not yet
+      exist at that point of the block sequence;
+    * a plane whose publisher is not the one the reading kernel declares --
+      ``published_by_layer`` is an attribute of the read, and a plane from a
+      different source layer is a different pool;
+    * a population above the reading kernel's declared ``population_bound``.
+      The bound is what sizes the masked score axis downstream, so a plane that
+      exceeds it would overflow a buffer the deployment proved was large enough;
+    * a width disagreement, when the caller states the position axis it expects.
+
+    The polarity is carried through unchanged and re-stated: a set bit admits.
+    """
+    if not isinstance(published, Mapping):
+        raise CandidateMaskError("published must be a candidate-mask record")
+    for key in ("width", "block", "word_bits", "words", "population", "polarity"):
+        if key not in published:
+            raise CandidateMaskError(
+                f"published candidate mask has no {key!r}; it is not a record "
+                "select_candidate_mask produced"
+            )
+    for name, value in (
+        ("published_by_layer", published_by_layer),
+        ("reading_layer", reading_layer),
+        ("population_bound", population_bound),
+    ):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise CandidateMaskError(f"{name} must be a non-negative integer")
+    if reading_layer <= published_by_layer:
+        raise CandidateMaskError(
+            f"layer {reading_layer} reads the candidate pool published by layer "
+            f"{published_by_layer}; the pinned condition is "
+            "candidate_source_layer < layer_id, strictly"
+        )
+    if published["polarity"] != "set_bit_admits_position":
+        raise CandidateMaskError(
+            f"published plane states polarity {published['polarity']!r}, not "
+            "set_bit_admits_position"
+        )
+    published_width = published["width"]
+    if width is not None:
+        if isinstance(width, bool) or not isinstance(width, int) or width <= 0:
+            raise CandidateMaskError("width must be a positive integer")
+        if published_width != width:
+            raise CandidateMaskError(
+                f"published plane is {published_width} positions wide and the "
+                f"reading layer expects {width}"
+            )
+    population = published["population"]
+    if population > population_bound:
+        raise CandidateMaskError(
+            f"published candidate pool admits {population} positions, above the "
+            f"{population_bound} the reading kernel declares"
+        )
+    return {
+        "contract": "candidate_mask_view_v1",
+        "polarity": "set_bit_admits_position",
+        "published_by_layer": published_by_layer,
+        "reading_layer": reading_layer,
+        "population": population,
+        "population_bound": population_bound,
+        "width": published_width,
+        "block": published["block"],
+        "word_bits": published["word_bits"],
+        "words": published["words"],
+        "identical_to_publication": True,
     }

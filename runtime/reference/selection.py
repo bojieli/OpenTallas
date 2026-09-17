@@ -329,6 +329,143 @@ __all__ = [
     "SelectionReferenceError",
     "biased_topk_route_indices",
     "index_topk_indices",
+    "shared_index_view",
     "stable_topk_bf16",
     "stable_topk_binary32",
 ]
+
+
+# ---------------------------------------------------------------------------
+# SHARED_INDEX_REUSE, a Reindex layer's selection reused by the layers after it.
+# Numeric contract `selection_shared_index_view_v1`.
+#
+# DeepSeek-V4.1-Flash scores the index on eight layers only --
+# `index_source_layer_ids` [2, 8, 14, 20, 24, 28, 32, 36] of
+# SRC-DSV41-FLASH-CONFIG.  Every other layer attends with the selection the most
+# recent of those published; the exported kernel says so in its own attributes,
+# `published_by_layer` and `selection_lifetime: until_the_next_index_source`.
+#
+# The read is a `STATE_READ`, so its contract is identity over a lifetime rather
+# than arithmetic on values: the indices a reusing layer attends with must be
+# bit-for-bit the ones its publisher selected, and the publisher must still be
+# the current one.  Both are preconditions a plain copy cannot check, and both
+# are real failure modes -- a layer that reused a stale selection would attend to
+# a set of compressed rows that a later `INDEX_TOPK` has already replaced, and
+# nothing downstream could tell, because a wrong selection is still a
+# well-formed one.
+#
+# NOT ESTABLISHED: which indices the publisher chose (that is
+# `index_topk_indices` above), the window/compressed join that follows the read
+# (whose contract `selection_shared_index_view_window_then_compressed_v1` is
+# attribute-for-attribute the join `index_topk_indices` already publishes), and
+# anything about the attention that consumes the joined indices.
+# ---------------------------------------------------------------------------
+
+
+def shared_index_view(
+    published_selection: IndexTensor,
+    *,
+    published_by_layer: int,
+    reading_layer: int,
+    index_source_layers: Sequence[int],
+    padding_index: int = -1,
+) -> IndexTensor:
+    """Read a Reindex layer's published selection -- ``selection_shared_index_view_v1``.
+
+    Returns the published tensor itself, unchanged, so that a caller comparing
+    the view with the publication compares identity rather than a
+    re-derivation.  What this function contributes is the set of reads it
+    REFUSES:
+
+    * a reading layer that is itself an index source.  Such a layer selects its
+      own indices; if it read a view instead, the selection the hardware
+      computed for it would be discarded silently.
+    * a publisher that is not an index source at all.
+    * a publisher that is not the *most recent* index source at or before the
+      reading layer.  This is ``selection_lifetime:
+      until_the_next_index_source`` stated as a rule: layer 3 may read layer 2's
+      selection, and once layer 8 has published, layer 9 may not.
+    * a reading layer at or before its publisher.
+    * a ragged selection, a non-integer index, or a negative index that is not
+      the declared ``padding_index``.  ``-1`` is the exported padding index; any
+      other negative value is a fault, not a slot that selected nothing.
+    """
+
+    def _layer(value: object, label: str) -> int:
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise SelectionReferenceError(f"{label} must be a non-negative integer")
+        return int(value)
+
+    published_by_layer = _layer(published_by_layer, "published_by_layer")
+    reading_layer = _layer(reading_layer, "reading_layer")
+    sources = sorted(
+        {
+            _layer(layer, f"index_source_layers[{position}]")
+            for position, layer in enumerate(_sequence(
+                index_source_layers, "index_source_layers"
+            ))
+        }
+    )
+    if not sources:
+        raise SelectionReferenceError(
+            "index_source_layers must name at least one index source"
+        )
+    if published_by_layer not in sources:
+        raise SelectionReferenceError(
+            f"layer {published_by_layer} is not an index source, so it publishes "
+            "no selection to view"
+        )
+    if reading_layer in sources:
+        raise SelectionReferenceError(
+            f"layer {reading_layer} is an index source and selects its own "
+            "indices; it must not read a shared view"
+        )
+    if reading_layer <= published_by_layer:
+        raise SelectionReferenceError(
+            f"layer {reading_layer} reads a selection published by layer "
+            f"{published_by_layer}, which is not ahead of it"
+        )
+    current = max(layer for layer in sources if layer < reading_layer)
+    if current != published_by_layer:
+        raise SelectionReferenceError(
+            f"layer {reading_layer} reads layer {published_by_layer}'s selection, "
+            f"but layer {current} has published since: the selection lifetime "
+            "ends at the next index source"
+        )
+
+    batches = _sequence(published_selection, "published_selection")
+    if not batches:
+        raise SelectionReferenceError("published_selection must contain a batch")
+    width: int | None = None
+    for batch_index, raw_matrix in enumerate(batches):
+        rows = _sequence(raw_matrix, f"published_selection[{batch_index}]")
+        if not rows:
+            raise SelectionReferenceError(
+                f"published_selection[{batch_index}] must contain a row"
+            )
+        for row_index, raw_row in enumerate(rows):
+            row = _sequence(
+                raw_row, f"published_selection[{batch_index}][{row_index}]"
+            )
+            if width is None:
+                width = len(row)
+                if width == 0:
+                    raise SelectionReferenceError(
+                        "published_selection rows must not be empty"
+                    )
+            elif len(row) != width:
+                raise SelectionReferenceError(
+                    "published_selection must be a rectangular rank-3 tensor"
+                )
+            for slot, value in enumerate(row):
+                label = (
+                    f"published_selection[{batch_index}][{row_index}][{slot}]"
+                )
+                if isinstance(value, bool) or not isinstance(value, int):
+                    raise SelectionReferenceError(f"{label} must be an integer")
+                if value < 0 and value != padding_index:
+                    raise SelectionReferenceError(
+                        f"{label} is {value}, which is neither an index nor the "
+                        f"declared padding index {padding_index}"
+                    )
+    return published_selection

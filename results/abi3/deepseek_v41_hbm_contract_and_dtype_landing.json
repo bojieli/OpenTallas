@@ -1,0 +1,261 @@
+{
+ "claim": "the V4.1 HBM comparator build advances from the numeric-contract refusal to a measured HBM capacity refusal; all 81 contracts the V4.1 graph names now resolve to an implementation, and fp4_e2m1_s16_e4m3 has an ABI 3.0 storage type across compiler, runtime, simulator and RTL",
+ "claim_boundary": {
+  "does_not_establish": [
+   "any V4.1 HBM deployment: none was built, no deployment digest exists, no descriptor multiset was compared, nothing executed",
+   "that the V4.1 forward FP4 quantiser is bit-identical to DeepSeek's: the reference implements the rule docs/SOURCES.md records and its scale-selection micro-path is unconfirmed",
+   "anything about the two ROM stores, which this unit did not touch",
+   "that the five new references are qualified against RTL: none has a dual-simulator campaign yet"
+  ],
+  "establishes": [
+   "every contract the released V4.1 kernel IR names resolves to an implementation (0 unimplemented, measured)",
+   "the cluster-n-comparator capability declares 107 contracts and passes require_implemented",
+   "the V4.1 HBM build now stops at a capacity refusal, quoted, with the footprint attributed by arena slot and weight residency",
+   "the four shipped deployments rebuild to their committed digests after every change here"
+  ]
+ },
+ "contracts": {
+  "named_by_the_v41_graph": 81,
+  "new_references_written": 5,
+  "resolution_checked_by": "compiler.ir.v3.numeric.implementation_of, each site re-resolved in this run",
+  "reused": {
+   "candidate_mask_admission_plane_v1": "runtime.reference.candidate_pool.select_candidate_mask",
+   "candidate_mask_block_maximum_v1": "runtime.reference.candidate_pool.block_max_rows",
+   "candidate_mask_block_top_k_v1": "runtime.reference.candidate_pool.select_candidate_blocks",
+   "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1": "runtime.reference.fp4_kv.quantize_to_fp4",
+   "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1": "runtime.reference.fp4_kv.dequantize_to_fp8",
+   "hyper_connection_hc_collapse_bf16_v1": "runtime.reference.hyper_connection.hc_pre_bf16",
+   "index_key_write_bf16_v1": "runtime.reference.compressed_kv.compressed_kv_write_bf16",
+   "ngram_hash_u32_column_join_v1": "runtime.reference.engram.ngram_row_ids",
+   "ngram_hash_u32_lookback_ids_v1": "runtime.reference.engram.ngram_row_ids",
+   "ngram_hash_u32_order2_v1": "runtime.reference.engram.ngram_row_ids",
+   "ngram_hash_u32_order3_v1": "runtime.reference.engram.ngram_row_ids",
+   "ngram_hash_u32_order4_v1": "runtime.reference.engram.ngram_row_ids",
+   "sampling_deepseek_v41_sample_binary32_greedy_argmax_v1": "runtime.reference.sampling.deepseek_v4_sample_binary32",
+   "sampling_deepseek_v41_sample_binary32_temperature_v1": "runtime.reference.sampling.deepseek_v4_sample_binary32",
+   "sampling_deepseek_v41_sample_binary32_token_append_v1": "runtime.reference.sampling.deepseek_v4_sample_binary32",
+   "selection_shared_index_view_window_then_compressed_v1": "runtime.reference.selection.index_topk_indices"
+  },
+  "reused_existing_references": 16,
+  "unimplemented_after": 0,
+  "unimplemented_before": 21,
+  "written": {
+   "candidate_mask_view_v1": "runtime.reference.candidate_pool.candidate_mask_view",
+   "lookup_compressed_token_ids_v1": "runtime.reference.lookup.compressed_token_ids",
+   "lookup_engram_row_fp8_e4m3_reconstruct_v1": "runtime.reference.lookup.engram_row_fp8_e4m3_reconstruct",
+   "lookup_engram_row_fp8_e4m3_row_read_v1": "runtime.reference.lookup.engram_row_fp8_e4m3_row_read",
+   "selection_shared_index_view_v1": "runtime.reference.selection.shared_index_view"
+  }
+ },
+ "current_refusal": "PlanError: physical HBM plan requires 548500668416 bytes per node, capability provides 103079215104",
+ "current_refusal_attribution": {
+  "capability": {
+   "contracts": 107,
+   "digest": "be7a538c7ed5dab958efda1b60cdd6430f55633cd4beda97d98913e9815894c6",
+   "hbm_bytes_per_node": 103079215104,
+   "nodes": 64,
+   "profile": "cluster-n-comparator"
+  },
+  "hbm_fit": {
+   "activation_arena_bytes": 319278673928,
+   "activation_arena_slots": 783,
+   "hbm_available_per_node": 103079215104,
+   "hbm_bytes_per_node": 548500668416,
+   "hbm_fits": false,
+   "kernels_planned": 1340,
+   "node_sharded_weight_bytes": 291980812288,
+   "replicated_weight_bytes": 215545920480,
+   "state_bytes": 3667521536,
+   "token_block_rows": 512,
+   "weight_bytes": 507526732768
+  },
+  "largest_arena_slots": [
+   {
+    "bytes": 137438953472,
+    "cols": 262144,
+    "rows": 262144,
+    "slot": "arena0507"
+   },
+   {
+    "bytes": 68719476736,
+    "cols": 262144,
+    "rows": 262144,
+    "slot": "arena0689"
+   },
+   {
+    "bytes": 17179869184,
+    "cols": 32768,
+    "rows": 262144,
+    "slot": "arena0015"
+   },
+   {
+    "bytes": 17179869184,
+    "cols": 32768,
+    "rows": 262144,
+    "slot": "arena0013"
+   }
+  ],
+  "largest_non_sharded_weight_groups": [
+   {
+    "bytes": 98308270592,
+    "path": "model-00048-of-00048.safetensors",
+    "residency": "replicated"
+   },
+   {
+    "bytes": 98305579008,
+    "path": "model-00047-of-00048.safetensors",
+    "residency": "replicated"
+   },
+   {
+    "bytes": 3072133456,
+    "path": "model-00048-of-00048.safetensors",
+    "residency": "replicated"
+   },
+   {
+    "bytes": 3072133456,
+    "path": "model-00048-of-00048.safetensors",
+    "residency": "replicated"
+   },
+   {
+    "bytes": 3072049344,
+    "path": "model-00047-of-00048.safetensors",
+    "residency": "replicated"
+   },
+   {
+    "bytes": 3072049344,
+    "path": "model-00047-of-00048.safetensors",
+    "residency": "replicated"
+   }
+  ],
+  "reading": [
+   "215,545,920,480 B of weights are REPLICATED on every node, dominated by the two Engram row tables (98,308,270,592 + 98,305,579,008) and their e8m0 scale planes; the shipped chip has 103,079,215,104 B of HBM per node, so the table alone does not fit on one node and must be row- or column-sharded across the cluster.  That is the same open item the wafer/array lane records as 'the array placer's ownership of a row-sharded HBM table'",
+   "319,278,673,928 B of activation arena, of which 206,158,430,208 B is two slots of 262,144 x 262,144: the INDEX_SCORE output and the candidate-pool admission plane read per token.  This is results/abi3/deepseek_v41_hbm_comparator_plan.json#known_gaps 'block-max-context-axis-not-resolved-by-a-loop' -- the context axis is planned at the span maximum.  Naming the operator in CONTEXT_LOOP_OPS is not sufficient: VECTOR.INDEX_SCORE is already named there and the ARENA SLOT is still sized at the span maximum, so the fix is in arena sizing, not in the loop set"
+  ]
+ },
+ "dtype_amendment": {
+  "feature_bit": "Feature.FP4_E2M1_S16_E4M3_TENSOR = 13",
+  "neutral_name": "fp4_e2m1_s16_e4m3",
+  "simulator_quantiser_agreement": "600 of 600 random 16-element BF16 groups agree code-for-code with runtime.reference.fp4_kv.quantize_to_fp4 (elements and E4M3 scale); the all-zero group emits scale code 0 and zero elements, as the reference does",
+  "sites": [
+   "runtime/abi3/constants.py: DType, DTYPE_BITS, Feature",
+   "compiler/backends/hbm_sram/plan.py: DTYPE_MAP",
+   "compiler/backends/hbm_sram/lower.py: _DTYPE_FEATURE",
+   "compiler/backends/rom/common/image.py: DTYPE_BY_NAME",
+   "runtime/sim/memory.py: NUMPY_DTYPE, SUB_BYTE_DTYPES",
+   "runtime/sim/formats.py: WIDENABLE, widen",
+   "runtime/sim/engines/vector.py: _quantize_fp4_s16_e4m3_blocks + the QUANTIZE dtype gate",
+   "rtl/abi3/ot_a3_lane_pkg.sv: FMT_FP4_E2M1_S16_E4M3, element_width, significand_width, unpack_element",
+   "rtl/abi3/ot_a3_format_pkg.sv: FMT_ + decode_element",
+   "rtl/abi3/ot_a3_link_pkg.sv + ot_a3_communication_decoder.sv: DTYPE_ + dtype_legal",
+   "rtl/abi3/ot_a3_vector_convert.sv: identity and widening support",
+   "spec/abi3/registries.json (republished) and docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md section 9"
+  ],
+  "storage_code": "DType.FP4_E2M1_S16_E4M3 = 0x32, 4 bits"
+ },
+ "other_backend_gaps_closed": [
+  {
+   "id": "cache-row-map-compressed-group-index",
+   "refusal": "PlanError: kernel main.layer02.attention.indexer.key_write: destination-row map 'compressed_group_index' is not one of absolute_position, absolute_position_mod_window, completed_absolute_position_floor_div_ratio",
+   "resolution": "CACHE_ROW_ALIASES maps it to completed_absolute_position_floor_div_ratio.  Evidence, not assumption: the V4 export names the long spelling and the V4.1 export the short one on kernels carrying the SAME numeric contract compressed_kv_write_bf16_v1, whose one reference is runtime.reference.compressed_kv.compressed_kv_write_bf16, both with a positive ratio and a destination extent of context_length // ratio rows"
+  },
+  {
+   "id": "attention-sparse-block-width-unstated",
+   "refusal": "PlanError: kernel main.layer00.attention.sparse: ATTENTION.SPARSE must declare its block width",
+   "resolution": "read from the CONTRACT, not the model: both graphs name sparse_attention_bf16_v1 and runtime/reference/sparse_attention.py declares SPARSE_ATTENTION_BLOCK_SIZE = 64 as a module constant.  The kernel attribute still wins where present, so V4 is unchanged"
+  },
+  {
+   "id": "head-rms-norm-head-count-unstated",
+   "refusal": "PlanError: kernel main.final_norm: HEAD_RMS_NORM must declare its head count in aux0",
+   "resolution": "derived, not defaulted: the iteration domain's width is the reduction group and the principal operand's last dimension is the row; when the row is a whole number of groups the head count is their quotient, and 5120 // 5120 = 1 for the final norm.  A ragged or absent pair still refuses"
+  },
+  {
+   "id": "compress-project-gate-projection-absent",
+   "refusal": "PlanError: main.layer20.attention.compressor.project (COMPRESS_PROJECT): binds 2 input views where VECTOR.8 requires 3",
+   "resolution": "OPTIONAL_INPUT_SLOTS gains COMPRESS_PROJECT slot 2, and the backend honours it only when the kernel declares projections == 1 (SRC-DSV41-FLASH-MODEL: a ratio-1 compressor is a plain BF16 projection, with no gate).  A gated compressor that bound two operands is still a fault"
+  }
+ ],
+ "provenance": {
+  "branch": "token-path-end-to-end",
+  "git_commit": "6898b855fd909b6a4291c3b3ac82dfab28a3ef9d",
+  "kernel_ir": {
+   "graph_id": "9d348505b8ee59fb0c32eee3bdbd4f967e2c86d9cdf743a85d33b03866bb28e4",
+   "kernels": 3243,
+   "path": "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json"
+  },
+  "source_sha256": {
+   "compiler/backends/hbm_sram/capability.py": "f1ff99b89b6ac99db761b236248bd5388e92303a1aa41e29a024d363a5949916",
+   "compiler/backends/hbm_sram/lower.py": "f3451f79b07df705fee9de7c843e9128fe5de23aeab74bb458248a7bc4b65fef",
+   "compiler/backends/hbm_sram/plan.py": "e498e4263e8a7f12d9c90bc75ecddb489a750d3e2a6d91b01f941df042a32826",
+   "compiler/backends/rom/common/image.py": "cefb3e9a694488a5bd9155510d9c2e150bb7882d8e2542ad23e88a64cbc7ee46",
+   "compiler/ir/v3/lowering.py": "3d191083621ccf321ff4684edbcf5041d74d1577825b053e05d331e940634c4e",
+   "compiler/ir/v3/numeric.py": "d7ba8e7300b50870c71b7eb4e57a24365d111f59bad512e7727aefa39a738200",
+   "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "3fe47be704505219fa913444010c66b342fdb2e402bcf618d67f03aa3fc8e07b",
+   "rtl/abi3/ot_a3_communication_decoder.sv": "4e124f9b1f46183c6a10451481b9be28c4e9b709c95695f36f02c08bea42bffb",
+   "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+   "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+   "rtl/abi3/ot_a3_link_pkg.sv": "77c2b22e2ef2a81a638a532e4c2eb9e32d0d6747aee00074b205b2681f0a87b7",
+   "rtl/abi3/ot_a3_vector_convert.sv": "a8586be6018ad8d1cb81904f37a1a00f1099b1978c9b79327678719b704d5fda",
+   "runtime/abi3/constants.py": "be903bd5fe7899621015467c919d2f6f0e030834e0aca7b736063cc776e3f5ab",
+   "runtime/reference/candidate_pool.py": "81bb066ac912ead7ca2845e17670e5aa51d6b22f6d459f5c396e0a29959787ae",
+   "runtime/reference/lookup.py": "389e84233c524ef6c14df2bbba3ce89f6312e2883c630cc18f1c070b7e4d7617",
+   "runtime/reference/selection.py": "6eef67c17f58b4ce57f9eaea7fddffe9006a551e383f9b2f72784f90e8681cbd",
+   "runtime/sim/engines/vector.py": "cc6ba463092aaca31c16c8858bbe40dc737ba167b444024da403550c31e953eb",
+   "runtime/sim/formats.py": "4511da5577b963434d24686f070e9082cec903c46362ab7c5919631a7b6f905b",
+   "runtime/sim/memory.py": "7165bf61c0aa964d4b9862318d834509421889a170c32cac9e4baf25207a7bbe",
+   "spec/abi3/numeric_contract_union_comparator.json": "cf6dcb1e44d3bdcd90ba896b91c71ff7f3b6ece66601bb22d41c7ae02ae88e0b",
+   "spec/abi3/registries.json": "b2feff8bfae4d3bef7aa69d7f1b243c7a2b742be9060cfdc8bb6bd10d53720c0",
+   "tests/abi3/test_wire_format.py": "e84e70c6c7df2daeee0e24fcc12ea9b12d8e0d37792347df943646f5f1c5e037",
+   "tests/compiler/test_deepseek_v41_hbm_comparator.py": "79ce9e0543992ea567db73865ba0d555d1458f36b27a0af593306b9ad44b5283",
+   "tools/build_deepseek_v41_hbm_comparator.py": "b627d2738fc53c4c6aee761522cfc3575f2a5152fe87992e4edfe845156a62fa",
+   "tools/build_hbm_sram_deployment.py": "8b56a647fe60037204a7eec693a50b371614ddc082b2021e8d5b0b1384b613fb"
+  },
+  "worktree_dirty": true,
+  "worktree_dirty_note": "other sessions are advancing the same tree; the files this unit changed are listed in source_sha256 and nothing else"
+ },
+ "rtl_qualification": {
+  "elaboration_only": {
+   "ot_a3_link_node hierarchy (crc_pkg, fp32_rne_pkg, link_pkg, communication_decoder, link_channel, mesh_router, collective_engine, link_node)": "iverilog -g2012 exit 0",
+   "ot_a3_lq8 hierarchy (ot_fp32_rne_pkg, format_pkg, engine_pkg, lane_pkg, lane_pipelined, lq8)": "iverilog -g2012 exit 0",
+   "ot_a3_vector_convert": "iverilog -g2012 exit 0"
+  },
+  "not_rerun": {
+   "results/rtl/abi3_lq8.json, abi3_pipelined_lane.json, abi3_engine_campaign.json, a3_link_campaign.json, a3_operator_admission*.json": "these pin files this unit changed and are therefore bound to superseded sources.  The lq8 campaign was started and stopped after ~45 min of yosys synthesis on a machine saturated by other sessions' ORFS runs; no test asserts source currency for any of them, and the RTL change is additive (a new FMT_ localparam routed to the existing E2M1 case arms), so the elaborations above are what this unit establishes and a rerun is what it does not"
+  },
+  "reran_and_passed": {
+   "results/rtl/a3_v41_block_max_campaign.json": "69,108 checks across Icarus and Verilator, both PASS, simulators agree; re-pinned to the sources this unit changed",
+   "results/rtl/a3_v41_candidate_mask_campaign.json": "iverilog 127,879 / verilator 127,881 checks, PASS, simulators_agree=True; re-pinned"
+  }
+ },
+ "schema": "opentallas.deepseek_v41.hbm_contract_and_dtype_landing.v1",
+ "shipped_digests_after_the_change": {
+  "hbm capability digests": {
+   "all_match_the_committed_records": true,
+   "cluster-32": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+   "cluster-32-speculative": "9e959d6f649cea47fdeee382697e15f19575a19b8a12b327091d0d78989a7bcd",
+   "single-chip": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d"
+  },
+  "hbm deepseek cluster-32": {
+   "certificate": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+   "identical": true,
+   "plan_id": "37c179e96fe8e09ba388064e81a34559604cb28ab4d08f5202beb8eab8d0c40d",
+   "rebuilt": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42"
+  },
+  "hbm qwen3 single-chip": {
+   "certificate": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+   "identical": true,
+   "plan_id": "9482ede9eeddac2da5b020726606dd4d95989936ac70398950379375d1ca644b",
+   "rebuilt": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16"
+  },
+  "note": "the two ROM deployments were rebuilt twice, the second time after every edit in this unit, against compiler/backends/rom/common/image.py cefb3e9a694488a5bd9155510d9c2e150bb7882d8e2542ad23e88a64cbc7ee46 and program.py 71887140814ae5b4f9e19b4c1b2fdb5ef4576545e7430b005afb125675317c25; both runs produced the shipped digests",
+  "rom deepseek-v4-flash (wafer)": {
+   "expected": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+   "identical": true,
+   "rebuilt": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9"
+  },
+  "rom qwen3-8b": {
+   "expected": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+   "identical": true,
+   "rebuilt": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a"
+  }
+ }
+}
