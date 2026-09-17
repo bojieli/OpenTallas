@@ -11,13 +11,14 @@ narrowing or the exponential is transcribed:
     context     = accumulator / denominator
     codes       = _narrow(context)
 
-EVERY CASE KEEPS THE SINK AT OR BELOW THE MAXIMUM, and that is a limitation of
-the RTL rather than of the operator. The reference's exponential accepts any
-finite argument; ot_a3_fp32_transcendental_cr_rne's OP_EXP_NONPOS accepts finite
-x <= 0 and refuses a positive one, so a sink above the row maximum has no
-correctly-rounded path in this tree. The generator therefore ASSERTS the bound on
-every case it emits -- a case that broke it would be testing a refusal, not the
-arithmetic -- and the bench drives that refusal separately and on purpose.
+BOTH SIGNS OF THE OFFSET ARE COVERED, which they were not when this file was
+written. A sink above the row maximum used to have no correctly-rounded path --
+OP_EXP_NONPOS refuses a positive argument -- so every case kept the sink at or
+below the maximum and the epilogue refused the rest. That was the wrong shape:
+2,680 of V4-Flash's 2,944 shipped sink logits are POSITIVE, so the refused case
+was the ordinary one. ot_a3_fp32_exp_pos_cr_rne now covers x > 0 and the epilogue
+selects by sign, so the cases below include positive offsets and the generator
+asserts only that the offset is FINITE.
 
 ``saturating`` exists because the division can overflow BF16 while the binary32
 quotient is finite, which is the one place _narrow's clamp is reachable from here.
@@ -56,6 +57,16 @@ def case_inputs(name: str, seed: int):
         return acc, maxima, sums, maxima
     if name == "sink_far_below":
         return acc, maxima, sums, np.float32(-80.0)
+    if name == "sink_above_max":
+        #: The offset is POSITIVE -- the case the old refusal rejected, and the
+        #: one 91% of shipped sink logits produce whenever the row's scaled
+        #: score maximum sits below the sink.
+        return acc, np.float32(-1.5), sums, np.float32(2.4927471)
+    if name == "sink_above_max_small":
+        return acc, np.float32(0.25), sums, np.float32(1.129465)
+    if name == "sink_far_above":
+        #: A large positive offset, where the sink term dominates the denominator.
+        return acc, np.float32(-9.0), np.float32(0.5), np.float32(2.4927471)
     if name == "tiny_denominator":
         #: A small denominator scales every channel up; the quotient stays finite.
         return acc, maxima, np.float32(np.ldexp(1.0, -20)), np.float32(-60.0)
@@ -81,6 +92,9 @@ CASES = (
     ("typical", 11),
     ("sink_equals_max", 13),
     ("sink_far_below", 17),
+    ("sink_above_max", 17),
+    ("sink_above_max_small", 19),
+    ("sink_far_above", 23),
     ("tiny_denominator", 19),
     ("saturating", 23),
     ("negative_accumulator", 29),
@@ -107,9 +121,9 @@ def main() -> int:
     lines = [str(len(CASES))]
     for index, (name, seed) in enumerate(CASES):
         acc, maxima, sums, sink = case_inputs(name, seed)
-        #: The RTL has no correctly-rounded exp for a positive argument, so no
-        #: case may present one. Asserted, not hoped for.
-        assert sink - maxima <= 0, f"{name}: sink above the maximum"
+        #: Both signs are legal now; only a finite offset is required, which is
+        #: all either exponential's domain asks.
+        assert np.isfinite(sink - maxima), f"{name}: offset is not finite"
         sink_exp, denominator, codes, saturated = expected(acc, maxima, sums, sink)
         assert np.isfinite(denominator) and denominator > 0, name
         #: AND THE QUOTIENT MUST BE FINITE. The reference flags a nonfinite

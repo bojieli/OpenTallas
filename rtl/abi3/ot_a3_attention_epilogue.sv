@@ -20,17 +20,18 @@
 // TWO PLACES THIS REFUSES WHERE THE REFERENCE REPAIRS, and both are recorded
 // because neither is a property of the arithmetic:
 //
-//   1. A SINK LOGIT ABOVE THE ROW MAXIMUM. The reference computes
-//      exp_cr32(sink - maxima) with an exponential that accepts ANY finite
-//      argument, and nothing bounds the sink from above: ``maxima`` is the
-//      maximum over SCORES and the sink never joins the running maximum. The
-//      only correctly-rounded exponential in this tree,
-//      ot_a3_fp32_transcendental_cr_rne's OP_EXP_NONPOS, admits finite x <= 0
-//      and REFUSES a positive argument outright. exp(x) could be reached as
-//      1/exp(-x) or through OP_SIGMOID, and neither is CORRECTLY ROUNDED -- both
-//      round twice -- so this fails closed with ERR_SCALE_RANGE instead of
-//      returning a number that is nearly right. Closing the gap means extending
-//      the transcendental unit to positive arguments, not working around it here.
+//   1. A SINK LOGIT ABOVE THE ROW MAXIMUM -- NO LONGER REFUSED. Nothing bounds
+//      the sink from above: ``maxima`` is the maximum over SCORES and the sink
+//      never joins the running maximum, and read out of the checkpoints 2,680 of
+//      V4-Flash's 2,944 sink logits are POSITIVE (91.0%), as are 71.3% of
+//      V4.1's. So the offset is positive on ordinary rows, not corner ones, and
+//      an earlier version of this block refused every one of them.
+//      ot_a3_fp32_transcendental_cr_rne's OP_EXP_NONPOS takes finite x <= 0 and
+//      ot_a3_fp32_exp_pos_cr_rne takes x > 0, each correctly rounded and each
+//      qualified against the reference's own exp_cr32, so the offset's SIGN
+//      selects between them and neither is asked for a value outside its
+//      domain. 1/exp(-x) and sigmoid(x)/(1-sigmoid(x)) would both have rounded
+//      twice and neither is used.
 //   2. A DENOMINATOR THAT IS NOT POSITIVE FINITE. The reference does not refuse
 //      this: it FLAGS the query row and re-runs it through an exact oracle
 //      (``_repair_rows``). This block has no oracle, so it refuses. A datapath
@@ -120,19 +121,38 @@ module ot_a3_attention_epilogue (
         .y(add_y), .err(add_err), .valid_out(add_valid_out)
     );
 
+    //: TWO EXPONENTIALS, SELECTED BY THE OFFSET'S SIGN. Each is correctly
+    //: rounded on its own domain and each is qualified against exp_cr32; asking
+    //: either for a value outside its domain is what the select prevents.
     reg         exp_in_valid;
     reg  [31:0] exp_argument;
-    wire        exp_in_ready;
-    wire        exp_out_valid;
-    wire [31:0] exp_result;
-    wire [1:0]  exp_error;
-    ot_a3_fp32_transcendental_cr_rne exponential (
+
+    wire        neg_in_ready, neg_out_valid;
+    wire [31:0] neg_result;
+    wire [1:0]  neg_error;
+    ot_a3_fp32_transcendental_cr_rne exponential_nonpos (
         .clk(clk), .rst_n(rst_n),
-        .in_valid(exp_in_valid), .in_ready(exp_in_ready),
+        .in_valid(exp_in_valid & ~offset_positive), .in_ready(neg_in_ready),
         .operation(OP_EXP_NONPOS), .argument_code(exp_argument),
-        .out_valid(exp_out_valid), .out_ready(state == S_SINK),
-        .result_code(exp_result), .result_error(exp_error)
+        .out_valid(neg_out_valid), .out_ready(state == S_SINK),
+        .result_code(neg_result), .result_error(neg_error)
     );
+
+    wire        pos_in_ready, pos_out_valid;
+    wire [31:0] pos_result;
+    wire [1:0]  pos_error;
+    ot_a3_fp32_exp_pos_cr_rne exponential_pos (
+        .clk(clk), .rst_n(rst_n),
+        .in_valid(exp_in_valid & offset_positive), .in_ready(pos_in_ready),
+        .argument_code(exp_argument),
+        .out_valid(pos_out_valid), .out_ready(state == S_SINK),
+        .result_code(pos_result), .result_error(pos_error)
+    );
+
+    wire        exp_in_ready  = offset_positive ? pos_in_ready  : neg_in_ready;
+    wire        exp_out_valid = offset_positive ? pos_out_valid : neg_out_valid;
+    wire [31:0] exp_result    = offset_positive ? pos_result    : neg_result;
+    wire [1:0]  exp_error     = offset_positive ? pos_error     : neg_error;
 
     reg         div_in_valid;
     wire        div_in_ready;
@@ -223,14 +243,7 @@ module ot_a3_attention_epilogue (
                 end
 
                 S_SINK: begin
-                    if (offset_positive) begin
-                        //: The reference would compute exp of a positive
-                        //: argument here; this tree has no correctly-rounded way
-                        //: to do that, so it fails closed rather than rounding
-                        //: twice. See the header.
-                        error_code <= ERR_SCALE_RANGE;
-                        busy <= 1'b0; done <= 1'b1; state <= S_DONE;
-                    end else if (exp_out_valid) begin
+                    if (exp_out_valid) begin
                         if (exp_error != 2'd0) begin
                             error_code <= ERR_SCALE_RANGE;
                             busy <= 1'b0; done <= 1'b1; state <= S_DONE;

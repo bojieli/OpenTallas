@@ -48,12 +48,30 @@ module tb_a3_attention_epilogue;
     );
 
     always #1 clk = ~clk;
+
+    //: A WATCHDOG, BECAUSE THE FAILURE MODE HERE IS A HANG. The epilogue waits
+    //: on an exponential's out_valid, and a unit that is never given the
+    //: argument its domain admits never raises it -- so mis-selecting between
+    //: the nonpositive and positive units stalls instead of computing a wrong
+    //: number. Without this the mutant that always picks the nonpositive unit
+    //: reads as a slow test rather than a broken one.
+    localparam integer WATCHDOG_CYCLES = 4_000_000;
+    integer watchdog;
+    initial watchdog = 0;
+    always @(posedge clk) begin
+        watchdog <= watchdog + 1;
+        if (watchdog > WATCHDOG_CYCLES) begin
+            $display("FAIL watchdog: no progress in %0d cycles -- the epilogue is stalled, most likely waiting on an exponential that was never issued its argument", WATCHDOG_CYCLES);
+            $finish;
+        end
+    end
     always @(posedge clk) if (acc_rd_en) acc_rd_data <= mem[acc_rd_addr[8:0]];
     always @(posedge clk) if (out_we) begin
         mem[out_addr[8:0]] <= out_data; writes = writes + 1;
     end
 
     task go; begin
+        watchdog = 0;
         writes = 0;
         for (j = OUT_BASE; j < OUT_BASE + WIDTH; j = j + 1) mem[j] = 32'hdead_0000;
         @(negedge clk); start = 1; @(negedge clk); start = 0;
@@ -116,21 +134,10 @@ module tb_a3_attention_epilogue;
         end
         $fclose(fh);
 
-        // -- the two places the RTL is narrower than the reference -----------
-        //: A sink ABOVE the maximum. The reference computes exp of a positive
-        //: argument; OP_EXP_NONPOS refuses one, so this must fail closed rather
-        //: than round twice through 1/exp(-x).
-        cfg_width = WIDTH; cfg_final_max = 32'h3f800000;   //: 1.0
-        cfg_final_sums = 32'h41000000; cfg_sink_code = 32'h40000000;  //: 2.0
-        go;
-        if (error_code !== ot_a3_engine_pkg::ERR_SCALE_RANGE) begin
-            $display("FAIL sink above the maximum gave %0h", error_code);
-            errors = errors + 1;
-        end
-        if (writes !== 0) begin
-            $display("FAIL sink refusal still wrote %0d words", writes);
-            errors = errors + 1;
-        end
+        // -- the one place the RTL is still narrower than the reference ------
+        //: A sink above the maximum is NO LONGER a refusal -- the cases above
+        //: cover both signs -- so what remains is the denominator.
+        cfg_width = WIDTH;
         //: A denominator that is not positive. The reference flags the row and
         //: repairs it through an exact oracle; there is none here.
         cfg_final_max = 32'h00000000; cfg_sink_code = 32'hc2c80000;  //: -100
@@ -148,7 +155,7 @@ module tb_a3_attention_epilogue;
         end
 
         if (errors == 0)
-            $display("PASS a3_attention_epilogue: %0d cases match exp_cr32 and _narrow on the sink term, the denominator and every channel, and 3 refusals fail closed", ncases);
+            $display("PASS a3_attention_epilogue: %0d cases match exp_cr32 and _narrow on the sink term, the denominator and every channel, at BOTH offset signs, and 2 refusals fail closed", ncases);
         else
             $display("FAIL a3_attention_epilogue: %0d errors", errors);
         $finish;
