@@ -205,6 +205,29 @@
             "dut.device.sequencer.ins_control_id",
             "dut.device.sequencer.dbg_source_operation_id"
           ],
+          "live_tap_attempted_and_measured": {
+            "but_two_of_eleven_roles_never_cross_that_port": {
+              "best_mask_reached": "11111111001",
+              "finding": "NINE of the eleven roles collect on the live walk. COUNTER_CLASS and NUMERIC are never seen -- not once in 198,018 descriptors. The sequencer fetches the wait set, the operator, the schedule and the resolver bank's views, and passes the numeric-profile and counter-class IDS onward without reading them; the ISSUE BRIDGE reads the numeric descriptor on its own descriptor port, which is where its contract-digest check comes from.",
+              "per_role_collection_counts": {
+                "counter_class": 0,
+                "input_view_0": 38645,
+                "input_view_1": 37613,
+                "input_view_2": 36581,
+                "input_view_3": 35549,
+                "numeric": 0,
+                "operator": 40709,
+                "output_view_0": 34517,
+                "output_view_1": 33485,
+                "schedule": 40021,
+                "wait_set": 2830805
+              }
+            },
+            "consequence": "A collector tapping only the sequencer's port cannot assemble the record, and that was an assumption in the module's design rather than a measurement. The record needs taps on BOTH ports -- the sequencer's for wait set, operator, schedule and views, and the bridge's for numeric and counter class -- or the two remaining descriptors have to be fetched by the collector itself, which would stop it being passive. Deciding between those is the next step, and it is a smaller question than it looked: nine elevenths of the record already arrives.",
+            "the_walk_does_reach_the_operator": "932 VECTOR.MHC operators are issued across the four programs, and the collector recognised 344 of them as the PRE form -- the rest are POST, which correctly fails the aux_id_1 == 20 match. So HC_PRE is genuinely reached by the real control plane, 198,018 descriptors crossing the port.",
+            "what_this_does_not_change": "the collector's own campaign and the collected-record execution both stand: they drive it with all eleven descriptors, which is what a correct tap will deliver. What is measured here is the tap's source, not the collector's assembly.",
+            "what_was_done": "The collector was instantiated in rtl/test/tb_a3_deployment.sv as a pure observation -- hierarchical reads of dut.device.desc_{id,valid,data} and the sequencer's ins_* registers, driving nothing -- and the four shipped programs were replayed. The bench still passed unchanged (deployments=5 cases=10 issues=29016 views=84047 checks=597620), confirming the tap is non-intrusive. The instrumentation was then reverted; these numbers are the result."
+          },
           "observational_not_production": "every field is already a register inside the sequencer, so the demonstration reads them hierarchically and changes no production RTL. Output ports on the sequencer and device top are the eventual wiring and are not needed to show the tap works.",
           "step": "tap the collector onto the live descriptor port",
           "unresolved_detail": "when to pulse begin_valid. The sequencer decodes into ins_* and then fetches, so a pulse on ins_descriptor_id changing should precede the fetches -- but that ordering is NOT measured, and an off-by-one there makes a correct collector look broken. Measure the cycle relationship between the ins_* write and the first desc_valid before wiring it."
