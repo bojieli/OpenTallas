@@ -1,0 +1,13 @@
+{
+  "coverage": {
+    "deepseek-v4-flash-0731": "17/28 engine operations admitted; 10 refused",
+    "deepseek-v4.1-flash": "17/31 engine operations admitted; 13 refused",
+    "deepseek-v4.1-flash-reduced-v1": "17/31 engine operations admitted; 13 refused",
+    "qwen3-8b": "12/14 engine operations admitted; 0 refused",
+    "qwen3-reduced-v1": "12/14 engine operations admitted; 0 refused"
+  },
+  "qualification_constraint": "tools/run_a3_operator_admission_rtl_campaign.py anchors every case to a Qwen3 program counter and its golden write stream, so it cannot cover a leg for an operator Qwen3 does not issue -- which is all thirteen. Qualifying one leg at a time needs a single-operator vehicle that lowers a minimal graph naming one refused operator and checks it against that operator's reference; otherwise a leg is only exercisable once a whole DeepSeek program lowers, needing ten (V4-Flash) or thirteen (V4.1) legs at once.",
+  "question": "For each published graph, how much of it can the RTL issue bridge execute? A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY and the program stops, so this is the ceiling on any token claim for that model.",
+  "reading": "Qwen3 is fully covered on both its shipped and reduced graphs, which is why its two token cells exist and why nothing in the RTL blocks the others. Both DeepSeek graphs are short, and they overlap: nine of V4-Flash's ten refused operations are also refused for V4.1, so one body of bridge work serves both.",
+  "schema": "opentallas.rtl_bridge_coverage.v1"
+}

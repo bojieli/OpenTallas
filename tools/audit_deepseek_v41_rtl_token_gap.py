@@ -185,6 +185,40 @@ def instantiation_sites(module: str) -> list[str]:
     return sites
 
 
+#: Why a single leg cannot be qualified on its own today.
+#:
+#: The bridge's qualification harness is
+#: ``tools/run_a3_operator_admission_rtl_campaign.py``, and every case it builds is
+#: anchored to a *Qwen3 program counter* and compared against the shipped prefix's
+#: golden write stream for that counter.  So an operator Qwen3 does not issue has
+#: no PC and no golden, and the campaign cannot cover its leg however correct the
+#: leg is.  Qwen3 issues none of the thirteen.
+#:
+#: Measured by writing the VECTOR.HADAMARD leg -- the cheapest of them: one
+#: operand from ``m0``, one result, one contract, engine already instantiated in
+#: ``ot_a3_engine_array.sv``.  Twenty-two sites across the bridge, and it
+#: elaborates clean under Verilator.  It was then reverted rather than committed,
+#: because an unqualified change to this file stales the five committed artifacts
+#: that pin its digest -- including both operator-admission campaigns -- and buys
+#: nothing until something can issue the operator.
+#:
+#: So the unblocking work is a harness, not a leg: a single-operator vehicle that
+#: builds a deployment from a minimal graph naming one refused operator beside
+#: admitted ones, drives it through the bridge, and checks the result against that
+#: operator's reference. With it, all thirteen legs qualify one at a time. Without
+#: it they qualify only once a whole DeepSeek program lowers, which needs all ten
+#: of V4-Flash's or all thirteen of V4.1's at once.
+LEG_QUALIFICATION_HARNESS = (
+    "tools/run_a3_operator_admission_rtl_campaign.py anchors every case to a Qwen3 "
+    "program counter and its golden write stream, so it cannot cover a leg for an "
+    "operator Qwen3 does not issue -- which is all thirteen. Qualifying one leg at "
+    "a time needs a single-operator vehicle that lowers a minimal graph naming one "
+    "refused operator and checks it against that operator's reference; otherwise a "
+    "leg is only exercisable once a whole DeepSeek program lowers, needing ten "
+    "(V4-Flash) or thirteen (V4.1) legs at once."
+)
+
+
 def audit(ir_path: Path) -> dict[str, object]:
     graph = json.loads(ir_path.read_text(encoding="utf-8"))
     demand: collections.Counter[str] = collections.Counter()
@@ -262,6 +296,7 @@ def audit(ir_path: Path) -> dict[str, object]:
         "array_operand_ports": ARRAY_OPERAND_PORTS,
         "array_result_ports": ARRAY_RESULT_PORTS,
         "bridge_result_bank_selectors": bridge_result_bank_selectors(),
+        "leg_qualification_harness": LEG_QUALIFICATION_HARNESS,
         "bridge_result_bank_caveat": (
             "An operand that is a produced plane must be read from the result "
             "bank, and the bridge names one output per bank that may do so. Only "

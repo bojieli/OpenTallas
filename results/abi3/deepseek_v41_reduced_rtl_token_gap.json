@@ -84,6 +84,7 @@
   ],
   "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
   "kernels": 3245,
+  "leg_qualification_harness": "tools/run_a3_operator_admission_rtl_campaign.py anchors every case to a Qwen3 program counter and its golden write stream, so it cannot cover a leg for an operator Qwen3 does not issue -- which is all thirteen. Qualifying one leg at a time needs a single-operator vehicle that lowers a minimal graph naming one refused operator and checks it against that operator's reference; otherwise a leg is only exercisable once a whole DeepSeek program lowers, needing ten (V4-Flash) or thirteen (V4.1) legs at once.",
   "model_id": "deepseek-v4.1-flash-reduced-v1",
   "operations_admitted_by_the_bridge": 17,
   "operations_demanded": 31,
