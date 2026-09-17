@@ -1,0 +1,183 @@
+{
+  "agreement": {
+    "hbm_single_chip": false,
+    "rom_wafer": false
+  },
+  "cases": {
+    "hbm_single_chip": {
+      "agrees_with_oracle": false,
+      "distribution": {},
+      "emitted_token_ids": [],
+      "failure": "prefill failed: operator 1678: aux_id_2 declares hc_mult 4294967295, the operands carry 4",
+      "identity": {
+        "capability": "results/abi3/deepseek_v41_hbm_comparator_capability.json",
+        "capability_sha256": "f85b4c0daa7e91f4ef5e19f94a1394b9ed59fb744248b84c89bd9fc1bc2dc7cc",
+        "deployment": "build/abi3/deepseek-v41-reduced-hbm",
+        "deployment_sha256": "60ba60119e700481921e2ae78862073828ca9661f54f8b7aabe6a852cddcdf6f",
+        "descriptor_count": 9122,
+        "instruction_count": 3760
+      },
+      "retired_work": 14,
+      "stop_reason": "failed"
+    },
+    "rom_wafer": {
+      "agrees_with_oracle": false,
+      "distribution": {
+        "oracle_token": {
+          "logit": -0.002029888331890106,
+          "of": 4040,
+          "rank": 2102,
+          "token_id": 1638
+        },
+        "top": [
+          {
+            "logit": 0.8815239667892456,
+            "token_id": 2750
+          },
+          {
+            "logit": 0.8078653216362,
+            "token_id": 3813
+          },
+          {
+            "logit": 0.8067857623100281,
+            "token_id": 310
+          },
+          {
+            "logit": 0.8039984703063965,
+            "token_id": 223
+          },
+          {
+            "logit": 0.8014716506004333,
+            "token_id": 459
+          },
+          {
+            "logit": 0.7767004370689392,
+            "token_id": 1692
+          },
+          {
+            "logit": 0.7553300261497498,
+            "token_id": 3705
+          },
+          {
+            "logit": 0.737472414970398,
+            "token_id": 2284
+          }
+        ]
+      },
+      "emitted_token_ids": [
+        2750
+      ],
+      "failure": null,
+      "identity": {
+        "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "capability_sha256": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
+        "deployment": "build/abi3/deepseek-v41-reduced-rom",
+        "deployment_sha256": "fedcd05d1b850b72384b6aff80d016267ea64052fffba2fd061e566c0cb295f5",
+        "descriptor_count": 9772,
+        "instruction_count": 4385
+      },
+      "retired_work": 13473,
+      "stop_reason": "max_new_tokens"
+    }
+  },
+  "evidence_class": "functional_device_execution",
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "not_a_claim": [
+    "rtl_execution",
+    "timing_or_performance",
+    "released_model_numerics",
+    "agreement_with_the_reference_oracle"
+  ],
+  "oracle": {
+    "artifact": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+    "checkpoint_lock_id": "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1",
+    "generated_token_ids": [
+      1638,
+      930,
+      2587,
+      930,
+      1638,
+      1638,
+      1638,
+      1638,
+      0
+    ],
+    "sha256": "a3e139e6313ce84f24eddbdc607b6e24a7777257a655b70265173bba2943f695"
+  },
+  "producer": {
+    "git": {
+      "commit": "4260e9cd032d2bca6b56199ce1a26706fe44feaf",
+      "worktree_dirty": true
+    },
+    "sha256": "f97180a589efa8914f6ffcc34e47611576c5420a54ae5531d0cd9199072ff777",
+    "tool": "tools/run_deepseek_v41_reduced_token_walk.py"
+  },
+  "prompt_dependence": {
+    "distinct_outputs": 3,
+    "output_depends_on_input": true,
+    "probed_store": "rom_wafer",
+    "probes": {
+      "constant": {
+        "emitted_token_ids": [
+          2800
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      },
+      "oracle_prompt": {
+        "emitted_token_ids": [
+          2750
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          0,
+          3563,
+          3745,
+          418,
+          170,
+          16,
+          3564,
+          3582
+        ]
+      },
+      "reversed": {
+        "emitted_token_ids": [
+          2301
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          3582,
+          3564,
+          16,
+          170,
+          418,
+          3745,
+          3563,
+          0
+        ]
+      }
+    }
+  },
+  "prompt_token_ids": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582
+  ],
+  "schema": "opentallas.abi3.reduced_token_walk.v1",
+  "stores_agree_with_each_other": false,
+  "workload_id": "TA-DS41-REDUCED-EOS-1"
+}

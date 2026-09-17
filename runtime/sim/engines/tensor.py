@@ -1251,17 +1251,24 @@ def _tensor_embed_lookup(
         f"EMBED_LOOKUP token view {id_view.descriptor_id} stores "
         f"{DType(id_view.dtype).name}; expected a 32-bit token ID",
     )
+    #: A RANK-1 TABLE IS ONE VALUE PER ROW, which is a table this graph really
+    #: declares: the Engram compressed-token map is ``u32[vocabulary]`` -- "one
+    #: value per token" in its own reference's words -- and the two backends
+    #: present it differently, ROM as ``[vocabulary, 1]`` and HBM as
+    #: ``[vocabulary]``.  Both are the same bytes in the same order, and rank 2
+    #: exactly refused the second one at instruction 8 of the HBM prefill.
     _require(
-        len(table_view.dims) == 2,
+        1 <= len(table_view.dims) <= 2,
         f"EMBED_LOOKUP table view {table_view.descriptor_id} has rank "
-        f"{len(table_view.dims)}; expected [vocabulary, width]",
+        f"{len(table_view.dims)}; expected [vocabulary, width] or [vocabulary]",
     )
     _require(
         output_view.dtype == table_view.dtype,
         f"EMBED_LOOKUP writes {DType(table_view.dtype).name} rows into a "
         f"{DType(output_view.dtype).name} view; a lookup performs no conversion",
     )
-    vocabulary, width = table_view.dims
+    vocabulary = int(table_view.dims[0])
+    width = int(table_view.dims[1]) if len(table_view.dims) == 2 else 1
     identifiers = np.asarray(ctx.read(id_view)).reshape(-1).astype(np.int64, copy=False)
     tokens = int(identifiers.size)
     #: The output holds ``tokens`` rows of ``width``, and the check is on that
