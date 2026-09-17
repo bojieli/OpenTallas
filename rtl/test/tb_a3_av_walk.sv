@@ -124,7 +124,9 @@ module tb_a3_av_walk;
 
             $sformat(path, "acc_%0d.hex", c); $readmemh(path, emem);
             for (j = 0; j < channels; j = j + 1) begin
-                out_rd_addr = j; #1;
+                //: A registered read: present the address, then let one edge
+                //: pass before sampling, which is what the epilogue does too.
+                out_rd_addr = j; @(negedge clk);
                 if (out_rd_data !== emem[j]) begin
                     if (errors < 24)
                         $display("FAIL %0s channel %0d got %08h expected %08h",

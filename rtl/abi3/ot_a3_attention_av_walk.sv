@@ -72,7 +72,16 @@ module ot_a3_attention_av_walk #(
     //: The accumulator is up to CHANNELS_MAX wide, so it leaves through a read
     //: port rather than a bus.
     input  wire [31:0] out_rd_addr,
-    output wire [31:0] out_rd_data,
+    //: REGISTERED, not a combinational read of the accumulator array.
+    //:
+    //: Routed on ASAP7 at 1.2 ns the block's only violating path was this port
+    //: to that one -- out_rd_addr[3] to out_rd_data[9] at -22.5 ps, a 128-entry
+    //: 32-bit mux straddling the block boundary with the flow's input and
+    //: output delay budgets on either end. It is also what the consumer already
+    //: assumes: ot_a3_attention_epilogue spends a cycle between presenting an
+    //: address and sampling, commented "one edge for the memory to capture the
+    //: address", so a registered read is the shape it was written against.
+    output reg  [31:0] out_rd_data,
 
     output reg         busy,
     output reg         done,
@@ -133,7 +142,10 @@ module ot_a3_attention_av_walk #(
     reg [31:0] kv_rd_chan;
     reg        kv_rd_live;
 
-    assign out_rd_data = acc[out_rd_addr[$clog2(CHANNELS_MAX)-1:0]];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) out_rd_data <= 32'd0;
+        else out_rd_data <= acc[out_rd_addr[$clog2(CHANNELS_MAX)-1:0]];
+    end
 
     // -- the rescale multiply -------------------------------------------------
     reg        mul_vin;
