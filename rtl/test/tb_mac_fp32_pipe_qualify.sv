@@ -17,7 +17,13 @@
 // question is how big the gap is and where it lives: alignment sticky bits,
 // subnormal results, and out-of-range exponents are three different defects with
 // three different fixes, and a single pass/fail count cannot tell them apart.
-module tb_mac_fp32_pipe_qualify;
+module tb_mac_fp32_pipe_qualify #(
+    //: Overridden from the command line so the SAME suite qualifies both
+    //: pipeline depths. The checker pops a queue on valid_out rather than
+    //: counting cycles, so it is already latency-agnostic; the only thing the
+    //: sixth stage changes is how long the drain has to be, and the drain is 16.
+    parameter integer ROUND_STAGE = 0
+);
     reg clk = 0, rst_n = 0, iv = 0;
     reg [15:0] a = 0, b = 0;
     reg [31:0] c = 0;
@@ -26,7 +32,8 @@ module tb_mac_fp32_pipe_qualify;
     wire        ov;
     wire [31:0] y;
     wire [1:0]  ey;
-    ot_mac_bf16_fp32_pipe dut (.clk(clk), .rst_n(rst_n), .valid_in(iv),
+    ot_mac_bf16_fp32_pipe #(.ROUND_STAGE(ROUND_STAGE)) dut (
+                              .clk(clk), .rst_n(rst_n), .valid_in(iv),
                                .a(a), .b(b), .c(c), .y(y), .err(ey), .valid_out(ov));
 
     // operands in flight, popped on valid_out

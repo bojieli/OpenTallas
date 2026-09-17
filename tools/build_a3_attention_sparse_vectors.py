@@ -54,25 +54,32 @@ def bf16(values: np.ndarray) -> np.ndarray:
 
 
 #: name, span, heads, head_dim, slots, kv_rows, index kind
+#:
+#: head_dim IS 16 OR MORE, which is the smallest any shipped ATTENTION.SPARSE
+#: uses. It is not a free choice: the AV walk's inner pass is head_dim long and
+#: carries the accumulator hazard, so it refuses a head_dim at or below its
+#: product-add pipeline depth -- MAC_LAT + 2, which is 8 with the split rounding
+#: stage. An earlier revision of this suite used 8, and moving the product-add to
+#: six stages turned every case into a shape refusal.
 CASES = [
-    ("one_block", 1, 2, 8, 6, 8, "random"),
-    ("full_block", 1, 2, 8, 64, 32, "random"),
+    ("one_block", 1, 2, 16, 6, 8, "random"),
+    ("full_block", 1, 2, 16, 64, 32, "random"),
     #: Two source blocks: the online rescale has to actually do something.
-    ("two_blocks", 1, 2, 8, 70, 96, "random"),
-    ("three_blocks", 1, 1, 8, 133, 160, "random"),
+    ("two_blocks", 1, 2, 16, 70, 96, "random"),
+    ("three_blocks", 1, 1, 16, 133, 160, "random"),
     #: Several query rows through one instance: the running maximum and the
     #: denominator must not survive a row boundary.
-    ("multi_row", 3, 2, 8, 6, 8, "random"),
+    ("multi_row", 3, 2, 16, 6, 8, "random"),
     #: Several rows AND several blocks. With one block per row a sequencer that
     #: forgets to rewind the block cursor at a row boundary is invisible, which a
     #: mutation of exactly that showed: the single-block multi-row case above
     #: passed with the rewind deleted.
-    ("multi_row_blocks", 2, 2, 8, 70, 96, "random"),
-    ("wide_head", 1, 1, 16, 64, 64, "random"),
+    ("multi_row_blocks", 2, 2, 16, 70, 96, "random"),
+    ("wide_head", 1, 1, 32, 64, 64, "random"),
     #: "duplicate_index_policy": "preserve_every_source_slot"
-    ("duplicates", 1, 2, 8, 12, 8, "duplicate"),
+    ("duplicates", 1, 2, 16, 12, 8, "duplicate"),
     #: One valid slot in the first block is the contract's minimum.
-    ("single_valid", 1, 2, 8, 1, 8, "random"),
+    ("single_valid", 1, 2, 16, 1, 8, "random"),
 ]
 
 

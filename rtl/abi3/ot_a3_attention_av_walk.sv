@@ -35,7 +35,13 @@
 module ot_a3_attention_av_walk #(
     parameter integer CHANNELS_MAX = 512,
     parameter integer LANES_MAX    = 64,
-    parameter integer MAC_LAT      = 5,
+    //: SIX, not five: this walk instantiates the product-add with its rounding
+    //: stage split, which is what lifts the block off the MAC's own 1.716 ns
+    //: final cone. Both depths are bit-identical to
+    //: ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne over 901,440 cases, so
+    //: the choice is purely a timing one.
+    parameter integer MAC_ROUND_STAGE = 1,
+    parameter integer MAC_LAT      = 6,
     parameter integer MUL_LAT      = 5
 ) (
     input  wire        clk,
@@ -193,7 +199,7 @@ module ot_a3_attention_av_walk #(
     wire        mac_vout;
     wire [31:0] mac_y;
     wire [1:0]  mac_err;
-    ot_mac_bf16_fp32_pipe product_add (
+    ot_mac_bf16_fp32_pipe #(.ROUND_STAGE(MAC_ROUND_STAGE)) product_add (
         .clk(clk), .rst_n(rst_n), .valid_in(b_valid),
         .a(b_prob), .b(kv_element), .c(acc_in),
         .y(mac_y), .err(mac_err), .valid_out(mac_vout)
@@ -247,7 +253,12 @@ module ot_a3_attention_av_walk #(
                             //: The hazard the QK walk closes at elaboration is
                             //: closed here at admission, because the inner
                             //: extent is head_dim. Every shipped
-                            //: ATTENTION.SPARSE head_dim is 16, 128 or 512.
+                            //: ATTENTION.SPARSE head_dim is 16, 128 or 512, so
+                            //: the floor of MAC_LAT + 3 = 9 refuses nothing the
+                            //: device is asked to run -- but it DOES move with
+                            //: the product-add's depth, and splitting that
+                            //: unit's rounding stage raised the floor from 8 to
+                            //: 9 and turned a head_dim of 8 into a refusal.
                             cfg_channels <= PIPE_DEPTH[31:0]) begin
                             error_code <= ot_a3_engine_pkg::ERR_SHAPE;
                             done <= 1'b1;

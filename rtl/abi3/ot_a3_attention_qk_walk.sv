@@ -37,7 +37,13 @@
 // ---------------------------------------------------------------------------
 module ot_a3_attention_qk_walk #(
     parameter integer LANES = 64,
-    parameter integer MAC_LAT = 5
+    //: SIX, not five: this walk instantiates the product-add with its rounding
+    //: stage split, which is what lifts the block off the MAC's own 1.716 ns
+    //: final cone. Both depths are bit-identical to
+    //: ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne over 901,440 cases, so
+    //: the choice is purely a timing one.
+    parameter integer MAC_ROUND_STAGE = 1,
+    parameter integer MAC_LAT = 6
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -146,7 +152,7 @@ module ot_a3_attention_qk_walk #(
     wire        mac_vout;
     wire [31:0] mac_y;
     wire [1:0]  mac_err;
-    ot_mac_bf16_fp32_pipe product_add (
+    ot_mac_bf16_fp32_pipe #(.ROUND_STAGE(MAC_ROUND_STAGE)) product_add (
         .clk(clk), .rst_n(rst_n), .valid_in(b_valid),
         .a(q_held), .b(kv_element), .c(acc_in),
         .y(mac_y), .err(mac_err), .valid_out(mac_vout)

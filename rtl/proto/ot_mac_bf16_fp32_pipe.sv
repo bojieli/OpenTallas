@@ -56,7 +56,24 @@
 // therefore measures 174 MHz. A BF16 product needs only 8x8 mantissa bits, so
 // the product is exact in 16 bits with no wide intermediate at all.
 // ---------------------------------------------------------------------------
-module ot_mac_bf16_fp32_pipe (
+module ot_mac_bf16_fp32_pipe #(
+    //: 0 keeps the five-stage pipeline this module was qualified as, bit for
+    //: bit. 1 cuts the last stage in two and makes the pipeline SIX deep.
+    //:
+    //: The cut is here because this is where the time is. Routed on ASAP7 at
+    //: 1.2 ns the worst path in ot_a3_attention_qk_walk was
+    //: product_add.s4_sum[20] to the output register at -516 ps -- 1.716 ns for
+    //: one stage, against 229 ps for the align stage two boundaries earlier. A
+    //: seven-fold imbalance is not a technology limit, it is a stage doing too
+    //: much: a 29-way leading-zero priority mux, the normalize shift, the
+    //: 25-bit round, the exponent add, a variable right shift, a 29-bit sticky
+    //: reduction, a second round and the assemble, all in one cone.
+    //:
+    //: Opt-in rather than unconditional because ot_a3_mac_lane_pipe states the
+    //: depth as five in its own comments and sizes a companion to match, so a
+    //: unilateral sixth stage would silently mis-pair every one of its results.
+    parameter integer ROUND_STAGE = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        valid_in,
@@ -298,6 +315,7 @@ module ot_mac_bf16_fp32_pipe (
 
     wire [24:0] rounded = {1'b0, nrm[28:5]} +
                           ((nrm[4] && (nrm[3:0] != 4'b0 || nrm[5])) ? 25'd1 : 25'd0);
+    wire        sum_zero = (s4_sum == 29'b0);
 
     //: e_pre is the stored exponent plus 127, computed combinationally so both the
     //: range check and the subnormal shift can read it.
@@ -318,9 +336,57 @@ module ot_mac_bf16_fp32_pipe (
     //: 2042 and `e_pre >= 128` was TRUE for it -- the deepest underflows took the
     //: normal path and emitted a large subnormal instead of zero. 32 of 901,440
     //: cases, all of them a tiny product against a zero accumulator.
-    wire [7:0]  sub_shift = e_pre[10]         ? 8'd255
-                          : (e_pre >= 11'd128) ? 8'd0
-                          : (8'd128 - e_pre[7:0]);
+    // -- the optional stage boundary ------------------------------------------
+    //: Everything above is the first half: leading-zero count, normalize shift,
+    //: the 25-bit round and the exponent add. Everything below is the second:
+    //: the subnormal shift, its sticky, its round, and the assemble. ROUND_STAGE
+    //: decides whether a register sits between them.
+    wire [28:0] q_nrm;
+    wire [24:0] q_rounded;
+    wire [10:0] q_e_pre;
+    wire        q_sign, q_nf, q_v, q_sum_zero;
+    generate
+        if (ROUND_STAGE == 0) begin : g_one_stage
+            assign q_nrm = nrm;
+            assign q_rounded = rounded;
+            assign q_e_pre = e_pre;
+            assign q_sign = s4_sign;
+            assign q_nf = s4_nf;
+            assign q_v = s4_v;
+            assign q_sum_zero = sum_zero;
+        end else begin : g_two_stages
+            reg [28:0] r_nrm;
+            reg [24:0] r_rounded;
+            reg [10:0] r_e_pre;
+            reg        r_sign, r_nf, r_v, r_sum_zero;
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) begin
+                    r_nrm <= 29'b0; r_rounded <= 25'b0; r_e_pre <= 11'b0;
+                    r_sign <= 1'b0; r_nf <= 1'b0; r_v <= 1'b0;
+                    r_sum_zero <= 1'b1;
+                end else begin
+                    r_nrm <= nrm;
+                    r_rounded <= rounded;
+                    r_e_pre <= e_pre;
+                    r_sign <= s4_sign;
+                    r_nf <= s4_nf;
+                    r_v <= s4_v;
+                    r_sum_zero <= sum_zero;
+                end
+            end
+            assign q_nrm = r_nrm;
+            assign q_rounded = r_rounded;
+            assign q_e_pre = r_e_pre;
+            assign q_sign = r_sign;
+            assign q_nf = r_nf;
+            assign q_v = r_v;
+            assign q_sum_zero = r_sum_zero;
+        end
+    endgenerate
+
+    wire [7:0]  sub_shift = q_e_pre[10]         ? 8'd255
+                          : (q_e_pre >= 11'd128) ? 8'd0
+                          : (8'd128 - q_e_pre[7:0]);
 
     //: The subnormal fraction is ROUNDED, not truncated. Shifting the already
     //: rounded significand right and keeping what lands is a truncation, and it
@@ -331,15 +397,15 @@ module ot_mac_bf16_fp32_pipe (
     //: reference's single one.
     wire [5:0]  tsh    = 6'd5 + {1'b0, sub_shift[4:0]};
     wire [5:0]  tsh_c  = (sub_shift >= 8'd24) ? 6'd29 : ((tsh > 6'd29) ? 6'd29 : tsh);
-    wire [28:0] sub_q  = (tsh_c >= 6'd29) ? 29'b0 : (nrm >> tsh_c);
+    wire [28:0] sub_q  = (tsh_c >= 6'd29) ? 29'b0 : (q_nrm >> tsh_c);
     wire [4:0]  sub_ri = (tsh_c == 6'd0) ? 5'd0 : (tsh_c[4:0] - 5'd1);
-    wire        sub_r  = (tsh_c == 6'd0) ? 1'b0 : nrm[sub_ri];
+    wire        sub_r  = (tsh_c == 6'd0) ? 1'b0 : q_nrm[sub_ri];
     reg         sub_st;
     integer     sb;
     always @* begin
         sub_st = 1'b0;
         for (sb = 0; sb < 29; sb = sb + 1)
-            if ((sb + 1) < tsh_c) sub_st = sub_st | nrm[sb];
+            if ((sb + 1) < tsh_c) sub_st = sub_st | q_nrm[sb];
     end
     //: The cut is 25, not 24. At sub_shift = 24 the significand's leading one lands
     //: exactly one place below the fraction LSB, so the value is AT LEAST half an
@@ -357,9 +423,10 @@ module ot_mac_bf16_fp32_pipe (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin y <= 32'b0; valid_out <= 1'b0; err <= E_NONE; end
         else begin
-            valid_out <= s4_v;
-            err <= s4_nf ? E_NONFINITE
-                 : ((s4_sum != 29'b0) && !e_pre[10] && (e_pre >= 11'd382)) ? E_RANGE : E_NONE;
+            valid_out <= q_v;
+            err <= q_nf ? E_NONFINITE
+                 : (!q_sum_zero && !q_e_pre[10] && (q_e_pre >= 11'd382))
+                   ? E_RANGE : E_NONE;
             //: The bias constant is 2, not 4. Deriving it: s3_p = significand x
             //: 2**25, so a value is s4_sum x 2**(s3_exp-279); nrm[27:4] is
             //: s4_sum x 2**(4-lz), so the unbiased exponent is s3_exp-lz-252 and
@@ -369,20 +436,20 @@ module ot_mac_bf16_fp32_pipe (
             //: 126,123 of 126,689 mantissa-matching cases off by exactly +2,
             //: with the mantissa already correct. A constant bias error, not a
             //: rounding one, and invisible to a bench that only checked timing.
-            e = e_pre;
+            e = q_e_pre;
             //: The stored field is e - 127, so a NORMAL binary32 result needs
             //: e >= 128 and anything at or below 127 underflows. The guard said
             //: e < 254, which flushed every result whose stored exponent was
             //: below 127 -- that is, every value below 1.0 -- to zero: 29,554 of
             //: 180,000 cases, including plainly normal numbers like 0x1bba1cf1.
-            if (s4_sum == 29'b0)
+            if (q_sum_zero)
                 y <= 32'b0;
             else if (e[10] || e < 11'd128)
                 //: subnormal, or zero once the shift exceeds the field
                 y <= (sub_man[22:0] == 23'b0) ? 32'b0
-                                              : {s4_sign, 8'd0, sub_man[22:0]};
+                                              : {q_sign, 8'd0, sub_man[22:0]};
             else
-                y <= {s4_sign, e[7:0] - 8'd127,
-                      rounded[24] ? rounded[23:1] : rounded[22:0]};
+                y <= {q_sign, e[7:0] - 8'd127,
+                      q_rounded[24] ? q_rounded[23:1] : q_rounded[22:0]};
         end
 endmodule
