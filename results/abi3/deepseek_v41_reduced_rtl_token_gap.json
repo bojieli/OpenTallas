@@ -1,0 +1,167 @@
+{
+  "admitted": [
+    {
+      "kernels": 663,
+      "operation": "TENSOR.MATMUL"
+    },
+    {
+      "kernels": 521,
+      "operation": "DMA.TRANSFER"
+    },
+    {
+      "kernels": 168,
+      "operation": "VECTOR.RMS_NORM"
+    },
+    {
+      "kernels": 137,
+      "operation": "DMA.GATHER"
+    },
+    {
+      "kernels": 136,
+      "operation": "VECTOR.ROPE"
+    },
+    {
+      "kernels": 121,
+      "operation": "REDUCTION.EXPERT_SUM"
+    },
+    {
+      "kernels": 80,
+      "operation": "VECTOR.SILU_MUL"
+    },
+    {
+      "kernels": 48,
+      "operation": "DMA.SCATTER"
+    },
+    {
+      "kernels": 40,
+      "operation": "ATTENTION.SPARSE"
+    },
+    {
+      "kernels": 40,
+      "operation": "ROUTE.BIASED_TOPK"
+    },
+    {
+      "kernels": 40,
+      "operation": "ROUTE.WEIGHT_NORMALIZE"
+    },
+    {
+      "kernels": 40,
+      "operation": "ROUTE.WINDOW_INDEX"
+    },
+    {
+      "kernels": 40,
+      "operation": "VECTOR.SQRT_SOFTPLUS"
+    },
+    {
+      "kernels": 4,
+      "operation": "TENSOR.EMBED_LOOKUP"
+    },
+    {
+      "kernels": 1,
+      "operation": "SELECTION.ARGMAX"
+    },
+    {
+      "kernels": 1,
+      "operation": "SELECTION.TOKEN_APPEND"
+    },
+    {
+      "kernels": 1,
+      "operation": "VECTOR.HEAD_RMS_NORM"
+    }
+  ],
+  "build_a_module": 0,
+  "graph_id": "85c5b2fabe90b9033f0cadf7e8e8045439ff2eccfdd3fe31bcd4df8132316c14",
+  "kernels": 3245,
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "operations_admitted_by_the_bridge": 17,
+  "operations_demanded": 31,
+  "operations_executed_outside_the_bridge": {
+    "STATE.READ": "ot_a3_state_controller.sv"
+  },
+  "operations_refused": 13,
+  "refused": [
+    {
+      "kernels": 444,
+      "operation": "VECTOR.CONVERT",
+      "rtl_module": "ot_a3_vector_convert.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 198,
+      "operation": "REDUCTION.GROUPED_CONCAT",
+      "rtl_module": "ot_a3_reduction_grouped_concat.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 160,
+      "operation": "VECTOR.MHC",
+      "rtl_module": "ot_a3_vector_mhc_post.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 120,
+      "operation": "TENSOR.ROUTED_MATMUL",
+      "rtl_module": "ot_a3_tensor_routed_matmul.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 89,
+      "operation": "VECTOR.SCALE",
+      "rtl_module": "ot_a3_vector_scale.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 40,
+      "operation": "ROUTE.EXPERT_DISPATCH",
+      "rtl_module": "ot_a3_route_expert_dispatch.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 10,
+      "operation": "VECTOR.COMPRESS",
+      "rtl_module": "ot_a3_vector_compress_project.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 9,
+      "operation": "ROUTE.INDEX_TOPK",
+      "rtl_module": "ot_a3_route_index_topk.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 8,
+      "operation": "VECTOR.INDEX_SCORE",
+      "rtl_module": "ot_a3_vector_index_score.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 6,
+      "operation": "DMA.NGRAM_HASH",
+      "rtl_module": "ot_a3_dma_ngram_hash.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 2,
+      "operation": "VECTOR.ENGRAM_GATE",
+      "rtl_module": "ot_a3_vector_engram_gate.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 1,
+      "operation": "ROUTE.BLOCK_MAX",
+      "rtl_module": "ot_a3_route_block_max.sv",
+      "task": "wire an existing module"
+    },
+    {
+      "kernels": 1,
+      "operation": "ROUTE.CANDIDATE_MASK",
+      "rtl_module": "ot_a3_route_candidate_mask.sv",
+      "task": "wire an existing module"
+    }
+  ],
+  "refused_kernel_share": 0.3353,
+  "schema": "opentallas.deepseek_v41_rtl_token_gap.v1",
+  "statement": "A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY, so the admitted set is exactly the subset of this graph the RTL can execute -- except for the families the bridge does not execute at all, which are listed separately rather than counted as gaps. Every refused operation here has a module in rtl/abi3 that the admission expression does not name, so the distance is wiring per engine and not design.",
+  "unmapped_kernel_kinds": {},
+  "wire_an_existing_module": 13
+}

@@ -1,0 +1,62 @@
+{
+  "hbm_single_chip": {
+    "capability_digest": "2f41529361302f00ff44960595bdd577d4b5e6246fe158c3868093004b774ce7",
+    "checker_findings": 21,
+    "finding_shapes": {
+      "axis_extent_exceeds_one_loop_iteration": 8,
+      "generated_constant_not_declared_by_the_graph": 2,
+      "verifier_rejected_the_deployment": 1,
+      "view_exceeds_object": 10
+    },
+    "graph_id": "85c5b2fabe90b9033f0cadf7e8e8045439ff2eccfdd3fe31bcd4df8132316c14",
+    "note": "The remaining view findings all trace to the indexer's per-token selection scratch, declared capacity_rows = 1, read by a span-wide consumer under a layer-outer schedule. The ROM wafer backend does not have this problem, which is why that store is admitted and this one is not yet.",
+    "plan_id": "417081be9a57842b086807d2fc48a9fab67b0d0fd62f9b941db24a0be449c063",
+    "profile": "single-chip-comparator",
+    "status": "lowers; legality findings outstanding"
+  },
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "rom_array_64": {
+    "reason": "region 'rom.r0.p059.s1' has 12 members per slot, which do not divide into 64 owners. The reduction scales n_routed_experts by the width factor, 192/16 = 12, and a 64-owner array needs the expert count to divide by 64. This is a property of the reduced vehicle's shape, not of the array backend: the released 192 divides 64 three ways.",
+    "status": "refused"
+  },
+  "rom_wafer": {
+    "capability_digest": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
+    "deployment_sha256": "4adb830b51012a86099569b489bc89b5679048f681f477ac3cf5de16e38146a4",
+    "descriptor_count": 9710,
+    "descriptors_by_type": {
+      "COMMUNICATION": 49,
+      "COUNTER_CLASS": 9,
+      "ENTRYPOINT_TABLE": 1,
+      "EVENT_WAIT_SET": 1172,
+      "GENERATION_POLICY": 1,
+      "LOOP_CONTROL": 1347,
+      "MEMORY_OBJECT": 1492,
+      "NUMERIC": 73,
+      "OPERATOR": 1417,
+      "PREDICATE": 5,
+      "SCHEDULE": 97,
+      "STATE": 3,
+      "TENSOR_VIEW": 4043,
+      "TOPOLOGY": 1
+    },
+    "deterministic": {
+      "descriptor_table_identical": true,
+      "manifest_identical": true,
+      "plan_identical": true,
+      "program_identical": true
+    },
+    "instruction_count": 4337,
+    "loop_count": 1347,
+    "mutable_state_bytes": 55463362,
+    "plan_id": "eea08d2764dfa2e3abaed3f7d8a33652dc267dde352cdafe367bd6793287d9a1",
+    "product": "deepseek-v4.1-flash-rom",
+    "region_count": 821,
+    "rom_generated_bytes": 41968252,
+    "rom_payload_bytes": 25727664,
+    "status": "admitted",
+    "target_id": "deepseek-v4.1-flash-rom-wafer-2",
+    "verifier_admitted": true
+  },
+  "schema": "opentallas.deepseek_v41_reduced_deployments.v1",
+  "what_this_is": "The first deployments of any DeepSeek-V4.1-Flash graph on either store. The vehicle is the reduced fixture (dim 160, vocab 4,040, 40 layers, window 128), so these are shape-reduced deployments of the full operator set, not shipped dimensions."
+}
