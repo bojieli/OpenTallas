@@ -86,6 +86,47 @@
   "critical_path_detail": {
     "blocker": {
       "and_those_instances_are_superseded": "The campaign binds deployment sha256 34ca189c... which is on disk as build/abi3/deepseek-v4-flash-rom-PRE-AM-E9. The current shipped ROM deployment is 3a240986... with 3,135 descriptors against that one's 3,405 -- 270 fewer at the same 1,323 instructions -- so AM-E9 removed descriptors and ids at or after the first removal shifted. The HBM deployment the campaign names is not on disk at all.",
+      "measured_2026_09_17": {
+        "consequence": "The connection work is much smaller than generalising 83 predicates. For the ROM store the engine's gates already match the shipped program and it can be connected as it stands. For HBM two constants are stale -- the operator id and, by the same shift, its wait set. Re-pinning them is a two-line change that would then be stale again after the next descriptor-count change, which is the argument for deriving both from the record instead; but it is not a blocker to a first token on ROM.",
+        "hbm": {
+          "descriptors": 3341,
+          "mhc_operator_count": 17,
+          "mhc_operator_descriptor_ids": [
+            547,
+            866,
+            875,
+            1067,
+            1076,
+            1717,
+            1727,
+            1896,
+            1906,
+            2325
+          ],
+          "pinned_id_545_still_names_mhc": false,
+          "verdict": "THE HBM PINNING HAS DRIFTED BY TWO. The first MHC operator is descriptor 547, not the 545 the engine gates on, so the engine would refuse the current HBM program at its instruction gate. The deployment the campaign names (ec7cff23...) is not on disk, so the drift cannot be attributed to a particular change here."
+        },
+        "method": "Both deployments rebuilt from the shipped graph at HEAD and every descriptor scanned for engine_family VECTOR with engine_sub MHC. The ROM rebuild reproduces the on-disk digest 3a240986..., so that deployment is current.",
+        "question": "Do the HC_PRE engine's pinned descriptor constants still apply to the CURRENT shipped deployments? The engine gates on ROM program counter 15 / operator 381 / wait set 382 and HBM program counter 14 / operator 545 / wait set 546, and the campaign that qualified it binds a PRE-AM-E9 ROM deployment.",
+        "rom": {
+          "descriptors": 3135,
+          "mhc_operator_count": 17,
+          "mhc_operator_descriptor_ids": [
+            381,
+            711,
+            720,
+            923,
+            939,
+            1570,
+            1580,
+            1742,
+            1755,
+            2181
+          ],
+          "pinned_id_381_still_names_mhc": true,
+          "verdict": "THE ROM PINNING HOLDS. Descriptor 381 is still the VECTOR.MHC operator (family 0x30, sub 9) in the current deployment, so AM-E9 removed 270 descriptors from later in the table and left this one where it was."
+        }
+      },
       "what": "ot_a3_vector_mhc_pre_tile_scheduler gates admission on 83 field comparisons across five gates, and they are pinned to two exact descriptor INSTANCES: ROM program counter 15 with operator descriptor 381 and wait set 382, HBM program counter 14 with operator 545 and wait set 546.",
       "what_is_not_established_here": "whether descriptor 381 still names the MHC operator in the current deployment. The count difference proves ids moved, not which ones; checking that is the first concrete step, and it decides whether the engine needs re-pinning against the current program or generalising outright.",
       "which_constants_are_which": "Of the 83, the dtypes, HC_EPSILON and the 256-bit contract digest ARE the operator's identity and should stay pinned. The program counters, operator and wait-set ids, and the per-store schedule tiling words 54..62 are properties of one build of one program and are what must be derived from the record instead. The datapath behind the gates already reads the record generically, which is the same shape as the frozen-admission-predicate pattern that froze Qwen3 at a fixed shape earlier in this work."
