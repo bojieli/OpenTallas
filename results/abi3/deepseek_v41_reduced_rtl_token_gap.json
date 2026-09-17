@@ -82,149 +82,186 @@
     "m0_reads_result",
     "m1_reads_result"
   ],
+  "critical_path": "HYPER_CONNECT_PRE is the first refusal in both DeepSeek graphs, so it is the whole critical path until it is done -- and its engine is ot_a3_hc_pre_t1_descriptor_rne.sv, already synthesizable and already qualified against both stores' shipped descriptors (results/rtl/a3_hc_pre_t1_campaign.json: 1,379,450 checks per simulator, dual-simulator agreement, ROM/HBM output parity, all 74 numeric boundary words exact). The remaining work is a bridge connection, not arithmetic: admit the operation, route to that engine, and emit its 8 weight and 16 combination words -- both register bundles, so the BIASED_TOPK two-pass emit applies rather than needing a second physical write port.",
   "forced_order": [
     {
+      "engine": "ot_a3_hc_pre_t1_descriptor_rne.sv",
       "kernel_kind": "HYPER_CONNECT_PRE",
       "numeric_contracts_needed": 1,
       "operands_needed": 4,
       "operation": "VECTOR.MHC",
       "position": 3,
+      "qualified_by": "results/rtl/a3_hc_pre_t1_campaign.json",
       "results_needed": 2
     },
     {
+      "engine": null,
       "kernel_kind": "QUANTIZE",
       "numeric_contracts_needed": 7,
       "operands_needed": 1,
       "operation": "VECTOR.CONVERT",
       "position": 8,
+      "qualified_by": null,
       "results_needed": 2
     },
     {
+      "engine": null,
       "kernel_kind": "DEQUANTIZE",
       "numeric_contracts_needed": 4,
       "operands_needed": 2,
       "operation": "VECTOR.CONVERT",
       "position": 21,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "CONCAT",
       "numeric_contracts_needed": 5,
       "operands_needed": 4,
       "operation": "REDUCTION.GROUPED_CONCAT",
       "position": 43,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": "ot_a3_vector_mhc_post.sv",
       "kernel_kind": "HYPER_CONNECT_POST",
       "numeric_contracts_needed": 1,
       "operands_needed": 4,
       "operation": "VECTOR.MHC",
       "position": 48,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "SCALE",
       "numeric_contracts_needed": 3,
       "operands_needed": 1,
       "operation": "VECTOR.SCALE",
       "position": 59,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "EXPERT_DISPATCH",
       "numeric_contracts_needed": 1,
       "operands_needed": 2,
       "operation": "ROUTE.EXPERT_DISPATCH",
       "position": 60,
+      "qualified_by": null,
       "results_needed": 2
     },
     {
+      "engine": null,
       "kernel_kind": "ROUTED_MATMUL",
       "numeric_contracts_needed": 3,
       "operands_needed": 3,
       "operation": "TENSOR.ROUTED_MATMUL",
       "position": 62,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "MUL",
       "numeric_contracts_needed": 1,
       "operands_needed": 2,
       "operation": "VECTOR.SCALE",
       "position": 65,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "NGRAM_HASH",
       "numeric_contracts_needed": 3,
       "operands_needed": 3,
       "operation": "DMA.NGRAM_HASH",
       "position": 76,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "ENGRAM_GATE",
       "numeric_contracts_needed": 1,
       "operands_needed": 4,
       "operation": "VECTOR.ENGRAM_GATE",
       "position": 84,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "COMPRESS_PROJECT",
       "numeric_contracts_needed": 1,
       "operands_needed": 3,
       "operation": "VECTOR.COMPRESS",
       "position": 179,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "COMPRESS_STATE_UPDATE",
       "numeric_contracts_needed": 1,
       "operands_needed": 1,
       "operation": "VECTOR.COMPRESS",
       "position": 180,
+      "qualified_by": null,
       "results_needed": 2
     },
     {
+      "engine": null,
       "kernel_kind": "COMPRESS_POOL",
       "numeric_contracts_needed": 1,
       "operands_needed": 2,
       "operation": "VECTOR.COMPRESS",
       "position": 181,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "INDEX_SCORE",
       "numeric_contracts_needed": 1,
       "operands_needed": 3,
       "operation": "VECTOR.INDEX_SCORE",
       "position": 199,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "INDEX_TOPK",
       "numeric_contracts_needed": 2,
       "operands_needed": 3,
       "operation": "ROUTE.INDEX_TOPK",
       "position": 200,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "BLOCK_MAX",
       "numeric_contracts_needed": 1,
       "operands_needed": 1,
       "operation": "ROUTE.BLOCK_MAX",
       "position": 1671,
+      "qualified_by": null,
       "results_needed": 1
     },
     {
+      "engine": null,
       "kernel_kind": "CANDIDATE_MASK",
       "numeric_contracts_needed": 1,
       "operands_needed": 1,
       "operation": "ROUTE.CANDIDATE_MASK",
       "position": 1673,
+      "qualified_by": null,
       "results_needed": 1
     }
   ],

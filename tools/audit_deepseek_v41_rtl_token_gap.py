@@ -73,6 +73,30 @@ MODULE_OVERRIDES = {
 #: decodes ``A3_MAJOR_STATE`` and counts ``A3_STATE_READ`` itself.
 NOT_BRIDGE_EXECUTED = {"STATE": "ot_a3_state_controller.sv"}
 
+#: Kernel KINDS whose engine is a descriptor-level module beside the array rather
+#: than a named-after-the-opcode one in it, with the campaign that qualified it.
+#:
+#: Searching by opcode name missed the most important entry and reported the
+#: critical path as an engine that had to be designed.  ``HYPER_CONNECT_PRE``'s
+#: engine exists, is synthesizable, and is qualified against the REAL descriptors
+#: of both stores' shipped programs -- HBM PC14/operator 545 and ROM PC15/operator
+#: 381 -- over 1,379,450 checks per simulator with the two simulators agreeing, all
+#: 74 numeric boundary words exact, and ROM/HBM output parity.  It emits the two
+#: results this kind needs as register bundles: 8 weight words and 16 combination
+#: words.  What it is not is connected to the issue bridge.
+#:
+#: That distinction matters because the two tasks are not the same size.  Composing
+#: correctly-rounded softmax-and-Sinkhorn arithmetic is weeks; routing a qualified
+#: engine's registered results through the bridge is the BIASED_TOPK two-pass emit
+#: again, which is already precedented in this file's neighbour.
+KIND_ENGINE_OVERRIDES = {
+    "HYPER_CONNECT_PRE": (
+        "ot_a3_hc_pre_t1_descriptor_rne.sv",
+        "results/rtl/a3_hc_pre_t1_campaign.json",
+    ),
+    "HYPER_CONNECT_POST": ("ot_a3_vector_mhc_post.sv", None),
+}
+
 ARRAY = ROOT / "rtl/abi3/ot_a3_engine_array.sv"
 
 
@@ -309,6 +333,8 @@ def audit(ir_path: Path) -> dict[str, object]:
                 "operands_needed": max(shape["operands"]),
                 "results_needed": max(shape["results"]),
                 "numeric_contracts_needed": len(shape["contracts"]),
+                "engine": KIND_ENGINE_OVERRIDES.get(kind, (None, None))[0],
+                "qualified_by": KIND_ENGINE_OVERRIDES.get(kind, (None, None))[1],
             }
         )
     return {
@@ -345,6 +371,19 @@ def audit(ir_path: Path) -> dict[str, object]:
         "refused": rows,
         "unmapped_kernel_kinds": dict(unmapped),
         "forced_order": by_order,
+        "critical_path": (
+            "HYPER_CONNECT_PRE is the first refusal in both DeepSeek graphs, so it "
+            "is the whole critical path until it is done -- and its engine is "
+            "ot_a3_hc_pre_t1_descriptor_rne.sv, already synthesizable and already "
+            "qualified against both stores' shipped descriptors "
+            "(results/rtl/a3_hc_pre_t1_campaign.json: 1,379,450 checks per "
+            "simulator, dual-simulator agreement, ROM/HBM output parity, all 74 "
+            "numeric boundary words exact). The remaining work is a bridge "
+            "connection, not arithmetic: admit the operation, route to that engine, "
+            "and emit its 8 weight and 16 combination words -- both register "
+            "bundles, so the BIASED_TOPK two-pass emit applies rather than needing "
+            "a second physical write port."
+        ),
         "forced_order_note": (
             "A refused operation stops the program, so no kernel after the first "
             "refusal is reachable and the program's own order fixes the order the "
