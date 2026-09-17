@@ -1,8 +1,44 @@
 {
+  "asap7_prelayout_fmax_search": {
+    "corner": "default",
+    "depth1": {
+      "cell_area_um2": 16077.147,
+      "cell_count": 116941,
+      "min_clock_period_ns": 2.55596923828125
+    },
+    "depth1_repeat_a": {
+      "cell_area_um2": 16077.147,
+      "cell_count": 116941,
+      "min_clock_period_ns": 2.55596923828125
+    },
+    "depth1_repeat_b": {
+      "cell_area_um2": 16077.147,
+      "cell_count": 116941,
+      "min_clock_period_ns": 2.55596923828125
+    },
+    "depth2": {
+      "cell_area_um2": 16048.649,
+      "cell_count": 116412,
+      "min_clock_period_ns": 2.5177001953125
+    },
+    "determinism": "depth 1 was run three times and returned 2.5560 ns and 116,941 cells every time, so this flow is deterministic for a fixed input and the depth-1 vs depth-2 difference is a measurement rather than scatter.",
+    "finding": "Splitting the 128-range conflict reduction gains 1.5% of the module's minimum period, not the 2.00x sustained throughput the iso-area audit sized from it. That reduction is not what binds this module, so the audit's highest-leverage change does not deliver what it was sized at, and the sizing should not be pursued on this path.",
+    "gain_percent": 1.5,
+    "method": "--fmax-search bisects the clock period for the shortest meeting setup",
+    "popcount_diagnostic": {
+      "cell_count": 118233,
+      "min_clock_period_ns": 14.993408203125,
+      "reading": "REMOVING logic made the module 5.9x slower with 1,292 MORE cells, and since the flow is deterministic this is a real synthesis effect rather than noise: the popcount's presence is steering the mapping of the reduction it shares range_valid with. It is recorded because it says the module's period is set by how Yosys maps this cone and not by the cone's logical depth, which is also why splitting the depth bought 1.5%. Not investigated further here.",
+      "what": "a run with dbg_ranges_used's 128-long serial 8-bit adder chain deleted, to test whether that debug counter was the binding path"
+    },
+    "stages": "synth,sta",
+    "view": "asap7"
+  },
   "does_not_establish": [
     "any frequency, area or throughput claim: this is behaviour only",
     "that a consumer tolerates the extra cycle -- ot_a3_microsequencer reads the conflict one cycle after the check and must be changed before CHECK_STAGES = 2 can be adopted in the control plane",
-    "that the 2.00x sustained sizing in the iso-area audit is a result; that needs a closed routed record of the full control plane"
+    "that the 2.00x sustained sizing in the iso-area audit is a result; that needs a closed routed record of the full control plane",
+    "that the iso-area audit's 16.10 ns pre-layout figure for this module is wrong in itself: this measures 2.56 ns at the same stage class on the same PDK, the two do not reconcile, and the audit already flags them as unreconciled with 7 of its 12 sources drifted"
   ],
   "establishes": [
     "CHECK_STAGES = 1 is cycle-for-cycle identical to the module as committed, on both conflict outputs and on dbg_ranges_used",
