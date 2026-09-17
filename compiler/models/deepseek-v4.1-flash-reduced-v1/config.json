@@ -153,5 +153,18 @@
     "use_cache": true,
     "vocab_size": 4040
   },
-  "transformers_version": "5.6.0"
+  "transformers_version": "5.6.0",
+  "vision_config": {
+    "downsample_ratio": 3,
+    "hidden_size": 1024,
+    "intermediate_size": 2816,
+    "max_image_tokens": 1024,
+    "max_wh_ratio": null,
+    "min_pixels": 295936,
+    "model_type": "deepseek_v41_vision",
+    "num_attention_heads": 16,
+    "num_hidden_layers": 0,
+    "patch_size": 14,
+    "rope_theta": 10000
+  }
 }

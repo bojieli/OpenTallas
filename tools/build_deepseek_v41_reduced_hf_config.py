@@ -96,6 +96,21 @@ RENAMED: Mapping[str, str] = {
 #: is what keeps the released-pair test meaningful.
 OPTIONAL: Mapping[str, str] = {"max_position_embeddings": "max_seq_len"}
 
+#: The vision tower's own section, hf_name <- inference_name. Verified against
+#: the released pair exactly like the architecture map, all ten fields.
+VISION: Mapping[str, str] = {
+    "num_hidden_layers": "vision_n_layers",
+    "hidden_size": "vision_dim",
+    "num_attention_heads": "vision_n_heads",
+    "intermediate_size": "vision_inter_dim",
+    "patch_size": "vision_patch_size",
+    "rope_theta": "vision_rope_theta",
+    "downsample_ratio": "vision_downsample_ratio",
+    "max_image_tokens": "vision_max_n_token",
+    "min_pixels": "vision_min_pixels",
+    "max_wh_ratio": "vision_max_wh_ratio",
+}
+
 #: No runtime counterpart in either form; carried unchanged.
 CARRIED = (
     "attention_bias", "attention_dropout", "hidden_act", "initializer_range",
@@ -130,6 +145,17 @@ def translate_architecture(
     return out
 
 
+def translate_vision(
+    inference: Mapping[str, Any], released_vision: Mapping[str, Any]
+) -> dict[str, Any]:
+    """One inference config's vision fields as a HuggingFace vision section."""
+
+    out = {"model_type": released_vision["model_type"]}
+    for hf_key, inf_key in VISION.items():
+        out[hf_key] = inference[inf_key]
+    return out
+
+
 def prove_against_released() -> dict[str, Any]:
     """Reproduce the released architecture section from the released runtime one."""
 
@@ -150,8 +176,20 @@ def prove_against_released() -> dict[str, Any]:
             "the map does not reproduce the released architecture section: "
             f"missing={missing} extra={extra} differing={differing}"
         )
+    released_vision = released_root["vision_config"]
+    rebuilt_vision = translate_vision(released_inference, released_vision)
+    vision_differs = sorted(
+        key for key in set(released_vision) | set(rebuilt_vision)
+        if released_vision.get(key) != rebuilt_vision.get(key)
+    )
+    if vision_differs:
+        raise ConfigTranslationError(
+            "the map does not reproduce the released vision section: "
+            f"differing={vision_differs}"
+        )
     return {
         "fields_reproduced": len(released_text),
+        "vision_fields_reproduced": len(released_vision),
         "released_config_is_reproduced_exactly": True,
     }
 
@@ -191,10 +229,17 @@ def build_reduced_root() -> dict[str, Any]:
         "quantization_config": quantization,
         "text_config": translate_architecture(reduced_inference, released_text),
         "transformers_version": released_root["transformers_version"],
+        #: THE TOWER IS PRESENT AND ZERO LAYERS DEEP, not omitted. The reduction
+        #: records reduced_vision_n_layers 0 against the release's 32, and the
+        #: reduced runtime config says exactly that while leaving every other
+        #: vision width alone -- so this section is the reduction's own
+        #: statement rather than an absence. Omitting it instead makes
+        #: build_official_tensor_specs refuse, because it resolves the section
+        #: to decide whether the release has a tower at all.
+        "vision_config": translate_vision(
+            reduced_inference, released_root["vision_config"]
+        ),
     }
-    #: NO vision_config. The reduction excludes the tower --
-    #: reduced_vision_n_layers 0 against the release's 32 -- because the
-    #: workload is text only and the tower is not on a text token's decode path.
     return root
 
 
@@ -205,8 +250,9 @@ def main() -> int:
     args = ap.parse_args()
 
     proof = prove_against_released()
-    print(f"map reproduces the released architecture section exactly: "
-          f"{proof['fields_reproduced']} fields")
+    print(f"map reproduces the released config exactly: "
+          f"{proof['fields_reproduced']} architecture fields and "
+          f"{proof['vision_fields_reproduced']} vision fields")
 
     root = build_reduced_root()
     text = json.dumps(root, indent=2, sort_keys=True) + "\n"

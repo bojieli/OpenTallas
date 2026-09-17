@@ -1,0 +1,36 @@
+{
+ "accounted_for_by_the_vision_exclusion": {
+  "count": 53,
+  "patterns": {
+   "aligner.wN.bias": 2,
+   "aligner.wN.weight": 2,
+   "image_end": 1,
+   "image_newline": 1,
+   "image_start": 1,
+   "layers.N.ffn.gate.bias_vl": 40,
+   "mtp.N.ffn.gate.bias_vl": 3,
+   "vision.norm.weight": 1,
+   "vision.patch_embed.proj.bias": 1,
+   "vision.patch_embed.proj.weight": 1
+  },
+  "why": "the reduction record's vision_excluded: reduced_vision_n_layers 0 against the release's 32, the workload being text only. bias_vl is here because the adapter gates it on the tower"
+ },
+ "checkpoint_holds": 4221,
+ "derived": 4317,
+ "derived_but_absent": 96,
+ "positive_control": {
+  "derived": 96085,
+  "release_pins": 96085,
+  "reproduced": true
+ },
+ "present_but_not_derived": 0,
+ "unaccounted_for": {
+  "count": 43,
+  "patterns": {
+   "layers.N.attn.wo_a.scale": 40,
+   "mtp.N.attn.wo_a.scale": 3
+  },
+  "why": "nothing in the reduction record justifies these. The adapter builds attn.wo_a with fp8_linear exactly as it builds wo_b, wq_a, wq_b and wkv; the checkpoint holds those four scales and wo_a's weight, but not wo_a's scale"
+ },
+ "verdict": "the reduced checkpoint is missing tensors its own config implies"
+}
