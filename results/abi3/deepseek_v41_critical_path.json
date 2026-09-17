@@ -183,6 +183,17 @@
             "dut.device.desc_valid",
             "dut.device.desc_data"
           ],
+          "fetch_order_measured_from_the_state_machine": {
+            "begin_valid_resolved": "the ins_* writes are non-blocking in the decode cycle, so they are visible from the next cycle, while the first desc_valid cannot arrive until the request issued in that same cycle has been serviced. A pulse derived from ins_descriptor_id changing therefore precedes every fetch of that instruction, which is what the tap needs. This was the detail left unmeasured; it is measured.",
+            "method": "read from ot_a3_microsequencer.sv rather than simulated, because the order is decided by the state machine and a simulation would only sample one program.",
+            "order": [
+              "decode cycle (line ~1491): writes every ins_* register AND asserts seq_desc_req for the PREDICATE if the instruction is predicated, otherwise for the WAIT SET. So the first descriptor fetched is NOT the operator.",
+              "S_WAIT_WAIT (1656): consumes the wait set, refusing anything whose type is not EVENT_WAIT_SET, then S_WAIT_EVAL",
+              "S_DISPATCH (1679, requesting at ~1734): seq_desc_id <= ins_descriptor_id -- the OPERATOR -- then S_ENG_WAIT",
+              "then the numeric profile and S_SCHED_WAIT's schedule, then the resolver bank's views"
+            ],
+            "the_collector_is_compatible": "and this was worth checking rather than assuming. Its is_wait term is deliberately NOT gated on have_operator, so the wait set arriving first is collected; is_operator fires on the second fetch; and every other role is gated on have_operator and arrives after the operator. The design's one requirement -- that the operator precede the ten descriptors it names -- is exactly what the sequencer does, because it learns those ids from the operator too."
+          },
           "harness_already_exists": "rtl/test/tb_a3_deployment.sv replays the DeepSeek-V4-Flash ROM wafer and HBM cluster programs through the real control plane from their own deployment images, on both entrypoints, and reaches 37 of the 37 opcodes the shipped programs issue. The sequencer ALREADY fetches HC_PRE's descriptors there, so the tap needs no new program, deployment or store.",
           "hierarchy": "tb_a3_deployment.dut (ot_a3_microsequencer_top) -> .device (ot_a3_device_top) -> .sequencer (ot_a3_microsequencer)",
           "instruction_registers": [
