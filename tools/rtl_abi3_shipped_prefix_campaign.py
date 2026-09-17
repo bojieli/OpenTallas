@@ -185,6 +185,19 @@ RTL_SOURCES = (
     "rtl/proto/ot_fp32_mul_rne_pipe.sv",
     "rtl/abi3/ot_a3_reduction_expert_sum.sv",
     "rtl/abi3/ot_a3_place_table.sv",
+    #: ATTENTION.SPARSE and the eight parts it composes. The bridge
+    #: instantiates the engine, so every list that elaborates the bridge
+    #: needs them -- a missing entry is not a missing test, it is a
+    #: MODMISSING at elaboration and a campaign that cannot run at all.
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+    "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+    "rtl/abi3/ot_a3_attention_kv_index.sv",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv",
+    "rtl/abi3/ot_a3_attention_denominator.sv",
+    "rtl/abi3/ot_a3_attention_epilogue.sv",
+    "rtl/abi3/ot_a3_attention_qk_walk.sv",
+    "rtl/abi3/ot_a3_attention_av_walk.sv",
+    "rtl/abi3/ot_a3_attention_sparse.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (

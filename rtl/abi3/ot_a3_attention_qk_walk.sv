@@ -86,6 +86,7 @@ module ot_a3_attention_qk_walk #(
 
     integer i;
 
+    localparam [2:0] S_BASE  = 3'd6;
     localparam [2:0] S_IDLE  = 3'd0;
     localparam [2:0] S_QHOLD = 3'd5;
     localparam [2:0] S_WALK  = 3'd1;
@@ -100,6 +101,29 @@ module ot_a3_attention_qk_walk #(
     reg [1:0]  qphase;
     reg [31:0] scale_lane;
     reg [31:0] acc [0:LANES-1];
+    //: EVERY LANE'S ROW ADDRESS, COMPUTED ONCE.
+    //:
+    //: The inner loop's address is base + row[lane]*stride + depth, and `lane`
+    //: advances every cycle, so writing it that way puts a 64-way mux, a 32x32
+    //: multiply and two adds between the lane counter and the address register.
+    //: Routed on ASAP7 that was this block's critical path as soon as the
+    //: product-add stopped being it: lane[1] to kv_rd_addr[30] at -239 ps in a
+    //: 1.2 ns period, for 694.9 MHz.
+    //:
+    //: Nothing in base + row[lane]*stride depends on the reduction index, so it
+    //: is computed once per launch into one register per lane and the inner loop
+    //: becomes a mux and an add. The setup costs LANES cycles against the
+    //: LANES * head_dim issue cycles that follow -- 64 against 32,768 at the
+    //: shipped head width.
+    reg [31:0] row_addr [0:LANES-1];
+    reg [31:0] base_lane;
+    //: AND THE MULTIPLY IS PIPELINED THERE, because static timing does not care
+    //: how often a path runs: hoisting it into its own state shortens no path by
+    //: itself. Splitting it into two 16x32 halves with a register between is what
+    //: shortens it, and the setup state has the cycles to spare.
+    reg [31:0] mul_a, mul_b;
+    reg [47:0] part_lo, part_hi;
+    reg [1:0]  base_phase;
     reg [15:0] q_held;
     //: The lane and liveness that produced the address now on the kv bus.
     reg [31:0] kv_rd_lane;
@@ -191,6 +215,9 @@ module ot_a3_attention_qk_walk #(
         if (!rst_n) begin
             state <= S_IDLE;
             depth <= 32'd0; lane <= 32'd0; drain <= 32'd0; scale_lane <= 32'd0;
+            base_lane <= 32'd0; base_phase <= 2'd0;
+            mul_a <= 32'd0; mul_b <= 32'd0;
+            part_lo <= 48'd0; part_hi <= 48'd0;
             qphase <= 2'd0;
             q_rd_en <= 1'b0; q_rd_addr <= 32'd0;
             kv_rd_en <= 1'b0; kv_rd_addr <= 32'd0;
@@ -227,8 +254,37 @@ module ot_a3_attention_qk_walk #(
                         end else begin
                             error_code <= ERR_NONE;
                             busy <= 1'b1;
+                            base_lane <= 32'd0;
+                            base_phase <= 2'd0;
+                            state <= S_BASE;
+                        end
+                    end
+                end
+
+                //: One lane's row address per pass through the two multiply
+                //: halves. The row goes through the same validity gate the walk
+                //: applies to the element, so an invalid lane addresses row zero
+                //: rather than whatever -1 resolves to.
+                S_BASE: begin
+                    if (base_phase == 2'd0) begin
+                        mul_a <= lane_valid[base_lane[$clog2(LANES)-1:0]]
+                                 ? lane_row[base_lane[$clog2(LANES)-1:0]*32 +: 32]
+                                 : 32'd0;
+                        mul_b <= cfg_kv_stride;
+                        base_phase <= 2'd1;
+                    end else if (base_phase == 2'd1) begin
+                        part_lo <= {16'd0, mul_a[15:0]} * {16'd0, mul_b};
+                        part_hi <= {16'd0, mul_a[31:16]} * {16'd0, mul_b};
+                        base_phase <= 2'd2;
+                    end else begin
+                        row_addr[base_lane[$clog2(LANES)-1:0]] <=
+                            cfg_kv_base + part_lo[31:0] + {part_hi[15:0], 16'd0};
+                        base_phase <= 2'd0;
+                        if (base_lane + 32'd1 >= LANES[31:0]) begin
                             qphase <= 2'd0;
                             state <= S_QHOLD;
+                        end else begin
+                            base_lane <= base_lane + 32'd1;
                         end
                     end
                 end
@@ -257,8 +313,8 @@ module ot_a3_attention_qk_walk #(
                     kv_rd_en <= 1'b1;
                     kv_rd_lane <= lane;
                     kv_rd_live <= lane_valid[lane[$clog2(LANES)-1:0]];
-                    kv_rd_addr <= cfg_kv_base +
-                                  lane_row[lane*32 +: 32] * cfg_kv_stride + depth;
+                    //: A mux and an add. The multiply is gone from this path.
+                    kv_rd_addr <= row_addr[lane[$clog2(LANES)-1:0]] + depth;
                     if (lane + 32'd1 >= LANES[31:0]) begin
                         lane <= 32'd0;
                         if (depth + 32'd1 >= cfg_head_dim) begin

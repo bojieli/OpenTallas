@@ -110,11 +110,21 @@ module ot_a3_attention_av_walk #(
     reg [15:0] kv_rd_prob;
     reg [15:0] b_prob;
     //: The lane's row base, multiplied ONCE per lane instead of once per
-    //: channel. The inner loop runs cfg_channels times per lane, so computing
-    //: lane_row * cfg_kv_stride inside it puts a 32x32 multiply in the address
-    //: path of every issue cycle to save one register. S_PHOLD is idle while the
-    //: probability read lands, so the multiply is free there.
+    //: channel: the inner loop runs cfg_channels times per lane, so computing
+    //: lane_row * cfg_kv_stride inside it would put a 32x32 multiply in the
+    //: address path of every issue cycle to save one register.
+    //:
+    //: AND THE MULTIPLY IS SPLIT ACROSS S_PHOLD's THREE PHASES, because static
+    //: timing does not care how often a path runs -- a multiply reached once
+    //: per lane is still a multiply in a one-cycle path, and in the QK walk the
+    //: same expression was that block's critical path at -239 ps in 1.2 ns once
+    //: the product-add stopped being it. Two 16x32 halves with a register
+    //: between cost two extra cycles per lane, against cfg_channels issue
+    //: cycles: 3 in 512 at the shipped head width.
     reg [31:0] row_base;
+    reg [31:0] mul_row, mul_stride;
+    reg [47:0] part_lo, part_hi;
+    reg [1:0]  pphase;
     reg [31:0] acc [0:CHANNELS_MAX-1];
     integer i;
 
@@ -224,7 +234,9 @@ module ot_a3_attention_av_walk #(
             kv_rd_prob <= 16'd0;
             kv_rd_en <= 1'b0; kv_rd_addr <= 32'd0;
             kv_rd_chan <= 32'd0; kv_rd_live <= 1'b0;
-            row_base <= 32'd0;
+            row_base <= 32'd0; pphase <= 2'd0;
+            mul_row <= 32'd0; mul_stride <= 32'd0;
+            part_lo <= 48'd0; part_hi <= 48'd0;
             mul_vin <= 1'b0; mul_a <= 32'd0;
             for (i = 0; i < CHANNELS_MAX; i = i + 1) acc[i] <= 32'd0;
         end else begin
@@ -273,6 +285,7 @@ module ot_a3_attention_av_walk #(
                                 for (i = 0; i < CHANNELS_MAX; i = i + 1)
                                     acc[i] <= 32'd0;
                                 lane <= 32'd0;
+                                pphase <= 2'd0;
                                 state <= S_PHOLD;
                             end else begin
                                 state <= S_SCALE;
@@ -314,19 +327,30 @@ module ot_a3_attention_av_walk #(
                 S_SDRAIN: begin
                     if (drain >= MUL_LAT[31:0] + 32'd2) begin
                         lane <= 32'd0;
+                        pphase <= 2'd0;
                         state <= S_PHOLD;
                     end else begin
                         drain <= drain + 32'd1;
                     end
                 end
 
-                //: One cycle per lane, to multiply the row base. The
-                //: probability needs no read: it is on the bus.
+                //: Three cycles per lane, to multiply the row base in two
+                //: halves. The probability needs no read: it is on the bus.
                 S_PHOLD: begin
-                    row_base <= lane_row[lane[$clog2(LANES_MAX)-1:0]*32 +: 32]
-                                * cfg_kv_stride;
-                    chan <= 32'd0;
-                    state <= S_ACCUM;
+                    if (pphase == 2'd0) begin
+                        mul_row <= lane_row[lane[$clog2(LANES_MAX)-1:0]*32 +: 32];
+                        mul_stride <= cfg_kv_stride;
+                        pphase <= 2'd1;
+                    end else if (pphase == 2'd1) begin
+                        part_lo <= {16'd0, mul_row[15:0]} * {16'd0, mul_stride};
+                        part_hi <= {16'd0, mul_row[31:16]} * {16'd0, mul_stride};
+                        pphase <= 2'd2;
+                    end else begin
+                        row_base <= part_lo[31:0] + {part_hi[15:0], 16'd0};
+                        pphase <= 2'd0;
+                        chan <= 32'd0;
+                        state <= S_ACCUM;
+                    end
                 end
 
                 //: lane OUTSIDE, channel INSIDE -- the reference's schedule.
@@ -342,6 +366,7 @@ module ot_a3_attention_av_walk #(
                             state <= S_ADRAIN;
                         end else begin
                             lane <= lane + 32'd1;
+                            pphase <= 2'd0;
                             state <= S_PHOLD;
                         end
                     end else begin
