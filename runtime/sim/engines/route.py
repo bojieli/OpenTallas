@@ -441,9 +441,27 @@ def expert_dispatch(ctx: EngineContext, sub: int, descriptor: Descriptor) -> Non
 # ---------------------------------------------------------------------------
 # INDEX_TOPK and WINDOW_INDEX
 # ---------------------------------------------------------------------------
+#: ``aux_id_1`` bit above the mask mode: THE RANKED AXIS IS NOT A KV ROW SPACE.
+#: A top-k over candidate BLOCKS emits block identifiers, which index the
+#: candidate axis of a mask and not the joined key/value rows -- so there is
+#: nothing for them to be rebased above, and rebasing them produced ids outside
+#: the block count (15 + 128 = 143 against 16 blocks) that ROUTE.CANDIDATE_MASK
+#: refused.  Carried as a BIT ABOVE the mode rather than as a fifth aux word
+#: because the payload has exactly four, and set only by a kernel that declares a
+#: ``block`` -- so every deployment written before this one is unchanged, which
+#: matters: 41 of V4-Flash's INDEX_TOPK kernels rank KV rows and must keep
+#: rebasing.
+RANKS_BLOCKS = 0x4
+
+
+def _ranks_blocks(descriptor: Descriptor, slot: int) -> bool:
+    value = _aux(descriptor, slot)
+    return bool(value is not None and int(value) & RANKS_BLOCKS)
+
+
 def _mask_mode(descriptor: Descriptor, slot: int) -> int:
     mode = _aux(descriptor, slot)
-    mode = MASK_CAUSAL if mode is None else mode
+    mode = MASK_CAUSAL if mode is None else int(mode) & ~RANKS_BLOCKS
     _require(mode in (MASK_CAUSAL, MASK_FULL), f"ROUTE: unknown mask mode {mode}")
     return mode
 
@@ -609,7 +627,7 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     # physical circular-window capacity even before all of its slots are valid.
     rebase = (
         (context if phase is Phase.PREFILL else window)
-        if ratio_view is not None
+        if ratio_view is not None and not _ranks_blocks(descriptor, 1)
         else 0
     )
 

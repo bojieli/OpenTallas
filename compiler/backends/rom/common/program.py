@@ -730,6 +730,14 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
 #: ``selected_rows_ratioN``
 #:     a selection that carries one row per group plus a whole group of
 #:     window rows, ``S // N + N``.
+#: ``aux_id_1`` bit of ``ROUTE.INDEX_TOPK``: the ranked axis is candidate blocks,
+#: not key/value rows.  Mirrors ``runtime.sim.engines.route.RANKS_BLOCKS``.
+_TOPK_RANKS_BLOCKS = 0x4
+
+#: ``aux_id_1`` of ``REDUCTION.GROUPED_CONCAT``: the join compacts PAD_INDEX to
+#: a trailing run.  Mirrors ``runtime.sim.engines.reduction``'s own constant.
+_JOIN_COMPACTS_PADDING = 1
+
 _DERIVED_AXIS_FORMS: Mapping[str, Any] = {
     "span_groups_ratio": lambda n: RequestAxis(Symbol.SPAN_TOKENS, n),
     "context_groups_ratio": lambda n: RequestAxis(Symbol.CONTEXT_LENGTH, n),
@@ -3320,6 +3328,20 @@ class RomLowering:
         slot_bytes, capacity, row_elements = self._state_group_shape[group_key]
         prepared = self._state_object[group_key]
         tensor = self.tensors[tensor_id]
+        #: A TENSOR DECLARING MORE ROWS THAN THE RESOURCE HOLDS IS NOT A PLANE OF
+        #: IT.  The KV join is the case: its declared extent is the sliding
+        #: window PLUS the compressed prefix -- A18's bias plus its
+        #: request-determined part -- and the window resource's slot is exactly
+        #: the window.  Placed as a plane, its leading extent was overwritten with
+        #: the capacity below (so a 192-row join presented 128 rows and the
+        #: concatenation engine refused it), and had it presented 192 the view
+        #: would have read 64 rows of the NEXT LAYER'S plane, since the slots are
+        #: contiguous and one window wide.  The join's destination is a buffer of
+        #: its own; returning None here is what sends it to that path.  Its
+        #: sources stay planes -- they are the ones the state actually holds.
+        declared_leading = self._dims(tensor)[0] if tensor.shape else 0
+        if declared_leading > int(capacity):
+            return None
         dtype = self._dtype(tensor.dtype)
         bits = DTYPE_BITS[dtype]
         window = slot_bytes * 8 // bits
@@ -5824,9 +5846,22 @@ class RomLowering:
                     )
                 return [width]
             if sub == int(Route.INDEX_TOPK):
+                # A kernel that declares a ``block`` ranks candidate BLOCKS, so
+                # its identifiers index a mask's candidate axis and not the
+                # joined key/value rows: they must NOT be rebased above the
+                # window, which is what the engine does by default for a
+                # compressed selection.  The statement rides as a bit above the
+                # mask mode because the typed payload carries exactly four aux
+                # words and this operator already uses all four.  Only a kernel
+                # declaring a block sets it, so no deployment written before it
+                # changes -- and 41 of V4-Flash's INDEX_TOPK kernels rank KV rows
+                # and must go on rebasing.
+                mode = 0 if attributes.get("mask_mode", "causal") == "causal" else 1
+                if "block" in attributes:
+                    mode |= _TOPK_RANKS_BLOCKS
                 return [
                     self._index_topk_capacity(kernel),
-                    0 if attributes.get("mask_mode", "causal") == "causal" else 1,
+                    mode,
                     int(Symbol.CONTEXT_LENGTH),
                     int(Symbol.POSITION_START),
                 ]
@@ -5889,7 +5924,22 @@ class RomLowering:
             # window joined to a compressed-index block joins on the feature
             # axis, and axis 0 could not express it at all because the two
             # operands have different widths.
-            return [int(attributes.get("axis", 0))]
+            #
+            # A join whose graph declares ``padding_index`` joins operands that
+            # carry padding, and its result must present ONE TRAILING RUN of it:
+            # the segments are fixed-width, so an early prefill query fills two
+            # of a 128-slot window and a plain concatenation puts 126 pads ahead
+            # of the compressed segment's valid entries -- which is what made
+            # ATTENTION.SPARSE refuse the second query of every V4.1 prefill.
+            # The second word is a FLAG and not the pad code: the code is the
+            # architecture's single NO_ID, which is also what an unnamed aux slot
+            # holds, so a code could not be distinguished from an absence.  Only
+            # a graph that declares the attribute emits it, so no deployment
+            # whose graph does not changes by a byte.
+            words = [int(attributes.get("axis", 0))]
+            if "padding_index" in attributes:
+                words.append(_JOIN_COMPACTS_PADDING)
+            return words
         if family is Major.DMA and sub == int(Dma.FILL):
             return [int(attributes.get("fill_code", 0))]
         return []

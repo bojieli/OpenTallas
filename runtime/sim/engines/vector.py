@@ -1695,6 +1695,15 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     # distinguish two different rules over the same storage formats.
     fp4 = code_view.dtype == DType.MXFP4_E2M1
     contract = declared_contract(ctx.table, operator.payload["numeric_profile_id"])
+    #: Whether a nonzero count is a CLAMP THE CONTRACT SPECIFIES or a genuine
+    #: overflow.  Each branch says which, because the branches disagree: three of
+    #: the four derive a scale and then clamp by specification, and only the
+    #: generic activation quantiser searches for a scale that avoids saturating
+    #: and has nowhere to go when none exists.  Re-deriving this below from the
+    #: code dtype and the contract is what went wrong -- the AM-E10 branch was
+    #: added here and not there, so its specified clamp was read as an overflow
+    #: and refused the main latent's own quantisation.
+    clamped_by_contract = True
     if code_view.dtype == DType.FP4_E2M1_S16_E4M3:
         # The group is the operator's, taken from the scale view, not a constant:
         # the format's name says 16 because that is DeepSeek-V4.1-Flash's main
@@ -1736,6 +1745,10 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         with _numeric_guard(contract):
             flat_codes, flat_scales, saturations = _quantize_fp8_qdq_blocks(source)
     else:
+        #: The only branch that does not clamp by specification: this quantiser
+        #: searches for a block scale and refuses to saturate, so a nonzero count
+        #: here is a value it could not represent at all.
+        clamped_by_contract = False
         with _numeric_guard("block activation quantisation"):
             flat_codes, flat_scales, saturations = _quantize_activation_blocks(source)
     codes = flat_codes.reshape(rows, blocks, block)
@@ -1746,7 +1759,7 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     ctx.counters.add("vector.conversions", int(codes.size) + int(scales.size))
     if saturations:
         ctx.counters.add("vector.saturations", int(saturations))
-        if not fp4 and contract != CONTRACT_DEEPSEEK_FP8_QDQ_QUANTIZE:
+        if not clamped_by_contract:
             raise EngineError(
                 f"QUANTIZE saturated {saturations} E4M3FN block(s)",
                 trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),

@@ -782,27 +782,49 @@ def _account_contraction(
 def _matmul_shapes(
     activation_view: ResolvedView, weight_view: ResolvedView, output_view: ResolvedView
 ) -> tuple[int, int, int]:
+    #: THE CONTRACTION IS OVER THE LAST AXIS AND THE ROWS ARE EVERYTHING BEFORE
+    #: IT, whatever rank that is.  The reduction dimension is the operand's final
+    #: extent in every case, so a leading axis factored differently -- the
+    #: grouped output projection presents ``[rows, 1, K]``, a degenerate axis
+    #: inserted to match an operand row convention -- has byte-identical
+    #: row-major layout to ``[rows, K]`` and contracts identically.  Demanding
+    #: rank 2 refused that operand while ``_write_result`` below already reshapes
+    #: into whatever rank the destination declares, so the two disagreed.
+    #:
+    #: The WEIGHT stays rank 2 exactly: its two axes are ``N`` and ``K`` and
+    #: neither is a free factoring -- a rank-3 weight would be a different
+    #: operator, not the same one written another way.
     _require(
-        len(activation_view.dims) == 2,
+        len(activation_view.dims) >= 2,
         f"MATMUL activation view {activation_view.descriptor_id} has rank "
-        f"{len(activation_view.dims)}; expected [rows, K]",
+        f"{len(activation_view.dims)}; expected [rows, K] or a view whose "
+        "leading axes factor the rows",
     )
     _require(
         len(weight_view.dims) == 2,
         f"MATMUL weight view {weight_view.descriptor_id} has rank "
         f"{len(weight_view.dims)}; expected [N, K]",
     )
-    rows, depth = activation_view.dims
+    rows = 1
+    for extent in tuple(activation_view.dims)[:-1]:
+        rows *= int(extent)
+    depth = int(activation_view.dims[-1])
     cols, weight_depth = weight_view.dims
     _require(
         depth == weight_depth,
         f"MATMUL reduction extents differ: activation K={depth}, weight K="
         f"{weight_depth}",
     )
+    output_rows = 1
+    for extent in tuple(output_view.dims)[:-1]:
+        output_rows *= int(extent)
     _require(
-        tuple(output_view.dims) == (rows, cols),
+        len(output_view.dims) >= 2
+        and output_rows == rows
+        and int(output_view.dims[-1]) == int(cols),
         f"MATMUL output view {output_view.descriptor_id} is {output_view.dims}; "
-        f"expected {(rows, cols)}",
+        f"expected {(rows, cols)} or a view whose leading axes multiply to "
+        f"{rows} over a final {cols}",
     )
     _require(rows > 0 and cols > 0 and depth > 0, "MATMUL has an empty extent")
     return rows, cols, depth
@@ -831,6 +853,14 @@ def _tensor_matmul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     else:
         activations = ctx.read(activation_view)
         weights = ctx.read(weight_view)
+    #: The contraction kernels keep their strict ``[M,K] x [N,K]`` contract --
+    #: they are the numeric definition and a rank they do not name is a rank they
+    #: must not guess at.  So the CANONICAL 2-D FORM is presented here, from the
+    #: row count ``_matmul_shapes`` has already established: the flattening is
+    #: row-major over axes the operand's own strides make contiguous, so it moves
+    #: no element and changes no reduction.
+    if len(activation_view.dims) > 2:
+        activations = np.ascontiguousarray(activations).reshape(rows, depth)
     values, saturations, scale_multiplications = _contract(
         ctx,
         activation_view,

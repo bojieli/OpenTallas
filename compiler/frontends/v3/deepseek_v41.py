@@ -1219,7 +1219,17 @@ def source_kind_plan(
         "HC_FINAL_COLLAPSE": ("EXPERT_REDUCE",),
         "HC_POST": ("HYPER_CONNECT_POST",),
         "HC_PRE": ("HYPER_CONNECT_PRE", "SELECT", "SELECT", "EXPERT_REDUCE"),
-        "HEAD_RMS_NORM": ("HEAD_RMS_NORM",),
+        # THE MODEL'S FINAL NORM IS AN ORDINARY RMSNorm, and it used to name
+        # ``HEAD_RMS_NORM`` here.  ``VECTOR.HEAD_RMS_NORM`` is a different
+        # operator: the released QUERY HEAD norm, unweighted and at a pinned head
+        # width the engine carries as a constant (``HEAD_RMS_NORM_WIDTH``).  The
+        # final norm is ``self.norm(h)`` in ``Transformer.forward``, the same
+        # weighted ``RMSNorm(args.dim)`` class as every layer norm, over the whole
+        # hidden width -- so it lowers to the same operator and names the same
+        # contract as those 168 kernels.  Issued as the head norm it reached the
+        # engine with a contract that engine does not implement, at PC 4,321 of
+        # 4,337: the last operator before the LM head.
+        "FINAL_RMS_NORM": ("RMS_NORM",),
         "INDEX_KEY_PROJECT": ("MATMUL",),
         "INDEX_KEY_WRITE": ("KV_APPEND",),
         "INDEX_QUERY_PROJECT": ("QUANTIZE", "MATMUL"),
@@ -1385,7 +1395,9 @@ CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
     "HC_FINAL_COLLAPSE": "hyper_connection_hc_collapse_bf16",
     "HC_POST": "vector_hc_post_bf16",
     "HC_PRE": "hyper_connection_hc_pre_bf16",
-    "HEAD_RMS_NORM": "normalization_head_rms_norm_bf16",
+    #: The same contract the layer norms name; see ``FINAL_RMS_NORM``'s entry in
+    #: the expansion table for why it is not the head norm's.
+    "FINAL_RMS_NORM": "deepseek_rmsnorm_binary32",
     "INDEX_KEY_PROJECT": "matrix_bf16_linear_bf16",
     "INDEX_KEY_WRITE": "index_key_write_bf16",
     "INDEX_QUERY_PROJECT": "matrix_dense_fp8_linear_bf16",
@@ -1561,7 +1573,7 @@ def unlayered_source_plan(
     prologue.append("HC_EXPAND")
     return tuple(prologue) + (
         "HC_FINAL_COLLAPSE",
-        "HEAD_RMS_NORM",
+        "FINAL_RMS_NORM",
         "LM_HEAD",
         "SAMPLE",
     )
@@ -2479,7 +2491,25 @@ def export_deepseek_v41_kernel_graph(
             raise DeepSeekV41KernelIRError(
                 f"{source!r} width {width} is not a whole number of {block}-blocks"
             )
-        scale = act(f"{name}.scale", "e8m0", (*shape[:-1], width // block))
+        #: THE SCALE'S DTYPE IS THE CALLER'S DECLARED ``scale_format``, not a
+        #: constant.  ``fp4_act_quant``'s own docstring is "FP4 with E8M0 scales
+        #: for the indexer or E4M3 scales for compressed KV", and both call sites
+        #: already state which they are -- but this helper wrote ``e8m0`` for both,
+        #: so the main latent carried E2M1 codes beside an E8M0 scale.  That pair
+        #: IS MXFP4_E2M1: the scale format is what distinguishes it from
+        #: FP4_E2M1_S16_E4M3, so the declaration and the storage disagreed and the
+        #: quantiser refused the operand.  Deriving it from the attribute the
+        #: caller already writes makes the two impossible to separate.
+        scale_format = str(attributes.get("scale_format") or "")
+        scale_dtypes = {"e4m3": "fp8_e4m3fn", "e8m0": "e8m0", "ue8m0": "e8m0"}
+        if scale_format not in scale_dtypes:
+            raise DeepSeekV41KernelIRError(
+                f"{name!r} declares scale_format {scale_format!r}; a block "
+                f"quantizer states one of {sorted(scale_dtypes)}"
+            )
+        scale = act(
+            f"{name}.scale", scale_dtypes[scale_format], (*shape[:-1], width // block)
+        )
         payload = builder.tensor(
             f"{name}.payload",
             dtype,
@@ -2809,8 +2839,16 @@ def export_deepseek_v41_kernel_graph(
         # keeps exactly this buffer -- and the lookup commits the span's own
         # positions into it.  The declared view is the resource; the rows written
         # are the request's, as for every other append in this graph.
+        #: EXTENTED BY THE REQUEST, not by the resource.  The buffer's capacity is
+        #: the whole context, but what a transaction has committed is
+        #: ``context_length`` ids -- and ``DMA.NGRAM_HASH`` downstream emits one
+        #: row per position of the sequence it is given, so a view presenting all
+        #: 128 ring rows asked it to hash 128 positions for an 8-token prompt.
+        #: That was the trap the first token died on, and it is the last of them.
         compressed_ids = view(
-            f"{op}.committed", "u32", (context_tokens, )
+            f"{op}.committed",
+            "u32",
+            (Symbolic("context_length", 1, context_tokens),),
         )
         emit(
             op,
@@ -3297,7 +3335,17 @@ def export_deepseek_v41_kernel_graph(
                 # ``Compressor.forward``'s ratio-1 branch: ``norm(wkv(x))`` and
                 # nothing else.  There is no learned pooling score, so the gate
                 # operand does not exist rather than being empty.
-                packed = act(f"{op}.latent", "fp32", (span, HEAD_DIM))
+                #
+                # AND IT IS BF16, not fp32.  ``Compressor.__init__`` declares
+                # ``Linear(args.dim, head_dim, dtype=torch.float32 if
+                # compress_ratio > 1 else torch.bfloat16)`` and says why in its
+                # own comment: "ratio 1 is a plain projection, so it stays in the
+                # checkpoint's bf16; the softmax pooling above ratio 1 runs in
+                # fp32, so those weights are promoted to fp32 to match".  Declared
+                # fp32, this latent reached an RMSNorm whose contract is BF16 in
+                # and BF16 out, and the norm refused it -- the one operand in the
+                # whole graph that did.
+                packed = act(f"{op}.latent", "bf16", (span, HEAD_DIM))
                 projection_attributes["projections"] = 1
                 projection_attributes["pooling"] = "none"
             emit(
@@ -4629,11 +4677,11 @@ def export_deepseek_v41_kernel_graph(
             "weight_source": "the_last_block_feed_forward_branch_weights",
         },
     )
-    op = start("HEAD_RMS_NORM", "final_norm", None)
+    op = start("FINAL_RMS_NORM", "final_norm", None)
     head_normed = act(f"{op}.hidden", "bf16", (span, HIDDEN))
     emit(
         op,
-        "HEAD_RMS_NORM",
+        "RMS_NORM",
         (collapsed, role_weight("model.final_norm.weight")),
         (head_normed,),
         iteration_domain={"tokens": span, "width": HIDDEN},

@@ -306,11 +306,19 @@ def ngram_hash(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         f"DMA.NGRAM_HASH row ID view {out_view.descriptor_id} is "
         f"{out_view.dims}; both extents must be positive",
     )
+    #: THE SEQUENCE MAY BE LONGER THAN THE OUTPUT, and in decode it must be: an
+    #: n-gram at the current position looks back over ids the current span does
+    #: not hold, so the operand is the committed prefix ENDING at the last output
+    #: position.  Prefill from position zero is the degenerate case where the two
+    #: are equal, which is the only case the equality admitted -- so a decode
+    #: step could never have issued this operator at all.  The output rows are the
+    #: LAST ``positions`` of the sequence; ``lead`` below is what makes that
+    #: correspondence explicit rather than implied by an equal length.
     _require(
-        int(id_view.element_count) == positions,
+        int(id_view.element_count) >= positions,
         f"DMA.NGRAM_HASH token ID view {id_view.descriptor_id} holds "
-        f"{id_view.element_count} IDs for {positions} output position(s); this "
-        "operator emits one row per position of the sequence it is given",
+        f"{id_view.element_count} IDs for {positions} output position(s); the "
+        "sequence must reach at least as far as the positions emitted",
     )
     _require(
         len(column_view.dims) == 3 and int(column_view.dims[0]) == 2,
@@ -337,6 +345,9 @@ def ngram_hash(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         int(value)
         for value in np.asarray(ctx.read(id_view), dtype=np.uint64).reshape(-1)
     ]
+    #: Sequence entries ahead of the first emitted position: the lookback the
+    #: n-grams need and the output does not name.
+    lead = len(identifiers) - positions
     multipliers = [
         int(value)
         for value in np.asarray(
@@ -361,7 +372,9 @@ def ngram_hash(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             f"DMA.NGRAM_HASH dead-position view {dead_view.descriptor_id} holds "
             "a value other than 0 or 1",
         )
-        dead = tuple(int(index) for index in np.nonzero(flags)[0])
+        #: The flags are per OUTPUT position and the reference indexes the whole
+        #: sequence, so they are shifted by the same lead the rows are.
+        dead = tuple(int(index) + lead for index in np.nonzero(flags)[0])
 
     rows = np.empty((positions, heads), dtype=np.uint64)
     for head in range(heads):
@@ -388,7 +401,7 @@ def ngram_hash(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
                 f"DMA.NGRAM_HASH operator {descriptor.descriptor_id}: {exc}",
                 trap_class=3,
             ) from exc
-        for position, record in enumerate(records):
+        for position, record in enumerate(records[lead:]):
             rows[position, head] = int(record["row_id"])
 
     _require(

@@ -50,7 +50,7 @@ distinct, reproducible datapaths here, and an unknown order is a fault.
 
 from __future__ import annotations
 
-from typing import Mapping
+from typing import Mapping, Sequence
 
 import numpy as np
 
@@ -370,6 +370,62 @@ JOIN_AXES: tuple[int, ...] = (0, 1)
 JOIN_RANK: Mapping[int, int | None] = {0: None, 1: 2}
 
 
+#: The padding code an index operand carries, spelled as this architecture spells
+#: it everywhere: ``NO_ID``.  ``runtime.sim.engines.route`` and
+#: ``runtime.sim.engines.attention`` both define ``PAD_INDEX = NO_ID``, and this
+#: is the same value under the same name, kept local so the join does not import
+#: from a sibling engine.
+PAD_INDEX = NO_ID
+
+
+#: ``aux_id_1`` on a join: the operands carry :data:`PAD_INDEX` padding and the
+#: join must COMPACT it, so the result is one run of valid entries followed by
+#: one run of padding.  The value is a flag, not a pad code, because the pad code
+#: is the architecture's single ``NO_ID`` -- which is also what an absent aux slot
+#: holds, so a code could not be told from an absence.
+_JOIN_COMPACTS_PADDING = 1
+
+
+def _compacts_padding(descriptor: Descriptor) -> bool:
+    value = _aux(descriptor, 1)
+    if value is None:
+        return False
+    _require(
+        value == _JOIN_COMPACTS_PADDING,
+        f"GROUPED_CONCAT operator {descriptor.descriptor_id} names "
+        f"{value} in aux_id_1; the only padding discipline defined is "
+        f"{_JOIN_COMPACTS_PADDING}, which compacts PAD_INDEX to a trailing run",
+    )
+    return True
+
+
+def _compact_along(parts: Sequence[np.ndarray], axis: int, width: int) -> np.ndarray:
+    """Join ``parts`` keeping valid entries first and padding trailing.
+
+    Why a join has to do this at all: the segments are fixed-width, so an early
+    prefill query fills two of a 128-slot window and the sliding-window segment
+    carries 126 pads BEFORE the compressed segment's own valid entries.  A plain
+    concatenation therefore interleaves, and ABI 3.0 fixes padding as one
+    trailing run -- so ATTENTION.SPARSE refused the second query of every
+    prefill.  Compacting here is what the exporter's ``padding_index`` attribute
+    has always declared; nothing read it before.
+
+    Valid entries keep PRODUCER ORDER across segments, which is the order the
+    sparse reference consumes and must not be sorted: segment 0's valid entries,
+    then segment 1's, and so on.
+    """
+    joined = np.concatenate(parts, axis=axis)
+    flat = np.moveaxis(joined, axis, -1)
+    out = np.full(flat.shape, np.asarray(PAD_INDEX).astype(flat.dtype), dtype=flat.dtype)
+    rows = flat.reshape(-1, flat.shape[-1])
+    result = out.reshape(-1, out.shape[-1])
+    pad = np.asarray(PAD_INDEX).astype(flat.dtype)
+    for index in range(rows.shape[0]):
+        kept = rows[index][rows[index] != pad]
+        result[index, : kept.size] = kept
+    return np.moveaxis(out, -1, axis)
+
+
 def _join_axis(descriptor: Descriptor) -> int:
     """``aux_id_0`` as a join axis (amendment A17).
 
@@ -505,7 +561,16 @@ def grouped_concat(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None
         f"GROUPED_CONCAT output view {out_view.descriptor_id} dims "
         f"{out_view.dims} differ from the axis-{axis} concatenation {expected}",
     )
-    joined = np.concatenate(parts, axis=axis)
+    if _compacts_padding(descriptor):
+        _require(
+            out_view.dtype in (DType.U32, DType.I32),
+            f"GROUPED_CONCAT output view {out_view.descriptor_id} stores "
+            f"{out_view.dtype:#04x}; only a 32-bit index join carries "
+            "PAD_INDEX padding to compact",
+        )
+        joined = _compact_along(parts, axis, joined_extent)
+    else:
+        joined = np.concatenate(parts, axis=axis)
     ctx.write(out_view, joined.reshape(out_view.dims))
     ctx.counters.add("reduction.elements", int(joined.size))
 
