@@ -30,7 +30,7 @@
    "layers.N.attn.wo_a.scale": 40,
    "mtp.N.attn.wo_a.scale": 3
   },
-  "why": "a FORMAT deviation, not a stray omission: the lock records wkv, wo_b, wq_a and wq_b as F8_E4M3 with F8_E8M0 scales and wo_a alone as BF16 with no scale, where the adapter builds all five with fp8_linear and reproduces the release's own pinned 96,085 from shard-header evidence. The reduced 256x256 shape is divisible by the 32-wide quantization block exactly like its siblings', so the reduced width does not force it"
+  "why": "a STORAGE-versus-RUNTIME difference, both sides read directly. The released checkpoint's own shard header stores wo_a.weight as F8_E4M3 with an F8_E8M0 scale; the released inference source at the same revision declares ColumnParallelLinear(..., dtype=torch.bfloat16) for it, which registers no scale, because wo_a is consumed inside a torch.einsum that cannot take an fp8 weight and a separate scale -- the release's own comment beside it says convert.py dequantizes wo_a to bf16 and that an fp8 grouped GEMM would halve the memory. The reduced fixture is built from named_parameters() and so follows the source; the adapter models the storage"
  },
- "verdict": "the reduced checkpoint stores attn.wo_a unquantized where the release quantizes it, so its tensor structure is not a faithful reduction and a release record pinned against it would pin that in"
+ "verdict": "the reduced checkpoint is written in the release's RUNTIME shape and this adapter models its STORAGE shape; to be pinned here it must store attn.wo_a as fp8 with a scale, as the released checkpoint's own shard headers do"
 }

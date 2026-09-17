@@ -23,19 +23,37 @@ WHAT IT FOUND. Two classes, one justified and one not:
   against the release's 32, the workload being text only. ``bias_vl`` is in this
   class because the adapter gates it on the tower's presence.
 * 43 ``attn.wo_a.scale``, one per main layer and per MTP layer. This is a
-  FORMAT DEVIATION rather than a stray omission, and the checkpoint lock names
-  it: in the reduced checkpoint ``wkv``, ``wo_b``, ``wq_a`` and ``wq_b`` are all
-  ``F8_E4M3`` with ``F8_E8M0`` scales, while ``wo_a`` alone is ``BF16`` with no
-  scale. The adapter builds all five with ``fp8_linear``, and its derivation
-  reproduces the release's own pinned 96,085 -- evidence measured from the
-  released shard headers -- so the release quantizes ``wo_a`` and the reduced
-  fixture does not. Its 256x256 reduced shape is divisible by the 32-wide
-  quantization block, exactly like its siblings', so nothing about the reduced
-  width forces it.
+  STORAGE-VERSUS-RUNTIME difference, and both sides were read directly rather
+  than inferred:
 
-  A release record pinned against the checkpoint as it stands would pin that
-  deviation in, and the reduced vehicle would then verify a model that stores
-  one projection differently from the one it claims to reduce.
+  - The RELEASED CHECKPOINT stores it quantized. Its own shard header says
+    ``layers.0.attn.wo_a.weight`` is ``F8_E4M3`` [8192, 4096] with
+    ``wo_a.scale`` ``F8_E8M0`` [256, 128], and its index carries 96,085 tensors
+    including 43 ``wo_a.scale`` -- which is what the release record pins and
+    what the adapter reproduces.
+  - The RELEASED INFERENCE SOURCE at the same revision declares it unquantized:
+    ``self.wo_a = ColumnParallelLinear(..., dtype=torch.bfloat16)``, where
+    ``wq_a``, ``wq_b``, ``wkv`` and ``wo_b`` all take the default fp8. A bf16
+    ``Linear`` registers no scale at all. The reason is visible two hundred
+    lines down: ``wo_a`` is consumed as ``self.wo_a.weight.view(...)`` inside a
+    ``torch.einsum`` because it is block-diagonal over the output groups, and an
+    einsum cannot take an fp8 weight with a separate scale.
+
+  THE RELEASE SAYS SO ITSELF, in a comment beside that einsum:
+
+      # wo_a is block-diagonal over groups (each projects only its own heads),
+      # hence einsum not Linear. convert.py dequantizes it to bf16; an fp8
+      # grouped GEMM would halve the memory.
+
+  So the checkpoint ships fp8 and the runtime holds bf16, by design, and the
+  conversion between them is a step the release names.
+
+  The reduced fixture is built from ``model.named_parameters()``, so it follows
+  the SOURCE and holds ``wo_a`` as BF16 with no scale. It is faithful to the
+  runtime shape and not to the storage shape, while the adapter models the
+  storage shape. Neither side is a bug on its own; they are two different
+  representations of the same release, and a reduced checkpoint that is to be
+  pinned by this adapter has to be written in the storage one.
 """
 from __future__ import annotations
 
@@ -186,20 +204,26 @@ def classify(names: set[str], present: set[str]) -> dict[str, Any]:
             "count": len(other),
             "patterns": patterns(other),
             "why": (
-                "a FORMAT deviation, not a stray omission: the lock records "
-                "wkv, wo_b, wq_a and wq_b as F8_E4M3 with F8_E8M0 scales and "
-                "wo_a alone as BF16 with no scale, where the adapter builds all "
-                "five with fp8_linear and reproduces the release's own pinned "
-                "96,085 from shard-header evidence. The reduced 256x256 shape "
-                "is divisible by the 32-wide quantization block exactly like "
-                "its siblings', so the reduced width does not force it"
+                "a STORAGE-versus-RUNTIME difference, both sides read "
+                "directly. The released checkpoint's own shard header stores "
+                "wo_a.weight as F8_E4M3 with an F8_E8M0 scale; the released "
+                "inference source at the same revision declares "
+                "ColumnParallelLinear(..., dtype=torch.bfloat16) for it, which "
+                "registers no scale, because wo_a is consumed inside a "
+                "torch.einsum that cannot take an fp8 weight and a separate "
+                "scale -- the release's own comment beside it says convert.py "
+                "dequantizes wo_a to bf16 and that an fp8 grouped GEMM would "
+                "halve the memory. The reduced fixture is built from "
+                "named_parameters() and so follows the source; the adapter "
+                "models the storage"
             ) if other else "none",
         },
         "verdict": (
             "faithful" if not other else
-            "the reduced checkpoint stores attn.wo_a unquantized where the "
-            "release quantizes it, so its tensor structure is not a faithful "
-            "reduction and a release record pinned against it would pin that in"
+            "the reduced checkpoint is written in the release's RUNTIME shape "
+            "and this adapter models its STORAGE shape; to be pinned here it "
+            "must store attn.wo_a as fp8 with a scale, as the released "
+            "checkpoint's own shard headers do"
         ),
     }
 
