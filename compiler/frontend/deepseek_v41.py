@@ -161,12 +161,25 @@ def validate_official_config(
     # identity and its vision tower.  A record that pins none checks none.
     for path, pinned_section in release.config_sections.items():
         section: Any = config
+        resolved = True
         for key in filter(None, path.split(".")):
             if not isinstance(section, Mapping) or key not in section:
-                raise DeepSeekV41AdapterError(
-                    f"official config has no section {path!r}"
-                )
+                resolved = False
+                break
             section = section[key]
+        if pinned_section is None:
+            #: PINNED ABSENT. The record says this release has no such
+            #: structure, so a config that carries one contradicts it.
+            if resolved:
+                raise DeepSeekV41AdapterError(
+                    f"official config carries section {path!r}, which "
+                    f"{release.model_id} pins as absent"
+                )
+            continue
+        if not resolved:
+            raise DeepSeekV41AdapterError(
+                f"official config has no section {path!r}"
+            )
         if not isinstance(section, Mapping):
             raise DeepSeekV41AdapterError(f"config section {path!r} is not an object")
         for key, expected in pinned_section.items():

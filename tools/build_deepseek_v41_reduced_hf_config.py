@@ -229,17 +229,22 @@ def build_reduced_root() -> dict[str, Any]:
         "quantization_config": quantization,
         "text_config": translate_architecture(reduced_inference, released_text),
         "transformers_version": released_root["transformers_version"],
-        #: THE TOWER IS PRESENT AND ZERO LAYERS DEEP, not omitted. The reduction
-        #: records reduced_vision_n_layers 0 against the release's 32, and the
-        #: reduced runtime config says exactly that while leaving every other
-        #: vision width alone -- so this section is the reduction's own
-        #: statement rather than an absence. Omitting it instead makes
-        #: build_official_tensor_specs refuse, because it resolves the section
-        #: to decide whether the release has a tower at all.
-        "vision_config": translate_vision(
-            reduced_inference, released_root["vision_config"]
-        ),
     }
+    #: NO vision_config, and that is now sayable. The reduction excludes the
+    #: tower -- reduced_vision_n_layers 0 against the release's 32, the workload
+    #: being text only -- and the adapter reads the section's presence in the
+    #: CONFIG as ``vision_enabled``, so a config without one derives neither the
+    #: tower's tensors nor the bias_vl that rides with it.
+    #:
+    #: This file first wrote a zero-layer tower instead, because
+    #: build_official_tensor_specs refuses a RECORD that pins no vision section
+    #: -- such a record cannot say whether the release has a tower. But a
+    #: zero-layer tower still sets vision_enabled, so 53 vision and
+    #: vision-language tensors were derived that the checkpoint does not hold.
+    #: A release record can now pin a section ABSENT, which answers "can this
+    #: record speak about the tower" yes and "does the release have one" no,
+    #: and validate_official_config refuses a config that carries a section
+    #: pinned absent -- so absence is asserted rather than merely unmentioned.
     return root
 
 

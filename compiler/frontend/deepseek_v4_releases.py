@@ -116,7 +116,22 @@ class DeepSeekV4Release:
     #: keyed by the same key path joined with ``.`` (``""`` is the root).  A
     #: multi-modal release carries its own tower and its own root identity
     #: alongside the language model's scalars.
-    config_sections: Mapping[str, Mapping[str, Any]] = _NO_CONFIG_SECTIONS
+    #:
+    #: A value of ``None`` PINS THE SECTION ABSENT, which is a different
+    #: statement from not pinning it at all.  Front ends read the presence of a
+    #: key here to decide whether a record can speak about that structure --
+    #: ``build_official_tensor_specs`` refuses a record that pins no
+    #: ``vision_config``, because such a record cannot say whether the release
+    #: has a tower -- and they read the section's presence in the CONFIG to
+    #: decide whether the structure exists.  Those are two different questions,
+    #: and a text-only model needs to answer the first yes and the second no.
+    #: Without ``None`` it cannot: pinning the section forces the config to
+    #: carry it, and omitting the pin makes the front end refuse.
+    #:
+    #: It stays a pin, not a silence.  ``validate_official_config`` refuses a
+    #: config that DOES carry a section pinned absent, so "absent" is asserted
+    #: and checked rather than merely unmentioned.
+    config_sections: Mapping[str, Mapping[str, Any] | None] = _NO_CONFIG_SECTIONS
 
     def __post_init__(self) -> None:
         layers = self.config_scalars.get("num_hidden_layers")
