@@ -209,6 +209,31 @@
       "what": "A semantic-record collector. The engine takes 128 words in one bundle and no existing module sees them all: the bridge holds the operator, numeric payload and resolved views but has ZERO mentions of the SCHEDULE descriptor, which is words 52..63; the microsequencer decodes that in S_SCHED_WAIT and the views arrive later from the resolver bank.",
       "why_it_is_tractable": "The operator descriptor names every piece by id -- input_view_0..3 370..373, output_view_0/1 375/377, schedule_id 379, numeric_profile_id 378 -- and the microsequencer already fetches descriptors by id. So the collector latches what the sequencer is already walking past rather than resolving anything itself."
     },
+    "second_staleness": {
+      "consequence": "Connecting the engine needs its schedule gate regenerated against the current descriptor as well as the id half fixed. That is a legitimate re-pin: unlike a descriptor id, tile geometry and bank masks ARE architectural facts the gate should check. The committed vectors were deliberately NOT overwritten here, because the RTL gate still expects the old ones and the committed campaign passes against them; replacing one without the other would leave neither meaning anything.",
+      "reading": "A regenerated record reproduces descriptor 379 exactly. The committed vectors and the RTL schedule_rom gate agree with each other and both disagree with the descriptor, and the disagreement is not a renumbering -- a bank_mask of 0x40000000 and a port_mask of 56 are not plausible values for those fields, while 8 and 3 are. So the SCHEDULE encoding changed at some point and neither the vectors nor the gate were regenerated. This is a SECOND staleness, independent of the descriptor-id renumbering, and it is semantic rather than positional.",
+      "rom_schedule_descriptor_379_now": {
+        "bank_mask": 8,
+        "issue_window": 1,
+        "max_outstanding": 1,
+        "port_mask": 3,
+        "resource_bound": 3,
+        "tile_cols": 4,
+        "tile_depth": 1,
+        "tile_rows": 131072
+      },
+      "what": "The engine gates on the SCHEDULE descriptor contents in words 52..63, and those are pinned to a superseded encoding. Word map: 54 issue_window, 55 tile_rows, 56 tile_cols, 57 tile_depth, 58 bank_mask, 59 port_mask, 61 resource_bound, 62 max_outstanding.",
+      "what_the_gate_and_committed_vectors_hold": {
+        "bank_mask": 1073741824,
+        "issue_window": 32,
+        "max_outstanding": 32,
+        "port_mask": 56,
+        "resource_bound": 3,
+        "tile_cols": 4096,
+        "tile_depth": 1024,
+        "tile_rows": 128
+      }
+    },
     "the_record_is_what_the_bridge_already_holds": "The engine takes a 128-word semantic record: word 0 profile, word 1 active_tokens, words 2..9 the instruction, 10..32 the operator descriptor, 33..51 the numeric payload including the 256-bit contract digest, 52..63 the schedule, and six 10-word view records from word 64. Every one of those is a field the bridge latches already, so the connection is a packing function rather than new architecture.",
     "why_first": "It is the first refused kernel in both DeepSeek graphs -- index 4 of V4-Flash, index 3 of V4.1 -- and a refused operation raises TRAP_CAPABILITY, so nothing after it is reachable. Until it is wired it is the entire critical path."
   },

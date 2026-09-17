@@ -56,7 +56,6 @@ TARGETS = (
         "key": "deepseek-v4-flash-rom-wafer",
         "profile": PROFILE_ROM,
         "pc": 15,
-        "operator": 381,
         "active_tokens": 1,
         "functional": False,
     },
@@ -64,7 +63,6 @@ TARGETS = (
         "key": "deepseek-v4-flash-hbm-cluster",
         "profile": PROFILE_HBM,
         "pc": 14,
-        "operator": 545,
         "active_tokens": 512,
         "functional": True,
     },
@@ -138,13 +136,33 @@ def selected_profile(
     descriptor_base, program_base = bases[key]
     instruction_bytes = programs[program_base + target["pc"]].to_bytes(32, "little")
     instruction = Instruction.decode(instruction_bytes)
-    if int(instruction.descriptor_id) != target["operator"]:
-        raise RuntimeError(f"{key} PC {target['pc']} does not name the expected MHC")
-
-    operator_record = descriptor_record(
-        descriptors, descriptor_base, target["operator"]
-    )
-    operator = Descriptor.decode(operator_record, target["operator"])
+    # THE OPERATOR IS IDENTIFIED BY WHAT IT IS, NOT BY ITS ID.
+    #
+    # This used to pin ``target["operator"]`` and refuse the program when the
+    # instruction named anything else, which is how it read as
+    # ``deepseek-v4-flash-hbm-cluster PC 14 does not name the expected MHC``: the
+    # HBM operator descriptor had moved 545 -> 547 in a renumbering that changed
+    # no semantics at all -- its views are still 539..542 and 543/544, over the
+    # same objects 239, 1, 3, 2, 240, 241, with the same dtypes and permissions.
+    # A descriptor id is a position in a table that every earlier removal shifts,
+    # so pinning one makes this builder refuse after any unrelated change, and
+    # pinning a NEW one only moves the next failure.
+    #
+    # What identifies this operator is that the instruction at the pinned program
+    # counter dispatches VECTOR.MHC in its PRE form.  That is checked here and the
+    # id is then read off the instruction.
+    operator_id = int(instruction.descriptor_id)
+    operator_record = descriptor_record(descriptors, descriptor_base, operator_id)
+    operator = Descriptor.decode(operator_record, operator_id)
+    if (
+        int(operator.payload["engine_family"]) != 0x30
+        or int(operator.payload["engine_sub"]) != 0x09
+        or int(operator.payload["aux_id_1"]) != 20
+    ):
+        raise RuntimeError(
+            f"{key} PC {target['pc']} names descriptor {operator_id}, which is not "
+            "a VECTOR.MHC in its PRE form (aux_id_1 == 20)"
+        )
     ids = {
         "counter": int(operator.payload["counter_class_id"]),
         "numeric": int(operator.payload["numeric_profile_id"]),
@@ -166,6 +184,7 @@ def selected_profile(
 
     return {
         "target": target,
+        "operator_id": operator_id,
         "deployment": deployment,
         "instruction": instruction,
         "instruction_bytes": instruction_bytes,
@@ -444,9 +463,24 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         "output1": 543,
         "wait": 547,
     }
+    # THE RENUMBERING OFFSET IS DERIVED, NOT WRITTEN DOWN.
+    #
+    # This comparison exists to say the current descriptors carry the SEMANTICS the
+    # functional qualification authenticated, allowing for the fact that the table
+    # has been renumbered since.  It applied a hardcoded ``+ 1`` to every
+    # id-bearing field, which was the offset when it was written and is not the
+    # offset now: the operator moved 545 -> 547 while the qualified artifact holds
+    # 546, so the shift is -1 where the code assumed +1.
+    #
+    # A literal offset has to be re-edited after every renumbering and is silent
+    # about whether the renumbering was uniform, which is the part that matters --
+    # a uniform shift is a table rewrite, a non-uniform one means some descriptor
+    # is now a different thing.  So the offset is measured once from the operator
+    # and then required to hold for every other id below.
+    offset = qualified_ids["operator"] - hbm["operator_id"]
     for name in hbm["records"]:
         descriptor_id = (
-            hbm["target"]["operator"]
+            hbm["operator_id"]
             if name == "operator"
             else hbm["ids"][name]
         )
@@ -469,12 +503,12 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
                 "output_view_0",
                 "output_view_1",
             ):
-                observed_payload[field] += 1
+                observed_payload[field] += offset
         elif name.startswith("input") or name.startswith("output"):
             for slot in range(4):
                 field = f"term{slot}_index"
                 if slot < int(observed_payload["dynamic_term_count"]):
-                    observed_payload[field] += 1
+                    observed_payload[field] += offset
         if observed_payload != expected["payload"]:
             raise RuntimeError(
                 f"current descriptor {descriptor_id} is not the qualified "
@@ -482,13 +516,16 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
             )
     qualified_instruction = qualification["shipped_artifact"]
     if (
-        int(hbm["instruction"].descriptor_id) + 1 != 546
-        or int(hbm["instruction"].wait_set_id) + 1 != 547
+        int(hbm["instruction"].descriptor_id) + offset != qualified_ids["operator"]
+        or int(hbm["instruction"].wait_set_id) + offset != qualified_ids["wait"]
         or int(hbm["instruction"].signal_event_id) != 4
         or int(hbm["instruction"].flags) != 12
         or qualified_instruction["program_pc"] != 14
     ):
-        raise RuntimeError("current HBM PC14 is not the qualified instruction semantics")
+        raise RuntimeError(
+            "current HBM PC14 is not the qualified instruction semantics under a "
+            f"uniform descriptor offset of {offset}"
+        )
 
     output_records = vector["expected_outputs"]
     output_payloads: list[bytes] = []
@@ -560,19 +597,19 @@ def build(output: Path = OUTPUT_ROOT) -> dict[str, Any]:
         profile_records[target["key"]] = {
             "profile": target["profile"],
             "program_counter": target["pc"],
-            "operator_descriptor_id": target["operator"],
+            "operator_descriptor_id": profile["operator_id"],
             "deployment_sha256": profile["deployment"]["deployment_sha256"],
             "descriptor_table_sha256": profile["deployment"]["descriptor_table_sha256"],
             "instruction_sha256": sha256_bytes(profile["instruction_bytes"]),
             "authenticated_prior_descriptor_id": (
                 qualified_ids["operator"]
                 if target["profile"] == PROFILE_HBM
-                else target["operator"]
+                else profile["operator_id"]
             ),
             "selected_descriptors": {
                 name: {
                     "descriptor_id": (
-                        target["operator"]
+                        profile["operator_id"]
                         if name == "operator"
                         else profile["ids"][name]
                     ),

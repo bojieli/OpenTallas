@@ -408,9 +408,28 @@ def descriptor_configs() -> tuple[list[int], list[int], dict[str, object]]:
             "deployment_sha256": profile["deployment"]["deployment_sha256"],
             "instruction_sha256": sha256_bytes(profile["instruction_bytes"]),
         }
+    # THE PROGRAM COUNTER IS THE IDENTITY; THE DESCRIPTOR ID IS A POSITION.
+    #
+    # This required ``(rom[2], rom[4], hbm[2], hbm[4]) == (15, 381, 14, 545)`` and
+    # refused with "current ROM/HBM HC_PRE identity drift" once the HBM operator
+    # moved 545 -> 547.  Nothing about the operator had changed: same program
+    # counter, same views 539..542 and 543/544 over the same objects 239, 1, 3, 2,
+    # 240, 241, same dtypes, permissions and numeric contract.  A descriptor id is
+    # a position in a table that every earlier removal shifts, and re-pinning it
+    # only moves the next refusal, so what is checked is the program counter --
+    # which IS the program's own identity for this operator -- and that the word
+    # the record carries at index 4 is the operator the instruction at that counter
+    # actually names.
     require(
-        (rom[2], rom[4], hbm[2], hbm[4]) == (15, 381, 14, 545),
-        "current ROM/HBM HC_PRE identity drift",
+        (rom[2], hbm[2]) == (15, 14),
+        f"HC_PRE program counters moved: ROM {rom[2]} (expected 15), "
+        f"HBM {hbm[2]} (expected 14)",
+    )
+    require(
+        rom[4] == int(profiles[tile_vectors.PROFILE_ROM]["operator_id"])
+        and hbm[4] == int(profiles[tile_vectors.PROFILE_HBM]["operator_id"]),
+        "the assembled record's operator word does not match the operator the "
+        "instruction at its program counter names",
     )
     return rom, hbm, identities
 
