@@ -3305,6 +3305,17 @@ def export_deepseek_v41_kernel_graph(
                         },
                         "predicate_output": f"{op}.should_compress",
                         "ratio": ratio,
+                        # The head width, which the V4 export also declares.  It
+                        # is not new information -- a backend can divide the
+                        # packed projection row by the overlap coefficient and
+                        # get it -- and that is the point: the emitter derives it
+                        # and checks this declaration against what it derived,
+                        # and ``check.py``'s compressor reconstruction reads the
+                        # geometry from the GRAPH precisely so that it owes
+                        # nothing to the lowering. Leaving it out made the two
+                        # disagree about whether it was optional, and the
+                        # deployment check stopped on ``KeyError: 'head_dim'``.
+                        "head_dim": HEAD_DIM,
                     },
                     # The carry is a read-modify-write of both histories, not a
                     # write.  ``Compressor.forward``'s decode branch fills one

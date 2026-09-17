@@ -1496,11 +1496,30 @@ def _check_compressor_deployment(
             and ring_modulus_of(view) == ratio
             and runtime_terms(view) == [(int(Symbol.POSITION_START), 1)]
         ]
+        # The absolute position encoding is optional, and the check is that the
+        # deployment agrees with the graph either way -- a gather exactly when
+        # the graph names a position operand, and none when it does not.
+        #
+        # ``VECTOR.COMPRESS`` sub-case 2 reads (candidates, projection,
+        # position_embedding).  A state update has no projection matrix, so
+        # ``in1`` is a hole and the position embedding is ``in2``: a graph naming
+        # one input has no APE.  V4-Flash names two and biases each raw pooling
+        # score by the gathered row; V4.1's compressor is ``norm(wkv(x))`` at
+        # ratio 1 and a softmax pooling of ``wkv`` by ``wgate`` above it, adds
+        # nothing to ``score``, and its checkpoint has no ``.ape`` tensor for any
+        # layer.  Demanding the gather unconditionally reported every V4.1
+        # compressor as defective for not having a term it does not have.
+        declares_ape = len(kernel.inputs) > 1
         require(
             "compressor_ape_ring_binding",
-            bool(ape_index_views),
-            f"kernel {kernel.index} has no APE gather addressed by the "
-            f"authenticated modulus-{ratio} table at POSITION_START",
+            bool(ape_index_views) == declares_ape,
+            f"kernel {kernel.index} "
+            + (
+                f"has no APE gather addressed by the authenticated "
+                f"modulus-{ratio} table at POSITION_START"
+                if declares_ape
+                else "names no position operand but the deployment gathers one"
+            ),
         )
 
         boundary_views: list[Any] = []

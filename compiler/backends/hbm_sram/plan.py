@@ -1073,8 +1073,6 @@ REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     # input sum -- fixed window capacity followed by the prefix -- and is
     # derived from ``phase_inputs`` rather than approximated by this one table.
     "attention_rows_window": RequestExtent(),
-    "attention_rows_ratio4": RequestExtent(numerator=5, unit=4),
-    "attention_rows_ratio128": RequestExtent(numerator=129, unit=128),
     "selected_rows_ratio128": RequestExtent(unit=128, bias=128),
 }
 
@@ -1099,12 +1097,42 @@ REQUEST_EXTENT: Mapping[str, RequestExtent] = {
 #: nobody has written down is still not an invitation to guess one.
 _GROUP_RATIO_SYMBOL = re.compile(r"^(span|context)_groups_ratio(\d+)$")
 
+#: The same grammar for the sparse join's own declared axis, and for the same
+#: reason one step later.
+#:
+#: ``attention_rows_ratio4`` and ``attention_rows_ratio128`` used to be spelled
+#: out as ``5/4`` and ``129/128``.  Those are one function: the prefill join is
+#: the current span followed by the valid compressed prefix, which is
+#: ``span + span/N`` rows, so the extent is ``(N + 1) * span / N`` -- and the two
+#: literals are that function at V4's two ratios.  V4.1's main layers compress at
+#: **2**, so the graph declares ``attention_rows_ratio2`` and the enumerated
+#: table had no entry; an absent entry means "no request-sized axis", so the
+#: operand would have kept a declared maximum instead of resolving, and the
+#: lowering refused with ``phase extent 3*span_tokens/2+0 does not match the
+#: declared output``.
+#:
+#: That is the same defect ``_GROUP_RATIO_SYMBOL`` above was introduced to
+#: remove -- a model constant inside a model-blind table -- so it gets the same
+#: remedy rather than a third literal.  The declared maxima remain the check on
+#: the grammar and not a second source of truth: ``request_extent_of`` evaluates
+#: it at the capability's context bound and refuses any tensor whose declared
+#: maximum disagrees, which is what keeps the shipped ratio-4 and ratio-128
+#: graphs honest now that no entry names them.
+_ATTENTION_ROWS_SYMBOL = re.compile(r"^attention_rows_ratio(\d+)$")
+
 
 def request_extent_for(symbol: str) -> RequestExtent | None:
     """The A18 function of one runtime symbol, or ``None`` if it has none."""
     named = REQUEST_EXTENT.get(symbol)
     if named is not None:
         return named
+    rows = _ATTENTION_ROWS_SYMBOL.match(symbol)
+    if rows is not None:
+        ratio = int(rows.group(1))
+        if ratio < 1:
+            return None
+        # span + span/ratio, as one affine function over a common denominator.
+        return RequestExtent(numerator=ratio + 1, unit=ratio)
     match = _GROUP_RATIO_SYMBOL.match(symbol)
     if match is None:
         return None
@@ -1132,6 +1160,56 @@ def request_extent_for(symbol: str) -> RequestExtent | None:
 CONTEXT_LOOP_OPS: frozenset[tuple[int, int]] = frozenset(
     {(int(Major.VECTOR), int(Vector.INDEX_SCORE))}
 )
+
+def touches_single_row_state(
+    kernel: Kernel,
+    states: Sequence[Any],
+    state_of_tensor: Mapping[str, Sequence[Any]],
+) -> bool:
+    """True when a kernel reads or writes a state the graph sizes at ONE row.
+
+    A state resource with ``capacity_rows = 1`` holds exactly one token's values,
+    so a dispatch that covered a whole token block would present a view of the
+    block's rows over a store that has room for one.  V4.1's indexer is the case:
+    it writes a ``[span, 144]`` selection -- one token's 128 window rows plus its
+    16 selected indices -- into ``index_selection.main.layer.N``, declared
+    ``capacity_rows = 1``, and the verifier reported the overrun ten times over::
+
+        view 2904: maximum element 18447 needs 73792 bytes but object 1638 is
+        9216 bytes
+
+    The remedy ``CONTEXT_LOOP_OPS`` names for the same two-extent shape is the
+    right one -- one token per dispatch -- but the condition is NOT the opcode.
+    Adding ``ROUTE.INDEX_TOPK`` to that set made the shipped V4 graph refuse
+    outright, because its own ``main.layer03.compressed_dense_indices`` has no
+    context-sized operand for the loop to bind, and keying the rule on a
+    *declared context axis* instead still moved V4's plan digest.
+
+    The capacity is the honest condition, and it is also the one that cannot
+    reach a qualified graph: the shipped V4 graph declares 229 states and NOT ONE
+    of them has ``capacity_rows = 1``, while V4.1 declares nine.  So this rule
+    changes exactly the graphs whose states say a dispatch is one row, and
+    nothing else -- verified by both shipped plan digests holding still.
+    """
+    named = set(kernel.state_reads) | set(kernel.state_writes)
+    # A consumer does not have to NAME the resource to read it.  The indexer's
+    # selection is a tensor mapped onto ``index_selection.main.layer.N``, and the
+    # sparse attention that uses it reads that tensor as an ordinary operand --
+    # so the operand's own mapping has to be consulted too, or the producer is
+    # dispatched per token while its consumer still presents a block-wide view
+    # of the same one-row store.
+    for name in (*kernel.inputs, *kernel.outputs):
+        mapping = state_of_tensor.get(name)
+        if mapping:
+            named.add(str(mapping[0]))
+    if not named:
+        return False
+    for resource in states:
+        if getattr(resource, "state_id", None) in named and (
+            int(getattr(resource, "capacity_rows", 0)) == 1
+        ):
+            return True
+    return False
 
 
 def context_axis_of(
@@ -4772,6 +4850,13 @@ def _plan_kernels(
             # One token per dispatch: the row axis the engine indexes is then
             # the token's own trailing axis, and the index values are offsets
             # inside it rather than row numbers of a block.
+            kernel_block = 1
+        if kernel_block > 1 and touches_single_row_state(
+            kernel, graph.states, state_of_tensor
+        ):
+            # One token per dispatch, so the view covers the one row the state
+            # holds.  This sets the block only: a context loop needs an axis to
+            # bind and these kernels may not declare one.
             kernel_block = 1
         context_op = (int(engine.family), int(engine.sub)) in CONTEXT_LOOP_OPS
         phase_context = bool(kernel.attributes.get("phase_symbol_binding")) or any(

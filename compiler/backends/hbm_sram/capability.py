@@ -221,13 +221,15 @@ def _shared_capability(
     numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
     fabric: Mapping[str, Any] | None = None,
     memory: Mapping[str, Mapping[str, Any]] = SHARED_MEMORY,
+    features: tuple[Feature, ...] = SHARED_FEATURES,
+    limits_override: Mapping[str, int] | None = None,
 ) -> Capability:
-    limits = dict(SHARED_LIMITS)
+    limits = dict(SHARED_LIMITS if limits_override is None else limits_override)
     limits["max_nodes"] = node_count
     capability = Capability(
         capability_id="",
         topology_class=int(topology_class),
-        features=tuple(int(f) for f in SHARED_FEATURES),
+        features=tuple(int(f) for f in features),
         limits=limits,
         numeric_contracts=tuple(numeric_contracts),
         engines={name: dict(spec) for name, spec in SHARED_ENGINES.items()},
@@ -403,6 +405,59 @@ def cluster_n_capability(
     )
 
 
+def comparator_limits() -> Mapping[str, int]:
+    """The shared limits with AM-C1's event scoreboard published as built.
+
+    ``rtl/abi3/ot_a3_pkg.sv`` states the hardware plainly::
+
+        // AM-C1 ... the scoreboard holds 2,048 events x {pending, signalled,
+        // published}.  The four shipped capability records still publish
+        // max_event_id 1,023: they are certificate inputs of the bound
+        // deployments (the vector builder re-hashes them and refuses drift), so
+        // re-publishing them is AM-C1's separate capability step.
+        localparam integer A3_EVENT_COUNT  = 2048;
+
+    So 1,023 is not what the microsequencer holds; it is what four records may
+    not stop saying without moving digests that bound deployments are signed
+    against.  This record is nobody's certificate input, so it publishes the
+    built number, and AM-C1's step costs nothing here.
+
+    The reduced V4.1 program is why it matters: 1,445 distinct completion levels
+    across 3,245 kernels on one chip, refused twice over as ``program signals
+    1445 distinct events, capability admits 1024`` and ``program names event ID
+    1444, capability admits IDs up to 1023``.  1,445 fits the scoreboard that
+    exists; it did not fit the one the shipped records still describe.
+    """
+    limits = dict(SHARED_LIMITS)
+    limits["max_events"] = 2048
+    limits["max_event_id"] = 2047
+    return limits
+
+
+def comparator_features() -> tuple[Feature, ...]:
+    """The shared feature bits plus AM-E10's fp4 tensor format.
+
+    ``FP4_E2M1_S16_E4M3_TENSOR`` says the chip applies ONE E4M3 scale PER 16
+    E2M1 elements.  It is not implied by ``MXFP4_E2M1_E8M0`` (E8M0 per 32) and
+    not implied by ``FP8_E4M3FN_TENSOR``, which is exactly why amendment AM-E10
+    gave it a bit of its own: a chip may have both of those and still have no
+    path that applies an E4M3 scale to a group of sixteen.  V4.1's routed
+    experts are stored that way, so its graph requires the bit, and the verifier
+    said so in as many words -- ``capability does not implement required feature
+    bits [13]``.
+
+    The RTL carries the format: ``ot_a3_format_pkg.sv``, the lane and link
+    packages, ``ot_a3_communication_decoder.sv`` and ``ot_a3_vector_convert.sv``
+    all name the code.  So this declares an implemented decoder, not a widened
+    permission.
+
+    It is a separate tuple for the reason ``comparator_numeric_contracts`` is:
+    adding the bit to :data:`SHARED_FEATURES` would move both shipped capability
+    digests and invalidate every deployment already admitted against them.
+    """
+    return SHARED_FEATURES + (Feature.FP4_E2M1_S16_E4M3_TENSOR,)
+
+
 def comparator_numeric_contracts() -> tuple[str, ...]:
     """The shared union widened by a comparator model's contracts.
 
@@ -521,6 +576,8 @@ def single_chip_comparator_capability() -> Capability:
         link=SINGLE_CHIP_LINK,
         numeric_contracts=comparator_numeric_contracts(),
         memory=comparator_memory(),
+        features=comparator_features(),
+        limits_override=comparator_limits(),
     )
 
 
