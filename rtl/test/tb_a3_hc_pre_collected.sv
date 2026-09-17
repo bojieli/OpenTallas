@@ -52,6 +52,13 @@ module tb_a3_hc_pre_collected;
         .instruction_control_id(instruction_control_id),
         .instruction_source_operation_id(instruction_source_operation_id),
         .desc_valid(desc_valid), .desc_id(desc_id), .desc_data(desc_data),
+        //: One stream here: these vectors present all eleven descriptors on it, so
+        //: the auxiliary port is tied to the same signals. On a live tap the two
+        //: differ -- the sequencer's port carries nine of the eleven roles and the
+        //: bridge's carries NUMERIC and COUNTER_CLASS, measured on the four shipped
+        //: programs -- and the primary is preferred when both match, so this wiring
+        //: reproduces the single-stream behaviour exactly.
+        .aux_desc_valid(desc_valid), .aux_desc_id(desc_id), .aux_desc_data(desc_data),
         .record_valid(record_valid), .record_words(record_words),
         .error_code(collector_error), .collected_mask(collected_mask));
 
