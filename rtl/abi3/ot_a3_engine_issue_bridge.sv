@@ -451,6 +451,7 @@ module ot_a3_engine_issue_bridge #(
     output reg  [31:0]   dma_scatter_launch_count,
     output reg  [31:0]   attention_gqa_launch_count,
     output reg  [31:0]   attention_sparse_launch_count,
+    output reg  [31:0]   vector_sqrt_softplus_launch_count,
     output reg  [31:0]   selection_argmax_launch_count,
     output reg  [31:0]   selection_token_append_launch_count,
     output reg  [31:0]   selected_token,
@@ -513,6 +514,7 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
     localparam [7:0] ATTENTION_GQA = 8'h01;
     localparam [7:0] ATTENTION_SPARSE = 8'h02;
+    localparam [7:0] VECTOR_SQRT_SOFTPLUS = 8'h0c;
     localparam [7:0] SELECTION_ARGMAX = 8'h00;
     localparam [7:0] SELECTION_TOKEN_APPEND = 8'h01;
     localparam [7:0] FMT_U32 = 8'h04;
@@ -592,6 +594,9 @@ module ot_a3_engine_issue_bridge #(
     //:       hashlib.sha256(b'sparse_attention_bf16_v1').digest()[::-1].hex())"
     localparam [255:0] CONTRACT_SPARSE_ATTENTION_RAW =
         256'hb019cc11a0a100ff057027b933025774ad4ea6d5cf1630c06e6a5d1379b165e1;
+    //: ``sqrt_softplus_router_binary32_v1``, computed the same way.
+    localparam [255:0] CONTRACT_SQRT_SOFTPLUS_RAW =
+        256'h206149d79b1a35d8b6ab4734764ad123e85cd8261de3586ac1ac28ecaf148519;
     //: ADMISSION USED ITS OWN COPY OF THE GEOMETRY.
     //:
     //: The datapath instances below are handed GQA_QUERY_HEADS, GQA_KV_HEADS,
@@ -1020,7 +1025,9 @@ module ot_a3_engine_issue_bridge #(
     reg        route_biased_topk_q;
     reg        reduction_expert_sum_q;
     reg        attention_sparse_q;
+    reg        vector_sqrt_softplus_q;
     wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
+                                 vector_sqrt_softplus_q |
                                  dma_scatter_q | attention_gqa_q |
                                  attention_sparse_q |
                                  selection_argmax_q | selection_token_append_q |
@@ -1555,7 +1562,8 @@ module ot_a3_engine_issue_bridge #(
         route_biased_topk_q ? 6'b110011
       : (attention_gqa_q || attention_sparse_q) ? 6'b011111
       : (selection_argmax_q || selection_token_append_q ||
-         route_weight_normalize_q || route_window_index_q) ? 6'b010001
+         route_weight_normalize_q || route_window_index_q ||
+         vector_sqrt_softplus_q) ? 6'b010001
       : 6'b010011;
 
     wire [2:0] next_slot_w = next_bound_slot(slot_bound, slot_cursor);
@@ -1919,6 +1927,33 @@ module ot_a3_engine_issue_bridge #(
     localparam integer SPARSE_CHANNELS_MAX = 512;
     localparam integer SPARSE_SLOTS_MAX    = 4096;
     localparam integer SPARSE_KV_ROWS_MAX  = 1048576;
+    //: VECTOR.SQRT_SOFTPLUS: one [span, width] binary32 view in, one out. The
+    //: operator is elementwise and its contract is binary32 on both sides --
+    //: ``sqrt_softplus_router_binary32_v1`` -- so there is nothing to check
+    //: beyond the two views agreeing and the span being admitted.
+    wire [31:0] sqrt_softplus_width = slot_dim1[0];
+    wire sqrt_softplus_shape_ok =
+        (slot_dtype[0] == FMT_FP32) && (slot_rank[0] == 8'd2) &&
+        (slot_terms[0] == 8'd0) &&
+        (sqrt_softplus_width != 32'd0) &&
+        (slot_dim2[0] == 32'd0) && (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == sqrt_softplus_width) &&
+        (slot_stride1[0] == 32'd1) &&
+        (slot_stride2[0] == 32'd0) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd2) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == request_span) &&
+        span_admitted && slot_offset_consistent(0) &&
+        (slot_dtype[4] == FMT_FP32) && (slot_rank[4] == 8'd2) &&
+        (slot_terms[4] == 8'd0) &&
+        (slot_dim1[4] == sqrt_softplus_width) &&
+        (slot_dim2[4] == 32'd0) && (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == sqrt_softplus_width) &&
+        (slot_stride1[4] == 32'd1) &&
+        (slot_stride2[4] == 32'd0) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd2) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == request_span) &&
+        slot_offset_consistent(4);
+
     wire [31:0] sparse_heads    = slot_dim1[0];
     wire [31:0] sparse_head_dim = slot_dim2[0];
     wire [31:0] sparse_kv_rows  = slot_dim0[1];
@@ -2103,6 +2138,7 @@ module ot_a3_engine_issue_bridge #(
       : reduction_expert_sum_q ? expert_sum_shape_ok
       : dma_scatter_q ? scatter_shape_ok
       : attention_sparse_q ? sparse_shape_ok
+      : vector_sqrt_softplus_q ? sqrt_softplus_shape_ok
       : gqa_shape_ok;
 
     // -- the frozen numeric contract of each admitted family --------------
@@ -2123,7 +2159,13 @@ module ot_a3_engine_issue_bridge #(
         (desc_data[703:672] == 32'd0) &&
         (desc_data[767:704] == 64'd0);
     wire mapped_numeric_ok = mapped_numeric_frame_ok &&
-        ((attention_sparse_q &&
+        ((vector_sqrt_softplus_q &&
+          (numeric_input_dtype == FMT_FP32) &&
+          (numeric_second_dtype == FMT_FP32) &&
+          (numeric_output_dtype == FMT_FP32) &&
+          (desc_data[639:608] == 32'd0) &&
+          (desc_data[1023:768] == CONTRACT_SQRT_SOFTPLUS_RAW)) ||
+         (attention_sparse_q &&
           (numeric_input_dtype == FMT_BF16) &&
           (numeric_second_dtype == FMT_BF16) &&
           (numeric_output_dtype == FMT_BF16) &&
@@ -2398,6 +2440,7 @@ module ot_a3_engine_issue_bridge #(
             dma_scatter_q <= 1'b0;
             attention_gqa_q <= 1'b0;
             attention_sparse_q <= 1'b0;
+            vector_sqrt_softplus_q <= 1'b0;
             selection_argmax_q <= 1'b0;
             selection_token_append_q <= 1'b0;
             route_weight_normalize_q <= 1'b0;
@@ -2458,6 +2501,7 @@ module ot_a3_engine_issue_bridge #(
             dma_scatter_launch_count <= 32'd0;
             attention_gqa_launch_count <= 32'd0;
             attention_sparse_launch_count <= 32'd0;
+            vector_sqrt_softplus_launch_count <= 32'd0;
             selection_argmax_launch_count <= 32'd0;
             selection_token_append_launch_count <= 32'd0;
             selected_token <= 32'd0;
@@ -2514,7 +2558,10 @@ module ot_a3_engine_issue_bridge #(
                 dma_scatter_q <= 1'b0;
                 attention_gqa_q <= 1'b0;
             attention_sparse_q <= 1'b0;
+            vector_sqrt_softplus_q <= 1'b0;
                 attention_sparse_q <= 1'b0;
+            vector_sqrt_softplus_q <= 1'b0;
+                vector_sqrt_softplus_q <= 1'b0;
                 selection_argmax_q <= 1'b0;
                 selection_token_append_q <= 1'b0;
                 route_weight_normalize_q <= 1'b0;
@@ -2565,7 +2612,10 @@ module ot_a3_engine_issue_bridge #(
                 dma_scatter_launch_count <= 32'd0;
                 attention_gqa_launch_count <= 32'd0;
                 attention_sparse_launch_count <= 32'd0;
+                vector_sqrt_softplus_launch_count <= 32'd0;
+            vector_sqrt_softplus_launch_count <= 32'd0;
             attention_sparse_launch_count <= 32'd0;
+            vector_sqrt_softplus_launch_count <= 32'd0;
                 selection_argmax_launch_count <= 32'd0;
                 selection_token_append_launch_count <= 32'd0;
                 selected_token <= 32'd0;
@@ -2626,6 +2676,7 @@ module ot_a3_engine_issue_bridge #(
                                   (cfg_extended_placement_valid &&
                                    (((issue_family == FAMILY_VECTOR) &&
                                      ((issue_sub == VECTOR_ADD) ||
+                                      (issue_sub == VECTOR_SQRT_SOFTPLUS) ||
                                       (issue_sub == VECTOR_SILU_MUL))) ||
                                     ((issue_family == FAMILY_DMA) &&
                                      (issue_sub == DMA_SCATTER)) ||
@@ -2679,6 +2730,10 @@ module ot_a3_engine_issue_bridge #(
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ATTENTION) &&
                                     (issue_sub == ATTENTION_GQA);
+                                vector_sqrt_softplus_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_VECTOR) &&
+                                    (issue_sub == VECTOR_SQRT_SOFTPLUS);
                                 attention_sparse_q <=
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ATTENTION) &&
@@ -3118,6 +3173,9 @@ module ot_a3_engine_issue_bridge #(
                                 //: counts.
                                 : attention_sparse_q
                                 ? (request_span * sparse_row_words)
+                                //: One activation per score.
+                                : vector_sqrt_softplus_q
+                                ? (request_span * sqrt_softplus_width)
                                 //: groups x slots, which is the reference's own
                                 //: reduction.elements for this operator.
                                 : route_weight_normalize_q
@@ -3151,6 +3209,8 @@ module ot_a3_engine_issue_bridge #(
                                 //: _from_padding`` asks to be counted apart.
                                 : attention_sparse_q
                                 ? (request_span * sparse_heads * sparse_slots)
+                                : vector_sqrt_softplus_q
+                                ? (request_span * sqrt_softplus_width)
                                 : dma_scatter_q ? request_span
                                 : route_weight_normalize_q
                                 ? (request_span * weight_normalize_slots)
@@ -3371,6 +3431,9 @@ module ot_a3_engine_issue_bridge #(
                                 else if (attention_sparse_q)
                                     attention_sparse_launch_count <=
                                         attention_sparse_launch_count + 1;
+                                else if (vector_sqrt_softplus_q)
+                                    vector_sqrt_softplus_launch_count <=
+                                        vector_sqrt_softplus_launch_count + 1;
                                 else if (selection_argmax_q) begin
                                     selection_argmax_launch_count <=
                                         selection_argmax_launch_count + 1;
@@ -3486,6 +3549,16 @@ module ot_a3_engine_issue_bridge #(
     wire [7:0] append_eos_reason;
     wire [31:0] append_result_count;
     wire [31:0] append_work_count;
+
+    // -- VECTOR.SQRT_SOFTPLUS ------------------------------------------------
+    wire        sps_rd_en;
+    wire [31:0] sps_rd_addr;
+    wire        sps_out_we;
+    wire [31:0] sps_out_addr, sps_out_data;
+    wire        sps_busy, sps_done;
+    wire [7:0]  sps_error_code;
+    wire [31:0] sps_out_count;
+    wire [31:0] sps_linear, sps_underflow, sps_transcendental;
 
     // -- ATTENTION.SPARSE ----------------------------------------------------
     wire        spa_mem_rd_en;
@@ -3618,6 +3691,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_done
         : route_biased_topk_q ? btk_done
         : reduction_expert_sum_q ? esum_done
+        : vector_sqrt_softplus_q ? sps_done
         : attention_sparse_q ? spa_done
         : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
@@ -3628,6 +3702,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_busy
         : route_biased_topk_q ? btk_busy
         : reduction_expert_sum_q ? esum_busy
+        : vector_sqrt_softplus_q ? sps_busy
         : attention_sparse_q ? spa_busy
         : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
@@ -3638,6 +3713,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_error_code
         : route_biased_topk_q ? btk_error_code
         : reduction_expert_sum_q ? esum_error_code
+        : vector_sqrt_softplus_q ? sps_error_code
         : attention_sparse_q ? spa_error_code
         : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
@@ -3648,6 +3724,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_count
         : route_biased_topk_q ? btk_selected
         : reduction_expert_sum_q ? esum_out_count
+        : vector_sqrt_softplus_q ? sps_out_count
         : attention_sparse_q ? spa_rows_emitted
         : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
@@ -3658,6 +3735,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_candidates
         : route_biased_topk_q ? btk_candidates
         : reduction_expert_sum_q ? esum_out_count
+        : vector_sqrt_softplus_q ? sps_out_count
         : attention_sparse_q ? spa_valid_row_reads
         : attention_gqa_q ? gqa_work_count : array_work_count;
     //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
@@ -3717,6 +3795,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_pos_rd_en
         : route_biased_topk_q ? btk_score_rd_en
         : reduction_expert_sum_q ? esum_m0_rd_en
+        : vector_sqrt_softplus_q ? sps_rd_en
         : attention_sparse_q ? spa_mem_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
     assign m0_rd_addr = bridge_index_read ? bridge_index_addr
@@ -3728,6 +3807,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_pos_rd_addr
         : route_biased_topk_q ? btk_score_rd_addr
         : reduction_expert_sum_q ? esum_m0_rd_addr
+        : vector_sqrt_softplus_q ? sps_rd_addr
         : attention_sparse_q ? spa_mem_rd_addr
         : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
@@ -3769,6 +3849,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_we
         : route_biased_topk_q ? btk_out_we
         : reduction_expert_sum_q ? esum_out_we
+        : vector_sqrt_softplus_q ? sps_out_we
         : attention_sparse_q ? spa_out_we
         : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
@@ -3779,6 +3860,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_addr
         : route_biased_topk_q ? btk_out_addr
         : reduction_expert_sum_q ? esum_out_addr
+        : vector_sqrt_softplus_q ? sps_out_addr
         : attention_sparse_q ? spa_out_addr
         : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
@@ -3789,6 +3871,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_data
         : route_biased_topk_q ? btk_out_data
         : reduction_expert_sum_q ? esum_out_data
+        : vector_sqrt_softplus_q ? sps_out_data
         : attention_sparse_q ? spa_out_data
         : attention_gqa_q ? gqa_out_data : array_out_data;
     // The bridge's own index read and the scatter's index read address the
@@ -3798,7 +3881,7 @@ module ot_a3_engine_issue_bridge #(
         : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q ||
-           attention_sparse_q ||
+           attention_sparse_q || vector_sqrt_softplus_q ||
            route_weight_normalize_q || route_window_index_q ||
            route_biased_topk_q || reduction_expert_sum_q);
     wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
@@ -4062,6 +4145,32 @@ module ot_a3_engine_issue_bridge #(
         .exponential_count(gqa_exponential_count),
         .value_multiply_count(gqa_value_multiply_count),
         .saturation_count(gqa_saturation_count)
+    );
+
+    //: VECTOR.SQRT_SOFTPLUS. One view in, one out, walked element by element
+    //: through the scalar unit -- the operator is elementwise and there is no
+    //: dependence between elements, so widening it is a lane count rather than
+    //: a redesign.
+    ot_a3_vector_sqrt_softplus_row softplus_row (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & vector_sqrt_softplus_q),
+        .cfg_elements(request_span * sqrt_softplus_width),
+        .cfg_in_base(slot0_base),
+        .cfg_out_base(slot4_base),
+        .in_rd_en(sps_rd_en),
+        .in_rd_addr(sps_rd_addr),
+        .in_rd_data(m0_rd_data),
+        .out_we(sps_out_we),
+        .out_addr(sps_out_addr),
+        .out_data(sps_out_data),
+        .busy(sps_busy),
+        .done(sps_done),
+        .error_code(sps_error_code),
+        .out_count(sps_out_count),
+        .linear_count(sps_linear),
+        .underflow_count(sps_underflow),
+        .transcendental_count(sps_transcendental)
     );
 
     //: ATTENTION.SPARSE. Four bound inputs and one output, the same five slots

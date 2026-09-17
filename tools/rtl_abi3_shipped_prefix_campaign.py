@@ -198,6 +198,11 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_attention_qk_walk.sv",
     "rtl/abi3/ot_a3_attention_av_walk.sv",
     "rtl/abi3/ot_a3_attention_sparse.sv",
+    #: VECTOR.SQRT_SOFTPLUS and the correctly-rounded square root
+    #: under it, which the bridge now instantiates too.
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
 )
 TEST_SOURCES = (
