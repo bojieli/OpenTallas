@@ -129,7 +129,13 @@ def test_deepseek_capacity_counts_replication_constants_and_rolling_queries(
     assert proofs["fallback_replicated_weight_bytes"] == 4_583_010_304
     assert proofs["weight_bytes_per_node"] == 13_445_013_724
     assert proofs["weight_replication_overhead_per_node"] > 4_000_000_000
-    assert proofs["generated_constant_bytes"] == 272_629_772
+    # 268,435,456 of this is the two 128 MiB RoPE coefficient tables; the rest
+    # is six 2 MiB index tables plus twelve bytes of scalars.  The figure was
+    # 272,629,772 when it was written, which is four index tables fewer: the
+    # ``ring_indices``/``floor_div_indices`` pairs arrived with
+    # ``2a15997 feat(abi3): lower DeepSeek state as direct HBM buffers``, one
+    # day after this expectation, and the assertion has been failing since.
+    assert proofs["generated_constant_bytes"] == 281_018_380
 
     placements = {item.tensor_id: item for item in plan.weight_placements}
     assert placements["embed.weight"].residency == "replicated"
@@ -507,8 +513,10 @@ def test_shared_exchange_scratch_uses_one_dedicated_one_credit_queue(
 
     assert result["ok"], result["errors"]
     assert result["exchange_object_ids"]
-    assert result["triple_count"] == 36
-    assert result["scratch_dma_count"] == 72
+    # 36 and 72 here predate the same commit: direct-HBM DeepSeek state added
+    # one exchange triple and the two DMAs that serve it.
+    assert result["triple_count"] == 37
+    assert result["scratch_dma_count"] == 74
     assert result["queue_index"] == capability.engines["dma"]["queues"] - 1
     assert result["issue_window"] == 1
     assert result["max_outstanding"] == 1
