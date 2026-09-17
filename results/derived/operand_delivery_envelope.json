@@ -1,0 +1,113 @@
+{
+  "envelope": {
+    "above_parity_in_every_regime": true,
+    "best_regime_ratio": 1.9523142183681383,
+    "crossover": "the single buffer wins while operand supply is near-perfect (skew 0 and 1) because the second bank's area is not free; the double buffer wins from skew 2 on, where the single bank's utilisation collapses",
+    "reading": "choosing the better structure per regime, the array is above A100 standard-cell-logic iso-area parity at every straggler level measured, and the binding regime is skew 3",
+    "worst_regime_best_ratio": 1.0798970971937574
+  },
+  "producer": {
+    "git": {
+      "commit": "3415f14b1547404fab4fa74774c573ed37ceffe6",
+      "worktree_dirty": true
+    },
+    "sha256": "40dc0dad09e71cdce36f81585f16eb7bf67d0dc38d6f1690399c1dc3f80acd6e",
+    "tool": "tools/audit_operand_delivery_envelope.py"
+  },
+  "question": "across the operand-supply regimes that were measured, and the structures that were built, what is the worst regime's best A100 iso-area ratio?",
+  "refusals": [
+    "not-a-silicon-claim: ASAP7 is a predictive, non-manufacturable PDK, and the A100 comparator is TSMC N7 silicon",
+    "not-a-claim-of-optimality: this is the envelope of three measured structures, not a bound over all possible ones",
+    "the 512-unit rows and the 16-unit rows are not comparable term-for-term; the narrow ones settle a direction, not a ratio"
+  ],
+  "regimes": [
+    {
+      "above_parity": true,
+      "best_ratio_vs_a100_logic": 1.9523142183681383,
+      "best_structure": "lockstep_single_buffer",
+      "frontier_double_buffer": 1.4124208231758921,
+      "lockstep_single_buffer": 1.9523142183681383,
+      "meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
+      "regime": "skew_0"
+    },
+    {
+      "above_parity": true,
+      "best_ratio_vs_a100_logic": 1.7212877359140002,
+      "best_structure": "lockstep_single_buffer",
+      "frontier_double_buffer": 1.4073849561228733,
+      "lockstep_single_buffer": 1.7212877359140002,
+      "meaning": "every unit slowed a little and by a different amount",
+      "regime": "skew_1"
+    },
+    {
+      "above_parity": true,
+      "best_ratio_vs_a100_logic": 1.3775073576941306,
+      "best_structure": "frontier_double_buffer",
+      "frontier_double_buffer": 1.3775073576941306,
+      "lockstep_single_buffer": 1.0064374821818927,
+      "meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "regime": "skew_2"
+    },
+    {
+      "above_parity": true,
+      "best_ratio_vs_a100_logic": 1.0798970971937574,
+      "best_structure": "frontier_double_buffer",
+      "frontier_double_buffer": 1.0798970971937574,
+      "lockstep_single_buffer": 0.5111329713785906,
+      "meaning": "one unit in sixteen at a 25% refill duty",
+      "regime": "skew_3"
+    },
+    {
+      "above_parity": true,
+      "best_ratio_vs_a100_logic": 1.3688821791708556,
+      "best_structure": "frontier_double_buffer",
+      "frontier_double_buffer": 1.3688821791708556,
+      "lockstep_single_buffer": 0.8980315683570838,
+      "meaning": "EVERY unit at a 50% refill duty",
+      "regime": "skew_4"
+    }
+  ],
+  "schema": "opentallas.derived.operand_delivery_envelope.v1",
+  "sources": [
+    {
+      "path": "results/derived/operand_delivery_double_buffer_audit.json",
+      "sha256": "729b2291b5445ce52b52fc243d76265a32c80f509c7a3f3acebdb3ac9d4a0a6f"
+    },
+    {
+      "path": "results/derived/operand_delivery_bank_depth_audit.json",
+      "sha256": "752bcdbc6cad41c655e4a1622c1915c24bd91a60eac840046f84476e1bd581c3"
+    }
+  ],
+  "third_structure_refuted": {
+    "decoupled_banks2_at_16_units": [
+      {
+        "elapsed_cycles": 10094,
+        "label": "decoupled_banks2",
+        "refill_skew": 1,
+        "sustained_mac_active": null
+      },
+      {
+        "elapsed_cycles": 10313,
+        "label": "decoupled_banks2",
+        "refill_skew": 2,
+        "sustained_mac_active": null
+      }
+    ],
+    "decoupled_banks4_at_16_units": [
+      {
+        "elapsed_cycles": 10094,
+        "label": "decoupled_banks4",
+        "refill_skew": 1,
+        "sustained_mac_active": null
+      },
+      {
+        "elapsed_cycles": 10313,
+        "label": "decoupled_banks4",
+        "refill_skew": 2,
+        "sustained_mac_active": null
+      }
+    ],
+    "verdict": "four banks retire the same work in the same cycles as two for +45.7 % core area and 3.5 % less frequency, and do not close at 0.8 ns; at three passes a tile fetch already fits inside a descriptor's compute time, so banks three and four are lookahead nothing ever waits on",
+    "what": "four weight banks"
+  }
+}
