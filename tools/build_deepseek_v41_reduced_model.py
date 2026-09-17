@@ -144,7 +144,7 @@ KEPT_EXACTLY = (
     "o_groups", "n_shared_experts", "n_activated_experts",
     "dspark_n_activated_experts", "dspark_block_size", "candidate_block_size",
     "hc_mult", "hc_sinkhorn_iters", "hc_eps", "engram_max_ngram_size",
-    "engram_compressed_vocab_size", "engram_pad_id", "window_size",
+    "engram_pad_id", "window_size",
     "norm_eps", "score_func", "route_scale", "swiglu_limit",
     "rope_theta", "compress_rope_theta", "rope_factor", "beta_fast",
     "beta_slow", "original_seq_len", "dtype", "expert_dtype",
@@ -169,6 +169,12 @@ COUNT_FIELDS = (
 DERIVED_FIELDS = {
     "rope_head_dim": "head_dim // (released head_dim // released rope_head_dim)",
     "engram_vocab_size": "released bucket size // the engram share factor below",
+    "engram_compressed_vocab_size": (
+        "engram.build_compressed_token_map of the REDUCED tokenizer, which the "
+        "release itself asserts this field against; a reduced vocabulary "
+        "normalises onto a smaller compressed space, so the released 99,092 is "
+        "not a fact about this vehicle"
+    ),
     "engram_num_embeddings": (
         "engram.EngramLayout.from_args of the reduced arguments, bucket primes "
         "summed per engram layer"
@@ -184,6 +190,63 @@ DERIVED_FIELDS = {
 }
 #: Parameters the reference implementation itself initialises to ones.
 GAIN_PARAMETER = re.compile(r"(^|\.)(\w*norm)\.weight$|(^|\.)(q_weight|k_weight)$")
+
+
+def install_cache_view(source: dict[str, Any], snapshot: Path) -> Path:
+    """Publish the constructed checkpoint where a hub consumer resolves it.
+
+    ``runtime/sim/generators.py`` derives the Engram compressed token map by
+    calling ``huggingface_hub.try_to_load_from_cache(repository, "tokenizer.json",
+    revision=...)`` and then checking the bytes against the digest the graph
+    declares.  The digest check is the guarantee; the cache is only the lookup.
+    This repository does not exist on the Hub -- it is a constructed fixture
+    whose "revision" is the digest of its own content -- so the lookup has to be
+    satisfied locally or a deployment cannot be built at all:
+
+        opentallas/deepseek-v4.1-flash-reduced-v1 tokenizer.json at revision
+        ... is not in the local cache
+
+    Real files are written, never symlinks into ``blobs/``.  A hub cache names
+    blobs by the file's git SHA-1, which is shared across repositories, so
+    writing a fixture's bytes through a blob symlink can overwrite a *released*
+    file that happens to hash the same -- a trap this fixture has already hit
+    once from the other direction.  The revision is content-addressed, so a
+    rebuild installs a new directory rather than mutating this one.
+    """
+    root = Path(
+        os.environ.get("OPENTALLAS_HF_HOME", Path.home() / ".cache/huggingface/hub")
+    )
+    view = (
+        root
+        / f"models--{source['repository'].replace('/', '--')}"
+        / "snapshots"
+        / str(source["revision"])
+    )
+    view.mkdir(parents=True, exist_ok=True)
+    for record in source["expected_files"]:
+        name = record["path"]
+        payload = (snapshot / name).read_bytes()
+        if hashlib.sha256(payload).hexdigest() != record["sha256"]:
+            raise ReducedModelError(
+                f"{name} does not match the digest the source contract declares"
+            )
+        (view / name).write_bytes(payload)
+    return view
+
+
+def write_reduced_tokenizer(snapshot: Path, model_dir: Path, vocab_size: int) -> None:
+    """Materialise the reduced tokenizer into the fixture directory."""
+    from tools.build_deepseek_v41_reduced_tokenizer import reduce_tokenizer
+
+    released = json.loads((snapshot / "tokenizer.json").read_text(encoding="utf-8"))
+    reduced = reduce_tokenizer(released, vocab_size)
+    (model_dir / "tokenizer.json").write_text(
+        json.dumps(reduced, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    (model_dir / "tokenizer_config.json").write_text(
+        (snapshot / "tokenizer_config.json").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
 
 
 class ReducedModelError(RuntimeError):
@@ -258,6 +321,7 @@ def reduced_body(
     factor: int,
     block: int,
     engram_factor: int,
+    compressed_vocab_size: int,
 ) -> dict[str, Any]:
     """Apply the reduction rule to the released flat inference config."""
 
@@ -307,6 +371,7 @@ def reduced_body(
             "rotation pairs channels, so it has to be even"
         )
     body["engram_vocab_size"] = int(full["engram_vocab_size"]) // engram_factor
+    body["engram_compressed_vocab_size"] = int(compressed_vocab_size)
     body["vision_n_layers"] = 0
     body["max_batch_size"] = 1
     body["temperature"] = 0
@@ -1124,6 +1189,13 @@ def write_snapshot(
     ).encode("utf-8")
     (snapshot / "inference_config.json").write_bytes(config_bytes)
     (model_dir / "inference_config.json").write_bytes(config_bytes)
+    # The tokenizer is part of the checkpoint, not a side artifact: the Engram
+    # compressed token map is derived from it, so a consumer that resolved a
+    # different tokenizer would build different hash tables for the same weights.
+    # It is written into both trees and registered in the source contract below
+    # for the same reason ``inference_config.json`` is.
+    for name in ("tokenizer.json", "tokenizer_config.json"):
+        (snapshot / name).write_bytes((model_dir / name).read_bytes())
 
     # STORAGE FORMAT.  The packed FP4 expert weights are written as I8, which is
     # how the RELEASED checkpoint represents them -- compiler/frontend/checkpoint
@@ -1227,12 +1299,17 @@ def write_snapshot(
         "inference_config.json",
         "model.safetensors.index.json",
         "parameter_formats.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
         shard,
     ]
     # The "revision" of a constructed checkpoint is its own content: the digest
     # of the configuration and the seed that produced every byte.
     revision = hashlib.sha256(
-        config_bytes + f"|seed={seed}".encode("utf-8")
+        config_bytes
+        + f"|seed={seed}".encode("utf-8")
+        + b"|tokenizer="
+        + _sha256_file(model_dir / "tokenizer.json").encode("utf-8")
     ).hexdigest()[:40]
     source = {
         "schema": CHECKPOINT_SOURCE_SCHEMA,
@@ -1311,7 +1388,24 @@ def main(argv: list[str] | None = None) -> int:
     vendor, engram_mod = import_vendor(snapshot_dir)
     from transformers import AutoTokenizer
 
-    tokenizer = AutoTokenizer.from_pretrained(str(snapshot_dir))
+    # The fixture is built against its OWN tokenizer, not the release's.  The
+    # released tokenizer emits ids up to 129,279 while this vehicle's embedding
+    # has ``vocab_size`` rows, so building the model against it would produce a
+    # fixture that tokenises text it cannot embed -- and would leave the Engram
+    # compressed token map, which ``build_compressed_token_map`` derives FROM the
+    # tokenizer, describing a vocabulary the checkpoint does not have.  The
+    # release's own assertion in ``engram.py`` is what forces the pair to agree.
+    reduced_vocab_size = int(full["vocab_size"]) // factor
+    arguments.model_dir.mkdir(parents=True, exist_ok=True)
+    write_reduced_tokenizer(snapshot_dir, arguments.model_dir, reduced_vocab_size)
+    tokenizer = AutoTokenizer.from_pretrained(str(arguments.model_dir))
+    if len(tokenizer) != reduced_vocab_size:
+        raise ReducedModelError(
+            f"the reduced tokenizer holds {len(tokenizer)} tokens for a "
+            f"{reduced_vocab_size}-row embedding"
+        )
+    _, compressed_vocab_size = engram_mod.build_compressed_token_map(tokenizer)
+    compressed_vocab_size = int(compressed_vocab_size)
 
     prompt_tokens = int(governed["prompt_token_count"])
     cap = int(governed["max_new_tokens"])
@@ -1337,6 +1431,7 @@ def main(argv: list[str] | None = None) -> int:
         factor=factor,
         block=block,
         engram_factor=int(arguments.engram_share_limit),
+        compressed_vocab_size=compressed_vocab_size,
     )
     probe_body["max_seq_len"] = sequence_context(probe_body, prompt_tokens, cap)
     probe_body["engram_num_embeddings"] = derive_engram_rows(
@@ -1352,7 +1447,11 @@ def main(argv: list[str] | None = None) -> int:
     engram_factor = 1
     while engram_factor <= int(arguments.engram_share_limit):
         body = reduced_body(
-            full, factor=factor, block=block, engram_factor=engram_factor
+            full,
+            factor=factor,
+            block=block,
+            engram_factor=engram_factor,
+            compressed_vocab_size=compressed_vocab_size,
         )
         body["max_seq_len"] = sequence_context(body, prompt_tokens, cap)
         body["engram_num_embeddings"] = derive_engram_rows(vendor, engram_mod, body)
@@ -1379,7 +1478,11 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     body = reduced_body(
-        full, factor=factor, block=block, engram_factor=chosen_factor
+        full,
+        factor=factor,
+        block=block,
+        engram_factor=chosen_factor,
+        compressed_vocab_size=compressed_vocab_size,
     )
     body["max_seq_len"] = sequence_context(body, prompt_tokens, cap)
     body["engram_num_embeddings"] = derive_engram_rows(vendor, engram_mod, body)
@@ -1501,6 +1604,7 @@ def main(argv: list[str] | None = None) -> int:
     lock = build_checkpoint_lock(arguments.snapshot, source)
     arguments.lock.parent.mkdir(parents=True, exist_ok=True)
     arguments.lock.write_bytes(canonical_json(lock) + b"\n")
+    cache_view = install_cache_view(source, arguments.snapshot)
 
     workload = {
         "workload_id": WORKLOAD_ID,
@@ -1707,6 +1811,7 @@ def main(argv: list[str] | None = None) -> int:
         f"params={parameter_count:,} bytes={bytes_now['total']:,} "
         f"engram_factor={chosen_factor}"
     )
+    print(f"cache view: {cache_view}")
     return 0
 
 

@@ -84,13 +84,23 @@ def test_release_is_registered_under_its_own_model_id() -> None:
     }
     assert V41_FLASH_REDUCED is not V41_FLASH
     assert resolve_release(V41_FLASH_REDUCED.model_id) is V41_FLASH_REDUCED
-    # It has no tokenizer and no model card, and says so rather than borrowing
-    # the release's digests: its checkpoint source lists four files and not one
-    # of them is either.
-    assert V41_FLASH_REDUCED.tokenizer_sha256 is None
-    assert V41_FLASH_REDUCED.tokenizer_config_sha256 is None
+    # It has no model card and says so rather than borrowing the release's
+    # digest.  It DOES carry a tokenizer, and its own, not the release's: the
+    # Engram n-gram tables hash over *compressed* token ids that
+    # ``engram.build_compressed_token_map`` derives from the tokenizer, so a
+    # vehicle with no tokenizer has no engram and a vehicle borrowing the
+    # released one would tokenise ids up to 129,279 that its 4,040-row
+    # embedding cannot hold.  The two digests therefore differ from the
+    # release's rather than being absent.
     assert V41_FLASH_REDUCED.model_card_sha256 is None
+    assert V41_FLASH_REDUCED.tokenizer_sha256 is not None
+    assert V41_FLASH_REDUCED.tokenizer_sha256 != V41_FLASH.tokenizer_sha256
+    assert V41_FLASH_REDUCED.tokenizer_config_sha256 is not None
     assert V41_FLASH.tokenizer_sha256 is not None
+    # And the compressed vocabulary is the tokenizer's, not the release's: a
+    # 4,040-token vocabulary normalises onto 3,402 compressed ids.
+    assert V41_FLASH_REDUCED.config_scalars["engram_compressed_vocab_size"] == 3_402
+    assert V41_FLASH.config_scalars["engram_compressed_vocab_size"] == 99_092
     # And it pins the vision tower ABSENT, which is a statement the validator
     # checks, not a silence.
     assert V41_FLASH_REDUCED.config_sections["vision_config"] is None

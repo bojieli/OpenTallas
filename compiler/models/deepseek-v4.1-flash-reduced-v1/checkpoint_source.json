@@ -3,13 +3,13 @@
   "expected_files": [
     {
       "path": "config.json",
-      "sha256": "043cfe085acf4d2a41c64c26cc57051cf169115b4b1dde3c60ad3aa71f3475fd",
-      "size_bytes": 2939
+      "sha256": "32f6712f9714f0a2863bbe4f54873ed7c1ac9d2815cf096ad65c887e0ffa5189",
+      "size_bytes": 2938
     },
     {
       "path": "inference_config.json",
-      "sha256": "a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb",
-      "size_bytes": 2160
+      "sha256": "3981625600c458d98afefb214cf374b9fcd73982e1da3dcb95025431cae1a90d",
+      "size_bytes": 2159
     },
     {
       "path": "model-00001-of-00001.safetensors",
@@ -25,6 +25,16 @@
       "path": "parameter_formats.json",
       "sha256": "3d2590e4ff12da5b04a9e05a53776bf3ddf471e70f1b5cd21488fa6fc9b03c0e",
       "size_bytes": 464561
+    },
+    {
+      "path": "tokenizer.json",
+      "sha256": "595deb8a55b069a7412b4778bdbfb0619c936ae9bf84a2744f1c505034c87db3",
+      "size_bytes": 147273
+    },
+    {
+      "path": "tokenizer_config.json",
+      "sha256": "6ac8c8dc065ed118161d02dd532749ae3f52c243deac27872134fae2f50d8547",
+      "size_bytes": 801
     }
   ],
   "remote_code_policy": "disabled",
@@ -32,8 +42,10 @@
   "required_files": [
     "config.json",
     "inference_config.json",
-    "parameter_formats.json"
+    "parameter_formats.json",
+    "tokenizer.json",
+    "tokenizer_config.json"
   ],
-  "revision": "0edbeffa7d0ac91c61987bdd7406d96ac899964d",
+  "revision": "d25fe02d2d3140aaab037e9ec32ed4100f1d4e02",
   "schema": "opentallas.checkpoint_source.v1"
 }

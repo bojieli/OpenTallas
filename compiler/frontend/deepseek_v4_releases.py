@@ -783,11 +783,11 @@ V41_FLASH = DeepSeekV4Release(
 V41_FLASH_REDUCED = DeepSeekV4Release(
     model_id="deepseek-v4.1-flash-reduced-v1",
     repository="opentallas/deepseek-v4.1-flash-reduced-v1",
-    revision="0edbeffa7d0ac91c61987bdd7406d96ac899964d",
+    revision="d25fe02d2d3140aaab037e9ec32ed4100f1d4e02",
     config_sha256=(
-        "043cfe085acf4d2a41c64c26cc57051cf169115b4b1dde3c60ad3aa71f3475fd"
+        "32f6712f9714f0a2863bbe4f54873ed7c1ac9d2815cf096ad65c887e0ffa5189"
     ),
-    config_bytes=2939,
+    config_bytes=2938,
     index_sha256=(
         "18458ac663386b63726134a9b14c822802b19e7a3847f84da6536d0a02f0ba18"
     ),
@@ -802,12 +802,22 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
     ),
     tensor_structure_evidence="derived_and_confronted_with_checkpoint_index",
     inference_config_sha256=(
-        "a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb"
+        "3981625600c458d98afefb214cf374b9fcd73982e1da3dcb95025431cae1a90d"
     ),
-    #: No model card and no tokenizer: this fixture has neither.
+    #: No model card: this fixture has none.  It DOES have a tokenizer, and
+    #: must: ``engram.build_compressed_token_map`` derives the Engram
+    #: compressed token map from it, so a consumer resolving a different
+    #: tokenizer would build different hash tables over the same weights.  It is
+    #: the released BPE restricted to this vehicle's 4,040-token id space, and
+    #: ``engram_compressed_vocab_size`` below is what the release's own
+    #: derivation returns for it -- 3,402, not the released 99,092.
     model_card_sha256=None,
-    tokenizer_sha256=None,
-    tokenizer_config_sha256=None,
+    tokenizer_sha256=(
+        "595deb8a55b069a7412b4778bdbfb0619c936ae9bf84a2744f1c505034c87db3"
+    ),
+    tokenizer_config_sha256=(
+        "6ac8c8dc065ed118161d02dd532749ae3f52c243deac27872134fae2f50d8547"
+    ),
     main_compress_ratios=(0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
     dspark_compress_ratios=(0, 0, 0),
     config_scalars=MappingProxyType(
@@ -824,7 +834,7 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
             "dspark_noise_token_id": 128799,
             "dspark_num_experts_per_tok": 3,
             "dspark_target_layer_ids": [37, 38, 39],
-            "engram_compressed_vocab_size": 99092,
+            "engram_compressed_vocab_size": 3402,
             "engram_head_dim": 32,
             "engram_layer_ids": [1, 14],
             "engram_max_ngram_size": 4,
@@ -893,7 +903,7 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
         "09b0308369f0dac4c833d348e9aa8d1a632b8ffde340d01da66b806d1c4a31f3"
     ),
     checkpoint_lock_id=(
-        "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1"
+        "2c63f413e81951ab69f9e5ed3520d695af7fcd6a1e6cba09814788d40543f429"
     ),
     supported_compress_ratios=(0, 1, 2),
     config_layout=MappingProxyType(
