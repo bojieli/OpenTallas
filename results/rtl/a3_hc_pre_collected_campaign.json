@@ -1,0 +1,55 @@
+{
+  "chain": "raw descriptors -> ot_a3_semantic_record_collector -> 128-word record -> ot_a3_hc_pre_t1_descriptor_rne -> 8 weight and 16 combination coefficients",
+  "does_not_establish": [
+    "any token: one operator of one layer is not a model",
+    "that the collector taps a live fetch port -- ot_a3_microsequencer is not in this bench and the descriptor stream is driven by it",
+    "that the engine's results reach a result bank: they are compared here, not emitted",
+    "any timing, area or throughput claim"
+  ],
+  "establishes": [
+    "the engine accepts the record the collector assembles and computes the expected coefficients from it, on the shipped ROM program's HC_PRE dispatch (program counter 15, operator 381)",
+    "the arithmetic counters hold on a collected record: 393,216 fused accumulations and 16,383 balanced reduction adds",
+    "both simulators agree"
+  ],
+  "results": {
+    "icarus": {
+      "checks": 27,
+      "errors": 0,
+      "pass": true
+    },
+    "verilator": {
+      "checks": 27,
+      "errors": 0,
+      "pass": true
+    }
+  },
+  "schema": "opentallas.a3_hc_pre_collected.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "005ff4d9237548ed76d732b097616523ebec755d86ccbd7417f66baf1452f175",
+    "rtl/abi3/ot_a3_hc_coefficients_rne.sv": "7251ffaa8a77691c61b4b31d435ca5f7c238ef78c9b4859cf958bd50e6e98ae0",
+    "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv": "474fbd53b38c6740ff53d54ff9742d65172f835c77aaef3c2ccd80033af55a3b",
+    "rtl/abi3/ot_a3_hc_projection_pkg.sv": "d3591df9b9bde7997922756734d61eec5ed32245e4e3a718a2a43b42e9468d6a",
+    "rtl/abi3/ot_a3_hc_projection_rms_rne.sv": "6e76c5d83522969883358ad5ac0f0869e6c2959337fe306763315572bd5fd1b1",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv": "a935cd5b6a82d1be73ff396ec86d9c60bfc58d31dd0012fd7c4b8bcaaa63524e",
+    "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv": "1040b68ea7824e3d495c6cc4255983ce94ca376dff69bd56e21e81af658b85dd",
+    "rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv": "b4a9f659cf4e69e73a688a24b126426f29263366257b6b2ae104479eb1293da3",
+    "rtl/abi3/ot_a3_semantic_record_collector.sv": "acde446572eda6ed895b4c3b58a8801bc180dcd6d19143e288cb4c95c41048ce",
+    "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv": "af29f8b8f83597bf1a8c9a657a9dd79fbb04b399781895b48f4efaa2b8c5b864",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
+    "rtl/test/tb_a3_hc_pre_collected.sv": "9f601aed4cb2ca529d50c2c67633a99846f5310c9b4aa6be6640a4bd42d9b451",
+    "tools/run_a3_hc_pre_collected_campaign.py": "0270cf22ba38cdfa6bd401b1ab8d02ae493238fb70dfdace2dbe9fca47661be6"
+  },
+  "status": "pass",
+  "vector_sha256": {
+    "BASE": "a8d9a1f9a1b714499a3f43b2b9ed48445370a418bf1219960562a9ef3203063b",
+    "EXPECTED": "4c5d44fcd0d92516c6fa6bb2b24d2fd2c52f6cc729c0a05a9e90e22d7c9fc4f1",
+    "HIDDEN": "b6c73f0f29f553cd5d88b169989accac6d3554a35becbe66b6411db8690c53dd",
+    "PROJECTION": "33c16205fa650f82e1118a54289422bd59775ee569fcd84e790ca67693a199fb",
+    "ROM_DESC": "ee1aee137ecd7e932329a9d1597a42384527f5fcf212ec5a984aaab1df7fd93f",
+    "ROM_META": "f683fde30812fae7dbd213e5617e37b20d5d1aee4349da6e7efe6d19d8b50967",
+    "SCALE": "5ef82263570509b9bf53f08a0288724f9717b7e0724c23c4047ea7a6303b45b5"
+  }
+}
