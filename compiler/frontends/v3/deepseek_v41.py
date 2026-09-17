@@ -1024,6 +1024,13 @@ _ATTENTION_MODE_SOURCE_KINDS: Mapping[str, tuple[str, ...]] = {
         # cosmetic ordering question -- it names two tensors that do not exist.
         "COMPRESS_STATE_UPDATE",
         "COMPRESS_POOL",
+        # ``Compressor.forward`` ends ``return self.norm(kv.to(dtype))``: the
+        # pooled latent is binary32 because the softmax gate runs in fp32, and it
+        # is CAST BACK to the activation dtype before the norm.  The cast was
+        # missing here, so the norm was handed an fp32 view and refused it -- its
+        # contract is BF16 in and BF16 out.  V4's own export emits the same
+        # conversion after its pool (``BINARY32_TO_BF16`` there too).
+        "BINARY32_TO_BF16",
         "RMS_NORM",
         "INDEX_KEY_PROJECT",
         "RMS_NORM",
@@ -1127,6 +1134,7 @@ def source_kind_plan(
         "CANDIDATE_MASK_READ": ("STATE_READ",),
         "COMPRESSED_KV_VALID_VIEW": ("STATE_READ",),
         "COMPRESS_KV_WRITE": ("KV_APPEND",),
+        "BINARY32_TO_BF16": ("CONVERT",),
         "COMPRESS_POOL": ("COMPRESS_POOL",),
         "COMPRESS_PROJECT": ("COMPRESS_PROJECT",),
         "COMPRESS_STATE_UPDATE": ("COMPRESS_STATE_UPDATE",),
@@ -1172,8 +1180,10 @@ def source_kind_plan(
             + ("CONCAT",)
         ),
         # ``ParallelEngramEmbedding.forward`` keeps the table FP8 and
-        # dequantizes each row on lookup.
-        "ENGRAM_ROW_LOOKUP": ("EMBEDDING_LOOKUP", "DEQUANTIZE"),
+        # dequantizes each row on lookup, gathering the row's scale with the
+        # same indices -- which is TWO lookups, the codes and their scales.
+        "ENGRAM_ROW_LOOKUP": ("EMBEDDING_LOOKUP", "EMBEDDING_LOOKUP",
+                              "DEQUANTIZE"),
         # ``build_compressed_token_map``'s table, read once per token.
         "ENGRAM_TOKEN_COMPRESS": ("EMBEDDING_LOOKUP",),
         "EXPERT_DISPATCH": ("EXPERT_DISPATCH",),
@@ -1347,6 +1357,9 @@ CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
     "CANDIDATE_MASK_READ": "candidate_mask_view",
     "COMPRESSED_KV_VALID_VIEW": "compressed_kv_valid_view_bf16",
     "COMPRESS_KV_WRITE": "compressed_kv_write_bf16",
+    #: The narrowing is the reference's own, named after it so that the
+    #: implementation resolves without a frozen table entry.
+    "BINARY32_TO_BF16": "conversion_binary32_tensor_to_bf16_rne",
     "COMPRESS_POOL": "compression_pool_compress_pool_f32",
     "COMPRESS_PROJECT": "compression_compress_project_bf16",
     "COMPRESS_STATE_UPDATE": "compression_state_compress_state_update_f32",
@@ -1491,7 +1504,9 @@ def layer_source_plan(
     #: pooled reduction and no partial-group state to carry across steps
     #: (``Compressor.forward``'s first branch, and ``Compressor.__init__``
     #: registers neither buffer).
-    pooled_only = ("COMPRESS_POOL", "COMPRESS_STATE_UPDATE")
+    #: and therefore no binary32 latent to cast back either: ratio 1's ``wkv``
+    #: is declared ``torch.bfloat16`` where ratio > 1 promotes it to fp32.
+    pooled_only = ("COMPRESS_POOL", "COMPRESS_STATE_UPDATE", "BINARY32_TO_BF16")
     plan: list[tuple[str, ...]] = []
     for mode in modes:
         kinds: list[str] = []
@@ -2986,12 +3001,18 @@ def export_deepseek_v41_kernel_graph(
             #
             # The release dequantizes on lookup and gathers the scale with the
             # SAME indices (``ParallelEngramEmbedding.forward``:
-            # ``scales = F.embedding(local_indices, self.scale)``).  That is what
-            # the reconstruct kernel below states: it takes ``table_scale`` as an
-            # explicit operand and declares ``scale_rows`` addressed by the same
-            # row identifiers.  The provenance is therefore recorded where it is
-            # actionable, on the kernel that applies it, instead of as a tensor
-            # declaration no addressing rule can satisfy.
+            # ``scales = F.embedding(local_indices, self.scale)``).  So THIS
+            # EXPORT GATHERS IT TOO, with a second lookup on the same row
+            # identifiers, and the reconstruction below consumes the gathered
+            # plane.  Passing the whole table scale to the dequantiser instead
+            # and recording "addressed_by_the_same_row_identifiers" as an
+            # attribute did not work: no engine can act on that attribute,
+            # because the row identifiers are not one of the dequantiser's
+            # operands -- slot 2 is the carried-plane operand of the partial
+            # dequantisation contract -- so the device refused the pair with a
+            # 189,998-row scale against 3,072 gathered rows.  Gathering it here
+            # needs no new operator and no engine change: EMBEDDING_LOOKUP is
+            # exactly the release's ``F.embedding``.
             rows_payload = builder.tensor(
                 f"{op}.rows",
                 "fp8_e4m3fn",
@@ -3018,11 +3039,36 @@ def export_deepseek_v41_kernel_graph(
             # ``self.wkv(self.embed(hash_ids).flatten(-2))``.  The element order
             # is unchanged, so the reconstruction writes the rank-2 form directly
             # rather than moving it twice.
+            #: One scale per gathered row, gathered by the same identifiers.
+            #: The table scale is ``[table_rows, 1]``, so the gathered plane is
+            #: one block scale per row and the block is the row's full width.
+            row_scales = builder.tensor(
+                f"{op}.row_scales",
+                "e8m0",
+                (span, ENGRAM_COLUMNS, 1),
+                "activation",
+            )
+            emit(
+                f"{op}.read_scales",
+                "EMBEDDING_LOOKUP",
+                (row_identifiers, table_scale),
+                (row_scales,),
+                step="row_scale_read",
+                iteration_domain={
+                    "tokens": span,
+                    "rows": ENGRAM_COLUMNS,
+                    "width": 1,
+                },
+                attributes={
+                    "table_rows": int(scale_of[table_spec.name].shape[0]),
+                    "row_dtype": "e8m0",
+                },
+            )
             rows_bf16 = act(f"{op}.values", "bf16", (span, ENGRAM_ROW_WIDTH))
             emit(
                 f"{op}.reconstruct",
                 "DEQUANTIZE",
-                (rows_payload, table_scale),
+                (rows_payload, row_scales),
                 (rows_bf16,),
                 step="reconstruct",
                 iteration_domain={
@@ -3034,7 +3080,7 @@ def export_deepseek_v41_kernel_graph(
                     "block_size": WEIGHT_BLOCK,
                     "output_dtype": "bf16",
                     "row_layout": "ascending_column_then_row_element",
-                    "scale_rows": "addressed_by_the_same_row_identifiers",
+                    "scale_rows": "gathered_by_the_same_row_identifiers",
                 },
             )
 
@@ -3374,6 +3420,22 @@ def export_deepseek_v41_kernel_graph(
                     },
                 )
             latent_rows = groups if ratio > 1 else span
+            if ratio > 1:
+                op = start("BINARY32_TO_BF16", "attention.compressor.narrow", layer)
+                narrowed = act(f"{op}.latent", "bf16", (groups, HEAD_DIM))
+                emit(
+                    op,
+                    "CONVERT",
+                    (latent,),
+                    (narrowed,),
+                    iteration_domain={"rows": groups, "width": HEAD_DIM},
+                    attributes={
+                        "execution_predicate": group_predicate,
+                        "output_dtype": "bf16",
+                        "rounding": "round_to_nearest_even",
+                    },
+                )
+                latent = narrowed
             latent_normed = rms_norm(
                 "attention.compressor.norm", latent,
                 "attention.compressor.norm.weight", layer=layer,
@@ -3642,6 +3704,25 @@ def export_deepseek_v41_kernel_graph(
                 # yet" rather than "scored badly".
                 "causal_mask": "compressed_group_completed_before_position",
                 "head_reduction": "rectified_then_head_weighted_sum",
+                # THE ENGINE'S OWN HEAD-WEIGHT FACTOR IS ONE, and saying so is
+                # not a formality.  ``VECTOR.INDEX_SCORE`` reads a learned-index
+                # scale off its numeric descriptor and refuses one that is not a
+                # positive finite binary32 -- V4 carries the whole factor there
+                # (``deepseek_v4_graph`` states 0x3c3504f3, which is
+                # ``1/sqrt(index_n_heads * index_head_dim)``) and has the engine
+                # apply it.  This export applies it UPSTREAM instead, in the
+                # ``SCALE`` kernel just above, because the release writes it as a
+                # multiplication on ``weights_proj``'s output
+                # (``weights = self.weights_proj(x) * (self.softmax_scale *
+                # self.n_heads**-0.5)``) and that is a kernel of its own here.
+                # Declaring nothing left the descriptor's scale at zero and the
+                # operator could not be issued at all; declaring the factor again
+                # would apply it twice.  One is the third option and the true one,
+                # and it keeps the refusal meaningful for a graph that forgets.
+                "head_weight_scale_binary32": binary32_bits(1.0),
+                "head_weight_scale_applied_by": (
+                    "the_preceding_scale_kernel_on_the_head_weights"
+                ),
                 "ratio": ratio,
             }
             if committed_predicate:

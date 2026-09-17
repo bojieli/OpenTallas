@@ -516,11 +516,29 @@ def _scaled_bf16(codes: np.ndarray, scale_bits: int) -> tuple[np.ndarray, int]:
 # VECTOR.COMPRESS
 # ---------------------------------------------------------------------------
 def _ratio(descriptor: Descriptor) -> int:
+    """The compression ratio the operator declares in ``aux_id_1``.
+
+    ``PINNED_COMPRESSION_RATIOS`` is ``(4, 128)``, and those are
+    DeepSeek-V4-Flash-0731's ratios -- the module that defines them pins that
+    repository and revision at the top of the file.  Admitting only those two
+    refused DeepSeek-V4.1-Flash outright: its own released
+    ``inference_config.json`` declares ``compress_ratios`` of 1 and 2, so every
+    V4.1 compressor site was rejected before it ran, on the shipped model as much
+    as on a reduced one.
+
+    A ratio is therefore admitted as a POSITIVE COUNT here, and the geometry it
+    implies is checked where it is observable: each caller derives the
+    overlap coefficient from its own declared pool operand and cross-checks the
+    rest against it, which is stronger than this predicate was -- an operand that
+    disagrees with the ratio is refused whatever the ratio's value.  The release
+    discriminates the same way, on the count and not on a table:
+    ``inference/model.py`` writes ``if compress_ratio > 1``.
+    """
     ratio = _aux(descriptor, 1)
     _require(
-        ratio is not None and ratio in PINNED_COMPRESSION_RATIOS,
-        f"operator {descriptor.descriptor_id}: aux_id_1 must name a pinned "
-        f"compression ratio {sorted(PINNED_COMPRESSION_RATIOS)}",
+        ratio is not None and int(ratio) >= 1,
+        f"operator {descriptor.descriptor_id}: aux_id_1 must name a compression "
+        f"ratio of at least one; it names {ratio!r}",
     )
     assert ratio is not None
     return int(ratio)
@@ -659,11 +677,16 @@ def _compress_pool(ctx: EngineContext, descriptor: Descriptor) -> None:
         f"COMPRESS_POOL score view {score_view.descriptor_id} is "
         f"{score_view.dims}; the KV operand is {kv_view.dims}",
     )
-    expected_axis = (2 if ratio == PINNED_OVERLAP_RATIO else 1) * ratio
+    #: The pooled axis states whether the grouping overlaps: a non-overlapping
+    #: pool covers the group's own ``ratio`` candidates, an overlapping one
+    #: (V4-Flash's ratio 4) covers ``2 * ratio``.  Reading it from the operand
+    #: rather than from the ratio's numeric value is what lets a release with
+    #: different ratios -- V4.1's 1 and 2 -- pool at all, and refuses exactly as
+    #: much: any other axis is still rejected.
     _require(
-        axis == expected_axis,
-        f"COMPRESS_POOL ratio {ratio} pools {expected_axis} candidates; the "
-        f"operand declares {axis}",
+        axis in (ratio, 2 * ratio),
+        f"COMPRESS_POOL ratio {ratio} pools either {ratio} candidates or "
+        f"{2 * ratio} where the groups overlap; the operand declares {axis}",
     )
     _require(
         _dims(out_view, 3, "COMPRESS_POOL output") == (batch, groups, head_dim),
@@ -690,18 +713,41 @@ def _compress_pool(ctx: EngineContext, descriptor: Descriptor) -> None:
 
 def _compress_state_update(ctx: EngineContext, descriptor: Descriptor) -> None:
     ratio = _ratio(descriptor)
-    overlap = ratio == PINNED_OVERLAP_RATIO
-    coefficient = 2 if overlap else 1
     projected_view = ctx.input_view(descriptor, 0)
     _require(
         int(descriptor.payload["input_view_1"]) == NO_ID,
         f"operator {descriptor.descriptor_id}: COMPRESS_STATE_UPDATE binds a "
         "projection matrix in input_view_1; a state update has none",
     )
-    ape_view = ctx.input_view(descriptor, 2)
+    #: The absolute position embedding is OPTIONAL, because V4.1 has none.  Its
+    #: released compressor pools with the gate alone --
+    #: ``kv = (kv * score.softmax(dim=2)).sum(dim=2)`` in ``inference/model.py``
+    #: -- with nothing added to the scores, so the export leaves slot 2 unbound
+    #: and reading it unconditionally trapped on NO_ID before the pool ran.  An
+    #: absent operand means an absent bias here, never a zero one supplied by
+    #: this engine: a supplied operand would be a numeric contract nobody wrote.
+    ape_view = (
+        ctx.input_view(descriptor, 2)
+        if int(descriptor.payload["input_view_2"]) != NO_ID
+        else None
+    )
     kv_out = ctx.output_view(descriptor, 0)
     score_out = ctx.output_view(descriptor, 1)
 
+    #: The declared pool output states the overlap, as it does in COMPRESS_POOL:
+    #: its third axis is ``coefficient * ratio``.  Every check below then
+    #: cross-checks that one derived value -- the projected width against the
+    #: head dimension, and the pool views against the pooled axis -- instead of
+    #: all of them agreeing with a ratio pinned to another release.
+    declared_pool_axis = _dims(kv_out, 4, "COMPRESS_STATE_UPDATE pool KV")[2]
+    _require(
+        declared_pool_axis in (ratio, 2 * ratio),
+        f"COMPRESS_STATE_UPDATE pool KV view {kv_out.descriptor_id} pools "
+        f"{declared_pool_axis} candidates; ratio {ratio} pools either {ratio} or "
+        f"{2 * ratio} where the groups overlap",
+    )
+    coefficient = declared_pool_axis // ratio
+    overlap = coefficient == 2
     batch, span, pair, width = _dims(projected_view, 4, "COMPRESS_STATE_UPDATE input")
     _require(
         pair == 2,
@@ -714,12 +760,15 @@ def _compress_state_update(ctx: EngineContext, descriptor: Descriptor) -> None:
         f"{coefficient} times a head dimension",
     )
     head_dim = width // coefficient
-    ape_rows, ape_width = _dims(ape_view, 2, "COMPRESS_STATE_UPDATE position embedding")
-    _require(
-        ape_rows == ratio and ape_width == width,
-        f"COMPRESS_STATE_UPDATE position embedding is {ape_view.dims}; ratio "
-        f"{ratio} declares {(ratio, width)}",
-    )
+    if ape_view is not None:
+        ape_rows, ape_width = _dims(
+            ape_view, 2, "COMPRESS_STATE_UPDATE position embedding"
+        )
+        _require(
+            ape_rows == ratio and ape_width == width,
+            f"COMPRESS_STATE_UPDATE position embedding is {ape_view.dims}; ratio "
+            f"{ratio} declares {(ratio, width)}",
+        )
 
     start = _aux(descriptor, 2)
     position = 0 if start is None else int(ctx.symbol(int(start)))
@@ -750,13 +799,17 @@ def _compress_state_update(ctx: EngineContext, descriptor: Descriptor) -> None:
         _dtype(view, DType.FP32, f"COMPRESS_STATE_UPDATE pool {label}")
 
     projected = _fp32(ctx, projected_view, "COMPRESS_STATE_UPDATE input")
-    ape = _fp32(ctx, ape_view, "COMPRESS_STATE_UPDATE position embedding")
     kv = projected[:, :cutoff, 0, :]
     scores = projected[:, :cutoff, 1, :]
-    # The source adds the APE row to the whole complete prefix before the
-    # overlap transform, including halves the transform later replaces.
-    positions = np.arange(cutoff) % ratio
-    biased = np.add(scores, ape[positions][None, :, :], dtype=np.float32)
+    if ape_view is None:
+        #: No operand, no bias: the gate scores go into the pool as projected.
+        biased = np.ascontiguousarray(scores, dtype=np.float32)
+    else:
+        ape = _fp32(ctx, ape_view, "COMPRESS_STATE_UPDATE position embedding")
+        # The source adds the APE row to the whole complete prefix before the
+        # overlap transform, including halves the transform later replaces.
+        positions = np.arange(cutoff) % ratio
+        biased = np.add(scores, ape[positions][None, :, :], dtype=np.float32)
     _finite(biased, "COMPRESS_STATE_UPDATE score plus position embedding")
 
     kv_groups = kv.reshape(batch, groups, ratio, width)

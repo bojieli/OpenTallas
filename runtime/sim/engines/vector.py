@@ -191,6 +191,53 @@ def _same_shape(left: ResolvedView, right: ResolvedView, label: str) -> None:
     )
 
 
+def _suffix_shape(state: ResolvedView, operand: ResolvedView, label: str) -> None:
+    """Assert ``operand``'s dims are a trailing suffix of ``state``'s.
+
+    Equal dims are the degenerate suffix, so this admits everything
+    :func:`_same_shape` does and additionally admits an operand that is
+    broadcast over ``state``'s leading axes.  Only a SUFFIX is admitted, which
+    is what makes the row mapping unambiguous: the operand's rows tile
+    ``state``'s in row-major order, so state row ``r`` reads operand row
+    ``r % operand_rows`` and no other correspondence is possible.
+    """
+    left = tuple(int(extent) for extent in state.dims)
+    right = tuple(int(extent) for extent in operand.dims)
+    if right != left[len(left) - len(right):] or len(right) > len(left):
+        _require(
+            False,
+            f"{label}: view {state.descriptor_id} is {state.dims} and view "
+            f"{operand.descriptor_id} is {operand.dims}, which is not a "
+            "trailing suffix of it and so broadcasts no particular way",
+        )
+
+
+def _elements(dims: Sequence[int]) -> int:
+    count = 1
+    for extent in dims:
+        count *= int(extent)
+    return count
+
+
+def _same_elements(left: ResolvedView, right: ResolvedView, label: str) -> None:
+    """Assert two views cover the same elements in the same row-major order.
+
+    This is weaker than :func:`_same_shape` on purpose, and is only correct for
+    an operator that reads and writes flat -- it admits a view whose leading
+    axes are factored differently over the same extent.  The engram plane is
+    declared ``[position, head, width]`` where its destination is
+    ``[position, head * width]``; the two have byte-identical row-major layout,
+    and ``_write_rows`` already reshapes into the destination's own dims, so the
+    stricter check refused a view the write path handles natively.
+    """
+    _require(
+        _elements(left.dims) == _elements(right.dims),
+        f"{label}: view {left.descriptor_id} is {left.dims} and view "
+        f"{right.descriptor_id} is {right.dims}, which do not cover the same "
+        "number of elements",
+    )
+
+
 def _rows(dims: Sequence[int]) -> int:
     count = 1
     for extent in dims[:-1]:
@@ -1511,7 +1558,11 @@ def _convert_dequantize(ctx: EngineContext, operator: Descriptor) -> None:
         else None
     )
     if carried_view is None:
-        _same_shape(code_view, output_view, "DEQUANTIZE output shape")
+        #: A full dequantisation is elementwise over every code: ``rows``,
+        #: ``blocks`` and ``width`` below all come from the code and scale
+        #: views, and the destination's own dims are used only by the write.
+        #: So the invariant that matters is the extent, not the factoring.
+        _same_elements(code_view, output_view, "DEQUANTIZE output shape")
     else:
         # A *partial* dequantisation.  DeepSeek quantises the 448 non-rotary
         # channels of a 512-wide KV vector and keeps the 64 rotary ones in
@@ -2094,16 +2145,34 @@ _ENGRAM_GATE_REFUSALS: dict[int, str] = {
 def _engram_gate_codes(
     ctx: EngineContext, view: ResolvedView, width: int, label: str
 ) -> np.ndarray:
-    """Read a binary32 operand of the gate as ``[rows, width]`` of codes."""
+    """Read an operand of the gate as ``[rows, width]`` of binary32 codes.
+
+    The contract is binary32 THROUGHOUT THE ARITHMETIC, which is not the same
+    claim as every operand view storing binary32: the shipped V4.1 frame carries
+    the residual stream and the gate weights in BF16, and the declared numeric
+    profile says so -- ``_check_dtype`` against ``profile.input_dtype`` passes on
+    those views.  Demanding FP32 storage here contradicted that profile and
+    refused the shipped frame outright.
+
+    So the operand is widened to binary32 on the way in, and only a dtype whose
+    widening is EXACT is admitted: BF16 and FP16 are prefixes of binary32's
+    significand and FP32 is already it, so none of the three rounds and the
+    arithmetic below is binary32 with no conversion boundary.  A quantised or
+    integer view is refused rather than decoded, because that would introduce a
+    rounding the contract does not name.
+    """
     _unscaled(view, f"ENGRAM_GATE {label}")
     _require(
-        view.dtype == DType.FP32,
+        view.dtype in (DType.FP32, DType.BF16, DType.FP16),
         f"ENGRAM_GATE {label} view {view.descriptor_id} stores "
-        f"{DType(view.dtype).name}; the {ENGRAM_GATE_CONTRACT} contract is "
-        "binary32 throughout",
+        f"{DType(view.dtype).name}; the {ENGRAM_GATE_CONTRACT} contract admits "
+        "only a view that widens into binary32 exactly (FP32, BF16 or FP16)",
         TrapClass.CAPABILITY_OR_RESOURCE,
     )
     values = _read_rows(ctx, view, width)
+    if view.dtype != DType.FP32:
+        with _numeric_guard(f"ENGRAM_GATE {label} view {view.descriptor_id}"):
+            values = widen(view.dtype, values)
     return np.ascontiguousarray(values, dtype=np.float32).view(np.uint32)
 
 
@@ -2150,8 +2219,18 @@ def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> N
     _check_dtype(kv_view, profile.second_input_dtype, "ENGRAM_GATE key/value")
     _check_dtype(out_view, profile.output_dtype, "ENGRAM_GATE output")
     _same_shape(state_view, out_view, "ENGRAM_GATE output shape")
-    _same_shape(state_view, query_view, "ENGRAM_GATE query shape")
-    _same_shape(state_view, gate_key_view, "ENGRAM_GATE gate-key shape")
+    #: The query and the gate key are broadcast operands, exactly as the
+    #: key/value pair below is: the released projection weights are
+    #: ``[hyper_stream, width]``, ONE query vector per hyper-connection copy
+    #: shared by every position, so a span-N state of
+    #: ``[position, hyper_stream, width]`` reads the same four vectors N times.
+    #: Requiring an identical shape here refused that -- (128, 4, 160) state
+    #: against a (4, 160) weight -- and the operand it demanded instead does not
+    #: exist in the release.  A trailing SUFFIX is what is admitted, so the row
+    #: mapping is row-major broadcasting and nothing else: state row
+    #: ``p * streams + m`` reads operand row ``m``.
+    _suffix_shape(state_view, query_view, "ENGRAM_GATE query shape")
+    _suffix_shape(state_view, gate_key_view, "ENGRAM_GATE gate-key shape")
     _require(
         profile.epsilon_bits != 0,
         f"numeric profile {profile.descriptor_id} declares no epsilon; the "
@@ -2166,32 +2245,73 @@ def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> N
     state = _engram_gate_codes(ctx, state_view, width, "state")
     query = _engram_gate_codes(ctx, query_view, width, "query")
     gate_key = _engram_gate_codes(ctx, gate_key_view, width, "gate key")
+    #: ``rows`` is the state's; a suffix operand holds a whole divisor of it.
+    query_rows = int(query.shape[0])
+    gate_key_rows = int(gate_key.shape[0])
+    #: The state's rows are ``[..., hyper_stream, width]``, so its second-last
+    #: axis is the number of hyper-connection copies one position carries.
+    streams = int(state_view.dims[-2]) if len(state_view.dims) >= 2 else 1
+    planes = int(kv_view.dims[-2]) if len(kv_view.dims) >= 2 else 0
     _require(
-        len(kv_view.dims) >= 2 and int(kv_view.dims[-2]) == 2,
+        planes == 2 or (streams > 1 and planes == streams + 1),
         f"ENGRAM_GATE key/value view {kv_view.descriptor_id} is {kv_view.dims}; "
         f"the key and the value are the two planes of a [2, {width}] view, or "
-        f"of a [rows, 2, {width}] one",
+        f"of a [rows, 2, {width}] one -- or, where the state carries {streams} "
+        f"hyper-connection streams, the {streams + 1} planes of one key per "
+        f"stream followed by the single value they share",
     )
-    pairs = _engram_gate_codes(ctx, kv_view, width, "key/value").reshape(-1, 2, width)
-    _require(
-        pairs.shape[0] in (1, rows),
-        f"ENGRAM_GATE key/value view {kv_view.descriptor_id} holds "
-        f"{pairs.shape[0]} pair(s) for {rows} state row(s); a retrieved pair is "
-        "shared by every row or given one each",
-    )
+    codes = _engram_gate_codes(ctx, kv_view, width, "key/value")
+    if planes == 2:
+        pairs = codes.reshape(-1, 2, width)
+        _require(
+            pairs.shape[0] in (1, rows),
+            f"ENGRAM_GATE key/value view {kv_view.descriptor_id} holds "
+            f"{pairs.shape[0]} pair(s) for {rows} state row(s); a retrieved pair "
+            "is shared by every row or given one each",
+        )
+        shared_value_planes = None
+    else:
+        #: THE RELEASED PROJECTION PUBLISHES ``hc_mult + 1`` PLANES, not a pair:
+        #: ``kv.split([hc_mult * dim, dim])`` gives one key per hyper-connection
+        #: copy and one value all of them share.  The pair for stream ``m`` is
+        #: therefore (plane m, plane hc_mult), which no single strided view of
+        #: this buffer presents -- which is why the exporter states the layout
+        #: instead of materialising it by duplicating the value plane.  Reading
+        #: it here is what honours that statement; before this the engine refused
+        #: the buffer and the only operand it would accept was one the release
+        #: does not produce.
+        shared_value_planes = codes.reshape(-1, planes, width)
+        positions = int(shared_value_planes.shape[0])
+        _require(
+            rows % streams == 0 and positions in (1, rows // streams),
+            f"ENGRAM_GATE key/value view {kv_view.descriptor_id} holds "
+            f"{positions} position(s) of {planes} planes for {rows} state row(s) "
+            f"over {streams} stream(s); the planes are shared by every position "
+            "or given one each",
+        )
+        pairs = None
 
     epsilon_code = int(profile.epsilon_bits)
     results = np.empty((rows, width), dtype=np.uint32)
     gates: list[int] = []
     for row in range(rows):
-        pair = pairs[0] if pairs.shape[0] == 1 else pairs[row]
+        if shared_value_planes is None:
+            pair = pairs[0] if pairs.shape[0] == 1 else pairs[row]
+        else:
+            #: state row ``r`` is position ``r // streams``, stream ``r % streams``
+            block = shared_value_planes[
+                0
+                if shared_value_planes.shape[0] == 1
+                else row // streams
+            ]
+            pair = (block[row % streams], block[planes - 1])
         with _numeric_guard(ENGRAM_GATE_CONTRACT):
             outcome = engram_gate(
                 [int(code) for code in state[row]],
                 [int(code) for code in pair[0]],
                 [int(code) for code in pair[1]],
-                [int(code) for code in query[row]],
-                [int(code) for code in gate_key[row]],
+                [int(code) for code in query[row % query_rows]],
+                [int(code) for code in gate_key[row % gate_key_rows]],
                 epsilon_code=epsilon_code,
                 # The admitted width is the operand's own, so no model geometry
                 # bounds this operator from inside the engine.
@@ -2212,7 +2332,16 @@ def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> N
         results[row] = np.asarray(outcome.output_codes, dtype=np.uint32)
         gates.append(int(outcome.gate_code))
 
-    ctx.write(out_view, results.view(np.float32).reshape(out_view.dims))
+    #: The gate's arithmetic is binary32 and its DESTINATION is whatever the
+    #: numeric profile declares -- BF16 in the shipped V4.1 frame, which the
+    #: ``_check_dtype`` above has already agreed with.  So the result is narrowed
+    #: on the way out through the same path every other vector operator uses,
+    #: which makes that narrowing the operation's single rounding boundary and
+    #: counts it.  Writing the binary32 codes straight into the view instead was
+    #: refused outright by the memory service, and rightly: an implicit
+    #: conversion is exactly what it exists to catch.
+    _, conversions = _write_rows(ctx, out_view, results.view(np.float32))
+    ctx.counters.add("vector.conversions", conversions)
     # Two normalisations and one sigmoid per row, as the V4.1 operator
     # accounting charges an Engram module.
     ctx.counters.add("vector.norm_rows", 2 * rows)

@@ -114,6 +114,39 @@ VEHICLE_SOURCES: tuple[str, ...] = (
     "rtl/proto/ot_fp32_mul_rne_pipe.sv",
     "rtl/abi3/ot_a3_reduction_expert_sum.sv",
     "rtl/abi3/ot_a3_place_table.sv",
+    #: The bridge grew two more admitted operators -- ATTENTION.SPARSE and
+    #: VECTOR.SQRT_SOFTPLUS -- and instantiates them itself, so their module
+    #: trees are part of THIS vehicle whether or not a Qwen program issues them.
+    #: Without them the elaboration stops at MODMISSING, which reads like a
+    #: campaign regression and is a source list that did not follow the bridge.
+    #: The set below is the transitive closure of the top's instantiations, not a
+    #: guess: the sparse engine pulls five walk/epilogue modules, those pull the
+    #: softmax block and two transcendentals, and the multicast wrapper pulls the
+    #: link and mesh tree.
+    #: Packages first: the link tree names ot_a3_link_pkg and its CRC helper,
+    #: and Verilator resolves a package only from a file it was given.
+    "rtl/lib/ot_crc_pkg.sv",
+    "rtl/abi3/ot_a3_link_pkg.sv",
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv",
+    "rtl/abi3/ot_a3_attention_qk_walk.sv",
+    "rtl/abi3/ot_a3_attention_av_walk.sv",
+    "rtl/abi3/ot_a3_attention_denominator.sv",
+    "rtl/abi3/ot_a3_attention_epilogue.sv",
+    "rtl/abi3/ot_a3_attention_kv_index.sv",
+    "rtl/abi3/ot_a3_attention_sparse.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+    "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+    "rtl/abi3/ot_a3_communication_decoder.sv",
+    "rtl/abi3/ot_a3_link_channel.sv",
+    "rtl/abi3/ot_a3_link_endpoint.sv",
+    "rtl/abi3/ot_a3_link_node.sv",
+    "rtl/abi3/ot_a3_mesh_router.sv",
+    "rtl/abi3/ot_a3_collective_engine.sv",
+    "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+    "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/test/a3_engine_completion_adapter.sv",
     "rtl/test/a3_shipped_prefix_top.sv",

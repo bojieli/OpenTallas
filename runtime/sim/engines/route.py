@@ -742,12 +742,19 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             joined = np.concatenate(
                 (valid_window.astype(np.int64), chosen)
             )
-        _require(
-            joined.size > 0,
-            f"ROUTE.INDEX_TOPK: query {row} selects no KV row; an empty "
-            "softmax has no defined value",
-            trap_class=6,
-        )
+        #: AN EMPTY SELECTION IS A VALUE HERE, not a fault.  The release returns
+        #: ``torch.where(idxs < compress_lens, idxs + offset, -1)``, and at query
+        #: ``p`` only ``p // ratio`` compressed groups are complete -- so query 0
+        #: gets a row of nothing but the sentinel, every time, by construction.
+        #: ``selected`` is pre-filled with ``PAD_INDEX``, whose bits are the
+        #: release's own ``-1``, so leaving the row untouched IS that result.
+        #:
+        #: The empty softmax this used to refuse is real, but it is
+        #: ATTENTION.SPARSE's to refuse: that operator performs the softmax and
+        #: sees BOTH row sources, so it can tell a query with no rows at all from
+        #: one whose compressed source is merely not yet reachable.  It already
+        #: does, in the same words.  Refusing here instead rejected the first
+        #: query of every prefill.
         joined.sort()
         selected[row, : joined.size] = joined.astype(np.uint32)
     ctx.write(out_view, selected.reshape(out_view.dims))

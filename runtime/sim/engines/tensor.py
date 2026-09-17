@@ -1234,10 +1234,23 @@ def _tensor_embed_lookup(
     vocabulary, width = table_view.dims
     identifiers = np.asarray(ctx.read(id_view)).reshape(-1).astype(np.int64, copy=False)
     tokens = int(identifiers.size)
+    #: The output holds ``tokens`` rows of ``width``, and the check is on that
+    #: flattening rather than on rank 2 exactly -- the write below is already
+    #: ``rows.reshape(output_view.dims)``, and a view whose leading axes are
+    #: factored (the engram lookup declares ``[position, head, width]``) has
+    #: byte-identical row-major layout to ``[tokens, width]``.  Demanding rank 2
+    #: here contradicted that write and refused a legal view; the gather still
+    #: performs no arithmetic, so exactness is unaffected.
+    leading = 1
+    for extent in tuple(output_view.dims)[:-1]:
+        leading *= int(extent)
     _require(
-        tuple(output_view.dims) == (tokens, width),
+        len(output_view.dims) >= 2
+        and int(output_view.dims[-1]) == width
+        and leading == tokens,
         f"EMBED_LOOKUP output view {output_view.descriptor_id} is "
-        f"{output_view.dims}; expected {(tokens, width)}",
+        f"{output_view.dims}; expected {(tokens, width)} or a view whose "
+        f"leading axes multiply to {tokens} over a final {width}",
     )
     if operator.payload["numeric_profile_id"] != NO_ID:
         profile = ctx.numeric(operator.payload["numeric_profile_id"])

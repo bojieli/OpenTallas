@@ -127,6 +127,9 @@
     "lookup_engram_row_fp8_e4m3_row_read_v1": [
       "deepseek-v4.1-flash"
     ],
+    "lookup_engram_row_fp8_e4m3_row_scale_read_v1": [
+      "deepseek-v4.1-flash"
+    ],
     "matrix_bf16_linear_bf16_softmax_and_head_scale_v1": [
       "deepseek-v4.1-flash"
     ],
@@ -158,9 +161,6 @@
       "deepseek-v4.1-flash"
     ],
     "ngram_hash_u32_column_join_v1": [
-      "deepseek-v4.1-flash"
-    ],
-    "ngram_hash_u32_lookback_ids_v1": [
       "deepseek-v4.1-flash"
     ],
     "ngram_hash_u32_order2_v1": [
@@ -252,7 +252,7 @@
       "candidate_mask_block_maximum_v1": 1,
       "candidate_mask_block_top_k_v1": 1,
       "candidate_mask_view_v1": 4,
-      "compressed_kv_valid_view_bf16_v1": 38,
+      "compressed_kv_valid_view_bf16_v1": 42,
       "compressed_kv_write_bf16_v1": 4,
       "compression_compress_project_bf16_v1": 4,
       "compression_pool_compress_pool_f32_v1": 3,
@@ -289,6 +289,7 @@
       "lookup_compressed_token_ids_v1": 1,
       "lookup_engram_row_fp8_e4m3_reconstruct_v1": 2,
       "lookup_engram_row_fp8_e4m3_row_read_v1": 2,
+      "lookup_engram_row_fp8_e4m3_row_scale_read_v1": 2,
       "matrix_bf16_linear_bf16_softmax_and_head_scale_v1": 8,
       "matrix_bf16_linear_bf16_v1": 12,
       "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1": 130,
@@ -300,7 +301,6 @@
       "mxfp4_swiglu_bf16_routing_weight_product_v1": 40,
       "mxfp4_swiglu_bf16_up_contraction_v1": 40,
       "ngram_hash_u32_column_join_v1": 2,
-      "ngram_hash_u32_lookback_ids_v1": 2,
       "ngram_hash_u32_order2_v1": 2,
       "ngram_hash_u32_order3_v1": 2,
       "ngram_hash_u32_order4_v1": 2,
@@ -374,6 +374,7 @@
     "lookup_compressed_token_ids_v1",
     "lookup_engram_row_fp8_e4m3_reconstruct_v1",
     "lookup_engram_row_fp8_e4m3_row_read_v1",
+    "lookup_engram_row_fp8_e4m3_row_scale_read_v1",
     "matrix_bf16_linear_bf16_softmax_and_head_scale_v1",
     "matrix_bf16_linear_bf16_v1",
     "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
@@ -385,7 +386,6 @@
     "mxfp4_swiglu_bf16_routing_weight_product_v1",
     "mxfp4_swiglu_bf16_up_contraction_v1",
     "ngram_hash_u32_column_join_v1",
-    "ngram_hash_u32_lookback_ids_v1",
     "ngram_hash_u32_order2_v1",
     "ngram_hash_u32_order3_v1",
     "ngram_hash_u32_order4_v1",

@@ -182,12 +182,21 @@ def hash_route_indices(
 # DeepSeek-V4.1-Flash Engram table lookups
 # ---------------------------------------------------------------------------
 #
-# Three kernels of the V4.1 Engram path are table reads, and each names its own
+# Four kernels of the V4.1 Engram path are table reads, and each names its own
 # numeric contract because each reads a differently typed table:
 #
-#   ``lookup_compressed_token_ids_v1``            u32 map, one value per token
-#   ``lookup_engram_row_fp8_e4m3_row_read_v1``    fp8_e4m3fn rows, 256 wide
-#   ``lookup_engram_row_fp8_e4m3_reconstruct_v1`` e8m0-scaled blocks -> bf16
+#   ``lookup_compressed_token_ids_v1``              u32 map, one value per token
+#   ``lookup_engram_row_fp8_e4m3_row_read_v1``      fp8_e4m3fn rows, 256 wide
+#   ``lookup_engram_row_fp8_e4m3_row_scale_read_v1`` e8m0 row scales, one per row
+#   ``lookup_engram_row_fp8_e4m3_reconstruct_v1``   e8m0-scaled blocks -> bf16
+#
+# The scale read is the gather the reconstruction below has always ASSUMED its
+# caller performed -- its docstring states that the caller "has already gathered
+# ``scale[row_identifiers[p][c]]`` for every hash column ``c``".  The export now
+# emits that gather as its own kernel, which is why it now names its own
+# contract: handing the whole ``[table_rows, 1]`` scale tensor to the
+# reconstruction instead left the correspondence unstated in the graph, and the
+# device refused the pair (189,998 scale rows against 3,072 gathered rows).
 #
 # Every one of them is written from the kernel's own declared attributes and
 # from the released tensor declarations -- ``engram.compressed_token_map`` is
@@ -341,6 +350,87 @@ def engram_row_fp8_e4m3_row_read(
     return tuple(out)
 
 
+def engram_row_fp8_e4m3_row_scale_read(
+    row_identifiers: Sequence[Sequence[int]],
+    scale_table: Sequence[Sequence[int]],
+) -> tuple[tuple[int, ...], ...]:
+    """Engram row-scale read -- ``lookup_engram_row_fp8_e4m3_row_scale_read_v1``.
+
+    The companion of :func:`engram_row_fp8_e4m3_row_read`: the SAME identifiers
+    address the table's scale plane, in the same
+    ``ascending_column_then_row_element`` order, so that scale ``c`` of the
+    returned row is the scale of hash column ``c`` of the payload row.  This is
+    the release's own second gather -- ``ParallelEngramEmbedding.forward`` runs
+    ``scales = F.embedding(local_indices, self.scale)`` beside its payload
+    embedding -- and it is what makes the correspondence the reconstruction
+    checks true by construction rather than by assertion.
+
+    The scale plane is declared ``e8m0[table_rows, blocks_per_row]``, and the
+    V4.1 tables hold exactly one block per row because ``scale_block_elements``
+    is the row's full width.  That is NOT frozen here: the per-row block count
+    is taken from the table and every row is checked to carry the same count.
+
+    The operation is BYTE PRESERVING, as the payload read is: an e8m0 code is
+    returned exactly as the table holds it, undecoded, so no value can round and
+    a NaN code (0xFF) is neither produced nor consumed here -- the
+    reconstruction is where it is refused, because that is where it would reach
+    arithmetic.  The only arithmetic is address arithmetic, and every identifier
+    is bounds-checked against the scale plane's own row count.
+    """
+
+    rows = _sequence(scale_table, "scale_table")
+    if not rows:
+        raise LookupReferenceError("scale_table must hold a row")
+    table: list[tuple[int, ...]] = []
+    blocks: int | None = None
+    for index, raw in enumerate(rows):
+        row = _sequence(raw, f"scale_table[{index}]")
+        if blocks is None:
+            blocks = len(row)
+            if blocks == 0:
+                raise LookupReferenceError(
+                    "scale_table rows must hold at least one block scale"
+                )
+        elif len(row) != blocks:
+            raise LookupReferenceError(
+                f"scale_table[{index}] holds {len(row)} block scales and "
+                f"scale_table[0] holds {blocks}; the plane is rectangular"
+            )
+        table.append(
+            tuple(
+                _integer(value, f"scale_table[{index}][{slot}]", maximum=0xFF)
+                for slot, value in enumerate(row)
+            )
+        )
+    positions = _sequence(row_identifiers, "row_identifiers")
+    if not positions:
+        raise LookupReferenceError("row_identifiers must contain a position")
+    columns: int | None = None
+    out: list[tuple[int, ...]] = []
+    for position, raw_row in enumerate(positions):
+        ids = _sequence(raw_row, f"row_identifiers[{position}]")
+        if columns is None:
+            columns = len(ids)
+            if columns == 0:
+                raise LookupReferenceError(
+                    "row_identifiers rows must name at least one hash column"
+                )
+        elif len(ids) != columns:
+            raise LookupReferenceError(
+                "row_identifiers must be a rectangular rank-2 tensor"
+            )
+        scales: list[int] = []
+        for column, identifier in enumerate(ids):
+            row_id = _integer(
+                identifier,
+                f"row_identifiers[{position}][{column}]",
+                maximum=len(table) - 1,
+            )
+            scales.extend(table[row_id])
+        out.append(tuple(scales))
+    return tuple(out)
+
+
 def engram_row_fp8_e4m3_reconstruct(
     payload_codes: Sequence[Sequence[int]],
     scale_codes: Sequence[Sequence[int]],
@@ -439,5 +529,6 @@ __all__ = [
     "compressed_token_ids",
     "engram_row_fp8_e4m3_reconstruct",
     "engram_row_fp8_e4m3_row_read",
+    "engram_row_fp8_e4m3_row_scale_read",
     "hash_route_indices",
 ]
