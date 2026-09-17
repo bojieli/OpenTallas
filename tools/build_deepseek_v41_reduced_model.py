@@ -440,6 +440,52 @@ def build_model(vendor: Any, body: dict[str, Any], tokenizer: Any) -> Any:
     return vendor.Transformer(vendor.ModelArgs(**body), tokenizer)
 
 
+
+def round_trip_wo_a(model: Any) -> int:
+    """Put wo_a through the release's storage round trip, in place.
+
+    THE FIXTURE'S RECORDED TOKENS MUST BE THE TOKENS LOADING IT REPRODUCES, and
+    without this they are not. The vendor module holds wo_a as bf16 -- the
+    RUNTIME shape -- while the checkpoint stores fp8 with a 32x32-blocked E8M0
+    scale, and ``convert.py`` dequantizes between them. Generating from the
+    freshly initialised bf16 weights therefore records tokens from values that
+    are strictly more precise than any loader can reconstruct, and the reduced
+    oracle caught exactly that: the builder recorded
+    [2794, 2794, 2794, 2794, 3929 x 9, 1] and loading the same fixture produced
+    [3929 x 14, 1].
+
+    So the round trip is applied to the in-memory model before anything reads
+    it -- generation, the seed search, and the writer alike. Every one of them
+    then sees the values the release's own pipeline would deliver.
+    """
+
+    import torch
+
+    touched = 0
+    with torch.no_grad():
+        for name, parameter in model.named_parameters():
+            if not name.endswith("attn.wo_a.weight"):
+                continue
+            state, _ = _store_wo_a_quantized(
+                {name: parameter.detach().to("cpu")}, {name: "bfloat16"}, torch
+            )
+            stored = state[name]
+            scale = state[name.replace(".weight", ".scale")]
+            out_block = stored.size(0) // scale.size(0)
+            in_block = stored.size(1) // scale.size(1)
+            wide = (
+                stored.unflatten(0, (-1, out_block))
+                .unflatten(-1, (-1, in_block))
+                .float()
+                * scale[:, None, :, None].float()
+            )
+            parameter.copy_(
+                wide.flatten(2, 3).flatten(0, 1).bfloat16().to(parameter.device)
+            )
+            touched += 1
+    return touched
+
+
 def greedy(model: Any, prompt: list[int], *, cap: int, eos: set[int]) -> list[int]:
     """Greedy generation, argmax with ties to the lowest id, stopping on EOS.
 
@@ -592,6 +638,7 @@ def search_seeds(
     for seed in range(resumed_from if resumed_from is not None else start,
                       limit, stride):
         fill_parameters(model, seed, initializer_range)
+        round_trip_wo_a(model)
         produced = greedy(model, prompt, cap=cap, eos=eos)
         tried.append(seed)
         if seed == 0:
@@ -723,6 +770,7 @@ def select_seed(
     started = time.time()
     for seed in range(limit):
         fill_parameters(model, seed, initializer_range)
+        round_trip_wo_a(model)
         generated = greedy(model, prompt, cap=cap, eos=eos)
         tried += 1
         if seed == 0:
@@ -758,6 +806,20 @@ def select_seed(
         "seed_zero_generated_token_ids": seed_zero,
         "search_wall_seconds": round(time.time() - started, 1),
         "selection_is_argmax": True,
+        #: This path scans upward from zero and breaks at the first seed that
+        #: satisfies the rule, so minimality holds by construction and
+        #: ``seeds_tried == seed + 1`` is the check. The sharded path states a
+        #: residue-class argument instead because it does not scan in order;
+        #: this one needs no argument beyond the loop. The field was absent here
+        #: while the sharded path set it, which read as a regression in the
+        #: record when a serial search replaced a sharded one.
+        "minimality_established": True,
+        "minimality_argument": (
+            f"the search scanned every seed from 0 upward and stopped at the "
+            f"first that satisfied the rule, so no seed below {chosen[0]} "
+            f"satisfies it; seeds_tried {tried} is {chosen[0]} + 1"
+        ),
+        "searched_in_parallel": False,
     }, model
 
 
@@ -926,7 +988,11 @@ def _store_wo_a_quantized(
             torch.zeros_like(magnitude),
         )
         exponent = exponent.clamp(-127.0, 127.0)
-        scale = torch.pow(torch.tensor(2.0), exponent)
+        #: exp2 rather than pow(tensor(2.0), ...): this builder runs under a
+        #: default-device context, so a freshly constructed scalar lands on the
+        #: accelerator while the state dict has already been moved to the host,
+        #: and the multiply then refuses with "found at least two devices".
+        scale = torch.exp2(exponent)
         quotient = blocked / scale[:, None, :, None]
         weight = (
             quotient.flatten(2, 3).flatten(0, 1).to(torch.float8_e4m3fn).contiguous()
@@ -1257,6 +1323,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         model = build_model(vendor, body, tokenizer)
         fill_parameters(model, int(aggregated["seed"]), initializer_range)
+        round_trip_wo_a(model)
         replayed = greedy(model, prompt, cap=cap, eos=eos)
         if replayed != list(aggregated["generated_token_ids"]):
             raise ReducedModelError(
@@ -1302,9 +1369,11 @@ def main(argv: list[str] | None = None) -> int:
             initializer_range=initializer_range,
         )
         fill_parameters(model, int(selection["seed"]), initializer_range)
+        round_trip_wo_a(model)
     else:
         model = build_model(vendor, body, tokenizer)
         fill_parameters(model, int(arguments.seed), initializer_range)
+        round_trip_wo_a(model)
         generated = greedy(model, prompt, cap=cap, eos=eos)
         selection = {
             "rule": "supplied on the command line",

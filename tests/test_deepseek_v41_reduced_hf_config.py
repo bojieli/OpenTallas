@@ -106,11 +106,28 @@ def test_the_reduced_config_keeps_the_mode_sequence_and_reduces_the_widths() -> 
         assert architecture[key] < released_text[key], key
 
 
-def test_the_vision_tower_is_excluded() -> None:
+def test_the_vision_tower_is_present_and_zero_layers_deep() -> None:
+    """Present, not omitted -- and that is a requirement, not a preference.
+
+    ``build_official_tensor_specs`` resolves the vision section to decide
+    whether the release has a tower at all, and refuses a record that pins
+    none, so omitting the section makes the derivation refuse. The reduction
+    records reduced_vision_n_layers 0 against the release's 32, and a
+    zero-layer tower is exactly that statement -- with vision_enabled false,
+    the adapter derives no vision tensors and no bias_vl.
+    """
+
     on_disk = json.loads((REDUCED / "config.json").read_text())
-    assert "vision_config" not in on_disk
     released = json.loads((RELEASED / "config.json").read_text())
-    assert "vision_config" in released
+    assert "vision_config" in on_disk
+    assert on_disk["vision_config"]["num_hidden_layers"] == 0
+    assert released["vision_config"]["num_hidden_layers"] == 32
+    #: every other vision width is the release's, because only the depth is
+    #: reduced
+    for key, value in released["vision_config"].items():
+        if key == "num_hidden_layers":
+            continue
+        assert on_disk["vision_config"][key] == value, key
 
 
 def test_the_root_dtype_is_carried_and_not_mapped() -> None:

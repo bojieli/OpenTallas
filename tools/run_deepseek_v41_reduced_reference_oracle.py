@@ -1,0 +1,491 @@
+#!/usr/bin/env python3
+"""The V4.1 G1f reduced oracle: the release's own implementation, reduced widths.
+
+``tools/abi3_g1_models.py`` names this file as the producer of
+``results/abi3/deepseek_v41_reduced_reference_oracle.json``, and
+``tools/build_abi3_g1f_reduced_end_to_end.py --model deepseek-v4.1-flash``
+refuses until it exists:
+
+    deepseek-v4.1-flash: G1f runs the whole reduced workload with nothing
+    injected, so the fixture, its lock, its workload and its oracle are all
+    prerequisites; missing reduced reference oracle
+    (results/abi3/deepseek_v41_reduced_reference_oracle.json)
+
+It is the DeepSeek-V4.1-Flash counterpart of
+``tools/run_qwen3_reduced_reference_oracle.py``, and it is a different tool from
+``tools/build_deepseek_v41_reduced_model.py`` for the reason that module's
+docstring gives: the fixture builder generated its weights in memory and then
+wrote them, so its token ids are a statement about a process, not about the
+bytes on disk.  This tool READS THE SHARD BACK and runs the reference over
+whatever is in it.  If the two ever disagree the fixture is not reproducible,
+which is a finding, and ``--expect-summary`` is how that comparison is made.
+
+**The reference implementation.**  DeepSeek-V4.1-Flash is not in
+``transformers``, so there is no ``AutoModelForCausalLM`` path and no
+``model.generate`` to cross-check against -- the Qwen predecessor's second
+opinion has no analogue here and this file does not pretend otherwise.  What
+runs is the RELEASE'S OWN ``inference/model.py`` and ``inference/engram.py``,
+imported from the pinned 476 GB snapshot by the same
+``import_vendor`` the fixture builder used, and the greedy loop is imported from
+that builder rather than re-implemented, so there is one loop and not two.
+
+**What is authenticated before a framework is imported.**  The reduced
+checkpoint against its committed lock
+(``compiler.frontend.checkpoint.verify_checkpoint_lock``, the same function that
+binds the 510 GB production checkpoint); the workload against its own digest;
+every prompt and EOS id against the reduced vocabulary; and the vendor modules
+by SHA-256, recorded in the output so a later reader can tell which
+implementation produced these ids.
+
+**What this is not.**  An external comparator, like every oracle in this
+repository: it never supplies an accelerator activation and never produces an
+accelerator token.  It is also not a claim about the RELEASED model's numerics
+-- the weights are a constructed fixture, and the reduced widths are the point.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import platform
+import sys
+import time
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from compiler.frontend.checkpoint import (  # noqa: E402
+    load_checkpoint_lock,
+    verify_checkpoint_lock,
+)
+from runtime.abi3.capability import canonical_json  # noqa: E402
+from compiler.frontend.deepseek_v4_releases import V41_FLASH  # noqa: E402
+from tools.build_deepseek_v41_reduced_model import (  # noqa: E402
+    DEFAULT_LOCK,
+    DEFAULT_SNAPSHOT,
+    DEFAULT_SUMMARY,
+    DEFAULT_WORKLOAD_DIR,
+    MODEL_ID,
+    WORKLOAD_ID,
+    build_model,
+    greedy,
+    import_vendor,
+    released_snapshot,
+)
+
+SCHEMA = "opentallas.abi3.reference_oracle.v1"
+ORACLE_TOOL = "tools/run_deepseek_v41_reduced_reference_oracle.py"
+ORACLE_TOOL_VERSION = "deepseek_v41_reduced_reference_oracle.py:v1"
+DEFAULT_OUTPUT = ROOT / "results/abi3/deepseek_v41_reduced_reference_oracle.json"
+#: The vendor modules the fixture was built out of, recorded in
+#: results/abi3/deepseek_v41_reduced_model.json under release.vendor_modules.
+VENDOR_MODULES = ("inference/model.py", "inference/engram.py")
+
+
+class ReducedOracleError(RuntimeError):
+    """A source cannot support reduced-oracle evidence."""
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        while block := handle.read(4 * 1024 * 1024):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
+    """Copy the shard's bytes into the model, restoring each logical format.
+
+    ``write_snapshot`` stores the packed FP4 expert weights as I8 because the
+    RELEASED checkpoint does -- ``compiler/frontend/checkpoint`` refuses an F4
+    header in as many words -- and records the logical dtype of every parameter
+    in ``parameter_formats.json``.  The restoration is a reinterpretation of the
+    same bytes, never a conversion, and this function refuses rather than casts
+    if a stored tensor's byte count does not match the parameter it is loaded
+    into.
+    """
+    import torch
+    from safetensors.torch import load_file
+
+    formats = json.loads(
+        (snapshot / "parameter_formats.json").read_text(encoding="utf-8")
+    )
+    logical = formats["logical"]
+    index = json.loads(
+        (snapshot / "model.safetensors.index.json").read_text(encoding="utf-8")
+    )
+    shards = sorted(set(index["weight_map"].values()))
+    state: dict[str, Any] = {}
+    for shard in shards:
+        state.update(load_file(str(snapshot / shard)))
+
+    # THE RELEASE'S OWN CONVERSION STEP, because the shard is in the release's
+    # STORAGE shape and the runtime model is not.
+    #
+    # ``inference/model.py`` declares wo_a as ``ColumnParallelLinear(...,
+    # dtype=torch.bfloat16)`` where every sibling projection takes the default
+    # fp8, and says why beside the einsum that consumes it: "wo_a is
+    # block-diagonal over groups (each projects only its own heads), hence
+    # einsum not Linear.  convert.py dequantizes it to bf16; an fp8 grouped GEMM
+    # would halve the memory."  So the checkpoint ships fp8 with a 32x32-blocked
+    # E8M0 scale -- the released shard header says F8_E4M3 beside F8_E8M0 -- and
+    # ``convert.py`` is the step between it and the runtime.
+    #
+    # This is that step, in convert.py's own shape handling.  Before it existed
+    # the loader refused a storage-shaped shard with "43 unexpected", naming
+    # every wo_a.scale, because the runtime model declares no such parameter.
+    converted = 0
+    for name in [key for key in state if key.endswith("attn.wo_a.weight")]:
+        scale_name = name.replace(".weight", ".scale")
+        if scale_name not in state:
+            continue
+        weight = state[name]
+        scale = state.pop(scale_name)
+        out_block = weight.size(0) // scale.size(0)
+        in_block = weight.size(1) // scale.size(1)
+        if (out_block, in_block) not in ((32, 32), (128, 128)):
+            raise ReducedOracleError(
+                f"{name} is {tuple(weight.shape)} against a scale of "
+                f"{tuple(scale.shape)}, a {out_block}x{in_block} block the "
+                "release's own convert.py does not accept"
+            )
+        wide = (
+            weight.unflatten(0, (-1, out_block))
+            .unflatten(-1, (-1, in_block))
+            .float()
+            * scale[:, None, :, None].float()
+        )
+        state[name] = wide.flatten(2, 3).flatten(0, 1).bfloat16()
+        logical[name] = "bfloat16"
+        converted += 1
+
+    parameters = dict(model.named_parameters())
+    missing = sorted(set(parameters) - set(state))
+    extra = sorted(set(state) - set(parameters))
+    if missing or extra:
+        raise ReducedOracleError(
+            "the shard and the reduced model do not name the same parameters: "
+            f"{len(missing)} missing (first: {missing[:3]}), "
+            f"{len(extra)} unexpected (first: {extra[:3]})"
+        )
+
+    reinterpreted = 0
+    with torch.no_grad():
+        for name, parameter in parameters.items():
+            stored = state[name]
+            want = str(parameter.dtype).removeprefix("torch.")
+            if logical.get(name) != want:
+                raise ReducedOracleError(
+                    f"parameter_formats.json records {name!r} as "
+                    f"{logical.get(name)!r}; the reduced model wants {want!r}"
+                )
+            if tuple(stored.shape) != tuple(parameter.shape):
+                raise ReducedOracleError(
+                    f"{name}: shard shape {tuple(stored.shape)} is not the "
+                    f"model's {tuple(parameter.shape)}"
+                )
+            if stored.dtype == parameter.dtype:
+                parameter.copy_(stored)
+                continue
+            # A reinterpretation: identical byte counts, same element count.
+            if stored.element_size() != parameter.element_size():
+                raise ReducedOracleError(
+                    f"{name}: shard dtype {stored.dtype} is {stored.element_size()} "
+                    f"bytes per element and the parameter's {parameter.dtype} is "
+                    f"{parameter.element_size()}; this is a conversion, not the "
+                    "byte-for-byte reinterpretation the fixture recorded"
+                )
+            parameter.view(torch.uint8).copy_(stored.view(torch.uint8))
+            reinterpreted += 1
+
+    declared = set(formats.get("reinterpreted", ()))
+    if reinterpreted != len(declared):
+        raise ReducedOracleError(
+            f"reinterpreted {reinterpreted} tensors; parameter_formats.json "
+            f"declares {len(declared)}"
+        )
+    return {
+        "shards": shards,
+        "parameter_count": len(parameters),
+        "reinterpreted_tensor_count": reinterpreted,
+        "reinterpretation": (
+            "packed FP4 expert weights are stored as I8, the released "
+            "checkpoint's own convention, and restored to float4_e2m1fn_x2 by "
+            "viewing the same bytes"
+        ),
+        "dequantized_tensor_count": converted,
+        "dequantization": (
+            "attn.wo_a ships fp8 with a 32x32-blocked E8M0 scale, as the "
+            "released checkpoint's own shard header does, and is dequantized to "
+            "bf16 here -- the release's convert.py step, which its model.py "
+            "names beside the einsum that consumes the weight. This one IS a "
+            "conversion and not a reinterpretation, and it is lossy in the same "
+            "way the release's is"
+        ),
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
+    parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
+    parser.add_argument("--workload-dir", type=Path, default=DEFAULT_WORKLOAD_DIR)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--expect-summary",
+        type=Path,
+        default=DEFAULT_SUMMARY,
+        help=(
+            "the fixture builder's own record. Its seed_selection.generated_token_ids "
+            "were produced from weights held in memory; this run reproduces them "
+            "from the bytes on disk, and a disagreement is refused rather than "
+            "recorded, because it would mean the fixture is not reproducible"
+        ),
+    )
+    parser.add_argument(
+        "--allow-summary-disagreement",
+        action="store_true",
+        help=(
+            "record a disagreement with the fixture record instead of refusing. "
+            "For diagnosing one, never for producing evidence"
+        ),
+    )
+    arguments = parser.parse_args(argv)
+
+    # Authenticate every immutable input before a framework is imported: a stale
+    # checkpoint or prompt must fail before 34.5 M parameters are allocated.
+    lock = load_checkpoint_lock(arguments.lock)
+    verified = verify_checkpoint_lock(arguments.snapshot, lock)
+    workload_path = arguments.workload_dir / f"{WORKLOAD_ID}.json"
+    workload_bytes = workload_path.read_bytes()
+    workload = json.loads(workload_bytes)
+    if workload["workload_id"] != WORKLOAD_ID:
+        raise ReducedOracleError(
+            f"{workload_path} declares {workload['workload_id']!r}, not {WORKLOAD_ID!r}"
+        )
+    if workload["model_id"] != MODEL_ID:
+        raise ReducedOracleError(
+            f"{workload_path} is for {workload['model_id']!r}, not {MODEL_ID!r}"
+        )
+    recomputed = hashlib.sha256(
+        canonical_json({k: v for k, v in workload.items() if k != "digest"})
+    ).hexdigest()
+    if recomputed != workload["digest"]:
+        raise ReducedOracleError(
+            f"{workload_path} digest {workload['digest']} does not cover its body "
+            f"(recomputed {recomputed})"
+        )
+
+    body = json.loads(
+        (arguments.snapshot / "inference_config.json").read_text(encoding="utf-8")
+    )
+    vocab = int(body["vocab_size"])
+    prompt = [int(token) for token in workload["token_ids"]]
+    if any(token >= vocab or token < 0 for token in prompt):
+        raise ReducedOracleError(
+            "a prompt token id lies outside the reduced vocabulary"
+        )
+    eos_ids = {int(token) for token in workload["official_eos_token_ids"]}
+    if any(token >= vocab or token < 0 for token in eos_ids):
+        raise ReducedOracleError("an official EOS id lies outside the vocabulary")
+    cap = int(workload["max_new_tokens"])
+    if len(prompt) + cap > int(body["max_seq_len"]):
+        raise ReducedOracleError(
+            f"prompt {len(prompt)} + cap {cap} exceeds the fixture's "
+            f"max_seq_len {body['max_seq_len']}"
+        )
+
+    released = released_snapshot()
+    vendor_identity = {
+        module: {
+            "path": f"{released}/{module}",
+            "sha256": _sha256_file(released / module),
+            "bytes": (released / module).stat().st_size,
+        }
+        for module in VENDOR_MODULES
+    }
+
+    import torch
+    from transformers import AutoTokenizer
+
+    vendor, _engram = import_vendor(released)
+    tokenizer = AutoTokenizer.from_pretrained(str(released))
+
+    started = time.perf_counter()
+    model = build_model(vendor, body, tokenizer)
+    loaded = _load_weights(model, arguments.snapshot)
+    model.eval()
+    load_seconds = time.perf_counter() - started
+
+    step_started = time.perf_counter()
+    with torch.inference_mode():
+        generated = greedy(model, prompt, cap=cap, eos=eos_ids)
+    elapsed = time.perf_counter() - step_started
+
+    stop = "eos" if generated and generated[-1] in eos_ids else "max_new_tokens"
+
+    summary_agreement: dict[str, Any] | None = None
+    if arguments.expect_summary and arguments.expect_summary.is_file():
+        summary = json.loads(
+            arguments.expect_summary.read_text(encoding="utf-8")
+        )
+        expected = [
+            int(token)
+            for token in summary["seed_selection"]["generated_token_ids"]
+        ]
+        agreed = expected == [int(token) for token in generated]
+        summary_agreement = {
+            "path": str(arguments.expect_summary),
+            "sha256": _sha256_file(arguments.expect_summary),
+            "seed": summary["seed_selection"]["seed"],
+            "in_memory_generated_token_ids": expected,
+            "agreed": agreed,
+            "why": (
+                "the fixture builder generated from weights held in memory; this "
+                "run generated from the bytes it wrote. Agreement is what makes "
+                "the fixture reproducible"
+            ),
+        }
+        if not agreed and not arguments.allow_summary_disagreement:
+            raise ReducedOracleError(
+                "the fixture record and the bytes on disk disagree: builder "
+                f"{expected} vs this run {generated}. The fixture is not "
+                "reproducible; pass --allow-summary-disagreement to record it"
+            )
+
+    report = {
+        "schema": SCHEMA,
+        "evidence_class": "external_reference_comparator",
+        "not_a_claim": [
+            "accelerator_execution",
+            "artifact_only_execution",
+            "timing_or_performance",
+            "numerics_at_full_dimension",
+            "released_model_numerics",
+        ],
+        "model_id": MODEL_ID,
+        "reduced": True,
+        "snapshot": str(arguments.snapshot),
+        "torch_version": torch.__version__,
+        "python_version": platform.python_version(),
+        "dtype": "bfloat16",
+        "selection": "greedy_lowest_token_id_argmax",
+        "generation_policy_id": "greedy_argmax_lowest_id_first_eos_v1",
+        "include_eos_in_output": True,
+        "device_map": str(next(model.parameters()).device),
+        "reference_implementation": {
+            "same_as_full_oracle": True,
+            "loader": (
+                "the release's own inference/model.py Transformer, built from the "
+                "fixture's inference_config.json and loaded from its shard"
+            ),
+            "greedy_loop": "tools/build_deepseek_v41_reduced_model.py::greedy",
+            "greedy_loop_sha256": _sha256_file(
+                ROOT / "tools/build_deepseek_v41_reduced_model.py"
+            ),
+            "released_snapshot": str(released),
+            "released_revision": V41_FLASH.revision,
+            "vendor_modules": vendor_identity,
+            "cross_checked_against": None,
+            "why_no_cross_check": (
+                "DeepSeek-V4.1-Flash has no transformers modelling code, so there "
+                "is no second greedy implementation to compare against; the Qwen "
+                "predecessor cross-checks against transformers.generate and this "
+                "one cannot. What IS cross-checked is the fixture record: the same "
+                "ids from weights in memory and from the bytes on disk"
+            ),
+            "weights_read_back_from_disk": True,
+        },
+        "weight_loading": loaded,
+        "producer": {
+            "tool": ORACLE_TOOL,
+            "tool_version": ORACLE_TOOL_VERSION,
+            "command_argv": [ORACLE_TOOL, *(argv if argv is not None else sys.argv[1:])],
+            "selected_workload_ids": [WORKLOAD_ID],
+        },
+        "fixture_record_agreement": summary_agreement,
+        "input_identity": {
+            "checkpoint_lock": {
+                "path": str(arguments.lock),
+                "lock_id": lock["lock_id"],
+                "sha256": _sha256_file(arguments.lock),
+                "verified_files": len(verified.get("files", []))
+                if isinstance(verified, dict)
+                else None,
+            },
+            "workload_sources": {
+                WORKLOAD_ID: {
+                    "path": str(workload_path),
+                    "sha256": hashlib.sha256(workload_bytes).hexdigest(),
+                    "digest": workload["digest"],
+                    "digest_recomputed": recomputed,
+                    "size_bytes": len(workload_bytes),
+                }
+            },
+            "inference_config_sha256": _sha256_file(
+                arguments.snapshot / "inference_config.json"
+            ),
+        },
+        "weights_are_fixed_and_bound": {
+            "regenerated_per_run": False,
+            "read_from": str(arguments.snapshot),
+            "bound_by": "compiler.frontend.checkpoint.verify_checkpoint_lock",
+            "lock_id": lock["lock_id"],
+            "shards": [
+                {
+                    "path": shard["path"],
+                    "sha256": shard["file_sha256"],
+                    "size_bytes": shard["file_size_bytes"],
+                    "tensor_count": shard["tensor_count"],
+                }
+                for shard in lock["shards"]
+            ],
+        },
+        "architecture_under_test": {
+            "n_layers": int(body["n_layers"]),
+            "compress_ratios": list(body["compress_ratios"]),
+            "kv_source_layers": list(body["kv_source_layers"]),
+            "index_source_layers": list(body["index_source_layers"]),
+            "candidate_source_layer": int(body["candidate_source_layer"]),
+            "engram_layer_ids": list(body["engram_layer_ids"]),
+            "dspark_target_layer_ids": list(body["dspark_target_layer_ids"]),
+            "dim": int(body["dim"]),
+            "vocab_size": vocab,
+            "why": (
+                "the CSA2 mode sequence and every arity are the released model's; "
+                "only magnitudes are reduced, which is what makes a G1f run a "
+                "witness about this architecture"
+            ),
+        },
+        "results": {
+            WORKLOAD_ID: {
+                "kind": workload["kind"],
+                "workload_digest": workload["digest"],
+                "prompt_token_count": len(prompt),
+                "prompt_token_ids": prompt,
+                "generated_token_ids": [int(token) for token in generated],
+                "generated_token_count": len(generated),
+                "stop_reason": stop,
+                "official_eos_token_ids": sorted(eos_ids),
+                "max_new_tokens": cap,
+                "wall_seconds": round(elapsed, 3),
+                "load_seconds": round(load_seconds, 3),
+            }
+        },
+    }
+    arguments.output.parent.mkdir(parents=True, exist_ok=True)
+    arguments.output.write_bytes(canonical_json(report) + b"\n")
+    print(
+        f"{WORKLOAD_ID}: {report['results'][WORKLOAD_ID]['generated_token_ids']} "
+        f"stop={stop} -> {arguments.output}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

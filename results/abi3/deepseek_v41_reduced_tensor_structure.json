@@ -15,9 +15,9 @@
   },
   "why": "the reduction record's vision_excluded: reduced_vision_n_layers 0 against the release's 32, the workload being text only. bias_vl is here because the adapter gates it on the tower"
  },
- "checkpoint_holds": 4221,
+ "checkpoint_holds": 4264,
  "derived": 4317,
- "derived_but_absent": 96,
+ "derived_but_absent": 53,
  "positive_control": {
   "derived": 96085,
   "release_pins": 96085,
@@ -25,12 +25,9 @@
  },
  "present_but_not_derived": 0,
  "unaccounted_for": {
-  "count": 43,
-  "patterns": {
-   "layers.N.attn.wo_a.scale": 40,
-   "mtp.N.attn.wo_a.scale": 3
-  },
-  "why": "a STORAGE-versus-RUNTIME difference, both sides read directly. The released checkpoint's own shard header stores wo_a.weight as F8_E4M3 with an F8_E8M0 scale; the released inference source at the same revision declares ColumnParallelLinear(..., dtype=torch.bfloat16) for it, which registers no scale, because wo_a is consumed inside a torch.einsum that cannot take an fp8 weight and a separate scale -- the release's own comment beside it says convert.py dequantizes wo_a to bf16 and that an fp8 grouped GEMM would halve the memory. The reduced fixture is built from named_parameters() and so follows the source; the adapter models the storage"
+  "count": 0,
+  "patterns": {},
+  "why": "none"
  },
- "verdict": "the reduced checkpoint is written in the release's RUNTIME shape and this adapter models its STORAGE shape; to be pinned here it must store attn.wo_a as fp8 with a scale, as the released checkpoint's own shard headers do"
+ "verdict": "faithful"
 }
