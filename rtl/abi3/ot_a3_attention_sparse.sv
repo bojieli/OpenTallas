@@ -63,9 +63,33 @@ module ot_a3_attention_sparse #(
     input  wire [31:0] cfg_kv_rows,
     input  wire [31:0] cfg_scale_code,
 
+    //: THE SINK HAS ITS OWN PORT, and the other three inputs share one.
+    //:
+    //: Query, KV and the window indices are all results an earlier operator
+    //: wrote, and they reach this engine through one muxed read because the
+    //: three never want it at once: the QK walk issues its query reads and its
+    //: KV reads in different states, and the AV walk reads only while the QK
+    //: walk is idle. A select, not an arbiter -- and an arbiter would be a
+    //: latent stall the walks have no back-pressure input to absorb.
+    //:
+    //: The sink is the one operand that is not such a result: it is a
+    //: CHECKPOINT tensor, named ``layers.<n>.attn.attn_sink`` with no producing
+    //: operator. ROUTE.BIASED_TOPK's bias -- ``ffn.gate.bias``, a checkpoint
+    //: operand of exactly the same kind -- is read on the bridge's SECOND
+    //: operand port rather than muxed onto the first, so this engine matches
+    //: that shape.
+    //:
+    //: Not because the bank differs: both of the bridge's operand ports assert
+    //: reads_result for these families, and only TENSOR.MATMUL reads the weight
+    //: store, so a checkpoint operand is staged into the result bank like any
+    //: other. Splitting the port is about matching the precedent that already
+    //: carries a checkpoint operand, not about reaching a different store.
     output reg         mem_rd_en,
     output reg  [31:0] mem_rd_addr,
     input  wire [31:0] mem_rd_data,
+    output reg         sink_rd_en,
+    output reg  [31:0] sink_rd_addr,
+    input  wire [31:0] sink_rd_data,
     output wire        mem_we,
     output wire [31:0] mem_wr_addr,
     output wire [31:0] mem_wr_data,
@@ -246,8 +270,6 @@ module ot_a3_attention_sparse #(
             mem_rd_en = 1'b1;
             mem_rd_addr = cfg_index_base + row * cfg_slots
                         + block * LANES[31:0] + slot_cursor;
-        end else if (state == S_SINKRD && rdphase == 2'd1) begin
-            mem_rd_en = 1'b1; mem_rd_addr = cfg_sink_base + head;
         end else begin
             mem_rd_en = 1'b0; mem_rd_addr = 32'd0;
         end
@@ -261,6 +283,7 @@ module ot_a3_attention_sparse #(
         if (!rst_n) begin
             state <= S_IDLE; busy <= 1'b0; done <= 1'b0;
             error_code <= ot_a3_engine_pkg::ERR_NONE; nonfinite <= 1'b0;
+            sink_rd_en <= 1'b0; sink_rd_addr <= 32'd0;
             row <= 32'd0; head <= 32'd0; block <= 32'd0; blocks_total <= 32'd0;
             slot_cursor <= 32'd0; rdphase <= 2'd0; sink_code <= 32'd0;
             pulse_kvidx <= 1'b0; pulse_qk <= 1'b0; pulse_av <= 1'b0;
@@ -271,6 +294,7 @@ module ot_a3_attention_sparse #(
             for (i = 0; i < LANES; i = i + 1) idx[i] <= 32'd0;
         end else begin
             done <= 1'b0;
+            sink_rd_en <= 1'b0;
             pulse_kvidx <= 1'b0; pulse_qk <= 1'b0; pulse_av <= 1'b0;
             pulse_epi <= 1'b0; den_valid <= 1'b0;
             if (av_nonfinite || prob_nonfinite) nonfinite <= 1'b1;
@@ -401,10 +425,14 @@ module ot_a3_attention_sparse #(
                 end
 
                 S_SINKRD: begin
-                    if (rdphase == 2'd0) rdphase <= 2'd1;
-                    else if (rdphase == 2'd1) rdphase <= 2'd2;
-                    else begin
-                        sink_code <= mem_rd_data;
+                    if (rdphase == 2'd0) begin
+                        sink_rd_en <= 1'b1;
+                        sink_rd_addr <= cfg_sink_base + head;
+                        rdphase <= 2'd1;
+                    end else if (rdphase == 2'd1) begin
+                        rdphase <= 2'd2;
+                    end else begin
+                        sink_code <= sink_rd_data;
                         rdphase <= 2'd0;
                         state <= S_EPI;
                     end

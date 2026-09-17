@@ -19,9 +19,9 @@ module tb_a3_attention_sparse;
 
     reg clk = 0, rst_n = 0, start = 0;
     reg [31:0] cfg_rows, cfg_heads, cfg_head_dim, cfg_slots, cfg_kv_rows;
-    wire mem_rd_en, mem_we;
-    wire [31:0] mem_rd_addr, mem_wr_addr, mem_wr_data;
-    reg  [31:0] mem_rd_data;
+    wire mem_rd_en, mem_we, sink_rd_en;
+    wire [31:0] mem_rd_addr, mem_wr_addr, mem_wr_data, sink_rd_addr;
+    reg  [31:0] mem_rd_data, sink_rd_data;
     wire busy, done, nonfinite;
     wire [7:0] error_code;
     wire [31:0] valid_row_reads, padding_lanes_seen, rows_emitted;
@@ -48,6 +48,10 @@ module tb_a3_attention_sparse;
         .cfg_scale_code(32'h3d35_04f3),
         .mem_rd_en(mem_rd_en), .mem_rd_addr(mem_rd_addr),
         .mem_rd_data(mem_rd_data),
+        //: A second bank in the real device; the same array here, so the
+        //: address assertion below still covers it.
+        .sink_rd_en(sink_rd_en), .sink_rd_addr(sink_rd_addr),
+        .sink_rd_data(sink_rd_data),
         .mem_we(mem_we), .mem_wr_addr(mem_wr_addr), .mem_wr_data(mem_wr_data),
         .busy(busy), .done(done), .error_code(error_code),
         .nonfinite(nonfinite),
@@ -59,7 +63,8 @@ module tb_a3_attention_sparse;
     always #1 clk = ~clk;
     //: One registered read port serves all five views, which is the whole point
     //: of the operator's port mux.
-    always @(posedge clk) if (mem_rd_en) mem_rd_data <= mem[mem_rd_addr[15:0]];
+    always @(posedge clk) if (mem_rd_en)  mem_rd_data  <= mem[mem_rd_addr[15:0]];
+    always @(posedge clk) if (sink_rd_en) sink_rd_data <= mem[sink_rd_addr[15:0]];
 
     //: EVERY READ MUST LAND INSIDE A BOUND VIEW. An operator that addresses
     //: past its own index view, or gathers at a padding lane's -1, still gets
@@ -71,6 +76,14 @@ module tb_a3_attention_sparse;
     //: padded tail of a partial index block, both left every output bit-exact.
     integer stray_reads; initial stray_reads = 0;
     always @(posedge clk) begin
+        if (rst_n && sink_rd_en) begin
+            if (!(sink_rd_addr >= SINK_BASE &&
+                  sink_rd_addr <  SINK_BASE + cfg_heads)) begin
+                if (stray_reads < 6)
+                    $display("FAIL stray sink read at %0d", sink_rd_addr);
+                stray_reads = stray_reads + 1;
+            end
+        end
         if (rst_n && mem_rd_en) begin
             if (!((mem_rd_addr >= QUERY_BASE &&
                    mem_rd_addr <  QUERY_BASE + cfg_rows*cfg_heads*cfg_head_dim) ||
