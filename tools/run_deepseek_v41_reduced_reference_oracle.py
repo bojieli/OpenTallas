@@ -175,10 +175,22 @@ def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
         )
 
     reinterpreted = 0
+    widened = 0
     with torch.no_grad():
         for name, parameter in parameters.items():
             stored = state[name]
             want = str(parameter.dtype).removeprefix("torch.")
+            if logical.get(name) == "bfloat16" and want == "float32":
+                #: A WIDENING THE RELEASE ALSO PERFORMS. The checkpoint stores
+                #: head.weight, the compressor's projections and the MTP heads
+                #: in BF16 -- its own shard headers say so -- while the vendor
+                #: module holds them in F32. Widening is exact, and the bits the
+                #: narrowing dropped are gone from the fixture's own generation
+                #: too, so the values here are the ones its record was made
+                #: from.
+                parameter.copy_(stored.to(parameter.dtype))
+                widened += 1
+                continue
             if logical.get(name) != want:
                 raise ReducedOracleError(
                     f"parameter_formats.json records {name!r} as "
@@ -219,6 +231,14 @@ def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
             "viewing the same bytes"
         ),
         "dequantized_tensor_count": converted,
+        "widened_tensor_count": widened,
+        "widening": (
+            "the checkpoint stores head.weight, the compressor's projections "
+            "and the MTP heads in BF16 where the vendor module holds F32, as "
+            "the released checkpoint's own shard headers do. Widening is exact; "
+            "the bits the narrowing dropped are absent from the fixture's own "
+            "generation too"
+        ),
         "dequantization": (
             "attn.wo_a ships fp8 with a 32x32-blocked E8M0 scale, as the "
             "released checkpoint's own shard header does, and is dequantized to "

@@ -18,10 +18,10 @@ and every difference is classified.
 
 WHAT IT FOUND. Two classes, one justified and one not:
 
-* 53 vision and vision-language tensors the reduced checkpoint omits, which the
-  reduction record justifies -- ``vision_excluded``, reduced_vision_n_layers 0
-  against the release's 32, the workload being text only. ``bias_vl`` is in this
-  class because the adapter gates it on the tower's presence.
+* 53 vision and vision-language tensors, which WERE derived while the reduced
+  config carried a zero-layer tower -- ``vision_enabled`` is the section's
+  presence, not its depth. With the tower pinned ABSENT on the record and left
+  out of the config, they are not derived at all and this class is empty.
 * 43 ``attn.wo_a.scale``, one per main layer and per MTP layer. This is a
   STORAGE-VERSUS-RUNTIME difference, and both sides were read directly rather
   than inferred:
@@ -121,7 +121,12 @@ def reduced_release_candidate(root: dict[str, Any]) -> Any:
             ("architectures", "bos_token_id", "dtype", "eos_token_id",
              "image_token_id", "model_type", "pad_token_id")
         }),
-        "vision_config": MappingProxyType(dict(root["vision_config"])),
+        #: PINNED ABSENT, which is what lets the derivation agree with a
+        #: text-only checkpoint: vision_enabled is the section's presence in the
+        #: CONFIG, so a config without one derives neither the tower's tensors
+        #: nor the bias_vl that rides with it, while the record can still say
+        #: whether a tower exists at all.
+        "vision_config": None,
     }
     return dataclasses.replace(
         V41_FLASH,

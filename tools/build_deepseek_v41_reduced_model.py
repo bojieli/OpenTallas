@@ -441,6 +441,64 @@ def build_model(vendor: Any, body: dict[str, Any], tokenizer: Any) -> Any:
 
 
 
+#: Parameters whose STORAGE dtype in the released checkpoint differs from the
+#: dtype the vendor module holds at runtime, by suffix.  Every entry was read
+#: off the released checkpoint's own shard headers:
+#:
+#:   head.weight                            BF16
+#:   layers.N.attn.compressor.wkv.weight    BF16   (module says float32)
+#:   layers.N.attn.compressor.wgate.weight  BF16   (module says float32)
+#:   layers.N.attn.compressor.norm.weight   BF16
+#:   mtp.N.markov_head.head.weight          BF16
+#:   mtp.N.markov_head.embed.weight         BF16
+#:   mtp.N.confidence_head.proj.weight      BF16
+#:
+#: ``layers.N.attn.attn_sink`` is NOT here: the release stores it F32 and the
+#: module declares float32, so storage and runtime agree and there is nothing to
+#: round trip.  That is why it never appeared in the derivation's dtype
+#: disagreement while its neighbours did.
+STORAGE_BF16_SUFFIXES = (
+    "head.weight",
+    "attn.compressor.wkv.weight",
+    "attn.compressor.wgate.weight",
+    "attn.compressor.norm.weight",
+    "markov_head.head.weight",
+    "markov_head.embed.weight",
+    "confidence_head.proj.weight",
+)
+
+
+def storage_dtype_for(name: str, torch: Any) -> Any | None:
+    """The dtype the released checkpoint stores this parameter in, or None."""
+
+    for suffix in STORAGE_BF16_SUFFIXES:
+        if name.endswith(suffix):
+            return torch.bfloat16
+    return None
+
+
+def round_trip_storage_dtypes(model: Any) -> int:
+    """Put every narrowed parameter through its storage round trip, in place.
+
+    The same reason ``round_trip_wo_a`` exists: a fixture's recorded tokens have
+    to be the tokens loading it reproduces, and a parameter the checkpoint stores
+    in BF16 while the module holds F32 loses bits on the way out. Generating from
+    the F32 values records tokens from precision no loader can reconstruct.
+    """
+
+    import torch
+
+    touched = 0
+    with torch.no_grad():
+        for name, parameter in model.named_parameters():
+            storage = storage_dtype_for(name, torch)
+            if storage is None or parameter.dtype == storage:
+                continue
+            parameter.copy_(parameter.detach().to(storage).to(parameter.dtype))
+            touched += 1
+    return touched
+
+
 def round_trip_wo_a(model: Any) -> int:
     """Put wo_a through the release's storage round trip, in place.
 
@@ -638,6 +696,7 @@ def search_seeds(
     for seed in range(resumed_from if resumed_from is not None else start,
                       limit, stride):
         fill_parameters(model, seed, initializer_range)
+        round_trip_storage_dtypes(model)
         round_trip_wo_a(model)
         produced = greedy(model, prompt, cap=cap, eos=eos)
         tried.append(seed)
@@ -770,6 +829,7 @@ def select_seed(
     started = time.time()
     for seed in range(limit):
         fill_parameters(model, seed, initializer_range)
+        round_trip_storage_dtypes(model)
         round_trip_wo_a(model)
         generated = greedy(model, prompt, cap=cap, eos=eos)
         tried += 1
@@ -1058,6 +1118,19 @@ def write_snapshot(
             tensor = tensor.view(torch.int8)
         state[name] = tensor
 
+    # EVERY NARROWED PARAMETER IS WRITTEN IN ITS STORAGE DTYPE. The released
+    # checkpoint stores head.weight, the compressor's projections and the MTP
+    # heads in BF16 where the vendor module holds F32 -- its own shard headers
+    # say so -- and a fixture that writes the runtime dtype instead disagrees
+    # with the front end's derivation on nine tensor groups and 1,613,184
+    # payload bytes.
+    for name in list(state):
+        storage = storage_dtype_for(name, torch)
+        if storage is None or state[name].dtype == storage:
+            continue
+        state[name] = state[name].to(storage).contiguous()
+        logical[name] = str(storage).removeprefix("torch.")
+
     # wo_a IS WRITTEN IN THE RELEASE'S STORAGE SHAPE, not its runtime one.
     #
     # The vendor module declares it ``ColumnParallelLinear(..., dtype=
@@ -1323,6 +1396,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         model = build_model(vendor, body, tokenizer)
         fill_parameters(model, int(aggregated["seed"]), initializer_range)
+        round_trip_storage_dtypes(model)
         round_trip_wo_a(model)
         replayed = greedy(model, prompt, cap=cap, eos=eos)
         if replayed != list(aggregated["generated_token_ids"]):
@@ -1369,10 +1443,12 @@ def main(argv: list[str] | None = None) -> int:
             initializer_range=initializer_range,
         )
         fill_parameters(model, int(selection["seed"]), initializer_range)
+        round_trip_storage_dtypes(model)
         round_trip_wo_a(model)
     else:
         model = build_model(vendor, body, tokenizer)
         fill_parameters(model, int(arguments.seed), initializer_range)
+        round_trip_storage_dtypes(model)
         round_trip_wo_a(model)
         generated = greedy(model, prompt, cap=cap, eos=eos)
         selection = {

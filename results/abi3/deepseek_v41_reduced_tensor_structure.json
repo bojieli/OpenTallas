@@ -1,23 +1,12 @@
 {
  "accounted_for_by_the_vision_exclusion": {
-  "count": 53,
-  "patterns": {
-   "aligner.wN.bias": 2,
-   "aligner.wN.weight": 2,
-   "image_end": 1,
-   "image_newline": 1,
-   "image_start": 1,
-   "layers.N.ffn.gate.bias_vl": 40,
-   "mtp.N.ffn.gate.bias_vl": 3,
-   "vision.norm.weight": 1,
-   "vision.patch_embed.proj.bias": 1,
-   "vision.patch_embed.proj.weight": 1
-  },
+  "count": 0,
+  "patterns": {},
   "why": "the reduction record's vision_excluded: reduced_vision_n_layers 0 against the release's 32, the workload being text only. bias_vl is here because the adapter gates it on the tower"
  },
  "checkpoint_holds": 4264,
- "derived": 4317,
- "derived_but_absent": 53,
+ "derived": 4264,
+ "derived_but_absent": 0,
  "positive_control": {
   "derived": 96085,
   "release_pins": 96085,
