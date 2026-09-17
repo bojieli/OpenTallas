@@ -191,6 +191,32 @@ def _is_direct_buffer_state(state_class: str) -> bool:
 KV_STATE_CLASSES = frozenset({"compressed_kv", "kv_cache", "kv_window"})
 
 
+#: State classes whose plane presents THE REQUEST'S EXTENT rather than the
+#: resource's capacity, even where the axis is the identity.
+#:
+#: The distinction is whether a reader ADDRESSES the resource or CONSUMES it in
+#: order.  Attention indexes a KV window by explicit row, and its own index
+#: operand names rows anywhere in the capacity, so a shortened view would hide
+#: rows the index names -- the capacity is right there, and that is why it was the
+#: default for every plane.  The two classes below are not addressed:
+#:
+#:   ``token_ring``  a sequence.  ``DMA.NGRAM_HASH`` emits one row per element it
+#:                   is given, so the capacity asked an 8-token prompt for 128
+#:                   positions, 120 of them never written.
+#:   ``scratch``     one row per query of the request.  ``ROUTE.INDEX_TOPK``
+#:                   compares its output's rows against its score operand's, so
+#:                   the capacity claimed 128 queries for a span of 8.
+#:
+#: A class not listed here keeps the capacity, which is the conservative default:
+#: presenting more rows than a request wrote is visible to every consumer that
+#: counts them, while presenting fewer would silently hide addressed rows.
+REQUEST_EXTENT_STATE_CLASSES = frozenset({"scratch", "token_ring"})
+
+
+def _is_sequence_state(state_class: str) -> bool:
+    return str(state_class) in REQUEST_EXTENT_STATE_CLASSES
+
+
 def _is_kv_state(state_class: str) -> bool:
     return str(state_class) in KV_STATE_CLASSES
 
@@ -3224,7 +3250,18 @@ class RomLowering:
             if tensor is None or tensor.role != "state":
                 continue
             symbol, _multiplier, axis = self._leading_symbol(tensor)
-            if symbol is None or axis.is_identity:
+            #: A SEQUENCE resource is request-sized on the identity axis too.
+            #: The identity was excluded because every state plane was a randomly
+            #: addressed cache, where presenting the capacity is right and a
+            #: shortened view would hide rows an index names.  A token ring is not
+            #: addressed, it is CONSUMED IN ORDER: ``DMA.NGRAM_HASH`` emits one row
+            #: per element it is given, so the ring's capacity asked an 8-token
+            #: prompt for 128 positions, 120 of them never written.  Its extent is
+            #: the identity in CONTEXT_LENGTH and it still needs the loop that
+            #: resolves it.
+            if symbol is None or (
+                axis.is_identity and not _is_sequence_state(self._state_class_of(name))
+            ):
                 continue
             if self._state_owner.get(name) is not None:
                 named.append(name)
@@ -3282,6 +3319,22 @@ class RomLowering:
             run, position, slot = placement
             return f"st.r{run}.p{position:03d}.s{slot}"
         return f"st.g.{tensor_id}"
+
+    def _state_class_of(self, tensor_id: str) -> str:
+        """The class of the state resource ``tensor_id`` is a plane of, or "".
+
+        Read from the graph's own state declarations.  The placement's group key
+        is a group NAME (``state.7``), not the tuple it was grouped by, so it
+        cannot answer this -- and indexing it as though it were the tuple returns
+        a character, which is a lookup that never matches and never fails.
+        """
+        state_id = self._state_owner.get(tensor_id)
+        if state_id is None:
+            return ""
+        for state in self.graph.states:
+            if str(state.state_id) == str(state_id):
+                return str(state.state_class)
+        return ""
 
     def _state_plane_view(
         self,
@@ -4999,7 +5052,17 @@ class RomLowering:
             terms: tuple[DynamicTerm, ...] = ()
             if context is not None:
                 symbol, _multiplier, declared = self._leading_symbol(tensor)
-                if symbol is not None and not declared.is_identity:
+                #: A SEQUENCE resource resolves its extent even on the identity
+                #: axis.  The identity needed no resolving term while every state
+                #: plane was a randomly addressed cache presented at capacity, but
+                #: a token ring is read in position order: its consumer counts one
+                #: output row per element it is given, so an 8-token prompt handed
+                #: the whole 128-row ring asked for 128 positions, 120 of them
+                #: uninitialised.  The axis is the identity in CONTEXT_LENGTH and
+                #: the term is what makes the view present what the request has
+                #: committed.
+                sequence = _is_sequence_state(self._state_class_of(name))
+                if symbol is not None and (not declared.is_identity or sequence):
                     plane_axis = declared
                     terms = (
                         DynamicTerm.loop(
