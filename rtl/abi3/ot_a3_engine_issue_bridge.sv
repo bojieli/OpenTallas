@@ -450,6 +450,7 @@ module ot_a3_engine_issue_bridge #(
     output reg  [31:0]   vector_silu_mul_launch_count,
     output reg  [31:0]   dma_scatter_launch_count,
     output reg  [31:0]   attention_gqa_launch_count,
+    output reg  [31:0]   attention_sparse_launch_count,
     output reg  [31:0]   selection_argmax_launch_count,
     output reg  [31:0]   selection_token_append_launch_count,
     output reg  [31:0]   selected_token,
@@ -511,6 +512,7 @@ module ot_a3_engine_issue_bridge #(
     localparam [7:0] VECTOR_ADD = 8'h03;
     localparam [7:0] VECTOR_SILU_MUL = 8'h04;
     localparam [7:0] ATTENTION_GQA = 8'h01;
+    localparam [7:0] ATTENTION_SPARSE = 8'h02;
     localparam [7:0] SELECTION_ARGMAX = 8'h00;
     localparam [7:0] SELECTION_TOKEN_APPEND = 8'h01;
     localparam [7:0] FMT_U32 = 8'h04;
@@ -582,6 +584,14 @@ module ot_a3_engine_issue_bridge #(
     // qwen3_gqa_fp32_softmax_bf16_v1
     localparam [255:0] CONTRACT_QWEN_GQA_RAW =
         256'h81e12c87d89ead473983a0898c3fbfe08d7b0a3864b55fb1f0171a4698f53a62;
+    //: ``sparse_attention_bf16_v1``. These constants are the BYTE-REVERSED
+    //: sha256 of the contract name -- the line above is
+    //: sha256("qwen3_gqa_fp32_softmax_bf16_v1")[::-1] -- so this one was
+    //: computed, not transcribed:
+    //:   python3 -c "import hashlib; print(
+    //:       hashlib.sha256(b'sparse_attention_bf16_v1').digest()[::-1].hex())"
+    localparam [255:0] CONTRACT_SPARSE_ATTENTION_RAW =
+        256'hb019cc11a0a100ff057027b933025774ad4ea6d5cf1630c06e6a5d1379b165e1;
     //: ADMISSION USED ITS OWN COPY OF THE GEOMETRY.
     //:
     //: The datapath instances below are handed GQA_QUERY_HEADS, GQA_KV_HEADS,
@@ -1009,8 +1019,10 @@ module ot_a3_engine_issue_bridge #(
     reg        route_window_index_q;
     reg        route_biased_topk_q;
     reg        reduction_expert_sum_q;
+    reg        attention_sparse_q;
     wire       mapped_family_q = vector_add_q | vector_silu_mul_q |
                                  dma_scatter_q | attention_gqa_q |
+                                 attention_sparse_q |
                                  selection_argmax_q | selection_token_append_q |
                                  route_weight_normalize_q |
                                  route_window_index_q | route_biased_topk_q |
@@ -1061,6 +1073,9 @@ module ot_a3_engine_issue_bridge #(
     reg [31:0] mapped_third_base;
     reg [31:0] mapped_index_base;
     reg [31:0] mapped_output_base;
+    //: The numeric descriptor's scale bits, for an operator whose scale is a
+    //: descriptor value rather than a frozen constant.
+    reg [31:0] mapped_scale_bits;
     reg [31:0] mapped_prior_base;
     reg [31:0] mapped_result_words;
     reg [31:0] mapped_work_words;
@@ -1538,7 +1553,7 @@ module ot_a3_engine_issue_bridge #(
         //: The first mask to name slot 5: scores, bias, selected ids and the
         //: selected weights that ride beside them.
         route_biased_topk_q ? 6'b110011
-      : attention_gqa_q ? 6'b011111
+      : (attention_gqa_q || attention_sparse_q) ? 6'b011111
       : (selection_argmax_q || selection_token_append_q ||
          route_weight_normalize_q || route_window_index_q) ? 6'b010001
       : 6'b010011;
@@ -1887,6 +1902,94 @@ module ot_a3_engine_issue_bridge #(
         //: reference, so it is refused here.
         (!window_index_mask_full || (op_aux2 != NO_ID));
 
+    // -- ATTENTION.SPARSE ----------------------------------------------------
+    //: [span, heads, head_dim] BF16 queries, a FUSED rank-2 [kv_rows, head_dim]
+    //: BF16 KV, [span, slots] U32 window indices, [heads] FP32 attention sinks,
+    //: and [span, heads, head_dim] BF16 output rows.
+    //:
+    //: The KV is rank 2 and not rank 3 because the operator has ONE KV head
+    //: (``key_value_heads: 1``): every query head reads the same selected rows,
+    //: which is also what lets one element feed every head.
+    //:
+    //: THE 64-SLOT SOURCE BLOCK IS NOT CHECKED HERE because it is not a view
+    //: dimension -- it is frozen by the numeric contract, and ``slots`` is the
+    //: candidate count the index view carries, which the engine walks in
+    //: ceil(slots / 64) blocks with the tail implicitly padded.
+    localparam integer SPARSE_HEADS_MAX    = 128;
+    localparam integer SPARSE_CHANNELS_MAX = 512;
+    localparam integer SPARSE_SLOTS_MAX    = 4096;
+    localparam integer SPARSE_KV_ROWS_MAX  = 1048576;
+    wire [31:0] sparse_heads    = slot_dim1[0];
+    wire [31:0] sparse_head_dim = slot_dim2[0];
+    wire [31:0] sparse_kv_rows  = slot_dim0[1];
+    wire [31:0] sparse_slots    = slot_dim1[2];
+    wire [31:0] sparse_row_words = sparse_heads * sparse_head_dim;
+    wire sparse_shape_ok =
+        //: slot 0 -- the RoPE'd queries.
+        (slot_dtype[0] == FMT_BF16) && (slot_rank[0] == 8'd3) &&
+        (slot_terms[0] == 8'd0) &&
+        (sparse_heads != 32'd0) &&
+        (sparse_heads <= SPARSE_HEADS_MAX[31:0]) &&
+        (sparse_head_dim != 32'd0) &&
+        (sparse_head_dim <= SPARSE_CHANNELS_MAX[31:0]) &&
+        //: The AV walk's inner pass is head_dim long and carries its
+        //: accumulator hazard, so it refuses a head_dim at or below its
+        //: product-add depth. Refusing it here too means the operator is not
+        //: admitted and then failed by its own engine.
+        (sparse_head_dim > 32'd8) &&
+        (slot_tail_dims[0] == 32'd0) &&
+        (slot_stride0[0] == sparse_row_words) &&
+        (slot_stride1[0] == sparse_head_dim) &&
+        (slot_stride2[0] == 32'd1) && (slot_tail_strides[0] == 32'd0) &&
+        (captured_rank[0] == 8'd3) && (captured_axis[0] == 8'd0) &&
+        (captured_extent[0] == request_span) &&
+        span_admitted && slot_offset_consistent(0) &&
+        //: slot 1 -- the fused KV, shared by every head.
+        (slot_dtype[1] == FMT_BF16) && (slot_rank[1] == 8'd2) &&
+        (slot_terms[1] == 8'd0) &&
+        (sparse_kv_rows != 32'd0) &&
+        (sparse_kv_rows <= SPARSE_KV_ROWS_MAX[31:0]) &&
+        (slot_dim1[1] == sparse_head_dim) &&
+        (slot_dim2[1] == 32'd0) && (slot_tail_dims[1] == 32'd0) &&
+        (slot_stride0[1] == sparse_head_dim) &&
+        (slot_stride1[1] == 32'd1) &&
+        (slot_stride2[1] == 32'd0) && (slot_tail_strides[1] == 32'd0) &&
+        //: slot 2 -- the window indices, one row per query position.
+        (slot_dtype[2] == FMT_U32) && (slot_rank[2] == 8'd2) &&
+        (slot_terms[2] == 8'd0) &&
+        (sparse_slots != 32'd0) &&
+        (sparse_slots <= SPARSE_SLOTS_MAX[31:0]) &&
+        (slot_dim2[2] == 32'd0) && (slot_tail_dims[2] == 32'd0) &&
+        (slot_stride0[2] == sparse_slots) &&
+        (slot_stride1[2] == 32'd1) &&
+        (slot_stride2[2] == 32'd0) && (slot_tail_strides[2] == 32'd0) &&
+        (captured_rank[2] == 8'd2) && (captured_axis[2] == 8'd0) &&
+        (captured_extent[2] == request_span) &&
+        slot_offset_consistent(2) &&
+        //: slot 3 -- one binary32 sink per head. The descriptor spells the
+        //: dtype out (``attention_sink_dtype: binary32``) and it is NOT the
+        //: BF16 every other operand carries.
+        (slot_dtype[3] == FMT_FP32) && (slot_rank[3] == 8'd1) &&
+        (slot_terms[3] == 8'd0) &&
+        (slot_dim0[3] == sparse_heads) &&
+        (slot_dim1[3] == 32'd0) && (slot_dim2[3] == 32'd0) &&
+        (slot_tail_dims[3] == 32'd0) &&
+        (slot_stride0[3] == 32'd1) && (slot_stride1[3] == 32'd0) &&
+        (slot_stride2[3] == 32'd0) && (slot_tail_strides[3] == 32'd0) &&
+        slot_offset_consistent(3) &&
+        //: slot 4 -- the output, the query view's shape exactly.
+        (slot_dtype[4] == FMT_BF16) && (slot_rank[4] == 8'd3) &&
+        (slot_terms[4] == 8'd0) &&
+        (slot_dim1[4] == sparse_heads) &&
+        (slot_dim2[4] == sparse_head_dim) &&
+        (slot_tail_dims[4] == 32'd0) &&
+        (slot_stride0[4] == sparse_row_words) &&
+        (slot_stride1[4] == sparse_head_dim) &&
+        (slot_stride2[4] == 32'd1) && (slot_tail_strides[4] == 32'd0) &&
+        (captured_rank[4] == 8'd3) && (captured_axis[4] == 8'd0) &&
+        (captured_extent[4] == request_span) &&
+        slot_offset_consistent(4);
+
     //: ROUTE.BIASED_TOPK: [span, experts] FP32 scores, an [experts] FP32 bias,
     //: [span, k] U32 selected ids and [span, k] FP32 UNBIASED selected weights.
     //: Slot 0 IS the sequence axis -- one routing group per token position.
@@ -1999,6 +2102,7 @@ module ot_a3_engine_issue_bridge #(
       : route_biased_topk_q ? biased_topk_shape_ok
       : reduction_expert_sum_q ? expert_sum_shape_ok
       : dma_scatter_q ? scatter_shape_ok
+      : attention_sparse_q ? sparse_shape_ok
       : gqa_shape_ok;
 
     // -- the frozen numeric contract of each admitted family --------------
@@ -2019,7 +2123,23 @@ module ot_a3_engine_issue_bridge #(
         (desc_data[703:672] == 32'd0) &&
         (desc_data[767:704] == 64'd0);
     wire mapped_numeric_ok = mapped_numeric_frame_ok &&
-        ((vector_add_q &&
+        ((attention_sparse_q &&
+          (numeric_input_dtype == FMT_BF16) &&
+          (numeric_second_dtype == FMT_BF16) &&
+          (numeric_output_dtype == FMT_BF16) &&
+          //: THE SCALE IS READ, NOT ASSUMED. GQA compares against a frozen
+          //: GQA_SCALE_BITS because its head width is frozen; this operator's
+          //: scale is 1/sqrt(head_dim) and the shipped head widths differ, so
+          //: the descriptor's value is carried to the engine and only checked
+          //: here for being a positive finite binary32. Zero is what a backend
+          //: whose contract table lacks this operator's spelling of the field
+          //: emits -- it happened at V4.1 PC 77 -- and it is the one value that
+          //: must not pass.
+          (desc_data[639:608] != 32'd0) &&
+          (desc_data[638:631] != 8'hff) &&
+          (desc_data[639] == 1'b0) &&
+          (desc_data[1023:768] == CONTRACT_SPARSE_ATTENTION_RAW)) ||
+         (vector_add_q &&
           (numeric_input_dtype == FMT_BF16) &&
           (numeric_second_dtype == FMT_BF16) &&
           (numeric_output_dtype == FMT_BF16) &&
@@ -2225,6 +2345,12 @@ module ot_a3_engine_issue_bridge #(
            (scatter_plane_is_value ? kv_plane_span : 32'd0))
         : (slot4_map[31:0] + captured_offset[4][31:0]);
     wire [31:0] slot5_base = slot5_map[31:0] + captured_offset[5][31:0];
+    //: SLOT 2 WITHOUT THE VALUE-PLANE OFFSET. ``slot2_base`` above adds a KV
+    //: plane span because slot 2 is GQA's value plane. ATTENTION.SPARSE's slot 2
+    //: is its window index view, which is one plain rank-2 result, so it needs
+    //: the resolved offset unchanged. A new wire rather than a condition on
+    //: slot2_base, so no GQA path moves.
+    wire [31:0] slot2_plain_base = slot2_map[31:0] + captured_offset[2][31:0];
     wire [31:0] mapped_index_slot_base =
         attention_gqa_q ? slot3_base : slot0_base;
 
@@ -2271,6 +2397,7 @@ module ot_a3_engine_issue_bridge #(
             vector_silu_mul_q <= 1'b0;
             dma_scatter_q <= 1'b0;
             attention_gqa_q <= 1'b0;
+            attention_sparse_q <= 1'b0;
             selection_argmax_q <= 1'b0;
             selection_token_append_q <= 1'b0;
             route_weight_normalize_q <= 1'b0;
@@ -2330,6 +2457,7 @@ module ot_a3_engine_issue_bridge #(
             vector_silu_mul_launch_count <= 32'd0;
             dma_scatter_launch_count <= 32'd0;
             attention_gqa_launch_count <= 32'd0;
+            attention_sparse_launch_count <= 32'd0;
             selection_argmax_launch_count <= 32'd0;
             selection_token_append_launch_count <= 32'd0;
             selected_token <= 32'd0;
@@ -2385,6 +2513,8 @@ module ot_a3_engine_issue_bridge #(
                 vector_silu_mul_q <= 1'b0;
                 dma_scatter_q <= 1'b0;
                 attention_gqa_q <= 1'b0;
+            attention_sparse_q <= 1'b0;
+                attention_sparse_q <= 1'b0;
                 selection_argmax_q <= 1'b0;
                 selection_token_append_q <= 1'b0;
                 route_weight_normalize_q <= 1'b0;
@@ -2434,6 +2564,8 @@ module ot_a3_engine_issue_bridge #(
                 vector_silu_mul_launch_count <= 32'd0;
                 dma_scatter_launch_count <= 32'd0;
                 attention_gqa_launch_count <= 32'd0;
+                attention_sparse_launch_count <= 32'd0;
+            attention_sparse_launch_count <= 32'd0;
                 selection_argmax_launch_count <= 32'd0;
                 selection_token_append_launch_count <= 32'd0;
                 selected_token <= 32'd0;
@@ -2498,7 +2630,8 @@ module ot_a3_engine_issue_bridge #(
                                     ((issue_family == FAMILY_DMA) &&
                                      (issue_sub == DMA_SCATTER)) ||
                                     ((issue_family == FAMILY_ATTENTION) &&
-                                     (issue_sub == ATTENTION_GQA)) ||
+                                     ((issue_sub == ATTENTION_GQA) ||
+                                      (issue_sub == ATTENTION_SPARSE))) ||
                                     ((issue_family == FAMILY_SELECTION) &&
                                      ((issue_sub == SELECTION_ARGMAX) ||
                                       (issue_sub == SELECTION_TOKEN_APPEND))) ||
@@ -2546,6 +2679,10 @@ module ot_a3_engine_issue_bridge #(
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_ATTENTION) &&
                                     (issue_sub == ATTENTION_GQA);
+                                attention_sparse_q <=
+                                    cfg_extended_placement_valid &&
+                                    (issue_family == FAMILY_ATTENTION) &&
+                                    (issue_sub == ATTENTION_SPARSE);
                                 selection_argmax_q <=
                                     cfg_extended_placement_valid &&
                                     (issue_family == FAMILY_SELECTION) &&
@@ -2828,6 +2965,7 @@ module ot_a3_engine_issue_bridge #(
                                 response_trap <= TRAP_DESCRIPTOR;
                                 state <= S_RESPONSE;
                             end else begin
+                                mapped_scale_bits <= desc_data[639:608];
                                 numeric_profile_dtypes <= {
                                     desc_data[535:528],
                                     desc_data[543:536],
@@ -2975,6 +3113,11 @@ module ot_a3_engine_issue_bridge #(
                                 ? (request_span * KV_PLANE_WORDS)
                                 : attention_gqa_q
                                 ? (request_span * GQA_OUTPUT_WORDS)
+                                //: One output element per (row, head, channel),
+                                //: which is what the engine's rows_emitted
+                                //: counts.
+                                : attention_sparse_q
+                                ? (request_span * sparse_row_words)
                                 //: groups x slots, which is the reference's own
                                 //: reduction.elements for this operator.
                                 : route_weight_normalize_q
@@ -3001,6 +3144,13 @@ module ot_a3_engine_issue_bridge #(
                                 : attention_gqa_q
                                 ? (request_span * cfg_context_length *
                                    QUERY_HEADS * HEAD_WIDTH)
+                                //: The VALID selected rows, padding excluded --
+                                //: the engine's valid_row_reads, and what
+                                //: ``counter_scope:
+                                //: logical_source_work_separates_valid_kv_reads
+                                //: _from_padding`` asks to be counted apart.
+                                : attention_sparse_q
+                                ? (request_span * sparse_heads * sparse_slots)
                                 : dma_scatter_q ? request_span
                                 : route_weight_normalize_q
                                 ? (request_span * weight_normalize_slots)
@@ -3218,6 +3368,9 @@ module ot_a3_engine_issue_bridge #(
                                 else if (attention_gqa_q)
                                     attention_gqa_launch_count <=
                                         attention_gqa_launch_count + 1;
+                                else if (attention_sparse_q)
+                                    attention_sparse_launch_count <=
+                                        attention_sparse_launch_count + 1;
                                 else if (selection_argmax_q) begin
                                     selection_argmax_launch_count <=
                                         selection_argmax_launch_count + 1;
@@ -3333,6 +3486,19 @@ module ot_a3_engine_issue_bridge #(
     wire [7:0] append_eos_reason;
     wire [31:0] append_result_count;
     wire [31:0] append_work_count;
+
+    // -- ATTENTION.SPARSE ----------------------------------------------------
+    wire        spa_mem_rd_en;
+    wire [31:0] spa_mem_rd_addr;
+    wire        spa_sink_rd_en;
+    wire [31:0] spa_sink_rd_addr;
+    wire        spa_out_we;
+    wire [31:0] spa_out_addr;
+    wire [31:0] spa_out_data;
+    wire        spa_busy, spa_done, spa_nonfinite;
+    wire [7:0]  spa_error_code;
+    wire [31:0] spa_valid_row_reads, spa_padding_lanes, spa_rows_emitted;
+    wire [31:0] spa_saturation_count;
 
     wire gqa_mem_req_valid;
     wire [31:0] gqa_mem_req_addr;
@@ -3452,6 +3618,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_done
         : route_biased_topk_q ? btk_done
         : reduction_expert_sum_q ? esum_done
+        : attention_sparse_q ? spa_done
         : attention_gqa_q ? gqa_done : array_done;
     assign engine_busy = rope_q ? rope_busy
         : rms_norm_q ? rms_busy
@@ -3461,6 +3628,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_busy
         : route_biased_topk_q ? btk_busy
         : reduction_expert_sum_q ? esum_busy
+        : attention_sparse_q ? spa_busy
         : attention_gqa_q ? gqa_busy : array_busy;
     assign engine_error_code = rope_q ? rope_error_code
         : rms_norm_q ? rms_error_code
@@ -3470,6 +3638,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_error_code
         : route_biased_topk_q ? btk_error_code
         : reduction_expert_sum_q ? esum_error_code
+        : attention_sparse_q ? spa_error_code
         : attention_gqa_q ? gqa_error_code : array_error_code;
     assign engine_result_count = rope_q ? rope_result_count
         : rms_norm_q ? rms_result_count
@@ -3479,6 +3648,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_count
         : route_biased_topk_q ? btk_selected
         : reduction_expert_sum_q ? esum_out_count
+        : attention_sparse_q ? spa_rows_emitted
         : attention_gqa_q ? gqa_result_count : array_result_count;
     assign engine_work_count = rope_q ? rope_work_count
         : rms_norm_q ? rms_work_count
@@ -3488,6 +3658,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_candidates
         : route_biased_topk_q ? btk_candidates
         : reduction_expert_sum_q ? esum_out_count
+        : attention_sparse_q ? spa_valid_row_reads
         : attention_gqa_q ? gqa_work_count : array_work_count;
     //: THE TWO SELF-CHECKS THE BRIDGE HOLDS AN ENGINE TO, and the reason a
     //: correct 16-row launch used to come back as TRAP_ENGINE.
@@ -3546,6 +3717,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_pos_rd_en
         : route_biased_topk_q ? btk_score_rd_en
         : reduction_expert_sum_q ? esum_m0_rd_en
+        : attention_sparse_q ? spa_mem_rd_en
         : attention_gqa_q ? gqa_mem_req_valid : array_m0_rd_en;
     assign m0_rd_addr = bridge_index_read ? bridge_index_addr
         : rope_q ? rope_input_rd_addr
@@ -3556,12 +3728,16 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_pos_rd_addr
         : route_biased_topk_q ? btk_score_rd_addr
         : reduction_expert_sum_q ? esum_m0_rd_addr
+        : attention_sparse_q ? spa_mem_rd_addr
         : attention_gqa_q ? gqa_mem_req_addr : array_m0_rd_addr;
     assign m1_rd_en = rope_q ? rope_coefficient_rd_en
         : rms_norm_q ? rms_weight_rd_en
         : vector_silu_mul_q ? silu_b_rd_en
         : route_biased_topk_q ? btk_bias_rd_en
         : reduction_expert_sum_q ? esum_val_rd_en[1]
+        //: The sink, a checkpoint operand -- the same port btk_bias_rd_en uses
+        //: for the router bias, which is a checkpoint operand of one kind.
+        : attention_sparse_q ? spa_sink_rd_en
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 1'b0
         : array_m1_rd_en;
@@ -3570,6 +3746,7 @@ module ot_a3_engine_issue_bridge #(
         : vector_silu_mul_q ? silu_b_rd_addr
         : route_biased_topk_q ? btk_bias_rd_addr
         : reduction_expert_sum_q ? esum_val_rd_addr[63:32]
+        : attention_sparse_q ? spa_sink_rd_addr
         : (selection_token_append_q || attention_gqa_q ||
            route_weight_normalize_q || route_window_index_q) ? 32'd0
         : array_m1_rd_addr;
@@ -3592,6 +3769,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_we
         : route_biased_topk_q ? btk_out_we
         : reduction_expert_sum_q ? esum_out_we
+        : attention_sparse_q ? spa_out_we
         : attention_gqa_q ? gqa_out_valid : array_out_we;
     assign out_addr = rope_q ? rope_out_addr
         : rms_norm_q ? rms_out_addr
@@ -3601,6 +3779,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_addr
         : route_biased_topk_q ? btk_out_addr
         : reduction_expert_sum_q ? esum_out_addr
+        : attention_sparse_q ? spa_out_addr
         : attention_gqa_q ? gqa_out_addr : array_out_addr;
     assign out_data = rope_q ? rope_out_data
         : rms_norm_q ? rms_out_data
@@ -3610,6 +3789,7 @@ module ot_a3_engine_issue_bridge #(
         : route_window_index_q ? widx_out_data
         : route_biased_topk_q ? btk_out_data
         : reduction_expert_sum_q ? esum_out_data
+        : attention_sparse_q ? spa_out_data
         : attention_gqa_q ? gqa_out_data : array_out_data;
     // The bridge's own index read and the scatter's index read address the
     // index bank; every other mapped operand and result is a plane of the
@@ -3618,13 +3798,14 @@ module ot_a3_engine_issue_bridge #(
         : (rms_norm_q || rope_q || matmul_q || vector_add_q ||
            vector_silu_mul_q || selection_argmax_q ||
            selection_token_append_q || attention_gqa_q ||
+           attention_sparse_q ||
            route_weight_normalize_q || route_window_index_q ||
            route_biased_topk_q || reduction_expert_sum_q);
     wire dma_gather_q = (issue_family_q == FAMILY_DMA) &&
                         (issue_sub_q == DMA_GATHER);
     assign m1_reads_result = rope_q || dma_transfer_q || vector_add_q ||
         vector_silu_mul_q || dma_scatter_q || route_biased_topk_q ||
-        reduction_expert_sum_q ||
+        reduction_expert_sum_q || attention_sparse_q ||
         ((GATHER_PLACEMENT_ADDRESSED != 0) && dma_gather_q);
     assign m1_reads_matmul_weight = matmul_q;
 
@@ -3881,6 +4062,59 @@ module ot_a3_engine_issue_bridge #(
         .exponential_count(gqa_exponential_count),
         .value_multiply_count(gqa_value_multiply_count),
         .saturation_count(gqa_saturation_count)
+    );
+
+    //: ATTENTION.SPARSE. Four bound inputs and one output, the same five slots
+    //: GQA binds, and the same one-outstanding registered read the operand banks
+    //: present -- so no adaptation register is needed here at all: the engine's
+    //: own read ports already assume the bank's one-cycle answer.
+    //:
+    //: THE SCALE COMES FROM THE DESCRIPTOR. GQA is handed a frozen
+    //: GQA_SCALE_CODE because its head width is frozen; this operator's scale is
+    //: 1/sqrt(head_dim) and the shipped head widths are 16, 128 and 512, so a
+    //: constant here would be right for one deployment and silently wrong for
+    //: the others. ``mapped_numeric_ok`` refuses a scale that is not a positive
+    //: finite binary32, which is the check that catches a backend emitting zero
+    //: because its contract table lacks the exporter's spelling of the field.
+    ot_a3_attention_sparse #(
+        .CHANNELS_MAX(SPARSE_CHANNELS_MAX),
+        .HEADS_MAX(SPARSE_HEADS_MAX),
+        .KV_ROWS_MAX(SPARSE_KV_ROWS_MAX)
+    ) sparse_attention (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(engine_start & attention_sparse_q),
+        .cfg_query_base(slot0_base),
+        .cfg_kv_base(slot1_base),
+        //: slot2_plain_base, NOT slot2_base: the latter adds a KV plane span
+        //: because slot 2 is GQA's value plane, and this operator's slot 2 is
+        //: its window index view.
+        .cfg_index_base(slot2_plain_base),
+        .cfg_sink_base(slot3_base),
+        .cfg_out_base(slot4_base),
+        .cfg_rows(request_span),
+        .cfg_heads(sparse_heads),
+        .cfg_head_dim(sparse_head_dim),
+        .cfg_slots(sparse_slots),
+        .cfg_kv_rows(sparse_kv_rows),
+        .cfg_scale_code(mapped_scale_bits),
+        .mem_rd_en(spa_mem_rd_en),
+        .mem_rd_addr(spa_mem_rd_addr),
+        .mem_rd_data(m0_rd_data),
+        .sink_rd_en(spa_sink_rd_en),
+        .sink_rd_addr(spa_sink_rd_addr),
+        .sink_rd_data(m1_rd_data),
+        .mem_we(spa_out_we),
+        .mem_wr_addr(spa_out_addr),
+        .mem_wr_data(spa_out_data),
+        .busy(spa_busy),
+        .done(spa_done),
+        .error_code(spa_error_code),
+        .nonfinite(spa_nonfinite),
+        .valid_row_reads(spa_valid_row_reads),
+        .padding_lanes_seen(spa_padding_lanes),
+        .rows_emitted(spa_rows_emitted),
+        .saturation_count(spa_saturation_count)
     );
 
     //: ROUTE.WEIGHT_NORMALIZE. The group count is ``request_span`` because slot
