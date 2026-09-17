@@ -22,12 +22,20 @@ WHAT IT FOUND. Two classes, one justified and one not:
   reduction record justifies -- ``vision_excluded``, reduced_vision_n_layers 0
   against the release's 32, the workload being text only. ``bias_vl`` is in this
   class because the adapter gates it on the tower's presence.
-* 43 ``attn.wo_a.scale``, one per main layer and per MTP layer, which nothing
-  justifies. The adapter builds ``wo_a`` with ``fp8_linear``, exactly as it
-  builds ``wo_b``, ``wq_a``, ``wq_b`` and ``wkv``; the reduced checkpoint holds
-  the scales for all four of those and the weight for ``wo_a``, but not its
-  scale. So the reduced checkpoint is missing 43 tensors that its own config
-  implies, and a release record pinned against it today would pin that gap in.
+* 43 ``attn.wo_a.scale``, one per main layer and per MTP layer. This is a
+  FORMAT DEVIATION rather than a stray omission, and the checkpoint lock names
+  it: in the reduced checkpoint ``wkv``, ``wo_b``, ``wq_a`` and ``wq_b`` are all
+  ``F8_E4M3`` with ``F8_E8M0`` scales, while ``wo_a`` alone is ``BF16`` with no
+  scale. The adapter builds all five with ``fp8_linear``, and its derivation
+  reproduces the release's own pinned 96,085 -- evidence measured from the
+  released shard headers -- so the release quantizes ``wo_a`` and the reduced
+  fixture does not. Its 256x256 reduced shape is divisible by the 32-wide
+  quantization block, exactly like its siblings', so nothing about the reduced
+  width forces it.
+
+  A release record pinned against the checkpoint as it stands would pin that
+  deviation in, and the reduced vehicle would then verify a model that stores
+  one projection differently from the one it claims to reduce.
 """
 from __future__ import annotations
 
@@ -178,15 +186,20 @@ def classify(names: set[str], present: set[str]) -> dict[str, Any]:
             "count": len(other),
             "patterns": patterns(other),
             "why": (
-                "nothing in the reduction record justifies these. The adapter "
-                "builds attn.wo_a with fp8_linear exactly as it builds wo_b, "
-                "wq_a, wq_b and wkv; the checkpoint holds those four scales and "
-                "wo_a's weight, but not wo_a's scale"
+                "a FORMAT deviation, not a stray omission: the lock records "
+                "wkv, wo_b, wq_a and wq_b as F8_E4M3 with F8_E8M0 scales and "
+                "wo_a alone as BF16 with no scale, where the adapter builds all "
+                "five with fp8_linear and reproduces the release's own pinned "
+                "96,085 from shard-header evidence. The reduced 256x256 shape "
+                "is divisible by the 32-wide quantization block exactly like "
+                "its siblings', so the reduced width does not force it"
             ) if other else "none",
         },
         "verdict": (
             "faithful" if not other else
-            "the reduced checkpoint is missing tensors its own config implies"
+            "the reduced checkpoint stores attn.wo_a unquantized where the "
+            "release quantizes it, so its tensor structure is not a faithful "
+            "reduction and a release record pinned against it would pin that in"
         ),
     }
 
