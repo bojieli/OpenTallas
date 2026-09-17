@@ -124,7 +124,76 @@
             2181
           ],
           "pinned_id_381_still_names_mhc": true,
-          "verdict": "THE ROM PINNING HOLDS. Descriptor 381 is still the VECTOR.MHC operator (family 0x30, sub 9) in the current deployment, so AM-E9 removed 270 descriptors from later in the table and left this one where it was."
+          "verdict": "THE ROM PINNING HOLDS COMPLETELY. Descriptor 381 is still the VECTOR.MHC operator, and the six views it names carry exactly the object ids, permissions and dtypes the engine's view gate pins. The engine would admit the current shipped ROM program as it stands.",
+          "view_gate": {
+            "checked": [
+              {
+                "dtype": 16,
+                "expected_object": 359,
+                "object": 359,
+                "permissions": 1,
+                "rank": 3,
+                "slot": 0,
+                "view": 370
+              },
+              {
+                "dtype": 18,
+                "expected_object": 9,
+                "object": 9,
+                "permissions": 1,
+                "rank": 2,
+                "slot": 1,
+                "view": 371
+              },
+              {
+                "dtype": 18,
+                "expected_object": 12,
+                "object": 12,
+                "permissions": 1,
+                "rank": 1,
+                "slot": 2,
+                "view": 372
+              },
+              {
+                "dtype": 18,
+                "expected_object": 10,
+                "object": 10,
+                "permissions": 1,
+                "rank": 1,
+                "slot": 3,
+                "view": 373
+              },
+              {
+                "dtype": 18,
+                "expected_object": 374,
+                "object": 374,
+                "permissions": 3,
+                "rank": 3,
+                "slot": 4,
+                "view": 375
+              },
+              {
+                "dtype": 18,
+                "expected_object": 376,
+                "object": 376,
+                "permissions": 3,
+                "rank": 3,
+                "slot": 5,
+                "view": 377
+              }
+            ],
+            "operator_381_names": {
+              "input_view_0": 370,
+              "input_view_1": 371,
+              "input_view_2": 372,
+              "input_view_3": 373,
+              "numeric_profile_id": 378,
+              "output_view_0": 375,
+              "output_view_1": 377,
+              "schedule_id": 379
+            },
+            "verdict": "ALL SIX HOLD -- object id, permissions and dtype -- so the engine's whole ROM view gate is satisfied by the current shipped deployment, not just its operator id. dtype 16 is FMT_BF16 on the hidden stream and 18 is FMT_FP32 on the rest, which is what the gate expects."
+          }
         }
       },
       "what": "ot_a3_vector_mhc_pre_tile_scheduler gates admission on 83 field comparisons across five gates, and they are pinned to two exact descriptor INSTANCES: ROM program counter 15 with operator descriptor 381 and wait set 382, HBM program counter 14 with operator 545 and wait set 546.",
@@ -134,6 +203,12 @@
     "engine": "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv",
     "engine_status": "finished and qualified, not connected. results/rtl/a3_hc_pre_t1_campaign.json passes over 1,379,450 checks per simulator with both simulators agreeing, all 74 numeric boundary words exact, ROM/HBM output parity and synthesizable elaboration. It emits the two results this kind needs -- 8 weight words and 16 combination words -- as register bundles, so the two-view problem is the BIASED_TOPK two-pass emit and not a second physical write port.",
     "operation": "VECTOR.MHC / HYPER_CONNECT_PRE",
+    "remaining_work": {
+      "and_for_hbm": "two constants are stale -- the MHC operator is descriptor 547 where the engine gates on 545 -- and the HBM view gate's object ids were not checked here, so that store needs the same measurement before it is connected.",
+      "then": "admit VECTOR.MHC with the PRE form in the bridge, route to the engine, and emit its 8 weight and 16 combination words in two passes over the single result port, as ROUTE.BIASED_TOPK already does for two register-sourced views.",
+      "what": "A semantic-record collector. The engine takes 128 words in one bundle and no existing module sees them all: the bridge holds the operator, numeric payload and resolved views but has ZERO mentions of the SCHEDULE descriptor, which is words 52..63; the microsequencer decodes that in S_SCHED_WAIT and the views arrive later from the resolver bank.",
+      "why_it_is_tractable": "The operator descriptor names every piece by id -- input_view_0..3 370..373, output_view_0/1 375/377, schedule_id 379, numeric_profile_id 378 -- and the microsequencer already fetches descriptors by id. So the collector latches what the sequencer is already walking past rather than resolving anything itself."
+    },
     "the_record_is_what_the_bridge_already_holds": "The engine takes a 128-word semantic record: word 0 profile, word 1 active_tokens, words 2..9 the instruction, 10..32 the operator descriptor, 33..51 the numeric payload including the 256-bit contract digest, 52..63 the schedule, and six 10-word view records from word 64. Every one of those is a field the bridge latches already, so the connection is a packing function rather than new architecture.",
     "why_first": "It is the first refused kernel in both DeepSeek graphs -- index 4 of V4-Flash, index 3 of V4.1 -- and a refused operation raises TRAP_CAPABILITY, so nothing after it is reachable. Until it is wired it is the entire critical path."
   },
