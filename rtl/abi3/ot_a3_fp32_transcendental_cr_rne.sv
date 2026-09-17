@@ -32,7 +32,23 @@ module ot_a3_fp32_transcendental_cr_rne #(
     output reg         out_valid,
     input  wire        out_ready,
     output reg  [31:0] result_code,
-    output reg  [1:0]  result_error
+    output reg  [1:0]  result_error,
+    //: THE ENCLOSING INTERVAL, for a caller that must not round twice.
+    //:
+    //: SQRT_SOFTPLUS needs log(1 + exp(x)) rounded ONCE, so it cannot take this
+    //: engine's rounded exponential and take a logarithm of it -- that is two
+    //: roundings and a different function. It takes the interval instead and
+    //: carries it through its own series before rounding at all.
+    //:
+    //: Purely additive: nothing here changes what result_code or result_error
+    //: carry, and the seven existing instances leave these unconnected. They
+    //: are valid on the same cycle out_valid rises, and only for a request that
+    //: actually ran the series -- an argument the engine answers from an early
+    //: exit (zero, or a magnitude past the flush threshold) publishes
+    //: interval_exact low, because there is no interval to publish.
+    output reg               interval_exact,
+    output reg [FRAC_BITS+2:0] interval_lower_out,
+    output reg [FRAC_BITS+2:0] interval_upper_out
 );
     localparam OP_EXP_NONPOS = 1'b0;
     localparam OP_SIGMOID = 1'b1;
@@ -390,6 +406,9 @@ module ot_a3_fp32_transcendental_cr_rne #(
             out_valid <= 1'b0;
             result_code <= 0;
             result_error <= ERR_NONE;
+            interval_exact <= 1'b0;
+            interval_lower_out <= 0;
+            interval_upper_out <= 0;
         end else begin
             if (out_valid && out_ready)
                 out_valid <= 1'b0;
@@ -401,6 +420,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
                         argument_sign <= argument_code[31];
                         result_code <= 0;
                         result_error <= ERR_NONE;
+                        interval_exact <= 1'b0;
                         if (argument_nonfinite ||
                             (operation == OP_EXP_NONPOS &&
                              !argument_code[31] && !argument_zero)) begin
@@ -483,6 +503,9 @@ module ot_a3_fp32_transcendental_cr_rne #(
                 end
 
                 S_CERTIFY: begin
+                    interval_exact <= 1'b1;
+                    interval_lower_out <= interval_lower;
+                    interval_upper_out <= interval_upper;
                     if (rounded_lower == rounded_upper) begin
                         result_code <= rounded_lower;
                         result_error <= ERR_NONE;
