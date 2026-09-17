@@ -72,9 +72,10 @@
   "array_operand_ports": 4,
   "array_result_ports": 1,
   "blocked_on": {
-    "add a multi-contract admission leg": 5,
-    "add an admission leg": 4,
-    "widen the engine-array port surface, then add the leg": 4
+    "add a multi-contract admission leg": 1,
+    "add an admission leg": 1,
+    "instantiate the module, then add the leg": 7,
+    "widen the engine-array port surface, then instantiate and wire": 4
   },
   "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
   "kernels": 3245,
@@ -87,7 +88,12 @@
   "operations_refused": 13,
   "refused": [
     {
-      "blocked_on": "widen the engine-array port surface, then add the leg",
+      "blocked_on": "widen the engine-array port surface, then instantiate and wire",
+      "instantiated_by": [
+        "ot_a3_engine_array.sv",
+        "ot_a3_operand_receiver.sv",
+        "ot_a3_vector_fp4kv_dequant.sv"
+      ],
       "kernels": 444,
       "numeric_contracts_needed": 11,
       "operands_needed": 2,
@@ -96,7 +102,8 @@
       "rtl_module": "ot_a3_vector_convert.sv"
     },
     {
-      "blocked_on": "add a multi-contract admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 198,
       "numeric_contracts_needed": 5,
       "operands_needed": 4,
@@ -105,7 +112,10 @@
       "rtl_module": "ot_a3_reduction_grouped_concat.sv"
     },
     {
-      "blocked_on": "widen the engine-array port surface, then add the leg",
+      "blocked_on": "widen the engine-array port surface, then instantiate and wire",
+      "instantiated_by": [
+        "ot_a3_engine_array.sv"
+      ],
       "kernels": 160,
       "numeric_contracts_needed": 2,
       "operands_needed": 4,
@@ -114,7 +124,8 @@
       "rtl_module": "ot_a3_vector_mhc_post.sv"
     },
     {
-      "blocked_on": "add a multi-contract admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 120,
       "numeric_contracts_needed": 3,
       "operands_needed": 3,
@@ -124,6 +135,9 @@
     },
     {
       "blocked_on": "add a multi-contract admission leg",
+      "instantiated_by": [
+        "ot_a3_engine_array.sv"
+      ],
       "kernels": 89,
       "numeric_contracts_needed": 4,
       "operands_needed": 2,
@@ -132,7 +146,8 @@
       "rtl_module": "ot_a3_vector_scale.sv"
     },
     {
-      "blocked_on": "widen the engine-array port surface, then add the leg",
+      "blocked_on": "widen the engine-array port surface, then instantiate and wire",
+      "instantiated_by": [],
       "kernels": 40,
       "numeric_contracts_needed": 1,
       "operands_needed": 2,
@@ -141,7 +156,10 @@
       "rtl_module": "ot_a3_route_expert_dispatch.sv"
     },
     {
-      "blocked_on": "widen the engine-array port surface, then add the leg",
+      "blocked_on": "widen the engine-array port surface, then instantiate and wire",
+      "instantiated_by": [
+        "ot_a3_engine_array.sv"
+      ],
       "kernels": 10,
       "numeric_contracts_needed": 3,
       "operands_needed": 3,
@@ -150,7 +168,8 @@
       "rtl_module": "ot_a3_vector_compress_project.sv"
     },
     {
-      "blocked_on": "add a multi-contract admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 9,
       "numeric_contracts_needed": 2,
       "operands_needed": 3,
@@ -160,6 +179,9 @@
     },
     {
       "blocked_on": "add an admission leg",
+      "instantiated_by": [
+        "ot_a3_engine_array.sv"
+      ],
       "kernels": 8,
       "numeric_contracts_needed": 1,
       "operands_needed": 3,
@@ -168,7 +190,8 @@
       "rtl_module": "ot_a3_vector_index_score.sv"
     },
     {
-      "blocked_on": "add a multi-contract admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 6,
       "numeric_contracts_needed": 3,
       "operands_needed": 3,
@@ -177,7 +200,8 @@
       "rtl_module": "ot_a3_dma_ngram_hash.sv"
     },
     {
-      "blocked_on": "add an admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 2,
       "numeric_contracts_needed": 1,
       "operands_needed": 4,
@@ -186,7 +210,8 @@
       "rtl_module": "ot_a3_vector_engram_gate.sv"
     },
     {
-      "blocked_on": "add an admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 1,
       "numeric_contracts_needed": 1,
       "operands_needed": 1,
@@ -195,7 +220,8 @@
       "rtl_module": "ot_a3_route_block_max.sv"
     },
     {
-      "blocked_on": "add an admission leg",
+      "blocked_on": "instantiate the module, then add the leg",
+      "instantiated_by": [],
       "kernels": 1,
       "numeric_contracts_needed": 1,
       "operands_needed": 1,
@@ -206,6 +232,6 @@
   ],
   "refused_kernel_share": 0.3353,
   "schema": "opentallas.deepseek_v41_rtl_token_gap.v1",
-  "statement": "A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY, so the admitted set is exactly the subset of this graph the RTL can execute -- except for the families the bridge does not execute at all, which are listed separately rather than counted as gaps. Every refused operation has a module in rtl/abi3, but a module is not a form match: the engine array carries two operands and one result per dispatch, and an operation asking for more needs that surface widened before an admission leg can be written. ot_a3_vector_convert.sv states its own restriction in its header.",
+  "statement": "A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY, so the admitted set is exactly the subset of this graph the RTL can execute -- except for the families the bridge does not execute at all, which are listed separately rather than counted as gaps. Every refused operation has a module in rtl/abi3, but a module is not a form match: the engine array carries two operands and one result per dispatch, and an operation asking for more needs that surface widened before an admission leg can be written. ot_a3_vector_convert.sv states its own restriction in its header. Nor is a module in the tree necessarily instantiated: five of the thirteen are in ot_a3_engine_array.sv and the rest are instantiated by nothing, so they need a place to run before a leg means anything.",
   "unmapped_kernel_kinds": {}
 }

@@ -143,6 +143,26 @@ def module_for(operation: str) -> str | None:
     return None
 
 
+def instantiation_sites(module: str) -> list[str]:
+    """The RTL files that instantiate ``module``, excluding its own definition.
+
+    A module that exists and is instantiated NOWHERE is further from working than
+    one the engine array already holds, and the admission leg is not the whole of
+    the difference: the engine has to be given a place to run, its operand and
+    result ports connected to the array's banks, and its ``select_*`` term added.
+    Five of the refused operations are already in ``ot_a3_engine_array.sv`` and the
+    rest are in the tree and instantiated by nothing, which is worth separating.
+    """
+    stem = module.removesuffix(".sv")
+    sites = []
+    for path in sorted(RTL_DIR.glob("*.sv")):
+        if path.name == module:
+            continue
+        if f"{stem} " in path.read_text(encoding="utf-8"):
+            sites.append(path.name)
+    return sites
+
+
 def audit(ir_path: Path) -> dict[str, object]:
     graph = json.loads(ir_path.read_text(encoding="utf-8"))
     demand: collections.Counter[str] = collections.Counter()
@@ -176,10 +196,13 @@ def audit(ir_path: Path) -> dict[str, object]:
         shape = form[operation]
         operands = max(shape["operands"])
         results = max(shape["results"])
+        sites = instantiation_sites(module) if module else []
         if module is None:
             blocked = "build a module"
         elif results > ARRAY_RESULT_PORTS or operands > ARRAY_OPERAND_PORTS:
-            blocked = "widen the engine-array port surface, then add the leg"
+            blocked = "widen the engine-array port surface, then instantiate and wire"
+        elif not sites:
+            blocked = "instantiate the module, then add the leg"
         elif len(shape["contracts"]) > 1:
             blocked = "add a multi-contract admission leg"
         else:
@@ -189,6 +212,7 @@ def audit(ir_path: Path) -> dict[str, object]:
                 "operation": operation,
                 "kernels": demand[operation],
                 "rtl_module": module,
+                "instantiated_by": sites,
                 "operands_needed": operands,
                 "results_needed": results,
                 "numeric_contracts_needed": len(shape["contracts"]),
@@ -228,7 +252,10 @@ def audit(ir_path: Path) -> dict[str, object]:
             "module is not a form match: the engine array carries two operands "
             "and one result per dispatch, and an operation asking for more needs "
             "that surface widened before an admission leg can be written. "
-            "ot_a3_vector_convert.sv states its own restriction in its header."
+            "ot_a3_vector_convert.sv states its own restriction in its header. "
+            "Nor is a module in the tree necessarily instantiated: five of the "
+            "thirteen are in ot_a3_engine_array.sv and the rest are instantiated "
+            "by nothing, so they need a place to run before a leg means anything."
         ),
     }
 
@@ -258,7 +285,8 @@ def main() -> int:
         print(
             f"  {row['operation']:<26} x{row['kernels']:<5} "
             f"{row['operands_needed']}in/{row['results_needed']}out "
-            f"{row['numeric_contracts_needed']}c  {row['blocked_on']}"
+            f"{row['numeric_contracts_needed']}c "
+            f"{'inst' if row['instantiated_by'] else '----'}  {row['blocked_on']}"
         )
     return 0
 
