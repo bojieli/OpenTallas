@@ -108,12 +108,6 @@ SILU_SOURCES = (
 APPEND_SOURCES = (
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_selection_token_append.sv",
-    "rtl/proto/ot_fp32_add_rne_pipe.sv",
-    "rtl/abi3/ot_a3_route_weight_normalize.sv",
-    "rtl/abi3/ot_a3_route_window_index.sv",
-    "rtl/abi3/ot_a3_route_biased_topk.sv",
-    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
-    "rtl/abi3/ot_a3_reduction_expert_sum.sv",
 )
 BENCHES = (
     {

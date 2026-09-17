@@ -2274,64 +2274,60 @@ class Builder:
         self.bank[BASE_TOKEN] = ordinary
 
         # ---------------------------------------------------- what bounds it
-        # The three operators below are shipped instructions of the governed
-        # program that this bridge does not admit, and each is issued here so
-        # the refusal is a measurement rather than a reading of the source.
-        # They were four.  The fourth was the head span's DMA.GATHER at PC 68,
-        # refused because `dense_row_source_ok` pinned a non-embedding
-        # gather's source to FP32; that pin was an artefact of the one gather
-        # the predicate had been written against and not a property of this
-        # design -- `ot_a3_dma_index_mover` has no dtype port at all -- and
-        # PC 68 is now issued as a PASSING case above rather than refused
-        # here.  What remains is the three MLP projections, whose weight
-        # objects are objects of the layer's own 23, and an object no
-        # admitted operator can name is one no run of this design can ever
-        # resolve.  The bases bound to the three refused weight objects are
-        # the halfword bases they would occupy in a projection-matrix bank
-        # this vehicle does not stage for them; nothing reads them, and they
-        # are here so the refusal is attributable to the view SHAPE and not
-        # to an unplaced object.
-        refused_matmul_map = dict(object_base)
-        refused_matmul_map[matmul_gate[1]] = 0
-        refused_matmul_map[matmul_up[1]] = 12288 * ADD_WIDTH
-        refused_matmul_map[matmul_down[1]] = 2 * 12288 * ADD_WIDTH
-        for name, pc, weights in (
-            ("gate", PC_MATMUL_GATE, matmul_gate),
-            ("up", PC_MATMUL_UP, matmul_up),
-            ("down", PC_MATMUL_DOWN, matmul_down),
-        ):
-            self.emit(
-                name=f"descriptor_refusal_mlp_{name}_projection_weight_view",
-                pc=pc,
-                family=int(Major.TENSOR),
-                sub=int(Tensor.MATMUL),
-                operator_id=operations[pc]["operator_id"],
-                views=operations[pc]["views"],
-                object_map=refused_matmul_map,
-                context_length=17,
-                kv_plane_rows=KV_PLANE_ROWS,
-                request_max_new_tokens=1,
-                generated_before=0,
-                expected_fault=True,
-                expected_trap=TRAP_DESCRIPTOR,
-                expected_result_count=0,
-                expected_work_count=0,
-                expected_write_count=0,
-                expected_token=0,
-                expected_tie_multiplicity=0,
-                expected_eos_reason=0,
-                expected_launch=LAUNCH_NONE,
-                compare_base=BASE_TRUNK,
-                compare_words=untouched_trunk,
-                note=(
-                    "the admitted TENSOR.MATMUL weight view is [n <= 4096, "
-                    "4096]; this one is "
-                    f"{operations[pc]['views'][1]['dims']!r} and the operator "
-                    "is refused before a single weight halfword is read, so "
-                    "object "
-                    f"{weights[1]} is placed by the table and never resolved"
-                ),
-            )
+        # THREE CASES USED TO LIVE HERE AND THE BOUND THEY TESTED IS GONE.
+        #
+        # They issued the shipped MLP gate, up and down projections and asserted
+        # each was refused with TRAP_DESCRIPTOR because the admitted
+        # TENSOR.MATMUL weight view was [n <= 4096, 4096] and theirs are
+        # [12288, 4096], [12288, 4096] and [4096, 12288]. That bound is no longer
+        # 4,096. `matmul_weight_source_ok` in ot_a3_engine_issue_bridge.sv reads
+        # `desc_view_dim0 <= 32'hffff`, raised to 65,535 by f6afec5 (2026-09-13)
+        # so the reduced decode's head could run without being partitioned into
+        # fifths. All three projections are inside that bound, so the bridge
+        # admits them and the three assertions became false the day the bound
+        # moved. Nothing reported it because 4918b92 staled this campaign's
+        # upstream witness the same day and it could not run at all until
+        # 2026-09-16.
+        #
+        # THEY CANNOT BE CONVERTED INTO PASSING CASES HERE. A projection weight
+        # is 12,288 x 4,096 BF16 halfwords; this vehicle's operand bank is
+        # BANK_WORDS words and stages none of them, which is precisely why the
+        # cases were written as refusals -- the note they carried said so ("the
+        # bases bound to the three refused weight objects are the halfword bases
+        # they would occupy in a projection-matrix bank this vehicle does not
+        # stage for them; nothing reads them"). An admitted matmul would read
+        # whatever those bases point at and there is no golden for that.
+        #
+        # AND THEY CANNOT BE RE-AIMED PAST THE NEW BOUND. A case's weight dims
+        # come from the deployment's own descriptor records in descriptors.hex,
+        # not from the `views` stream this builder controls, and no shipped
+        # operator declares a weight view above 65,535 rows -- the head is
+        # partitioned precisely so none does. Re-aiming would mean fabricating a
+        # descriptor record, which would make the refusal attributable to this
+        # builder rather than to the governed program.
+        #
+        # So the three are removed rather than repaired, and the consequence is
+        # recorded rather than hidden: THIS CAMPAIGN NO LONGER COVERS THE
+        # MATMUL WEIGHT-ROW BOUND AT ALL. Covering it needs either a fabricated
+        # descriptor admitted as such, or a vehicle that stages a projection.
+        self.uncovered_after_bound_change = {
+            "predicate": "matmul_weight_source_ok: desc_view_dim0 <= 32'hffff",
+            "bound_raised_by": "f6afec5",
+            "removed_cases": [
+                "descriptor_refusal_mlp_gate_projection_weight_view",
+                "descriptor_refusal_mlp_up_projection_weight_view",
+                "descriptor_refusal_mlp_down_projection_weight_view",
+            ],
+            "why_removed": ("each asserted a refusal on a 4,096-row weight-view "
+                            "bound that f6afec5 raised to 65,535, so all three "
+                            "shipped projections are now admitted"),
+            "why_not_repaired": ("they cannot become passing cases without "
+                                 "staging a 12,288 x 4,096 projection, and they "
+                                 "cannot be re-aimed past 65,535 without "
+                                 "fabricating a descriptor record"),
+            "coverage_lost": ("no case in this vector set now exercises the "
+                              "matmul weight-row bound"),
+        }
 
 
     # -- helpers ------------------------------------------------------------
@@ -2649,6 +2645,8 @@ def build(
                 item["expected"]["write_beats"] for item in builder.cases
             ),
         },
+        "uncovered_after_bound_change": getattr(
+            builder, "uncovered_after_bound_change", None),
         "claim_boundary": {
             "exact_shipped_operator_records": True,
             "exact_resolved_view_stream": True,
