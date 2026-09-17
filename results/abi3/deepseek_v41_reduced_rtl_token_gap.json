@@ -83,6 +83,19 @@
     "m1_reads_result"
   ],
   "critical_path": "HYPER_CONNECT_PRE is the first refusal in both DeepSeek graphs, so it is the whole critical path until it is done -- and its engine is ot_a3_hc_pre_t1_descriptor_rne.sv, already synthesizable and already qualified against both stores' shipped descriptors (results/rtl/a3_hc_pre_t1_campaign.json: 1,379,450 checks per simulator, dual-simulator agreement, ROM/HBM output parity, all 74 numeric boundary words exact). The remaining work is a bridge connection, not arithmetic: admit the operation, route to that engine, and emit its 8 weight and 16 combination words -- both register bundles, so the BIASED_TOPK two-pass emit applies rather than needing a second physical write port.",
+  "critical_path_detail": {
+    "blocker": {
+      "and_those_instances_are_superseded": "The campaign binds deployment sha256 34ca189c... which is on disk as build/abi3/deepseek-v4-flash-rom-PRE-AM-E9. The current shipped ROM deployment is 3a240986... with 3,135 descriptors against that one's 3,405 -- 270 fewer at the same 1,323 instructions -- so AM-E9 removed descriptors and ids at or after the first removal shifted. The HBM deployment the campaign names is not on disk at all.",
+      "what": "ot_a3_vector_mhc_pre_tile_scheduler gates admission on 83 field comparisons across five gates, and they are pinned to two exact descriptor INSTANCES: ROM program counter 15 with operator descriptor 381 and wait set 382, HBM program counter 14 with operator 545 and wait set 546.",
+      "what_is_not_established_here": "whether descriptor 381 still names the MHC operator in the current deployment. The count difference proves ids moved, not which ones; checking that is the first concrete step, and it decides whether the engine needs re-pinning against the current program or generalising outright.",
+      "which_constants_are_which": "Of the 83, the dtypes, HC_EPSILON and the 256-bit contract digest ARE the operator's identity and should stay pinned. The program counters, operator and wait-set ids, and the per-store schedule tiling words 54..62 are properties of one build of one program and are what must be derived from the record instead. The datapath behind the gates already reads the record generically, which is the same shape as the frozen-admission-predicate pattern that froze Qwen3 at a fixed shape earlier in this work."
+    },
+    "engine": "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv",
+    "engine_status": "finished and qualified, not connected. results/rtl/a3_hc_pre_t1_campaign.json passes over 1,379,450 checks per simulator with both simulators agreeing, all 74 numeric boundary words exact, ROM/HBM output parity and synthesizable elaboration. It emits the two results this kind needs -- 8 weight words and 16 combination words -- as register bundles, so the two-view problem is the BIASED_TOPK two-pass emit and not a second physical write port.",
+    "operation": "VECTOR.MHC / HYPER_CONNECT_PRE",
+    "the_record_is_what_the_bridge_already_holds": "The engine takes a 128-word semantic record: word 0 profile, word 1 active_tokens, words 2..9 the instruction, 10..32 the operator descriptor, 33..51 the numeric payload including the 256-bit contract digest, 52..63 the schedule, and six 10-word view records from word 64. Every one of those is a field the bridge latches already, so the connection is a packing function rather than new architecture.",
+    "why_first": "It is the first refused kernel in both DeepSeek graphs -- index 4 of V4-Flash, index 3 of V4.1 -- and a refused operation raises TRAP_CAPABILITY, so nothing after it is reachable. Until it is wired it is the entire critical path."
+  },
   "forced_order": [
     {
       "engine": "ot_a3_hc_pre_t1_descriptor_rne.sv",
