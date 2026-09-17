@@ -783,11 +783,11 @@ V41_FLASH = DeepSeekV4Release(
 V41_FLASH_REDUCED = DeepSeekV4Release(
     model_id="deepseek-v4.1-flash-reduced-v1",
     repository="opentallas/deepseek-v4.1-flash-reduced-v1",
-    revision="08dc6a7b6fcca3313acffed7ae2991b82b1a09dd",
+    revision="0edbeffa7d0ac91c61987bdd7406d96ac899964d",
     config_sha256=(
-        "2089a4019f5d445798fdcf287c158a64fd7869a06ebe188aac3145c4e3d3b718"
+        "043cfe085acf4d2a41c64c26cc57051cf169115b4b1dde3c60ad3aa71f3475fd"
     ),
-    config_bytes=2938,
+    config_bytes=2939,
     index_sha256=(
         "18458ac663386b63726134a9b14c822802b19e7a3847f84da6536d0a02f0ba18"
     ),
@@ -802,7 +802,7 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
     ),
     tensor_structure_evidence="derived_and_confronted_with_checkpoint_index",
     inference_config_sha256=(
-        "fa73a0ccb4f4ea4c6a13b31551cac7996dae65eb29d79de7fcbb8dc3f538f8fd"
+        "a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb"
     ),
     #: No model card and no tokenizer: this fixture has neither.
     model_card_sha256=None,
@@ -844,7 +844,7 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
             "index_topk": 16,
             "initializer_range": 0.02,
             "kv_source_layer_ids": [2, 8, 14, 20],
-            "max_position_embeddings": 24,
+            "max_position_embeddings": 128,
             "model_type": "deepseek_v41_text",
             "moe_intermediate_size": 64,
             "n_routed_experts": 12,
@@ -893,7 +893,7 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
         "09b0308369f0dac4c833d348e9aa8d1a632b8ffde340d01da66b806d1c4a31f3"
     ),
     checkpoint_lock_id=(
-        "0c2881c91799c131a0773808114b3e1e640e4cfa39610f7e5955ef289ada8e07"
+        "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1"
     ),
     supported_compress_ratios=(0, 1, 2),
     config_layout=MappingProxyType(

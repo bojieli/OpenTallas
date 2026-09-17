@@ -319,10 +319,40 @@ def reduced_body(
 
 
 def sequence_context(body: dict[str, Any], prompt_tokens: int, cap: int) -> int:
-    """``max_seq_len``: the whole run, rounded up to the largest compress ratio."""
+    """``max_seq_len``: the whole run, aligned to every structure that tiles it.
+
+    Two alignments, and the second was missing.
+
+    The compress ratio, so every compressed KV plane holds a whole number of
+    latents -- the rule this function was written to.
+
+    AND THE SLIDING WINDOW, because the window tiles the context too. The
+    reduction keeps ``window_size`` at 128 exactly, the window being part of the
+    mode structure under test, so a capacity that is not a whole number of
+    windows is a capacity no deployment can use: the V4.1 export refuses a
+    context that is not a whole number of sliding windows, and the RTL's own
+    ``ROUTE.WINDOW_INDEX`` admission requires ``window <= slots``. Rounding to
+    the compress ratio alone gave 24 against a window of 128, which satisfies
+    neither, and the reduced model could be built but not deployed.
+
+    The cost is capacity, not work: the run still touches its own
+    prompt_tokens + cap positions, and the KV planes are merely sized for a
+    whole window.
+    """
 
     ratios = [int(r) for r in body["compress_ratios"] if int(r) > 0]
     step = max(ratios) if ratios else 1
+    window = int(body.get("window_size") or 0)
+    if window > 0:
+        #: lcm would be the general answer; every shipped window is a multiple
+        #: of every shipped ratio, so the window alone is the binding alignment
+        #: and a mismatch is worth refusing rather than silently rounding.
+        if window % step:
+            raise ReducedModelError(
+                f"the reduced window {window} is not a multiple of the largest "
+                f"compress ratio {step}, so no capacity tiles both"
+            )
+        step = window
     needed = prompt_tokens + cap
     return ((needed + step - 1) // step) * step
 

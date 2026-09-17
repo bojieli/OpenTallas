@@ -3,13 +3,13 @@
   "expected_files": [
     {
       "path": "config.json",
-      "sha256": "2089a4019f5d445798fdcf287c158a64fd7869a06ebe188aac3145c4e3d3b718",
-      "size_bytes": 2938
+      "sha256": "043cfe085acf4d2a41c64c26cc57051cf169115b4b1dde3c60ad3aa71f3475fd",
+      "size_bytes": 2939
     },
     {
       "path": "inference_config.json",
-      "sha256": "fa73a0ccb4f4ea4c6a13b31551cac7996dae65eb29d79de7fcbb8dc3f538f8fd",
-      "size_bytes": 2159
+      "sha256": "a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb",
+      "size_bytes": 2160
     },
     {
       "path": "model-00001-of-00001.safetensors",
@@ -34,6 +34,6 @@
     "inference_config.json",
     "parameter_formats.json"
   ],
-  "revision": "08dc6a7b6fcca3313acffed7ae2991b82b1a09dd",
+  "revision": "0edbeffa7d0ac91c61987bdd7406d96ac899964d",
   "schema": "opentallas.checkpoint_source.v1"
 }
