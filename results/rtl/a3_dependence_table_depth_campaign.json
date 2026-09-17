@@ -1,0 +1,36 @@
+{
+  "does_not_establish": [
+    "any frequency, area or throughput claim: this is behaviour only",
+    "that a consumer tolerates the extra cycle -- ot_a3_microsequencer reads the conflict one cycle after the check and must be changed before CHECK_STAGES = 2 can be adopted in the control plane",
+    "that the 2.00x sustained sizing in the iso-area audit is a result; that needs a closed routed record of the full control plane"
+  ],
+  "establishes": [
+    "CHECK_STAGES = 1 is cycle-for-cycle identical to the module as committed, on both conflict outputs and on dbg_ranges_used",
+    "CHECK_STAGES = 2 equals that reference delayed by exactly one cycle, so the deeper check answers the same question about the same instant"
+  ],
+  "results": {
+    "icarus": {
+      "cycles": 20000,
+      "depth1_checks": 20000,
+      "depth2_checks": 19997,
+      "errors": 0,
+      "pass": true
+    },
+    "verilator": {
+      "cycles": 20000,
+      "depth1_checks": 20000,
+      "depth2_checks": 19997,
+      "errors": 0,
+      "pass": true
+    }
+  },
+  "schema": "opentallas.a3_dependence_table_depth.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_dependence_table.sv": "7e6a7e28e4d4042f2aa5919317b8e8cecd8024f9de796b40fd22d2d59b5fa7ad",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/test/tb_a3_dependence_table_depth.sv": "279d12e073376883828fbfa42b2ab4bfb4905d61c90b8b3a71aeb63097555598",
+    "tools/run_a3_dependence_table_depth_campaign.py": "b07ef3a950ca186c7829369aac13d343d2912a216f93e29e6c1fe7280ec18383"
+  },
+  "status": "pass"
+}

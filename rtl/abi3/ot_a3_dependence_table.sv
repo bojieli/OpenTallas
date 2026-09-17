@@ -32,9 +32,41 @@
 //
 // The package is referenced by scope, never wildcard-imported [OI-43].
 // ---------------------------------------------------------------------------
+// THE CONFLICT REDUCTION'S DEPTH IS A PARAMETER.
+//
+// ``CHECK_STAGES`` splits the check across that many cycles.  At 1 the module is
+// bit-identical to the single-cycle form it has always had and the conflict is
+// registered one cycle after ``checkN_valid``; at 2 the 128 per-range results are
+// reduced to eight group bits, registered, and reduced again, so the conflict is
+// registered two cycles after.
+//
+// Why it is a parameter and not a rewrite: the whole 128-range reduction is one
+// combinational cone -- 128 sixteen-bit equalities and 256 forty-bit interval
+// compares OR-ed together -- and
+// ``results/derived/abi3_iso_area_three_level_audit.json`` measures it as the
+// control plane's clock, at a 16.10 ns pre-layout critical path.  That audit names
+// splitting this path as the highest-leverage change available and sizes it at
+// 2.00x sustained throughput (L3 1.075x -> 2.152x of an A100) at ZERO datapath
+// area, while also refusing to call the 2.00x a result until a closed routed
+// record exists.  A parameter lets both depths be measured from one source, and
+// lets the deeper one be adopted by its consumer only once it has one.
+//
+// The state a check is evaluated against does not change with the depth.  Both
+// forms read the table in the cycle ``checkN_valid`` is high -- at 2 the
+// comparators are still in that cycle and only the reduction of their results
+// moves -- so a deeper check answers later about the same instant, and no new
+// hazard is introduced by the depth itself.  What DOES change is the consumer's
+// obligation: ``ot_a3_microsequencer`` must wait the extra cycle before reading
+// the conflict, which is why 1 remains the default.
 module ot_a3_dependence_table #(
     parameter integer ENTRIES = ot_a3_pkg::A3_IRS_ENTRIES,
-    parameter integer RANGES  = ot_a3_pkg::A3_DEP_RANGES
+    parameter integer RANGES  = ot_a3_pkg::A3_DEP_RANGES,
+    parameter integer CHECK_STAGES = 1,
+    //: Groups the 128 per-range results are reduced in before the pipeline
+    //: register.  Eight groups of sixteen splits the cone near its middle: a
+    //: 16-way OR of comparator outputs in the first cycle and an 8-way OR of
+    //: registered bits in the second.
+    parameter integer CHECK_GROUPS = 8
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -96,38 +128,95 @@ module ot_a3_dependence_table #(
         end
     endfunction
 
-    reg conflict0;
-    reg conflict1;
+    //: Per-range results, one bit each, computed for both check ports.  Written as
+    //: a loop over TOTAL rather than the nested entry/range loops it replaces
+    //: because the flat index is what the group reduction below partitions; the
+    //: bits themselves are the same predicate on the same operands.
+    reg [TOTAL-1:0] hit0;
+    reg [TOTAL-1:0] hit1;
+    reg             wild_any;
     integer e;
     integer r;
+    integer i;
     always @* begin
-        conflict0 = 1'b0;
-        conflict1 = 1'b0;
-        for (e = 0; e < ENTRIES; e = e + 1) begin
-            if (entry_valid[e] && wild[e]) begin
-                conflict0 = 1'b1;
-                conflict1 = 1'b1;
-            end
+        wild_any = 1'b0;
+        for (e = 0; e < ENTRIES; e = e + 1)
+            if (entry_valid[e] && wild[e])
+                wild_any = 1'b1;
+        for (e = 0; e < ENTRIES; e = e + 1)
             for (r = 0; r < RANGES; r = r + 1) begin
-                if (range_conflicts(entry_valid[e] && range_valid[e*RANGES + r],
+                hit0[e*RANGES + r] =
+                    range_conflicts(entry_valid[e] && range_valid[e*RANGES + r],
                                     range_object[e*RANGES + r],
                                     range_lo[e*RANGES + r],
                                     range_hi[e*RANGES + r],
                                     range_write[e*RANGES + r],
                                     check0_object, check0_lo, check0_hi,
-                                    check0_write))
-                    conflict0 = 1'b1;
-                if (range_conflicts(entry_valid[e] && range_valid[e*RANGES + r],
+                                    check0_write);
+                hit1[e*RANGES + r] =
+                    range_conflicts(entry_valid[e] && range_valid[e*RANGES + r],
                                     range_object[e*RANGES + r],
                                     range_lo[e*RANGES + r],
                                     range_hi[e*RANGES + r],
                                     range_write[e*RANGES + r],
                                     check1_object, check1_lo, check1_hi,
-                                    check1_write))
-                    conflict1 = 1'b1;
+                                    check1_write);
             end
+    end
+
+    //: The group reduction.  A named reg per group rather than a part-select of a
+    //: wider vector indexed by a loop variable: indexing a part-select is
+    //: something Verilator accepts and Icarus 11 rejects, and both simulators run
+    //: this module's campaign.
+    localparam integer PER_GROUP = TOTAL / CHECK_GROUPS;
+    reg [CHECK_GROUPS-1:0] group0;
+    reg [CHECK_GROUPS-1:0] group1;
+    integer g;
+    integer gi;
+    always @* begin
+        for (g = 0; g < CHECK_GROUPS; g = g + 1) begin
+            group0[g] = 1'b0;
+            group1[g] = 1'b0;
+        end
+        for (i = 0; i < TOTAL; i = i + 1) begin
+            gi = i / PER_GROUP;
+            if (hit0[i]) group0[gi] = 1'b1;
+            if (hit1[i]) group1[gi] = 1'b1;
         end
     end
+
+    //: Stage one, present only at CHECK_STAGES == 2. At 1 these registers are
+    //: unread and the synthesiser removes them, so the single-cycle netlist is
+    //: what it always was.
+    reg [CHECK_GROUPS-1:0] group0_q;
+    reg [CHECK_GROUPS-1:0] group1_q;
+    reg                    wild_any_q;
+    reg                    check0_valid_q;
+    reg                    check1_valid_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            group0_q <= {CHECK_GROUPS{1'b0}};
+            group1_q <= {CHECK_GROUPS{1'b0}};
+            wild_any_q <= 1'b0;
+            check0_valid_q <= 1'b0;
+            check1_valid_q <= 1'b0;
+        end else begin
+            group0_q <= group0;
+            group1_q <= group1;
+            wild_any_q <= wild_any;
+            check0_valid_q <= check0_valid;
+            check1_valid_q <= check1_valid;
+        end
+    end
+
+    wire conflict0 = (CHECK_STAGES >= 2)
+        ? (wild_any_q || (group0_q != {CHECK_GROUPS{1'b0}}))
+        : (wild_any   || (group0   != {CHECK_GROUPS{1'b0}}));
+    wire conflict1 = (CHECK_STAGES >= 2)
+        ? (wild_any_q || (group1_q != {CHECK_GROUPS{1'b0}}))
+        : (wild_any   || (group1   != {CHECK_GROUPS{1'b0}}));
+    wire check0_valid_now = (CHECK_STAGES >= 2) ? check0_valid_q : check0_valid;
+    wire check1_valid_now = (CHECK_STAGES >= 2) ? check1_valid_q : check1_valid;
 
     // -- insert: merge, fill, or wild ------------------------------------
     // One loop variable per process: a variable shared between processes
@@ -208,8 +297,8 @@ module ot_a3_dependence_table #(
             check1_conflict <= 1'b0;
             dbg_ranges_used <= 8'd0;
         end else begin
-            check0_conflict <= check0_valid && conflict0;
-            check1_conflict <= check1_valid && conflict1;
+            check0_conflict <= check0_valid_now && conflict0;
+            check1_conflict <= check1_valid_now && conflict1;
             dbg_ranges_used <= used;
             if (clear) begin
                 entry_valid <= {ENTRIES{1'b0}};
