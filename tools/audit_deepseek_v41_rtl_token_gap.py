@@ -19,10 +19,20 @@ compares them:
    token names the expression itself uses; and
 3. whether an RTL module for each refused operation exists in ``rtl/abi3``.
 
-Point 3 is what makes the number actionable.  An operation with no module is a
-design task; an operation whose module sits in the tree unadmitted is a wiring
-task, and the two are not the same size.  The answer at the time of writing is
-that they are almost all the second kind.
+Point 3 is what makes the number actionable -- but module existence is NOT the
+same as a form match, and reporting it as one overstates how close the work is.
+``ot_a3_vector_convert.sv`` says so in its own header: "This block implements the
+unscaled, one-input/one-output form of CONVERT ... Block-scaled dequantisation
+and two-output quantisation need more than this engine-array port exposes and
+remain fail-closed."  Meanwhile 370 of the graph's 444 CONVERT kernels are
+``bf16 -> (fp8_e4m3fn, e8m0)``: block quantisation with a scale plane, two
+outputs.  A module that exists and cannot be asked for what the graph needs is
+not a wiring away from working.
+
+So the audit also measures the FORM each refused operation is asked for -- how
+many operands, how many results, how many distinct numeric contracts -- and
+compares it against what the engine array's ports carry.  That is what separates
+an operation that needs an admission leg from one that needs port surface first.
 """
 
 from __future__ import annotations
@@ -62,6 +72,33 @@ MODULE_OVERRIDES = {
 #: absence from that expression is not a refusal.  ``ot_a3_state_controller.sv``
 #: decodes ``A3_MAJOR_STATE`` and counts ``A3_STATE_READ`` itself.
 NOT_BRIDGE_EXECUTED = {"STATE": "ot_a3_state_controller.sv"}
+
+ARRAY = ROOT / "rtl/abi3/ot_a3_engine_array.sv"
+
+
+def array_port_surface() -> tuple[int, int]:
+    """What one engine-array dispatch carries, counted from the array's ports.
+
+    Read from the source rather than written down, because a constant here would
+    go stale the moment a port is added and would then misreport the remaining
+    work in the safe direction.
+
+    ``cfg_input_valid(4'b0011)`` in the bridge is NOT this number: that is what
+    the bridge currently *passes* for the engines it drives.  The array declares
+    ``m0``..``m3``, and ``ot_a3_vector_mhc_post`` already reads all four
+    (branch/residual/post/comb), so four operands are precedented.  The result
+    side is one: every engine in the array writes through the single
+    ``out_we``/``out_addr``/``out_data``, ``ot_a3_vector_compress_project``
+    included, so a two-result operation needs a port that does not exist yet.
+    """
+    source = ARRAY.read_text(encoding="utf-8")
+    header = source[source.index("module ot_a3_engine_array") : source.index("\n);")]
+    operands = len(re.findall(r"input\s+wire\s+\[31:0\]\s+m(\d+)_rd_data", source))
+    results = len(re.findall(r"output\s+wire\s+out_we", header)) or 1
+    return max(operands, 1), results
+
+
+ARRAY_OPERAND_PORTS, ARRAY_RESULT_PORTS = array_port_surface()
 
 
 def admitted_operations() -> set[str]:
@@ -110,12 +147,20 @@ def audit(ir_path: Path) -> dict[str, object]:
     graph = json.loads(ir_path.read_text(encoding="utf-8"))
     demand: collections.Counter[str] = collections.Counter()
     unmapped: collections.Counter[str] = collections.Counter()
+    form: dict[str, dict[str, set]] = {}
     for kernel in graph["kernels"]:
         engine = KERNEL_TO_ENGINE.get(kernel["kind"])
         if engine is None:
             unmapped[kernel["kind"]] += 1
             continue
-        demand[operation_name(int(engine.family), int(engine.sub))] += 1
+        operation = operation_name(int(engine.family), int(engine.sub))
+        demand[operation] += 1
+        shape = form.setdefault(
+            operation, {"operands": set(), "results": set(), "contracts": set()}
+        )
+        shape["operands"].add(len(kernel["inputs"]))
+        shape["results"].add(len(kernel["outputs"]))
+        shape["contracts"].add(kernel["numeric_contract"])
 
     admitted = admitted_operations()
     elsewhere = {
@@ -128,12 +173,26 @@ def audit(ir_path: Path) -> dict[str, object]:
     rows = []
     for operation in refused:
         module = module_for(operation)
+        shape = form[operation]
+        operands = max(shape["operands"])
+        results = max(shape["results"])
+        if module is None:
+            blocked = "build a module"
+        elif results > ARRAY_RESULT_PORTS or operands > ARRAY_OPERAND_PORTS:
+            blocked = "widen the engine-array port surface, then add the leg"
+        elif len(shape["contracts"]) > 1:
+            blocked = "add a multi-contract admission leg"
+        else:
+            blocked = "add an admission leg"
         rows.append(
             {
                 "operation": operation,
                 "kernels": demand[operation],
                 "rtl_module": module,
-                "task": "wire an existing module" if module else "build a module",
+                "operands_needed": operands,
+                "results_needed": results,
+                "numeric_contracts_needed": len(shape["contracts"]),
+                "blocked_on": blocked,
             }
         )
     rows.sort(key=lambda row: (-int(row["kernels"]), row["operation"]))
@@ -151,8 +210,11 @@ def audit(ir_path: Path) -> dict[str, object]:
         "refused_kernel_share": round(
             sum(demand[o] for o in refused) / max(sum(demand.values()), 1), 4
         ),
-        "wire_an_existing_module": sum(1 for r in rows if r["rtl_module"]),
-        "build_a_module": sum(1 for r in rows if not r["rtl_module"]),
+        "blocked_on": dict(
+            collections.Counter(str(r["blocked_on"]) for r in rows)
+        ),
+        "array_operand_ports": ARRAY_OPERAND_PORTS,
+        "array_result_ports": ARRAY_RESULT_PORTS,
         "admitted": [{"operation": o, "kernels": demand[o]} for o in
                      sorted(wired, key=lambda o: -demand[o])],
         "refused": rows,
@@ -162,9 +224,11 @@ def audit(ir_path: Path) -> dict[str, object]:
             "TRAP_CAPABILITY, so the admitted set is exactly the subset of this "
             "graph the RTL can execute -- except for the families the bridge does "
             "not execute at all, which are listed separately rather than counted "
-            "as gaps. Every refused operation here has a module in rtl/abi3 that "
-            "the admission expression does not name, so the distance is wiring "
-            "per engine and not design."
+            "as gaps. Every refused operation has a module in rtl/abi3, but a "
+            "module is not a form match: the engine array carries two operands "
+            "and one result per dispatch, and an operation asking for more needs "
+            "that surface widened before an admission leg can be written. "
+            "ot_a3_vector_convert.sv states its own restriction in its header."
         ),
     }
 
@@ -185,12 +249,17 @@ def main() -> int:
     print(
         f"{report['model_id']}: {report['operations_admitted_by_the_bridge']}"
         f"/{report['operations_demanded']} engine operations admitted; "
-        f"{report['operations_refused']} refused "
-        f"({report['wire_an_existing_module']} have a module to wire, "
-        f"{report['build_a_module']} need one built)"
+        f"{report['operations_refused']} refused"
     )
+    for label, count in sorted(report["blocked_on"].items()):
+        print(f"  {count:2d}  {label}")
+    print()
     for row in report["refused"]:
-        print(f"  {row['operation']:<26} x{row['kernels']:<5} {row['rtl_module'] or '(no module)'}")
+        print(
+            f"  {row['operation']:<26} x{row['kernels']:<5} "
+            f"{row['operands_needed']}in/{row['results_needed']}out "
+            f"{row['numeric_contracts_needed']}c  {row['blocked_on']}"
+        )
     return 0
 
 

@@ -69,7 +69,13 @@
       "operation": "VECTOR.HEAD_RMS_NORM"
     }
   ],
-  "build_a_module": 0,
+  "array_operand_ports": 4,
+  "array_result_ports": 1,
+  "blocked_on": {
+    "add a multi-contract admission leg": 5,
+    "add an admission leg": 4,
+    "widen the engine-array port surface, then add the leg": 4
+  },
   "graph_id": "85c5b2fabe90b9033f0cadf7e8e8045439ff2eccfdd3fe31bcd4df8132316c14",
   "kernels": 3245,
   "model_id": "deepseek-v4.1-flash-reduced-v1",
@@ -81,87 +87,125 @@
   "operations_refused": 13,
   "refused": [
     {
+      "blocked_on": "widen the engine-array port surface, then add the leg",
       "kernels": 444,
+      "numeric_contracts_needed": 11,
+      "operands_needed": 2,
       "operation": "VECTOR.CONVERT",
-      "rtl_module": "ot_a3_vector_convert.sv",
-      "task": "wire an existing module"
+      "results_needed": 2,
+      "rtl_module": "ot_a3_vector_convert.sv"
     },
     {
+      "blocked_on": "add a multi-contract admission leg",
       "kernels": 198,
+      "numeric_contracts_needed": 5,
+      "operands_needed": 4,
       "operation": "REDUCTION.GROUPED_CONCAT",
-      "rtl_module": "ot_a3_reduction_grouped_concat.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_reduction_grouped_concat.sv"
     },
     {
+      "blocked_on": "widen the engine-array port surface, then add the leg",
       "kernels": 160,
+      "numeric_contracts_needed": 2,
+      "operands_needed": 4,
       "operation": "VECTOR.MHC",
-      "rtl_module": "ot_a3_vector_mhc_post.sv",
-      "task": "wire an existing module"
+      "results_needed": 2,
+      "rtl_module": "ot_a3_vector_mhc_post.sv"
     },
     {
+      "blocked_on": "add a multi-contract admission leg",
       "kernels": 120,
+      "numeric_contracts_needed": 3,
+      "operands_needed": 3,
       "operation": "TENSOR.ROUTED_MATMUL",
-      "rtl_module": "ot_a3_tensor_routed_matmul.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_tensor_routed_matmul.sv"
     },
     {
+      "blocked_on": "add a multi-contract admission leg",
       "kernels": 89,
+      "numeric_contracts_needed": 4,
+      "operands_needed": 2,
       "operation": "VECTOR.SCALE",
-      "rtl_module": "ot_a3_vector_scale.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_vector_scale.sv"
     },
     {
+      "blocked_on": "widen the engine-array port surface, then add the leg",
       "kernels": 40,
+      "numeric_contracts_needed": 1,
+      "operands_needed": 2,
       "operation": "ROUTE.EXPERT_DISPATCH",
-      "rtl_module": "ot_a3_route_expert_dispatch.sv",
-      "task": "wire an existing module"
+      "results_needed": 2,
+      "rtl_module": "ot_a3_route_expert_dispatch.sv"
     },
     {
+      "blocked_on": "widen the engine-array port surface, then add the leg",
       "kernels": 10,
+      "numeric_contracts_needed": 3,
+      "operands_needed": 3,
       "operation": "VECTOR.COMPRESS",
-      "rtl_module": "ot_a3_vector_compress_project.sv",
-      "task": "wire an existing module"
+      "results_needed": 2,
+      "rtl_module": "ot_a3_vector_compress_project.sv"
     },
     {
+      "blocked_on": "add a multi-contract admission leg",
       "kernels": 9,
+      "numeric_contracts_needed": 2,
+      "operands_needed": 3,
       "operation": "ROUTE.INDEX_TOPK",
-      "rtl_module": "ot_a3_route_index_topk.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_route_index_topk.sv"
     },
     {
+      "blocked_on": "add an admission leg",
       "kernels": 8,
+      "numeric_contracts_needed": 1,
+      "operands_needed": 3,
       "operation": "VECTOR.INDEX_SCORE",
-      "rtl_module": "ot_a3_vector_index_score.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_vector_index_score.sv"
     },
     {
+      "blocked_on": "add a multi-contract admission leg",
       "kernels": 6,
+      "numeric_contracts_needed": 3,
+      "operands_needed": 3,
       "operation": "DMA.NGRAM_HASH",
-      "rtl_module": "ot_a3_dma_ngram_hash.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_dma_ngram_hash.sv"
     },
     {
+      "blocked_on": "add an admission leg",
       "kernels": 2,
+      "numeric_contracts_needed": 1,
+      "operands_needed": 4,
       "operation": "VECTOR.ENGRAM_GATE",
-      "rtl_module": "ot_a3_vector_engram_gate.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_vector_engram_gate.sv"
     },
     {
+      "blocked_on": "add an admission leg",
       "kernels": 1,
+      "numeric_contracts_needed": 1,
+      "operands_needed": 1,
       "operation": "ROUTE.BLOCK_MAX",
-      "rtl_module": "ot_a3_route_block_max.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_route_block_max.sv"
     },
     {
+      "blocked_on": "add an admission leg",
       "kernels": 1,
+      "numeric_contracts_needed": 1,
+      "operands_needed": 1,
       "operation": "ROUTE.CANDIDATE_MASK",
-      "rtl_module": "ot_a3_route_candidate_mask.sv",
-      "task": "wire an existing module"
+      "results_needed": 1,
+      "rtl_module": "ot_a3_route_candidate_mask.sv"
     }
   ],
   "refused_kernel_share": 0.3353,
   "schema": "opentallas.deepseek_v41_rtl_token_gap.v1",
-  "statement": "A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY, so the admitted set is exactly the subset of this graph the RTL can execute -- except for the families the bridge does not execute at all, which are listed separately rather than counted as gaps. Every refused operation here has a module in rtl/abi3 that the admission expression does not name, so the distance is wiring per engine and not design.",
-  "unmapped_kernel_kinds": {},
-  "wire_an_existing_module": 13
+  "statement": "A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY, so the admitted set is exactly the subset of this graph the RTL can execute -- except for the families the bridge does not execute at all, which are listed separately rather than counted as gaps. Every refused operation has a module in rtl/abi3, but a module is not a form match: the engine array carries two operands and one result per dispatch, and an operation asking for more needs that surface widened before an admission leg can be written. ot_a3_vector_convert.sv states its own restriction in its header.",
+  "unmapped_kernel_kinds": {}
 }
