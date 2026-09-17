@@ -77,6 +77,11 @@
     "instantiate the module, then add the leg": 7,
     "widen the engine-array port surface, then instantiate and wire": 4
   },
+  "bridge_result_bank_caveat": "An operand that is a produced plane must be read from the result bank, and the bridge names one output per bank that may do so. Only m0 and m1 have one, and m2_rd_en is forced low for every mapped operator, so even an operation whose leg is otherwise complete cannot read a third produced operand -- VECTOR.INDEX_SCORE's query, key and head-weight planes are all three arena-resident.",
+  "bridge_result_bank_selectors": [
+    "m0_reads_result",
+    "m1_reads_result"
+  ],
   "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
   "kernels": 3245,
   "model_id": "deepseek-v4.1-flash-reduced-v1",

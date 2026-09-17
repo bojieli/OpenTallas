@@ -101,6 +101,28 @@ def array_port_surface() -> tuple[int, int]:
 ARRAY_OPERAND_PORTS, ARRAY_RESULT_PORTS = array_port_surface()
 
 
+def bridge_result_bank_selectors() -> list[str]:
+    """Which operand banks the BRIDGE can point at the result bank.
+
+    A second surface, distinct from the array's port count and easy to miss.  The
+    array reads four banks, but an operand that is a *produced plane* has to be
+    read from the result bank the earlier operators wrote, and the bridge says
+    which bank does that with one output per bank -- ``m0_reads_result``,
+    ``m1_reads_result``.  There is no ``m2_reads_result``, and ``m2_rd_en`` is
+    forced to zero for every ``mapped_family_q`` operator, so a mapped operator
+    whose THIRD operand is a produced plane cannot read it today however complete
+    its admission leg is.  ``VECTOR.INDEX_SCORE`` is exactly that shape: query,
+    key and a head-weight plane, all three arena-resident.
+    """
+    source = BRIDGE.read_text(encoding="utf-8")
+    return [
+        f"m{index}_reads_result"
+        for index in range(8)
+        if f"output wire          m{index}_reads_result" in source
+        or f"m{index}_reads_result," in source
+    ]
+
+
 def admitted_operations() -> set[str]:
     """``FAMILY.SUB`` names the bridge's admission expression accepts."""
     source = BRIDGE.read_text(encoding="utf-8")
@@ -239,6 +261,15 @@ def audit(ir_path: Path) -> dict[str, object]:
         ),
         "array_operand_ports": ARRAY_OPERAND_PORTS,
         "array_result_ports": ARRAY_RESULT_PORTS,
+        "bridge_result_bank_selectors": bridge_result_bank_selectors(),
+        "bridge_result_bank_caveat": (
+            "An operand that is a produced plane must be read from the result "
+            "bank, and the bridge names one output per bank that may do so. Only "
+            "m0 and m1 have one, and m2_rd_en is forced low for every mapped "
+            "operator, so even an operation whose leg is otherwise complete "
+            "cannot read a third produced operand -- VECTOR.INDEX_SCORE's query, "
+            "key and head-weight planes are all three arena-resident."
+        ),
         "admitted": [{"operation": o, "kernels": demand[o]} for o in
                      sorted(wired, key=lambda o: -demand[o])],
         "refused": rows,
