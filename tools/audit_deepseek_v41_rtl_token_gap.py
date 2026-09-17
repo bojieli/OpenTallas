@@ -224,19 +224,34 @@ def audit(ir_path: Path) -> dict[str, object]:
     demand: collections.Counter[str] = collections.Counter()
     unmapped: collections.Counter[str] = collections.Counter()
     form: dict[str, dict[str, set]] = {}
-    for kernel in graph["kernels"]:
+    # ONE OPCODE CAN COVER TWO OPERATIONS.  ``VECTOR.MHC`` is both
+    # ``HYPER_CONNECT_PRE`` (four operands, TWO results, a softmax-and-Sinkhorn
+    # coefficient computation) and ``HYPER_CONNECT_POST`` (four operands, one
+    # result, a multiply-add tree).  ``ot_a3_vector_mhc_post.sv`` implements the
+    # second and says so -- "PRE and HEAD need correctly-rounded nonlinear
+    # arithmetic and remain fail-closed" -- so grouping them under the opcode
+    # reports one task where there are two of different sizes.  Kinds are tracked
+    # beside operations for that reason.
+    kinds: dict[str, dict[str, set]] = {}
+    first_refusal: dict[str, int] = {}
+    for index, kernel in enumerate(graph["kernels"]):
         engine = KERNEL_TO_ENGINE.get(kernel["kind"])
         if engine is None:
             unmapped[kernel["kind"]] += 1
             continue
         operation = operation_name(int(engine.family), int(engine.sub))
         demand[operation] += 1
-        shape = form.setdefault(
-            operation, {"operands": set(), "results": set(), "contracts": set()}
-        )
-        shape["operands"].add(len(kernel["inputs"]))
-        shape["results"].add(len(kernel["outputs"]))
-        shape["contracts"].add(kernel["numeric_contract"])
+        for table, key in ((form, operation), (kinds, kernel["kind"])):
+            shape = table.setdefault(
+                key,
+                {"operands": set(), "results": set(), "contracts": set(),
+                 "operation": {operation}, "count": set()},
+            )
+            shape["operands"].add(len(kernel["inputs"]))
+            shape["results"].add(len(kernel["outputs"]))
+            shape["contracts"].add(kernel["numeric_contract"])
+            shape["operation"].add(operation)
+        first_refusal.setdefault(kernel["kind"], index)
 
     admitted = admitted_operations()
     elsewhere = {
@@ -276,6 +291,26 @@ def audit(ir_path: Path) -> dict[str, object]:
             }
         )
     rows.sort(key=lambda row: (-int(row["kernels"]), row["operation"]))
+
+    # The program's own order, which is what makes this a plan rather than a list.
+    # Nothing downstream of the first refusal can be reached, so the order the
+    # kernels appear in fixes the order the work has to be done in.
+    refused_ops = set(refused)
+    by_order = []
+    for kind, shape in sorted(kinds.items(), key=lambda item: first_refusal[item[0]]):
+        operation = sorted(shape["operation"])[0]
+        if operation not in refused_ops:
+            continue
+        by_order.append(
+            {
+                "position": first_refusal[kind],
+                "kernel_kind": kind,
+                "operation": operation,
+                "operands_needed": max(shape["operands"]),
+                "results_needed": max(shape["results"]),
+                "numeric_contracts_needed": len(shape["contracts"]),
+            }
+        )
     return {
         "schema": "opentallas.deepseek_v41_rtl_token_gap.v1",
         "graph_id": graph.get("graph_id"),
@@ -309,6 +344,13 @@ def audit(ir_path: Path) -> dict[str, object]:
                      sorted(wired, key=lambda o: -demand[o])],
         "refused": rows,
         "unmapped_kernel_kinds": dict(unmapped),
+        "forced_order": by_order,
+        "forced_order_note": (
+            "A refused operation stops the program, so no kernel after the first "
+            "refusal is reachable and the program's own order fixes the order the "
+            "work must be done in. The first entry is the whole critical path "
+            "until it is done."
+        ),
         "statement": (
             "A kernel naming an operation the bridge refuses raises "
             "TRAP_CAPABILITY, so the admitted set is exactly the subset of this "
@@ -346,6 +388,14 @@ def main() -> int:
     )
     for label, count in sorted(report["blocked_on"].items()):
         print(f"  {count:2d}  {label}")
+    print()
+    print("  forced order (program position -> kind):")
+    for row in report["forced_order"]:
+        print(
+            f"    {row['position']:5d}  {row['kernel_kind']:<22} "
+            f"{row['operands_needed']}in/{row['results_needed']}out "
+            f"{row['numeric_contracts_needed']}c  ({row['operation']})"
+        )
     print()
     for row in report["refused"]:
         print(

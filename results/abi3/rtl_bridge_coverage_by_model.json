@@ -6,6 +6,294 @@
     "qwen3-8b": "12/14 engine operations admitted; 0 refused",
     "qwen3-reduced-v1": "12/14 engine operations admitted; 0 refused"
   },
+  "forced_order": {
+    "deepseek-v4-flash-0731": [
+      {
+        "kernel_kind": "HYPER_CONNECT_PRE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.MHC",
+        "position": 4,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "QUANTIZE",
+        "numeric_contracts_needed": 5,
+        "operands_needed": 1,
+        "operation": "VECTOR.CONVERT",
+        "position": 9,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "DEQUANTIZE",
+        "numeric_contracts_needed": 2,
+        "operands_needed": 3,
+        "operation": "VECTOR.CONVERT",
+        "position": 20,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "CONCAT",
+        "numeric_contracts_needed": 2,
+        "operands_needed": 4,
+        "operation": "REDUCTION.GROUPED_CONCAT",
+        "position": 23,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "HYPER_CONNECT_POST",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.MHC",
+        "position": 48,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "SCALE",
+        "numeric_contracts_needed": 2,
+        "operands_needed": 1,
+        "operation": "VECTOR.SCALE",
+        "position": 59,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "EXPERT_DISPATCH",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "ROUTE.EXPERT_DISPATCH",
+        "position": 60,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "ROUTED_MATMUL",
+        "numeric_contracts_needed": 3,
+        "operands_needed": 3,
+        "operation": "TENSOR.ROUTED_MATMUL",
+        "position": 62,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "MUL",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "VECTOR.SCALE",
+        "position": 65,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "COMPRESS_PROJECT",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 3,
+        "operation": "VECTOR.COMPRESS",
+        "position": 167,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "COMPRESS_STATE_UPDATE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "VECTOR.COMPRESS",
+        "position": 168,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "COMPRESS_POOL",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "VECTOR.COMPRESS",
+        "position": 169,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "CONVERT",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 1,
+        "operation": "VECTOR.CONVERT",
+        "position": 170,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "HADAMARD",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 1,
+        "operation": "VECTOR.HADAMARD",
+        "position": 180,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "INDEX_SCORE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 3,
+        "operation": "VECTOR.INDEX_SCORE",
+        "position": 194,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "INDEX_TOPK",
+        "numeric_contracts_needed": 2,
+        "operands_needed": 3,
+        "operation": "ROUTE.INDEX_TOPK",
+        "position": 195,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "HYPER_CONNECT_HEAD",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.MHC",
+        "position": 3949,
+        "results_needed": 1
+      }
+    ],
+    "deepseek-v4.1-flash-reduced-v1": [
+      {
+        "kernel_kind": "HYPER_CONNECT_PRE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.MHC",
+        "position": 3,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "QUANTIZE",
+        "numeric_contracts_needed": 7,
+        "operands_needed": 1,
+        "operation": "VECTOR.CONVERT",
+        "position": 8,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "DEQUANTIZE",
+        "numeric_contracts_needed": 4,
+        "operands_needed": 2,
+        "operation": "VECTOR.CONVERT",
+        "position": 21,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "CONCAT",
+        "numeric_contracts_needed": 5,
+        "operands_needed": 4,
+        "operation": "REDUCTION.GROUPED_CONCAT",
+        "position": 43,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "HYPER_CONNECT_POST",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.MHC",
+        "position": 48,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "SCALE",
+        "numeric_contracts_needed": 3,
+        "operands_needed": 1,
+        "operation": "VECTOR.SCALE",
+        "position": 59,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "EXPERT_DISPATCH",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "ROUTE.EXPERT_DISPATCH",
+        "position": 60,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "ROUTED_MATMUL",
+        "numeric_contracts_needed": 3,
+        "operands_needed": 3,
+        "operation": "TENSOR.ROUTED_MATMUL",
+        "position": 62,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "MUL",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "VECTOR.SCALE",
+        "position": 65,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "NGRAM_HASH",
+        "numeric_contracts_needed": 3,
+        "operands_needed": 3,
+        "operation": "DMA.NGRAM_HASH",
+        "position": 76,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "ENGRAM_GATE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 4,
+        "operation": "VECTOR.ENGRAM_GATE",
+        "position": 84,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "COMPRESS_PROJECT",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 3,
+        "operation": "VECTOR.COMPRESS",
+        "position": 179,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "COMPRESS_STATE_UPDATE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 1,
+        "operation": "VECTOR.COMPRESS",
+        "position": 180,
+        "results_needed": 2
+      },
+      {
+        "kernel_kind": "COMPRESS_POOL",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 2,
+        "operation": "VECTOR.COMPRESS",
+        "position": 181,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "INDEX_SCORE",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 3,
+        "operation": "VECTOR.INDEX_SCORE",
+        "position": 199,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "INDEX_TOPK",
+        "numeric_contracts_needed": 2,
+        "operands_needed": 3,
+        "operation": "ROUTE.INDEX_TOPK",
+        "position": 200,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "BLOCK_MAX",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 1,
+        "operation": "ROUTE.BLOCK_MAX",
+        "position": 1671,
+        "results_needed": 1
+      },
+      {
+        "kernel_kind": "CANDIDATE_MASK",
+        "numeric_contracts_needed": 1,
+        "operands_needed": 1,
+        "operation": "ROUTE.CANDIDATE_MASK",
+        "position": 1673,
+        "results_needed": 1
+      }
+    ]
+  },
+  "forced_order_finding": "A refused operation raises TRAP_CAPABILITY and the program stops, so no kernel after the first refusal is reachable: the program's order fixes the work's order. HYPER_CONNECT_PRE is the first refusal in BOTH DeepSeek graphs -- kernel 4 of V4-Flash and kernel 3 of V4.1 -- so it is the entire critical path to any DeepSeek token until it is done. It needs four operands (the array has four ports), TWO results (the array has one), and an engine: ot_a3_vector_mhc_post.sv implements the POST form and states that 'PRE and HEAD need correctly-rounded nonlinear arithmetic and remain fail-closed'. The pieces PRE needs are already certified separately -- ot_a3_hc_stable_softmax_rne, ot_a3_hc_sinkhorn20_rne, ot_a3_hc_coefficients_rne, ot_a3_vector_mhc_pre_tile_scheduler -- so PRE is a composition, not a new arithmetic design.",
+  "kinds_not_opcodes": "One opcode can carry two operations of different shapes, and grouping by opcode hid that. VECTOR.CONVERT is QUANTIZE (one operand, TWO results, 7 contracts) and DEQUANTIZE (two operands, one result, 4 contracts); VECTOR.SCALE is SCALE and MUL, both single-result; VECTOR.COMPRESS is three kinds of which one needs two results. Counting kinds, only four of the seventeen need the second result port: HYPER_CONNECT_PRE, QUANTIZE, EXPERT_DISPATCH and COMPRESS_STATE_UPDATE.",
   "qualification_constraint": "tools/run_a3_operator_admission_rtl_campaign.py anchors every case to a Qwen3 program counter and its golden write stream, so it cannot cover a leg for an operator Qwen3 does not issue -- which is all thirteen. Qualifying one leg at a time needs a single-operator vehicle that lowers a minimal graph naming one refused operator and checks it against that operator's reference; otherwise a leg is only exercisable once a whole DeepSeek program lowers, needing ten (V4-Flash) or thirteen (V4.1) legs at once.",
   "question": "For each published graph, how much of it can the RTL issue bridge execute? A kernel naming an operation the bridge refuses raises TRAP_CAPABILITY and the program stops, so this is the ceiling on any token claim for that model.",
   "reading": "Qwen3 is fully covered on both its shipped and reduced graphs, which is why its two token cells exist and why nothing in the RTL blocks the others. Both DeepSeek graphs are short, and they overlap: nine of V4-Flash's ten refused operations are also refused for V4.1, so one body of bridge work serves both.",
