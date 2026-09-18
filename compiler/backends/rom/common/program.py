@@ -210,6 +210,17 @@ KV_STATE_CLASSES = frozenset({"compressed_kv", "kv_cache", "kv_window"})
 #: A class not listed here keeps the capacity, which is the conservative default:
 #: presenting more rows than a request wrote is visible to every consumer that
 #: counts them, while presenting fewer would silently hide addressed rows.
+#: ``scratch`` IS LOAD-BEARING and stays, which was established by removing it:
+#: the reduced ROM wafer then stopped emitting a token at all and refused with
+#: "ROUTE.INDEX_TOPK output view 2868 covers 128 query rows, expected 8" -- the
+#: exact fault the class was added for.
+#:
+#: At SHIPPED scale it is expensive, and that cost is recorded rather than hidden.
+#: A 262,144 x 262,144 scratch plane's resolving term needs a stride of 262,144
+#: squared, past the 32-bit dynamic-term field, which the drop above now handles.
+#: The shipped V4.1 ARRAY additionally cannot place its state -- 606 GB against a
+#: capability declaring 180 GB -- and that refusal is NOT caused by this class:
+#: removing it leaves the same 605,992,800,396-byte requirement.
 REQUEST_EXTENT_STATE_CLASSES = frozenset({"scratch", "token_ring"})
 
 
@@ -1389,6 +1400,9 @@ class RomLowering:
         self._loop_of_run: dict[int, int] = {}
         #: State views whose placement loop was not open where they were built.
         self._state_loop_suppressed: list[dict[str, Any]] = []
+        #: Request-resolving terms whose stride the 32-bit field cannot hold; the
+        #: operand presents its capacity instead and the fact is published.
+        self._resolving_term_unencodable: list[dict[str, Any]] = []
         self._state_descriptor: dict[str, int] = {}
         self._state_object: dict[str, int] = {}
         self._state_slot: dict[str, tuple[str, int]] = {}
@@ -5063,13 +5077,32 @@ class RomLowering:
                 #: committed.
                 sequence = _is_sequence_state(self._state_class_of(name))
                 if symbol is not None and (not declared.is_identity or sequence):
-                    plane_axis = declared
-                    terms = (
-                        DynamicTerm.loop(
-                            context,
-                            self._plane_row(tensor) * self._dims(tensor)[0],
-                        ),
-                    )
+                    stride = self._resolving_term_stride(tensor, name)
+                    #: A RESOLVING TERM THE FIELD CANNOT HOLD IS NOT ATTACHED.
+                    #: The stride the resolver requires is one row of the plane
+                    #: times the axis capacity, which for the shipped V4.1 array's
+                    #: 262,144 x 262,144 scratch plane is 262,144 squared -- past
+                    #: the 32-bit dynamic-term stride field.  Forcing it reached
+                    #: the layout encoder and broke the build outright; the
+                    #: alternative is the behaviour that held before this session,
+                    #: where the plane presents its capacity.  That is CORRECT for
+                    #: a randomly addressed plane and merely conservative for a
+                    #: sequence one, so the term is dropped and the drop is
+                    #: recorded -- the same discipline ``_loop_for_state_slot``
+                    #: applies to a loop it cannot address.
+                    if stride > 0xFFFFFFFF:
+                        self._resolving_term_unencodable.append(
+                            {
+                                "tensor_id": str(name),
+                                "state_class": str(self._state_class_of(name)),
+                                "required_stride": int(stride),
+                                "plane_dims": [int(x) for x in self._dims(tensor)],
+                                "presents": "the plane's declared capacity",
+                            }
+                        )
+                    else:
+                        plane_axis = declared
+                        terms = (DynamicTerm.loop(context, stride),)
             view = self._state_plane_view(
                 kernel,
                 name,
@@ -6363,7 +6396,23 @@ class RomLowering:
         # The key is ``[B, C, D]`` wherever it lives.  In the released graph it
         # is a plane of the compressed cache, which is a STATE resource; a graph
         # that keeps it as an ordinary activation states the same operand.
-        key_term = DynamicTerm.loop(context, self._plane_row(key) * candidates)
+        #: The same reasoning as ``_resolving_term_stride``: the row width has to
+        #: come from the state group.  ``_plane_row`` falls back to the tensor's
+        #: plane WIDTH when no group owns the tensor, and for a plane whose
+        #: declared width is its capacity that fallback returns the capacity, so
+        #: this product becomes the capacity squared -- 262,144 x 262,144 on the
+        #: shipped V4.1 array, which the 32-bit stride field cannot hold.  Unlike
+        #: the state-slot term a few lines above, this one had no bound check, so
+        #: it reached the layout encoder instead of a lowering error.
+        key_row = self._state_plane_row_elements(kernel.inputs[1], key)
+        key_term = DynamicTerm.loop(context, key_row * candidates)
+        if key_row * candidates > 0xFFFFFFFF:
+            raise RomLoweringError(
+                f"index key {kernel.inputs[1]!r} needs a resolving term of stride "
+                f"{key_row * candidates} ({key_row} elements a row over "
+                f"{candidates} candidates), which does not fit the 32-bit "
+                "dynamic-term stride field of ABI 3.0 tensor views"
+            )
         key_view = self._state_plane_view(
             kernel,
             kernel.inputs[1],
@@ -6418,6 +6467,66 @@ class RomLowering:
             schedule_rows=1,
             extra_close=1,
         )
+
+    def _state_plane_row_elements(self, name: str, tensor: Tensor) -> int:
+        """Elements between successive rows of the state plane ``name`` lives in.
+
+        ``_plane_row`` answers this from the state group when a group owns the
+        tensor and from the tensor's own plane WIDTH when none does.  That
+        fallback is wrong wherever the width and the capacity are the same
+        number, which is every rank-one plane: it returns the capacity, and a
+        caller multiplying by a capacity-sized extent then gets the capacity
+        SQUARED.  So the group is read directly and an unowned tensor is refused.
+        """
+        state_id = self._state_owner.get(name)
+        if state_id is None or state_id not in self._state_slot:
+            raise RomLoweringError(
+                f"state operand {name!r} needs one row's element count for a "
+                "resolving term, and no state group owns it; the tensor's own "
+                "declared width is not a substitute -- where the width IS the "
+                "capacity the product would be the capacity squared"
+            )
+        group_key, _slot = self._state_slot[state_id]
+        return int(self._state_group_shape[group_key][2])
+
+    def _resolving_term_stride(self, tensor: Tensor, name: str) -> int:
+        """The stride a SINGLE-TRIP resolving loop's term must carry.
+
+        ``runtime.sim.memory._walks_extent_axis`` accepts a term as walking the
+        extent axis when its stride is ``stride[axis] * numerator * divisor /
+        unit``, and ``_open_context_loop`` sets the divisor so that expression is
+        the axis's whole capacity.  For a state plane presented as
+        ``[capacity, row_elements]`` that is ``row_elements * capacity``.
+
+        It has to come from the STATE GROUP rather than from the tensor's own
+        declared shape.  ``_plane_row`` reads the group when it knows the tensor
+        and falls back to the tensor's plane WIDTH when it does not -- and for a
+        rank-one ring declared ``[context_length]`` that width IS the capacity, so
+        the fallback returns the capacity and the product becomes the capacity
+        SQUARED.  On the reduced vehicle that is 128 x 128 = 16,384 and encodes
+        fine; on the shipped V4.1 token ring it is 262,144 x 262,144 and the
+        encoder refuses it -- "term0_stride=68719476736 does not fit in 4 unsigned
+        bytes" -- which is how the shipped array build broke.
+
+        So the group is consulted directly and a tensor whose group is unknown is
+        REFUSED rather than given a stride derived from the wrong quantity.  A
+        wrong stride here is not a crash in every case: it is a view the resolver
+        silently declines to clamp, which presents an operand's declared maximum
+        to an operator that counts its rows.
+        """
+        state_id = self._state_owner.get(name)
+        if state_id is None or state_id not in self._state_slot:
+            raise RomLoweringError(
+                f"state operand {name!r} needs a request-resolving loop term, and "
+                "its stride is one row of the plane times the axis capacity -- but "
+                "no state group owns it, so the row width cannot be read.  The "
+                "tensor's own declared width is NOT a substitute: for a rank-one "
+                "ring it is the capacity itself and the product would be the "
+                "capacity squared"
+            )
+        group_key, _slot = self._state_slot[state_id]
+        row_elements = int(self._state_group_shape[group_key][2])
+        return row_elements * int(self._dims(tensor)[0])
 
     def _plane_row(self, tensor: Tensor) -> int:
         """Elements between successive rows of a state plane's merged struct."""
@@ -10294,6 +10403,11 @@ class RomLowering:
                 if self._sram_kv_used:
                     note["storage_class"] = StorageClass.SRAM.name
             builder.notes["rom_lowering"]["direct_buffer_state"] = note
+        if self._resolving_term_unencodable:
+            builder.notes["rom_lowering"]["resolving_terms_unencodable"] = sorted(
+                self._resolving_term_unencodable,
+                key=lambda record: (record["tensor_id"], record["required_stride"]),
+            )
         if self._state_loop_suppressed:
             builder.notes["rom_lowering"]["state_loop_terms_suppressed"] = sorted(
                 self._state_loop_suppressed,
