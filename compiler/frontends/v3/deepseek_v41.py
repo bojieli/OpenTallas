@@ -119,7 +119,12 @@ from typing import Any, Mapping, Sequence
 
 from compiler.frontend.checkpoint import CheckpointError, load_checkpoint_lock
 from compiler.frontend.deepseek_v4 import TensorSpec
-from compiler.frontend.deepseek_v4_releases import V41_FLASH, DeepSeekV4Release, V41_FLASH_REDUCED
+from compiler.frontend.deepseek_v4_releases import (
+    V41_FLASH,
+    DeepSeekV4Release,
+    V41_FLASH_REDUCED,
+    V41_FLASH_REDUCED_V2,
+)
 from compiler.frontend.deepseek_v41 import (
     DeepSeekV41AdapterError,
     build_official_tensor_specs,
@@ -776,11 +781,24 @@ V41_FLASH_REDUCED_PROFILE = DeepSeekV41Profile(
     generation_policy_id="deepseek_v41_flash_reduced_greedy_argmax_v1",
 )
 
+#: The in-range-expert fixture, on the same numeric profile and generation policy:
+#: it is the same vehicle with one block scale changed, so nothing about how it is
+#: lowered or how a token is selected differs.
+V41_FLASH_REDUCED_V2_PROFILE = DeepSeekV41Profile(
+    release=V41_FLASH_REDUCED_V2,
+    numeric_profile="deepseek_v41_flash_reduced_target_precision_v1",
+    generation_policy_id="deepseek_v41_flash_reduced_greedy_argmax_v1",
+)
+
 MODEL_ID = V41_FLASH_PROFILE.model_id
 
 MODEL_PROFILES: Mapping[str, DeepSeekV41Profile] = {
     profile.model_id: profile
-    for profile in (V41_FLASH_PROFILE, V41_FLASH_REDUCED_PROFILE)
+    for profile in (
+        V41_FLASH_PROFILE,
+        V41_FLASH_REDUCED_PROFILE,
+        V41_FLASH_REDUCED_V2_PROFILE,
+    )
 }
 
 DEFAULT_SNAPSHOT = V41_FLASH.snapshot
@@ -5118,6 +5136,7 @@ __all__ = [
     "MODEL_ID",
     "MODEL_PROFILES",
     "V41_FLASH_REDUCED_PROFILE",
+    "V41_FLASH_REDUCED_V2_PROFILE",
     "MODEL_SOURCE_SHA256",
     "SPECULATIVE_SOURCE_KINDS",
     "V41_FLASH_PROFILE",

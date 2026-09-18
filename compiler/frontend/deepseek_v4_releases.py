@@ -26,7 +26,7 @@ substituted for the pinned one without the mismatch surfacing.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
@@ -935,10 +935,47 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
 )
 
 
+#: The reduced V4.1 fixture again, with the routed experts' block scale set so
+#: their projection stays inside the architecture's own SwiGLU limit.
+#:
+#: A THIRD PINNED RECORD, for the same reason the second one exists: a second
+#: vehicle is a second pin and not a weakened one.  Everything structural is
+#: v1's -- the same 4,264 tensors, the same 40,258,841 payload bytes, the same
+#: config, tokenizer and inference config digests, byte for byte, because the
+#: reduction changed MAGNITUDES and not architecture.  Only the two digests that
+#: cover tensor CONTENT move.
+#:
+#: Why it exists: v1 writes 0x7F -- a scale of exactly 2**0 -- into every routed
+#: expert's E8M0 block scale, leaving uniform-random FP4 nibbles spanning the
+#: whole E2M1 range to 6.0.  An independent dequantisation measures the resulting
+#: 160-wide expert projection at absmax 119.3 against a ``swiglu_limit`` of 10.0,
+#: so 99.8% to 100% of routed gate and up values saturate the clamp and the expert
+#: output becomes a function of its operands' SIGNS -- through which no two
+#: implementations can be compared.  ``results/abi3/
+#: deepseek_v41_reduced_fixture_saturates.json`` records the measurement; this
+#: record's fixture sets the exponent to -5, which puts the projection near 3.7.
+V41_FLASH_REDUCED_V2 = replace(
+    V41_FLASH_REDUCED,
+    model_id="deepseek-v4.1-flash-reduced-v2",
+    checkpoint_lock_id=(
+        "ae61cb77750a6752afa94f99ff36b64189666cf8a09e2162293ebb0819195a4a"
+    ),
+    tensor_content_sha256=(
+        "fb6ebe9933aa24a394de2912604f0ebca9d597b232746910307cc2677347bb96"
+    ),
+)
+
+
 RELEASES: Mapping[str, DeepSeekV4Release] = MappingProxyType(
     {
         release.model_id: release
-        for release in (FLASH, PRO, V41_FLASH, V41_FLASH_REDUCED)
+        for release in (
+            FLASH,
+            PRO,
+            V41_FLASH,
+            V41_FLASH_REDUCED,
+            V41_FLASH_REDUCED_V2,
+        )
     }
 )
 
@@ -967,6 +1004,7 @@ __all__ = [
     "RELEASES",
     "V41_FLASH",
     "V41_FLASH_REDUCED",
+    "V41_FLASH_REDUCED_V2",
     "DeepSeekV4Release",
     "DeepSeekV4ReleaseError",
     "resolve_release",
