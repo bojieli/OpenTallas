@@ -119,6 +119,19 @@ def oracle_checkpoints(
         convert_mod = importlib.import_module("convert")
         body = dict(body)
         body["expert_dtype"] = None
+    elif expert_numeric_path == "fp4_dequantised":
+        # The device computes its routed experts as MXFP4 and its SHARED expert as
+        # fp8.  Against an fp8-recast oracle the shared expert matches at cosine 1.0
+        # and the routed ones do not -- which is not a fault, it is two different
+        # legitimate arithmetics being compared.  This path keeps the declared
+        # numerics (same FP4 codes, same E8M0 block scales, same activation
+        # quantisation) and replaces only the vendor kernel that is broken on this
+        # GPU, so the comparison is like for like.
+        from tools.run_deepseek_v41_reduced_reference_oracle import (
+            install_fp4_dequantised_linear,
+        )
+
+        install_fp4_dequantised_linear(vendor, importlib.import_module("convert"))
     tokenizer = AutoTokenizer.from_pretrained(str(snapshot))
     model = build_model(vendor, body, tokenizer)
     _load_weights(model, snapshot, convert_mod=convert_mod)
@@ -352,7 +365,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--expert-numeric-path",
-        choices=("fp4", "fp8"),
+        choices=("fp4", "fp8", "fp4_dequantised"),
         default="fp4",
         help=(
             "the routed-expert path the REFERENCE runs on; it must match the "
