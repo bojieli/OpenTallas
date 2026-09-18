@@ -1,0 +1,35 @@
+{
+  "it_explains_every_observation": {
+    "all_three_v41_lanes_fail_identically": "same lowering; the row counts differ only as each lane's compressed plane does -- 128+4096 on the wafer, 128+256 on the array-64, 128+64 on the reduced array-12",
+    "decode_step_1_fails": "span 1 against context 9",
+    "prefill_passes": "span == context under the prefill phase's position_start = 0 pin",
+    "v4_flash_decodes_16_tokens": "its layer-00 KV join has only TWO inputs, the span and the 128-row window, with no compressed prefix -- so no context-derived extent is involved and there is nothing to mismatch"
+  },
+  "not_a_claim": [
+    "no fix is implemented; this records the cause and the direction",
+    "whether V4-Flash has any join that WOULD change is not yet measured"
+  ],
+  "root_cause": "The KV join's CONTEXT-derived extents are resolved against a loop whose bound symbol is SPAN_TOKENS.  The extent names CONTEXT_LENGTH; the loop counts SPAN_TOKENS.  In prefill the two coincide -- the phase pins position_start to 0, so the span IS the context -- and the mismatch is invisible.  At decode the span is 1 while the context is 9, and they diverge.",
+  "schema": "opentallas.result.v41_decode_root_cause.v1",
+  "the_fix_direction": "Either the view carries a RUNTIME_SYMBOL term on CONTEXT_LENGTH instead of a LOOP_INDUCTION term on a span-bound loop, or the lowering opens a CONTEXT_LENGTH-bound loop for these operands.  Both are changes to the join's lowering and both must be gated: DeepSeek-V4-Flash has 43 phase-split axis-0 joins of its own and three closed cells.",
+  "the_measurement": {
+    "compressed_input_view_2817": {
+      "declares": "context_groups_ratio2 -> numerator 1, unit 2, bias 0",
+      "loop_2814_bound_divisor": 128,
+      "loop_2814_bound_symbol": "SPAN_TOKENS",
+      "resolves_to_at_decode": 64,
+      "term": "LOOP_INDUCTION on loop 2814, stride 2048, stride0 32"
+    },
+    "join_output_view_2827": {
+      "arithmetic": "_remaining_extent computes numerator * remaining / unit + bias.  With the loop counting SPAN_TOKENS the remaining is 1, so floor(1 * 1 / 2) = 0 compressed groups and the view presents 0 + 128 = 128.  Against CONTEXT_LENGTH = 9 it would be floor(9 / 2) = 4, so 4 + 128 = 132.",
+      "declares": "1 * CONTEXT_LENGTH / 2 + 128 -- the committed window beside the context's compressed prefix",
+      "loop_2815_bound_divisor": 128,
+      "loop_2815_bound_symbol": "SPAN_TOKENS",
+      "resolves_to_at_decode": 128,
+      "term": "LOOP_INDUCTION on loop 2815, stride 2048, stride0 32"
+    },
+    "no_edge_masks": "all three views carry edge_mask_id = NONE, so the A26 path is not involved"
+  },
+  "the_tree_had_already_named_this": "compiler/backends/rom/common/program.py::_check_join_extent says it in terms: 'the exporter's symbol on the output was attention_rows_ratioN -- the span's group count where the join carries the context's.  It agreed with the operands in prefill, where the span IS the context, so every gate this program had ever run passed and the first decode step failed at the engine'.  That is the same span-versus-context mismatch, described from the declaration's side; this measures it from the LOOP's side, which is where it actually resolves.",
+  "why_my_blunt_experiment_half_worked": "Forcing the output to its declared rows removed the bad narrowing and the first join passed.  It could not be right in general because it also removed GOOD narrowing from joins whose extents legitimately follow the span -- which is why a second join then refused with its output too LARGE.  The principled change is to resolve a context-derived extent against the context, not to stop resolving extents."
+}
