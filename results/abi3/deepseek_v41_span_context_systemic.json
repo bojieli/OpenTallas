@@ -9,6 +9,13 @@
     "no V4.1 cell closes",
     "the third place is identified and NOT fixed; sizing an operand's leading axis from the context touches every operand the ROM lane builds, so it needs its own gate rather than a quick edit"
   ],
+  "place_3_ATTEMPTED_AND_REVERTED": {
+    "reverted": "The attempt is reverted; the tree carries only the two gated fixes, and the reduced V4.1 array rebuilds byte-identically to the two-fix build (695b4f30...).",
+    "the_shape_of_the_real_fix": "Per-phase input views for a phase-split join, so each phase's operand carries the extent that phase needs -- the same treatment the output already gets.  That is a change to ``_emit_phase_layout``'s operand construction rather than to a sizing helper, and it is where the remaining work is.",
+    "what_I_tried": "Declaring the context-derived operand's leading extent as its CAPACITY instead of the token block, on the reasoning that the A26 edge mask now clamps it exactly at run time.",
+    "what_that_establishes": "The two phases want DIFFERENT leading extents from the same operand: prefill wants the token block, decode wants the context capacity.  A single shared input view cannot carry both, and the phase forms in the built deployment demonstrably DO share their input views -- both operators of the ratio-2 join reference view 2817.  So place 3 is not a sizing rule to correct but a structural gap: the lowering emits per-phase OUTPUT views (``_view_for_phase_extent`` is called once per phase) and shares one INPUT view across phases.",
+    "why_it_failed": "It broke PREFILL: 'prefill failed: GROUPED_CONCAT output view 7029 dims (2, 32) differ from the axis-0 concatenation (9, 32)'.  In prefill the join is evaluated per TOKEN BLOCK -- the output resolves 2 * span_block and the span-derived operand contributes that block's rows -- so a context operand declaring the whole capacity contributes 8 where the block needs 1.  Output 2 against inputs 1 + 8 = 9."
+  },
   "schema": "opentallas.result.v41_span_context_confusion_is_systemic.v1",
   "the_remaining_refusal_explained": "GROUPED_CONCAT output view 7033 dims (138, 32) against (129, 32).  The output resolves 1 * context / 1 + 129 = 138 while its inputs present 128 + 1 = 129, because the compressed operand is sized by the span.  The output is now RIGHT and the operand's capacity is wrong -- the mirror image of where this started, where the operand was right and the output wrong.",
   "the_three_places": {
