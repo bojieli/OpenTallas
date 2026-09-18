@@ -1,0 +1,45 @@
+{
+  "decomposition": {
+    "both_vs_oracle": "BOTH stores put the oracle's token at about zero while their own winners are at about +0.9.  So whatever separates the stores is NOT why they miss the oracle -- there is a larger, SHARED error, and it lives in something both lanes share",
+    "store_vs_store": "EVERY element differs, by 0.115 on average against winners of about 0.9 -- roughly a tenth of full scale -- and each store's winner is a close runner-up in the other.  That is the shape of an ACCUMULATED ASSOCIATION DIFFERENCE spread over the whole network, not one wrong operator: the lanes reduce batched against per-token everywhere, and binary32 addition is not associative",
+    "what_both_share": "the engines and the V4.1 frontend graph.  The engines are shared with DeepSeek-V4-Flash, whose shipped deployment MATCHES its own oracle at 13806, so the shared error is most likely in the V4.1 graph or in the reduced-model/oracle pairing -- not in the engine stack"
+  },
+  "logits": {
+    "differing_elements": 4040,
+    "hbm": {
+      "argmax": 459,
+      "logit": 0.937498,
+      "logit_at_oracle_token": -0.022279,
+      "logit_at_rom_pick": 0.85208
+    },
+    "identical": false,
+    "max_abs_diff": 0.5320645,
+    "mean_abs_diff": 0.1154662,
+    "rom": {
+      "argmax": 2750,
+      "logit": 0.881524,
+      "logit_at_hbm_pick": 0.801472,
+      "logit_at_oracle_token": -0.00203
+    },
+    "vocabulary": 4040
+  },
+  "not_a_claim": [
+    "that the association difference is the ONLY cause of the store-vs-store gap; it is the shape the evidence has",
+    "any figure for how much of the oracle gap each cause owns"
+  ],
+  "producer": {
+    "git": {
+      "commit": "ad728507ca18c3f50bd46599721e7d7297169f8f",
+      "worktree_dirty": true
+    },
+    "sha256": "c2195c21be4b353332099de544a6cce6c90e5a42d1e65341c48c522e072040a8",
+    "tool": "tools/compare_deepseek_v41_store_logits.py"
+  },
+  "question": "two questions were being confused: why the stores disagree with EACH OTHER, and why both disagree with the ORACLE.  The final logits are the one tap whose shape both lanes agree on, so they separate them",
+  "schema": "opentallas.abi3.v41_logit_decomposition.v1",
+  "why_no_intermediate_tap_works": {
+    "kernels_with_matching_launch_counts": 0,
+    "reading": "EVERY shared kernel is dispatched a different number of times in the two lanes -- the ROM wafer is a two-node device and loops reductions per token, the HBM lane batches -- so no per-kernel or per-launch digest aligns anywhere.  Four instruments failed on this before the count was measured rather than assumed",
+    "shared_kernels": 1317
+  }
+}
