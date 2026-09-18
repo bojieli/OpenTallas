@@ -268,6 +268,31 @@ class DeploymentBuilder:
                 f"amendment A18 extent axis {extent_axis} is outside the "
                 f"rank-{rank} view it is declared on"
             )
+        # A LOOP_INDUCTION term names a loop whose induction value resolves the
+        # view's address.  If that loop is not OPEN where the view is built, the
+        # operator reading the view will be issued outside it and the resolver
+        # refuses at run time -- ``view N: loop M is not active``.  The hazard is
+        # named in ``open_loop_stack``'s own docstring, which notes that static
+        # admission does not catch it; nothing enforced it, so it was caught only
+        # by executing.  Measured: the shipped DeepSeek-V4.1 ROM wafer and ROM
+        # array deployments both refuse in prefill on view 1097 naming loop 1076,
+        # a TENSOR.EMBED_LOOKUP issued at program position 6 whose term names a
+        # loop whose body is 239..495 -- and no loop covers position 6 at all.
+        # Refusing here turns that into a build error at the emission site.
+        open_loops = {loop for loop, _ in self._loop_stack}
+        for term in dynamic:
+            if int(term.kind) != int(SelectorKind.LOOP_INDUCTION):
+                continue
+            if int(term.index) not in open_loops:
+                raise BuildError(
+                    f"a view is being built with a LOOP_INDUCTION term naming "
+                    f"loop {int(term.index)}, which is not open here. Open loops "
+                    f"are {sorted(open_loops)}. A term naming a closed loop "
+                    f"builds and admits, then refuses at run time with "
+                    f"'loop {int(term.index)} is not active': either open that "
+                    f"loop around the operator that reads this view, or do not "
+                    f"give the view the term"
+                )
         for axis in range(MAX_RANK):
             payload[f"dim{axis}"] = dims[axis] if axis < rank else 0
             payload[f"stride{axis}"] = strides[axis] if axis < rank else 0
