@@ -2,16 +2,6 @@
   "basis": "Every field is copied from a record a run wrote: design.fmax_hz (ORFS finish__timing__fmax for a routed record, OpenSTA 1/(period - WNS) for a pre-layout one), design.closed and the signal-integrity counts that decide it, and target_clock_period_ns.  target_headroom is setup WNS over the target: a large value means the target was loose and the fmax is what that route achieved, NOT the block's ceiling.",
   "best_closed_fmax_per_block_slowest_first": [
     {
-      "at_target_clock_period_ns": 4.75,
-      "block": "ot_a3_g2_cluster",
-      "family": "abi3_datapath",
-      "fmax_hz": 220627000.0,
-      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p75ns.json",
-      "slew_margin_percent": 40.0,
-      "standard_cell_area_um2": 84773.4,
-      "target_headroom": 0.04578063157894737
-    },
-    {
       "at_target_clock_period_ns": 4.5,
       "block": "ot_a3_vector_scale",
       "family": "abi3_datapath",
@@ -40,6 +30,16 @@
       "slew_margin_percent": 60.0,
       "standard_cell_area_um2": 1504.85,
       "target_headroom": 0.02021525
+    },
+    {
+      "at_target_clock_period_ns": 4.5,
+      "block": "ot_a3_g2_cluster",
+      "family": "abi3_datapath",
+      "fmax_hz": 302456000.0,
+      "record": "results/physical_abi3/asap7/g2_cluster/pnr_4p50ns_slew55_falsepath_closed.json",
+      "slew_margin_percent": 55.0,
+      "standard_cell_area_um2": 88658.3,
+      "target_headroom": 0.2652733333333333
     },
     {
       "at_target_clock_period_ns": 3.0,
@@ -343,22 +343,22 @@
     }
   ],
   "clock_limiter": {
-    "at_target_clock_period_ns": 4.75,
-    "block": "ot_a3_g2_cluster",
+    "at_target_clock_period_ns": 3.6,
+    "block": "ot_a3_fp32_div_rne",
     "family": "abi3_datapath",
-    "fmax_hz": 220627000.0,
+    "fmax_hz": 283509000.0,
     "note": "the design's clock cannot exceed the slowest block ON IT, so this row is the whole-design operating point and every ABI 3.0 block above it has headroom.  Probes and legacy tensor-accelerator blocks are excluded by family: neither is referenced from rtl/abi3/ or from any backend, so neither is on this clock.  Including them would let a retired block set the operating point.",
-    "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p75ns.json",
+    "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
     "scope": "abi3_datapath only",
-    "slew_margin_percent": 40.0,
-    "standard_cell_area_um2": 84773.4,
-    "target_headroom": 0.04578063157894737
+    "slew_margin_percent": 60.0,
+    "standard_cell_area_um2": 1504.85,
+    "target_headroom": 0.02021525
   },
   "counts": {
-    "closed_routed_record_count": 64,
+    "closed_routed_record_count": 65,
     "distinct_blocks_with_a_closed_routed_record": 34,
-    "post_route_record_count": 108,
-    "record_count": 181
+    "post_route_record_count": 109,
+    "record_count": 182
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -444,7 +444,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "fc593dc1a22b0a37a3b0adb9427fff4a3a58f13b"
+      "commit": "c8411a654f7468252e79088c12f53d4207fee807"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3635,6 +3635,29 @@
       "standard_cell_area_um2": 209.704,
       "target_clock_period_ns": 1.0,
       "target_headroom": 0.266757
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_g2_cluster",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 302456000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/g2_cluster/pnr_4p50ns_slew55_falsepath_closed.json",
+      "record_sha256": "dcfdd04941bda1e09674b9b72206edcc210f052db9e89bbf660e01466b253000",
+      "setup_wns_ns": 1.19373,
+      "slew_margin_percent": 55.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 88658.3,
+      "target_clock_period_ns": 4.5,
+      "target_headroom": 0.2652733333333333
     },
     {
       "antenna_violating_nets": 0,

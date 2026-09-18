@@ -9,16 +9,16 @@
     "with_their_own_closed_record": 17
   },
   "limiter_under_audit": {
-    "at_target_clock_period_ns": 4.75,
-    "block": "ot_a3_g2_cluster",
+    "at_target_clock_period_ns": 3.6,
+    "block": "ot_a3_fp32_div_rne",
     "family": "abi3_datapath",
-    "fmax_hz": 220627000.0,
+    "fmax_hz": 283509000.0,
     "note": "the design's clock cannot exceed the slowest block ON IT, so this row is the whole-design operating point and every ABI 3.0 block above it has headroom.  Probes and legacy tensor-accelerator blocks are excluded by family: neither is referenced from rtl/abi3/ or from any backend, so neither is on this clock.  Including them would let a retired block set the operating point.",
-    "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p75ns.json",
+    "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
     "scope": "abi3_datapath only",
-    "slew_margin_percent": 40.0,
-    "standard_cell_area_um2": 84773.4,
-    "target_headroom": 0.04578063157894737
+    "slew_margin_percent": 60.0,
+    "standard_cell_area_um2": 1504.85,
+    "target_headroom": 0.02021525
   },
   "method": "Reads the instantiation graph out of every synthesisable source under rtl/ (rtl/test/ excluded) with comments BLANKED first -- a mention is not a binding -- then takes the transitive closure from each block that has a closed routed record.  A module inside that closure had its paths timed as part of a block that closed, whether or not it was ever routed standalone.",
   "modules": [
@@ -1041,7 +1041,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "fc593dc1a22b0a37a3b0adb9427fff4a3a58f13b"
+      "commit": "c8411a654f7468252e79088c12f53d4207fee807"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
