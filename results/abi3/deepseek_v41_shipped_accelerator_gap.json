@@ -1,11 +1,120 @@
 {
  "answer": "no. It fails closed in prefill with a named lowering fault, and that fault -- not the oracle, not the checkpoint, not the numerics -- is now what stands between the V4.1 cells and closure.",
+ "both_shipped_deployments_fail_identically": {
+  "reading": "the SAME view id and the SAME loop id in both, so the fault is in the lowering the two backends share rather than in either backend. One bug, not two.",
+  "rom_array_64": {
+   "deployment": "build/abi3/deepseek-v41-flash-rom-array-64",
+   "failure": "prefill failed: view 1097: loop 1076 is not active"
+  },
+  "rom_wafer": {
+   "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+   "failure": "prefill failed: view 1097: loop 1076 is not active"
+  }
+ },
  "not_a_claim": [
   "not an RTL measurement: the device is runtime.sim",
   "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
   "no statement about whether the shipped cells would AGREE with the oracle once they execute. The margin of 2.4947 makes agreement plausible where the reduced vehicle's 0.00515 made it impossible, but plausible is not measured."
  ],
  "question": "with a shipped-scale oracle finally in hand, does the shipped V4.1 ROM WAFER deployment execute?",
+ "reduced_versus_shipped": {
+  "rows": [
+   {
+    "deployment": "shipped wafer",
+    "descriptors": 9448,
+    "embed_lookups": 4,
+    "pairs": [
+     {
+      "descriptor": 1093,
+      "gap": 8,
+      "loop": 1085,
+      "output_view": 1089,
+      "rank": 2
+     },
+     {
+      "descriptor": 1100,
+      "gap": 24,
+      "loop": 1076,
+      "output_view": 1097,
+      "rank": 2
+     },
+     {
+      "descriptor": 1734,
+      "gap": 7,
+      "loop": 1727,
+      "output_view": 1731,
+      "rank": 3
+     },
+     {
+      "descriptor": 5300,
+      "gap": 5,
+      "loop": 5295,
+      "output_view": 5298,
+      "rank": 3
+     }
+    ]
+   },
+   {
+    "deployment": "shipped array-64",
+    "descriptors": 9612,
+    "embed_lookups": 4,
+    "pairs": [
+     {
+      "descriptor": 1093,
+      "gap": 8,
+      "loop": 1085,
+      "output_view": 1089,
+      "rank": 2
+     },
+     {
+      "descriptor": 1100,
+      "gap": 24,
+      "loop": 1076,
+      "output_view": 1097,
+      "rank": 2
+     }
+    ]
+   },
+   {
+    "deployment": "reduced v2 rom (EXECUTES)",
+    "descriptors": 9772,
+    "embed_lookups": 6,
+    "pairs": [
+     {
+      "descriptor": 1395,
+      "gap": 8,
+      "loop": 1387,
+      "output_view": 1391,
+      "rank": 2
+     },
+     {
+      "descriptor": 1404,
+      "gap": 7,
+      "loop": 1397,
+      "output_view": 1401,
+      "rank": 2
+     },
+     {
+      "descriptor": 2028,
+      "gap": 7,
+      "loop": 2021,
+      "output_view": 2025,
+      "rank": 3
+     },
+     {
+      "descriptor": 2037,
+      "gap": 7,
+      "loop": 2030,
+      "output_view": 2034,
+      "rank": 3
+     }
+    ]
+   }
+  ],
+  "the_anomaly": "every EMBED_LOOKUP in the working reduced deployment sits 5 to 8 descriptors after the loop that indexes its output.  In BOTH shipped deployments the second one sits 24 back, and the loop it names (1076) is EARLIER than the loop the FIRST EMBED_LOOKUP uses (1085) -- a later operator reaching back past an intervening loop.  Loop 1076 closes at program position 495, so if descriptor 1100 issues after that the loop is gone, which is exactly what the resolver reports.",
+  "the_question_for_whoever_fixes_it": "a single-iteration loop (bounds [0,1), max_iterations 1) around an embedding lookup is the shape a loop that should have been folded away leaves behind.  So either loop 1076 should not exist and the view should carry no dynamic term, or descriptor 1100 belongs inside its body.  The reduced deployment answers neither question because its pairing is already consistent.",
+  "what": "every TENSOR.EMBED_LOOKUP in each deployment, with the loop its output view is indexed by"
+ },
  "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
  "the_refusal": {
   "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
