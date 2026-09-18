@@ -1,0 +1,122 @@
+{
+  "answer": "16 of them, verified by reading the instantiation lines rather than by counting mentions -- comment lines that merely name a module are excluded.",
+  "engines_and_their_instantiations": {
+    "ot_a3_attention_av_walk": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 156
+      }
+    ],
+    "ot_a3_attention_denominator": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 115
+      },
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 125
+      }
+    ],
+    "ot_a3_attention_epilogue": [
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 117
+      }
+    ],
+    "ot_a3_attention_qk_walk": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 208
+      }
+    ],
+    "ot_a3_attention_softmax_block": [
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 186
+      }
+    ],
+    "ot_a3_mac_lane_pipe": [
+      {
+        "instantiates": "ot_mac_bf16_fp32_pipe",
+        "line": 148
+      }
+    ],
+    "ot_a3_reduction_balanced_sum": [
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 77
+      }
+    ],
+    "ot_a3_reduction_expert_sum": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 323
+      },
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 424
+      },
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 582
+      }
+    ],
+    "ot_a3_reduction_ordered_sum": [
+      {
+        "instantiates": "ot_mac_bf16_fp32_pipe",
+        "line": 303
+      }
+    ],
+    "ot_a3_route_biased_topk": [
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 153
+      }
+    ],
+    "ot_a3_route_weight_normalize": [
+      {
+        "instantiates": "ot_fp32_add_rne_pipe",
+        "line": 132
+      }
+    ],
+    "ot_a3_vector_scale_pipe": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 129
+      }
+    ],
+    "ot_probe_bf16_add_pipe": [
+      {
+        "instantiates": "ot_bf16_add_pipe",
+        "line": 6
+      }
+    ],
+    "ot_probe_fp32_mul_pipe": [
+      {
+        "instantiates": "ot_fp32_mul_rne_pipe",
+        "line": 27
+      }
+    ],
+    "ot_probe_indep4": [
+      {
+        "instantiates": "ot_mac_bf16_csa_pipe",
+        "line": 8
+      }
+    ],
+    "ot_probe_mac_fp32_pipe": [
+      {
+        "instantiates": "ot_mac_bf16_fp32_pipe",
+        "line": 6
+      }
+    ]
+  },
+  "how_this_was_found": "By a route FAILING.  The coverage-route planner derived each module's source list from the coverage audit's module rows, which are filtered to ``ot_a3_*`` -- so a child whose name carries no such prefix was invisible, and ``ot_a3_mac_lane_pipe``'s route died in yosys with \"Module `ot_mac_bf16_fp32_pipe' referenced in module `ot_a3_mac_lane_pipe' in cell `mac' is not part of the design.\"  Fixing the planner to walk the FULL instantiation graph revealed that 13 of the 51 planned routes needed a non-abi3 file, and that most of those files are the pipelined primitives.",
+  "not_a_claim": [
+    "instantiating a pipelined unit is not a frequency: none of these engines has a closed routed record yet, so no claim is made about what they achieve",
+    "this counts engines under rtl/abi3/ only, and only the five pipelined primitives named; a pipelined unit reached through a deeper chain is not counted here",
+    "ot_a3_vector_scale_pipe and ot_a3_fp32_div_rne_pipe are pipelined ENGINES rather than primitives and are counted elsewhere"
+  ],
+  "question": "The standing objection is that the pipelined FP32 arithmetic was 'measured and proven but not yet integrated into the engine implementations'.  Which ABI 3.0 engines actually instantiate a pipelined primitive today?",
+  "schema": "opentallas.result.pipelined_primitives_are_wired.v1",
+  "what_it_corrects": "The gap is not INTEGRATION, it is CHARACTERISATION.  These engines use pipelined arithmetic; what none of them has is a routed ASAP7 record, which is exactly the coverage gap the datapath audit measures.  Saying the pipelined units are 'not integrated' understates the RTL and misdirects the work -- what they need is routing, not wiring."
+}

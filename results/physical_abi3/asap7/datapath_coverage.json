@@ -8,6 +8,785 @@
     "uncovered_and_instantiated_by_nothing": 17,
     "with_their_own_closed_record": 18
   },
+  "file_of_module": {
+    "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
+    "expert_mask_controller": "rtl/expert_mask_controller.sv",
+    "f_async_fifo": "rtl/formal/f_async_fifo.sv",
+    "f_cdc_mailbox": "rtl/formal/f_cdc_mailbox.sv",
+    "f_credit_manager": "rtl/formal/f_credit_manager.sv",
+    "f_power_controller": "rtl/formal/f_power_controller.sv",
+    "f_route_mask": "rtl/formal/f_route_mask.sv",
+    "f_schedule_controller": "rtl/formal/f_schedule_controller.sv",
+    "f_skid_buffer": "rtl/formal/f_skid_buffer.sv",
+    "f_stage_controller": "rtl/formal/f_stage_controller.sv",
+    "f_sync_level": "rtl/formal/f_sync_level.sv",
+    "fakeram7_128x64": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram7_256x32": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram_2048x128": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram_256x128": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram_256x64": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram_512x128": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "fakeram_512x8": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+    "opentallas_tile": "rtl/opentallas_tile.sv",
+    "ot_a3_attention_av_walk": "rtl/abi3/ot_a3_attention_av_walk.sv",
+    "ot_a3_attention_denominator": "rtl/abi3/ot_a3_attention_denominator.sv",
+    "ot_a3_attention_epilogue": "rtl/abi3/ot_a3_attention_epilogue.sv",
+    "ot_a3_attention_kv_index": "rtl/abi3/ot_a3_attention_kv_index.sv",
+    "ot_a3_attention_qk_walk": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+    "ot_a3_attention_softmax_block": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+    "ot_a3_attention_sparse": "rtl/abi3/ot_a3_attention_sparse.sv",
+    "ot_a3_collective_engine": "rtl/abi3/ot_a3_collective_engine.sv",
+    "ot_a3_communication_decoder": "rtl/abi3/ot_a3_communication_decoder.sv",
+    "ot_a3_dependence_table": "rtl/abi3/ot_a3_dependence_table.sv",
+    "ot_a3_descriptor_record_validator": "rtl/abi3/ot_a3_descriptor_record_validator.sv",
+    "ot_a3_device_top": "rtl/abi3/ot_a3_device_top.sv",
+    "ot_a3_dma_fill": "rtl/abi3/ot_a3_dma_fill.sv",
+    "ot_a3_dma_index_mover": "rtl/abi3/ot_a3_dma_index_mover.sv",
+    "ot_a3_dma_ngram_hash": "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+    "ot_a3_engine_array": "rtl/abi3/ot_a3_engine_array.sv",
+    "ot_a3_engine_issue_bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+    "ot_a3_engram_exact_dot_tree": "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+    "ot_a3_engram_fp32_sqrt_rne_pipe": "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+    "ot_a3_event_scoreboard": "rtl/abi3/ot_a3_event_scoreboard.sv",
+    "ot_a3_fp32_div_rne": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+    "ot_a3_fp32_div_rne_pipe": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+    "ot_a3_fp32_exp_pos_cr_rne": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+    "ot_a3_fp32_sqrt_rne": "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "ot_a3_fp32_transcendental_cr_rne": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+    "ot_a3_fp4kv_dequant_lane": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+    "ot_a3_fp4kv_fetch": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+    "ot_a3_g2_array_issue_adapter": "rtl/abi3/ot_a3_g2_array_issue_adapter.sv",
+    "ot_a3_g2_array_staging": "rtl/abi3/ot_a3_g2_array_staging.sv",
+    "ot_a3_g2_cluster": "rtl/abi3/ot_a3_g2_cluster.sv",
+    "ot_a3_g2_descriptor_store": "rtl/abi3/ot_a3_g2_descriptor_store.sv",
+    "ot_a3_g2_issue_record_ram": "rtl/abi3/ot_a3_g2_issue_record_ram.sv",
+    "ot_a3_g2_program_store": "rtl/abi3/ot_a3_g2_program_store.sv",
+    "ot_a3_hc_coefficients_rne": "rtl/abi3/ot_a3_hc_coefficients_rne.sv",
+    "ot_a3_hc_pre_t1_descriptor_rne": "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv",
+    "ot_a3_hc_projection_rms_rne": "rtl/abi3/ot_a3_hc_projection_rms_rne.sv",
+    "ot_a3_hc_reduction_store": "rtl/abi3/ot_a3_hc_projection_rms_rne.sv",
+    "ot_a3_hc_sinkhorn20_rne": "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv",
+    "ot_a3_hc_stable_softmax_rne": "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv",
+    "ot_a3_hc_stable_softmax_sinkhorn20_rne": "rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv",
+    "ot_a3_instruction_decoder": "rtl/abi3/ot_a3_instruction_decoder.sv",
+    "ot_a3_issue_record_store": "rtl/abi3/ot_a3_issue_record_store.sv",
+    "ot_a3_lane_pipelined": "rtl/abi3/ot_a3_lane_pipelined.sv",
+    "ot_a3_link_endpoint": "rtl/abi3/ot_a3_link_endpoint.sv",
+    "ot_a3_link_node": "rtl/abi3/ot_a3_link_node.sv",
+    "ot_a3_link_return": "rtl/abi3/ot_a3_link_node.sv",
+    "ot_a3_link_rx_channel": "rtl/abi3/ot_a3_link_channel.sv",
+    "ot_a3_link_tx_channel": "rtl/abi3/ot_a3_link_channel.sv",
+    "ot_a3_link_wire": "rtl/abi3/ot_a3_link_node.sv",
+    "ot_a3_loop_stack": "rtl/abi3/ot_a3_loop_stack.sv",
+    "ot_a3_lq8": "rtl/abi3/ot_a3_lq8.sv",
+    "ot_a3_mac_lane": "rtl/abi3/ot_a3_mac_lane.sv",
+    "ot_a3_mac_lane_pipe": "rtl/abi3/ot_a3_mac_lane_pipe.sv",
+    "ot_a3_mesh_router": "rtl/abi3/ot_a3_mesh_router.sv",
+    "ot_a3_microsequencer": "rtl/abi3/ot_a3_microsequencer.sv",
+    "ot_a3_ngram_mul_pipe": "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+    "ot_a3_operand_receiver": "rtl/abi3/ot_a3_operand_receiver.sv",
+    "ot_a3_partial_collector": "rtl/abi3/ot_a3_partial_collector.sv",
+    "ot_a3_place_table": "rtl/abi3/ot_a3_place_table.sv",
+    "ot_a3_program_header": "rtl/abi3/ot_a3_program_header.sv",
+    "ot_a3_qwen_gqa": "rtl/abi3/ot_a3_qwen_gqa.sv",
+    "ot_a3_qwen_gqa_adapter": "rtl/abi3/ot_a3_qwen_gqa_adapter.sv",
+    "ot_a3_qwen_kv_scatter_adapter": "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv",
+    "ot_a3_reduction_balanced_sum": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+    "ot_a3_reduction_expert_sum": "rtl/abi3/ot_a3_reduction_expert_sum.sv",
+    "ot_a3_reduction_grouped_concat": "rtl/abi3/ot_a3_reduction_grouped_concat.sv",
+    "ot_a3_reduction_ordered_sum": "rtl/abi3/ot_a3_reduction_ordered_sum.sv",
+    "ot_a3_resolver_bank": "rtl/abi3/ot_a3_resolver_bank.sv",
+    "ot_a3_rope_lane_pipe": "rtl/abi3/ot_a3_rope_lane_pipe.sv",
+    "ot_a3_route_biased_topk": "rtl/abi3/ot_a3_route_biased_topk.sv",
+    "ot_a3_route_block_max": "rtl/abi3/ot_a3_route_block_max.sv",
+    "ot_a3_route_candidate_mask": "rtl/abi3/ot_a3_route_candidate_mask.sv",
+    "ot_a3_route_expert_dispatch": "rtl/abi3/ot_a3_route_expert_dispatch.sv",
+    "ot_a3_route_index_topk": "rtl/abi3/ot_a3_route_index_topk.sv",
+    "ot_a3_route_weight_normalize": "rtl/abi3/ot_a3_route_weight_normalize.sv",
+    "ot_a3_route_window_index": "rtl/abi3/ot_a3_route_window_index.sv",
+    "ot_a3_selection_argmax": "rtl/abi3/ot_a3_selection_argmax.sv",
+    "ot_a3_selection_token_append": "rtl/abi3/ot_a3_selection_token_append.sv",
+    "ot_a3_semantic_record_collector": "rtl/abi3/ot_a3_semantic_record_collector.sv",
+    "ot_a3_shared_divider": "rtl/abi3/ot_a3_shared_divider.sv",
+    "ot_a3_state_controller": "rtl/abi3/ot_a3_state_controller.sv",
+    "ot_a3_symbol_file": "rtl/abi3/ot_a3_symbol_file.sv",
+    "ot_a3_tensor_lane_mapper": "rtl/abi3/ot_a3_tensor_lane_mapper.sv",
+    "ot_a3_tensor_routed_matmul": "rtl/abi3/ot_a3_tensor_routed_matmul.sv",
+    "ot_a3_tile64": "rtl/abi3/ot_a3_tile64.sv",
+    "ot_a3_tree_endpoint_fp32": "rtl/abi3/ot_a3_tree_endpoint_fp32.sv",
+    "ot_a3_vector_add": "rtl/abi3/ot_a3_vector_add.sv",
+    "ot_a3_vector_compress_project": "rtl/abi3/ot_a3_vector_compress_project.sv",
+    "ot_a3_vector_convert": "rtl/abi3/ot_a3_vector_convert.sv",
+    "ot_a3_vector_engram_gate": "rtl/abi3/ot_a3_vector_engram_gate.sv",
+    "ot_a3_vector_fp4kv_dequant": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+    "ot_a3_vector_hadamard": "rtl/abi3/ot_a3_vector_hadamard.sv",
+    "ot_a3_vector_index_score": "rtl/abi3/ot_a3_vector_index_score.sv",
+    "ot_a3_vector_mhc_post": "rtl/abi3/ot_a3_vector_mhc_post.sv",
+    "ot_a3_vector_mhc_pre_tile_scheduler": "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv",
+    "ot_a3_vector_rms_norm": "rtl/abi3/ot_a3_vector_rms_norm.sv",
+    "ot_a3_vector_rope": "rtl/abi3/ot_a3_vector_rope.sv",
+    "ot_a3_vector_scale": "rtl/abi3/ot_a3_vector_scale.sv",
+    "ot_a3_vector_scale_pipe": "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+    "ot_a3_vector_silu_mul": "rtl/abi3/ot_a3_vector_silu_mul.sv",
+    "ot_a3_vector_sqrt_softplus": "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+    "ot_a3_vector_sqrt_softplus_row": "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+    "ot_a3_view_resolver": "rtl/abi3/ot_a3_view_resolver.sv",
+    "ot_a3_wafer_multicast_adapter": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+    "ot_async_fifo": "rtl/lib/ot_async_fifo.sv",
+    "ot_bf16_add_flat": "rtl/proto/ot_bf16_add_flat.sv",
+    "ot_bf16_add_pipe": "rtl/proto/ot_bf16_add_pipe.sv",
+    "ot_bf16_add_rne": "rtl/ot_bf16_add_rne.sv",
+    "ot_bist_controller": "rtl/ot_bist_controller.sv",
+    "ot_cdc_mailbox": "rtl/lib/ot_cdc_mailbox.sv",
+    "ot_cluster_dispatcher": "rtl/proto/ot_cluster_dispatcher.sv",
+    "ot_cmd_frontend": "rtl/ot_cmd_frontend.sv",
+    "ot_compute_unit": "rtl/proto/ot_compute_unit.sv",
+    "ot_compute_unit_gemm": "rtl/proto/ot_compute_unit_gemm.sv",
+    "ot_crc16_ccitt": "rtl/lib/ot_crc16_ccitt.sv",
+    "ot_crc32c": "rtl/lib/ot_crc32c.sv",
+    "ot_credit_manager": "rtl/ot_credit_manager.sv",
+    "ot_csr_block": "rtl/ot_csr_block.sv",
+    "ot_dft_controller": "rtl/ot_dft_controller.sv",
+    "ot_dispatch_leaf": "rtl/proto/ot_dispatch_tree.sv",
+    "ot_dispatch_node": "rtl/proto/ot_dispatch_tree.sv",
+    "ot_dispatch_tree": "rtl/proto/ot_dispatch_tree.sv",
+    "ot_dtree_unit_model": "rtl/abi3/ot_probe_dispatch_tree.sv",
+    "ot_format_decode": "rtl/ot_format_decode.sv",
+    "ot_fp32_add_rne_pipe": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "ot_fp32_mul_rne_pipe": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "ot_fp32_rsqrt_rne": "rtl/ot_fp32_rsqrt_rne.sv",
+    "ot_hbm_frontend": "rtl/ot_hbm_frontend.sv",
+    "ot_kernel_dispatcher": "rtl/proto/ot_kernel_dispatcher.sv",
+    "ot_mac_bf16_csa_pipe": "rtl/proto/ot_mac_bf16_csa_pipe.sv",
+    "ot_mac_bf16_fp32_pipe": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+    "ot_mac_lane": "rtl/proto/ot_mac_lane.sv",
+    "ot_mac_lane_fmt": "rtl/proto/ot_mac_lane_fmt.sv",
+    "ot_mac_lane_packed": "rtl/proto/ot_mac_lane_packed.sv",
+    "ot_mac_tile": "rtl/proto/ot_mac_tile.sv",
+    "ot_mac_tile_h": "rtl/proto/ot_mac_tile_h.sv",
+    "ot_numeric_dot": "rtl/ot_numeric_dot.sv",
+    "ot_power_reset_controller": "rtl/ot_power_reset_controller.sv",
+    "ot_probe_add40": "rtl/abi3/ot_probe_add40.sv",
+    "ot_probe_add8": "rtl/abi3/ot_probe_add8.sv",
+    "ot_probe_bf16_add": "rtl/abi3/ot_probe_bf16_add.sv",
+    "ot_probe_bf16_add_flat": "rtl/abi3/ot_probe_bf16_add_flat.sv",
+    "ot_probe_bf16_add_pipe": "rtl/abi3/ot_probe_bf16_add_pipe.sv",
+    "ot_probe_cluster_disp": "rtl/abi3/ot_probe_cluster_disp.sv",
+    "ot_probe_dispatch_tree": "rtl/abi3/ot_probe_dispatch_tree.sv",
+    "ot_probe_dtree_bare": "rtl/abi3/ot_probe_dispatch_tree.sv",
+    "ot_probe_flat_disp_wide": "rtl/abi3/ot_probe_flat_disp_wide.sv",
+    "ot_probe_floor": "rtl/abi3/ot_probe_floor.sv",
+    "ot_probe_floor_wide": "rtl/abi3/ot_probe_floor_wide.sv",
+    "ot_probe_fp32_add": "rtl/abi3/ot_probe_fp32_add.sv",
+    "ot_probe_fp32_mul": "rtl/abi3/ot_probe_fp32_mul.sv",
+    "ot_probe_fp32_mul_pipe": "rtl/abi3/ot_probe_fp32_mul_pipe.sv",
+    "ot_probe_fp32_tobf16": "rtl/abi3/ot_probe_fp32_tobf16.sv",
+    "ot_probe_had1": "rtl/abi3/ot_probe_had1.sv",
+    "ot_probe_indep4": "rtl/abi3/ot_probe_indep4.sv",
+    "ot_probe_lane_bf16": "rtl/abi3/ot_probe_lane_bf16.sv",
+    "ot_probe_lane_fp8": "rtl/abi3/ot_probe_lane_fp8.sv",
+    "ot_probe_lane_mxfp4": "rtl/abi3/ot_probe_lane_mxfp4.sv",
+    "ot_probe_mac_csa": "rtl/abi3/ot_probe_mac_csa.sv",
+    "ot_probe_mac_fp32_pipe": "rtl/abi3/ot_probe_mac_fp32_pipe.sv",
+    "ot_probe_mac_fx": "rtl/abi3/ot_probe_mac_fx.sv",
+    "ot_probe_mac_pipe": "rtl/abi3/ot_probe_mac_pipe.sv",
+    "ot_probe_mul_bf16": "rtl/abi3/ot_probe_mul_bf16.sv",
+    "ot_probe_mul_fp32": "rtl/abi3/ot_probe_mul_fp32.sv",
+    "ot_probe_mul_fp8": "rtl/abi3/ot_probe_mul_fp8.sv",
+    "ot_probe_mul_mxfp4": "rtl/abi3/ot_probe_mul_mxfp4.sv",
+    "ot_probe_packed8": "rtl/abi3/ot_probe_packed8.sv",
+    "ot_probe_packed8_bf16": "rtl/abi3/ot_probe_packed8_bf16.sv",
+    "ot_probe_st1": "rtl/abi3/ot_probe_st1.sv",
+    "ot_probe_st2": "rtl/abi3/ot_probe_st2.sv",
+    "ot_probe_st2b": "rtl/abi3/ot_probe_st2b.sv",
+    "ot_probe_st3": "rtl/abi3/ot_probe_st3.sv",
+    "ot_probe_tile16": "rtl/abi3/ot_probe_tile16.sv",
+    "ot_probe_tile4": "rtl/abi3/ot_probe_tile4.sv",
+    "ot_probe_tile64": "rtl/abi3/ot_probe_tile64.sv",
+    "ot_probe_vadd8": "rtl/abi3/ot_probe_vadd8.sv",
+    "ot_ras_controller": "rtl/ot_ras_controller.sv",
+    "ot_reduction_endpoint": "rtl/ot_reduction_tree.sv",
+    "ot_reduction_tree": "rtl/ot_reduction_tree.sv",
+    "ot_reset_sync": "rtl/lib/ot_reset_sync.sv",
+    "ot_rom_bank_array": "rtl/rom/ot_rom_bank_array.sv",
+    "ot_rom_macro_periphery": "rtl/ot_rom_macro_periphery.sv",
+    "ot_rom_read_service": "rtl/rom/ot_rom_read_service.sv",
+    "ot_rom_wrapper": "rtl/ot_rom_wrapper.sv",
+    "ot_route_mask": "rtl/ot_route_mask.sv",
+    "ot_schedule_controller": "rtl/ot_schedule_controller.sv",
+    "ot_session_table": "rtl/ot_session_table.sv",
+    "ot_skid_buffer": "rtl/lib/ot_skid_buffer.sv",
+    "ot_stage_controller": "rtl/ot_stage_controller.sv",
+    "ot_stage_link_endpoint": "rtl/ot_stage_link_endpoint.sv",
+    "ot_stage_link_rx": "rtl/ot_stage_link_rx.sv",
+    "ot_stage_link_tx": "rtl/ot_stage_link_tx.sv",
+    "ot_stage_top": "rtl/ot_stage_top.sv",
+    "ot_sync_bits": "rtl/lib/ot_sync_bits.sv",
+    "ot_sync_level": "rtl/lib/ot_sync_level.sv",
+    "ot_ta_add_bf16_executor": "rtl/ot_ta_add_bf16_executor.sv",
+    "ot_ta_add_bf16_sram_engine": "rtl/ot_ta_add_bf16_sram_engine.sv",
+    "ot_ta_command_decoder": "rtl/ot_ta_command_decoder.sv",
+    "ot_ta_dma_add_sequencer": "rtl/ot_ta_dma_add_sequencer.sv",
+    "ot_ta_dma_hbm_indexed_to_sram": "rtl/ot_ta_dma_hbm_indexed_to_sram.sv",
+    "ot_ta_dma_hbm_to_sram": "rtl/ot_ta_dma_hbm_to_sram.sv",
+    "ot_ta_dma_head_rmsnorm_sequencer": "rtl/ot_ta_dma_head_rmsnorm_sequencer.sv",
+    "ot_ta_dma_matmul_sequencer": "rtl/ot_ta_dma_matmul_sequencer.sv",
+    "ot_ta_dma_rmsnorm_sequencer": "rtl/ot_ta_dma_rmsnorm_sequencer.sv",
+    "ot_ta_dma_rope_sequencer": "rtl/ot_ta_dma_rope_sequencer.sv",
+    "ot_ta_head_rmsnorm_bf16_sram_engine": "rtl/ot_ta_head_rmsnorm_bf16_sram_engine.sv",
+    "ot_ta_matmul_bf16_sram_engine": "rtl/ot_ta_matmul_bf16_sram_engine.sv",
+    "ot_ta_rmsnorm_bf16_sram_engine": "rtl/ot_ta_rmsnorm_bf16_sram_engine.sv",
+    "ot_ta_rope_bf16_sram_engine": "rtl/ot_ta_rope_bf16_sram_engine.sv",
+    "ot_tile": "rtl/ot_tile.sv",
+    "ot_vector_add_unit": "rtl/proto/ot_vector_add_unit.sv",
+    "rom_mac_tile": "rtl/rom_mac_tile.sv",
+    "static_timeslot_switch": "rtl/static_timeslot_switch.sv",
+    "via_mask_rom": "rtl/via_mask_rom.sv"
+  },
+  "instantiation_graph": {
+    "NAME": [
+      "ot_compute_unit_gemm"
+    ],
+    "expert_mask_controller": [],
+    "f_async_fifo": [
+      "ot_async_fifo"
+    ],
+    "f_cdc_mailbox": [
+      "ot_cdc_mailbox"
+    ],
+    "f_credit_manager": [
+      "ot_credit_manager"
+    ],
+    "f_power_controller": [
+      "ot_power_reset_controller"
+    ],
+    "f_route_mask": [
+      "ot_route_mask"
+    ],
+    "f_schedule_controller": [
+      "ot_schedule_controller"
+    ],
+    "f_skid_buffer": [
+      "ot_skid_buffer"
+    ],
+    "f_stage_controller": [
+      "ot_stage_controller"
+    ],
+    "f_sync_level": [
+      "ot_sync_level"
+    ],
+    "fakeram7_128x64": [],
+    "fakeram7_256x32": [],
+    "fakeram_2048x128": [],
+    "fakeram_256x128": [],
+    "fakeram_256x64": [],
+    "fakeram_512x128": [],
+    "fakeram_512x8": [],
+    "opentallas_tile": [
+      "expert_mask_controller",
+      "rom_mac_tile",
+      "via_mask_rom"
+    ],
+    "ot_a3_attention_av_walk": [
+      "ot_fp32_mul_rne_pipe",
+      "ot_mac_bf16_fp32_pipe"
+    ],
+    "ot_a3_attention_denominator": [
+      "ot_a3_attention_softmax_block",
+      "ot_a3_reduction_balanced_sum",
+      "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe"
+    ],
+    "ot_a3_attention_epilogue": [
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_exp_pos_cr_rne",
+      "ot_a3_fp32_transcendental_cr_rne",
+      "ot_fp32_add_rne_pipe"
+    ],
+    "ot_a3_attention_kv_index": [],
+    "ot_a3_attention_qk_walk": [
+      "ot_fp32_mul_rne_pipe",
+      "ot_mac_bf16_fp32_pipe"
+    ],
+    "ot_a3_attention_softmax_block": [
+      "ot_a3_fp32_transcendental_cr_rne",
+      "ot_fp32_add_rne_pipe"
+    ],
+    "ot_a3_attention_sparse": [
+      "ot_a3_attention_av_walk",
+      "ot_a3_attention_denominator",
+      "ot_a3_attention_epilogue",
+      "ot_a3_attention_kv_index",
+      "ot_a3_attention_qk_walk"
+    ],
+    "ot_a3_collective_engine": [],
+    "ot_a3_communication_decoder": [],
+    "ot_a3_dependence_table": [],
+    "ot_a3_descriptor_record_validator": [],
+    "ot_a3_device_top": [
+      "ot_a3_microsequencer",
+      "ot_a3_program_header"
+    ],
+    "ot_a3_dma_fill": [],
+    "ot_a3_dma_index_mover": [],
+    "ot_a3_dma_ngram_hash": [
+      "ot_a3_ngram_mul_pipe"
+    ],
+    "ot_a3_engine_array": [
+      "ot_a3_dma_index_mover",
+      "ot_a3_mac_lane",
+      "ot_a3_mac_lane_pipe",
+      "ot_a3_selection_argmax",
+      "ot_a3_vector_add",
+      "ot_a3_vector_compress_project",
+      "ot_a3_vector_convert",
+      "ot_a3_vector_hadamard",
+      "ot_a3_vector_index_score",
+      "ot_a3_vector_mhc_post",
+      "ot_a3_vector_scale_pipe"
+    ],
+    "ot_a3_engine_issue_bridge": [
+      "ot_a3_attention_sparse",
+      "ot_a3_engine_array",
+      "ot_a3_place_table",
+      "ot_a3_qwen_gqa",
+      "ot_a3_reduction_expert_sum",
+      "ot_a3_route_biased_topk",
+      "ot_a3_route_weight_normalize",
+      "ot_a3_route_window_index",
+      "ot_a3_selection_token_append",
+      "ot_a3_vector_rms_norm",
+      "ot_a3_vector_rope",
+      "ot_a3_vector_silu_mul",
+      "ot_a3_vector_sqrt_softplus_row"
+    ],
+    "ot_a3_engram_exact_dot_tree": [],
+    "ot_a3_engram_fp32_sqrt_rne_pipe": [],
+    "ot_a3_event_scoreboard": [],
+    "ot_a3_fp32_div_rne": [],
+    "ot_a3_fp32_div_rne_pipe": [],
+    "ot_a3_fp32_exp_pos_cr_rne": [],
+    "ot_a3_fp32_sqrt_rne": [],
+    "ot_a3_fp32_transcendental_cr_rne": [],
+    "ot_a3_fp4kv_dequant_lane": [],
+    "ot_a3_fp4kv_fetch": [],
+    "ot_a3_g2_array_issue_adapter": [],
+    "ot_a3_g2_array_staging": [
+      "fakeram7_256x32",
+      "fakeram_256x64",
+      "fakeram_512x128"
+    ],
+    "ot_a3_g2_cluster": [
+      "ot_a3_g2_array_issue_adapter",
+      "ot_a3_g2_array_staging",
+      "ot_a3_g2_descriptor_store",
+      "ot_a3_g2_issue_record_ram",
+      "ot_a3_g2_program_store",
+      "ot_a3_lq8",
+      "ot_a3_microsequencer"
+    ],
+    "ot_a3_g2_descriptor_store": [
+      "fakeram_2048x128"
+    ],
+    "ot_a3_g2_issue_record_ram": [
+      "fakeram_256x128"
+    ],
+    "ot_a3_g2_program_store": [
+      "fakeram_256x128"
+    ],
+    "ot_a3_hc_coefficients_rne": [
+      "ot_a3_fp32_transcendental_cr_rne",
+      "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+    ],
+    "ot_a3_hc_pre_t1_descriptor_rne": [
+      "ot_a3_hc_coefficients_rne",
+      "ot_a3_hc_projection_rms_rne",
+      "ot_a3_vector_mhc_pre_tile_scheduler"
+    ],
+    "ot_a3_hc_projection_rms_rne": [
+      "ot_a3_hc_reduction_store",
+      "ot_fp32_rsqrt_rne"
+    ],
+    "ot_a3_hc_reduction_store": [],
+    "ot_a3_hc_sinkhorn20_rne": [
+      "ot_a3_fp32_div_rne"
+    ],
+    "ot_a3_hc_stable_softmax_rne": [
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "ot_a3_hc_stable_softmax_sinkhorn20_rne": [
+      "ot_a3_hc_sinkhorn20_rne",
+      "ot_a3_hc_stable_softmax_rne"
+    ],
+    "ot_a3_instruction_decoder": [],
+    "ot_a3_issue_record_store": [],
+    "ot_a3_lane_pipelined": [],
+    "ot_a3_link_endpoint": [
+      "ot_a3_link_rx_channel",
+      "ot_a3_link_tx_channel"
+    ],
+    "ot_a3_link_node": [
+      "ot_a3_collective_engine",
+      "ot_a3_link_rx_channel",
+      "ot_a3_link_tx_channel",
+      "ot_a3_mesh_router"
+    ],
+    "ot_a3_link_return": [],
+    "ot_a3_link_rx_channel": [],
+    "ot_a3_link_tx_channel": [],
+    "ot_a3_link_wire": [],
+    "ot_a3_loop_stack": [],
+    "ot_a3_lq8": [
+      "ot_a3_lane_pipelined"
+    ],
+    "ot_a3_mac_lane": [],
+    "ot_a3_mac_lane_pipe": [
+      "ot_mac_bf16_fp32_pipe"
+    ],
+    "ot_a3_mesh_router": [],
+    "ot_a3_microsequencer": [
+      "ot_a3_dependence_table",
+      "ot_a3_event_scoreboard",
+      "ot_a3_instruction_decoder",
+      "ot_a3_issue_record_store",
+      "ot_a3_loop_stack",
+      "ot_a3_resolver_bank",
+      "ot_a3_shared_divider",
+      "ot_a3_state_controller",
+      "ot_a3_symbol_file"
+    ],
+    "ot_a3_ngram_mul_pipe": [],
+    "ot_a3_operand_receiver": [],
+    "ot_a3_partial_collector": [],
+    "ot_a3_place_table": [],
+    "ot_a3_program_header": [],
+    "ot_a3_qwen_gqa": [
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "ot_a3_qwen_gqa_adapter": [
+      "ot_a3_qwen_gqa",
+      "ot_a3_qwen_kv_scatter_adapter"
+    ],
+    "ot_a3_qwen_kv_scatter_adapter": [
+      "ot_a3_descriptor_record_validator",
+      "ot_a3_dma_index_mover",
+      "ot_a3_instruction_decoder"
+    ],
+    "ot_a3_reduction_balanced_sum": [
+      "ot_fp32_add_rne_pipe"
+    ],
+    "ot_a3_reduction_expert_sum": [
+      "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe"
+    ],
+    "ot_a3_reduction_grouped_concat": [],
+    "ot_a3_reduction_ordered_sum": [
+      "ot_mac_bf16_fp32_pipe"
+    ],
+    "ot_a3_resolver_bank": [
+      "ot_a3_view_resolver"
+    ],
+    "ot_a3_rope_lane_pipe": [],
+    "ot_a3_route_biased_topk": [
+      "ot_fp32_add_rne_pipe"
+    ],
+    "ot_a3_route_block_max": [],
+    "ot_a3_route_candidate_mask": [],
+    "ot_a3_route_expert_dispatch": [],
+    "ot_a3_route_index_topk": [],
+    "ot_a3_route_weight_normalize": [
+      "ot_a3_fp32_div_rne",
+      "ot_fp32_add_rne_pipe"
+    ],
+    "ot_a3_route_window_index": [],
+    "ot_a3_selection_argmax": [],
+    "ot_a3_selection_token_append": [],
+    "ot_a3_semantic_record_collector": [],
+    "ot_a3_shared_divider": [],
+    "ot_a3_state_controller": [],
+    "ot_a3_symbol_file": [],
+    "ot_a3_tensor_lane_mapper": [],
+    "ot_a3_tensor_routed_matmul": [
+      "ot_a3_mac_lane_pipe"
+    ],
+    "ot_a3_tile64": [
+      "ot_a3_lq8"
+    ],
+    "ot_a3_tree_endpoint_fp32": [],
+    "ot_a3_vector_add": [],
+    "ot_a3_vector_compress_project": [],
+    "ot_a3_vector_convert": [],
+    "ot_a3_vector_engram_gate": [
+      "ot_a3_engram_exact_dot_tree",
+      "ot_a3_engram_fp32_sqrt_rne_pipe",
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "ot_a3_vector_fp4kv_dequant": [
+      "ot_a3_fp4kv_dequant_lane",
+      "ot_a3_fp4kv_fetch"
+    ],
+    "ot_a3_vector_hadamard": [],
+    "ot_a3_vector_index_score": [],
+    "ot_a3_vector_mhc_post": [],
+    "ot_a3_vector_mhc_pre_tile_scheduler": [],
+    "ot_a3_vector_rms_norm": [
+      "ot_fp32_rsqrt_rne"
+    ],
+    "ot_a3_vector_rope": [
+      "ot_a3_rope_lane_pipe",
+      "ot_ta_rope_bf16_sram_engine"
+    ],
+    "ot_a3_vector_scale": [],
+    "ot_a3_vector_scale_pipe": [
+      "ot_fp32_mul_rne_pipe"
+    ],
+    "ot_a3_vector_silu_mul": [
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "ot_a3_vector_sqrt_softplus": [
+      "ot_a3_fp32_sqrt_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "ot_a3_vector_sqrt_softplus_row": [
+      "ot_a3_vector_sqrt_softplus"
+    ],
+    "ot_a3_view_resolver": [],
+    "ot_a3_wafer_multicast_adapter": [
+      "ot_a3_communication_decoder",
+      "ot_a3_link_endpoint",
+      "ot_a3_link_return",
+      "ot_a3_link_wire"
+    ],
+    "ot_async_fifo": [
+      "ot_reset_sync"
+    ],
+    "ot_bf16_add_flat": [],
+    "ot_bf16_add_pipe": [],
+    "ot_bf16_add_rne": [],
+    "ot_bist_controller": [],
+    "ot_cdc_mailbox": [],
+    "ot_cluster_dispatcher": [],
+    "ot_cmd_frontend": [],
+    "ot_compute_unit": [
+      "fakeram7_128x64",
+      "fakeram_256x128",
+      "ot_mac_tile"
+    ],
+    "ot_compute_unit_gemm": [
+      "fakeram7_256x32",
+      "fakeram_256x128",
+      "fakeram_256x64",
+      "ot_mac_tile"
+    ],
+    "ot_crc16_ccitt": [],
+    "ot_crc32c": [],
+    "ot_credit_manager": [],
+    "ot_csr_block": [],
+    "ot_dft_controller": [],
+    "ot_dispatch_leaf": [],
+    "ot_dispatch_node": [],
+    "ot_dispatch_tree": [
+      "ot_dispatch_leaf",
+      "ot_dispatch_node"
+    ],
+    "ot_dtree_unit_model": [],
+    "ot_format_decode": [],
+    "ot_fp32_add_rne_pipe": [],
+    "ot_fp32_mul_rne_pipe": [],
+    "ot_fp32_rsqrt_rne": [],
+    "ot_hbm_frontend": [],
+    "ot_kernel_dispatcher": [],
+    "ot_mac_bf16_csa_pipe": [],
+    "ot_mac_bf16_fp32_pipe": [],
+    "ot_mac_lane": [],
+    "ot_mac_lane_fmt": [],
+    "ot_mac_lane_packed": [],
+    "ot_mac_tile": [],
+    "ot_mac_tile_h": [
+      "ot_mac_lane"
+    ],
+    "ot_numeric_dot": [],
+    "ot_power_reset_controller": [],
+    "ot_probe_add40": [],
+    "ot_probe_add8": [],
+    "ot_probe_bf16_add": [
+      "ot_bf16_add_rne"
+    ],
+    "ot_probe_bf16_add_flat": [
+      "ot_bf16_add_flat"
+    ],
+    "ot_probe_bf16_add_pipe": [
+      "ot_bf16_add_pipe"
+    ],
+    "ot_probe_cluster_disp": [
+      "ot_cluster_dispatcher"
+    ],
+    "ot_probe_dispatch_tree": [
+      "ot_dispatch_tree",
+      "ot_dtree_unit_model"
+    ],
+    "ot_probe_dtree_bare": [
+      "ot_dispatch_tree"
+    ],
+    "ot_probe_flat_disp_wide": [
+      "ot_cluster_dispatcher",
+      "ot_dtree_unit_model"
+    ],
+    "ot_probe_floor": [],
+    "ot_probe_floor_wide": [],
+    "ot_probe_fp32_add": [],
+    "ot_probe_fp32_mul": [],
+    "ot_probe_fp32_mul_pipe": [
+      "ot_fp32_mul_rne_pipe"
+    ],
+    "ot_probe_fp32_tobf16": [],
+    "ot_probe_had1": [
+      "ot_a3_vector_hadamard"
+    ],
+    "ot_probe_indep4": [
+      "ot_mac_bf16_csa_pipe"
+    ],
+    "ot_probe_lane_bf16": [
+      "ot_mac_lane_fmt"
+    ],
+    "ot_probe_lane_fp8": [
+      "ot_mac_lane_fmt"
+    ],
+    "ot_probe_lane_mxfp4": [
+      "ot_mac_lane_fmt"
+    ],
+    "ot_probe_mac_csa": [],
+    "ot_probe_mac_fp32_pipe": [
+      "ot_mac_bf16_fp32_pipe"
+    ],
+    "ot_probe_mac_fx": [],
+    "ot_probe_mac_pipe": [],
+    "ot_probe_mul_bf16": [],
+    "ot_probe_mul_fp32": [],
+    "ot_probe_mul_fp8": [],
+    "ot_probe_mul_mxfp4": [],
+    "ot_probe_packed8": [
+      "ot_mac_lane_packed"
+    ],
+    "ot_probe_packed8_bf16": [
+      "ot_mac_lane_packed"
+    ],
+    "ot_probe_st1": [],
+    "ot_probe_st2": [],
+    "ot_probe_st2b": [],
+    "ot_probe_st3": [],
+    "ot_probe_tile16": [
+      "ot_mac_tile"
+    ],
+    "ot_probe_tile4": [
+      "ot_mac_tile"
+    ],
+    "ot_probe_tile64": [
+      "ot_mac_tile"
+    ],
+    "ot_probe_vadd8": [
+      "ot_vector_add_unit"
+    ],
+    "ot_ras_controller": [],
+    "ot_reduction_endpoint": [],
+    "ot_reduction_tree": [],
+    "ot_reset_sync": [],
+    "ot_rom_bank_array": [],
+    "ot_rom_macro_periphery": [],
+    "ot_rom_read_service": [],
+    "ot_rom_wrapper": [],
+    "ot_route_mask": [],
+    "ot_schedule_controller": [],
+    "ot_session_table": [],
+    "ot_skid_buffer": [],
+    "ot_stage_controller": [],
+    "ot_stage_link_endpoint": [
+      "ot_stage_link_rx",
+      "ot_stage_link_tx"
+    ],
+    "ot_stage_link_rx": [],
+    "ot_stage_link_tx": [],
+    "ot_stage_top": [
+      "ot_async_fifo",
+      "ot_cdc_mailbox",
+      "ot_cmd_frontend",
+      "ot_credit_manager",
+      "ot_csr_block",
+      "ot_power_reset_controller",
+      "ot_ras_controller",
+      "ot_reset_sync",
+      "ot_schedule_controller",
+      "ot_session_table",
+      "ot_stage_controller",
+      "ot_sync_bits",
+      "ot_sync_level"
+    ],
+    "ot_sync_bits": [],
+    "ot_sync_level": [],
+    "ot_ta_add_bf16_executor": [
+      "ot_bf16_add_rne",
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_add_bf16_sram_engine": [
+      "ot_ta_add_bf16_executor"
+    ],
+    "ot_ta_command_decoder": [],
+    "ot_ta_dma_add_sequencer": [
+      "ot_ta_add_bf16_sram_engine",
+      "ot_ta_dma_hbm_to_sram"
+    ],
+    "ot_ta_dma_hbm_indexed_to_sram": [
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_dma_hbm_to_sram": [
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_dma_head_rmsnorm_sequencer": [
+      "ot_ta_dma_hbm_to_sram",
+      "ot_ta_head_rmsnorm_bf16_sram_engine"
+    ],
+    "ot_ta_dma_matmul_sequencer": [
+      "ot_ta_dma_hbm_to_sram",
+      "ot_ta_matmul_bf16_sram_engine"
+    ],
+    "ot_ta_dma_rmsnorm_sequencer": [
+      "ot_ta_dma_hbm_to_sram",
+      "ot_ta_rmsnorm_bf16_sram_engine"
+    ],
+    "ot_ta_dma_rope_sequencer": [
+      "ot_ta_dma_hbm_indexed_to_sram",
+      "ot_ta_rope_bf16_sram_engine"
+    ],
+    "ot_ta_head_rmsnorm_bf16_sram_engine": [
+      "ot_fp32_rsqrt_rne",
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_matmul_bf16_sram_engine": [
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_rmsnorm_bf16_sram_engine": [
+      "ot_fp32_rsqrt_rne",
+      "ot_ta_command_decoder"
+    ],
+    "ot_ta_rope_bf16_sram_engine": [
+      "ot_ta_command_decoder"
+    ],
+    "ot_tile": [
+      "ot_numeric_dot",
+      "ot_route_mask",
+      "via_mask_rom"
+    ],
+    "ot_vector_add_unit": [
+      "ot_bf16_add_pipe"
+    ],
+    "rom_mac_tile": [],
+    "static_timeslot_switch": [],
+    "via_mask_rom": []
+  },
   "limiter_under_audit": {
     "at_target_clock_period_ns": 3.6,
     "block": "ot_a3_fp32_div_rne",
@@ -1041,7 +1820,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "4a6d01a07438e107a348b2f50719549152a1b0fe"
+      "commit": "6700ef8b29d287e0ff8e4798ddb01a4733e27296"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },

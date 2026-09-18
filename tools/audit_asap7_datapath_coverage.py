@@ -304,6 +304,19 @@ def main() -> int:
         "uncovered_and_instantiated_by_nothing": [r["module"] for r in tops],
         "carry_no_timing_paths": [r["module"] for r in no_paths],
         "modules": rows,
+        # The full graph, every module and not only the ``ot_a3_`` ones.  The
+        # route planner needs it: ``ot_a3_mac_lane_pipe`` instantiates
+        # ``ot_mac_bf16_fp32_pipe``, whose name carries no ``ot_a3_`` prefix, and
+        # a planner walking only the rows above omitted it from the source list --
+        # yosys then refused with "Module `\\ot_mac_bf16_fp32_pipe' referenced in
+        # module `\\ot_a3_mac_lane_pipe' in cell `\\mac' is not part of the
+        # design."  The audit's own SCOPE is the abi3 modules; the graph it walked
+        # to decide that scope is wider, and publishing it stops a consumer from
+        # rebuilding a narrower one.
+        "instantiation_graph": {
+            name: sorted(children) for name, children in sorted(graph.items())
+        },
+        "file_of_module": dict(sorted(defined.items())),
         "not_a_claim": [
             "coverage is not a frequency: a module inside a closed block met that "
             "block's target, which may be looser than the module's own ceiling",

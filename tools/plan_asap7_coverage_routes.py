@@ -113,11 +113,21 @@ def main() -> int:
 
     coverage = json.loads(COVERAGE.read_text())
     rows = {r["module"]: r for r in coverage["modules"]}
-    children = {r["module"]: set() for r in coverage["modules"]}
-    for row in coverage["modules"]:
-        for parent in row["instantiated_by"]:
-            if parent in children:
-                children[parent].add(row["module"])
+    # The FULL graph, not the abi3-filtered rows.  Deriving children from
+    # ``instantiated_by`` on the rows alone loses every child whose name carries
+    # no ``ot_a3_`` prefix: ``ot_a3_mac_lane_pipe`` instantiates
+    # ``ot_mac_bf16_fp32_pipe``, the route omitted that file, and yosys refused
+    # with "Module `\\ot_mac_bf16_fp32_pipe' ... is not part of the design".
+    graph = coverage.get("instantiation_graph")
+    file_of = coverage.get("file_of_module") or {}
+    if graph:
+        children = {name: set(kids) for name, kids in graph.items()}
+    else:  # an older report without the full graph
+        children = {r["module"]: set() for r in coverage["modules"]}
+        for row in coverage["modules"]:
+            for parent in row["instantiated_by"]:
+                if parent in children:
+                    children[parent].add(row["module"])
 
     packages = _package_files()
     targets = [r["module"] for r in coverage["uncovered_and_instantiated"]]
@@ -139,7 +149,7 @@ def main() -> int:
         family = sorted(descendants(name))
         files: list[str] = []
         for member in family:
-            path = rows.get(member, {}).get("file")
+            path = rows.get(member, {}).get("file") or file_of.get(member)
             if path and path not in files:
                 files.append(path)
         needed = [
