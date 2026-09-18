@@ -1,0 +1,84 @@
+{
+  "diagnosis": {
+    "divergences": [
+      {
+        "changes_value": "yes",
+        "contract_v1": "1e-6 applied to the norm product, i.e. the denominator",
+        "id": "D1_clamp_target",
+        "pinned": "clamp_min(1e-6) applied to |dot|, the normalised dot, before sqrt"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "dot / max(sqrt(sum q^2) * sqrt(sum k^2), 1e-6); no eps term",
+        "id": "D2_mean_not_sum",
+        "pinned": "rsqrt(mean(h^2) + norm_eps) * rsqrt(mean(key^2) + norm_eps), then * dim**-0.5; norm_eps = 1e-20"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "dot is q . k; hidden_codes take no part in the gate",
+        "id": "D3_operand_roles",
+        "pinned": "dot is h . (q_weight * k_weight * key); h is both gate query and residual"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "h + gate * (key * value), elementwise",
+        "id": "D4_gated_term",
+        "pinned": "h + gate * value, value shared across the hc_mult copies"
+      }
+    ],
+    "engine_executes": "runtime.reference.engram.engram_gate",
+    "graph_declares": "engram_gate_fp32_v1",
+    "operator": "VECTOR.ENGRAM_GATE",
+    "pinned_contract_id_exists_anywhere": false,
+    "release_form_available_but_unused": "runtime.reference.engram.engram_gate_pinned_form",
+    "statement": "the engine executes the contract the graph names, and the REPOSITORY ITSELF documents that contract as differing from the release's own Engram.forward in four ways, every one of which it marks changes_value: yes.  The release-faithful expression is already implemented beside it and nothing calls it."
+  },
+  "does_not_explain": {
+    "store_vs_store": "the ROM wafer and HBM tokens differ from EACH OTHER (2750 against 459).  Both stores run this same engine, so this gate cannot be why they differ from one another -- that is a separate divergence, and the per-launch digest instrument in tools/bisect_deepseek_v41_store_divergence.py is the wrong shape to find it"
+  },
+  "not_a_claim": [
+    "that fixing the gate makes the token match; the four divergences are established, their combined effect on this workload is not"
+  ],
+  "producer": {
+    "git": {
+      "commit": "c720710a6e2526abd497b2b587046ecb5377fda7",
+      "worktree_dirty": true
+    }
+  },
+  "question": "why does the reduced DeepSeek V4.1 deployment emit a token its own reference oracle disagrees with, when the shipped V4-Flash deployment emits one its oracle AGREES with?",
+  "schema": "opentallas.abi3.v41_gate_divergence_diagnosis.v1",
+  "sources": [
+    {
+      "path": "runtime/reference/engram.py",
+      "sha256": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0"
+    },
+    {
+      "path": "runtime/sim/engines/vector.py",
+      "sha256": "7e53c8e05b58b969f32a803e94d78e464d396719dc4e55ad3c281b1b66575131"
+    },
+    {
+      "path": "results/abi3/deepseek_v41_reduced_token_walk.json",
+      "sha256": "da5ea81b047437a1a8b33093cca4002fecbfd92ddbc4eec19b85c508569bad82"
+    }
+  ],
+  "what_narrowed_it": {
+    "v41_reduced": {
+      "hbm_token": 459,
+      "oracle_first_token": 1638,
+      "rom_wafer_token": 2750
+    },
+    "v4_flash_shipped_rom_wafer": {
+      "agrees": true,
+      "emitted_token": 13806,
+      "oracle_first_token": 13806,
+      "reading": "the engine stack, the real control plane and the ROM wafer lowering are correct end-to-end for a full-scale DeepSeek model, so the V4.1 disagreement is in a V4.1-ONLY path",
+      "retired_work": 26102
+    }
+  },
+  "what_would_fix_it": [
+    "name a release-faithful contract on the V4.1 ENGRAM_GATE kernel instead of engram_gate_fp32_v1, since v1 is a frozen ABI contract and may not be changed",
+    "dispatch VECTOR.ENGRAM_GATE to engram_gate_pinned_form for that contract",
+    "declare the new contract in the capability records that admit V4.1",
+    "re-run the token walk and compare against the oracle again"
+  ]
+}
