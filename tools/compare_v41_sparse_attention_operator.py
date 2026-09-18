@@ -448,7 +448,12 @@ def main(argv: list[str] | None = None) -> int:
             # anything -- window rows plus a compressed prefix -- so the join's row
             # order is exactly what becomes testable here.
             vendor_rows = np.asarray(kv[0], dtype=np.float64)
-            device_rows = np.asarray(device_kv[:live], dtype=np.float64)
+            # Search the WHOLE fused view, not its first ``live`` rows.  The device's
+            # joined operand is a CONCAT of the window capacity and the compressed
+            # prefix, so a vendor row can sit anywhere in it; restricting the search
+            # to the first twelve slots reported "0 of 12 matched" when the rows may
+            # simply have been further along.
+            device_rows = np.asarray(device_kv, dtype=np.float64)
             permutation: list[int | None] = []
             residuals: list[float] = []
             for row in vendor_rows:
@@ -459,6 +464,7 @@ def main(argv: list[str] | None = None) -> int:
             matched = [value for value in permutation if value is not None]
             rows_out.append({
                 "operand": "joined_kv_row_order",
+                "device_rows_searched": int(device_rows.shape[0]),
                 "vendor_rows": int(vendor_rows.shape[0]),
                 "rows_matched_exactly": len(matched),
                 "is_a_permutation": len(matched) == vendor_rows.shape[0]

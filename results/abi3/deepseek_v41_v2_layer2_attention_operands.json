@@ -1,22 +1,28 @@
 {
   "READING_THIS_CORRECTLY": {
-    "row_order_hypothesis": {
-      "evidence": "0 of 12 vendor rows match any device row to 1e-6; the worst vendor row's closest pairing is 7.187 away. Different values, not a reordering.",
-      "hypothesis": "identical indices selecting different values suggested the device's joined operand holds the same rows in a different ORDER",
-      "verdict": "REFUTED"
-    },
-    "the_remaining_target": "not even the eight WINDOW rows match, and layer 0's matched bit for bit, so the difference is not only the compressed prefix. Layer 2 differs from layers 0 and 1 in TWO ways: compress_ratio 2, and being the first entry of kv_source_layers [2, 8, 14, 20] -- the layers whose KV later layers read. A source layer builds its KV through a path a non-source layer does not use, and that path is what remains.",
+    "established_at_layer_2": [
+      "the sparse-attention OPERATOR is bit-exact on the vendor's own operands: cosine 1.0, max abs diff 0.0 over 2,048 elements",
+      "the SELECTED INDICES are bit-identical over 12 live slots, so the compressor's index path is right where it first exists, and position alignment follows from that identity",
+      "the joined operand's extent resolves correctly: the device's fused view is exactly 12 rows, the window's 8 plus the compressed prefix's 4"
+    ],
+    "hypotheses_closed": [
+      "the operator itself -- bit-exact here as at layer 0",
+      "the index selection -- bit-identical",
+      "a row-order difference in the CONCAT -- refuted, the rows are different values and not a reordering",
+      "the operand rows being a measurement artifact -- refuted, the OUTPUT agrees with them and not with the depth sweep",
+      "the rope TABLE choice -- refuted. Layer 2's window-KV rotation gathers from rope.coefficient_table.yarn while layers 0 and 1 gather from .base, which looks wrong and is right: the vendor builds ONE freqs_cis per Attention module and chooses its theta by whether the layer compresses (compressing -> compress_rope_theta with YaRN, otherwise base rope_theta with YaRN disabled), and _window_kv rotates with that same table. So a compressing layer's window KV really does use the compressed profile, and the frontend matches the rule."
+    ],
+    "remaining_candidates": [
+      "the YaRN frequency values themselves at theta 160000 -- the formula was re-derived by hand and agrees, but it has not been compared numerically against the vendor's precompute_freqs_cis output the way the base table was",
+      "the QUANTIZE/DEQUANTIZE pair on the joined KV: the vendor quantises the whole post-RoPE vector in place, RoPE tail included, and layer 0 reproduces it -- but layer 2's path runs it on a differently-rotated vector",
+      "the compressor's own latent, which the CONCAT's third input supplies"
+    ],
     "what_differs": {
       "attention_output": 0.481423,
+      "even_the_window_rows": "0 of the vendor's 12 rows appear anywhere in the device's 12 to 1e-6, worst closest pairing 7.187 -- so the eight WINDOW rows differ too, though layer 0's matched bit for bit",
       "fused_kv_window": 0.345033,
-      "query_after_rotation": 0.483221,
-      "reading": "the OUTPUT agrees with the operands rather than with the depth sweep's 0.991827 at block.02, so the operands really differ and the sweep -- which takes the best of 166 same-size candidates -- was over-reporting at this layer. Where the sweep is corroborated it holds: layers 0 and 1 at 0.99997 and 0.99935 are backed by all three operands being bit-identical there."
-    },
-    "what_is_established_at_layer_2": [
-      "the sparse-attention OPERATOR is bit-exact on the vendor's own operands: cosine 1.0, max abs diff 0.0 over 2,048 elements",
-      "the SELECTED INDICES are bit-identical: cosine 1.0, max abs diff 0.0 over 12 live slots, 132 remaining slots all the padding index. Layer 2 is the first layer whose index row is the window plus a compressed prefix, so the compressor's index path is correct where it first exists",
-      "position alignment is established BY those indices: bit-identical index rows can only occur at the same query position"
-    ]
+      "query_after_rotation": 0.483221
+    }
   },
   "captured_call": {
     "index_shape": [
@@ -90,6 +96,7 @@
         "slots": 132
       },
       {
+        "device_rows_searched": 12,
         "identity_order": false,
         "is_a_permutation": false,
         "operand": "joined_kv_row_order",
@@ -610,7 +617,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "49f245ee39fc129e2ecb22f21bf4f754d0bb71b9"
+      "commit": "9c3b6135736900cce705761c8239402c73617608"
     },
     "tool": "tools/compare_v41_sparse_attention_operator.py"
   },
