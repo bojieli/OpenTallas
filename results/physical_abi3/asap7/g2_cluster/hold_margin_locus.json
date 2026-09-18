@@ -1,0 +1,36 @@
+{
+  "measured": {
+    "closed": false,
+    "drc_errors": 0,
+    "elapsed_minutes": 183.5,
+    "fmax_mhz": 309.4,
+    "hold_margin_ns": 0.02,
+    "hold_wns_ns": -0.0016197,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "setup_wns_ns": 1.26832,
+    "slew_margin_percent": 55.0,
+    "standard_cell_area_um2": 88633.4,
+    "target_period_ns": 4.5
+  },
+  "next": "A 60 ps hold margin at the same 4.5 ns / 55% slew point, which is ~2.8x the observed estimate-to-extraction delta.  Setup has +1.268 ns of room, so the delay buffers a hold repair inserts cannot endanger it.",
+  "question": "The G2 control cluster routes clean at 4.5 ns -- zero max-slew, max-cap, max-fanout and DRC violations, +1.268 ns setup slack, 309.4 MHz available -- and is denied `closed` by a single hold violation of 1.62 PICOSECONDS.  Where is that violation created, and why did a 20 ps hold margin not move it at all?",
+  "schema": "opentallas.result.g2_hold_margin_locus.v1",
+  "the_locus": "Hold repair runs under GLOBAL-ROUTE ESTIMATED parasitics and found no violation to fix, so a margin had nothing to bite on.  The 1.62 ps appears only in the finish check, which runs under RCX-EXTRACTED parasitics.  The violation is therefore created by the estimate-to-extraction delta on one path, and a margin closes it only if it EXCEEDS that delta.  At 20 ps repair already saw >=20 ps of slack under estimates, so the delta on this path is more than 21.6 ps and 20 ps could not possibly have been enough.",
+  "the_margin_was_applied": {
+    "config": "config.mk carries the flow default `export HOLD_SLACK_MARGIN = 0` and this run's `export HOLD_SLACK_MARGIN = 0.02` afterwards; make takes the later assignment, which is why the driver appends rather than edits.",
+    "orfs_saw_it": "repair_timing -setup_margin 0 -hold_margin 0.02 -repair_tns 100 -verbose",
+    "what_repair_reported": "[INFO RSZ-0033] No hold violations found."
+  },
+  "the_path": {
+    "data_arrival_ps": 1106.42,
+    "from": "rst_n (top-level input port), with a declared 900 ps input external delay",
+    "library_hold_time_ps": 14.47,
+    "reading": "It is a removal check on an ASYNCHRONOUS reset reaching a DFF's RESETN, and its data path is dominated by the declared 900 ps input external delay rather than by logic.  Nothing about the datapath or the microsequencer is slow here.",
+    "through": "5 buffers -- BUFx2, BUFx12f, BUFx6f, BUFx6f",
+    "to": "sequencer.irs.serial[14][31]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)",
+    "type": "min (hold)"
+  },
+  "what_this_is_worth": "The currently-closed G2 operating point is 4.75 ns / 220.6 MHz.  This route is clean on every signal-integrity check at 4.5 ns and reports 309.4 MHz, so clearing 1.62 ps moves the ABI3 control plane's closed frequency by 1.40x."
+}
