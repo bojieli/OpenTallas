@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.physical.combinational_fp32_multiply_audit.v1",
+ "question": "what sets the ABI 3.0 datapath's clock, and is there a qualified way past it?",
+ "answer": "a COMBINATIONAL FP32 multiply. The limiter's critical path is 51 half-adder cells of a mantissa partial-product tree in one cycle. The qualified pipelined replacement already exists in the tree, and every block that uses it closes between 839 and 862 MHz.",
+ "the_limiter": {
+  "block": "ot_a3_vector_scale",
+  "closed_fmax_mhz": 222.9,
+  "at_target_ns": 4.5,
+  "critical_path": {
+   "startpoint": "a_rd_data[14] (input port)",
+   "endpoint": "result_buffer[458][8]",
+   "driver_stages": 132,
+   "cell_histogram_top": {"HA": 51, "AOI21": 18, "OR4": 16, "AO21": 16, "XNOR2": 12, "OR5": 12},
+   "declared_input_external_delay_ps": 900.0,
+   "input_delay_share_of_path": 0.193,
+   "logic_after_the_input_port_ps": 3760.5,
+   "source_line": "rtl/abi3/ot_a3_vector_scale.sv:95 -- ot_fp32_rne_pkg::fp32_mul_rne(decoded_a[31:0], right_value), combinational, followed by fp32_to_bf16_rne in the same cycle"
+  }
+ },
+ "the_comparison": {
+  "basis": "same PDK, same corner, same flow, same slew-margin discipline; the only structural difference is whether the FP32 multiply is pipelined",
+  "combinational": [
+   {"block": "ot_a3_vector_scale", "fmax_mhz": 222.9, "target_ns": 4.5}
+  ],
+  "pipelined_ot_fp32_mul_rne_pipe": [
+   {"block": "ot_a3_attention_qk_walk", "fmax_mhz": 839.5, "target_ns": 1.2},
+   {"block": "ot_a3_attention_av_walk", "fmax_mhz": 861.8, "target_ns": 1.2}
+  ],
+  "ratio": 3.77
+ },
+ "how_widespread": {
+  "files_still_using_the_combinational_multiply": 14,
+  "list": [
+   "rtl/abi3/ot_a3_hc_projection_rms_rne.sv",
+   "rtl/abi3/ot_a3_vector_mhc_post.sv",
+   "rtl/abi3/ot_a3_hc_coefficients_rne.sv",
+   "rtl/abi3/ot_a3_vector_rms_norm.sv",
+   "rtl/abi3/ot_a3_mac_lane.sv",
+   "rtl/abi3/ot_a3_vector_hadamard.sv",
+   "rtl/abi3/ot_a3_qwen_gqa.sv",
+   "rtl/abi3/ot_a3_route_weight_normalize.sv",
+   "rtl/abi3/ot_a3_vector_engram_gate.sv",
+   "rtl/abi3/ot_a3_vector_silu_mul.sv",
+   "rtl/abi3/ot_a3_vector_scale.sv",
+   "rtl/abi3/ot_a3_rope_lane_pipe.sv",
+   "rtl/abi3/ot_a3_vector_index_score.sv",
+   "rtl/probe/ot_probe_fp32_mul.sv"
+  ],
+  "files_already_converted": [
+   "rtl/abi3/ot_a3_attention_qk_walk.sv",
+   "rtl/abi3/ot_a3_attention_av_walk.sv",
+   "rtl/abi3/ot_a3_attention_denominator.sv",
+   "rtl/abi3/ot_a3_reduction_expert_sum.sv"
+  ]
+ },
+ "the_replacement_is_already_qualified": {
+  "module": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+  "bench": "rtl/test/tb_fp32_mul_rne_pipe_qualify.sv",
+  "interface": "clk, rst_n, valid_in, a[31:0], b[31:0] -> y[31:0], err[1:0], valid_out",
+  "note": "a valid_in/valid_out handshake, so a converted engine must hold its index and error state across the pipe rather than writing in the read cycle"
+ },
+ "not_a_claim": [
+  "ASAP7 is a predictive academic PDK; no figure here is a silicon claim",
+  "the 3.77x is between DIFFERENT blocks that happen to differ in this construct, not the same block measured twice. It bounds what the construct costs only to the extent the blocks are otherwise comparable, and they are not identical designs",
+  "converting a block changes its latency, so a cycle-model figure that depends on the current latency moves with it; the conversion is not free even where the frequency gain is real"
+ ]
+}
