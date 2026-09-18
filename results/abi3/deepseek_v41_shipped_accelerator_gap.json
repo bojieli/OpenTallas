@@ -134,6 +134,11 @@
   "what": "every TENSOR.EMBED_LOOKUP in each deployment, with the loop its output view is indexed by"
  },
  "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
+ "the_committed_deployments_were_stale": {
+  "discovery": "rebuilding the shipped ROM wafer from source gives a DIFFERENT digest, SIX EMBED_LOOKUPs where the committed artifact has four, and every one of them inside its own tight loop -- zero operators outside their loop. The emitter was fixed at some point and the artifact was never regenerated.",
+  "so_the_loop_fault_was_not_live": "view 1097 / loop 1076 does not exist in a fresh build. I spent a stretch localising a defect in a build product instead of rebuilding it first, which is exactly what my own recorded lesson says not to do: \"build products go stale under evidence -- rebuild from source before correcting a figure to match an artifact.\"",
+  "the_invariant_is_still_worth_having": "runtime/abi3/builder.py now refuses a view whose LOOP_INDUCTION term names a loop that is not open, at the emission site. Gated: the Qwen3 ROM deployment rebuilds byte-identical with it active."
+ },
  "the_refusal": {
   "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
   "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
@@ -176,5 +181,13 @@
   "the shipped ROM wafer and ROM array DEPLOYMENTS exist and are admitted against their capabilities",
   "the shipped ROM wafer deployment does NOT execute: this record"
  ],
+ "where_the_rebuilt_wafer_now_stops": {
+  "compare": "the stale artifact refused at 0.0 s; this one executes 218 s of prefill before stopping",
+  "deployment": "rebuilt from build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+  "failure": "prefill failed: EMBED_LOOKUP output view 1735 is (32, 24, 1); expected (768, 8) or a view whose leading axes multiply to 768 over a final 8",
+  "prefill_seconds": 217.9,
+  "reading": "a rank-3 Engram EMBED_LOOKUP output view carries a UNIT final axis where the operator requires the table width of 8. Its leading axes are right -- 32 tokens x 24 hash columns = 768, which is what the operator asks for -- so the shape is correct except for the feature width, which is emitted as 1.",
+  "why_this_is_a_better_blocker": "the operator prints both the shape it got and the shape it wants, so this is a one-axis discrepancy in one view rather than a scope question. It is also adjacent to code that already special-cases width-one Engram tables on the OPERAND side (the unit_width branch in _weight_view), which is where to look."
+ },
  "why_this_is_the_right_kind_of_blocker": "it is a fail-closed refusal with a view id, a loop id and a source line, not a timeout, a silent wrong answer, or a resource limit. The reduced V4.1 ROM deployment lowers through the SAME backend (rom.wafer_logical_device) and executes, so the fault is scale-dependent rather than a missing feature."
 }
