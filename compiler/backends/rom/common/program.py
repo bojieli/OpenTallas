@@ -9195,14 +9195,41 @@ class RomLowering:
         if planes:
             plane = self.tensors[planes[0]]
             _s, _m, plane_axis = self._leading_symbol(plane)
-            context_divisor = (
-                self._dims(plane)[0]
-                * int(plane_axis.unit)
-                // max(int(plane_axis.numerator), 1)
-            )
-            context = self._open_context_loop(
-                kernel, self._dims(plane)[0], plane_axis
-            )
+            if self._phase_layout_needs_context(kernel) and int(
+                plane_axis.symbol
+            ) != int(Symbol.CONTEXT_LENGTH):
+                # The loop opened here RESOLVES the operands' A18 extents, and a
+                # context-derived extent can only be resolved by a loop that
+                # counts the CONTEXT.  Taking the symbol from the first
+                # request-sized plane gives a SPAN-bound loop whenever that plane
+                # leads on the span -- and then ``_remaining_extent`` computes
+                # ``numerator * span / unit + bias`` for an extent that names the
+                # context.  In prefill the phase pins ``position_start`` to 0 so
+                # span IS context and the two agree; at decode the span is one
+                # and the context is the whole history, so the ratio-2 join's
+                # output resolved to ``floor(1/2) + 128`` = its 128-row window
+                # while its operands presented 128 + 64, and every V4.1
+                # deployment refused at the first decode step.
+                #
+                # So when this kernel's phase layout needs a context form, the
+                # loop is opened on CONTEXT_LENGTH over the capability's declared
+                # context -- exactly what the no-plane branch below already does,
+                # and for the same stated reason.
+                context_divisor = int(
+                    self.capability.limits["max_context_positions"]
+                )
+                context = self._open_context_loop(
+                    kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
+                )
+            else:
+                context_divisor = (
+                    self._dims(plane)[0]
+                    * int(plane_axis.unit)
+                    // max(int(plane_axis.numerator), 1)
+                )
+                context = self._open_context_loop(
+                    kernel, self._dims(plane)[0], plane_axis
+                )
         elif self._phase_layout_needs_context(kernel) or (
             consumer_paths is not None
             and any(
