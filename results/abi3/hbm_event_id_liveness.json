@@ -1,0 +1,20 @@
+{
+  "answer": "No.  It needs 215.  The peak number of events simultaneously LIVE -- signalled and not yet waited on for the last time -- is 215, which the existing 2,048-entry board holds 9x over.  The 2,442 is an artifact of the allocator: runtime/abi3/builder.py's new_event() is a bare monotonic counter that never reuses an id, so the count is the number of events the program ever creates rather than the number it ever holds.",
+  "measured": {
+    "distinct_event_ids_minted": 2442,
+    "events_ever_waited_on": 2441,
+    "events_never_waited_on": 1,
+    "highest_event_id": 2441,
+    "instructions": 4759,
+    "peak_simultaneously_live_events": 215
+  },
+  "method": "Decoded the built program's 4,759 instructions and every wait-set descriptor they reference.  An event's live range runs from the instruction that first signals it to the last instruction whose wait set names it as a producer; the peak is the maximum number of ranges overlapping at any instruction position.",
+  "not_a_claim": [
+    "no allocator change is claimed here; this measures what the program needs",
+    "the liveness is computed over PROGRAM ORDER.  The program contains loop control, so an allocator acting on this measurement must treat a loop body conservatively rather than trusting straight-line order"
+  ],
+  "question": "The shipped DeepSeek-V4.1-Flash HBM deployment is refused 'program signals 2442 distinct events, capability admits 2048'.  2,048 is the largest board the implemented hardware expresses -- A3_EVENT_COUNT in rtl/abi3/ot_a3_pkg.sv, with ot_a3_event_scoreboard.sv's index width following it.  Does the program actually NEED 2,442 scoreboard entries?",
+  "schema": "opentallas.result.hbm_event_id_liveness.v1",
+  "what_it_implies": "The ninth cell of the nine-cell matrix is blocked by an id allocator, not by the accelerator.  An allocator that releases an id after its last waiter would fit this program on the hardware that exists, with an order of magnitude of margin -- and would leave every shipped deployment untouched if it engages only where the monotonic count exceeds the capability's board.",
+  "why_the_ratio_is_so_large": "2,441 of the 2,442 events are genuinely waited on, so almost none are dead -- this is not a case of useless events.  What makes the peak small is the SHAPE of the graph: the 40 layers are lowered one after another, and a layer's events are all consumed before the next layer's are created, so the live set is about one layer's worth rather than forty."
+}
