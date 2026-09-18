@@ -1,5 +1,5 @@
 {
-  "answer": "it starts and stops at instruction 6 on a view/loop scoping defect",
+  "answer": "at HEAD the shipped V4.1 array deployment does not BUILD; the earlier six-instruction halt was a stale artifact",
   "contrast": "DeepSeek-V4-Flash's array-32 deployment does NOT have this defect: it walks 1,344 instructions across 32 nodes and emits a token that agrees with its own wafer.  So this is specific to the V4.1 array lowering, not to array topologies",
   "device": {
     "instruction_count": 4429,
@@ -111,5 +111,16 @@
     "retired_work": 6
   },
   "schema": "opentallas.abi3.v41_array_first_execution.v1",
+  "supersedes_itself": {
+    "fix_direction": "a single-trip resolving loop never advances -- ``_open_context_loop`` says so: 'it runs once, and the resolution it carries is the point of it' -- so the term's stride is never added to an address and need not be the whole-plane advance.  Either it becomes the plane's ROW stride, or the encoder's refusal is turned into a build-time diagnosis instead of a crash in the layout encoder.  Neither is landed here: both change how A18 extents resolve and the reduced vehicles that now work would have to be re-verified against them",
+    "so_the_regression_is_mine": "the token_ring rule that made DMA.NGRAM_HASH receive the committed prefix instead of the whole capacity is what attaches this term.  It is correct on the reduced vehicle, where the context is 128 and the product is 16,384, and it cannot be expressed at all on a 262,144-row ring",
+    "what_HEAD_does_instead": {
+      "arithmetic": "68,719,476,736 is 262144 squared.  The term this session attaches to a request-sized sequence plane carries stride ``_plane_row(tensor) * _dims(tensor)[0]``, and on the shipped V4.1 token ring both factors are the 262,144-row context, so the product overflows the 32-bit stride field",
+      "error": "tensor_view.term0_stride=68719476736 does not fit in 4 unsigned bytes",
+      "result": "the shipped V4.1 array build FAILS OUTRIGHT at HEAD",
+      "site": "_state_plane_view's extra_terms, reached from _operand_view's state branch"
+    },
+    "what_changed": "the deployment this artifact measured was NEVER REBUILT in this session -- it predates the token_ring request-extent change -- so the 'six instructions then loop 1076 is not active' result is against a STALE build, and its zero suppression records describe code that no longer runs"
+  },
   "why_the_shipped_model": "the reduced V4.1 vehicle cannot be built for this topology at all -- its 12 routed experts do not divide 64 owners, and the ROM array backend refuses the shard rather than splitting a slot -- so the shipped deployment is the only route to a V4.1 array execution.  Its 384 experts divide 64 owners exactly six ways"
 }
