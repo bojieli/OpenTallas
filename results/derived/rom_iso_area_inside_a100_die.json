@@ -1,0 +1,351 @@
+{
+ "a100_comparator": {
+  "bf16_dense_ops_s": 312000000000000.0,
+  "die_area_mm2": 826.0,
+  "evidence": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper",
+  "hbm_bandwidth_bytes_s": 2039000000000.0,
+  "hbm_capacity_bytes": 80000000000.0,
+  "roof_choice": "the committed facts carry the A100's bf16 dense roof and no INT8 roof, so bf16 is what the compute-bound ceiling uses.  The A100's published INT8 roof is 2x its bf16 roof, which would DOUBLE the GPU's compute-bound ceiling and halve every ratio past the crossover.  Stated because it moves the answer against us."
+ },
+ "answer": {
+  "count_considered": 9,
+  "count_that_fit": 1,
+  "designs_that_fit": [
+   {
+    "batch1_speed_ratio": 14.370426323786699,
+    "batch256_speed_ratio": 0.32669676603483266,
+    "compute_area_mm2": 80.8533245292308,
+    "crossover_batch": 16,
+    "model": "Qwen3-8B",
+    "precision": "q4p25",
+    "rom_area_mm2": 596.4666754707692
+   }
+  ]
+ },
+ "area_budget": {
+  "a100_die_area_mm2": 826.0,
+  "interconnect_fraction": 0.08,
+  "overhead_fraction": 0.1,
+  "policy": "balanced: ROM sized to the stored weights, SRAM sized to the resident KV, graded fixed fractions for overhead and interconnect, compute takes the rest",
+  "policy_source": "the committed quantised-variant design records' own area_split_per_device",
+  "usable_area_mm2": 677.32
+ },
+ "cells": {
+  "DSV4-Flash": {
+   "active_parameters": 13000000000.0,
+   "by_precision": {
+    "bf16": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 22875.196302775385,
+     "shortfall_factor_x": 33.773100311190255,
+     "stored_weight_bytes": 166878536440.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 22,875 mm2 of mask ROM, 33.77x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 16.0
+    },
+    "fp8": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 11437.598151387692,
+     "shortfall_factor_x": 16.886550155595128,
+     "stored_weight_bytes": 83439268220.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 11,438 mm2 of mask ROM, 16.89x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 8.0
+    },
+    "q4p25": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 6076.224017924711,
+     "shortfall_factor_x": 8.97097977015991,
+     "stored_weight_bytes": 44327111241.875,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 6,076 mm2 of mask ROM, 8.97x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 4.25
+    }
+   },
+   "operations_per_token": 26000000000.0,
+   "weight_inventory": {
+    "basis": "checkpoint_bytes: every weight the model can reach, because a mask ROM cannot fault an expert in on demand",
+    "checkpoint_bytes": 166878536440,
+    "dense_weight_bytes": 7768281308,
+    "resident_only_weight_bytes": 1077678080,
+    "routed_weight_bytes": 147169738752
+   }
+  },
+  "DSV4.1-Flash": {
+   "active_parameters": 16000000000.0,
+   "by_precision": {
+    "bf16": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 69948.437922,
+     "shortfall_factor_x": 103.27236449831689,
+     "stored_weight_bytes": 510286023000.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 69,948 mm2 of mask ROM, 103.27x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 16.0
+    },
+    "fp8": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 34974.218961,
+     "shortfall_factor_x": 51.636182249158445,
+     "stored_weight_bytes": 255143011500.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 34,974 mm2 of mask ROM, 51.64x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 8.0
+    },
+    "q4p25": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 18580.05382303125,
+     "shortfall_factor_x": 27.431721819865423,
+     "stored_weight_bytes": 135544724859.375,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 18,580 mm2 of mask ROM, 27.43x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 4.25
+    }
+   },
+   "operations_per_token": 32000000000.0,
+   "weight_inventory": {
+    "basis": "checkpoint_bytes: every weight the model can reach, because a mask ROM cannot fault an expert in on demand",
+    "checkpoint_bytes": 510286023000,
+    "dense_weight_bytes": 8522921408,
+    "resident_only_weight_bytes": 205052396560,
+    "routed_weight_bytes": 288777830400
+   }
+  },
+  "Qwen3-8B": {
+   "active_parameters": 7568405504.0,
+   "by_precision": {
+    "bf16": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 2245.521601772308,
+     "shortfall_factor_x": 3.315303847180517,
+     "stored_weight_bytes": 16381470720.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 2,246 mm2 of mask ROM, 3.32x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 16.0
+    },
+    "fp8": {
+     "fits_inside_a100_die": false,
+     "rom_area_mm2": 1122.760800886154,
+     "shortfall_factor_x": 1.6576519235902585,
+     "stored_weight_bytes": 8190735360.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "does not fit: the weights alone need 1,123 mm2 of mask ROM, 1.66x the 677 mm2 this die has to spend after overhead and interconnect",
+     "weight_bits_per_parameter": 8.0
+    },
+    "q4p25": {
+     "a100_compute_bound_tokens_s": 20612.003402506907,
+     "a100_weights_fit_in_80gb_hbm": true,
+     "batch1_speed_ratio": 14.370426323786699,
+     "batch256_speed_ratio": 0.32669676603483266,
+     "by_batch": [
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 468.59255956461806,
+       "batch": 1,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 14.370426323786699
+      },
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 937.1851191292361,
+       "batch": 2,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 7.1852131618933495
+      },
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 1874.3702382584722,
+       "batch": 4,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 3.5926065809466747
+      },
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 3748.7404765169445,
+       "batch": 8,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 1.7963032904733374
+      },
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 7497.480953033889,
+       "batch": 16,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 0.8981516452366687
+      },
+      {
+       "a100_binding_constraint": "weight_read",
+       "a100_tokens_s": 14994.961906067778,
+       "batch": 32,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 0.44907582261833434
+      },
+      {
+       "a100_binding_constraint": "compute",
+       "a100_tokens_s": 20612.003402506907,
+       "batch": 64,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 0.32669676603483266
+      },
+      {
+       "a100_binding_constraint": "compute",
+       "a100_tokens_s": 20612.003402506907,
+       "batch": 128,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 0.32669676603483266
+      },
+      {
+       "a100_binding_constraint": "compute",
+       "a100_tokens_s": 20612.003402506907,
+       "batch": 256,
+       "ours_binding_constraint": "compute",
+       "ours_tokens_s": 6733.874853097974,
+       "speed_ratio_ours_over_a100": 0.32669676603483266
+      }
+     ],
+     "compute_area_mm2": 80.8533245292308,
+     "crossover_batch_where_a100_overtakes": 16,
+     "execution_format": "w4a8",
+     "fits_inside_a100_die": true,
+     "kv_store": "hbm (off-die): the allocation that gives ROM its best chance inside one die",
+     "ours_compute_bound_tokens_s": 6733.874853097974,
+     "ours_rom_read_bound_tokens_s": 38686.153846153844,
+     "rom_area_mm2": 596.4666754707692,
+     "rom_array_sweep_ceiling_tokens_s": 29014.61538461539,
+     "stored_weight_bytes": 4351328160.0,
+     "usable_area_mm2": 677.32,
+     "verdict": "fits: 596.5 mm2 of ROM leaves 80.9 mm2 to compute with",
+     "weight_bits_per_parameter": 4.25
+    }
+   },
+   "operations_per_token": 15136811008.0,
+   "weight_inventory": {
+    "basis": "checkpoint_bytes: every weight the model can reach, because a mask ROM cannot fault an expert in on demand",
+    "checkpoint_bytes": 16381470720,
+    "dense_weight_bytes": 15136811008,
+    "resident_only_weight_bytes": 1244659712,
+    "routed_weight_bytes": 0
+   }
+  }
+ },
+ "cross_check_against_committed_design": {
+  "agrees": true,
+  "committed_design": "Qwen3-8B/ROM-N6-q4p25-SRAMKV-wafer-pipeline-x1",
+  "committed_rom_mm2": 596.4666754707692,
+  "performed": true,
+  "relative_difference": 0.0,
+  "this_audit_rom_mm2": 596.4666754707692
+ },
+ "measured_compute_density_sensitivity": {
+  "measured_bf16_ops_s_per_mm2": 1306860969335.1562,
+  "measured_compute_unit_lanes": 16,
+  "measured_compute_unit_mm2": 0.0315247,
+  "measured_datapath_clock_hz": 1287450000.0,
+  "measured_over_derived_x": 2.932059867098107,
+  "measured_w4a8_ops_s_per_mm2": 3696361013939.655,
+  "performed": true,
+  "qwen3_8b_q4p25_under_measured_compute": {
+   "batch1_speed_ratio": 42.134950297065174,
+   "batch256_speed_ratio": 0.957894476401473,
+   "by_batch": [
+    {
+     "a100_tokens_s": 468.59255956461806,
+     "batch": 1,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 42.134950297065174
+    },
+    {
+     "a100_tokens_s": 937.1851191292361,
+     "batch": 2,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 21.067475148532587
+    },
+    {
+     "a100_tokens_s": 1874.3702382584722,
+     "batch": 4,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 10.533737574266294
+    },
+    {
+     "a100_tokens_s": 3748.7404765169445,
+     "batch": 8,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 5.266868787133147
+    },
+    {
+     "a100_tokens_s": 7497.480953033889,
+     "batch": 16,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 2.6334343935665734
+    },
+    {
+     "a100_tokens_s": 14994.961906067778,
+     "batch": 32,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 1.3167171967832867
+    },
+    {
+     "a100_tokens_s": 20612.003402506907,
+     "batch": 64,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 0.957894476401473
+    },
+    {
+     "a100_tokens_s": 20612.003402506907,
+     "batch": 128,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 0.957894476401473
+    },
+    {
+     "a100_tokens_s": 20612.003402506907,
+     "batch": 256,
+     "ours_tokens_s": 19744.124206829732,
+     "speed_ratio_ours_over_a100": 0.957894476401473
+    }
+   ],
+   "crossover_batch_where_a100_overtakes": 64,
+   "tokens_s": 19744.124206829732
+  },
+  "roofline_bf16_ops_s_per_mm2": 445714285714.2857,
+  "source": "results/derived/device_level_iso_area_audit.json",
+  "w4a8_over_bf16_format_ratio": 2.82842712474619,
+  "why_separate": "ADR-003 section 3.5 forbids combining two technology views.  The answer above is entirely N6-derived.  This block is ASAP7-measured and is a sensitivity, not a claim."
+ },
+ "not_a_claim": [
+  "not an RTL measurement and not a simulation: this is the committed analytical roofline evaluated at a 826 mm2 area budget",
+  "the ROM capacity density is graded 'derived' and the SRAM capacity density it is built beside is graded 'assumed'; a ROM array that misses its density target moves every area here",
+  "the crossover batch is where the GPU overtakes us on THROUGHPUT.  It says nothing about latency, where a design that never reads weights off-die keeps its advantage at every batch",
+  "one A100 is charged for its die only.  Its HBM stacks are real silicon that this frame does not charge it for, and charging them would move the comparison in our favour"
+ ],
+ "producer": {
+  "git": {
+   "commit": "26e2d41a2bc70ea30c7b1d59ab4085646111cca3"
+  },
+  "tool": "tools/audit_rom_iso_area_inside_a100_die.py"
+ },
+ "question": "inside the A100's own 826 mm2 -- not at matched silicon area -- does a ROM design that holds a whole model exist, and what does it deliver against the one A100 that occupies the same silicon?",
+ "schema": "opentallas.derived.rom_iso_area_inside_a100_die.v1",
+ "technology": {
+  "compute_ops_s_per_mm2": {
+   "bf16": 445714285714.2857,
+   "fp32": 27857142857.142857,
+   "fp4": 1782857142857.1428,
+   "fp8": 891428571428.5714,
+   "w4a8": 1260670375601.159
+  },
+  "rom_array_sweep_ceiling_tokens_s": 29014.61538461539,
+  "rom_capacity_bytes_per_mm2": 7295173.961840629,
+  "rom_capacity_grade": "derived",
+  "rom_read_bytes_s_per_mm2": 282222222222.2222,
+  "rom_read_grade": "derived",
+  "source": "results/roofline/n6_vs_a100/analytical.json technology_derivations"
+ }
+}
