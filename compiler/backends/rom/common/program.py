@@ -1123,8 +1123,44 @@ def _detect_spans(
     return spans
 
 
-def analyze(graph: KernelGraph) -> GraphAnalysis:
-    """Split ``graph`` into prologue, periodic layer runs and epilogue."""
+def _split_span(
+    start: int, period: int, groups: int, cap: int
+) -> list[tuple[int, int, int]]:
+    """Cut one detected span into balanced sub-spans of at most ``cap`` groups.
+
+    A span is a maximal run of structurally identical layers, so the compressor
+    folds it into ONE loop -- which is what a single chip wants and what a
+    pipeline cannot use: a partition across nodes needs as many runs as it has
+    stages, and a stack of 36 identical layers detects as one.  Splitting is
+    exact (the sub-spans tile the same layers in the same order, with the same
+    period) and balanced to within one group, so no stage carries a whole extra
+    layer of ROM because of the arithmetic.
+
+    ``cap`` of zero means no cap, which is every existing target: the span is
+    returned unchanged and no digest moves.
+    """
+    if cap <= 0 or groups <= cap:
+        return [(start, period, groups)]
+    chunks = -(-groups // cap)
+    base, extra = divmod(groups, chunks)
+    spans: list[tuple[int, int, int]] = []
+    cursor = start
+    for index in range(chunks):
+        size = base + (1 if index < extra else 0)
+        spans.append((cursor, period, size))
+        cursor += size * period
+    return spans
+
+
+def analyze(graph: KernelGraph, *, max_layers_per_run: int = 0) -> GraphAnalysis:
+    """Split ``graph`` into prologue, periodic layer runs and epilogue.
+
+    ``max_layers_per_run`` caps how many groups one detected span may fold into
+    a single loop.  Zero, the default, is the single-address-space behaviour:
+    fold as far as the signatures repeat.  A positive cap is what a pipelined
+    multi-node target sets, because a stage owns whole layer runs and a stack of
+    identical layers detects as one run that no partition can cut.
+    """
     tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
     kernels = list(graph.kernels)
     layered = [i for i, k in enumerate(kernels) if k.layer is not None]
@@ -1156,11 +1192,14 @@ def analyze(graph: KernelGraph) -> GraphAnalysis:
         tuple(_kernel_signature(k, tensors) for k in by_layer[layer])
         for layer in layer_numbers
     ]
+    detected = [
+        piece
+        for span in _detect_spans(signatures)
+        for piece in _split_span(*span, int(max_layers_per_run))
+    ]
     runs = [
         _make_run(index, layer_numbers[start : start + period * groups], period, by_layer)
-        for index, (start, period, groups) in enumerate(
-            _detect_spans(signatures)
-        )
+        for index, (start, period, groups) in enumerate(detected)
     ]
 
     producer: dict[str, Kernel] = {}
@@ -1323,6 +1362,10 @@ class RomTargetPolicy:
     #: bank presents ``E/N`` local experts against the global expert bound.
     bank_shards: int = 1
     node_sharded_roles: tuple[str, ...] = ("expert_bank", "expert_bank_scale")
+    #: Caps how many layer groups one compressed body may fold, so a pipelined
+    #: target gets as many layer runs as it has stages.  Zero, the default, is
+    #: every existing target: fold as far as the layer signatures repeat.
+    max_layers_per_run: int = 0
     #: An explicit cap on the decode budget the emitted generation policy
     #: admits.  The IR states the model's own budget; a target whose declared
     #: context is smaller than that budget cannot honour it and, rather than
@@ -1364,7 +1407,9 @@ class RomLowering:
         self.weight_storage_class = weight_storage_class
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.states = {s.state_id: s for s in graph.states}
-        self.analysis = analyze(graph)
+        self.analysis = analyze(
+            graph, max_layers_per_run=int(policy.max_layers_per_run or 0)
+        )
         self._compression_ratios: frozenset[int] | None = None
         # Before anything resolves an operand: every derived axis name this
         # backend parses is confronted with the bound the graph declares for it.

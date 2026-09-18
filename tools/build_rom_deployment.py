@@ -83,6 +83,12 @@ from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,
     qwen3_rom_capability,
 )
+from compiler.backends.rom.qwen3_array import (  # noqa: E402
+    NODE_COUNT as QWEN3_ARRAY_NODE_COUNT,
+    TARGET_ID as QWEN3_ARRAY_TARGET_ID,
+    build_qwen3_array_rom_deployment,
+    qwen3_array_rom_capability,
+)
 from compiler.ir.v3.kernel_ir import KernelGraph, require_neutral  # noqa: E402
 from runtime.abi3.capability import Capability, canonical_json  # noqa: E402
 from runtime.abi3.constants import StorageClass  # noqa: E402
@@ -107,6 +113,12 @@ PRODUCTS = (
     # count is derived from the released expert count and the declared NVLink
     # domain size rather than typed: see ``expert_parallel_node_count``.
     "deepseek-v4.1-flash-array",
+    # Qwen3-8B on an N-node pipelined ROM array.  The analytical sweep's own
+    # design point (``ROM-N5-native-SRAMKV-array-pipeline-x8-romfill``) had no
+    # deployment target until this backend: its published capability records
+    # collapse the devices into one logical device and say so.  ``--nodes``
+    # selects the point; the layer partition is derived from the graph.
+    "qwen3-8b-array",
     # DeepSeek-V4.1-Flash on two wafer-scale logical devices, plan WP-E.  There
     # is no V4.1 single-chip product and no one-wafer one: 307.5 GB of weights
     # against a 192 GiB wafer ROM.  The layer partition, the pipeline depth and
@@ -257,6 +269,18 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             defects=defects,
             weight_storage_class=storage,
         )
+    elif product == "qwen3-8b-array":
+        nodes = int(getattr(args, "nodes", None) or QWEN3_ARRAY_NODE_COUNT)
+        capability = supplied or qwen3_array_rom_capability(node_count=nodes)
+        deployment, plan = build_qwen3_array_rom_deployment(
+            graph,
+            capability=capability,
+            node_count=int(capability.limits.get("max_nodes", nodes)),
+            defects=defects,
+            weight_storage_class=storage,
+            epoch=args.epoch,
+            target_id=args.target_id or QWEN3_ARRAY_TARGET_ID,
+        )
     elif product == "deepseek-v4-flash-array":
         capability = supplied or deepseek_v4_array_rom_capability()
         deployment, plan = build_deepseek_v4_array_rom_deployment(
@@ -341,6 +365,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             "rebuilt against that machine's capability.  The record must still "
             "admit the product's program: this overrides the machine, never "
             "the lowering."
+        ),
+    )
+    parser.add_argument(
+        "--nodes",
+        type=int,
+        help=(
+            "node count for a product whose node count is a design point rather "
+            "than a fixed geometry (qwen3-8b-array). Ignored by every other "
+            "product, whose node count is derived or frozen"
         ),
     )
     parser.add_argument("--verify", action="store_true")
