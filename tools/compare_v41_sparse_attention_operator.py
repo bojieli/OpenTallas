@@ -104,6 +104,38 @@ def main(argv: list[str] | None = None) -> int:
         default=ROOT / "results/abi3/deepseek_v41_sparse_attention_operator.json",
     )
     parser.add_argument(
+        "--snapshot", type=Path, default=None,
+        help="the reduced snapshot the reference is built from (default v1)",
+    )
+    parser.add_argument(
+        "--checkpoint-lock", type=Path, default=None,
+        help="the lock that snapshot is verified against",
+    )
+    parser.add_argument(
+        "--deployment", type=Path, default=None,
+        help="override the device deployment for the compared store",
+    )
+    parser.add_argument(
+        "--checkpoint-root", type=Path, default=None,
+        help="the device's checkpoint root, which must match the deployment",
+    )
+    parser.add_argument(
+        "--oracle", type=Path, default=None,
+        help="the oracle record whose workload this uses",
+    )
+    parser.add_argument(
+        "--expert-numeric-path", choices=("fp4", "fp8"), default="fp4",
+        help="the routed-expert path the reference runs on",
+    )
+    parser.add_argument(
+        "--call", type=int, default=1,
+        help=(
+            "which sparse_attn call to compare, 1-based. One per attention layer, "
+            "so 3 is layer 2 -- the first layer whose compress_ratio is nonzero and "
+            "the first in kv_source_layers"
+        ),
+    )
+    parser.add_argument(
         "--with-device",
         action="store_true",
         help=(
@@ -119,30 +151,43 @@ def main(argv: list[str] | None = None) -> int:
     )
     arguments = parser.parse_args(argv)
 
-    record = json.loads(ORACLE_RECORD.read_text())
+    record = json.loads(Path(arguments.oracle or ORACLE_RECORD).read_text())
     prompt = [int(t) for t in record["results"][WORKLOAD_ID]["prompt_token_ids"]]
 
-    lock = load_checkpoint_lock(DEFAULT_LOCK)
-    verify_checkpoint_lock(DEFAULT_SNAPSHOT, lock)
-    body = json.loads(
-        (DEFAULT_SNAPSHOT / "inference_config.json").read_text(encoding="utf-8")
+    snapshot = Path(arguments.snapshot) if arguments.snapshot else DEFAULT_SNAPSHOT
+    lock = load_checkpoint_lock(
+        Path(arguments.checkpoint_lock) if arguments.checkpoint_lock else DEFAULT_LOCK
     )
+    verify_checkpoint_lock(snapshot, lock)
+    body = json.loads(
+        (snapshot / "inference_config.json").read_text(encoding="utf-8")
+    )
+    import importlib
+
     import torch
     from transformers import AutoTokenizer
 
     released = released_snapshot()
     vendor, _engram = import_vendor(released)
-    tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
+    convert_mod = None
+    if arguments.expert_numeric_path == "fp8":
+        convert_mod = importlib.import_module("convert")
+        body = dict(body)
+        body["expert_dtype"] = None
+    tokenizer = AutoTokenizer.from_pretrained(str(snapshot))
     model = build_model(vendor, body, tokenizer)
-    _load_weights(model, DEFAULT_SNAPSHOT)
+    _load_weights(model, snapshot, convert_mod=convert_mod)
     model.eval()
 
     captured: dict[str, Any] = {}
     original = vendor.sparse_attn
 
+    seen = {"calls": 0}
+
     def spy(q, kv, attn_sink, topk_idxs, softmax_scale):
         out = original(q, kv, attn_sink, topk_idxs, softmax_scale)
-        if not captured:
+        seen["calls"] += 1
+        if seen["calls"] == want_call and not captured:
             captured.update(
                 {
                     "q": q.detach().float().cpu().numpy(),
@@ -155,6 +200,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         return out
 
+    want_call = int(arguments.call)
     vendor.sparse_attn = spy
     try:
         device = next(model.parameters()).device
@@ -262,8 +308,31 @@ def main(argv: list[str] | None = None) -> int:
         key = (int(Major.ATTENTION), int(Attention.SPARSE))
         original_engine = _REGISTRY[key]
 
+        device_calls = {"n": 0}
+        # ADDRESSING A LAYER ON THE DEVICE BY CALL INDEX DOES NOT WORK, and the
+        # probe reported three uncorrelated operands twice before that was clear:
+        # the device issues attention per token block as well as per layer, so its
+        # Nth call is not layer N-1.  The reliable selector is a STRUCTURAL
+        # signature of the layer -- the number of live (non-padding) index slots,
+        # which is the window alone at compress_ratio 0 and the window plus the
+        # compressed prefix above it: 8 at layers 0 and 1 of this vehicle, 12 at
+        # layer 2.  So the device call compared is the first whose live index count
+        # matches the vendor's operand length.
+        want_live = int(idx.shape[-1])
+
         def attention_spy(ctx, sub, descriptor):
+            device_calls["n"] += 1
+            live = None
             if not grabbed:
+                try:
+                    probe = ctx.input_view(descriptor, 2)
+                    codes = np.ascontiguousarray(ctx.read(probe)).view(np.int32)
+                    row = codes.reshape(probe.dims)
+                    row = row[-1] if row.ndim > 1 else row
+                    live = int((row >= 0).sum())
+                except Exception:
+                    live = None
+            if live == want_live and not grabbed:
                 for slot in range(3):
                     view = ctx.input_view(descriptor, slot)
                     codes = ctx.read(view)
@@ -386,7 +455,10 @@ def main(argv: list[str] | None = None) -> int:
             "operator produce the vendor's output?"
         ),
         "captured_call": {
-            "which": "the first sparse_attn call of the forward pass (layer 0)",
+            "which": (
+                f"sparse_attn call {arguments.call} of the forward pass, which is "
+                f"attention layer {arguments.call - 1}"
+            ),
             "query_shape": list(q.shape),
             "kv_shape": list(kv.shape),
             "sink_shape": list(sink.shape),
