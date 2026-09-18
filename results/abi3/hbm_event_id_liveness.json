@@ -1,5 +1,26 @@
 {
+  "CORRECTION": {
+    "established_by_building_it": "The allocator was implemented, and it does what the arithmetic said: 2,442 ids down to 910, inside the 2,048 board, with both shipped HBM digests byte-identical.  The build is still refused, now by the rule rather than by the count -- 'instruction 14 (VECTOR.MHC): event 0 is signalled more than once; events are single-assignment', and the checker additionally found two waits made mutually exclusive by an unconditional branch.  The change was reverted.",
+    "what_the_board_actually_bounds": "The number of distinct completion LEVELS a program's text may name, not the number it holds at once.  So 2,442 > 2,048 is a real refusal and the 215 peak is irrelevant to it.",
+    "what_was_wrong": "This record's original 'what_it_implies' said an allocator that released an id after its last waiter would fit the program on the hardware that exists.  That is FALSE, and it was written without checking the event semantics.",
+    "why": "ABI 3.0 events are SINGLE-ASSIGNMENT as a property of the program text: docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md section 12.14 says 'at most one instruction may name a given event ID in its signal-event field', and runtime.abi3.verifier._verify_instructions proves it at admission.  An event is a LEVEL -- its one producer raises it and NOTHING LOWERS IT before the transaction ends -- so there is no moment at which an id becomes free.  A reused id would already be raised when its second producer ran, and a waiter on that second producer would pass immediately.  The rule prevents exactly that bug, and 'liveness' is not a concept the event model has."
+  },
   "answer": "No.  It needs 215.  The peak number of events simultaneously LIVE -- signalled and not yet waited on for the last time -- is 215, which the existing 2,048-entry board holds 9x over.  The 2,442 is an artifact of the allocator: runtime/abi3/builder.py's new_event() is a bare monotonic counter that never reuses an id, so the count is the number of events the program ever creates rather than the number it ever holds.",
+  "legal_reductions_measured": {
+    "drop_events_nothing_waits_on": {
+      "events": 1,
+      "verdict": "negligible"
+    },
+    "merge_events_that_are_always_awaited_together": {
+      "distinct_waiter_signatures": 2165,
+      "events_saved": 276,
+      "groups_that_merge": 200,
+      "idea": "Where several producers are named by exactly the same set of wait sets, one level can stand for all of them -- the shape the wire format itself describes, a CONTROL.NOP that publishes 'every producer named above this point has retired'.  This does not reuse an id and so does not violate single assignment.",
+      "largest_group": 6,
+      "still_over_the_board_by": 117,
+      "verdict": "not enough on its own: 2,165 against a 2,048 board"
+    }
+  },
   "measured": {
     "distinct_event_ids_minted": 2442,
     "events_ever_waited_on": 2441,
@@ -15,6 +36,7 @@
   ],
   "question": "The shipped DeepSeek-V4.1-Flash HBM deployment is refused 'program signals 2442 distinct events, capability admits 2048'.  2,048 is the largest board the implemented hardware expresses -- A3_EVENT_COUNT in rtl/abi3/ot_a3_pkg.sv, with ot_a3_event_scoreboard.sv's index width following it.  Does the program actually NEED 2,442 scoreboard entries?",
   "schema": "opentallas.result.hbm_event_id_liveness.v1",
-  "what_it_implies": "The ninth cell of the nine-cell matrix is blocked by an id allocator, not by the accelerator.  An allocator that releases an id after its last waiter would fit this program on the hardware that exists, with an order of magnitude of margin -- and would leave every shipped deployment untouched if it engages only where the monotonic count exceeds the capability's board.",
+  "what_it_implies": "SUPERSEDED -- see CORRECTION.  The board bounds distinct levels, so the count must come down or the board must go up.",
+  "what_remains": "Two options, both real.  (1) Widen the board: A3_EVENT_COUNT in rtl/abi3/ot_a3_pkg.sv is 2048 and ot_a3_event_scoreboard.sv holds three flip-flops per event (pending, signalled, published), so 4,096 costs about 6,144 more flip-flops -- roughly 10% of the G2 cluster's 88,633 um2 -- and needs its own routed evidence plus a comparator-only limits bump, since the shipped records are certificate inputs.  (2) Emit fewer completion levels: 4,759 instructions produce 2,442 of them, and a lowering that published one level per group of independent producers rather than one per producer would cut it further than the 276 that pure co-waiter merging finds.",
   "why_the_ratio_is_so_large": "2,441 of the 2,442 events are genuinely waited on, so almost none are dead -- this is not a case of useless events.  What makes the peak small is the SHAPE of the graph: the 40 layers are lowered one after another, and a layer's events are all consumed before the next layer's are created, so the live set is about one layer's worth rather than forty."
 }
