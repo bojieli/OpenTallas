@@ -1,0 +1,51 @@
+{
+ "deployment": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41_wafer_c8192",
+ "workload_id": "TA-DS41-AGENT-1",
+ "prompt_token_ids": [
+  0,
+  128799,
+  3476,
+  477,
+  260,
+  16372,
+  6107,
+  15873,
+  22896,
+  9633,
+  377,
+  260,
+  25627,
+  10661,
+  7353,
+  20289,
+  16,
+  14983,
+  9045,
+  834,
+  4105,
+  716,
+  2859,
+  305,
+  6361,
+  362,
+  1009,
+  1529,
+  1936,
+  18514,
+  16,
+  3245
+ ],
+ "emitted_token_ids": [
+  260
+ ],
+ "stop_reason": "max_new_tokens",
+ "failure": null,
+ "prefill_tokens": 32,
+ "wall_seconds": 9117.5,
+ "comparison": {
+  "TA-DS41-CHAT-1-P32_emitted": [
+   305
+  ],
+  "question": "same token for a different prompt would mean the input is not read"
+ }
+}
