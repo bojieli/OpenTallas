@@ -128,6 +128,16 @@ def main(argv: list[str] | None = None) -> int:
         help="the routed-expert path the reference runs on",
     )
     parser.add_argument(
+        "--phase", choices=("prefill", "decode"), default="prefill",
+        help=(
+            "which phase's device call to compare. The device issues two "
+            "ATTENTION.SPARSE calls per layer -- the KV CONCAT declares "
+            "phase_inputs {decode: [1, 2], prefill: [0, 2]} -- and the transaction "
+            "boundary separates them. Capturing 'decode' is also the control that "
+            "shows the gate is live"
+        ),
+    )
+    parser.add_argument(
         "--call", type=int, default=1,
         help=(
             "which sparse_attn call to compare, 1-based. One per attention layer, "
@@ -305,6 +315,7 @@ def main(argv: list[str] | None = None) -> int:
             root=ROOT / "build/models/deepseek-v4.1-flash-reduced-v1",
         )
         grabbed: dict[str, Any] = {}
+        closed = {"prefill_done": False}
         key = (int(Major.ATTENTION), int(Attention.SPARSE))
         original_engine = _REGISTRY[key]
 
@@ -332,7 +343,12 @@ def main(argv: list[str] | None = None) -> int:
                     live = int((row >= 0).sum())
                 except Exception:
                     live = None
-            if live == want_live and not grabbed:
+            in_phase = (
+                closed["prefill_done"]
+                if arguments.phase == "decode"
+                else not closed["prefill_done"]
+            )
+            if live == want_live and not grabbed and in_phase:
                 for slot in range(3):
                     view = ctx.input_view(descriptor, slot)
                     codes = ctx.read(view)
@@ -374,10 +390,31 @@ def main(argv: list[str] | None = None) -> int:
             return result
 
         _REGISTRY[key] = attention_spy
+        # PHASE, not just position.  The device issues two ATTENTION.SPARSE calls per
+        # layer -- the KV CONCAT declares phase_inputs {decode: [1, 2], prefill:
+        # [0, 2]} -- and identical indices prove only that two calls are at the same
+        # POSITION, since both phases of a position select the same rows.  The
+        # transaction boundary is what separates them: the driver submits prefill
+        # first, so capture is closed at the end of the first submission.
+        driver = GenerationDriver(device_obj)
+        submit = device_obj.execute_submission
+        phase = {"transactions": 0}
+
+        def phased(request):
+            try:
+                return submit(request)
+            finally:
+                phase["transactions"] += 1
+                if phase["transactions"] >= 1:
+                    # After prefill closes, stop accepting captures.
+                    closed["prefill_done"] = True
+
+        device_obj.execute_submission = phased
         try:
-            GenerationDriver(device_obj).generate(prompt, max_new_tokens=1)
+            driver.generate(prompt, max_new_tokens=1)
         finally:
             _REGISTRY[key] = original_engine
+            device_obj.execute_submission = submit
 
         def compare(name: str, mine: np.ndarray, vendor_values: np.ndarray) -> dict[str, Any]:
             a = np.asarray(mine, dtype=np.float64).reshape(-1)

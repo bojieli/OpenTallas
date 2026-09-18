@@ -1,41 +1,4 @@
 {
-  "READING_THIS_CORRECTLY": {
-    "ALIGNMENT_IS_NOT_ESTABLISHED_AFTER_ALL": {
-      "what_I_found": "the device issues TWO ATTENTION.SPARSE calls per layer, not one. Reading the first six calls: four have 8 live index slots and a [128, 32] KV view (layers 0 and 1, two calls each) and the next two have 12 live slots and a [12, 32] view (layer 2, two calls). The graph explains why -- the KV CONCAT declares phase_inputs {decode: [1, 2], prefill: [0, 2]}, so a prefill-phase and a decode-phase attention both exist -- and my selector, which takes the FIRST call whose live index count matches, cannot tell them apart.",
-      "what_is_needed_next": "a phase-aware selector. The device's two calls per layer differ in which CONCAT input they read, so the prefill-phase call is identifiable by its KV operand deriving from key_value_quantize rather than window_write. Until the probe distinguishes them, the layer-2 operand numbers are not evidence of a fault.",
-      "what_survives_regardless": [
-        "the operator is bit-exact on the vendor's own operands at layer 2",
-        "the index selection is bit-identical, and the joined extent resolves to exactly 12 rows -- 8 window plus 4 compressed",
-        "the KV views are BF16 with no scale object (scale_object_id is NO_ID and scale_block_elements is 0), so the comparison was not silently dropping a block scale -- one alternative explanation closed",
-        "the yarn rope table agrees with the vendor's precompute_freqs_cis to 9.3e-10",
-        "the rope TABLE ASSIGNMENT is correct: a compressing layer's window KV really does use the compressed profile"
-      ],
-      "what_that_does_to_the_numbers": "the 0.483 query, 0.345 KV and 0.481 output at layer 2 may be comparing the device's DECODE-phase call against the vendor's PREFILL call, which would differ legitimately. I lifted exactly this caveat one commit too early -- on the grounds that bit-identical indices prove position alignment -- and identical indices do prove POSITION but say nothing about PHASE, because both phases of a position select the same rows by index."
-    },
-    "established_at_layer_2": [
-      "the sparse-attention OPERATOR is bit-exact on the vendor's own operands: cosine 1.0, max abs diff 0.0 over 2,048 elements",
-      "the SELECTED INDICES are bit-identical over 12 live slots, so the compressor's index path is right where it first exists, and position alignment follows from that identity",
-      "the joined operand's extent resolves correctly: the device's fused view is exactly 12 rows, the window's 8 plus the compressed prefix's 4"
-    ],
-    "hypotheses_closed": [
-      "the operator itself -- bit-exact here as at layer 0",
-      "the index selection -- bit-identical",
-      "a row-order difference in the CONCAT -- refuted, the rows are different values and not a reordering",
-      "the operand rows being a measurement artifact -- refuted, the OUTPUT agrees with them and not with the depth sweep",
-      "the rope TABLE choice -- refuted. Layer 2's window-KV rotation gathers from rope.coefficient_table.yarn while layers 0 and 1 gather from .base, which looks wrong and is right: the vendor builds ONE freqs_cis per Attention module and chooses its theta by whether the layer compresses (compressing -> compress_rope_theta with YaRN, otherwise base rope_theta with YaRN disabled), and _window_kv rotates with that same table. So a compressing layer's window KV really does use the compressed profile, and the frontend matches the rule."
-    ],
-    "remaining_candidates": [
-      "the YaRN frequency values themselves at theta 160000 -- the formula was re-derived by hand and agrees, but it has not been compared numerically against the vendor's precompute_freqs_cis output the way the base table was",
-      "the QUANTIZE/DEQUANTIZE pair on the joined KV: the vendor quantises the whole post-RoPE vector in place, RoPE tail included, and layer 0 reproduces it -- but layer 2's path runs it on a differently-rotated vector",
-      "the compressor's own latent, which the CONCAT's third input supplies"
-    ],
-    "what_differs": {
-      "attention_output": 0.481423,
-      "even_the_window_rows": "0 of the vendor's 12 rows appear anywhere in the device's 12 to 1e-6, worst closest pairing 7.187 -- so the eight WINDOW rows differ too, though layer 0's matched bit for bit",
-      "fused_kv_window": 0.345033,
-      "query_after_rotation": 0.483221
-    }
-  },
   "captured_call": {
     "index_shape": [
       1,
@@ -629,7 +592,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "9c3b6135736900cce705761c8239402c73617608"
+      "commit": "2c1df972277b8e4f63d2c1be53cf11087eaf397e"
     },
     "tool": "tools/compare_v41_sparse_attention_operator.py"
   },
