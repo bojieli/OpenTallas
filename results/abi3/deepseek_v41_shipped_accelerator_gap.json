@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
+ "question": "with a shipped-scale oracle finally in hand, does the shipped V4.1 ROM WAFER deployment execute?",
+ "answer": "no. It fails closed in prefill with a named lowering fault, and that fault -- not the oracle, not the checkpoint, not the numerics -- is now what stands between the V4.1 cells and closure.",
+ "the_refusal": {
+  "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+  "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+  "workload_id": "TA-DS41-CHAT-1-P32",
+  "prompt_tokens": 32,
+  "stop_reason": "failed",
+  "failure": "prefill failed: view 1097: loop 1076 is not active",
+  "emitted_token_ids": [],
+  "raised_by": "runtime/sim/memory.py:688",
+  "what_it_means": "view 1097 carries a dynamic term of kind LOOP_INDUCTION naming loop 1076, and loop 1076 is not in the active loop set when the view is resolved. The view is used outside the loop that indexes it -- a lowering fault in the deployment, caught by the resolver rather than producing a wrong address."
+ },
+ "why_this_is_the_right_kind_of_blocker": "it is a fail-closed refusal with a view id, a loop id and a source line, not a timeout, a silent wrong answer, or a resource limit. The reduced V4.1 ROM deployment lowers through the SAME backend (rom.wafer_logical_device) and executes, so the fault is scale-dependent rather than a missing feature.",
+ "what_is_now_established_on_the_v41_path": [
+  "the shipped checkpoint is present and locked: 476 GB, 48 shards, 96,085 tensors",
+  "the shipped ORACLE works: runtime/reference/deepseek_v41_oracle.py emits [13806, 345, 7472, 49665] on TA-DS41-CHAT-1-P32, with a first-token margin of 2.4947",
+  "the shipped ROM wafer and ROM array DEPLOYMENTS exist and are admitted against their capabilities",
+  "the shipped ROM wafer deployment does NOT execute: this record"
+ ],
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
+  "no statement about whether the shipped cells would AGREE with the oracle once they execute. The margin of 2.4947 makes agreement plausible where the reduced vehicle's 0.00515 made it impossible, but plausible is not measured."
+ ]
+}
