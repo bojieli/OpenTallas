@@ -1,0 +1,34 @@
+{
+  "an_earlier_version_of_the_fix_was_caught_by_the_gate": "The first helper normalised a unit of one to one rather than to zero, which moved 216 V4-Flash views by nothing but extent_unit 0 -> 1 -- the same function spelled differently.  The gate caught it before it was committed, which is what the gate is for.",
+  "blast_radius_measured_not_assumed": {
+    "deepseek_v4_flash_rom": "116 views change, every one of them by extent_numerator 0 -> 1 and nothing else, so the deployment digest MOVES: 3a240986... -> 0e7cc36b...",
+    "deepseek_v4_flash_rom_array_32": "120 candidate views by the same test; not yet rebuilt",
+    "qwen3_8b_hbm": "0 views -- digest cannot move",
+    "qwen3_8b_rom": "0 views carry a numerator the old test could erase -- digest cannot move"
+  },
+  "how_it_was_found": "By measurement after three static readings of the same operator had each been refuted.  The chain: (1) the committed reduced V4.1 walk has decode_steps 0, so NO V4.1 build had ever run a decode step -- running one reproduced the shipped failure in 60 SECONDS instead of 5h36m; (2) instrumenting the engine printed the resolved views -- inputs 128 and 64 summing to 192 against an output resolving to 128; (3) instrumenting the LOWERING showed it hands the decode phase the correct RequestAxis(CONTEXT_LENGTH, unit=2, numerator=1, bias=128); (4) a fresh rebuild was byte-identical to the committed one, eliminating staleness; so the loss was in the last hop, and it was one comparison operator.",
+  "it_does_NOT_by_itself_unblock_decode": "The reduced V4.1 array still refuses at decode step 1 after the fix, with the same message.  So this is one real defect on the path and not the whole cause; the remaining gap is in how the runtime narrows these views, which is not yet measured.",
+  "not_a_claim": [
+    "the fix is not claimed to close any cell",
+    "V4-Flash's tokens are not claimed to be unaffected; that is the pending verification"
+  ],
+  "schema": "opentallas.result.a18_numerator_one_erased.v1",
+  "the_defect": {
+    "now": "the identity test is applied to the WHOLE affine function, not field by field",
+    "site": "runtime/abi3/builder.py::tensor_view",
+    "was": "\"extent_numerator\": int(extent_numerator) if extent_numerator > 1 else 0",
+    "what_it_erased": "1 * CONTEXT_LENGTH / 2 + 128 -- the decode extent of DeepSeek-V4.1-Flash's ratio-2 attention KV join, a 128-row committed window beside the context's compressed prefix -- encoded as 0 * x / 2 + 128 and resolved to the window alone.",
+    "why_it_was_written_that_way": "The stated intent is sound and is in the comment: A13's own affine function is 1*value/1+0, so a view that does not need amendment A18 encodes all three fields as zero and stays byte-identical to the same view written before the amendment.  What is wrong is testing the fields SEPARATELY: a numerator of exactly one is not the identity unless its unit is also one and its bias zero."
+  },
+  "the_open_question_this_raises": "DeepSeek-V4-Flash's three cells are CLOSED with committed tokens, produced from deployments containing these 116 damaged views.  Either the erased numerators did not affect its execution -- the codebase's own note on a dropped resolving term says presenting the declared capacity is 'correct for a randomly addressed plane and merely conservative for a sequence one' -- in which case the digest move is a correction and its tokens stand; or its tokens change, which would be a serious finding about a closed cell.  A re-walk of the fixed build against the committed tokens is the only thing that settles it, and it is RUNNING.",
+  "verified_in_the_artifact": {
+    "reduced_v41_array_view_2817_compressed_input": {
+      "after": "num=1 unit=2 bias=0",
+      "before": "num=0 unit=2 bias=0"
+    },
+    "reduced_v41_array_view_2827_join_output": {
+      "after": "num=1 unit=2 bias=128",
+      "before": "num=0 unit=2 bias=128"
+    }
+  }
+}

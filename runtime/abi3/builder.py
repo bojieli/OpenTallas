@@ -107,6 +107,36 @@ class DynamicTerm:
         return DynamicTerm(int(SelectorKind.RUNTIME_SYMBOL), int(symbol), stride)
 
 
+def _extent_fields(unit: int, numerator: int, bias: int) -> dict[str, int]:
+    """Amendment A18's three extent fields, zeroed only for the identity.
+
+    A13's own affine function is ``1 * value / 1 + 0``.  A view that does not
+    need A18 therefore encodes all three fields as zero and stays byte-identical
+    to the same view written before the amendment -- which is the property this
+    normalisation exists to preserve.
+
+    What it must NOT do is test the fields separately.  ``numerator > 1`` reads a
+    numerator of exactly one as absent, and a numerator of one is the ordinary
+    case for an extent counted in units of more than one element:
+    ``CONTEXT_LENGTH / 2`` is numerator one over unit two.  Zeroing it silently
+    deletes the symbolic term and leaves the bias behind.
+    """
+
+    if int(numerator) <= 1 and int(unit) <= 1 and int(bias) == 0:
+        return {"extent_unit": 0, "extent_numerator": 0, "extent_bias": 0}
+    return {
+        # A unit of one is no division, and the encoding has always written that
+        # as zero.  Keeping that normalisation is what makes this change touch
+        # ONLY the views the old test damaged: gating an earlier version of this
+        # helper against DeepSeek-V4-Flash's ROM deployment moved 216 views by
+        # nothing but ``extent_unit: 0 -> 1``, which is the same function spelled
+        # differently and would have moved a shipped digest for no reason.
+        "extent_unit": int(unit) if int(unit) > 1 else 0,
+        "extent_numerator": int(numerator),
+        "extent_bias": int(bias),
+    }
+
+
 class DeploymentBuilder:
     """Accumulates descriptors, objects and instructions for one deployment."""
 
@@ -257,9 +287,19 @@ class DeploymentBuilder:
             # encode as zero and a view that does not need the amendment is
             # byte-identical to the same view written before it.
             "extent_axis": int(extent_axis),
-            "extent_unit": int(extent_unit) if extent_unit > 1 else 0,
-            "extent_numerator": int(extent_numerator) if extent_numerator > 1 else 0,
-            "extent_bias": int(extent_bias),
+            # The identity test is on the WHOLE affine function, not field by
+            # field.  Applied per field it zeroed a numerator of exactly ONE
+            # while letting its unit and bias survive, so
+            # ``1 * CONTEXT_LENGTH / 2 + 128`` -- the decode extent of
+            # DeepSeek-V4.1-Flash's ratio-2 attention KV join, a 128-row
+            # committed window beside the context's compressed prefix -- encoded
+            # as ``0 * x / 2 + 128`` and resolved to the window alone.  The
+            # operand then presented 128 rows where the join's inputs summed to
+            # 192, and every V4.1 deployment refused at the first decode step
+            # with "GROUPED_CONCAT output view ... differ from the axis-0
+            # concatenation".  A numerator of one is not the identity; a
+            # numerator of one WITH a unit of one AND a bias of zero is.
+            **_extent_fields(extent_unit, extent_numerator, extent_bias),
             "edge_mask_id": edge_mask_id,
             "element_offset": element_offset,
         }
