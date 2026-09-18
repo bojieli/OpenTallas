@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.abi3.v41_reduced_oracle_dead_experts.v1",
+  "question": "why does the reduced V4.1 device disagree with its reference oracle in the feed-forward path?",
+  "answer": "because the ORACLE's routed mixture-of-experts contributes exactly nothing: every FP4 routed expert's second projection returns all zeros in the reference run, so the oracle's token came from a shared-expert-only model",
+  "measurements": [
+    {
+      "probe": "forward hooks on the vendor model's routed experts, layers 0, 1 and 2, four experts each",
+      "result": "11 of 11 observed routed-expert w2 outputs are ENTIRELY zero -- 0 nonzero of 1120, 160, 160, 320, 1280, 160, 1280, 160, 160, 320 and 1120 elements",
+      "reading": "systematic, not one expert or one layer"
+    },
+    {
+      "probe": "the input those projections received",
+      "result": "expert 0 of layer 0: w2 input absmax 26.25 with 327 of 448 elements nonzero, head [24.75, -15.8125, -0.00383, 4.28125]",
+      "reading": "the zero output is not a zero input; something in the FP4 path returns zero for a nonzero operand"
+    },
+    {
+      "probe": "the SHARED expert of the same layer, whose w2 weights are FP8_E4M3FN rather than float4_e2m1fn_x2",
+      "result": "input absmax 0.196289 (512/512 nonzero) -> output absmax 0.020264 (1280/1280 nonzero)",
+      "reading": "the FP8 path works in the same run, the same module type, the same hooks; the FP4 path is what returns zero"
+    },
+    {
+      "probe": "the vendor's whole feed-forward output for layer 0",
+      "result": "absmax 0.020264, head [-0.000118, 0.007324, -0.001648, -0.000622] -- equal to the shared expert's output to every digit printed",
+      "reading": "the routed experts contribute nothing to the oracle's own forward pass"
+    },
+    {
+      "probe": "what the device computes for the same reduction",
+      "result": "absmax 2720.0, head [808.0, 114.5, 21.25, 1096.0, -548.0, -788.0]",
+      "reading": "with E8M0 block scales that the reduced fixture fills with 0x7F -- a scale of exactly 2**0 -- the FP4 expert weights ARE +/-6, and a 64-term dot of +/-6 against a +/-26 activation is thousands. The device's magnitude is what this fixture's arithmetic gives; the oracle's zero is not."
+    }
+  ],
+  "consequence": "the reduced V4.1 oracle cannot validate the routed-expert path, and no correct implementation can reproduce its token while computing that path. The three V4.1 cells are blocked on the REFERENCE for this path, not only on the implementation.",
+  "what_is_not_established": [
+    "whether the vendor's FP4 gemm returns zero because of this machine's GPU or tilelang build, or for a reason intrinsic to the kernel: the oracle artifact as committed was produced in this environment and has dead experts, and that is all this measurement shows",
+    "whether the released model on supported hardware behaves this way -- nothing here is a claim about DeepSeek's model or kernels in their intended setting",
+    "DeepSeek-V4-Flash also declares expert_dtype fp4 and its three cells DO match their oracle, so the V4-Flash oracle must reach its expert path by some route that does not go through this kernel; which route is not established here"
+  ],
+  "paths_forward": [
+    "validate the expert path against our OWN contract-governed reference rather than the vendor kernel -- runtime/reference already implements the MXFP4 SwiGLU and the blocked contraction, and those contracts are what the deployment is admitted against",
+    "or build a reduced fixture whose expert magnitudes keep the vendor's FP4 path out of whatever regime zeroes it, and regenerate the oracle from that",
+    "either way the comparison instrument stays the one that worked twice this session: capture the vendor module's own operands and run our operator on exactly those numbers"
+  ],
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "this does not prove the device's feed-forward path is correct; it proves the oracle's is dead, which is a different statement and a weaker one",
+    "the token is still 1242 against the oracle's 1638"
+  ]
+}
