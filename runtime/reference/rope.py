@@ -482,30 +482,53 @@ def _binary32_value(code: int) -> Fraction:
     return decoded.value
 
 
-@lru_cache(maxsize=64)
-def _correctly_rounded_root_power(base: int, index: int) -> int:
-    """Return CR32(``base ** (index / 32)``) without host ``pow``."""
+@lru_cache(maxsize=256)
+def _correctly_rounded_root_power(base: int, index: int, pairs: int = 32) -> int:
+    """Return CR32(``base ** (index / pairs)``) without host ``pow``.
+
+    ``pairs`` is the number of complex rotary pairs the table has, which is half
+    the rotary width, and it is the DENOMINATOR of the rotary frequency
+    exponent: channel pair ``p``'s frequency is ``1 / base ** (2p / width)`` =
+    ``1 / base ** (p / pairs)``.
+
+    IT USED TO BE THE CONSTANT 32, and that was a real defect rather than a
+    tidiness one.  32 pairs is a 64-wide rotation, which is the released
+    DeepSeek geometry, so every shipped lowering was right and every model with a
+    different rotary width silently got the RELEASED model's frequencies.
+    Measured on the reduced V4.1 fixture, whose rotary width is 4: pair 1's
+    frequency came out ``1 / 10000 ** (2/64) = 0.75`` where the vendor's is
+    ``1 / 10000 ** (2/4) = 0.01``, a rotation angle 75x too large.  The query and
+    the fused KV window both carry that rotation, which is exactly the pair of
+    operands that disagreed with the vendor while their unrotated sources agreed
+    bit for bit.
+
+    The default keeps the shipped value, so a caller that does not state its
+    width -- the frozen 64-wide reference path in this module -- is unchanged and
+    no shipped digest moves.
+    """
 
     if index == 0:
         return _BINARY32_ONE
+    if pairs <= 0:
+        raise ValueError(f"pairs {pairs} must be positive")
     target = base**index
     lower_code = 0
     upper_exclusive = _BINARY32_MAX_FINITE + 1
     while lower_code + 1 < upper_exclusive:
         candidate_code = (lower_code + upper_exclusive) // 2
         candidate = _binary32_value(candidate_code)
-        if candidate**32 <= target:
+        if candidate**pairs <= target:
             lower_code = candidate_code
         else:
             upper_exclusive = candidate_code
 
     lower = _binary32_value(lower_code)
-    if lower**32 == target:
+    if lower**pairs == target:
         return lower_code
     upper_code = lower_code + 1
     upper = _binary32_value(upper_code)
     midpoint = (lower + upper) / 2
-    midpoint_power = midpoint**32
+    midpoint_power = midpoint**pairs
     if midpoint_power < target:
         return upper_code
     if midpoint_power > target:

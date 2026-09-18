@@ -182,8 +182,14 @@ def _rope_frequencies_binary32(
     base = int(theta)
     if float(base) != theta:
         raise GeneratorError(f"theta {theta} is not an exact integer base")
+    # ``pairs`` is the exponent denominator, not just the count: pair ``p``'s
+    # frequency is ``1 / base ** (2p / rotary_width)`` = ``1 / base ** (p /
+    # pairs)``.  Passing it was the fix for a table that gave every model the
+    # RELEASED 64-wide geometry's frequencies whatever width it declared.
     codes = [
-        binary32_divide(0x3F800000, _correctly_rounded_root_power(base, index))
+        binary32_divide(
+            0x3F800000, _correctly_rounded_root_power(base, index, pairs)
+        )
         for index in range(pairs)
     ]
     frequencies = np.asarray(codes, dtype=np.uint32).view(np.float32).copy()

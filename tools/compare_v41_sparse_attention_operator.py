@@ -1,0 +1,437 @@
+#!/usr/bin/env python3
+"""Run OUR sparse attention on the VENDOR's own operands, and compare.
+
+The depth sweep put the reduced V4.1 divergence inside layer 0's attention core:
+the query and latent-KV projection chain matches the oracle at cosine 1.0 and
+``sparse_attn``'s output is the first departure at 0.947.  That localises the
+fault to a span, not to a cause -- the span holds the query rotation, the window
+KV, the sparse attention itself, the inverse rotation and the block-diagonal
+output projection, and a tap cannot separate them because the KV the kernel reads
+is built inside ``_window_kv`` and never exists as a module's output.
+
+This tool separates the OPERATOR from its OPERANDS.  It wraps the vendor's
+``sparse_attn`` to capture the five arguments of its first call exactly as the
+kernel received them -- query, fused KV, per-head sinks, selected indices, and
+the softmax scale -- and its output; then it runs
+``runtime.reference.sparse_attention_bf16`` on those same numbers and compares.
+
+The reading is binary and there is no third option:
+
+*   the outputs AGREE -> our sparse-attention operator is right, and the fault is
+    in what feeds it: the window KV, the index selection, or the rotation applied
+    to the query.
+*   the outputs DISAGREE -> the operator is wrong, and the comparison says by how
+    much and in which heads, on inputs that are not in dispute.
+
+The vendor kernel is BF16 in and BF16 out with an FP32 accumulator, which is what
+the reference implements, so the two are comparable term for term rather than
+approximately.  Exact equality is not expected: the vendor sums a block of 64 in
+a GPU gemm's order and the reference sums in ascending order, and the sink and
+the divide are the same operations in both.  The question is whether they agree to
+the last few bits or differ structurally.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from compiler.frontend.checkpoint import (  # noqa: E402
+    load_checkpoint_lock,
+    verify_checkpoint_lock,
+)
+from runtime.reference.sparse_attention import (  # noqa: E402
+    sparse_attention_bf16,
+)
+from tools.build_deepseek_v41_reduced_model import (  # noqa: E402
+    DEFAULT_LOCK,
+    DEFAULT_SNAPSHOT,
+    WORKLOAD_ID,
+    build_model,
+    import_vendor,
+    released_snapshot,
+)
+from tools.run_deepseek_v41_reduced_reference_oracle import _load_weights  # noqa: E402
+
+SCHEMA = "opentallas.abi3.v41_sparse_attention_operator.v1"
+TOOL = "tools/compare_v41_sparse_attention_operator.py"
+ORACLE_RECORD = ROOT / "results/abi3/deepseek_v41_reduced_reference_oracle.json"
+
+
+def _git(*args: str) -> str:
+    return subprocess.run(
+        ("git", *args), cwd=ROOT, capture_output=True, text=True, check=False
+    ).stdout.strip()
+
+
+def _bf16_codes(array: np.ndarray) -> np.ndarray:
+    """BF16 code points of a float array, round-to-nearest-even."""
+    import torch
+
+    return (
+        torch.from_numpy(np.ascontiguousarray(array, dtype=np.float32))
+        .to(torch.bfloat16)
+        .view(torch.uint16)
+        .numpy()
+        .astype(np.int64)
+    )
+
+
+def _binary32_codes(array: np.ndarray) -> np.ndarray:
+    return np.ascontiguousarray(array, dtype=np.float32).view(np.uint32).astype(np.int64)
+
+
+def _bf16_to_float(codes: np.ndarray) -> np.ndarray:
+    raw = (np.asarray(codes, dtype=np.uint32) << 16).astype(np.uint32)
+    return raw.view(np.float32).astype(np.float64)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=ROOT / "results/abi3/deepseek_v41_sparse_attention_operator.json",
+    )
+    parser.add_argument(
+        "--with-device",
+        action="store_true",
+        help=(
+            "also read the DEVICE's own ATTENTION.SPARSE operands and compare them "
+            "against the vendor's, which is what says WHICH operand is wrong"
+        ),
+    )
+    parser.add_argument(
+        "--positions",
+        type=int,
+        default=2,
+        help="how many query positions of the captured call to compare",
+    )
+    arguments = parser.parse_args(argv)
+
+    record = json.loads(ORACLE_RECORD.read_text())
+    prompt = [int(t) for t in record["results"][WORKLOAD_ID]["prompt_token_ids"]]
+
+    lock = load_checkpoint_lock(DEFAULT_LOCK)
+    verify_checkpoint_lock(DEFAULT_SNAPSHOT, lock)
+    body = json.loads(
+        (DEFAULT_SNAPSHOT / "inference_config.json").read_text(encoding="utf-8")
+    )
+    import torch
+    from transformers import AutoTokenizer
+
+    released = released_snapshot()
+    vendor, _engram = import_vendor(released)
+    tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
+    model = build_model(vendor, body, tokenizer)
+    _load_weights(model, DEFAULT_SNAPSHOT)
+    model.eval()
+
+    captured: dict[str, Any] = {}
+    original = vendor.sparse_attn
+
+    def spy(q, kv, attn_sink, topk_idxs, softmax_scale):
+        out = original(q, kv, attn_sink, topk_idxs, softmax_scale)
+        if not captured:
+            captured.update(
+                {
+                    "q": q.detach().float().cpu().numpy(),
+                    "kv": kv.detach().float().cpu().numpy(),
+                    "sink": attn_sink.detach().float().cpu().numpy(),
+                    "idx": topk_idxs.detach().cpu().numpy(),
+                    "scale": float(softmax_scale),
+                    "out": out.detach().float().cpu().numpy(),
+                }
+            )
+        return out
+
+    vendor.sparse_attn = spy
+    try:
+        device = next(model.parameters()).device
+        with torch.inference_mode():
+            model(torch.tensor([prompt], dtype=torch.long, device=device))
+    finally:
+        vendor.sparse_attn = original
+    if not captured:
+        raise SystemExit("the vendor forward pass made no sparse_attn call")
+
+    q = captured["q"]        # [b, m, h, d]
+    kv = captured["kv"]      # [b, n, d]
+    sink = captured["sink"]  # [h]
+    idx = captured["idx"]    # [b, m, topk]
+    vendor_out = captured["out"]
+    batch, positions, heads, head_dim = q.shape
+    take = min(int(arguments.positions), positions)
+
+    # The reference is exercised on the LAST ``take`` positions, because the last
+    # one is where the token comes from and an earlier one is a control.
+    rows = list(range(positions - take, positions))
+    query_codes = [[
+        [[int(c) for c in _bf16_codes(q[b, m, h])] for h in range(heads)]
+        for m in rows
+    ] for b in range(batch)]
+    kv_codes = [
+        [[int(c) for c in _bf16_codes(kv[b, n])] for n in range(kv.shape[1])]
+        for b in range(batch)
+    ]
+    sink_codes = [int(c) for c in _binary32_codes(sink)]
+    selected = [[
+        [int(v) for v in idx[b, m]] for m in rows
+    ] for b in range(batch)]
+    scale_code = int(_binary32_codes(np.asarray([captured["scale"]]))[0])
+
+    result = sparse_attention_bf16(
+        query_codes,
+        kv_codes,
+        sink_codes,
+        selected,
+        scale_binary32=scale_code,
+    )
+    ours = np.asarray(
+        [[[_bf16_to_float(np.asarray(head)) for head in row] for row in batch_rows]
+         for batch_rows in result.values],
+        dtype=np.float64,
+    )
+    theirs = np.asarray(
+        [[[vendor_out[b, m, h] for h in range(heads)] for m in rows]
+         for b in range(batch)],
+        dtype=np.float64,
+    )
+
+    difference = np.abs(ours - theirs)
+    flat_ours = ours.reshape(-1)
+    flat_theirs = theirs.reshape(-1)
+    norm = float(np.linalg.norm(flat_ours) * np.linalg.norm(flat_theirs))
+    cosine = float(flat_ours @ flat_theirs / norm) if norm else None
+    per_head = []
+    for h in range(heads):
+        a = ours[:, :, h, :].reshape(-1)
+        b = theirs[:, :, h, :].reshape(-1)
+        scale = float(np.linalg.norm(a) * np.linalg.norm(b))
+        per_head.append({
+            "head": h,
+            "cosine": round(float(a @ b / scale), 6) if scale else None,
+            "max_abs_diff": round(float(np.abs(a - b).max()), 8),
+            "ours_norm": round(float(np.linalg.norm(a)), 8),
+            "theirs_norm": round(float(np.linalg.norm(b)), 8),
+        })
+    worst = sorted(
+        (h for h in per_head if h["cosine"] is not None), key=lambda h: h["cosine"]
+    )[:8]
+
+    agrees = bool(cosine is not None and cosine > 0.9999)
+    # -- the operands themselves, from the device ---------------------------
+    #
+    # If the operator agrees, the fault is in what feeds it, and the three things
+    # that feed it are exactly the three views ATTENTION.SPARSE reads.  So they
+    # are read off the device and compared against the vendor's own, which names
+    # the wrong one instead of narrowing to a span.
+    operands: dict[str, Any] | None = None
+    if arguments.with_device:
+        from runtime.abi3.capability import Capability
+        from runtime.abi3.constants import Attention, Major
+        from runtime.abi3.deployment import Deployment
+        from runtime.driver import GenerationDriver
+        from runtime.sim import formats
+        from runtime.sim.device import Device
+        from runtime.sim.engine import _REGISTRY
+        from runtime.sim.engines import load_engines
+
+        load_engines()
+        capability_path = ROOT / "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+        body_c = json.loads(capability_path.read_text())
+        capability = Capability.from_dict(body_c.get("capability", body_c))
+        device_obj = Device(
+            Deployment.read(ROOT / "build/abi3/deepseek-v41-reduced-rom"),
+            capability,
+            verify=False,
+            trace=False,
+            root=ROOT / "build/models/deepseek-v4.1-flash-reduced-v1",
+        )
+        grabbed: dict[str, Any] = {}
+        key = (int(Major.ATTENTION), int(Attention.SPARSE))
+        original_engine = _REGISTRY[key]
+
+        def attention_spy(ctx, sub, descriptor):
+            if not grabbed:
+                for slot in range(3):
+                    view = ctx.input_view(descriptor, slot)
+                    codes = ctx.read(view)
+                    try:
+                        values = np.asarray(
+                            formats.widen(view.dtype, codes), dtype=np.float64
+                        )
+                    except Exception:
+                        # The index operand is an integer view and has no
+                        # binary32 widening; its codes ARE its values, and a
+                        # signed padding index has to survive the read, so it is
+                        # reinterpreted as int32 rather than as unsigned.
+                        values = np.asarray(
+                            np.ascontiguousarray(codes).view(np.int32), dtype=np.float64
+                        )
+                    grabbed[f"slot{slot}"] = {
+                        "dims": [int(d) for d in view.dims],
+                        "dtype": int(view.dtype),
+                        "values": values.reshape(-1).copy(),
+                    }
+            return original_engine(ctx, sub, descriptor)
+
+        _REGISTRY[key] = attention_spy
+        try:
+            GenerationDriver(device_obj).generate(prompt, max_new_tokens=1)
+        finally:
+            _REGISTRY[key] = original_engine
+
+        def compare(name: str, mine: np.ndarray, vendor_values: np.ndarray) -> dict[str, Any]:
+            a = np.asarray(mine, dtype=np.float64).reshape(-1)
+            b = np.asarray(vendor_values, dtype=np.float64).reshape(-1)
+            row = {
+                "operand": name,
+                "device_elements": int(a.size),
+                "vendor_elements": int(b.size),
+            }
+            if a.size != b.size:
+                row["comparable"] = False
+                row["why"] = "the device holds this operand in a different shape"
+                return row
+            scale = float(np.linalg.norm(a) * np.linalg.norm(b))
+            row.update({
+                "comparable": True,
+                "cosine": round(float(a @ b / scale), 8) if scale else None,
+                "max_abs_diff": round(float(np.abs(a - b).max()), 8),
+                "mean_abs_diff": round(float(np.abs(a - b).mean()), 8),
+                "identical": bool(np.array_equal(a, b)),
+            })
+            return row
+
+        last = positions - 1
+        rows_out = []
+        if "slot0" in grabbed:
+            # The device's views are the DECLARED maxima -- all prompt positions,
+            # the whole window capacity, every top-k slot -- and they are padded
+            # rather than shortened: the index row holds the valid rows then the
+            # padding index, and the unused KV rows are zero.  So the comparison
+            # slices the device's operand down to the vendor's live extent instead
+            # of calling a shape difference a disagreement.
+            def slot(name: str) -> np.ndarray:
+                entry = grabbed[name]
+                return np.asarray(entry["values"]).reshape(entry["dims"])
+
+            device_q = slot("slot0")
+            device_kv = slot("slot1")
+            device_idx = slot("slot2")
+            live = int(kv.shape[1])
+            topk = int(idx.shape[2])
+            rows_out.append(
+                compare(
+                    "query_after_rotation",
+                    device_q[last] if device_q.ndim == 3 else device_q,
+                    q[0, last],
+                )
+            )
+            rows_out.append(
+                compare("fused_kv_window", device_kv[:live], kv[0])
+            )
+            rows_out.append(
+                compare("selected_indices", device_idx[last][:topk], idx[0, last])
+            )
+            padding = device_idx[last][topk:]
+            rows_out.append({
+                "operand": "index_padding_beyond_the_live_extent",
+                "slots": int(padding.size),
+                "all_padding_index": bool(np.all(padding == -1)),
+                "distinct": sorted({int(v) for v in padding.tolist()})[:4],
+            })
+            unused = device_kv[live:]
+            rows_out.append({
+                "operand": "kv_rows_beyond_the_live_extent",
+                "rows": int(unused.shape[0]),
+                "all_zero": bool(np.all(unused == 0.0)),
+            })
+        operands = {
+            "what_this_settles": (
+                "the operator agrees on the vendor's operands, so the wrong operand "
+                "is the fault; these are the device's own three views against the "
+                "vendor's own three arguments"
+            ),
+            "device_view_shapes": {
+                name: grabbed[name]["dims"] for name in sorted(grabbed)
+            },
+            "comparisons": rows_out,
+            "first_disagreeing_operand": next(
+                (
+                    r["operand"]
+                    for r in rows_out
+                    if r.get("comparable") and not r.get("identical")
+                ),
+                None,
+            ),
+        }
+
+    report = {
+        "schema": SCHEMA,
+        "producer": {"tool": TOOL, "git": {"commit": _git("rev-parse", "HEAD")}},
+        "question": (
+            "given the vendor kernel's OWN operands, does our sparse-attention "
+            "operator produce the vendor's output?"
+        ),
+        "captured_call": {
+            "which": "the first sparse_attn call of the forward pass (layer 0)",
+            "query_shape": list(q.shape),
+            "kv_shape": list(kv.shape),
+            "sink_shape": list(sink.shape),
+            "index_shape": list(idx.shape),
+            "softmax_scale": captured["scale"],
+            "softmax_scale_binary32": scale_code,
+            "positions_compared": rows,
+        },
+        "verdict": "OPERATOR_AGREES" if agrees else "OPERATOR_DISAGREES",
+        "reading": (
+            "our operator reproduces the vendor kernel on its own operands, so the "
+            "fault is upstream: the window KV, the index selection, or the query "
+            "rotation"
+            if agrees
+            else "our operator does NOT reproduce the vendor kernel on operands "
+            "that are not in dispute, so the fault is in the operator"
+        ),
+        "whole_tensor": {
+            "cosine": round(cosine, 8) if cosine is not None else None,
+            "max_abs_diff": round(float(difference.max()), 8),
+            "mean_abs_diff": round(float(difference.mean()), 8),
+            "elements": int(difference.size),
+        },
+        "worst_heads": worst,
+        "operands": operands,
+        "per_head": per_head,
+        "not_a_claim": [
+            "exact equality is not expected: the vendor sums a 64-row block in a "
+            "GPU gemm's order and the reference sums in ascending order",
+            "this is the reference operator, not the RTL and not the simulator's "
+            "engine; they share this reference's contract",
+        ],
+    }
+    arguments.output.parent.mkdir(parents=True, exist_ok=True)
+    arguments.output.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps({
+        "verdict": report["verdict"],
+        "whole_tensor": report["whole_tensor"],
+        "worst_heads": worst[:4],
+    }, indent=1))
+    print(f"-> {arguments.output}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
