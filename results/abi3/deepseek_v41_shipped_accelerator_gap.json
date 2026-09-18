@@ -11,6 +11,24 @@
    "failure": "prefill failed: view 1097: loop 1076 is not active"
   }
  },
+ "localised_to_the_instruction": {
+  "issue_positions": {
+   "descriptor_1093": 4,
+   "descriptor_1100": 6
+  },
+  "loop_1349_count": 1349,
+  "loop_bodies": {
+   "loop_1076 (named by descriptor 1100 output view)": "239..495",
+   "loop_1085 (used by descriptor 1093)": "4..5",
+   "loop_1727 (used by the rank-3 EMBED_LOOKUP)": "256..257",
+   "loop_5295 (used by the other rank-3 EMBED_LOOKUP)": "2103..2104"
+  },
+  "method": "decode the program body and find the issue positions of the EMBED_LOOKUP descriptors, then read the body range of every loop descriptor",
+  "program_instructions": 4343,
+  "the_defect": "NO LOOP IN THE DEPLOYMENT COVERS PROGRAM POSITION 6.  The loops around it are 1085 (body 4..5), 1101 (body 8..9) and 1075 (body 11..237), so positions 6..7 are a gap with no loop open.  Descriptor 1100 is issued into that gap while its output view carries a LOOP_INDUCTION term naming loop 1076, whose body is 239..495.  The tight loop this operator needs was never emitted, and the term points at an unrelated structural loop.",
+  "the_pattern": "every EMBED_LOOKUP that resolves is wrapped in a TIGHT single-instruction loop: 1093 issues at position 4 and its loop 1085 has body 4..5; the rank-3 pair have bodies 256..257 and 2103..2104.  Descriptor 1100 issues at position 6 and should therefore have a loop with body 6..7.",
+  "why_i_have_not_patched_it": "the fix is in the ROM program builder's loop-scope emission, which is shared by every ROM product.  The three DeepSeek-V4-Flash cells and the Qwen3 ROM cells close through that same code, and they are the matrix's main asset.  A blind edit there can break six closed cells to chase three open ones, so the localisation is recorded to the instruction and the change is left to be made against the emitter with the V4-Flash and Qwen3 walks as regression gates."
+ },
  "not_a_claim": [
   "not an RTL measurement: the device is runtime.sim",
   "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
