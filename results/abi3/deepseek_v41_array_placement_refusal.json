@@ -66,6 +66,15 @@
       "worktree_dirty": true
     }
   },
+  "progress": {
+    "gate": "the reduced ROM deployment rebuilds to 9935b6c2 throughout, unchanged",
+    "reduction": "508x, by capping a scratch capacity at the schedule's token block",
+    "state_pool_after": 291504128,
+    "state_pool_before": 148178468864,
+    "still_over_by": "528,972,796,044 against 180,000,000,000",
+    "total_after": 528972796044,
+    "total_before": 605992800396
+  },
   "question": "the shipped V4.1 ROM array-64 build refuses its state placement -- 605,992,800,396 bytes against a capability declaring 180,000,000,000.  What is asking for it?",
   "schema": "opentallas.abi3.v41_array_placement_refusal.v1",
   "scratch_cap_landed_anyway": {
@@ -80,5 +89,20 @@
     "the_lever": "capacity_rows.  The mask is per QUERY, and nothing requires a whole context of queries to be live at once: a token-blocked query axis holds one block's masks instead of all of them, which is the same argument token_block_rows already makes elsewhere in this backend.  The row width is fixed by the model and the row COUNT is a scheduling choice",
     "why_it_is_still_unplaceable": "the release computes that mask as a TRANSIENT tensor inside one forward pass.  This export materialises it as a scratch STATE whose capacity_rows is the whole query block -- the entire 262,144-token context -- so the product is context x context and one layer's mask is 68 GB",
     "why_that_shape_is_CORRECT": "the frontend declares row_elements = context_tokens // ratios[layer], and layer 20 is the candidate_source_layer whose compress_ratio is 1 -- so its candidate axis IS the full context.  The release agrees: select_candidate_blocks operates on index_score whose last axis is end_pos // ratio, which at ratio 1 is every position.  So this is not a sizing error"
+  },
+  "what_remains_is_activations_not_states": {
+    "arithmetic": "137,438,953,472 is 262,144 squared times two -- a bf16 buffer of [context, context].  68,719,476,736 is the same shape at one byte",
+    "largest": [
+      "object 6811 HBM 137,438,953,472 bytes",
+      "object 8784 HBM 68,719,476,736 bytes"
+    ],
+    "pool": {
+      "HBM": 528681291916,
+      "STATE": 291504128,
+      "objects": 128
+    },
+    "what_it_would_take": "block-wise REUSE of those buffers, so one block's rows are live at a time and the next block overwrites them.  That is a liveness and dependence change, not a parameter: the backend already computes ``activation_liveness``, and this asks it to schedule a buffer smaller than the tensor it holds.  Not attempted here",
+    "which_tensors": "the candidate mask and the index scores at the candidate source layer, whose compression ratio is 1 -- so their candidate axis is every position and both axes are the context",
+    "why_they_are_that_large": "``_padded_bytes`` allocates a symbolic-leading activation at the architectural context and only ADDS a final-block pad; it does not reduce the allocation to one block.  Its own docstring says why: \"A13 clamps the final iteration to the request's real rows at execution, but the frozen verifier proves every tensor view over the loop's static block.\"  So a [context, context] activation at a 262,144 context is 137 GB by design"
   }
 }

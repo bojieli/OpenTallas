@@ -3120,7 +3120,10 @@ class RomLowering:
                     "state_class": members[0].state_class,
                 }
             row_bytes = (row_elements * bits + 7) // 8
-            capacity = self._extent(members[0].capacity_rows)
+            #: The CAPPED capacity, the same one the group key was built from --
+            #: capping only the key would group the states correctly and then size
+            #: the object from the uncapped declaration, which is the whole cost.
+            capacity = self._scratch_capacity(members[0])
             slot_bytes = row_bytes * capacity
             if slot_bytes <= 0:
                 raise RomLoweringError(f"state group {index} has no capacity")
@@ -10256,9 +10259,46 @@ class RomLowering:
         }
         for name, (needed, limit) in sorted(checks.items()):
             if needed > limit:
+                #: NAME THE OBJECTS.  A total against a limit says a placement does
+                #: not fit and nothing about what to change, and the two candidate
+                #: answers -- a few enormous objects, or a long tail -- call for
+                #: opposite work.  So the largest contributors to the failing pool
+                #: are listed with the storage class each was priced under.
+                wanted = (
+                    {StorageClass.HBM, StorageClass.STATE}
+                    if name == "hbm_and_state"
+                    else {StorageClass[name.upper()]}
+                )
+                biggest: list[tuple[int, int, str]] = []
+                for descriptor in self.builder.table.descriptors():
+                    if descriptor.descriptor_type != (
+                        ExtendedDescriptorType.MEMORY_OBJECT
+                    ):
+                        continue
+                    storage = StorageClass(descriptor.payload["storage_class"])
+                    if storage not in wanted:
+                        continue
+                    biggest.append(
+                        (
+                            int(descriptor.payload["size_bytes"]),
+                            int(descriptor.descriptor_id),
+                            storage.name,
+                        )
+                    )
+                biggest.sort(reverse=True)
+                head = ", ".join(
+                    f"object {oid} {cls} {size} bytes" for size, oid, cls in biggest[:5]
+                )
+                totals: dict[str, int] = {}
+                for size, _oid, cls in biggest:
+                    totals[cls] = totals.get(cls, 0) + size
+                share = ", ".join(
+                    f"{cls} {total}" for cls, total in sorted(totals.items())
+                )
                 raise RomLoweringError(
                     f"{name} objects need {needed} bytes but the capability "
-                    f"declares {limit}; the placement does not fit the target"
+                    f"declares {limit}; the placement does not fit the target. "
+                    f"{len(biggest)} objects in that pool ({share}); largest: {head}"
                 )
         return {
             "declared": declared,
