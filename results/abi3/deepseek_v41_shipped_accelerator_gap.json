@@ -1,28 +1,53 @@
 {
- "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
- "question": "with a shipped-scale oracle finally in hand, does the shipped V4.1 ROM WAFER deployment execute?",
  "answer": "no. It fails closed in prefill with a named lowering fault, and that fault -- not the oracle, not the checkpoint, not the numerics -- is now what stands between the V4.1 cells and closure.",
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
+  "no statement about whether the shipped cells would AGREE with the oracle once they execute. The margin of 2.4947 makes agreement plausible where the reduced vehicle's 0.00515 made it impossible, but plausible is not measured."
+ ],
+ "question": "with a shipped-scale oracle finally in hand, does the shipped V4.1 ROM WAFER deployment execute?",
+ "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
  "the_refusal": {
-  "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
   "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
-  "workload_id": "TA-DS41-CHAT-1-P32",
-  "prompt_tokens": 32,
-  "stop_reason": "failed",
-  "failure": "prefill failed: view 1097: loop 1076 is not active",
+  "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
   "emitted_token_ids": [],
+  "failure": "prefill failed: view 1097: loop 1076 is not active",
+  "localised_to": {
+   "descriptor": 1100,
+   "loop_1076": {
+    "body_end": 495,
+    "body_start": 239,
+    "bound_selector_kind": 2,
+    "bound_symbol_id": "NO_ID",
+    "loop_index": 0,
+    "lower_bound": 0,
+    "max_iterations": 1,
+    "step": 1,
+    "upper_bound": 1
+   },
+   "operator": "TENSOR.EMBED_LOOKUP (engine_family 32, engine_sub 3)",
+   "output_view_0": 1097,
+   "prior_art_in_this_tree": "EMBED_LOOKUP has a recorded history of addressing faults here: \"legacy unkeyed bases ignore the placement table -- EMBED_LOOKUP and GATHER addressed by launch counter, so the token id was validated and never used\". That is a different fault from this one, but it is the same operator and the same part of the lowering.",
+   "reading": "the EMBED_LOOKUP at descriptor 1100 writes a rank-2 view whose only dynamic term is loop 1076, a SINGLE-ITERATION loop whose body spans program positions 239 to 495.  For the view to resolve, the operator must be issued inside that body.  It is not, so the resolver refuses.  Exactly one descriptor in the deployment references view 1097, so there is no ambiguity about which operator owns the fault.",
+   "view_1097": {
+    "dynamic_term_count": 1,
+    "rank": 2,
+    "term0_index": 1076,
+    "term0_kind": "LOOP_INDUCTION",
+    "term0_stride": 262144
+   }
+  },
+  "prompt_tokens": 32,
   "raised_by": "runtime/sim/memory.py:688",
-  "what_it_means": "view 1097 carries a dynamic term of kind LOOP_INDUCTION naming loop 1076, and loop 1076 is not in the active loop set when the view is resolved. The view is used outside the loop that indexes it -- a lowering fault in the deployment, caught by the resolver rather than producing a wrong address."
+  "stop_reason": "failed",
+  "what_it_means": "view 1097 carries a dynamic term of kind LOOP_INDUCTION naming loop 1076, and loop 1076 is not in the active loop set when the view is resolved. The view is used outside the loop that indexes it -- a lowering fault in the deployment, caught by the resolver rather than producing a wrong address.",
+  "workload_id": "TA-DS41-CHAT-1-P32"
  },
- "why_this_is_the_right_kind_of_blocker": "it is a fail-closed refusal with a view id, a loop id and a source line, not a timeout, a silent wrong answer, or a resource limit. The reduced V4.1 ROM deployment lowers through the SAME backend (rom.wafer_logical_device) and executes, so the fault is scale-dependent rather than a missing feature.",
  "what_is_now_established_on_the_v41_path": [
   "the shipped checkpoint is present and locked: 476 GB, 48 shards, 96,085 tensors",
   "the shipped ORACLE works: runtime/reference/deepseek_v41_oracle.py emits [13806, 345, 7472, 49665] on TA-DS41-CHAT-1-P32, with a first-token margin of 2.4947",
   "the shipped ROM wafer and ROM array DEPLOYMENTS exist and are admitted against their capabilities",
   "the shipped ROM wafer deployment does NOT execute: this record"
  ],
- "not_a_claim": [
-  "not an RTL measurement: the device is runtime.sim",
-  "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
-  "no statement about whether the shipped cells would AGREE with the oracle once they execute. The margin of 2.4947 makes agreement plausible where the reduced vehicle's 0.00515 made it impossible, but plausible is not measured."
- ]
+ "why_this_is_the_right_kind_of_blocker": "it is a fail-closed refusal with a view id, a loop id and a source line, not a timeout, a silent wrong answer, or a resource limit. The reduced V4.1 ROM deployment lowers through the SAME backend (rom.wafer_logical_device) and executes, so the fault is scale-dependent rather than a missing feature."
 }
