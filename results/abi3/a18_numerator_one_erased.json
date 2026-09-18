@@ -1,4 +1,10 @@
 {
+  "UPDATE_the_fix_cannot_change_behaviour": {
+    "so_what_the_fix_is_worth": "The declaration now means what it says, which is what a verifier can check and a reader can trust; and a defensive clamp in the resolver is no longer load-bearing for correctness.  It is not a behaviour fix and must not be described as one.",
+    "the_digest_still_moves": "116 V4-Flash views change by extent_numerator 0 -> 1, so the deployment digest moves 3a240986... -> 0e7cc36b... even though execution does not.  A digest that moves without a behaviour change is exactly the case a token re-walk settles cheaply, and the walk is running to confirm the prediction rather than to discover the answer.",
+    "what_I_could_not_say_before": "Whether repairing 116 of DeepSeek-V4-Flash's views changes its committed tokens.  I recorded it as an open gate and started a re-walk.",
+    "what_the_resolver_shows": "It cannot.  runtime/sim/memory.py reads the field as ``numerator = max(int(payload['extent_numerator']), 1)`` -- so a stored 0 and a stored 1 resolve IDENTICALLY, and the resolver has been compensating for the encoder all along.  The fix therefore corrects what the deployment SAYS without changing what it DOES."
+  },
   "an_earlier_version_of_the_fix_was_caught_by_the_gate": "The first helper normalised a unit of one to one rather than to zero, which moved 216 V4-Flash views by nothing but extent_unit 0 -> 1 -- the same function spelled differently.  The gate caught it before it was committed, which is what the gate is for.",
   "blast_radius_measured_not_assumed": {
     "deepseek_v4_flash_rom": "116 views change, every one of them by extent_numerator 0 -> 1 and nothing else, so the deployment digest MOVES: 3a240986... -> 0e7cc36b...",
@@ -30,5 +36,10 @@
       "after": "num=1 unit=2 bias=128",
       "before": "num=0 unit=2 bias=128"
     }
+  },
+  "where_the_v41_decode_failure_actually_LIVES": {
+    "measured_mechanism": "A view's leading axis is narrowed only when a LOOP_INDUCTION term walks the extent axis (``_walks_extent_axis``: the term's stride must equal ``stride[axis] * numerator * bound_divisor / unit``).  When it does, ``_remaining_extent`` computes ``numerator * remaining_tokens / unit + bias`` from the LOOP's remaining bound-symbol units.",
+    "the_asymmetry_that_causes_the_refusal": "At decode step 1 the join's OUTPUT view narrows and its compressed INPUT does not.  The output resolves to 128 -- its bias -- because the context loop's remaining units are one token, and floor(1 * 1 / 2) is 0 compressed groups.  The input's term stride does not match the walk test, so it is not narrowed at all and presents its full declared 64 rows.  128 against 128 + 64 is the refusal.",
+    "what_this_makes_the_open_question": "Whether the join's output extent should be resolved against the LOOP'S RESIDUE at all.  The rows the join produces are the request's committed window plus the context's compressed prefix -- a function of the whole context, not of what one iteration has left -- while _remaining_extent exists for A13's partial final block.  Either the view should not carry a walking term on that axis, or its extent should be bound to CONTEXT_LENGTH rather than to the loop.  Deciding which is a change to the join's lowering, and it is the next thing to measure rather than the fourth thing to guess."
   }
 }
