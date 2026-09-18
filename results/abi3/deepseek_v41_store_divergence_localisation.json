@@ -1,4 +1,11 @@
 {
+  "correction": {
+    "issued": "the same session, on reading the two descriptors",
+    "so_kernel_74_is": "a granularity artifact, not a value divergence",
+    "what_is_true": "the eight is a PER-TOKEN LOOP, not a split reduction.  ROM's in0 is [6, 160] -- six contributions for ONE token -- dispatched once per token, and HBM's is [6, 128, 160], all 128 token rows batched into one dispatch.  Both reduce the same leading axis of six contributions, so each token receives the same pairwise tree.  The digests differ because they are digests of a [160] buffer against a [128, 160] one",
+    "what_was_claimed": "that kernel 74's disagreement was a reduction-association violation, because the graph declares pairwise_tree and the ROM lane spends eight operators on it against the HBM lane's one",
+    "why_i_repeated_it": "this is the FOURTH time this instrument has reported a lowering difference as a value one, and the tool's own docstring already warns about exactly this -- per-launch digests cannot compare lanes that dispatch differently.  I wrote that warning and then did not apply it"
+  },
   "method": "every engine dispatch's output views are digested against the descriptor's source_kernel_id -- the graph kernel both lanes were lowered from -- and the two traces are compared per kernel and then grouped by layer.  Digests only, because the lanes legitimately spend different NUMBERS of operators on one kernel and comparing (family, sub, digest) reports that as a value difference",
   "not_a_claim": [
     "that the expert reduction is the ONLY divergence -- it is the first, and 1,087 of 1,317 shared kernels differ downstream of it",
@@ -26,7 +33,7 @@
     "layers_fully_agreeing": [
       "prologue"
     ],
-    "reading": "the prologue agrees completely, so the token ids, the embedding, the compressed-id map and the hyper-connection expansion are byte-identical between the stores.  The FIRST disagreement is the MoE expert reduction of layer 0, and the graph declares its association: a PAIRWISE TREE over the contributions.  A pairwise tree has one shape.  The ROM lane spends eight operators on that kernel and the HBM lane one, so the association between partial sums is outside any single operator's declared order in at least one of them -- and a binary32 sum's value depends on association.  At most one lane forms the tree the graph names"
+    "reading": "the prologue agrees completely.  Beyond it, this instrument cannot tell a granularity difference from a value one -- see the correction field"
   },
   "schema": "opentallas.abi3.v41_store_divergence_localisation.v1",
   "sources": [
@@ -39,9 +46,12 @@
       "sha256": "f47c452cbc3c777afc2db3187d3a4e3a7d6aca6e2eb82ad1015439cecf741ef2"
     }
   ],
+  "what_survives": {
+    "not_sound": "any claim about WHERE the values first diverge.  A disagreement between per-launch digests is ambiguous between granularity and value, and every disagreement this trace reports is at a kernel where the lanes dispatch differently",
+    "sound": "the PROLOGUE AGREEMENT.  Identical digests imply identical bytes and identical shapes, so the prologue's kernels genuinely produce the same results in both stores: token ids, embedding, compressed-id map and hyper-connection expansion"
+  },
   "what_would_settle_it": [
-    "read what association each lane actually forms for EXPERT_REDUCE -- the ROM lane's eight operators and the HBM lane's one -- and compare both against runtime.sim.engines.reduction's pairwise tree over the declared contribution order",
-    "the lane that does not form the declared tree is the one to fix; the graph's reduction_order is the authority and neither lane gets to choose"
+    "digest each kernel's whole declared OUTPUT TENSOR after its last launch retires, not each launch's own view.  That is shape-independent by construction and is the instrument this question needs; it is named in the tool's docstring and still not built"
   ],
   "why_this_is_not_the_engram_gate": "the gate was the other candidate and is now excluded: both stores run the same engine, and executing the release's own gate instead of the frozen v1 contract left both tokens unchanged (2750, 459)"
 }
