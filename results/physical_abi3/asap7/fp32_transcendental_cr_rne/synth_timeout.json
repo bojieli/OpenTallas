@@ -1,0 +1,13 @@
+{
+  "answer": "More than the flow's fixed two-hour synthesis ceiling.  Yosys was killed at 7,200 s having produced nothing: ``stages_completed`` is empty and there is no frequency to report.",
+  "contrast_with_the_other_wide_leaf": "``ot_a3_fp32_div_rne``, seven parents, closed at 3.6 ns in 7.5 MINUTES.  The two widest leaves in the same datapath differ by more than two orders of magnitude in synthesis cost, which is why 'route the uncovered modules' is not a uniform-cost plan.",
+  "not_a_claim": [
+    "the 6-hour attempt may also fail; a block that produced nothing in two hours is not promised to finish in six",
+    "the timed-out record is kept with status 'error' rather than discarded, because 'we tried to characterise the widest-fan-in leaf and could not within the budget' is a fact about the available evidence"
+  ],
+  "question": "``ot_a3_fp32_transcendental_cr_rne`` is the widest-fan-in shared leaf in the ABI 3.0 datapath -- eight parents instantiate it -- so one route would bound all of them.  What does routing it cost?",
+  "schema": "opentallas.result.transcendental_synth_timeout.v1",
+  "the_ceiling_is_overridable_and_was_documented_before": "``tools/run_abi3_physical.py::synth_timeout_seconds`` reads ``OT_SYNTH_TIMEOUT_SECONDS``, and its docstring already records the same shape for ``ot_a3_vector_sqrt_softplus`` at FRAC_BITS 224: '448-bit products and a 455-iteration divider, and its synthesis was killed at 7,200 s having produced nothing'.  So this is the second instance of a known class, not a new kind of failure.",
+  "what_was_done": "Relaunched at a 6-hour ceiling, and the coverage-route queue now exports the same ceiling for every route, so a genuinely large block asks for time rather than being reported as an error.",
+  "why_this_blocks_more_than_one_module": "A parent contains its children, so a block whose child will not synthesise will not synthesise either.  The transcendental's eight parents -- ot_a3_attention_epilogue, ot_a3_attention_softmax_block, ot_a3_hc_coefficients_rne, ot_a3_hc_stable_softmax_rne, ot_a3_qwen_gqa, ot_a3_vector_engram_gate, ot_a3_vector_silu_mul, ot_a3_vector_sqrt_softplus -- are behind it, so roughly nine of the 53 uncovered modules wait on this one synthesis."
+}
