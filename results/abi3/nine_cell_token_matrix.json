@@ -1,0 +1,261 @@
+{
+  "cells": [
+    {
+      "agrees_with_oracle": true,
+      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+      "artifact_sha256": "6ab9917a657a1b7739a4215b6c0b90a658e665bab9585ab15a417a993aaa337c",
+      "deployment": null,
+      "emitted_token_ids": [
+        3925,
+        13,
+        151645
+      ],
+      "model": "qwen3-8b",
+      "oracle_artifact": "/home/ubuntu/OpenTallas/results/abi3/qwen3_reference_oracle_eos.json",
+      "scale": "shipped",
+      "status": "closed",
+      "store": "rom_single_chip",
+      "target_id": null,
+      "token_legitimacy_problems": [],
+      "topology": "SINGLE_CHIP"
+    },
+    {
+      "agrees_with_oracle": true,
+      "artifact": "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "artifact_sha256": "814f4e1ce5ae756d5c6beeab9b7cda4cec844419490bd6750ce8fce16eeb3f12",
+      "deployment": null,
+      "emitted_token_ids": [
+        3925,
+        13,
+        151645
+      ],
+      "model": "qwen3-8b",
+      "oracle_artifact": "/home/ubuntu/OpenTallas/results/abi3/qwen3_reference_oracle_eos.json",
+      "scale": "shipped",
+      "status": "closed",
+      "store": "hbm_sram",
+      "target_id": null,
+      "token_legitimacy_problems": [],
+      "topology": "SINGLE_CHIP"
+    },
+    {
+      "agrees_with_oracle": true,
+      "agrees_with_single_chip": true,
+      "artifact": "results/abi3/qwen3_reduced_array_token_walk.json",
+      "artifact_sha256": "819374c0b8c62a53e84b74d7c0e60695084d00ce0dd3912d0bf9bc57754b7f5c",
+      "capability": "results/abi3/qwen3_reduced_rom_array_4_capability.json",
+      "deployment": "build/abi3/qwen3-reduced-rom-array-4",
+      "emitted_token_ids": [
+        1073,
+        382,
+        93
+      ],
+      "model": "qwen3-8b",
+      "node_count": null,
+      "oracle_artifact": "results/abi3/qwen3_reduced_reference_oracle.json",
+      "retired": 756,
+      "scale": "reduced",
+      "status": "closed",
+      "stop_reason": "eos",
+      "store": "rom_array",
+      "topology": "CLUSTER_N"
+    },
+    {
+      "agrees_with_oracle": true,
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "artifact_sha256": "00e239a28bb515ba8db45dfb685705b21d28e49fce27f8f522d15532c3591fef",
+      "deployment": null,
+      "emitted_token_ids": [
+        13806,
+        345,
+        7472,
+        55560
+      ],
+      "model": "deepseek-v4-flash-0731",
+      "oracle_artifact": "results/abi3/deepseek_v4_reference_oracle_prefix.json",
+      "scale": "shipped",
+      "status": "closed",
+      "store": "rom_wafer",
+      "target_id": null,
+      "token_legitimacy_problems": [],
+      "topology": "WAFER_LOGICAL_DEVICE"
+    },
+    {
+      "agrees_with_oracle": true,
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "artifact_sha256": "ea1e17f74c372470d10df1a83dc9f02e7f86e0829f47c940aa7ea4ca79c13043",
+      "deployment": null,
+      "emitted_token_ids": [
+        13806,
+        345,
+        7472,
+        55560
+      ],
+      "model": "deepseek-v4-flash-0731",
+      "oracle_artifact": "results/abi3/deepseek_v4_reference_oracle_prefix.json",
+      "scale": "shipped",
+      "status": "closed",
+      "store": "hbm_sram",
+      "target_id": null,
+      "token_legitimacy_problems": [],
+      "topology": "CLUSTER_32"
+    },
+    {
+      "agrees_with_oracle": true,
+      "artifact": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32_t16.json",
+      "artifact_sha256": "b6c340081b06225b9c96d5a9e907a3c3562c61dbc166fc4a10a853d390428466",
+      "deployment": null,
+      "emitted_token_ids": [
+        13806,
+        345,
+        7472,
+        55560,
+        517,
+        436,
+        295,
+        223,
+        736,
+        4343,
+        16,
+        2052,
+        710,
+        2038,
+        44158,
+        477
+      ],
+      "model": "deepseek-v4-flash-0731",
+      "oracle_artifact": "results/abi3/deepseek_v4_reference_oracle_prefix.json",
+      "scale": "shipped",
+      "status": "closed",
+      "store": "rom_array",
+      "target_id": null,
+      "token_legitimacy_problems": [],
+      "topology": "CLUSTER_32"
+    },
+    {
+      "agrees_with_oracle": false,
+      "artifact": "results/abi3/deepseek_v41_reduced_token_walk.json",
+      "artifact_sha256": "417c1ae4cc015068d3b563c5909e6f79121e16e182c9377dbcb84cf4bf468900",
+      "blocker_evidence": [
+        {
+          "artifact": "results/abi3/deepseek_v41_oracle_logit_comparison.json",
+          "sha256": "914df51235bf1268044e42bcd7cf0cefad602ca0f8d0431b2ae0f973f152cb94"
+        },
+        {
+          "artifact": "results/abi3/deepseek_v41_oracle_depth_bisection_deep.json",
+          "sha256": "1d35efdd779b7a2e637e897067e78e92c6187748ab0a59a0621b22036ba0e032"
+        },
+        {
+          "artifact": "results/abi3/deepseek_v41_oracle_attention_split.json",
+          "sha256": "876fa870dee90af6be8142d9edebdaeb0cdb0404abbec89e73c8753e19de9c4e"
+        }
+      ],
+      "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+      "deployment": "build/abi3/deepseek-v41-reduced-rom",
+      "emitted_token_ids": [
+        2750
+      ],
+      "model": "deepseek-v4.1-flash",
+      "oracle_artifact": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+      "oracle_token_ids": [
+        1638,
+        930,
+        2587,
+        930,
+        1638,
+        1638,
+        1638,
+        1638,
+        0
+      ],
+      "oracle_token_rank_in_this_distribution": 2102,
+      "retired": 13473,
+      "scale": "reduced",
+      "status": "executes_but_disagrees",
+      "stop_reason": "max_new_tokens",
+      "store": "rom_wafer",
+      "topology": "WAFER_LOGICAL_DEVICE"
+    },
+    {
+      "agrees_with_oracle": false,
+      "artifact": "results/abi3/deepseek_v41_reduced_token_walk.json",
+      "artifact_sha256": "417c1ae4cc015068d3b563c5909e6f79121e16e182c9377dbcb84cf4bf468900",
+      "blocker_evidence": [
+        {
+          "artifact": "results/abi3/deepseek_v41_oracle_logit_comparison.json",
+          "sha256": "914df51235bf1268044e42bcd7cf0cefad602ca0f8d0431b2ae0f973f152cb94"
+        },
+        {
+          "artifact": "results/abi3/deepseek_v41_oracle_depth_bisection_deep.json",
+          "sha256": "1d35efdd779b7a2e637e897067e78e92c6187748ab0a59a0621b22036ba0e032"
+        }
+      ],
+      "capability": "results/abi3/deepseek_v41_hbm_comparator_capability.json",
+      "deployment": "build/abi3/deepseek-v41-reduced-hbm",
+      "emitted_token_ids": [
+        459
+      ],
+      "model": "deepseek-v4.1-flash",
+      "oracle_artifact": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+      "oracle_token_ids": [
+        1638,
+        930,
+        2587,
+        930,
+        1638,
+        1638,
+        1638,
+        1638,
+        0
+      ],
+      "oracle_token_rank_in_this_distribution": 2170,
+      "retired": 10694,
+      "scale": "reduced",
+      "status": "executes_but_disagrees",
+      "stop_reason": "max_new_tokens",
+      "store": "hbm_sram",
+      "topology": "SINGLE_CHIP"
+    },
+    {
+      "agrees_with_oracle": false,
+      "artifact": "results/abi3/deepseek_v41_array_placement_refusal.json",
+      "artifact_sha256": "0590f1bca7c6c6a033ec1e442dbde81b165d651bd4c5c9c08e1395d6185cb572",
+      "blocker_evidence": [
+        {
+          "artifact": "results/abi3/deepseek_v41_array_placement_refusal.json",
+          "sha256": "0590f1bca7c6c6a033ec1e442dbde81b165d651bd4c5c9c08e1395d6185cb572"
+        }
+      ],
+      "emitted_token_ids": [],
+      "model": "deepseek-v4.1-flash",
+      "refusal": "recorded in the artifact",
+      "scale": "reduced",
+      "status": "no_token",
+      "store": "rom_array",
+      "topology": "CLUSTER_N"
+    }
+  ],
+  "counts": {
+    "closed": 6,
+    "executes_but_disagrees": 2,
+    "no_token": 1
+  },
+  "not_a_claim": [
+    "not an RTL measurement: every token here is from runtime.sim unless its own artifact says otherwise",
+    "a SHIPPED-scale cell and a REDUCED-scale cell are not the same evidence, and the scale field says which each is; a shipped DeepSeek token costs days of simulation at the measured rate"
+  ],
+  "producer": {
+    "git": {
+      "commit": "77325b2c2132153c0bfd3f5bdd54ddc53e4ab1f4"
+    },
+    "tool": "tools/audit_nine_cell_token_matrix.py"
+  },
+  "question": "which of the nine topology-model cells have an end-to-end token that agrees with their own reference oracle, and what blocks the rest?",
+  "schema": "opentallas.abi3.nine_cell_token_matrix.v1",
+  "status_meanings": {
+    "closed": "a token was emitted and it agrees with the cell's oracle",
+    "executes_but_disagrees": "the program ran end to end and emitted a token, and the token does not match the oracle -- an arithmetic fault, not a stop",
+    "no_token": "no token; the blocker is recorded in blocker_evidence",
+    "unknown": "the artifact is absent or does not parse"
+  }
+}

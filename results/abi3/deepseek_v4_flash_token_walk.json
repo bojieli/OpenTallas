@@ -1,8 +1,27 @@
 {
   "agreement": {
+    "rom_array_32": true,
     "rom_wafer": true
   },
   "cases": {
+    "rom_array_32": {
+      "agrees_with_oracle": true,
+      "emitted_token_ids": [
+        13806
+      ],
+      "failure": null,
+      "identity": {
+        "capability": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+        "capability_sha256": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+        "deployment": "build/abi3/deepseek-v4-flash-rom-array-32",
+        "deployment_sha256": "bcf4d82bb5231c4304239b2bc0b6d2f530d231f9e8ae0501d7553bb649fcb546",
+        "instruction_count": 1344,
+        "node_count": 32,
+        "target_id": "deepseek-v4-flash-rom-array-32"
+      },
+      "retired_work": 26337,
+      "stop_reason": "max_new_tokens"
+    },
     "rom_wafer": {
       "agrees_with_oracle": true,
       "emitted_token_ids": [
@@ -53,7 +72,7 @@
   },
   "producer": {
     "git": {
-      "commit": "5391b3173cd98d50b413ef0c67e7a08a3de20de8",
+      "commit": "5cb3ae91c4b27295a93b376bfa59c8923028b14f",
       "worktree_dirty": true
     },
     "sha256": "9b345e0540f387c5a7a371c92765dba7e13dcdfdb1400a192a5819c08e0fb008",
