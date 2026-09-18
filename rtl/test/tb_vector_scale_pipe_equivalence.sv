@@ -193,6 +193,28 @@ module tb_vector_scale_pipe_equivalence;
         run_case(32'd513, 16'd0, 32'h3F800000, 8'h10);
         run_case(32'd8,   16'd0, 32'h7F800000, 8'h10);
         run_case(32'd8,   16'd2, 32'h3F800000, 8'h10);
+        // ---- a REFUSAL immediately followed by a good operation ------------
+        // This is the case the engine campaign caught and this bench did not.
+        // A refusal abandons the operand with elements still in the multiplier,
+        // and if the engine returns to S_IDLE and is restarted before they
+        // emerge, they retire as the NEXT operation's results: the campaign saw
+        // six words committed and the wrong fault code on two refusal cases.
+        // Back-to-back with no idle gap is what exposes it.
+        for (j = 0; j < 512; j = j + 1) begin
+            mem_a[j] = {16'b0, 16'h3F80};
+            mem_b[j] = {16'b0, 16'h3F80};
+        end
+        mem_a[3] = {16'b0, 16'h7F80};          // nonfinite deep in the operand
+        run_case(32'd64, 16'd0, 32'h3F800000, 8'h10);   // refuses at element 3
+        mem_a[3] = {16'b0, 16'h3F80};
+        run_case(32'd6,  16'd0, 32'h3F800000, 8'h10);   // must be clean
+        run_case(32'd6,  16'd0, 32'h3F800000, 8'h10);
+        mem_a[1] = {16'b0, 16'hFF80};
+        run_case(32'd8,  16'd1, 32'h0, 8'h10);          // refuses at element 1
+        mem_a[1] = {16'b0, 16'h3F80};
+        run_case(32'd8,  16'd1, 32'h0, 8'h10);          // must be clean
+        run_case(32'd64, 16'd0, 32'h3F800000, 8'h10);
+
         // ---- back to ordinary values, several random sweeps ----------------
         for (j = 0; j < 512; j = j + 1) begin
             mem_a[j] = {16'b0, $random(seed) & 16'h3FFF};

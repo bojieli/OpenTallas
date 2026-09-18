@@ -673,7 +673,13 @@ module ot_a3_engine_array (
     wire [31:0] scale_out_count, scale_sat;
     wire [7:0]  scale_error;
 
-    ot_a3_vector_scale scaler (
+    // The PIPELINED engine, one element per cycle.  Same ports, same arithmetic,
+    // proven equal on every architectural output by
+    // rtl/test/tb_vector_scale_pipe_equivalence.sv, and routed at 984.4 MHz
+    // against the combinational engine's 222.9 with 15% LESS area.  The element
+    // cost changes from 3 cycles to 1, so any cycle figure taken from this
+    // engine moves with the swap.
+    ot_a3_vector_scale_pipe scaler (
         .clk(clk), .rst_n(rst_n),
         .start(start & select_scale & descriptor_admitted),
         .cfg_count(cfg_count),

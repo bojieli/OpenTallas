@@ -66,6 +66,12 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_add.sv",
     "rtl/abi3/ot_a3_vector_convert.sv",
     "rtl/abi3/ot_a3_vector_scale.sv",
+    # The engine array instantiates the PIPELINED scaler
+    # (rtl/abi3/ot_a3_engine_array.sv), so its sources are what the array is
+    # built from; the combinational engine stays in the list because the
+    # equivalence bench drives both.
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv",
     "rtl/abi3/ot_a3_vector_hadamard.sv",
     "rtl/abi3/ot_a3_vector_index_score.sv",
     "rtl/abi3/ot_a3_vector_compress_project.sv",
@@ -133,14 +139,19 @@ MUTATIONS: tuple[dict[str, str], ...] = (
         "after": "out_data <= {16'b0, narrowed[15:1], ~narrowed[0]};",
     },
     {
-        "id": "scale_multiply_to_add",
-        "source": "rtl/abi3/ot_a3_vector_scale.sv",
-        "description": "replace the SCALE product with a binary32 addition",
+        # The array now builds the PIPELINED scaler, so a mutation of the
+        # combinational engine is no longer in the array's build path and would
+        # be silently un-caught.  This mutates the engine the array actually
+        # instantiates, and the fault is the same class: the committed word stops
+        # depending on the product.
+        "id": "scale_result_ignores_product",
+        "source": "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+        "description": "commit the left operand instead of the SCALE product",
         "before": (
-            "ot_fp32_rne_pkg::fp32_mul_rne(decoded_a[31:0], right_value);"
+            "ot_fp32_rne_pkg::fp32_to_bf16_rne(product_value);"
         ),
         "after": (
-            "ot_fp32_rne_pkg::fp32_add_rne(decoded_a[31:0], right_value);"
+            "ot_fp32_rne_pkg::fp32_to_bf16_rne(scale_bits_r);"
         ),
     },
     {

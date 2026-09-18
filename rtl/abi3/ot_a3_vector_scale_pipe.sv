@@ -78,7 +78,8 @@ module ot_a3_vector_scale_pipe #(
     localparam [2:0] S_IDLE   = 3'd0;
     localparam [2:0] S_RUN    = 3'd1;
     localparam [2:0] S_COMMIT = 3'd2;
-    localparam [2:0] S_DONE   = 3'd3;
+    localparam [2:0] S_DRAIN  = 3'd3;
+    localparam [2:0] S_DONE   = 3'd4;
 
     localparam integer INDEX_BITS = $clog2(MAX_ELEMENTS);
     //: ``ot_fp32_mul_rne_pipe``'s valid chain is valid_in -> s1_v -> s2_v ->
@@ -86,6 +87,16 @@ module ot_a3_vector_scale_pipe #(
     localparam integer MUL_LATENCY = 5;
 
     reg [2:0] state;
+    //: A refusal abandons the operand with elements still inside the
+    //: multiplier.  ``ot_fp32_mul_rne_pipe`` has no flush, so those elements
+    //: WILL emerge -- and if the engine has already returned to S_IDLE and been
+    //: restarted, they emerge as retires of the NEXT operation.  Measured: the
+    //: engine campaign's cases 11 and 13 are refusals, and unflushed they
+    //: committed six words each and reported the wrong fault code, because a
+    //: stale in-flight element retired first.  S_DRAIN holds the engine until
+    //: the pipe is empty.  Two cycles beyond the multiply cover the operand
+    //: address and data stages ahead of it.
+    reg [3:0] drain_count;
     reg [INDEX_BITS-1:0] issue_index;
     reg issuing;
     reg [INDEX_BITS-1:0] commit_index;
@@ -147,6 +158,7 @@ module ot_a3_vector_scale_pipe #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
+            drain_count <= 4'd0;
             issue_index <= {INDEX_BITS{1'b0}};
             issuing <= 1'b0;
             commit_index <= {INDEX_BITS{1'b0}};
@@ -253,10 +265,14 @@ module ot_a3_vector_scale_pipe #(
                         result_buffer[retire_index] <= {16'b0, narrowed[15:0]};
                         if (retire_nonfinite) begin
                             error_code <= ERR_OPERAND_NONFINITE;
-                            state <= S_DONE;
+                            issuing <= 1'b0;
+                            drain_count <= MUL_LATENCY + 2;
+                            state <= S_DRAIN;
                         end else if (retire_range) begin
                             error_code <= ERR_PRODUCT_RANGE;
-                            state <= S_DONE;
+                            issuing <= 1'b0;
+                            drain_count <= MUL_LATENCY + 2;
+                            state <= S_DRAIN;
                         end else begin
                             if (narrowed[16])
                                 pending_saturation_count <=
@@ -266,6 +282,17 @@ module ot_a3_vector_scale_pipe #(
                                 state <= S_COMMIT;
                         end
                     end
+                end
+
+                S_DRAIN: begin
+                    // Let the abandoned elements fall out of the pipe.  Nothing
+                    // is inspected and nothing is committed: the architectural
+                    // destination is untouched because S_COMMIT never runs.
+                    issuing <= 1'b0;
+                    if (drain_count == 4'd0)
+                        state <= S_DONE;
+                    else
+                        drain_count <= drain_count - 4'd1;
                 end
 
                 S_COMMIT: begin
