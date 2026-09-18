@@ -1617,10 +1617,19 @@ def run_pnr(
     # Phase 1: ORFS synthesis only.  OpenROAD's Verilog reader rejects the
     # ``input signed`` declarations Yosys emits for signed RTL ports, so the
     # mapped netlist is normalised on the host before the flow resumes.
+    # The SAME ceiling ``synth_timeout_seconds`` documents, which until now
+    # governed only the local-Yosys path at ``--stages synth``.  Synthesis inside
+    # ORFS -- which is what ``--stages pnr`` runs -- carried a hardcoded 7,200 s,
+    # so a block that legitimately needs longer could not ask: the override
+    # existed and did not reach the path where the need appears.  Measured on two
+    # blocks, both killed at exactly 7,200 s having produced nothing:
+    # ``ot_a3_engine_array`` and ``ot_a3_fp32_transcendental_cr_rne``, the latter
+    # the widest-fan-in leaf in the datapath at eight parents.  The default is
+    # unchanged, so no existing route moves.
     proc = orfs_make(
         f"{mapped_container} && chmod a+w {mapped_container}",
         "orfs_synth.log",
-        7200,
+        synth_timeout_seconds(),
     )
     require_success(proc, "ORFS synthesis")
     mapped = results_dir / "1_2_yosys.v"

@@ -1,4 +1,14 @@
 {
+  "UPDATE_the_override_did_not_reach_this_path": {
+    "retried": "at a 6-hour ceiling that now actually applies",
+    "the_fix": "The ORFS synthesis goal now calls ``synth_timeout_seconds()`` too.  Its default is 7200, so no existing route moves; what changes is that a block can now ask.",
+    "two_blocks_measured_at_exactly_7200_s": [
+      "ot_a3_engine_array -- the assembled datapath",
+      "ot_a3_fp32_transcendental_cr_rne -- the widest-fan-in leaf, eight parents"
+    ],
+    "what_happened": "The six-hour retry failed at 7,200 s again, with stages_completed still empty.  OT_SYNTH_TIMEOUT_SECONDS=21600 was set and verified on the process environment, and it changed nothing.",
+    "why": "tools/run_abi3_physical.py had TWO synthesis paths and the override reached only one.  ``synth_timeout_seconds()`` governed the LOCAL Yosys invocation used by ``--stages synth``; synthesis inside ORFS -- which is what ``--stages pnr`` runs, as the first of two ``orfs_make`` goals -- carried a hardcoded 7200 while the place-and-route goal after it carried 21600.  So the knob existed and did not reach the path where the need appears."
+  },
   "answer": "More than the flow's fixed two-hour synthesis ceiling.  Yosys was killed at 7,200 s having produced nothing: ``stages_completed`` is empty and there is no frequency to report.",
   "contrast_with_the_other_wide_leaf": "``ot_a3_fp32_div_rne``, seven parents, closed at 3.6 ns in 7.5 MINUTES.  The two widest leaves in the same datapath differ by more than two orders of magnitude in synthesis cost, which is why 'route the uncovered modules' is not a uniform-cost plan.",
   "not_a_claim": [
