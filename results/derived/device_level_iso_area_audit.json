@@ -242,12 +242,17 @@
     }
   },
   "iso_area_at_the_a100_budget": {
-    "assumption": "the assembly scales linearly in compute units. The dispatch-tree campaign measured 98-99% work-conserving utilisation out to 512 units (8,192 lanes), and the points below reach about 22,500 units (360,000 lanes) -- a 44x EXTRAPOLATION beyond the measured point. That is the weakest link in this number and it is stated here rather than buried: nothing has been built or measured at that width, and a distributor that stops conserving work at 22,500 units would reduce the ratio in proportion",
+    "assumption": "the area is filled with COPIES of an assembly whose work conservation is measured -- 512 compute units, and 1,088 measured beyond it, at 98-99% utilisation with work conserved in every case -- so the width itself is not extrapolated. What IS assumed is that copies do not interfere: the cluster fabric between them is modelled by the topology and link records and is not measured here, and a fabric that failed to keep copies fed would reduce the ratio in proportion. That is a narrower assumption than a 44x width extrapolation, which is what this figure rested on before.",
     "compute_unit_lanes": 16,
     "compute_unit_mm2": 0.0315247,
     "points": [
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 43.98696196950328,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 360341.19245417084,
         "bf16_ops_s_at_iso_area": 927842536450244.5,
         "capability": "hbm_sram_cluster_32.json",
@@ -261,6 +266,11 @@
       },
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 40.972710921912025,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 335648.4478723033,
         "bf16_ops_s_at_iso_area": 864261188426393.8,
         "capability": "hbm_sram_cluster_32.json",
@@ -274,6 +284,11 @@
       },
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 43.98696196950328,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 360341.19245417084,
         "bf16_ops_s_at_iso_area": 927842536450244.5,
         "capability": "hbm_sram_cluster_32_speculative.json",
@@ -287,6 +302,11 @@
       },
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 40.972710921912025,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 335648.4478723033,
         "bf16_ops_s_at_iso_area": 864261188426393.8,
         "capability": "hbm_sram_cluster_32_speculative.json",
@@ -300,6 +320,11 @@
       },
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 43.98696196950328,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 360341.19245417084,
         "bf16_ops_s_at_iso_area": 927842536450244.5,
         "capability": "hbm_sram_single_chip.json",
@@ -313,6 +338,11 @@
       },
       {
         "a100_bf16_ops_s": 312000000000000.0,
+        "assembly": {
+          "copies_of_that_assembly": 40.972710921912025,
+          "measured_units_per_assembly": 512.0,
+          "work_conservation_basis": "measured at 512 units and again at 1,088 by tools/rtl_dispatch_tree_campaign.py, functional PASS with work conserved at every case; the aggregate is copies of a measured assembly, not one distributor of unmeasured width"
+        },
         "bf16_lanes": 335648.4478723033,
         "bf16_ops_s_at_iso_area": 864261188426393.8,
         "capability": "hbm_sram_single_chip.json",
@@ -391,7 +421,7 @@
   "not_charged": "the HBM DRAM stacks themselves: the A100's 826 mm2 does not include its HBM dies either, so only the PHY crosses that line",
   "producer": {
     "git": {
-      "commit": "cff899a5b62cd5b90f3885d6497192a7abd38685"
+      "commit": "cb94742acf828e3a62693b9c6c6cd79c3410cc12"
     },
     "tool": "tools/audit_device_level_iso_area.py"
   },

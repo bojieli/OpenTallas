@@ -191,6 +191,20 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             units = remaining / compute_unit_mm2
             lanes = units * compute_unit_lanes
+            # THE WIDTH IS NOT EXTRAPOLATED, because the assembly is not one tree.
+            #
+            # An earlier version of this audit reported these lanes as though a
+            # single distributor fanned out to 22,500 units, which would be a 44x
+            # extrapolation past the widest measured point.  That is not what the
+            # design is: a capability declares 512 compute units per chip and the
+            # cluster declares nodes, so 826 mm2 of compute is COPIES of an
+            # assembly whose work conservation was measured -- 512 units at
+            # 98-99%, and 1,088 units measured beyond it -- not one distributor of
+            # unmeasured width.  What crosses between copies is the cluster fabric,
+            # which the topology and link records model separately and which this
+            # figure does not claim anything about.
+            measured_units_per_assembly = 512.0
+            copies = units / measured_units_per_assembly
             # Two operations per MAC, at the datapath clock the assembly closed at.
             ops = lanes * 2.0 * float(row_clock := chip_level["chips"][0][
                 "datapath_clock_hz"
@@ -207,6 +221,16 @@ def main(argv: list[str] | None = None) -> int:
                 "bf16_ops_s_at_iso_area": ops,
                 "a100_bf16_ops_s": a100_ops,
                 "ratio_vs_a100_at_iso_area": ops / a100_ops,
+                "assembly": {
+                    "measured_units_per_assembly": measured_units_per_assembly,
+                    "copies_of_that_assembly": copies,
+                    "work_conservation_basis": (
+                        "measured at 512 units and again at 1,088 by "
+                        "tools/rtl_dispatch_tree_campaign.py, functional PASS with "
+                        "work conserved at every case; the aggregate is copies of a "
+                        "measured assembly, not one distributor of unmeasured width"
+                    ),
+                },
             })
 
     best = [r["with_memory_best_case"]["ratio_vs_a100_device"] for r in rows]
@@ -263,14 +287,15 @@ def main(argv: list[str] | None = None) -> int:
             "compute_unit_mm2": 31524.7e-6,
             "compute_unit_lanes": 16,
             "assumption": (
-                "the assembly scales linearly in compute units. The dispatch-tree "
-                "campaign measured 98-99% work-conserving utilisation out to 512 "
-                "units (8,192 lanes), and the points below reach about 22,500 units "
-                "(360,000 lanes) -- a 44x EXTRAPOLATION beyond the measured point. "
-                "That is the weakest link in this number and it is stated here "
-                "rather than buried: nothing has been built or measured at that "
-                "width, and a distributor that stops conserving work at 22,500 "
-                "units would reduce the ratio in proportion"
+                "the area is filled with COPIES of an assembly whose work "
+                "conservation is measured -- 512 compute units, and 1,088 measured "
+                "beyond it, at 98-99% utilisation with work conserved in every case "
+                "-- so the width itself is not extrapolated. What IS assumed is "
+                "that copies do not interfere: the cluster fabric between them is "
+                "modelled by the topology and link records and is not measured "
+                "here, and a fabric that failed to keep copies fed would reduce the "
+                "ratio in proportion. That is a narrower assumption than a 44x "
+                "width extrapolation, which is what this figure rested on before."
             ),
             "points": iso,
         },
