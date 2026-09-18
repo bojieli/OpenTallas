@@ -1,0 +1,47 @@
+{
+  "method": "every engine dispatch's output views are digested against the descriptor's source_kernel_id -- the graph kernel both lanes were lowered from -- and the two traces are compared per kernel and then grouped by layer.  Digests only, because the lanes legitimately spend different NUMBERS of operators on one kernel and comparing (family, sub, digest) reports that as a value difference",
+  "not_a_claim": [
+    "that the expert reduction is the ONLY divergence -- it is the first, and 1,087 of 1,317 shared kernels differ downstream of it",
+    "that fixing it makes either token match the oracle"
+  ],
+  "producer": {
+    "git": {
+      "commit": "5391b3173cd98d50b413ef0c67e7a08a3de20de8",
+      "worktree_dirty": true
+    }
+  },
+  "question": "the ROM wafer emits 2750 and the HBM single chip 459 from ONE graph over ONE set of weights.  Where do they stop agreeing?",
+  "result": {
+    "first_divergent_kernel": {
+      "declared_contribution_order": "ascending_token_then_ascending_selection",
+      "declared_reduction_order": "pairwise_tree",
+      "hbm_operator_count": 1,
+      "index": 74,
+      "kernel_id": "main.layer00.feed_forward.reduce",
+      "kind": "EXPERT_REDUCE",
+      "numeric_contract": "dispatch_reduce_expert_outputs_bf16_v1",
+      "rom_operator_count": 8
+    },
+    "layers_compared": 18,
+    "layers_fully_agreeing": [
+      "prologue"
+    ],
+    "reading": "the prologue agrees completely, so the token ids, the embedding, the compressed-id map and the hyper-connection expansion are byte-identical between the stores.  The FIRST disagreement is the MoE expert reduction of layer 0, and the graph declares its association: a PAIRWISE TREE over the contributions.  A pairwise tree has one shape.  The ROM lane spends eight operators on that kernel and the HBM lane one, so the association between partial sums is outside any single operator's declared order in at least one of them -- and a binary32 sum's value depends on association.  At most one lane forms the tree the graph names"
+  },
+  "schema": "opentallas.abi3.v41_store_divergence_localisation.v1",
+  "sources": [
+    {
+      "path": "build/ir-v3/deepseek-v4.1-flash-reduced-v1/kernel_ir.v3.json",
+      "sha256": "732f992c9a43203d9645597b16891f8564894c4327f48a50b93121f877a2e1dd"
+    },
+    {
+      "path": "tools/bisect_deepseek_v41_store_divergence.py",
+      "sha256": "f47c452cbc3c777afc2db3187d3a4e3a7d6aca6e2eb82ad1015439cecf741ef2"
+    }
+  ],
+  "what_would_settle_it": [
+    "read what association each lane actually forms for EXPERT_REDUCE -- the ROM lane's eight operators and the HBM lane's one -- and compare both against runtime.sim.engines.reduction's pairwise tree over the declared contribution order",
+    "the lane that does not form the declared tree is the one to fix; the graph's reduction_order is the authority and neither lane gets to choose"
+  ],
+  "why_this_is_not_the_engram_gate": "the gate was the other candidate and is now excluded: both stores run the same engine, and executing the release's own gate instead of the frozen v1 contract left both tokens unchanged (2750, 459)"
+}
