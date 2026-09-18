@@ -1,0 +1,29 @@
+{
+  "answer": "it starts and stops at instruction 6 on a view/loop scoping defect",
+  "contrast": "DeepSeek-V4-Flash's array-32 deployment does NOT have this defect: it walks 1,344 instructions across 32 nodes and emits a token that agrees with its own wafer.  So this is specific to the V4.1 array lowering, not to array topologies",
+  "device": {
+    "instruction_count": 4429,
+    "max_retired_work": 3906385,
+    "node_count": 64,
+    "target_id": "deepseek-v4.1-flash-rom-array-64",
+    "topology_class": 3
+  },
+  "not_a_claim": [
+    "that this is the only defect on the V4.1 array path -- it is the first, reached after six retired instructions"
+  ],
+  "producer": {
+    "git": {
+      "commit": "03ffc18cbeda4624493555bb99e768ff1ade3caa",
+      "worktree_dirty": true
+    }
+  },
+  "question": "does the shipped DeepSeek-V4.1-Flash ROM array-64 deployment execute?",
+  "reading": "the deployment is admitted and its program loads, so the array's placement, sharding and descriptor tables are consistent enough to start.  The stop is a LOOP SCOPING defect: a tensor view carries a LOOP_INDUCTION term naming a loop that is not open where the view resolves.  That is the array analogue of the request-extent and operand-row gaps the wafer and single-chip lanes needed, and it is the FIRST execution this topology has ever had for this model, so it is the first chance anything like it could surface",
+  "result": {
+    "emitted_token_ids": [],
+    "failure": "prefill failed: view 1097: loop 1076 is not active",
+    "retired_work": 6
+  },
+  "schema": "opentallas.abi3.v41_array_first_execution.v1",
+  "why_the_shipped_model": "the reduced V4.1 vehicle cannot be built for this topology at all -- its 12 routed experts do not divide 64 owners, and the ROM array backend refuses the shard rather than splitting a slot -- so the shipped deployment is the only route to a V4.1 array execution.  Its 384 experts divide 64 owners exactly six ways"
+}
