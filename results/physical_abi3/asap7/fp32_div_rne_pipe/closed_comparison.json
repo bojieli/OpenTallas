@@ -1,0 +1,43 @@
+{
+  "closed_to_closed": {
+    "area_ratio_smaller_is_better": 1.137,
+    "both_have_zero": "max-slew, max-cap, max-fanout and DRC violations",
+    "clock_ratio": 1.476,
+    "pipelined": {
+      "area_um2": 1323.53,
+      "cell_count": 13076,
+      "closed": true,
+      "fmax_mhz": 418.5,
+      "module": "ot_a3_fp32_div_rne_pipe",
+      "setup_wns_ns": 0.0106097,
+      "target_ns": 2.4
+    },
+    "reference": {
+      "area_um2": 1504.85,
+      "closed": true,
+      "fmax_mhz": 283.5,
+      "module": "ot_a3_fp32_div_rne",
+      "setup_wns_ns": 0.0727749,
+      "target_ns": 3.6
+    }
+  },
+  "equivalence": "673 cases, 0 failures, bit-exact -- results/rtl/fp32_div_pipe_equivalence.json",
+  "how_to_remove_the_trade": "The cycle cost is 2 per bisection step over ~31 steps, and 31 is the width of a binary search over the whole 31-bit code space.  The quotient's exponent is directly computable from the operands', so seeding the bracket to a three-exponent window would cut the search to about 25 steps -- roughly 1.24x fewer cycles, which would make the change close to latency-neutral while keeping the 1.48x clock and the smaller area.  It is not done here because it needs its own correctness argument for subnormals and the overflow boundary, and stacking a second delicate change on an unverified first one is how a correctly-rounded divider goes quietly wrong.",
+  "is_the_trade_worth_taking": {
+    "NOT_MEASURED": "The division fraction of a token's cycles is not measured here, so the net effect on token time is an argument and not a result.  It would be settled by a cycle-accurate token walk with a per-operator breakdown.",
+    "argument_for": "The divider is shared by seven parents and sits inside ot_a3_engine_issue_bridge, so its period is the engine complex's period: every MAC on that clock gets the 1.48x.  Division is a per-ROW scalar operation -- the softmax denominator, the RMS norm reciprocal, the route weight normalisation -- while matmul MACs dominate the operation count by orders of magnitude."
+  },
+  "not_a_claim": [
+    "nothing is rewired: no parent instantiates the pipelined module, so no deployment or campaign result moves",
+    "ASAP7 is a predictive, non-manufacturable academic PDK"
+  ],
+  "question": "The shared fp32 divider bounds the engine complex at 283.5 MHz and seven token-path parents instantiate it.  Its critical path is one bisection step entire in one cycle.  Split across two cycles, what does it cost and what does it buy?",
+  "schema": "opentallas.result.fp32_div_pipe_closed_comparison.v1",
+  "the_cost_stated_plainly": {
+    "clock_ratio": 1.476,
+    "cycles_ratio": 1.969,
+    "reading": "The clock rose 1.48x and the cycles grew 1.97x, so ONE DIVISION TAKES 1.33x LONGER in wall time.  This is a trade, not a free win, and calling it a speedup without that sentence would be wrong.",
+    "time_per_division_ratio": 1.334
+  },
+  "why_the_area_fell": "Pipeline registers were added and the block still shrank 12%, because the reference evaluates a SECOND full comparison every cycle -- the RNE rounding midpoint, a value read once after the bracket closes.  Moving it out of the loop saves more than the registers cost."
+}

@@ -1,12 +1,12 @@
 {
   "carry_no_timing_paths": [],
   "counts": {
-    "abi3_modules": 103,
+    "abi3_modules": 104,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 34,
+    "covered_by_a_closed_block": 35,
     "uncovered_and_instantiated": 52,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 16
+    "with_their_own_closed_record": 17
   },
   "limiter_under_audit": {
     "at_target_clock_period_ns": 4.75,
@@ -230,6 +230,14 @@
         "ot_a3_vector_silu_mul"
       ],
       "module": "ot_a3_fp32_div_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_fp32_div_rne_pipe"
     },
     {
       "carries_no_timing_paths": false,
@@ -1033,14 +1041,14 @@
   ],
   "producer": {
     "git": {
-      "commit": "d433df449b06d4a484dcbbf345f8a7fb520ca722"
+      "commit": "fc593dc1a22b0a37a3b0adb9427fff4a3a58f13b"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
   "question": "The fmax inventory calls the slowest ABI 3.0 block with a closed routed record the design's clock limiter.  Is every ABI 3.0 datapath module inside SOME block that has closed, so that the limiter covers the datapath rather than only the blocks that happen to have been routed?",
   "schema": "opentallas.derived.asap7_datapath_coverage.v1",
   "top_level_islands": {
-    "count": 25,
+    "count": 26,
     "islands": [
       {
         "has_a_closed_record": false,
@@ -1272,6 +1280,14 @@
         "top": "ot_a3_dma_fill"
       },
       {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_fp32_div_rne_pipe"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_fp32_div_rne_pipe"
+      },
+      {
         "has_a_closed_record": false,
         "members": [
           "ot_a3_operand_receiver"
@@ -1361,7 +1377,7 @@
       }
     ],
     "what": "A module nothing instantiates is the root of a separately elaborated subsystem.  No single top integrates this design, so every ASAP7 frequency is a statement about ONE island, and a whole-chip clock has not been measured because no netlist contains the whole chip.",
-    "with_a_closed_record": 8
+    "with_a_closed_record": 9
   },
   "uncovered_and_instantiated": [
     {
