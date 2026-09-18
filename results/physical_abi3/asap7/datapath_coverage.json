@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 104,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 36,
-    "uncovered_and_instantiated": 51,
+    "covered_by_a_closed_block": 39,
+    "uncovered_and_instantiated": 48,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 18
+    "with_their_own_closed_record": 21
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -1262,9 +1262,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_link_channel.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_link_endpoint",
         "ot_a3_link_node"
@@ -1273,9 +1273,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_link_channel.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_link_endpoint",
         "ot_a3_link_node"
@@ -1325,9 +1325,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_mac_lane_pipe.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array",
         "ot_a3_tensor_routed_matmul"
@@ -1820,7 +1820,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "6700ef8b29d287e0ff8e4798ddb01a4733e27296"
+      "commit": "15661c514feaa11d375f4d8a0a0d6420d3f2ef67"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2294,20 +2294,6 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_link_endpoint",
-        "ot_a3_link_node"
-      ],
-      "module": "ot_a3_link_rx_channel"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_link_endpoint",
-        "ot_a3_link_node"
-      ],
-      "module": "ot_a3_link_tx_channel"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
       ],
       "module": "ot_a3_link_wire"
@@ -2317,13 +2303,6 @@
         "ot_a3_engine_array"
       ],
       "module": "ot_a3_mac_lane"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array",
-        "ot_a3_tensor_routed_matmul"
-      ],
-      "module": "ot_a3_mac_lane_pipe"
     },
     {
       "instantiated_by": [
