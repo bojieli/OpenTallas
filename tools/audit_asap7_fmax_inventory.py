@@ -36,6 +36,23 @@ SCHEMA = "opentallas.physical.asap7_fmax_inventory.v2"
 TOOL = "tools/audit_asap7_fmax_inventory.py"
 
 
+#: Block families.  The ASAP7 record set mixes three kinds of block and a clock
+#: limiter computed over all of them is meaningless: ``ot_probe_*`` are
+#: characterisation probes built to measure one construct (several are deliberately
+#: retired in favour of a pipelined replacement), and ``ot_ta_*`` belong to the
+#: earlier tensor-accelerator design -- neither is referenced from ``rtl/abi3/`` or
+#: from any backend, so neither is on the ABI 3.0 datapath's clock.  Only the third
+#: family can limit it.
+def _family(block: str | None) -> str:
+    if not block:
+        return "unknown"
+    if block.startswith("ot_probe_"):
+        return "probe"
+    if block.startswith("ot_ta_"):
+        return "legacy_tensor_accelerator"
+    return "abi3_datapath"
+
+
 def _git(*args: str) -> str:
     return subprocess.run(
         ["git", *args], cwd=ROOT, capture_output=True, text=True, check=True
@@ -87,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
                 "record": str(path.relative_to(ROOT)),
                 "record_sha256": _sha256(path),
                 "block": design.get("block"),
+                "family": _family(design.get("block")),
                 "post_route": post_route,
                 "stages": list(stages),
                 "closed": design.get("closed"),
@@ -117,6 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         if current is None or float(record["fmax_hz"]) > float(current["fmax_hz"]):
             per_block[block] = {
                 "block": block,
+                "family": _family(block),
                 "fmax_hz": record["fmax_hz"],
                 "at_target_clock_period_ns": record["target_clock_period_ns"],
                 "target_headroom": record["target_headroom"],
@@ -126,7 +145,9 @@ def main(argv: list[str] | None = None) -> int:
             }
 
     ranking = sorted(per_block.values(), key=lambda entry: float(entry["fmax_hz"]))
-    limiter = ranking[0] if ranking else None
+    datapath = [e for e in ranking if e["family"] == "abi3_datapath"]
+    limiter = datapath[0] if datapath else None
+    excluded = [e for e in ranking if e["family"] != "abi3_datapath"]
 
     report = {
         "schema": SCHEMA,
@@ -153,21 +174,33 @@ def main(argv: list[str] | None = None) -> int:
             if limiter is None
             else {
                 **limiter,
+                "scope": "abi3_datapath only",
                 "note": (
-                    "the design's clock cannot exceed the slowest block on it, so this "
-                    "row is the whole-design operating point and every block above it "
-                    "has headroom"
+                    "the design's clock cannot exceed the slowest block ON IT, so this "
+                    "row is the whole-design operating point and every ABI 3.0 block "
+                    "above it has headroom.  Probes and legacy tensor-accelerator "
+                    "blocks are excluded by family: neither is referenced from "
+                    "rtl/abi3/ or from any backend, so neither is on this clock.  "
+                    "Including them would let a retired block set the operating point."
                 ),
             }
         ),
+        "excluded_from_the_limiter_by_family": [
+            {"block": e["block"], "family": e["family"], "fmax_hz": e["fmax_hz"]}
+            for e in excluded
+        ],
         "records": records,
         "not_a_claim": [
             "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a "
             "silicon claim",
             "a block's best closed fmax is the best over the routes that were RUN, not "
             "a proven ceiling: a block nobody routed at a tight target will read slow",
-            "the limiter is the slowest block that has a closed record.  A block with "
-            "no closed record at all is not on this list and could be slower",
+            "the limiter is the slowest ABI 3.0 block that has a closed record.  A "
+            "block with no closed record at all is not on this list and could be "
+            "slower",
+            "the family split is by module-name prefix confirmed against whether "
+            "rtl/abi3/ or any backend references the block; it is a classification, "
+            "not a measurement",
         ],
     }
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
@@ -180,11 +213,12 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"  {float(entry['fmax_hz'])/1e6:9.1f} MHz  T={entry['at_target_clock_period_ns']!s:>6} ns "
             f" headroom={entry['target_headroom'] if entry['target_headroom'] is None else round(entry['target_headroom'],3)!s:>6}"
-            f"  {entry['block']}"
+            f"  [{entry['family'][:5]}] {entry['block']}"
         )
     if limiter:
         print(
-            f"\nclock limiter: {limiter['block']} at {float(limiter['fmax_hz'])/1e6:.1f} MHz "
+            f"\nclock limiter (abi3 datapath only): {limiter['block']} at "
+            f"{float(limiter['fmax_hz'])/1e6:.1f} MHz "
             f"({limiter['record']})"
         )
     return 0

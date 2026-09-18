@@ -34,10 +34,10 @@
   "counts": {
     "distinct_blocks_with_a_closed_routed_record": 29,
     "pre_layout_only_records": 72,
-    "records_read": 160,
+    "records_read": 161,
     "routed_and_closed": 54,
-    "routed_not_closed": 34,
-    "routed_records": 88
+    "routed_not_closed": 35,
+    "routed_records": 89
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -46,7 +46,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "5303f7b61753b37b7fa85de8fe9bdaa93a376089"
+      "commit": "4dc6a2aeffe16fa97c8e5477d2243a08771dcc8c"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -3486,6 +3486,41 @@
       }
     },
     {
+      "block": "ot_ta_matmul_bf16_sram_engine",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 122",
+      "core_area_um2": 22975.9,
+      "hold_wns_ns": 0.0520449,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 57959000.0,
+      "record": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr_reroute_si.json",
+      "record_sha256": "b2dfed0ebf946690bdebdc2718b73f4150ded3e3502c8f6ef7eff9fc3f47f3e9",
+      "routed": true,
+      "setup_wns_ns": 0.74642,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 122
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8348.44,
+      "status": "pass",
+      "target_clock_period_ns": 18.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 122
+        },
+        "violating": {
+          "max_slew_violations": 122
+        }
+      }
+    },
+    {
       "block": "ot_compute_unit",
       "closed": false,
       "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 2",
@@ -4174,7 +4209,7 @@
   "view": "asap7",
   "why_the_not_closed_records_are_not_closed": {
     "blocked_only_by_a_pre_layout_stage": 5,
-    "routed_netlist_dirty": 20,
+    "routed_netlist_dirty": 21,
     "routed_timing_not_met": 4,
     "signal_integrity_fields_absent": 5
   }
