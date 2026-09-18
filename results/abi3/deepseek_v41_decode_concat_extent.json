@@ -1,4 +1,11 @@
 {
+  "CORRECTION_the_explanation_is_refuted": {
+    "what_I_claimed": "That the defect is 'a phase-split join whose output is declared as the window alone', and that the two V4.1 lanes failing identically was 'one defect rendered at two shardings'.",
+    "what_is_refuted": "The EXPLANATION.  Two builds that DECODE CORRECTLY carry the identical declaration:\n  * DeepSeek-V4-Flash ROM wafer, which decodes 16 committed tokens, declares its shared join output as num=0 unit=4 bias=128 with a 2-input and a 1-input operator under one 'CONTEXT_LENGTH GE 4' predicate -- the same construction as V4.1's 'GE 2'.\n  * The REDUCED V4.1 ROM, which completes decode and emits 1126, declares out 2952 as num=0 unit=2 bias=128 with inputs 128 + 64 -- field for field the shipped build's shape, differing only in scale (the shipped compressed plane is 4,096 rows where the reduced one is 64).\nSo 'the output is declared as the window alone' cannot be the defect: it is how every passing build declares it too.",
+    "what_survives": "The OBSERVATION.  Both shipped V4.1 lanes fail at the same operator with the same shape, and the row counts scale with each lane's compressed plane (128+4096 on the wafer, 128+256 on the array-64) while both outputs resolve to the 128-row window.  That is unchanged.",
+    "what_this_rules_out_and_in": "Rules out: the declaration, the predicate symbol, the shared output view, and the phase pairing -- all four are identical between passing and failing builds.  Rules in: something about how these views RESOLVE at runtime, which differs with scale, and which no amount of reading the descriptor table has settled.",
+    "why_I_stopped_reading": "Three successive static readings of this operator have now been wrong -- first the predicate symbol, then the output extent, then the shared view.  Each was consistent with the descriptors and refuted by a build that passes.  The instrument that would settle it is the RESOLVED view dimensions at that operator in a passing run compared against the failing one, and the reduced vehicle walks in minutes rather than hours, so that is the cheap measurement to make rather than a fourth inference."
+  },
   "measured": {
     "graph_kernel": {
       "axis": 0,
@@ -62,6 +69,10 @@
       }
     ]
   },
+  "not_yet_established": [
+    "the root cause.  Three readings refuted; the declaration is identical in passing and failing builds, so the difference is in resolution rather than declaration",
+    "why prefill passes and decode step 1 does not, which was already open and remains so"
+  ],
   "question": "The shipped V4.1 ROM wafer completes prefill and refuses decode step 1 with 'GROUPED_CONCAT output view 2655 dims (128, 512) differ from the axis-0 concatenation (4224, 512)'.  What is the shape of that defect?",
   "schema": "opentallas.result.v41_decode_concat_extent.v1",
   "this_failure_is_already_described_in_the_tree": {
