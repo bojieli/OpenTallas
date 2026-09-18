@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.abi3.v41_hc_mix_root_cause.v1",
+  "question": "why does every V4.1 layer after layer 0 depart from the oracle while layer 0 is nearly exact?",
+  "answer": "the computed hyper-connection mix never reaches the collapse: EVERY layer collapses its four hyper-connection streams with the IDENTITY one-hot, which is correct only for layer 0",
+  "evidence": [
+    {
+      "probe": "the graph's cross-layer wiring",
+      "result": "correct. Layer 0's attention collapse reads hyper_connection.identity_branch_weights; layer 0's FFN collapse reads main.layer00.hyper_connection.attention.branch_weights; layer 1's attention collapse reads main.layer00.hyper_connection.FEED_FORWARD.branch_weights; layer 1's FFN collapse reads main.layer01.hyper_connection.attention.branch_weights",
+      "reading": "the vendor's rule -- layer L's ffn_pre is layer L+1's attention pre_mix, and layer L's attn_pre is layer L's own FFN pre_mix -- is expressed exactly. The frontend is not the fault."
+    },
+    {
+      "probe": "the vendor's own layer-0 attention mix, captured by wrapping Block.hc_mixes",
+      "result": "attn_pre is [8, 4], per token: row 7 = [0.502604, 0.502076, 0.500883, 0.499715], row 0 = [0.498372, 0.504284, 0.497368, 0.495541]; the four weights of a row sum to about 2.0, not 1.0",
+      "reading": "the mix is a per-token Sinkhorn-normalised vector, not a selection"
+    },
+    {
+      "probe": "every branch-weight operand the device actually reads (REDUCTION input 1)",
+      "result": "six views, all of shape [4] and all valued [1.0, 0.0, 0.0, 0.0]",
+      "reading": "two defects in one measurement: the VALUE is the identity one-hot where a computed mix was due, and the SHAPE is one token-invariant row where the vendor's is one row per token"
+    }
+  ],
+  "why_layer_0_is_exact": "layer 0's attention collapse is SUPPOSED to read the identity -- Transformer.forward builds it with make_identity_pre_mix -- so the defect is invisible there and visible in every later layer. That is the shape of the whole depth sweep: 0.9961 at layer 0, 0.4451 at layer 1, a ~0.24 plateau to layer 39.",
+  "what_to_fix": [
+    "the HYPER_CONNECT_PRE lowering presents its weight planes as token-invariant rows; the mix is one statistic per token and has to be presented per token, which is the same finding as the ROM lowering's open refusal of a token-invariant mHC weight row of 20 elements against 4 contributions per token (test_rom_short_horizon)",
+    "the value reaching the collapse is the identity, so either the engine is not writing the computed planes or the collapse's operand resolves to the identity constant rather than to the SELECT's output"
+  ],
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "this is the root cause of the plateau, not necessarily the only remaining fault: layer 0 measures 0.9961 and not 1.0, so something smaller is also wrong inside a layer",
+    "the token is still wrong (ROM 1242 against the oracle's 1638); this names the fault, it does not close the cell"
+  ]
+}
