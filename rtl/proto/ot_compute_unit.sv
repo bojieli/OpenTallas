@@ -303,18 +303,72 @@ module ot_compute_unit #(
                                  : fill_here ? fill_cnt[7:0]
                                              : rd_addr;
             wire [WGT_BITS-1:0] wd_here = wr_here ? wr_data : refill_data;
-            fakeram_256x128 u_lo (
-                .clk(clk), .addr_in(addr_here),
-                .ce_in(wr_here | fill_here | rd_here),
-                .we_in(wr_here | fill_here),
-                .wd_in(wd_here[127:0]), .rd_out(rd_lo_bus[b*128 +: 128])
-            );
-            fakeram_256x128 u_hi (
-                .clk(clk), .addr_in(addr_here),
-                .ce_in(wr_here | fill_here | rd_here),
-                .we_in(wr_here | fill_here),
-                .wd_in(wd_here[WGT_BITS-1:128]), .rd_out(rd_hi_bus[b*128 +: 128])
-            );
+            //: THE BANK'S MACRO COMPOSITION FOLLOWS ITS DEPTH, and the depth is
+            //: K_MAX -- the columns one bank holds -- so no second parameter
+            //: decides it.  Both compositions present the same 256-bit row to
+            //: the read mux below, so nothing downstream of here changes.
+            //:
+            //: 256 is the original: two ``fakeram_256x128`` ganged in width, 2 x
+            //: 1404.5 = 2,809 um2 per bank.  A double buffer at that depth
+            //: therefore costs 100 % MORE WEIGHT SRAM, which is why it loses to
+            //: the single buffer whenever operand supply is good enough that the
+            //: second bank is never waited on -- measured as 1.41x the A100's
+            //: logic density against the single buffer's 1.95x at refill skew 0.
+            //:
+            //: 128 is the answer to that: four ``fakeram7_128x64``, 4 x 361.2 =
+            //: 1,444.8 um2, so TWO half-depth banks are 2,890 um2 against the one
+            //: full-depth bank's 2,809 -- 2.9 % more SRAM for a true ping-pong,
+            //: where the full-depth pair pays 100 %.  The tile is half as wide, so
+            //: a K=256 kernel becomes two tiles rather than one and the refill is
+            //: charged twice; whether that trade wins is a measurement, not an
+            //: argument, and it is the one the campaign at this geometry makes.
+            if (K_MAX == 256) begin : depth256
+                fakeram_256x128 u_lo (
+                    .clk(clk), .addr_in(addr_here),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[127:0]), .rd_out(rd_lo_bus[b*128 +: 128])
+                );
+                fakeram_256x128 u_hi (
+                    .clk(clk), .addr_in(addr_here),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[WGT_BITS-1:128]), .rd_out(rd_hi_bus[b*128 +: 128])
+                );
+            end else if (K_MAX == 128) begin : depth128
+                //: 7-bit ports, so the address is truncated rather than widened:
+                //: ``cfg_k`` is bounded by K_MAX above, so a column index that
+                //: needed bit 7 could not have been issued.
+                fakeram7_128x64 u_lo0 (
+                    .clk(clk), .addr_in(addr_here[6:0]),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[63:0]), .rd_out(rd_lo_bus[b*128 +: 64])
+                );
+                fakeram7_128x64 u_lo1 (
+                    .clk(clk), .addr_in(addr_here[6:0]),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[127:64]), .rd_out(rd_lo_bus[b*128 + 64 +: 64])
+                );
+                fakeram7_128x64 u_hi0 (
+                    .clk(clk), .addr_in(addr_here[6:0]),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[191:128]), .rd_out(rd_hi_bus[b*128 +: 64])
+                );
+                fakeram7_128x64 u_hi1 (
+                    .clk(clk), .addr_in(addr_here[6:0]),
+                    .ce_in(wr_here | fill_here | rd_here),
+                    .we_in(wr_here | fill_here),
+                    .wd_in(wd_here[WGT_BITS-1:192]),
+                    .rd_out(rd_hi_bus[b*128 + 64 +: 64])
+                );
+            end else begin : depth_unsupported
+                //: A depth with no macro composition is refused at elaboration
+                //: rather than silently built from the wrong parts.
+                $error("ot_compute_unit: K_MAX=%0d has no weight-SRAM macro composition; 128 and 256 are built", K_MAX);
+            end
         end
     endgenerate
 

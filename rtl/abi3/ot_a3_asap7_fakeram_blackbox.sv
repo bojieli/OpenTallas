@@ -107,6 +107,27 @@ module fakeram_2048x128 (
         end
 endmodule
 
+module fakeram7_128x64 (
+    input  wire        clk,
+    input  wire [6:0]  addr_in,
+    input  wire        ce_in,
+    input  wire        we_in,
+    input  wire [63:0] wd_in,
+    output reg  [63:0] rd_out
+);
+    //: 128 words of 64 bits.  Four of these gang to the 256-bit weight row at
+    //: half the depth of the ``fakeram_256x128`` pair, which is what lets a
+    //: double buffer cost 2.9 % more weight SRAM than one full-depth bank rather
+    //: than 100 % more.  The platform ships the LEF/liberty pair; the port list
+    //: below is read off ``asap7/verilog/fakeram7_128x64.sv`` and not invented.
+    reg [63:0] mem [0:127];
+    always @(posedge clk)
+        if (ce_in) begin
+            if (we_in) mem[addr_in] <= wd_in;
+            else       rd_out       <= mem[addr_in];
+        end
+endmodule
+
 module fakeram_256x64 (
     input  wire        clk,
     input  wire [7:0]  addr_in,
@@ -189,6 +210,17 @@ module fakeram_2048x128 (
     input  wire         we_in,
     input  wire [127:0] wd_in,
     output wire [127:0] rd_out
+);
+endmodule
+
+(* blackbox *)
+module fakeram7_128x64 (
+    input  wire        clk,
+    input  wire [6:0]  addr_in,
+    input  wire        ce_in,
+    input  wire        we_in,
+    input  wire [63:0] wd_in,
+    output wire [63:0] rd_out
 );
 endmodule
 

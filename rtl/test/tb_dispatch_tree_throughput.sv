@@ -86,7 +86,12 @@ module tb_dispatch_tree_throughput #(
     parameter integer FLAT    = 0,
     parameter integer SKEW    = 0,
     parameter integer REFILL_DECOUPLED = 0,
-    parameter integer WGT_BANKS        = 1
+    parameter integer WGT_BANKS        = 1,
+    //: The weight bank's depth, which is also its macro composition: 256 is the
+    //: ``fakeram_256x128`` pair and 128 the four ``fakeram7_128x64`` parts.  A
+    //: kernel deeper than one bank would need two tiles, which this bench does
+    //: not split, so a run at 128 must keep its kernel depths at or below it.
+    parameter integer K_MAX            = 256
 );
     localparam integer UNITS  = LEAVES * GROUP;
     localparam integer TILE_W = $clog2(UNITS);
@@ -216,7 +221,7 @@ module tb_dispatch_tree_throughput #(
                     for (rl = 0; rl < LANES; rl = rl + 1)
                         rdata[16*rl +: 16] = wgt_mem[(rcol % KF)*LANES + rl];
                 end
-                ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256),
+                ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(K_MAX),
                                   .REFILL_DECOUPLED(REFILL_DECOUPLED),
                                   .WGT_BANKS(WGT_BANKS)) cu (
                     .clk(clk), .rst_n(rst_n),

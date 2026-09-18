@@ -141,9 +141,9 @@ def verilator_version() -> str:
 
 def build(workdir: Path, leaves: int, radix: int, credits: int,
           jobs: int, flat: int = 0, skew: int = 0, group: int = 1,
-          decoupled: int = 0, banks: int = 1) -> Path:
+          decoupled: int = 0, banks: int = 1, kmax: int = 256) -> Path:
     tag = (f"l{leaves}_g{group}_r{radix}_c{credits}_f{flat}_s{skew}"
-           f"_d{decoupled}_b{banks}")
+           f"_d{decoupled}_b{banks}_k{kmax}")
     obj = workdir / f"obj_{tag}"
     exe = obj / f"sim_{tag}"
     if exe.exists():
@@ -155,6 +155,7 @@ def build(workdir: Path, leaves: int, radix: int, credits: int,
            f"-GLEAVES={leaves}", f"-GRADIX={radix}", f"-GCREDITS={credits}",
            f"-GFLAT={flat}", f"-GSKEW={skew}", f"-GGROUP={group}",
            f"-GREFILL_DECOUPLED={decoupled}", f"-GWGT_BANKS={banks}",
+           f"-GK_MAX={kmax}",
            "-o", exe.name, "--Mdir", str(obj), "-j", str(jobs),
            *[str(ROOT / s) for s in SOURCES]]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -261,6 +262,16 @@ def main() -> int:
                     help="ot_compute_unit WGT_BANKS: 1 single buffer (the fill "
                          "and the walk share one macro port), 2 double buffer at "
                          "one extra macro pair. Repeatable; default 1")
+    ap.add_argument("--kmax", type=int, default=256, choices=(128, 256),
+                    help="ot_compute_unit K_MAX: the weight bank's depth and so "
+                         "its macro composition. 256 is the fakeram_256x128 pair "
+                         "(2,809 um2 a bank); 128 is four fakeram7_128x64 "
+                         "(1,445 um2 a bank), so two half-depth banks cost 2.9%% "
+                         "more weight SRAM than ONE full-depth bank where two "
+                         "full-depth banks cost 100%% more. A kernel deeper than "
+                         "one bank needs two tiles, which the bench does not "
+                         "split, so a run at 128 must keep --ndesc kernels at or "
+                         "below that depth.")
     ap.add_argument("--ndesc", type=int, default=12,
                     help="descriptors per utilisation case")
     ap.add_argument("--jobs", type=int, default=6)
@@ -314,11 +325,18 @@ def main() -> int:
                     continue
                 exe = build(args.workdir, n, radix, args.credits, args.jobs,
                             flat=flat, skew=skew, group=gsz,
-                            decoupled=decoupled, banks=banks)
+                            decoupled=decoupled, banks=banks,
+                            kmax=args.kmax)
                 res = run_one(exe, args.ndesc, n * gsz, flat)
                 rec = {
                     "refill_decoupled": decoupled,
                     "weight_banks": banks,
+                    #: The bank's depth, which is also its macro composition: 256
+                    #: is the fakeram_256x128 pair and 128 the four
+                    #: fakeram7_128x64 parts.  Recorded so an area record built at
+                    #: one depth cannot be charged against a campaign run at
+                    #: another.
+                    "weight_bank_depth": args.kmax,
                     "leaves": n,
                     "group": gsz,
                     "compute_units": n * gsz,
