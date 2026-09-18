@@ -141,9 +141,16 @@ def _recast_experts_to_fp8(
         scale = state[scale_name]
         if weight.dtype != torch.int8:
             weight = weight.view(torch.int8)
-        widened, block_scale = convert_mod.cast_e2m1fn_to_e4m3fn(
-            weight, scale.view(torch.uint8)
-        )
+        # The scale goes in as its OWN dtype, not as raw bytes.
+        #
+        # ``cast_e2m1fn_to_e4m3fn`` does ``scale.float()`` and divides by 2**6, so
+        # a float8_e8m0fnu tensor decodes to the value 1.0 and yields a returned
+        # block scale of 2**-6.  Passing ``scale.view(torch.uint8)`` instead made
+        # ``.float()`` read the CODE -- 127 for an exponent of zero -- so the
+        # returned scale came back as 127/64 = 1.984 and the reconstructed weight
+        # as 384 * 2 = 768 against a true 6.0: 128x too large.  I attributed that
+        # inflation to the vendor's kernel for several commits; it was this line.
+        widened, block_scale = convert_mod.cast_e2m1fn_to_e4m3fn(weight, scale)
         state[name] = widened
         state[scale_name] = block_scale
         logical[name] = "float8_e4m3fn"

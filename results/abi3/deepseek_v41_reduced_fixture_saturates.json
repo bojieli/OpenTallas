@@ -1,42 +1,79 @@
 {
-  "schema": "opentallas.abi3.v41_reduced_fixture_saturates.v1",
-  "question": "can the reduced V4.1 fixture's routed-expert region be validated against an external reference at all?",
+  "CORRECTION": {
+    "the_bug": "the recast helper was called as cast_e2m1fn_to_e4m3fn(weight, scale.view(torch.uint8)). The function does scale.float() and divides by 2**6, so a float8_e8m0fnu tensor decodes to the VALUE 1.0 and returns a block scale of 2**-6. Passing the raw bytes made .float() read the CODE, 127, so the returned scale came back as 127/64 = 1.984 and the reconstructed weight as 384 * 2 = 768 against a true 6.0 -- 128x.",
+    "verified_after_the_fix": "fp8 weight absmax 384.0 times block scale 0.015625 reconstructs to exactly 6.0, which is what the FP4 dequantisation gives. The vendor's recast is lossless as convert.py documents.",
+    "what_changes": "with the recast fixed, the v2 oracle emits [3118, 3583, 2357, ...] where the buggy one emitted [1224, 510, 1183, ...]. The reference is now faithful AND unsaturated on v2, so a device-versus-reference comparison there is finally well-posed. The device emits 1126 against 3118, so a real difference remains -- but it is now a difference between two valid computations.",
+    "what_still_stands": [
+      "the FP4 expert path returns exactly zero for every routed expert on this machine (11 of 11): that was measured on the UNMODIFIED vendor path and is unaffected by this bug",
+      "the v1 fixture saturates its own SwiGLU clamp by construction: the independent dequantisation's 119.3 against a limit of 10 uses no vendor kernel at all"
+    ],
+    "what_was_wrong": "this artifact states that the vendor's FP8 recast path inflates the expert projection by about 113x (w1 absmax 13504 against an independent 119.3). That inflation was MY BUG, not the vendor's kernel."
+  },
   "answer": "no, for two independent reasons: the fixture saturates the SwiGLU clamp by construction, and neither vendor expert kernel on this machine computes the documented arithmetic",
   "independent_dequantisation": {
-    "method": "pure numpy, using the vendor's own FP4_TABLE, on the fixture's stored packed weights and E8M0 scales -- a third reference beside the two vendor kernels",
-    "fp4_table": [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 0.0, -0.5, -1.0, -1.5, -2.0, -3.0, -4.0, -6.0],
-    "e8m0_exponents_present": [0],
-    "e8m0_factors_present": [1.0],
     "dequantised_w1_absmax": 6.0,
+    "e8m0_exponents_present": [
+      0
+    ],
+    "e8m0_factors_present": [
+      1.0
+    ],
     "ffn_norm_activation_absmax": 3.796875,
     "ffn_norm_activation_mean_abs": 0.805353,
+    "fp4_table": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      4.0,
+      6.0,
+      0.0,
+      -0.5,
+      -1.0,
+      -1.5,
+      -2.0,
+      -3.0,
+      -4.0,
+      -6.0
+    ],
     "gate_absmax": 119.295,
-    "gate_mean_abs": 32.638
+    "gate_mean_abs": 32.638,
+    "method": "pure numpy, using the vendor's own FP4_TABLE, on the fixture's stored packed weights and E8M0 scales -- a third reference beside the two vendor kernels"
   },
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "not a claim about DeepSeek's kernels in their intended setting; every kernel statement here is about this machine",
+    "not a claim that the device's expert path is correct -- it is consistent with the independent dequantisation in MAGNITUDE (weights +/-6) where the FP8 reference is not, which is weaker than agreement",
+    "the token is still 1242 against the live oracle's 1224"
+  ],
+  "question": "can the reduced V4.1 fixture's routed-expert region be validated against an external reference at all?",
   "reason_one_the_fixture_saturates": {
-    "swiglu_limit": 10.0,
     "clamp": "gate_upper_and_up_symmetric, declared identically in the vendor module and in this graph's SWIGLU attributes",
+    "consequence": "in the saturating regime clamp(gate, max=10) and clamp(up, +/-10) make the expert output a function of the SIGNS of gate and up, not their magnitudes, so any two implementations agree only where every sign agrees and a value near zero flips the result by the full clamped product. This is a property of the fixture's construction -- uniform random FP4 nibbles as weights, a 160-wide contraction, unit block scales -- and not of any implementation.",
     "independent_gate_mean_abs_against_the_limit": "32.6 against 10.0",
     "measured_saturation_on_the_fp8_reference": "99.8% to 100.0% of routed gate and up values lie beyond +/-10, while the SHARED expert sits at absmax 1.008 with 0.0% beyond",
-    "consequence": "in the saturating regime clamp(gate, max=10) and clamp(up, +/-10) make the expert output a function of the SIGNS of gate and up, not their magnitudes, so any two implementations agree only where every sign agrees and a value near zero flips the result by the full clamped product. This is a property of the fixture's construction -- uniform random FP4 nibbles as weights, a 160-wide contraction, unit block scales -- and not of any implementation."
+    "swiglu_limit": 10.0
   },
   "reason_two_neither_vendor_kernel_is_usable_here": {
     "fp4_path": "every routed expert's w2 returns exactly zero (11 of 11 measured); its w1 reaches absmax 50.5 against the independent 119.3",
     "fp8_recast_path": "w2 works, but w1 reaches absmax 13504.0 and mean 4111.4 against the independent 119.3 and 32.6 -- about 113x the magnitude an independent dequantisation gives",
     "reading": "the FP4 path is dead and the FP8 path's magnitudes are inconsistent with the fixture's own weights and scales. The repository's existing probe compared one weight TENSOR's recast and found it faithful; that is a different measurement from the gemm's applied block scale at these magnitudes."
   },
+  "schema": "opentallas.abi3.v41_reduced_fixture_saturates.v1",
   "what_is_proven_correct": {
     "layer_0_against_the_live_reference": {
-      "attn_norm": 1.0,
-      "attn.wq_a": 1.0,
-      "attn.q_norm": 1.0,
-      "attn.wq_b": 1.0,
-      "attn.wkv": 1.0,
-      "attn.kv_norm": 1.0,
-      "attn.wo_b": 1.0,
       "attn (whole)": 1.0,
-      "ffn_norm": 1.0,
-      "ffn.gate (the router)": 1.0
+      "attn.kv_norm": 1.0,
+      "attn.q_norm": 1.0,
+      "attn.wkv": 1.0,
+      "attn.wo_b": 1.0,
+      "attn.wq_a": 1.0,
+      "attn.wq_b": 1.0,
+      "attn_norm": 1.0,
+      "ffn.gate (the router)": 1.0,
+      "ffn_norm": 1.0
     },
     "reading": "the entire attention half of layer 0, both normalisations and the expert router are cosine 1.0 against the reference on the live-expert path. Only the routed-expert computation differs, which is exactly the region the two reasons above make unverifiable on this vehicle."
   },
@@ -44,11 +81,5 @@
     "rebuild the reduced fixture so the routed-expert projection stays inside the SwiGLU limit -- smaller expert weight magnitudes or non-unit E8M0 block scales -- and regenerate the oracle from it; the fixture builder already parameterises the construction",
     "or move the V4.1 cells onto the full-scale model, which is what all three DeepSeek-V4-Flash cells do, where trained weights keep the clamp inactive",
     "either way the attention half needs no further work: it is bit-exact"
-  ],
-  "not_a_claim": [
-    "not an RTL measurement: the device is runtime.sim",
-    "not a claim about DeepSeek's kernels in their intended setting; every kernel statement here is about this machine",
-    "not a claim that the device's expert path is correct -- it is consistent with the independent dequantisation in MAGNITUDE (weights +/-6) where the FP8 reference is not, which is weaker than agreement",
-    "the token is still 1242 against the live oracle's 1224"
   ]
 }
