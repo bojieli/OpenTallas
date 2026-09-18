@@ -37,10 +37,10 @@
   "counts": {
     "distinct_blocks_with_a_closed_routed_record": 32,
     "pre_layout_only_records": 72,
-    "records_read": 171,
+    "records_read": 172,
     "routed_and_closed": 60,
-    "routed_not_closed": 39,
-    "routed_records": 99
+    "routed_not_closed": 40,
+    "routed_records": 100
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -49,7 +49,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "a24001663b20083a5d233f7f6f7c9424c4ff7500"
+      "commit": "d1265369607694502d5eb3f3e3fbc595e9f34d1c"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -269,6 +269,36 @@
         "violating": {
           "max_slew_violations": 5
         }
+      }
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 457595,
+      "hold_wns_ns": -0.0016197,
+      "macro_area_um2": 36521.8,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 309437000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p50ns_slew55.json",
+      "record_sha256": "9517c68914e539c2ab17b07734c390ce628c64bb41a2b51f321293813eac97a0",
+      "routed": true,
+      "setup_wns_ns": 1.26832,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 88633.4,
+      "status": "not_met",
+      "target_clock_period_ns": 4.5,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 1,
+        "setup_violations": 0
       }
     },
     {
@@ -4618,7 +4648,7 @@
       "core_area_um2": 16482.7,
       "hold_wns_ns": 0.038389200000000005,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 984426000.0,
       "record": "results/physical_abi3/asap7/vector_scale_pipe/pnr_1p3ns_closed.json",
       "record_sha256": "3f50f665d6f4a30418dba164b8d67e3296cac3518120f1521693c6fbd93b8423",
@@ -4650,7 +4680,7 @@
   "why_the_not_closed_records_are_not_closed": {
     "blocked_only_by_a_pre_layout_stage": 5,
     "routed_netlist_dirty": 21,
-    "routed_timing_not_met": 8,
+    "routed_timing_not_met": 9,
     "signal_integrity_fields_absent": 5
   },
   "working_tree_cleanliness": {
@@ -4661,6 +4691,7 @@
       "results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json"
     ],
     "records_read_from_an_untracked_file": [
+      "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p50ns_slew55.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
@@ -4669,8 +4700,7 @@
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
       "results/physical_abi3/asap7/lq8_array/pnr_t2p4.json",
       "results/physical_abi3/asap7/lq8_array/pnr_t3p0.json",
-      "results/physical_abi3/asap7/lq8_array/pnr_t4p0.json",
-      "results/physical_abi3/asap7/vector_scale_pipe/pnr_1p3ns_closed.json"
+      "results/physical_abi3/asap7/lq8_array/pnr_t4p0.json"
     ],
     "what": "this audit hashes the file on disk.  A record whose disk contents differ from its committed version cannot be reproduced from a fresh clone, so every such record is named here rather than left for a reader to discover from record_sha256."
   }

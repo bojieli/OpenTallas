@@ -703,13 +703,19 @@ def resolve_signal_integrity_constraints(
     max_transition_ns: float | str | None,
     max_fanout: int | str | None,
     slew_margin_percent: float | None,
+    hold_margin_ns: float | None = None,
 ) -> dict[str, Any] | None:
     """Turn the command-line options into the recorded constraint block.
 
     Returns ``None`` when no option was given, so the SDC and the record are
     exactly what they were before the options existed.
     """
-    if max_transition_ns is None and max_fanout is None and slew_margin_percent is None:
+    if (
+        max_transition_ns is None
+        and max_fanout is None
+        and slew_margin_percent is None
+        and hold_margin_ns is None
+    ):
         return None
     time_unit_ns = view["time_unit_ns"]
     out: dict[str, Any] = {}
@@ -763,6 +769,14 @@ def resolve_signal_integrity_constraints(
         if not 0.0 <= margin < 100.0:
             raise FlowError(f"--slew-margin-percent must be in [0, 100), got {margin}")
         out["slew_margin_percent"] = margin
+    if hold_margin_ns is not None:
+        out["hold_margin_ns"] = float(hold_margin_ns)
+        out["hold_margin_basis"] = (
+            "ORFS HOLD_SLACK_MARGIN: repair_timing targets this much POSITIVE hold "
+            "slack under global-route-estimated parasitics so the RCX-extracted "
+            "finish check still lands non-negative.  Absent: ORFS default 0, which "
+            "leaves the estimate-versus-extraction gap standing as a violation"
+        )
         out["slew_margin_basis"] = (
             "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and "
             "after global routing: the repair targets (100 - margin)% of each pin's "
@@ -1507,6 +1521,14 @@ def orfs_config_lines(
         "export SYNTH_HIERARCHICAL = 0",
         "export LEC_CHECK = 0",
         "export TNS_END_PERCENT = 100",
+        # ORFS repairs hold under GLOBAL-ROUTE-ESTIMATED parasitics and the finish
+        # check measures it under RCX-EXTRACTED ones, so repairing to exactly zero
+        # leaves the extraction gap as a violation.  Measured on the G2 cluster at
+        # 4.5 ns with a 55% slew margin: zero max-slew, max-cap, max-fanout and DRC
+        # violations and +1.2683 ns of SETUP slack, refused for a hold violation of
+        # 1.62 PICOSECONDS.  That is rule R13 -- the same estimate-versus-extraction
+        # gap the slew margin exists to cover -- applied to hold.  Default stays 0
+        # so no existing record moves.
         "export HOLD_SLACK_MARGIN = 0",
         "export SETUP_SLACK_MARGIN = 0",
         "export SKIP_REPORT_METRICS = 0",
@@ -1520,6 +1542,20 @@ def orfs_config_lines(
         config.append(f"export {key} = {value}")
     if constraints and constraints.get("slew_margin_percent") is not None:
         config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
+    if constraints and constraints.get("hold_margin_ns") is not None:
+        # ORFS repairs hold under GLOBAL-ROUTE-ESTIMATED parasitics and the finish
+        # check measures it under RCX-EXTRACTED ones, so repairing to exactly zero
+        # leaves the extraction gap standing as a violation.  Measured on the G2
+        # cluster at 4.5 ns with a 55% slew margin: zero max-slew, max-cap,
+        # max-fanout and DRC violations and +1.2683 ns of SETUP slack, refused for a
+        # hold violation of 1.62 PICOSECONDS.  That is rule R13 -- the same
+        # estimate-versus-extraction gap the slew margin exists to cover -- applied
+        # to hold.  The later line wins in an ORFS config, so this overrides the
+        # HOLD_SLACK_MARGIN = 0 above only when a margin was asked for, and every
+        # record without one keeps a byte-identical config.mk.
+        config.append(
+            f"export HOLD_SLACK_MARGIN = {constraints['hold_margin_ns']:g}"
+        )
     config.extend(memory_macro_config_lines(memory_macros))
     return config
 
@@ -2109,6 +2145,17 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--hold-margin-ns",
+        type=float,
+        default=None,
+        metavar="NS",
+        help=(
+            "ORFS HOLD_SLACK_MARGIN: repair_timing targets this much POSITIVE hold "
+            "slack under estimated parasitics so the extracted finish check still "
+            "lands non-negative.  Absent: ORFS default 0"
+        ),
+    )
+    parser.add_argument(
         "--memory-macro",
         action="append",
         default=[],
@@ -2290,7 +2337,8 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         constraints = resolve_signal_integrity_constraints(
-            view, corner, args.max_transition_ns, args.max_fanout, args.slew_margin_percent
+            view, corner, args.max_transition_ns, args.max_fanout,
+            args.slew_margin_percent, args.hold_margin_ns
         )
     except FlowError as exc:
         print(str(exc), file=sys.stderr)

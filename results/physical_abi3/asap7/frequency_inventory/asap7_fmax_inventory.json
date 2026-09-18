@@ -337,8 +337,8 @@
   "counts": {
     "closed_routed_record_count": 60,
     "distinct_blocks_with_a_closed_routed_record": 32,
-    "post_route_record_count": 99,
-    "record_count": 171
+    "post_route_record_count": 100,
+    "record_count": 172
   },
   "excluded_from_the_limiter_by_family": [
     {
@@ -411,7 +411,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "a24001663b20083a5d233f7f6f7c9424c4ff7500"
+      "commit": "d1265369607694502d5eb3f3e3fbc595e9f34d1c"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -553,6 +553,29 @@
       "standard_cell_area_um2": 85820.4,
       "target_clock_period_ns": 4.5,
       "target_headroom": 0.026996000000000003
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 309437000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p50ns_slew55.json",
+      "record_sha256": "9517c68914e539c2ab17b07734c390ce628c64bb41a2b51f321293813eac97a0",
+      "setup_wns_ns": 1.26832,
+      "slew_margin_percent": 55.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 88633.4,
+      "target_clock_period_ns": 4.5,
+      "target_headroom": 0.28184888888888887
     },
     {
       "antenna_violating_nets": 0,
