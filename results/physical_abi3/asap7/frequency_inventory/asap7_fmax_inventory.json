@@ -32,14 +32,14 @@
       "target_headroom": 0.036531666666666664
     },
     {
-      "at_target_clock_period_ns": 3.8,
+      "at_target_clock_period_ns": 3.0,
       "block": "add_bf16_sram_engine",
       "family": "abi3_datapath",
-      "fmax_hz": 274229000.0,
-      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr_3p8ns_closed.json",
+      "fmax_hz": 342010000.0,
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr_3p0ns_closed.json",
       "slew_margin_percent": 60.0,
-      "standard_cell_area_um2": 2049.93,
-      "target_headroom": 0.04037263157894737
+      "standard_cell_area_um2": 2073.06,
+      "target_headroom": 0.025370600000000004
     },
     {
       "at_target_clock_period_ns": 6.0,
@@ -335,10 +335,10 @@
     "target_headroom": 0.04578063157894737
   },
   "counts": {
-    "closed_routed_record_count": 60,
+    "closed_routed_record_count": 62,
     "distinct_blocks_with_a_closed_routed_record": 32,
-    "post_route_record_count": 101,
-    "record_count": 174
+    "post_route_record_count": 104,
+    "record_count": 177
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -424,7 +424,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "d58364441dfa486324dd146d26ed51e87a9c7dc0"
+      "commit": "cec84699660db5f827ed9f8f96181ec5f77acb79"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -1698,6 +1698,75 @@
       "standard_cell_area_um2": 2008.31,
       "target_clock_period_ns": 4.4,
       "target_headroom": 0.04942136363636363
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "add_bf16_sram_engine",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 350472000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr_2p6ns_not_met.json",
+      "record_sha256": "72cb476178a850dd5848e3779aa64a8d95f566aab232f3d4160bee8780534f82",
+      "setup_wns_ns": -0.253292,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2107.17,
+      "target_clock_period_ns": 2.6,
+      "target_headroom": -0.09742
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "add_bf16_sram_engine",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 342010000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr_3p0ns_closed.json",
+      "record_sha256": "fc7ef7598779dea5a5b34045e81d6a5378a8f3d2c6117813ed67cfc1e02545c4",
+      "setup_wns_ns": 0.07611180000000001,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2073.06,
+      "target_clock_period_ns": 3.0,
+      "target_headroom": 0.025370600000000004
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "add_bf16_sram_engine",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 309455000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr_3p4ns_closed.json",
+      "record_sha256": "f9ba6c33b6b489d791e3008e25ccc370bf4e44b47726e95f3072d7f043509d94",
+      "setup_wns_ns": 0.16850800000000002,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2059.08,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": 0.04956117647058824
     },
     {
       "antenna_violating_nets": 0,
