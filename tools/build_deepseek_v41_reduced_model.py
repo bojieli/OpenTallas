@@ -191,6 +191,33 @@ DERIVED_FIELDS = {
 #: Parameters the reference implementation itself initialises to ones.
 GAIN_PARAMETER = re.compile(r"(^|\.)(\w*norm)\.weight$|(^|\.)(q_weight|k_weight)$")
 
+#: The routed experts' own E8M0 block scales, which are the only lever this
+#: construction has over the magnitude of an expert projection.
+EXPERT_SCALE_PARAMETER = re.compile(r"\.experts\.\d+\.w[123]\.scale$")
+
+#: Exponent written into a routed expert's E8M0 block scale, as a power of two.
+#:
+#: ZERO WAS A FIDELITY BUG, not a neutral default.  The expert weights are
+#: uniform random FP4 nibbles, so they span the whole E2M1 range up to 6.0, and a
+#: scale of 2**0 leaves them there.  Measured on the v1 fixture by an independent
+#: dequantisation -- numpy, the vendor's own FP4_TABLE, the fixture's own stored
+#: bytes -- a 160-wide expert projection then reaches absmax 119.3 with mean 32.6
+#: against the architecture's own ``swiglu_limit`` of 10.0, so 99.8% to 100.0% of
+#: routed gate and up values saturate the clamp while the SHARED expert (whose
+#: weights are FP8 and trained-shaped) sits at absmax 1.008 with none saturating.
+#: A fixture whose routed experts are permanently clamped is not a reduction of
+#: the architecture: the clamp makes the expert output a function of the SIGNS of
+#: its operands, so no two implementations can be compared through it, and
+#: ``results/abi3/deepseek_v41_reduced_fixture_saturates.json`` records that in
+#: full.
+#:
+#: The scale is what the format provides for exactly this: it sets the magnitude
+#: of a block.  -5 divides the projection by 32, which puts absmax near 3.7 and
+#: mean near 1.0 -- inside the limit, and the same order as the shared expert the
+#: fixture already builds correctly.  The default stays 0 so the v1 fixture and
+#: every artifact pinned to its digest reproduce byte for byte.
+EXPERT_SCALE_EXPONENT = 0
+
 
 def install_cache_view(source: dict[str, Any], snapshot: Path) -> Path:
     """Publish the constructed checkpoint where a hub consumer resolves it.
@@ -500,10 +527,21 @@ def fill_parameters(model: Any, seed: int, initializer_range: float) -> None:
             rng = np.random.default_rng(key)
             shape = tuple(parameter.shape)
             if parameter.dtype == torch.float8_e8m0fnu:
-                # 0x7F is E8M0's zero exponent: a scale of exactly 2**0.
+                # 0x7F is E8M0's zero exponent: a scale of exactly 2**0.  A
+                # routed expert's scale takes EXPERT_SCALE_EXPONENT instead, for
+                # the reason recorded beside that constant; the code for exponent
+                # ``e`` is ``127 + e``.
+                code = 0x7F
+                if EXPERT_SCALE_PARAMETER.search(name):
+                    code = 0x7F + int(EXPERT_SCALE_EXPONENT)
+                    if not 0 <= code <= 0xFE:
+                        raise ReducedModelError(
+                            f"expert scale exponent {EXPERT_SCALE_EXPONENT} "
+                            f"encodes as E8M0 code {code}, outside 0..254"
+                        )
                 parameter.view(torch.uint8).copy_(
                     torch.full(
-                        shape, 0x7F, dtype=torch.uint8, device=parameter.device
+                        shape, code, dtype=torch.uint8, device=parameter.device
                     )
                 )
             elif parameter.dtype == torch.float4_e2m1fn_x2:
@@ -1347,6 +1385,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed-limit", type=int, default=4096)
     parser.add_argument("--seed", type=int, default=None, help="skip the search")
     parser.add_argument(
+        "--expert-scale-exponent",
+        type=int,
+        default=0,
+        help=(
+            "power of two written into every routed expert's E8M0 block scale. "
+            "0 reproduces the v1 fixture, whose expert projection reaches 119.3 "
+            "against a swiglu_limit of 10 and therefore saturates the clamp on "
+            "99.8%% of values; -5 divides it by 32 and puts it inside the limit, "
+            "the same order as the shared expert. See EXPERT_SCALE_EXPONENT"
+        ),
+    )
+    parser.add_argument(
         "--engram-share-limit",
         type=int,
         default=1 << 20,
@@ -1375,6 +1425,12 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     arguments = parser.parse_args(argv)
+
+    # Before ANY weight is constructed, and once: the seed search and the final
+    # build must use one construction or the search selects a seed for a fixture
+    # that is never built.
+    global EXPERT_SCALE_EXPONENT
+    EXPERT_SCALE_EXPONENT = int(arguments.expert_scale_exponent)
 
     root_config = json.loads(FULL_ROOT_CONFIG.read_text(encoding="utf-8"))
     full = json.loads(FULL_INFERENCE_CONFIG.read_text(encoding="utf-8"))
