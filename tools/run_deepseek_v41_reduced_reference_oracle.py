@@ -98,6 +98,76 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def install_fp4_dequantised_linear(vendor: Any, convert_mod: Any) -> Any:
+    """Replace the vendor's fp4 GEMM with a PyTorch dequantisation of the same bytes.
+
+    THE SHIPPED EXPERT PATH, computed without the kernel that is broken here.  The
+    release's ``linear()`` dispatches on weight dtype and sends
+    ``float4_e2m1fn_x2`` to ``fp4_gemm``, which on this sm_120 GPU disagrees with
+    two mutually independent references -- measured in
+    ``runtime/reference/deepseek_v4_oracle.py`` at a maximum absolute error of
+    6.5623 against a tolerance of 0.0401 -- and on this fixture returns exactly
+    zero for every routed expert.
+
+    The two references it disagrees with are the vendor's own FP4->FP8 recast fed
+    to ``fp8_gemm``, and "a direct PyTorch dequantisation using the vendor's
+    FP4_TABLE".  The recast path is available already (``--expert-numeric-path
+    fp8``) but it changes the arithmetic: FP8xFP8 is not MXFP4, and at reduced
+    scale that difference compounds to a different token.  THIS is the other one,
+    and it keeps the declared numerics: the same FP4 codes, the same E8M0 block
+    scales, the same activation quantisation, and one dequantised matmul in place
+    of the kernel.
+
+    Why that matters for the comparison rather than only for correctness: the
+    deployment is admitted against MXFP4 contracts, so a reference on the FP4
+    path is comparing like with like, while the FP8 recast compares two different
+    legitimate arithmetics.  And it needs no change to what is BUILT -- no
+    product variant, no front-end edit -- which is what makes it the right
+    reference for the shipped configuration.
+    """
+    import torch
+
+    original_linear = vendor.linear
+    table = convert_mod.FP4_TABLE
+
+    def dequantised_linear(x, weight, bias=None):
+        if weight.dtype != torch.float4_e2m1fn_x2:
+            return original_linear(x, weight, bias)
+        assert bias is None
+        codes = weight.view(torch.uint8)
+        low = codes & 0x0F
+        high = (codes >> 4) & 0x0F
+        lookup = table.to(codes.device).float()
+        values = torch.stack([lookup[low.long()], lookup[high.long()]], dim=-1)
+        values = values.flatten(-2)
+        out_features, in_features = values.shape
+        scale = weight.scale.float()
+        blocks = scale.shape[-1]
+        block = in_features // blocks
+        dequantised = (
+            values.unflatten(-1, (blocks, block)) * scale.unsqueeze(-1)
+        ).flatten(-2)
+        # The activation is quantised exactly as the kernel path would, then
+        # dequantised, so the operand seen by the matmul is the one the contract
+        # describes rather than the unquantised original.
+        quantised, activation_scale = vendor.act_quant(
+            x, vendor.fp8_block_size, vendor.scale_fmt, vendor.scale_dtype
+        )
+        widened = quantised.float()
+        a_blocks = activation_scale.shape[-1]
+        a_block = widened.shape[-1] // a_blocks
+        widened = (
+            widened.unflatten(-1, (a_blocks, a_block))
+            * activation_scale.float().unsqueeze(-1)
+        ).flatten(-2)
+        return torch.nn.functional.linear(
+            widened, dequantised.to(widened.dtype)
+        ).to(x.dtype)
+
+    vendor.linear = dequantised_linear
+    return original_linear
+
+
 def _recast_experts_to_fp8(
     state: dict[str, Any], logical: dict[str, str], convert_mod: Any
 ) -> int:
@@ -330,7 +400,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--workload-dir", type=Path, default=DEFAULT_WORKLOAD_DIR)
     parser.add_argument(
         "--expert-numeric-path",
-        choices=("fp4", "fp8"),
+        choices=("fp4", "fp8", "fp4_dequantised"),
         default="fp4",
         help=(
             "which routed-expert numeric path the reference runs on. 'fp4' is "
@@ -425,6 +495,9 @@ def main(argv: list[str] | None = None) -> int:
 
     vendor, _engram = import_vendor(released)
     convert_mod = None
+    if arguments.expert_numeric_path == "fp4_dequantised":
+        # Keep the fp4 weights and the fp4 dispatch; replace only the kernel.
+        install_fp4_dequantised_linear(vendor, importlib.import_module("convert"))
     if arguments.expert_numeric_path == "fp8":
         # ``import_vendor`` has already put ``inference/`` on sys.path, which is
         # how ``model.py``'s own ``from kernel import ...`` resolves.

@@ -1,4 +1,15 @@
 {
+  "CORRECTED_BY_A_SECOND_INDEPENDENT_REFERENCE": {
+    "the_hypothesis_this_points_at": "the QUANTIZE/DEQUANTIZE pair on the layer-2 KV. The vendor quantises the whole post-RoPE vector in place; its measured QDQ delta is 0.0 at layer 0 and 0.125 at a later layer, so a device QDQ with the wrong block geometry or scale format would be INVISIBLE at layer 0 and visible as a few per cent at layer 2 -- which is exactly the observed pattern of exact layers 0 and 1 and a few-per-cent layer 2.",
+    "verdict": "WRONG",
+    "what_follows": [
+      "the reference is now corroborated by two mutually independent computations, so the divergence is on the device or graph side",
+      "path matching is MOOT -- there is nothing to match, because the two paths already agree -- and the front-end variant I costed last commit is unnecessary",
+      "there IS a fault to find, and the aligned layer-2 measurement is evidence of it rather than of accumulated rounding: the window rows differ by about five per cent while the residual entering layer 2 is 0.99935 correct, and a projection of an almost-exact input cannot be five per cent wrong by accumulation"
+    ],
+    "what_was_concluded": "that the device's divergence is a genuine numeric-path difference -- device MXFP4 against reference FP8-recast -- and that closing the cell needs path matching or full scale rather than a bug hunt.",
+    "why": "a second reference on the SHIPPED fp4 path -- the same FP4 codes and E8M0 scales, the same activation quantisation, one PyTorch dequantisation in place of the broken kernel, which is the other of the two independent references runtime/reference/deepseek_v4_oracle.py names -- produces IDENTICAL logits to the FP8 recast: argmax 3118, top1 0.97164, top2 1946 at 0.798973, margin 0.172667, and the same 16-token sequence. The expert numeric path therefore does not move the output at this scale, so it cannot be what separates the device from the reference."
+  },
   "FEASIBILITY_OF_PATH_MATCHING": {
     "and_there_is_a_fidelity_cost": "the shipped DeepSeek-V4.1-Flash declares expert_dtype fp4. An FP8-expert deployment is therefore a VARIANT of the product, not the product. It would make the reduced comparison exact and it would be validating a variant's numerics -- worth doing deliberately and worth not doing by accident, which is why this is recorded rather than started.",
     "checked": "compiler/frontends/v3/deepseek_v41.py line 4475 starts the routed expert as MXFP4_SWIGLU unconditionally, and the routed expert's weight declarations (lines ~3563 and ~3705) name dtype mxfp4_e2m1 directly. FP8_SWIGLU exists in the same front end but is used only for the one shared expert every token runs.",
