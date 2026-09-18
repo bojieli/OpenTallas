@@ -1,4 +1,18 @@
 {
+  "answer": "the binding term is the shipped model's 501 GB of weights measured against one node's 180 GB of HBM, not the candidate mask",
+  "correction": {
+    "so": "WEIGHTS are 83 per cent of it.  Capping the scratch capacity takes the mask from 68.7 GB to 134 MB and leaves about 537 GB, still three times the declared HBM.  The mask was the largest single STATE and nowhere near the largest term",
+    "what_i_claimed": "that the refusal is 'on a 68 GB candidate mask' -- the artifact's own title -- with the query-block capacity as the lever",
+    "what_the_measurement_says": {
+      "candidate_mask_share": "68,719,476,736 of 605,992,800,396 -- eleven per cent",
+      "capability_hbm_bytes": 180000000000,
+      "refusal_cited": 605992800396,
+      "state_bytes_as_declared": 74933362688,
+      "sum": 576315912656,
+      "weight_bytes_from_bindings": 501382549968
+    },
+    "what_the_real_question_is": "the refusal names ``hbm_and_state`` and compares the WHOLE model against ONE node's HBM.  The capability declares 180 GB of HBM and 19.3 GB of ROM PER NODE across 64 nodes -- 11.5 TB and 1.2 TB in aggregate -- so 501 GB of weights fit if they are sharded, and on a ROM array they belong in the ROM banks rather than in HBM at all.  Either the weights are not being sharded across the array, or they are being classified as HBM-resident when the product is a ROM one.  That is the question, and it is not a scratch-lifetime question"
+  },
   "largest_states": [
     {
       "capacity_rows": 262144,
@@ -54,6 +68,11 @@
   },
   "question": "the shipped V4.1 ROM array-64 build refuses its state placement -- 605,992,800,396 bytes against a capability declaring 180,000,000,000.  What is asking for it?",
   "schema": "opentallas.abi3.v41_array_placement_refusal.v1",
+  "scratch_cap_landed_anyway": {
+    "gate": "the reduced vehicles are untouched by construction -- their context is 128 and the block is 512, so the cap is a no-op there -- and the reduced ROM deployment rebuilds to the identical digest 9935b6c2",
+    "what": "a scratch state's declared capacity is now capped at the schedule's token_block_rows, which the array products set to 512",
+    "why_it_is_right_independently": "the frontend's own comment says the query block IS the capacity and then assumes span.maximum is the block; that assumption is false wherever a product blocks the token axis, and it sized a per-query-row plane for 512 times the rows the schedule presents"
+  },
   "the_single_largest": {
     "bytes": 68719476736,
     "shape": "262,144 rows x 262,144 elements, u8",

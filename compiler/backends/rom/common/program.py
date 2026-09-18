@@ -191,6 +191,12 @@ def _is_direct_buffer_state(state_class: str) -> bool:
 KV_STATE_CLASSES = frozenset({"compressed_kv", "kv_cache", "kv_window"})
 
 
+#: State classes that are DERIVED PER QUERY ROW and live for the query block, as
+#: opposed to caches addressed by absolute position across the whole context.  Only
+#: these may have their declared capacity capped at the schedule's token block.
+SCRATCH_STATE_CLASSES = frozenset({"scratch"})
+
+
 #: State classes whose plane presents THE REQUEST'S EXTENT rather than the
 #: resource's capacity, even where the axis is the identity.
 #:
@@ -3026,6 +3032,39 @@ class RomLowering:
             digest_of(generator, parameters),
         )
 
+    def _scratch_capacity(self, state: StateResource) -> int:
+        """A scratch resource holds one QUERY BLOCK, not the whole context.
+
+        The frontend declares these capacities as ``context_tokens`` and says why:
+        "THE QUERY BLOCK IS THE CAPACITY ... ``span.maximum`` is ``context_tokens``,
+        so this is the block the schedule actually presents."  The first half is
+        the rule and the second half is an assumption about the schedule, and it is
+        false wherever a product blocks the token axis: this backend's array
+        products declare ``token_block_rows = 512``, so the schedule presents 512
+        query rows and the state was sized for 262,144 of them.
+
+        That over-allocation is what refuses the shipped V4.1 array placement.  Its
+        ``candidate_pool_mask`` is ``262,144 x 262,144`` u8 -- 68 GB for one layer,
+        and correctly shaped, because the candidate source layer's compression ratio
+        is 1 so its candidate axis IS every position.  At one query block the same
+        mask is 134 MB.
+
+        Only ``scratch`` is capped, and only downward.  A cache class is addressed
+        by absolute position and must present its whole capacity; a scratch plane is
+        derived per query row and lives for the block, which is the distinction the
+        frontend comment draws itself.  A product that blocks nothing is unchanged,
+        and so is any deployment whose context is already inside one block -- which
+        is why the reduced vehicles are untouched: their context is 128 and the block
+        is 512.
+        """
+        declared = self._extent(state.capacity_rows)
+        if str(state.state_class) not in SCRATCH_STATE_CLASSES:
+            return declared
+        block = int(self.policy.token_block_rows or 0)
+        if block <= 0:
+            return declared
+        return min(declared, block)
+
     def emit_states(self) -> None:
         """Merge congruent per-layer state resources into one physical state.
 
@@ -3055,7 +3094,7 @@ class RomLowering:
                 state.state_class,
                 state.dtype,
                 state.row_elements,
-                self._extent(state.capacity_rows),
+                self._scratch_capacity(state),
                 state.initialization,
             )
             groups.setdefault(key, []).append(state)
