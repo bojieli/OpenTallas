@@ -73,6 +73,8 @@ from compiler.backends.rom.deepseek_v41_array import (  # noqa: E402
     TARGET_ID as V41_ARRAY_TARGET_ID,
     build_deepseek_v41_array_rom_deployment,
     deepseek_v41_array_rom_capability,
+    NODE_COUNT as V41_ARRAY_NODE_COUNT,
+    DOMAIN_SIZE as V41_ARRAY_DOMAIN_SIZE,
 )
 from compiler.backends.rom.deepseek_v41 import (  # noqa: E402
     TARGET_ID as V41_WAFER_TARGET_ID,
@@ -291,14 +293,32 @@ def build(product: str, graph: KernelGraph, args) -> tuple[Deployment, Any, Any]
             epoch=args.epoch,
         )
     elif product == "deepseek-v4.1-flash-array":
-        capability = supplied or deepseek_v41_array_rom_capability()
+        # The node count, the fabric domain size and the ROM alignment are all
+        # derived from the SHIPPED geometry by default -- 384 routed experts, 64
+        # nodes, 8 per domain, 4,096-byte rows.  A reduced regression graph has 12
+        # experts, and 12 divides none of those: no node count is both a divisor of
+        # 12 and a multiple of 8, and the reduced fixture's regions are smaller than
+        # one 4,096-byte row, so sharding them cannot produce whole owner strides.
+        # Both are frozen constants rather than properties of the backend, so they
+        # are exposed.  Left unset, every shipped build is byte-identical to before.
+        array_nodes = args.nodes or V41_ARRAY_NODE_COUNT
+        array_domain = args.domain_size or V41_ARRAY_DOMAIN_SIZE
+        capability = supplied or deepseek_v41_array_rom_capability(
+            node_count=array_nodes, domain_size=array_domain
+        )
+        array_kwargs: dict[str, Any] = {}
+        if args.alignment_bytes:
+            array_kwargs["alignment_bytes"] = args.alignment_bytes
         deployment, plan = build_deepseek_v41_array_rom_deployment(
             graph,
             capability=capability,
             defects=defects,
             weight_storage_class=storage,
             epoch=args.epoch,
+            node_count=array_nodes,
+            domain_size=array_domain,
             target_id=args.target_id or V41_ARRAY_TARGET_ID,
+            **array_kwargs,
         )
     elif product == "deepseek-v4.1-flash":
         capability = supplied or deepseek_v41_rom_capability()
@@ -387,6 +407,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             "configuration lowers through the same backend as the shipped one and "
             "must be distinguishable from it: the RTL vector builder keys a target "
             "by this id and refuses two deployments claiming the same one."
+        ),
+    )
+    parser.add_argument(
+        "--domain-size",
+        type=int,
+        default=None,
+        help=(
+            "fabric domain size for the array products.  CLUSTER_N requires "
+            "domains * domain_size == max_nodes exactly, so this and --nodes move "
+            "together.  Unset keeps the shipped geometry."
+        ),
+    )
+    parser.add_argument(
+        "--alignment-bytes",
+        type=int,
+        default=None,
+        help=(
+            "ROM region alignment.  The shipped 4,096-byte row is larger than a "
+            "reduced fixture's whole region, and a node-sharded region must be "
+            "whole owner strides, so a reduced array build needs a smaller one. "
+            "Unset keeps the shipped row."
         ),
     )
     parser.add_argument("--json", action="store_true", help="machine-readable report")
