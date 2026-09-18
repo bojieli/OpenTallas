@@ -146,6 +146,11 @@ CONTRACT_ALIASES: Mapping[str, str] = {
 }
 
 #: Every contract name this module recognises, alias included.
+#: The Engram gate's two contracts.  See KNOWN_CONTRACTS below for why both are
+#: named here rather than left to resolve to the empty string.
+CONTRACT_ENGRAM_GATE = "engram_gate_fp32_v1"
+CONTRACT_ENGRAM_GATE_PINNED = "engram_gate_pinned_form_v1"
+
 KNOWN_CONTRACTS: frozenset[str] = frozenset(
     {
         CONTRACT_SEQUENTIAL,
@@ -160,6 +165,17 @@ KNOWN_CONTRACTS: frozenset[str] = frozenset(
         CONTRACT_QWEN_SILU_MUL,
         CONTRACT_DEEPSEEK_FP8_SWIGLU,
         CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
+        #: THE TWO ENGRAM GATES, because an engine has to be able to tell them
+        #: apart.  Neither was here, so ``contract_for_digest`` returned "" for
+        #: both and a descriptor naming one was indistinguishable from a
+        #: descriptor naming the other -- which is fine while one gate exists and
+        #: silently wrong the moment two do.  ``engram_gate_fp32_v1`` is the frozen
+        #: ABI contract; ``engram_gate_pinned_form_v1`` is the expression
+        #: DeepSeek-V4.1-Flash's own ``Engram.forward`` computes, and the two
+        #: disagree in four value-changing ways that
+        #: ``runtime.reference.engram.engram_gate_pinned_divergences`` enumerates.
+        CONTRACT_ENGRAM_GATE,
+        CONTRACT_ENGRAM_GATE_PINNED,
         *CONTRACT_ALIASES,
     }
 )
@@ -1315,6 +1331,8 @@ __all__ = [
     "CONTRACT_QWEN_SILU_MUL",
     "CONTRACT_SEQUENTIAL",
     "DEFAULT_BACKEND",
+    "CONTRACT_ENGRAM_GATE",
+    "CONTRACT_ENGRAM_GATE_PINNED",
     "KNOWN_CONTRACTS",
     "MATMUL_CONTRACTS",
     "NarrowResult",

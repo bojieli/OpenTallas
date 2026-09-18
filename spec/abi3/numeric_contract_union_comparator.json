@@ -31,6 +31,9 @@
     "compression_state_compress_state_update_f32_raw_window_transaction_v1": [
       "deepseek-v4.1-flash"
     ],
+    "conversion_binary32_tensor_to_bf16_rne_v1": [
+      "deepseek-v4.1-flash"
+    ],
     "deepseek_rmsnorm_binary32_v1": [
       "deepseek-v4.1-flash"
     ],
@@ -40,7 +43,7 @@
     "dispatch_routed_experts_bf16_v1": [
       "deepseek-v4.1-flash"
     ],
-    "engram_gate_fp32_v1": [
+    "engram_gate_pinned_form_v1": [
       "deepseek-v4.1-flash"
     ],
     "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1": [
@@ -172,9 +175,6 @@
     "ngram_hash_u32_order4_v1": [
       "deepseek-v4.1-flash"
     ],
-    "normalization_head_rms_norm_bf16_v1": [
-      "deepseek-v4.1-flash"
-    ],
     "quantization_fp4_qdq_bf16_quantize_v1": [
       "deepseek-v4.1-flash"
     ],
@@ -257,10 +257,11 @@
       "compression_compress_project_bf16_v1": 4,
       "compression_pool_compress_pool_f32_v1": 3,
       "compression_state_compress_state_update_f32_raw_window_transaction_v1": 3,
-      "deepseek_rmsnorm_binary32_v1": 168,
+      "conversion_binary32_tensor_to_bf16_rne_v1": 3,
+      "deepseek_rmsnorm_binary32_v1": 169,
       "dispatch_reduce_expert_outputs_bf16_v1": 40,
       "dispatch_routed_experts_bf16_v1": 40,
-      "engram_gate_fp32_v1": 2,
+      "engram_gate_pinned_form_v1": 2,
       "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1": 4,
       "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1": 4,
       "fp8_swiglu_bf16_clamped_silu_product_v1": 40,
@@ -304,7 +305,6 @@
       "ngram_hash_u32_order2_v1": 2,
       "ngram_hash_u32_order3_v1": 2,
       "ngram_hash_u32_order4_v1": 2,
-      "normalization_head_rms_norm_bf16_v1": 1,
       "quantization_fp4_qdq_bf16_quantize_v1": 12,
       "quantization_fp4_qdq_bf16_reconstruct_v1": 12,
       "quantization_fp8_qdq_bf16_quantize_v1": 40,
@@ -342,10 +342,11 @@
     "compression_compress_project_bf16_v1",
     "compression_pool_compress_pool_f32_v1",
     "compression_state_compress_state_update_f32_raw_window_transaction_v1",
+    "conversion_binary32_tensor_to_bf16_rne_v1",
     "deepseek_rmsnorm_binary32_v1",
     "dispatch_reduce_expert_outputs_bf16_v1",
     "dispatch_routed_experts_bf16_v1",
-    "engram_gate_fp32_v1",
+    "engram_gate_pinned_form_v1",
     "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1",
     "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1",
     "fp8_swiglu_bf16_clamped_silu_product_v1",
@@ -389,7 +390,6 @@
     "ngram_hash_u32_order2_v1",
     "ngram_hash_u32_order3_v1",
     "ngram_hash_u32_order4_v1",
-    "normalization_head_rms_norm_bf16_v1",
     "quantization_fp4_qdq_bf16_quantize_v1",
     "quantization_fp4_qdq_bf16_reconstruct_v1",
     "quantization_fp8_qdq_bf16_quantize_v1",

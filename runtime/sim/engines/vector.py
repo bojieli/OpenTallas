@@ -97,6 +97,7 @@ from runtime.reference.hyper_connection import binary32_sigmoid_rne
 from runtime.reference.engram import (
     ENGRAM_GATE_NUMERIC_CONTRACT,
     engram_gate,
+    engram_gate_pinned_form,
 )
 from runtime.reference.swiglu import (
     OFFICIAL_NEGATIVE_SWIGLU_LIMIT_BINARY32,
@@ -2136,6 +2137,15 @@ def _vector_hadamard(ctx: EngineContext, sub: int, operator: Descriptor) -> None
 #: contract is a second thing to get wrong.
 ENGRAM_GATE_CONTRACT = ENGRAM_GATE_NUMERIC_CONTRACT
 
+#: THE RELEASE'S OWN GATE, as a contract this engine can be asked for.
+#: ``engram_gate_fp32_v1`` is a frozen ABI contract and differs from
+#: DeepSeek-V4.1-Flash's ``Engram.forward`` in four ways that all change the value
+#: -- ``runtime.reference.engram.engram_gate_pinned_divergences`` enumerates them
+#: and ``prove_pinned_form_differs`` exhibits an input where the gates come out
+#: 0.784 against 0.683.  So the release's expression gets a contract of its own
+#: rather than a redefinition of v1, and a graph asks for it by name.
+ENGRAM_GATE_PINNED_CONTRACT = "engram_gate_pinned_form_v1"
+
 #: ``EngramGateResult.refusal_stage`` values, by name, so a trap message can
 #: attribute a refusal to one line of the contract rather than to "the gate
 #: failed".  The reference's numbering is the RTL's ``refusal_stage`` port.
@@ -2305,6 +2315,12 @@ def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> N
         pairs = None
 
     epsilon_code = int(profile.epsilon_bits)
+    #: WHICH GATE THIS OPERATOR IS, read from the contract the descriptor names
+    #: rather than chosen here.  A graph that asks for the release's form gets it;
+    #: one that asks for v1 gets v1, unchanged, because v1 is frozen ABI and some
+    #: deployment may be bound to it.
+    contract = declared_contract(ctx.table, operator.payload["numeric_profile_id"])
+    pinned = contract == ENGRAM_GATE_PINNED_CONTRACT
     results = np.empty((rows, width), dtype=np.uint32)
     gates: list[int] = []
     for row in range(rows):
@@ -2318,6 +2334,29 @@ def _vector_engram_gate(ctx: EngineContext, sub: int, operator: Descriptor) -> N
                 else row // streams
             ]
             pair = (block[row % streams], block[planes - 1])
+        if pinned:
+            #: The release uses the two gate weights ONLY as a product --
+            #: ``weight = self.q_weight.float() * self.k_weight.float()  # only
+            #: ever used as a product`` -- so the product is formed here from the
+            #: same two operands v1 reads separately, and no new operand row is
+            #: needed.  ``h`` is both the gate query and the residual in this form,
+            #: which is D3, so the state row is passed once and used twice inside.
+            q_row = query[row % query_rows]
+            k_row = gate_key[row % gate_key_rows]
+            with _numeric_guard(ENGRAM_GATE_PINNED_CONTRACT):
+                weight_row = [
+                    int(exact.binary32_multiply(int(a), int(b)))
+                    for a, b in zip(q_row, k_row, strict=True)
+                ]
+                pinned_out = engram_gate_pinned_form(
+                    [int(code) for code in state[row]],
+                    [int(code) for code in pair[0]],
+                    [int(code) for code in pair[1]],
+                    weight_row,
+                )
+            results[row] = np.asarray(pinned_out["output_codes"], dtype=np.uint32)
+            gates.append(int(pinned_out["gate_code"]))
+            continue
         with _numeric_guard(ENGRAM_GATE_CONTRACT):
             outcome = engram_gate(
                 [int(code) for code in state[row]],

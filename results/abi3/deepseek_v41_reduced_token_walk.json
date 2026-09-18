@@ -56,7 +56,7 @@
         "capability": "results/abi3/deepseek_v41_hbm_comparator_capability.json",
         "capability_sha256": "f85b4c0daa7e91f4ef5e19f94a1394b9ed59fb744248b84c89bd9fc1bc2dc7cc",
         "deployment": "build/abi3/deepseek-v41-reduced-hbm",
-        "deployment_sha256": "afbee5a53e55ab17691ad98c54abd5146f9b98e76d7a37a2dd4d379b01f81038",
+        "deployment_sha256": "215fc3ea8352afe8046d6047129d90522ffaf33dc52ef1dc60eed899eb308fd7",
         "descriptor_count": 9122,
         "instruction_count": 3760
       },
@@ -115,7 +115,7 @@
         "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
         "capability_sha256": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
         "deployment": "build/abi3/deepseek-v41-reduced-rom",
-        "deployment_sha256": "691690d684c3dea5b925ecd6dba427456bbbb5049865e91d7b20114bbf7f3fc6",
+        "deployment_sha256": "9935b6c23661e42c3e96864803c34b6cf0f5f9736fd29e54dc8050bc6dad5529",
         "descriptor_count": 9772,
         "instruction_count": 4385
       },
@@ -149,7 +149,7 @@
   },
   "producer": {
     "git": {
-      "commit": "6673fdaf5bed5c97dd5549fced62d94b4a80d3cf",
+      "commit": "dd637ddd34c6c87d34eb46a023f6e02dead0159d",
       "worktree_dirty": true
     },
     "sha256": "f97180a589efa8914f6ffcc34e47611576c5420a54ae5531d0cd9199072ff777",
@@ -162,7 +162,7 @@
     "probes": {
       "constant": {
         "emitted_token_ids": [
-          2959
+          2380
         ],
         "failure": null,
         "prompt_token_ids": [

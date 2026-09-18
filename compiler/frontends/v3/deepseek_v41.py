@@ -1378,7 +1378,16 @@ CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
     "DSPARK_NOISE_EMBED": "structural_dspark_noise_embed_bf16",
     "DSPARK_PREFILL_KV": "dspark_prefill_kv_bf16",
     "DSPARK_WINDOW_INDEX": "indexing_dspark_window_indices",
-    "ENGRAM_GATE": "engram_gate_fp32",
+    #: THE RELEASE'S GATE, not the frozen v1 contract.  ``engram_gate_fp32_v1``
+    #: differs from this release's own ``Engram.forward`` in four ways that all
+    #: change the value -- ``engram_gate_pinned_divergences()`` enumerates them and
+    #: ``prove_pinned_form_differs()`` runs both on one input and gets gates of
+    #: 0.784 and 0.683.  Naming v1 here asked the device to compute a gate this
+    #: model does not have, which is why the emitted token disagreed with the
+    #: reference oracle while the V4-Flash token, whose path has no Engram at all,
+    #: agreed with its own.  v1 is frozen ABI and is left alone; this names the
+    #: contract whose implementation is the release's expression.
+    "ENGRAM_GATE": "engram_gate_pinned_form",
     "ENGRAM_KV_PROJECT": "matrix_dense_fp8_linear_bf16",
     "ENGRAM_NGRAM_HASH": "ngram_hash_u32",
     "ENGRAM_ROW_LOOKUP": "lookup_engram_row_fp8_e4m3",
