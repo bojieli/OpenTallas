@@ -93,12 +93,15 @@ def oracle_checkpoints(
     prompt: list[int],
     deep_layers: Sequence[int] = (),
     expert_numeric_path: str = "fp4",
+    snapshot: Path | None = None,
+    lock_path: Path | None = None,
 ) -> list[dict[str, Any]]:
     """The vendor forward pass's own tensors, at the last prompt position."""
-    lock = load_checkpoint_lock(DEFAULT_LOCK)
-    verify_checkpoint_lock(DEFAULT_SNAPSHOT, lock)
+    snapshot = Path(snapshot) if snapshot is not None else DEFAULT_SNAPSHOT
+    lock = load_checkpoint_lock(Path(lock_path) if lock_path else DEFAULT_LOCK)
+    verify_checkpoint_lock(snapshot, lock)
     body = json.loads(
-        (DEFAULT_SNAPSHOT / "inference_config.json").read_text(encoding="utf-8")
+        (snapshot / "inference_config.json").read_text(encoding="utf-8")
     )
     import importlib
 
@@ -116,9 +119,9 @@ def oracle_checkpoints(
         convert_mod = importlib.import_module("convert")
         body = dict(body)
         body["expert_dtype"] = None
-    tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
+    tokenizer = AutoTokenizer.from_pretrained(str(snapshot))
     model = build_model(vendor, body, tokenizer)
-    _load_weights(model, DEFAULT_SNAPSHOT, convert_mod=convert_mod)
+    _load_weights(model, snapshot, convert_mod=convert_mod)
     model.eval()
 
     taps: list[dict[str, Any]] = []
@@ -248,9 +251,16 @@ def oracle_checkpoints(
     return taps
 
 
-def device_trace(store: str, prompt: list[int]) -> tuple[list[dict[str, Any]], list[int]]:
+def device_trace(
+    store: str,
+    prompt: list[int],
+    deployment_override: Path | None = None,
+    checkpoint_override: Path | None = None,
+) -> tuple[list[dict[str, Any]], list[int]]:
     """Every engine call's output view, in issue order."""
     deployment_dir, capability_path = STORES[store]
+    if deployment_override is not None:
+        deployment_dir = str(deployment_override)
     body = json.loads(Path(ROOT / capability_path).read_text())
     capability = Capability.from_dict(body.get("capability", body))
     device = Device(
@@ -258,7 +268,7 @@ def device_trace(store: str, prompt: list[int]) -> tuple[list[dict[str, Any]], l
         capability,
         verify=False,
         trace=False,
-        root=CHECKPOINT,
+        root=Path(checkpoint_override) if checkpoint_override else CHECKPOINT,
     )
     trace: list[dict[str, Any]] = []
     original = dict(_REGISTRY)
@@ -350,6 +360,30 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     parser.add_argument(
+        "--snapshot",
+        type=Path,
+        default=None,
+        help="the reduced snapshot the REFERENCE is built from (default v1)",
+    )
+    parser.add_argument(
+        "--checkpoint-lock",
+        type=Path,
+        default=None,
+        help="the lock that snapshot is verified against",
+    )
+    parser.add_argument(
+        "--deployment",
+        type=Path,
+        default=None,
+        help="override the device deployment directory for the named store",
+    )
+    parser.add_argument(
+        "--checkpoint-root",
+        type=Path,
+        default=None,
+        help="the device's checkpoint root, which must match the deployment",
+    )
+    parser.add_argument(
         "--deep-layer",
         action="append",
         type=int,
@@ -370,14 +404,20 @@ def main(argv: list[str] | None = None) -> int:
     prompt = [int(t) for t in case["prompt_token_ids"]]
 
     taps = oracle_checkpoints(
-        prompt, arguments.deep_layer or (), arguments.expert_numeric_path
+        prompt,
+        arguments.deep_layer or (),
+        arguments.expert_numeric_path,
+        arguments.snapshot,
+        arguments.checkpoint_lock,
     )
     print(f"oracle: {len(taps)} checkpoints", flush=True)
 
     load_engines()
     report_stores: dict[str, Any] = {}
     for store in stores:
-        trace, emitted = device_trace(store, prompt)
+        trace, emitted = device_trace(
+            store, prompt, arguments.deployment, arguments.checkpoint_root
+        )
         print(f"{store}: {len(trace)} engine outputs, token {emitted}", flush=True)
         rows = []
         first_departure = None
