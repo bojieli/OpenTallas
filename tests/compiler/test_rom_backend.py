@@ -3819,15 +3819,43 @@ def test_a_state_read_representation_does_not_reserve_a_second_column(
     assert any(k.kind == "STATE_READ" for k in graph.kernels)
     deployment, _plan = build_qwen3_rom_deployment(graph, capability=qwen_capability)
 
-    declared = {s.state_id: s.row_elements for s in graph.states}
-    state = next(
-        d
-        for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.STATE
+    # This used to read a STATE descriptor's ``row_bytes``.  Qwen's KV cache is
+    # not a STATE descriptor -- ``rom_lowering.direct_buffer_state`` places the
+    # ``kv_cache`` class as a direct HBM buffer, and the committed qwen3-8b and
+    # deepseek-v4-flash ROM deployments both carry ZERO STATE descriptors -- so
+    # that lookup raised ``StopIteration`` rather than failing an assertion.
+    #
+    # The second assertion was worse: it read ``state_row_widenings`` from the
+    # TOP of ``notes`` while the backend publishes it under ``rom_lowering``, so
+    # ``.get`` returned ``None``, ``not None`` was true, and the invariant this
+    # test exists for was passing vacuously.  Both are read from where they are
+    # now, and the key's PRESENCE is asserted so a later move fails loudly
+    # instead of silently passing again.
+    lowering = deployment.notes["rom_lowering"]
+    assert "state_row_widenings" in lowering
+    assert not lowering["state_row_widenings"]
+
+    # And the invariant itself, differentially: a reserved second column widens
+    # the row, which shows up as more bytes.  The same graph WITHOUT the
+    # re-presentation must produce byte-identical state sizing.
+    plain_root = workspace / "state-read-baseline"
+    plain_root.mkdir(parents=True, exist_ok=True)
+    plain, _plain_plan = build_qwen3_rom_deployment(
+        qwen_shaped_graph(plain_root), capability=qwen_capability
     )
-    row_elements = state.payload["row_bytes"] * 8 // 16
-    assert row_elements == next(iter(declared.values()))
-    assert not deployment.notes.get("state_row_widenings")
+    assert (
+        deployment.notes["memory_footprint"]["session_bytes_in_hbm"]
+        == plain.notes["memory_footprint"]["session_bytes_in_hbm"]
+    )
+    objects = sorted(
+        deployment.table.get(o).payload["size_bytes"]
+        for o in deployment.table.ids_of_type(ExtendedDescriptorType.MEMORY_OBJECT)
+    )
+    plain_objects = sorted(
+        plain.table.get(o).payload["size_bytes"]
+        for o in plain.table.ids_of_type(ExtendedDescriptorType.MEMORY_OBJECT)
+    )
+    assert objects == plain_objects
 
     # And the plane the re-presentation hands on is addressed exactly where the
     # append wrote it: same pitch, same column.
