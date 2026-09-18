@@ -98,7 +98,63 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
+def _recast_experts_to_fp8(
+    state: dict[str, Any], logical: dict[str, str], convert_mod: Any
+) -> int:
+    """The release README's own FP8 expert path, applied to the reduced shard.
+
+    ``runtime/reference/deepseek_v4_oracle.py`` established this adaptation and
+    recorded why: on this sm_120 GPU the released ``fp4_gemm`` TileLang kernel
+    disagrees with two mutually independent references -- the vendor's own
+    FP4->FP8 recast fed to ``fp8_gemm``, and a direct PyTorch dequantisation
+    through the vendor's ``FP4_TABLE`` -- which agree with each other to bf16
+    output rounding.  Its committed probe measures the FP4 path at a maximum
+    absolute error of 6.5623 against a tolerance of 0.0401 while the FP8 path
+    measures 0.0156, so the V4-Flash oracle runs on FP8 and its three cells
+    agree with the device.
+
+    The reduced V4.1 oracle did NOT do this, and the consequence is measured in
+    ``results/abi3/deepseek_v41_reduced_oracle_dead_experts.json``: every routed
+    expert's second projection returns exactly zero, so the oracle's token comes
+    from a shared-expert-only model and no implementation that computes the
+    routed experts can reproduce it.
+
+    The recast is the vendor's ``convert.cast_e2m1fn_to_e4m3fn``, which
+    ``convert.py`` documents as LOSSLESS: every FP4 value is exactly
+    representable in E4M3 and the applied offset is a power of two bounded by
+    ``2**6``, so ``6.0 * 2**6 = 384`` stays under E4M3's maximum of 448.  The
+    stored shard already holds the packed weights as I8, which is exactly the
+    input the function asserts on, so nothing is reinterpreted here either.
+    """
+    import torch
+
+    recast = 0
+    for name in sorted(state):
+        if ".ffn.experts." not in name or not name.endswith(".weight"):
+            continue
+        scale_name = name[: -len(".weight")] + ".scale"
+        if scale_name not in state:
+            continue
+        if logical.get(name) != "float4_e2m1fn_x2":
+            continue
+        weight = state[name]
+        scale = state[scale_name]
+        if weight.dtype != torch.int8:
+            weight = weight.view(torch.int8)
+        widened, block_scale = convert_mod.cast_e2m1fn_to_e4m3fn(
+            weight, scale.view(torch.uint8)
+        )
+        state[name] = widened
+        state[scale_name] = block_scale
+        logical[name] = "float8_e4m3fn"
+        logical[scale_name] = "float8_e8m0fnu"
+        recast += 1
+    return recast
+
+
+def _load_weights(
+    model: Any, snapshot: Path, *, convert_mod: Any | None = None
+) -> dict[str, Any]:
     """Copy the shard's bytes into the model, restoring each logical format.
 
     ``write_snapshot`` stores the packed FP4 expert weights as I8 because the
@@ -164,6 +220,10 @@ def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
         logical[name] = "bfloat16"
         converted += 1
 
+    expert_recasts = 0
+    if convert_mod is not None:
+        expert_recasts = _recast_experts_to_fp8(state, logical, convert_mod)
+
     parameters = dict(model.named_parameters())
     missing = sorted(set(parameters) - set(state))
     extra = sorted(set(state) - set(parameters))
@@ -216,10 +276,16 @@ def _load_weights(model: Any, snapshot: Path) -> dict[str, Any]:
             reinterpreted += 1
 
     declared = set(formats.get("reinterpreted", ()))
-    if reinterpreted != len(declared):
+    # The declared reinterpretations are the PACKED FP4 tensors.  On the FP8
+    # expert path they were recast before this loop, so they are no longer
+    # reinterpretations and the count legitimately drops -- by exactly the number
+    # recast, which is checked rather than waived.
+    expected = len(declared) - expert_recasts
+    if reinterpreted != expected:
         raise ReducedOracleError(
             f"reinterpreted {reinterpreted} tensors; parameter_formats.json "
-            f"declares {len(declared)}"
+            f"declares {len(declared)} and {expert_recasts} were recast to the "
+            f"FP8 expert path, so {expected} were due"
         )
     return {
         "shards": shards,
@@ -255,6 +321,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
     parser.add_argument("--workload-dir", type=Path, default=DEFAULT_WORKLOAD_DIR)
+    parser.add_argument(
+        "--expert-numeric-path",
+        choices=("fp4", "fp8"),
+        default="fp4",
+        help=(
+            "which routed-expert numeric path the reference runs on. 'fp4' is "
+            "what this tool always did and what the committed artifact was "
+            "produced with; on this machine it makes every routed expert return "
+            "exactly zero (see results/abi3/"
+            "deepseek_v41_reduced_oracle_dead_experts.json), so the oracle is "
+            "then a shared-expert-only model. 'fp8' is the release README's own "
+            "documented alternative and the path the V4-Flash oracle already "
+            "runs on, via the vendor's own lossless recast"
+        ),
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument(
         "--expect-summary",
@@ -330,15 +411,28 @@ def main(argv: list[str] | None = None) -> int:
         for module in VENDOR_MODULES
     }
 
+    import importlib
+
     import torch
     from transformers import AutoTokenizer
 
     vendor, _engram = import_vendor(released)
-    tokenizer = AutoTokenizer.from_pretrained(str(released))
+    convert_mod = None
+    if arguments.expert_numeric_path == "fp8":
+        # ``import_vendor`` has already put ``inference/`` on sys.path, which is
+        # how ``model.py``'s own ``from kernel import ...`` resolves.
+        convert_mod = importlib.import_module("convert")
+        # The release README: "If you want to use fp8, just remove
+        # "expert_dtype": "fp4" in config.json and specify --expert-dtype fp8 in
+        # convert.py."  This is that configuration, stated on the body the model
+        # is built from rather than by editing a committed fixture.
+        body = dict(body)
+        body["expert_dtype"] = None
+    tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
 
     started = time.perf_counter()
     model = build_model(vendor, body, tokenizer)
-    loaded = _load_weights(model, arguments.snapshot)
+    loaded = _load_weights(model, arguments.snapshot, convert_mod=convert_mod)
     model.eval()
     load_seconds = time.perf_counter() - started
 
