@@ -1,4 +1,25 @@
 {
+  "READING_THIS_CORRECTLY": {
+    "alignment_is_established": {
+      "phase": "capture is gated to the PREFILL transaction. Gating left every number byte-identical, which is what should happen if the original capture was already prefill -- and is also what would happen if the gate never fired, so the control matters: --phase decode captures NOTHING, because no call with 12 live index slots occurs after prefill closes. The gate is live and the only matching call in the run is the prefill one.",
+      "position": "the selected indices are bit-identical over 12 live slots, and an index row can only match at the same query position"
+    },
+    "hypotheses_closed_at_this_site": [
+      "the sparse-attention operator -- bit-exact on the vendor's own operands here as at layer 0",
+      "the index selection -- bit-identical, so the compressor's index path is right where it first exists",
+      "a row-order difference in the CONCAT -- refuted",
+      "a dropped block scale in the comparison -- refuted by the view's own dtype",
+      "the yarn rope frequency VALUES -- agree with the vendor's precompute_freqs_cis to 9.3e-10",
+      "the rope table ASSIGNMENT -- correct: the vendor builds one freqs_cis per Attention module and picks its theta by whether the layer compresses, so a compressing layer's window KV really does use the compressed profile"
+    ],
+    "the_difference_is_evidence": {
+      "attention_output": 0.481423,
+      "fused_kv_window": 0.345033,
+      "query_after_rotation": 0.483221,
+      "reading": "position-aligned, phase-aligned, not a row permutation (0 of 12 vendor rows present anywhere in the device's 12, worst closest pairing 7.187), and not a dropped block scale (the KV views are BF16 with scale_object_id NO_ID and scale_block_elements 0). The OUTPUT agrees with the operands rather than with the depth sweep's 0.991827, so the sweep was over-reporting at this layer."
+    },
+    "what_remains": "the VALUES the layer-2 KV path produces -- the quantise/dequantise pair on the rotated vector, and the compressor's own latent, which the CONCAT's third input supplies. Everything layers 0 and 1 exercise is exact to five decimals, and layer 2's index path is exact, so the fault is confined to what a compressing layer computes for its KV values."
+  },
   "captured_call": {
     "index_shape": [
       1,
