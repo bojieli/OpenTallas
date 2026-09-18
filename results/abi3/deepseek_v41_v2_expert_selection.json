@@ -1,0 +1,7328 @@
+{
+ "capture_note": "the engine wrapper is entered twice per descriptor, so each selection arrives twice; consecutive duplicates are dropped.  Without that the pairing is off by one from layer 1 onward and every layer reads as divergent",
+ "comparisons": [
+  {
+   "device_call": 0,
+   "oracle_layer": 0,
+   "pair_index": 0,
+   "per_position": [
+    {
+     "device": [
+      0,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 0,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 1,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      5,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      2,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      2,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 8,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 2,
+   "oracle_layer": 1,
+   "pair_index": 1,
+   "per_position": [
+    {
+     "device": [
+      2,
+      4,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      6,
+      7,
+      11
+     ],
+     "overlap": 6,
+     "position": 0,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      5,
+      7,
+      9
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      7,
+      9
+     ],
+     "overlap": 6,
+     "position": 1,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      6,
+      8,
+      10
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      10
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      11
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      6,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      6,
+      7,
+      8
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      3,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      3,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 8,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 4,
+   "oracle_layer": 2,
+   "pair_index": 2,
+   "per_position": [
+    {
+     "device": [
+      0,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      6,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      7,
+      11
+     ],
+     "overlap": 6,
+     "position": 1,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      11
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      6,
+      7,
+      10
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      6,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      11
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      6,
+      7,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      4,
+      5,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 7,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 6,
+   "oracle_layer": 3,
+   "pair_index": 3,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      6,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 0,
+     "same_set": true
+    },
+    {
+     "device": [
+      3,
+      4,
+      6,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 1,
+     "same_set": true
+    },
+    {
+     "device": [
+      3,
+      4,
+      5,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      4,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      4,
+      6,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      5,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      5,
+      6,
+      9
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      5,
+      6,
+      9
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 7,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 8,
+   "oracle_layer": 4,
+   "pair_index": 4,
+   "per_position": [
+    {
+     "device": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      10
+     ],
+     "overlap": 6,
+     "position": 0,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 1,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      11
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      8
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      8
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      8
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      8
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      5,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      5,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      8,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 7,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 10,
+   "oracle_layer": 5,
+   "pair_index": 5,
+   "per_position": [
+    {
+     "device": [
+      1,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      9
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      7,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      5,
+      7,
+      9
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      5,
+      6,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      6,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      6,
+      8,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      3,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 2,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 12,
+   "oracle_layer": 6,
+   "pair_index": 6,
+   "per_position": [
+    {
+     "device": [
+      0,
+      4,
+      5,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      11
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      8,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      5,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      5,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 14,
+   "oracle_layer": 7,
+   "pair_index": 7,
+   "per_position": [
+    {
+     "device": [
+      0,
+      3,
+      5,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      4,
+      6,
+      8,
+      9,
+      10
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      5,
+      6,
+      7,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      5,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      4,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      5,
+      6,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      10
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      5,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      5,
+      6,
+      7,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      6,
+      8
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      5,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 16,
+   "oracle_layer": 8,
+   "pair_index": 8,
+   "per_position": [
+    {
+     "device": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      10
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      8
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      8
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      5,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      6,
+      7,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      6,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      3,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 18,
+   "oracle_layer": 9,
+   "pair_index": 9,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      4,
+      5,
+      7,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      11
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      9,
+      10
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      6,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      2,
+      5,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      5,
+      7,
+      9
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      7,
+      8,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 20,
+   "oracle_layer": 10,
+   "pair_index": 10,
+   "per_position": [
+    {
+     "device": [
+      1,
+      2,
+      3,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      6,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      4,
+      6,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      10
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      6,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      6,
+      7,
+      8
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      6,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 4,
+     "same_set": true
+    },
+    {
+     "device": [
+      2,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      2,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      6,
+      10
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      6,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      2,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 4,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 22,
+   "oracle_layer": 11,
+   "pair_index": 11,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      10
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      5,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      8
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      9,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      7,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      2,
+      4,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 2,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 24,
+   "oracle_layer": 12,
+   "pair_index": 12,
+   "per_position": [
+    {
+     "device": [
+      1,
+      3,
+      4,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      6,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      7
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      6,
+      11
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      6,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      11
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      11
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      6,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      4,
+      6,
+      8,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      5,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 7,
+     "same_set": true
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 26,
+   "oracle_layer": 13,
+   "pair_index": 13,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      5,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      7,
+      8,
+      9
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      8,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      3,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      6,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 2,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 28,
+   "oracle_layer": 14,
+   "pair_index": 14,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      6,
+      7,
+      8
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      5,
+      7,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      5,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      5,
+      6,
+      7,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 30,
+   "oracle_layer": 15,
+   "pair_index": 15,
+   "per_position": [
+    {
+     "device": [
+      4,
+      5,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      7,
+      10
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      6,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      5,
+      6,
+      7,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      9,
+      10,
+      11
+     ],
+     "overlap": 2,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      6,
+      10
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      9
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      5,
+      6,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      6,
+      11
+     ],
+     "overlap": 6,
+     "position": 6,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      5,
+      7,
+      8
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      5,
+      7,
+      8
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 32,
+   "oracle_layer": 16,
+   "pair_index": 16,
+   "per_position": [
+    {
+     "device": [
+      2,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      8,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      7,
+      9
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      6,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 34,
+   "oracle_layer": 17,
+   "pair_index": 17,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 6,
+     "position": 2,
+     "same_set": true
+    },
+    {
+     "device": [
+      2,
+      3,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      7,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      6,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 36,
+   "oracle_layer": 18,
+   "pair_index": 18,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      6,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      5,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      6,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      6,
+      7,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 38,
+   "oracle_layer": 19,
+   "pair_index": 19,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      6,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      7
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      6,
+      9,
+      10
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      6,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      0,
+      5,
+      6,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      6,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 40,
+   "oracle_layer": 20,
+   "pair_index": 20,
+   "per_position": [
+    {
+     "device": [
+      1,
+      3,
+      4,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      7,
+      11
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      7,
+      8,
+      11
+     ],
+     "overlap": 3,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      7,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      6,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 42,
+   "oracle_layer": 21,
+   "pair_index": 21,
+   "per_position": [
+    {
+     "device": [
+      2,
+      3,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      4,
+      6,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      6,
+      7,
+      8
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      4,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      7,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      5,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      5,
+      9,
+      10
+     ],
+     "overlap": 6,
+     "position": 5,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      7,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      6,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      3,
+      6,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 44,
+   "oracle_layer": 22,
+   "pair_index": 22,
+   "per_position": [
+    {
+     "device": [
+      0,
+      4,
+      6,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      3,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      11
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      5,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      8,
+      9
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      6,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 46,
+   "oracle_layer": 23,
+   "pair_index": 23,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      7,
+      10
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      9
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      4,
+      5,
+      7,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      5,
+      6,
+      7,
+      8
+     ],
+     "overlap": 3,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      6,
+      7
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      7,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      7,
+      8
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      9
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      7,
+      8,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 48,
+   "oracle_layer": 24,
+   "pair_index": 24,
+   "per_position": [
+    {
+     "device": [
+      1,
+      3,
+      4,
+      5,
+      8,
+      9
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      10
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 6,
+     "position": 3,
+     "same_set": true
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      6,
+      7,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      2,
+      4,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 1,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 50,
+   "oracle_layer": 25,
+   "pair_index": 25,
+   "per_position": [
+    {
+     "device": [
+      2,
+      5,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      6,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      5,
+      6,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      3,
+      6,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      4,
+      5,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      10
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      7,
+      11
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      7
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      6,
+      7,
+      11
+     ],
+     "overlap": 3,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 52,
+   "oracle_layer": 26,
+   "pair_index": 26,
+   "per_position": [
+    {
+     "device": [
+      4,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      9
+     ],
+     "oracle": [
+      2,
+      3,
+      5,
+      7,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      7,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 54,
+   "oracle_layer": 27,
+   "pair_index": 27,
+   "per_position": [
+    {
+     "device": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      8,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      6,
+      7,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      11
+     ],
+     "overlap": 2,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      8
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      6,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      6,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      5,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      4,
+      5,
+      6,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 56,
+   "oracle_layer": 28,
+   "pair_index": 28,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      8
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      6,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      5,
+      6,
+      9
+     ],
+     "oracle": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      6,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      6,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      5,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      11
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      5,
+      7,
+      8
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      7,
+      8
+     ],
+     "overlap": 3,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      6,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 58,
+   "oracle_layer": 29,
+   "pair_index": 29,
+   "per_position": [
+    {
+     "device": [
+      5,
+      6,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      4,
+      7,
+      8,
+      9,
+      10
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      8
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      2,
+      4,
+      5,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      6,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      6,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      4,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      11
+     ],
+     "overlap": 3,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      6,
+      7,
+      9
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      7,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 60,
+   "oracle_layer": 30,
+   "pair_index": 30,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      4,
+      5,
+      6,
+      7
+     ],
+     "oracle": [
+      0,
+      5,
+      6,
+      7,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      6,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      6,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      7,
+      10
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      5,
+      7,
+      9
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      9
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      6,
+      7
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      6,
+      7
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      7,
+      8
+     ],
+     "overlap": 3,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 62,
+   "oracle_layer": 31,
+   "pair_index": 31,
+   "per_position": [
+    {
+     "device": [
+      1,
+      2,
+      3,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      8
+     ],
+     "overlap": 5,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      7
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      5,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      6,
+      7,
+      8
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      5,
+      6,
+      8
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      10
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      6,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 64,
+   "oracle_layer": 32,
+   "pair_index": 32,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      3,
+      5,
+      6,
+      9
+     ],
+     "oracle": [
+      0,
+      4,
+      6,
+      8,
+      9,
+      10
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      6,
+      10
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      5,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      5,
+      8,
+      11
+     ],
+     "overlap": 5,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      6,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      7,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      5,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      5,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      8,
+      9
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 66,
+   "oracle_layer": 33,
+   "pair_index": 33,
+   "per_position": [
+    {
+     "device": [
+      4,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      5,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      5,
+      6,
+      10
+     ],
+     "overlap": 2,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      8
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      6,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      4,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      9
+     ],
+     "overlap": 2,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      5,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      3,
+      4,
+      5,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      3,
+      5,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      5,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      7,
+      8,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      8,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 68,
+   "oracle_layer": 34,
+   "pair_index": 34,
+   "per_position": [
+    {
+     "device": [
+      0,
+      1,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      6,
+      7,
+      8
+     ],
+     "overlap": 3,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      7,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      4,
+      6,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8
+     ],
+     "overlap": 1,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      9,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      3,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      1,
+      3,
+      4,
+      9,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      4,
+      6,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      6,
+      7,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      6,
+      7,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      8,
+      10
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 70,
+   "oracle_layer": 35,
+   "pair_index": 35,
+   "per_position": [
+    {
+     "device": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      10
+     ],
+     "oracle": [
+      1,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      6,
+      7,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      6,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      6,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      4,
+      5,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      8
+     ],
+     "overlap": 4,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      6,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      8,
+      9
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      5,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      5,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 72,
+   "oracle_layer": 36,
+   "pair_index": 36,
+   "per_position": [
+    {
+     "device": [
+      0,
+      2,
+      3,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      4,
+      5,
+      8,
+      10
+     ],
+     "overlap": 2,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      8,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      6,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      3,
+      4,
+      6,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      6,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      3,
+      5,
+      8,
+      9
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      5,
+      10,
+      11
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      5,
+      6,
+      10
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      3,
+      4,
+      5,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      11
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      8,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      5,
+      6,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 74,
+   "oracle_layer": 37,
+   "pair_index": 37,
+   "per_position": [
+    {
+     "device": [
+      3,
+      5,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      7,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      6,
+      7,
+      9
+     ],
+     "oracle": [
+      3,
+      4,
+      5,
+      7,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      2,
+      4,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      5,
+      6,
+      7,
+      9
+     ],
+     "overlap": 4,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      6,
+      8,
+      9,
+      11
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      11
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      6,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      5,
+      6,
+      7,
+      10,
+      11
+     ],
+     "oracle": [
+      2,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "overlap": 4,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      4,
+      5,
+      6,
+      8,
+      9
+     ],
+     "oracle": [
+      3,
+      6,
+      7,
+      8,
+      9,
+      11
+     ],
+     "overlap": 3,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 76,
+   "oracle_layer": 38,
+   "pair_index": 38,
+   "per_position": [
+    {
+     "device": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      4,
+      9,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      6,
+      8,
+      9
+     ],
+     "overlap": 3,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      2,
+      3,
+      4,
+      7,
+      9,
+      10
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      7,
+      8,
+      9
+     ],
+     "oracle": [
+      0,
+      3,
+      6,
+      7,
+      8,
+      9
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      11
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      7
+     ],
+     "overlap": 3,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      5,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      1,
+      4,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      4,
+      5,
+      8,
+      10
+     ],
+     "oracle": [
+      0,
+      2,
+      5,
+      6,
+      8,
+      11
+     ],
+     "overlap": 3,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "oracle": [
+      0,
+      1,
+      3,
+      5,
+      8,
+      10
+     ],
+     "overlap": 4,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  },
+  {
+   "device_call": 78,
+   "oracle_layer": 39,
+   "pair_index": 39,
+   "per_position": [
+    {
+     "device": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      10
+     ],
+     "oracle": [
+      1,
+      4,
+      5,
+      9,
+      10,
+      11
+     ],
+     "overlap": 2,
+     "position": 0,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      4,
+      5,
+      6,
+      7,
+      11
+     ],
+     "oracle": [
+      1,
+      3,
+      7,
+      9,
+      10,
+      11
+     ],
+     "overlap": 2,
+     "position": 1,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      2,
+      5,
+      7,
+      8,
+      11
+     ],
+     "oracle": [
+      2,
+      3,
+      5,
+      8,
+      9,
+      11
+     ],
+     "overlap": 4,
+     "position": 2,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      6,
+      7,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      3,
+      4,
+      7,
+      9,
+      10
+     ],
+     "overlap": 3,
+     "position": 3,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      3,
+      7,
+      9,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 4,
+     "same_set": false
+    },
+    {
+     "device": [
+      0,
+      1,
+      2,
+      5,
+      7,
+      10
+     ],
+     "oracle": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      10
+     ],
+     "overlap": 5,
+     "position": 5,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      3,
+      7,
+      8,
+      9,
+      10
+     ],
+     "oracle": [
+      1,
+      2,
+      3,
+      7,
+      9,
+      10
+     ],
+     "overlap": 5,
+     "position": 6,
+     "same_set": false
+    },
+    {
+     "device": [
+      2,
+      4,
+      8,
+      9,
+      10,
+      11
+     ],
+     "oracle": [
+      0,
+      2,
+      4,
+      8,
+      10,
+      11
+     ],
+     "overlap": 5,
+     "position": 7,
+     "same_set": false
+    }
+   ],
+   "positions": 8,
+   "positions_with_the_same_selected_set": 0,
+   "score_view_dims": [
+    8,
+    12
+   ],
+   "score_view_dtype": "18"
+  }
+ ],
+ "device_biased_topk_calls": 40,
+ "device_duplicate_captures_dropped": 40,
+ "device_emitted_token_ids": [
+  1126
+ ],
+ "device_score_view_dtypes": [
+  "18"
+ ],
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "selections are compared as SETS, because the ABI orders by score descending then index ascending while torch's topk is only stable; slot order is not required to agree",
+  "pairing is by issue order -- the nth oracle gate against the nth device BIASED_TOPK call.  If the device issues a gate the oracle does not, or in another order, the pairing is wrong and the disagreement is an artifact of pairing rather than of routing; the captured counts are reported so that can be checked"
+ ],
+ "oracle_gates_captured": 40,
+ "producer": {
+  "git": {
+   "commit": "58b549c68401a09fa56ec3ce011aa693d7598be5"
+  },
+  "tool": "tools/compare_v41_expert_selection.py"
+ },
+ "question": "do the device and the oracle select the same experts for the same tokens, and at what depth do they first stop?",
+ "schema": "opentallas.abi3.v41_expert_selection_comparison.v1",
+ "store": "rom",
+ "summary": {
+  "agreement_fraction": 0.178125,
+  "first_divergent_pair_index": 2,
+  "pairs_compared": 40,
+  "positions_compared": 320,
+  "positions_with_the_same_selected_set": 57
+ },
+ "workload": {
+  "token_ids": [
+   0,
+   3563,
+   3745,
+   418,
+   170,
+   16,
+   3564,
+   3582
+  ],
+  "workload_id": "TA-DS41-REDUCED-EOS-1"
+ }
+}
