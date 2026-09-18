@@ -1,4 +1,25 @@
 {
+  "GATE_RESULT_the_prediction_held": {
+    "reading": "DeepSeek-V4-Flash's ROM wafer emits [13806, 345] on the repaired build -- identical to its committed tokens -- through a full 32-token prefill AND one decode step, which is the phase where a resolving-extent change would bite.  So the digest move is a correction to what the deployment declares, and the closed cell stands.",
+    "walk": {
+      "committed_prefix": [
+        13806,
+        345
+      ],
+      "decode_steps": 1,
+      "deployment": "the FIXED rebuild of deepseek-v4-flash-rom (digest 0e7cc36b..., 116 views repaired)",
+      "emitted": [
+        13806,
+        345
+      ],
+      "failure": null,
+      "matches": true,
+      "prefill_tokens": 32,
+      "wall_seconds": 3200.6
+    },
+    "what_the_committed_artifact_now_is": "build/abi3/deepseek-v4-flash-rom on disk carries the OLD declaration.  It is behaviourally identical and its tokens are unaffected, so it is not urgent to replace -- but it is now known to differ from what the current builder emits, and that is recorded here rather than discovered later as a mystery digest mismatch.",
+    "why_this_was_predictable_and_still_worth_running": "The resolver clamps ``max(numerator, 1)``, so a stored 0 and a stored 1 were always going to resolve the same way; the prediction came from reading that line.  Running it anyway is the difference between a closed cell that is argued safe and one that is measured safe, and it cost 53 minutes."
+  },
   "UPDATE_the_fix_cannot_change_behaviour": {
     "so_what_the_fix_is_worth": "The declaration now means what it says, which is what a verifier can check and a reader can trust; and a defensive clamp in the resolver is no longer load-bearing for correctness.  It is not a behaviour fix and must not be described as one.",
     "the_digest_still_moves": "116 V4-Flash views change by extent_numerator 0 -> 1, so the deployment digest moves 3a240986... -> 0e7cc36b... even though execution does not.  A digest that moves without a behaviour change is exactly the case a token re-walk settles cheaply, and the walk is running to confirm the prediction rather than to discover the answer.",
