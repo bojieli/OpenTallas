@@ -1,0 +1,1400 @@
+{
+  "carry_no_timing_paths": [],
+  "counts": {
+    "abi3_modules": 103,
+    "carry_no_timing_paths": 0,
+    "covered_by_a_closed_block": 33,
+    "uncovered_and_instantiated": 53,
+    "uncovered_and_instantiated_by_nothing": 17,
+    "with_their_own_closed_record": 15
+  },
+  "limiter_under_audit": {
+    "at_target_clock_period_ns": 4.75,
+    "block": "ot_a3_g2_cluster",
+    "family": "abi3_datapath",
+    "fmax_hz": 220627000.0,
+    "note": "the design's clock cannot exceed the slowest block ON IT, so this row is the whole-design operating point and every ABI 3.0 block above it has headroom.  Probes and legacy tensor-accelerator blocks are excluded by family: neither is referenced from rtl/abi3/ or from any backend, so neither is on this clock.  Including them would let a retired block set the operating point.",
+    "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p75ns.json",
+    "scope": "abi3_datapath only",
+    "slew_margin_percent": 40.0,
+    "standard_cell_area_um2": 84773.4,
+    "target_headroom": 0.04578063157894737
+  },
+  "method": "Reads the instantiation graph out of every synthesisable source under rtl/ (rtl/test/ excluded) with comments BLANKED first -- a mention is not a binding -- then takes the transitive closure from each block that has a closed routed record.  A module inside that closure had its paths timed as part of a block that closed, whether or not it was ever routed standalone.",
+  "modules": [
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_attention_av_walk.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_av_walk"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_attention_denominator.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_denominator"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_attention_epilogue.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_epilogue"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_kv_index"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_qk_walk"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_denominator"
+      ],
+      "module": "ot_a3_attention_softmax_block"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_attention_sparse.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_attention_sparse"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_collective_engine.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_collective_engine"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_communication_decoder.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_communication_decoder"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_dependence_table.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_dependence_table"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_descriptor_record_validator.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_qwen_kv_scatter_adapter"
+      ],
+      "module": "ot_a3_descriptor_record_validator"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_device_top.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_device_top"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_dma_fill.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_dma_fill"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_dma_index_mover.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_a3_qwen_kv_scatter_adapter"
+      ],
+      "module": "ot_a3_dma_index_mover"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_dma_ngram_hash"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_engine_array.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_engine_array"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_engine_issue_bridge"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_engram_gate"
+      ],
+      "module": "ot_a3_engram_exact_dot_tree"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_engram_gate"
+      ],
+      "module": "ot_a3_engram_fp32_sqrt_rne_pipe"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_event_scoreboard.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_event_scoreboard"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_epilogue",
+        "ot_a3_hc_sinkhorn20_rne",
+        "ot_a3_hc_stable_softmax_rne",
+        "ot_a3_qwen_gqa",
+        "ot_a3_route_weight_normalize",
+        "ot_a3_vector_engram_gate",
+        "ot_a3_vector_silu_mul"
+      ],
+      "module": "ot_a3_fp32_div_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_epilogue"
+      ],
+      "module": "ot_a3_fp32_exp_pos_cr_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_vector_sqrt_softplus"
+      ],
+      "module": "ot_a3_fp32_sqrt_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_epilogue",
+        "ot_a3_attention_softmax_block",
+        "ot_a3_hc_coefficients_rne",
+        "ot_a3_hc_stable_softmax_rne",
+        "ot_a3_qwen_gqa",
+        "ot_a3_vector_engram_gate",
+        "ot_a3_vector_silu_mul",
+        "ot_a3_vector_sqrt_softplus"
+      ],
+      "module": "ot_a3_fp32_transcendental_cr_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_fp4kv_dequant"
+      ],
+      "module": "ot_a3_fp4kv_dequant_lane"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_fp4kv_dequant"
+      ],
+      "module": "ot_a3_fp4kv_fetch"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_array_issue_adapter.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_g2_array_issue_adapter"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_array_staging.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_g2_array_staging"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_cluster.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_g2_cluster"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_descriptor_store.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_g2_descriptor_store"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_issue_record_ram.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_g2_issue_record_ram"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_g2_program_store.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_g2_program_store"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_coefficients_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_hc_coefficients_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_pre_t1_descriptor_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_hc_pre_t1_descriptor_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_projection_rms_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_hc_projection_rms_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_projection_rms_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_projection_rms_rne"
+      ],
+      "module": "ot_a3_hc_reduction_store"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+      ],
+      "module": "ot_a3_hc_sinkhorn20_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+      ],
+      "module": "ot_a3_hc_stable_softmax_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_coefficients_rne"
+      ],
+      "module": "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_instruction_decoder.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer",
+        "ot_a3_qwen_kv_scatter_adapter"
+      ],
+      "module": "ot_a3_instruction_decoder"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_issue_record_store.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_issue_record_store"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_lq8"
+      ],
+      "module": "ot_a3_lane_pipelined"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_endpoint.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_endpoint"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_link_node"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_return"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_channel.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_link_endpoint",
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_link_rx_channel"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_channel.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_link_endpoint",
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_link_tx_channel"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_wire"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_loop_stack.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_loop_stack"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_lq8.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_g2_cluster",
+        "ot_a3_tile64"
+      ],
+      "module": "ot_a3_lq8"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_mac_lane.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_mac_lane"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_mac_lane_pipe.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_a3_tensor_routed_matmul"
+      ],
+      "module": "ot_a3_mac_lane_pipe"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_mesh_router.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_mesh_router"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_microsequencer.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_device_top",
+        "ot_a3_g2_cluster"
+      ],
+      "module": "ot_a3_microsequencer"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_dma_ngram_hash.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_dma_ngram_hash"
+      ],
+      "module": "ot_a3_ngram_mul_pipe"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_operand_receiver.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_operand_receiver"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_partial_collector.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_partial_collector"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_place_table.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_place_table"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_program_header.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_device_top"
+      ],
+      "module": "ot_a3_program_header"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_qwen_gqa.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge",
+        "ot_a3_qwen_gqa_adapter"
+      ],
+      "module": "ot_a3_qwen_gqa"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_qwen_gqa_adapter.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_qwen_gqa_adapter"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_qwen_gqa_adapter"
+      ],
+      "module": "ot_a3_qwen_kv_scatter_adapter"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_attention_denominator"
+      ],
+      "module": "ot_a3_reduction_balanced_sum"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_reduction_expert_sum.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_reduction_expert_sum"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_reduction_grouped_concat.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_reduction_grouped_concat"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_reduction_ordered_sum.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_reduction_ordered_sum"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_resolver_bank.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_resolver_bank"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_rope_lane_pipe.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_rope"
+      ],
+      "module": "ot_a3_rope_lane_pipe"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_route_biased_topk.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_biased_topk"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_route_block_max.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_route_block_max"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_route_candidate_mask.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_route_candidate_mask"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_route_expert_dispatch.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_route_expert_dispatch"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_route_index_topk.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_route_index_topk"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_route_weight_normalize.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_weight_normalize"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_route_window_index.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_window_index"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_selection_argmax.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_selection_argmax"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_selection_token_append.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_selection_token_append"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_semantic_record_collector.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_semantic_record_collector"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_shared_divider.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_shared_divider"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_state_controller.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_state_controller"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_symbol_file.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_microsequencer"
+      ],
+      "module": "ot_a3_symbol_file"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_tensor_lane_mapper.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_tensor_lane_mapper"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_tensor_routed_matmul.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_tensor_routed_matmul"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_tile64.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_tile64"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_tree_endpoint_fp32.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_tree_endpoint_fp32"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_add.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_add"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_compress_project.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_compress_project"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_convert.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_convert"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_engram_gate.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_vector_engram_gate"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_vector_fp4kv_dequant"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_hadamard.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_probe_had1"
+      ],
+      "module": "ot_a3_vector_hadamard"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_index_score.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_index_score"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_mhc_post.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_mhc_post"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_vector_mhc_pre_tile_scheduler"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_rms_norm.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_rms_norm"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_rope.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_rope"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_vector_scale.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [],
+      "module": "ot_a3_vector_scale"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+      "has_its_own_closed_record": true,
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_scale_pipe"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_silu_mul.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_silu_mul"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_vector_sqrt_softplus_row"
+      ],
+      "module": "ot_a3_vector_sqrt_softplus"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_sqrt_softplus_row"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": true,
+      "file": "rtl/abi3/ot_a3_view_resolver.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [
+        "ot_a3_resolver_bank"
+      ],
+      "module": "ot_a3_view_resolver"
+    },
+    {
+      "carries_no_timing_paths": false,
+      "covered_by_a_closed_block": false,
+      "file": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+      "has_its_own_closed_record": false,
+      "instantiated_by": [],
+      "module": "ot_a3_wafer_multicast_adapter"
+    }
+  ],
+  "not_a_claim": [
+    "coverage is not a frequency: a module inside a closed block met that block's target, which may be looser than the module's own ceiling",
+    "ASAP7 is a predictive, non-manufacturable academic PDK",
+    "a module instantiated by nothing is a top-level or a retired module; which of the two it is cannot be read off the graph and is not guessed at here",
+    "the instantiation regex reads ``name [#(...)] label (`` at statement position and drops SystemVerilog keywords by name; it is a parse of convention, not a full elaboration"
+  ],
+  "producer": {
+    "git": {
+      "commit": "4df2d512214a0451b67612e60e18d233fae5ef20"
+    },
+    "tool": "tools/audit_asap7_datapath_coverage.py"
+  },
+  "question": "The fmax inventory calls the slowest ABI 3.0 block with a closed routed record the design's clock limiter.  Is every ABI 3.0 datapath module inside SOME block that has closed, so that the limiter covers the datapath rather than only the blocks that happen to have been routed?",
+  "schema": "opentallas.derived.asap7_datapath_coverage.v1",
+  "uncovered_and_instantiated": [
+    {
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_denominator"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_epilogue"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_sparse"
+      ],
+      "module": "ot_a3_attention_kv_index"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_denominator"
+      ],
+      "module": "ot_a3_attention_softmax_block"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_attention_sparse"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_collective_engine"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_communication_decoder"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_qwen_kv_scatter_adapter"
+      ],
+      "module": "ot_a3_descriptor_record_validator"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_a3_qwen_kv_scatter_adapter"
+      ],
+      "module": "ot_a3_dma_index_mover"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_engine_array"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_vector_engram_gate"
+      ],
+      "module": "ot_a3_engram_exact_dot_tree"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_vector_engram_gate"
+      ],
+      "module": "ot_a3_engram_fp32_sqrt_rne_pipe"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_epilogue",
+        "ot_a3_hc_sinkhorn20_rne",
+        "ot_a3_hc_stable_softmax_rne",
+        "ot_a3_qwen_gqa",
+        "ot_a3_route_weight_normalize",
+        "ot_a3_vector_engram_gate",
+        "ot_a3_vector_silu_mul"
+      ],
+      "module": "ot_a3_fp32_div_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_epilogue"
+      ],
+      "module": "ot_a3_fp32_exp_pos_cr_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_epilogue",
+        "ot_a3_attention_softmax_block",
+        "ot_a3_hc_coefficients_rne",
+        "ot_a3_hc_stable_softmax_rne",
+        "ot_a3_qwen_gqa",
+        "ot_a3_vector_engram_gate",
+        "ot_a3_vector_silu_mul",
+        "ot_a3_vector_sqrt_softplus"
+      ],
+      "module": "ot_a3_fp32_transcendental_cr_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_hc_coefficients_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_hc_projection_rms_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_projection_rms_rne"
+      ],
+      "module": "ot_a3_hc_reduction_store"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+      ],
+      "module": "ot_a3_hc_sinkhorn20_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+      ],
+      "module": "ot_a3_hc_stable_softmax_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_coefficients_rne"
+      ],
+      "module": "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_endpoint"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_return"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_link_endpoint",
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_link_rx_channel"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_link_endpoint",
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_link_tx_channel"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_wafer_multicast_adapter"
+      ],
+      "module": "ot_a3_link_wire"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_mac_lane"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_a3_tensor_routed_matmul"
+      ],
+      "module": "ot_a3_mac_lane_pipe"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_link_node"
+      ],
+      "module": "ot_a3_mesh_router"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_place_table"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_device_top"
+      ],
+      "module": "ot_a3_program_header"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge",
+        "ot_a3_qwen_gqa_adapter"
+      ],
+      "module": "ot_a3_qwen_gqa"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_qwen_gqa_adapter"
+      ],
+      "module": "ot_a3_qwen_kv_scatter_adapter"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_attention_denominator"
+      ],
+      "module": "ot_a3_reduction_balanced_sum"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_reduction_expert_sum"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_vector_rope"
+      ],
+      "module": "ot_a3_rope_lane_pipe"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_biased_topk"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_weight_normalize"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_route_window_index"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_selection_argmax"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_selection_token_append"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_add"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_compress_project"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_convert"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array",
+        "ot_probe_had1"
+      ],
+      "module": "ot_a3_vector_hadamard"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_index_score"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_array"
+      ],
+      "module": "ot_a3_vector_mhc_post"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_hc_pre_t1_descriptor_rne"
+      ],
+      "module": "ot_a3_vector_mhc_pre_tile_scheduler"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_rms_norm"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_rope"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_silu_mul"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_vector_sqrt_softplus_row"
+      ],
+      "module": "ot_a3_vector_sqrt_softplus"
+    },
+    {
+      "instantiated_by": [
+        "ot_a3_engine_issue_bridge"
+      ],
+      "module": "ot_a3_vector_sqrt_softplus_row"
+    }
+  ],
+  "uncovered_and_instantiated_by_nothing": [
+    "ot_a3_device_top",
+    "ot_a3_dma_fill",
+    "ot_a3_engine_issue_bridge",
+    "ot_a3_hc_pre_t1_descriptor_rne",
+    "ot_a3_link_node",
+    "ot_a3_operand_receiver",
+    "ot_a3_partial_collector",
+    "ot_a3_qwen_gqa_adapter",
+    "ot_a3_reduction_grouped_concat",
+    "ot_a3_reduction_ordered_sum",
+    "ot_a3_route_expert_dispatch",
+    "ot_a3_semantic_record_collector",
+    "ot_a3_tensor_lane_mapper",
+    "ot_a3_tensor_routed_matmul",
+    "ot_a3_tile64",
+    "ot_a3_vector_engram_gate",
+    "ot_a3_wafer_multicast_adapter"
+  ]
+}
