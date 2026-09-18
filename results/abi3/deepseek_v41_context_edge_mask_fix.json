@@ -1,0 +1,28 @@
+{
+  "gated": {
+    "deepseek_v4_flash_rom": "UNCHANGED from the A18-only build (0e7cc36b...), so neither fix moves it",
+    "qwen3_8b_rom": "UNCHANGED (233784898066e8d2...)",
+    "reach": "exactly the models with a context-derived phase layout, which today is V4.1 alone"
+  },
+  "measured_result": {
+    "after_the_context_loop_fix_alone": "output resolved 132 against inputs 128+64 -- right value, wrong inputs",
+    "after_the_edge_mask_too": "both sides agree and the join is passed",
+    "before_this_pair_of_fixes": "output resolved 128 against inputs 128+64",
+    "prefill_token": "1126, unchanged from the committed reduced walk, so addressing is intact",
+    "ratio_2_join": "PASSES -- the layer02 attention KV join no longer refuses at decode step 1"
+  },
+  "not_a_claim": [
+    "no V4.1 cell closes: a ratio-1 layer's join still refuses at decode step 1",
+    "the reduced vehicle's token is 1126 and its oracle is 2750, so even a passing decode would not close that cell -- the reduced vehicle's disagreement is the near-tied routing already recorded, not this defect"
+  ],
+  "schema": "opentallas.result.v41_context_edge_mask_fix.v1",
+  "the_change": "A CONTEXT-derived operand is clamped by amendment A26's EDGE MASK naming the context loop, not by moving its LOOP_INDUCTION term onto that loop.",
+  "what_now_fails_is_a_different_defect": {
+    "measured": "output view 7033 declares num=1 unit=0 bias=129 with a term on the CONTEXT_LENGTH loop, so it resolves to 1 * 9 / 1 + 129 = 138.  Its inputs are the 128-row window and a compressed plane whose DECLARED capacity is 1 row, summing to 129.",
+    "not_caused_by_these_fixes": "The same join refused identically under the earlier blunt experiment that forced declared rows, before either fix existed, so it is exposed by getting past the first join rather than introduced.",
+    "reading": "The extent function asks for context/1 = 9 compressed rows from a plane that holds 1.  This is not the span-versus-context mismatch: the symbol is now right and the term is on the right loop.  It is an extent that exceeds its operand's declared capacity, which is a different question -- whether the clamp should be bounded by what the inputs can hold.",
+    "refusal": "GROUPED_CONCAT output view 7033 dims (138, 32) differ from the axis-0 concatenation (129, 32)",
+    "the_join": "a RATIO-1 layer, kernel 1687"
+  },
+  "why_the_term_was_the_wrong_instrument": "A LOOP_INDUCTION term's stride is ALSO the address advance -- the tensor-view record carries a separate edge-mask field for exactly this reason, and says so.  Moving the term to the context loop clamps the axis AND moves the base with it.  Measured: it made the ratio-2 join pass and changed the reduced vehicle's PREFILL token from 1126 to 2284, because the operand then read different memory.  The edge mask clamps without advancing, which is the only one of the two meanings this operand needs."
+}

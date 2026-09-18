@@ -4339,6 +4339,7 @@ class RomLowering:
         extent_unit: int | None = None,
         extent_numerator: int = 0,
         extent_bias: int = 0,
+        edge_mask_id: int = NO_ID,
     ) -> int:
         object_id = self._buffer(tensor.tensor_id)
         permissions = (
@@ -4401,6 +4402,7 @@ class RomLowering:
             extent_unit=extent_unit,
             extent_numerator=extent_numerator,
             extent_bias=extent_bias,
+            edge_mask_id=edge_mask_id,
             label="view.buf",
         )
 
@@ -5408,6 +5410,30 @@ class RomLowering:
             and bool(broadcast_dims)
             and broadcast_dims[0] != dims[0]
         )
+        # A CONTEXT-derived leading axis must take its term from the CONTEXT
+        # loop.  ``_row_term`` attaches the term to the ROW loop, which is
+        # span-bound, so ``_remaining_extent`` then computes
+        # ``numerator * span / unit + bias`` for an axis that counts the context.
+        # In prefill the phase pins ``position_start`` to 0 and the two symbols
+        # agree; at decode the span is one and the context is the whole history,
+        # and the ratio-2 compressed prefix presented its full declared capacity
+        # instead of the context's groups -- 64 rows where the context gives 4.
+        # This is the same span-versus-context mismatch the context-loop choice
+        # fixes for the phase OUTPUT, one level down on its operands.
+        # AMENDMENT A26, and it has to be the edge mask rather than a term.  A
+        # LOOP_INDUCTION term's stride is ALSO the address advance -- the
+        # tensor-view record carries a separate edge-mask field for exactly this
+        # reason -- so moving the term to the context loop clamps the axis and
+        # moves the base with it.  Measured: doing that made the ratio-2 join
+        # pass and changed the reduced vehicle's PREFILL token from 1126 to 2284,
+        # because the operand then read different memory.  The edge mask names a
+        # loop whose remaining extent clamps the view WITHOUT advancing it, which
+        # is the only one of the two meanings this operand needs.
+        context_edge = NO_ID
+        if context is not None and dims:
+            _csym, _cmult, lead = self._leading_symbol(tensor)
+            if _csym is not None and int(lead.symbol) == int(Symbol.CONTEXT_LENGTH):
+                context_edge = context
         return self._buffer_view(
             tensor,
             dims=broadcast_dims,
@@ -5416,6 +5442,7 @@ class RomLowering:
             shape=shape,
             loop=loop,
             writable=writable,
+            edge_mask_id=context_edge,
             # A routed weight is stored as ``[span, top_k]`` but presented as
             # one value per row of ``[top_k * span, width]``.  The clamped axis
             # belongs to that presented view, so its affine numerator is
