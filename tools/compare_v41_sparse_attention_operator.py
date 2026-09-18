@@ -439,6 +439,34 @@ def main(argv: list[str] | None = None) -> int:
                 "all_padding_index": bool(np.all(padding == -1)),
                 "distinct": sorted({int(v) for v in padding.tolist()})[:4],
             })
+            # IS THE JOINED KV A PERMUTATION OF THE VENDOR'S?
+            #
+            # The indices are bit-identical while the KV values are not, and those
+            # two facts together have one obvious explanation: the device's joined
+            # operand holds the same rows in a different ORDER, so an identical
+            # index selects a different row.  Layer 2 is the first layer that joins
+            # anything -- window rows plus a compressed prefix -- so the join's row
+            # order is exactly what becomes testable here.
+            vendor_rows = np.asarray(kv[0], dtype=np.float64)
+            device_rows = np.asarray(device_kv[:live], dtype=np.float64)
+            permutation: list[int | None] = []
+            residuals: list[float] = []
+            for row in vendor_rows:
+                norms = np.linalg.norm(device_rows - row, axis=1)
+                best = int(np.argmin(norms))
+                permutation.append(best if float(norms[best]) < 1e-6 else None)
+                residuals.append(float(norms[best]))
+            matched = [value for value in permutation if value is not None]
+            rows_out.append({
+                "operand": "joined_kv_row_order",
+                "vendor_rows": int(vendor_rows.shape[0]),
+                "rows_matched_exactly": len(matched),
+                "is_a_permutation": len(matched) == vendor_rows.shape[0]
+                and len(set(matched)) == len(matched),
+                "vendor_row_to_device_row": permutation,
+                "identity_order": permutation == list(range(vendor_rows.shape[0])),
+                "worst_unmatched_residual": max(residuals) if residuals else None,
+            })
             if "output" in grabbed:
                 entry = grabbed["output"]
                 device_out = np.asarray(entry["values"]).reshape(entry["dims"])

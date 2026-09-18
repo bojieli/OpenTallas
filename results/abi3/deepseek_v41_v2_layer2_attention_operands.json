@@ -1,10 +1,4 @@
 {
-  "READING_THIS_CORRECTLY": {
-    "position_alignment_is_established": "bit-identical indices can only happen at the same query position, so the device call selected by live index count is the same position the vendor row is taken from. That was the open question in the previous note and it is closed by the indices themselves.",
-    "resolved": "the previous version of this note said the query and fused-KV rows were a measurement artifact because they could not be reconciled with the depth sweep's 0.991827 at block.02. Reading the OUTPUT of the same call settles it the other way: the output is cosine 0.481, which agrees with the operands (0.483 and 0.345) and not with the sweep. The operands really do differ, and the sweep was over-reporting at layer 2.",
-    "the_target": "layer 2's attention operands: the query after rotation (0.483) and the fused KV window (0.345), with the SELECTED INDICES bit-identical (1.0, max abs diff 0.0). Layer 2 is the first layer with compress_ratio 2, so the compressor's INDEX path is right and its VALUE path -- the compressed KV rows it appends, and the rotation applied across the joined operand -- is where the fault is.",
-    "why_the_sweep_over_reports": "it searches every device tensor of the same element count for the BEST absolute cosine -- 166 candidates at this size -- so with forty layers of similar-magnitude residuals it can find a close match by chance. At layers 0 and 1 its 0.99997 and 0.99935 are corroborated by independent evidence (the layer-0 deep tap at cosine 1.0 and all three operands bit-identical), so the instrument is sound where it is confirmed and optimistic where it is not. Nearest-neighbour matching is a localisation tool, which is what its own not_a_claim field says."
-  },
   "captured_call": {
     "index_shape": [
       1,
@@ -75,6 +69,28 @@
         ],
         "operand": "index_padding_beyond_the_live_extent",
         "slots": 132
+      },
+      {
+        "identity_order": false,
+        "is_a_permutation": false,
+        "operand": "joined_kv_row_order",
+        "rows_matched_exactly": 0,
+        "vendor_row_to_device_row": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "vendor_rows": 12,
+        "worst_unmatched_residual": 7.187042487137116
       },
       {
         "comparable": true,
@@ -575,7 +591,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "2a457e29100b3eb96ec33c07c11778e829a3cabe"
+      "commit": "49f245ee39fc129e2ecb22f21bf4f754d0bb71b9"
     },
     "tool": "tools/compare_v41_sparse_attention_operator.py"
   },
