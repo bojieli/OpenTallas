@@ -1,0 +1,98 @@
+{
+  "agreement": {
+    "rom_wafer": true
+  },
+  "cases": {
+    "rom_wafer": {
+      "agrees_with_oracle": true,
+      "emitted_token_ids": [
+        13806
+      ],
+      "failure": null,
+      "identity": {
+        "capability": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+        "capability_sha256": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+        "deployment": "build/abi3/deepseek-v4-flash-rom",
+        "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+        "instruction_count": 1323,
+        "node_count": 1,
+        "target_id": "deepseek-v4-flash-rom-wafer"
+      },
+      "retired_work": 26102,
+      "stop_reason": "max_new_tokens"
+    }
+  },
+  "evidence_class": "functional_device_execution_shipped_checkpoint",
+  "model_id": "deepseek-v4-flash-0731",
+  "not_a_claim": [
+    "rtl_execution",
+    "timing_or_performance",
+    "numerics_beyond_this_workload_and_step_count"
+  ],
+  "oracle": {
+    "artifact": "results/abi3/deepseek_v4_reference_oracle_prefix.json",
+    "generated_token_ids": [
+      13806,
+      345,
+      7472,
+      55560,
+      517,
+      436,
+      295,
+      223,
+      736,
+      4343,
+      16,
+      2052,
+      710,
+      2038,
+      44158,
+      477
+    ],
+    "sha256": "5f0ec716e26a87de33f2b83ef6c61dd75313e88f86038d04460c6b538213eeac"
+  },
+  "producer": {
+    "git": {
+      "commit": "5391b3173cd98d50b413ef0c67e7a08a3de20de8",
+      "worktree_dirty": true
+    },
+    "sha256": "9b345e0540f387c5a7a371c92765dba7e13dcdfdb1400a192a5819c08e0fb008",
+    "tool": "tools/run_deepseek_v4_flash_token_walk.py"
+  },
+  "prompt_token_ids": [
+    0,
+    128803,
+    35,
+    2237,
+    17171,
+    12927,
+    223,
+    22,
+    14,
+    6884,
+    81673,
+    16,
+    53479,
+    334,
+    7472,
+    49665,
+    436,
+    295,
+    223,
+    24,
+    4343,
+    29,
+    13806,
+    406,
+    7472,
+    49665,
+    436,
+    295,
+    223,
+    553,
+    4343,
+    29
+  ],
+  "schema": "opentallas.abi3.shipped_token_walk.v1",
+  "workload_id": "TA-DS-CHAT-1-P32"
+}
