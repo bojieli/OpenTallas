@@ -1,0 +1,77 @@
+{
+  "measured": {
+    "graph_kernel": {
+      "axis": 0,
+      "index": 210,
+      "kernel_id": "main.layer02.attention.key_value_view",
+      "kind": "CONCAT",
+      "note": "IDENTICAL on DeepSeek-V4-Flash's main.layer02.attention_kv_view -- same axis, same phase_inputs, same segment order, same symbol binding -- and V4-Flash's shipped ROM array decodes 16 tokens.  So the graph's phase declaration is not on its own the defect.",
+      "phase_inputs": {
+        "decode": [
+          1,
+          2
+        ],
+        "prefill": [
+          0,
+          2
+        ]
+      },
+      "phase_segment_order": {
+        "decode": "committed_window_then_valid_compressed_prefix",
+        "prefill": "current_then_valid_compressed_prefix"
+      },
+      "phase_symbol_binding": {
+        "decode": {
+          "span_tokens": 1
+        },
+        "prefill": {
+          "position_start": 0
+        }
+      },
+      "phases": [
+        "prefill",
+        "decode"
+      ]
+    },
+    "the_engine_check_is_not_layout_driven": "runtime/sim/engines/reduction.py sums dims[axis] over the input views ACTUALLY WIRED and compares that to the output view's resolved dims.  So the 4224 in the message is 128 + 4096 from operator 2656's two inputs, and the 128 is what output view 2655 resolved to.",
+    "the_shared_predicate": {
+      "consequence_measured": "CONTEXT_LENGTH is at least 2 in BOTH phases -- 32 during this prompt's prefill and 33 at decode step 1 -- so the un-inverted instruction 708 is the one that runs in both, and instruction 709 never runs.",
+      "decoded_from": "selector_kind=RUNTIME_SYMBOL, selector_index=3, comparison=5(GE), immediate=2",
+      "descriptor": 2567,
+      "reads": "CONTEXT_LENGTH >= 2"
+    },
+    "the_two_operators_the_backend_emitted": [
+      {
+        "flags": "PREDICATED|WAIT_ACQUIRE|SIGNAL_RELEASE",
+        "inputs": {
+          "view_2316": "(128, 512) nterms=1 unit=0",
+          "view_2645": "(4096, 512) nterms=1 unit=2"
+        },
+        "instruction": 708,
+        "operator": 2656,
+        "output": "view_2655 (4224, 512) nterms=1 extent_axis=0 numerator=0 unit=2 bias=128"
+      },
+      {
+        "flags": "PREDICATED|PREDICATE_INVERT|WAIT_ACQUIRE|SIGNAL_RELEASE",
+        "inputs": {
+          "view_2316": "(128, 512) nterms=1 unit=0"
+        },
+        "instruction": 709,
+        "operator": 2658,
+        "output": "view_2655 (4224, 512) -- the SAME output view"
+      }
+    ]
+  },
+  "question": "The shipped V4.1 ROM wafer completes prefill and refuses decode step 1 with 'GROUPED_CONCAT output view 2655 dims (128, 512) differ from the axis-0 concatenation (4224, 512)'.  What is the shape of that defect?",
+  "schema": "opentallas.result.v41_decode_concat_extent.v1",
+  "this_failure_is_already_described_in_the_tree": {
+    "what_it_says": "'the full path took whatever symbol the exporter had put on the output tensor, and for DeepSeek's compressed attention join that symbol was attention_rows_ratioN -- the span's group count where the join carries the context's.  It agreed with the operands in prefill, where the span IS the context, so every gate this program had ever run passed and the first decode step failed at the engine with output view ... differ from the axis-0 concatenation.'",
+    "where": "compiler/backends/rom/common/program.py::_check_join_extent",
+    "why_that_guard_did_not_fire_here": "SUSPECTED, NOT DEMONSTRATED.  ``_check_join_extent`` returns early when ``self._phase_layout_extents(kernel) is not None`` -- and this kernel has a phase layout, being precisely a phase-split join.  So the check that exists for this failure is skipped for the shape that produces it.  That is a hypothesis from reading the guard, not a measurement, and it is recorded as one."
+  },
+  "what_is_NOT_established": [
+    "why prefill passed.  Under a naive reading of the A18 fields, operator 2656 in prefill sums 128 + (context/2 = 16) = 144 against an output resolving to 128, which should have failed there too.  It did not, so the resolution of unit/numerator/bias in these views is not what that naive reading assumes, and the discrepancy is left open rather than explained away",
+    "whether the fix belongs in the output tensor's declared extent, in the phase-layout branch of _check_join_extent, or in the predicate's choice of symbol",
+    "no fix is attempted: the same join shape exists in DeepSeek-V4-Flash, whose three cells are CLOSED with committed tokens, so a change here moves shipped digests and must be gated against them"
+  ]
+}
