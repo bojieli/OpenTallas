@@ -65,6 +65,32 @@
         "pc 10 CONTROL.LOOP_NEXT"
       ]
     },
+    "loop_1076_is_a_region_loop": {
+      "loop_1075": {
+        "body_end": 242,
+        "body_start": 11,
+        "bound_divisor": 1,
+        "upper_bound": 1
+      },
+      "loop_1076": {
+        "body_end": 505,
+        "body_start": 244,
+        "bound_divisor": 1,
+        "lower_bound": 0,
+        "max_iterations": 1,
+        "step": 1,
+        "upper_bound": 1
+      },
+      "loop_1085_for_contrast": {
+        "body_end": 5,
+        "body_start": 4,
+        "bound_divisor": 512,
+        "note": "kernel 0's real per-operator context loop",
+        "upper_bound": 256
+      },
+      "reading": "1076 runs ONCE over a body of 262 instructions, which is a LAYER-RUN REGION and not a per-operator context loop.  So the term on view 1097 came from the run/state-slot path -- ``_loop_of_run.get(placement[0])`` -- which is exactly the path ``_loop_for_state_slot``'s guard governs.  That eliminates the other candidate: it is not the context loop this session's token_ring change introduces, whose loops look like 1085",
+      "the_anomaly_is_now_single": "the guard governs this term's source and the deployment records ZERO suppressions, while the operator that reads the view is at pc 6 and the loop's body begins at 244.  Either the guard's open-loop test saw 1076 as open when the view was built -- which body_start 244 contradicts -- or the view reached the prologue kernel without passing the guard.  ``_view()``'s dedup cache is the only route that bypasses a per-request guard, and it is keyed on the terms, so a hit would require the prologue's own request to have carried the term already.  Instrumenting ``_loop_for_state_slot`` and ``_view`` in an array build, with the wafer as control, is what separates those"
+    },
     "why_it_surfaced_now": "kernel 1 writes a token_ring, and a token_ring's plane became request-sized earlier in this session so that DMA.NGRAM_HASH would be handed the committed prefix instead of the whole capacity.  That is what gives the view a resolving loop to need.  The wafer and single-chip lanes emit it; the array lane does not, and no execution had ever reached the array path to show that"
   },
   "not_a_claim": [
