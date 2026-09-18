@@ -337,9 +337,21 @@
   "counts": {
     "closed_routed_record_count": 60,
     "distinct_blocks_with_a_closed_routed_record": 32,
-    "post_route_record_count": 100,
-    "record_count": 172
+    "post_route_record_count": 101,
+    "record_count": 174
   },
+  "excluded_from_the_limiter_as_superseded": [
+    {
+      "block": "ot_a3_vector_scale",
+      "fmax_hz": 222945000.0,
+      "instantiated_by_synthesisable_rtl": [],
+      "replaced_by": "ot_a3_vector_scale_pipe",
+      "replacement_instantiated_by": [
+        "rtl/abi3/ot_a3_engine_array.sv"
+      ],
+      "retired_module": "ot_a3_vector_scale"
+    }
+  ],
   "excluded_from_the_limiter_by_family": [
     {
       "block": "ot_probe_fp32_mul",
@@ -407,11 +419,12 @@
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
     "a block's best closed fmax is the best over the routes that were RUN, not a proven ceiling: a block nobody routed at a tight target will read slow",
     "the limiter is the slowest ABI 3.0 block that has a closed record.  A block with no closed record at all is not on this list and could be slower",
-    "the family split is by module-name prefix confirmed against whether rtl/abi3/ or any backend references the block; it is a classification, not a measurement"
+    "the family split is by module-name prefix confirmed against whether rtl/abi3/ or any backend references the block; it is a classification, not a measurement",
+    "a block listed under excluded_from_the_limiter_as_superseded still has a true routed record; what is no longer true is that the design contains it.  The test requires BOTH that no synthesisable file instantiates it and that a <block>_pipe twin IS instantiated, so a top-level module -- which nothing instantiates -- is never retired by it"
   ],
   "producer": {
     "git": {
-      "commit": "d1265369607694502d5eb3f3e3fbc595e9f34d1c"
+      "commit": "d58364441dfa486324dd146d26ed51e87a9c7dc0"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3185,6 +3198,27 @@
     },
     {
       "antenna_violating_nets": null,
+      "block": "ot_a3_engine_array",
+      "closed": false,
+      "drc_errors": null,
+      "family": "abi3_datapath",
+      "fmax_hz": null,
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null,
+      "post_route": false,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/engine_array/pnr_1p6ns_synth_timeout.json",
+      "record_sha256": "3afd167bddbe0ea215409a962e10c6d512679a298d1e7d08f431b03086619869",
+      "setup_wns_ns": null,
+      "slew_margin_percent": null,
+      "stages": [],
+      "standard_cell_area_um2": null,
+      "target_clock_period_ns": 1.6,
+      "target_headroom": null
+    },
+    {
+      "antenna_violating_nets": null,
       "block": "ot_a3_mac_lane",
       "closed": false,
       "drc_errors": null,
@@ -3420,6 +3454,29 @@
       "standard_cell_area_um2": 209.704,
       "target_clock_period_ns": 1.0,
       "target_headroom": 0.266757
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 309437000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/g2_cluster/pnr_4p50ns_slew55_hold20ps.json",
+      "record_sha256": "59a9d3590b1e8f87cd5649eae18852f3409c02784c47c589e2c1c46ff87c06b3",
+      "setup_wns_ns": 1.26832,
+      "slew_margin_percent": 55.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 88633.4,
+      "target_clock_period_ns": 4.5,
+      "target_headroom": 0.28184888888888887
     },
     {
       "antenna_violating_nets": null,

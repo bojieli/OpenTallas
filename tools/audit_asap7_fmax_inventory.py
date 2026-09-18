@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -43,6 +44,93 @@ TOOL = "tools/audit_asap7_fmax_inventory.py"
 #: earlier tensor-accelerator design -- neither is referenced from ``rtl/abi3/`` or
 #: from any backend, so neither is on the ABI 3.0 datapath's clock.  Only the third
 #: family can limit it.
+def _without_comments(text: str) -> str:
+    """``text`` with SystemVerilog comments blanked, newlines preserved.
+
+    A mention is not a binding.  The pipelined twin's own header comment names the
+    module it replaces -- which is exactly what a replacement's documentation
+    should do -- and counting that as an instantiation is what made the retirement
+    test find an instantiator that does not exist.  Comments are blanked rather
+    than removed so that line positions, and therefore the "does this line begin
+    with ``module``" test, still hold.
+    """
+
+    out = list(text)
+    index = 0
+    end = len(text)
+    while index < end:
+        if text.startswith("//", index):
+            stop = text.find("\n", index)
+            stop = end if stop < 0 else stop
+            for position in range(index, stop):
+                out[position] = " "
+            index = stop
+        elif text.startswith("/*", index):
+            stop = text.find("*/", index + 2)
+            stop = end if stop < 0 else stop + 2
+            for position in range(index, stop):
+                if out[position] != "\n":
+                    out[position] = " "
+            index = stop
+        else:
+            index += 1
+    return "".join(out)
+
+
+def _superseded_by_a_pipelined_twin(block: str) -> dict[str, Any] | None:
+    """Whether ``block`` has been replaced by a ``<block>_pipe`` module.
+
+    A block's frequency belongs to the design's clock only if the design contains
+    the block.  When a pipelined twin has taken its place, the retired module
+    keeps its routed record -- the record is still true about the module -- but it
+    is no longer on any clock, and letting it rank as the datapath's
+    second-slowest block reports a ceiling the shipped design does not have.
+
+    The test is deliberately narrow, because a tree scan that merely counts
+    mentions would also retire every TOP-LEVEL module (nothing instantiates a
+    top).  BOTH halves must hold:
+
+    1. no synthesisable file instantiates ``block`` -- its own definition and
+       everything under ``rtl/test/`` excluded, since a testbench keeping a
+       reference engine alive for an equivalence proof is exactly the case this
+       function exists to recognise; and
+    2. some synthesisable file DOES instantiate ``<block>_pipe``.
+
+    A top-level module fails the second half and is never retired by this.
+    """
+
+    pipe = f"{block}_pipe"
+    definition = ROOT / "rtl" / "abi3" / f"{block}.sv"
+    instantiators: list[str] = []
+    pipe_instantiators: list[str] = []
+    for path in sorted((ROOT / "rtl").rglob("*.sv")):
+        if path == definition or "test" in path.relative_to(ROOT / "rtl").parts:
+            continue
+        try:
+            text = _without_comments(path.read_text(encoding="utf-8"))
+        except OSError:
+            continue
+        relative = str(path.relative_to(ROOT))
+        # An instantiation names the module at the start of a statement; a
+        # declaration of the module itself begins with ``module``.
+        for match in re.finditer(rf"(?<![A-Za-z0-9_])({re.escape(pipe)}|{re.escape(block)})(?![A-Za-z0-9_])", text):
+            line_start = text.rfind("\n", 0, match.start()) + 1
+            if text[line_start : match.start()].strip().startswith("module"):
+                continue
+            if match.group(1) == pipe:
+                pipe_instantiators.append(relative)
+            else:
+                instantiators.append(relative)
+    if instantiators or not pipe_instantiators:
+        return None
+    return {
+        "retired_module": block,
+        "replaced_by": pipe,
+        "instantiated_by_synthesisable_rtl": sorted(set(instantiators)),
+        "replacement_instantiated_by": sorted(set(pipe_instantiators)),
+    }
+
+
 def _family(block: str | None) -> str:
     if not block:
         return "unknown"
@@ -145,7 +233,18 @@ def main(argv: list[str] | None = None) -> int:
             }
 
     ranking = sorted(per_block.values(), key=lambda entry: float(entry["fmax_hz"]))
-    datapath = [e for e in ranking if e["family"] == "abi3_datapath"]
+    superseded: dict[str, dict[str, Any]] = {}
+    for entry in ranking:
+        if entry["family"] != "abi3_datapath":
+            continue
+        retired = _superseded_by_a_pipelined_twin(str(entry["block"]))
+        if retired is not None:
+            superseded[str(entry["block"])] = retired
+    datapath = [
+        e
+        for e in ranking
+        if e["family"] == "abi3_datapath" and e["block"] not in superseded
+    ]
     limiter = datapath[0] if datapath else None
     excluded = [e for e in ranking if e["family"] != "abi3_datapath"]
 
@@ -185,6 +284,15 @@ def main(argv: list[str] | None = None) -> int:
                 ),
             }
         ),
+        "excluded_from_the_limiter_as_superseded": [
+            {
+                "block": entry["block"],
+                "fmax_hz": entry["fmax_hz"],
+                **superseded[str(entry["block"])],
+            }
+            for entry in ranking
+            if str(entry["block"]) in superseded
+        ],
         "excluded_from_the_limiter_by_family": [
             {"block": e["block"], "family": e["family"], "fmax_hz": e["fmax_hz"]}
             for e in excluded
@@ -201,6 +309,12 @@ def main(argv: list[str] | None = None) -> int:
             "the family split is by module-name prefix confirmed against whether "
             "rtl/abi3/ or any backend references the block; it is a classification, "
             "not a measurement",
+            "a block listed under excluded_from_the_limiter_as_superseded still has "
+            "a true routed record; what is no longer true is that the design "
+            "contains it.  The test requires BOTH that no synthesisable file "
+            "instantiates it and that a <block>_pipe twin IS instantiated, so a "
+            "top-level module -- which nothing instantiates -- is never retired by "
+            "it",
         ],
     }
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
