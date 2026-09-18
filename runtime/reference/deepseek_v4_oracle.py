@@ -504,6 +504,12 @@ class WeightStore:
         #: are always requested back to back for the same module.
         self.expert_recast: Callable[..., Any] | None = None
         self._expert_pair: tuple[str, Any, Any] | None = None
+        #: Side of the square E8M0 block scale that ``attn.wo_a.weight`` carries.
+        #: V4's quantization_config declares 128; V4.1 declares 32, and folding a
+        #: 32-block scale as if it were 128 fails the shape check rather than
+        #: computing a wrong number.  Left at V4's value so no existing record
+        #: moves; the V4.1 engine sets it from its own release.
+        self.fp8_block_size = 128
 
     def _handle(self, filename: str):
         handle = self._handles.get(filename)
@@ -536,11 +542,12 @@ class WeightStore:
             return cached
 
         if name.endswith("attn.wo_a.weight"):
-            # convert.py: fold the E8M0 128x128 block scale into bfloat16.
+            # convert.py: fold the square E8M0 block scale into bfloat16.
             weight = self.raw(name)
             scale = self.raw(name.replace(".weight", ".scale"))
+            block = self.fp8_block_size
             widened = (
-                weight.unflatten(0, (-1, 128)).unflatten(-1, (-1, 128)).float()
+                weight.unflatten(0, (-1, block)).unflatten(-1, (-1, block)).float()
                 * scale[:, None, :, None].float()
             )
             out = widened.flatten(2, 3).flatten(0, 1).bfloat16()
