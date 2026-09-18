@@ -114,8 +114,8 @@ CELLS: tuple[dict[str, Any], ...] = (
         "store": "rom_array",
         "topology": "CLUSTER_N",
         "scale": "reduced",
-        "artifact": "results/abi3/deepseek_v41_array_placement_refusal.json",
-        "reader": "refusal",
+        "artifact": "results/abi3/deepseek_v41_reduced_v2_rom_array_token_walk.json",
+        "reader": "v41_array_walk",
     },
 )
 
@@ -131,7 +131,7 @@ BLOCKER_EVIDENCE: dict[tuple[str, str], tuple[str, ...]] = {
         "results/abi3/deepseek_v41_oracle_depth_bisection_deep.json",
     ),
     ("deepseek-v4.1-flash", "rom_array"): (
-        "results/abi3/deepseek_v41_array_placement_refusal.json",
+        "results/abi3/deepseek_v41_v2_divergence_causal_chain.json",
     ),
 }
 
@@ -239,6 +239,27 @@ def _read_v41_v2_bisection(
     }
 
 
+def _read_v41_array_walk(body: dict[str, Any], _cell: dict[str, Any]) -> dict[str, Any]:
+    """The reduced V4.1 ROM ARRAY walk.
+
+    This cell used to read a placement refusal: the array build was attempted from
+    the SHIPPED graph, whose 606 GB of weights were measured against one node's
+    180 GB of HBM.  It is now built from the same reduced graph the other two V4.1
+    cells use, at 12 nodes over 3 domains, and it runs.
+    """
+    topology = body.get("topology") or {}
+    return {
+        "emitted_token_ids": list(body.get("emitted_token_ids") or []),
+        "agrees_with_oracle": body.get("agrees_with_oracle"),
+        "oracle_artifact": "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
+        "deployment": "build/abi3/deepseek-v41-reduced-v2-rom-array",
+        "target_id": body.get("target_id"),
+        "stop_reason": body.get("stop_reason"),
+        "node_count": topology.get("nodes"),
+        "agrees_with_rom_wafer": list(body.get("emitted_token_ids") or []) == [1126],
+    }
+
+
 def _read_refusal(body: dict[str, Any], _cell: dict[str, Any]) -> dict[str, Any]:
     return {
         "emitted_token_ids": [],
@@ -256,6 +277,7 @@ READERS = {
     "accelerator_token": _read_accelerator_token,
     "qwen3_array_walk": _read_qwen3_array_walk,
     "v41_walk": _read_v41_walk,
+    "v41_array_walk": _read_v41_array_walk,
     "v41_v2_bisection": _read_v41_v2_bisection,
     "refusal": _read_refusal,
 }

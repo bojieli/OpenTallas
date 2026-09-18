@@ -196,27 +196,33 @@
     },
     {
       "agrees_with_oracle": false,
-      "artifact": "results/abi3/deepseek_v41_array_placement_refusal.json",
-      "artifact_sha256": "0590f1bca7c6c6a033ec1e442dbde81b165d651bd4c5c9c08e1395d6185cb572",
+      "agrees_with_rom_wafer": true,
+      "artifact": "results/abi3/deepseek_v41_reduced_v2_rom_array_token_walk.json",
+      "artifact_sha256": "1de5605e04bc5d4cbf02978cfd9e617dc7d878fcff4784478ac6e9c83d170bd4",
       "blocker_evidence": [
         {
-          "artifact": "results/abi3/deepseek_v41_array_placement_refusal.json",
-          "sha256": "0590f1bca7c6c6a033ec1e442dbde81b165d651bd4c5c9c08e1395d6185cb572"
+          "artifact": "results/abi3/deepseek_v41_v2_divergence_causal_chain.json",
+          "sha256": "ee480249a06d371634c7ab94ef97d7a6c1b9775b9f747bf4681407b4fcbe3e77"
         }
       ],
-      "emitted_token_ids": [],
+      "deployment": "build/abi3/deepseek-v41-reduced-v2-rom-array",
+      "emitted_token_ids": [
+        1126
+      ],
       "model": "deepseek-v4.1-flash",
-      "refusal": "recorded in the artifact",
+      "node_count": 12,
+      "oracle_artifact": "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
       "scale": "reduced",
-      "status": "no_token",
+      "status": "executes_but_disagrees",
+      "stop_reason": "max_new_tokens",
       "store": "rom_array",
+      "target_id": "deepseek-v4.1-flash-reduced-rom-array",
       "topology": "CLUSTER_N"
     }
   ],
   "counts": {
     "closed": 6,
-    "executes_but_disagrees": 2,
-    "no_token": 1
+    "executes_but_disagrees": 3
   },
   "not_a_claim": [
     "not an RTL measurement: every token here is from runtime.sim unless its own artifact says otherwise",
@@ -224,7 +230,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "f7c70cc42dce73376639f789f3d4d58f5dfad005"
+      "commit": "ff9006f73a07f3fc87865ae2e5008922e6034c96"
     },
     "tool": "tools/audit_nine_cell_token_matrix.py"
   },
