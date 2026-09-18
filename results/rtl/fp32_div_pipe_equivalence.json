@@ -1,0 +1,36 @@
+{
+  "answer": "Yes -- bit-exact on 673 cases, at 1.96x the cycles.",
+  "cost": {
+    "cycle_ratio": 1.96,
+    "pipe_cycles_total": 43291,
+    "reading": "About twice the cycles per division, by construction.  The trade is worthwhile only if the period falls by more than that, and only the routed result can say -- the route is in flight and no frequency is claimed here.",
+    "ref_cycles_total": 21982
+  },
+  "equivalence": {
+    "bench": "rtl/test/tb_a3_fp32_div_pipe_equiv.sv",
+    "cases": 673,
+    "compared": "result_code and result_error, bit for bit",
+    "coverage": [
+      "25 named edges: 1/1, 1/2, 2/1, 1/3, 3/1, maxfinite over {0.5, 1, 2, maxfinite}, 1/maxfinite, min and max subnormal both ways, min normal, zero numerator, zero denominator, inf and NaN in both operands, all four sign combinations, negative zero",
+      "48 exact powers of two, 2^k/1 and 1/2^k for k in 0..23",
+      "400 random finite pairs",
+      "200 random pairs with exponent pinned to 127, where RNE ties are common"
+    ],
+    "failures": 0,
+    "simulator": "icarus verilog -g2012",
+    "verdict": "EQUIVALENT",
+    "why_both_sides_are_latched": "out_valid is a one-cycle pulse and the two modules finish on different cycles, so a bench that waits on one side's pulse while the other has already finished hangs rather than fails.  Both are latched and a timeout is reported as a failure -- the same shape the VECTOR.SCALE equivalence bench needed."
+  },
+  "not_a_claim": [
+    "no frequency: this records equivalence and cycle cost, not the ASAP7 result",
+    "673 cases is not exhaustive over 2^64 input pairs; the named edges are chosen where division's edges are and the reference remains the golden side",
+    "nothing is rewired: no parent instantiates the pipelined module yet"
+  ],
+  "question": "ot_a3_fp32_div_rne closes on ASAP7 at 283.5 MHz and seven token-path parents instantiate it, so it bounds the engine complex.  Its critical path is one bisection step entire in one cycle.  Does a two-cycle step compute the same thing?",
+  "schema": "opentallas.result.fp32_div_pipe_equivalence.v1",
+  "what_changed": {
+    "1_the_multiply_is_registered": "The bisection step becomes two cycles: one forms the 49-bit product of the candidate significand and the divisor, one aligns it against the numerator and moves the bracket.  The 25x24 multiply and the 97-bit alignment no longer share a cycle.",
+    "2_the_rounding_comparison_leaves_the_loop": "The reference evaluates a SECOND full comparison every cycle, for the round-to-nearest-even midpoint between lower_code and its successor.  That value is read once, after the bracket closes.  It is now computed there, so the per-cycle logic carries one comparator instead of two.",
+    "what_is_unchanged": "The ports, so no parent changes -- the valid/ready handshake means a caller sees only more latency.  And the algorithm: the bracket update, both MAX_FINITE clamps, the 2**128 overflow boundary and the tie-to-even rule are transcribed from the reference."
+  }
+}
