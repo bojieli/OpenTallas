@@ -20,6 +20,47 @@
     },
     "what_remains": "the VALUES the layer-2 KV path produces -- the quantise/dequantise pair on the rotated vector, and the compressor's own latent, which the CONCAT's third input supplies. Everything layers 0 and 1 exercise is exact to five decimals, and layer 2's index path is exact, so the fault is confined to what a compressing layer computes for its KV values."
   },
+  "SUPERSEDED_BY_AN_ALIGNED_MEASUREMENT": {
+    "aligned_result": {
+      "compressed_rows_8_to_11_l2_distance": [
+        0.5625,
+        0.8388,
+        0.3827,
+        0.3638
+      ],
+      "device_row_norms_compressed": [
+        6.02,
+        5.548,
+        5.448,
+        5.376
+      ],
+      "reading": "both halves differ by roughly five to fifteen per cent relative, not structurally. That is consistent with the depth sweep's 0.991827 at block.02 and with the residual entering layer 2 being 0.99935 correct -- the three measurements agree once the capture is aligned, and it was the operand cosines that were wrong.",
+      "vendor_row_norms_compressed": [
+        5.882,
+        5.754,
+        5.519,
+        5.363
+      ],
+      "window_rows_0_to_7_l2_distance": [
+        0.3606,
+        0.451,
+        0.2591,
+        0.3873,
+        0.3196,
+        0.316,
+        0.4123,
+        0.2352
+      ]
+    },
+    "verdict": "the cosine figures in this artifact -- 0.483 query, 0.345 KV, 0.481 output, and the 7.187 worst row residual -- are NOT the size of the layer-2 difference. They came from captures that were not the same tensor on both sides. A measurement that identifies the vendor tensor by POINTER IDENTITY and the device tensor by its 12-row fused view gives a much smaller difference.",
+    "what_still_stands": [
+      "the sparse-attention operator is bit-exact on the vendor's own operands",
+      "the selected indices are bit-identical, so the compressor's index path is exact where it first exists",
+      "the yarn rope frequencies agree with the vendor's to 9.3e-10 and the table assignment is correct",
+      "layers 0 and 1 agree to five decimals, which is the strongest statement in this whole thread and is unaffected"
+    ],
+    "what_this_changes": "there is no dramatic layer-2 operator fault. What the evidence now shows is a few-per-cent divergence that begins around layer 2 and compounds over forty layers to a different token. That is the signature of the two sides running genuinely different numeric paths -- the device computes MXFP4 under the contracts it was admitted against while the reference computes the vendor's FP8 recast through tilelang kernels -- not of a broken operator. Closing the cell on this vehicle would therefore mean either a tolerance-based comparison or making both sides run the same expert and KV numeric path, not finding one more bug."
+  },
   "captured_call": {
     "index_shape": [
       1,
