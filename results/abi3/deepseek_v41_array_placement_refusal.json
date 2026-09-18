@@ -1,0 +1,65 @@
+{
+  "largest_states": [
+    {
+      "capacity_rows": 262144,
+      "dtype": "u8",
+      "elements": 68719476736,
+      "row_elements": 262144,
+      "state_class": "scratch",
+      "state_id": "candidate_pool_mask.main.layer.20"
+    },
+    {
+      "capacity_rows": 262144,
+      "dtype": "u32",
+      "elements": 167772160,
+      "row_elements": 640,
+      "state_class": "scratch",
+      "state_id": "index_selection.main.layer.2"
+    },
+    {
+      "capacity_rows": 262144,
+      "dtype": "u32",
+      "elements": 167772160,
+      "row_elements": 640,
+      "state_class": "scratch",
+      "state_id": "index_selection.main.layer.8"
+    },
+    {
+      "capacity_rows": 262144,
+      "dtype": "u32",
+      "elements": 167772160,
+      "row_elements": 640,
+      "state_class": "scratch",
+      "state_id": "index_selection.main.layer.14"
+    },
+    {
+      "capacity_rows": 262144,
+      "dtype": "u32",
+      "elements": 167772160,
+      "row_elements": 640,
+      "state_class": "scratch",
+      "state_id": "index_selection.main.layer.20"
+    }
+  ],
+  "not_a_claim": [
+    "that token-blocking the query axis is sufficient to place the whole deployment -- it addresses the largest single state and the total is 606 GB against 180 GB, so other states may also need it",
+    "that the wafer topology places it; that was not measured here"
+  ],
+  "not_caused_by_this_session": "removing REQUEST_EXTENT_STATE_CLASSES' scratch entry leaves the requirement byte-for-byte identical at 605,992,800,396, so the session's token_ring/scratch rule is not why the placement refuses",
+  "producer": {
+    "git": {
+      "commit": "1278085ce5578d4a3b800b803f3718114f582a47",
+      "worktree_dirty": true
+    }
+  },
+  "question": "the shipped V4.1 ROM array-64 build refuses its state placement -- 605,992,800,396 bytes against a capability declaring 180,000,000,000.  What is asking for it?",
+  "schema": "opentallas.abi3.v41_array_placement_refusal.v1",
+  "the_single_largest": {
+    "bytes": 68719476736,
+    "shape": "262,144 rows x 262,144 elements, u8",
+    "state_id": "candidate_pool_mask.main.layer.20",
+    "the_lever": "capacity_rows.  The mask is per QUERY, and nothing requires a whole context of queries to be live at once: a token-blocked query axis holds one block's masks instead of all of them, which is the same argument token_block_rows already makes elsewhere in this backend.  The row width is fixed by the model and the row COUNT is a scheduling choice",
+    "why_it_is_still_unplaceable": "the release computes that mask as a TRANSIENT tensor inside one forward pass.  This export materialises it as a scratch STATE whose capacity_rows is the whole query block -- the entire 262,144-token context -- so the product is context x context and one layer's mask is 68 GB",
+    "why_that_shape_is_CORRECT": "the frontend declares row_elements = context_tokens // ratios[layer], and layer 20 is the candidate_source_layer whose compress_ratio is 1 -- so its candidate axis IS the full context.  The release agrees: select_candidate_blocks operates on index_score whose last axis is end_pos // ratio, which at ratio 1 is every position.  So this is not a sizing error"
+  }
+}
