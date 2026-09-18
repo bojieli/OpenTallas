@@ -90,7 +90,9 @@ def _git(*args: str) -> str:
 
 
 def oracle_checkpoints(
-    prompt: list[int], deep_layers: Sequence[int] = ()
+    prompt: list[int],
+    deep_layers: Sequence[int] = (),
+    expert_numeric_path: str = "fp4",
 ) -> list[dict[str, Any]]:
     """The vendor forward pass's own tensors, at the last prompt position."""
     lock = load_checkpoint_lock(DEFAULT_LOCK)
@@ -98,14 +100,25 @@ def oracle_checkpoints(
     body = json.loads(
         (DEFAULT_SNAPSHOT / "inference_config.json").read_text(encoding="utf-8")
     )
+    import importlib
+
     import torch
     from transformers import AutoTokenizer
 
     released = released_snapshot()
     vendor, _engram = import_vendor(released)
+    # The reference has to run on the SAME routed-expert numeric path as the
+    # oracle being compared against, or its taps come from a model whose experts
+    # are dead and every feed-forward comparison is meaningless.  See
+    # results/abi3/deepseek_v41_reduced_oracle_dead_experts.json.
+    convert_mod = None
+    if expert_numeric_path == "fp8":
+        convert_mod = importlib.import_module("convert")
+        body = dict(body)
+        body["expert_dtype"] = None
     tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
     model = build_model(vendor, body, tokenizer)
-    _load_weights(model, DEFAULT_SNAPSHOT)
+    _load_weights(model, DEFAULT_SNAPSHOT, convert_mod=convert_mod)
     model.eval()
 
     taps: list[dict[str, Any]] = []
@@ -322,6 +335,21 @@ def main(argv: list[str] | None = None) -> int:
         default=ROOT / "results/abi3/deepseek_v41_oracle_depth_bisection.json",
     )
     parser.add_argument(
+        "--oracle",
+        type=Path,
+        default=ORACLE_RECORD,
+        help="the oracle record whose workload and token this compares against",
+    )
+    parser.add_argument(
+        "--expert-numeric-path",
+        choices=("fp4", "fp8"),
+        default="fp4",
+        help=(
+            "the routed-expert path the REFERENCE runs on; it must match the "
+            "oracle record's, or the reference's own experts are dead"
+        ),
+    )
+    parser.add_argument(
         "--deep-layer",
         action="append",
         type=int,
@@ -337,11 +365,13 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
     stores = arguments.store or ["rom"]
 
-    record = json.loads(ORACLE_RECORD.read_text())
+    record = json.loads(Path(arguments.oracle).read_text())
     case = record["results"][WORKLOAD_ID]
     prompt = [int(t) for t in case["prompt_token_ids"]]
 
-    taps = oracle_checkpoints(prompt, arguments.deep_layer or ())
+    taps = oracle_checkpoints(
+        prompt, arguments.deep_layer or (), arguments.expert_numeric_path
+    )
     print(f"oracle: {len(taps)} checkpoints", flush=True)
 
     load_engines()
