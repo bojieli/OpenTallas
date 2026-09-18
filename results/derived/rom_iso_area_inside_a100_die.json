@@ -30,6 +30,92 @@
   "policy_source": "the committed quantised-variant design records' own area_split_per_device",
   "usable_area_mm2": 677.32
  },
+ "both_sides_must_fit": {
+  "per_model": {
+   "DSV4-Flash/bf16": {
+    "a100_can_serve_on_one_device": false,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": false,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": false,
+    "stored_weight_bytes": 166878536440.0,
+    "verdict": "NEITHER machine can serve this model at this budget: the A100's 80 GB of HBM cannot hold the weights and our 826 mm2 cannot either, so the comparison is vacuous rather than lost"
+   },
+   "DSV4-Flash/fp8": {
+    "a100_can_serve_on_one_device": false,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": false,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": true,
+    "stored_weight_bytes": 83439268220.0,
+    "verdict": "only ours fits: the A100 cannot serve this model on one device, so there is no comparator to match"
+   },
+   "DSV4-Flash/q4p25": {
+    "a100_can_serve_on_one_device": true,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": true,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": true,
+    "stored_weight_bytes": 44327111241.875,
+    "verdict": "both fit: the ratio means something"
+   },
+   "DSV4.1-Flash/bf16": {
+    "a100_can_serve_on_one_device": false,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": false,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": false,
+    "stored_weight_bytes": 510286023000.0,
+    "verdict": "NEITHER machine can serve this model at this budget: the A100's 80 GB of HBM cannot hold the weights and our 826 mm2 cannot either, so the comparison is vacuous rather than lost"
+   },
+   "DSV4.1-Flash/fp8": {
+    "a100_can_serve_on_one_device": false,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": false,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": false,
+    "stored_weight_bytes": 255143011500.0,
+    "verdict": "NEITHER machine can serve this model at this budget: the A100's 80 GB of HBM cannot hold the weights and our 826 mm2 cannot either, so the comparison is vacuous rather than lost"
+   },
+   "DSV4.1-Flash/q4p25": {
+    "a100_can_serve_on_one_device": false,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": false,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": false,
+    "stored_weight_bytes": 135544724859.375,
+    "verdict": "NEITHER machine can serve this model at this budget: the A100's 80 GB of HBM cannot hold the weights and our 826 mm2 cannot either, so the comparison is vacuous rather than lost"
+   },
+   "Qwen3-8B/bf16": {
+    "a100_can_serve_on_one_device": true,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": true,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": true,
+    "stored_weight_bytes": 16381470720.0,
+    "verdict": "both fit: the ratio means something"
+   },
+   "Qwen3-8B/fp8": {
+    "a100_can_serve_on_one_device": true,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": true,
+    "ours_fits_as_all_rom": false,
+    "ours_has_an_admissible_split": true,
+    "stored_weight_bytes": 8190735360.0,
+    "verdict": "both fit: the ratio means something"
+   },
+   "Qwen3-8B/q4p25": {
+    "a100_can_serve_on_one_device": true,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "comparison_is_meaningful": true,
+    "ours_fits_as_all_rom": true,
+    "ours_has_an_admissible_split": true,
+    "stored_weight_bytes": 4351328160.0,
+    "verdict": "both fit: the ratio means something"
+   }
+  },
+  "what": "a ratio at a fixed area budget is only meaningful if BOTH machines can serve the model there.  The A100 has 80 GB of HBM; a model whose weights exceed it cannot be served by one A100 at any of these precisions, so our not fitting is not a shortfall against a comparator that does not fit either."
+ },
  "cells": {
   "DSV4-Flash": {
    "active_parameters": 13000000000.0,
@@ -1012,7 +1098,7 @@
  },
  "producer": {
   "git": {
-   "commit": "982015814aa986dcc772771c75aac1b1469ebbe2"
+   "commit": "a75c0c8d269e9b7844af6e15c28138743d136dc7"
   },
   "tool": "tools/audit_rom_iso_area_inside_a100_die.py"
  },

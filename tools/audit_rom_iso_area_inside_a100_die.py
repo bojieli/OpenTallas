@@ -477,6 +477,41 @@ def main() -> int:
                     ),
                 }
 
+    # Symmetry check.  A ratio is only meaningful if BOTH machines can serve the
+    # model at this budget.  The A100 has 80 GB of HBM, and a model whose weights
+    # exceed that cannot be served by one A100 at all -- so "our design does not
+    # fit" is only a shortfall when the comparator does fit.  Recorded for every
+    # row rather than only where it is convenient.
+    symmetry: dict[str, Any] = {}
+    for model_name, cell in cells.items():
+        for precision, entry in cell["by_precision"].items():
+            weight_bytes = entry["stored_weight_bytes"]
+            a100_can = weight_bytes <= a100_hbm_capacity
+            # Our side's real criterion is the OPTIMISED split, not the all-ROM
+            # fit: sizing ROM to the whole model is one design point and the
+            # sweep above finds better ones that stream most of the weights.
+            ours_can = f"{model_name}/{precision}" in optimised
+            symmetry[f"{model_name}/{precision}"] = {
+                "stored_weight_bytes": weight_bytes,
+                "a100_hbm_capacity_bytes": a100_hbm_capacity,
+                "a100_can_serve_on_one_device": a100_can,
+                "ours_has_an_admissible_split": ours_can,
+                "ours_fits_as_all_rom": entry["fits_inside_a100_die"],
+                "comparison_is_meaningful": bool(a100_can and ours_can),
+                "verdict": (
+                    "both fit: the ratio means something"
+                    if a100_can and ours_can
+                    else "NEITHER machine can serve this model at this budget: the "
+                    "A100's 80 GB of HBM cannot hold the weights and our 826 mm2 "
+                    "cannot either, so the comparison is vacuous rather than lost"
+                    if not a100_can and not ours_can
+                    else "only the A100 fits: this is a real shortfall on our side"
+                    if a100_can
+                    else "only ours fits: the A100 cannot serve this model on one "
+                    "device, so there is no comparator to match"
+                ),
+            }
+
     fitting = [
         (model, precision, entry)
         for model, cell in cells.items()
@@ -524,6 +559,16 @@ def main() -> int:
             ),
         },
         "cells": cells,
+        "both_sides_must_fit": {
+            "what": (
+                "a ratio at a fixed area budget is only meaningful if BOTH machines "
+                "can serve the model there.  The A100 has 80 GB of HBM; a model "
+                "whose weights exceed it cannot be served by one A100 at any of "
+                "these precisions, so our not fitting is not a shortfall against a "
+                "comparator that does not fit either."
+            ),
+            "per_model": symmetry,
+        },
         "optimised_rom_hbm_split": {
             "what": (
                 "sizing ROM to the whole model is one design point, not the best.  "
