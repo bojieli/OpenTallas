@@ -3104,13 +3104,26 @@ def export_deepseek_v41_kernel_graph(
             # ``self.wkv(self.embed(hash_ids).flatten(-2))``.  The element order
             # is unchanged, so the reconstruction writes the rank-2 form directly
             # rather than moving it twice.
-            #: One scale per gathered row, gathered by the same identifiers.
-            #: The table scale is ``[table_rows, 1]``, so the gathered plane is
-            #: one block scale per row and the block is the row's full width.
+            #: One scale per gathered row PER BLOCK, gathered by the same
+            #: identifiers.  This used to declare a width of 1 with the comment
+            #: "the table scale is ``[table_rows, 1]``, so the gathered plane is
+            #: one block scale per row".  That is true only when the row is one
+            #: block wide.  It is, on the reduced regression vehicle -- head_dim
+            #: 32 over a 32-element block -- which is why a hardcoded 1 passed
+            #: there; the SHIPPED release has head_dim 256 over the same block
+            #: and so carries **8** scales per row.  The shipped ROM wafer
+            #: refused on exactly that: "EMBED_LOOKUP output view is
+            #: (32, 24, 1); expected (768, 8)".  The width is the scale table's
+            #: own trailing extent, so it is read from the table rather than
+            #: assumed.
+            scale_spec = scale_of[table_spec.name]
+            scale_width = (
+                int(scale_spec.shape[1]) if len(scale_spec.shape) > 1 else 1
+            )
             row_scales = builder.tensor(
                 f"{op}.row_scales",
                 "e8m0",
-                (span, ENGRAM_COLUMNS, 1),
+                (span, ENGRAM_COLUMNS, scale_width),
                 "activation",
             )
             emit(
@@ -3122,10 +3135,10 @@ def export_deepseek_v41_kernel_graph(
                 iteration_domain={
                     "tokens": span,
                     "rows": ENGRAM_COLUMNS,
-                    "width": 1,
+                    "width": scale_width,
                 },
                 attributes={
-                    "table_rows": int(scale_of[table_spec.name].shape[0]),
+                    "table_rows": int(scale_spec.shape[0]),
                     "row_dtype": "e8m0",
                 },
             )
