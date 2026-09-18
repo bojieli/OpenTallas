@@ -1,2 +1,239 @@
-{"architecture_under_test":{"candidate_source_layer":20,"compress_ratios":[0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],"dim":160,"dspark_target_layer_ids":[37,38,39],"engram_layer_ids":[1,14],"index_source_layers":[2,8,14,20,24,28,32,36],"kv_source_layers":[2,8,14,20],"n_layers":40,"vocab_size":4040,"why":"the CSA2 mode sequence and every arity are the released model's; only magnitudes are reduced, which is what makes a G1f run a witness about this architecture"},"device_map":"cuda:0","dtype":"bfloat16","evidence_class":"external_reference_comparator","fixture_record_agreement":{"agreed":true,"in_memory_generated_token_ids":[1638,930,2587,930,1638,1638,1638,1638,0],"path":"/home/ubuntu/OpenTallas/results/abi3/deepseek_v41_reduced_model.json","seed":656,"sha256":"e78fe9dbffb29f372fd6df80f9d80fe4ac38761f05da0da9efb4b93bde0fd121","why":"the fixture builder generated from weights held in memory; this run generated from the bytes it wrote. Agreement is what makes the fixture reproducible"},"generation_policy_id":"greedy_argmax_lowest_id_first_eos_v1","include_eos_in_output":true,"input_identity":{"checkpoint_lock":{"lock_id":"c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1","path":"/home/ubuntu/OpenTallas/results/abi3/deepseek_v41_reduced_checkpoint.lock.json","sha256":"ce8c2c5f14eb53414942c451810bb105e75fb213ef8f0434d1b0cac91d16cfb2","verified_files":3},"inference_config_sha256":"a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb","workload_sources":{"TA-DS41-REDUCED-EOS-1":{"digest":"9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3","digest_recomputed":"9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3","path":"/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-reduced-v1/TA-DS41-REDUCED-EOS-1.json","sha256":"8cabf1c2e7604bcbeabfb93a1d650fd313b4098e86ca0ba7de6deb6610033cd4","size_bytes":1426}}},"model_id":"deepseek-v4.1-flash-reduced-v1","not_a_claim":["accelerator_execution","artifact_only_execution","timing_or_performance","numerics_at_full_dimension","released_model_numerics"],"producer":{"command_argv":["tools/run_deepseek_v41_reduced_reference_oracle.py"],"selected_workload_ids":["TA-DS41-REDUCED-EOS-1"],"tool":"tools/run_deepseek_v41_reduced_reference_oracle.py","tool_version":"deepseek_v41_reduced_reference_oracle.py:v1"},"python_version":"3.10.12","reduced":true,"reference_implementation":{"cross_checked_against":null,"greedy_loop":"tools/build_deepseek_v41_reduced_model.py::greedy","greedy_loop_sha256":"14bad49931a54ee8370714e4a879c24a20e72f583435cbe9eac3eaca708b47b6","loader":"the release's own inference/model.py Transformer, built from the fixture's inference_config.json and loaded from its shard","released_revision":"dba1be0a40aa45a94ad051997016db3960a90277","released_snapshot":"/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277","same_as_full_oracle":true,"vendor_modules":{"inference/engram.py":{"bytes":8138,"path":"/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/inference/engram.py","sha256":"11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897"},"inference/model.py":{"bytes":61549,"path":"/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/inference/model.py","sha256":"4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"}},"weights_read_back_from_disk":true,"why_no_cross_check":"DeepSeek-V4.1-Flash has no transformers modelling code, so there is no second greedy implementation to compare against; the Qwen predecessor cross-checks against transformers.generate and this one cannot. What IS cross-checked is the fixture record: the same ids from weights in memory and from the bytes on disk"},"results":{"TA-DS41-REDUCED-EOS-1":{"generated_token_count":9,"generated_token_ids":[1638,930,2587,930,1638,1638,1638,1638,0],"kind":"chat","load_seconds":0.669,"max_new_tokens":16,"official_eos_token_ids":[0,1],"prompt_token_count":8,"prompt_token_ids":[0,3563,3745,418,170,16,3564,3582],"stop_reason":"eos","wall_seconds":2.757,"workload_digest":"9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3"}},"schema":"opentallas.abi3.reference_oracle.v1","selection":"greedy_lowest_token_id_argmax","snapshot":"/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v1","torch_version":"2.10.0+cu128","weight_loading":{"dequantization":"attn.wo_a ships fp8 with a 32x32-blocked E8M0 scale, as the released checkpoint's own shard header does, and is dequantized to bf16 here -- the release's convert.py step, which its model.py names beside the einsum that consumes the weight. This one IS a conversion and not a reinterpretation, and it is lossy in the same way the release's is","dequantized_tensor_count":43,"parameter_count":4221,"reinterpretation":"packed FP4 expert weights are stored as I8, the released checkpoint's own convention, and restored to float4_e2m1fn_x2 by viewing the same bytes","reinterpreted_tensor_count":1476,"shards":["model-00001-of-00001.safetensors"],"widened_tensor_count":9,"widening":"the checkpoint stores head.weight, the compressor's projections and the MTP heads in BF16 where the vendor module holds F32, as the released checkpoint's own shard headers do. Widening is exact; the bits the narrowing dropped are absent from the fixture's own generation too"},"weights_are_fixed_and_bound":{"bound_by":"compiler.frontend.checkpoint.verify_checkpoint_lock","lock_id":"c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1","read_from":"/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v1","regenerated_per_run":false,"shards":[{"path":"model-00001-of-00001.safetensors","sha256":"b079aacc019242dfa6bc67611ad4b25ac1721b0ff89fa21d837a045bd6db6722","size_bytes":40688625,"tensor_count":4264}]}}
-
+{
+  "SUPERSEDED": {
+    "further_caveat": "even the FP8 reference cannot validate this fixture's expert region: an independent dequantisation puts the expert projection at absmax 119.3 against a swiglu_limit of 10, so 99.8%-100% of routed values saturate the clamp. results/abi3/deepseek_v41_reduced_fixture_saturates.json records that, and build/models/deepseek-v4.1-flash-reduced-v2 is the fixture built to fix it (expert E8M0 exponent -5, weights absmax 0.1875).",
+    "two_independent_reasons": [
+      "its routed experts are DEAD: it ran the vendor's FP4 expert kernel, which on this machine returns exactly zero for every routed expert's second projection (11 of 11 measured), so its token came from a shared-expert-only model. See deepseek_v41_reduced_oracle_dead_experts.json",
+      "its provenance is stale: it records checkpoint lock c38e77599e941b07 over 3 verified files, while the committed lock results/abi3/deepseek_v41_reduced_checkpoint.lock.json is 2c63f413e81951ab over 5. The lock has not been modified since commit bb5a580; this artifact predates it."
+    ],
+    "use_instead": "results/abi3/deepseek_v41_reduced_reference_oracle_fp8_experts.json, which runs the release README's own FP8 expert path and records the current lock (2c63f413e81951ab, 5 files verified)",
+    "verdict": "do not use this record as the reference for the V4.1 cells"
+  },
+  "architecture_under_test": {
+    "candidate_source_layer": 20,
+    "compress_ratios": [
+      0,
+      0,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "dim": 160,
+    "dspark_target_layer_ids": [
+      37,
+      38,
+      39
+    ],
+    "engram_layer_ids": [
+      1,
+      14
+    ],
+    "index_source_layers": [
+      2,
+      8,
+      14,
+      20,
+      24,
+      28,
+      32,
+      36
+    ],
+    "kv_source_layers": [
+      2,
+      8,
+      14,
+      20
+    ],
+    "n_layers": 40,
+    "vocab_size": 4040,
+    "why": "the CSA2 mode sequence and every arity are the released model's; only magnitudes are reduced, which is what makes a G1f run a witness about this architecture"
+  },
+  "device_map": "cuda:0",
+  "dtype": "bfloat16",
+  "evidence_class": "external_reference_comparator",
+  "fixture_record_agreement": {
+    "agreed": true,
+    "in_memory_generated_token_ids": [
+      1638,
+      930,
+      2587,
+      930,
+      1638,
+      1638,
+      1638,
+      1638,
+      0
+    ],
+    "path": "/home/ubuntu/OpenTallas/results/abi3/deepseek_v41_reduced_model.json",
+    "seed": 656,
+    "sha256": "e78fe9dbffb29f372fd6df80f9d80fe4ac38761f05da0da9efb4b93bde0fd121",
+    "why": "the fixture builder generated from weights held in memory; this run generated from the bytes it wrote. Agreement is what makes the fixture reproducible"
+  },
+  "generation_policy_id": "greedy_argmax_lowest_id_first_eos_v1",
+  "include_eos_in_output": true,
+  "input_identity": {
+    "checkpoint_lock": {
+      "lock_id": "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1",
+      "path": "/home/ubuntu/OpenTallas/results/abi3/deepseek_v41_reduced_checkpoint.lock.json",
+      "sha256": "ce8c2c5f14eb53414942c451810bb105e75fb213ef8f0434d1b0cac91d16cfb2",
+      "verified_files": 3
+    },
+    "inference_config_sha256": "a8c2ac01c49a50cd0da302bc5bbfc3510ed4457ed53933675dd662ce42244deb",
+    "workload_sources": {
+      "TA-DS41-REDUCED-EOS-1": {
+        "digest": "9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3",
+        "digest_recomputed": "9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3",
+        "path": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-reduced-v1/TA-DS41-REDUCED-EOS-1.json",
+        "sha256": "8cabf1c2e7604bcbeabfb93a1d650fd313b4098e86ca0ba7de6deb6610033cd4",
+        "size_bytes": 1426
+      }
+    }
+  },
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "not_a_claim": [
+    "accelerator_execution",
+    "artifact_only_execution",
+    "timing_or_performance",
+    "numerics_at_full_dimension",
+    "released_model_numerics"
+  ],
+  "producer": {
+    "command_argv": [
+      "tools/run_deepseek_v41_reduced_reference_oracle.py"
+    ],
+    "selected_workload_ids": [
+      "TA-DS41-REDUCED-EOS-1"
+    ],
+    "tool": "tools/run_deepseek_v41_reduced_reference_oracle.py",
+    "tool_version": "deepseek_v41_reduced_reference_oracle.py:v1"
+  },
+  "python_version": "3.10.12",
+  "reduced": true,
+  "reference_implementation": {
+    "cross_checked_against": null,
+    "greedy_loop": "tools/build_deepseek_v41_reduced_model.py::greedy",
+    "greedy_loop_sha256": "14bad49931a54ee8370714e4a879c24a20e72f583435cbe9eac3eaca708b47b6",
+    "loader": "the release's own inference/model.py Transformer, built from the fixture's inference_config.json and loaded from its shard",
+    "released_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "released_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+    "same_as_full_oracle": true,
+    "vendor_modules": {
+      "inference/engram.py": {
+        "bytes": 8138,
+        "path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/inference/engram.py",
+        "sha256": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897"
+      },
+      "inference/model.py": {
+        "bytes": 61549,
+        "path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/inference/model.py",
+        "sha256": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+      }
+    },
+    "weights_read_back_from_disk": true,
+    "why_no_cross_check": "DeepSeek-V4.1-Flash has no transformers modelling code, so there is no second greedy implementation to compare against; the Qwen predecessor cross-checks against transformers.generate and this one cannot. What IS cross-checked is the fixture record: the same ids from weights in memory and from the bytes on disk"
+  },
+  "results": {
+    "TA-DS41-REDUCED-EOS-1": {
+      "generated_token_count": 9,
+      "generated_token_ids": [
+        1638,
+        930,
+        2587,
+        930,
+        1638,
+        1638,
+        1638,
+        1638,
+        0
+      ],
+      "kind": "chat",
+      "load_seconds": 0.669,
+      "max_new_tokens": 16,
+      "official_eos_token_ids": [
+        0,
+        1
+      ],
+      "prompt_token_count": 8,
+      "prompt_token_ids": [
+        0,
+        3563,
+        3745,
+        418,
+        170,
+        16,
+        3564,
+        3582
+      ],
+      "stop_reason": "eos",
+      "wall_seconds": 2.757,
+      "workload_digest": "9489a9d20897495d589de19d907c2ee9459b74035495a2f47118a646f714e5c3"
+    }
+  },
+  "schema": "opentallas.abi3.reference_oracle.v1",
+  "selection": "greedy_lowest_token_id_argmax",
+  "snapshot": "/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v1",
+  "torch_version": "2.10.0+cu128",
+  "weight_loading": {
+    "dequantization": "attn.wo_a ships fp8 with a 32x32-blocked E8M0 scale, as the released checkpoint's own shard header does, and is dequantized to bf16 here -- the release's convert.py step, which its model.py names beside the einsum that consumes the weight. This one IS a conversion and not a reinterpretation, and it is lossy in the same way the release's is",
+    "dequantized_tensor_count": 43,
+    "parameter_count": 4221,
+    "reinterpretation": "packed FP4 expert weights are stored as I8, the released checkpoint's own convention, and restored to float4_e2m1fn_x2 by viewing the same bytes",
+    "reinterpreted_tensor_count": 1476,
+    "shards": [
+      "model-00001-of-00001.safetensors"
+    ],
+    "widened_tensor_count": 9,
+    "widening": "the checkpoint stores head.weight, the compressor's projections and the MTP heads in BF16 where the vendor module holds F32, as the released checkpoint's own shard headers do. Widening is exact; the bits the narrowing dropped are absent from the fixture's own generation too"
+  },
+  "weights_are_fixed_and_bound": {
+    "bound_by": "compiler.frontend.checkpoint.verify_checkpoint_lock",
+    "lock_id": "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1",
+    "read_from": "/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v1",
+    "regenerated_per_run": false,
+    "shards": [
+      {
+        "path": "model-00001-of-00001.safetensors",
+        "sha256": "b079aacc019242dfa6bc67611ad4b25ac1721b0ff89fa21d837a045bd6db6722",
+        "size_bytes": 40688625,
+        "tensor_count": 4264
+      }
+    ]
+  }
+}
