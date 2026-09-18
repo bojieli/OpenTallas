@@ -1033,12 +1033,336 @@
   ],
   "producer": {
     "git": {
-      "commit": "4df2d512214a0451b67612e60e18d233fae5ef20"
+      "commit": "3113bd25af91c8c125d593c679382e100a73059e"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
   "question": "The fmax inventory calls the slowest ABI 3.0 block with a closed routed record the design's clock limiter.  Is every ABI 3.0 datapath module inside SOME block that has closed, so that the limiter covers the datapath rather than only the blocks that happen to have been routed?",
   "schema": "opentallas.derived.asap7_datapath_coverage.v1",
+  "top_level_islands": {
+    "count": 25,
+    "islands": [
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_attention_av_walk",
+          "ot_a3_attention_denominator",
+          "ot_a3_attention_epilogue",
+          "ot_a3_attention_kv_index",
+          "ot_a3_attention_qk_walk",
+          "ot_a3_attention_softmax_block",
+          "ot_a3_attention_sparse",
+          "ot_a3_dma_index_mover",
+          "ot_a3_engine_array",
+          "ot_a3_engine_issue_bridge",
+          "ot_a3_fp32_div_rne",
+          "ot_a3_fp32_exp_pos_cr_rne",
+          "ot_a3_fp32_sqrt_rne",
+          "ot_a3_fp32_transcendental_cr_rne",
+          "ot_a3_mac_lane",
+          "ot_a3_mac_lane_pipe",
+          "ot_a3_place_table",
+          "ot_a3_qwen_gqa",
+          "ot_a3_reduction_balanced_sum",
+          "ot_a3_reduction_expert_sum",
+          "ot_a3_rope_lane_pipe",
+          "ot_a3_route_biased_topk",
+          "ot_a3_route_weight_normalize",
+          "ot_a3_route_window_index",
+          "ot_a3_selection_argmax",
+          "ot_a3_selection_token_append",
+          "ot_a3_vector_add",
+          "ot_a3_vector_compress_project",
+          "ot_a3_vector_convert",
+          "ot_a3_vector_hadamard",
+          "ot_a3_vector_index_score",
+          "ot_a3_vector_mhc_post",
+          "ot_a3_vector_rms_norm",
+          "ot_a3_vector_rope",
+          "ot_a3_vector_scale_pipe",
+          "ot_a3_vector_silu_mul",
+          "ot_a3_vector_sqrt_softplus",
+          "ot_a3_vector_sqrt_softplus_row",
+          "ot_fp32_add_rne_pipe",
+          "ot_fp32_mul_rne_pipe",
+          "ot_fp32_rsqrt_rne",
+          "ot_mac_bf16_fp32_pipe",
+          "ot_ta_command_decoder",
+          "ot_ta_rope_bf16_sram_engine"
+        ],
+        "modules_reached": 44,
+        "top": "ot_a3_engine_issue_bridge"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "fakeram7_256x32",
+          "fakeram_2048x128",
+          "fakeram_256x128",
+          "fakeram_256x64",
+          "fakeram_512x128",
+          "ot_a3_dependence_table",
+          "ot_a3_event_scoreboard",
+          "ot_a3_g2_array_issue_adapter",
+          "ot_a3_g2_array_staging",
+          "ot_a3_g2_cluster",
+          "ot_a3_g2_descriptor_store",
+          "ot_a3_g2_issue_record_ram",
+          "ot_a3_g2_program_store",
+          "ot_a3_instruction_decoder",
+          "ot_a3_issue_record_store",
+          "ot_a3_lane_pipelined",
+          "ot_a3_loop_stack",
+          "ot_a3_lq8",
+          "ot_a3_microsequencer",
+          "ot_a3_resolver_bank",
+          "ot_a3_shared_divider",
+          "ot_a3_state_controller",
+          "ot_a3_symbol_file",
+          "ot_a3_view_resolver"
+        ],
+        "modules_reached": 24,
+        "top": "ot_a3_g2_cluster"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_dependence_table",
+          "ot_a3_device_top",
+          "ot_a3_event_scoreboard",
+          "ot_a3_instruction_decoder",
+          "ot_a3_issue_record_store",
+          "ot_a3_loop_stack",
+          "ot_a3_microsequencer",
+          "ot_a3_program_header",
+          "ot_a3_resolver_bank",
+          "ot_a3_shared_divider",
+          "ot_a3_state_controller",
+          "ot_a3_symbol_file",
+          "ot_a3_view_resolver"
+        ],
+        "modules_reached": 13,
+        "top": "ot_a3_device_top"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_fp32_div_rne",
+          "ot_a3_fp32_transcendental_cr_rne",
+          "ot_a3_hc_coefficients_rne",
+          "ot_a3_hc_pre_t1_descriptor_rne",
+          "ot_a3_hc_projection_rms_rne",
+          "ot_a3_hc_reduction_store",
+          "ot_a3_hc_sinkhorn20_rne",
+          "ot_a3_hc_stable_softmax_rne",
+          "ot_a3_hc_stable_softmax_sinkhorn20_rne",
+          "ot_a3_vector_mhc_pre_tile_scheduler",
+          "ot_fp32_rsqrt_rne"
+        ],
+        "modules_reached": 11,
+        "top": "ot_a3_hc_pre_t1_descriptor_rne"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_descriptor_record_validator",
+          "ot_a3_dma_index_mover",
+          "ot_a3_fp32_div_rne",
+          "ot_a3_fp32_transcendental_cr_rne",
+          "ot_a3_instruction_decoder",
+          "ot_a3_qwen_gqa",
+          "ot_a3_qwen_gqa_adapter",
+          "ot_a3_qwen_kv_scatter_adapter"
+        ],
+        "modules_reached": 8,
+        "top": "ot_a3_qwen_gqa_adapter"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_communication_decoder",
+          "ot_a3_link_endpoint",
+          "ot_a3_link_return",
+          "ot_a3_link_rx_channel",
+          "ot_a3_link_tx_channel",
+          "ot_a3_link_wire",
+          "ot_a3_wafer_multicast_adapter"
+        ],
+        "modules_reached": 7,
+        "top": "ot_a3_wafer_multicast_adapter"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_collective_engine",
+          "ot_a3_link_node",
+          "ot_a3_link_rx_channel",
+          "ot_a3_link_tx_channel",
+          "ot_a3_mesh_router"
+        ],
+        "modules_reached": 5,
+        "top": "ot_a3_link_node"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_engram_exact_dot_tree",
+          "ot_a3_engram_fp32_sqrt_rne_pipe",
+          "ot_a3_fp32_div_rne",
+          "ot_a3_fp32_transcendental_cr_rne",
+          "ot_a3_vector_engram_gate"
+        ],
+        "modules_reached": 5,
+        "top": "ot_a3_vector_engram_gate"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_mac_lane_pipe",
+          "ot_a3_tensor_routed_matmul",
+          "ot_mac_bf16_fp32_pipe"
+        ],
+        "modules_reached": 3,
+        "top": "ot_a3_tensor_routed_matmul"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_lane_pipelined",
+          "ot_a3_lq8",
+          "ot_a3_tile64"
+        ],
+        "modules_reached": 3,
+        "top": "ot_a3_tile64"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_fp4kv_dequant_lane",
+          "ot_a3_fp4kv_fetch",
+          "ot_a3_vector_fp4kv_dequant"
+        ],
+        "modules_reached": 3,
+        "top": "ot_a3_vector_fp4kv_dequant"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_dma_ngram_hash",
+          "ot_a3_ngram_mul_pipe"
+        ],
+        "modules_reached": 2,
+        "top": "ot_a3_dma_ngram_hash"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_reduction_ordered_sum",
+          "ot_mac_bf16_fp32_pipe"
+        ],
+        "modules_reached": 2,
+        "top": "ot_a3_reduction_ordered_sum"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_dma_fill"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_dma_fill"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_operand_receiver"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_operand_receiver"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_partial_collector"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_partial_collector"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_reduction_grouped_concat"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_reduction_grouped_concat"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_route_block_max"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_route_block_max"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_route_candidate_mask"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_route_candidate_mask"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_route_expert_dispatch"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_route_expert_dispatch"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_route_index_topk"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_route_index_topk"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_semantic_record_collector"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_semantic_record_collector"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_tensor_lane_mapper"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_tensor_lane_mapper"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_tree_endpoint_fp32"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_tree_endpoint_fp32"
+      },
+      {
+        "has_a_closed_record": true,
+        "members": [
+          "ot_a3_vector_scale"
+        ],
+        "modules_reached": 1,
+        "top": "ot_a3_vector_scale"
+      }
+    ],
+    "what": "A module nothing instantiates is the root of a separately elaborated subsystem.  No single top integrates this design, so every ASAP7 frequency is a statement about ONE island, and a whole-chip clock has not been measured because no netlist contains the whole chip.",
+    "with_a_closed_record": 8
+  },
   "uncovered_and_instantiated": [
     {
       "instantiated_by": [

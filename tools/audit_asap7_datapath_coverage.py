@@ -111,11 +111,19 @@ _NOT_A_MODULE = frozenset(
 
 
 def _sources() -> list[Path]:
-    """Synthesisable sources: everything under rtl/ outside rtl/test/."""
+    """Synthesisable sources: under rtl/, outside rtl/test/ and rtl/build/.
+
+    ``rtl/build/`` holds campaign work directories with ANNOTATED COPIES of
+    library modules -- ``ot_credit_manager`` appears in four files there and
+    once for real.  Scanning them would concatenate a module's body with its
+    copies and double-count every instantiation inside it.  No ``ot_a3_``
+    module is duplicated that way today, so the ABI 3.0 figures are unchanged
+    by this exclusion; it is the general correctness of the parse.
+    """
     return [
         path
         for path in sorted((ROOT / "rtl").rglob("*.sv"))
-        if "test" not in path.relative_to(ROOT / "rtl").parts
+        if not {"test", "build"} & set(path.relative_to(ROOT / "rtl").parts)
     ]
 
 
@@ -202,6 +210,32 @@ def main() -> int:
             }
         )
 
+    # Top-level islands: a module nothing instantiates is the root of a
+    # separately-elaborated subsystem.  Their number and what each reaches is the
+    # shape of the design as the RTL actually assembles it, and it decides what a
+    # per-block frequency is a statement ABOUT.
+    # Scoped to this audit's subject.  The graph also holds probe wrappers,
+    # ``ot_fp32_*`` primitives and any ``tb_*`` top that sits outside rtl/test/,
+    # and each of those is a root nothing instantiates without being a subsystem
+    # of the design.
+    islands = sorted(
+        name
+        for name in graph
+        if not instantiated_by.get(name) and name.startswith("ot_a3_")
+    )
+    island_rows = []
+    for name in islands:
+        members = sorted(_reachable(graph, [name]))
+        island_rows.append(
+            {
+                "top": name,
+                "modules_reached": len(members),
+                "members": members,
+                "has_a_closed_record": name in closed_blocks,
+            }
+        )
+    island_rows.sort(key=lambda row: -row["modules_reached"])
+
     gaps = [
         r
         for r in rows
@@ -249,6 +283,20 @@ def main() -> int:
             "uncovered_and_instantiated_by_nothing": len(tops),
         },
         "limiter_under_audit": limiter,
+        "top_level_islands": {
+            "what": (
+                "A module nothing instantiates is the root of a separately "
+                "elaborated subsystem.  No single top integrates this design, so "
+                "every ASAP7 frequency is a statement about ONE island, and a "
+                "whole-chip clock has not been measured because no netlist "
+                "contains the whole chip."
+            ),
+            "count": len(island_rows),
+            "with_a_closed_record": sum(
+                1 for row in island_rows if row["has_a_closed_record"]
+            ),
+            "islands": island_rows,
+        },
         "uncovered_and_instantiated": [
             {"module": r["module"], "instantiated_by": r["instantiated_by"]}
             for r in gaps
@@ -272,6 +320,11 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     print(json.dumps(report["counts"], indent=1, sort_keys=True))
+    print(f"\ntop-level islands: {len(island_rows)} "
+          f"({report['top_level_islands']['with_a_closed_record']} with a closed record)")
+    for row in island_rows[:8]:
+        mark = "closed" if row["has_a_closed_record"] else "  --  "
+        print(f"  {mark}  {row['modules_reached']:3d} modules  {row['top']}")
     if gaps:
         print("\nUNCOVERED and instantiated -- the limiter does not cover these:")
         for row in gaps:

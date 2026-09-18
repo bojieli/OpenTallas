@@ -74,7 +74,7 @@ def _package_files() -> dict[str, str]:
     """``package name -> defining file``, over the synthesisable sources."""
     found: dict[str, str] = {}
     for path in sorted((ROOT / "rtl").rglob("*.sv")):
-        if "test" in path.relative_to(ROOT / "rtl").parts:
+        if {"test", "build"} & set(path.relative_to(ROOT / "rtl").parts):
             continue
         try:
             text = _without_comments(path.read_text(encoding="utf-8"))
