@@ -32,6 +32,16 @@
       "target_headroom": 0.036531666666666664
     },
     {
+      "at_target_clock_period_ns": 3.6,
+      "block": "ot_a3_fp32_div_rne",
+      "family": "abi3_datapath",
+      "fmax_hz": 283509000.0,
+      "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 1504.85,
+      "target_headroom": 0.02021525
+    },
+    {
       "at_target_clock_period_ns": 3.0,
       "block": "add_bf16_sram_engine",
       "family": "abi3_datapath",
@@ -335,10 +345,10 @@
     "target_headroom": 0.04578063157894737
   },
   "counts": {
-    "closed_routed_record_count": 62,
-    "distinct_blocks_with_a_closed_routed_record": 32,
-    "post_route_record_count": 104,
-    "record_count": 177
+    "closed_routed_record_count": 63,
+    "distinct_blocks_with_a_closed_routed_record": 33,
+    "post_route_record_count": 106,
+    "record_count": 179
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -424,7 +434,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cec84699660db5f827ed9f8f96181ec5f77acb79"
+      "commit": "d433df449b06d4a484dcbbf345f8a7fb520ca722"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3500,6 +3510,52 @@
       "standard_cell_area_um2": 140.23,
       "target_clock_period_ns": 0.25,
       "target_headroom": 0.022428439999999997
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_fp32_div_rne",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 286732000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_2p0ns_not_met.json",
+      "record_sha256": "8b5dd7bf7f57fc4690599e4716ebb0ad097d45239cfd38b72e083b6fa3009b23",
+      "setup_wns_ns": -1.48758,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1702.16,
+      "target_clock_period_ns": 2.0,
+      "target_headroom": -0.74379
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_fp32_div_rne",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 283509000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
+      "record_sha256": "741603c46ea2579a40e4bd62c9a2e66f650d6f279b9d8ce0e8060d1d0376fc5e",
+      "setup_wns_ns": 0.0727749,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1504.85,
+      "target_clock_period_ns": 3.6,
+      "target_headroom": 0.02021525
     },
     {
       "antenna_violating_nets": 0,

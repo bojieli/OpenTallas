@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 103,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 33,
-    "uncovered_and_instantiated": 53,
+    "covered_by_a_closed_block": 34,
+    "uncovered_and_instantiated": 52,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 15
+    "with_their_own_closed_record": 16
   },
   "limiter_under_audit": {
     "at_target_clock_period_ns": 4.75,
@@ -217,9 +217,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_fp32_div_rne.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_attention_epilogue",
         "ot_a3_hc_sinkhorn20_rne",
@@ -1033,7 +1033,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "3113bd25af91c8c125d593c679382e100a73059e"
+      "commit": "d433df449b06d4a484dcbbf345f8a7fb520ca722"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -1436,18 +1436,6 @@
         "ot_a3_vector_engram_gate"
       ],
       "module": "ot_a3_engram_fp32_sqrt_rne_pipe"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_attention_epilogue",
-        "ot_a3_hc_sinkhorn20_rne",
-        "ot_a3_hc_stable_softmax_rne",
-        "ot_a3_qwen_gqa",
-        "ot_a3_route_weight_normalize",
-        "ot_a3_vector_engram_gate",
-        "ot_a3_vector_silu_mul"
-      ],
-      "module": "ot_a3_fp32_div_rne"
     },
     {
       "instantiated_by": [
