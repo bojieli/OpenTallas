@@ -1,0 +1,3601 @@
+{
+  "blocks_with_a_closed_routed_record": [
+    "ot_a3_attention_av_walk",
+    "ot_a3_attention_qk_walk",
+    "ot_a3_dma_ngram_hash",
+    "ot_a3_fp32_sqrt_rne",
+    "ot_a3_g2_cluster",
+    "ot_a3_lane_pipelined",
+    "ot_a3_lq8",
+    "ot_a3_microsequencer",
+    "ot_a3_route_index_topk",
+    "ot_a3_tree_endpoint_fp32",
+    "ot_a3_vector_scale",
+    "ot_compute_unit",
+    "ot_mac_bf16_fp32_pipe",
+    "ot_probe_bf16_add_pipe",
+    "ot_probe_cluster_disp",
+    "ot_probe_dispatch_tree",
+    "ot_probe_floor_wide",
+    "ot_probe_lane_bf16",
+    "ot_probe_lane_fp8",
+    "ot_probe_lane_mxfp4",
+    "ot_probe_packed8",
+    "ot_probe_packed8_bf16",
+    "ot_probe_vadd8",
+    "reduction_s8_g2"
+  ],
+  "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
+  "counts": {
+    "distinct_blocks_with_a_closed_routed_record": 24,
+    "pre_layout_only_records": 72,
+    "records_read": 155,
+    "routed_and_closed": 49,
+    "routed_not_closed": 34,
+    "routed_records": 83
+  },
+  "not_a_claim": [
+    "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
+    "a pre-layout sta record is not a closure statement and is counted separately",
+    "a closed block is not a closed chip: these are block-level runs, and what a full assembly costs is not measured here"
+  ],
+  "producer": {
+    "git": {
+      "commit": "d87a6f859a9559f1ae365411a181db1d5efcc2f2"
+    },
+    "tool": "tools/audit_asap7_closure_matrix.py"
+  },
+  "question": "how much of this design is routed on ASAP7, and how much of what is routed closes?",
+  "records": [
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 448907,
+      "hold_wns_ns": -0.0015507,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 216963000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/at_5f09d3f/pnr_4p75ns.json",
+      "record_sha256": "63f98b44e0c58a92f019cb222de8e1ec48ef8fb1490936593a8e2d9ea00ddc6d",
+      "routed": true,
+      "setup_wns_ns": 0.14091499999999998,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 3
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 85154.9,
+      "status": "not_met",
+      "target_clock_period_ns": 4.75
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 2",
+      "core_area_um2": 448907,
+      "hold_wns_ns": 0.0290669,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 211094000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/at_5f09d3f/pnr_5p00ns.json",
+      "record_sha256": "bf602a32eb3009b8eae7d93b7051ccf70d53af8363f0d867fef4ea02f93ee8b6",
+      "routed": true,
+      "setup_wns_ns": 0.26276900000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 2
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84387.8,
+      "status": "pass",
+      "target_clock_period_ns": 5.0
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 448907,
+      "hold_wns_ns": -0.0077716700000000005,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 189189000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/at_5f09d3f/pnr_5p50ns.json",
+      "record_sha256": "22375faf5ada5acb799228c34096ae119cad903f20c4c6c893b6d9c1178b749d",
+      "routed": true,
+      "setup_wns_ns": 0.21427000000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 2
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 83887.9,
+      "status": "not_met",
+      "target_clock_period_ns": 5.5
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 8",
+      "core_area_um2": 448907,
+      "hold_wns_ns": 0.013087300000000001,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 216655000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/g_4.75.json",
+      "record_sha256": "5612d1215e8ff251a556178bf36a0c6eabc9152132162b3e8c84f012aee3356f",
+      "routed": true,
+      "setup_wns_ns": 0.134366,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 8
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 85052.2,
+      "status": "pass",
+      "target_clock_period_ns": 4.75
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 448545,
+      "hold_wns_ns": 0.0273126,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 226163000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p00ns.json",
+      "record_sha256": "0d17117f60508289c7fe52f8824184232bafc2f6534efd6915ae18e642269594",
+      "routed": true,
+      "setup_wns_ns": -0.421596,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 15
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 86313.5,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 448545,
+      "hold_wns_ns": -0.00130768,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 228388000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p50ns.json",
+      "record_sha256": "feeb6f44979230aaff02d480aefe94607853214b41ad5f38f6d66bfd59f03a4b",
+      "routed": true,
+      "setup_wns_ns": 0.121482,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 5
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 85820.4,
+      "status": "not_met",
+      "target_clock_period_ns": 4.5
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 448545,
+      "hold_wns_ns": 0.0203746,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 220627000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_4p75ns.json",
+      "record_sha256": "01ea7e0caa16f97fe5d120240c7e42a9c4d66a7d642b49a08e1563370fbabc06",
+      "routed": true,
+      "setup_wns_ns": 0.217458,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84773.4,
+      "status": "pass",
+      "target_clock_period_ns": 4.75
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 1",
+      "core_area_um2": 448545,
+      "hold_wns_ns": 0.0185384,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 204819000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_5p00ns.json",
+      "record_sha256": "90171a98827d89567276457e0f77b0c317ae517239b2c95cc5e41be8461a2c0b",
+      "routed": true,
+      "setup_wns_ns": 0.117631,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84491.6,
+      "status": "pass",
+      "target_clock_period_ns": 5.0
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 1",
+      "core_area_um2": 448545,
+      "hold_wns_ns": 0.0228654,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 186085000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_6p00ns.json",
+      "record_sha256": "755b120be05d3ba5713f7d4b0aa39c2b8b9d4be65823cc7a871289dcc8c01cc3",
+      "routed": true,
+      "setup_wns_ns": 0.626101,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84481.3,
+      "status": "pass",
+      "target_clock_period_ns": 6.0
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 11",
+      "core_area_um2": 448545,
+      "hold_wns_ns": 0.0306184,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 183241000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/operating_point/pnr_7p00ns.json",
+      "record_sha256": "c6c9c6781ef0e858c12197f6edafa81cfbb54c002bcc061528c84c4e36845153",
+      "routed": true,
+      "setup_wns_ns": 1.54271,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 11
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84143.7,
+      "status": "pass",
+      "target_clock_period_ns": 7.0
+    },
+    {
+      "block": "ot_a3_g2_cluster",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 1",
+      "core_area_um2": 451479,
+      "hold_wns_ns": 0.03216770000000001,
+      "macro_area_um2": 36521.8,
+      "post_route_fmax_hz": 185941000.0,
+      "record": "results/physical_abi3/asap7/a3_g2_cluster/pnr.json",
+      "record_sha256": "6cfdd606cc52bb8999fde9abd786027e5fb4e71c85a6ea2a296baeeb4b48f1ab",
+      "routed": true,
+      "setup_wns_ns": 10.622,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 84740.3,
+      "status": "pass",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10537.8,
+      "hold_wns_ns": 0.0357284,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 392518000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr.json",
+      "record_sha256": "7c90d2b6219d02f56c8b3813c91c8548c5d1dc0598d89a9bf06ce7ef3ba6164d",
+      "routed": true,
+      "setup_wns_ns": 3.45235,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3947.84,
+      "status": "pass",
+      "target_clock_period_ns": 6.0
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10443.8,
+      "hold_wns_ns": 0.0337674,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 502048000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p08ns_fixed_closed.json",
+      "record_sha256": "d1e587c2a17f3d6fd3a985a801b2f443748bd7142aa34d3ed828df068c308023",
+      "routed": true,
+      "setup_wns_ns": 0.088157,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3941.25,
+      "status": "pass",
+      "target_clock_period_ns": 2.08
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 10537.8,
+      "hold_wns_ns": 0.038917700000000006,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 499619000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p1ns_baseline.json",
+      "record_sha256": "d3f75756151a1744edb7342edd53cfff5841012e35953586849a7139d037748c",
+      "routed": true,
+      "setup_wns_ns": 0.0984763,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3959.24,
+      "status": "not_met",
+      "target_clock_period_ns": 2.1
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10443.8,
+      "hold_wns_ns": 0.0352587,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 504733000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p1ns_fixed.json",
+      "record_sha256": "05eff35d1fecbaaa4cdda6deaf5fdaa189a749b4fdc8d556b1e246864dd655a1",
+      "routed": true,
+      "setup_wns_ns": 0.118753,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3940.58,
+      "status": "pass",
+      "target_clock_period_ns": 2.1
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10537.8,
+      "hold_wns_ns": 0.0368258,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 447659000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p38ns_baseline_closed.json",
+      "record_sha256": "ad4db9b379ed78a1a4a1b0d91e84b4bec23980d31038f9a3af13b24168259f5d",
+      "routed": true,
+      "setup_wns_ns": 0.14615799999999998,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3956.88,
+      "status": "pass",
+      "target_clock_period_ns": 2.38
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10537.8,
+      "hold_wns_ns": 0.040304200000000005,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 430277000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p5ns_baseline.json",
+      "record_sha256": "e52638ac9f0daee165cee5aaad8ced770b824778abdeac3b37ea46f53d28d98e",
+      "routed": true,
+      "setup_wns_ns": 0.175916,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3955.31,
+      "status": "pass",
+      "target_clock_period_ns": 2.5
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10443.8,
+      "hold_wns_ns": 0.035145800000000005,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 430804000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p5ns_fixed.json",
+      "record_sha256": "fbf09313638cb914b8f890ec4b395ca8a8c9940b761a2859e30ba9a897d14e0b",
+      "routed": true,
+      "setup_wns_ns": 0.178759,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3932.9,
+      "status": "pass",
+      "target_clock_period_ns": 2.5
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 10213.3,
+      "hold_wns_ns": 0.0406484,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 199653000.0,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_prev_7ee333d.json",
+      "record_sha256": "2757bd209d1e13c6d7124e511c79a34387d884273957e939e81cb76daa77cae0",
+      "routed": true,
+      "setup_wns_ns": 0.991298,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3790.2,
+      "status": "pass",
+      "target_clock_period_ns": 6.0
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 194848193.29612193,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L1.json",
+      "record_sha256": "d164a1ee08d24c6f43e295de8bcec3806c3d0cf3781b836ad9f5530fa4655ee7",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 224946842.39797375,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L2.json",
+      "record_sha256": "f33743c746ff218058e8c5dfffc191456834d60ad9804702afb84b46076c219e",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 231600070.11551824,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3.json",
+      "record_sha256": "24ddac847cf8abd9c5b5deef7a2c8df5cc3cdcd6de379752c0ebee95cdb15e07",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 422588625.03097236,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_baseline_abc1p6.json",
+      "record_sha256": "c9f765a4c69b2036c76d2d0b36bef1fd5bcc4a0816f61cc808bc01779bb3d8a9",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 1.6
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 422588617.59603876,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_baseline_abc2p4.json",
+      "record_sha256": "4892aecddde910125372a8cda89cfffebbf4cf6695eb7dad027fbfe810434f92",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 482601770.8580371,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_fixed_abc1p6.json",
+      "record_sha256": "444924d3b61ca92171b3169edc95deaea2976594d91eb1b32af180f29b179995",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 1.6
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 482601761.1614409,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_fixed_abc2p4.json",
+      "record_sha256": "e1afbe4b909ed843cdba0f4488da84b50705e432aae48a575d064d07bb7dafd8",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 490391285.01622826,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_flush_inflight_abc2p4.json",
+      "record_sha256": "4350e5f88d1da5f37fd7ce4b8e5233469c5cb090af35368d9e61a4043139b31e",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.4
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 391026448.63411355,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_L3_msb_tree_rejected.json",
+      "record_sha256": "d998862ffc3855d52c0c8add2330c2b82990d1e376af51b2b16505db1e48a3d5",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 1.3
+    },
+    {
+      "block": "ot_a3_lane_pipelined",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 231600070.11551824,
+      "record": "results/physical_abi3/asap7/a3_lane_pipelined/prelayout_item11_L3.json",
+      "record_sha256": "17dce09ee69a73bbc0e391f4bd8455636870e69f520d4609d54a62e0018e6a59",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77429.7,
+      "hold_wns_ns": 0.0293264,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 140285000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr.json",
+      "record_sha256": "cb8465b449967d2bba4a4be395d17201228b2bdadbf794c685e4e4eb6222e1bc",
+      "routed": true,
+      "setup_wns_ns": 8.87167,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 28807.7,
+      "status": "pass",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 95006.9,
+      "hold_wns_ns": 0.0259777,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 60700100.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_prev_da66772.json",
+      "record_sha256": "1a6efac8b0af11518b7fabc3533b5651ecd15731d5e98a20b6426eaa9962c710",
+      "routed": true,
+      "setup_wns_ns": -0.474433,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 37402.1,
+      "status": "not_met",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 292",
+      "core_area_um2": 76187.6,
+      "hold_wns_ns": 0.0393152,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 137679000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_slew292_2f6b0a4.json",
+      "record_sha256": "569460cf558ae3e4b1232dba7ac9ce197fe291775643a86481812604ea429f29",
+      "routed": true,
+      "setup_wns_ns": 8.73675,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 292
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 27842.5,
+      "status": "not_met",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77369.6,
+      "hold_wns_ns": 0.0205032,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 512771000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0.json",
+      "record_sha256": "7c694bc9f59984fdad7120ed027d275d30bcf874017598f737d644733ae5864e",
+      "routed": true,
+      "setup_wns_ns": 0.0498108,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 29396.9,
+      "status": "pass",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77369.6,
+      "hold_wns_ns": 0.028977799999999998,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 433434000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4.json",
+      "record_sha256": "853a12ad4970fddd0f6def57903e35b607bdd614b781f3de49db4ea394ab6731",
+      "routed": true,
+      "setup_wns_ns": 0.0928411,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 29387.1,
+      "status": "pass",
+      "target_clock_period_ns": 2.4
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77369.6,
+      "hold_wns_ns": 0.020467700000000002,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 393987000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0.json",
+      "record_sha256": "2c6a07384bc0edc89544cf8710c73399828ce3a416d844705f1ca8046ece3583",
+      "routed": true,
+      "setup_wns_ns": 0.461847,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 29388.4,
+      "status": "pass",
+      "target_clock_period_ns": 3.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 77369.6,
+      "hold_wns_ns": 0.027978000000000003,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 389962000.0,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0.json",
+      "record_sha256": "826719796e1fd06980cd6cfcb129352fae8147749ea2a0e29b294b90e7f6f3f6",
+      "routed": true,
+      "setup_wns_ns": 1.43565,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 29358.4,
+      "status": "pass",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 137047643.79845703,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3.json",
+      "record_sha256": "d907fa81964853a56d1ef8f2aad8aa4701e1614a956280c01139bd4556c5ced1",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 409643450.78663075,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
+      "record_sha256": "89de009eb390ec41f056824a06902ed4bb0346c5b7759b74fca2e93e1c5b91a0",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.6
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 420065581.4166085,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
+      "record_sha256": "101dd3746bbb1376d8f8038c8b6bb149452d26957cf7ecd5f34cc6da6c69c4f7",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 2.2
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 420065587.5386244,
+      "record": "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
+      "record_sha256": "2ce6298831cf4fefe79c28998de76eda1abd922f848528c81c74f765c44a4a9e",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.6
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 3204, max_cap_violations 3",
+      "core_area_um2": 136926,
+      "hold_wns_ns": 0.0358396,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 264834000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr.json",
+      "record_sha256": "b3ae9772b3d0fe851531fbc5b334ad870773013a33b8d68407903c5f7f4176d2",
+      "routed": true,
+      "setup_wns_ns": 0.624053,
+      "signal_integrity_violations": {
+        "max_cap_violations": 3,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 3204
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 51151.6,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 136546,
+      "hold_wns_ns": 0.036859,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 491389000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_2p0ns_full_hierarchy_fastest.json",
+      "record_sha256": "b6103124c6e18bdc7bf95cc00e1bcf94f6dde6a089f9250618ed98b64f53e8ce",
+      "routed": true,
+      "setup_wns_ns": -0.0350477,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 52963.3,
+      "status": "not_met",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 21764.5,
+      "hold_wns_ns": 0.0442871,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 548458000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_2p2ns.json",
+      "record_sha256": "a9ddc3a6c94af0ef59366bce74689df0746606d1e717f06c0a7a4e3283dcd11b",
+      "routed": true,
+      "setup_wns_ns": 0.376707,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8440.22,
+      "status": "pass",
+      "target_clock_period_ns": 2.2
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 136546,
+      "hold_wns_ns": 0.050034300000000004,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 317144000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_3p4ns_full_hierarchy_closed.json",
+      "record_sha256": "a458ecdfbc86afe5f022d81edc06be6c2cede44c0907b985914840f73e44caee",
+      "routed": true,
+      "setup_wns_ns": 0.24685900000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 54280.6,
+      "status": "pass",
+      "target_clock_period_ns": 3.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 136546,
+      "hold_wns_ns": 0.0390097,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 299723000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_4p4ns_full_hierarchy_closed.json",
+      "record_sha256": "733d4ddc8362b272c52aff95b9396249714a90aced320cb26f8bfdb1861bb16f",
+      "routed": true,
+      "setup_wns_ns": 1.06359,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 54317.8,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": null,
+      "closed_reason": null,
+      "core_area_um2": 21764.5,
+      "hold_wns_ns": null,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 511317000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_4p4ns_with_prelayout_sta.json",
+      "record_sha256": "ae9ddb32aef6f7524a30f42592fb036ca768d87f9fdbe158b05b3bd93d21f0c2",
+      "routed": true,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8437.9,
+      "status": "not_met",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 21764.5,
+      "hold_wns_ns": 0.0471363,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 534260000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_frontend_only.json",
+      "record_sha256": "f6b749b2b8adcb25c1abcae12569ecf90ae8bd97f20475987bf6bf38f10e9a0d",
+      "routed": true,
+      "setup_wns_ns": 2.52825,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8440.48,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 49",
+      "core_area_um2": 21764.5,
+      "hold_wns_ns": 0.0449029,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 511317000.0,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_slew49_1004397.json",
+      "record_sha256": "6235d37cae9eb87486ff53749d966ef56baa6dda458cd9d986f74efdc1a2b6c4",
+      "routed": true,
+      "setup_wns_ns": 2.44427,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 49
+      },
+      "stages_completed": [
+        "synth",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8437.9,
+      "status": "not_met",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_a3_microsequencer",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 8180767.853385196,
+      "record": "results/physical_abi3/asap7/a3_microsequencer/prelayout_head_full_hierarchy.json",
+      "record_sha256": "9ce3e295063f2fab7b0b09f5252fa4af2230c858254319558dc58b45461fca89",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_a3_tree_endpoint_fp32",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 15654.5,
+      "hold_wns_ns": 0.027029900000000003,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 355923000.0,
+      "record": "results/physical_abi3/asap7/a3_re8/pnr.json",
+      "record_sha256": "1a4fa838ad37695f2035d527183fdd4bdd4ab003bca5d5f0d6aa98badc907bce",
+      "routed": true,
+      "setup_wns_ns": 3.1904000000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 5546.01,
+      "status": "pass",
+      "target_clock_period_ns": 6.0
+    },
+    {
+      "block": "ot_a3_tile64",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/a3_tile64/physical.json",
+      "record_sha256": "dcb3aac4036aa2723eb97d6823c20fd1e05f1aff21a66498c0af1688a42c6d5e",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 16.0
+    },
+    {
+      "block": "add_bf16_sram_engine",
+      "closed": false,
+      "closed_reason": "record predates the signal-integrity fields and its container report is not retained; closure cannot be asserted without a re-route",
+      "core_area_um2": 5216.43,
+      "hold_wns_ns": 0.056499400000000005,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 239089000.0,
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json",
+      "record_sha256": "836be970b2de47d364c02a1bbe16d8c167505feea646b15fd5939913c720a84e",
+      "routed": true,
+      "setup_wns_ns": 0.217454,
+      "signal_integrity_violations": {
+        "max_cap_violations": null,
+        "max_fanout_violations": null,
+        "max_slew_violations": null
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2008.31,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "add_bf16_sram_engine",
+      "closed": null,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/add_bf16_sram_engine/synth_sta.json",
+      "record_sha256": "22b3b7a07c159798ffa5f9f78316e80d347acde17137a485fb5077309de03226",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.4
+    },
+    {
+      "block": "ot_probe_acc_align",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 570592125.5411744,
+      "record": "results/physical_abi3/asap7/adder_probes/acc_align.json",
+      "record_sha256": "b752581efe96975d092c17afd2bed914ee53d8eb1e5f858f0adaaed70f568ccf",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_probe_acc_align",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 562997029.5992681,
+      "record": "results/physical_abi3/asap7/adder_probes/acc_align_msb_tree_rejected.json",
+      "record_sha256": "bab8515c2190f270ad78879d5efe709bf78469a089c94f15f882b389f8cb2996",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_probe_acc_round_pack",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 717574556.34255,
+      "record": "results/physical_abi3/asap7/adder_probes/acc_round_pack.json",
+      "record_sha256": "5688ab3187e109e817a535f9e94682b90b1699ebc8f572b7456bc220698e122f",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_probe_acc_sum_normalise",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 496554406.5133051,
+      "record": "results/physical_abi3/asap7/adder_probes/acc_sum_normalise.json",
+      "record_sha256": "04c358293c0540b2da270f85e4bb88ef24a81ec98117f0e0147e65545737c5f4",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_probe_acc_sum_normalise",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 439031776.30270857,
+      "record": "results/physical_abi3/asap7/adder_probes/acc_sum_normalise_msb_tree_rejected.json",
+      "record_sha256": "3aee9485837344b9e99c987918de99a12b4504dfcec16c201f8d65c661f618a9",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_a3_attention_av_walk",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 23320.9,
+      "hold_wns_ns": 0.0332391,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 861821000.0,
+      "record": "results/physical_abi3/asap7/attention_av_walk/physical.json",
+      "record_sha256": "ffdcb17cf090ea488e43394f34b74ec51a9e323546d8633ff056afda2e0d40a2",
+      "routed": true,
+      "setup_wns_ns": 0.039666400000000004,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8569.42,
+      "status": "pass",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_a3_attention_qk_walk",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 21210.4,
+      "hold_wns_ns": 0.0390699,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 839452000.0,
+      "record": "results/physical_abi3/asap7/attention_qk_walk/physical.json",
+      "record_sha256": "37d603c8f09d0f79b0f2f1591f8de68d92439fb611d0173e1b24142f2a8fceae",
+      "routed": true,
+      "setup_wns_ns": 0.008747,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7494.81,
+      "status": "pass",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_probe_bf16_add_flat",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 311.793,
+      "hold_wns_ns": 0.0918384,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 505247000.0,
+      "record": "results/physical_abi3/asap7/bf16_add/flat_lzc.json",
+      "record_sha256": "09961c283d6676492d45b7d1c85180fc27905a5bde6d6a69de2b666be24d016e",
+      "routed": true,
+      "setup_wns_ns": -0.979229,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 153.673,
+      "status": "not_met",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_bf16_add_pipe",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 362.313,
+      "hold_wns_ns": 0.0405459,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1439290000.0,
+      "record": "results/physical_abi3/asap7/bf16_add/pipe_5stage.json",
+      "record_sha256": "c80a75bf2ca3b40c13ca53a12d4786b34de6592d20b2449e174f546611def5a1",
+      "routed": true,
+      "setup_wns_ns": 0.00521516,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 155.904,
+      "status": "pass",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_bf16_add",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 638.648,
+      "hold_wns_ns": 0.0973982,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 363970000.0,
+      "record": "results/physical_abi3/asap7/bf16_add/rne_combinational.json",
+      "record_sha256": "f779b762da1e26653d34b8042057bcc8956d98e63f402ac007239d65ddd621e2",
+      "routed": true,
+      "setup_wns_ns": -1.7474800000000001,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 310.423,
+      "status": "not_met",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_cluster_disp",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 828.377,
+      "hold_wns_ns": 0.0536849,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1290490000.0,
+      "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+      "record_sha256": "c3ed3e7d14998b4dc32f8a50bd01a675c1261ce2240fdd297b76062c6c5fba30",
+      "routed": true,
+      "setup_wns_ns": 0.0251023,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 342.178,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 31524.7,
+      "hold_wns_ns": 0.008166330000000001,
+      "macro_area_um2": 2808.96,
+      "post_route_fmax_hz": 1289720000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+      "record_sha256": "be46dae888c87373d7767638b6102602e484f654ea1c48755ee33e2c19eaf6b8",
+      "routed": true,
+      "setup_wns_ns": 0.0246408,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7381.39,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 31813,
+      "hold_wns_ns": 0.017246300000000003,
+      "macro_area_um2": 2808.96,
+      "post_route_fmax_hz": 1286300000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks1_0p8.json",
+      "record_sha256": "c1e1bbe8136ce48ea788557e614817bb01eea16cadb3e7bfe539324fd3707123",
+      "routed": true,
+      "setup_wns_ns": 0.0225776,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7696.37,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 7",
+      "core_area_um2": 41367.9,
+      "hold_wns_ns": 0.017568100000000003,
+      "macro_area_um2": 5617.92,
+      "post_route_fmax_hz": 1281380000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks2_0p8.json",
+      "record_sha256": "fb34df037af80222abdd22b9bb90173ea4bd1401496196803fab41593119492a",
+      "routed": true,
+      "setup_wns_ns": 0.019592400000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 7
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7689.42,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 60275.6,
+      "hold_wns_ns": 0.0129379,
+      "macro_area_um2": 11235.8,
+      "post_route_fmax_hz": 1236550000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks4_0p8.json",
+      "record_sha256": "49ec0cfa815a28881b290c35ba5da942620cf8b2946daf5428d119c2ffaa42c9",
+      "routed": true,
+      "setup_wns_ns": -0.0086996,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8035.68,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 7",
+      "core_area_um2": 41367.9,
+      "hold_wns_ns": 0.017568100000000003,
+      "macro_area_um2": 5617.92,
+      "post_route_fmax_hz": 1281380000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
+      "record_sha256": "f217209dbc2c18fa02e9e82c89476de8be1c9a7c6b720f235de5864d00b80111",
+      "routed": true,
+      "setup_wns_ns": 0.019592400000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 7
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7689.42,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 41367.9,
+      "hold_wns_ns": 0.0235731,
+      "macro_area_um2": 5617.92,
+      "post_route_fmax_hz": 1256010000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+      "record_sha256": "1302239293c5ca57d100ff71091b576720e72a2987ef94cd74727f248ac6e9c6",
+      "routed": true,
+      "setup_wns_ns": 0.00382533,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7698.74,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 31813,
+      "hold_wns_ns": 0.0146754,
+      "macro_area_um2": 2808.96,
+      "post_route_fmax_hz": 1275800000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
+      "record_sha256": "606ca0e9794ae34ba175c0ee5253b54f52dbf043701bc6cbd3f196966a182833",
+      "routed": true,
+      "setup_wns_ns": 0.016180800000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7534.77,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 27590.5,
+      "hold_wns_ns": 0.021488900000000002,
+      "macro_area_um2": 2889.22,
+      "post_route_fmax_hz": 1234100000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_banks2_0p8.json",
+      "record_sha256": "18219e2ea61ab0010f83af58787ef6c26a135518ede4391f72a4801afd6c766b",
+      "routed": true,
+      "setup_wns_ns": -0.0103049,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 6134.61,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 27590.5,
+      "hold_wns_ns": 0.0157499,
+      "macro_area_um2": 2889.22,
+      "post_route_fmax_hz": 1113670000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_banks2_0p95.json",
+      "record_sha256": "ba018af0714b55e2e384c44038a407d71f1b7c11fad355fabf855bb7c75b65b9",
+      "routed": true,
+      "setup_wns_ns": 0.0520692,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 6023.17,
+      "status": "pass",
+      "target_clock_period_ns": 0.95
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 27590.5,
+      "hold_wns_ns": 0.019584599999999997,
+      "macro_area_um2": 2889.22,
+      "post_route_fmax_hz": 1090620000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_chain_banks2_slew15_0p95.json",
+      "record_sha256": "d86a1b9a25eba0fdce73d3c570bd21262ac4a5893e8db6f4952d3ddc4e37b644",
+      "routed": true,
+      "setup_wns_ns": 0.0330911,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 6021.03,
+      "status": "pass",
+      "target_clock_period_ns": 0.95
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 31774.5,
+      "hold_wns_ns": 0.021270700000000003,
+      "macro_area_um2": 2808.96,
+      "post_route_fmax_hz": 1267810000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_lockstep_control_0p8.json",
+      "record_sha256": "d41413ea76a387874ee3a582909b91bb0068d446b61c8ee1cf99cdc93186beb2",
+      "routed": true,
+      "setup_wns_ns": 0.011241,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7483.51,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_mac_csa",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1469342436.5460708,
+      "record": "results/physical_abi3/asap7/datapath_probes/csa_v3.json",
+      "record_sha256": "507dc982de68e4e5b1cb0b5a7ce87e5e1f7de1992f5f837d2542202713e6cbb3",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.6
+    },
+    {
+      "block": "ot_mac_tile",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 926210965.4768223,
+      "record": "results/physical_abi3/asap7/datapath_probes/direct_4.json",
+      "record_sha256": "f327b02ffc4741a2240531a0743f91447dc0d308aa069554411cc58de81567c8",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_mac_tile",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 73900708.48564225,
+      "record": "results/physical_abi3/asap7/datapath_probes/direct_64.json",
+      "record_sha256": "79b01e1359590be0b898f70ce18f6f9d8362d61b0292a4493bc8c30d4fe95ebd",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_mac_tile_h",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/datapath_probes/hier_4.json",
+      "record_sha256": "663a0b79745ad37902bb78b7f480b8eba2c76d53147d39498097c98d4d10d564",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_indep4",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1149548125.734972,
+      "record": "results/physical_abi3/asap7/datapath_probes/indep4.json",
+      "record_sha256": "b8c48046c9471ab120e70efcd6bcfe04320e5c954573e8b92fa19b531a3ffe4d",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_mac_pipe",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 724814889.6333966,
+      "record": "results/physical_abi3/asap7/datapath_probes/mac_pipe.json",
+      "record_sha256": "3602e169a0c173936dfa63e2c5ebabdecd807966650526a16c643d4a75858390",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_add8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 3411581926.2169166,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_add8.json",
+      "record_sha256": "24a8cd13f5feded87137d9e1c62731695d26821daf121f840ba8cf003f8ece8d",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.2
+    },
+    {
+      "block": "ot_probe_floor",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 8691270189.355944,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_floor.json",
+      "record_sha256": "4c47ad0949b7d971a8f7199b29286b00f9b5e2e924c8253b86a12d10d4994419",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 0.2
+    },
+    {
+      "block": "ot_probe_mac_fx",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 752253789.3391234,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_mac_fx.json",
+      "record_sha256": "4d2ac1277086cde26be386b150c42ecba4827b02364d704bf91947c98288a9cd",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.5
+    },
+    {
+      "block": "ot_probe_mul_bf16",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1540564737.0097117,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_mul_bf16.json",
+      "record_sha256": "2e21b2d982932d15c98cdebb88926c2176dcb692dc41c3e1a7fc1c3b019dc3a5",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.5
+    },
+    {
+      "block": "ot_probe_mul_fp32",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 613064252.04164,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_mul_fp32.json",
+      "record_sha256": "9c39c8cc8bf680d46e5ec940735f29d623560caf1a82931c6daac4c242e60615",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.5
+    },
+    {
+      "block": "ot_probe_mul_fp8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 2606242150.2519565,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_mul_fp8.json",
+      "record_sha256": "30010fb0221e71263407b89a9aa8705f77bfd51fec7a9123137aa667e33ab23a",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 0.5
+    },
+    {
+      "block": "ot_probe_mul_mxfp4",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 4712536120.288329,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_mul_mxfp4.json",
+      "record_sha256": "3e2f47421336fda1052753f9df92bb19c7413a51346ec1e10468349f8f10f6f4",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 0.5
+    },
+    {
+      "block": "ot_probe_st1",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1641732510.4373665,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_st1.json",
+      "record_sha256": "64c167937835ad0b6ad45df2fd48d14343ea050b1cc6d079dbd3f2e9b7adad1f",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.3
+    },
+    {
+      "block": "ot_probe_st3",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 3372983518.468711,
+      "record": "results/physical_abi3/asap7/datapath_probes/ot_probe_st3.json",
+      "record_sha256": "13fd7482a39581692e467389c44314d3d8f82eca45632ce690b8f47bc62cecb3",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 0.3
+    },
+    {
+      "block": "ot_probe_tile16",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 128545040.04728144,
+      "record": "results/physical_abi3/asap7/datapath_probes/tile3_16.json",
+      "record_sha256": "84352c5bfa198396b413d66a9ff7ce4b260591438b8dfd782be6f1cce75471d3",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_tile4",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 599152407.7990576,
+      "record": "results/physical_abi3/asap7/datapath_probes/tile3_4.json",
+      "record_sha256": "908ce31d394aa5eb83c7715a6f4105a3b1fc46f0fe9ab8c7481860002c829218",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_tile64",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 14134332.427098513,
+      "record": "results/physical_abi3/asap7/datapath_probes/tile3_64.json",
+      "record_sha256": "c17fb8446ac88ad5278cbe4ffe99a39be0c7dffeb5f1e41ff681655de7c46ac4",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.7
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 19200,
+      "hold_wns_ns": 0.0287624,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1753850000.0,
+      "record": "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l32_0p8.json",
+      "record_sha256": "0169c6791bb088610648086b4a97196abda625039ea3f3a02ad6d8e909b7ed43",
+      "routed": true,
+      "setup_wns_ns": 0.229827,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7364.93,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 39769.1,
+      "hold_wns_ns": 0.0440236,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1475380000.0,
+      "record": "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l68_0p8.json",
+      "record_sha256": "fe4a7b73d3ffffb81704b0cb256794651410c88804a372e27ae90e097a37f0b7",
+      "routed": true,
+      "setup_wns_ns": 0.122207,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 15242.6,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 39769.1,
+      "hold_wns_ns": 0.038329300000000004,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1323040000.0,
+      "record": "results/physical_abi3/asap7/dispatch_tree/pnr_g16_l68_1p2.json",
+      "record_sha256": "097b2fbcd3741ba12c41ec1e669acfce3a5d5ff2d5bca107139f6f313dea4d2f",
+      "routed": true,
+      "setup_wns_ns": 0.444162,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 15235.7,
+      "status": "pass",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_probe_dtree_bare",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 780207855.89437,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_bare_g16_u1088.json",
+      "record_sha256": "475934d27e4c5f071ce2ca92e6e7438095b75b2d7a0683414049d00bb853f9c9",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dtree_bare",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 826928663.4992229,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_bare_g16_u512.json",
+      "record_sha256": "87ffb3025ff42baf969219fa3f77baa562eb1933c85870a5c8e867d73f497a61",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dtree_bare",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 464765762.06938016,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_bare_g1_u1076.json",
+      "record_sha256": "c66381ceeb8ec13a4e7e81402890d65a34e149b39356a061b8977718aa1d2320",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_flat_disp_wide",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 99470243.83639264,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_flat_u1076.json",
+      "record_sha256": "74c1bb01d254897d6ce1c8c77bdea6e76ae574e7f0086c798747bc6afd1e35af",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_flat_disp_wide",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 639006960.9301237,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_flat_u16.json",
+      "record_sha256": "4fb65fce30d0dfc6ea73e384067596851c048144a4e8a7dc2900c6279c67f2f7",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_cluster_dispatcher",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 46209150.45312551,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_flatmod_u1076.json",
+      "record_sha256": "848af3613600a652f79d4f80d2ed526ba6c07e10bba52fff1cc0ce1f0430eda9",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_cluster_dispatcher",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 652038648.9043815,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_flatmod_u16.json",
+      "record_sha256": "5e351284cbe986104695ccbd8fa311fc24f1ba77cd8cfe7a37a820c7f610b2ca",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 781170327.7361792,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_radix_r33.json",
+      "record_sha256": "333ab1084bd3bb3918e0ce4de378fc241af315e8b01c1c7388f782880ae96644",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1159715783.053418,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_radix_r4.json",
+      "record_sha256": "26bb741a1079efadc023fe43e7e5010b9ef6274f9708909ee463b30b51e26fee",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 398752753.97471017,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_radix_r68.json",
+      "record_sha256": "40395f73a4130a1e7f88c35fdc3376cd46a1daf94fe9f22bdffff3f70dff11b7",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1160160922.7203498,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_radix_r8.json",
+      "record_sha256": "620f358e3bf922b9a412231f6fc38dddfe5d9002207e5c095ab9e241948f0311",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1160046542.988525,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_tree_g16_u1088.json",
+      "record_sha256": "8601f0edda4b0df793856f22f793711018b457e4f83aed00bfb780075bb9a660",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 1305475219.265472,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_tree_g16_u512.json",
+      "record_sha256": "8827385fd91443b9a06e5b77fdbb99391acb1f864a8c481695374e8ed5d4e733",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 463180296.52126676,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_tree_g1_u1076.json",
+      "record_sha256": "55918a8db5e3ed038e1dc00ff95bf677adbb102ab635b47bec9357073bdf1d45",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_probe_dispatch_tree",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 883013654.8051523,
+      "record": "results/physical_abi3/asap7/dispatch_tree/synth_tree_g1_u68.json",
+      "record_sha256": "bbd69317073db4677cac6e8708378a5ec430afdb5e0282acd612e1b4bad0a89a",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "ot_a3_dma_ngram_hash",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 43695.2,
+      "hold_wns_ns": 0.0267744,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1067010000.0,
+      "record": "results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      "record_sha256": "81732b8a703e5e7387b3ae37ca2ea74a9a73a145aa51691823bc56ffe57017ae",
+      "routed": true,
+      "setup_wns_ns": 0.562798,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 15941.3,
+      "status": "pass",
+      "target_clock_period_ns": 1.5
+    },
+    {
+      "block": "ot_a3_mac_lane",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 162220147.6465608,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_mac_lane.json",
+      "record_sha256": "eaec494eae3a53ef2dc7363b4c59015176d13f7326b41f1c0270da9e6c5006f1",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_selection_argmax",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 483216641.9387079,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_selection_argmax.json",
+      "record_sha256": "c93b4ba6cebc28f3ecff084d0b744f6c1a9d217a271298993d938c1fd4561e1b",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_selection_token_append",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 695478463.5141946,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_selection_token_append.json",
+      "record_sha256": "ebe86820e2eab07486cc52e85cadcadc165fa5722b2071f6d725f4bdae6c1cac",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_vector_add",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 290342218.613628,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_vector_add.json",
+      "record_sha256": "b3cb5e3b34bf6ab5090bc7d9838b9d9cc6deda875bcc8283646fda0e79ae897a",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_vector_convert",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 556879516.3298934,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_vector_convert.json",
+      "record_sha256": "5510e236833f56595adba8cabb2716b2da7d151f95da7e50aa7a4a4169f42e5b",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_vector_mhc_post",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 125920978.40700977,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_vector_mhc_post.json",
+      "record_sha256": "8814b8ea2e619f9bffeff803a7817f3295bbe5b72460bd03b563ae6aab1f2199",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_vector_mhc_pre_tile_scheduler",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 218426914.4616338,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_vector_mhc_pre_tile_scheduler.json",
+      "record_sha256": "9c11d075632da4a55b8cbe1627d2da6b13294687bff4cc7c63d490214998b0fa",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 118032001.93250032,
+      "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_vector_scale.json",
+      "record_sha256": "eab1f3774895363cbde9e55be0f87c8846c66ab782490911cb1d9b7817492515",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_probe_floor_wide",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 322.364,
+      "hold_wns_ns": 0.0121748,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 4091770000.0,
+      "record": "results/physical_abi3/asap7/flow_ceiling/pnr_post_route.json",
+      "record_sha256": "4c21c52e3c90bc7cb6b98171fabc416150c977f675a274835e59adc8563f4aeb",
+      "routed": true,
+      "setup_wns_ns": 0.005607109999999999,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 140.23,
+      "status": "pass",
+      "target_clock_period_ns": 0.25
+    },
+    {
+      "block": "ot_a3_fp32_sqrt_rne",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 621.05,
+      "hold_wns_ns": 0.056491599999999996,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1363800000.0,
+      "record": "results/physical_abi3/asap7/fp32_sqrt_rne/physical.json",
+      "record_sha256": "a4d11443b6d4c24fa1974d0619778b35085ab606bfacfd9914bb1ee0e9a96b35",
+      "routed": true,
+      "setup_wns_ns": 0.266757,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 209.704,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/lq8_array/pnr_t2p4.json",
+      "record_sha256": "5ac162fa840ba34d7a5a35b8c4b953a86f80cf7a0d83c15d21f1443322ef9ebc",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 2.4
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/lq8_array/pnr_t3p0.json",
+      "record_sha256": "651620938f95a1023f10f976a4d795df5fa754c4810782cf2e33b46373bd3bb5",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 3.0
+    },
+    {
+      "block": "ot_a3_lq8",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/lq8_array/pnr_t4p0.json",
+      "record_sha256": "937bbcc63dceccef3d05c859f696c03c17fc313d0ab6ea311cb2e1a9fd3526a6",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 4.0
+    },
+    {
+      "block": "ot_mac_bf16_fp32_pipe",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 1541.18,
+      "hold_wns_ns": 0.0410738,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1040280000.0,
+      "record": "results/physical_abi3/asap7/mac_bf16_fp32_pipe_round_stage/physical.json",
+      "record_sha256": "6f37f54ed1a3ee4a317084bd98f8a57b811e94370e82e2d9719c5438e0c4f400",
+      "routed": true,
+      "setup_wns_ns": 0.0387219,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 509.352,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_lane_bf16",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 649.626,
+      "hold_wns_ns": 0.0417033,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1358000000.0,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_bf16.json",
+      "record_sha256": "7d21bbe86c662dc4b8c6daf64abf6c46b80a005bd038bbb487b8af961889ccf5",
+      "routed": true,
+      "setup_wns_ns": 0.263623,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 258.503,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_packed8_bf16",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 2500.4,
+      "hold_wns_ns": 0.0414936,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1030020000.0,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_bf16_packed8.json",
+      "record_sha256": "5a09ddfa5330f29412cabc04d643adc32f044f30ab36a55892de187ea500ebdd",
+      "routed": true,
+      "setup_wns_ns": 0.0291434,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 993.86,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_lane_fp8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 570.953,
+      "hold_wns_ns": 0.0421836,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1370860000.0,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_fp8.json",
+      "record_sha256": "00c61e58c2f97b4271790eb4dca4faf88bbc37eaf527f2c04fa5e523b7b376ee",
+      "routed": true,
+      "setup_wns_ns": 0.270531,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 229.212,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_lane_mxfp4",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 530.42,
+      "hold_wns_ns": 0.043032,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1388030000.0,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_mxfp4.json",
+      "record_sha256": "e3eab7afdb7c22d5250a5329618c1201238eb8395ad47c78d069877e1c17cafe",
+      "routed": true,
+      "setup_wns_ns": 0.279552,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 214.457,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_probe_packed8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 1697.58,
+      "hold_wns_ns": 0.039845900000000004,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1062640000.0,
+      "record": "results/physical_abi3/asap7/mac_lanes/lane_mxfp4_packed8.json",
+      "record_sha256": "c75bf0405b53539ea80ba32adf0e2487124d1756f3657819289a28a73f73bbe9",
+      "routed": true,
+      "setup_wns_ns": 0.0589473,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 664.221,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_mac_tile",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 12278.4,
+      "hold_wns_ns": 0.0323038,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1117370000.0,
+      "record": "results/physical_abi3/asap7/mac_tile/pnr_lanes16.json",
+      "record_sha256": "428eda0e562dd2b698cd84962d626f713616de0d9ac71c36e5de6ef918926290",
+      "routed": true,
+      "setup_wns_ns": 0.305042,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 13
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 4120.69,
+      "status": "not_met",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_ta_matmul_bf16_sram_engine",
+      "closed": false,
+      "closed_reason": "record predates the signal-integrity fields and its container report is not retained; closure cannot be asserted without a re-route",
+      "core_area_um2": 22975.9,
+      "hold_wns_ns": 0.0520449,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 57959000.0,
+      "record": "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json",
+      "record_sha256": "29c1d548a0e13e88f837b690e0ce3b46a3ad40dcbd9a93a6b59be0a40e248d7a",
+      "routed": true,
+      "setup_wns_ns": 0.74642,
+      "signal_integrity_violations": {
+        "max_cap_violations": null,
+        "max_fanout_violations": null,
+        "max_slew_violations": null
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8348.44,
+      "status": "pass",
+      "target_clock_period_ns": 18.0
+    },
+    {
+      "block": "ot_compute_unit",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 2",
+      "core_area_um2": 31524.7,
+      "hold_wns_ns": 0.0233358,
+      "macro_area_um2": 2808.96,
+      "post_route_fmax_hz": 1096620000.0,
+      "record": "results/physical_abi3/asap7/operating_points/compute_unit_1p0.json",
+      "record_sha256": "11a840274880e90780bfef7a36c9d94903cfebd5bc0195084b059a7419f86203",
+      "routed": true,
+      "setup_wns_ns": 0.088108,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 2
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7279.04,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "reduction_s8_g2",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 1624.97,
+      "hold_wns_ns": 0.0524895,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1031010000.0,
+      "record": "results/physical_abi3/asap7/operating_points/reduction_s8_g2_2p25.json",
+      "record_sha256": "3bb9ed4cf521ce449f4da9b85b63ce7e7bf6b8d06d3260a0ce0e70de0780a28b",
+      "routed": true,
+      "setup_wns_ns": 1.2800799999999999,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 594.543,
+      "status": "pass",
+      "target_clock_period_ns": 2.25
+    },
+    {
+      "block": "ot_probe_vadd8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 7155.63,
+      "hold_wns_ns": 0.033876199999999995,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1039430000.0,
+      "record": "results/physical_abi3/asap7/operating_points/vector_add_unit_1p0.json",
+      "record_sha256": "8a647d68b86a32905c00341c91a7ad901526bd5b7a1f89f095199f5980fe99a6",
+      "routed": true,
+      "setup_wns_ns": 0.0379333,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2673.01,
+      "status": "pass",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "reduction_s8_g2",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 1624.97,
+      "hold_wns_ns": 0.052539499999999996,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1287450000.0,
+      "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+      "record_sha256": "d2ec92b1e53365c4ab7fccb53915ffdb18f9233c5e3893f10dd95c0083874d63",
+      "routed": true,
+      "setup_wns_ns": 0.023271200000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 621.618,
+      "status": "pass",
+      "target_clock_period_ns": 0.8
+    },
+    {
+      "block": "reduction_s8_g2",
+      "closed": false,
+      "closed_reason": "record predates the signal-integrity fields and its container report is not retained; closure cannot be asserted without a re-route",
+      "core_area_um2": 2240.22,
+      "hold_wns_ns": 0.0557746,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 455262000.0,
+      "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr_serial_chain.json",
+      "record_sha256": "1312870d3d99f26efacc275228daa2a45e6f62eab55040710d4ec4c42b05195d",
+      "routed": true,
+      "setup_wns_ns": 0.0534617,
+      "signal_integrity_violations": {
+        "max_cap_violations": null,
+        "max_fanout_violations": null,
+        "max_slew_violations": null
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 845.509,
+      "status": "pass",
+      "target_clock_period_ns": 2.25
+    },
+    {
+      "block": "reduction_s8_g2",
+      "closed": null,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/reduction_s8_g2/synth_sta.json",
+      "record_sha256": "9f90fe8d404dbe03f49486e0b59ea5e4f651c00d52d761d7531719b03106cb7a",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 2.25
+    },
+    {
+      "block": "ot_a3_route_block_max",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 1762.72,
+      "hold_wns_ns": 0.0449881,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1713600000.0,
+      "record": "results/physical_abi3/asap7/route_block_max/physical.json",
+      "record_sha256": "9f7145d289bcabd5996219c97f71a82646ac46c5f5e0d9d04f9928c54fdcb6d6",
+      "routed": true,
+      "setup_wns_ns": 0.416435,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 681.498,
+      "status": "not_met",
+      "target_clock_period_ns": 1.0
+    },
+    {
+      "block": "ot_a3_route_candidate_mask",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 8151.91,
+      "hold_wns_ns": 0.050853,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 845859000.0,
+      "record": "results/physical_abi3/asap7/route_candidate_mask/physical.json",
+      "record_sha256": "b999cc0495389d8c9869320e77456d8c5cf7cb2d622be1160c5c15d47f636c1c",
+      "routed": true,
+      "setup_wns_ns": 1.31777,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2971.11,
+      "status": "not_met",
+      "target_clock_period_ns": 2.5
+    },
+    {
+      "block": "ot_a3_route_index_topk",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 9156.18,
+      "hold_wns_ns": 0.0547892,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 916122000.0,
+      "record": "results/physical_abi3/asap7/route_index_topk/physical.json",
+      "record_sha256": "76a176ac0bbf7c058634f6b139ed102c294753c71d6d7d1e308c1d6470588b05",
+      "routed": true,
+      "setup_wns_ns": 0.108442,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3097.23,
+      "status": "pass",
+      "target_clock_period_ns": 1.2
+    },
+    {
+      "block": "ot_probe_vadd8",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 7155.63,
+      "hold_wns_ns": 0.0331322,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1377420000.0,
+      "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",
+      "record_sha256": "d2e148ac64a627ddda86a5bfac34af41925c40558d17827559d1ff36bfef91fe",
+      "routed": true,
+      "setup_wns_ns": 0.0240047,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2728.66,
+      "status": "pass",
+      "target_clock_period_ns": 0.75
+    },
+    {
+      "block": "ot_a3_vector_engram_gate",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": null,
+      "record": "results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      "record_sha256": "15f622a5ee9fc3b34d943f537d25695084b0c9b3be8f69affecb48304a7862de",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [],
+      "standard_cell_area_um2": null,
+      "status": "error",
+      "target_clock_period_ns": 2.0
+    },
+    {
+      "block": "ot_a3_vector_fp4kv_dequant",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 4244.65,
+      "hold_wns_ns": 0.0347686,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 882842000.0,
+      "record": "results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      "record_sha256": "2eab61bb5ea009527e17db98b64a48c8496421e8febeaf2b6886f18692ccdfcc",
+      "routed": true,
+      "setup_wns_ns": 0.267295,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1673.87,
+      "status": "not_met",
+      "target_clock_period_ns": 1.4
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 78",
+      "core_area_um2": 18628.1,
+      "hold_wns_ns": 0.0514921,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 138666000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_10p0ns_baseline.json",
+      "record_sha256": "f4b605782d65da2212b0f321c705133d7ecc6ea8ecb2581ae34afefc524bb8a8",
+      "routed": true,
+      "setup_wns_ns": 2.7884,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 78
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 6891.43,
+      "status": "pass",
+      "target_clock_period_ns": 10.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 18628.1,
+      "hold_wns_ns": 0.0514708,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 138430000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_11p0ns_baseline_closed.json",
+      "record_sha256": "03792269077d5308ff00fdcca4e8f0e496bf113b51309601f90884479a8cee44",
+      "routed": true,
+      "setup_wns_ns": 3.77611,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7431.47,
+      "status": "pass",
+      "target_clock_period_ns": 11.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 18901.8,
+      "hold_wns_ns": 0.05754310000000001,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 206085000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_5p0ns_fixed_closed.json",
+      "record_sha256": "2e0380dcae605a6b9b2da856f3f0a553e7464cfbbad167c052c67ab31497c7a4",
+      "routed": true,
+      "setup_wns_ns": 0.147624,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7463.84,
+      "status": "pass",
+      "target_clock_period_ns": 5.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": "signal-integrity violations in the routed netlist: max_slew_violations 250",
+      "core_area_um2": 18901.8,
+      "hold_wns_ns": 0.0538801,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 199465000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_5p2ns_fixed.json",
+      "record_sha256": "aeeab5748e79c8c55ccb6445ed33a9bae49d7d5eab2b80e46b9c66a86612f85c",
+      "routed": true,
+      "setup_wns_ns": 0.186601,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 250
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7023.67,
+      "status": "pass",
+      "target_clock_period_ns": 5.2
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 18901.8,
+      "hold_wns_ns": 0.0617846,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 178930000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_5p8ns_fixed_closed.json",
+      "record_sha256": "18b2ea28bb337adab850afcca380140b6ceee7f3293b695607da3cf6597d3c02",
+      "routed": true,
+      "setup_wns_ns": 0.211227,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7362.94,
+      "status": "pass",
+      "target_clock_period_ns": 5.8
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 18628.1,
+      "hold_wns_ns": 0.05139950000000001,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 146782000.0,
+      "record": "results/physical_abi3/asap7/vector_scale/pnr_9p7ns_baseline_closed.json",
+      "record_sha256": "3a733b5c4c2b2548b5bd40db8c44476a85e4d4b8ef9157f70d512ceb67838eec",
+      "routed": true,
+      "setup_wns_ns": 2.8871700000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "synth",
+        "sta",
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7408.49,
+      "status": "pass",
+      "target_clock_period_ns": 9.7
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 115309950.02799398,
+      "record": "results/physical_abi3/asap7/vector_scale/prelayout_baseline_abc5p0.json",
+      "record_sha256": "a5827d541233bbfa059ae4aa24b63f563cd476b4eeb756df09383c86c829c320",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 5.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 106697622.86821415,
+      "record": "results/physical_abi3/asap7/vector_scale/prelayout_baseline_abc8p5.json",
+      "record_sha256": "7df8bee619b52432ae010d0c2651e14ec143115265d6f7192c5a770792cacee4",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "not_met",
+      "target_clock_period_ns": 8.5
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 206335200.42835027,
+      "record": "results/physical_abi3/asap7/vector_scale/prelayout_fixed_abc5p0.json",
+      "record_sha256": "b8b913dbc00b73fa5dda036061bfca1d14aeb0ba986a0c99ac6999533bc87fba",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 5.0
+    },
+    {
+      "block": "ot_a3_vector_scale",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": null,
+      "hold_wns_ns": null,
+      "macro_area_um2": null,
+      "post_route_fmax_hz": 180294446.0061036,
+      "record": "results/physical_abi3/asap7/vector_scale/prelayout_fixed_abc8p5.json",
+      "record_sha256": "b924c42aa1c721396988a57f8e1ce49cbaa6bd5da06db9fb34346aa4c3699872",
+      "routed": false,
+      "setup_wns_ns": null,
+      "signal_integrity_violations": null,
+      "stages_completed": [
+        "synth",
+        "sta"
+      ],
+      "standard_cell_area_um2": null,
+      "status": "pass",
+      "target_clock_period_ns": 8.5
+    }
+  ],
+  "schema": "opentallas.physical.asap7_closure_matrix.v1",
+  "view": "asap7"
+}
