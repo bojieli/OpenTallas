@@ -16,6 +16,20 @@
     "what_that_establishes": "The two phases want DIFFERENT leading extents from the same operand: prefill wants the token block, decode wants the context capacity.  A single shared input view cannot carry both, and the phase forms in the built deployment demonstrably DO share their input views -- both operators of the ratio-2 join reference view 2817.  So place 3 is not a sizing rule to correct but a structural gap: the lowering emits per-phase OUTPUT views (``_view_for_phase_extent`` is called once per phase) and shares one INPUT view across phases.",
     "why_it_failed": "It broke PREFILL: 'prefill failed: GROUPED_CONCAT output view 7029 dims (2, 32) differ from the axis-0 concatenation (9, 32)'.  In prefill the join is evaluated per TOKEN BLOCK -- the output resolves 2 * span_block and the span-derived operand contributes that block's rows -- so a context operand declaring the whole capacity contributes 8 where the block needs 1.  Output 2 against inputs 1 + 8 = 9."
   },
+  "place_3_SOLVED_IN_PRINCIPLE_AND_NOT_LANDED": {
+    "measured_effect": {
+      "prefill_token": "1126, unchanged -- addressing intact",
+      "ratio_1_join_inputs": "129 -> 137 = 128 + 9, so the context operand now presents the context",
+      "ratio_2_join": "still passes",
+      "what_still_fails": "the ratio-1 join's OUTPUT resolves 138 where its operands sum to 137.  Its extent is num=1 unit=1 bias=129 and the bias is one too many: 128 for the committed window is right, the extra 1 is unlocated.  An attempt to fix it by binding the loop to the decode extent's own symbol was INERT -- the digest did not move -- so that symbol is already CONTEXT_LENGTH and my reasoning about a POSITION_START rewrite was wrong."
+    },
+    "the_working_design": "Per-phase INPUT views.  The lowering already emits per-phase OUTPUT views; sharing one input view across phases is what cannot work, because prefill needs the operand's TOKEN BLOCK and decode needs its CONTEXT capacity.  A decode-phase view of a context-derived operand -- declared at capacity, clamped by an A26 edge mask on the context loop, carrying no row term because the decode form reads the prefix from row zero -- was implemented and MEASURED.",
+    "what_landing_it_needs": [
+      "locate the extra 1 in the ratio-1 join's output bias -- one instrumented build of _join_extent_under's DECODE call, which is a three-minute loop",
+      "then a V4-Flash token re-walk, because the change reaches V4-Flash"
+    ],
+    "why_it_is_reverted_rather_than_committed": "It moves DeepSeek-V4-Flash's deployment digest -- 0e7cc36b... -> 176c24ed... -- so V4-Flash does have phase-split joins with context-derived operands, and landing this needs another 53-minute token re-walk to show its three closed cells still emit [13806, 345].  Since the change does not yet close any V4.1 cell either, committing it would move a closed cell's digest for no gain.  Reverted; V4-Flash rebuilds back to 0e7cc36b... and Qwen3 was never moved by it at all."
+  },
   "schema": "opentallas.result.v41_span_context_confusion_is_systemic.v1",
   "the_remaining_refusal_explained": "GROUPED_CONCAT output view 7033 dims (138, 32) against (129, 32).  The output resolves 1 * context / 1 + 129 = 138 while its inputs present 128 + 1 = 129, because the compressed operand is sized by the span.  The output is now RIGHT and the operand's capacity is wrong -- the mirror image of where this started, where the operand was right and the output wrong.",
   "the_three_places": {
