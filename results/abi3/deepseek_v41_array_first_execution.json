@@ -32,6 +32,21 @@
       "rank": 2,
       "view": 1097
     },
+    "guard_already_exists_and_did_not_fire": {
+      "guard": "compiler/backends/rom/common/program.py::_loop_for_state_slot drops a state-slot loop term when that loop is not in builder.open_loop_stack(), and its comment names THIS failure verbatim: \"a prologue or epilogue kernel runs with no loop open at all ... Emitting the placement's loop regardless produces a view that both the resolver and runtime.sim.memory refuse -- 'loop M is not active'\"",
+      "how_to_tell_them_apart": "instrument _loop_for_state_slot and _view for this tensor in an array build and print the open-loop stack plus whether the view came from the cache.  The wafer build is the control: it opens two loops around the same kernel and resolves the same shape of view without complaint",
+      "loop_1076_is_opened": {
+        "at_pc": 243,
+        "operator_needing_it_at_pc": 6,
+        "total_loop_setups_in_program": 1365
+      },
+      "so": "the guard never fired for view 1097.  At the moment the view was built the builder's open-loop stack CONTAINED loop 1076, and in the emitted program that loop is opened at pc 243 while the operator that reads the view is at pc 6",
+      "suppression_records_in_this_deployment": 0,
+      "two_candidate_mechanisms": [
+        "the builder's open-loop stack and the emitted instruction order diverge on the array path, so a view built while a loop was notionally open is consumed by an operator emitted outside it",
+        "_view() deduplicates by key, and the key includes the dynamic terms -- so a layer-region kernel that legitimately built this view WITH the term could be handing it to the prologue kernel from the cache, which would bypass the guard because the guard runs per request and not per cache hit"
+      ]
+    },
     "instruction_streams_compared": {
       "rom_array_64": [
         "pc 3 CONTROL.LOOP_SETUP",
