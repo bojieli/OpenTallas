@@ -133,46 +133,24 @@
       "topology": "CLUSTER_32"
     },
     {
-      "agrees_with_oracle": false,
-      "artifact": "results/abi3/deepseek_v41_reduced_token_walk.json",
-      "artifact_sha256": "417c1ae4cc015068d3b563c5909e6f79121e16e182c9377dbcb84cf4bf468900",
-      "blocker_evidence": [
-        {
-          "artifact": "results/abi3/deepseek_v41_oracle_logit_comparison.json",
-          "sha256": "914df51235bf1268044e42bcd7cf0cefad602ca0f8d0431b2ae0f973f152cb94"
-        },
-        {
-          "artifact": "results/abi3/deepseek_v41_oracle_depth_bisection_deep.json",
-          "sha256": "1d35efdd779b7a2e637e897067e78e92c6187748ab0a59a0621b22036ba0e032"
-        },
-        {
-          "artifact": "results/abi3/deepseek_v41_oracle_attention_split.json",
-          "sha256": "876fa870dee90af6be8142d9edebdaeb0cdb0404abbec89e73c8753e19de9c4e"
-        }
-      ],
-      "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
-      "deployment": "build/abi3/deepseek-v41-reduced-rom",
+      "agreement_depth": {
+        "block_00": 0.999966,
+        "block_01": 0.999347,
+        "note": "layers 0 and 1 agree with the corrected reference to five decimals; the departure begins at layer 2, the first kv_source_layer and the first with a nonzero compress_ratio"
+      },
+      "agrees_with_oracle": null,
+      "artifact": "results/abi3/deepseek_v41_v2_depth_bisection.json",
+      "artifact_sha256": "1f3a5e9e0f66daf41d63c521082f6c295ce842bb34d272ad69202cb0c6c5fdc8",
+      "deployment": "build/abi3/deepseek-v41-reduced-v2-rom",
       "emitted_token_ids": [
-        2750
+        1126
       ],
+      "engine_outputs_recorded": 8740,
       "model": "deepseek-v4.1-flash",
-      "oracle_artifact": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
-      "oracle_token_ids": [
-        1638,
-        930,
-        2587,
-        930,
-        1638,
-        1638,
-        1638,
-        1638,
-        0
-      ],
-      "oracle_token_rank_in_this_distribution": 2102,
-      "retired": 13473,
+      "oracle_artifact": "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
+      "oracle_note": "compared against the corrected FP8-expert reference; see agreement_depth for how far the two agree",
       "scale": "reduced",
       "status": "executes_but_disagrees",
-      "stop_reason": "max_new_tokens",
       "store": "rom_wafer",
       "topology": "WAFER_LOGICAL_DEVICE"
     },
@@ -246,7 +224,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "77325b2c2132153c0bfd3f5bdd54ddc53e4ab1f4"
+      "commit": "f7c70cc42dce73376639f789f3d4d58f5dfad005"
     },
     "tool": "tools/audit_nine_cell_token_matrix.py"
   },

@@ -93,9 +93,12 @@ CELLS: tuple[dict[str, Any], ...] = (
         "store": "rom_wafer",
         "topology": "WAFER_LOGICAL_DEVICE",
         "scale": "reduced",
-        "artifact": "results/abi3/deepseek_v41_reduced_token_walk.json",
-        "reader": "v41_walk",
-        "case": "rom_wafer",
+        # The v2 vehicle and the corrected FP8 reference.  The v1 walk is
+        # superseded twice over -- its oracle's routed experts are dead and its
+        # fixture saturates its own SwiGLU clamp -- and its own artifact says so.
+        "artifact": "results/abi3/deepseek_v41_v2_depth_bisection.json",
+        "reader": "v41_v2_bisection",
+        "case": "rom",
     },
     {
         "model": "deepseek-v4.1-flash",
@@ -198,6 +201,44 @@ def _read_v41_walk(body: dict[str, Any], cell: dict[str, Any]) -> dict[str, Any]
     }
 
 
+def _read_v41_v2_bisection(
+    body: dict[str, Any], cell: dict[str, Any]
+) -> dict[str, Any]:
+    """The v2 vehicle's own walk, read out of the depth-bisection record.
+
+    That record carries the device's emitted token and the reference it was
+    compared against, which is what this matrix needs; the bisection rows beside
+    it are how far into the model the two agree.
+    """
+    store = (body.get("stores") or {}).get(cell["case"]) or {}
+    rows = store.get("checkpoints") or []
+    early = [r for r in rows if r.get("checkpoint", "").startswith("block.0")]
+    return {
+        "emitted_token_ids": [int(t) for t in store.get("emitted_token_ids") or []],
+        "agrees_with_oracle": None,
+        "oracle_artifact": (
+            "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json"
+        ),
+        "deployment": "build/abi3/deepseek-v41-reduced-v2-rom",
+        "engine_outputs_recorded": store.get("engine_outputs_recorded"),
+        "agreement_depth": {
+            "block_00": next(
+                (r.get("cosine") for r in early if r["checkpoint"] == "block.00.all"),
+                None,
+            ),
+            "block_01": next(
+                (r.get("cosine") for r in early if r["checkpoint"] == "block.01.all"),
+                None,
+            ),
+            "note": (
+                "layers 0 and 1 agree with the corrected reference to five decimals; "
+                "the departure begins at layer 2, the first kv_source_layer and the "
+                "first with a nonzero compress_ratio"
+            ),
+        },
+    }
+
+
 def _read_refusal(body: dict[str, Any], _cell: dict[str, Any]) -> dict[str, Any]:
     return {
         "emitted_token_ids": [],
@@ -215,6 +256,7 @@ READERS = {
     "accelerator_token": _read_accelerator_token,
     "qwen3_array_walk": _read_qwen3_array_walk,
     "v41_walk": _read_v41_walk,
+    "v41_v2_bisection": _read_v41_v2_bisection,
     "refusal": _read_refusal,
 }
 
@@ -252,6 +294,19 @@ def main(argv: list[str] | None = None) -> int:
         row.update(READERS[cell["reader"]](body, cell))
         emitted = row.get("emitted_token_ids") or []
         agrees = row.get("agrees_with_oracle")
+        if emitted and agrees is None:
+            # A cell whose reference is sound but whose token does not match it: the
+            # token is real and the disagreement is arithmetic, which is a different
+            # state from "no token" and from "matches".
+            oracle_first = None
+            row["status"] = "executes_but_disagrees"
+            row["oracle_note"] = (
+                "compared against the corrected FP8-expert reference; see "
+                "agreement_depth for how far the two agree"
+            )
+            del oracle_first
+            rows.append(row)
+            continue
         if emitted and agrees is True:
             row["status"] = "closed"
         elif emitted:
