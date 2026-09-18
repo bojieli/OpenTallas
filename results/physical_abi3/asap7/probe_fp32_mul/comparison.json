@@ -1,4 +1,22 @@
 {
+ "headline_closed_to_closed": {
+  "area_ratio_combinational_over_pipelined": 2.155,
+  "basis": "both records CLOSED: zero max-slew, max-cap and max-fanout violations, zero DRC, setup and hold met",
+  "combinational": {
+   "area_um2": 1461.99,
+   "cells": 14706,
+   "fmax_mhz": 247.1,
+   "target_ns": 4.2
+  },
+  "frequency_ratio": 3.881,
+  "pipelined": {
+   "area_um2": 678.466,
+   "cells": 6470,
+   "fmax_mhz": 959.0,
+   "target_ns": 1.1
+  },
+  "throughput_per_um2_ratio": 8.362
+ },
  "measurements": {
   "combinational_at_2p0ns": {
    "closed": false,
@@ -9,6 +27,26 @@
    "standard_cell_area_um2": 1695.55,
    "standard_cell_count": 17269,
    "target_ns": 2.0
+  },
+  "combinational_at_3p8ns": {
+   "closed": false,
+   "drc_errors": 0,
+   "fmax_hz": 253049000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": -0.15179800000000002,
+   "standard_cell_area_um2": 1513.93,
+   "standard_cell_count": 15294,
+   "target_ns": 3.8
+  },
+  "combinational_at_4p2ns_CLOSED": {
+   "closed": true,
+   "drc_errors": 0,
+   "fmax_hz": 247123000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": 0.15343299999999999,
+   "standard_cell_area_um2": 1461.99,
+   "standard_cell_count": 14706,
+   "target_ns": 4.2
   },
   "pipelined_at_0p8ns": {
    "closed": false,
@@ -29,12 +67,22 @@
    "standard_cell_area_um2": 678.466,
    "standard_cell_count": 6470,
    "target_ns": 1.1
+  },
+  "pipelined_at_1p1ns_CLOSED": {
+   "closed": true,
+   "drc_errors": 0,
+   "fmax_hz": 958971000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": 0.057215600000000005,
+   "standard_cell_area_um2": 678.466,
+   "standard_cell_count": 6470,
+   "target_ns": 1.1
   }
  },
  "not_a_claim": [
   "ASAP7 is a predictive academic PDK; no figure here is a silicon claim",
-  "neither of the two probes compared at 2.0/0.8 ns CLOSED -- each missed its target, so the fmax is the path the route achieved and not a closure. The pipelined probe has a separate CLOSED record at 1.1 ns (959.0 MHz); the combinational one at an achievable target is still routing at the time of writing",
-  "the pipelined form costs five cycles of latency. This measures frequency and area, not the throughput of any engine that adopts it, which depends on whether that engine overlaps the pipe"
+  "the pipelined form costs five cycles of latency. This measures frequency and area, not the throughput of any engine that adopts it, which depends on whether that engine overlaps the pipe",
+  "the combinational probe is slower at a LOOSER target -- 280.7 MHz at 2.0 ns, 253.0 at 3.8, 247.1 at 4.2 -- because the optimiser works less hard when it has slack. The closed-to-closed ratio therefore uses the combinational side at its most favourable CLOSED point, not at its fastest measured path"
  ],
  "probes": {
   "combinational": "rtl/abi3/ot_probe_fp32_mul.sv -- registers ot_fp32_rne_pkg::fp32_mul_rne",

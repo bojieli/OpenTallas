@@ -22,6 +22,7 @@
     "ot_probe_cluster_disp",
     "ot_probe_dispatch_tree",
     "ot_probe_floor_wide",
+    "ot_probe_fp32_mul",
     "ot_probe_fp32_mul_pipe",
     "ot_probe_lane_bf16",
     "ot_probe_lane_fp8",
@@ -33,12 +34,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 30,
+    "distinct_blocks_with_a_closed_routed_record": 31,
     "pre_layout_only_records": 72,
-    "records_read": 168,
-    "routed_and_closed": 58,
-    "routed_not_closed": 38,
-    "routed_records": 96
+    "records_read": 170,
+    "routed_and_closed": 59,
+    "routed_not_closed": 39,
+    "routed_records": 98
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -47,7 +48,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "bfa623224a50cefa50fd7e28100f9fca4bb93085"
+      "commit": "082f4d927c5fb1ba3b9258110828f2c6b27797e4"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -3097,7 +3098,7 @@
       "core_area_um2": 43695.2,
       "hold_wns_ns": 0.0267744,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 1067010000.0,
       "record": "results/physical_abi3/asap7/dma_ngram_hash/pnr_clean_reroute.json",
       "record_sha256": "6302f4948c803e4198780167e46eaf34abbf9be12e01feb954387d14857d5dec",
@@ -3804,7 +3805,7 @@
       "core_area_um2": 3842.98,
       "hold_wns_ns": 0.366724,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 280709000.0,
       "record": "results/physical_abi3/asap7/probe_fp32_mul/combinational_2p0ns.json",
       "record_sha256": "25ea1f33f6c11f08fb0f535ccc87b6c965f7da4b6e15231c8cbd58948d312dd9",
@@ -3828,13 +3829,69 @@
       }
     },
     {
+      "block": "ot_probe_fp32_mul",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 3842.98,
+      "hold_wns_ns": 0.7257480000000001,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 253049000.0,
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/combinational_3p8ns.json",
+      "record_sha256": "4c0e051ae4f0c21e899fae664926de33dda95554cd6160c2b835e8a3d35cc7be",
+      "routed": true,
+      "setup_wns_ns": -0.15179800000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1513.93,
+      "status": "not_met",
+      "target_clock_period_ns": 3.8,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 25
+      }
+    },
+    {
+      "block": "ot_probe_fp32_mul",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 3842.98,
+      "hold_wns_ns": 0.8011860000000001,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 247123000.0,
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/combinational_4p2ns_closed.json",
+      "record_sha256": "f39d290966fe242fe4658e3294fd804eac48465780452cbc2d43131e7ca3a18b",
+      "routed": true,
+      "setup_wns_ns": 0.15343299999999999,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1461.99,
+      "status": "pass",
+      "target_clock_period_ns": 4.2,
+      "why_not_closed": null
+    },
+    {
       "block": "ot_probe_fp32_mul_pipe",
       "closed": false,
       "closed_reason": null,
       "core_area_um2": 1803.78,
       "hold_wns_ns": 0.0377288,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 1024700000.0,
       "record": "results/physical_abi3/asap7/probe_fp32_mul/pipelined_0p8ns.json",
       "record_sha256": "ecc5d7bfa6df16286bfe39e7a03a4ebaa92915ca91a776c936e742726c9e7bd8",
@@ -3864,7 +3921,7 @@
       "core_area_um2": 1803.78,
       "hold_wns_ns": 0.035969299999999996,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 958971000.0,
       "record": "results/physical_abi3/asap7/probe_fp32_mul/pipelined_1p1ns_closed.json",
       "record_sha256": "8fbcdd2f1ddc3d8c06210c08e8ceb72c412edc7dcb595adec43c1d57edcaa046",
@@ -4566,7 +4623,7 @@
   "why_the_not_closed_records_are_not_closed": {
     "blocked_only_by_a_pre_layout_stage": 5,
     "routed_netlist_dirty": 21,
-    "routed_timing_not_met": 7,
+    "routed_timing_not_met": 8,
     "signal_integrity_fields_absent": 5
   },
   "working_tree_cleanliness": {
@@ -4583,13 +4640,11 @@
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
-      "results/physical_abi3/asap7/dma_ngram_hash/pnr_clean_reroute.json",
       "results/physical_abi3/asap7/lq8_array/pnr_t2p4.json",
       "results/physical_abi3/asap7/lq8_array/pnr_t3p0.json",
       "results/physical_abi3/asap7/lq8_array/pnr_t4p0.json",
-      "results/physical_abi3/asap7/probe_fp32_mul/combinational_2p0ns.json",
-      "results/physical_abi3/asap7/probe_fp32_mul/pipelined_0p8ns.json",
-      "results/physical_abi3/asap7/probe_fp32_mul/pipelined_1p1ns_closed.json"
+      "results/physical_abi3/asap7/probe_fp32_mul/combinational_3p8ns.json",
+      "results/physical_abi3/asap7/probe_fp32_mul/combinational_4p2ns_closed.json"
     ],
     "what": "this audit hashes the file on disk.  A record whose disk contents differ from its committed version cannot be reproduced from a fresh clone, so every such record is named here rather than left for a reader to discover from record_sha256."
   }
