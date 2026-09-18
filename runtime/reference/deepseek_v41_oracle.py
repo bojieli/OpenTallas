@@ -392,15 +392,42 @@ class StreamingDeepSeekV41(StreamingDeepSeekV4):
             self._engram_dense_cache[key] = names
         return names
 
+    #: A single Engram table is ~49 GB.  A gather asking for more rows than this
+    #: is not a lookup, it is a bug about to become an out-of-memory error, so it
+    #: is refused with the count rather than attempted.
+    MAX_ENGRAM_ROWS_PER_LOOKUP = 4096
+
     def _gather_rows(self, name: str, rows: list[int]):
-        """Read exactly ``rows`` of a checkpoint tensor, nothing else."""
+        """Read exactly ``rows`` of a checkpoint tensor, nothing else.
+
+        Two things here are load-bearing.  The read is pinned to the HOST: the
+        parent's ``forward`` sets the default device to CUDA for the whole pass,
+        and a safetensors slice taken under that default lands on the GPU -- which
+        for a 49 GB table is an immediate out-of-memory, as it was on the first
+        decode step before this was pinned.  And the row count is bounded: a
+        lookup wants tens of rows, so a request for millions is a defect and is
+        refused with its own size instead of being handed to the allocator.
+        """
         torch = self.torch
+        if not rows:
+            raise OracleError(f"{name}: empty Engram row gather")
+        if len(rows) > self.MAX_ENGRAM_ROWS_PER_LOOKUP:
+            raise OracleError(
+                f"{name}: Engram gather asked for {len(rows):,} rows, above the "
+                f"{self.MAX_ENGRAM_ROWS_PER_LOOKUP:,} bound. A lookup wants tens; "
+                "this is a defect in the index path, not a large request"
+            )
         filename = self.store.weight_map.get(name)
         if filename is None:
             raise OracleError(f"checkpoint has no tensor {name!r}")
         handle = self.store._handle(filename)
         window = handle.get_slice(name)
-        gathered = [window[row : row + 1] for row in rows]
+        prior = torch.get_default_device()
+        torch.set_default_device("cpu")
+        try:
+            gathered = [window[row : row + 1] for row in rows]
+        finally:
+            torch.set_default_device(prior)
         self.engram_rows_read += len(rows)
         return torch.cat(gathered, dim=0)
 

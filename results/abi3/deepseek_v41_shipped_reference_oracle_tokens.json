@@ -1,0 +1,54 @@
+{
+ "engine": "runtime/reference/deepseek_v41_oracle.py::StreamingDeepSeekV41",
+ "evidence_class": "external_reference_comparator",
+ "first_token_margin": {
+  "margin": 2.494688,
+  "note": "measured on the same workload in the single-forward record. This is why the shipped path is worth walking and the reduced one is not: 2.4947 of logit margin is not reachable by a sub-ulp arithmetic difference.",
+  "ratio": 484.4,
+  "reduced_fixture_margin": 0.00515,
+  "top1": 27.374533,
+  "top2": 24.879845
+ },
+ "generated_token_ids": [
+  13806,
+  345,
+  7472,
+  49665
+ ],
+ "not_a_claim": [
+  "not an accelerator token and not a cell: the nine-cell matrix is unchanged by this record",
+  "four tokens on one workload, with the expert path on the vendor\u2019s documented FP8 recast; V4.1\u2019s FP4 GEMM is unverified",
+  "the second run prefilled in 19.7 s where the first took 91.7 s -- TileLang kernel cache and a warm host weight cache, not a model difference"
+ ],
+ "peak_device_bytes": 708310016,
+ "question": "what does the SHIPPED DeepSeek-V4.1-Flash reference emit, so the three V4.1 cells have an oracle to be checked against?",
+ "relation_to_the_v4_flash_cells": {
+  "reading": "the first THREE tokens agree and the fourth differs (49665 against 55560). Same prompt, different model: they are expected to agree while the prompt dominates and to separate once the models do. It is a sanity check on the harness, not on either model.",
+  "v41_shipped_tokens": [
+   13806,
+   345,
+   7472,
+   49665
+  ],
+  "v4_flash_shipped_tokens": [
+   13806,
+   345,
+   7472,
+   55560
+  ]
+ },
+ "role_note": "the vendor\u2019s own pinned modelling code, driven by an on-demand weight loader. It never produces accelerator tokens and never supplies an activation (ADR-003 section 18).",
+ "schema": "opentallas.abi3.v41_shipped_reference_oracle_tokens.v1",
+ "selection": "greedy argmax over the float32 logits, ties to the lowest token id",
+ "stop_reason": "max_new_tokens",
+ "timing": {
+  "decode_seconds_total": 4.170537711121142,
+  "decode_steps": 3,
+  "prefill_seconds": 19.73046693811193,
+  "wall_seconds": 23.9
+ },
+ "vendor_sample_agreements": 4,
+ "vendor_sample_disagreements": [],
+ "what_this_unblocks": "the three V4.1 cells now have a shipped-scale oracle. The accelerator side is next: build/abi3/deepseek-v41-flash-rom-wafer-2 and build/abi3/deepseek-v41-flash-rom-array-64 exist and have not been walked.",
+ "workload_id": "TA-DS41-CHAT-1-P32"
+}
