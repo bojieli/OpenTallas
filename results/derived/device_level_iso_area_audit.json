@@ -1,0 +1,400 @@
+{
+  "chips": [
+    {
+      "bf16_ops_s": 659174400000.0,
+      "capability": "hbm_sram_cluster_32.json",
+      "declared_memory_bytes": {
+        "hbm": 103079215104,
+        "rom": 0,
+        "sram": 134217728
+      },
+      "hbm_stacks_charged": 7,
+      "logic_assembly_mm2": 0.7826391770000001,
+      "published_ratio_logic_only": 2.2297912250190985,
+      "with_memory_best_case": {
+        "device_area_mm2": 116.80463981700001,
+        "device_ops_s_per_mm2": 5643392257.642682,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.01494051924619505,
+        "rom_mm2": 0.0,
+        "sram_mm2": 46.02200064
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 165.456600137,
+        "device_ops_s_per_mm2": 3983971624.3062882,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.010547309492554467,
+        "rom_mm2": 0.0,
+        "sram_mm2": 94.67396096
+      }
+    },
+    {
+      "bf16_ops_s": 659174400000.0,
+      "capability": "hbm_sram_cluster_32_speculative.json",
+      "declared_memory_bytes": {
+        "hbm": 103079215104,
+        "rom": 0,
+        "sram": 134217728
+      },
+      "hbm_stacks_charged": 7,
+      "logic_assembly_mm2": 0.7826391770000001,
+      "published_ratio_logic_only": 2.2297912250190985,
+      "with_memory_best_case": {
+        "device_area_mm2": 116.80463981700001,
+        "device_ops_s_per_mm2": 5643392257.642682,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.01494051924619505,
+        "rom_mm2": 0.0,
+        "sram_mm2": 46.02200064
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 165.456600137,
+        "device_ops_s_per_mm2": 3983971624.3062882,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.010547309492554467,
+        "rom_mm2": 0.0,
+        "sram_mm2": 94.67396096
+      }
+    },
+    {
+      "bf16_ops_s": 659174400000.0,
+      "capability": "hbm_sram_single_chip.json",
+      "declared_memory_bytes": {
+        "hbm": 103079215104,
+        "rom": 0,
+        "sram": 134217728
+      },
+      "hbm_stacks_charged": 7,
+      "logic_assembly_mm2": 0.7826391770000001,
+      "published_ratio_logic_only": 2.2297912250190985,
+      "with_memory_best_case": {
+        "device_area_mm2": 116.80463981700001,
+        "device_ops_s_per_mm2": 5643392257.642682,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.01494051924619505,
+        "rom_mm2": 0.0,
+        "sram_mm2": 46.02200064
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 165.456600137,
+        "device_ops_s_per_mm2": 3983971624.3062882,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.010547309492554467,
+        "rom_mm2": 0.0,
+        "sram_mm2": 94.67396096
+      }
+    },
+    {
+      "bf16_ops_s": 21093580800000.0,
+      "capability": "rom_deepseek_v4.json",
+      "declared_memory_bytes": {
+        "hbm": 1649267441664,
+        "rom": 206158430208,
+        "sram": 8589934592
+      },
+      "hbm_stacks_charged": 104,
+      "logic_assembly_mm2": 20.383755344,
+      "published_ratio_logic_only": 2.7396278101337384,
+      "with_memory_best_case": {
+        "device_area_mm2": 13965.136250796753,
+        "device_ops_s_per_mm2": 1510445757.2905204,
+        "hbm_phy_mm2": 1040.0,
+        "ratio_vs_a100_device": 0.003998808318980673,
+        "rom_mm2": 9959.344454492753,
+        "sram_mm2": 2945.40804096
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 191849.293428827,
+        "device_ops_s_per_mm2": 109948702.04109134,
+        "hbm_phy_mm2": 1040.0,
+        "ratio_vs_a100_device": 0.00029108214066006873,
+        "rom_mm2": 184729.776172043,
+        "sram_mm2": 6059.13350144
+      }
+    },
+    {
+      "bf16_ops_s": 659174400000.0,
+      "capability": "rom_deepseek_v4_array_32.json",
+      "declared_memory_bytes": {
+        "hbm": 180000000000,
+        "rom": 17179869184,
+        "sram": 268435456
+      },
+      "hbm_stacks_charged": 5,
+      "logic_assembly_mm2": 0.7826391770000001,
+      "published_ratio_logic_only": 2.2297912250190985,
+      "with_memory_best_case": {
+        "device_area_mm2": 972.7720116647295,
+        "device_ops_s_per_mm2": 677624759.0346869,
+        "hbm_phy_mm2": 50.0,
+        "ratio_vs_a100_device": 0.00179396811205978,
+        "rom_mm2": 829.9453712077295,
+        "sram_mm2": 92.04400128
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 15634.278575433917,
+        "device_ops_s_per_mm2": 42162124.515022926,
+        "hbm_phy_mm2": 50.0,
+        "ratio_vs_a100_device": 0.00011162152195323377,
+        "rom_mm2": 15394.148014336917,
+        "sram_mm2": 189.34792192
+      }
+    },
+    {
+      "bf16_ops_s": 659174400000.0,
+      "capability": "rom_deepseek_v4_pro_array_32.json",
+      "declared_memory_bytes": {
+        "hbm": 180000000000,
+        "rom": 85899345920,
+        "sram": 268435456
+      },
+      "hbm_stacks_charged": 5,
+      "logic_assembly_mm2": 0.7826391770000001,
+      "published_ratio_logic_only": 2.2297912250190985,
+      "with_memory_best_case": {
+        "device_area_mm2": 4292.553496495648,
+        "device_ops_s_per_mm2": 153562302.84331608,
+        "hbm_phy_mm2": 50.0,
+        "ratio_vs_a100_device": 0.00040654635304031755,
+        "rom_mm2": 4149.726856038647,
+        "sram_mm2": 92.04400128
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 77210.87063278159,
+        "device_ops_s_per_mm2": 8537326.345341492,
+        "hbm_phy_mm2": 50.0,
+        "ratio_vs_a100_device": 2.2602024234782283e-05,
+        "rom_mm2": 76970.74007168459,
+        "sram_mm2": 189.34792192
+      }
+    },
+    {
+      "bf16_ops_s": 1318348800000.0,
+      "capability": "rom_qwen3.json",
+      "declared_memory_bytes": {
+        "hbm": 103079215104,
+        "rom": 17179869184,
+        "sram": 134217728
+      },
+      "hbm_stacks_charged": 7,
+      "logic_assembly_mm2": 1.402352834,
+      "published_ratio_logic_only": 2.4888486362637736,
+      "with_memory_best_case": {
+        "device_area_mm2": 947.3697246817295,
+        "device_ops_s_per_mm2": 1391588485.1005783,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.0036841413099137103,
+        "rom_mm2": 829.9453712077295,
+        "sram_mm2": 46.02200064
+      },
+      "with_memory_worst_case": {
+        "device_area_mm2": 15560.224328130917,
+        "device_ops_s_per_mm2": 84725565.14603662,
+        "hbm_phy_mm2": 70.0,
+        "ratio_vs_a100_device": 0.00022430550259816106,
+        "rom_mm2": 15394.148014336917,
+        "sram_mm2": 94.67396096
+      }
+    }
+  ],
+  "headline": {
+    "above_parity_best_case": false,
+    "above_parity_worst_case": false,
+    "published_logic_only_range": [
+      2.2297912250190985,
+      2.7396278101337384
+    ],
+    "with_memory_best_case_range": [
+      0.00040654635304031755,
+      0.01494051924619505
+    ],
+    "with_memory_worst_case_range": [
+      2.2602024234782283e-05,
+      0.010547309492554467
+    ]
+  },
+  "inputs": {
+    "chip_level_audit": {
+      "path": "results/derived/chip_level_density_audit.json",
+      "sha256": "6945a6c437e725c9c37e9fa65c6ca02efd5460b8033f119406bcb565b359b5fd"
+    },
+    "comparator": {
+      "bf16_dense_ops_s": 312000000000000.0,
+      "device_level_ops_s_per_mm2": 377723970944.30994,
+      "die_area_mm2": 826.0,
+      "logic_level_ops_s_per_mm2": 629539951573.85,
+      "ops_s_per_w": 780000000000.0,
+      "part": "a100_sxm_80gb",
+      "power_w": 400.0,
+      "process": "TSMC N7"
+    },
+    "hbm_phy_grade": "assumed",
+    "hbm_phy_mm2_per_stack": 10.0,
+    "hbm_stack_capacity_bytes": 16000000000.0,
+    "rom_density_bytes_mm2": {
+      "fabricated_28nm_anchor": 1116000.0,
+      "published_3d_metal": 20700000.0
+    },
+    "sram_density_bytes_mm2": {
+      "basis": "routed macro area inside ot_compute_unit: 1,404.48 um2 for 4,096 bytes and 722.305 um2 for 1,024 bytes",
+      "large_macro_fakeram_256x128": 2916381.8637502845,
+      "small_macro_fakeram7_128x64": 1417683.665487571
+    }
+  },
+  "iso_area_at_the_a100_budget": {
+    "assumption": "the assembly scales linearly in compute units. The dispatch-tree campaign measured 98-99% work-conserving utilisation out to 512 units (8,192 lanes), and the points below reach about 22,500 units (360,000 lanes) -- a 44x EXTRAPOLATION beyond the measured point. That is the weakest link in this number and it is stated here rather than buried: nothing has been built or measured at that width, and a distributor that stops conserving work at 22,500 units would reduce the ratio in proportion",
+    "compute_unit_lanes": 16,
+    "compute_unit_mm2": 0.0315247,
+    "points": [
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 360341.19245417084,
+        "bf16_ops_s_at_iso_area": 927842536450244.5,
+        "capability": "hbm_sram_cluster_32.json",
+        "case": "best_case",
+        "compute_area_mm2": 709.97799936,
+        "compute_units": 22521.324528385678,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 116.02200064,
+        "ratio_vs_a100_at_iso_area": 2.9738542834943735
+      },
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 335648.4478723033,
+        "bf16_ops_s_at_iso_area": 864261188426393.8,
+        "capability": "hbm_sram_cluster_32.json",
+        "case": "worst_case",
+        "compute_area_mm2": 661.3260390400001,
+        "compute_units": 20978.027992018957,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 164.67396096,
+        "ratio_vs_a100_at_iso_area": 2.770067911623057
+      },
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 360341.19245417084,
+        "bf16_ops_s_at_iso_area": 927842536450244.5,
+        "capability": "hbm_sram_cluster_32_speculative.json",
+        "case": "best_case",
+        "compute_area_mm2": 709.97799936,
+        "compute_units": 22521.324528385678,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 116.02200064,
+        "ratio_vs_a100_at_iso_area": 2.9738542834943735
+      },
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 335648.4478723033,
+        "bf16_ops_s_at_iso_area": 864261188426393.8,
+        "capability": "hbm_sram_cluster_32_speculative.json",
+        "case": "worst_case",
+        "compute_area_mm2": 661.3260390400001,
+        "compute_units": 20978.027992018957,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 164.67396096,
+        "ratio_vs_a100_at_iso_area": 2.770067911623057
+      },
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 360341.19245417084,
+        "bf16_ops_s_at_iso_area": 927842536450244.5,
+        "capability": "hbm_sram_single_chip.json",
+        "case": "best_case",
+        "compute_area_mm2": 709.97799936,
+        "compute_units": 22521.324528385678,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 116.02200064,
+        "ratio_vs_a100_at_iso_area": 2.9738542834943735
+      },
+      {
+        "a100_bf16_ops_s": 312000000000000.0,
+        "bf16_lanes": 335648.4478723033,
+        "bf16_ops_s_at_iso_area": 864261188426393.8,
+        "capability": "hbm_sram_single_chip.json",
+        "case": "worst_case",
+        "compute_area_mm2": 661.3260390400001,
+        "compute_units": 20978.027992018957,
+        "datapath_clock_hz": 1287450000.0,
+        "fits_in_the_a100_budget": true,
+        "memory_mm2": 164.67396096,
+        "ratio_vs_a100_at_iso_area": 2.770067911623057
+      },
+      {
+        "capability": "rom_deepseek_v4.json",
+        "case": "best_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 13944.752495452754,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_deepseek_v4.json",
+        "case": "worst_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 191828.909673483,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_deepseek_v4_array_32.json",
+        "case": "best_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 971.9893724877295,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_deepseek_v4_array_32.json",
+        "case": "worst_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 15633.495936256917,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_deepseek_v4_pro_array_32.json",
+        "case": "best_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 4291.770857318647,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_deepseek_v4_pro_array_32.json",
+        "case": "worst_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 77210.08799360458,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_qwen3.json",
+        "case": "best_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 945.9673718477295,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      },
+      {
+        "capability": "rom_qwen3.json",
+        "case": "worst_case",
+        "fits_in_the_a100_budget": false,
+        "memory_mm2": 15558.821975296918,
+        "why": "its declared memory alone exceeds 826 mm2, so no compute fits beside it at this density"
+      }
+    ],
+    "question": "at the A100's own 826 mm2, with memory charged from the same budget, what does this design deliver against its 312 TFLOP/s?"
+  },
+  "not_a_claim": [
+    "ASAP7 is a predictive, non-manufacturable PDK and the A100 is TSMC N7 silicon; this is a design-level comparison, not a silicon one",
+    "the HBM PHY area is graded 'assumed' in technology.json and the ROM densities are anchors, not a fabricated macro of this design",
+    "the SRAM density is the PDK's own fakeram macro as routed, which is a predictive macro rather than a foundry bitcell"
+  ],
+  "not_charged": "the HBM DRAM stacks themselves: the A100's 826 mm2 does not include its HBM dies either, so only the PHY crosses that line",
+  "producer": {
+    "git": {
+      "commit": "cff899a5b62cd5b90f3885d6497192a7abd38685"
+    },
+    "tool": "tools/audit_device_level_iso_area.py"
+  },
+  "question": "charged for the same categories the A100's 826 mm2 includes -- SRAM, the mask-ROM array and the HBM PHY -- what is the device-level iso-area ratio?",
+  "schema": "opentallas.derived.device_level_iso_area.v1"
+}
