@@ -353,7 +353,25 @@ def main(argv: list[str] | None = None) -> int:
                         "dtype": int(view.dtype),
                         "values": values.reshape(-1).copy(),
                     }
-            return original_engine(ctx, sub, descriptor)
+            result = original_engine(ctx, sub, descriptor)
+            if grabbed and "output" not in grabbed:
+                # The OUTPUT of the same call, which is what settles a disagreement
+                # between the operand probe and the depth sweep: if the output
+                # matches while the operands appear not to, the operand slicing is
+                # wrong; if the output differs too, the operands really do.
+                try:
+                    out_view = ctx.output_view(descriptor, 0)
+                    out = np.asarray(
+                        formats.widen(out_view.dtype, ctx.read(out_view)),
+                        dtype=np.float64,
+                    )
+                    grabbed["output"] = {
+                        "dims": [int(d) for d in out_view.dims],
+                        "values": out.reshape(-1).copy(),
+                    }
+                except Exception:
+                    pass
+            return result
 
         _REGISTRY[key] = attention_spy
         try:
@@ -421,6 +439,19 @@ def main(argv: list[str] | None = None) -> int:
                 "all_padding_index": bool(np.all(padding == -1)),
                 "distinct": sorted({int(v) for v in padding.tolist()})[:4],
             })
+            if "output" in grabbed:
+                entry = grabbed["output"]
+                device_out = np.asarray(entry["values"]).reshape(entry["dims"])
+                slice_out = (
+                    device_out[last] if device_out.ndim == 3 else device_out
+                )
+                rows_out.append(
+                    compare("attention_output", slice_out, vendor_out[0, last])
+                )
+                rows_out.append({
+                    "operand": "device_output_view_dims",
+                    "dims": entry["dims"],
+                })
             unused = device_kv[live:]
             rows_out.append({
                 "operand": "kv_rows_beyond_the_live_extent",

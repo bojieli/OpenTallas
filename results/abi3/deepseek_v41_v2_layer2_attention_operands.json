@@ -1,11 +1,9 @@
 {
   "READING_THIS_CORRECTLY": {
-    "how_the_selector_was_reached": "call index does not address a layer on the device: its Nth attention call is not layer N-1, because prefill issues attention per token block too. Two earlier runs of this probe compared the device's layer 0 against the vendor's layer 2 and reported three uncorrelated operands; the structural selector -- live index count, 8 at layers 0 and 1 and 12 at layer 2 -- is what made the index comparison meaningful.",
-    "what_is_NOT_evidence_yet": "the query_after_rotation and fused_kv_window rows, at cosine 0.483 and 0.345. They cannot be reconciled with the depth sweep, which measures block.02 at 0.991827, and the reason is position alignment: the device issues attention per token as well as per layer, the vendor row compared is the LAST prompt position, and the device call selected is the first whose live index count matches -- which need not be the same position. Until the position is pinned on both sides these two numbers are a measurement artifact and not a finding.",
-    "what_is_evidence": [
-      "the OPERATOR agrees bit-exactly on the vendor's own operands at layer 2: cosine 1.0, max abs diff 0.0 over 2,048 elements, same as at layer 0",
-      "the SELECTED INDICES are bit-identical -- cosine 1.0, max abs diff 0.0 over 12 slots, with the remaining 132 slots all the padding index. Layer 2 is the first layer whose index row is the window PLUS a compressed prefix, so the compressor's index path is correct at the point it first exists"
-    ]
+    "position_alignment_is_established": "bit-identical indices can only happen at the same query position, so the device call selected by live index count is the same position the vendor row is taken from. That was the open question in the previous note and it is closed by the indices themselves.",
+    "resolved": "the previous version of this note said the query and fused-KV rows were a measurement artifact because they could not be reconciled with the depth sweep's 0.991827 at block.02. Reading the OUTPUT of the same call settles it the other way: the output is cosine 0.481, which agrees with the operands (0.483 and 0.345) and not with the sweep. The operands really do differ, and the sweep was over-reporting at layer 2.",
+    "the_target": "layer 2's attention operands: the query after rotation (0.483) and the fused KV window (0.345), with the SELECTED INDICES bit-identical (1.0, max abs diff 0.0). Layer 2 is the first layer with compress_ratio 2, so the compressor's INDEX path is right and its VALUE path -- the compressed KV rows it appends, and the rotation applied across the joined operand -- is where the fault is.",
+    "why_the_sweep_over_reports": "it searches every device tensor of the same element count for the BEST absolute cosine -- 166 candidates at this size -- so with forty layers of similar-magnitude residuals it can find a close match by chance. At layers 0 and 1 its 0.99997 and 0.99935 are corroborated by independent evidence (the layer-0 deep tap at cosine 1.0 and all three operands bit-identical), so the instrument is sound where it is confirmed and optimistic where it is not. Nearest-neighbour matching is a localisation tool, which is what its own not_a_claim field says."
   },
   "captured_call": {
     "index_shape": [
@@ -79,12 +77,35 @@
         "slots": 132
       },
       {
+        "comparable": true,
+        "cosine": 0.48142321,
+        "device_elements": 2048,
+        "identical": false,
+        "max_abs_diff": 0.90136719,
+        "mean_abs_diff": 0.25728188,
+        "operand": "attention_output",
+        "vendor_elements": 2048
+      },
+      {
+        "dims": [
+          8,
+          64,
+          32
+        ],
+        "operand": "device_output_view_dims"
+      },
+      {
         "all_zero": true,
         "operand": "kv_rows_beyond_the_live_extent",
         "rows": 0
       }
     ],
     "device_view_shapes": {
+      "output": [
+        8,
+        64,
+        32
+      ],
       "slot0": [
         8,
         64,
@@ -554,7 +575,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "c81892fffe57201ddca4595e15d7d79e9d82cd11"
+      "commit": "2a457e29100b3eb96ec33c07c11778e829a3cabe"
     },
     "tool": "tools/compare_v41_sparse_attention_operator.py"
   },
