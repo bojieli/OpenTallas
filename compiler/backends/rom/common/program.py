@@ -6558,23 +6558,36 @@ class RomLowering:
     def _state_plane_row_elements(self, name: str, tensor: Tensor) -> int:
         """Elements between successive rows of the state plane ``name`` lives in.
 
-        ``_plane_row`` answers this from the state group when a group owns the
-        tensor and from the tensor's own plane WIDTH when none does.  That
-        fallback is wrong wherever the width and the capacity are the same
-        number, which is every rank-one plane: it returns the capacity, and a
-        caller multiplying by a capacity-sized extent then gets the capacity
-        SQUARED.  So the group is read directly and an unowned tensor is refused.
+        The state group that owns the tensor is the authority, because a merged
+        struct's row is the whole struct and not one plane of it.  When no group
+        owns the operand -- a plain activation buffer standing where a shipped
+        graph puts a state plane, which is what several synthetic graphs do --
+        the tensor's own non-leading extents ARE its row, and using them is
+        correct.
+
+        The one case that is not correct is the case this guard exists for: a
+        plane whose declared width is its own CAPACITY.  Then the "row" is the
+        whole object, a caller multiplying it by a capacity-sized extent asks for
+        the capacity squared, and the stride overflows the 32-bit dynamic-term
+        field instead of addressing anything (measured once at
+        ``dims=[262144, 262144]``).  That shape is refused, and only that shape:
+        a blanket refusal of every unowned operand took 58 admissible synthetic
+        builds down with it.
         """
         state_id = self._state_owner.get(name)
-        if state_id is None or state_id not in self._state_slot:
+        if state_id is not None and state_id in self._state_slot:
+            group_key, _slot = self._state_slot[state_id]
+            return int(self._state_group_shape[group_key][2])
+        dims = self._dims(tensor)
+        width = self._plane_width(name)
+        if len(dims) >= 2 and width == int(dims[0]):
             raise RomLoweringError(
                 f"state operand {name!r} needs one row's element count for a "
-                "resolving term, and no state group owns it; the tensor's own "
-                "declared width is not a substitute -- where the width IS the "
-                "capacity the product would be the capacity squared"
+                f"resolving term; no state group owns it and its own declared "
+                f"width {width} IS its leading capacity, so the product would be "
+                "the capacity squared rather than a row stride"
             )
-        group_key, _slot = self._state_slot[state_id]
-        return int(self._state_group_shape[group_key][2])
+        return int(width)
 
     def _resolving_term_stride(self, tensor: Tensor, name: str) -> int:
         """The stride a SINGLE-TRIP resolving loop's term must carry.
@@ -6595,25 +6608,32 @@ class RomLowering:
         encoder refuses it -- "term0_stride=68719476736 does not fit in 4 unsigned
         bytes" -- which is how the shipped array build broke.
 
-        So the group is consulted directly and a tensor whose group is unknown is
-        REFUSED rather than given a stride derived from the wrong quantity.  A
-        wrong stride here is not a crash in every case: it is a view the resolver
-        silently declines to clamp, which presents an operand's declared maximum
-        to an operator that counts its rows.
+        So the group is consulted directly, and the tensor's own shape is used
+        only where it is the right quantity: a plain buffer of
+        ``[capacity, width]`` whose width is a real width, which is what several
+        synthetic graphs put where a shipped graph puts a state plane.  The shape
+        that the guard exists for -- a width equal to the leading capacity -- is
+        still refused, because a wrong stride here is not a crash in every case:
+        it is a view the resolver silently declines to clamp, which presents an
+        operand's declared maximum to an operator that counts its rows.
         """
+        dims = self._dims(tensor)
+        capacity = int(dims[0])
         state_id = self._state_owner.get(name)
-        if state_id is None or state_id not in self._state_slot:
+        if state_id is not None and state_id in self._state_slot:
+            group_key, _slot = self._state_slot[state_id]
+            return int(self._state_group_shape[group_key][2]) * capacity
+        width = self._plane_width(name)
+        if len(dims) < 2 or width == capacity:
             raise RomLoweringError(
                 f"state operand {name!r} needs a request-resolving loop term, and "
                 "its stride is one row of the plane times the axis capacity -- but "
-                "no state group owns it, so the row width cannot be read.  The "
-                "tensor's own declared width is NOT a substitute: for a rank-one "
-                "ring it is the capacity itself and the product would be the "
-                "capacity squared"
+                "no state group owns it and its own declared width "
+                f"{width} is not a row: for this rank-{len(dims)} operand the "
+                "width IS the capacity, so the product would be the capacity "
+                "squared"
             )
-        group_key, _slot = self._state_slot[state_id]
-        row_elements = int(self._state_group_shape[group_key][2])
-        return row_elements * int(self._dims(tensor)[0])
+        return width * capacity
 
     def _plane_row(self, tensor: Tensor) -> int:
         """Elements between successive rows of a state plane's merged struct."""

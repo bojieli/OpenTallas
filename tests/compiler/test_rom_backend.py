@@ -2856,15 +2856,26 @@ def test_the_derived_group_names_resolve_to_a_symbol_and_a_ratio() -> None:
     # operand of the join presented its maximum, the sums agreed, and layer 2
     # read 327,808 KV rows for a request with 133.
     #
-    # A join carries its window whatever the request is, so the window rows are
-    # a bias; the compressed layers add ``context / ratio`` more, which in
-    # prefill is the span and folds into the numerator.
+    # A join's declared form is its PREFILL form, and these three used to carry
+    # a 128-row bias on the reading that a join always holds its whole physical
+    # window.  It does not hold it in prefill: the pinned layout selects the
+    # current KV plus the valid compressed prefix, so ratio 0 resolves to the
+    # span itself, ratio 4 to ``5 * span / 4`` and ratio 128 to
+    # ``129 * span / 128``, and the window rows fold into the numerator instead
+    # of standing beside it as a constant.  The bias belongs to the DECODE form,
+    # which selects a fixed 128-row physical window plus a context-derived
+    # prefix, and ``_phase_layout_extents`` derives that path from
+    # ``phase_inputs`` rather than from this table.  ``selected_rows_ratio128``
+    # is the one axis here that still carries the constant, because its extent
+    # is the selection and not the join.
     window = SYMBOL_BY_NAME["attention_rows_window"]
-    assert (window.numerator, window.unit, window.bias) == (1, 1, 128)
+    assert (window.numerator, window.unit, window.bias) == (1, 1, 0)
     ratio4 = SYMBOL_BY_NAME["attention_rows_ratio4"]
-    assert (ratio4.numerator, ratio4.unit, ratio4.bias) == (5, 4, 128)
+    assert (ratio4.numerator, ratio4.unit, ratio4.bias) == (5, 4, 0)
     ratio128 = SYMBOL_BY_NAME["attention_rows_ratio128"]
-    assert (ratio128.numerator, ratio128.unit, ratio128.bias) == (129, 128, 128)
+    assert (ratio128.numerator, ratio128.unit, ratio128.bias) == (129, 128, 0)
+    selected = SYMBOL_BY_NAME["selected_rows_ratio128"]
+    assert (selected.numerator, selected.unit, selected.bias) == (1, 128, 128)
     for name, request in SYMBOL_BY_NAME.items():
         assert request.unit >= 1 and request.numerator >= 1, name
 
@@ -4154,8 +4165,28 @@ def test_prefill_issues_one_dispatch_per_kernel_per_layer(
 
     device = Device(deployment, qwen_capability, root=execution_workspace, verify=False)
     device.on_issue = on_issue
-    GenerationDriver(device).generate([1, 2, 3, 4, 5], max_new_tokens=0)
-    engine = [d for d in dispatches if d != int(M.CONTROL)]
+
+    # Prefill only, and asked for with a LEGAL request.  This used to pass
+    # ``max_new_tokens=0``, which is now refused at admission -- "request symbol
+    # MAX_NEW_TOKENS must be positive", because a request whose decode budget is
+    # zero cannot produce the token its generation policy promises.  So the
+    # request asks for one token and the dispatch list is cut at the first
+    # transaction boundary, which is the prefill and is what this assertion was
+    # ever about.
+    boundaries: list[int] = []
+    submit = device.execute_submission
+
+    def counted(request):
+        try:
+            return submit(request)
+        finally:
+            boundaries.append(len(dispatches))
+
+    device.execute_submission = counted
+    GenerationDriver(device).generate([1, 2, 3, 4, 5], max_new_tokens=1)
+    assert boundaries, "no transaction reached the device"
+    prefill_dispatches = dispatches[: boundaries[0]]
+    engine = [d for d in prefill_dispatches if d != int(M.CONTROL)]
     state = [d for d in engine if d == int(M.STATE)]
     work = len(engine) - len(state)
     # Exactly one dispatch per kernel that does engine work: not one per token,
@@ -4452,11 +4483,20 @@ def test_a_group_count_predicate_is_a_comparison_on_the_symbol_it_derives_from()
         Comparison.GE,
         1,
     )
-    # A bias moves the target, never the unit: the KV join's 128-row window is
-    # there for a span of one, so "more than the window" is "at least one row".
+    # A bias moves the target, never the unit.  ``selected_rows_ratio128`` is the
+    # axis that carries one: its 128 rows are there for a span of one, so "more
+    # than the window" is "at least one unit".  The join axes state their PREFILL
+    # form and carry no bias, so the same comparison on one of them only shifts
+    # the target: "> 128" is "at least 129".
+    assert _rewrite_comparison(
+        SYMBOL_BY_NAME["selected_rows_ratio128"], ">", 128
+    ) == (
+        Comparison.GE,
+        128,
+    )
     assert _rewrite_comparison(SYMBOL_BY_NAME["attention_rows_window"], ">", 128) == (
         Comparison.GE,
-        1,
+        129,
     )
     assert _rewrite_comparison(SYMBOL_BY_NAME["context_groups_ratio4"], "<", 1) == (
         Comparison.LT,
@@ -4748,10 +4788,22 @@ def test_a_reduced_join_states_the_extent_its_remaining_operands_supply(
 
     The attention KV join is ``span + 128 + context/ratio`` rows.  Drop the
     compressed segment and it is ``span + 128`` -- the sliding window is a bias
-    and the span is the identity -- which is exactly ``attention_rows_window``.
-    Leaving the full extent on the reduced path would declare rows no operand
-    supplies, and a view that cannot resolve presents its declared maximum.
+    and the span is the identity.
+
+    The reference is written out rather than named.  It used to be
+    ``SYMBOL_BY_NAME["attention_rows_window"]``, which was the same affine image
+    while that axis carried the window as a 128-row bias; the registry now states
+    the axes' PREFILL forms, where the pinned layout selects the current KV plus
+    the valid compressed prefix and no constant window stands beside the span.
+    This graph's join is the decode shape, so its extent is still ``span + 128``
+    and the assertion is about THIS join rather than about whatever a named axis
+    currently declares.  Leaving the full extent on the reduced path would
+    declare rows no operand supplies, and a view that cannot resolve presents its
+    declared maximum.
     """
+    from compiler.backends.rom.common.program import RequestAxis
+    from runtime.abi3.descriptors import Symbol
+
     lowering = _lowering(predicated_graph, deepseek_capability)
     lowering.tensors["join.current"] = Tensor(
         tensor_id="join.current",
@@ -4775,7 +4827,7 @@ def test_a_reduced_join_states_the_extent_its_remaining_operands_supply(
         ["join.current", "join.window"], 0
     )
     assert static == 0
-    assert reduced == SYMBOL_BY_NAME["attention_rows_window"]
+    assert reduced == RequestAxis(Symbol.SPAN_TOKENS, 1, 1, 128)
     # And a join of two operands counted in different units has no single
     # affine image, so the full row is refused rather than guessed.
     with pytest.raises(RomLoweringError):
