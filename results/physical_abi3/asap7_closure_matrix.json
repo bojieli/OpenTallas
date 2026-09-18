@@ -41,7 +41,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "d87a6f859a9559f1ae365411a181db1d5efcc2f2"
+      "commit": "cd3c9ba573ff1ac90116b75cd2451b25c181bbf2"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -69,7 +69,18 @@
       ],
       "standard_cell_area_um2": 85154.9,
       "status": "not_met",
-      "target_clock_period_ns": 4.75
+      "target_clock_period_ns": 4.75,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 3
+        },
+        "violating": {
+          "max_slew_violations": 3
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -93,7 +104,18 @@
       ],
       "standard_cell_area_um2": 84387.8,
       "status": "pass",
-      "target_clock_period_ns": 5.0
+      "target_clock_period_ns": 5.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 2
+        },
+        "violating": {
+          "max_slew_violations": 2
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -117,7 +139,18 @@
       ],
       "standard_cell_area_um2": 83887.9,
       "status": "not_met",
-      "target_clock_period_ns": 5.5
+      "target_clock_period_ns": 5.5,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 2
+        },
+        "violating": {
+          "max_slew_violations": 2
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -141,7 +174,18 @@
       ],
       "standard_cell_area_um2": 85052.2,
       "status": "pass",
-      "target_clock_period_ns": 4.75
+      "target_clock_period_ns": 4.75,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 8
+        },
+        "violating": {
+          "max_slew_violations": 8
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -165,7 +209,18 @@
       ],
       "standard_cell_area_um2": 86313.5,
       "status": "not_met",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 15
+        },
+        "violating": {
+          "max_slew_violations": 15
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -189,7 +244,18 @@
       ],
       "standard_cell_area_um2": 85820.4,
       "status": "not_met",
-      "target_clock_period_ns": 4.5
+      "target_clock_period_ns": 4.5,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 5
+        },
+        "violating": {
+          "max_slew_violations": 5
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -213,7 +279,8 @@
       ],
       "standard_cell_area_um2": 84773.4,
       "status": "pass",
-      "target_clock_period_ns": 4.75
+      "target_clock_period_ns": 4.75,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -237,7 +304,18 @@
       ],
       "standard_cell_area_um2": 84491.6,
       "status": "pass",
-      "target_clock_period_ns": 5.0
+      "target_clock_period_ns": 5.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 1
+        },
+        "violating": {
+          "max_slew_violations": 1
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -261,7 +339,18 @@
       ],
       "standard_cell_area_um2": 84481.3,
       "status": "pass",
-      "target_clock_period_ns": 6.0
+      "target_clock_period_ns": 6.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 1
+        },
+        "violating": {
+          "max_slew_violations": 1
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -285,7 +374,18 @@
       ],
       "standard_cell_area_um2": 84143.7,
       "status": "pass",
-      "target_clock_period_ns": 7.0
+      "target_clock_period_ns": 7.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 11
+        },
+        "violating": {
+          "max_slew_violations": 11
+        }
+      }
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -309,7 +409,18 @@
       ],
       "standard_cell_area_um2": 84740.3,
       "status": "pass",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 1
+        },
+        "violating": {
+          "max_slew_violations": 1
+        }
+      }
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -335,7 +446,8 @@
       ],
       "standard_cell_area_um2": 3947.84,
       "status": "pass",
-      "target_clock_period_ns": 6.0
+      "target_clock_period_ns": 6.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -361,7 +473,8 @@
       ],
       "standard_cell_area_um2": 3941.25,
       "status": "pass",
-      "target_clock_period_ns": 2.08
+      "target_clock_period_ns": 2.08,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -387,7 +500,14 @@
       ],
       "standard_cell_area_um2": 3959.24,
       "status": "not_met",
-      "target_clock_period_ns": 2.1
+      "target_clock_period_ns": 2.1,
+      "why_not_closed": {
+        "class": "blocked_only_by_a_pre_layout_stage",
+        "failing_pre_layout_stages": [
+          "static_timing"
+        ],
+        "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
+      }
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -413,7 +533,8 @@
       ],
       "standard_cell_area_um2": 3940.58,
       "status": "pass",
-      "target_clock_period_ns": 2.1
+      "target_clock_period_ns": 2.1,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -439,7 +560,8 @@
       ],
       "standard_cell_area_um2": 3956.88,
       "status": "pass",
-      "target_clock_period_ns": 2.38
+      "target_clock_period_ns": 2.38,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -465,7 +587,8 @@
       ],
       "standard_cell_area_um2": 3955.31,
       "status": "pass",
-      "target_clock_period_ns": 2.5
+      "target_clock_period_ns": 2.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -491,7 +614,8 @@
       ],
       "standard_cell_area_um2": 3932.9,
       "status": "pass",
-      "target_clock_period_ns": 2.5
+      "target_clock_period_ns": 2.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -513,7 +637,8 @@
       ],
       "standard_cell_area_um2": 3790.2,
       "status": "pass",
-      "target_clock_period_ns": 6.0
+      "target_clock_period_ns": 6.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -534,7 +659,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -555,7 +681,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -576,7 +703,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -597,7 +725,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 1.6
+      "target_clock_period_ns": 1.6,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -618,7 +747,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.4
+      "target_clock_period_ns": 2.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -639,7 +769,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 1.6
+      "target_clock_period_ns": 1.6,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -660,7 +791,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.4
+      "target_clock_period_ns": 2.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -681,7 +813,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.4
+      "target_clock_period_ns": 2.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -702,7 +835,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 1.3
+      "target_clock_period_ns": 1.3,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lane_pipelined",
@@ -723,7 +857,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -749,7 +884,8 @@
       ],
       "standard_cell_area_um2": 28807.7,
       "status": "pass",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -771,7 +907,15 @@
       ],
       "standard_cell_area_um2": 37402.1,
       "status": "not_met",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": {
+        "class": "signal_integrity_fields_absent",
+        "signal_integrity": {
+          "max_cap_violations": null,
+          "max_fanout_violations": null,
+          "max_slew_violations": null
+        }
+      }
     },
     {
       "block": "ot_a3_lq8",
@@ -797,7 +941,18 @@
       ],
       "standard_cell_area_um2": 27842.5,
       "status": "not_met",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 292
+        },
+        "violating": {
+          "max_slew_violations": 292
+        }
+      }
     },
     {
       "block": "ot_a3_lq8",
@@ -822,7 +977,8 @@
       ],
       "standard_cell_area_um2": 29396.9,
       "status": "pass",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -847,7 +1003,8 @@
       ],
       "standard_cell_area_um2": 29387.1,
       "status": "pass",
-      "target_clock_period_ns": 2.4
+      "target_clock_period_ns": 2.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -872,7 +1029,8 @@
       ],
       "standard_cell_area_um2": 29388.4,
       "status": "pass",
-      "target_clock_period_ns": 3.0
+      "target_clock_period_ns": 3.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -897,7 +1055,8 @@
       ],
       "standard_cell_area_um2": 29358.4,
       "status": "pass",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -918,7 +1077,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -939,7 +1099,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.6
+      "target_clock_period_ns": 2.6,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -960,7 +1121,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 2.2
+      "target_clock_period_ns": 2.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -981,7 +1143,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.6
+      "target_clock_period_ns": 2.6,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1006,7 +1169,19 @@
       ],
       "standard_cell_area_um2": 51151.6,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 3,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 3204
+        },
+        "violating": {
+          "max_cap_violations": 3,
+          "max_slew_violations": 3204
+        }
+      }
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1032,7 +1207,12 @@
       ],
       "standard_cell_area_um2": 52963.3,
       "status": "not_met",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 1956
+      }
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1053,7 +1233,8 @@
       ],
       "standard_cell_area_um2": 8440.22,
       "status": "pass",
-      "target_clock_period_ns": 2.2
+      "target_clock_period_ns": 2.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1078,7 +1259,8 @@
       ],
       "standard_cell_area_um2": 54280.6,
       "status": "pass",
-      "target_clock_period_ns": 3.4
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1103,7 +1285,8 @@
       ],
       "standard_cell_area_um2": 54317.8,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1125,7 +1308,15 @@
       ],
       "standard_cell_area_um2": 8437.9,
       "status": "not_met",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": {
+        "class": "signal_integrity_fields_absent",
+        "signal_integrity": {
+          "max_cap_violations": null,
+          "max_fanout_violations": null,
+          "max_slew_violations": null
+        }
+      }
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1150,7 +1341,8 @@
       ],
       "standard_cell_area_um2": 8440.48,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1175,7 +1367,18 @@
       ],
       "standard_cell_area_um2": 8437.9,
       "status": "not_met",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 49
+        },
+        "violating": {
+          "max_slew_violations": 49
+        }
+      }
     },
     {
       "block": "ot_a3_microsequencer",
@@ -1196,7 +1399,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_tree_endpoint_fp32",
@@ -1222,7 +1426,8 @@
       ],
       "standard_cell_area_um2": 5546.01,
       "status": "pass",
-      "target_clock_period_ns": 6.0
+      "target_clock_period_ns": 6.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_tile64",
@@ -1240,7 +1445,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 16.0
+      "target_clock_period_ns": 16.0,
+      "why_not_closed": null
     },
     {
       "block": "add_bf16_sram_engine",
@@ -1264,7 +1470,15 @@
       ],
       "standard_cell_area_um2": 2008.31,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": {
+        "class": "signal_integrity_fields_absent",
+        "signal_integrity": {
+          "max_cap_violations": null,
+          "max_fanout_violations": null,
+          "max_slew_violations": null
+        }
+      }
     },
     {
       "block": "add_bf16_sram_engine",
@@ -1285,7 +1499,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.4
+      "target_clock_period_ns": 4.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_acc_align",
@@ -1306,7 +1521,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_acc_align",
@@ -1327,7 +1543,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_acc_round_pack",
@@ -1348,7 +1565,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_acc_sum_normalise",
@@ -1369,7 +1587,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_acc_sum_normalise",
@@ -1390,7 +1609,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_attention_av_walk",
@@ -1414,7 +1634,8 @@
       ],
       "standard_cell_area_um2": 8569.42,
       "status": "pass",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_attention_qk_walk",
@@ -1438,7 +1659,8 @@
       ],
       "standard_cell_area_um2": 7494.81,
       "status": "pass",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_bf16_add_flat",
@@ -1464,7 +1686,12 @@
       ],
       "standard_cell_area_um2": 153.673,
       "status": "not_met",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 18
+      }
     },
     {
       "block": "ot_probe_bf16_add_pipe",
@@ -1488,7 +1715,8 @@
       ],
       "standard_cell_area_um2": 155.904,
       "status": "pass",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_bf16_add",
@@ -1514,7 +1742,12 @@
       ],
       "standard_cell_area_um2": 310.423,
       "status": "not_met",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 18
+      }
     },
     {
       "block": "ot_probe_cluster_disp",
@@ -1538,7 +1771,8 @@
       ],
       "standard_cell_area_um2": 342.178,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1562,7 +1796,8 @@
       ],
       "standard_cell_area_um2": 7381.39,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1586,7 +1821,8 @@
       ],
       "standard_cell_area_um2": 7696.37,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1610,7 +1846,18 @@
       ],
       "standard_cell_area_um2": 7689.42,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 7
+        },
+        "violating": {
+          "max_slew_violations": 7
+        }
+      }
     },
     {
       "block": "ot_compute_unit",
@@ -1634,7 +1881,18 @@
       ],
       "standard_cell_area_um2": 8035.68,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 1
+        },
+        "violating": {
+          "max_slew_violations": 1
+        }
+      }
     },
     {
       "block": "ot_compute_unit",
@@ -1658,7 +1916,18 @@
       ],
       "standard_cell_area_um2": 7689.42,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 7
+        },
+        "violating": {
+          "max_slew_violations": 7
+        }
+      }
     },
     {
       "block": "ot_compute_unit",
@@ -1682,7 +1951,8 @@
       ],
       "standard_cell_area_um2": 7698.74,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1706,7 +1976,8 @@
       ],
       "standard_cell_area_um2": 7534.77,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1730,7 +2001,12 @@
       ],
       "standard_cell_area_um2": 6134.61,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 11
+      }
     },
     {
       "block": "ot_compute_unit",
@@ -1754,7 +2030,8 @@
       ],
       "standard_cell_area_um2": 6023.17,
       "status": "pass",
-      "target_clock_period_ns": 0.95
+      "target_clock_period_ns": 0.95,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1778,7 +2055,8 @@
       ],
       "standard_cell_area_um2": 6021.03,
       "status": "pass",
-      "target_clock_period_ns": 0.95
+      "target_clock_period_ns": 0.95,
+      "why_not_closed": null
     },
     {
       "block": "ot_compute_unit",
@@ -1802,7 +2080,8 @@
       ],
       "standard_cell_area_um2": 7483.51,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mac_csa",
@@ -1823,7 +2102,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.6
+      "target_clock_period_ns": 0.6,
+      "why_not_closed": null
     },
     {
       "block": "ot_mac_tile",
@@ -1844,7 +2124,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_mac_tile",
@@ -1865,7 +2146,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_mac_tile_h",
@@ -1883,7 +2165,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_indep4",
@@ -1904,7 +2187,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mac_pipe",
@@ -1925,7 +2209,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_add8",
@@ -1946,7 +2231,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.2
+      "target_clock_period_ns": 0.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_floor",
@@ -1967,7 +2253,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 0.2
+      "target_clock_period_ns": 0.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mac_fx",
@@ -1988,7 +2275,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.5
+      "target_clock_period_ns": 0.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mul_bf16",
@@ -2009,7 +2297,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.5
+      "target_clock_period_ns": 0.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mul_fp32",
@@ -2030,7 +2319,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.5
+      "target_clock_period_ns": 0.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mul_fp8",
@@ -2051,7 +2341,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 0.5
+      "target_clock_period_ns": 0.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_mul_mxfp4",
@@ -2072,7 +2363,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 0.5
+      "target_clock_period_ns": 0.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_st1",
@@ -2093,7 +2385,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.3
+      "target_clock_period_ns": 0.3,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_st3",
@@ -2114,7 +2407,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 0.3
+      "target_clock_period_ns": 0.3,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_tile16",
@@ -2135,7 +2429,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_tile4",
@@ -2156,7 +2451,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_tile64",
@@ -2177,7 +2473,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.7
+      "target_clock_period_ns": 0.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2203,7 +2500,8 @@
       ],
       "standard_cell_area_um2": 7364.93,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2229,7 +2527,14 @@
       ],
       "standard_cell_area_um2": 15242.6,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": {
+        "class": "blocked_only_by_a_pre_layout_stage",
+        "failing_pre_layout_stages": [
+          "static_timing"
+        ],
+        "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
+      }
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2255,7 +2560,8 @@
       ],
       "standard_cell_area_um2": 15235.7,
       "status": "pass",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dtree_bare",
@@ -2276,7 +2582,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dtree_bare",
@@ -2297,7 +2604,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dtree_bare",
@@ -2318,7 +2626,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_flat_disp_wide",
@@ -2339,7 +2648,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_flat_disp_wide",
@@ -2360,7 +2670,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_cluster_dispatcher",
@@ -2381,7 +2692,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_cluster_dispatcher",
@@ -2402,7 +2714,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2423,7 +2736,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2444,7 +2758,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2465,7 +2780,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2486,7 +2802,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2507,7 +2824,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2528,7 +2846,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2549,7 +2868,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_dispatch_tree",
@@ -2570,7 +2890,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_dma_ngram_hash",
@@ -2596,7 +2917,8 @@
       ],
       "standard_cell_area_um2": 15941.3,
       "status": "pass",
-      "target_clock_period_ns": 1.5
+      "target_clock_period_ns": 1.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_mac_lane",
@@ -2617,7 +2939,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_selection_argmax",
@@ -2638,7 +2961,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_selection_token_append",
@@ -2659,7 +2983,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_add",
@@ -2680,7 +3005,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_convert",
@@ -2701,7 +3027,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_mhc_post",
@@ -2722,7 +3049,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_mhc_pre_tile_scheduler",
@@ -2743,7 +3071,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -2764,7 +3093,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_floor_wide",
@@ -2788,7 +3118,8 @@
       ],
       "standard_cell_area_um2": 140.23,
       "status": "pass",
-      "target_clock_period_ns": 0.25
+      "target_clock_period_ns": 0.25,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_fp32_sqrt_rne",
@@ -2812,7 +3143,8 @@
       ],
       "standard_cell_area_um2": 209.704,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -2830,7 +3162,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 2.4
+      "target_clock_period_ns": 2.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -2848,7 +3181,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 3.0
+      "target_clock_period_ns": 3.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_lq8",
@@ -2866,7 +3200,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 4.0
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_mac_bf16_fp32_pipe",
@@ -2890,7 +3225,8 @@
       ],
       "standard_cell_area_um2": 509.352,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_lane_bf16",
@@ -2916,7 +3252,8 @@
       ],
       "standard_cell_area_um2": 258.503,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_packed8_bf16",
@@ -2940,7 +3277,8 @@
       ],
       "standard_cell_area_um2": 993.86,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_lane_fp8",
@@ -2966,7 +3304,8 @@
       ],
       "standard_cell_area_um2": 229.212,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_lane_mxfp4",
@@ -2992,7 +3331,8 @@
       ],
       "standard_cell_area_um2": 214.457,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_packed8",
@@ -3016,7 +3356,8 @@
       ],
       "standard_cell_area_um2": 664.221,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_mac_tile",
@@ -3042,7 +3383,18 @@
       ],
       "standard_cell_area_um2": 4120.69,
       "status": "not_met",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 13
+        },
+        "violating": {
+          "max_slew_violations": 13
+        }
+      }
     },
     {
       "block": "ot_ta_matmul_bf16_sram_engine",
@@ -3068,7 +3420,15 @@
       ],
       "standard_cell_area_um2": 8348.44,
       "status": "pass",
-      "target_clock_period_ns": 18.0
+      "target_clock_period_ns": 18.0,
+      "why_not_closed": {
+        "class": "signal_integrity_fields_absent",
+        "signal_integrity": {
+          "max_cap_violations": null,
+          "max_fanout_violations": null,
+          "max_slew_violations": null
+        }
+      }
     },
     {
       "block": "ot_compute_unit",
@@ -3092,7 +3452,18 @@
       ],
       "standard_cell_area_um2": 7279.04,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 2
+        },
+        "violating": {
+          "max_slew_violations": 2
+        }
+      }
     },
     {
       "block": "reduction_s8_g2",
@@ -3116,7 +3487,8 @@
       ],
       "standard_cell_area_um2": 594.543,
       "status": "pass",
-      "target_clock_period_ns": 2.25
+      "target_clock_period_ns": 2.25,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_vadd8",
@@ -3140,7 +3512,8 @@
       ],
       "standard_cell_area_um2": 2673.01,
       "status": "pass",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
     },
     {
       "block": "reduction_s8_g2",
@@ -3164,7 +3537,8 @@
       ],
       "standard_cell_area_um2": 621.618,
       "status": "pass",
-      "target_clock_period_ns": 0.8
+      "target_clock_period_ns": 0.8,
+      "why_not_closed": null
     },
     {
       "block": "reduction_s8_g2",
@@ -3188,7 +3562,15 @@
       ],
       "standard_cell_area_um2": 845.509,
       "status": "pass",
-      "target_clock_period_ns": 2.25
+      "target_clock_period_ns": 2.25,
+      "why_not_closed": {
+        "class": "signal_integrity_fields_absent",
+        "signal_integrity": {
+          "max_cap_violations": null,
+          "max_fanout_violations": null,
+          "max_slew_violations": null
+        }
+      }
     },
     {
       "block": "reduction_s8_g2",
@@ -3209,7 +3591,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 2.25
+      "target_clock_period_ns": 2.25,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_route_block_max",
@@ -3235,7 +3618,14 @@
       ],
       "standard_cell_area_um2": 681.498,
       "status": "not_met",
-      "target_clock_period_ns": 1.0
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": {
+        "class": "blocked_only_by_a_pre_layout_stage",
+        "failing_pre_layout_stages": [
+          "static_timing"
+        ],
+        "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
+      }
     },
     {
       "block": "ot_a3_route_candidate_mask",
@@ -3261,7 +3651,14 @@
       ],
       "standard_cell_area_um2": 2971.11,
       "status": "not_met",
-      "target_clock_period_ns": 2.5
+      "target_clock_period_ns": 2.5,
+      "why_not_closed": {
+        "class": "blocked_only_by_a_pre_layout_stage",
+        "failing_pre_layout_stages": [
+          "static_timing"
+        ],
+        "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
+      }
     },
     {
       "block": "ot_a3_route_index_topk",
@@ -3285,7 +3682,8 @@
       ],
       "standard_cell_area_um2": 3097.23,
       "status": "pass",
-      "target_clock_period_ns": 1.2
+      "target_clock_period_ns": 1.2,
+      "why_not_closed": null
     },
     {
       "block": "ot_probe_vadd8",
@@ -3309,7 +3707,8 @@
       ],
       "standard_cell_area_um2": 2728.66,
       "status": "pass",
-      "target_clock_period_ns": 0.75
+      "target_clock_period_ns": 0.75,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_engram_gate",
@@ -3327,7 +3726,8 @@
       "stages_completed": [],
       "standard_cell_area_um2": null,
       "status": "error",
-      "target_clock_period_ns": 2.0
+      "target_clock_period_ns": 2.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_fp4kv_dequant",
@@ -3353,7 +3753,14 @@
       ],
       "standard_cell_area_um2": 1673.87,
       "status": "not_met",
-      "target_clock_period_ns": 1.4
+      "target_clock_period_ns": 1.4,
+      "why_not_closed": {
+        "class": "blocked_only_by_a_pre_layout_stage",
+        "failing_pre_layout_stages": [
+          "static_timing"
+        ],
+        "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
+      }
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3379,7 +3786,18 @@
       ],
       "standard_cell_area_um2": 6891.43,
       "status": "pass",
-      "target_clock_period_ns": 10.0
+      "target_clock_period_ns": 10.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 78
+        },
+        "violating": {
+          "max_slew_violations": 78
+        }
+      }
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3405,7 +3823,8 @@
       ],
       "standard_cell_area_um2": 7431.47,
       "status": "pass",
-      "target_clock_period_ns": 11.0
+      "target_clock_period_ns": 11.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3431,7 +3850,8 @@
       ],
       "standard_cell_area_um2": 7463.84,
       "status": "pass",
-      "target_clock_period_ns": 5.0
+      "target_clock_period_ns": 5.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3457,7 +3877,18 @@
       ],
       "standard_cell_area_um2": 7023.67,
       "status": "pass",
-      "target_clock_period_ns": 5.2
+      "target_clock_period_ns": 5.2,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 0,
+          "max_slew_violations": 250
+        },
+        "violating": {
+          "max_slew_violations": 250
+        }
+      }
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3483,7 +3914,8 @@
       ],
       "standard_cell_area_um2": 7362.94,
       "status": "pass",
-      "target_clock_period_ns": 5.8
+      "target_clock_period_ns": 5.8,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3509,7 +3941,8 @@
       ],
       "standard_cell_area_um2": 7408.49,
       "status": "pass",
-      "target_clock_period_ns": 9.7
+      "target_clock_period_ns": 9.7,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3530,7 +3963,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 5.0
+      "target_clock_period_ns": 5.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3551,7 +3985,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "not_met",
-      "target_clock_period_ns": 8.5
+      "target_clock_period_ns": 8.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3572,7 +4007,8 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 5.0
+      "target_clock_period_ns": 5.0,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
@@ -3593,9 +4029,23 @@
       ],
       "standard_cell_area_um2": null,
       "status": "pass",
-      "target_clock_period_ns": 8.5
+      "target_clock_period_ns": 8.5,
+      "why_not_closed": null
     }
   ],
+  "recoverable_by_dropping_a_pre_layout_stage": [
+    "ot_a3_lane_pipelined",
+    "ot_a3_route_block_max",
+    "ot_a3_route_candidate_mask",
+    "ot_a3_vector_fp4kv_dequant",
+    "ot_probe_dispatch_tree"
+  ],
   "schema": "opentallas.physical.asap7_closure_matrix.v1",
-  "view": "asap7"
+  "view": "asap7",
+  "why_the_not_closed_records_are_not_closed": {
+    "blocked_only_by_a_pre_layout_stage": 5,
+    "routed_netlist_dirty": 20,
+    "routed_timing_not_met": 4,
+    "signal_integrity_fields_absent": 5
+  }
 }
