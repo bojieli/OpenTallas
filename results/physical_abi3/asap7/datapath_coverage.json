@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 104,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 35,
-    "uncovered_and_instantiated": 52,
+    "covered_by_a_closed_block": 36,
+    "uncovered_and_instantiated": 51,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 17
+    "with_their_own_closed_record": 18
   },
   "limiter_under_audit": {
     "at_target_clock_period_ns": 3.6,
@@ -150,9 +150,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_dma_index_mover.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array",
         "ot_a3_qwen_kv_scatter_adapter"
@@ -1041,7 +1041,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "c8411a654f7468252e79088c12f53d4207fee807"
+      "commit": "4a6d01a07438e107a348b2f50719549152a1b0fe"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -1427,13 +1427,6 @@
         "ot_a3_qwen_kv_scatter_adapter"
       ],
       "module": "ot_a3_descriptor_record_validator"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array",
-        "ot_a3_qwen_kv_scatter_adapter"
-      ],
-      "module": "ot_a3_dma_index_mover"
     },
     {
       "instantiated_by": [

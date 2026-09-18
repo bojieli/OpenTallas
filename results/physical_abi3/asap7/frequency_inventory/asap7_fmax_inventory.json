@@ -72,6 +72,16 @@
       "target_headroom": 0.004420708333333334
     },
     {
+      "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_dma_index_mover",
+      "family": "abi3_datapath",
+      "fmax_hz": 460639000.0,
+      "record": "results/physical_abi3/asap7/dma_index_mover/pnr_4p0ns_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 1500.19,
+      "target_headroom": 0.457275
+    },
+    {
       "at_target_clock_period_ns": 2.1,
       "block": "ot_a3_lane_pipelined",
       "family": "abi3_datapath",
@@ -355,10 +365,10 @@
     "target_headroom": 0.02021525
   },
   "counts": {
-    "closed_routed_record_count": 65,
-    "distinct_blocks_with_a_closed_routed_record": 34,
-    "post_route_record_count": 109,
-    "record_count": 182
+    "closed_routed_record_count": 67,
+    "distinct_blocks_with_a_closed_routed_record": 35,
+    "post_route_record_count": 111,
+    "record_count": 186
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -444,7 +454,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "c8411a654f7468252e79088c12f53d4207fee807"
+      "commit": "4a6d01a07438e107a348b2f50719549152a1b0fe"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3239,6 +3249,29 @@
     },
     {
       "antenna_violating_nets": 0,
+      "block": "ot_a3_dma_index_mover",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 460639000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/dma_index_mover/pnr_4p0ns_closed.json",
+      "record_sha256": "ae57440f6ad1240902ed2823d2bb23f828a6a3c8a8a8db4ff07349c569ccdb96",
+      "setup_wns_ns": 1.8291,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1500.19,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.457275
+    },
+    {
+      "antenna_violating_nets": 0,
       "block": "ot_a3_dma_ngram_hash",
       "closed": true,
       "drc_errors": 0,
@@ -3569,6 +3602,29 @@
     },
     {
       "antenna_violating_nets": 0,
+      "block": "ot_a3_fp32_div_rne",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 261014000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_4p0ns_closed.json",
+      "record_sha256": "a6a3d42084dc202c94b598751075a8217a94b25d9fe4f8a324f5b869a4423505",
+      "setup_wns_ns": 0.168791,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1485.44,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.04219775
+    },
+    {
+      "antenna_violating_nets": 0,
       "block": "ot_a3_fp32_div_rne_pipe",
       "closed": false,
       "drc_errors": 0,
@@ -3635,6 +3691,48 @@
       "standard_cell_area_um2": 209.704,
       "target_clock_period_ns": 1.0,
       "target_headroom": 0.266757
+    },
+    {
+      "antenna_violating_nets": null,
+      "block": "ot_a3_fp32_transcendental_cr_rne",
+      "closed": false,
+      "drc_errors": null,
+      "family": "abi3_datapath",
+      "fmax_hz": null,
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null,
+      "post_route": false,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_transcendental_cr_rne/pnr_4p0ns_synth_timeout.json",
+      "record_sha256": "f29bd5005bf032db50bc69cdf9c3fa9895505f36d53a7e80e8d82438dcb1a88a",
+      "setup_wns_ns": null,
+      "slew_margin_percent": null,
+      "stages": [],
+      "standard_cell_area_um2": null,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": null
+    },
+    {
+      "antenna_violating_nets": null,
+      "block": "ot_a3_fp32_transcendental_cr_rne",
+      "closed": false,
+      "drc_errors": null,
+      "family": "abi3_datapath",
+      "fmax_hz": null,
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null,
+      "post_route": false,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_transcendental_cr_rne/pnr_4p0ns_synth_timeout_2h.json",
+      "record_sha256": "f29bd5005bf032db50bc69cdf9c3fa9895505f36d53a7e80e8d82438dcb1a88a",
+      "setup_wns_ns": null,
+      "slew_margin_percent": null,
+      "stages": [],
+      "standard_cell_area_um2": null,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": null
     },
     {
       "antenna_violating_nets": 0,
