@@ -431,6 +431,14 @@ module tb_dispatch_tree_throughput #(
             run_case(256, 8, iv, nd, 400000);
             run_case( 64, 1, iv, nd, 400000);
             run_case( 64, 8, iv, nd, 400000);
+            //: K=128 IS THE HALF-DEPTH BANK'S OWN MAXIMUM, and it fits the
+            //: full-depth bank too, so it is the deepest kernel at which the two
+            //: geometries can be compared like for like.  Without it the only
+            //: shared depth was 64, a quarter of the full bank, and every
+            //: half-depth claim carried "at K=64" as a qualification.
+            run_case(128, 1, iv, nd, 400000);
+            run_case(128, 3, iv, nd, 400000);
+            run_case(128, 8, iv, nd, 400000);
             run_case(256, 1, 1,  nd, 400000);
             run_case(256, 4, 1,  nd, 400000);
         end
