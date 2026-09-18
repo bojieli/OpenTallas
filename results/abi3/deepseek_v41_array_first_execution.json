@@ -8,8 +8,53 @@
     "target_id": "deepseek-v4.1-flash-rom-array-64",
     "topology_class": 3
   },
+  "localisation": {
+    "diagnosis": "the wafer opens TWO NESTED LOOPS around kernel 1 and the array opens NONE, while both lanes give that kernel's output view the same kind of LOOP_INDUCTION term.  So the array lowering emits the operator without the loops its own views name, and the device refuses at resolve time -- correctly.  This is a loop-EMISSION gap on the array path, not a bad view: the view is the same shape of view the wafer resolves fine",
+    "failing_view": {
+      "a18_extent": {
+        "bias": 0,
+        "numerator": 0,
+        "unit": 0
+      },
+      "bound_by": "descriptor 1100, TENSOR.EMBED_LOOKUP, source_kernel_id 1",
+      "dims": [
+        131072,
+        1
+      ],
+      "dynamic_terms": [
+        {
+          "kind": "LOOP_INDUCTION",
+          "loop": 1076,
+          "stride": 131072
+        }
+      ],
+      "kernel": "main.compressed_token_ids -- the Engram compressed-token-id lookup",
+      "rank": 2,
+      "view": 1097
+    },
+    "instruction_streams_compared": {
+      "rom_array_64": [
+        "pc 3 CONTROL.LOOP_SETUP",
+        "pc 4 TENSOR.EMBED_LOOKUP (kernel 0)",
+        "pc 5 CONTROL.LOOP_NEXT",
+        "pc 6 TENSOR.EMBED_LOOKUP (kernel 1) -- NO LOOP OPENED"
+      ],
+      "rom_wafer": [
+        "pc 3 CONTROL.LOOP_SETUP",
+        "pc 4 TENSOR.EMBED_LOOKUP (kernel 0)",
+        "pc 5 CONTROL.LOOP_NEXT",
+        "pc 6 CONTROL.LOOP_SETUP",
+        "pc 7 CONTROL.LOOP_SETUP",
+        "pc 8 TENSOR.EMBED_LOOKUP (kernel 1)",
+        "pc 9 CONTROL.LOOP_NEXT",
+        "pc 10 CONTROL.LOOP_NEXT"
+      ]
+    },
+    "why_it_surfaced_now": "kernel 1 writes a token_ring, and a token_ring's plane became request-sized earlier in this session so that DMA.NGRAM_HASH would be handed the committed prefix instead of the whole capacity.  That is what gives the view a resolving loop to need.  The wafer and single-chip lanes emit it; the array lane does not, and no execution had ever reached the array path to show that"
+  },
   "not_a_claim": [
-    "that this is the only defect on the V4.1 array path -- it is the first, reached after six retired instructions"
+    "that this is the only defect on the V4.1 array path -- it is the first, reached after six retired instructions",
+    "that emitting the loops is the whole fix -- six retired instructions is not a survey, and the array path has had no execution before this one"
   ],
   "producer": {
     "git": {
