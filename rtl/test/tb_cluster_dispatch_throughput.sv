@@ -81,7 +81,11 @@ module tb_cluster_dispatch_throughput;
             ot_compute_unit #(.LANES(LANES), .ACC_W(ACC_W), .K_MAX(256)) cu (
                 .clk(clk), .rst_n(rst_n),
                 .start(cu_start), .cfg_k(cu_cfg_k), .cfg_scale(cu_cfg_scale),
-                .wgt_reload(1'b1),
+                .wgt_reload(1'b1), .acc_continue(1'b0),
+                //: no chain is opened here, so the status bit cannot fire; it is
+                //: connected because an unconnected output is a lint error and a
+                //: silently missing pin is how a real port went unnoticed once.
+                .acc_scale_violation(),
                 .busy(cu_busy[g]), .done(cu_done[g]),
                 .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
                 .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),

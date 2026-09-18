@@ -8,12 +8,224 @@
     "reading": "choosing the better structure per regime, the array is above A100 standard-cell-logic iso-area parity at every straggler level measured, and the binding regime is skew 3",
     "worst_regime_best_ratio": 1.0798970971937574
   },
+  "half_depth_double_buffer": {
+    "area_factor": 1.4993530381834328,
+    "clock_period_ns": 0.95,
+    "closed": true,
+    "compared_against": {
+      "closed": true,
+      "core_area_um2": 41367.9,
+      "label": "double_buffer_closed",
+      "post_route_fmax_hz": 1256010000.0,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json"
+    },
+    "core_area_um2": 27590.5,
+    "cross_tile_accumulate": {
+      "exactness": {
+        "bit_identical": true,
+        "evidence": {
+          "artifact": "results/rtl/compute_unit_acc_chain.json",
+          "sha256": "e1e2a60aa621065e40420c0875d4dbda38531b8b8b9feb2013e067aa68065f5a"
+        },
+        "what_was_compared": "two units in one bench, no reference model: the comparison is between the structures. K_MAX=256 walks 256 columns in one pass; K_MAX=128 walks 0..127, is refilled, and walks 128..255 with acc_continue. Every lane's 40-bit accumulator is compared bit for bit",
+        "why_it_is_exact": "the accumulator is carry-save in a fixed-point window whose exponent is ``cfg_scale``, an INPUT and not a per-tile derivation, so both passes land their terms on the same bit positions; a chain whose scale moves raises ``acc_scale_violation`` instead"
+      },
+      "throughput_cost": {
+        "factor": 0.950704,
+        "one_deep_pass_cycles": 270,
+        "overhead_cycles": 14,
+        "reading": "14 extra cycles on 270 -- one extra walk setup and one extra drain -- which is what a K=256 product pays to be served from a 128-deep bank",
+        "two_chained_passes_cycles": 284
+      },
+      "what_the_port_itself_cost": {
+        "core_area_um2_with_the_port": 27590.5,
+        "core_area_um2_without_the_port": 27590.5,
+        "post_route_fmax_hz_with_the_port": 1090620000.0,
+        "post_route_fmax_hz_without_the_port": 1113670000.0,
+        "reading": "the area is unchanged to the digit and the frequency moves by -2.07%; the chain-capable build needs a 15% slew margin to close, the same margin the full-depth double buffer needed, and closes with zero slew, cap and fanout violations",
+        "record_without_the_port": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_banks2_0p95.json"
+      }
+    },
+    "envelope_for_a_tile_depth_256_product": {
+      "above_parity_in_every_regime": true,
+      "applies_to": [
+        "deepseek-v4-flash-0731 (tile_depth 256, two chained tiles)",
+        "deepseek-v4.1-flash (tile_depth 256, two chained tiles)"
+      ],
+      "best_regime_ratio": 1.9523142183681383,
+      "moves_the_worst_regime_from": 1.0798970971937574,
+      "moves_the_worst_regime_to": 1.3366323236418158,
+      "net_factor": 1.2377404542666295,
+      "reading": "with the cross-tile accumulate, the half-depth structure serves a 256-deep product too, and the WORST regime's best ratio rises from 1.0799x to 1.3366x -- every point post-route closed, and no longer conditional on the product's declared tile depth",
+      "regimes": [
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.9523142183681383,
+          "best_structure": "lockstep_single_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.4124208231758921,
+          "half_depth_double_buffer": 1.7482103912933755,
+          "lockstep_single_buffer": 1.9523142183681383,
+          "meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
+          "regime": "skew_0"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.7419772949195456,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.4073849561228733,
+          "half_depth_double_buffer": 1.7419772949195456,
+          "lockstep_single_buffer": 1.7212877359140002,
+          "meaning": "every unit slowed a little and by a different amount",
+          "regime": "skew_1"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.7049965826679576,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.3775073576941306,
+          "half_depth_double_buffer": 1.7049965826679576,
+          "lockstep_single_buffer": 1.0064374821818927,
+          "meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+          "regime": "skew_2"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.3366323236418158,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.0798970971937574,
+          "half_depth_double_buffer": 1.3366323236418158,
+          "lockstep_single_buffer": 0.5111329713785906,
+          "meaning": "one unit in sixteen at a 25% refill duty",
+          "regime": "skew_3"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.6943208502844285,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.3688821791708556,
+          "half_depth_double_buffer": 1.6943208502844285,
+          "lockstep_single_buffer": 0.8980315683570838,
+          "meaning": "EVERY unit at a 50% refill duty",
+          "regime": "skew_4"
+        }
+      ],
+      "structure_factor": 1.3019198975355415,
+      "throughput_factor_of_the_chain": 0.950704,
+      "worst_regime_best_ratio": 1.3366323236418158
+    },
+    "envelope_within_its_reach": {
+      "above_parity_in_every_regime": true,
+      "applies_to": "a product whose declared reduction tile depth is at most 128",
+      "best_regime_ratio": 1.9523142183681383,
+      "moves_the_worst_regime_from": 1.0798970971937574,
+      "moves_the_worst_regime_to": 1.4059395181274252,
+      "reading": "adding the half-depth structure raises the WORST regime's best ratio from 1.0799x to 1.4059x, every point post-route closed, for a product whose tile depth it can hold",
+      "regimes": [
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.9523142183681383,
+          "best_structure": "lockstep_single_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.4124208231758921,
+          "half_depth_double_buffer": 1.8388587733862227,
+          "lockstep_single_buffer": 1.9523142183681383,
+          "meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
+          "regime": "skew_0"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.8323024778685537,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.4073849561228733,
+          "half_depth_double_buffer": 1.8323024778685537,
+          "lockstep_single_buffer": 1.7212877359140002,
+          "meaning": "every unit slowed a little and by a different amount",
+          "regime": "skew_1"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.793404237983597,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.3775073576941306,
+          "half_depth_double_buffer": 1.793404237983597,
+          "lockstep_single_buffer": 1.0064374821818927,
+          "meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+          "regime": "skew_2"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.4059395181274252,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.0798970971937574,
+          "half_depth_double_buffer": 1.4059395181274252,
+          "lockstep_single_buffer": 0.5111329713785906,
+          "meaning": "one unit in sixteen at a 25% refill duty",
+          "regime": "skew_3"
+        },
+        {
+          "above_parity": true,
+          "best_ratio_vs_a100_logic": 1.782174946444349,
+          "best_structure": "half_depth_double_buffer",
+          "every_candidate_is_closed": true,
+          "frontier_double_buffer": 1.3688821791708556,
+          "half_depth_double_buffer": 1.782174946444349,
+          "lockstep_single_buffer": 0.8980315683570838,
+          "meaning": "EVERY unit at a 50% refill duty",
+          "regime": "skew_4"
+        }
+      ],
+      "worst_regime_best_ratio": 1.4059395181274252
+    },
+    "frequency_factor": 0.8683211120930566,
+    "post_route_fmax_hz": 1090620000.0,
+    "product_scope": {
+      "serves": [
+        "qwen3-8b (tile_depth 128) directly, one tile per contraction",
+        "deepseek-v4-flash-0731 and deepseek-v4.1-flash (tile_depth 256) by chaining two tiles, at the measured cost below"
+      ],
+      "why_it_is_no_longer_conditional": "a 128-deep bank holds half a reduction tile of a product that declares 256, and the unit had no control that said 'continue the previous tile's sum'. It has one now (``acc_continue``), so a deep contraction is a sequence of passes over consecutive tiles -- how a tensor core walks a large K -- and the depth a product declares stops bounding the bank a unit can be built from"
+    },
+    "ratio_factor_vs_the_full_depth_pair": 1.3019198975355415,
+    "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_chain_banks2_slew15_0p95.json",
+    "record_sha256": "d86a1b9a25eba0fdce73d3c570bd21262ac4a5893e8db6f4952d3ddc4e37b644",
+    "setup_wns_ns": 0.0330911,
+    "smaller_than_the_single_bank_baseline": true,
+    "structure": "half_depth_double_buffer",
+    "throughput_identity_evidence": [
+      {
+        "artifact": "results/rtl/dispatch_tree_campaign_half_depth_k128_skew0.json",
+        "sha256": "772e183a6baa6cb29fdb489df0a8b3c9382a27f08f0798aba7150b26d1b19720"
+      },
+      {
+        "artifact": "results/rtl/dispatch_tree_campaign_half_depth_k128_skew2.json",
+        "sha256": "111918b5c60ec7cb5f37470ff129a39c9c209da8ec69d9f42f783ba770f47efa"
+      },
+      {
+        "artifact": "results/rtl/dispatch_tree_campaign_full_depth_k128_skew0.json",
+        "sha256": "1b33ffffa7db011d151ca99482da0f9ebf35606dc464ed7fd796ca2c231cc41b"
+      },
+      {
+        "artifact": "results/rtl/dispatch_tree_campaign_full_depth_k128_skew2.json",
+        "sha256": "5f806fcb72c13bf2e12b8ee0ac8ad00d2c7ed45e51654bbc372e42e99614e886"
+      }
+    ],
+    "throughput_identity_reading": "both bank depths retire identical elapsed cycles and identical unit completions at K=128 -- the half-depth bank's own maximum -- at refill skew 0 and 2 and one, three and eight passes per descriptor, matching the same identity already measured at K=64. So the factor is area and frequency only",
+    "what_it_is": "the same two-bank decoupled double buffer with each bank holding 128 contraction steps instead of 256, composed from four fakeram7_128x64 macros instead of two fakeram_256x128"
+  },
   "producer": {
     "git": {
-      "commit": "36cdaca0433c7a909903fa7d9311fbc9d68fdbc9",
+      "commit": "b39bc2766fe5aa4b896133210155074b5d004859",
       "worktree_dirty": true
     },
-    "sha256": "d4bfce9ee54bed64da9900dba37f382a7ad42bbe15c9d6a6b392cf12571d343f",
+    "sha256": "23273b5dcad2194fe2c7c270b710c062a08ae9aef76a9788e2e1773d30d56e67",
     "tool": "tools/audit_operand_delivery_envelope.py"
   },
   "question": "across the operand-supply regimes that were measured, and the structures that were built, what is the worst regime's best A100 iso-area ratio?",

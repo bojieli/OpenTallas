@@ -117,8 +117,28 @@ module ot_compute_unit #(
     //: stream rather than assumed by the unit.  Tie it high to charge a fresh
     //: fetch for every pass, which is what REFILL_DECOUPLED=0 always did.
     input  wire                   wgt_reload,
+    //: CROSS-TILE ACCUMULATE.  Asserted with ``start``, this pass CONTINUES the
+    //: previous pass's sums instead of beginning new ones: the accumulators are
+    //: not cleared, so a contraction deeper than one bank becomes a sequence of
+    //: passes over consecutive weight tiles, which is how a tensor core walks a
+    //: large K.  Tie it low and every existing behaviour is unchanged, bit for
+    //: bit -- the first pass of any chain has it low by definition.
+    //:
+    //: EXACTNESS IS NOT AN ASSUMPTION HERE.  The accumulator is carry-save in a
+    //: fixed-point window whose exponent is ``cfg_scale``, an INPUT and not a
+    //: per-tile derivation, so two passes that share ``cfg_scale`` land their
+    //: terms on the same bit positions and the continued sum is exact and
+    //: order-independent -- the same property the header claims for one pass. A
+    //: chain whose scale MOVES has no such property, so the unit latches the
+    //: scale of the pass that opened the chain and raises
+    //: ``acc_scale_violation`` if a continuing pass presents a different one,
+    //: rather than silently adding terms aligned two different ways.
+    input  wire                   acc_continue,
     output reg                    busy,
     output reg                    done,
+    //: A continuing pass presented a different ``cfg_scale`` than the pass that
+    //: opened its chain.  Sticky until the next chain-opening ``start``.
+    output reg                    acc_scale_violation,
 
     // ---- weight SRAM write port (host/DMA fill) ----
     //: bank 0 only: this is the host's image loader, not the operand-delivery
@@ -213,6 +233,11 @@ module ot_compute_unit #(
     reg [8:0] col;
     reg [7:0] rd_addr;
     reg       tile_clear, tile_valid, tile_valid_d;
+    //: The window exponent the open chain was started with, and whether a chain
+    //: is open at all.  Both are control state, not datapath: they gate a clear
+    //: and set a status bit, and neither is in the MAC's timing path.
+    reg [7:0] chain_scale;
+    reg       chain_open;
     reg [3:0] drain;
 
     //: a column is BACKED when it has arrived.  Under the old flow control that
@@ -331,9 +356,16 @@ module ot_compute_unit #(
             //: depth the two DeepSeek products ask for.  Serving them from it needs
             //: EITHER their schedule rule moved to 128, which doubles the tiles and
             //: so doubles the fills a descriptor is charged, OR a cross-tile
-            //: accumulate on this unit, which it has no input for: ``start`` begins
-            //: a pass and there is no control that says "continue the previous
-            //: tile's sum".  Both are measurable and neither is done here.
+            //: accumulate.  THE SECOND NOW EXISTS: ``acc_continue`` asserted with
+            //: ``start`` continues the previous pass's sums instead of clearing
+            //: them, so a K=256 contraction is two passes over consecutive
+            //: 128-deep tiles and the depth a product declares stops bounding the
+            //: bank a unit can be built from.  It is exact because ``cfg_scale``
+            //: is an input: both passes land their terms in one fixed-point
+            //: window, and a chain whose scale moves raises
+            //: ``acc_scale_violation`` rather than adding terms aligned two
+            //: different ways.  What it costs is the extra fill and drain per
+            //: tile, which is a measurement and not an argument.
             //:
             //: 128 is the answer to that: four ``fakeram7_128x64``, 4 x 361.2 =
             //: 1,444.8 um2, so TWO half-depth banks are 2,890 um2 against the one
@@ -386,8 +418,13 @@ module ot_compute_unit #(
                 );
             end else begin : depth_unsupported
                 //: A depth with no macro composition is refused at elaboration
-                //: rather than silently built from the wrong parts.
-                $error("ot_compute_unit: K_MAX=%0d has no weight-SRAM macro composition; 128 and 256 are built", K_MAX);
+                //: rather than silently built from the wrong parts.  The call sits
+                //: in an ``initial`` because a bare system task is not a module
+                //: item: Icarus refuses the file outright ("invalid module item"),
+                //: which turned a guard against one mistake into a compile error
+                //: for every depth.
+                initial
+                    $error("ot_compute_unit: K_MAX=%0d has no weight-SRAM macro composition; 128 and 256 are built", K_MAX);
             end
         end
     endgenerate
@@ -433,16 +470,30 @@ module ot_compute_unit #(
             state <= S_IDLE; col <= 9'b0; rd_addr <= 8'b0; act_raddr <= 9'b0;
             busy <= 1'b0; done <= 1'b0; tile_clear <= 1'b0; tile_valid <= 1'b0;
             drain <= 4'b0;
+            chain_scale <= 8'b0; chain_open <= 1'b0;
+            acc_scale_violation <= 1'b0;
         end else begin
             done       <= 1'b0;
             tile_clear <= 1'b0;
             case (state)
                 S_IDLE:
                     if (start) begin
-                        busy <= 1'b1; tile_clear <= 1'b1;
+                        busy <= 1'b1;
+                        //: The ONE line that makes a deep contraction expressible:
+                        //: a continuing pass does not clear, so its terms land on
+                        //: top of the chain's running sums.
+                        tile_clear <= ~acc_continue;
                         col <= 9'b0; rd_addr <= 8'b0; act_raddr <= 9'b0;
                         tile_valid <= 1'b0;
                         state <= S_WALK;
+                        if (acc_continue) begin
+                            if (chain_open && (cfg_scale != chain_scale))
+                                acc_scale_violation <= 1'b1;
+                        end else begin
+                            chain_scale <= cfg_scale;
+                            chain_open  <= 1'b1;
+                            acc_scale_violation <= 1'b0;
+                        end
                     end
 
                 S_WALK: begin

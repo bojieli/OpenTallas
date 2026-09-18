@@ -97,7 +97,8 @@ module tb_kernel_rom_vs_hbm #(
                       .REFILL_DECOUPLED(REFILL_DECOUPLED),
                       .WGT_BANKS(WGT_BANKS)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_k(cfg_k),
-        .cfg_scale(cfg_scale), .wgt_reload(wgt_reload),
+        .cfg_scale(cfg_scale), .wgt_reload(wgt_reload), .acc_continue(1'b0),
+        .acc_scale_violation(),
         .busy(busy), .done(done),
         .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
         .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),

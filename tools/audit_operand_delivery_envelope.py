@@ -39,6 +39,39 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOUBLE_BUFFER = ROOT / "results/derived/operand_delivery_double_buffer_audit.json"
 BANK_DEPTH = ROOT / "results/derived/operand_delivery_bank_depth_audit.json"
+#: The half-depth double buffer: the SAME two-bank decoupled structure, with each
+#: bank holding 128 contraction steps instead of 256, built from four
+#: ``fakeram7_128x64`` macros instead of two ``fakeram_256x128``.  Its record is
+#: read here rather than quoted, because the scale factor it contributes is
+#: entirely (area, frequency) and both come out of this file.
+HALF_DEPTH = (
+    ROOT
+    / "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_chain_banks2_slew15_0p95.json"
+)
+#: The same geometry WITHOUT the cross-tile accumulate port, kept so the port's
+#: own cost is a measurement rather than an assumption.
+HALF_DEPTH_NO_CHAIN = (
+    ROOT / "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_banks2_0p95.json"
+)
+#: The exactness proof and the cycle cost of splitting one deep contraction into
+#: two chained tiles.
+ACC_CHAIN = ROOT / "results/rtl/compute_unit_acc_chain.json"
+#: The full-depth pair it is the same structure as.  The factor is a RATIO of the
+#: two, so the denominator has to be the closed full-depth double buffer and not
+#: the single-bank baseline.
+FULL_DEPTH_PAIR_LABEL = "double_buffer_closed"
+#: The throughput evidence that lets the factor be applied at all.  Two bank
+#: depths retire identical work in identical cycles at every kernel depth the
+#: half-depth bank can hold -- measured at K=64 and again at K=128, its own
+#: maximum, across refill skew 0 and 2 and one, three and eight passes.  Without
+#: this the factor would be an area-and-frequency ratio between two structures
+#: that might not do the same work per cycle.
+THROUGHPUT_IDENTITY = (
+    "results/rtl/dispatch_tree_campaign_half_depth_k128_skew0.json",
+    "results/rtl/dispatch_tree_campaign_half_depth_k128_skew2.json",
+    "results/rtl/dispatch_tree_campaign_full_depth_k128_skew0.json",
+    "results/rtl/dispatch_tree_campaign_full_depth_k128_skew2.json",
+)
 
 
 def sha256(path: Path) -> str:
@@ -143,6 +176,231 @@ def main() -> int:
 
     envelope = min(r["best_ratio_vs_a100_logic"] for r in regimes)
     ceiling = max(r["best_ratio_vs_a100_logic"] for r in regimes)
+
+    # -- the half-depth structure, and the envelope it moves -----------------
+    #
+    # A THIRD closed structure at the published 512-unit width, and the one that
+    # moves the worst regime.  It is the same two-bank decoupled double buffer
+    # with each bank half as deep, so its ratio differs from the pair's by
+    # exactly (area, frequency) -- it does the same work in the same cycles,
+    # which is measured and not assumed (THROUGHPUT_IDENTITY).
+    #
+    # It is reported as its OWN envelope rather than folded into the one above,
+    # because it is product-conditional: a 128-deep bank holds a whole reduction
+    # tile of a product that declares ``tile_depth = 128`` (Qwen3-8B) and half a
+    # tile of one that declares 256 (both DeepSeek products).  Serving those
+    # needs either their schedule rule moved to 128, which doubles the tiles and
+    # the fills a descriptor is charged, or a cross-tile accumulate the unit has
+    # no input for.  Presenting one number for both would be the interesting
+    # half of a conditional statement with the condition dropped.
+    hd = json.loads(HALF_DEPTH.read_text())
+    hd_design = hd["design"]
+    hd_metrics = hd["place_and_route"]["metrics"]
+    pair = variants[FULL_DEPTH_PAIR_LABEL]
+    hd_area = float(hd_metrics["core_area_um2"])
+    hd_fmax = float(hd_metrics["fmax_hz"])
+    pair_area = float(pair["core_area_um2"])
+    pair_fmax = float(pair["post_route_fmax_hz"])
+    area_factor = pair_area / hd_area
+    frequency_factor = hd_fmax / pair_fmax
+    half_depth_factor = area_factor * frequency_factor
+    half_depth = {
+        "structure": "half_depth_double_buffer",
+        "what_it_is": (
+            "the same two-bank decoupled double buffer with each bank holding 128 "
+            "contraction steps instead of 256, composed from four fakeram7_128x64 "
+            "macros instead of two fakeram_256x128"
+        ),
+        "record": str(HALF_DEPTH.relative_to(ROOT)),
+        "record_sha256": sha256(HALF_DEPTH),
+        "closed": bool(hd_design["closed"]),
+        "clock_period_ns": float(hd_design["clock_period_ns"]),
+        "setup_wns_ns": float(
+            hd["acceptance"]["checks"][0]["setup_wns_ns"]
+        ),
+        "core_area_um2": hd_area,
+        "post_route_fmax_hz": hd_fmax,
+        "compared_against": {
+            "label": FULL_DEPTH_PAIR_LABEL,
+            "core_area_um2": pair_area,
+            "post_route_fmax_hz": pair_fmax,
+            "closed": pair.get("closed"),
+            "record": pair.get("record"),
+        },
+        "area_factor": area_factor,
+        "frequency_factor": frequency_factor,
+        "ratio_factor_vs_the_full_depth_pair": half_depth_factor,
+        "smaller_than_the_single_bank_baseline": hd_area
+        < float(variants["published_lockstep"]["core_area_um2"]),
+        "throughput_identity_evidence": [
+            {"artifact": name, "sha256": sha256(ROOT / name)}
+            for name in THROUGHPUT_IDENTITY
+        ],
+        "throughput_identity_reading": (
+            "both bank depths retire identical elapsed cycles and identical unit "
+            "completions at K=128 -- the half-depth bank's own maximum -- at refill "
+            "skew 0 and 2 and one, three and eight passes per descriptor, matching "
+            "the same identity already measured at K=64. So the factor is area and "
+            "frequency only"
+        ),
+        "product_scope": {
+            "serves": [
+                "qwen3-8b (tile_depth 128) directly, one tile per contraction",
+                "deepseek-v4-flash-0731 and deepseek-v4.1-flash (tile_depth 256) "
+                "by chaining two tiles, at the measured cost below",
+            ],
+            "why_it_is_no_longer_conditional": (
+                "a 128-deep bank holds half a reduction tile of a product that "
+                "declares 256, and the unit had no control that said 'continue the "
+                "previous tile's sum'. It has one now (``acc_continue``), so a deep "
+                "contraction is a sequence of passes over consecutive tiles -- how a "
+                "tensor core walks a large K -- and the depth a product declares "
+                "stops bounding the bank a unit can be built from"
+            ),
+        },
+    }
+
+    # -- what the chain costs, and what the port itself cost ------------------
+    chain = json.loads(ACC_CHAIN.read_text())
+    no_chain = json.loads(HALF_DEPTH_NO_CHAIN.read_text())
+    chain_cycles = chain["cycles"]
+    throughput_factor = float(chain_cycles["throughput_factor_of_the_split"])
+    half_depth["cross_tile_accumulate"] = {
+        "exactness": {
+            "bit_identical": bool(chain["bit_identical"]),
+            "what_was_compared": chain["method"],
+            "evidence": {
+                "artifact": str(ACC_CHAIN.relative_to(ROOT)),
+                "sha256": sha256(ACC_CHAIN),
+            },
+            "why_it_is_exact": (
+                "the accumulator is carry-save in a fixed-point window whose "
+                "exponent is ``cfg_scale``, an INPUT and not a per-tile derivation, "
+                "so both passes land their terms on the same bit positions; a chain "
+                "whose scale moves raises ``acc_scale_violation`` instead"
+            ),
+        },
+        "throughput_cost": {
+            "one_deep_pass_cycles": chain_cycles["one_deep_pass"],
+            "two_chained_passes_cycles": chain_cycles["chained_total"],
+            "overhead_cycles": chain_cycles["overhead_cycles"],
+            "factor": throughput_factor,
+            "reading": (
+                f"{chain_cycles['overhead_cycles']} extra cycles on "
+                f"{chain_cycles['one_deep_pass']} -- one extra walk setup and one "
+                "extra drain -- which is what a K=256 product pays to be served "
+                "from a 128-deep bank"
+            ),
+        },
+        "what_the_port_itself_cost": {
+            "core_area_um2_without_the_port": float(
+                no_chain["place_and_route"]["metrics"]["core_area_um2"]
+            ),
+            "core_area_um2_with_the_port": hd_area,
+            "post_route_fmax_hz_without_the_port": float(
+                no_chain["place_and_route"]["metrics"]["fmax_hz"]
+            ),
+            "post_route_fmax_hz_with_the_port": hd_fmax,
+            "record_without_the_port": str(HALF_DEPTH_NO_CHAIN.relative_to(ROOT)),
+            "reading": (
+                "the area is unchanged to the digit and the frequency moves by "
+                f"{(hd_fmax / float(no_chain['place_and_route']['metrics']['fmax_hz']) - 1) * 100:+.2f}%; "
+                "the chain-capable build needs a 15% slew margin to close, the same "
+                "margin the full-depth double buffer needed, and closes with zero "
+                "slew, cap and fanout violations"
+            ),
+        },
+    }
+    def scoped_for(factor: float) -> tuple[list[dict[str, object]], float, float]:
+        rows = []
+        for row in regimes:
+            scaled = float(row["frontier_double_buffer"]) * factor
+            candidates = {
+                "lockstep_single_buffer": float(row["lockstep_single_buffer"]),
+                "frontier_double_buffer": float(row["frontier_double_buffer"]),
+                "half_depth_double_buffer": scaled,
+            }
+            best = max(candidates, key=lambda k: candidates[k])
+            rows.append({
+                "regime": row["regime"],
+                "meaning": row["meaning"],
+                **candidates,
+                "best_structure": best,
+                "best_ratio_vs_a100_logic": candidates[best],
+                "above_parity": candidates[best] > 1.0,
+                "every_candidate_is_closed": True,
+            })
+        return (
+            rows,
+            min(r["best_ratio_vs_a100_logic"] for r in rows),
+            max(r["best_ratio_vs_a100_logic"] for r in rows),
+        )
+
+    # A product whose tile depth the bank holds pays no chaining cost; one that
+    # declares 256 pays the measured split factor.  Both are stated, because one
+    # number covering both would be the interesting half of a conditional with
+    # the condition dropped.
+    deep_rows, deep_floor, deep_ceiling = scoped_for(
+        half_depth_factor * throughput_factor
+    )
+    half_depth["envelope_for_a_tile_depth_256_product"] = {
+        "applies_to": [
+            "deepseek-v4-flash-0731 (tile_depth 256, two chained tiles)",
+            "deepseek-v4.1-flash (tile_depth 256, two chained tiles)",
+        ],
+        "structure_factor": half_depth_factor,
+        "throughput_factor_of_the_chain": throughput_factor,
+        "net_factor": half_depth_factor * throughput_factor,
+        "worst_regime_best_ratio": deep_floor,
+        "best_regime_ratio": deep_ceiling,
+        "above_parity_in_every_regime": all(r["above_parity"] for r in deep_rows),
+        "regimes": deep_rows,
+        "moves_the_worst_regime_from": envelope,
+        "moves_the_worst_regime_to": deep_floor,
+        "reading": (
+            "with the cross-tile accumulate, the half-depth structure serves a "
+            "256-deep product too, and the WORST regime's best ratio rises from "
+            f"{envelope:.4f}x to {deep_floor:.4f}x -- every point post-route closed, "
+            "and no longer conditional on the product's declared tile depth"
+        ),
+    }
+
+    scoped_regimes = []
+    for row in regimes:
+        scaled = float(row["frontier_double_buffer"]) * half_depth_factor
+        candidates = {
+            "lockstep_single_buffer": float(row["lockstep_single_buffer"]),
+            "frontier_double_buffer": float(row["frontier_double_buffer"]),
+            "half_depth_double_buffer": scaled,
+        }
+        best_structure = max(candidates, key=lambda k: candidates[k])
+        scoped_regimes.append({
+            "regime": row["regime"],
+            "meaning": row["meaning"],
+            **candidates,
+            "best_structure": best_structure,
+            "best_ratio_vs_a100_logic": candidates[best_structure],
+            "above_parity": candidates[best_structure] > 1.0,
+            "every_candidate_is_closed": True,
+        })
+    scoped_floor = min(r["best_ratio_vs_a100_logic"] for r in scoped_regimes)
+    scoped_ceiling = max(r["best_ratio_vs_a100_logic"] for r in scoped_regimes)
+    half_depth["envelope_within_its_reach"] = {
+        "applies_to": "a product whose declared reduction tile depth is at most 128",
+        "worst_regime_best_ratio": scoped_floor,
+        "best_regime_ratio": scoped_ceiling,
+        "above_parity_in_every_regime": all(
+            r["above_parity"] for r in scoped_regimes
+        ),
+        "regimes": scoped_regimes,
+        "moves_the_worst_regime_from": envelope,
+        "moves_the_worst_regime_to": scoped_floor,
+        "reading": (
+            "adding the half-depth structure raises the WORST regime's best ratio "
+            f"from {envelope:.4f}x to {scoped_floor:.4f}x, every point post-route "
+            "closed, for a product whose tile depth it can hold"
+        ),
+    }
     body = {
         "schema": "opentallas.derived.operand_delivery_envelope.v1",
         "question": (
@@ -151,6 +409,7 @@ def main() -> int:
             "A100 iso-area ratio?"
         ),
         "regimes": regimes,
+        "half_depth_double_buffer": half_depth,
         "envelope": {
             "worst_regime_best_ratio": envelope,
             "best_regime_ratio": ceiling,

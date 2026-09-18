@@ -65,7 +65,7 @@ module tb_kernel_dispatch_throughput;
         //: default REFILL_DECOUPLED=0: refill_valid is a token, so the payload is
         //: tied off and wgt_reload is high on every start.  This bench isolates
         //: CONTROL and checks no results, so the weight store is never written.
-        .wgt_reload(1'b1),
+        .wgt_reload(1'b1), .acc_continue(1'b0), .acc_scale_violation(),
         .busy(cu_busy), .done(cu_done),
         .wr_en(1'b0), .wr_addr(8'b0), .wr_data({16*LANES{1'b0}}),
         .act_we(1'b0), .act_waddr(9'b0), .act_wdata(16'b0),

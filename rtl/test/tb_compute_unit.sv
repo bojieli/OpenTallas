@@ -45,7 +45,8 @@ module tb_compute_unit;
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_k(cfg_k),
         //: wgt_reload high: every start is treated as bringing a new weight tile,
         //: which is what the default REFILL_DECOUPLED=0 handshake always did.
-        .cfg_scale(cfg_scale), .wgt_reload(1'b1), .busy(busy), .done(done),
+        .cfg_scale(cfg_scale), .wgt_reload(1'b1), .acc_continue(1'b0),
+        .acc_scale_violation(), .busy(busy), .done(done),
         .wr_en(wr_en), .wr_addr(wr_addr), .wr_data(wr_data),
         .act_we(act_we), .act_waddr(act_waddr), .act_wdata(act_wdata),
         //: refill_valid MUST be driven.  It was added to ot_compute_unit for the
