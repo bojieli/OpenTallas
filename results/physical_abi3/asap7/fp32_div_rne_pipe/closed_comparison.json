@@ -39,5 +39,41 @@
     "reading": "The clock rose 1.48x and the cycles grew 1.97x, so ONE DIVISION TAKES 1.33x LONGER in wall time.  This is a trade, not a free win, and calling it a speedup without that sentence would be wrong.",
     "time_per_division_ratio": 1.334
   },
-  "why_the_area_fell": "Pipeline registers were added and the block still shrank 12%, because the reference evaluates a SECOND full comparison every cycle -- the RNE rounding midpoint, a value read once after the bracket closes.  Moving it out of the loop saves more than the registers cost."
+  "three_point_summary": {
+    "pipelined": {
+      "area_um2": 1323.53,
+      "cycles": 43291,
+      "fmax_mhz": 418.5
+    },
+    "pipelined_and_seeded": {
+      "area_um2": 1336.43,
+      "cycles": 35335,
+      "fmax_mhz": 431.4
+    },
+    "reference": {
+      "area_um2": 1504.85,
+      "cycles": 21982,
+      "fmax_mhz": 283.5
+    }
+  },
+  "what_it_would_do_to_the_limiter_if_wired": "The limiter today is ot_a3_fp32_div_rne at 283.5 MHz.  Replacing it would move the limiter to ot_a3_g2_cluster at 302.5 MHz -- the next slowest closed ABI 3.0 block.  Nothing is wired: the seven parents would each see a longer division latency, so their RTL campaigns need re-qualifying before the swap, and that is not folded in silently.",
+  "why_the_area_fell": "Pipeline registers were added and the block still shrank 12%, because the reference evaluates a SECOND full comparison every cycle -- the RNE rounding midpoint, a value read once after the bracket closes.  Moving it out of the loop saves more than the registers cost.",
+  "with_bracket_seeding": {
+    "area_um2": 1336.43,
+    "closed": true,
+    "cycles": 35335,
+    "fmax_mhz": 431.4,
+    "module": "ot_a3_fp32_div_rne_pipe (seeded)",
+    "setup_wns_ns": 0.08220090000000001,
+    "target_ns": 2.4,
+    "the_prediction_held": "The seed logic sits on the accept path rather than the bisection step, so it was predicted not to cost clock.  It did not: 431.4 MHz against the unseeded 418.5 MHz, slightly faster rather than slower, and area 1336.4 um2 against 1323.5.  The difference either way is small enough to be layout noise; what matters is that it is not a regression.",
+    "the_trade_is_now_nearly_neutral": "1.52x the clock for 1.61x the cycles is 1.06x time per division -- against 1.33x before seeding.  So the engine complex's period falls by more than half while a single division costs about 6% more wall time.",
+    "vs_reference": {
+      "area_smaller": 1.126,
+      "clock": 1.522,
+      "cycles": 1.607,
+      "time_per_division": 1.056
+    },
+    "zero": "max-slew, max-cap, max-fanout and DRC"
+  }
 }
