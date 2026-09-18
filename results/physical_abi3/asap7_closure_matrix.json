@@ -8,8 +8,11 @@
     "ot_a3_lane_pipelined",
     "ot_a3_lq8",
     "ot_a3_microsequencer",
+    "ot_a3_route_block_max",
+    "ot_a3_route_candidate_mask",
     "ot_a3_route_index_topk",
     "ot_a3_tree_endpoint_fp32",
+    "ot_a3_vector_fp4kv_dequant",
     "ot_a3_vector_scale",
     "ot_compute_unit",
     "ot_mac_bf16_fp32_pipe",
@@ -27,12 +30,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 24,
+    "distinct_blocks_with_a_closed_routed_record": 27,
     "pre_layout_only_records": 72,
-    "records_read": 155,
-    "routed_and_closed": 49,
+    "records_read": 158,
+    "routed_and_closed": 52,
     "routed_not_closed": 34,
-    "routed_records": 83
+    "routed_records": 86
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -41,7 +44,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cd3c9ba573ff1ac90116b75cd2451b25c181bbf2"
+      "commit": "8aec5dd282abe8a5c048538eb3eff157ec629ce1"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -3628,6 +3631,31 @@
       }
     },
     {
+      "block": "ot_a3_route_block_max",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 1762.72,
+      "hold_wns_ns": 0.0449881,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 1713600000.0,
+      "record": "results/physical_abi3/asap7/route_block_max/pnr_closed.json",
+      "record_sha256": "28069c2c4c00499239aa6a9bb7290bbefe10cf40bd89b039cecbde89f90d7794",
+      "routed": true,
+      "setup_wns_ns": 0.416435,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 681.498,
+      "status": "pass",
+      "target_clock_period_ns": 1.0,
+      "why_not_closed": null
+    },
+    {
       "block": "ot_a3_route_candidate_mask",
       "closed": false,
       "closed_reason": null,
@@ -3659,6 +3687,31 @@
         ],
         "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
       }
+    },
+    {
+      "block": "ot_a3_route_candidate_mask",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 8151.91,
+      "hold_wns_ns": 0.050853,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 845859000.0,
+      "record": "results/physical_abi3/asap7/route_candidate_mask/pnr_closed.json",
+      "record_sha256": "966b608fa10e186530941c13a17104f97379ff1703d3b220e787fa767e94091c",
+      "routed": true,
+      "setup_wns_ns": 1.31777,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2971.11,
+      "status": "pass",
+      "target_clock_period_ns": 2.5,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_route_index_topk",
@@ -3761,6 +3814,31 @@
         ],
         "note": "the routed netlist is clean and meets setup and hold; the not-closed verdict comes from a pre-layout, ideal-clock stage that ran alongside it.  Re-running with --stages pnr alone removes the stage, not a violation"
       }
+    },
+    {
+      "block": "ot_a3_vector_fp4kv_dequant",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 4244.65,
+      "hold_wns_ns": 0.0347686,
+      "macro_area_um2": 0,
+      "post_route_fmax_hz": 882842000.0,
+      "record": "results/physical_abi3/asap7/vector_fp4kv_dequant/pnr_closed.json",
+      "record_sha256": "9ebaf16847901cf939f1c26f748536f04562ce5394eae1fd89bcd1d85640a60b",
+      "routed": true,
+      "setup_wns_ns": 0.267295,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1673.87,
+      "status": "pass",
+      "target_clock_period_ns": 1.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_vector_scale",
