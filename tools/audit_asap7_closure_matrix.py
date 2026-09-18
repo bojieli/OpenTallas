@@ -53,6 +53,39 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _committed_blob_hashes() -> dict[str, str]:
+    """Every tracked path's blob hash at HEAD, so a record read off a DIRTY working
+    tree can be flagged as such.
+
+    This audit hashes the file on disk.  If that file differs from the committed one
+    -- a regeneration that was never committed, which this checkout has had sitting
+    in it for days at a time -- then the matrix's numbers cannot be reproduced from
+    a fresh clone, and nothing in the artifact would have said so.  The record's own
+    ``record_sha256`` would eventually expose it; this names it up front instead.
+    """
+    listing = subprocess.run(
+        ["git", "ls-tree", "-r", "HEAD"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    hashes: dict[str, str] = {}
+    for line in listing.splitlines():
+        # "<mode> <type> <object>\t<path>"
+        meta, _, path = line.partition("\t")
+        parts = meta.split()
+        if path and len(parts) == 3:
+            hashes[path] = parts[2]
+    return hashes
+
+
+def _blob_hash(path: Path) -> str:
+    return subprocess.run(
+        ["git", "hash-object", str(path)], cwd=ROOT, capture_output=True, text=True, check=True
+    ).stdout.strip()
+
+
 def _why_not_closed(body: dict[str, Any], metrics: dict[str, Any]) -> dict[str, Any]:
     """Separate a DESIGN failure from a FLOW artifact, from the record's own fields.
 
@@ -132,6 +165,7 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
 
     base = ROOT / "results/physical_abi3" / arguments.view
+    committed = _committed_blob_hashes()
     rows: list[dict[str, Any]] = []
     for path in sorted(base.rglob("*.json")):
         if "artifacts" in path.parts:
@@ -149,6 +183,11 @@ def main(argv: list[str] | None = None) -> int:
         rows.append({
             "record": str(path.relative_to(ROOT)),
             "record_sha256": _sha256(path),
+            "matches_committed_version": (
+                None
+                if str(path.relative_to(ROOT)) not in committed
+                else _blob_hash(path) == committed[str(path.relative_to(ROOT))]
+            ),
             "block": design.get("block"),
             "stages_completed": list(stages),
             "routed": routed,
@@ -199,6 +238,20 @@ def main(argv: list[str] | None = None) -> int:
             "distinct_blocks_with_a_closed_routed_record": len(blocks_closed),
         },
         "blocks_with_a_closed_routed_record": blocks_closed,
+        "working_tree_cleanliness": {
+            "what": (
+                "this audit hashes the file on disk.  A record whose disk contents "
+                "differ from its committed version cannot be reproduced from a fresh "
+                "clone, so every such record is named here rather than left for a "
+                "reader to discover from record_sha256."
+            ),
+            "records_read_from_a_modified_file": sorted(
+                r["record"] for r in rows if r["matches_committed_version"] is False
+            ),
+            "records_read_from_an_untracked_file": sorted(
+                r["record"] for r in rows if r["matches_committed_version"] is None
+            ),
+        },
         "why_the_not_closed_records_are_not_closed": _reason_counts(not_closed),
         "recoverable_by_dropping_a_pre_layout_stage": sorted(
             {
