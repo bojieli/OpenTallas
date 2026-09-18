@@ -146,7 +146,16 @@ def test_the_comparator_declares_the_four_am_e10_contracts_and_no_others() -> No
     added = v41_added_contracts()
     assert added == (
         "candidate_mask_v1",
-        "engram_gate_fp32_v1",
+        # NOT ``engram_gate_fp32_v1``.  The V4.1 front end pins
+        # ``engram_gate_pinned_form`` because the frozen v1 contract differs from
+        # this release's own ``Engram.forward`` in four ways that all change the
+        # VALUE -- run on one input the two gates are 0.784 and 0.683 -- so naming
+        # v1 asked the device to compute a gate this model does not have, and the
+        # emitted token disagreed with the reference oracle while V4-Flash's, whose
+        # path has no Engram, agreed.  v1 is frozen ABI and is left alone; the
+        # comparator declares the contract whose implementation is the release's
+        # expression.  This test asserted the old name after the front end moved.
+        "engram_gate_pinned_form_v1",
         "fp4_e2m1_s16_e4m3_to_fp8_v1",
         "ngram_hash_u32_v1",
     )
