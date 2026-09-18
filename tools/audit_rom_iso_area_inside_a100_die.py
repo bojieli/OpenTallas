@@ -59,6 +59,11 @@ DEVICE_LEVEL = ROOT / "results/derived/device_level_iso_area_audit.json"
 #: in the committed artifacts; it is restated here because it IS the area budget.
 A100_DIE_AREA_MM2 = 826.0
 
+#: The comparator's own HBM stack count.  Allowing our die more stacks than the A100
+#: carries would compare two different dies: the PHY area is charged either way, but
+#: the beachfront that hosts it is not modelled, so the count is capped at the A100's.
+MAX_HBM_STACKS = 5
+
 #: Weight bit widths.  ``q4p25`` is the quantised study's own name: 4 bits of
 #: weight plus a 0.25-bit-per-weight share of the block scales.
 PRECISIONS = {
@@ -366,6 +371,112 @@ def main() -> int:
                 "crossover_batch_where_a100_overtakes": crossover,
             }
 
+    # ---- the architectural optimisation -------------------------------------
+    # Sizing ROM to hold the WHOLE model is one design point, not the best one.  It
+    # spends 88% of the usable die on storage and leaves 80.9 mm2 to compute with,
+    # which is why the GPU overtakes it past batch 16.  The split is a free variable:
+    # hold a fraction f of the weights in on-die ROM and stream the rest from HBM,
+    # charging the die for the HBM PHY it then needs.  Sweeping f finds the point
+    # that maximises throughput at each batch, which is the question "as good as
+    # possible inside 826 mm2" actually asks.
+    hbm_per_stack_bytes_s = hbm_bandwidth / 5.0  # A100 80GB is five HBM2e stacks
+    device_level = _load(DEVICE_LEVEL)["inputs"] if DEVICE_LEVEL.exists() else {}
+    phy_mm2_per_stack = float(device_level.get("hbm_phy_mm2_per_stack") or 10.0)
+    stack_capacity = float(device_level.get("hbm_stack_capacity_bytes") or 16e9)
+
+    def _best_split(weight_bytes: float, ops_per_token: float, fmt: str, batch: int,
+                    density: float) -> dict[str, Any]:
+        best: dict[str, Any] | None = None
+        for step in range(0, 101):
+            fraction = step / 100.0
+            rom_bytes = weight_bytes * fraction
+            streamed = weight_bytes - rom_bytes
+            rom_mm2 = rom_bytes / rom_bytes_per_mm2
+            if rom_mm2 > usable_mm2:
+                continue
+            minimum_stacks = 0
+            if streamed > 0:
+                # enough stacks to HOLD the streamed weights, at least one
+                minimum_stacks = max(1, int(-(-streamed // stack_capacity)))
+            if minimum_stacks > MAX_HBM_STACKS:
+                # more stacks than the comparator's own die carries: not a die this
+                # frame can claim, so the split is inadmissible rather than fast
+                continue
+            # More stacks buy bandwidth and cost PHY area; the optimiser picks,
+            # bounded by what the A100 itself carries so the two dies are comparable.
+            for stacks in range(minimum_stacks, MAX_HBM_STACKS + 1):
+                if stacks == 0 and streamed > 0:
+                    continue
+                phy_mm2 = stacks * phy_mm2_per_stack
+                compute_mm2 = usable_mm2 - rom_mm2 - phy_mm2
+                if compute_mm2 <= 0:
+                    continue
+                # seconds to produce one batch of tokens
+                compute_s = batch * ops_per_token / (compute_mm2 * density)
+                rom_s = (
+                    batch * rom_bytes / (rom_mm2 * rom_read_bytes_s_per_mm2)
+                    if rom_mm2 else 0.0
+                )
+                hbm_s = streamed / (stacks * hbm_per_stack_bytes_s) if stacks else 0.0
+                seconds = max(compute_s, rom_s, hbm_s)
+                if seconds <= 0:
+                    continue
+                tokens_s = batch / seconds
+                bound = max(
+                    (compute_s, "compute"), (rom_s, "rom_read"), (hbm_s, "hbm_read")
+                )[1]
+                if best is None or tokens_s > best["tokens_s"]:
+                    best = {
+                        "rom_fraction_of_weights": fraction,
+                        "rom_area_mm2": rom_mm2,
+                        "hbm_stacks": stacks,
+                        "hbm_phy_area_mm2": phy_mm2,
+                        "compute_area_mm2": compute_mm2,
+                        "tokens_s": tokens_s,
+                        "binding_constraint": bound,
+                    }
+        return best or {}
+
+    optimised: dict[str, Any] = {}
+    for model_name, cell in cells.items():
+        ops_per_token = cell["operations_per_token"]
+        for precision, entry in cell["by_precision"].items():
+            weight_bytes = entry["stored_weight_bytes"]
+            fmt = EXECUTION_FORMAT[precision]
+            density = compute_density[fmt]
+            rows = []
+            for batch in BATCHES:
+                point = _best_split(weight_bytes, ops_per_token, fmt, batch, density)
+                if not point:
+                    continue
+                a100_weight = hbm_bandwidth * batch / weight_bytes
+                a100_compute = a100_bf16_ops_s / ops_per_token
+                a100_tokens = min(a100_weight, a100_compute)
+                # Our side executes w4a8; the A100's committed roof is bf16.  Its
+                # published INT8 roof is 2x that, and past the crossover the GPU is
+                # compute-bound, so the whole high-batch margin would move.  Both are
+                # reported rather than only the favourable one.
+                a100_int8 = min(a100_weight, 2.0 * a100_compute)
+                rows.append({**point, "batch": batch, "a100_tokens_s": a100_tokens,
+                             "speed_ratio_ours_over_a100": point["tokens_s"] / a100_tokens,
+                             "a100_tokens_s_at_int8_roof": a100_int8,
+                             "speed_ratio_against_int8_roof": point["tokens_s"] / a100_int8})
+            if rows:
+                optimised[f"{model_name}/{precision}"] = {
+                    "by_batch": rows,
+                    "worst_ratio": min(r["speed_ratio_ours_over_a100"] for r in rows),
+                    "best_ratio": max(r["speed_ratio_ours_over_a100"] for r in rows),
+                    "above_parity_at_every_batch": all(
+                        r["speed_ratio_ours_over_a100"] >= 1.0 for r in rows
+                    ),
+                    "worst_ratio_against_int8_roof": min(
+                        r["speed_ratio_against_int8_roof"] for r in rows
+                    ),
+                    "above_parity_at_every_batch_against_int8_roof": all(
+                        r["speed_ratio_against_int8_roof"] >= 1.0 for r in rows
+                    ),
+                }
+
     fitting = [
         (model, precision, entry)
         for model, cell in cells.items()
@@ -413,6 +524,25 @@ def main() -> int:
             ),
         },
         "cells": cells,
+        "optimised_rom_hbm_split": {
+            "what": (
+                "sizing ROM to the whole model is one design point, not the best.  "
+                "Holding a fraction of the weights on-die and streaming the rest "
+                "from HBM -- charging the die for the HBM PHY it then needs -- is a "
+                "free variable, and this sweeps it at every batch to find the point "
+                "that maximises throughput inside the same 826 mm2."
+            ),
+            "hbm_phy_mm2_per_stack": phy_mm2_per_stack,
+            "hbm_phy_grade": "assumed",
+            "hbm_bytes_s_per_stack": hbm_per_stack_bytes_s,
+            "max_hbm_stacks": MAX_HBM_STACKS,
+            "max_hbm_stacks_basis": (
+                "the A100 80GB carries five HBM2e stacks.  Our die is charged PHY "
+                "area per stack but the beachfront that hosts it is not modelled, so "
+                "the count is capped at the comparator's own rather than left free"
+            ),
+            "points": optimised,
+        },
         "cross_check_against_committed_design": cross_check,
         "measured_compute_density_sensitivity": sensitivity,
         "answer": {
