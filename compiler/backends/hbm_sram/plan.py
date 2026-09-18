@@ -4791,6 +4791,53 @@ def _domain_extent(kernel: Kernel, keys: Sequence[str], span_max: int) -> int:
     return 0
 
 
+def _rolling_compressor_predicate_names(graph: KernelGraph) -> frozenset[str]:
+    """The predicate names the released rolling compressors publish.
+
+    This is the planner's copy of the discovery
+    ``compiler.backends.hbm_sram.lower.HbmLowering._discover_compressor_predicates``
+    performs: a rolling compressor is a ``COMPRESS_STATE_UPDATE`` kernel and the
+    name it publishes is its ``predicate_output``.  The lowering validates the
+    ratio and the two conditions; this only needs the names, so it reads the same
+    attribute off the same kinds and leaves the validation where it is.
+
+    It is derived rather than listed for the reason the lowering states about
+    ratios: naming the models shipped so far freezes a model-blind backend to
+    them.
+    """
+
+    names: set[str] = set()
+    for kernel in graph.kernels:
+        if kernel.kind != "COMPRESS_STATE_UPDATE":
+            continue
+        published = kernel.attributes.get("predicate_output")
+        if published:
+            names.add(str(published))
+    return frozenset(names)
+
+
+def _names_a_rolling_compressor_predicate(
+    kernel: Kernel, predicate_names: frozenset[str]
+) -> bool:
+    """Whether ``kernel`` is one of a rolling compressor's conditional paths.
+
+    Mirrors the attributes ``_compressor_predicate_of`` reads -- the predicate a
+    kernel publishes, the one that gates its execution, and the ones its
+    conditional outputs name -- so the planner and the lowering agree about which
+    kernels carry the two guarded physical forms.
+    """
+
+    named: set[str] = set()
+    for attribute in ("predicate_output", "execution_predicate"):
+        value = kernel.attributes.get(attribute)
+        if value:
+            named.add(str(value))
+    conditional = kernel.attributes.get("conditional_outputs")
+    if conditional:
+        named.update(str(value) for value in dict(conditional).values())
+    return bool(named & predicate_names)
+
+
 def _plan_kernels(
     graph: KernelGraph,
     tensors: Mapping[str, Tensor],
@@ -4822,6 +4869,7 @@ def _plan_kernels(
     """
     warnings: list[str] = []
     arity_faults: list[str] = []
+    rolling_predicate_names = _rolling_compressor_predicate_names(graph)
     # ``ROUTE.WINDOW_INDEX`` operators whose kernel declared no ``window_size``.
     # Recorded rather than refused: a graph that declares no window is naming
     # an index family this operator does not produce, which is a fact about the
@@ -5059,6 +5107,39 @@ def _plan_kernels(
                 # partial rows are joined by the explicit route-class-3 sum
                 # before EXPERT_REDUCE consumes them.
                 shard_columns = cols
+            elif _names_a_rolling_compressor_predicate(
+                kernel, rolling_predicate_names
+            ):
+                # A rolling compressor's conditional path carries TWO guarded
+                # physical instructions -- the prefill-many form and the
+                # boundary-decode-one form, which ``_emit_compressor_paths``
+                # emits and which converge only after the compressed-cache
+                # append.  A column-sharded contraction additionally carries an
+                # ``activation_transfer``, and the lowering refuses the
+                # combination outright ("a rolling-compressor conditional path
+                # cannot also carry link class 'activation_transfer'") because
+                # neither guarded path is the place to put one all-gather of a
+                # result the other path did not produce.
+                #
+                # Replication is what this planner already does with a
+                # contraction a node count cannot cut -- see the scale-tile case
+                # below -- so it is what a conditional path gets too: every node
+                # computes the whole projection and no transfer is needed.  The
+                # refusal it replaces was reached by DeepSeek-V4.1-Flash's
+                # indexer key projection at eight nodes, which is a 512-column
+                # contraction gated by the ratio-2 compressor.
+                #
+                # Shipped graphs are unmoved by construction: a shipped
+                # deployment that had reached this combination could not have
+                # been built at all, since the lowering refuses it.  So every
+                # kernel this branch newly replicates is one no shipped
+                # deployment contains.
+                warnings.append(
+                    f"kernel {kernel.kernel_id}: {cols} output columns gate on a "
+                    f"rolling-compressor predicate, whose two guarded paths "
+                    f"cannot carry an activation transfer; this contraction is "
+                    "replicated instead of sharded"
+                )
             elif node_count > 1 and cols % node_count == 0 and cols > node_count:
                 if (cols // node_count) % row_block:
                     warnings.append(

@@ -2382,6 +2382,35 @@ def _domain_extent(kernel: Kernel, graph: KernelGraph) -> int:
     return 0
 
 
+def _gates_on_a_rolling_compressor(graph: KernelGraph, kernel: Kernel) -> bool:
+    """Whether ``kernel`` sits on a rolling compressor's conditional path.
+
+    A rolling compressor is a ``COMPRESS_STATE_UPDATE`` kernel and the name it
+    publishes is its ``predicate_output``; a kernel is on its conditional path
+    when it publishes, executes under, or conditionally outputs that name.  Both
+    halves are graph facts, so this is independent of the plan under test --
+    which is the property that makes it usable here.
+    """
+
+    published = {
+        str(other.attributes.get("predicate_output", ""))
+        for other in graph.kernels
+        if other.kind == "COMPRESS_STATE_UPDATE"
+    }
+    published.discard("")
+    if not published:
+        return False
+    named: set[str] = set()
+    for attribute in ("predicate_output", "execution_predicate"):
+        value = kernel.attributes.get(attribute)
+        if value:
+            named.add(str(value))
+    conditional = kernel.attributes.get("conditional_outputs")
+    if conditional:
+        named.update(str(value) for value in dict(conditional).values())
+    return bool(named & published)
+
+
 def _logical_weight_use(
     graph: KernelGraph,
     kernel: Kernel,
@@ -2450,6 +2479,15 @@ def _logical_weight_use(
         or output_cols % node_count
         or (output_cols // node_count) % row_block
     ):
+        return False, True, 0
+    if _gates_on_a_rolling_compressor(graph, kernel):
+        # The planner replicates a contraction on a rolling compressor's
+        # conditional path, because that path carries two guarded physical
+        # instructions and the lowering refuses one that must also carry an
+        # ``activation_transfer``.  This restates that rule from the graph, as
+        # every rule in this checker is restated: what it must not do is read the
+        # planner's answer, so it re-derives the condition from the same kernel
+        # attributes the lowering uses to find the path at all.
         return False, True, 0
     shard_columns = output_cols // node_count
     node_stride = shard_columns if transposed else shard_columns * weight_cols

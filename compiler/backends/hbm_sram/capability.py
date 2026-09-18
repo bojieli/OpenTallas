@@ -367,6 +367,8 @@ def cluster_n_capability(
     domain_size: int = CLUSTER_DOMAIN_SIZE,
     numeric_contracts: tuple[str, ...] = SHARED_NUMERIC_CONTRACTS,
     memory: Mapping[str, Mapping[str, Any]] | None = None,
+    features: tuple[Feature, ...] | None = None,
+    limits_override: Mapping[str, int] | None = None,
 ) -> Capability:
     """The shared chip at ``node_count`` nodes under amendment AM-R1.
 
@@ -402,6 +404,10 @@ def cluster_n_capability(
         numeric_contracts=numeric_contracts,
         fabric=cluster_n_fabric(node_count=nodes, domain_count=domains),
         memory=SHARED_MEMORY if memory is None else memory,
+        # ``None`` means "the shipped chip", so the shipped ``cluster-n`` record
+        # is unmoved: both defaults reproduce the previous call exactly.
+        **({} if features is None else {"features": features}),
+        **({} if limits_override is None else {"limits_override": limits_override}),
     )
 
 
@@ -627,10 +633,25 @@ def capability_for(profile: str, *, node_count: int | None = None) -> Capability
                 "node_count"
             )
         if profile == CLUSTER_N_COMPARATOR_PROFILE:
+            # All FOUR comparator fields, matching
+            # :func:`single_chip_comparator_capability`.  This used to pass only
+            # the contracts and the memory, which made the cluster comparator a
+            # DIFFERENT machine from the single-chip one in two fields that are
+            # properties of the shared chip rather than of its cardinality: the
+            # AM-E10 fp4 feature bit, which every node's
+            # ``ot_a3_vector_convert.sv`` decodes, and AM-C1's event scoreboard,
+            # which every node's microsequencer holds at ``A3_EVENT_COUNT``.
+            # A comparator model refused for want of either got a verdict about
+            # the record rather than about itself -- DeepSeek-V4.1-Flash at eight
+            # nodes was refused "capability does not implement required feature
+            # bits [13]" by the cluster record and admitted by the one-chip
+            # record, on the same graph and the same chip.
             return cluster_n_capability(
                 node_count=int(node_count),
                 numeric_contracts=comparator_numeric_contracts(),
                 memory=comparator_memory(),
+                features=comparator_features(),
+                limits_override=comparator_limits(),
             )
         return cluster_n_capability(node_count=int(node_count))
     if node_count is not None:
