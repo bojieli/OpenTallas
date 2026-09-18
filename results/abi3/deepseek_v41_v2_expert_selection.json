@@ -7298,11 +7298,338 @@
  "oracle_gates_captured": 40,
  "producer": {
   "git": {
-   "commit": "58b549c68401a09fa56ec3ce011aa693d7598be5"
+   "commit": "697721f377d675dd8b3004bab9b78c176beac450"
   },
   "tool": "tools/compare_v41_expert_selection.py"
  },
  "question": "do the device and the oracle select the same experts for the same tokens, and at what depth do they first stop?",
+ "routing_weights": {
+  "device_weight_tensors": 40,
+  "per_layer": [
+   {
+    "median_device_over_oracle_ratio": 0.6666666955127165,
+    "oracle_layer": 0,
+    "pair_index": 0,
+    "positions_with_matching_selection": 8,
+    "worst_at_position": 2,
+    "worst_relative_weight_difference": 0.33338475666729217
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6667090987854011,
+    "oracle_layer": 1,
+    "pair_index": 1,
+    "positions_with_matching_selection": 8,
+    "worst_at_position": 6,
+    "worst_relative_weight_difference": 0.33477837168824814
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6666367901609864,
+    "oracle_layer": 2,
+    "pair_index": 2,
+    "positions_with_matching_selection": 7,
+    "worst_at_position": 3,
+    "worst_relative_weight_difference": 0.33648196122319135
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6682039282991206,
+    "oracle_layer": 3,
+    "pair_index": 3,
+    "positions_with_matching_selection": 7,
+    "worst_at_position": 2,
+    "worst_relative_weight_difference": 0.3497054742005488
+   },
+   {
+    "median_device_over_oracle_ratio": 0.664303168495609,
+    "oracle_layer": 4,
+    "pair_index": 4,
+    "positions_with_matching_selection": 7,
+    "worst_at_position": 3,
+    "worst_relative_weight_difference": 0.3796925403463365
+   },
+   {
+    "median_device_over_oracle_ratio": 0.665944405250818,
+    "oracle_layer": 5,
+    "pair_index": 5,
+    "positions_with_matching_selection": 2,
+    "worst_at_position": 5,
+    "worst_relative_weight_difference": 0.35443805285000435
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 6,
+    "pair_index": 6,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": 0.668110747685319,
+    "oracle_layer": 7,
+    "pair_index": 7,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 7,
+    "worst_relative_weight_difference": 0.35800526277384526
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6696602384303298,
+    "oracle_layer": 8,
+    "pair_index": 8,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 5,
+    "worst_relative_weight_difference": 0.3641739969301447
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6656263304975559,
+    "oracle_layer": 9,
+    "pair_index": 9,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 5,
+    "worst_relative_weight_difference": 0.3501695089855801
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6646483170810676,
+    "oracle_layer": 10,
+    "pair_index": 10,
+    "positions_with_matching_selection": 4,
+    "worst_at_position": 3,
+    "worst_relative_weight_difference": 0.3748460586812394
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6652618590062735,
+    "oracle_layer": 11,
+    "pair_index": 11,
+    "positions_with_matching_selection": 2,
+    "worst_at_position": 7,
+    "worst_relative_weight_difference": 0.36516500267784946
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6530190195833164,
+    "oracle_layer": 12,
+    "pair_index": 12,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 7,
+    "worst_relative_weight_difference": 0.3746310013479063
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6634367953733291,
+    "oracle_layer": 13,
+    "pair_index": 13,
+    "positions_with_matching_selection": 2,
+    "worst_at_position": 2,
+    "worst_relative_weight_difference": 0.37540394243415776
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6577646541803824,
+    "oracle_layer": 14,
+    "pair_index": 14,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 6,
+    "worst_relative_weight_difference": 0.3747534926888804
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6827877231288841,
+    "oracle_layer": 15,
+    "pair_index": 15,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 6,
+    "worst_relative_weight_difference": 0.38624665712653766
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 16,
+    "pair_index": 16,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": 0.653302336947282,
+    "oracle_layer": 17,
+    "pair_index": 17,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 2,
+    "worst_relative_weight_difference": 0.36380598677891357
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 18,
+    "pair_index": 18,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": 0.670318558010158,
+    "oracle_layer": 19,
+    "pair_index": 19,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 5,
+    "worst_relative_weight_difference": 0.39031562844530243
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 20,
+    "pair_index": 20,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6688959557524847,
+    "oracle_layer": 21,
+    "pair_index": 21,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 5,
+    "worst_relative_weight_difference": 0.40224934927755257
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 22,
+    "pair_index": 22,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 23,
+    "pair_index": 23,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": 0.6900513407521738,
+    "oracle_layer": 24,
+    "pair_index": 24,
+    "positions_with_matching_selection": 1,
+    "worst_at_position": 3,
+    "worst_relative_weight_difference": 0.444644865168549
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 25,
+    "pair_index": 25,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 26,
+    "pair_index": 26,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 27,
+    "pair_index": 27,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 28,
+    "pair_index": 28,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 29,
+    "pair_index": 29,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 30,
+    "pair_index": 30,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 31,
+    "pair_index": 31,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 32,
+    "pair_index": 32,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 33,
+    "pair_index": 33,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 34,
+    "pair_index": 34,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 35,
+    "pair_index": 35,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 36,
+    "pair_index": 36,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 37,
+    "pair_index": 37,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 38,
+    "pair_index": 38,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   },
+   {
+    "median_device_over_oracle_ratio": null,
+    "oracle_layer": 39,
+    "pair_index": 39,
+    "positions_with_matching_selection": 0,
+    "worst_at_position": null,
+    "worst_relative_weight_difference": 0.0
+   }
+  ],
+  "what": "where the two sides selected the SAME experts, how far apart are the routing weights?  Both sides are sorted by expert id first, because slot order is not required to agree.",
+  "worst_relative_difference_over_all_layers": 0.444644865168549
+ },
  "schema": "opentallas.abi3.v41_expert_selection_comparison.v1",
  "store": "rom",
  "summary": {

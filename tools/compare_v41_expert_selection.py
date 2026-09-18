@@ -76,6 +76,7 @@ def main() -> int:
     from runtime.abi3.deployment import Deployment
     from runtime.driver import GenerationDriver
     from runtime.sim.device import Device
+    from runtime.sim import formats
     from runtime.sim.engine import _REGISTRY
     from runtime.sim.engines import load_engines
     from tools.bisect_deepseek_v41_oracle_divergence import (
@@ -122,6 +123,9 @@ def main() -> int:
                         "indices": output[1].detach().cpu().numpy().reshape(
                             -1, output[1].shape[-1]
                         ),
+                        "weights": output[0].detach().float().cpu().numpy().reshape(
+                            -1, output[0].shape[-1]
+                        ),
                     }
                 )
         return hook
@@ -150,9 +154,24 @@ def main() -> int:
     )
 
     device_rows: list[dict[str, Any]] = []
+    device_weights: list[np.ndarray] = []
     original = dict(_REGISTRY)
     key = (Major.ROUTE, Route.BIASED_TOPK)
     real = original.get(key)
+    weight_key = (Major.ROUTE, Route.WEIGHT_NORMALIZE)
+    real_weight = original.get(weight_key)
+
+    def weight_spy(ctx, sub, descriptor):
+        out = real_weight(ctx, sub, descriptor)
+        try:
+            view = ctx.output_view(descriptor, 0)
+            values = np.asarray(
+                formats.widen(view.dtype, ctx.read(view)), dtype=np.float64
+            ).reshape(-1, view.dims[-1])
+            device_weights.append(values)
+        except Exception:
+            pass
+        return out
 
     def spy(ctx, sub, descriptor):
         result = real(ctx, sub, descriptor)
@@ -174,6 +193,8 @@ def main() -> int:
 
     if real is not None:
         _REGISTRY[key] = spy
+    if real_weight is not None:
+        _REGISTRY[weight_key] = weight_spy
     try:
         result = GenerationDriver(device).generate(token_ids, max_new_tokens=1).to_dict()
     finally:
@@ -192,6 +213,63 @@ def main() -> int:
         deduplicated.append(row)
     device_duplicates_dropped = len(device_rows) - len(deduplicated)
     device_rows = deduplicated
+
+    deduped_weights: list[np.ndarray] = []
+    for values in device_weights:
+        if deduped_weights and values.shape == deduped_weights[-1].shape and np.array_equal(
+            values, deduped_weights[-1]
+        ):
+            continue
+        deduped_weights.append(values)
+    device_weights = deduped_weights
+
+    # The routing WEIGHTS, compared where the selections agree.  The vendor
+    # normalises the gathered unbiased scores by their sum plus 1e-20 and then
+    # multiplies by route_scale; the device emits the same through GATHER ->
+    # WEIGHT_NORMALIZE.  Slot order is not required to agree, so both sides are
+    # sorted by expert id before comparing.
+    weight_rows: list[dict[str, Any]] = []
+    for index in range(min(len(oracle), len(device_weights))):
+        o_w = oracle[index]["weights"]
+        o_i = oracle[index]["indices"]
+        d_w = device_weights[index]
+        if index >= len(device_rows):
+            break
+        d_i = device_rows[index]["indices"]
+        rows = min(o_w.shape[0], d_w.shape[0])
+        worst = 0.0
+        worst_position = None
+        scale_ratios: list[float] = []
+        for row in range(rows):
+            if set(int(v) for v in o_i[row]) != set(int(v) for v in d_i[row]):
+                continue
+            o_order = np.argsort(o_i[row])
+            d_order = np.argsort(d_i[row])
+            a = o_w[row][o_order].astype(np.float64)
+            b = d_w[row][d_order].astype(np.float64)
+            if a.shape != b.shape:
+                continue
+            denominator = np.maximum(np.abs(a), 1e-30)
+            relative = float(np.max(np.abs(a - b) / denominator))
+            if relative > worst:
+                worst, worst_position = relative, row
+            with np.errstate(divide="ignore", invalid="ignore"):
+                ratio = np.where(np.abs(a) > 0, b / a, np.nan)
+            finite = ratio[np.isfinite(ratio)]
+            if finite.size:
+                scale_ratios.append(float(np.median(finite)))
+        weight_rows.append(
+            {
+                "pair_index": index,
+                "oracle_layer": oracle[index]["layer"],
+                "positions_with_matching_selection": len(scale_ratios),
+                "worst_relative_weight_difference": worst,
+                "worst_at_position": worst_position,
+                "median_device_over_oracle_ratio": (
+                    float(np.median(scale_ratios)) if scale_ratios else None
+                ),
+            }
+        )
 
     # ---- compare ---------------------------------------------------------
     comparisons: list[dict[str, Any]] = []
@@ -266,6 +344,18 @@ def main() -> int:
             "agreement_fraction": (matched_positions / total_positions) if total_positions else None,
             "first_divergent_pair_index": first_divergent,
         },
+        "routing_weights": {
+            "what": (
+                "where the two sides selected the SAME experts, how far apart are the "
+                "routing weights?  Both sides are sorted by expert id first, because "
+                "slot order is not required to agree."
+            ),
+            "device_weight_tensors": len(device_weights),
+            "per_layer": weight_rows,
+            "worst_relative_difference_over_all_layers": (
+                max((r["worst_relative_weight_difference"] for r in weight_rows), default=None)
+            ),
+        },
         "comparisons": comparisons,
         "not_a_claim": [
             "not an RTL measurement: the device is runtime.sim",
@@ -289,6 +379,13 @@ def main() -> int:
     print(f"  positions compared {s['positions_compared']}   same set {s['positions_with_the_same_selected_set']}"
           f"   agreement {s['agreement_fraction']!s}")
     print(f"  first divergent pair index: {s['first_divergent_pair_index']!s}")
+    rw = record["routing_weights"]
+    print(f"  --- routing weights ({rw['device_weight_tensors']} device tensors) ---")
+    print(f"  worst relative difference over all layers: {rw['worst_relative_difference_over_all_layers']!s}")
+    for r in rw["per_layer"][:4]:
+        print(f"    layer {r['oracle_layer']}: matched {r['positions_with_matching_selection']} pos, "
+              f"worst rel {r['worst_relative_weight_difference']:.6g}, "
+              f"median device/oracle {r['median_device_over_oracle_ratio']!s}")
     for c in comparisons[:4]:
         print(f"   pair {c['pair_index']} (oracle layer {c['oracle_layer']}, dtype {c['score_view_dtype']}): "
               f"{c['positions_with_the_same_selected_set']}/{c['positions']} same")

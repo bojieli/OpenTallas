@@ -1,50 +1,67 @@
 {
- "schema": "opentallas.abi3.v41_routed_expert_eliminations.v1",
- "question": "with the FFN input exact, the shared expert exact, and expert selection identical, what inside the device's routed-expert path can still explain L00.ffn.all = 0.984103?",
- "producer": {"tool": "read by inspection against the pinned vendor source", "git": {"commit": "ce7f202"}},
- "standing_observation": {
-  "L00.ffn_norm.all": 1.0,
-  "L00.ffn.shared_experts.all": 1.0,
-  "expert_selection_layer_0": "8/8 positions identical",
-  "L00.ffn.all": 0.984103,
-  "L00.ffn_last_position": 0.999983,
-  "note": "the difference is position-dependent: the last position is nearly exact while all eight together are not"
- },
+ "caveat_on_the_open_item": "L00.ffn.all is matched against 564 device tensors of that size by cosine, so a near-miss on a different tensor cannot be excluded from this reading alone. The block-level arithmetic is consistent with it -- an 17.8% error on an FFN contributing a few percent of the block norm gives the 0.82% seen at block.00.all -- but consistency is not identification, and the next step is an operand-level capture of EXPERT_DISPATCH rather than another cosine.",
  "eliminated": [
   {
    "candidate": "activation quantisation blocking",
-   "why_it_was_plausible": "a block size that does not divide the reduced width would leave a remainder block whose scale differs per position, which is position-dependent and routed-only",
+   "corrects": "the lead recorded in commit ce7f202, which guessed at a 128-element block leaving a 32-element remainder. There is no 128 anywhere in this path and no remainder.",
    "verdict": "ELIMINATED. ACTIVATION_BLOCK resolves to 32 (quantization_config.weight_block_size[0], [32,32] on BOTH the shipped and the reduced release) and the vendor's fp8_block_size default is also 32. dim is 160 = 5x32 and moe_inter_dim is 64 = 2x32, so the blocking is exact on both axes and there is no remainder block.",
-   "corrects": "the lead recorded in commit ce7f202, which guessed at a 128-element block leaving a 32-element remainder. There is no 128 anywhere in this path and no remainder."
+   "why_it_was_plausible": "a block size that does not divide the reduced width would leave a remainder block whose scale differs per position, which is position-dependent and routed-only"
   },
   {
    "candidate": "norm_topk_prob skipped on one side",
-   "why_it_was_plausible": "the reduced inference_config carries no norm_topk_prob, and a None would be falsy in the vendor's `if self.norm_topk_prob and self.topk > 1`, so the vendor would skip a normalisation the IR emits unconditionally",
-   "verdict": "ELIMINATED. The key is ABSENT from the config rather than present-and-null, so the vendor's dataclass default `norm_topk_prob: bool = True` applies and both sides normalise."
+   "verdict": "ELIMINATED. The key is ABSENT from the config rather than present-and-null, so the vendor's dataclass default `norm_topk_prob: bool = True` applies and both sides normalise.",
+   "why_it_was_plausible": "the reduced inference_config carries no norm_topk_prob, and a None would be falsy in the vendor's `if self.norm_topk_prob and self.topk > 1`, so the vendor would skip a normalisation the IR emits unconditionally"
   },
   {
    "candidate": "the SwiGLU clamp asymmetry",
-   "why_it_was_plausible": "the vendor clamps `up` on BOTH sides but `gate` only from ABOVE; a device that clamped the gate symmetrically would differ on exactly those elements where gate < -limit -- few elements, routed-only, position-dependent",
-   "verdict": "ELIMINATED. runtime/sim/engines/vector.py deepseek_clamped_silu_product_bf16 sets gate_high = gate > LIMIT only, and up_low/up_high on both sides -- the same asymmetry as the vendor."
+   "verdict": "ELIMINATED. runtime/sim/engines/vector.py deepseek_clamped_silu_product_bf16 sets gate_high = gate > LIMIT only, and up_low/up_high on both sides -- the same asymmetry as the vendor.",
+   "why_it_was_plausible": "the vendor clamps `up` on BOTH sides but `gate` only from ABOVE; a device that clamped the gate symmetrically would differ on exactly those elements where gate < -limit -- few elements, routed-only, position-dependent"
   },
   {
    "candidate": "the expert numeric path (MXFP4 device against an FP8-recast reference)",
-   "why_it_was_plausible": "the device computes routed experts as MXFP4 while the oracle recast them to FP8, so the comparison was between two different legitimate arithmetics",
-   "verdict": "ELIMINATED at tensor level. Re-running the layer-0 taps against the fp4_dequantised reference returns all 952 checkpoint cosines identical to the fp8 run, largest difference exactly 0, same emitted token. The two references agree bit-for-bit and the device differs from both equally."
+   "verdict": "ELIMINATED at tensor level. Re-running the layer-0 taps against the fp4_dequantised reference returns all 952 checkpoint cosines identical to the fp8 run, largest difference exactly 0, same emitted token. The two references agree bit-for-bit and the device differs from both equally.",
+   "why_it_was_plausible": "the device computes routed experts as MXFP4 while the oracle recast them to FP8, so the comparison was between two different legitimate arithmetics"
   },
   {
    "candidate": "the router's top-k selection",
-   "why_it_was_plausible": "a 50% selection rate over untrained weights has cut gaps below one BF16 epsilon on 7.2% of decisions",
-   "verdict": "ELIMINATED AT LAYER 0. Device and oracle select identical expert sets at 8/8 positions in layers 0 and 1. The router amplifies from layer 2 onward but does not originate the difference."
+   "verdict": "ELIMINATED AT LAYER 0. Device and oracle select identical expert sets at 8/8 positions in layers 0 and 1. The router amplifies from layer 2 onward but does not originate the difference.",
+   "why_it_was_plausible": "a 50% selection rate over untrained weights has cut gaps below one BF16 epsilon on 7.2% of decisions"
+  },
+  {
+   "candidate": "the routing weights",
+   "drift_note": "the ratio departs from 2/3 with depth -- 4.3e-08 at layer 0, 6.4e-05 at layer 1, 2.3e-03 at layer 3 -- which is the accumulated difference arriving at the router, not a scale error.",
+   "ratio_by_layer": {
+    "0": 0.6666666955127165,
+    "1": 0.6667090987854011,
+    "2": 0.6666367901609864,
+    "3": 0.6682039282991206
+   },
+   "verdict": "ELIMINATED at layer 0. Capturing the device's ROUTE.WEIGHT_NORMALIZE output against the vendor gate's returned weights, sorted by expert id on both sides and compared only where the selections agree, gives a device/oracle ratio of 0.6666666955127165 at layer 0 -- 2/3 to a relative 4.3e-08. That is exactly 1/route_scale (1.5), and it is a TAP-POINT OFFSET rather than a fault: the IR emits a SCALE op carrying binary32_bits(ROUTE_SCALE) immediately after WEIGHT_NORMALIZE, so the captured tensor is the pre-scale one. Once the scale is accounted for the weights agree to fp32 precision.",
+   "why_it_was_plausible": "position-dependent and routed-only, which fits every observation, and never compared operand-by-operand"
   }
- ],
- "still_open": [
-  "the routing WEIGHTS: gathered unbiased scores, normalised by sum + 1e-20, scaled by route_scale 1.5. Position-dependent and routed-only, which fits, and not yet compared operand-by-operand.",
-  "the accumulation order of the routed-expert GEMM itself",
-  "the per-expert dispatch/gather of tokens, which the device batches and the oracle does not"
  ],
  "not_a_claim": [
   "these are eliminations by source inspection against the pinned vendor revision plus one re-run measurement, not a proof that the remaining candidates are the cause",
   "not an RTL measurement: the device is runtime.sim"
+ ],
+ "producer": {
+  "git": {
+   "commit": "ce7f202"
+  },
+  "tool": "read by inspection against the pinned vendor source"
+ },
+ "question": "with the FFN input exact, the shared expert exact, and expert selection identical, what inside the device's routed-expert path can still explain L00.ffn.all = 0.984103?",
+ "schema": "opentallas.abi3.v41_routed_expert_eliminations.v1",
+ "standing_observation": {
+  "L00.ffn.all": 0.984103,
+  "L00.ffn.shared_experts.all": 1.0,
+  "L00.ffn_last_position": 0.999983,
+  "L00.ffn_norm.all": 1.0,
+  "expert_selection_layer_0": "8/8 positions identical",
+  "note": "the difference is position-dependent: the last position is nearly exact while all eight together are not"
+ },
+ "still_open": [
+  "the routed-expert computation for NON-FINAL positions. L00.ffn.all is 0.984103 -- a relative L2 error of 17.8% -- while the last position alone is 0.999983, a relative 0.58%. With the input exact, the selection identical at 8/8, the routing weights exact to 4.3e-08 and the shared expert exact, an error concentrated in the early positions points at the device's per-position handling in EXPERT_DISPATCH / the routed GEMM rather than at any per-expert value.",
+  "the routed GEMM's accumulation order"
  ]
 }
