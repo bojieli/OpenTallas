@@ -1,0 +1,53 @@
+{
+ "measurements": {
+  "combinational_at_2p0ns": {
+   "closed": false,
+   "drc_errors": 0,
+   "fmax_hz": 280709000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": -1.5624000000000002,
+   "standard_cell_area_um2": 1695.55,
+   "standard_cell_count": 17269,
+   "target_ns": 2.0
+  },
+  "pipelined_at_0p8ns": {
+   "closed": false,
+   "drc_errors": 0,
+   "fmax_hz": 1024700000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": -0.175892,
+   "standard_cell_area_um2": 712.86,
+   "standard_cell_count": 6734,
+   "target_ns": 0.8
+  },
+  "pipelined_at_1p1ns": {
+   "closed": true,
+   "drc_errors": 0,
+   "fmax_hz": 958971000.0,
+   "max_slew_violations": 0,
+   "setup_wns_ns": 0.057215600000000005,
+   "standard_cell_area_um2": 678.466,
+   "standard_cell_count": 6470,
+   "target_ns": 1.1
+  }
+ },
+ "not_a_claim": [
+  "ASAP7 is a predictive academic PDK; no figure here is a silicon claim",
+  "neither of the two probes compared at 2.0/0.8 ns CLOSED -- each missed its target, so the fmax is the path the route achieved and not a closure. The pipelined probe has a separate CLOSED record at 1.1 ns (959.0 MHz); the combinational one at an achievable target is still routing at the time of writing",
+  "the pipelined form costs five cycles of latency. This measures frequency and area, not the throughput of any engine that adopts it, which depends on whether that engine overlaps the pipe"
+ ],
+ "probes": {
+  "combinational": "rtl/abi3/ot_probe_fp32_mul.sv -- registers ot_fp32_rne_pkg::fp32_mul_rne",
+  "pipelined": "rtl/abi3/ot_probe_fp32_mul_pipe.sv -- registers the five-stage ot_fp32_mul_rne_pipe"
+ },
+ "question": "on ONE design differing only in whether the FP32 multiply is pipelined, what does the construct cost?",
+ "result": {
+  "area_ratio_combinational_over_pipelined": 2.379,
+  "cells_ratio_combinational_over_pipelined": 2.564,
+  "frequency_ratio": 3.65,
+  "statement": "the pipelined form is 3.65x faster AND 2.38x smaller, so it is 8.68x better per unit area. Pipelining this construct does not trade area for speed -- it wins both.",
+  "throughput_per_um2_ratio": 8.683
+ },
+ "schema": "opentallas.physical.fp32_multiply_construct_probe.v1",
+ "why": "the frequency audit compared ot_a3_vector_scale against the attention walks, which differ in this construct but are not otherwise the same design. These two probes are identical except for the multiply: same ports, same input and output registers, same corner, flow, utilisation and slew margin."
+}

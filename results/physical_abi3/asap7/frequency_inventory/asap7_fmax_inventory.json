@@ -122,6 +122,16 @@
       "target_headroom": 0.09036833333333333
     },
     {
+      "at_target_clock_period_ns": 1.1,
+      "block": "ot_probe_fp32_mul_pipe",
+      "family": "probe",
+      "fmax_hz": 958971000.0,
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/pipelined_1p1ns_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 678.466,
+      "target_headroom": 0.05201418181818182
+    },
+    {
       "at_target_clock_period_ns": 1.0,
       "block": "ot_probe_packed8_bf16",
       "family": "probe",
@@ -305,12 +315,17 @@
     "target_headroom": 0.04578063157894737
   },
   "counts": {
-    "closed_routed_record_count": 56,
-    "distinct_blocks_with_a_closed_routed_record": 29,
-    "post_route_record_count": 92,
-    "record_count": 164
+    "closed_routed_record_count": 58,
+    "distinct_blocks_with_a_closed_routed_record": 30,
+    "post_route_record_count": 96,
+    "record_count": 168
   },
   "excluded_from_the_limiter_by_family": [
+    {
+      "block": "ot_probe_fp32_mul_pipe",
+      "family": "probe",
+      "fmax_hz": 958971000.0
+    },
     {
       "block": "ot_probe_packed8_bf16",
       "family": "probe",
@@ -371,7 +386,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "519e07f2cd69d125d107952a22ce72884a55981c"
+      "commit": "bfa623224a50cefa50fd7e28100f9fca4bb93085"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3098,6 +3113,29 @@
       "target_headroom": 0.3751986666666667
     },
     {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_dma_ngram_hash",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 1067010000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "signoff_target",
+      "record": "results/physical_abi3/asap7/dma_ngram_hash/pnr_clean_reroute.json",
+      "record_sha256": "6302f4948c803e4198780167e46eaf34abbf9be12e01feb954387d14857d5dec",
+      "setup_wns_ns": 0.562798,
+      "slew_margin_percent": 30.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 15941.3,
+      "target_clock_period_ns": 1.5,
+      "target_headroom": 0.3751986666666667
+    },
+    {
       "antenna_violating_nets": null,
       "block": "ot_a3_mac_lane",
       "closed": false,
@@ -3706,6 +3744,75 @@
       "standard_cell_area_um2": 2673.01,
       "target_clock_period_ns": 1.0,
       "target_headroom": 0.0379333
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_probe_fp32_mul",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "probe",
+      "fmax_hz": 280709000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/combinational_2p0ns.json",
+      "record_sha256": "25ea1f33f6c11f08fb0f535ccc87b6c965f7da4b6e15231c8cbd58948d312dd9",
+      "setup_wns_ns": -1.5624000000000002,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1695.55,
+      "target_clock_period_ns": 2.0,
+      "target_headroom": -0.7812000000000001
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_probe_fp32_mul_pipe",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "probe",
+      "fmax_hz": 1024700000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/pipelined_0p8ns.json",
+      "record_sha256": "ecc5d7bfa6df16286bfe39e7a03a4ebaa92915ca91a776c936e742726c9e7bd8",
+      "setup_wns_ns": -0.175892,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 712.86,
+      "target_clock_period_ns": 0.8,
+      "target_headroom": -0.21986499999999998
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_probe_fp32_mul_pipe",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "probe",
+      "fmax_hz": 958971000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/probe_fp32_mul/pipelined_1p1ns_closed.json",
+      "record_sha256": "8fbcdd2f1ddc3d8c06210c08e8ceb72c412edc7dcb595adec43c1d57edcaa046",
+      "setup_wns_ns": 0.057215600000000005,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 678.466,
+      "target_clock_period_ns": 1.1,
+      "target_headroom": 0.05201418181818182
     },
     {
       "antenna_violating_nets": 0,
