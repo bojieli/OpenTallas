@@ -428,7 +428,9 @@ def main(argv: list[str] | None = None) -> int:
         # is built from rather than by editing a committed fixture.
         body = dict(body)
         body["expert_dtype"] = None
-    tokenizer = AutoTokenizer.from_pretrained(str(DEFAULT_SNAPSHOT))
+    # The tokenizer of the snapshot UNDER TEST, not the default one: a second
+    # reduced vehicle has its own, and the Engram n-gram state is derived from it.
+    tokenizer = AutoTokenizer.from_pretrained(str(arguments.snapshot))
 
     started = time.perf_counter()
     model = build_model(vendor, body, tokenizer)

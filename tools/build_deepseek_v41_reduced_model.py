@@ -1341,6 +1341,27 @@ def write_snapshot(
         "tokenizer_config.json",
         shard,
     ]
+    #: ``config.json`` -- the HuggingFace-shaped view the front end resolves
+    #: through this record -- is deliberately NOT listed here, and the asymmetry
+    #: is worth stating because it looks like an omission.
+    #:
+    #: The v1 record does list it, with the digest of the copy in the MODEL
+    #: directory, and its lock verifies FIVE files while the record names seven.
+    #: So the record and the lock have different sets by design: the lock reads
+    #: every declared byte of the snapshot, and ``config.json`` has never been in
+    #: the snapshot.  Adding it here therefore makes the LOCK demand a file that
+    #: does not exist -- measured: ``checkpoint snapshot is missing 'config.json'``
+    #: -- which is why this is a two-record problem and not a one-line one.
+    extra_digests: dict[str, Path] = {}
+    #: ...but if a vehicle's snapshot DOES hold one, it is listed, because then
+    #: the record and the lock agree about it: the lock reads every declared byte
+    #: of the snapshot and would find it.  v1's snapshot holds no config.json, so
+    #: v1's generated record is unchanged by this; a vehicle built with one gets a
+    #: record and a lock that both cover it, which is what the front end needs to
+    #: resolve the HuggingFace-shaped config through the same two-sided identity as
+    #: every other file.
+    if (snapshot / "config.json").is_file():
+        paths.append("config.json")
     # The "revision" of a constructed checkpoint is its own content: the digest
     # of the configuration and the seed that produced every byte.
     revision = hashlib.sha256(
@@ -1351,7 +1372,10 @@ def write_snapshot(
     ).hexdigest()[:40]
     source = {
         "schema": CHECKPOINT_SOURCE_SCHEMA,
-        "repository": f"opentallas/{MODEL_ID}",
+        # The model directory's own name, not the module constant: a second
+        # vehicle built through this builder would otherwise claim the first
+        # one's repository, which is the identity every consumer keys on.
+        "repository": f"opentallas/{model_dir.name}",
         "revision": revision,
         "remote_code_policy": "disabled",
         "checkpoint_index": "model.safetensors.index.json",
@@ -1363,8 +1387,10 @@ def write_snapshot(
         "expected_files": [
             {
                 "path": name,
-                "sha256": _sha256_file(snapshot / name),
-                "size_bytes": (snapshot / name).stat().st_size,
+                "sha256": _sha256_file(extra_digests.get(name, snapshot / name)),
+                "size_bytes": (
+                    extra_digests.get(name, snapshot / name)
+                ).stat().st_size,
             }
             for name in sorted(paths)
         ],

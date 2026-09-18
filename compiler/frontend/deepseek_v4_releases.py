@@ -957,8 +957,14 @@ V41_FLASH_REDUCED = DeepSeekV4Release(
 V41_FLASH_REDUCED_V2 = replace(
     V41_FLASH_REDUCED,
     model_id="deepseek-v4.1-flash-reduced-v2",
+    #: Its own repository and revision, from the record the builder generated.
+    #: The revision of a constructed checkpoint is its own content -- the digest
+    #: of the configuration and the seed that produced every byte -- so it is not
+    #: a choice either.
+    repository="opentallas/deepseek-v4.1-flash-reduced-v2",
+    revision="d25fe02d2d3140aaab037e9ec32ed4100f1d4e02",
     checkpoint_lock_id=(
-        "ae61cb77750a6752afa94f99ff36b64189666cf8a09e2162293ebb0819195a4a"
+        "2ea2d142370015c5c3aaa38bcd33f79ca3db3cd4aeb463c54d771c704bfc8548"
     ),
     tensor_content_sha256=(
         "fb6ebe9933aa24a394de2912604f0ebca9d597b232746910307cc2677347bb96"
