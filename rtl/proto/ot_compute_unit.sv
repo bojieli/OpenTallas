@@ -315,6 +315,26 @@ module ot_compute_unit #(
             //: second bank is never waited on -- measured as 1.41x the A100's
             //: logic density against the single buffer's 1.95x at refill skew 0.
             //:
+            //: WHICH PRODUCTS A 128-DEEP BANK CAN SERVE, because it is not all of
+            //: them.  A bank holds one reduction tile and PASSES DO NOT EXTEND IT
+            //: -- the header above records that a descriptor's passes re-walk the
+            //: same resident columns, ``rd_addr`` restarting at 0 on every
+            //: ``start``, which is weight-stationary REUSE and not reduction
+            //: tiling.  So the depth a product needs is the ``tile_depth`` its
+            //: schedule rule declares:
+            //:
+            //:   compiler/backends/rom/qwen3.py        tile_depth=128  -> fits
+            //:   compiler/backends/rom/deepseek_v4.py  tile_depth=256  -> does NOT
+            //:   compiler/backends/rom/deepseek_v41.py tile_depth=256  -> does NOT
+            //:
+            //: A half-depth bank is therefore right-sized for Qwen3 and half the
+            //: depth the two DeepSeek products ask for.  Serving them from it needs
+            //: EITHER their schedule rule moved to 128, which doubles the tiles and
+            //: so doubles the fills a descriptor is charged, OR a cross-tile
+            //: accumulate on this unit, which it has no input for: ``start`` begins
+            //: a pass and there is no control that says "continue the previous
+            //: tile's sum".  Both are measurable and neither is done here.
+            //:
             //: 128 is the answer to that: four ``fakeram7_128x64``, 4 x 361.2 =
             //: 1,444.8 um2, so TWO half-depth banks are 2,890 um2 against the one
             //: full-depth bank's 2,809 -- 2.9 % more SRAM for a true ping-pong,
