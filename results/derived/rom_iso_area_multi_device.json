@@ -1,0 +1,1293 @@
+{
+  "answer": {
+    "comparable_cells": [
+      {
+        "a100_devices": 1,
+        "batch1_speed_ratio": 14.370426323786699,
+        "batch256_speed_ratio": 0.32669676603483266,
+        "crossover_batch": 16,
+        "model": "Qwen3-8B",
+        "precision": "q4p25",
+        "silicon_budget_mm2": 826.0
+      }
+    ],
+    "count_comparable": 1,
+    "count_considered": 9
+  },
+  "cells": {
+    "DSV4-Flash": {
+      "active_parameters": 13000000000.0,
+      "by_precision": {
+        "bf16": {
+          "a100_devices_to_hold_the_weights": 3,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 22875.196302775385,
+          "shortfall_factor_x": 11.257700103730084,
+          "silicon_budget_mm2": 2478.0,
+          "stored_weight_bytes": 166878536440.0,
+          "usable_area_mm2": 2031.9600000000003,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 3 A100 dies is 2,478 mm2, 2,032 mm2 of it usable, and the weights alone need 22,875 mm2 of mask ROM -- 11.26x over",
+          "weight_bits_per_parameter": 16.0
+        },
+        "fp8": {
+          "a100_devices_to_hold_the_weights": 2,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 11437.598151387692,
+          "shortfall_factor_x": 8.443275077797564,
+          "silicon_budget_mm2": 1652.0,
+          "stored_weight_bytes": 83439268220.0,
+          "usable_area_mm2": 1354.64,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 2 A100 dies is 1,652 mm2, 1,355 mm2 of it usable, and the weights alone need 11,438 mm2 of mask ROM -- 8.44x over",
+          "weight_bits_per_parameter": 8.0
+        },
+        "q4p25": {
+          "a100_devices_to_hold_the_weights": 1,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 6076.224017924711,
+          "shortfall_factor_x": 8.97097977015991,
+          "silicon_budget_mm2": 826.0,
+          "stored_weight_bytes": 44327111241.875,
+          "usable_area_mm2": 677.32,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 1 A100 dies is 826 mm2, 677 mm2 of it usable, and the weights alone need 6,076 mm2 of mask ROM -- 8.97x over",
+          "weight_bits_per_parameter": 4.25
+        }
+      },
+      "checkpoint_bytes": 166878536440,
+      "operations_per_token": 26000000000.0
+    },
+    "DSV4.1-Flash": {
+      "active_parameters": 16000000000.0,
+      "by_precision": {
+        "bf16": {
+          "a100_devices_to_hold_the_weights": 7,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 69948.437922,
+          "shortfall_factor_x": 14.753194928330982,
+          "silicon_budget_mm2": 5782.0,
+          "stored_weight_bytes": 510286023000.0,
+          "usable_area_mm2": 4741.240000000001,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 7 A100 dies is 5,782 mm2, 4,741 mm2 of it usable, and the weights alone need 69,948 mm2 of mask ROM -- 14.75x over",
+          "weight_bits_per_parameter": 16.0
+        },
+        "fp8": {
+          "a100_devices_to_hold_the_weights": 4,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 34974.218961,
+          "shortfall_factor_x": 12.909045562289611,
+          "silicon_budget_mm2": 3304.0,
+          "stored_weight_bytes": 255143011500.0,
+          "usable_area_mm2": 2709.28,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 4 A100 dies is 3,304 mm2, 2,709 mm2 of it usable, and the weights alone need 34,974 mm2 of mask ROM -- 12.91x over",
+          "weight_bits_per_parameter": 8.0
+        },
+        "q4p25": {
+          "a100_devices_to_hold_the_weights": 2,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 18580.05382303125,
+          "shortfall_factor_x": 13.715860909932712,
+          "silicon_budget_mm2": 1652.0,
+          "stored_weight_bytes": 135544724859.375,
+          "usable_area_mm2": 1354.64,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 2 A100 dies is 1,652 mm2, 1,355 mm2 of it usable, and the weights alone need 18,580 mm2 of mask ROM -- 13.72x over",
+          "weight_bits_per_parameter": 4.25
+        }
+      },
+      "checkpoint_bytes": 510286023000,
+      "operations_per_token": 32000000000.0
+    },
+    "Qwen3-8B": {
+      "active_parameters": 7568405504.0,
+      "by_precision": {
+        "bf16": {
+          "a100_devices_to_hold_the_weights": 1,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 2245.521601772308,
+          "shortfall_factor_x": 3.315303847180517,
+          "silicon_budget_mm2": 826.0,
+          "stored_weight_bytes": 16381470720.0,
+          "usable_area_mm2": 677.32,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 1 A100 dies is 826 mm2, 677 mm2 of it usable, and the weights alone need 2,246 mm2 of mask ROM -- 3.32x over",
+          "weight_bits_per_parameter": 16.0
+        },
+        "fp8": {
+          "a100_devices_to_hold_the_weights": 1,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "ours_fits_in_the_same_silicon": false,
+          "rom_area_mm2": 1122.760800886154,
+          "shortfall_factor_x": 1.6576519235902585,
+          "silicon_budget_mm2": 826.0,
+          "stored_weight_bytes": 8190735360.0,
+          "usable_area_mm2": 677.32,
+          "verdict": "ours does NOT fit even at the cluster's own scale: 1 A100 dies is 826 mm2, 677 mm2 of it usable, and the weights alone need 1,123 mm2 of mask ROM -- 1.66x over",
+          "weight_bits_per_parameter": 8.0
+        },
+        "q4p25": {
+          "a100_cluster_compute_bound_tokens_s": 20612.003402506907,
+          "a100_devices_to_hold_the_weights": 1,
+          "a100_hbm_capacity_bytes_per_device": 80000000000.0,
+          "batch1_speed_ratio": 14.370426323786699,
+          "batch256_speed_ratio": 0.32669676603483266,
+          "by_batch": [
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 468.59255956461806,
+              "batch": 1,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 14.370426323786699
+            },
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 937.1851191292361,
+              "batch": 2,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 7.1852131618933495
+            },
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 1874.3702382584722,
+              "batch": 4,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 3.5926065809466747
+            },
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 3748.7404765169445,
+              "batch": 8,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 1.7963032904733374
+            },
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 7497.480953033889,
+              "batch": 16,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 0.8981516452366687
+            },
+            {
+              "a100_binding_constraint": "weight_read",
+              "a100_cluster_tokens_s": 14994.961906067778,
+              "batch": 32,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 0.44907582261833434
+            },
+            {
+              "a100_binding_constraint": "compute",
+              "a100_cluster_tokens_s": 20612.003402506907,
+              "batch": 64,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 0.32669676603483266
+            },
+            {
+              "a100_binding_constraint": "compute",
+              "a100_cluster_tokens_s": 20612.003402506907,
+              "batch": 128,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 0.32669676603483266
+            },
+            {
+              "a100_binding_constraint": "compute",
+              "a100_cluster_tokens_s": 20612.003402506907,
+              "batch": 256,
+              "ours_binding_constraint": "compute",
+              "ours_tokens_s": 6733.874853097974,
+              "speed_ratio_ours_over_a100_cluster": 0.32669676603483266
+            }
+          ],
+          "compute_area_mm2": 80.8533245292308,
+          "crossover_batch_where_the_cluster_overtakes": 16,
+          "execution_format": "w4a8",
+          "ours_compute_bound_tokens_s": 6733.874853097974,
+          "ours_fits_in_the_same_silicon": true,
+          "ours_rom_array_sweep_ceiling_tokens_s": 29014.61538461539,
+          "ours_rom_read_bound_tokens_s": 38686.153846153844,
+          "rom_area_mm2": 596.4666754707692,
+          "silicon_budget_mm2": 826.0,
+          "stored_weight_bytes": 4351328160.0,
+          "usable_area_mm2": 677.32,
+          "verdict": "both sides fit at 1 A100-die of silicon (826 mm2): 596.5 mm2 of ROM leaves 80.9 mm2 to compute with",
+          "weight_bits_per_parameter": 4.25
+        }
+      },
+      "checkpoint_bytes": 16381470720,
+      "operations_per_token": 15136811008.0
+    }
+  },
+  "cross_check_against_the_one_die_audit": {
+    "cells_checked": [
+      {
+        "batch1_ratio_agrees": true,
+        "cell": "Qwen3-8B/bf16",
+        "rom_area_agrees": true
+      },
+      {
+        "batch1_ratio_agrees": true,
+        "cell": "Qwen3-8B/fp8",
+        "rom_area_agrees": true
+      },
+      {
+        "batch1_ratio_agrees": true,
+        "cell": "Qwen3-8B/q4p25",
+        "rom_area_agrees": true
+      },
+      {
+        "batch1_ratio_agrees": true,
+        "cell": "DSV4-Flash/q4p25",
+        "rom_area_agrees": true
+      }
+    ],
+    "performed": true,
+    "single_device_cells_match_the_one_die_audit": true
+  },
+  "inputs": {
+    "a100_bf16_dense_ops_s": 312000000000000.0,
+    "a100_die_area_mm2": 826.0,
+    "a100_hbm_bandwidth_bytes_s": 2039000000000.0,
+    "a100_hbm_capacity_bytes": 80000000000.0,
+    "area_policy": "balanced: ROM sized to the stored weights, SRAM sized to the resident KV, graded fixed fractions for overhead and interconnect, compute takes the rest",
+    "compute_ops_s_per_mm2": {
+      "bf16": 445714285714.2857,
+      "fp32": 27857142857.142857,
+      "fp4": 1782857142857.1428,
+      "fp8": 891428571428.5714,
+      "w4a8": 1260670375601.159
+    },
+    "rom_bytes_per_mm2": 7295173.961840629,
+    "rom_read_bytes_s_per_mm2": 282222222222.2222,
+    "usable_area_fraction": 0.8200000000000001
+  },
+  "not_a_claim": [
+    "no row here is a silicon claim: the densities are N6 derivations and the ROM design is not fabricated",
+    "the A100 cluster is modelled as scaling LINEARLY -- N times the compute roof and N times the HBM bandwidth, with no collective, no tail and no load imbalance.  A real tensor- or expert-parallel deployment pays all three, so every ratio here understates ours",
+    "the device count is sized on WEIGHTS ONLY.  KV cache and activations are real and would raise it, which would raise the silicon budget handed to ours, so this too understates ours",
+    "our ROM read is charged once per token REGARDLESS of batch, while the A100's weight reads amortise over the batch.  That is the one-die audit's own model, kept identical so the two are comparable, and it is why ours loses at large batch",
+    "the array sweep ceiling is scaled by the device count on the reading that nodes sweep the shares they hold concurrently; at one device it is the one-die audit's own ceiling, which the cross-check verifies",
+    "holding the weights is necessary, not sufficient: a cell that fits here has not been shown to run, and the nine-cell token matrix is where running is recorded"
+  ],
+  "optimised_rom_hbm_split": {
+    "per_cell": {
+      "DSV4-Flash/bf16": {
+        "a100_devices": 3,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.0869565217391304,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 36.655402968489746,
+            "batch": 1,
+            "compute_area_mm2": 51.9442957779695,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 39.84282931357581,
+            "rom_area_mm2": 1830.0157042220308,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 73.31080593697949,
+            "batch": 2,
+            "compute_area_mm2": 51.9442957779695,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 79.68565862715162,
+            "rom_area_mm2": 1830.0157042220308,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 146.62161187395898,
+            "batch": 4,
+            "compute_area_mm2": 51.9442957779695,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 159.37131725430325,
+            "rom_area_mm2": 1830.0157042220308,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 293.24322374791797,
+            "batch": 8,
+            "compute_area_mm2": 51.9442957779695,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 318.7426345086065,
+            "rom_area_mm2": 1830.0157042220308,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 586.4864474958359,
+            "batch": 16,
+            "compute_area_mm2": 51.9442957779695,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 637.485269017213,
+            "rom_area_mm2": 1830.0157042220308,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 1172.9728949916719,
+            "batch": 32,
+            "compute_area_mm2": 280.6962588057231,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1261.2611774103996,
+            "rom_area_mm2": 1601.2637411942771,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.0752688172043008
+          },
+          {
+            "a100_cluster_tokens_s": 2345.9457899833437,
+            "batch": 64,
+            "compute_area_mm2": 280.6962588057231,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 2522.522354820799,
+            "rom_area_mm2": 1601.2637411942771,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.0752688172043008
+          },
+          {
+            "a100_cluster_tokens_s": 4691.8915799666875,
+            "batch": 128,
+            "compute_area_mm2": 509.4482218334772,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 4991.374021241157,
+            "rom_area_mm2": 1372.511778166523,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 9383.783159933375,
+            "batch": 256,
+            "compute_area_mm2": 738.200184861231,
+            "hbm_stacks": 15,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 9877.666484140394,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.05,
+            "speed_ratio_ours_over_a100_cluster": 1.0526315789473684
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 15,
+        "silicon_budget_mm2": 2478.0,
+        "worst_case_speed_ratio": 1.0526315789473684
+      },
+      "DSV4-Flash/fp8": {
+        "a100_devices": 2,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.1111111111111112,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 48.873870624652994,
+            "batch": 1,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 54.30430069405889,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 97.74774124930599,
+            "batch": 2,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 108.60860138811778,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 195.49548249861198,
+            "batch": 4,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 217.21720277623555,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 390.99096499722395,
+            "batch": 8,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 434.4344055524711,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 781.9819299944479,
+            "batch": 16,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 868.8688111049422,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 1563.9638599888958,
+            "batch": 32,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1737.7376222098844,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 3127.9277199777916,
+            "batch": 64,
+            "compute_area_mm2": 110.88018486123087,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 3475.475244419769,
+            "rom_area_mm2": 1143.7598151387692,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 6255.855439955583,
+            "batch": 128,
+            "compute_area_mm2": 225.2561663751078,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 6874.566417533608,
+            "rom_area_mm2": 1029.3838336248923,
+            "rom_fraction_of_weights": 0.09,
+            "speed_ratio_ours_over_a100_cluster": 1.0989010989010988
+          },
+          {
+            "a100_cluster_tokens_s": 12511.710879911167,
+            "batch": 256,
+            "compute_area_mm2": 454.0081294028615,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 13453.452559044263,
+            "rom_area_mm2": 800.6318705971386,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.0752688172043008
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 10,
+        "silicon_budget_mm2": 1652.0,
+        "worst_case_speed_ratio": 1.0752688172043008
+      },
+      "DSV4-Flash/q4p25": {
+        "a100_devices": 1,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.1111111111111112,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 45.998937058496935,
+            "batch": 1,
+            "compute_area_mm2": 19.697598207528927,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 51.1099300649966,
+            "rom_area_mm2": 607.6224017924711,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 91.99787411699387,
+            "batch": 2,
+            "compute_area_mm2": 19.697598207528927,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 102.2198601299932,
+            "rom_area_mm2": 607.6224017924711,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 183.99574823398774,
+            "batch": 4,
+            "compute_area_mm2": 19.697598207528927,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 204.4397202599864,
+            "rom_area_mm2": 607.6224017924711,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 367.9914964679755,
+            "batch": 8,
+            "compute_area_mm2": 19.697598207528927,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 408.8794405199728,
+            "rom_area_mm2": 607.6224017924711,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 735.982992935951,
+            "batch": 16,
+            "compute_area_mm2": 19.697598207528927,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 817.7588810399455,
+            "rom_area_mm2": 607.6224017924711,
+            "rom_fraction_of_weights": 0.1,
+            "speed_ratio_ours_over_a100_cluster": 1.1111111111111112
+          },
+          {
+            "a100_cluster_tokens_s": 1471.965985871902,
+            "batch": 32,
+            "compute_area_mm2": 80.45983838677603,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1617.5450394196725,
+            "rom_area_mm2": 546.860161613224,
+            "rom_fraction_of_weights": 0.09,
+            "speed_ratio_ours_over_a100_cluster": 1.098901098901099
+          },
+          {
+            "a100_cluster_tokens_s": 2943.931971743804,
+            "batch": 64,
+            "compute_area_mm2": 80.45983838677603,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 3235.090078839345,
+            "rom_area_mm2": 546.860161613224,
+            "rom_fraction_of_weights": 0.09,
+            "speed_ratio_ours_over_a100_cluster": 1.098901098901099
+          },
+          {
+            "a100_cluster_tokens_s": 5887.863943487608,
+            "batch": 128,
+            "compute_area_mm2": 141.22207856602313,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 6399.85211248653,
+            "rom_area_mm2": 486.0979214339769,
+            "rom_fraction_of_weights": 0.08,
+            "speed_ratio_ours_over_a100_cluster": 1.0869565217391304
+          },
+          {
+            "a100_cluster_tokens_s": 11775.727886975215,
+            "batch": 256,
+            "compute_area_mm2": 262.7465589245174,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 12527.370092526824,
+            "rom_area_mm2": 364.57344107548266,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 5,
+        "silicon_budget_mm2": 826.0,
+        "worst_case_speed_ratio": 1.0638297872340425
+      },
+      "DSV4.1-Flash/bf16": {
+        "a100_devices": 7,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.0638297872340425,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 27.970587781511703,
+            "batch": 1,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 29.755944448416706,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 55.94117556302341,
+            "batch": 2,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 59.51188889683341,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 111.88235112604681,
+            "batch": 4,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 119.02377779366682,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 223.76470225209363,
+            "batch": 8,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 238.04755558733365,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 447.52940450418726,
+            "batch": 16,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 476.0951111746673,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 895.0588090083745,
+            "batch": 32,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 952.1902223493346,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 1790.117618016749,
+            "batch": 64,
+            "compute_area_mm2": 194.33372468000107,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1904.3804446986692,
+            "rom_area_mm2": 4196.90627532,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 3580.235236033498,
+            "batch": 128,
+            "compute_area_mm2": 893.8181039000006,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 3768.6686695089456,
+            "rom_area_mm2": 3497.4218961,
+            "rom_fraction_of_weights": 0.05,
+            "speed_ratio_ours_over_a100_cluster": 1.0526315789473686
+          },
+          {
+            "a100_cluster_tokens_s": 7160.470472066996,
+            "batch": 256,
+            "compute_area_mm2": 893.8181039000006,
+            "hbm_stacks": 35,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 7537.337339017891,
+            "rom_area_mm2": 3497.4218961,
+            "rom_fraction_of_weights": 0.05,
+            "speed_ratio_ours_over_a100_cluster": 1.0526315789473686
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 35,
+        "silicon_budget_mm2": 5782.0,
+        "worst_case_speed_ratio": 1.0526315789473686
+      },
+      "DSV4.1-Flash/fp8": {
+        "a100_devices": 4,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.075268817204301,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 31.966386036013375,
+            "batch": 1,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 34.372458103240184,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 63.93277207202675,
+            "batch": 2,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 68.74491620648037,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 127.8655441440535,
+            "batch": 4,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 137.48983241296074,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 255.731088288107,
+            "batch": 8,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 274.9796648259215,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 511.462176576214,
+            "batch": 16,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 549.959329651843,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 1022.924353152428,
+            "batch": 32,
+            "compute_area_mm2": 61.08467273000042,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1099.918659303686,
+            "rom_area_mm2": 2448.19532727,
+            "rom_fraction_of_weights": 0.07,
+            "speed_ratio_ours_over_a100_cluster": 1.075268817204301
+          },
+          {
+            "a100_cluster_tokens_s": 2045.848706304856,
+            "batch": 64,
+            "compute_area_mm2": 410.8268623400004,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 2176.434793941336,
+            "rom_area_mm2": 2098.45313766,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 4091.697412609712,
+            "batch": 128,
+            "compute_area_mm2": 410.8268623400004,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 4352.869587882672,
+            "rom_area_mm2": 2098.45313766,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 8183.394825219424,
+            "batch": 256,
+            "compute_area_mm2": 410.8268623400004,
+            "hbm_stacks": 20,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 8705.739175765344,
+            "rom_area_mm2": 2098.45313766,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 20,
+        "silicon_budget_mm2": 3304.0,
+        "worst_case_speed_ratio": 1.0638297872340425
+      },
+      "DSV4.1-Flash/q4p25": {
+        "a100_devices": 2,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 1.0638297872340425,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 30.08601038683612,
+            "batch": 1,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 32.00639402854906,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 60.17202077367224,
+            "batch": 2,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 64.01278805709812,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 120.34404154734447,
+            "batch": 4,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 128.02557611419624,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 240.68808309468895,
+            "batch": 8,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 256.0511522283925,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 481.3761661893779,
+            "batch": 16,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 512.102304456785,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 962.7523323787558,
+            "batch": 32,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1024.20460891357,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 1925.5046647575116,
+            "batch": 64,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 2048.40921782714,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 3851.009329515023,
+            "batch": 128,
+            "compute_area_mm2": 139.83677061812523,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 4096.81843565428,
+            "rom_area_mm2": 1114.8032293818749,
+            "rom_fraction_of_weights": 0.06,
+            "speed_ratio_ours_over_a100_cluster": 1.0638297872340425
+          },
+          {
+            "a100_cluster_tokens_s": 7702.018659030046,
+            "batch": 256,
+            "compute_area_mm2": 325.63730884843767,
+            "hbm_stacks": 10,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 8107.388062136891,
+            "rom_area_mm2": 929.0026911515624,
+            "rom_fraction_of_weights": 0.05,
+            "speed_ratio_ours_over_a100_cluster": 1.0526315789473684
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 10,
+        "silicon_budget_mm2": 1652.0,
+        "worst_case_speed_ratio": 1.0526315789473684
+      },
+      "Qwen3-8B/bf16": {
+        "a100_devices": 1,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": false,
+        "best_case_speed_ratio": 1.3698630136986303,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 124.46989863435168,
+            "batch": 1,
+            "compute_area_mm2": 21.029167521476893,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 170.50671045801602,
+            "rom_area_mm2": 606.2908324785232,
+            "rom_fraction_of_weights": 0.27,
+            "speed_ratio_ours_over_a100_cluster": 1.3698630136986303
+          },
+          {
+            "a100_cluster_tokens_s": 248.93979726870336,
+            "batch": 2,
+            "compute_area_mm2": 21.029167521476893,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 341.01342091603203,
+            "rom_area_mm2": 606.2908324785232,
+            "rom_fraction_of_weights": 0.27,
+            "speed_ratio_ours_over_a100_cluster": 1.3698630136986303
+          },
+          {
+            "a100_cluster_tokens_s": 497.8795945374067,
+            "batch": 4,
+            "compute_area_mm2": 43.48438353920005,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 672.8102628883875,
+            "rom_area_mm2": 583.8356164608,
+            "rom_fraction_of_weights": 0.26,
+            "speed_ratio_ours_over_a100_cluster": 1.3513513513513513
+          },
+          {
+            "a100_cluster_tokens_s": 995.7591890748134,
+            "batch": 8,
+            "compute_area_mm2": 65.9395995569231,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1327.6789187664178,
+            "rom_area_mm2": 561.380400443077,
+            "rom_fraction_of_weights": 0.25,
+            "speed_ratio_ours_over_a100_cluster": 1.3333333333333333
+          },
+          {
+            "a100_cluster_tokens_s": 1991.5183781496269,
+            "batch": 16,
+            "compute_area_mm2": 88.39481557464626,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 2602.848913412256,
+            "rom_area_mm2": 538.9251844253538,
+            "rom_fraction_of_weights": 0.24,
+            "speed_ratio_ours_over_a100_cluster": 1.3069670568798029
+          },
+          {
+            "a100_cluster_tokens_s": 3983.0367562992537,
+            "batch": 32,
+            "compute_area_mm2": 178.2156796455385,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 4978.795945374068,
+            "rom_area_mm2": 449.10432035446155,
+            "rom_fraction_of_weights": 0.2,
+            "speed_ratio_ours_over_a100_cluster": 1.2500000000000002
+          },
+          {
+            "a100_cluster_tokens_s": 7966.0735125985075,
+            "batch": 64,
+            "compute_area_mm2": 312.94697575187695,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 9214.948755717049,
+            "rom_area_mm2": 314.3730242481231,
+            "rom_fraction_of_weights": 0.14,
+            "speed_ratio_ours_over_a100_cluster": 1.1567742553647564
+          },
+          {
+            "a100_cluster_tokens_s": 15932.147025197015,
+            "batch": 128,
+            "compute_area_mm2": 559.9543519468308,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 16424.89384040929,
+            "rom_area_mm2": 67.36564805316922,
+            "rom_fraction_of_weights": 0.03,
+            "speed_ratio_ours_over_a100_cluster": 1.0309278350515463
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 256,
+            "compute_area_mm2": 647.32,
+            "hbm_stacks": 3,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 19060.80291787253,
+            "rom_area_mm2": 0.0,
+            "rom_fraction_of_weights": 0.0,
+            "speed_ratio_ours_over_a100_cluster": 0.9247428571428571
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": 256,
+        "hbm_stack_cap": 5,
+        "silicon_budget_mm2": 826.0,
+        "worst_case_speed_ratio": 0.9247428571428571
+      },
+      "Qwen3-8B/fp8": {
+        "a100_devices": 1,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 2.222222222222222,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 248.93979726870336,
+            "batch": 1,
+            "compute_area_mm2": 9.801559512615427,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 553.1995494860074,
+            "rom_area_mm2": 617.5184404873846,
+            "rom_fraction_of_weights": 0.55,
+            "speed_ratio_ours_over_a100_cluster": 2.222222222222222
+          },
+          {
+            "a100_cluster_tokens_s": 497.8795945374067,
+            "batch": 2,
+            "compute_area_mm2": 21.029167521476893,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 1082.3469446465365,
+            "rom_area_mm2": 606.2908324785232,
+            "rom_fraction_of_weights": 0.54,
+            "speed_ratio_ours_over_a100_cluster": 2.173913043478261
+          },
+          {
+            "a100_cluster_tokens_s": 995.7591890748134,
+            "batch": 4,
+            "compute_area_mm2": 43.48438353920005,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 2074.498310572528,
+            "rom_area_mm2": 583.8356164608,
+            "rom_fraction_of_weights": 0.52,
+            "speed_ratio_ours_over_a100_cluster": 2.0833333333333335
+          },
+          {
+            "a100_cluster_tokens_s": 1991.5183781496269,
+            "batch": 8,
+            "compute_area_mm2": 77.16720756578468,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 3904.9379963718175,
+            "rom_area_mm2": 550.1527924342154,
+            "rom_fraction_of_weights": 0.49,
+            "speed_ratio_ours_over_a100_cluster": 1.9607843137254903
+          },
+          {
+            "a100_cluster_tokens_s": 3983.0367562992537,
+            "batch": 16,
+            "compute_area_mm2": 122.07763960123083,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 7189.327779515947,
+            "rom_area_mm2": 505.2423603987692,
+            "rom_fraction_of_weights": 0.45,
+            "speed_ratio_ours_over_a100_cluster": 1.8049865515666856
+          },
+          {
+            "a100_cluster_tokens_s": 7966.0735125985075,
+            "batch": 32,
+            "compute_area_mm2": 211.89850367212318,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 12479.007653359786,
+            "rom_area_mm2": 415.42149632787687,
+            "rom_fraction_of_weights": 0.37,
+            "speed_ratio_ours_over_a100_cluster": 1.566519268699188
+          },
+          {
+            "a100_cluster_tokens_s": 15932.147025197015,
+            "batch": 64,
+            "compute_area_mm2": 357.85740778732315,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 20963.351348943437,
+            "rom_area_mm2": 269.4625922126769,
+            "rom_fraction_of_weights": 0.24,
+            "speed_ratio_ours_over_a100_cluster": 1.3157894736842104
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 128,
+            "compute_area_mm2": 571.1819599556924,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "hbm_read",
+            "ours_tokens_s": 33541.36215830951,
+            "rom_area_mm2": 56.138040044307694,
+            "rom_fraction_of_weights": 0.05,
+            "speed_ratio_ours_over_a100_cluster": 1.6272732690423526
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 256,
+            "compute_area_mm2": 647.32,
+            "hbm_stacks": 3,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 38121.60583574506,
+            "rom_area_mm2": 0.0,
+            "rom_fraction_of_weights": 0.0,
+            "speed_ratio_ours_over_a100_cluster": 1.8494857142857142
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 5,
+        "silicon_budget_mm2": 826.0,
+        "worst_case_speed_ratio": 1.3157894736842104
+      },
+      "Qwen3-8B/q4p25": {
+        "a100_devices": 1,
+        "admissible": true,
+        "beats_the_cluster_at_every_batch": true,
+        "best_case_speed_ratio": 14.370426323786699,
+        "by_batch": [
+          {
+            "a100_cluster_tokens_s": 468.59255956461806,
+            "batch": 1,
+            "compute_area_mm2": 80.8533245292308,
+            "hbm_stacks": 0,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 6733.874853097974,
+            "rom_area_mm2": 596.4666754707692,
+            "rom_fraction_of_weights": 1.0,
+            "speed_ratio_ours_over_a100_cluster": 14.370426323786699
+          },
+          {
+            "a100_cluster_tokens_s": 937.1851191292361,
+            "batch": 2,
+            "compute_area_mm2": 96.46465883101541,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 8034.0659347904475,
+            "rom_area_mm2": 530.8553411689846,
+            "rom_fraction_of_weights": 0.89,
+            "speed_ratio_ours_over_a100_cluster": 8.572549617790681
+          },
+          {
+            "a100_cluster_tokens_s": 1874.3702382584722,
+            "batch": 4,
+            "compute_area_mm2": 132.25265935926166,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 11014.672090480297,
+            "rom_area_mm2": 495.0673406407384,
+            "rom_fraction_of_weights": 0.83,
+            "speed_ratio_ours_over_a100_cluster": 5.876465527277218
+          },
+          {
+            "a100_cluster_tokens_s": 3748.7404765169445,
+            "batch": 8,
+            "compute_area_mm2": 179.96999339692314,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 14988.81363140008,
+            "rom_area_mm2": 447.3500066030769,
+            "rom_fraction_of_weights": 0.75,
+            "speed_ratio_ours_over_a100_cluster": 3.9983599092265223
+          },
+          {
+            "a100_cluster_tokens_s": 7497.480953033889,
+            "batch": 16,
+            "compute_area_mm2": 245.58132769870775,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 20453.25825016479,
+            "rom_area_mm2": 381.7386723012923,
+            "rom_fraction_of_weights": 0.64,
+            "speed_ratio_ours_over_a100_cluster": 2.7280173672049526
+          },
+          {
+            "a100_cluster_tokens_s": 14994.961906067778,
+            "batch": 32,
+            "compute_area_mm2": 341.01599577403084,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 28401.541332004366,
+            "rom_area_mm2": 286.3040042259692,
+            "rom_fraction_of_weights": 0.48,
+            "speed_ratio_ours_over_a100_cluster": 1.8940722563964338
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 64,
+            "compute_area_mm2": 490.13266464172307,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "rom_read",
+            "ours_tokens_s": 38686.153846153844,
+            "rom_area_mm2": 137.18733535827693,
+            "rom_fraction_of_weights": 0.23,
+            "speed_ratio_ours_over_a100_cluster": 1.8768749980629584
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 128,
+            "compute_area_mm2": 627.32,
+            "hbm_stacks": 5,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 52246.390577523096,
+            "rom_area_mm2": 0.0,
+            "rom_fraction_of_weights": 0.0,
+            "speed_ratio_ours_over_a100_cluster": 2.5347555769939714
+          },
+          {
+            "a100_cluster_tokens_s": 20612.003402506907,
+            "batch": 256,
+            "compute_area_mm2": 647.32,
+            "hbm_stacks": 3,
+            "ours_binding_constraint": "compute",
+            "ours_tokens_s": 53912.09199235199,
+            "rom_area_mm2": 0.0,
+            "rom_fraction_of_weights": 0.0,
+            "speed_ratio_ours_over_a100_cluster": 2.6155677805581483
+          }
+        ],
+        "crossover_batch_where_the_cluster_overtakes": null,
+        "hbm_stack_cap": 5,
+        "silicon_budget_mm2": 826.0,
+        "worst_case_speed_ratio": 1.8768749980629584
+      }
+    },
+    "what": "All-ROM is one design point and, at these model sizes, the wrong one: an HBM stack holds far more per mm2 of die than on-die mask ROM, which is why every DeepSeek cell needs more than its budget as pure ROM.  This sweeps the fraction held in ROM against the fraction streamed from HBM, charges the die for the PHY, and caps the stacks at five per die -- the comparator's own count -- times the device count."
+  },
+  "producer": {
+    "git": {
+      "commit": "64c6fb61f1f5cf65bf3e5a3555cc7d8cb14c3602"
+    },
+    "tool": "tools/audit_rom_iso_area_multi_device.py"
+  },
+  "question": "Give each side the silicon the MODEL forces: as many A100 dies as it takes to hold the weights in HBM, and exactly that many die-areas of ours.  At that matched silicon, what does each deliver?  This is the only form in which DeepSeek-V4.1-Flash can be compared at all, since no single device of either kind can hold it.",
+  "schema": "opentallas.derived.rom_iso_area_multi_device.v1"
+}
