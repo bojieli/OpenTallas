@@ -2,16 +2,18 @@
   "envelope": {
     "above_parity_in_every_regime": true,
     "best_regime_ratio": 1.9523142183681383,
+    "closure_note": "both structures the envelope selects from are ROUTED AND CLOSED: published_lockstep at setup WNS +0.0246 ns with no max-slew violation, and double_buffer_closed at +0.0038 ns and 1,256.0 MHz.  The audit also holds double_buffer_no_slew_margin, which is the same structure without the slew constraint and does NOT close; it is not what any number here comes from, and the per-row provenance above is what makes that checkable rather than asserted",
     "crossover": "the single buffer wins while operand supply is near-perfect (skew 0 and 1) because the second bank's area is not free; the double buffer wins from skew 2 on, where the single bank's utilisation collapses",
+    "every_chosen_point_is_post_route_closed": true,
     "reading": "choosing the better structure per regime, the array is above A100 standard-cell-logic iso-area parity at every straggler level measured, and the binding regime is skew 3",
     "worst_regime_best_ratio": 1.0798970971937574
   },
   "producer": {
     "git": {
-      "commit": "3415f14b1547404fab4fa74774c573ed37ceffe6",
+      "commit": "36cdaca0433c7a909903fa7d9311fbc9d68fdbc9",
       "worktree_dirty": true
     },
-    "sha256": "40dc0dad09e71cdce36f81585f16eb7bf67d0dc38d6f1690399c1dc3f80acd6e",
+    "sha256": "d4bfce9ee54bed64da9900dba37f382a7ad42bbe15c9d6a6b392cf12571d343f",
     "tool": "tools/audit_operand_delivery_envelope.py"
   },
   "question": "across the operand-supply regimes that were measured, and the structures that were built, what is the worst regime's best A100 iso-area ratio?",
@@ -23,46 +25,141 @@
   "regimes": [
     {
       "above_parity": true,
+      "best_is_closed": true,
       "best_ratio_vs_a100_logic": 1.9523142183681383,
       "best_structure": "lockstep_single_buffer",
+      "double_buffer_source": {
+        "closed": true,
+        "core_area_um2": 41367.9,
+        "label": "double_buffer_closed",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1256010000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+        "setup_wns_ns": 0.00382533
+      },
       "frontier_double_buffer": 1.4124208231758921,
       "lockstep_single_buffer": 1.9523142183681383,
+      "lockstep_source": {
+        "closed": true,
+        "core_area_um2": 31524.7,
+        "label": "published_lockstep",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1289720000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "setup_wns_ns": 0.0246408
+      },
       "meaning": "every unit always fed: refill_valid asserted every cycle at every unit",
       "regime": "skew_0"
     },
     {
       "above_parity": true,
+      "best_is_closed": true,
       "best_ratio_vs_a100_logic": 1.7212877359140002,
       "best_structure": "lockstep_single_buffer",
+      "double_buffer_source": {
+        "closed": true,
+        "core_area_um2": 41367.9,
+        "label": "double_buffer_closed",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1256010000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+        "setup_wns_ns": 0.00382533
+      },
       "frontier_double_buffer": 1.4073849561228733,
       "lockstep_single_buffer": 1.7212877359140002,
+      "lockstep_source": {
+        "closed": true,
+        "core_area_um2": 31524.7,
+        "label": "published_lockstep",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1289720000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "setup_wns_ns": 0.0246408
+      },
       "meaning": "every unit slowed a little and by a different amount",
       "regime": "skew_1"
     },
     {
       "above_parity": true,
+      "best_is_closed": true,
       "best_ratio_vs_a100_logic": 1.3775073576941306,
       "best_structure": "frontier_double_buffer",
+      "double_buffer_source": {
+        "closed": true,
+        "core_area_um2": 41367.9,
+        "label": "double_buffer_closed",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1256010000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+        "setup_wns_ns": 0.00382533
+      },
       "frontier_double_buffer": 1.3775073576941306,
       "lockstep_single_buffer": 1.0064374821818927,
+      "lockstep_source": {
+        "closed": true,
+        "core_area_um2": 31524.7,
+        "label": "published_lockstep",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1289720000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "setup_wns_ns": 0.0246408
+      },
       "meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
       "regime": "skew_2"
     },
     {
       "above_parity": true,
+      "best_is_closed": true,
       "best_ratio_vs_a100_logic": 1.0798970971937574,
       "best_structure": "frontier_double_buffer",
+      "double_buffer_source": {
+        "closed": true,
+        "core_area_um2": 41367.9,
+        "label": "double_buffer_closed",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1256010000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+        "setup_wns_ns": 0.00382533
+      },
       "frontier_double_buffer": 1.0798970971937574,
       "lockstep_single_buffer": 0.5111329713785906,
+      "lockstep_source": {
+        "closed": true,
+        "core_area_um2": 31524.7,
+        "label": "published_lockstep",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1289720000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "setup_wns_ns": 0.0246408
+      },
       "meaning": "one unit in sixteen at a 25% refill duty",
       "regime": "skew_3"
     },
     {
       "above_parity": true,
+      "best_is_closed": true,
       "best_ratio_vs_a100_logic": 1.3688821791708556,
       "best_structure": "frontier_double_buffer",
+      "double_buffer_source": {
+        "closed": true,
+        "core_area_um2": 41367.9,
+        "label": "double_buffer_closed",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1256010000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+        "setup_wns_ns": 0.00382533
+      },
       "frontier_double_buffer": 1.3688821791708556,
       "lockstep_single_buffer": 0.8980315683570838,
+      "lockstep_source": {
+        "closed": true,
+        "core_area_um2": 31524.7,
+        "label": "published_lockstep",
+        "post_route_check_met": true,
+        "post_route_fmax_hz": 1289720000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+        "setup_wns_ns": 0.0246408
+      },
       "meaning": "EVERY unit at a 50% refill duty",
       "regime": "skew_4"
     }

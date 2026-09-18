@@ -64,21 +64,55 @@ def main() -> int:
     #: The two-structure comparison at 512 units, which is the published array.
     #: ``before`` is the lockstep single buffer and ``after`` the double buffer;
     #: the labels are the audit's own and are not renamed here.
+    #: EVERY NUMBER IS TRACED BACK TO THE VARIANT THAT PRODUCED IT, and that
+    #: variant's post-route closure is carried beside it.  Without this the
+    #: envelope is a pair of ratios with no way to tell whether the silicon they
+    #: describe meets timing, and the audit it derives from holds FIVE variants --
+    #: two of which do not close, including a double buffer that differs from the
+    #: closing one only in its slew margin.  Mistaking one for the other is easy
+    #: enough that I did it myself when reading this file back.
+    variants = {v["label"]: v for v in db["compute_unit_variants"]}
+
+    def provenance(value: float, skew: int) -> dict[str, object]:
+        for row in db["ratios"]:
+            got = row.get("sustained_ratio_vs_a100_logic_mac_active")
+            if got is None or int(row.get("refill_skew", -1)) != skew:
+                continue
+            if abs(float(got) - value) < 1e-12:
+                v = variants.get(row["label"], {})
+                return {
+                    "label": row["label"],
+                    "closed": v.get("closed"),
+                    "post_route_check_met": v.get("post_route_check_met"),
+                    "setup_wns_ns": v.get("setup_wns_ns"),
+                    "post_route_fmax_hz": v.get("post_route_fmax_hz"),
+                    "core_area_um2": v.get("core_area_um2"),
+                    "record": v.get("record"),
+                }
+        return {"label": None, "closed": None}
+
     regimes = []
     for name in sorted(db["headline"]):
         row = db["headline"][name]
         if not isinstance(row, dict) or "before_mac_active" not in row:
             continue
+        skew = int(name.rsplit("_", 1)[1])
         lock = float(row["before_mac_active"])
         dbl = float(row["after_mac_active"])
         best = "lockstep_single_buffer" if lock >= dbl else "frontier_double_buffer"
+        lock_src = provenance(lock, skew)
+        dbl_src = provenance(dbl, skew)
+        chosen = lock_src if lock >= dbl else dbl_src
         regimes.append({
             "regime": name,
             "meaning": row.get("meaning"),
             "lockstep_single_buffer": lock,
+            "lockstep_source": lock_src,
             "frontier_double_buffer": dbl,
+            "double_buffer_source": dbl_src,
             "best_structure": best,
             "best_ratio_vs_a100_logic": max(lock, dbl),
+            "best_is_closed": chosen.get("closed"),
             "above_parity": max(lock, dbl) > 1.0,
         })
 
@@ -121,6 +155,19 @@ def main() -> int:
             "worst_regime_best_ratio": envelope,
             "best_regime_ratio": ceiling,
             "above_parity_in_every_regime": all(r["above_parity"] for r in regimes),
+            "every_chosen_point_is_post_route_closed": all(
+                r["best_is_closed"] is True for r in regimes
+            ),
+            "closure_note": (
+                "both structures the envelope selects from are ROUTED AND CLOSED: "
+                "published_lockstep at setup WNS +0.0246 ns with no max-slew "
+                "violation, and double_buffer_closed at +0.0038 ns and 1,256.0 "
+                "MHz.  The audit also holds double_buffer_no_slew_margin, which "
+                "is the same structure without the slew constraint and does NOT "
+                "close; it is not what any number here comes from, and the "
+                "per-row provenance above is what makes that checkable rather "
+                "than asserted"
+            ),
             "crossover": (
                 "the single buffer wins while operand supply is near-perfect "
                 "(skew 0 and 1) because the second bank's area is not free; the "
