@@ -1,5 +1,5 @@
 {
-  "clock_period_ns": 2.0,
+  "clock_period_ns": 4.0,
   "derived_from": "results/physical_abi3/asap7/datapath_coverage.json",
   "not_a_claim": [
     "nothing is launched here; ORFS runs of ONE top collide on DESIGN_NICKNAME and four concurrent runs is the practical ceiling, so scheduling is the caller's",
@@ -8,14 +8,14 @@
   "ordering": "fan-in descending, then source bytes ascending: a module many parents instantiate bounds all of them with one route, and among equals the smaller source synthesises sooner",
   "producer": {
     "git": {
-      "commit": "1bb19884cd5272bb1d09e7b6a8affd7cab283aa5"
+      "commit": "05176dd4b0286fd566e3d3cb28e79800fbee042b"
     },
     "tool": "tools/plan_asap7_coverage_routes.py"
   },
   "route_count": 53,
   "routes": [
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_transcendental_cr_rne --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_transcendental_cr_rne --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 8,
       "instantiated_by": [
         "ot_a3_attention_epilogue",
@@ -35,7 +35,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_div_rne --source rtl/abi3/ot_a3_fp32_div_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_div_rne --source rtl/abi3/ot_a3_fp32_div_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 7,
       "instantiated_by": [
         "ot_a3_attention_epilogue",
@@ -54,7 +54,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_dma_index_mover --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_dma_index_mover --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_engine_array",
@@ -69,7 +69,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_rx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_rx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_link_endpoint",
@@ -84,7 +84,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_tx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_tx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_link_endpoint",
@@ -99,7 +99,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mac_lane_pipe --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_mac_lane_pipe.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mac_lane_pipe --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_mac_lane_pipe.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_engine_array",
@@ -115,7 +115,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_hadamard --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_hadamard.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_hadamard --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_hadamard.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_engine_array",
@@ -132,7 +132,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_qwen_gqa --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_qwen_gqa.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_qwen_gqa --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_qwen_gqa.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge",
@@ -149,7 +149,7 @@
       "submodules": 2
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_reduction_balanced_sum --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_reduction_balanced_sum --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_denominator"
@@ -162,7 +162,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_kv_index --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_kv_index.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_kv_index --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_kv_index.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_sparse"
@@ -176,7 +176,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engram_exact_dot_tree --source rtl/abi3/ot_a3_engram_exact_dot_tree.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engram_exact_dot_tree --source rtl/abi3/ot_a3_engram_exact_dot_tree.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_vector_engram_gate"
@@ -189,7 +189,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_window_index --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_route_window_index.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_window_index --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_route_window_index.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -203,7 +203,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_selection_token_append --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_selection_token_append.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_selection_token_append --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_selection_token_append.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -217,7 +217,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engram_fp32_sqrt_rne_pipe --source rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engram_fp32_sqrt_rne_pipe --source rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_vector_engram_gate"
@@ -230,7 +230,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_return --source rtl/abi3/ot_a3_link_node.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_return --source rtl/abi3/ot_a3_link_node.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
@@ -243,7 +243,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_wire --source rtl/abi3/ot_a3_link_node.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_wire --source rtl/abi3/ot_a3_link_node.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
@@ -256,7 +256,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_selection_argmax --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/abi3/ot_a3_selection_argmax.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_selection_argmax --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/abi3/ot_a3_selection_argmax.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -271,7 +271,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mesh_router --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/abi3/ot_a3_mesh_router.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mesh_router --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/abi3/ot_a3_mesh_router.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_link_node"
@@ -285,7 +285,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_exp_pos_cr_rne --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_exp_pos_cr_rne --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_epilogue"
@@ -298,7 +298,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_place_table --source rtl/abi3/ot_a3_place_table.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_place_table --source rtl/abi3/ot_a3_place_table.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -311,7 +311,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_endpoint --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_endpoint.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_endpoint --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_endpoint.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
@@ -326,7 +326,7 @@
       "submodules": 2
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_mhc_pre_tile_scheduler --source rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_mhc_pre_tile_scheduler --source rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_pre_t1_descriptor_rne"
@@ -339,7 +339,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_descriptor_record_validator --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_descriptor_record_validator.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_descriptor_record_validator --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_descriptor_record_validator.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_qwen_kv_scatter_adapter"
@@ -353,7 +353,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_program_header --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_program_header.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_program_header --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_program_header.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_device_top"
@@ -367,7 +367,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_communication_decoder --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_communication_decoder.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_communication_decoder --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_communication_decoder.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
@@ -382,7 +382,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_softmax_block --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_softmax_block --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_denominator"
@@ -397,7 +397,7 @@
       "submodules": 1
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_add --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_add.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_add --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_add.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -413,7 +413,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_convert --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_convert.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_convert --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_convert.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -429,7 +429,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_sinkhorn20_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_sinkhorn20_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_stable_softmax_sinkhorn20_rne"
@@ -444,7 +444,7 @@
       "submodules": 1
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_compress_project --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_compress_project.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_compress_project --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_compress_project.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -460,7 +460,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_rms_norm --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_rms_norm.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_rms_norm --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_rms_norm.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -475,7 +475,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_biased_topk --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_route_biased_topk.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_biased_topk --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_route_biased_topk.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -490,7 +490,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mac_lane --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_mac_lane.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mac_lane --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_mac_lane.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -506,7 +506,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_index_score --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_index_score.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_index_score --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_index_score.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -522,7 +522,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_mhc_post --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_mhc_post.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_mhc_post --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_mhc_post.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_array"
@@ -538,7 +538,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_denominator --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_denominator.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_denominator --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_attention_denominator.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_sparse"
@@ -555,7 +555,7 @@
       "submodules": 3
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_sqrt_softplus --source rtl/abi3/ot_a3_fp32_sqrt_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_sqrt_softplus --source rtl/abi3/ot_a3_fp32_sqrt_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_vector_sqrt_softplus_row"
@@ -570,7 +570,7 @@
       "submodules": 2
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_projection_rms_rne --source rtl/abi3/ot_a3_hc_projection_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_hc_projection_rms_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_projection_rms_rne --source rtl/abi3/ot_a3_hc_projection_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_hc_projection_rms_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_pre_t1_descriptor_rne"
@@ -585,7 +585,7 @@
       "submodules": 1
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_reduction_store --source rtl/abi3/ot_a3_hc_projection_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_hc_projection_rms_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_reduction_store --source rtl/abi3/ot_a3_hc_projection_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_hc_projection_rms_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_projection_rms_rne"
@@ -600,7 +600,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_weight_normalize --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_route_weight_normalize.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_route_weight_normalize --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_route_weight_normalize.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -616,7 +616,7 @@
       "submodules": 1
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_sqrt_softplus_row --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_fp32_sqrt_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_sqrt_softplus_row --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_fp32_sqrt_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus.sv --source rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -633,7 +633,7 @@
       "submodules": 3
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_rope_lane_pipe --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_rope_lane_pipe.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_rope_lane_pipe --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_rope_lane_pipe.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_vector_rope"
@@ -648,7 +648,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_collective_engine --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_collective_engine.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_collective_engine --source rtl/abi3/ot_a3_link_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_collective_engine.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_link_node"
@@ -663,7 +663,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_reduction_expert_sum --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_reduction_expert_sum.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_reduction_expert_sum --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_reduction_expert_sum.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -679,7 +679,7 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_stable_softmax_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_stable_softmax_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_stable_softmax_sinkhorn20_rne"
@@ -695,7 +695,7 @@
       "submodules": 2
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_qwen_kv_scatter_adapter --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_descriptor_record_validator.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --source rtl/abi3/ot_a3_instruction_decoder.sv --source rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_qwen_kv_scatter_adapter --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_pkg.sv --source rtl/abi3/ot_a3_descriptor_record_validator.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --source rtl/abi3/ot_a3_instruction_decoder.sv --source rtl/abi3/ot_a3_qwen_kv_scatter_adapter.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_qwen_gqa_adapter"
@@ -713,7 +713,7 @@
       "submodules": 3
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_silu_mul --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_silu_mul.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_silu_mul --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_vector_silu_mul.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -731,7 +731,7 @@
       "submodules": 2
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_stable_softmax_sinkhorn20_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_stable_softmax_sinkhorn20_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_coefficients_rne"
@@ -749,7 +749,7 @@
       "submodules": 4
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_epilogue --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_attention_epilogue.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_epilogue --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_attention_epilogue.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_attention_sparse"
@@ -767,7 +767,7 @@
       "submodules": 3
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_coefficients_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_coefficients_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_hc_coefficients_rne --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_hc_coefficients_rne.sv --source rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_rne.sv --source rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_hc_pre_t1_descriptor_rne"
@@ -786,7 +786,7 @@
       "submodules": 5
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_rope --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_rope_lane_pipe.sv --source rtl/abi3/ot_a3_vector_rope.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_rope --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_rope_lane_pipe.sv --source rtl/abi3/ot_a3_vector_rope.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -802,7 +802,7 @@
       "submodules": 1
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_sparse --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_attention_av_walk.sv --source rtl/abi3/ot_a3_attention_denominator.sv --source rtl/abi3/ot_a3_attention_epilogue.sv --source rtl/abi3/ot_a3_attention_kv_index.sv --source rtl/abi3/ot_a3_attention_qk_walk.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_attention_sparse.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_attention_sparse --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_attention_av_walk.sv --source rtl/abi3/ot_a3_attention_denominator.sv --source rtl/abi3/ot_a3_attention_epilogue.sv --source rtl/abi3/ot_a3_attention_kv_index.sv --source rtl/abi3/ot_a3_attention_qk_walk.sv --source rtl/abi3/ot_a3_attention_softmax_block.sv --source rtl/abi3/ot_a3_attention_sparse.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_reduction_balanced_sum.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
@@ -828,7 +828,7 @@
       "submodules": 10
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engine_array --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --source rtl/abi3/ot_a3_engine_array.sv --source rtl/abi3/ot_a3_mac_lane.sv --source rtl/abi3/ot_a3_mac_lane_pipe.sv --source rtl/abi3/ot_a3_selection_argmax.sv --source rtl/abi3/ot_a3_vector_add.sv --source rtl/abi3/ot_a3_vector_compress_project.sv --source rtl/abi3/ot_a3_vector_convert.sv --source rtl/abi3/ot_a3_vector_hadamard.sv --source rtl/abi3/ot_a3_vector_index_score.sv --source rtl/abi3/ot_a3_vector_mhc_post.sv --source rtl/abi3/ot_a3_vector_scale_pipe.sv --clock-period-ns 2 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
+      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_engine_array --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_dma_index_mover.sv --source rtl/abi3/ot_a3_engine_array.sv --source rtl/abi3/ot_a3_mac_lane.sv --source rtl/abi3/ot_a3_mac_lane_pipe.sv --source rtl/abi3/ot_a3_selection_argmax.sv --source rtl/abi3/ot_a3_vector_add.sv --source rtl/abi3/ot_a3_vector_compress_project.sv --source rtl/abi3/ot_a3_vector_convert.sv --source rtl/abi3/ot_a3_vector_hadamard.sv --source rtl/abi3/ot_a3_vector_index_score.sv --source rtl/abi3/ot_a3_vector_mhc_post.sv --source rtl/abi3/ot_a3_vector_scale_pipe.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 1,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
