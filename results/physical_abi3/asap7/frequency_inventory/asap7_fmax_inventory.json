@@ -142,6 +142,16 @@
       "target_headroom": 0.05201418181818182
     },
     {
+      "at_target_clock_period_ns": 1.3,
+      "block": "ot_a3_vector_scale_pipe",
+      "family": "abi3_datapath",
+      "fmax_hz": 984426000.0,
+      "record": "results/physical_abi3/asap7/vector_scale_pipe/pnr_1p3ns_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 6539.28,
+      "target_headroom": 0.2186
+    },
+    {
       "at_target_clock_period_ns": 1.0,
       "block": "ot_probe_packed8_bf16",
       "family": "probe",
@@ -325,10 +335,10 @@
     "target_headroom": 0.04578063157894737
   },
   "counts": {
-    "closed_routed_record_count": 59,
-    "distinct_blocks_with_a_closed_routed_record": 31,
-    "post_route_record_count": 98,
-    "record_count": 170
+    "closed_routed_record_count": 60,
+    "distinct_blocks_with_a_closed_routed_record": 32,
+    "post_route_record_count": 99,
+    "record_count": 171
   },
   "excluded_from_the_limiter_by_family": [
     {
@@ -401,7 +411,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "082f4d927c5fb1ba3b9258110828f2c6b27797e4"
+      "commit": "a24001663b20083a5d233f7f6f7c9424c4ff7500"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -4447,6 +4457,29 @@
       "standard_cell_area_um2": null,
       "target_clock_period_ns": 8.5,
       "target_headroom": null
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_scale_pipe",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 984426000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "signoff_target",
+      "record": "results/physical_abi3/asap7/vector_scale_pipe/pnr_1p3ns_closed.json",
+      "record_sha256": "3f50f665d6f4a30418dba164b8d67e3296cac3518120f1521693c6fbd93b8423",
+      "setup_wns_ns": 0.28418,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 6539.28,
+      "target_clock_period_ns": 1.3,
+      "target_headroom": 0.2186
     }
   ],
   "schema": "opentallas.physical.asap7_fmax_inventory.v2",
