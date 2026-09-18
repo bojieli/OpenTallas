@@ -1,0 +1,1373 @@
+{
+ "across_all_layers_and_positions": {
+  "bf16_epsilon": 0.00390625,
+  "fraction_within_one_bf16_epsilon_of_the_cut": 0.0,
+  "samples": 320,
+  "weakest_selected_over_strongest_median": 0.872497171163559,
+  "weakest_selected_over_strongest_min": 0.7388131618499756,
+  "weakest_selected_over_strongest_p05": 0.7854423731565475
+ },
+ "fixture": {
+  "checkpoint_lock_id": "2ea2d142370015c5c3aaa38bcd33f79ca3db3cd4aeb463c54d771c704bfc8548",
+  "n_activated_experts": 6,
+  "n_routed_experts": 12,
+  "route_scale": 1.5,
+  "score_func": "sqrtsoftplus",
+  "selection_rate": 0.5,
+  "snapshot": "build/models/deepseek-v4.1-flash-reduced-v2",
+  "weights": "a fixed Philox stream keyed by sha256(seed:tensor_name); no expert is trained to be preferred"
+ },
+ "layers_captured": 40,
+ "not_a_claim": [
+  "this measures the FIXTURE's router, not the device: no device trace is read here",
+  "the vendor Gate returns the selected weights only, so this reports the spread WITHIN the selected set rather than the 6th-to-7th score gap directly; a marginal pick with near-zero weight is the observable proxy for a selection the cut can lose, and it is a weaker instrument than the gap itself",
+  "a small margin does not prove the device and oracle actually selected differently -- it establishes that they need not agree, which is what makes the emitted token unusable as a correctness oracle on this vehicle"
+ ],
+ "per_layer": [
+  {
+   "last_position_indices": [
+    7,
+    11,
+    6,
+    10,
+    8,
+    0
+   ],
+   "last_position_weights": [
+    0.2787807583808899,
+    0.2715602517127991,
+    0.2462521344423294,
+    0.24051082134246826,
+    0.23324650526046753,
+    0.2296493947505951
+   ],
+   "layer": 0,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9441754221916199,
+    "median": 0.8459205031394958,
+    "min": 0.7774099707603455
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    3,
+    9,
+    11,
+    1,
+    6
+   ],
+   "last_position_weights": [
+    0.27189531922340393,
+    0.24134761095046997,
+    0.25268206000328064,
+    0.24619218707084656,
+    0.24539947509765625,
+    0.2424832284450531
+   ],
+   "layer": 1,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9546346664428711,
+    "median": 0.8777053356170654,
+    "min": 0.7790291905403137
+   }
+  },
+  {
+   "last_position_indices": [
+    11,
+    10,
+    4,
+    0,
+    5,
+    7
+   ],
+   "last_position_weights": [
+    0.26556500792503357,
+    0.26264333724975586,
+    0.2568843364715576,
+    0.2383815050125122,
+    0.2353343665599823,
+    0.24119147658348083
+   ],
+   "layer": 2,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9344198107719421,
+    "median": 0.8948385715484619,
+    "min": 0.8321200609207153
+   }
+  },
+  {
+   "last_position_indices": [
+    11,
+    3,
+    9,
+    4,
+    1,
+    0
+   ],
+   "last_position_weights": [
+    0.271650493144989,
+    0.26108241081237793,
+    0.24904753267765045,
+    0.23805969953536987,
+    0.2417052537202835,
+    0.23845455050468445
+   ],
+   "layer": 3,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9348839521408081,
+    "median": 0.8833601474761963,
+    "min": 0.8028404712677002
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    3,
+    6,
+    11,
+    2,
+    1
+   ],
+   "last_position_weights": [
+    0.2632592022418976,
+    0.2517014145851135,
+    0.2537728548049927,
+    0.24565374851226807,
+    0.24290482699871063,
+    0.24270787835121155
+   ],
+   "layer": 4,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9273883104324341,
+    "median": 0.8846548795700073,
+    "min": 0.7855682373046875
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    6,
+    7,
+    3,
+    1,
+    11
+   ],
+   "last_position_weights": [
+    0.2539723515510559,
+    0.2659915089607239,
+    0.25454339385032654,
+    0.24464038014411926,
+    0.24507160484790802,
+    0.2357807457447052
+   ],
+   "layer": 5,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9180741906166077,
+    "median": 0.8781565427780151,
+    "min": 0.8138637542724609
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    9,
+    3,
+    1,
+    5,
+    4
+   ],
+   "last_position_weights": [
+    0.3000752329826355,
+    0.25529706478118896,
+    0.2508384585380554,
+    0.2371121048927307,
+    0.23497746884822845,
+    0.2216995358467102
+   ],
+   "layer": 6,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.499999761581421
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9281212091445923,
+    "median": 0.8890163898468018,
+    "min": 0.7388131618499756
+   }
+  },
+  {
+   "last_position_indices": [
+    3,
+    11,
+    6,
+    8,
+    10,
+    1
+   ],
+   "last_position_weights": [
+    0.2812010645866394,
+    0.26815786957740784,
+    0.24174897372722626,
+    0.241776704788208,
+    0.23239222168922424,
+    0.2347232848405838
+   ],
+   "layer": 7,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9378581047058105,
+    "median": 0.8883566856384277,
+    "min": 0.8264272212982178
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    7,
+    6,
+    0,
+    5,
+    3
+   ],
+   "last_position_weights": [
+    0.269711971282959,
+    0.2634866237640381,
+    0.24853968620300293,
+    0.2557581663131714,
+    0.23575352132320404,
+    0.22675006091594696
+   ],
+   "layer": 8,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9095097184181213,
+    "median": 0.8646541833877563,
+    "min": 0.8188304305076599
+   }
+  },
+  {
+   "last_position_indices": [
+    1,
+    5,
+    3,
+    9,
+    7,
+    8
+   ],
+   "last_position_weights": [
+    0.28500139713287354,
+    0.25284677743911743,
+    0.2526312470436096,
+    0.2370898723602295,
+    0.23367494344711304,
+    0.2387557327747345
+   ],
+   "layer": 9,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9151551127433777,
+    "median": 0.8496887683868408,
+    "min": 0.775371253490448
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    5,
+    2,
+    9,
+    7,
+    11
+   ],
+   "last_position_weights": [
+    0.2548673450946808,
+    0.25547757744789124,
+    0.24960239231586456,
+    0.2545885443687439,
+    0.2367440164089203,
+    0.24872013926506042
+   ],
+   "layer": 10,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9266723990440369,
+    "median": 0.8448276519775391,
+    "min": 0.8020362854003906
+   }
+  },
+  {
+   "last_position_indices": [
+    4,
+    11,
+    6,
+    7,
+    8,
+    2
+   ],
+   "last_position_weights": [
+    0.2554730474948883,
+    0.2577616572380066,
+    0.2611142098903656,
+    0.2540796399116516,
+    0.24433991312980652,
+    0.22723153233528137
+   ],
+   "layer": 11,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9665505290031433,
+    "median": 0.9016386270523071,
+    "min": 0.8477986454963684
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    9,
+    4,
+    1,
+    0,
+    5
+   ],
+   "last_position_weights": [
+    0.27411752939224243,
+    0.26631516218185425,
+    0.24274256825447083,
+    0.24011552333831787,
+    0.24399754405021667,
+    0.23271170258522034
+   ],
+   "layer": 12,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.915591299533844,
+    "median": 0.8616576194763184,
+    "min": 0.7934216260910034
+   }
+  },
+  {
+   "last_position_indices": [
+    9,
+    10,
+    8,
+    11,
+    6,
+    1
+   ],
+   "last_position_weights": [
+    0.2706541419029236,
+    0.26238247752189636,
+    0.24643005430698395,
+    0.25556284189224243,
+    0.23904915153980255,
+    0.22592125833034515
+   ],
+   "layer": 13,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9302235841751099,
+    "median": 0.8568762540817261,
+    "min": 0.8221498727798462
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    2,
+    4,
+    3,
+    7,
+    1
+   ],
+   "last_position_weights": [
+    0.2588399052619934,
+    0.2480626106262207,
+    0.2516254186630249,
+    0.2679954469203949,
+    0.2369072139263153,
+    0.23656952381134033
+   ],
+   "layer": 14,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9104986190795898,
+    "median": 0.8719195127487183,
+    "min": 0.808474600315094
+   }
+  },
+  {
+   "last_position_indices": [
+    3,
+    7,
+    1,
+    5,
+    4,
+    8
+   ],
+   "last_position_weights": [
+    0.25540536642074585,
+    0.25836262106895447,
+    0.2580053508281708,
+    0.24486073851585388,
+    0.2495054304599762,
+    0.23386041820049286
+   ],
+   "layer": 15,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9494913220405579,
+    "median": 0.865880012512207,
+    "min": 0.7822996377944946
+   }
+  },
+  {
+   "last_position_indices": [
+    1,
+    11,
+    6,
+    7,
+    2,
+    10
+   ],
+   "last_position_weights": [
+    0.2662245035171509,
+    0.25471606850624084,
+    0.24766582250595093,
+    0.24374672770500183,
+    0.24610042572021484,
+    0.24154655635356903
+   ],
+   "layer": 16,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9375102519989014,
+    "median": 0.867357075214386,
+    "min": 0.8375594615936279
+   }
+  },
+  {
+   "last_position_indices": [
+    0,
+    1,
+    10,
+    6,
+    11,
+    8
+   ],
+   "last_position_weights": [
+    0.26827648282051086,
+    0.2707138657569885,
+    0.2490222305059433,
+    0.2506033778190613,
+    0.23157168924808502,
+    0.22981224954128265
+   ],
+   "layer": 17,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9279356598854065,
+    "median": 0.864411473274231,
+    "min": 0.8407718539237976
+   }
+  },
+  {
+   "last_position_indices": [
+    7,
+    11,
+    4,
+    1,
+    3,
+    6
+   ],
+   "last_position_weights": [
+    0.2865963876247406,
+    0.249103844165802,
+    0.24989235401153564,
+    0.24282431602478027,
+    0.24165768921375275,
+    0.22992543876171112
+   ],
+   "layer": 18,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9269688129425049,
+    "median": 0.8459595441818237,
+    "min": 0.7938262820243835
+   }
+  },
+  {
+   "last_position_indices": [
+    0,
+    2,
+    10,
+    8,
+    11,
+    7
+   ],
+   "last_position_weights": [
+    0.2633260190486908,
+    0.25695234537124634,
+    0.24947193264961243,
+    0.2499338686466217,
+    0.25211432576179504,
+    0.22820156812667847
+   ],
+   "layer": 19,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9491896033287048,
+    "median": 0.8836915493011475,
+    "min": 0.8246892690658569
+   }
+  },
+  {
+   "last_position_indices": [
+    11,
+    3,
+    7,
+    9,
+    10,
+    8
+   ],
+   "last_position_weights": [
+    0.24668586254119873,
+    0.25301826000213623,
+    0.2561827600002289,
+    0.24878977239131927,
+    0.2566140294075012,
+    0.23870927095413208
+   ],
+   "layer": 20,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9737727642059326,
+    "median": 0.8816438317298889,
+    "min": 0.7690292000770569
+   }
+  },
+  {
+   "last_position_indices": [
+    3,
+    6,
+    11,
+    10,
+    9,
+    8
+   ],
+   "last_position_weights": [
+    0.26228222250938416,
+    0.2532578110694885,
+    0.26182669401168823,
+    0.23522508144378662,
+    0.24120938777923584,
+    0.2461988627910614
+   ],
+   "layer": 21,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9469029903411865,
+    "median": 0.8634226322174072,
+    "min": 0.7718617916107178
+   }
+  },
+  {
+   "last_position_indices": [
+    6,
+    1,
+    8,
+    9,
+    3,
+    0
+   ],
+   "last_position_weights": [
+    0.2731393575668335,
+    0.2509160339832306,
+    0.24524250626564026,
+    0.2476390302181244,
+    0.2451954185962677,
+    0.23786774277687073
+   ],
+   "layer": 22,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.910943865776062,
+    "median": 0.8772300481796265,
+    "min": 0.7964429259300232
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    1,
+    2,
+    9,
+    7,
+    10
+   ],
+   "last_position_weights": [
+    0.2741249203681946,
+    0.24369379878044128,
+    0.25316885113716125,
+    0.25464773178100586,
+    0.2291117012500763,
+    0.24525299668312073
+   ],
+   "layer": 23,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9396774768829346,
+    "median": 0.8592504858970642,
+    "min": 0.763748824596405
+   }
+  },
+  {
+   "last_position_indices": [
+    6,
+    11,
+    3,
+    4,
+    1,
+    5
+   ],
+   "last_position_weights": [
+    0.2633345127105713,
+    0.2668330669403076,
+    0.258925199508667,
+    0.25050315260887146,
+    0.2333817332983017,
+    0.22702229022979736
+   ],
+   "layer": 24,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9150800108909607,
+    "median": 0.8578898906707764,
+    "min": 0.8508026599884033
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    4,
+    2,
+    0,
+    10,
+    11
+   ],
+   "last_position_weights": [
+    0.2596050500869751,
+    0.2547047436237335,
+    0.25407636165618896,
+    0.2461860477924347,
+    0.24631917476654053,
+    0.23910865187644958
+   ],
+   "layer": 25,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9424358010292053,
+    "median": 0.9058539867401123,
+    "min": 0.78070467710495
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    1,
+    11,
+    4,
+    2,
+    0
+   ],
+   "last_position_weights": [
+    0.2814374566078186,
+    0.2508978247642517,
+    0.23675291240215302,
+    0.2400531768798828,
+    0.24458307027816772,
+    0.2462756335735321
+   ],
+   "layer": 26,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9372854828834534,
+    "median": 0.873481810092926,
+    "min": 0.7947256565093994
+   }
+  },
+  {
+   "last_position_indices": [
+    6,
+    0,
+    5,
+    8,
+    11,
+    4
+   ],
+   "last_position_weights": [
+    0.2789614796638489,
+    0.25472491979599,
+    0.25949788093566895,
+    0.23092544078826904,
+    0.237280935049057,
+    0.2386094331741333
+   ],
+   "layer": 27,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9607816338539124,
+    "median": 0.8745813369750977,
+    "min": 0.8075207471847534
+   }
+  },
+  {
+   "last_position_indices": [
+    0,
+    4,
+    11,
+    6,
+    2,
+    1
+   ],
+   "last_position_weights": [
+    0.27346092462539673,
+    0.2592306435108185,
+    0.2438000589609146,
+    0.24106347560882568,
+    0.24514952301979065,
+    0.23729532957077026
+   ],
+   "layer": 28,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9333042502403259,
+    "median": 0.8822698593139648,
+    "min": 0.8436319828033447
+   }
+  },
+  {
+   "last_position_indices": [
+    2,
+    5,
+    0,
+    7,
+    3,
+    11
+   ],
+   "last_position_weights": [
+    0.26603537797927856,
+    0.26111769676208496,
+    0.2456623911857605,
+    0.24389460682868958,
+    0.24095505475997925,
+    0.24233485758304596
+   ],
+   "layer": 29,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.909008264541626,
+    "median": 0.8708460927009583,
+    "min": 0.7747548222541809
+   }
+  },
+  {
+   "last_position_indices": [
+    6,
+    2,
+    0,
+    8,
+    7,
+    1
+   ],
+   "last_position_weights": [
+    0.2749519348144531,
+    0.2563633918762207,
+    0.24335309863090515,
+    0.23598623275756836,
+    0.23624400794506073,
+    0.25310128927230835
+   ],
+   "layer": 30,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9045507907867432,
+    "median": 0.8654276728630066,
+    "min": 0.7426872849464417
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    11,
+    7,
+    1,
+    2,
+    6
+   ],
+   "last_position_weights": [
+    0.2693685293197632,
+    0.266382098197937,
+    0.24579063057899475,
+    0.23670285940170288,
+    0.2434329390525818,
+    0.238322913646698
+   ],
+   "layer": 31,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.5
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9138728976249695,
+    "median": 0.8876817226409912,
+    "min": 0.8344020247459412
+   }
+  },
+  {
+   "last_position_indices": [
+    1,
+    5,
+    0,
+    9,
+    8,
+    3
+   ],
+   "last_position_weights": [
+    0.2743639051914215,
+    0.2581077516078949,
+    0.2486577033996582,
+    0.24551710486412048,
+    0.24210426211357117,
+    0.23124930262565613
+   ],
+   "layer": 32,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9057208299636841,
+    "median": 0.8755342960357666,
+    "min": 0.8160937428474426
+   }
+  },
+  {
+   "last_position_indices": [
+    1,
+    11,
+    8,
+    3,
+    0,
+    9
+   ],
+   "last_position_weights": [
+    0.26764237880706787,
+    0.26249054074287415,
+    0.246127188205719,
+    0.2444474697113037,
+    0.24312324821949005,
+    0.2361692488193512
+   ],
+   "layer": 33,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9243770837783813,
+    "median": 0.8739650845527649,
+    "min": 0.8497887253761292
+   }
+  },
+  {
+   "last_position_indices": [
+    8,
+    6,
+    0,
+    2,
+    10,
+    1
+   ],
+   "last_position_weights": [
+    0.2614414095878601,
+    0.2566753327846527,
+    0.25779739022254944,
+    0.24981972575187683,
+    0.24130578339099884,
+    0.23296037316322327
+   ],
+   "layer": 34,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9160590767860413,
+    "median": 0.880685031414032,
+    "min": 0.863880455493927
+   }
+  },
+  {
+   "last_position_indices": [
+    4,
+    5,
+    11,
+    2,
+    0,
+    9
+   ],
+   "last_position_weights": [
+    0.2614453434944153,
+    0.25667789578437805,
+    0.2495611608028412,
+    0.25449123978614807,
+    0.2401740550994873,
+    0.2376503050327301
+   ],
+   "layer": 35,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9089865684509277,
+    "median": 0.8624425530433655,
+    "min": 0.852368175983429
+   }
+  },
+  {
+   "last_position_indices": [
+    10,
+    5,
+    2,
+    11,
+    8,
+    6
+   ],
+   "last_position_weights": [
+    0.2829579710960388,
+    0.2601880729198456,
+    0.24451017379760742,
+    0.24350965023040771,
+    0.2447466105222702,
+    0.2240874171257019
+   ],
+   "layer": 36,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.500000238418579,
+    "median": 1.5,
+    "min": 1.499999761581421
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.8959322571754456,
+    "median": 0.8055654168128967,
+    "min": 0.7669357657432556
+   }
+  },
+  {
+   "last_position_indices": [
+    3,
+    11,
+    7,
+    8,
+    9,
+    6
+   ],
+   "last_position_weights": [
+    0.26196953654289246,
+    0.264777809381485,
+    0.25471073389053345,
+    0.2486879825592041,
+    0.23200960457324982,
+    0.2378442883491516
+   ],
+   "layer": 37,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9205116033554077,
+    "median": 0.8800534605979919,
+    "min": 0.8244436979293823
+   }
+  },
+  {
+   "last_position_indices": [
+    0,
+    5,
+    8,
+    3,
+    10,
+    1
+   ],
+   "last_position_weights": [
+    0.2560063302516937,
+    0.25560033321380615,
+    0.2588134706020355,
+    0.2459152638912201,
+    0.24465668201446533,
+    0.23900793492794037
+   ],
+   "layer": 38,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9459952712059021,
+    "median": 0.904657244682312,
+    "min": 0.7613120675086975
+   }
+  },
+  {
+   "last_position_indices": [
+    2,
+    8,
+    11,
+    10,
+    0,
+    4
+   ],
+   "last_position_weights": [
+    0.2672587037086487,
+    0.25693920254707336,
+    0.2533476650714874,
+    0.2407047003507614,
+    0.24268873035907745,
+    0.2390608787536621
+   ],
+   "layer": 39,
+   "positions": 8,
+   "selected_per_position": 6,
+   "selected_weight_sum": {
+    "max": 1.5000001192092896,
+    "median": 1.5,
+    "min": 1.4999998807907104
+   },
+   "weakest_selected_over_strongest": {
+    "max": 0.9271740317344666,
+    "median": 0.8750296831130981,
+    "min": 0.7896076440811157
+   }
+  }
+ ],
+ "producer": {
+  "git": {
+   "commit": "d81b8ac62f96fc04624d9dc6196be5811983e8e8"
+  },
+  "tool": "tools/measure_v41_router_selection_margin.py"
+ },
+ "question": "on the reduced V4.1 fixture, is the top-6-of-12 expert selection decidable under the arithmetic noise between two legitimate implementations, or is it decided by rounding?",
+ "schema": "opentallas.abi3.v41_router_selection_margin.v1",
+ "the_cut": {
+  "absolute_gap_median": 0.013087332248687744,
+  "capture_note": "patching Tensor.topk re-enters once per call, so each score tensor arrived twice; the duplicates are dropped rather than left to double the sample count",
+  "duplicate_captures_dropped": 40,
+  "fraction_below_one_bf16_epsilon": 0.071875,
+  "fraction_below_ten_bf16_epsilons": 0.415625,
+  "relative_gap_max": 0.3789937128466928,
+  "relative_gap_median": 0.05272065560792656,
+  "relative_gap_min": 6.474257139689381e-06,
+  "relative_gap_p05": 0.002747450535952781,
+  "samples": 320,
+  "samples_of_the_score_vector": [
+   {
+    "capture_index": 0,
+    "last_position_cut_gap_absolute": 0.001681983470916748,
+    "last_position_cut_gap_relative_to_spread": 0.005652387106492183,
+    "last_position_scores_sorted_desc": [
+     0.9743452668190002,
+     0.9457011818885803,
+     0.8732458353042603,
+     0.8454985022544861,
+     0.8280075192451477,
+     0.8186052441596985,
+     0.8169232606887817,
+     0.7813063263893127,
+     0.7786117792129517,
+     0.771140456199646,
+     0.7190931439399719,
+     0.676774799823761
+    ],
+    "positions": 8
+   },
+   {
+    "capture_index": 1,
+    "last_position_cut_gap_absolute": 0.009847402572631836,
+    "last_position_cut_gap_relative_to_spread": 0.03475389007040728,
+    "last_position_scores_sorted_desc": [
+     0.9683215618133545,
+     0.8604801297187805,
+     0.8583706617355347,
+     0.8425185084342957,
+     0.8347880244255066,
+     0.831868588924408,
+     0.8220211863517761,
+     0.7847145795822144,
+     0.762955904006958,
+     0.7613890767097473,
+     0.7570860981941223,
+     0.6849747896194458
+    ],
+    "positions": 8
+   },
+   {
+    "capture_index": 2,
+    "last_position_cut_gap_absolute": 0.010153055191040039,
+    "last_position_cut_gap_relative_to_spread": 0.031548399678996794,
+    "last_position_scores_sorted_desc": [
+     0.9823916554450989,
+     0.9544622898101807,
+     0.9500471949577332,
+     0.8769484758377075,
+     0.8479653000831604,
+     0.8412908911705017,
+     0.8311378359794617,
+     0.831082284450531,
+     0.781856894493103,
+     0.7069087624549866,
+     0.6840702295303345,
+     0.6605669260025024
+    ],
+    "positions": 8
+   },
+   {
+    "capture_index": 39,
+    "last_position_cut_gap_absolute": 0.01418381929397583,
+    "last_position_cut_gap_relative_to_spread": 0.0483282367976981,
+    "last_position_scores_sorted_desc": [
+     0.9891026616096497,
+     0.9037350416183472,
+     0.8985157608985901,
+     0.8923242092132568,
+     0.8820236325263977,
+     0.8529958724975586,
+     0.8388120532035828,
+     0.767195463180542,
+     0.7611708641052246,
+     0.7588165998458862,
+     0.7430472373962402,
+     0.6956133842468262
+    ],
+    "positions": 8
+   }
+  ],
+  "score_tensors_captured": 40,
+  "selected_on": "scores + bias, which is what Gate.forward cuts on; the weights come from the raw scores",
+  "what": "the gap between the 6th score (last selected) and the 7th (first rejected), over the full spread of the 12 scores.  A relative gap of g means a perturbation of the scores by g of their own spread can change which experts run."
+ }
+}
