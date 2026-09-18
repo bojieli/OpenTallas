@@ -28,6 +28,23 @@
   ],
   "question": "ot_a3_fp32_div_rne closes on ASAP7 at 283.5 MHz and seven token-path parents instantiate it, so it bounds the engine complex.  Its critical path is one bisection step entire in one cycle.  Does a two-cycle step compute the same thing?",
   "schema": "opentallas.result.fp32_div_pipe_equivalence.v1",
+  "update_bracket_seeding": {
+    "measured": {
+      "cases": 673,
+      "cycle_ratio_after": 1.6,
+      "cycle_ratio_before": 1.97,
+      "failures": 0,
+      "pipe_cycles_after_seeding": 35335,
+      "pipe_cycles_before_seeding": 43291,
+      "ref_cycles": 21982,
+      "verdict": "EQUIVALENT"
+    },
+    "subnormals_fall_back": "A subnormal operand has no [1,2) significand, so the argument does not hold and those cases use the full range.  Falling back is always correct and only slower -- the bench covers both subnormal extremes in both operand positions.",
+    "the_argument": "For normal operands the significands lie in [1,2), so the ratio m_n/m_d lies in (0.5, 2) and the quotient lies strictly in (2**(ed-1), 2**(ed+1)) where ed = e_n - e_d.  Its biased exponent is therefore ed+126 or ed+127, and the answer's code lies in [(ed+126)<<23, ((ed+128)<<23)-1] -- a two-exponent window, about 24 bisection steps instead of 31.",
+    "what": "A third change: the bisection bracket is SEEDED from the operands' exponents instead of spanning the whole 31-bit code space.",
+    "what_it_does_to_the_trade": "At the 1.48x clock already measured, 1.60x cycles is 1.08x time per division -- against 1.33x before the seeding.  The change goes from a clear trade to very nearly neutral in latency while keeping the faster clock and the smaller area.  The routed confirmation that the seeding did not cost clock is PENDING; the seed logic sits on the accept path, not on the bisection step, so it should not, but that is a prediction until the route lands.",
+    "why_lower_code_may_still_start_at_zero": "The window's low end is the code of exactly 2**(ed-1), which is strictly BELOW the quotient, so a code satisfying the search predicate always exists inside the window and the initial value is always overwritten.  It is never reported."
+  },
   "what_changed": {
     "1_the_multiply_is_registered": "The bisection step becomes two cycles: one forms the 49-bit product of the candidate significand and the divisor, one aligns it against the numerator and moves the bracket.  The 25x24 multiply and the 97-bit alignment no longer share a cycle.",
     "2_the_rounding_comparison_leaves_the_loop": "The reference evaluates a SECOND full comparison every cycle, for the round-to-nearest-even midpoint between lower_code and its successor.  That value is read once, after the bracket closes.  It is now computed there, so the per-cycle logic carries one comparator instead of two.",

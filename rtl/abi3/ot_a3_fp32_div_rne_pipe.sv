@@ -12,7 +12,7 @@
 //
 // Its routed critical path is ONE bisection step, entire, in one cycle:
 // ``lower_code`` -> midpoint -> decode -> 24x24 multiply -> 97-bit align ->
-// compare -> update bounds.  Two changes shorten it without changing what it
+// compare -> update bounds.  Three changes shorten it without changing what it
 // computes:
 //
 //   1. THE MULTIPLY IS REGISTERED.  The step becomes two cycles: one that forms
@@ -28,6 +28,16 @@
 //      read once, after the bracket has closed.  Here it is computed then, in
 //      its own two cycles, so the per-cycle logic carries one comparator
 //      instead of two.
+//
+//   3. THE BRACKET IS SEEDED FROM THE EXPONENTS.  The reference bisects the whole
+//      31-bit code space, ~31 steps, when the quotient's exponent is arithmetic:
+//      for normal operands with significands in [1,2) the ratio lies strictly in
+//      (2**(ed-1), 2**(ed+1)) where ed = e_n - e_d, so the result's biased
+//      exponent is ed+126 or ed+127 and the answer's code lies in
+//      [(ed+126)<<23, ((ed+128)<<23)-1].  Seeding that two-exponent window costs
+//      ~24 steps instead of ~31.  A subnormal operand breaks the argument, so
+//      those fall back to the full range -- falling back is always correct and
+//      only slower.
 //
 // WHAT IS NOT CHANGED.  The ports, the algorithm and every result.  The bracket
 // update, the MAX_FINITE clamps, the overflow boundary (the real candidate one
@@ -227,6 +237,30 @@ module ot_a3_fp32_div_rne_pipe (
         end
     end
 
+    // ---- the seeded bracket ------------------------------------------------
+    // Both operands normal: the quotient's biased exponent is ed+126 or ed+127,
+    // so the answer's code lies in [(ed+126)<<23, ((ed+128)<<23)-1], clamped to
+    // the code space.  Either operand subnormal: the [1,2) significand argument
+    // does not hold, so the full range is used.
+    wire        numerator_subnormal   = (numerator_code[30:23] == 8'd0);
+    wire        denominator_subnormal = (denominator_code[30:23] == 8'd0);
+    wire signed [10:0] exponent_difference =
+        $signed({3'b0, numerator_code[30:23]}) -
+        $signed({3'b0, denominator_code[30:23]});
+    wire signed [10:0] low_exponent  = exponent_difference + 11'sd126;
+    wire signed [10:0] high_exponent = exponent_difference + 11'sd128;
+    wire [30:0] seed_low =
+        (numerator_subnormal || denominator_subnormal) ? 31'd0 :
+        (low_exponent <= 11'sd0) ? 31'd0 :
+        (low_exponent >= 11'sd255) ? MAX_FINITE :
+        {low_exponent[7:0], 23'd0};
+    wire [30:0] seed_high =
+        (numerator_subnormal || denominator_subnormal) ? MAX_FINITE :
+        (high_exponent >= 11'sd255) ? MAX_FINITE :
+        (high_exponent <= 11'sd0) ? MAX_FINITE :
+        (({high_exponent[7:0], 23'd0} - 31'd1) > MAX_FINITE
+            ? MAX_FINITE : ({high_exponent[7:0], 23'd0} - 31'd1));
+
     assign in_ready = !busy && (!out_valid || out_ready);
 
     always @(posedge clk or negedge rst_n) begin
@@ -269,8 +303,13 @@ module ot_a3_fp32_div_rne_pipe (
                 end else begin
                     busy <= 1'b1;
                     result_sign <= numerator_code[31] ^ denominator_code[31];
-                    low_code <= 0;
-                    high_code <= MAX_FINITE;
+                    // The seeded bracket.  ``lower_code`` still starts at 0 and
+                    // that is safe: the window's low end is the code of
+                    // 2**(ed-1), which is strictly BELOW the ratio, so the search
+                    // always moves ``lower_code`` to at least that code and never
+                    // reports the initial value.
+                    low_code <= seed_low;
+                    high_code <= seed_high;
                     lower_code <= 0;
                     if (numerator_code[30:23] == 0) begin
                         numerator_significand <= {1'b0, numerator_code[22:0]};
