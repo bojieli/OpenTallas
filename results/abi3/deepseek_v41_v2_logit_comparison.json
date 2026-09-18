@@ -1,43 +1,49 @@
 {
-  "schema": "opentallas.abi3.v41_v2_logit_comparison.v1",
-  "question": "the device and the corrected reference differ by a few per cent per layer; does a tolerance-based comparison close the cell, or is the accumulated difference material?",
+  "FEASIBILITY_OF_PATH_MATCHING": {
+    "and_there_is_a_fidelity_cost": "the shipped DeepSeek-V4.1-Flash declares expert_dtype fp4. An FP8-expert deployment is therefore a VARIANT of the product, not the product. It would make the reduced comparison exact and it would be validating a variant's numerics -- worth doing deliberately and worth not doing by accident, which is why this is recorded rather than started.",
+    "checked": "compiler/frontends/v3/deepseek_v41.py line 4475 starts the routed expert as MXFP4_SWIGLU unconditionally, and the routed expert's weight declarations (lines ~3563 and ~3705) name dtype mxfp4_e2m1 directly. FP8_SWIGLU exists in the same front end but is used only for the one shared expert every token runs.",
+    "the_honest_position": "the three V4.1 cells are blocked on this vehicle. Everything reachable without changing what is being built has been done: the reference is now sound (its predecessor's routed experts were dead), the fixture no longer saturates its own clamp, layers 0 and 1 agree to five decimals, the compressor's index path is bit-exact, and the residual divergence is a few per cent per layer of genuine numeric-path difference. Closing them needs either a front-end variant or a shipped-scale run, and both are decisions about scope rather than debugging.",
+    "therefore": "putting both sides on the FP8 expert path is a FRONT-END change, not a fixture flag: the routed expert's operator kind, its weight dtypes and its block geometry all have to become conditional on the declared expert dtype. That is tractable and it is not a quick edit."
+  },
   "answer": "it is material. A tolerance-based comparison does NOT close this cell.",
   "measured": {
-    "vocabulary": 4040,
-    "pearson_r_device_vs_reference": 0.479978,
-    "mean_abs_difference": 0.203958,
-    "max_abs_difference": 0.934211,
-    "reference": {
-      "argmax": 3118,
-      "top1_logit": 0.97164,
-      "top2": 1946,
-      "top2_logit": 0.798973,
-      "top1_to_top2_margin": 0.172667,
-      "logits_within_its_own_margin_of_the_top": 2
-    },
     "device": {
       "argmax": 1126,
       "top1_logit": 0.816409,
+      "top1_to_top2_margin": 0.00515,
       "top2": 1702,
-      "top2_logit": 0.811259,
-      "top1_to_top2_margin": 0.00515
+      "top2_logit": 0.811259
     },
+    "max_abs_difference": 0.934211,
+    "mean_abs_difference": 0.203958,
+    "pearson_r_device_vs_reference": 0.479978,
+    "rank_of_device_winner_in_reference_order": 499,
     "rank_of_reference_winner_in_device_order": 215,
-    "rank_of_device_winner_in_reference_order": 499
+    "reference": {
+      "argmax": 3118,
+      "logits_within_its_own_margin_of_the_top": 2,
+      "top1_logit": 0.97164,
+      "top1_to_top2_margin": 0.172667,
+      "top2": 1946,
+      "top2_logit": 0.798973
+    },
+    "vocabulary": 4040
   },
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "r = 0.48 does not say which side is right. It says they differ, and the reference is the external comparator by construction.",
+    "this is the reduced vehicle. It says nothing about the shipped V4.1 model, whose cells have never been run."
+  ],
+  "question": "the device and the corrected reference differ by a few per cent per layer; does a tolerance-based comparison close the cell, or is the accumulated difference material?",
   "reading": [
     "r = 0.48 is not the signature of two implementations that agree numerically and disagree only at the argmax. The output distributions genuinely differ, which is what a few-per-cent divergence per layer compounds to over forty layers.",
     "the reference's own argmax is reasonably decisive -- margin 0.173 with only two logits inside it -- so the disagreement is not the reference being ill-conditioned the way the v1 fixture was.",
     "the DEVICE's top-1 margin is 0.00515, essentially a tie, so its argmax is the part that is fragile. That is a property of this reduced vehicle's distribution, not of the implementation."
   ],
+  "schema": "opentallas.abi3.v41_v2_logit_comparison.v1",
   "what_closing_this_cell_would_require": [
     "path matching: build the deployment and the oracle on the SAME routed-expert and KV numeric path. The device computes MXFP4 under the contracts it was admitted against; the reference computes the vendor's FP8 recast. Both are legitimate and they are not the same arithmetic, and at reduced scale the difference compounds. A fixture and an IR declaring fp8 experts -- the release README's own documented alternative, which the shared expert already uses -- would put both sides on one path.",
     "or full scale: all three DeepSeek-V4-Flash cells match an FP8-expert oracle from an MXFP4 device at shipped scale, where trained weights keep magnitudes small and the per-layer difference does not compound the same way. A shipped V4.1 token costs days of simulation at the measured rate, which is why the reduced vehicle exists.",
     "what it does NOT require is another bug hunt at layer 2: six hypotheses are closed there and the aligned measurement shows a few per cent, not a fault."
-  ],
-  "not_a_claim": [
-    "not an RTL measurement: the device is runtime.sim",
-    "r = 0.48 does not say which side is right. It says they differ, and the reference is the external comparator by construction.",
-    "this is the reduced vehicle. It says nothing about the shipped V4.1 model, whose cells have never been run."
   ]
 }
