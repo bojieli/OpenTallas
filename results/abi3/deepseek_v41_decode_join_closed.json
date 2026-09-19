@@ -1,0 +1,53 @@
+{
+ "answer": "two independent statements were made in the wrong units, and both are now read off the built descriptors rather than argued about.  The reduced V4.1 vehicle runs prefill AND a decode step end to end.",
+ "defect_1_the_output_extent_named_the_wrong_symbol": {
+  "cause": "_phase_substitution rewrites CONTEXT_LENGTH onto whichever of the other two request scalars the phase leaves free, because that is what collapses a two-symbol sum onto one.  At decode the span is pinned to 1, so the context form became POSITION_START + 1 and the bias absorbed the window's 128.  But the loop that RESOLVES the result counts the CONTEXT, and A18 computes numerator * remaining / unit + bias from the LOOP's bound symbol.",
+  "fix": "state the derived extent back on CONTEXT_LENGTH where section 12.2's relation makes the inversion exact -- unit one, so nothing is floored.  POSITION_START + 129 becomes CONTEXT_LENGTH + 128, which is 137.",
+  "measured_after": "extent_bias 128, output 137",
+  "measured_before": "dim0 256, extent_numerator 1, extent_bias 129, term on the context loop",
+  "operands_presented": 137,
+  "resolved_to": "1 * CONTEXT_LENGTH + 129 = 9 + 129 = 138"
+ },
+ "defect_2_a_context_operand_was_presented_in_token_blocks": {
+  "cause": "the shared operand view is built against the row loop and blocked by the token block, which is right for every operand whose rows are the request's tokens.  A compressed KV prefix is not one: its leading axis names CONTEXT_LENGTH, and at decode the token block is ONE row while the context is the whole history.  A26's edge mask can only clamp a declared extent further, never restore it.",
+  "fix": "the phase gets its own view of that operand -- the declared capacity with an A18 extent of its own axis, resolved by the loop that counts the context -- and ONLY in the phase whose extent is stated in context units.",
+  "measured_after": "operands 137, matching the output",
+  "measured_before": "view 7027 dim0 = 1, term on the ROW loop, edge_mask_id on the context loop",
+  "why_the_scoping_matters": "measured: applied to both phases it broke PREFILL, whose sum is a static two rows -- one new token row joined to one prefix row, emitted inside the row loop and advancing a row an iteration.  The prefill prefix grew from its one row to the whole context and the join refused with 'output view dims (2, 32) differ from the axis-0 concatenation (9, 32)'."
+ },
+ "gate": {
+  "v4_flash_rom_array_rewalk": "in flight (16 tokens)",
+  "v4_flash_rom_rewalk": {
+   "oracle_agreement": true,
+   "reading": "the closed cell emits exactly what it emitted before",
+   "status": "pass",
+   "terminal_accepted": true,
+   "tokens": [
+    13806,
+    345,
+    7472,
+    55560
+   ],
+   "wall_seconds": 4097.6
+  },
+  "what_it_moves": "DeepSeek-V4-Flash's ROM and ROM-array digests -- V4-Flash has phase-split joins with context-derived operands too.  Its HBM cell and all three Qwen3 cells are byte-identical, so they need no re-walk."
+ },
+ "how_it_was_settled": "by dumping the emitted tensor-view descriptors of the refused instruction.  Four static readings of this join had already been refuted by builds that passed, so the descriptors are the evidence: view 7033 carried extent_bias 129 against the CONTEXT loop, and view 7027 carried dim0 = 1.",
+ "not_a_claim": [
+  "this does not close a V4.1 cell: the reduced vehicle's router is untrained and its near-tied scores make the token a function of sub-ulp arithmetic (results/abi3/deepseek_v41_v2_divergence_settled.json).  What it closes is the EXECUTION of a decode step, which every shipped-scale V4.1 walk needs."
+ ],
+ "question": "the DeepSeek-V4.1 attention join refused at the FIRST decode step in every deployment -- 'GROUPED_CONCAT output view dims differ from the axis-0 concatenation'.  What was wrong, and what does the fix cost?",
+ "result": {
+  "decode_steps": 1,
+  "emitted_token_ids": [
+   1126,
+   3804
+  ],
+  "failure": null,
+  "note": "1126 is the prefill token every previous reduced walk emitted, so prefill is unmoved; 3804 comes from a decode step no V4.1 build had ever executed.",
+  "prefill_tokens": 8,
+  "stop_reason": "max_new_tokens",
+  "vehicle": "the reduced V4.1 ROM array, 12 nodes, 4-node domains"
+ },
+ "schema": "opentallas.result.v41_decode_join_closed.v1"
+}

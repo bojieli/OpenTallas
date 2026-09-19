@@ -115,24 +115,34 @@ def _extent_fields(unit: int, numerator: int, bias: int) -> dict[str, int]:
     to the same view written before the amendment -- which is the property this
     normalisation exists to preserve.
 
-    What it must NOT do is test the fields separately.  ``numerator > 1`` reads a
-    numerator of exactly one as absent, and a numerator of one is the ordinary
-    case for an extent counted in units of more than one element:
-    ``CONTEXT_LENGTH / 2`` is numerator one over unit two.  Zeroing it silently
-    deletes the symbolic term and leaves the bias behind.
+    CORRECTION.  An earlier version of this helper wrote a numerator of exactly
+    one as ONE, on the reading that zero meant "no extent declared" and that
+    zeroing a numerator of one therefore deleted a symbolic term while leaving
+    its bias behind.  That reading is wrong, and the ABI says so in two places:
+    ``runtime/sim/memory.py`` resolves the field as ``max(numerator, 1)``, so
+    **zero IS the wire encoding of one**, and the verifier refuses the literal
+    one outright -- "a declared one is a value the wire format does not assign;
+    write zero".  Measured: with the numerator written as one, DeepSeek-V4-Flash
+    fails admission on 116 views and none of its three closed cells can execute.
+    The bias is unaffected either way, so nothing was ever dropped.
+
+    What survives from that attempt is the joint test below.  The three fields
+    are zeroed only for A13's own identity -- ``1 * value / 1 + 0`` -- so a view
+    that needs no A18 stays byte-identical to the same view written before the
+    amendment, and a view whose only A18 content is a bias keeps that bias.
     """
 
     if int(numerator) <= 1 and int(unit) <= 1 and int(bias) == 0:
         return {"extent_unit": 0, "extent_numerator": 0, "extent_bias": 0}
     return {
-        # A unit of one is no division, and the encoding has always written that
-        # as zero.  Keeping that normalisation is what makes this change touch
-        # ONLY the views the old test damaged: gating an earlier version of this
-        # helper against DeepSeek-V4-Flash's ROM deployment moved 216 views by
-        # nothing but ``extent_unit: 0 -> 1``, which is the same function spelled
-        # differently and would have moved a shipped digest for no reason.
+        # A unit of one is no division and a numerator of one is no scaling; the
+        # encoding has always written both as zero, and the resolver reads them
+        # back as one.  Keeping that normalisation is also what keeps this helper
+        # from moving a shipped digest for nothing: an earlier version moved 216
+        # DeepSeek-V4-Flash views by ``extent_unit: 0 -> 1`` alone, which is the
+        # same function spelled differently.
         "extent_unit": int(unit) if int(unit) > 1 else 0,
-        "extent_numerator": int(numerator),
+        "extent_numerator": int(numerator) if int(numerator) > 1 else 0,
         "extent_bias": int(bias),
     }
 

@@ -7135,6 +7135,44 @@ class RomLowering:
                 )
         return constants, aliases
 
+    def _extent_on_context_symbol(
+        self,
+        extent: RequestAxis | None,
+        aliases: Mapping[int, tuple[int, int]],
+    ) -> RequestAxis | None:
+        """State a phase's derived extent back on ``CONTEXT_LENGTH``.
+
+        :meth:`_phase_substitution` rewrites ``CONTEXT_LENGTH`` onto whichever
+        of the other two scalars the phase leaves free, because that is what
+        collapses a two-symbol sum onto one.  But the loop that *resolves* the
+        result counts the context, and A18 computes ``numerator * remaining /
+        unit + bias`` from the loop's own bound symbol -- so a sum that landed
+        on ``POSITION_START`` is then resolved against the wrong symbol.
+        Measured on the reduced V4.1 vehicle: the ratio-1 decode join declared
+        ``POSITION_START + 129`` and the context loop read ``9 + 129 = 138``
+        while its operands presented 137.
+
+        The inversion is section 12.2's relation read the other way --
+        ``POSITION_START == CONTEXT_LENGTH - SPAN_TOKENS`` with the span pinned
+        -- and the offset survives only where nothing is floored, so a unit
+        other than one is left alone rather than approximated.  That is the
+        same exactness rule :meth:`_join_extent_under` applies to the forward
+        rewrite.
+        """
+        if extent is None or int(extent.symbol) == int(Symbol.CONTEXT_LENGTH):
+            return extent
+        alias = aliases.get(int(Symbol.CONTEXT_LENGTH))
+        if alias is None or int(alias[0]) != int(extent.symbol):
+            return extent
+        if int(extent.unit) != 1:
+            return extent
+        return RequestAxis(
+            Symbol.CONTEXT_LENGTH,
+            1,
+            int(extent.numerator),
+            int(extent.bias) - int(extent.numerator) * int(alias[1]),
+        )
+
     def _join_extent_under(
         self,
         names: Sequence[str],
@@ -7711,6 +7749,14 @@ class RomLowering:
             extent, static = self._join_extent_under(
                 names, 0, constants, aliases
             )
+            # The declared output axis is the one form no loop has to resolve --
+            # the instruction reuses the view the kernel already built.  Any
+            # other form is resolved against the CONTEXT loop, so state it on
+            # the context where 12.2 makes that exact.
+            if extent is not None and extent != self._declared_join_axis(
+                kernel.outputs[0], 0
+            ):
+                extent = self._extent_on_context_symbol(extent, aliases)
             if extent is None and static <= 0:
                 raise RomLoweringError(
                     f"kernel {kernel.kernel_id!r}: phase {phase!r} selects an "
@@ -7940,7 +7986,14 @@ class RomLowering:
                         f"kernel {kernel.kernel_id!r}: no ABI slot carries "
                         f"selected input {ir_index} in phase {phase!r}"
                     )
-                row[abi_slot] = inputs[abi_slot]
+                row[abi_slot] = self._context_phase_input_view(
+                    self.tensors[kernel.inputs[ir_index]],
+                    shape,
+                    declared=inputs[abi_slot],
+                    phase_extent=extents[phase],
+                    context_loop=context_loop,
+                    context_divisor=context_divisor,
+                )
                 wait_names.append(kernel.inputs[ir_index])
             output = self._view_for_phase_extent(
                 output_tensor,
@@ -8038,6 +8091,63 @@ class RomLowering:
             self.builder.close_loop()
         for _ in range(extra_close):
             self.builder.close_loop()
+
+    def _context_phase_input_view(
+        self,
+        tensor: Tensor,
+        shape: KernelShape,
+        *,
+        declared: int,
+        phase_extent: tuple[RequestAxis | None, int],
+        context_loop: int | None,
+        context_divisor: int,
+    ) -> int:
+        """One phase's view of an operand whose own axis counts the CONTEXT.
+
+        An operand is presented in the units its phase's extent is stated in.
+        Both phases of the V4.1 attention join were measured, and they are
+        stated differently:
+
+        * prefill's sum is a STATIC two rows -- one new token row joined to one
+          prefix row -- emitted inside the row loop and advancing by a row an
+          iteration.  Every operand there is the blocked per-row view, and that
+          is the form the closed cells already ship.
+        * decode's sum is ``CONTEXT_LENGTH + 128``: the whole 128-row window
+          joined to the whole compressed prefix, once.
+
+        So the context view belongs to the phase whose extent counts the
+        context, and only there.  Without that condition the prefill prefix grew
+        from its one row to the whole context and the join refused with
+        ``output view ... dims (2, 32) differ from the axis-0 concatenation
+        (9, 32)`` -- measured, not supposed.
+
+        In the context-stated phase the shared view is wrong the other way: it
+        is built against the ROW loop and blocked by the token block, so at
+        decode it was ``dim0 = 1`` where the context is the whole history, and
+        A26's edge mask can only clamp that further, never restore it.  Here the
+        operand states its own axis against the loop that counts the context --
+        the identical construction the phase OUTPUT already uses, one level down
+        on its inputs.
+        """
+        extent, _static = phase_extent
+        if extent is None or int(extent.symbol) != int(Symbol.CONTEXT_LENGTH):
+            return declared
+        symbol, _multiplier, axis = self._leading_symbol(tensor)
+        if symbol is None or int(axis.symbol) != int(Symbol.CONTEXT_LENGTH):
+            return declared
+        if context_loop is None or context_divisor <= 0:
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r}: a phase reads a context-derived "
+                "operand and no context loop resolves its extent"
+            )
+        return self._phase_extent_view(
+            tensor,
+            shape,
+            extent=axis,
+            loop=context_loop,
+            divisor=context_divisor,
+            writable=False,
+        )
 
     def _phase_extent_view(
         self,
