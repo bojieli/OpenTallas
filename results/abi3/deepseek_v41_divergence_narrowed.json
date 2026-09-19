@@ -1,0 +1,69 @@
+{
+ "answer": "not in the head and not in the input.  The last position's RESIDUAL is wrong in direction, and the head faithfully turns it into the wrong token.",
+ "eliminated_so_far": [
+  "input windowing: no prefix of the prompt produces 305 (eleven oracle forwards)",
+  "argmax and tie-breaking: the logit VECTOR differs, not the choice among ties",
+  "the head's weight binding, dtype, shape and partitioning: read from descriptors",
+  "a scale error in the head input: the device's row is wider and its logits narrower",
+  "position 0's trace magnitude: a closed V4-Flash cell shows the same shape"
+ ],
+ "not_a_claim": [
+  "no operator is named",
+  "the device figures are the committed graded run's head trace, which records size, unique, min, max and argmax -- not the tensors"
+ ],
+ "question": "where is the shipped V4.1 divergence?  305 against 13806, with a 2.4947 logit margin no sub-ulp difference can cross.",
+ "schema": "opentallas.result.v41_divergence_narrowed.v1",
+ "side_by_side_at_the_head": {
+  "final_norm_over_all_32_positions": {
+   "device": {
+    "max": 1.758,
+    "min": -2.047,
+    "size": 163840
+   },
+   "oracle": {
+    "max": 1.71875,
+    "min": -2.03125,
+    "size": 163840
+   },
+   "reading": "matches to BF16 rounding"
+  },
+  "the_last_positions_normalised_row": {
+   "device": {
+    "argmax": 529,
+    "max": 1.422,
+    "min": -0.7656,
+    "size": 5120
+   },
+   "oracle": {
+    "argmax": 529,
+    "max": 1.1484375,
+    "min": -0.921875,
+    "rms": 0.226816,
+    "size": 5120
+   },
+   "reading": "SAME dominant channel, different extremes -- the device's row is wider (+1.42 against +1.15) and its minimum shallower (-0.77 against -0.92).  Correlated but not equal."
+  },
+  "the_logits": {
+   "device": {
+    "argmax": 305,
+    "max": 17.0,
+    "min": -13.48,
+    "size": 129280
+   },
+   "oracle": {
+    "argmax": 13806,
+    "max": 27.1919,
+    "min": -17.8166,
+    "rms": 4.1554,
+    "size": 129280
+   },
+   "reading": "the device's row is WIDER and its logits are NARROWER -- 17.0 against 27.19 over a 45-wide oracle range.  A pure scale error cannot do that; a row pointing somewhere else can, because it is then less aligned with every weight row."
+  }
+ },
+ "what_remains": "the 40-layer stack, at the last position.  ``final_norm`` over ALL positions matching says little about one row, because a whole-tensor min and max are set by extremes anywhere in it.  The shipped-scale depth bisection taps the oracle at exactly that position and matches every device engine output against it; it is the instrument, and it has been tracing for over four hours.",
+ "what_the_head_descriptors_rule_out": {
+  "method": "read the built wafer deployment's vocabulary-head operator directly",
+  "the_head_is_one_matmul_not_a_partitioned_set": "out (1, 129280) fp32, activation (1, 5120) bf16, weight (129280, 5120) bf16, stride0 5120 row-major.  The head trace's two 16,160-wide rows are not vocabulary partitions, so there is no assembly to mis-order.",
+  "the_weight_binding_is_exact": "the weight view names object 4, which maps 1,323,827,200 bytes at offset 184 of model-00043-of-00048.safetensors -- the shard the checkpoint index gives for ``head.weight`` -- and 129,280 x 5,120 x 2 bytes is 1,323,827,200 exactly.  Right shard, right size, right dtype."
+ }
+}
