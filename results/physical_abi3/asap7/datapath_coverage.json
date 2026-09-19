@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 40,
-    "uncovered_and_instantiated": 48,
+    "covered_by_a_closed_block": 50,
+    "uncovered_and_instantiated": 38,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 22
+    "with_their_own_closed_record": 33
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -838,9 +838,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_attention_kv_index.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_attention_sparse"
       ],
@@ -900,7 +900,7 @@
       "carries_no_timing_paths": false,
       "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_dependence_table.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_microsequencer"
       ],
@@ -971,9 +971,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_engram_exact_dot_tree.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_vector_engram_gate"
       ],
@@ -981,9 +981,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_vector_engram_gate"
       ],
@@ -1268,9 +1268,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_link_node.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
       ],
@@ -1300,9 +1300,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_link_node.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
       ],
@@ -1352,9 +1352,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_mesh_router.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_link_node"
       ],
@@ -1448,9 +1448,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_attention_denominator"
       ],
@@ -1556,9 +1556,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_route_window_index.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1566,9 +1566,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_selection_argmax.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array"
       ],
@@ -1576,9 +1576,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_selection_token_append.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1836,7 +1836,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "1e284a425ace9cd84022c905e551d9d65d3dd442"
+      "commit": "2b427887ab5d232fd667bfe8e8c49ca00ffcffd9"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2191,12 +2191,6 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_attention_sparse"
-      ],
-      "module": "ot_a3_attention_kv_index"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_attention_denominator"
       ],
       "module": "ot_a3_attention_softmax_block"
@@ -2230,18 +2224,6 @@
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_engine_array"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_vector_engram_gate"
-      ],
-      "module": "ot_a3_engram_exact_dot_tree"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_vector_engram_gate"
-      ],
-      "module": "ot_a3_engram_fp32_sqrt_rne_pipe"
     },
     {
       "instantiated_by": [
@@ -2306,27 +2288,9 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_wafer_multicast_adapter"
-      ],
-      "module": "ot_a3_link_return"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_wafer_multicast_adapter"
-      ],
-      "module": "ot_a3_link_wire"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_engine_array"
       ],
       "module": "ot_a3_mac_lane"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_link_node"
-      ],
-      "module": "ot_a3_mesh_router"
     },
     {
       "instantiated_by": [
@@ -2355,12 +2319,6 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_attention_denominator"
-      ],
-      "module": "ot_a3_reduction_balanced_sum"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_reduction_expert_sum"
@@ -2382,24 +2340,6 @@
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_route_weight_normalize"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_route_window_index"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_selection_argmax"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_selection_token_append"
     },
     {
       "instantiated_by": [
