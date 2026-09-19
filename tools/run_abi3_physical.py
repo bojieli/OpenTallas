@@ -274,6 +274,32 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def flow_timeout_seconds() -> int:
+    """The place-and-route wall-clock ceiling, overridable for a large block.
+
+    Reads ``OT_FLOW_TIMEOUT_SECONDS`` when set, defaulting to the six hours that
+    every route so far has fitted inside.  See the call site for the block that
+    did not.
+    """
+    import os
+
+    raw = os.environ.get("OT_FLOW_TIMEOUT_SECONDS")
+    if not raw:
+        return 21600
+    try:
+        value = int(raw)
+    except ValueError:
+        raise FlowError(
+            f"OT_FLOW_TIMEOUT_SECONDS={raw!r} is not an integer number of seconds"
+        ) from None
+    if value < 600:
+        raise FlowError(
+            f"OT_FLOW_TIMEOUT_SECONDS={value} is below the 600 s floor; a ceiling "
+            "that short reports every real route as an error"
+        )
+    return value
+
+
 def synth_timeout_seconds() -> int:
     """The Yosys wall-clock ceiling, overridable for a genuinely large block.
 
@@ -1640,7 +1666,15 @@ def run_pnr(
     signed_stripped = normalise_netlist(mapped, mapped)
 
     # Phase 2: floorplan through routing and metadata.
-    proc = orfs_make("finish metadata-generate", "orfs_flow.log", 21600)
+    #
+    # The same class of bug the synthesis ceiling had: a fixed six hours, right for
+    # every block characterised so far and wrong for at least one.
+    # ``ot_a3_attention_sparse`` -- the block whose closure would cover EIGHT
+    # uncovered datapath modules at once, including the correctly-rounded
+    # transcendental -- was killed at exactly 21,600 s while in GLOBAL ROUTE, stage
+    # five of six, and reported as an error.  Worse, the container outlives the
+    # wrapper, so the killed run kept burning cores on a result nobody would read.
+    proc = orfs_make("finish metadata-generate", "orfs_flow.log", flow_timeout_seconds())
     require_success(proc, "ORFS place-and-route")
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
