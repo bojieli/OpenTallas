@@ -5165,7 +5165,22 @@ class RomLowering:
                 #: the term is what makes the view present what the request has
                 #: committed.
                 sequence = _is_sequence_state(self._state_class_of(name))
-                if symbol is not None and (not declared.is_identity or sequence):
+                #: A PER-QUERY SCRATCH PLANE IS THE THIRD CASE, and it is the
+                #: same argument the token ring makes.  A state plane whose
+                #: leading axis is the identity in SPAN_TOKENS holds one row per
+                #: QUERY -- V4.1's candidate-admission plane is
+                #: ``[span_tokens, context_length]`` -- so its consumer counts one
+                #: row per query it is given, and presenting the capacity hands a
+                #: 32-token request 262,144 rows.  Measured on the shipped V4.1
+                #: ROM wafer: ``ROUTE.CANDIDATE_MASK output view 6738 covers
+                #: 262144 query rows, expected 32``, with the view carrying no
+                #: dynamic term at all.  A CONTEXT_LENGTH identity is NOT this
+                #: case: a KV cache is addressed absolutely and presenting its
+                #: capacity is what an append and a full-context read both need.
+                per_query = int(declared.symbol) == int(Symbol.SPAN_TOKENS)
+                if symbol is not None and (
+                    not declared.is_identity or sequence or per_query
+                ):
                     stride = self._resolving_term_stride(tensor, name)
                     #: A RESOLVING TERM THE FIELD CANNOT HOLD IS NOT ATTACHED.
                     #: The stride the resolver requires is one row of the plane
