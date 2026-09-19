@@ -34,20 +34,45 @@
   },
   "module": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
   "routed_on_asap7": {
-   "against_the_reference_at_the_same_target": {
+   "against_the_reference": {
+    "area_um2": 3350.12,
     "cells": 31931,
     "closed": false,
     "fmax_mhz": 196.614,
-    "standard_cell_area_um2": 3350.12
+    "target_ns": 4.0
    },
-   "cells": 29019,
-   "closed": true,
-   "fmax_mhz": 261.1,
-   "reading": "1.33x the frequency at 0.93x the area and 0.91x the cells, and it CLOSES where the reference did not meet timing at all.  With 1.01x the cycles that is 1.32x the block's throughput.",
-   "standard_cell_area_um2": 3124.26,
-   "status": "pass",
-   "target_period_ns": 4.0
+   "best_qualified": {
+    "area_um2": 3155.3,
+    "fmax_mhz": 276.9,
+    "target_ns": 3.7
+   },
+   "ladder": [
+    {
+     "area_um2": 3124.26,
+     "cells": 29019,
+     "closed": true,
+     "fmax_mhz": 261.1,
+     "status": "pass",
+     "target_ns": 4.0
+    },
+    {
+     "area_um2": 3155.3,
+     "closed": true,
+     "fmax_mhz": 276.9,
+     "status": "pass",
+     "target_ns": 3.7
+    },
+    {
+     "area_um2": 3170.87,
+     "closed": false,
+     "fmax_mhz": 277.1,
+     "status": "not_met",
+     "target_ns": 3.5
+    }
+   ],
+   "reading": "1.41x the frequency at 0.94x the area, and it CLOSES where the reference did not meet timing at all.  With 1.01x the cycles that is 1.40x the block's throughput.  Registers in the right place cost neither area nor cycles here: what the tool was buying with buffers at 196 MHz, a register buys for free.",
+   "the_ceiling_is_measured_not_assumed": "3.5 ns misses with fmax 277.1 -- the same number 3.7 ns closes at -- so ~277 MHz is this block's ceiling and it sits just under ot_a3_fp32_div_rne's own 283.5 MHz combinational body.  That is the prediction the attribution made, confirmed by a route rather than argued."
   }
  },
- "what_the_limiter_is_now": "the datapath's clock limiter rises from 196.6 MHz to 261.1 MHz.  It is still this block, and what remains below it is ot_a3_fp32_div_rne's own 283.5 MHz combinational body -- so ~261 MHz is close to the ceiling this block can reach with that divider inside it, and the cycle-cheap divider needed to pass 283.5 MHz does not exist yet (the pipelined one costs 1.55x the cycles here)."
+ "what_the_limiter_is_now": "the ABI 3.0 datapath's clock limiter rises from 196.6 MHz to 276.9 MHz, and the block is no longer far from the divider inside it.  Passing 283.5 MHz needs a CYCLE-CHEAP pipelined divider; the one that exists costs 1.55x the cycles on these operands, so that is a measured target and not an available swap."
 }

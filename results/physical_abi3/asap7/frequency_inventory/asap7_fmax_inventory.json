@@ -22,14 +22,14 @@
       "target_headroom": 0.036531666666666664
     },
     {
-      "at_target_clock_period_ns": 4.0,
+      "at_target_clock_period_ns": 3.7,
       "block": "ot_a3_hc_sinkhorn20_rne_pipe",
       "family": "abi3_datapath",
-      "fmax_hz": 261121000.0,
-      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_4p0ns_closed.json",
+      "fmax_hz": 276878000.0,
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_3p7ns_closed.json",
       "slew_margin_percent": 60.0,
-      "standard_cell_area_um2": 3124.26,
-      "target_headroom": 0.0425885
+      "standard_cell_area_um2": 3155.3,
+      "target_headroom": 0.02386535135135135
     },
     {
       "at_target_clock_period_ns": 3.6,
@@ -393,22 +393,22 @@
     }
   ],
   "clock_limiter": {
-    "at_target_clock_period_ns": 4.0,
+    "at_target_clock_period_ns": 3.7,
     "block": "ot_a3_hc_sinkhorn20_rne_pipe",
     "family": "abi3_datapath",
-    "fmax_hz": 261121000.0,
+    "fmax_hz": 276878000.0,
     "note": "the design's clock cannot exceed the slowest block ON IT, so this row is the whole-design operating point and every ABI 3.0 block above it has headroom.  Probes and legacy tensor-accelerator blocks are excluded by family: neither is referenced from rtl/abi3/ or from any backend, so neither is on this clock.  Including them would let a retired block set the operating point.",
-    "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_4p0ns_closed.json",
+    "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_3p7ns_closed.json",
     "scope": "abi3_datapath only",
     "slew_margin_percent": 60.0,
-    "standard_cell_area_um2": 3124.26,
-    "target_headroom": 0.0425885
+    "standard_cell_area_um2": 3155.3,
+    "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 72,
+    "closed_routed_record_count": 73,
     "distinct_blocks_with_a_closed_routed_record": 39,
-    "post_route_record_count": 117,
-    "record_count": 193
+    "post_route_record_count": 119,
+    "record_count": 195
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -494,7 +494,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "3cc986b86f607013d9dddf83bdddbbf9927d756c"
+      "commit": "1e284a425ace9cd84022c905e551d9d65d3dd442"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3886,6 +3886,52 @@
       "standard_cell_area_um2": 3350.12,
       "target_clock_period_ns": 4.0,
       "target_headroom": -0.27152499999999996
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 277060000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_3p5ns_not_met.json",
+      "record_sha256": "e30b0be9b911e15f95026d5b9c683af201572580953f2bebb45af7d44dd5b2cb",
+      "setup_wns_ns": -0.109321,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3170.87,
+      "target_clock_period_ns": 3.5,
+      "target_headroom": -0.031234571428571428
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 276878000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_3p7ns_closed.json",
+      "record_sha256": "18dd67066960edcdd797758683876e044b11587f79295b1815573032b40755e7",
+      "setup_wns_ns": 0.0883018,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3155.3,
+      "target_clock_period_ns": 3.7,
+      "target_headroom": 0.02386535135135135
     },
     {
       "antenna_violating_nets": 0,
