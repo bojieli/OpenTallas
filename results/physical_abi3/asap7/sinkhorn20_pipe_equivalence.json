@@ -1,0 +1,37 @@
+{
+ "and_the_pipelined_divider_is_NOT_the_second_step": {
+  "attribution": "the sum pipeline alone is 1.01x on the same 35 matrices, so the whole 54% is the divider",
+  "measured_ratio_with_it": 1.55,
+  "so": "it is behind PIPELINED_DIVIDER, defaulted off, with the number written down",
+  "the_lesson": "ot_a3_fp32_div_rne_pipe's own bench recorded 1.06x of division TIME on its own stimulus.  A Sinkhorn denominator is a four-element sum plus epsilon and its operands land differently in the seeded bracket, so a ratio measured on one stimulus is not a property of the module.",
+  "why_it_loses": "at 1.55x the cycles the swap needs 1.55x the clock to break even, and 431.4 over 283.5 is 1.52x"
+ },
+ "not_a_claim": [
+  "the twin's own routed frequency is not in this record yet: the route is running",
+  "nothing instantiates the twin; the certifying block is unmoved and its bound vectors are unaffected"
+ ],
+ "question": "the routed coverage sweep put ot_a3_hc_sinkhorn20_rne at 196.6 MHz, BELOW the divider's 283.5 -- so it is the datapath's clock limiter.  What is the path, and what does pipelining it cost?",
+ "schema": "opentallas.result.asap7_sinkhorn20_pipe_equivalence.v1",
+ "the_path_is_depth_not_fanout": {
+  "cause": "S_SUM computes the whole four-element reduction in ONE cycle as three dependent binary32 adds: (x0+x1) and (x2+x3) in parallel, then their sum, then the contract's epsilon",
+  "evidence": "every stage on the reported max-delay path drives one to five loads, and the path walks about ninety cells of adder carry and comparison logic from phase[0] to result_codes[375]",
+  "routed_cells": 31931,
+  "routed_fmax_mhz": 196.614,
+  "routed_standard_cell_area_um2": 3350.12
+ },
+ "the_twin": {
+  "bench": "rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv",
+  "change": "the same three adds on the same values in the same order, separated by registers: S_SUM becomes S_SUM_A (the two independent pair adds), S_SUM_B (their sum) and S_SUM_C (the epsilon add, which latches the denominator)",
+  "cycle_cost": {
+   "arithmetic": "two extra cycles per reduction, 39 phases of four groups = 156 reductions = 312 cycles, against 624 divisions of tens of cycles each",
+   "ratio_pipe_over_reference": 1.01
+  },
+  "equivalence": {
+   "cases": 35,
+   "coverage": "uniform one / quarter / smallest normal / largest finite, a row and a column graded by 2**-20, max-finite beside smallest-normal, the four malformed classes the loader refuses (zero, negative, infinite, NaN), and 24 random positive finite matrices",
+   "failures": 0,
+   "verdict": "EQUIVALENT"
+  },
+  "module": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv"
+ }
+}
