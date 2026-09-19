@@ -333,6 +333,73 @@ class StreamingDeepSeekV41(StreamingDeepSeekV4):
             f"{allocated} buffers allocated on the device "
             f"({allocated_bytes / 2**20:.1f} MiB)"
         )
+        #: AND THE N-GRAM HASH TABLES ARE DATA, NOT STATE.  Every buffer above is
+        #: a cache the model fills as it runs, so zero is the right start for it.
+        #: ``NgramHashState`` is the exception in kind: it registers ``primes``,
+        #: ``offsets``, ``multipliers`` and ``token_map`` as non-persistent
+        #: buffers whose CONTENT its ``__init__`` computes -- the compressed token
+        #: map from the tokenizer, the per-column prime moduli, the hash
+        #: multipliers derived from the compressed vocabulary size.  The skeleton
+        #: is built on ``meta``, so they arrive with no storage and the loop above
+        #: zeroed all four.
+        #:
+        #: MEASURED CONSEQUENCE.  ``token_map[input_ids]`` then returns 0 for
+        #: every token, ``rolling`` is 0, and ``rolling % primes`` is integer
+        #: modulo by ZERO, which on CUDA yields 0xFFFFFFFF.  Every one of the 24
+        #: hash columns at every position came out 4294967295, the row gather
+        #: returned zeros, ``wkv`` of zeros is zeros, and the Engram's
+        #: ``h + gate * value`` added EXACTLY NOTHING at layers 1 and 14 -- 0 of
+        #: 40 rows moved, at both.  The gold tokens produced before this fix were
+        #: produced by a model with no Engram.
+        #:
+        #: Rebuilt rather than restated: a second derivation of the token map and
+        #: the multipliers is a second thing to get wrong, so a real
+        #: ``NgramHashState`` is constructed off ``meta`` and its buffers copied
+        #: in.  ``cache`` is genuinely scratch and keeps its zeros.
+        self.hash_tables_restored = self._restore_ngram_hash_tables()
+
+    def _restore_ngram_hash_tables(self) -> tuple[str, ...]:
+        """Give ``NgramHashState`` back the tables its ``__init__`` computed."""
+        torch = self.torch
+        state = getattr(self.model, "engram_hash", None)
+        if state is None:
+            return ()
+        #: ``model.py`` does ``from engram import EngramLayout, NgramHashState``,
+        #: so the vendor module already carries both names and importing a second
+        #: copy of ``engram`` would build a second token map.
+        layout_cls = getattr(self.model_mod, "EngramLayout", None)
+        state_cls = getattr(self.model_mod, "NgramHashState", None)
+        if layout_cls is None or state_cls is None:
+            return ()
+        layout = layout_cls.from_args(self.args)
+        if layout is None:
+            return ()
+        with torch.device("cpu"):
+            real = state_cls(self.args, layout, self._tokenizer)
+        restored: list[str] = []
+        for name, buffer in list(state._buffers.items()):
+            if buffer is None or name == "cache":
+                continue
+            source = real._buffers.get(name)
+            if source is None:
+                continue
+            state._buffers[name] = source.detach().to(
+                device=self.device, dtype=buffer.dtype, copy=True
+            )
+            restored.append(name)
+        #: ``cache`` is the look-back history the forward writes before it reads,
+        #: so zeros are correct -- but it must exist at the real dtype and size.
+        cache = state._buffers.get("cache")
+        if cache is not None and cache.device.type == "meta":
+            state._buffers["cache"] = torch.zeros(
+                tuple(cache.shape), dtype=cache.dtype, device=self.device
+            )
+        self._log(
+            "n-gram hash tables restored: " + ", ".join(restored)
+            if restored
+            else "n-gram hash tables: nothing to restore"
+        )
+        return tuple(restored)
 
     # -- Engram residency -------------------------------------------------
     def _install_engram_residency(self) -> None:
