@@ -813,7 +813,29 @@ class ViewResolver:
             # One iteration is not a whole number of this axis's elements, so
             # the term does not walk it in blocks and bounds nothing.
             return False
-        return int(term_stride) == int(payload[f"stride{axis}"]) * step
+        if int(term_stride) != int(payload[f"stride{axis}"]) * step:
+            return False
+        # AND THE AXIS HAS TO BE ABLE TO HOLD ONE ITERATION.  The stride equality
+        # above is necessary and not sufficient: a term that advances by one whole
+        # block of SOME axis satisfies it whenever that block's byte stride happens
+        # to match, and a view whose declared extent is smaller than the block
+        # cannot be the axis being walked -- there is no partial final iteration of
+        # an axis that never held a full one.
+        #
+        # Measured: DeepSeek-V4.1's compressor gather presents ``(2, 512)`` -- the
+        # packed key/value PAIR and the head dimension -- out of a rank-3
+        # ``(span_groups_ratioN, 2, 512)`` tensor whose group axis is already
+        # consumed.  Its term advances 262,144 elements, which is exactly
+        # ``stride0 (512) * 512``, so the test passed and the resolver shortened the
+        # 2-row pair to ONE row.  DMA.GATHER then refused -- "output view dims
+        # (1, 512) differ from the gathered shape (2, 512)" -- at the third token of
+        # a run whose first two tokens matched the shipped oracle exactly.
+        #
+        # This is the same argument the docstring above already makes for the mHC
+        # branch reduction, applied to the declared extent instead of the stride:
+        # clamping such a view "would present four streams as one, which is not a
+        # partial final iteration of anything".
+        return int(payload[f"dim{axis}"]) >= step
 
     def _remaining_extent(
         self,
