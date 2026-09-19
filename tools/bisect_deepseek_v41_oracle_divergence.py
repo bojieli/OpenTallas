@@ -71,6 +71,21 @@ TOOL = "tools/bisect_deepseek_v41_oracle_divergence.py"
 ORACLE_RECORD = ROOT / "results/abi3/deepseek_v41_reduced_reference_oracle.json"
 CHECKPOINT = ROOT / "build/models/deepseek-v4.1-flash-reduced-v1"
 
+#: The SHIPPED release's two ROM stores.  They are separate entries rather than a
+#: flag because the capability differs too, and a comparison run against the wrong
+#: capability is a comparison against a different machine.  Both are built at 8,192
+#: positions: the resolving term for V4.1's per-query candidate plane needs a
+#: stride of one plane row times the axis capacity, which at the shipped 262,144
+#: context is past ABI 3.0's 32-bit dynamic-term stride field.
+SHIPPED_STORES = {
+    "shipped_wafer": (
+        "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+    ),
+    "shipped_array": (
+        "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+    ),
+}
+
 STORES = {
     "rom": (
         "build/abi3/deepseek-v41-reduced-rom",
@@ -79,6 +94,17 @@ STORES = {
     "hbm": (
         "build/abi3/deepseek-v41-reduced-hbm",
         "results/abi3/deepseek_v41_hbm_comparator_capability.json",
+    ),
+    # The shipped stores have no default deployment directory: a shipped build is
+    # produced per context and passed with --deployment, so the entry carries the
+    # capability and an empty path that --deployment must fill.
+    "shipped_wafer": (
+        "",
+        "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+    ),
+    "shipped_array": (
+        "",
+        "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
     ),
 }
 
@@ -95,8 +121,19 @@ def oracle_checkpoints(
     expert_numeric_path: str = "fp4",
     snapshot: Path | None = None,
     lock_path: Path | None = None,
+    shipped: bool = False,
 ) -> list[dict[str, Any]]:
-    """The vendor forward pass's own tensors, at the last prompt position."""
+    """The vendor forward pass's own tensors, at the last prompt position.
+
+    ``shipped`` swaps how the model is CONSTRUCTED and nothing else.  The reduced
+    path calls ``build_model`` and loads every weight, which cannot work at
+    shipped scale: ``ParallelEngramEmbedding`` alone asks for 91.55 GiB of fp8 on
+    a 95 GiB GPU and the constructor dies before a single hook fires.  The shipped
+    path builds through ``StreamingDeepSeekV41``, which holds the model on ``meta``
+    and materialises one block at a time with the Engram tables served by a
+    host-pinned row gather.  The hooks below are registered on the same module
+    names either way, so the taps are the same taps.
+    """
     snapshot = Path(snapshot) if snapshot is not None else DEFAULT_SNAPSHOT
     lock = load_checkpoint_lock(Path(lock_path) if lock_path else DEFAULT_LOCK)
     verify_checkpoint_lock(snapshot, lock)
@@ -133,9 +170,36 @@ def oracle_checkpoints(
 
         install_fp4_dequantised_linear(vendor, importlib.import_module("convert"))
     tokenizer = AutoTokenizer.from_pretrained(str(snapshot))
-    model = build_model(vendor, body, tokenizer)
-    _load_weights(model, snapshot, convert_mod=convert_mod)
-    model.eval()
+    engine = None
+    if shipped:
+        from compiler.frontend.deepseek_v41_tokenizer import (  # noqa: PLC0415
+            load_verified_deepseek_v41_tokenizer,
+        )
+        from runtime.reference.deepseek_v4_oracle import OracleConfig  # noqa: PLC0415
+        from runtime.reference.deepseek_v41_oracle import (  # noqa: PLC0415
+            StreamingDeepSeekV41,
+        )
+
+        verified = load_verified_deepseek_v41_tokenizer(snapshot)
+        backend = getattr(verified, "backend", None) or getattr(
+            verified, "_backend", None
+        )
+        engine = StreamingDeepSeekV41(
+            OracleConfig(
+                snapshot=snapshot,
+                max_seq_len=max(len(prompt) + 8, 64),
+                device="cuda",
+                verbose=True,
+            ),
+            tokenizer_backend=backend,
+        )
+        engine.load_endpoints()
+        model = engine.model
+        vendor = engine.model_mod
+    else:
+        model = build_model(vendor, body, tokenizer)
+        _load_weights(model, snapshot, convert_mod=convert_mod)
+        model.eval()
 
     taps: list[dict[str, Any]] = []
 
@@ -251,10 +315,18 @@ def oracle_checkpoints(
 
         setattr(vendor, function_name, make(function_name, original_function))
 
-    device = next(model.parameters()).device
-    ids = torch.tensor([prompt], dtype=torch.long, device=device)
-    with torch.inference_mode():
-        model(ids)
+    if engine is not None:
+        # The streaming engine owns the device placement and the per-block
+        # materialisation, so its own forward is the entry point; calling
+        # ``model(ids)`` directly would read meta tensors.
+        ids = torch.tensor([prompt], dtype=torch.long, device="cuda")
+        with torch.inference_mode():
+            engine.forward(ids, 0)
+    else:
+        device = next(model.parameters()).device
+        ids = torch.tensor([prompt], dtype=torch.long, device=device)
+        with torch.inference_mode():
+            model(ids)
     for handle in handles:
         handle.remove()
     if callable(original_hc_pre):
@@ -269,8 +341,18 @@ def device_trace(
     prompt: list[int],
     deployment_override: Path | None = None,
     checkpoint_override: Path | None = None,
+    max_elements: int = 1 << 21,
 ) -> tuple[list[dict[str, Any]], list[int]]:
-    """Every engine call's output view, in issue order."""
+    """Every engine call's output view, in issue order.
+
+    ``max_elements`` bounds what is KEPT, not what is executed.  ``_best_match``
+    only ever compares records whose element count equals an oracle tap's, and the
+    largest tap is the head's vocabulary row -- 129,280 elements.  A shipped V4.1
+    store emits views far larger than any tap: at 8,192 positions the candidate
+    admission plane alone is 8,192 squared, 537 MB as float64, and keeping every
+    such output exhausted host memory before prefill finished.  Anything above the
+    bound cannot match a tap, so dropping it costs no comparison.
+    """
     deployment_dir, capability_path = STORES[store]
     if deployment_override is not None:
         deployment_dir = str(deployment_override)
@@ -295,6 +377,8 @@ def device_trace(
                     formats.widen(view.dtype, ctx.read(view)), dtype=np.float64
                 ).reshape(-1)
             except Exception:  # an engine with no output view, or an odd dtype
+                return result
+            if values.size > int(max_elements):
                 return result
             trace.append(
                 {
@@ -404,6 +488,30 @@ def main(argv: list[str] | None = None) -> int:
         help="tap every named submodule of this block; repeatable",
     )
     parser.add_argument(
+        "--max-trace-elements",
+        type=int,
+        default=1 << 21,
+        help=(
+            "drop device outputs larger than this from the trace; they cannot "
+            "match any oracle tap and a shipped store emits views of 67 M elements"
+        ),
+    )
+    parser.add_argument(
+        "--shipped",
+        action="store_true",
+        help=(
+            "build the reference through StreamingDeepSeekV41 instead of "
+            "build_model, which is the only way it fits: the shipped Engram table "
+            "alone asks for 91.55 GiB of fp8 and the constructor dies first"
+        ),
+    )
+    parser.add_argument(
+        "--workload",
+        type=Path,
+        default=None,
+        help="take the prompt from this pinned workload document",
+    )
+    parser.add_argument(
         "--threshold",
         type=float,
         default=0.999,
@@ -412,9 +520,15 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
     stores = arguments.store or ["rom"]
 
-    record = json.loads(Path(arguments.oracle).read_text())
-    case = record["results"][WORKLOAD_ID]
-    prompt = [int(t) for t in case["prompt_token_ids"]]
+    if arguments.workload is not None:
+        # A shipped run takes its prompt from the pinned workload document, which
+        # is also where the grader reads it, so the two cannot drift apart.
+        workload = json.loads(Path(arguments.workload).read_text())
+        prompt = [int(t) for t in (workload.get("token_ids") or workload["prompt_token_ids"])]
+    else:
+        record = json.loads(Path(arguments.oracle).read_text())
+        case = record["results"][WORKLOAD_ID]
+        prompt = [int(t) for t in case["prompt_token_ids"]]
 
     taps = oracle_checkpoints(
         prompt,
@@ -422,6 +536,7 @@ def main(argv: list[str] | None = None) -> int:
         arguments.expert_numeric_path,
         arguments.snapshot,
         arguments.checkpoint_lock,
+        shipped=bool(arguments.shipped),
     )
     print(f"oracle: {len(taps)} checkpoints", flush=True)
 
@@ -429,7 +544,11 @@ def main(argv: list[str] | None = None) -> int:
     report_stores: dict[str, Any] = {}
     for store in stores:
         trace, emitted = device_trace(
-            store, prompt, arguments.deployment, arguments.checkpoint_root
+            store,
+            prompt,
+            arguments.deployment,
+            arguments.checkpoint_root,
+            arguments.max_trace_elements,
         )
         print(f"{store}: {len(trace)} engine outputs, token {emitted}", flush=True)
         rows = []
