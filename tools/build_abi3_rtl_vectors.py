@@ -206,6 +206,15 @@ def rtl_capability() -> Capability:
             int(Feature.BF16_TENSOR),
             int(Feature.TRANSACTIONAL_STATE),
             int(Feature.ON_DEVICE_SELECTION),
+            # Bit 10, INTEGRITY_RETRY.  Since 080f213 (2026-09-03) a data-bearing
+            # link descriptor that requests an integrity mode or a retry bound
+            # binds the requirement into the program header automatically, and
+            # the A14 link cases build exactly such a descriptor.  Without the
+            # bit, ``a14_link_node_scope`` is refused with "capability does not
+            # implement required feature bits [10]" and the whole vector set
+            # cannot be built -- which is why the committed set is 2026-09-02 and
+            # the correlation campaign has not reproduced since.
+            int(Feature.INTEGRITY_RETRY),
         ),
         limits={
             "max_instructions": 4096,
@@ -753,6 +762,7 @@ def _a13_block_case(
         max_iterations=A13_MAX_ITER,
         key="loop.block",
     )
+    b.open_loop(loop)
     view_in, view_out = w.block_views(
         loop_ids=[loop],
         strides=[A13_BLOCK * A13_ROW_ELEMENTS],
@@ -760,7 +770,6 @@ def _a13_block_case(
     )
     op = w.block_operator(view_in, view_out, key="op.block")
     tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
-    b.open_loop(loop)
     b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     # A tail dispatch outside the loop: a case with zero iterations still has to
@@ -877,11 +886,11 @@ def case_a13_constant_loop(cap: Capability) -> Case:
     loop = b.loop_control(
         lower_bound=0, upper_bound=3, step=1, key="loop.constant"
     )
+    b.open_loop(loop)
     view_in, view_out = w.block_views(
         loop_ids=[loop], strides=[A13_BLOCK * A13_ROW_ELEMENTS]
     )
     op = w.block_operator(view_in, view_out, key="op.block")
-    b.open_loop(loop)
     b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.emit(Major.CONTROL, Control.COMPLETE)
@@ -930,6 +939,8 @@ def case_a13_nested_blocks(cap: Capability) -> Case:
         bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_WIDE_BLOCK,
         max_iterations=A13_MAX_ITER, key="loop.inner",
     )
+    b.open_loop(outer)
+    b.open_loop(inner)
     view_in, view_out = w.block_views(
         loop_ids=[outer, inner],
         strides=[
@@ -938,8 +949,6 @@ def case_a13_nested_blocks(cap: Capability) -> Case:
         ],
     )
     op = w.block_operator(view_in, view_out, key="op.block")
-    b.open_loop(outer)
-    b.open_loop(inner)
     b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.close_loop()
@@ -990,6 +999,8 @@ def case_a13_four_terms(cap: Capability) -> Case:
         bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_BLOCK,
         max_iterations=A13_MAX_ITER, key="loop.inner",
     )
+    b.open_loop(outer)
+    b.open_loop(inner)
     view_in, view_out = w.block_views(
         loop_ids=[outer, inner],
         strides=[
@@ -1002,8 +1013,6 @@ def case_a13_four_terms(cap: Capability) -> Case:
         ],
     )
     op = w.block_operator(view_in, view_out, key="op.block")
-    b.open_loop(outer)
-    b.open_loop(inner)
     b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.close_loop()
@@ -1084,6 +1093,7 @@ def case_a13_non_leading_axis(cap: Capability) -> Case:
     dims = [MHC_STREAMS, MHC_TOKEN_BLOCK, A13_ROW_ELEMENTS]
     strides = [MHC_STREAM_PLANE, A13_ROW_ELEMENTS, 1]
     terms = [DynamicTerm.loop(loop, MHC_TOKEN_BLOCK * A13_ROW_ELEMENTS)]
+    b.open_loop(loop)
     view_in = b.tensor_view(
         object_id=branches,
         dtype=DType.BF16,
@@ -1114,7 +1124,6 @@ def case_a13_non_leading_axis(cap: Capability) -> Case:
         key="op.mhc",
     )
     tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
-    b.open_loop(loop)
     b.emit(Major.VECTOR, Vector.MHC, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.emit(Major.VECTOR, Vector.ADD, descriptor_id=tail, source_operation_id=1)
@@ -1178,6 +1187,8 @@ def case_a13_mixed_axes(cap: Capability) -> Case:
         # two streams inside one row: not the leading axis.  Does not clamp.
         DynamicTerm.loop(experts, expert_block * A13_ROW_ELEMENTS),
     ]
+    b.open_loop(tokens)
+    b.open_loop(experts)
     view_in = b.tensor_view(
         object_id=obj,
         dtype=DType.BF16,
@@ -1207,8 +1218,6 @@ def case_a13_mixed_axes(cap: Capability) -> Case:
         source_kernel_id=0,
         key="op.mixed",
     )
-    b.open_loop(tokens)
-    b.open_loop(experts)
     b.emit(Major.VECTOR, Vector.MHC, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.close_loop()
@@ -1302,6 +1311,7 @@ def _a18_pool_case(
     elements = max(numerator, 1) * divisor // max(unit, 1)
     step = strides[axis] * elements
     terms = [DynamicTerm.loop(loop, step if term_stride is None else term_stride)]
+    b.open_loop(loop)
     view_in = b.tensor_view(
         object_id=pool,
         dtype=DType.FP32,
@@ -1340,7 +1350,6 @@ def _a18_pool_case(
         key="op.pool",
     )
     tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
-    b.open_loop(loop)
     b.emit(Major.VECTOR, Vector.COMPRESS, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.emit(Major.VECTOR, Vector.ADD, descriptor_id=tail, source_operation_id=1)
@@ -1491,6 +1500,7 @@ def case_a18_axis_beyond_rank(cap: Capability) -> Case:
         bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=A13_BLOCK,
         max_iterations=A13_MAX_ITER, key="loop.block",
     )
+    b.open_loop(loop)
     view_in, view_out = w.block_views(
         loop_ids=[loop], strides=[A13_BLOCK * A13_ROW_ELEMENTS]
     )
@@ -1501,7 +1511,6 @@ def case_a18_axis_beyond_rank(cap: Capability) -> Case:
         "extent_axis"
     ] = 3
     op = w.block_operator(view_in, view_out, key="op.block")
-    b.open_loop(loop)
     b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
     b.close_loop()
     b.emit(Major.CONTROL, Control.COMPLETE)
@@ -1940,6 +1949,7 @@ def _a15_case(cap: Capability, name: str, *, scale_block_rows: int,
         key="loop.block",
     )
     term = DynamicTerm.loop(loop, A13_BLOCK * A13_ROW_ELEMENTS)
+    b.open_loop(loop)
     view_codes = b.tensor_view(
         object_id=codes,
         dtype=DType.FP8_E4M3FN,
@@ -1977,7 +1987,6 @@ def _a15_case(cap: Capability, name: str, *, scale_block_rows: int,
         source_kernel_id=0,
         key="op.convert",
     )
-    b.open_loop(loop)
     b.emit(Major.VECTOR, Vector.CONVERT, descriptor_id=convert,
            source_operation_id=0)
     b.close_loop()
@@ -2645,13 +2654,32 @@ def negative_instruction_cases(cap: Capability) -> list[Case]:
 
     w = _tiny(cap, "a3-neg-subopcode")
     deployment = w.finish()
+    # DERIVED, NOT WRITTEN.  This case used to hardcode 0x0d with the note "beyond
+    # SQRT_SOFTPLUS", which was true when it was written and stopped being true the
+    # moment the registry grew: 0x0d is now VECTOR.ENGRAM_GATE, which the RTL
+    # implements (``A3_VECTOR_ENGRAM_GATE = 8'h0d`` in ot_a3_pkg.sv).  So the RTL
+    # correctly ACCEPTED the instruction, resolved its operand view and issued it,
+    # while the golden expectation was a decode trap with zero views -- and the
+    # whole correlation campaign failed on "view overflow, expected 0" at this
+    # case.  A negative case that names a specific subopcode goes stale the moment
+    # the enum it is the complement of grows, so it is taken from the enum here.
+    illegal_vector_sub = max(int(v) for v in Vector) + 1
+    if illegal_vector_sub > 0xFF:
+        raise SystemExit(
+            "the VECTOR subopcode space is full; this case needs another family"
+        )
     cases.append(Case(
         name="negative_illegal_subopcode",
         deployment=deployment,
         device_runs=False,
-        corrupt=lambda image: patch_instruction(image, 0, {1: 0x0D}, reseal=True),
+        corrupt=lambda image: patch_instruction(
+            image, 0, {1: illegal_vector_sub}, reseal=True
+        ),
         reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
-        note="VECTOR subopcode 0x0d is beyond SQRT_SOFTPLUS",
+        note=(
+            f"VECTOR subopcode {illegal_vector_sub:#04x} is one past the highest "
+            f"defined one ({max(Vector, key=int).name}), derived from the registry"
+        ),
     ))
 
     w = _tiny(cap, "a3-neg-flag")
