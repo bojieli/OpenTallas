@@ -7,8 +7,8 @@
   "why_it_loses": "at 1.55x the cycles the swap needs 1.55x the clock to break even, and 431.4 over 283.5 is 1.52x"
  },
  "not_a_claim": [
-  "the twin's own routed frequency is not in this record yet: the route is running",
-  "nothing instantiates the twin; the certifying block is unmoved and its bound vectors are unaffected"
+  "nothing instantiates the twin: the certifying block is unmoved and its bound vectors are unaffected, so this is a qualified replacement and not a shipped one",
+  "the 261.1 MHz is this block alone; no whole-chip clock has ever been measured (25 top-level islands, none of them the chip)"
  ],
  "question": "the routed coverage sweep put ot_a3_hc_sinkhorn20_rne at 196.6 MHz, BELOW the divider's 283.5 -- so it is the datapath's clock limiter.  What is the path, and what does pipelining it cost?",
  "schema": "opentallas.result.asap7_sinkhorn20_pipe_equivalence.v1",
@@ -32,6 +32,22 @@
    "failures": 0,
    "verdict": "EQUIVALENT"
   },
-  "module": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv"
- }
+  "module": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
+  "routed_on_asap7": {
+   "against_the_reference_at_the_same_target": {
+    "cells": 31931,
+    "closed": false,
+    "fmax_mhz": 196.614,
+    "standard_cell_area_um2": 3350.12
+   },
+   "cells": 29019,
+   "closed": true,
+   "fmax_mhz": 261.1,
+   "reading": "1.33x the frequency at 0.93x the area and 0.91x the cells, and it CLOSES where the reference did not meet timing at all.  With 1.01x the cycles that is 1.32x the block's throughput.",
+   "standard_cell_area_um2": 3124.26,
+   "status": "pass",
+   "target_period_ns": 4.0
+  }
+ },
+ "what_the_limiter_is_now": "the datapath's clock limiter rises from 196.6 MHz to 261.1 MHz.  It is still this block, and what remains below it is ot_a3_fp32_div_rne's own 283.5 MHz combinational body -- so ~261 MHz is close to the ceiling this block can reach with that divider inside it, and the cycle-cheap divider needed to pass 283.5 MHz does not exist yet (the pipelined one costs 1.55x the cycles here)."
 }

@@ -22,6 +22,16 @@
       "target_headroom": 0.036531666666666664
     },
     {
+      "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "family": "abi3_datapath",
+      "fmax_hz": 261121000.0,
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_4p0ns_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 3124.26,
+      "target_headroom": 0.0425885
+    },
+    {
       "at_target_clock_period_ns": 3.6,
       "block": "ot_a3_fp32_div_rne",
       "family": "abi3_datapath",
@@ -383,22 +393,22 @@
     }
   ],
   "clock_limiter": {
-    "at_target_clock_period_ns": 3.6,
-    "block": "ot_a3_fp32_div_rne",
+    "at_target_clock_period_ns": 4.0,
+    "block": "ot_a3_hc_sinkhorn20_rne_pipe",
     "family": "abi3_datapath",
-    "fmax_hz": 283509000.0,
+    "fmax_hz": 261121000.0,
     "note": "the design's clock cannot exceed the slowest block ON IT, so this row is the whole-design operating point and every ABI 3.0 block above it has headroom.  Probes and legacy tensor-accelerator blocks are excluded by family: neither is referenced from rtl/abi3/ or from any backend, so neither is on this clock.  Including them would let a retired block set the operating point.",
-    "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
+    "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_4p0ns_closed.json",
     "scope": "abi3_datapath only",
     "slew_margin_percent": 60.0,
-    "standard_cell_area_um2": 1504.85,
-    "target_headroom": 0.02021525
+    "standard_cell_area_um2": 3124.26,
+    "target_headroom": 0.0425885
   },
   "counts": {
-    "closed_routed_record_count": 71,
-    "distinct_blocks_with_a_closed_routed_record": 38,
-    "post_route_record_count": 115,
-    "record_count": 190
+    "closed_routed_record_count": 72,
+    "distinct_blocks_with_a_closed_routed_record": 39,
+    "post_route_record_count": 117,
+    "record_count": 193
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -484,7 +494,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "15661c514feaa11d375f4d8a0a0d6420d3f2ef67"
+      "commit": "3cc986b86f607013d9dddf83bdddbbf9927d756c"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -3788,6 +3798,27 @@
       "target_headroom": null
     },
     {
+      "antenna_violating_nets": null,
+      "block": "ot_a3_fp32_transcendental_cr_rne",
+      "closed": false,
+      "drc_errors": null,
+      "family": "abi3_datapath",
+      "fmax_hz": null,
+      "max_cap_violations": null,
+      "max_fanout_violations": null,
+      "max_slew_violations": null,
+      "post_route": false,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/fp32_transcendental_cr_rne/pnr_4p0ns_synth_timeout_override_ineffective.json",
+      "record_sha256": "2a2de9b4ee5caffeb332581a214f0391f787545ce9d3511deeedc920f4fd2fcc",
+      "setup_wns_ns": null,
+      "slew_margin_percent": null,
+      "stages": [],
+      "standard_cell_area_um2": null,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": null
+    },
+    {
       "antenna_violating_nets": 0,
       "block": "ot_a3_g2_cluster",
       "closed": true,
@@ -3832,6 +3863,52 @@
       "standard_cell_area_um2": 88633.4,
       "target_clock_period_ns": 4.5,
       "target_headroom": 0.28184888888888887
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_hc_sinkhorn20_rne",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 196614000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne/pnr_4p0ns_not_met.json",
+      "record_sha256": "1bd2beff112fc25c9ee72fc2ef419db7c1f58daec2e895e0526a9796f65777d3",
+      "setup_wns_ns": -1.0860999999999998,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3350.12,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": -0.27152499999999996
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 261121000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne_pipe/pnr_4p0ns_closed.json",
+      "record_sha256": "cc280808ad90b37f1bcfd39dbf9e10952a8a8849d659579f0d556031b1de3596",
+      "setup_wns_ns": 0.170354,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3124.26,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.0425885
     },
     {
       "antenna_violating_nets": 0,
