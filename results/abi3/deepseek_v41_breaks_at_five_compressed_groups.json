@@ -1,0 +1,97 @@
+{
+ "answer": "between NINE and TEN tokens -- and the quantity that changes there is the number of ratio-2 compressed groups, which goes from FOUR to FIVE.",
+ "how_to_test_it_next": "the coincidence is testable without a token: find every view in the built c512 deployment whose declared leading extent is 4 and whose A18 extent axis is a group axis, or the reverse.  That is a static query over the descriptors, and it either names the view or refutes the hypothesis.",
+ "not_a_claim": [
+  "the hyper-connection reading is a hypothesis; the bracket is the measurement",
+  "no cell is closed: the pinned matrix workload is 32 tokens and it still fails"
+ ],
+ "question": "at what prompt length does the V4.1 device's prefill stop matching the oracle?",
+ "schema": "opentallas.result.v41_breaks_at_five_compressed_groups.v1",
+ "the_closed_bracket": [
+  {
+   "candidate_blocks": 1,
+   "device": [
+    14,
+    1320,
+    42250,
+    294
+   ],
+   "groups_ratio2": 4,
+   "oracle": [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   "result": "pass",
+   "tokens": 8
+  },
+  {
+   "candidate_blocks": 2,
+   "device": [
+    1320
+   ],
+   "groups_ratio2": 4,
+   "oracle_first": 1320,
+   "result": "PASS",
+   "terminal_accepted": true,
+   "tokens": 9
+  },
+  {
+   "candidate_blocks": 2,
+   "device": [
+    42250,
+    294,
+    2237,
+    16
+   ],
+   "first_divergence_index": 0,
+   "groups_ratio2": 5,
+   "oracle": [
+    56538,
+    16,
+    334,
+    22105
+   ],
+   "result": "FAIL",
+   "tokens": 10
+  },
+  {
+   "candidate_blocks": 2,
+   "device": [
+    2052,
+    223,
+    19,
+    17
+   ],
+   "groups_ratio2": 6,
+   "oracle": [
+    343,
+    19,
+    79,
+    5826
+   ],
+   "result": "fail",
+   "tokens": 12
+  },
+  {
+   "candidate_blocks": 2,
+   "groups_ratio2": 8,
+   "result": "fail",
+   "tokens": 16
+  },
+  {
+   "candidate_blocks": 4,
+   "groups_ratio2": 16,
+   "result": "fail",
+   "tokens": 32
+  }
+ ],
+ "what_it_leaves": {
+  "a_hypothesis_worth_testing_and_not_yet_tested": "FOUR is the hyper-connection multiplicity of this model.  A view whose leading axis is the four HC streams, used where the compressed-GROUP axis is meant, is correct for up to four groups and wrong from five -- and it is the exact confusion runtime/sim/memory.py's own docstring warns about: 'its leading axis is the four hyper-connection streams while the loop steps over tokens ... clamping such a view would present four streams as one'.  The resolver guard landed earlier in this session is the same family of error, found from the other end.",
+  "the_compressed_group_count": "prefill compresses floor(span / 2) groups at ratio 2: eight and nine tokens both give FOUR, ten and eleven give five, twelve gives six.  Four works and five does not, at every length tested."
+ },
+ "what_the_bracket_rules_out": {
+  "the_candidate_block_count": "nine and ten tokens BOTH have two candidate blocks -- one complete and one partial -- and nine passes while ten fails.  So the block count is not the variable, and the partial-block hypothesis I offered twice is dead."
+ }
+}
