@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 57,
-    "uncovered_and_instantiated": 31,
+    "covered_by_a_closed_block": 58,
+    "uncovered_and_instantiated": 30,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 40
+    "with_their_own_closed_record": 41
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -890,9 +890,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_communication_decoder.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
       ],
@@ -1838,7 +1838,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "e75690ba9c03f60e807abf2d236c9b46cb1c7df0"
+      "commit": "a87cb9b94188a2d1f60571d79e289facc2201a69"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2208,12 +2208,6 @@
         "ot_a3_link_node"
       ],
       "module": "ot_a3_collective_engine"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_wafer_multicast_adapter"
-      ],
-      "module": "ot_a3_communication_decoder"
     },
     {
       "instantiated_by": [

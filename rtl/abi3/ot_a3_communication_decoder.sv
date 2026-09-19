@@ -167,9 +167,16 @@ module ot_a3_communication_decoder #(
         descriptor_record[1535:416], 32'h0000_0000,
         descriptor_record[383:0]
     };
-    assign calculated_crc = ot_crc_pkg::crc32c(
-        1536, {{(4096-1536){1'b0}}, crc_record}
-    );
+    //: THE SAME CRC, IN A TREE.  ot_crc_pkg::crc32c states the reflected Castagnoli
+    //: algorithm one bit at a time, and unrolled over 1,536 bits that is a 1,536-step
+    //: chain: the routed block carried 1,162 XOR and XNOR cells on one path from
+    //: descriptor_record[1] to trap_class[1], 661 cell arcs, and closed at nothing --
+    //: 39.9 MHz against a 4 ns target, the slowest block in the ABI 3.0 inventory.
+    //: A CRC is linear over GF(2), so ot_crc32c_tree_pkg computes each of the 32
+    //: output bits as one XOR reduction over a generated mask, which is ten levels
+    //: rather than 1,536.  Identical function, proved by
+    //: rtl/test/tb_crc32c_tree_equiv.sv over 512 comparisons at four widths.
+    assign calculated_crc = ot_crc32c_tree_pkg::crc32c_1536(crc_record);
 
     wire header_reserved_bad = |descriptor_record[511:416];
     wire payload_reserved_bad = |descriptor_record[1535:1160];
@@ -262,9 +269,8 @@ module ot_a3_communication_decoder #(
         numeric_descriptor_record[1023:416], 32'h0000_0000,
         numeric_descriptor_record[383:0]
     };
-    assign numeric_calculated_crc = ot_crc_pkg::crc32c(
-        1024, {{(4096-1024){1'b0}}, numeric_crc_record}
-    );
+    assign numeric_calculated_crc =
+        ot_crc32c_tree_pkg::crc32c_1024(numeric_crc_record);
 
     function automatic dtype_legal;
         input [7:0] dtype;
