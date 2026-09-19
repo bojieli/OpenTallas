@@ -1,5 +1,20 @@
 {
- "answer": "between NINE and TEN tokens -- and the quantity that changes there is the number of ratio-2 compressed groups, which goes from FOUR to FIVE.",
+ "CORRECTION": {
+  "and_the_bracket_cannot_separate_the_two_candidates": {
+   "candidate_1_ratio_2_groups": "floor(n/2): 8 -> 4, 9 -> 4, 10 -> 5, 12 -> 6",
+   "candidate_2_dspark_blocks": "dspark_block_size is 5 and dspark_target_layer_ids is [37, 38, 39]; floor(n/5): 8 -> 1, 9 -> 1, 10 -> 2, 12 -> 2, 16 -> 3, 32 -> 6",
+   "why_no_length_separates_them": "both change exactly at 9 -> 10.  Separating them needs a length where one moves and the other does not -- 14 -> 15 keeps the group count at 7 while the DSpark count goes 2 -> 3 -- so the discriminating point is FIFTEEN tokens, not another point between 9 and 12."
+  },
+  "refuted_statically_in_two_queries": {
+   "verdict": "no group-counted axis is four wide, and no four-wide axis is group-counted.  The reading is wrong from both directions, and it cost no device time to find out.",
+   "views_whose_A18_extent_unit_is_2_and_whose_axis_is_declared_at_most_4": 0,
+   "views_with_a_4_wide_A18_axis": 49,
+   "what_those_49_are": "all of shape (4, 1, 5120), (4, 5120), (4, 512) or (4,), every one with extent_unit 0 and extent_numerator 0 -- that is, NO A18 extent at all.  They are the four hyper-connection streams, declared as themselves, with no request-determined extent to confuse with a group count."
+  },
+  "so_the_measurement_stands_and_the_mechanism_does_not": "the break is at 9 -> 10, which is measured.  Which config quantity owns it is not, and the next cheap step is the 15-token point rather than a story.",
+  "what_I_proposed": "that FOUR is the hyper-connection multiplicity, and a view whose leading axis is the four HC streams was being used where the compressed-GROUP axis is meant -- right for up to four groups and wrong from five"
+ },
+ "answer": "between NINE and TEN tokens.  TWO quantities change there -- the ratio-2 group count (4 -> 5) and the DSpark block count (1 -> 2) -- and the bracket cannot separate them; see CORRECTION.",
  "how_to_test_it_next": "the coincidence is testable without a token: find every view in the built c512 deployment whose declared leading extent is 4 and whose A18 extent axis is a group axis, or the reverse.  That is a static query over the descriptors, and it either names the view or refutes the hypothesis.",
  "not_a_claim": [
   "the hyper-connection reading is a hypothesis; the bracket is the measurement",
