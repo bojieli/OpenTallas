@@ -1,0 +1,45 @@
+{
+ "answer": "it is not variation.  The oracle computes **NaN** inside routed-expert w1 GEMMs, in a SINGLE forward, at different experts on different runs.",
+ "measured": {
+  "always_nan": [
+   "L02.ffn.experts.303.w1#0"
+  ],
+  "method": "a float64 sum-of-squares and a max captured per submodule output for the first six blocks, ONE forward per process, two separate processes",
+  "run_1_nan_taps": [
+   "L01.ffn.shared_experts.w1#0",
+   "L02.ffn.experts.303.w1#0"
+  ],
+  "run_2_nan_taps": [
+   "L02.ffn.experts.36.w1#0",
+   "L02.ffn.experts.303.w1#0",
+   "L05.ffn.shared_experts.w1#0"
+  ],
+  "shapes": {
+   "L02.ffn.experts.303.w1#0": [
+    29,
+    2304
+   ],
+   "L02.ffn.experts.36.w1#0": [
+    17,
+    2304
+   ],
+   "L05.ffn.shared_experts.w1#0": [
+    32,
+    2304
+   ]
+  }
+ },
+ "not_a_claim": [
+  "the NaN's cause inside the vendor FP8 GEMM is not established",
+  "this says nothing about whether the accelerator is right"
+ ],
+ "question": "the shipped V4.1 oracle disagrees with itself run to run.  Where does the variation enter?",
+ "schema": "opentallas.result.v41_oracle_emits_nan.v1",
+ "the_remedy_that_already_exists": "tools/bisect_deepseek_v41_oracle_divergence.py carries an ``--expert-numeric-path fp4_dequantised`` path whose own comment says it 'keeps the declared numerics -- same FP4 codes, same E8M0 block scales, same activation quantisation -- and replaces only the vendor kernel that is broken on this GPU'.  That is exactly this situation, and testing it for NaN is the next step.",
+ "what_it_means_for_the_v41_verification": {
+  "so_the_device_disagreeing_is_not_the_device_being_wrong": "305 against 13806 cannot be read as a device defect while the comparator computes NaN in its expert path.  That does not make the device right; it makes the comparison unsafe in the direction I had been reading it.",
+  "the_intermediates_are_unusable": "every cosine in the depth bisection was computed against a reference that contains NaN somewhere upstream, which is why its cosines are low everywhere and why three probes of the same row disagreed",
+  "the_token_is_stable_but_not_for_a_good_reason": "the oracle emits 13806 on every run and its final norm carries no NaN, so the NaN is masked somewhere between the expert and the residual.  A gold token that survives a NaN by masking is not a gold token anyone should grade against without saying so."
+ },
+ "why_the_earlier_two_forward_probe_was_invalid": "I first compared two forwards inside ONE process and read the differences as non-determinism.  That comparison is void on its own terms: the streaming engine materialises and releases weights per block and is not re-entrant, so a second forward is not a repeat.  The result survives only because ONE forward per process still shows NaN -- which is what makes the runs differ."
+}
