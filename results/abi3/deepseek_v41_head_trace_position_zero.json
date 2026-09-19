@@ -1,4 +1,24 @@
 {
+ "CORRECTION": {
+  "the_control_that_refutes_it": {
+   "cell": "deepseek-v4-flash ROM -- a CLOSED cell that agrees with its oracle",
+   "per_position_kernel": "main.hc_head",
+   "position_0": {
+    "max": 6240.0,
+    "min": -9280.0
+   },
+   "positions_after": {
+    "max": 244.0,
+    "median_max": 192.0,
+    "min": -201.0
+   },
+   "reading": "the same shape: the first traced row is two orders of magnitude larger than the rest, in a cell whose token matches its oracle exactly.  So a large first row is a property of how HeadTrace summarises its first invocation -- a destination buffer whose unwritten rows are still in the summary -- and NOT evidence of a numeric defect."
+  },
+  "what_I_claimed": "that position 0's collapse being three thousand times larger than every other position is a defect, and that it contaminates the prompt through the KV cache",
+  "what_I_should_have_done_first": "run the control before writing the diagnosis.  Two closed V4-Flash cells carry head traces in the same schema and cost nothing to read; one of them refutes the reading in a single command.",
+  "what_survives": "only the magnitude fact, and it is weaker than I stated: the device's assembled logits peak at 17.0 where the oracle's first token has top1 27.3745.  That is still an unexplained difference in the logit VECTOR rather than in a tie-break, but with the position-0 reading withdrawn there is no localisation left in this record -- the depth bisection remains the instrument."
+ },
+ "answer_superseded_by_CORRECTION": true,
  "not_a_claim": [
   "this does not name the operator: the collapse is where the magnitude is OBSERVED, not necessarily where it originates",
   "no cell is closed by this record"
