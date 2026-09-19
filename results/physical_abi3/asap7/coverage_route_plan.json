@@ -8,11 +8,11 @@
   "ordering": "fan-in descending, then source bytes ascending: a module many parents instantiate bounds all of them with one route, and among equals the smaller source synthesises sooner",
   "producer": {
     "git": {
-      "commit": "6700ef8b29d287e0ff8e4798ddb01a4733e27296"
+      "commit": "1e284a425ace9cd84022c905e551d9d65d3dd442"
     },
     "tool": "tools/plan_asap7_coverage_routes.py"
   },
-  "route_count": 51,
+  "route_count": 48,
   "routes": [
     {
       "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_fp32_transcendental_cr_rne --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
@@ -35,36 +35,6 @@
       "submodules": 0
     },
     {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_rx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
-      "fan_in": 2,
-      "instantiated_by": [
-        "ot_a3_link_endpoint",
-        "ot_a3_link_node"
-      ],
-      "module": "ot_a3_link_rx_channel",
-      "source_bytes": 16560,
-      "sources": [
-        "rtl/lib/ot_crc_pkg.sv",
-        "rtl/abi3/ot_a3_link_channel.sv"
-      ],
-      "submodules": 0
-    },
-    {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_link_tx_channel --source rtl/lib/ot_crc_pkg.sv --source rtl/abi3/ot_a3_link_channel.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
-      "fan_in": 2,
-      "instantiated_by": [
-        "ot_a3_link_endpoint",
-        "ot_a3_link_node"
-      ],
-      "module": "ot_a3_link_tx_channel",
-      "source_bytes": 16560,
-      "sources": [
-        "rtl/lib/ot_crc_pkg.sv",
-        "rtl/abi3/ot_a3_link_channel.sv"
-      ],
-      "submodules": 0
-    },
-    {
       "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_vector_hadamard --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/abi3/ot_a3_format_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_vector_hadamard.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
       "fan_in": 2,
       "instantiated_by": [
@@ -80,23 +50,6 @@
         "rtl/abi3/ot_a3_vector_hadamard.sv"
       ],
       "submodules": 0
-    },
-    {
-      "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_mac_lane_pipe --source rtl/abi3/ot_a3_engine_pkg.sv --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_mac_lane_pipe.sv --source rtl/proto/ot_mac_bf16_fp32_pipe.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
-      "fan_in": 2,
-      "instantiated_by": [
-        "ot_a3_engine_array",
-        "ot_a3_tensor_routed_matmul"
-      ],
-      "module": "ot_a3_mac_lane_pipe",
-      "source_bytes": 71175,
-      "sources": [
-        "rtl/abi3/ot_a3_engine_pkg.sv",
-        "rtl/ot_fp32_rne_pkg.sv",
-        "rtl/abi3/ot_a3_mac_lane_pipe.sv",
-        "rtl/proto/ot_mac_bf16_fp32_pipe.sv"
-      ],
-      "submodules": 1
     },
     {
       "command": "PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --top ot_a3_qwen_gqa --source rtl/ot_fp32_rne_pkg.sv --source rtl/abi3/ot_a3_fp32_div_rne.sv --source rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv --source rtl/abi3/ot_a3_qwen_gqa.sv --clock-period-ns 4 --stages pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60",
