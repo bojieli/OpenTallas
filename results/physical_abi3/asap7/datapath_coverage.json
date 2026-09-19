@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 55,
-    "uncovered_and_instantiated": 33,
+    "covered_by_a_closed_block": 56,
+    "uncovered_and_instantiated": 32,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 38
+    "with_their_own_closed_record": 39
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -1733,9 +1733,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_vector_mhc_pre_tile_scheduler.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_hc_pre_t1_descriptor_rne"
       ],
@@ -1836,7 +1836,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "0282a724a4ddc7b4dce9a4b0acb0528b5b511111"
+      "commit": "27c927c198918b2290152174d951dcd05f93f6a6"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2347,12 +2347,6 @@
         "ot_a3_engine_array"
       ],
       "module": "ot_a3_vector_mhc_post"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_hc_pre_t1_descriptor_rne"
-      ],
-      "module": "ot_a3_vector_mhc_pre_tile_scheduler"
     },
     {
       "instantiated_by": [
