@@ -1,0 +1,98 @@
+{
+ "answer": "between 8 and 16.  At 8 tokens the device's first token is the oracle's; at 16 it is not.",
+ "both_golds_reproduce": {
+  "p16": [
+   [
+    270,
+    17171,
+    295,
+    223
+   ],
+   [
+    270,
+    17171,
+    295,
+    223
+   ]
+  ],
+  "p8": [
+   [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   [
+    14,
+    1320,
+    16,
+    42250
+   ]
+  ],
+  "why_it_matters": "the oracle's INTERMEDIATES are not reproducible past position 7, so a gold at 16 tokens had to be checked rather than assumed.  Two fresh processes each, identical -- so the P16 disagreement is the device's."
+ },
+ "not_a_claim": [
+  "the candidate path is not shown to be at fault; it is what differs between the two prompt lengths",
+  "no cell is closed by this record"
+ ],
+ "question": "the V4.1 HBM cell agrees with the shipped oracle on an 8-token prompt and disagrees at the FIRST token on a 32-token one.  Where between them does prefill stop being right?",
+ "schema": "opentallas.result.v41_prefill_breaks_between_8_and_16.v1",
+ "the_bracket": [
+  {
+   "agreement": true,
+   "compared": 2,
+   "device": [
+    14,
+    1320,
+    42250,
+    294
+   ],
+   "first_token_agrees": true,
+   "note": "the prefix contract passes: every token compared matches",
+   "oracle": [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   "prompt_tokens": 8,
+   "terminal_accepted": true
+  },
+  {
+   "agreement": false,
+   "compared": 4,
+   "device": [
+    260,
+    45191,
+    17171,
+    295
+   ],
+   "first_token_agrees": false,
+   "note": "the FIRST token differs, so prefill is already wrong.  device[2] and device[3] equal oracle[1] and oracle[2], which is a coincidence of two chaotic continuations rather than a shift: once the first token differs the rest is a different sequence.",
+   "oracle": [
+    270,
+    17171,
+    295,
+    223
+   ],
+   "prompt_tokens": 16,
+   "terminal_accepted": false
+  },
+  {
+   "device": [
+    305
+   ],
+   "first_token_agrees": false,
+   "note": "the original observation",
+   "oracle": [
+    13806,
+    345,
+    7472,
+    49665
+   ],
+   "prompt_tokens": 32
+  }
+ ],
+ "the_next_bracket": "9 through 15 tokens would separate 'a second block exists' from 'more than four compressions have happened'.  Each point is one pinned workload, one oracle run of about 40 seconds, and one device run of about 25 minutes.",
+ "what_changes_between_8_and_16": "the candidate block is EIGHT positions wide.  At 8 tokens exactly ONE candidate block completes; at 16, TWO do.  The ratio-2 compressor also fires four times instead of eight.  So the first thing that exists at 16 and not at 8 is a SECOND completed candidate block -- and that is also where the oracle's own reproducibility ends, which is suggestive but not the same claim."
+}
