@@ -77,6 +77,7 @@ module ot_a3_mac_lane_pipe #(
 );
     localparam [7:0] ERR_NONE              = ot_a3_engine_pkg::ERR_NONE;
     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;
+    localparam [7:0] ERR_PRODUCT_RANGE     = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;
     localparam [7:0] ERR_ACCUMULATE_RANGE  = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;
     localparam [7:0] ERR_SHAPE             = ot_a3_engine_pkg::ERR_SHAPE;
 
@@ -166,6 +167,46 @@ module ot_a3_mac_lane_pipe #(
             slot_d4 <= slot_d3;  slot_d5 <= slot_d4;
         end
 
+    //: PRODUCT RANGE IS A SEPARATE REFUSAL FROM ACCUMULATE RANGE, and the fused
+    //: MAC cannot tell them apart: ot_mac_bf16_fp32_pipe reports one ``E_RANGE``
+    //: for a result that leaves the finite range, whichever step left it.  The
+    //: legacy lane refuses a product that overflows binary32 with
+    //: ERR_PRODUCT_RANGE at its S_MUL and an accumulation that overflows with
+    //: ERR_ACCUMULATE_RANGE at its S_ACC, and the engine campaign's
+    //: ``matmul_bf16_product_overflow`` asks for the first: it wanted fault 2 and
+    //: got 3.
+    //:
+    //: So the product is tested HERE, against the same authority the legacy lane
+    //: tests -- ``ot_fp32_rne_pkg::fp32_mul_rne``'s own out-of-range tag -- which
+    //: makes the two lanes agree by construction rather than by a re-derived
+    //: exponent bound.  Only the TAG is read, so the product value itself is dead
+    //: logic and is removed in synthesis; and a BF16 x BF16 product is EXACT in
+    //: binary32 (8 + 8 significand bits inside 24), so there is no rounding step
+    //: at which a fused and a sequential multiply could disagree about overflow.
+    //:
+    //: The flag is delayed by the pipe's own five stages so that it is considered
+    //: on the SAME cycle as that MAC's ``err``.  Latching it at issue instead
+    //: would let a later MAC's product fault beat an earlier MAC's nonfinite
+    //: operand, which is not the order the legacy lane refuses in.
+    wire [33:0] iss_dec_a = ot_a3_format_pkg::decode_element(cfg_dtype_a, a_rd_data);
+    wire [33:0] iss_dec_b = ot_a3_format_pkg::decode_element(cfg_dtype_b, b_rd_data);
+    wire [33:0] iss_raw_product =
+        ot_fp32_rne_pkg::fp32_mul_rne(iss_dec_a[31:0], iss_dec_b[31:0]);
+    wire iss_product_range = iss_v && iss_in_range
+                             && (iss_dec_a[33:32] == 2'd0)
+                             && (iss_dec_b[33:32] == 2'd0)
+                             && (iss_raw_product[33:32] != 2'd0);
+
+    reg pr_d1, pr_d2, pr_d3, pr_d4, pr_d5;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            pr_d1 <= 1'b0; pr_d2 <= 1'b0; pr_d3 <= 1'b0;
+            pr_d4 <= 1'b0; pr_d5 <= 1'b0;
+        end else begin
+            pr_d1 <= iss_product_range; pr_d2 <= pr_d1; pr_d3 <= pr_d2;
+            pr_d4 <= pr_d3;             pr_d5 <= pr_d4;
+        end
+
     integer ai;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
@@ -193,7 +234,10 @@ module ot_a3_mac_lane_pipe #(
             error_code <= ((cfg_rows == 0) || (cfg_cols == 0) || (cfg_depth == 0))
                           ? ERR_SHAPE : ERR_NONE;
         else if (pipe_ov && (error_code == ERR_NONE)) begin
+            //: the legacy lane's own priority: a nonfinite operand first, then a
+            //: product that left the range, then an accumulation that did
             if (pipe_err == 2'd1)      error_code <= ERR_OPERAND_NONFINITE;
+            else if (pr_d5)            error_code <= ERR_PRODUCT_RANGE;
             else if (pipe_err == 2'd2) error_code <= ERR_ACCUMULATE_RANGE;
         end
 
@@ -261,7 +305,18 @@ module ot_a3_mac_lane_pipe #(
                             //: exactly as the legacy lane does
                             if (error_code == ERR_NONE)
                                 error_code <= ERR_OPERAND_NONFINITE;
-                        end else begin
+                        //: AND FAIL CLOSED ON A FAULT THE *PIPE* RAISED, not only
+                        //: on one this narrowing can see.  ot_mac_bf16_fp32_pipe
+                        //: reports a nonfinite operand or an out-of-range result
+                        //: through ``err`` and still hands back a FINITE ``y`` -- its
+                        //: contract is that a refusal is never encoded as an
+                        //: infinity -- so ``narrowed`` is clean and this branch used
+                        //: to write the result anyway.  The legacy lane writes
+                        //: NOTHING for a descriptor that faulted, and the engine
+                        //: campaign's ``matmul_bf16_operand_nonfinite`` says so: it
+                        //: wants result count 0 and got 6, with every output word
+                        //: overwritten where the sentinel should have stood.
+                        end else if (error_code == ERR_NONE) begin
                             out_we   <= 1'b1;
                             out_addr <= cfg_out_base +
                                         ({16'b0, row} * {16'b0, cfg_cols}) +
