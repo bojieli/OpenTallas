@@ -1,0 +1,56 @@
+{
+ "answer": "NO, past position 7.  Two forwards in ONE process, same prompt, same weights: positions 0-7 are bit-identical and positions 8-31 differ, with per-position cosines between the oracle and ITSELF falling to 0.596.",
+ "measured": {
+  "median_cosine_among_differing_rows": 0.9014507276429372,
+  "method": "one StreamingDeepSeekV41, two eng.forward calls on the pinned 32-token workload, the final RMS norm's output captured on both and compared row by row",
+  "positions_bit_identical": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "positions_that_differ": 24,
+  "positions_where_even_the_dominant_channel_moves": [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   20,
+   25,
+   28,
+   30
+  ],
+  "post_norm_bit_identical": false,
+  "token_both_runs": 13806,
+  "worst_cosine_against_itself": 0.596222711102038,
+  "worst_position": 12
+ },
+ "not_a_claim": [
+  "the cause of the non-determinism is not established here; a reduction order in the vendor's TileLang sparse-attention or FP8 GEMM kernels is the obvious candidate and is not measured",
+  "this says nothing about whether the DEVICE is right"
+ ],
+ "question": "three separate probes of the shipped V4.1 oracle reported three different summaries for the SAME post-norm row of the SAME prompt.  Is the oracle reproducible?",
+ "schema": "opentallas.result.v41_oracle_nondeterminism.v1",
+ "what_an_instrument_has_to_do_now": [
+  "compare at positions 0-7, where the oracle is exactly reproducible, instead of at the last position",
+  "or compare TOKENS and logit margins, which survive the wobble",
+  "or make the vendor path deterministic before comparing intermediates at depth"
+ ],
+ "what_it_does_NOT_invalidate": {
+  "the_device_side": "the device is deterministic: 305 from the HBM store at 512 positions and 305 from the ROM wafer at 8,192, on separate runs of separate lowerings.",
+  "the_prefix_table": "eleven prefix lengths, each a token rather than an intermediate, and prefix 32 reproduces the committed gold",
+  "the_token_comparison": "both runs emit 13806, and the shipped margin is 2.4947 -- far outside the wobble.  The oracle remains a valid TOKEN comparator, which is what the graded cells are checked against."
+ },
+ "what_it_invalidates": {
+  "my_narrowing_record": "results/abi3/deepseek_v41_divergence_narrowed.json concluded 'the last position's residual is wrong in direction' from a device/oracle comparison at position 31.  That conclusion is withdrawn: the comparison had a noise floor I had not measured, and it is larger than the effect I attributed to the device.",
+  "the_depth_bisection_as_run": "its cosines are matched at the LAST position, which is position 31 -- deep inside the non-reproducible region.  Layer 0's attention scored 0.71 there and I read that as a departure; the oracle disagrees with itself by as much as 0.40 in the same region, so 0.71 is inside the noise and carries no information."
+ },
+ "where_it_starts_is_not_a_coincidence": "positions 0 through 7 reproduce exactly and position 8 is the first that does not.  The V4.1 candidate block is EIGHT positions wide -- a context shorter than one block completes no candidate at all, which is why this vehicle refuses a prompt under eight tokens.  So the non-determinism begins exactly when the first candidate block completes, which points at the sparse-attention candidate path rather than at the dense projections."
+}
