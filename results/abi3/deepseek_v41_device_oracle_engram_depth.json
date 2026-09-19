@@ -1,0 +1,66 @@
+{
+  "answer": "nowhere in particular: it DRIFTS.  At layer 1 the residual stream entering the gate and the gate's own output both agree to ONE BF16 ulp -- cosine 0.999998, max|diff| 0.03125.  At layer 14 the same two tensors are at cosine 0.9981 with max|diff| 48 against a stream peak of 1264, which is 3.8 percent.  There is no step change and no layer at which the device breaks.",
+  "device": {
+    "capability": "configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json",
+    "deployment": "the published shipped V4.1 HBM c512 cell, 8 nodes",
+    "note": "the layer-1 gate is issued EIGHT times, once per node, before layer 14 is reached"
+  },
+  "measured": {
+    "layer01": {
+      "engram_input_residual_stream": {
+        "cosine": 0.9999984173062454,
+        "max_abs_diff": 0.03125,
+        "peak_abs_value": 9.3125,
+        "relative": 0.003355704697986577,
+        "rows": 40,
+        "rows_that_differ": 40
+      },
+      "engram_output": {
+        "cosine": 0.9999981817187824,
+        "max_abs_diff": 0.03125,
+        "peak_abs_value": 9.3125,
+        "relative": 0.003355704697986577,
+        "rows": 40,
+        "rows_that_differ": 40
+      },
+      "operator": 2389
+    },
+    "layer14": {
+      "engram_input_residual_stream": {
+        "cosine": 0.9980895206945393,
+        "max_abs_diff": 48.0,
+        "peak_abs_value": 1264.0,
+        "relative": 0.0379746835443038,
+        "rows": 40,
+        "rows_that_differ": 40
+      },
+      "engram_output": {
+        "cosine": 0.9981200121597485,
+        "max_abs_diff": 48.0,
+        "peak_abs_value": 1280.0,
+        "relative": 0.0375,
+        "rows": 40,
+        "rows_that_differ": 40
+      },
+      "operator": 6753
+    }
+  },
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "a high cosine is necessary for a correct intermediate and not sufficient"
+  ],
+  "question": "with the comparator's Engram restored, where does the V4.1 device part from the oracle?  The Engram runs at layers 1 and 14 and its operands are unambiguously the same tensor on both sides, which makes those two layers a bisection step that needs no heuristic tensor matching.",
+  "schema": "opentallas.result.v41_device_oracle_engram_depth.v1",
+  "what_it_does_not_settle": [
+    "whether the drift is legitimate rounding on both sides or the device rounding differently somewhere: that needs a per-operator error budget, which this does not build",
+    "the drift between layers 14 and 39 and through the head, which is where an argmax flip actually happens; two checkpoints bound the shape, not the whole curve",
+    "the pinned 32-token comparison, whose gold does not move under the engram fix and which the three V4.1 cells still fail"
+  ],
+  "what_it_rules_out": [
+    "a broken engram on the device: its gate output matches the vendor form to one ulp, and the deployment declares engram_gate_pinned_form_v1 for both engram operators",
+    "a broken engram ADDRESSING on the device: the two n-gram hash implementations agree on all 48 columns at every position (results/abi3/deepseek_v41_ngram_hash_identity.json)",
+    "the earlier reading that layer 1's sparse attention sits at cosine 0.922 -- that bisection ran against the comparator while ITS engram was dead"
+  ],
+  "why_this_prompt": "P10 is fill-invariant at every tap and every row (results/abi3/deepseek_v41_oracle_cache_invariance.json run per prefix), so the comparator is trustworthy here at every position rather than only at rows 0-7",
+  "workload": "build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json"
+}
