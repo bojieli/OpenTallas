@@ -71,6 +71,8 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_mac_lane.sv",
     "rtl/abi3/ot_a3_selection_argmax.sv",
     "rtl/abi3/ot_a3_dma_index_mover.sv",
+    #: ot_a3_vector_add instantiates the pipelined binary32 adder.
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
     "rtl/abi3/ot_a3_vector_add.sv",
     "rtl/abi3/ot_a3_vector_convert.sv",
     "rtl/abi3/ot_a3_vector_scale.sv",

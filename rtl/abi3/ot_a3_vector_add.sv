@@ -64,6 +64,8 @@ module ot_a3_vector_add (
     // Both operand memories answer one cycle after the address is driven.
     localparam [2:0] S_WAIT  = 3'd5;
     localparam [2:0] S_ADD   = 3'd2;
+    //: the pipelined adder's answer arrives LATENCY cycles after valid_in
+    localparam [2:0] S_PIPE  = 3'd6;
     localparam [2:0] S_STORE = 3'd3;
     localparam [2:0] S_DONE  = 3'd4;
 
@@ -73,8 +75,39 @@ module ot_a3_vector_add (
 
     wire [33:0] left = ot_a3_format_pkg::decode_bf16(a_rd_data[15:0]);
     wire [33:0] right = ot_a3_format_pkg::decode_bf16(b_rd_data[15:0]);
-    wire [33:0] added = ot_fp32_rne_pkg::fp32_add_rne(left[31:0], right[31:0]);
     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(sum);
+
+    //: THE ADD IS PIPELINED.  ``ot_fp32_rne_pkg::fp32_add_rne`` is this project's
+    //: scalar authority for binary32 addition and stays so; what it is not is fast.
+    //: One call of it between registers put decode, a 28-bit jamming align, the add,
+    //: a 27-bit normalizing shift and the round in a single cone, and the routed
+    //: block reported 154.9 MHz at a 4 ns target -- the lowest block in the ABI 3.0
+    //: inventory and well under the 276.9 MHz design limiter.
+    //:
+    //: rtl/proto/ot_fp32_add_rne_pipe.sv is the same arithmetic in five stages and
+    //: is already qualified BIT-IDENTICAL to that authority, including the two
+    //: places the authority is deliberately not IEEE-754 -- (-0) + (-0) is +0, and
+    //: every zero result is canonical +0 -- with a nonfinite operand and an
+    //: out-of-range result failing closed through ``err`` rather than becoming an
+    //: infinity.  So this is a latency change and not a numeric one.
+    //:
+    //: THE ELEMENT RATE IMPROVES EVEN THOUGH THE LATENCY GROWS.  This engine already
+    //: spent four cycles per element -- issue, wait, add, store -- and now spends
+    //: nine, but at 4 ns it could not close at all.  Five extra cycles against the
+    //: clock the cone was costing is the trade, and it is a gain rather than a
+    //: wash.  An interleaved II=1 form would be better still and is a larger
+    //: rewrite: it needs the address carried through the pipe, which is the
+    //: companion pattern ot_a3_mac_lane_pipe already uses.
+    reg         add_valid;
+    wire [31:0] pipe_y;
+    wire [1:0]  pipe_err;
+    wire        pipe_valid;
+    ot_fp32_add_rne_pipe adder (
+        .clk(clk), .rst_n(rst_n),
+        .valid_in(add_valid),
+        .a(left[31:0]), .b(right[31:0]),
+        .y(pipe_y), .err(pipe_err), .valid_out(pipe_valid)
+    );
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -93,6 +126,7 @@ module ot_a3_vector_add (
             out_data <= 32'b0;
             index <= 32'b0;
             sum <= 32'b0;
+            add_valid <= 1'b0;
         end else begin
             done <= 1'b0;
             out_we <= 1'b0;
@@ -128,15 +162,36 @@ module ot_a3_vector_add (
                 end
 
                 S_ADD: begin
+                    //: the operand check stays HERE, ahead of the adder, so a
+                    //: nonfinite operand is refused before it is issued and the
+                    //: refusal order is the one this engine always had
                     if (left[33:32] != 2'd0 || right[33:32] != 2'd0) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if (added[33:32] != 2'd0) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
-                        state <= S_DONE;
                     end else begin
-                        sum <= added[31:0];
-                        state <= S_STORE;
+                        //: one cycle of valid_in, with the operands the memories are
+                        //: holding; the adder latches them on this edge
+                        add_valid <= 1'b1;
+                        state <= S_PIPE;
+                    end
+                end
+
+                S_PIPE: begin
+                    add_valid <= 1'b0;
+                    if (pipe_valid) begin
+                        if (pipe_err != 2'd0) begin
+                            //: err 1 is a nonfinite operand, which the check above
+                            //: has already excluded; err 2 is a sum that left the
+                            //: binary32 range, which is this engine's
+                            //: ERR_ACCUMULATE_RANGE
+                            error_code <= (pipe_err == 2'd1)
+                                          ? ERR_OPERAND_NONFINITE
+                                          : ERR_ACCUMULATE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            sum <= pipe_y;
+                            state <= S_STORE;
+                        end
                     end
                 end
 
