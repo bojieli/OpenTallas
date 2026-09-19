@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 58,
-    "uncovered_and_instantiated": 30,
+    "covered_by_a_closed_block": 59,
+    "uncovered_and_instantiated": 29,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 41
+    "with_their_own_closed_record": 42
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -1460,9 +1460,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_reduction_expert_sum.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1838,7 +1838,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "f7a1332ae9a717125729ee543e97b87a8f7ecb9f"
+      "commit": "d2fd52968035aac3c857c4dc941ce0e6367e53eb"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2288,12 +2288,6 @@
         "ot_a3_qwen_gqa_adapter"
       ],
       "module": "ot_a3_qwen_kv_scatter_adapter"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_reduction_expert_sum"
     },
     {
       "instantiated_by": [
