@@ -1,5 +1,5 @@
 {
-  "answer": "nowhere in particular between 0 and 1, and somewhere in 2..13.  At layer 1 the residual stream entering the gate and the gate's output both agree to ONE BF16 ulp; at layer 14 they are at cosine 0.9981 with max|diff| 48 against a peak of 1264.  The comparator is bit-exact against itself at this prompt, so that difference is the device's, and the layers between the two taps are exactly the first that run the compressed attention path.",
+  "answer": "nowhere in particular.  Layer 1's engram gate agrees to ONE BF16 ulp (0.34% of peak), layer 2's compressed-KV latent to 0.18%, and layer 14's engram gate to 3.75% -- 11.2x over thirteen layers, which is what coherent per-layer accumulation predicts.  The comparator is bit-exact against itself at this prompt, so the difference is the device's; its SHAPE is accumulation rather than a broken operator, and no tap so far isolates a site.",
   "device": {
     "capability": "configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json",
     "deployment": "the published shipped V4.1 HBM c512 cell, 8 nodes",
@@ -66,9 +66,21 @@
     "the earlier reading that layer 1's sparse attention sits at cosine 0.922 -- that bisection ran against the comparator while ITS engram was dead"
   ],
   "where_the_drift_is_introduced": {
+    "and the first tensor on the compressed path AGREES": {
+      "a_trap_this_measurement_walked_into_first": "comparing the device's combine against the compressor's RETURN value -- which is post-RMSNorm -- gave cosine 0.785 and a 139% relative difference, and the device's range [-3.735, 0.587] against the oracle's [-1.781, 1.383] is what exposed it: one side was normalised and the other was not.  The pre-norm range is [-3.734, 0.586].  A 139% divergence at the first compressed layer would have been a very different headline, and it was an alignment error in the comparand.",
+      "cosine": 0.999952092,
+      "device": "the VECTOR.COMPRESS combine, op 3128, output (1, 5, 512)",
+      "max_abs_diff": 0.00671285,
+      "oracle": "the INPUT to Compressor.norm -- the module returns self.norm(kv), so its RMSNorm's input is the pooled latent before the norm, which is what the device's combine holds",
+      "reading": "0.18%, the same order as layer 1's 0.34%.  The compressor is not where the drift is introduced; it starts at the same small per-layer difference the uncompressed layers show and accumulates from there.",
+      "relative_to_peak": 0.001798,
+      "what": "layer 2's pooled compressed-KV latent, the first thing the compressed path produces"
+    },
     "argument": "layer 1's engram gate agrees to ONE BF16 ulp on both its input and its output, so everything up to and including layer 1 matches.  Layer 14's agrees to 0.998 with max|diff| 48 against a peak of 1264.  The drift is therefore created between them.",
     "bounded_to": "layers 2 through 13",
-    "growth_is_faster_than_one_rounding_per_layer": "0.34% at layer 1 to 3.75% at layer 14 is about 100x over thirteen layers.  Accumulating one independent BF16 rounding per layer would predict sqrt(13) = 3.6x, and accumulating them coherently 13x.  100x is larger than either, which is a reason to look for a systematically different numeric choice in the compressed path rather than to call it benign accumulation -- but it is a reason, not a measurement.",
+    "growth_is_LINEAR, and my previous arithmetic was wrong": {
+      "corrected": "0.3356% at layer 1 to 3.75% at layer 14 is 11.2x over thirteen layers.  The earlier version of this record said 'about 100x' and inferred from that a systematically different numeric choice in the compressed path.  11.2x is the arithmetic, and 11.2x is what COHERENT per-layer accumulation predicts -- linear would be 13x, a random walk sqrt(13) = 3.6x.  So the growth rate is evidence FOR benign accumulation, not against it, and the inference is withdrawn."
+    },
     "what_those_layers_have_that_0_and_1_do_not": "compress_ratios is 0 for layers 0 and 1 and 2 for layers 2 through 19, so layers 2..13 are the first that run the COMPRESSED attention path -- the compressor, the indexer and its FP4 activation quantisation, and the sparse selection.  Layers 0 and 1 are sliding-window only."
   },
   "why_this_prompt": "P10 is fill-invariant at every tap and every row (results/abi3/deepseek_v41_oracle_cache_invariance.json run per prefix), so the comparator is trustworthy here at every position rather than only at rows 0-7",
