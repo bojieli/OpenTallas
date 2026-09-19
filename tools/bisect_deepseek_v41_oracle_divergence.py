@@ -106,7 +106,21 @@ STORES = {
         "",
         "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
     ),
+    # The HBM comparator at eight nodes with the widened completion-level board.  A
+    # store entry exists per CAPABILITY, not per deployment: pointing --deployment at
+    # an 8-node HBM build while the store named the 2-node wafer record was refused
+    # with "the admitted topology declares 8 nodes; the capability admits 2", which is
+    # the check doing its job.
+    "shipped_hbm": (
+        "",
+        "configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json",
+    ),
 }
+
+
+#: Mutable so the tap position reaches ``rows_of`` without threading it through every
+#: hook closure; set once from the command line before the forward pass runs.
+_TAP_POSITION = [-1]
 
 
 def _git(*args: str) -> str:
@@ -220,10 +234,17 @@ def oracle_checkpoints(
         array = np.asarray(value.float().cpu(), dtype=np.float64)
         if name == "head":
             return [(name, array[0].reshape(-1))] if array.ndim >= 2 else []
+        # WHICH POSITION the tap reads.  The default is the last, because the device
+        # walks positions while the oracle prefills in one call and the last is the one
+        # the head consumes.  But the shipped oracle is bit-identical to itself only at
+        # positions 0-7 -- measured row by row -- so a comparison at the last position of
+        # a long prompt has a noise floor of up to 0.40 in cosine and carries no
+        # information.  ``--tap-position`` moves the tap into the reproducible region.
+        _tap = _TAP_POSITION[0]
         if array.ndim < 2:
             return [(f"{name}.all", array.reshape(-1))] if array.size else []
         rows: list[tuple[str, np.ndarray]] = []
-        at_position = array[0, -1]
+        at_position = array[0, _tap] if abs(_tap) < array.shape[1] else array[0, -1]
         if at_position.ndim == 2:  # [hc_mult, dim] or [heads, head_dim]
             rows.extend(
                 (f"{name}.s{stream}", at_position[stream].reshape(-1))
@@ -497,6 +518,16 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     parser.add_argument(
+        "--tap-position",
+        type=int,
+        default=-1,
+        help=(
+            "which prompt position the oracle taps read; -1 is the last.  The shipped "
+            "oracle reproduces itself only at positions 0-7, so a comparison outside "
+            "that range has a noise floor larger than most effects"
+        ),
+    )
+    parser.add_argument(
         "--shipped",
         action="store_true",
         help=(
@@ -530,6 +561,7 @@ def main(argv: list[str] | None = None) -> int:
         case = record["results"][WORKLOAD_ID]
         prompt = [int(t) for t in case["prompt_token_ids"]]
 
+    _TAP_POSITION[0] = int(arguments.tap_position)
     taps = oracle_checkpoints(
         prompt,
         arguments.deep_layer or (),
