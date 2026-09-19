@@ -82,6 +82,8 @@ module ot_a3_vector_index_score #(
     //: the pipelined reduction adds answer LATENCY cycles after valid_in
     localparam [4:0] S_REDUCE_1W   = 5'd14;
     localparam [4:0] S_REDUCE_2W   = 5'd15;
+    //: the dot product's narrowing and ReLU, moved off the product-add's cycle
+    localparam [4:0] S_DOT_FINAL   = 5'd16;
 
     reg [4:0] state;
     reg [1:0] scan_kind;
@@ -116,6 +118,18 @@ module ot_a3_vector_index_score #(
         );
     wire [18:0] dot_narrowed =
         ot_fp32_rne_pkg::fp32_to_bf16_rne(dot_sum[31:0]);
+    //: THE NARROWING OFF THE PRODUCT-ADD'S CYCLE.  With the head reduction pipelined,
+    //: the critical path became k_rd_data[10] to relu_value[24] -- 117 cell arcs
+    //: holding the operand decode, the FUSED bf16 product-add, this narrowing and the
+    //: ReLU, all between two registers, and the block sat at 235.7 MHz.  The narrowing
+    //: reads the ACCUMULATOR instead, which is a register, so the cone ends at the
+    //: product-add and the narrowing starts a cycle of its own.
+    //:
+    //: It costs ONE cycle per head per candidate, taken once at the end of a
+    //: cfg_depth-long accumulation (128 for the shipped indexer), and it changes no
+    //: value: the same fp32_to_bf16_rne of the same binary32 sum, one cycle later.
+    wire [18:0] acc_narrowed =
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(accumulator);
     wire [33:0] weighted_product =
         ot_fp32_rne_pkg::fp32_mul_rne(relu_value, decoded_w[31:0]);
     wire [18:0] weighted_narrowed =
@@ -297,25 +311,31 @@ module ot_a3_vector_index_score #(
                         state <= S_DONE;
                     end else begin
                         work_count <= work_count + 1;
+                        accumulator <= dot_sum[31:0];
                         if (depth_index + 1 == cfg_depth) begin
-                            if (dot_narrowed[18:17] != 0) begin
-                                error_code <= ERR_ACCUMULATE_RANGE;
-                                state <= S_DONE;
-                            end else begin
-                                if (dot_narrowed[16])
-                                    pending_saturation_count <=
-                                        pending_saturation_count + 1;
-                                // ReLU is applied after the architectural
-                                // BF16 dot-product boundary.
-                                relu_value <= dot_narrowed[15]
-                                    ? 32'b0 : {dot_narrowed[15:0], 16'b0};
-                                state <= S_WEIGHT_ISSUE;
-                            end
+                            //: the sum is latched; the narrowing and the ReLU read it
+                            //: from the register on the next cycle
+                            state <= S_DOT_FINAL;
                         end else begin
-                            accumulator <= dot_sum[31:0];
                             depth_index <= depth_index + 1;
                             state <= S_DOT_ISSUE;
                         end
+                    end
+                end
+
+                S_DOT_FINAL: begin
+                    if (acc_narrowed[18:17] != 0) begin
+                        error_code <= ERR_ACCUMULATE_RANGE;
+                        state <= S_DONE;
+                    end else begin
+                        if (acc_narrowed[16])
+                            pending_saturation_count <=
+                                pending_saturation_count + 1;
+                        // ReLU is applied after the architectural
+                        // BF16 dot-product boundary.
+                        relu_value <= acc_narrowed[15]
+                            ? 32'b0 : {acc_narrowed[15:0], 16'b0};
+                        state <= S_WEIGHT_ISSUE;
                     end
                 end
 

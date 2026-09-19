@@ -168,12 +168,16 @@ MUTATIONS: tuple[dict[str, str], ...] = (
         "id": "index_score_remove_relu",
         "source": "rtl/abi3/ot_a3_vector_index_score.sv",
         "description": "propagate negative rounded head scores through ReLU",
+        #: the narrowing moved off the product-add's cycle, so the ReLU now reads
+        #: acc_narrowed -- the same fp32_to_bf16_rne of the same sum, one cycle later
+        #: -- and this mutation follows it.  What it tests is unchanged: drop the
+        #: negative-score clamp and the campaign must notice.
         "before": (
-            "relu_value <= dot_narrowed[15]\n"
-            "                                    ? 32'b0 : "
-            "{dot_narrowed[15:0], 16'b0};"
+            "relu_value <= acc_narrowed[15]\n"
+            "                            ? 32'b0 : "
+            "{acc_narrowed[15:0], 16'b0};"
         ),
-        "after": "relu_value <= {dot_narrowed[15:0], 16'b0};",
+        "after": "relu_value <= {acc_narrowed[15:0], 16'b0};",
     },
     {
         "id": "compress_swap_output_planes",
