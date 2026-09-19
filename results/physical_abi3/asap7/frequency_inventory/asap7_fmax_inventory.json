@@ -112,6 +112,16 @@
       "target_headroom": 0.3930475
     },
     {
+      "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_link_endpoint",
+      "family": "abi3_datapath",
+      "fmax_hz": 416851000.0,
+      "record": "results/physical_abi3/asap7/a3_link_endpoint/pnr_4p0ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 1451.5,
+      "target_headroom": 0.400265
+    },
+    {
       "at_target_clock_period_ns": 2.4,
       "block": "ot_a3_fp32_div_rne_pipe",
       "family": "abi3_datapath",
@@ -160,6 +170,16 @@
       "slew_margin_percent": 60.0,
       "standard_cell_area_um2": 29396.9,
       "target_headroom": 0.0249054
+    },
+    {
+      "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_program_header",
+      "family": "abi3_datapath",
+      "fmax_hz": 540922000.0,
+      "record": "results/physical_abi3/asap7/a3_program_header/pnr_4p0ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 596.949,
+      "target_headroom": 0.5378250000000001
     },
     {
       "at_target_clock_period_ns": 4.0,
@@ -223,6 +243,16 @@
     },
     {
       "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_descriptor_record_validator",
+      "family": "abi3_datapath",
+      "fmax_hz": 677216000.0,
+      "record": "results/physical_abi3/asap7/a3_descriptor_record_validator/pnr_4p0ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 1604.53,
+      "target_headroom": 0.6308425
+    },
+    {
+      "at_target_clock_period_ns": 4.0,
       "block": "ot_a3_reduction_balanced_sum",
       "family": "abi3_datapath",
       "fmax_hz": 785535000.0,
@@ -260,6 +290,16 @@
       "slew_margin_percent": 40.0,
       "standard_cell_area_um2": 2971.11,
       "target_headroom": 0.527108
+    },
+    {
+      "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_place_table",
+      "family": "abi3_datapath",
+      "fmax_hz": 850426000.0,
+      "record": "results/physical_abi3/asap7/a3_place_table/pnr_4p0ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 3082.82,
+      "target_headroom": 0.7060299999999999
     },
     {
       "at_target_clock_period_ns": 1.2,
@@ -515,10 +555,10 @@
     "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 85,
-    "distinct_blocks_with_a_closed_routed_record": 50,
-    "post_route_record_count": 133,
-    "record_count": 209
+    "closed_routed_record_count": 89,
+    "distinct_blocks_with_a_closed_routed_record": 54,
+    "post_route_record_count": 137,
+    "record_count": 213
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -604,7 +644,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "2b427887ab5d232fd667bfe8e8c49ca00ffcffd9"
+      "commit": "b2a1720918a77ea19d82e61d2708c7c2de72cce6"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -631,6 +671,29 @@
       "standard_cell_area_um2": 927.011,
       "target_clock_period_ns": 4.0,
       "target_headroom": 0.5405775
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_descriptor_record_validator",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 677216000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_descriptor_record_validator/pnr_4p0ns_coverage.json",
+      "record_sha256": "60b1f2dc1fcd20c2747964e0b1b79a0f1fcdaedc885448f568c1b9011483a9a3",
+      "setup_wns_ns": 2.52337,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1604.53,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.6308425
     },
     {
       "antenna_violating_nets": 0,
@@ -1396,6 +1459,29 @@
     },
     {
       "antenna_violating_nets": 0,
+      "block": "ot_a3_link_endpoint",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 416851000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_link_endpoint/pnr_4p0ns_coverage.json",
+      "record_sha256": "da0654c11676e47e31a81471feab16c54734f34fc91863c1bafb3711b8a71099",
+      "setup_wns_ns": 1.60106,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 1451.5,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.400265
+    },
+    {
+      "antenna_violating_nets": 0,
       "block": "ot_a3_link_return",
       "closed": true,
       "drc_errors": 0,
@@ -1993,6 +2079,52 @@
       "standard_cell_area_um2": 60955.4,
       "target_clock_period_ns": 2.6,
       "target_headroom": -4.210538461538461
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_place_table",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 850426000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_place_table/pnr_4p0ns_coverage.json",
+      "record_sha256": "cac119f20444a542b995e3ea9e3bbbb40147a187cf77c43436a013a314d791a1",
+      "setup_wns_ns": 2.8241199999999997,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3082.82,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.7060299999999999
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_program_header",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 540922000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_program_header/pnr_4p0ns_coverage.json",
+      "record_sha256": "5be454bd2be530bc4a3846127dc2ec90fed813b322ff17c85c0bc6815c542a02",
+      "setup_wns_ns": 2.1513000000000004,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 596.949,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.5378250000000001
     },
     {
       "antenna_violating_nets": 0,

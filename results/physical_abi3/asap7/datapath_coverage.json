@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 50,
-    "uncovered_and_instantiated": 38,
+    "covered_by_a_closed_block": 54,
+    "uncovered_and_instantiated": 34,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 33
+    "with_their_own_closed_record": 37
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -908,9 +908,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_descriptor_record_validator.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_qwen_kv_scatter_adapter"
       ],
@@ -1250,9 +1250,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_link_endpoint.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_wafer_multicast_adapter"
       ],
@@ -1399,9 +1399,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_place_table.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1409,9 +1409,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_program_header.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_device_top"
       ],
@@ -1836,7 +1836,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "2b427887ab5d232fd667bfe8e8c49ca00ffcffd9"
+      "commit": "b2a1720918a77ea19d82e61d2708c7c2de72cce6"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2215,12 +2215,6 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_qwen_kv_scatter_adapter"
-      ],
-      "module": "ot_a3_descriptor_record_validator"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_engine_array"
@@ -2282,27 +2276,9 @@
     },
     {
       "instantiated_by": [
-        "ot_a3_wafer_multicast_adapter"
-      ],
-      "module": "ot_a3_link_endpoint"
-    },
-    {
-      "instantiated_by": [
         "ot_a3_engine_array"
       ],
       "module": "ot_a3_mac_lane"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_place_table"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_device_top"
-      ],
-      "module": "ot_a3_program_header"
     },
     {
       "instantiated_by": [
