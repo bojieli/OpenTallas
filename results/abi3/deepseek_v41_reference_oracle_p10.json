@@ -1,0 +1,67 @@
+{
+ "engine": "runtime/reference/deepseek_v41_oracle.py::StreamingDeepSeekV41",
+ "environment": {
+  "cuda_available": true,
+  "device_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "python": "3.10.12",
+  "torch": "2.10.0+cu128",
+  "torch_cuda": "12.8"
+ },
+ "evidence_class": "external_reference_comparator",
+ "expert_numeric_path": "fp8",
+ "initial_max_seq_len": 64,
+ "load_endpoints": {
+  "embed_device": "cpu",
+  "head_bytes": 2647654400,
+  "head_device": "cpu",
+  "head_dtype": "float32",
+  "resident_top_level": [
+   "aligner.w1.bias",
+   "aligner.w1.weight",
+   "aligner.w2.bias",
+   "aligner.w2.weight",
+   "image_end",
+   "image_newline",
+   "image_start",
+   "norm.weight"
+  ]
+ },
+ "model_id": "deepseek-v4.1-flash",
+ "not_a_claim": [
+  "not an accelerator token and not a cell: this is the external comparator over the vendor's own pinned code",
+  "the expert path is the vendor's documented FP8 recast; V4.1's FP4 GEMM is unverified on this GPU and is not claimed here"
+ ],
+ "results": {
+  "TA-DS41-CHAT-1-P10": {
+   "expert_numeric_path": "fp8",
+   "generated_token_count": 4,
+   "generated_token_ids": [
+    56538,
+    16,
+    334,
+    22105
+   ],
+   "max_new_tokens": 4,
+   "prompt_token_count": 10,
+   "selection": "greedy argmax over the float32 logits, ties to the lowest token id",
+   "stop_reason": "max_new_tokens",
+   "vendor_sample_agreements": null,
+   "vendor_sample_disagreements": null,
+   "wall_seconds": 14.787,
+   "workload_digest": "3b39338af6fb5e41eb271025d8ecfc1d32fa3fa5143136f0e63fa42e4ecad4c3"
+  }
+ },
+ "schema": "opentallas.abi3.deepseek_v41_reference_oracle_prefix.v1",
+ "setup_seconds": 7.203,
+ "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "tokenizer_sha256": "c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b",
+ "vendor_source_sha256": {
+  "encoding/encoding.py": "502bdaec8a3fd88ebc24c4721a7038fbe42f2063c664638127056107920035c1",
+  "inference/config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "inference/convert.py": "035028340479145594a81d6084a8424e57363adf83c0d5983914783d95614d76",
+  "inference/engram.py": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+  "inference/kernel.py": "1236c3507019ed176f5dba5e04bcea58867cf654818c6cf138ed4845398c2455",
+  "inference/model.py": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+ }
+}
