@@ -1,98 +1,97 @@
 {
- "answer": "between 8 and 16.  At 8 tokens the device's first token is the oracle's; at 16 it is not.",
- "both_golds_reproduce": {
-  "p16": [
-   [
-    270,
-    17171,
-    295,
-    223
-   ],
-   [
-    270,
-    17171,
-    295,
-    223
-   ]
-  ],
-  "p8": [
-   [
-    14,
+ "a_refinement_on_the_comparator": {
+  "gold_that_does_not": {
+   "p9_run_a": [
     1320,
     16,
-    42250
+    42250,
+    16
    ],
-   [
-    14,
+   "p9_run_b": [
     1320,
+    42250,
     16,
-    42250
-   ]
-  ],
-  "why_it_matters": "the oracle's INTERMEDIATES are not reproducible past position 7, so a gold at 16 tokens had to be checked rather than assumed.  Two fresh processes each, identical -- so the P16 disagreement is the device's."
+    334
+   ],
+   "reading": "at nine tokens the oracle agrees with itself on the FIRST token and diverges after it, so the 9-token bracket point is run with max_new_tokens 1.  Token-level stability is not a simple function of 'positions 0-7'; it has to be checked per workload, which is why every gold here was produced twice."
+  },
+  "golds_that_reproduce_fully": {
+   "p12": 4,
+   "p16": 4,
+   "p8": 4
+  }
  },
+ "answer": "between 8 and 12 tokens.  Eight agrees; twelve does not.",
+ "next": "the 9-token point, one token, is running.  If it disagrees, the defect appears with ANY partial candidate block; if it agrees, the break is between 9 and 12 and the partial block alone is not enough.",
  "not_a_claim": [
-  "the candidate path is not shown to be at fault; it is what differs between the two prompt lengths",
+  "the partial-block path is not shown to be at fault; it is the structural difference the bracket isolates",
   "no cell is closed by this record"
  ],
- "question": "the V4.1 HBM cell agrees with the shipped oracle on an 8-token prompt and disagrees at the FIRST token on a 32-token one.  Where between them does prefill stop being right?",
- "schema": "opentallas.result.v41_prefill_breaks_between_8_and_16.v1",
+ "question": "at what prompt length does the V4.1 device's prefill stop matching the oracle?",
+ "schema": "opentallas.result.v41_prefill_breaks_between_8_and_12.v2",
  "the_bracket": [
   {
-   "agreement": true,
-   "compared": 2,
+   "agrees": true,
    "device": [
     14,
     1320,
     42250,
     294
    ],
-   "first_token_agrees": true,
-   "note": "the prefix contract passes: every token compared matches",
+   "device_first": 14,
    "oracle": [
     14,
     1320,
     16,
     42250
    ],
-   "prompt_tokens": 8,
-   "terminal_accepted": true
+   "oracle_first": 14,
+   "terminal_accepted": true,
+   "tokens": 8
   },
   {
-   "agreement": false,
-   "compared": 4,
+   "agrees": false,
+   "device": [
+    2052,
+    223,
+    19,
+    17
+   ],
+   "device_first": 2052,
+   "oracle": [
+    343,
+    19,
+    79,
+    5826
+   ],
+   "oracle_first": 343,
+   "tokens": 12
+  },
+  {
+   "agrees": false,
    "device": [
     260,
     45191,
     17171,
     295
    ],
-   "first_token_agrees": false,
-   "note": "the FIRST token differs, so prefill is already wrong.  device[2] and device[3] equal oracle[1] and oracle[2], which is a coincidence of two chaotic continuations rather than a shift: once the first token differs the rest is a different sequence.",
+   "device_first": 260,
    "oracle": [
     270,
     17171,
     295,
     223
    ],
-   "prompt_tokens": 16,
-   "terminal_accepted": false
+   "oracle_first": 270,
+   "tokens": 16
   },
   {
-   "device": [
-    305
-   ],
-   "first_token_agrees": false,
-   "note": "the original observation",
-   "oracle": [
-    13806,
-    345,
-    7472,
-    49665
-   ],
-   "prompt_tokens": 32
+   "agrees": false,
+   "device_first": 305,
+   "oracle_first": 13806,
+   "tokens": 32
   }
  ],
- "the_next_bracket": "9 through 15 tokens would separate 'a second block exists' from 'more than four compressions have happened'.  Each point is one pinned workload, one oracle run of about 40 seconds, and one device run of about 25 minutes.",
- "what_changes_between_8_and_16": "the candidate block is EIGHT positions wide.  At 8 tokens exactly ONE candidate block completes; at 16, TWO do.  The ratio-2 compressor also fires four times instead of eight.  So the first thing that exists at 16 and not at 8 is a SECOND completed candidate block -- and that is also where the oracle's own reproducibility ends, which is suggestive but not the same claim."
+ "what_changes_at_nine": "candidate_block_size is 8, so EIGHT tokens complete exactly one candidate block and nine or more add a PARTIAL second one.  The engine's own contract singles that case out: 'the last block is always admitted.  Its block maximum was taken over a partially filled block whose absent tail is minus-infinity padding, so its score is not comparable with a full block's.'  So the first structurally new thing between 8 and 12 is a partially filled candidate block.",
+ "why_selection_itself_is_not_the_variable": "window_size is 128 and index_topk is 512, so at 8, 12 or 16 positions the whole context sits inside the window and every candidate is selected either way.  What differs is not WHICH blocks are chosen but that a partial block exists to be described."
 }
