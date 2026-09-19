@@ -274,6 +274,30 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def synth_memory_max_bits() -> int:
+    """The inferred-memory ceiling ORFS synthesis will map rather than refuse.
+
+    Reads ``OT_SYNTH_MEMORY_MAX_BITS`` when set, defaulting to 65,536 bits -- large
+    enough for the descriptor and window register files these blocks carry, and
+    still a bound rather than an invitation: a block that legitimately needs an SRAM
+    macro should ask for one with ``--memory-macro`` and be measured with it.
+    """
+    import os
+
+    raw = os.environ.get("OT_SYNTH_MEMORY_MAX_BITS")
+    if not raw:
+        return 65536
+    try:
+        value = int(raw)
+    except ValueError:
+        raise FlowError(
+            f"OT_SYNTH_MEMORY_MAX_BITS={raw!r} is not an integer number of bits"
+        ) from None
+    if value < 1:
+        raise FlowError("OT_SYNTH_MEMORY_MAX_BITS must be positive")
+    return value
+
+
 def flow_timeout_seconds() -> int:
     """The place-and-route wall-clock ceiling, overridable for a large block.
 
@@ -1545,6 +1569,15 @@ def orfs_config_lines(
         "export PLACE_DENSITY_LB_ADDON = 0.05",
         "export SYNTH_REPEATABLE_BUILD = 1",
         "export SYNTH_HIERARCHICAL = 0",
+        # ORFS refuses an inferred memory above SYNTH_MEMORY_MAX_BITS rather than
+        # mapping it to flops, and its default is small enough that a descriptor
+        # block's own register file trips it: ``ot_a3_hc_pre_t1_descriptor_rne``
+        # failed synthesis with "Synthesized memory size 4096 exceeds
+        # SYNTH_MEMORY_MAX_BITS".  These blocks have no SRAM macro in the flow --
+        # every routed record here is standard cells plus the platform's fakeram
+        # where one is asked for -- so the right answer is to let yosys map the
+        # array to flops, which is what the routed area then honestly reports.
+        f"export SYNTH_MEMORY_MAX_BITS = {synth_memory_max_bits()}",
         "export LEC_CHECK = 0",
         "export TNS_END_PERCENT = 100",
         # ORFS repairs hold under GLOBAL-ROUTE-ESTIMATED parasitics and the finish
