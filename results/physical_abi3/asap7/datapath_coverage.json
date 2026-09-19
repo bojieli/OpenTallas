@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 59,
-    "uncovered_and_instantiated": 29,
+    "covered_by_a_closed_block": 60,
+    "uncovered_and_instantiated": 28,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 42
+    "with_their_own_closed_record": 43
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -536,7 +536,9 @@
       "ot_a3_fp4kv_fetch"
     ],
     "ot_a3_vector_hadamard": [],
-    "ot_a3_vector_index_score": [],
+    "ot_a3_vector_index_score": [
+      "ot_fp32_add_rne_pipe"
+    ],
     "ot_a3_vector_mhc_post": [],
     "ot_a3_vector_mhc_pre_tile_scheduler": [],
     "ot_a3_vector_rms_norm": [
@@ -1506,9 +1508,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_route_biased_topk.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1838,7 +1840,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "d2fd52968035aac3c857c4dc941ce0e6367e53eb"
+      "commit": "53de91d0dff0273c43724acda706e75dcbffe4ca"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2294,12 +2296,6 @@
         "ot_a3_vector_rope"
       ],
       "module": "ot_a3_rope_lane_pipe"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_route_biased_topk"
     },
     {
       "instantiated_by": [
