@@ -1,0 +1,43 @@
+{
+ "not_a_claim": [
+  "this does not name the operator: the collapse is where the magnitude is OBSERVED, not necessarily where it originates",
+  "no cell is closed by this record"
+ ],
+ "question": "the shipped V4.1 cells emit 305 where the oracle emits 13806, with a 2.4947 logit margin that no sub-ulp difference can cross.  The graded HBM run recorded a head trace.  What does it say?",
+ "schema": "opentallas.result.v41_head_trace_localises_position_zero.v1",
+ "the_next_experiment": "the depth bisection taps the oracle at the LAST prompt position only, because the oracle prefills the whole prompt in one batched call while the device walks positions.  Position 0 is now the position of interest, so the tap wants widening to the first position as well -- a small change to a tool that already runs at shipped scale.",
+ "two_facts_from_the_committed_trace": {
+  "1_position_zero_is_blown_out": {
+   "position_0": {
+    "max": 321536.0,
+    "min": -118784.0,
+    "size": 5120,
+    "unique": 1574
+   },
+   "positions_1_to_31": {
+    "count": 31,
+    "max_of_maxes": 312.0,
+    "median_max": 93.0,
+    "min_of_mins": -416.0
+   },
+   "what": "main.hyper_connection_collapse runs once per prompt position -- 32 rows for a 32-token prompt -- and POSITION 0 is three thousand times larger than every other position",
+   "why_it_is_a_defect_and_not_a_scale": "a BF16 residual stream of +321,536 / -118,784 is not a transformer residual.  Every other position of the same kernel sits within +-420, and the median maximum is about 93.  Position 0 attends only to itself, so a missing normalisation or an unmasked term shows there and nowhere else -- and it contaminates every later position through the KV cache, which is why a single bad position can move the token the head reads at position 31."
+  },
+  "2_the_top_logit_is_wrong_in_MAGNITUDE_too": {
+   "device_assembled_logits": {
+    "argmax": 305,
+    "max": 17.0,
+    "min": -13.48,
+    "size": 129280
+   },
+   "oracle_first_token": {
+    "margin": 2.494688,
+    "token": 13806,
+    "top1": 27.374533,
+    "top2": 24.879845
+   },
+   "reading": "the device's largest logit is 17 where the oracle's is 27.37.  The device is not choosing a near-tie differently; its logit vector is a different vector.  That is consistent with a contaminated residual and rules out any argmax or tie-breaking explanation."
+  }
+ },
+ "what_the_trace_also_shows_and_does_NOT_indict": "main.vocabulary_head.project appears twice with byte-identical summaries (size 16,160, unique 16,157, min -8.832, max 17) before the assembled 129,280-wide projection.  Two vocabulary partitions cannot agree that exactly, so these are the two predicated paths of one phase-split head reading one view -- expected, not a duplicated slice.  129,280 = 8 x 16,160 and the assembled row carries the full width, so the partitioning itself is intact."
+}
