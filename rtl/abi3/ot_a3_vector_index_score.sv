@@ -79,6 +79,9 @@ module ot_a3_vector_index_score #(
     localparam [4:0] S_REDUCE_2    = 5'd11;
     localparam [4:0] S_COMMIT      = 5'd12;
     localparam [4:0] S_DONE        = 5'd13;
+    //: the pipelined reduction adds answer LATENCY cycles after valid_in
+    localparam [4:0] S_REDUCE_1W   = 5'd14;
+    localparam [4:0] S_REDUCE_2W   = 5'd15;
 
     reg [4:0] state;
     reg [1:0] scan_kind;
@@ -117,16 +120,46 @@ module ot_a3_vector_index_score #(
         ot_fp32_rne_pkg::fp32_mul_rne(relu_value, decoded_w[31:0]);
     wire [18:0] weighted_narrowed =
         ot_fp32_rne_pkg::fp32_to_bf16_rne(weighted_product[31:0]);
-    wire [33:0] pair_01 = ot_fp32_rne_pkg::fp32_add_rne(
-        contributions[0], contributions[1]
+    //: THE BALANCED REDUCTION, PIPELINED.  The four head contributions reduce as a
+    //: tree -- two pair adds, then one -- and each was a combinational
+    //: ot_fp32_rne_pkg::fp32_add_rne between registers.  Routed, the final one was the
+    //: critical path: reduce_right[29] to result_buffer[17][1], 253 cell arcs with 60
+    //: HAxp5 half adders, and the block came back at 151.0 MHz not met.  The pair adds
+    //: are the same expression on the same operand width, so replacing only the last
+    //: one would hand the wall to them -- which is why all three go at once.
+    //:
+    //: rtl/proto/ot_fp32_add_rne_pipe.sv is that arithmetic in five stages, qualified
+    //: bit-identical to the authority including where the authority is deliberately
+    //: not IEEE-754, so the REDUCTION ORDER and every rounding are unchanged: pair 0+1
+    //: and pair 2+3 first, then their sum, which is what "the frozen balanced tree"
+    //: means and what this block's vectors are bound to.
+    //:
+    //: The two pair adds share one valid_in because they are issued together and
+    //: retire together, which keeps S_REDUCE_1 a single decision point.
+    reg         add_pair_valid;
+    reg         add_total_valid;
+    wire [31:0] pair_01_y, pair_23_y, head_total_y;
+    wire [1:0]  pair_01_err, pair_23_err, head_total_err;
+    wire        pair_01_ov, pair_23_ov, head_total_ov;
+
+    ot_fp32_add_rne_pipe pair_01_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_pair_valid),
+        .a(contributions[0]), .b(contributions[1]),
+        .y(pair_01_y), .err(pair_01_err), .valid_out(pair_01_ov)
     );
-    wire [33:0] pair_23 = ot_fp32_rne_pkg::fp32_add_rne(
-        contributions[2], contributions[3]
+    ot_fp32_add_rne_pipe pair_23_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_pair_valid),
+        .a(contributions[2]), .b(contributions[3]),
+        .y(pair_23_y), .err(pair_23_err), .valid_out(pair_23_ov)
     );
-    wire [33:0] head_total =
-        ot_fp32_rne_pkg::fp32_add_rne(reduce_left, reduce_right);
+    ot_fp32_add_rne_pipe head_total_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_total_valid),
+        .a(reduce_left), .b(reduce_right),
+        .y(head_total_y), .err(head_total_err), .valid_out(head_total_ov)
+    );
+
     wire [18:0] output_narrowed =
-        ot_fp32_rne_pkg::fp32_to_bf16_rne(head_total[31:0]);
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(head_total_y);
 
     wire [33:0] scan_decoded = (scan_kind == 0) ? decoded_q
                                  : (scan_kind == 1) ? decoded_k
@@ -152,6 +185,8 @@ module ot_a3_vector_index_score #(
             relu_value <= 0;
             reduce_left <= 0;
             reduce_right <= 0;
+            add_pair_valid <= 1'b0;
+            add_total_valid <= 1'b0;
             q_rd_en <= 1'b0;
             q_rd_addr <= 0;
             k_rd_en <= 1'b0;
@@ -319,18 +354,34 @@ module ot_a3_vector_index_score #(
                 end
 
                 S_REDUCE_1: begin
-                    if ((pair_01[33:32] != 0) || (pair_23[33:32] != 0)) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
-                        state <= S_DONE;
-                    end else begin
-                        reduce_left <= pair_01[31:0];
-                        reduce_right <= pair_23[31:0];
-                        state <= S_REDUCE_2;
+                    add_pair_valid <= 1'b1;
+                    state <= S_REDUCE_1W;
+                end
+
+                S_REDUCE_1W: begin
+                    add_pair_valid <= 1'b0;
+                    if (pair_01_ov && pair_23_ov) begin
+                        if ((pair_01_err != 2'd0) || (pair_23_err != 2'd0)) begin
+                            error_code <= ERR_ACCUMULATE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            reduce_left <= pair_01_y;
+                            reduce_right <= pair_23_y;
+                            state <= S_REDUCE_2;
+                        end
                     end
                 end
 
                 S_REDUCE_2: begin
-                    if ((head_total[33:32] != 0) ||
+                    add_total_valid <= 1'b1;
+                    state <= S_REDUCE_2W;
+                end
+
+                S_REDUCE_2W: begin
+                    add_total_valid <= 1'b0;
+                    if (!head_total_ov) begin
+                        //: wait for the pipe
+                    end else if ((head_total_err != 2'd0) ||
                         (output_narrowed[18:17] != 0)) begin
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
