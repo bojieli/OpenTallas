@@ -10,7 +10,7 @@
  },
  "evidence_class": "external_reference_comparator",
  "expert_numeric_path": "fp8",
- "initial_max_seq_len": 64,
+ "initial_max_seq_len": 256,
  "load_endpoints": {
   "embed_device": "cpu",
   "head_bytes": 2647654400,
@@ -39,8 +39,8 @@
    "generated_token_ids": [
     14,
     1320,
-    16,
-    42250
+    56538,
+    1082
    ],
    "max_new_tokens": 4,
    "prompt_token_count": 8,
@@ -48,12 +48,12 @@
    "stop_reason": "max_new_tokens",
    "vendor_sample_agreements": null,
    "vendor_sample_disagreements": null,
-   "wall_seconds": 74.348,
+   "wall_seconds": 31.48,
    "workload_digest": "d0d4a5ca6a4ce3db1433d45253f3a62db641bed9d69f31e1780befcbba538afc"
   }
  },
  "schema": "opentallas.abi3.deepseek_v41_reference_oracle_prefix.v1",
- "setup_seconds": 13.636,
+ "setup_seconds": 12.112,
  "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
  "tokenizer_sha256": "c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b",
  "vendor_source_sha256": {
