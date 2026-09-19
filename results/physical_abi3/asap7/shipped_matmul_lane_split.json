@@ -1,0 +1,51 @@
+{
+ "answer": "the slow one, almost entirely.  Of 272 TENSOR.MATMUL operators in the shipped DeepSeek-V4.1-Flash HBM cell, 26 are BF16 x BF16 and reach ot_a3_mac_lane_pipe at 394.0 MHz; the other 246 -- 90.4% -- involve FP8 and reach ot_a3_mac_lane, which routed at 64.3 MHz and did NOT meet a 4 ns target.",
+ "measured_on": {
+  "by_operand_dtype": {
+   "BF16 x BF16": {
+    "count": 26,
+    "declares_a_scale": false,
+    "lane": "pipelined"
+   },
+   "BF16 x FP8_E4M3FN": {
+    "count": 128,
+    "declares_a_scale": false,
+    "lane": "legacy"
+   },
+   "FP8_E4M3FN x FP8_E4M3FN": {
+    "count": 118,
+    "declares_a_scale": false,
+    "lane": "legacy"
+   }
+  },
+  "deployment": "the published shipped V4.1 HBM c512 cell, 8 nodes",
+  "operators": 272,
+  "operators_declaring_a_scale_operand": 0
+ },
+ "not_a_claim": [
+  "that the change has been made: it has not.  This records where the leverage is and why the conversion is sound, measured on the shipped descriptors",
+  "that 394.0 MHz would survive an FP8 front end: a decode adds logic to the issue path and the routed number would have to be re-measured",
+  "that the legacy lane is wrong -- it is the certifying implementation and stays so; what this says is that the SHIPPED path does not reach the fast one"
+ ],
+ "question": "ot_a3_engine_array routes TENSOR.MATMUL between two lanes on the descriptor.  Which lane do the SHIPPED descriptors actually reach?",
+ "schema": "opentallas.derived.shipped_matmul_lane_split.v1",
+ "the_lane_frequencies": {
+  "ot_a3_mac_lane": {
+   "cells": 72338,
+   "closed": false,
+   "fmax_hz": 64300000.0,
+   "why": "fp32_mul_rne and fp32_add_rne in series between registers, at S_MUL and S_ACC"
+  },
+  "ot_a3_mac_lane_pipe": {
+   "closed": true,
+   "fmax_hz": 394000000.0
+  }
+ },
+ "the_routing_condition": "ot_a3_engine_array.sv:527 -- use_pipe_mac requires cfg_dtype_a == BF16 AND cfg_dtype_b == BF16 AND no declared block scale on either operand",
+ "what_it_qualifies": "results/physical_abi3/asap7/limiter_ladder.json ranks the blocks that have CLOSED, and on that basis no rung above 276.9 MHz is worth more than 1.098x.  ot_a3_mac_lane is not on that ladder because it has not closed -- and it carries 90.4% of the shipped matmuls.  The ladder is therefore a statement about the closed set and not about the shipped token path, and this record is the qualification it needs.",
+ "why_this_is_the_concentrated_lever": {
+  "the_conversion_is_EXACT": "FP8_E4M3FN has three mantissa bits and BF16 has seven, and E4M3FN's exponent range (2**-9 .. 448) sits inside BF16's, so every finite E4M3FN value is exactly representable in BF16.  ot_a3_format_pkg says as much for binary32 and exhaustively checks all 256 codes; the same argument gives BF16.  So a decode in front of the BF16 MAC is a REPRESENTATION change and not a numeric one.",
+  "the_scale_path_is_not_in_the_way": "zero shipped matmuls declare a scale operand, so the other half of the routing condition is already satisfied by all 246",
+  "the_size_of_it": "moving those 246 from 64.3 MHz to 394.0 MHz is 6.1x on the operator that dominates the token path, against the 1.024x that fixing the published limiter buys"
+ }
+}
