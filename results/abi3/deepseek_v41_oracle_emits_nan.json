@@ -1,5 +1,24 @@
 {
- "answer": "it is not variation.  The oracle computes **NaN** inside routed-expert w1 GEMMs, in a SINGLE forward, at different experts on different runs.",
+ "CORRECTION": {
+  "so_the_finding_is_instrument_sensitive_and_I_cannot_separate_two_readings": {
+   "a_race_the_instrument_hides": "the streaming engine materialises weights per block; a pre-hook that reads module.weight forces a device synchronisation before the GEMM.  If the vendor path can start a GEMM against a partially-copied weight, a pre-hook masks exactly that -- so the NaN would be real in normal operation and invisible whenever anything synchronises.",
+   "or_the_instrument_causes_it": "about 1,800 post-only hooks, each running a reduction on a fresh output tensor, is itself a perturbation, and it is the only configuration in which NaN appeared.",
+   "which_one_is_not_established": true
+  },
+  "the_control_that_complicates_it": {
+   "and_a_separate_six_tap_run": "a narrower probe with pre-hooks on six named experts also found no NaN in any weight, scale, input or output -- including L02.ffn.experts.303.w1, which two earlier runs had reported NaN",
+   "probe": "every expert linear in the first six blocks watched with BOTH a pre-hook and a post-hook -- 6,930 modules, 13,860 hooks -- counting isnan on the weight, the scale and the input before each call and on the output after it",
+   "result": "outputs that went NaN: ZERO"
+  },
+  "what_I_claimed": "that the shipped oracle computes NaN inside routed-expert w1 GEMMs, measured in two single-forward processes and confirmed in a third by counting isnan directly (5 NaN taps of about 1,800)",
+  "what_I_should_have_done": "run the pre-hook control in the same session as the first NaN reading rather than publishing the mechanism from post-only hooks.  Three of my readings this session have been corrected by controls I ran afterwards; the controls are cheap and the corrections are not.",
+  "what_is_unaffected_either_way": {
+   "the_device_is_deterministic": "305 from two different stores at two different context lengths",
+   "the_intermediates_are_not_a_usable_comparator": "three separate single-forward processes produced three different summaries for the SAME post-norm row -- argmax 529, 4521 and 529, with min and max moving by up to 0.08.  That stands independently of the NaN question, and it is the fact that invalidates the depth bisection.",
+   "the_token_is_stable": "13806 on every run of every probe, including the ones that reported NaN, and the committed four-token gold reproduces.  Grading the cells on TOKENS remains sound; grading them on intermediates does not."
+  }
+ },
+ "answer": "NaN was measured in three post-only-hook runs and NOT reproduced with pre-hooks attached, so the mechanism is unsettled -- see CORRECTION.  What is settled is that the oracle's INTERMEDIATES are not reproducible while its TOKEN is.",
  "measured": {
   "always_nan": [
    "L02.ffn.experts.303.w1#0"
