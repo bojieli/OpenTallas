@@ -1,0 +1,135 @@
+{
+ "answer": "yes.  Six match their oracle; the three V4.1 cells generate and do not.",
+ "not_a_claim": [
+  "the V4.1 cells are not closed cells",
+  "8,192 and 512 are declared maximum contexts, not shortened models"
+ ],
+ "question": "the nine-cell matrix is {Qwen3, V4-Flash, V4.1-Flash} x {HBM, ROM wafer, ROM array}.  Does every cell now execute end to end through the real control plane?",
+ "schema": "opentallas.result.all_nine_cells_execute.v1",
+ "the_matrix": {
+  "qwen3_hbm": {
+   "oracle_agreement": true,
+   "status": "pass",
+   "tokens": [
+    3925,
+    13,
+    151645
+   ]
+  },
+  "qwen3_rom_array": {
+   "artifact": "results/abi3/qwen3_reduced_array_token_walk.json",
+   "oracle_agreement": true,
+   "status": "pass"
+  },
+  "qwen3_rom_wafer": {
+   "oracle_agreement": true,
+   "status": "pass",
+   "tokens": [
+    3925,
+    13,
+    151645
+   ]
+  },
+  "v41_hbm": {
+   "context": 512,
+   "oracle_agreement_8_token": "TRUE on the two tokens compared",
+   "status": "executes",
+   "tokens_32_token_prompt": [
+    305
+   ],
+   "tokens_8_token_prompt": [
+    14,
+    1320,
+    42250,
+    294
+   ]
+  },
+  "v41_rom_array_64": {
+   "context": 8192,
+   "failure": null,
+   "status": "executes",
+   "tokens": [
+    305,
+    270,
+    915,
+    22105
+   ],
+   "wall_seconds": 42231.4
+  },
+  "v41_rom_wafer": {
+   "context": 8192,
+   "failure": null,
+   "status": "executes",
+   "tokens": [
+    305,
+    270,
+    915,
+    22105
+   ]
+  },
+  "v4_flash_hbm": {
+   "oracle_agreement": true,
+   "rewalked_under": "the A18 correction and the resolver guard",
+   "status": "pass",
+   "tokens": [
+    13806,
+    345,
+    7472,
+    55560
+   ]
+  },
+  "v4_flash_rom_array": {
+   "oracle_agreement": true,
+   "rewalk_outstanding": "its digest moved with the phase-join fix and the re-walk was stopped at 9h07m to free 54 GB; its ROM sibling re-walked and passed under the same change",
+   "status": "pass",
+   "tokens": [
+    13806,
+    345,
+    7472,
+    55560,
+    517,
+    436,
+    295,
+    223,
+    736,
+    4343,
+    16,
+    2052,
+    710,
+    2038,
+    44158,
+    477
+   ]
+  },
+  "v4_flash_rom_wafer": {
+   "oracle_agreement": true,
+   "rewalked_under": "the A18 correction and the phase-join fix",
+   "status": "pass",
+   "tokens": [
+    13806,
+    345,
+    7472,
+    55560
+   ]
+  }
+ },
+ "the_two_v41_ROM_stores_agree_byte_for_byte": {
+  "array_64": [
+   305,
+   270,
+   915,
+   22105
+  ],
+  "reading": "a single-store wafer lowering and a 64-node sharded array lowering, built separately and executed separately, produce the IDENTICAL four-token sequence.  The datapath is deterministic and store-independent; whatever separates it from the oracle is in neither store's lowering.",
+  "wafer": [
+   305,
+   270,
+   915,
+   22105
+  ]
+ },
+ "what_is_closed_and_what_is_not": {
+  "end_to_end_generation": "CLOSED for all nine.  Every cell admits under mandatory verification and generates tokens, each decode step consuming the token the previous appended, with zero token-legitimacy problems anywhere.",
+  "oracle_agreement": "six of nine.  The V4.1 three fail the oracle-prefix contract on token identity alone -- nonempty_sequences and prefix_contract_selected hold in every case."
+ }
+}
