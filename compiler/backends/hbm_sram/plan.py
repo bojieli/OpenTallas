@@ -1402,6 +1402,50 @@ def phase_substitution(
     return constants, aliases
 
 
+def extent_on_context_symbol(
+    extent: "RequestExtent | None",
+    aliases: Mapping[int, tuple[int, int]],
+) -> "RequestExtent | None":
+    """State a phase's derived extent back on ``context_length``.
+
+    :func:`phase_substitution` rewrites ``CONTEXT_LENGTH`` onto whichever of the
+    other two scalars the phase leaves free, because that is what collapses a
+    two-symbol sum onto one.  But the loop that RESOLVES the result counts the
+    context, and A18 computes ``numerator * remaining / unit + bias`` from the
+    LOOP's bound symbol -- so a sum that landed on ``position_start`` is then
+    resolved against the wrong symbol.
+
+    Measured on the shipped V4.1 HBM cell at decode step 1: the join declared
+    ``position_start + 129`` and the context loop read ``33 + 129 = 162`` where
+    its operands presented 161.  The ROM lane had the same defect with the same
+    arithmetic and a different number.
+
+    The inversion is section 12.2's relation read the other way --
+    ``POSITION_START == CONTEXT_LENGTH - SPAN_TOKENS`` with the span pinned --
+    and the offset survives only where nothing is floored, so a unit other than
+    one is left alone rather than approximated.  That is the same exactness rule
+    :func:`join_extent_under` applies to the forward rewrite.
+    """
+    if extent is None or extent.symbol == "context_length":
+        return extent
+    alias = aliases.get(int(Symbol.CONTEXT_LENGTH))
+    if alias is None:
+        return extent
+    base = next(
+        (name for name, sym in EXTENT_SYMBOL.items() if int(sym) == int(alias[0])),
+        None,
+    )
+    if base is None or base != extent.symbol:
+        return extent
+    if int(extent.unit) != 1:
+        return extent
+    return replace(
+        extent,
+        symbol="context_length",
+        bias=int(extent.bias) - int(extent.numerator) * int(alias[1]),
+    )
+
+
 def join_extent_under(
     tensors: Mapping[str, Tensor],
     names: Sequence[str],

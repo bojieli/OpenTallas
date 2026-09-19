@@ -123,6 +123,7 @@ from .plan import (
     _abi_input_slots,
     join_extent,
     join_extent_under,
+    extent_on_context_symbol,
     evaluate_comparison,
     phase_substitution,
     substitute_condition,
@@ -4769,6 +4770,16 @@ class _Emitter:
             extent, static = join_extent_under(
                 self.tensors, names, 0, self.span_max, constants, aliases
             )
+            # The declared output axis is the one form no loop has to resolve --
+            # the instruction reuses the view the kernel already built.  Any other
+            # form is resolved against the CONTEXT loop, so state it on the
+            # context where 12.2 makes that exact.  Measured on the shipped V4.1
+            # HBM cell: without this the decode join declared 162 rows where its
+            # operands presented 161.
+            if extent is not None and extent != self._declared_join_axis(
+                kernel.outputs[0]
+            ):
+                extent = extent_on_context_symbol(extent, aliases)
             if extent is None and static <= 0:
                 raise LoweringError(
                     f"kernel {plan.kernel_id}: phase {phase!r} selects an empty "
