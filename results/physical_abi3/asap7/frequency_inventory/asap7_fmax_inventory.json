@@ -253,6 +253,16 @@
     },
     {
       "at_target_clock_period_ns": 4.0,
+      "block": "ot_a3_vector_convert",
+      "family": "abi3_datapath",
+      "fmax_hz": 717392000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_convert/pnr_4p0ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 285.914,
+      "target_headroom": 0.651515
+    },
+    {
+      "at_target_clock_period_ns": 4.0,
       "block": "ot_a3_reduction_balanced_sum",
       "family": "abi3_datapath",
       "fmax_hz": 785535000.0,
@@ -555,10 +565,10 @@
     "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 89,
-    "distinct_blocks_with_a_closed_routed_record": 54,
-    "post_route_record_count": 137,
-    "record_count": 213
+    "closed_routed_record_count": 90,
+    "distinct_blocks_with_a_closed_routed_record": 55,
+    "post_route_record_count": 139,
+    "record_count": 215
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -644,7 +654,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "b2a1720918a77ea19d82e61d2708c7c2de72cce6"
+      "commit": "0282a724a4ddc7b4dce9a4b0acb0528b5b511111"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -2063,6 +2073,29 @@
       "closed": false,
       "drc_errors": 0,
       "family": "abi3_datapath",
+      "fmax_hz": 74862100.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_microsequencer_dep_depth/pnr_2p6ns_dep1_control_not_met.json",
+      "record_sha256": "5aaaa6f7b385845295fbbb3236f01842d3fefa5272bd6904e2ac219ddadb04d2",
+      "setup_wns_ns": -10.7579,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 61138.8,
+      "target_clock_period_ns": 2.6,
+      "target_headroom": -4.137653846153846
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_microsequencer",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
       "fmax_hz": 73814700.0,
       "max_cap_violations": 0,
       "max_fanout_violations": 1,
@@ -2263,6 +2296,29 @@
       "standard_cell_area_um2": null,
       "target_clock_period_ns": 16.0,
       "target_headroom": null
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_convert",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 717392000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_vector_convert/pnr_4p0ns_coverage.json",
+      "record_sha256": "fdcc22b1fdae940ae161b7877f612785feb226bd15c92dd2fd18a4be5594a915",
+      "setup_wns_ns": 2.60606,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 285.914,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": 0.651515
     },
     {
       "antenna_violating_nets": 0,
