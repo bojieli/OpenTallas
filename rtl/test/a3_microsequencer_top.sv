@@ -48,6 +48,9 @@ module ot_a3_microsequencer_top
     parameter integer FAST_FRONT_END = 0,
     // View-resolution scheduling; passed through to ot_a3_device_top.
     parameter integer FAST_SCAN     = 0,
+    //: Forwarded to the dependence table's conflict-reduction depth so one
+    //: campaign can drive both depths from one source.
+    parameter integer DEP_CHECK_STAGES = 1,
     parameter integer FAST_WALK     = 0
 ) (
     input  wire        clk,
@@ -236,7 +239,8 @@ module ot_a3_microsequencer_top
         .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
         .FAST_FRONT_END(FAST_FRONT_END),
         .FAST_SCAN(FAST_SCAN),
-        .FAST_WALK(FAST_WALK)
+        .FAST_WALK(FAST_WALK),
+        .DEP_CHECK_STAGES(DEP_CHECK_STAGES)
     ) device (
         .clk(clk),
         .rst_n(rst_n),

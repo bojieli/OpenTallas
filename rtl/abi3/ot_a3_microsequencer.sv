@@ -149,6 +149,30 @@ module ot_a3_microsequencer
     // the one every committed campaign was run against.  The cost is three
     // flip-flops a level, 6,144 for a board of 4,096.
     parameter integer EVENTS = ot_a3_pkg::A3_EVENT_COUNT,
+    // Depth of the dependence table's conflict reduction, forwarded to
+    // ot_a3_dependence_table's CHECK_STAGES.
+    //
+    // At 1 this controller is the netlist it has always been: the table answers
+    // one cycle after ``checkN_valid`` and both consumers read the answer in the
+    // next state.  At 2 the table answers one cycle later still -- the 128
+    // per-range results are reduced to eight group bits, registered, and reduced
+    // again -- so each consumer owes the check one more cycle and nothing else.
+    // rtl/test/tb_a3_dependence_table_depth.sv proves depth 2 equals depth 1
+    // delayed by exactly one cycle over 20,000 cycles under both simulators.
+    //
+    // Why it is worth a cycle: the whole 128-range reduction is ONE
+    // combinational cone, and results/derived/abi3_iso_area_three_level_audit.json
+    // measures it as the control plane's clock.  With the full control plane the
+    // sequencer issues one descriptor every 567 datapath cycles against 270
+    // cycles of work, so the array is starved 52% of the time and sustained
+    // device-level throughput sits at 1.07x-1.32x of an A100 against a 2.23x
+    // peak; the frontend-only sequencer issues one every 281 cycles at 96.5%
+    // utilisation.  Splitting this path is the one change that addresses that gap
+    // at zero datapath area.
+    //
+    // The DEFAULT stays 1 until a closed routed record exists for depth 2, so
+    // the shipped elaboration and every bound vector are unmoved.
+    parameter integer DEP_CHECK_STAGES = 1,
     // Front-end request scheduling.  ``FAST_FRONT_END = 0`` rebuilds the
     // front end exactly as it was before this parameter: one state per
     // decision, each request registered by the state that decided to make
@@ -832,7 +856,7 @@ module ot_a3_microsequencer
     reg         dep_check1_write;
     wire        dep_check1_conflict;
 
-    ot_a3_dependence_table deps (
+    ot_a3_dependence_table #(.CHECK_STAGES(DEP_CHECK_STAGES)) deps (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear),
@@ -974,6 +998,19 @@ module ot_a3_microsequencer
     reg  [13:0] hz_work;
     reg         hz_acc;
     reg         hz_retire_seen;     // a retirement landed since the scan began
+    //: Cycles still owed to the table after the last check pair is issued.  The
+    //: scan is already pipelined -- each cycle issues a pair and folds in the
+    //: PREVIOUS cycle's results -- so at depth 1 nothing is owed and this stays
+    //: zero, which is why the default elaboration is unchanged.  At depth 2 the
+    //: last pair's answer is two cycles behind its issue, so the loop spends one
+    //: more cycle folding before the terminal test; without it the last pair's
+    //: conflict would be dropped and a real hazard would issue.
+    reg  [1:0]  hz_drain;
+    //: Cycles a consumer owes the table beyond the one the depth-1 form already
+    //: spends.  Written as a comparison rather than a part-select of the integer
+    //: parameter: the depth campaign records that indexing a part-select is
+    //: accepted by one of the two simulators and rejected by the other.
+    localparam [1:0] DEP_OWED = (DEP_CHECK_STAGES >= 2) ? 2'd1 : 2'd0;
     wire [3:0]  hz_first  = lowest_bit(hz_work);
     wire [13:0] hz_rest   = hz_work & ~(14'd1 << hz_first);
     wire [3:0]  hz_second = lowest_bit(hz_rest);
@@ -1265,6 +1302,7 @@ module ot_a3_microsequencer
             hz_work <= 14'd0;
             hz_acc <= 1'b0;
             hz_retire_seen <= 1'b0;
+            hz_drain <= 2'd0;
             pub_work <= 14'd0;
             dep_insert_valid <= 1'b0;
             dep_insert_object <= 16'd0;
@@ -1625,6 +1663,7 @@ module ot_a3_microsequencer
                             dep_check0_lo <= {6'd0, pred_element, 2'b00};
                             dep_check0_hi <= {6'd0, pred_element, 2'b00} + 40'd4;
                             dep_check0_write <= 1'b0;
+                            hz_drain <= DEP_OWED;
                             state <= S_PRED_HAZARD;
                         end
                         default: begin
@@ -1636,9 +1675,13 @@ module ot_a3_microsequencer
                     endcase
                 end
                 S_PRED_HAZARD: begin
-                    // The check issued last cycle answers now.
-                    if (dep_check0_conflict) begin
+                    // The check issued last cycle answers now -- a cycle later
+                    // at depth 2, which is what hz_drain spends.
+                    if (hz_drain != 2'd0) begin
+                        hz_drain <= hz_drain - 2'd1;
+                    end else if (dep_check0_conflict) begin
                         dep_check0_valid <= 1'b1;
+                        hz_drain <= DEP_OWED;
                         dbg_dep_stalls <= dbg_dep_stalls + 32'd1;
                     end else begin
                         predicate_read_object_id <= pred_object_id;
@@ -1924,8 +1967,16 @@ module ot_a3_microsequencer
                             hz_work <= hz_rest & ~(14'd1 << hz_second);
                         end else begin
                             hz_work <= 14'd0;
+                            // The last pair is in flight.  At depth 1 its answer
+                            // is on the wires next cycle, which is when the
+                            // terminal test below runs; at depth 2 it is a cycle
+                            // later, so owe the table that cycle.
+                            hz_drain <= DEP_OWED;
                         end
                         hz_acc <= hz_acc | dep_check0_conflict | dep_check1_conflict;
+                    end else if (hz_drain != 2'd0) begin
+                        hz_acc <= hz_acc | dep_check0_conflict | dep_check1_conflict;
+                        hz_drain <= hz_drain - 2'd1;
                     end else if (hz_conflict_now) begin
                         dbg_dep_stalls <= dbg_dep_stalls + 32'd1;
                         state <= S_HAZARD_STALL;
@@ -1946,6 +1997,7 @@ module ot_a3_microsequencer
                         hz_work <= rng_valid;
                         hz_acc <= 1'b0;
                         hz_retire_seen <= 1'b0;
+                        hz_drain <= 2'd0;
                         state <= S_HAZARD;
                     end
                 end

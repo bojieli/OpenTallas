@@ -1,0 +1,45 @@
+{
+ "and_the_consumer_is_proven_not_assumed": {
+  "result": {
+   "depth_1": {
+    "iverilog": "pass",
+    "verilator": "pass"
+   },
+   "depth_2": {
+    "iverilog": "pass",
+    "verilator": "pass"
+   },
+   "marker": "PASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11",
+   "reading": "the same 65 cases, the same 53 programs, the same 185 engine-issue events and the same 11 traps at depth 2.  The deeper form takes more cycles to do it, which is the whole trade: the cycle buys the clock."
+  },
+  "the_change": "ot_a3_microsequencer takes DEP_CHECK_STAGES and owes the table one more cycle at depth 2, in BOTH consumers -- the range scan and the predicate hazard.  The owed count is a comparison rather than a part-select of the integer parameter, because the depth campaign records that indexing a part-select is accepted by one of the two simulators and rejected by the other.",
+  "the_gate": "tools/rtl_abi3_dep_check_depth_campaign.py replays the WHOLE ABI 3.0 vector set through the real control plane at both depths under both simulators, and requires the marker the vector set derives from its golden execution on runtime.sim.device.Device",
+  "what_was_missing": "rtl/test/tb_a3_dependence_table_depth.sv proved the TABLE: depth 2 equals depth 1 delayed by one cycle, 20,000 cycles, both simulators.  It says nothing about the microsequencer, whose hazard scan is pipelined -- each cycle issues a check pair and folds in the previous cycle's results -- so at depth 2 the last pair's answer arrives after the loop has left.  Dropping it would issue an instruction over a live hazard: a silent wrong answer, not a stall."
+ },
+ "answer": "yes.  603.7 MHz, closed, on ASAP7.",
+ "default_is_still_1": "the parameter defaults to 1 in both the table and the sequencer, so the shipped elaboration and every bound vector are unmoved.  Adopting depth 2 is now a one-parameter decision with both halves of its evidence in hand.",
+ "not_a_claim": [
+  "the 2.152x sustained figure is the AUDIT's sizing, not a measurement of this record; what this record removes is the audit's stated reason for refusing it",
+  "the depth-1 routed record is still running, so the frequency RATIO between the two depths is not stated here"
+ ],
+ "question": "results/derived/abi3_iso_area_three_level_audit.json named ONE combinational cone as the control plane's clock and sized splitting it at 2.00x sustained throughput, while refusing to call that a result 'until a closed routed record exists at 534 MHz or better'.  Does one exist?",
+ "schema": "opentallas.result.dep_check_depth_closes.v1",
+ "the_routed_record": {
+  "against_the_bar": "603.7 MHz against the audit's 534 MHz, so the bar is met",
+  "antenna": 0,
+  "cells": 149194,
+  "closed": true,
+  "core_area_um2": 47629.1,
+  "drc": 0,
+  "fmax_mhz": 603.678,
+  "hold_wns_ns": 0.0526,
+  "module": "ot_a3_dependence_table",
+  "parameters": {
+   "CHECK_STAGES": 2
+  },
+  "record": "results/physical_abi3/asap7/dependence_table/pnr_1p8ns_check_stages_2_closed.json",
+  "standard_cell_area_um2": 18606.5,
+  "status": "pass",
+  "target_period_ns": 1.8
+ }
+}

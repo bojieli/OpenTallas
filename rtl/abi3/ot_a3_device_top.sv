@@ -90,7 +90,10 @@ module ot_a3_device_top #(
     // could not elaborate at all -- the parameter it named did not exist here.
     // Both default to 0, which is the shipped build.
     parameter integer FAST_SCAN = 0,
-    parameter integer FAST_WALK = 0
+    parameter integer FAST_WALK = 0,
+    //: Forwarded to ot_a3_microsequencer's dependence-check depth.  1 is the
+    //: shipped elaboration; 2 splits the 128-range conflict reduction.
+    parameter integer DEP_CHECK_STAGES = 1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -478,7 +481,8 @@ module ot_a3_device_top #(
         .CRC_CACHE_ENTRIES(CRC_CACHE_ENTRIES),
         .FAST_FRONT_END(FAST_FRONT_END),
         .FAST_SCAN(FAST_SCAN),
-        .FAST_WALK(FAST_WALK)
+        .FAST_WALK(FAST_WALK),
+        .DEP_CHECK_STAGES(DEP_CHECK_STAGES)
     ) sequencer (
         .clk(clk),
         .rst_n(rst_n),
