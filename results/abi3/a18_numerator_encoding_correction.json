@@ -15,6 +15,27 @@
  },
  "question": "was 'an A18 numerator of exactly ONE was silently encoded as zero' a defect?",
  "schema": "opentallas.result.a18_numerator_encoding_correction.v1",
+ "suite_gate": {
+  "failing_nodes_at_head": 135,
+  "failing_nodes_on_this_change": 123,
+  "method": "tests/compiler and tests/abi3 run twice -- once in a worktree at HEAD, once on this change -- and the two failing-node SETS compared.  A bare count is not a gate here: 123 nodes fail at HEAD for reasons this change does not touch (source-currency drift across bound artifacts), so only the set difference says anything.",
+  "reading": "twelve nodes are repaired and none regress.  Every repaired node is a DeepSeek-V4-Flash or array admission test, which is exactly the blast radius the 116-view admission failure predicted.",
+  "regressions": [],
+  "repaired": [
+   "tests/compiler/test_a3_operator_admission_rtl.py::test_vectors_are_byte_exact_and_source_current",
+   "tests/compiler/test_rom_array_backend.py::test_the_array_is_admitted_as_a_32_node_cluster",
+   "tests/compiler/test_rom_array_backend.py::test_the_checker_certifies_the_phase_layout_convergence",
+   "tests/compiler/test_rom_array_backend.py::test_the_independent_schedule_checker_admits_the_array",
+   "tests/compiler/test_rom_backend.py::test_alternating_layers_compress_into_one_periodic_loop",
+   "tests/compiler/test_rom_backend.py::test_deepseek_rom_deployment_is_admitted",
+   "tests/compiler/test_rom_backend.py::test_independent_schedule_checker_accepts_both_products",
+   "tests/compiler/test_rom_backend.py::test_multiplied_routed_span_stays_one_request_wide_batch",
+   "tests/compiler/test_rom_backend.py::test_released_rolling_compressor_is_admitted_as_plain_abi3",
+   "tests/compiler/test_rom_backend.py::test_schedule_checker_rejects_zero_link_credit",
+   "tests/compiler/test_storage_class_equivalence.py::test_both_builds_are_admitted[deepseek_v4]",
+   "tests/compiler/test_storage_class_equivalence.py::test_the_property_holds[deepseek_v4]"
+  ]
+ },
  "what_survives_from_the_attempt": "the JOINT test.  All three extent fields are zeroed only for A13's own identity -- 1 * value / 1 + 0 -- so a view needing no A18 stays byte-identical to the pre-amendment form and a view whose only A18 content is a bias keeps that bias.",
  "what_the_abi_says": {
   "resolver": "runtime/sim/memory.py resolves the field as max(int(payload['extent_numerator']), 1), so zero on the wire IS one",
