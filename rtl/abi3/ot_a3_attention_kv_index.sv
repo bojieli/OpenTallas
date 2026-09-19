@@ -59,36 +59,75 @@ module ot_a3_attention_kv_index #(
     localparam [31:0] PAD_INDEX = 32'hffff_ffff;
 
     integer i;
+    integer node;
 
-    //: One pass over the block: the mask, the count, whether any live lane
-    //: follows a pad lane, and whether any live lane is out of range.
+    //: ONE PASS OVER THE BLOCK, BUT NOT ONE CHAIN.  The four things this block
+    //: publishes -- the mask, the count, whether a live lane follows a pad lane,
+    //: and whether a live lane is out of range -- are all REDUCTIONS, and a
+    //: sequential accumulate over SLOTS turns two of them into serial carries.
+    //: Written that way, the routed block reported 148.1 MHz at a 4 ns target
+    //: with 157 ``HAxp5`` half-adders on one path from ``indices`` to
+    //: ``lane_valid``: 64 chained 32-bit increments, which is what
+    //: ``count = count + 1`` inside the loop means after synthesis.
+    //:
+    //: Each is restated as a per-lane term under a balanced reduction, which is
+    //: the same function at logarithmic depth:
+    //:
+    //:   * the mask is already per-lane and was never the problem;
+    //:   * the count is a POPCOUNT of the mask, summed up a binary tree, so its
+    //:     depth is ``$clog2(SLOTS)`` narrow adds instead of SLOTS wide ones;
+    //:   * "a live lane after a pad lane" is LOCAL.  A6 fixes padding as one
+    //:     TRAILING run, and a mask is one trailing run exactly when no live
+    //:     lane follows a dead one -- so ``mask[i] & ~mask[i-1]`` over i >= 1 is
+    //:     the whole test and the serial ``seen_pad`` carry is not needed.
+    //:     (Both directions: a live lane with ANY earlier pad lane has a nearest
+    //:     one, and the lane just after that pad satisfies the local test.)
+    //:   * the range refusal is a per-lane compare under an OR.
     reg [SLOTS-1:0] mask_scan;
+    reg [SLOTS-1:0] mask_prev;
+    reg [SLOTS-1:0] range_bit;
     reg [31:0] count_scan;
     reg        interleaved_scan;
     reg        out_of_range_scan;
-    reg        seen_pad;
     reg [31:0] slot_code;
+
+    //: The popcount tree, as a heap over the next power of two at or above
+    //: SLOTS: leaves at ``[LEAVES .. 2*LEAVES-1]``, each internal node the sum
+    //: of its two children, the total at node 1.  CW is the width that holds
+    //: SLOTS, so the adds are 1 to CW bits wide rather than 32.
+    localparam integer LEAVES = 1 << $clog2(SLOTS);
+    localparam integer CW = $clog2(SLOTS + 1);
+    reg [CW-1:0] adder_node [0:2*LEAVES-1];
+
     always @* begin
         mask_scan = {SLOTS{1'b0}};
-        count_scan = 32'd0;
-        interleaved_scan = 1'b0;
-        out_of_range_scan = 1'b0;
-        seen_pad = 1'b0;
+        range_bit = {SLOTS{1'b0}};
         for (i = 0; i < SLOTS; i = i + 1) begin
             //: Named, because indexing a part-select is the construct Verilator
             //: accepts and the pinned Icarus 11 rejects.
             slot_code = indices[i*32 +: 32];
-            if (slot_code == PAD_INDEX) begin
-                seen_pad = 1'b1;
-            end else begin
+            if (slot_code != PAD_INDEX) begin
                 mask_scan[i] = 1'b1;
-                count_scan = count_scan + 32'd1;
-                //: A live lane after a pad lane breaks A6's trailing-run rule.
-                if (seen_pad) interleaved_scan = 1'b1;
                 //: Unsigned, so this is the >= kv_rows bound directly.
-                if (slot_code >= cfg_kv_rows) out_of_range_scan = 1'b1;
+                range_bit[i] = (slot_code >= cfg_kv_rows);
             end
         end
+        out_of_range_scan = |range_bit;
+
+        //: A live lane after a pad lane breaks A6's trailing-run rule.  Bit i of
+        //: ``mask_prev`` is lane i-1, and bit 0 is 1 -- there is no pad lane
+        //: before lane 0 -- which the truncating assignment of an SLOTS+1 bit
+        //: concatenation to an SLOTS bit reg produces directly, and which is
+        //: also correct at SLOTS == 1.
+        mask_prev = {mask_scan, 1'b1};
+        interleaved_scan = |(mask_scan & ~mask_prev);
+
+        for (i = 0; i < LEAVES; i = i + 1)
+            adder_node[LEAVES + i] =
+                (i < SLOTS) ? {{(CW-1){1'b0}}, mask_scan[i]} : {CW{1'b0}};
+        for (node = LEAVES - 1; node >= 1; node = node - 1)
+            adder_node[node] = adder_node[2*node] + adder_node[2*node + 1];
+        count_scan = adder_node[1];
     end
 
     always @(posedge clk or negedge rst_n) begin
