@@ -14,7 +14,40 @@
   "so_the_measurement_stands_and_the_mechanism_does_not": "the break is at 9 -> 10, which is measured.  Which config quantity owns it is not, and the next cheap step is the 15-token point rather than a story.",
   "what_I_proposed": "that FOUR is the hyper-connection multiplicity, and a view whose leading axis is the four HC streams was being used where the compressed-GROUP axis is meant -- right for up to four groups and wrong from five"
  },
- "answer": "between NINE and TEN tokens.  TWO quantities change there -- the ratio-2 group count (4 -> 5) and the DSpark block count (1 -> 2) -- and the bracket cannot separate them; see CORRECTION.",
+ "CORRECTION_2": {
+  "so_it_is_not_a_threshold": {
+   "first_divergence_index_by_prompt_length": {
+    "10": 0,
+    "11": 3,
+    "12": 0,
+    "16": 0,
+    "32": 0,
+    "8": "none of the 2 compared",
+    "9": "none of the 1 compared"
+   },
+   "why_that_breaks_the_reading": "a structural threshold at 9 -> 10 would fail EVERY longer length at token 0.  Eleven does not: it matches three tokens.  The pattern is non-monotone in prompt length, which no 'more than four groups' or 'more than one DSpark block' rule can produce."
+  },
+  "the_disconfirming_datum": {
+   "first_divergence_index": 3,
+   "p11_device": [
+    294,
+    2237,
+    16,
+    1730
+   ],
+   "p11_oracle": [
+    294,
+    2237,
+    16,
+    983
+   ],
+   "reading": "ELEVEN tokens agrees on the first THREE tokens and differs only on the fourth"
+  },
+  "what_I_got_wrong": "I read four points (8, 9, 10, 12) as a monotone threshold and committed that reading before the fifth (11) had landed, when it was already running.  The fifth refutes it.  Waiting for the point I had already paid for would have cost nothing.",
+  "what_that_would_implicate": "an error that grows with the number of compressed groups -- for instance a compressed prefix counted alongside the window rows it already covers -- rather than a rule that switches on at a particular count.  That is a different investigation from the one the bracket suggested, and it wants the per-layer instrument at a SHORT prompt, where the oracle is reproducible, rather than more prompt lengths.",
+  "what_the_pattern_looks_like_instead": "a numerical difference present at every length whose effect on the TOP-1 token depends on that prompt's logit margin -- large margins survive it, small ones do not.  And the difference appears to GROW with context: at 32 tokens the device's largest logit is 17.0 against the oracle's 27.19, which is not a sub-ulp effect, while at 8 and 9 tokens the tokens match outright."
+ },
+ "answer": "NOT a threshold -- see CORRECTION_2.  Eleven tokens agrees on three tokens while ten and twelve fail at the first, so the pattern is non-monotone and the 4-versus-5 reading does not hold.",
  "how_to_test_it_next": "the coincidence is testable without a token: find every view in the built c512 deployment whose declared leading extent is 4 and whose A18 extent axis is a group axis, or the reverse.  That is a static query over the descriptors, and it either names the view or refutes the hypothesis.",
  "not_a_claim": [
   "the hyper-connection reading is a hypothesis; the bracket is the measurement",
