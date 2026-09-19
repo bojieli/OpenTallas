@@ -1,0 +1,100 @@
+{
+ "cover": [
+  {
+   "count": 30,
+   "newly_covered": [
+    "ot_a3_attention_denominator",
+    "ot_a3_attention_epilogue",
+    "ot_a3_attention_kv_index",
+    "ot_a3_attention_softmax_block",
+    "ot_a3_attention_sparse",
+    "ot_a3_engine_array",
+    "ot_a3_fp32_exp_pos_cr_rne",
+    "ot_a3_fp32_transcendental_cr_rne",
+    "ot_a3_mac_lane",
+    "ot_a3_place_table",
+    "ot_a3_qwen_gqa",
+    "ot_a3_reduction_balanced_sum",
+    "ot_a3_reduction_expert_sum",
+    "ot_a3_rope_lane_pipe",
+    "ot_a3_route_biased_topk",
+    "ot_a3_route_weight_normalize",
+    "ot_a3_route_window_index",
+    "ot_a3_selection_argmax",
+    "ot_a3_selection_token_append",
+    "ot_a3_vector_add",
+    "ot_a3_vector_compress_project",
+    "ot_a3_vector_convert",
+    "ot_a3_vector_hadamard",
+    "ot_a3_vector_index_score",
+    "ot_a3_vector_mhc_post",
+    "ot_a3_vector_rms_norm",
+    "ot_a3_vector_rope",
+    "ot_a3_vector_silu_mul",
+    "ot_a3_vector_sqrt_softplus",
+    "ot_a3_vector_sqrt_softplus_row"
+   ],
+   "top": "ot_a3_engine_issue_bridge"
+  },
+  {
+   "count": 7,
+   "newly_covered": [
+    "ot_a3_hc_coefficients_rne",
+    "ot_a3_hc_projection_rms_rne",
+    "ot_a3_hc_reduction_store",
+    "ot_a3_hc_sinkhorn20_rne",
+    "ot_a3_hc_stable_softmax_rne",
+    "ot_a3_hc_stable_softmax_sinkhorn20_rne",
+    "ot_a3_vector_mhc_pre_tile_scheduler"
+   ],
+   "top": "ot_a3_hc_pre_t1_descriptor_rne"
+  },
+  {
+   "count": 4,
+   "newly_covered": [
+    "ot_a3_communication_decoder",
+    "ot_a3_link_endpoint",
+    "ot_a3_link_return",
+    "ot_a3_link_wire"
+   ],
+   "top": "ot_a3_wafer_multicast_adapter"
+  },
+  {
+   "count": 2,
+   "newly_covered": [
+    "ot_a3_collective_engine",
+    "ot_a3_mesh_router"
+   ],
+   "top": "ot_a3_link_node"
+  },
+  {
+   "count": 2,
+   "newly_covered": [
+    "ot_a3_descriptor_record_validator",
+    "ot_a3_qwen_kv_scatter_adapter"
+   ],
+   "top": "ot_a3_qwen_gqa_adapter"
+  },
+  {
+   "count": 2,
+   "newly_covered": [
+    "ot_a3_engram_exact_dot_tree",
+    "ot_a3_engram_fp32_sqrt_rne_pipe"
+   ],
+   "top": "ot_a3_vector_engram_gate"
+  },
+  {
+   "count": 1,
+   "newly_covered": [
+    "ot_a3_program_header"
+   ],
+   "top": "ot_a3_device_top"
+  }
+ ],
+ "method": "greedy set cover over the instantiation closure; every module in the graph is a candidate top, including already-covered parents, because a covered parent can still be the cheapest umbrella for uncovered children",
+ "not_covered_by_any_top": [],
+ "route_count_greedy_cover": 7,
+ "route_count_one_per_module": 48,
+ "schema": "opentallas.derived.asap7_umbrella_route_cover.v1",
+ "uncovered_count": 48
+}
