@@ -524,8 +524,25 @@ module ot_a3_engine_array (
     //: Routing on the descriptor rather than replacing the lane outright means no
     //: descriptor changes behaviour: one that the pipelined lane does not claim is
     //: executed by exactly the gates that executed it before.
+    //: WIDENED TO FP8, which is where the shipped descriptors are.  Restricting the
+    //: pipelined lane to BF16 on both operands left 90.4% of the shipped matmuls on
+    //: the legacy one: 272 TENSOR.MATMUL operators in the shipped V4.1 HBM cell, 26
+    //: BF16 x BF16 and 246 involving FP8_E4M3FN, so the 394.0 MHz lane ran one matmul
+    //: in ten and the 64.3 MHz lane ran the rest
+    //: (results/physical_abi3/asap7/shipped_matmul_lane_split.json).
+    //:
+    //: E4M3FN is admitted because the conversion to BF16 is EXACT -- three mantissa
+    //: bits into seven, and a range inside BF16's -- so ot_a3_mac_lane_pipe's decode
+    //: changes the representation and not the value.  The block-scale condition is
+    //: unchanged and still sends a scaled descriptor to the legacy lane: a scale is
+    //: an fp32 multiply before the product, which is not a representation change.
+    //: Zero shipped matmuls declare one.
+    wire pipe_dtype_ok_a = (cfg_dtype_a == FMT_BF16)
+                        || (cfg_dtype_a == ot_a3_format_pkg::FMT_FP8_E4M3FN);
+    wire pipe_dtype_ok_b = (cfg_dtype_b == FMT_BF16)
+                        || (cfg_dtype_b == ot_a3_format_pkg::FMT_FP8_E4M3FN);
     wire use_pipe_mac = select_mac
-                     && (cfg_dtype_a == FMT_BF16) && (cfg_dtype_b == FMT_BF16)
+                     && pipe_dtype_ok_a && pipe_dtype_ok_b
                      && !cfg_scale_a && !cfg_scale_b;
 
     wire        pmac_a_en, pmac_b_en, pmac_we, pmac_busy, pmac_done;

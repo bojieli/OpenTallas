@@ -22,6 +22,10 @@ module tb_mac_lane_pipe_equiv;
     reg         start = 0;
     reg [15:0]  cfg_rows = 0, cfg_cols = 0, cfg_depth = 0;
     reg [31:0]  cfg_a_base = 0, cfg_b_base = 0, cfg_out_base = 0;
+    //: driven per case, so the FP8 descriptors the pipelined lane now claims are
+    //: compared against the legacy lane on the same memories
+    localparam [7:0] FMT_BF16 = 8'h10, FMT_FP8 = 8'h20;
+    reg [7:0]   dt_a = FMT_BF16, dt_b = FMT_BF16;
 
     // ---- legacy lane ----
     wire        L_ae, L_be, L_se, L_te, L_we, L_busy, L_done;
@@ -32,7 +36,7 @@ module tb_mac_lane_pipe_equiv;
     ot_a3_mac_lane legacy (
         .clk(clk), .rst_n(rst_n), .start(start),
         .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
-        .cfg_dtype_a(8'h10), .cfg_dtype_b(8'h10),
+        .cfg_dtype_a(dt_a), .cfg_dtype_b(dt_b),
         .cfg_a_base(cfg_a_base), .cfg_b_base(cfg_b_base),
         .cfg_scale_a(1'b0), .cfg_scale_b(1'b0),
         .cfg_block_a(16'd0), .cfg_block_b(16'd0),
@@ -61,7 +65,7 @@ module tb_mac_lane_pipe_equiv;
     ot_a3_mac_lane_pipe #(.LANES_IF(8)) fast (
         .clk(clk), .rst_n(rst_n), .start(start),
         .cfg_rows(cfg_rows), .cfg_cols(cfg_cols), .cfg_depth(cfg_depth),
-        .cfg_dtype_a(8'h10), .cfg_dtype_b(8'h10),
+        .cfg_dtype_a(dt_a), .cfg_dtype_b(dt_b),
         .cfg_a_base(cfg_a_base), .cfg_b_base(cfg_b_base),
         .cfg_out_base(cfg_out_base),
         .a_rd_en(P_ae), .a_rd_addr(P_aa), .a_rd_data(P_ad),
@@ -163,6 +167,7 @@ module tb_mac_lane_pipe_equiv;
     task run_fault_case(input [15:0] M, input [15:0] N, input [15:0] K,
                         input integer kind);
         begin
+            dt_a = FMT_BF16; dt_b = FMT_BF16;
             for (i = 0; i < MEM; i = i + 1) begin
                 case (kind)
                     0: begin
@@ -189,6 +194,20 @@ module tb_mac_lane_pipe_equiv;
             if (kind == 0) begin
                 //: BF16 exponent all-ones is an infinity, which the decode refuses
                 mem_a[3] = {16'b0, 1'b0, 8'hFF, 7'd0};
+            end
+            if (kind == 3) begin
+                //: A RESERVED E4M3FN ENCODING, which is a TAG and not a bit pattern:
+                //: ot_a3_format_pkg reports 0x7f and 0xff by setting FMT_ERR_NONFINITE
+                //: and leaving the value at zero, so a lane that narrows the value and
+                //: trusts the MAC to notice sees a finite zero and computes.  The
+                //: engine campaign found exactly that when the pipelined lane was
+                //: widened to FP8; this is the case that keeps it found.
+                dt_a = FMT_FP8; dt_b = FMT_FP8;
+                for (i = 0; i < MEM; i = i + 1) begin
+                    mem_a[i] = {24'b0, 8'h3a};
+                    mem_b[i] = {24'b0, 8'h2c};
+                end
+                mem_a[2] = {24'b0, 8'h7f};
             end
             Ln = 0; Pn = 0; Lcyc = 0; Pcyc = 0;
             rst_n = 0; start = 0;
@@ -230,6 +249,78 @@ module tb_mac_lane_pipe_equiv;
                     end
             $display("  fault kind %0d : legacy code %0d wrote %0d, pipelined code %0d wrote %0d",
                      kind, L_err, Ln, P_err, Pn);
+            dt_a = FMT_BF16; dt_b = FMT_BF16;
+        end
+    endtask
+
+    //: FP8 DESCRIPTORS, which the pipelined lane claims now.  E4M3FN converts to BF16
+    //: exactly -- three mantissa bits into seven, a range inside BF16's -- so the two
+    //: lanes must produce IDENTICAL write streams, not merely close ones, and this is
+    //: the claim that licences widening use_pipe_mac in ot_a3_engine_array.
+    //:
+    //: The codes are drawn over the whole finite E4M3FN space including subnormals
+    //: (exponent field 0, which is where an inexact conversion would show first) and
+    //: the reserved 0x7f/0xff NaNs are avoided, since those are a refusal rather than
+    //: an arithmetic case and the refusal set is covered above.
+    task run_fp8_case(input [15:0] M, input [15:0] N, input [15:0] K,
+                      input [7:0] fa, input [7:0] fb);
+        integer q;
+        begin
+            dt_a = fa; dt_b = fb;
+            for (q = 0; q < MEM; q = q + 1) begin
+                if (fa == FMT_FP8) begin
+                    rnd = nxt(rnd);
+                    //: any 8-bit code whose exponent/mantissa is not the reserved
+                    //: all-ones pattern
+                    mem_a[q] = {24'b0, rnd[7:0]};
+                    if (mem_a[q][6:0] == 7'h7f) mem_a[q] = {24'b0, rnd[7], 7'h3a};
+                end else begin
+                    rnd = nxt(rnd); ex = 8'd118 + {5'b0, rnd[18:16]};
+                    mem_a[q] = {16'b0, rnd[31], ex, rnd[14:8]};
+                end
+                if (fb == FMT_FP8) begin
+                    rnd = nxt(rnd);
+                    mem_b[q] = {24'b0, rnd[7:0]};
+                    if (mem_b[q][6:0] == 7'h7f) mem_b[q] = {24'b0, rnd[7], 7'h2c};
+                end else begin
+                    rnd = nxt(rnd); ex = 8'd118 + {5'b0, rnd[18:16]};
+                    mem_b[q] = {16'b0, rnd[31], ex, rnd[14:8]};
+                end
+            end
+            Ln = 0; Pn = 0; Lcyc = 0; Pcyc = 0;
+            rst_n = 0; start = 0;
+            repeat (3) @(negedge clk);
+            rst_n = 1;
+            cfg_rows = M; cfg_cols = N; cfg_depth = K;
+            cfg_a_base = 0; cfg_b_base = 32'd4096; cfg_out_base = 32'd0;
+            @(negedge clk);
+            start = 1; @(negedge clk); start = 0;
+            q = 0;
+            while (!((Ln >= M*N) && (Pn >= M*N)) && q < 4000000) begin
+                @(negedge clk); q = q + 1;
+            end
+            repeat (20) @(negedge clk);
+            cases = cases + 1;
+            if (Ln != Pn) begin
+                bad = bad + 1;
+                $display("FAIL fp8 %0h x %0h M=%0d N=%0d K=%0d: legacy wrote %0d, pipelined %0d",
+                         fa, fb, M, N, K, Ln, Pn);
+            end else
+                for (j = 0; j < Ln; j = j + 1)
+                    if (La[j] !== Pa[j] || Ld[j] !== Pd[j]) begin
+                        bad = bad + 1;
+                        if (bad < 8)
+                            $display("FAIL fp8 %0h x %0h write %0d: legacy %h@%h pipelined %h@%h",
+                                     fa, fb, j, Ld[j], La[j], Pd[j], Pa[j]);
+                        j = Ln;
+                    end
+            if (L_err !== P_err) begin
+                bad = bad + 1;
+                $display("FAIL fp8 %0h x %0h: error_code legacy %0d pipelined %0d", fa, fb, L_err, P_err);
+            end
+            $display("  fp8 %0h x %0h M=%0d N=%0d K=%0d : %0d writes, legacy %0d cycles, pipelined %0d cycles (%0.2fx)",
+                     fa, fb, M, N, K, Ln, Lcyc, Pcyc, (Pcyc > 0) ? (1.0*Lcyc/Pcyc) : 0.0);
+            dt_a = FMT_BF16; dt_b = FMT_BF16;
         end
     endtask
 
@@ -242,12 +333,20 @@ module tb_mac_lane_pipe_equiv;
         run_case(3, 5, 9);       // both awkward
         run_case(1, 64, 64);
         run_case(4, 16, 16);
+        //: the three dtype pairings the shipped descriptors use
+        run_fp8_case(1, 8, 16, FMT_FP8,  FMT_FP8);
+        run_fp8_case(1, 8, 16, FMT_BF16, FMT_FP8);
+        run_fp8_case(1, 8, 16, FMT_FP8,  FMT_BF16);
+        run_fp8_case(2, 12, 9, FMT_FP8,  FMT_FP8);
+        run_fp8_case(3, 5, 33, FMT_BF16, FMT_FP8);
+
         run_fault_case(1, 6, 4, 0);
         run_fault_case(1, 6, 4, 1);
         run_fault_case(1, 6, 8, 2);
+        run_fault_case(1, 6, 4, 3);
 
         if (bad == 0)
-            $display("PASS mac_lane_pipe: %0d descriptors including three refusals, write streams and error codes identical to ot_a3_mac_lane", cases);
+            $display("PASS mac_lane_pipe: %0d descriptors including five FP8 pairings and four refusals, write streams and error codes identical to ot_a3_mac_lane", cases);
         else
             $display("FAIL mac_lane_pipe: %0d mismatches over %0d descriptors", bad, cases);
         $finish;

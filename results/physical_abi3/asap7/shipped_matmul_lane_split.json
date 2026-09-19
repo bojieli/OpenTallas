@@ -1,5 +1,5 @@
 {
- "answer": "the slow one, almost entirely.  Of 272 TENSOR.MATMUL operators in the shipped DeepSeek-V4.1-Flash HBM cell, 26 are BF16 x BF16 and reach ot_a3_mac_lane_pipe at 394.0 MHz; the other 246 -- 90.4% -- involve FP8 and reach ot_a3_mac_lane, which routed at 64.3 MHz and did NOT meet a 4 ns target.",
+ "answer": "the slow one, almost entirely.  Of 272 TENSOR.MATMUL operators in the shipped DeepSeek-V4.1-Flash HBM cell, 26 are BF16 x BF16 and reach ot_a3_mac_lane_pipe at 394.0 MHz; the other 246 -- 90.4% -- involve FP8 and reach ot_a3_mac_lane, which routed at 64.3 MHz and did NOT meet a 4 ns target.  FIXED: the pipelined lane now decodes FP8 to BF16 exactly and the routing admits it, at a cost of 0.4% frequency.",
  "measured_on": {
   "by_operand_dtype": {
    "BF16 x BF16": {
@@ -29,6 +29,22 @@
  ],
  "question": "ot_a3_engine_array routes TENSOR.MATMUL between two lanes on the descriptor.  Which lane do the SHIPPED descriptors actually reach?",
  "schema": "opentallas.derived.shipped_matmul_lane_split.v1",
+ "the_change_is_now_made": {
+  "a_stale_record_found_while_doing_it": "the committed 394.0 MHz record for this block is from commit 6700ef8b and a different source list; the same module without the FP8 path closes at 611.2 MHz today.  Both of today's records are filed so the comparison is one variable.",
+  "and_one_thing_the_gate_caught": "the first attempt computed on a RESERVED E4M3FN encoding instead of refusing it.  ot_a3_format_pkg reports 0x7f and 0xff by setting FMT_ERR_NONFINITE and leaving the VALUE at zero, so narrowing the value handed the MAC a finite zero and the MAC had nothing to refuse -- matmul_fp8_reserved_encoding wanted fault 1 and got fault 0 with six words written. The lane now reads the decode TAG, delayed by the pipe's five stages and first in the legacy lane's refusal order, and the bench carries that case so it stays caught.",
+  "gated_by": [
+   "rtl/test/tb_mac_lane_pipe_equiv.sv: 16 descriptors, five FP8 dtype pairings and four refusals, write streams and error codes IDENTICAL to the legacy lane, at 2.94x to 4.41x fewer cycles",
+   "tools/rtl_abi3_engine_campaign.py: pass on iverilog and verilator, 40,878 checks each, with the marker byte-identical to the run before the change"
+  ],
+  "matched_routes_at_4ns": {
+   "bf16_only_control_fmax_hz": 611200000.0,
+   "both": "closed, zero slew violations",
+   "cost_of_the_decode": "0.996x frequency, 0.99x cells -- it is free",
+   "fp8_capable_fmax_hz": 608600000.0
+  },
+  "what": "ot_a3_mac_lane_pipe decodes an FP8_E4M3FN operand to a BF16 code before the MAC, and ot_a3_engine_array's use_pipe_mac admits FP8 on either operand.  The block-scale condition is unchanged.",
+  "what_the_shipped_descriptors_get": "the 246 FP8 matmuls move from ot_a3_mac_lane at 64.3 MHz, which did not meet a 4 ns target, to ot_a3_mac_lane_pipe at 608.6 MHz closed: 9.5x on 90.4% of the shipped matmuls"
+ },
  "the_lane_frequencies": {
   "ot_a3_mac_lane": {
    "cells": 72338,

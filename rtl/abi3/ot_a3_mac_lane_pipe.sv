@@ -146,10 +146,39 @@ module ot_a3_mac_lane_pipe #(
     wire [1:0]  pipe_err;
     wire        pipe_ov;
 
+    wire [33:0] iss_dec_a = ot_a3_format_pkg::decode_element(cfg_dtype_a, a_rd_data);
+    wire [33:0] iss_dec_b = ot_a3_format_pkg::decode_element(cfg_dtype_b, b_rd_data);
+
+    //: AND THIS IS HOW AN FP8 OPERAND REACHES A BF16 MAC.  ot_mac_bf16_fp32_pipe
+    //: takes BF16 codes, and the lane used to be restricted to BF16 descriptors for
+    //: that reason -- which left the shipped path on the legacy lane: of 272
+    //: TENSOR.MATMUL operators in the shipped V4.1 HBM cell, 26 are BF16 x BF16 and
+    //: 246 involve FP8_E4M3FN, so 90.4% of them ran at 64.3 MHz instead of 394.0
+    //: (results/physical_abi3/asap7/shipped_matmul_lane_split.json).
+    //:
+    //: THE CONVERSION IS EXACT, so this is a representation change and not a numeric
+    //: one.  E4M3FN carries three mantissa bits where BF16 carries seven, and its
+    //: range 2**-9 .. 448 sits inside BF16's, so every finite E4M3FN value -- normal
+    //: or subnormal, all 256 codes -- is representable in BF16 with no rounding.
+    //: ot_a3_format_pkg says as much for binary32 and checks all 256 exhaustively;
+    //: the narrowing below cannot round because the value it narrows has at most four
+    //: significant bits.
+    //:
+    //: A BF16 operand takes its own code straight through, so a descriptor the lane
+    //: already claimed is fed exactly the bits it was fed before.  A reserved E4M3FN
+    //: encoding decodes to NaN, narrows to a NaN BF16, and the MAC refuses it through
+    //: err -- which is the same ERR_OPERAND_NONFINITE the legacy lane raises.
+    wire [18:0] iss_nar_a = ot_fp32_rne_pkg::fp32_to_bf16_rne(iss_dec_a[31:0]);
+    wire [18:0] iss_nar_b = ot_fp32_rne_pkg::fp32_to_bf16_rne(iss_dec_b[31:0]);
+    wire [15:0] mac_code_a = (cfg_dtype_a == ot_a3_format_pkg::FMT_BF16)
+                             ? a_rd_data[15:0] : iss_nar_a[15:0];
+    wire [15:0] mac_code_b = (cfg_dtype_b == ot_a3_format_pkg::FMT_BF16)
+                             ? b_rd_data[15:0] : iss_nar_b[15:0];
+
     ot_mac_bf16_fp32_pipe mac (
         .clk(clk), .rst_n(rst_n),
         .valid_in(iss_v && iss_in_range),
-        .a(a_rd_data[15:0]), .b(b_rd_data[15:0]),
+        .a(mac_code_a), .b(mac_code_b),
         .c(acc[iss_slot[SW-1:0]]),
         .y(pipe_y), .err(pipe_err), .valid_out(pipe_ov)
     );
@@ -188,8 +217,7 @@ module ot_a3_mac_lane_pipe #(
     //: on the SAME cycle as that MAC's ``err``.  Latching it at issue instead
     //: would let a later MAC's product fault beat an earlier MAC's nonfinite
     //: operand, which is not the order the legacy lane refuses in.
-    wire [33:0] iss_dec_a = ot_a3_format_pkg::decode_element(cfg_dtype_a, a_rd_data);
-    wire [33:0] iss_dec_b = ot_a3_format_pkg::decode_element(cfg_dtype_b, b_rd_data);
+
     wire [33:0] iss_raw_product =
         ot_fp32_rne_pkg::fp32_mul_rne(iss_dec_a[31:0], iss_dec_b[31:0]);
     wire iss_product_range = iss_v && iss_in_range
@@ -205,6 +233,28 @@ module ot_a3_mac_lane_pipe #(
         end else begin
             pr_d1 <= iss_product_range; pr_d2 <= pr_d1; pr_d3 <= pr_d2;
             pr_d4 <= pr_d3;             pr_d5 <= pr_d4;
+        end
+
+    //: A NONFINITE OPERAND IS A TAG, NOT A BIT PATTERN, and that is why this check has
+    //: to exist rather than be left to the MAC.  ot_a3_format_pkg's decoders report a
+    //: reserved E4M3FN encoding -- 0x7f and 0xff -- by setting FMT_ERR_NONFINITE and
+    //: leaving the VALUE at 32'b0, so narrowing it hands the MAC a finite zero and the
+    //: MAC has nothing to refuse.  The engine campaign's matmul_fp8_reserved_encoding
+    //: caught exactly that: it wants fault 1 and no writes, and got fault 0 with six
+    //: words written.  The legacy lane reads the tag at its S_SCALE and refuses; so
+    //: does this, delayed by the pipe's five stages like the product flag so the two
+    //: are weighed on the same cycle, and FIRST in the order the legacy lane uses.
+    wire iss_operand_nonfinite = iss_v && iss_in_range
+                                 && ((iss_dec_a[33:32] != 2'd0)
+                                     || (iss_dec_b[33:32] != 2'd0));
+    reg nf_d1, nf_d2, nf_d3, nf_d4, nf_d5;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            nf_d1 <= 1'b0; nf_d2 <= 1'b0; nf_d3 <= 1'b0;
+            nf_d4 <= 1'b0; nf_d5 <= 1'b0;
+        end else begin
+            nf_d1 <= iss_operand_nonfinite; nf_d2 <= nf_d1; nf_d3 <= nf_d2;
+            nf_d4 <= nf_d3;                 nf_d5 <= nf_d4;
         end
 
     integer ai;
@@ -236,7 +286,8 @@ module ot_a3_mac_lane_pipe #(
         else if (pipe_ov && (error_code == ERR_NONE)) begin
             //: the legacy lane's own priority: a nonfinite operand first, then a
             //: product that left the range, then an accumulation that did
-            if (pipe_err == 2'd1)      error_code <= ERR_OPERAND_NONFINITE;
+            if (nf_d5 || (pipe_err == 2'd1))
+                                       error_code <= ERR_OPERAND_NONFINITE;
             else if (pr_d5)            error_code <= ERR_PRODUCT_RANGE;
             else if (pipe_err == 2'd2) error_code <= ERR_ACCUMULATE_RANGE;
         end
