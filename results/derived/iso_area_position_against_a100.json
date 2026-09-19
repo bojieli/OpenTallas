@@ -1,0 +1,63 @@
+{
+ "a_figure_i_quoted_without_a_basis": {
+  "retracted": "1.216x to 1.287x sustained",
+  "why": "I reported that range repeatedly as the sustained iso-area figure.  It appears in NO committed record; grepping results/ for it finds only this retraction.  It was session arithmetic tying the sustained ratio to the microsequencer's closure frequency, and I never published the derivation.  The committed sustained figures are 1.952x and 2.059x at skew 0 and 1.006x and 1.124x at skew 2."
+ },
+ "answer": "it matches and exceeds it on every committed basis.  The ratio is the device's throughput per mm2 DIVIDED BY the A100's throughput per mm2, so greater than one means more work per unit silicon: peak 2.077x, sustained 1.952x MAC-active and 2.059x by occupancy.  The thin case is the straggler assumption -- 1.006x and 1.124x at skew 2 -- and the best measured refill regime lifts that to 1.425x and 1.592x.",
+ "committed_figures": {
+  "peak_array_level": {
+   "evidence": "ROUTED AND CLOSED on both blocks",
+   "ratio": 2.0770877724717445,
+   "what_it_is": "N ot_compute_unit instances plus the descriptor distributor that reaches all of them"
+  },
+  "peak_mac_tile_level": {
+   "evidence": "ROUTED, NOT CLOSED",
+   "ratio": 4.625747378761451,
+   "what_is_out": "all operand storage, all control, everything else",
+   "what_it_is": "ot_mac_tile: 16 MAC lanes, the operand broadcast tree, the accumulators and the exponent-window logic"
+  },
+  "skew_meanings": {
+   "skew0": "every unit always fed: refill_valid asserted every cycle at every unit",
+   "skew2": "STRAGGLERS -- one unit in sixteen at a 50% refill duty"
+  },
+  "source": "results/abi3/sustained_array_iso_area.json",
+  "sustained_skew0_mac_active": 1.9523142183681381,
+  "sustained_skew0_occupancy": 2.05901710885124,
+  "sustained_skew2_best_refill_mac_active": 1.4254731508241418,
+  "sustained_skew2_best_refill_occupancy": 1.59244747033549,
+  "sustained_skew2_mac_active": 1.0064374821818924,
+  "sustained_skew2_occupancy": 1.1243276112389553
+ },
+ "not_a_claim": [
+  "this is throughput per unit area against a published A100 figure, not a benchmark of one system against another: no A100 was run here",
+  "the logic-area fraction of the A100 die is ASSUMED at 0.6 and graded as such in the source",
+  "peak is not sustained and the MAC-tile level is not the array level; the source record's level_naming_guard warns against comparing them digit for digit"
+ ],
+ "question": "the standing goal is to MATCH an A100's performance at iso-area in a comparable node.  Where does the design stand, and what does the number mean?",
+ "schema": "opentallas.result.iso_area_position_against_a100.v1",
+ "the_frequency_that_carries_the_throughput_is_not_the_limiter": {
+  "abi3_datapath_limiter_block": "ot_a3_hc_sinkhorn20_rne_pipe",
+  "abi3_datapath_limiter_hz": 276878000.0,
+  "compute_unit_evidence": "ROUTED AND CLOSED, slew violations 0, at a 0.8 ns target",
+  "compute_unit_routed_fmax_hz": 1289720000.0,
+  "why_they_are_different": "the iso-area ratios are computed from ot_compute_unit's own routed frequency and routed area -- 1.29 GHz, comparable to the A100's boost clock -- while the 276.9 MHz figure is the slowest ABI 3.0 block that has closed, which is a Sinkhorn/HC block and not in the MAC datapath the throughput is measured on.  A block clock below a GPU's does not imply throughput per mm2 below a GPU's, and here it does not: the design wins on MACs per unit area."
+ },
+ "the_ratio_is_device_over_a100": {
+  "comparator": {
+   "bf16_dense_ops_s": 312000000000000.0,
+   "bf16_evidence": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper",
+   "die_area_mm2": 826.0,
+   "logic_area_mm2": 495.59999999999997,
+   "logic_level_ops_s_per_mm2": 629539951573.85,
+   "part": "a100_sxm_80gb",
+   "process": "TSMC N7"
+  },
+  "definition": "device ops/s per mm2 / A100 ops/s per mm2.  ABOVE 1 means the design delivers MORE throughput per unit area than the comparator.  Below 1 would mean less."
+ },
+ "what_is_not_closed": {
+  "binding_constraint": "operand delivery",
+  "datapath_coverage": "54 of 105 ABI 3.0 modules are inside a block that has closed, so the limiter covers half the datapath and the other half is unmeasured",
+  "the_thin_case": "skew 2 without double-buffering is 1.006x MAC-active, which is parity and not a margin; the double-buffered 1.425x is DERIVED from a work-per-area rescaling and not a second pipeline measurement, which the source record states",
+  "why_it_is_the_remaining_target": "operand delivery is 59.6% of the compute unit's occupied area and 75% of its power by lane-probe subtraction, so the next iso-area gain is there rather than in the arithmetic"
+ }
+}
