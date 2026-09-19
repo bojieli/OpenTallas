@@ -1,0 +1,45 @@
+{
+ "against_the_fixed_module": {
+  "and_the_seven_arithmetic_descriptors_still_agree": true,
+  "observed": [
+   "fault kind 0 : legacy code 1 wrote 0, pipelined code 1 wrote 0",
+   "fault kind 1 : legacy code 2 wrote 0, pipelined code 2 wrote 0",
+   "fault kind 2 : legacy code 3 wrote 0, pipelined code 3 wrote 0"
+  ],
+  "speedup_range_on_those": "2.55x to 4.84x fewer cycles than the legacy lane",
+  "verdict": "PASS, 10 descriptors including three refusals"
+ },
+ "against_the_pre_fix_module": {
+  "observed": [
+   "fault kind 0: legacy code 1 wrote 0, pipelined code 1 wrote 6",
+   "fault kind 1: error_code legacy 2 pipelined 3",
+   "fault kind 1: legacy wrote 0 words, pipelined wrote 6",
+   "fault kind 2: legacy wrote 0 words, pipelined wrote 6"
+  ],
+  "revision": "HEAD~1 of rtl/abi3/ot_a3_mac_lane_pipe.sv",
+  "verdict": "FAIL, 4 mismatches over 10 descriptors"
+ },
+ "answer": "yes.  Extended with the three refusals the BF16 path can reach it FAILS against the pre-fix module with four mismatches and passes against the fixed one, so the guard is demonstrated rather than asserted.",
+ "not_a_claim": [
+  "three refusals are the ones the BF16 x BF16 path can reach; the legacy lane's scale-range refusal is unreachable from the pipelined lane, which does not claim scaled descriptors",
+  "not a physical measurement"
+ ],
+ "question": "rtl/test/tb_mac_lane_pipe_equiv.sv proves the pipelined MAC lane writes what the legacy lane writes, and two refusal-path divergences lived in the pipelined lane while it passed.  Does the bench now catch them?",
+ "schema": "opentallas.rtl.mac_lane_pipe_refusal_equivalence.v1",
+ "the_three_refusals": {
+  "kind_0_nonfinite_operand": {
+   "expected_code": 1,
+   "expected_writes": 0
+  },
+  "kind_1_product_past_binary32": {
+   "expected_code": 2,
+   "expected_writes": 0
+  },
+  "kind_2_accumulation_past_binary32": {
+   "expected_code": 3,
+   "expected_writes": 0
+  },
+  "note": "the bench also fails if the LEGACY lane does not refuse, so a stimulus that stops reaching the refusal cannot pass silently"
+ },
+ "why_it_could_not_see_them": "run_case deliberately drew operands 'in a range that keeps every product and partial sum inside binary32, so both lanes take the no-error path and the comparison is about arithmetic rather than about fault handling' -- its own words.  Seven descriptors, no refusals.  The engine campaign saw the divergence, as two case indices, after eighteen minutes."
+}

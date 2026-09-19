@@ -144,6 +144,95 @@ module tb_mac_lane_pipe_equiv;
         end
     endtask
 
+    //: AND THE REFUSAL PATHS, which run_case above deliberately never enters.
+    //:
+    //: That omission is why two divergences lived in ot_a3_mac_lane_pipe while this
+    //: bench passed: it wrote results for a descriptor that had faulted, and it
+    //: reported an accumulation overflow where the contract wants a product
+    //: overflow.  Only the engine campaign saw them, and only as case indices.  An
+    //: equivalence bench that never refuses anything cannot see a refusal diverge,
+    //: so these three drive each refusal the BF16 path can reach and require the
+    //: same write stream and the same code from both lanes.
+    //:
+    //: kind 0  a nonfinite BF16 operand          -> ERR_OPERAND_NONFINITE (1)
+    //: kind 1  a product past binary32           -> ERR_PRODUCT_RANGE (2)
+    //: kind 2  an accumulation past binary32     -> ERR_ACCUMULATE_RANGE (3)
+    //:
+    //: The wait cannot be "both wrote M*N words" here, because a refusing lane
+    //: writes fewer: it waits for both to retire.
+    task run_fault_case(input [15:0] M, input [15:0] N, input [15:0] K,
+                        input integer kind);
+        begin
+            for (i = 0; i < MEM; i = i + 1) begin
+                case (kind)
+                    0: begin
+                        //: in range everywhere, then one operand made an infinity
+                        rnd = nxt(rnd); ex = 8'd118 + {5'b0, rnd[18:16]};
+                        mem_a[i] = {16'b0, rnd[31], ex, rnd[14:8]};
+                        rnd = nxt(rnd); ex = 8'd118 + {5'b0, rnd[18:16]};
+                        mem_b[i] = {16'b0, rnd[31], ex, rnd[14:8]};
+                    end
+                    1: begin
+                        //: 2**126 x 2**126: the product's exponent leaves binary32
+                        //: while both operands are finite BF16
+                        mem_a[i] = {16'b0, 1'b0, 8'd253, 7'd0};
+                        mem_b[i] = {16'b0, 1'b0, 8'd253, 7'd0};
+                    end
+                    default: begin
+                        //: each product is finite and the running sum is not: 2**127
+                        //: added to itself K times
+                        mem_a[i] = {16'b0, 1'b0, 8'd254, 7'd0};
+                        mem_b[i] = {16'b0, 1'b0, 8'd127, 7'd0};
+                    end
+                endcase
+            end
+            if (kind == 0) begin
+                //: BF16 exponent all-ones is an infinity, which the decode refuses
+                mem_a[3] = {16'b0, 1'b0, 8'hFF, 7'd0};
+            end
+            Ln = 0; Pn = 0; Lcyc = 0; Pcyc = 0;
+            rst_n = 0; start = 0;
+            repeat (3) @(negedge clk);
+            rst_n = 1;
+            cfg_rows = M; cfg_cols = N; cfg_depth = K;
+            cfg_a_base = 0; cfg_b_base = 32'd4096; cfg_out_base = 32'd0;
+            @(negedge clk);
+            start = 1; @(negedge clk); start = 0;
+            i = 0;
+            while (!(L_done || L_busy) && i < 100) begin @(negedge clk); i = i + 1; end
+            i = 0;
+            while ((L_busy || P_busy) && i < 4000000) begin @(negedge clk); i = i + 1; end
+            repeat (20) @(negedge clk);
+
+            cases = cases + 1;
+            if (L_err === 8'd0) begin
+                bad = bad + 1;
+                $display("FAIL fault kind %0d: the LEGACY lane did not refuse (code 0) -- the stimulus is wrong, not the lane",
+                         kind);
+            end
+            if (L_err !== P_err) begin
+                bad = bad + 1;
+                $display("FAIL fault kind %0d: error_code legacy %0d pipelined %0d",
+                         kind, L_err, P_err);
+            end
+            if (Ln != Pn) begin
+                bad = bad + 1;
+                $display("FAIL fault kind %0d: legacy wrote %0d words, pipelined wrote %0d",
+                         kind, Ln, Pn);
+            end else
+                for (j = 0; j < Ln; j = j + 1)
+                    if (La[j] !== Pa[j] || Ld[j] !== Pd[j]) begin
+                        bad = bad + 1;
+                        if (bad < 8)
+                            $display("FAIL fault kind %0d write %0d: legacy %h@%h pipelined %h@%h",
+                                     kind, j, Ld[j], La[j], Pd[j], Pa[j]);
+                        j = Ln;
+                    end
+            $display("  fault kind %0d : legacy code %0d wrote %0d, pipelined code %0d wrote %0d",
+                     kind, L_err, Ln, P_err, Pn);
+        end
+    endtask
+
     initial begin
         $display("legacy ot_a3_mac_lane vs pipelined ot_a3_mac_lane_pipe, same memories");
         run_case(1, 8, 16);
@@ -153,8 +242,12 @@ module tb_mac_lane_pipe_equiv;
         run_case(3, 5, 9);       // both awkward
         run_case(1, 64, 64);
         run_case(4, 16, 16);
+        run_fault_case(1, 6, 4, 0);
+        run_fault_case(1, 6, 4, 1);
+        run_fault_case(1, 6, 8, 2);
+
         if (bad == 0)
-            $display("PASS mac_lane_pipe: %0d descriptors, write streams and error codes identical to ot_a3_mac_lane", cases);
+            $display("PASS mac_lane_pipe: %0d descriptors including three refusals, write streams and error codes identical to ot_a3_mac_lane", cases);
         else
             $display("FAIL mac_lane_pipe: %0d mismatches over %0d descriptors", bad, cases);
         $finish;
