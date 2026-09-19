@@ -1,5 +1,5 @@
 {
-  "answer": "nowhere in particular: it DRIFTS.  At layer 1 the residual stream entering the gate and the gate's own output both agree to ONE BF16 ulp -- cosine 0.999998, max|diff| 0.03125.  At layer 14 the same two tensors are at cosine 0.9981 with max|diff| 48 against a stream peak of 1264, which is 3.8 percent.  There is no step change and no layer at which the device breaks.",
+  "answer": "nowhere in particular between 0 and 1, and somewhere in 2..13.  At layer 1 the residual stream entering the gate and the gate's output both agree to ONE BF16 ulp; at layer 14 they are at cosine 0.9981 with max|diff| 48 against a peak of 1264.  The comparator is bit-exact against itself at this prompt, so that difference is the device's, and the layers between the two taps are exactly the first that run the compressed attention path.",
   "device": {
     "capability": "configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json",
     "deployment": "the published shipped V4.1 HBM c512 cell, 8 nodes",
@@ -51,9 +51,13 @@
   ],
   "question": "with the comparator's Engram restored, where does the V4.1 device part from the oracle?  The Engram runs at layers 1 and 14 and its operands are unambiguously the same tensor on both sides, which makes those two layers a bisection step that needs no heuristic tensor matching.",
   "schema": "opentallas.result.v41_device_oracle_engram_depth.v1",
+  "the_comparator_is_bit_exact_against_itself_here": {
+    "contrast_with_the_pinned_32_token_prompt": "at 32 tokens the same measurement moves 80 of 81 taps from row 8 up, which is why the intermediate comparison has to be done at a short prefix",
+    "measured": "two separate processes, one forward each, same prompt: max|diff| ZERO at both engram layers, cosine 1.000000000",
+    "why_it_matters": "the P10 intermediates are therefore a STABLE target, not a wobbling one.  Fill-invariance said the comparator reads no uninitialised cache at this length; this says it also repeats exactly across processes.  So the device's 0.998 at layer 14 is the DEVICE's difference and cannot be attributed to comparator noise."
+  },
   "what_it_does_not_settle": [
-    "whether the drift is legitimate rounding on both sides or the device rounding differently somewhere: that needs a per-operator error budget, which this does not build",
-    "the drift between layers 14 and 39 and through the head, which is where an argmax flip actually happens; two checkpoints bound the shape, not the whole curve",
+    "WHICH layer between 2 and 13 introduces it, and which operator inside that layer: the engram gives two unambiguous taps and there is no third until layer 14, so narrowing further needs a shape-aware per-operator comparison rather than the best-cosine matching the earlier bisection used",
     "the pinned 32-token comparison, whose gold does not move under the engram fix and which the three V4.1 cells still fail"
   ],
   "what_it_rules_out": [
@@ -61,6 +65,12 @@
     "a broken engram ADDRESSING on the device: the two n-gram hash implementations agree on all 48 columns at every position (results/abi3/deepseek_v41_ngram_hash_identity.json)",
     "the earlier reading that layer 1's sparse attention sits at cosine 0.922 -- that bisection ran against the comparator while ITS engram was dead"
   ],
+  "where_the_drift_is_introduced": {
+    "argument": "layer 1's engram gate agrees to ONE BF16 ulp on both its input and its output, so everything up to and including layer 1 matches.  Layer 14's agrees to 0.998 with max|diff| 48 against a peak of 1264.  The drift is therefore created between them.",
+    "bounded_to": "layers 2 through 13",
+    "growth_is_faster_than_one_rounding_per_layer": "0.34% at layer 1 to 3.75% at layer 14 is about 100x over thirteen layers.  Accumulating one independent BF16 rounding per layer would predict sqrt(13) = 3.6x, and accumulating them coherently 13x.  100x is larger than either, which is a reason to look for a systematically different numeric choice in the compressed path rather than to call it benign accumulation -- but it is a reason, not a measurement.",
+    "what_those_layers_have_that_0_and_1_do_not": "compress_ratios is 0 for layers 0 and 1 and 2 for layers 2 through 19, so layers 2..13 are the first that run the COMPRESSED attention path -- the compressor, the indexer and its FP4 activation quantisation, and the sparse selection.  Layers 0 and 1 are sliding-window only."
+  },
   "why_this_prompt": "P10 is fill-invariant at every tap and every row (results/abi3/deepseek_v41_oracle_cache_invariance.json run per prefix), so the comparator is trustworthy here at every position rather than only at rows 0-7",
   "workload": "build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json"
 }
