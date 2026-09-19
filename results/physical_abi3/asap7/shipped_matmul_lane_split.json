@@ -1,4 +1,46 @@
 {
+ "and_no_shipped_matmul_reaches_the_legacy_lane_now": {
+  "counted_over_every_shipped_cell": {
+   "deepseek-v4-flash-hbm-tokens": {
+    "legacy": 0,
+    "matmuls": 69,
+    "pipelined": 69
+   },
+   "deepseek-v4-flash-rom": {
+    "legacy": 0,
+    "matmuls": 69,
+    "pipelined": 69
+   },
+   "deepseek-v4-flash-rom-array-32": {
+    "legacy": 0,
+    "matmuls": 69,
+    "pipelined": 69
+   },
+   "deepseek-v41-flash-rom-array-64": {
+    "legacy": 0,
+    "matmuls": 273,
+    "pipelined": 273
+   },
+   "deepseek-v41-flash-rom-wafer-2": {
+    "legacy": 0,
+    "matmuls": 273,
+    "pipelined": 273
+   },
+   "qwen3-8b-hbm-tokens": {
+    "legacy": 0,
+    "matmuls": 8,
+    "pipelined": 8
+   },
+   "total": {
+    "legacy": 0,
+    "matmuls": 761,
+    "pipelined": 761
+   }
+  },
+  "reading": "every shipped matmul in all three model families, on HBM and on both ROM topologies, declares BF16 or FP8_E4M3FN operands and no block scale, so all 761 now satisfy use_pipe_mac.  The whole shipped matmul path runs on the 608.6 MHz lane and none of it runs on the 64.3 MHz one.",
+  "what_it_closes": "the qualification this record raised against results/physical_abi3/asap7/limiter_ladder.json.  The ladder ranks blocks that have CLOSED, and ot_a3_mac_lane at 64.3 MHz was the reason to distrust it -- a block off the ladder carrying most of the shipped matmuls.  It carries none of them now, so the ladder describes the shipped token path as well as the closed set.",
+  "what_it_does_not_claim": "that ot_a3_mac_lane is dead.  ot_a3_engine_array still instantiates it and still routes to it for a dtype pair the pipelined lane does not claim -- FP32, FP4, or any descriptor declaring a block scale -- so it remains the implementation of record for those and is exercised by the engine campaign's own cases.  What is measured here is that no SHIPPED descriptor is one of those."
+ },
  "answer": "the slow one, almost entirely.  Of 272 TENSOR.MATMUL operators in the shipped DeepSeek-V4.1-Flash HBM cell, 26 are BF16 x BF16 and reach ot_a3_mac_lane_pipe at 394.0 MHz; the other 246 -- 90.4% -- involve FP8 and reach ot_a3_mac_lane, which routed at 64.3 MHz and did NOT meet a 4 ns target.  FIXED: the pipelined lane now decodes FP8 to BF16 exactly and the routing admits it, at a cost of 0.4% frequency.",
  "measured_on": {
   "by_operand_dtype": {
