@@ -103,6 +103,17 @@ BACKENDS = {
     "rom_qwen3": "compiler.backends.rom.qwen3:lower_to_abi3",
     "rom_deepseek_v4": "compiler.backends.rom.deepseek_v4:lower_to_abi3",
     "rom_deepseek_v4_array": "compiler.backends.rom.deepseek_v4_array:lower_to_abi3",
+    # DeepSeek-V4.1-Flash, the two ROM stores.  Both backends already expose the
+    # same ``lower_to_abi3`` entry point the other three do; what was missing was
+    # a name here, and without it the V4.1 cells could only be walked by a
+    # session script -- which is exactly the provenance this tool exists to
+    # refuse.  The wafer product is the SINGLE-STORE lowering and the array
+    # product the node-sharded one, so they are two names for the same reason
+    # ``rom_deepseek_v4`` and ``rom_deepseek_v4_array`` are.
+    "rom_deepseek_v41": "compiler.backends.rom.deepseek_v41:lower_to_abi3",
+    "rom_deepseek_v41_array": (
+        "compiler.backends.rom.deepseek_v41_array:lower_to_abi3"
+    ),
 }
 
 # Sources shared by every governed token capture.  This is intentionally a
@@ -177,6 +188,20 @@ BACKEND_FUNCTIONAL_SOURCE_PATHS = {
     "rom_deepseek_v4_array": (
         "compiler/backends/rom/deepseek_v4_array.py",
         "compiler/backends/rom/deepseek_v4.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
+    ),
+    "rom_deepseek_v41": (
+        "compiler/backends/rom/deepseek_v41.py",
+        "compiler/backends/rom/common/image.py",
+        "compiler/backends/rom/common/program.py",
+        "compiler/backends/schedule_rule.py",
+    ),
+    "rom_deepseek_v41_array": (
+        "compiler/backends/rom/deepseek_v41_array.py",
+        "compiler/backends/rom/deepseek_v41.py",
+        "compiler/backends/rom/deepseek_v4_array.py",
         "compiler/backends/rom/common/image.py",
         "compiler/backends/rom/common/program.py",
         "compiler/backends/schedule_rule.py",
