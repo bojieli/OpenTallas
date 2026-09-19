@@ -1,5 +1,5 @@
 {
- "answer": "yes.  Six match their oracle; the three V4.1 cells generate and do not.",
+ "answer": "yes.  Six match their oracle and all six now hold a CURRENT gate -- the V4-Flash ROM array was the last one whose digest had moved without a re-walk, and it has been re-gated.  The three V4.1 cells generate and do not match.",
  "not_a_claim": [
   "the V4.1 cells are not closed cells",
   "8,192 and 512 are declared maximum contexts, not shortened models"
@@ -79,26 +79,16 @@
    ]
   },
   "v4_flash_rom_array": {
+   "note_on_the_token_list": "four tokens, which is what build/workloads/deepseek-v4-flash-0731-prefix/TA-DS-CHAT-1-P32.json declares; the sixteen listed before came from a run that overrode max_new_tokens",
    "oracle_agreement": true,
-   "rewalk_outstanding": "its digest moved with the phase-join fix and the re-walk was stopped at 9h07m to free 54 GB; its ROM sibling re-walked and passed under the same change",
+   "regated_record": "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array32_p32_regated.json",
+   "rewalked_under": "the A18 correction and the phase-join fix, re-gated in full: status pass, terminal contract accepted with no failed checks, first_divergence_index null over the four tokens the pinned workload asks for, 13,842 s",
    "status": "pass",
    "tokens": [
     13806,
     345,
     7472,
-    55560,
-    517,
-    436,
-    295,
-    223,
-    736,
-    4343,
-    16,
-    2052,
-    710,
-    2038,
-    44158,
-    477
+    55560
    ]
   },
   "v4_flash_rom_wafer": {
