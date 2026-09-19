@@ -351,6 +351,35 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
     reg [31:0] output_stride;
     reg last_comb;
 
+    //: THE WORK PRODUCT DOES NOT NEED A 64-BIT MULTIPLIER.  Written as three
+    //: zero-extended 64-bit operands it asks synthesis for two 64x64 multipliers,
+    //: and the routed block showed the cost: 38 ``FAx1`` full adders in ONE ripple
+    //: chain from ``token_base_q`` to ``tile_logical_work[63]``, 110 cell arcs,
+    //: 237.4 MHz against a 4 ns target -- below the 276.9 MHz design limiter, so
+    //: closing it as written would have LOWERED the design's clock.
+    //:
+    //: Two of the three operands are bounded by CONSTANTS in this module, for every
+    //: tile kind, and the state machine is what makes the bound hold:
+    //:
+    //:   * ``fields_total`` is 24, 8 or 16, and ``field_base_q`` advances only
+    //:     while ``field_base_q + active_field_count < fields_total``, so it never
+    //:     exceeds its total and ``active_field_count <= 24`` -- FIVE bits;
+    //:   * ``k_total`` is 16,384 or 1 and ``k_base_q`` advances under the same
+    //:     rule, so ``active_k_count <= 16,384`` -- FIFTEEN bits.
+    //:
+    //: ``active_token_count`` stays 32 bits: it is bounded by ``tokens_q``, which is
+    //: the request's own span and not a constant here.  32 + 5 + 15 = 52, so the
+    //: product still cannot overflow the 64-bit output and its VALUE is unchanged;
+    //: ``rtl/test/tb_a3_tile_work_product_equiv.sv`` drives both forms over the
+    //: bounded space and 20,000 random in-bound triples and they agree on every
+    //: one, and over 4,000 OUT-of-bound triples where they differ -- which is the
+    //: bound, measured rather than assumed.
+    reg [4:0]  work_fields;
+    reg [14:0] work_depth;
+    reg [36:0] work_rows_by_fields;
+    reg [51:0] work_product;
+    reg [36:0] output_rows_by_fields;
+
     always @* begin
         fields_total = (kind_q == TILE_PROJECTION) ? 32'd24 :
                        (kind_q == TILE_WEIGHTS) ? 32'd8 : 32'd16;
@@ -369,10 +398,12 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
         else
             active_k_count = k_total - k_base_q;
 
-        logical_work = (kind_q == TILE_PROJECTION) ?
-            {32'd0, active_token_count} *
-            {32'd0, active_field_count} *
-            {32'd0, active_k_count} : 64'd0;
+        work_fields = active_field_count[4:0];
+        work_depth = active_k_count[14:0];
+        work_rows_by_fields = {5'd0, active_token_count} * {32'd0, work_fields};
+        work_product = {15'd0, work_rows_by_fields} * {37'd0, work_depth};
+        logical_work = (kind_q == TILE_PROJECTION) ? {12'd0, work_product} : 64'd0;
+        output_rows_by_fields = {5'd0, active_token_count} * {32'd0, work_fields};
         output_stride = (kind_q == TILE_WEIGHTS) ? 32'd8 :
                         (kind_q == TILE_COMBINATION) ? 32'd16 : 32'd0;
         output_base = (kind_q == TILE_PROJECTION) ? 64'd0 :
@@ -463,9 +494,10 @@ module ot_a3_vector_mhc_pre_tile_scheduler #(
                             logical_fma_count <= logical_fma_count + logical_work;
                         end else begin
                             commit_tile_count <= commit_tile_count + 1;
+                            //: the same 5-bit field bound, so the accumulate
+                            //: carries a 37-bit product rather than a 64-bit one
                             logical_output_count <= logical_output_count +
-                                ({32'd0, active_token_count} *
-                                 {32'd0, active_field_count});
+                                {27'd0, output_rows_by_fields};
                         end
 
                         if (k_base_q + active_k_count < k_total) begin
