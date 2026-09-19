@@ -1,4 +1,11 @@
 {
+ "CORRECTION": {
+  "so_the_premise_does_not_survive_routing": "the audit measured the conflict cone at 16.10 ns and named it the control plane's clock, but that is a PRE-LAYOUT synth+sta number.  Routed, the cone is about 1.67 ns at BOTH depths -- the same discipline that had the microsequencer at 8.18 MHz pre-layout and 317 MHz routed.  The dependence table is not the routed limiter, so splitting it cannot be the lever.",
+  "what_I_reported": "that a closed routed record at 603.7 MHz removes the audit's stated reason for refusing its 2.00x sustained sizing",
+  "what_is_still_true": "the split is proven equivalent end to end, costs nothing in area, and is available behind a parameter.  What is NOT true is that it buys 2.00x sustained throughput.",
+  "what_the_second_record_shows": "the SAME block at CHECK_STAGES=1 closes at 599.9 MHz.  The split buys 0.6%, and depth 2 is slightly SMALLER (149,194 cells against 153,635) because a registered reduction needs less repair than a combinational one.",
+  "where_to_look_instead": "the FULL 12-module sequencer routes at 264.8 MHz with **3,204 max-slew violations** and 3 max-cap.  Thousands of slew violations is a drive and fan-out signature, not a depth one -- a badly-slow ASAP7 block here has usually been ONE net with hundreds of loads.  The full sequencer at depth 2 is routing now, and if it lands near 264.8 MHz with the violations intact that settles it: the lever is the fan-out, and the cone was a red herring that only a routed record could expose."
+ },
  "and_the_consumer_is_proven_not_assumed": {
   "result": {
    "depth_1": {
@@ -16,7 +23,7 @@
   "the_gate": "tools/rtl_abi3_dep_check_depth_campaign.py replays the WHOLE ABI 3.0 vector set through the real control plane at both depths under both simulators, and requires the marker the vector set derives from its golden execution on runtime.sim.device.Device",
   "what_was_missing": "rtl/test/tb_a3_dependence_table_depth.sv proved the TABLE: depth 2 equals depth 1 delayed by one cycle, 20,000 cycles, both simulators.  It says nothing about the microsequencer, whose hazard scan is pipelined -- each cycle issues a check pair and folds in the previous cycle's results -- so at depth 2 the last pair's answer arrives after the loop has left.  Dropping it would issue an instruction over a live hazard: a silent wrong answer, not a stall."
  },
- "answer": "yes.  603.7 MHz, closed, on ASAP7.",
+ "answer": "yes -- and the same record at depth 1 closes at 599.9 MHz, which REFUTES the sizing the record was meant to unlock.  See CORRECTION.",
  "default_is_still_1": "the parameter defaults to 1 in both the table and the sequencer, so the shipped elaboration and every bound vector are unmoved.  Adopting depth 2 is now a one-parameter decision with both halves of its evidence in hand.",
  "not_a_claim": [
   "the 2.152x sustained figure is the AUDIT's sizing, not a measurement of this record; what this record removes is the audit's stated reason for refusing it",
@@ -41,5 +48,22 @@
   "standard_cell_area_um2": 18606.5,
   "status": "pass",
   "target_period_ns": 1.8
+ },
+ "the_routed_records": {
+  "check_stages_1": {
+   "area_um2": 19258.9,
+   "cells": 153635,
+   "closed": true,
+   "fmax_mhz": 599.9,
+   "max_slew_violations": 0
+  },
+  "check_stages_2": {
+   "area_um2": 18606.5,
+   "cells": 149194,
+   "closed": true,
+   "fmax_mhz": 603.678,
+   "max_slew_violations": 0
+  },
+  "ratio": 1.006
  }
 }
