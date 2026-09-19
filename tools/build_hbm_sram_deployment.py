@@ -83,6 +83,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--event-board",
+        type=int,
+        default=None,
+        help=(
+            "completion-level board depth to declare, for a COMPARATOR profile "
+            "only.  ABI 3.0 events are single-assignment levels, so the board "
+            "bounds the number a program's text may NAME; the shipped "
+            "DeepSeek-V4.1-Flash release names 2,442 at eight nodes and no "
+            "allocator can recycle an ID.  The depth must be one the "
+            "microsequencer's EVENTS parameter is elaborated at"
+        ),
+    )
+    parser.add_argument(
         "--nodes",
         type=int,
         default=None,
@@ -154,7 +167,11 @@ def build(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     capability = (
         Capability.from_dict(json.loads(Path(args.capability).read_text()))
         if getattr(args, "capability", None) is not None
-        else capability_for(args.profile, node_count=getattr(args, "nodes", None))
+        else capability_for(
+            args.profile,
+            node_count=getattr(args, "nodes", None),
+            event_board=getattr(args, "event_board", None),
+        )
     )
     tile = TileConfig(
         rows=args.tile_rows,

@@ -411,7 +411,7 @@ def cluster_n_capability(
     )
 
 
-def comparator_limits() -> Mapping[str, int]:
+def comparator_limits(event_board: int = 2048) -> Mapping[str, int]:
     """The shared limits with AM-C1's event scoreboard published as built.
 
     ``rtl/abi3/ot_a3_pkg.sv`` states the hardware plainly::
@@ -433,10 +433,32 @@ def comparator_limits() -> Mapping[str, int]:
     1445 distinct events, capability admits 1024`` and ``program names event ID
     1444, capability admits IDs up to 1023``.  1,445 fits the scoreboard that
     exists; it did not fit the one the shipped records still describe.
+
+    ``event_board`` says which built configuration is being declared.  The
+    default is the package default ``A3_EVENT_COUNT``, so every existing caller
+    reproduces its previous record byte for byte.  A wider value declares the
+    microsequencer's ``EVENTS`` parameter at that depth, and a capability may
+    only declare a depth some elaboration of the RTL actually holds -- the
+    parameter exists in ``rtl/abi3/ot_a3_microsequencer.sv`` and forwards to
+    ``ot_a3_event_scoreboard``, at three flip-flops a level.
+
+    The shipped DeepSeek-V4.1-Flash release is why a second depth exists: it
+    names 2,442 distinct completion levels at eight nodes, and because ABI 3.0
+    events are single-assignment there is no allocator that can fit them into a
+    smaller board -- that was built and refused, ``event 0 is signalled more
+    than once``.  Merging producers that every wait set names together is legal
+    and reaches 2,165, which is still over 2,048.  So the board is the thing
+    that has to be wider.
     """
+    if int(event_board) < 1 or int(event_board) & (int(event_board) - 1):
+        raise ValueError(
+            f"event board {event_board} is not a power of two; the scoreboard's "
+            "index width is $clog2(EVENTS) and a partial board would admit IDs "
+            "the RTL does not hold"
+        )
     limits = dict(SHARED_LIMITS)
-    limits["max_events"] = 2048
-    limits["max_event_id"] = 2047
+    limits["max_events"] = int(event_board)
+    limits["max_event_id"] = int(event_board) - 1
     return limits
 
 
@@ -618,14 +640,35 @@ PROFILES: dict[str, Capability] = {
 }
 
 
-def capability_for(profile: str, *, node_count: int | None = None) -> Capability:
+def capability_for(
+    profile: str,
+    *,
+    node_count: int | None = None,
+    event_board: int | None = None,
+) -> Capability:
     """Return a fresh capability record for a named profile.
 
     ``node_count`` is accepted only for ``cluster-n``, whose whole point is that
     the count is a capability *value* rather than a class: every other profile
     names a fixed cardinality, and silently ignoring a count against one of them
     would hand back a record for a machine the caller did not ask for.
+
+    ``event_board`` is accepted only for a COMPARATOR profile, for the same
+    reason: the four shipped records are certificate inputs of bound
+    deployments, so a wider board declared against one of them would move a
+    digest something is already signed against.  A comparator record is nobody's
+    certificate input, and the depth it declares is a parameter of the built
+    microsequencer rather than a permission -- see :func:`comparator_limits`.
     """
+    if event_board is not None and profile not in (
+        CLUSTER_N_COMPARATOR_PROFILE,
+        "single-chip-comparator",
+    ):
+        raise KeyError(
+            f"profile {profile!r} is a shipped record and is a certificate "
+            "input of the deployments bound against it; only a comparator "
+            "profile may declare a different event board"
+        )
     if profile in (CLUSTER_N_PROFILE, CLUSTER_N_COMPARATOR_PROFILE):
         if node_count is None:
             raise KeyError(
@@ -651,7 +694,9 @@ def capability_for(profile: str, *, node_count: int | None = None) -> Capability
                 numeric_contracts=comparator_numeric_contracts(),
                 memory=comparator_memory(),
                 features=comparator_features(),
-                limits_override=comparator_limits(),
+                limits_override=comparator_limits(
+                    **({} if event_board is None else {"event_board": int(event_board)})
+                ),
             )
         return cluster_n_capability(node_count=int(node_count))
     if node_count is not None:

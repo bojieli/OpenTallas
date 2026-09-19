@@ -130,6 +130,25 @@ module ot_a3_microsequencer
     // Instruction indexes covered by the vector.  A pc at or above this always
     // takes the full recurrence, so a short vector loses cycles, never checks.
     parameter integer CRC_CACHE_ENTRIES = 2048,
+    // Completion-level board depth, forwarded to ot_a3_event_scoreboard.
+    //
+    // ABI 3.0 events are SINGLE-ASSIGNMENT levels -- section 12.14 lets at most
+    // one instruction name a given event ID in its signal field, and nothing
+    // lowers a level before the transaction ends -- so the board bounds the
+    // number of distinct completion levels a program's TEXT may name, not the
+    // number it holds at once.  An allocator cannot recycle an ID: that was
+    // built and refused by the verifier, ``event 0 is signalled more than
+    // once``.
+    //
+    // The shipped DeepSeek-V4.1-Flash release needs 2,442 levels at eight
+    // nodes, and the legal reduction -- merging producers that every wait set
+    // names together -- reaches only 2,165.  Both are over the default 2,048,
+    // so the board is the thing that has to be wider, and it is a parameter
+    // rather than a new default so that no bound vector and no shipped
+    // capability record moves: the default elaboration is byte-identical to
+    // the one every committed campaign was run against.  The cost is three
+    // flip-flops a level, 6,144 for a board of 4,096.
+    parameter integer EVENTS = ot_a3_pkg::A3_EVENT_COUNT,
     // Front-end request scheduling.  ``FAST_FRONT_END = 0`` rebuilds the
     // front end exactly as it was before this parameter: one state per
     // decision, each request registered by the state that decided to make
@@ -629,7 +648,7 @@ module ot_a3_microsequencer
     wire [31:0] sb_signal_count;
     wire [31:0] sb_wait_count;
 
-    ot_a3_event_scoreboard events (
+    ot_a3_event_scoreboard #(.EVENTS(EVENTS)) events (
         .clk(clk),
         .rst_n(rst_n),
         .clear(xact_clear),
