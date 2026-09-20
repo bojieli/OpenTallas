@@ -1,0 +1,17 @@
+{
+  "answer": "NOTHING YET: its first synthesis TIMED OUT after 21,600 seconds -- six hours of pinned yosys and no netlist. So the 64-lane tile is not merely unwired and unrouted, it has not been built at all. A run with an eighteen-hour budget is going.",
+  "not_a_claim": [
+    "a synthesis timeout is not a defect in ot_a3_tile64: it is a statement about six hours of one ABC invocation on a two-million-cell netlist",
+    "nothing here says the tile would not close if it synthesised"
+  ],
+  "producer": {
+    "git": {
+      "commit": "c737f08e37b19ede0aa9bacb10b6ad97d2395fee"
+    },
+    "tool": "tools/run_abi3_physical.py --stages synth,sta"
+  },
+  "question": "results/derived/arithmetic_width_by_vehicle.json says ot_a3_tile64 is the design's own 64-lane tile, written and instantiated by nothing and never routed. What does it measure?",
+  "schema": "opentallas.result.tile64_does_not_synthesise_in_six_hours.v1",
+  "the_size_is_the_likely_cause_and_is_measurable_from_its_parts": "ot_a3_tile64 is eight ot_a3_lq8 at LANES = 8 each. ot_a3_lq8's own best density-optimal closed record is 245,217 cells and 29,396.9 um2 at 512.8 MHz, so eight of them is on the order of two million cells before the tile stream sequencer. Six hours of ABC on that is not a surprising failure and it is not evidence of anything wrong with the RTL.",
+  "what_it_does_to_the_projection": "results/derived/engine_array_iso_area.json projects 4.662x for 64 lanes at the compute unit's routed clock, with tile64's AREA estimated from ot_mac_tile's measured 262.6 um2 per lane -- and labels that the one estimated quantity. This measurement says the estimate cannot yet be checked against the module it describes. The ABI 3.0 row of the same table is unaffected and is the one to read meanwhile: 64 ABI 3.0 lanes as eight ot_a3_lq8, entirely measured, reach 0.391x -- where SIXTEEN proto lanes reach at a quarter of the clock."
+}
