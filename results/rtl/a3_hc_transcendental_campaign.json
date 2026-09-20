@@ -1,5 +1,5 @@
 {
-  "checks": 169962,
+  "checks": 6637132,
   "counts": {
     "accepted": 4155,
     "exp": 2100,
@@ -7,16 +7,16 @@
     "sigmoid": 2100
   },
   "log_sha256": {
-    "iverilog": "98b56fc9a6583a16eeae277ef4bb1a4ef243636d4eb92a02ad252d5b8b2d3d37",
-    "verilator": "c3d717b8769a72b9db0ac65302793509adfadd5d0b03d8a370357d146c4a13b5",
-    "verilator_compile": "c4bc79f9611a9372544b1af0e76a647a5024f140d162d06f0267a729f5b7aa6e",
-    "yosys": "fcd23e4d483beca6dce432d082d53fb5a7be3c8c3925816fd4a64c3af5a3fb8c"
+    "iverilog": "1e2129db0151e1169384b800bbb3017a1850eb0d553ded1d1e3efaef84ec8b4e",
+    "verilator": "3fc49e9d174301e37b73adb7ceca187d5f5bbd02a948366c8921c464e6e39b73",
+    "verilator_compile": "bd7a8a4a4f16cefcb41d5ad9bd460b54d3fd814a8425dee664bdfe0ce89b03af",
+    "yosys": "4ae0756c83b0fd3f0a959eca72ea137336dcf35ab2ba7fd22df65b04d3bd5537"
   },
   "normalized_summary": {
     "accepted": 4155,
     "cases": 4200,
     "exp": 2100,
-    "max_cycles": 67,
+    "max_cycles": 3212,
     "refused": 45,
     "reset_cycles": 23,
     "sigmoid": 2100,
@@ -44,11 +44,14 @@
   },
   "simulators_agree": true,
   "source_sha256": {
-    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
-    "rtl/test/tb_a3_hc_transcendental.sv": "c7dac68b127803a2b8e09988e4028e0df79bee1753a08b72ba0857e521b02ff9",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "058e767b96f9d6da4550de1cec14d66bfd05247dd2ad11732210f1467663b4e6",
+    "rtl/lib/ot_wide_div_seq.sv": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+    "rtl/lib/ot_wide_div_small_seq.sv": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+    "rtl/lib/ot_wide_mul_seq.sv": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+    "rtl/test/tb_a3_hc_transcendental.sv": "5a073c6cf80839cf31fc9bdf39231b0af8e1aa84358bb4dc309cf5c4646fe99c",
     "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
     "tools/build_a3_hc_transcendental_vectors.py": "78b4c2a97ec7c5cd5cee7497fe4698c7df403a2fa4f16f7607ebfc6b1195cf5c",
-    "tools/run_a3_hc_transcendental_rtl_campaign.py": "2190a9c654ebfa61b48276059b644e48d7675c8609f290a120a64aa6f385a4b6"
+    "tools/run_a3_hc_transcendental_rtl_campaign.py": "921126e7b573256eda0d2825b7f1462a6edc921e912673f94b055dd8a992bd7f"
   },
   "status": "pass",
   "synthesis_frontend": {
@@ -82,10 +85,10 @@
     "index.json": "fb76c2157c3732e74ad3b4ce2b3795286e00502853604164355773e66700f1e4"
   },
   "verification_wall_seconds": {
-    "iverilog_compile": 0.007883214973844588,
-    "iverilog_simulation": 30.118498977040872,
-    "verilator_compile": 5.325203112908639,
-    "verilator_simulation": 0.39511426992248744,
-    "yosys_elaboration": 11.279609808931127
+    "iverilog_compile": 0.021638520061969757,
+    "iverilog_simulation": 1265.6765682999976,
+    "verilator_compile": 18.21091280411929,
+    "verilator_simulation": 34.19569051801227,
+    "yosys_elaboration": 1.7273568301461637
   }
 }
