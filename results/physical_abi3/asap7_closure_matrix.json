@@ -13,7 +13,9 @@
     "ot_a3_engram_fp32_sqrt_rne_pipe",
     "ot_a3_fp32_div_rne",
     "ot_a3_fp32_div_rne_pipe",
+    "ot_a3_fp32_exp_pos_cr_rne",
     "ot_a3_fp32_sqrt_rne",
+    "ot_a3_fp32_transcendental_cr_rne",
     "ot_a3_g2_cluster",
     "ot_a3_hc_sinkhorn20_rne_pipe",
     "ot_a3_lane_pipelined",
@@ -65,12 +67,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 62,
+    "distinct_blocks_with_a_closed_routed_record": 64,
     "pre_layout_only_records": 108,
-    "records_read": 265,
-    "routed_and_closed": 100,
+    "records_read": 267,
+    "routed_and_closed": 102,
     "routed_not_closed": 57,
-    "routed_records": 157
+    "routed_records": 159
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -79,7 +81,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "7755f1727280ac3c0a1a30ebba67df93c661ce82"
+      "commit": "f7258c97fb62fac1eb07dfe930eb7e7d055ab101"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -247,6 +249,32 @@
     },
     {
       "block": "ot_a3_fp32_exp_pos_cr_rne",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 25076.3,
+      "hold_wns_ns": 0.0432889,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 306130000.0,
+      "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/pnr_3p4ns_sequential_closed.json",
+      "record_sha256": "419ea3a7e06300ef3f9ccac7c9da70948b412e646c238b2ffbb7e0ddf1287fab",
+      "routed": true,
+      "setup_wns_ns": 0.133413,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 9465.03,
+      "status": "pass",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": null
+    },
+    {
+      "block": "ot_a3_fp32_exp_pos_cr_rne",
       "closed": false,
       "closed_reason": null,
       "core_area_um2": 91690.8,
@@ -274,6 +302,32 @@
         "hold_violations": 0,
         "setup_violations": 1001
       }
+    },
+    {
+      "block": "ot_a3_fp32_transcendental_cr_rne",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 25756.4,
+      "hold_wns_ns": 0.0421609,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 306808000.0,
+      "record": "results/physical_abi3/asap7/a3_fp32_transcendental_cr_rne/pnr_3p4ns_sequential_closed.json",
+      "record_sha256": "9d6e9a9e721c83ee817864a4da9cea9d247f0b2ffd278a83c097f3b707f15508",
+      "routed": true,
+      "setup_wns_ns": 0.14063399999999998,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 9820.91,
+      "status": "pass",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": null
     },
     {
       "block": "ot_a3_g2_cluster",
@@ -2260,7 +2314,7 @@
       "core_area_um2": 9792.07,
       "hold_wns_ns": 0.0322626,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 290463000.0,
       "record": "results/physical_abi3/asap7/a3_vector_index_score/pnr_3p5ns_closed.json",
       "record_sha256": "09d2d3677f748cac1741638a6d4c96c35ee8353ebfc1580b3947e070a3b00abb",
@@ -7099,10 +7153,11 @@
       "results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json"
     ],
     "records_read_from_an_untracked_file": [
+      "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/pnr_3p4ns_sequential_closed.json",
+      "results/physical_abi3/asap7/a3_fp32_transcendental_cr_rne/pnr_3p4ns_sequential_closed.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
-      "results/physical_abi3/asap7/a3_vector_index_score/pnr_3p5ns_closed.json",
       "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",

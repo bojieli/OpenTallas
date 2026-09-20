@@ -163,7 +163,18 @@ def iterative_cycles(operation: int, argument: int, error: int) -> int:
         return 0
     if operation == 1 and ((not sign and magnitude >= 0x41C80000) or (sign and magnitude >= 0x43160000)):
         return 0
-    return 67 if operation else 66
+    # MEASURED, not estimated: the engine's wide arithmetic became sequential, so
+    # a request is a fixed number of cycles again but a much larger one. Every
+    # non-early-exit argument takes exactly these, independent of its value --
+    # 2,880 for OP_EXP_NONPOS (57 series passes of a carry-save multiply and a
+    # restoring divide, then eight squarings) and 3,212 for OP_SIGMOID (the same
+    # plus 332 for the rational transform's 328-bit division at one bit per clock).
+    # Read off rtl/test/tb_a3_hc_transcendental.sv's own handshake for four
+    # arguments spanning both operations and both signs; the old figures were 66
+    # and 67. This stays a PREDICTION rather than an observation on purpose: a
+    # change that altered the latency would fail the campaign here until the
+    # constant was updated deliberately.
+    return 3212 if operation else 2880
 
 
 def expected_summary(manifest: dict[str, Any]) -> tuple[dict[str, int], int]:

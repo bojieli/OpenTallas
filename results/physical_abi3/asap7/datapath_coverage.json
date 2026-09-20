@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 61,
-    "uncovered_and_instantiated": 27,
+    "covered_by_a_closed_block": 63,
+    "uncovered_and_instantiated": 25,
     "uncovered_and_instantiated_by_nothing": 17,
-    "with_their_own_closed_record": 44
+    "with_their_own_closed_record": 46
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -1046,9 +1046,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_attention_epilogue"
       ],
@@ -1066,9 +1066,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_attention_epilogue",
         "ot_a3_attention_softmax_block",
@@ -1854,7 +1854,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "7755f1727280ac3c0a1a30ebba67df93c661ce82"
+      "commit": "f7258c97fb62fac1eb07dfe930eb7e7d055ab101"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2242,25 +2242,6 @@
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_engine_array"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_attention_epilogue"
-      ],
-      "module": "ot_a3_fp32_exp_pos_cr_rne"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_attention_epilogue",
-        "ot_a3_attention_softmax_block",
-        "ot_a3_hc_coefficients_rne",
-        "ot_a3_hc_stable_softmax_rne",
-        "ot_a3_qwen_gqa",
-        "ot_a3_vector_engram_gate",
-        "ot_a3_vector_silu_mul",
-        "ot_a3_vector_sqrt_softplus"
-      ],
-      "module": "ot_a3_fp32_transcendental_cr_rne"
     },
     {
       "instantiated_by": [
