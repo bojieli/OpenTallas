@@ -4,8 +4,8 @@
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
     "covered_by_a_closed_block": 63,
-    "uncovered_and_instantiated": 25,
-    "uncovered_and_instantiated_by_nothing": 17,
+    "uncovered_and_instantiated": 24,
+    "uncovered_and_instantiated_by_nothing": 18,
     "with_their_own_closed_record": 46
   },
   "file_of_module": {
@@ -431,7 +431,7 @@
       "ot_a3_fp32_transcendental_cr_rne"
     ],
     "ot_a3_hc_stable_softmax_sinkhorn20_rne": [
-      "ot_a3_hc_sinkhorn20_rne",
+      "ot_a3_hc_sinkhorn20_rne_pipe",
       "ot_a3_hc_stable_softmax_rne"
     ],
     "ot_a3_instruction_decoder": [],
@@ -1202,9 +1202,7 @@
       "covered_by_a_closed_block": false,
       "file": "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv",
       "has_its_own_closed_record": false,
-      "instantiated_by": [
-        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
-      ],
+      "instantiated_by": [],
       "module": "ot_a3_hc_sinkhorn20_rne"
     },
     {
@@ -1212,7 +1210,9 @@
       "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
       "has_its_own_closed_record": true,
-      "instantiated_by": [],
+      "instantiated_by": [
+        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
+      ],
       "module": "ot_a3_hc_sinkhorn20_rne_pipe"
     },
     {
@@ -1854,7 +1854,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "f7258c97fb62fac1eb07dfe930eb7e7d055ab101"
+      "commit": "39fd1a95086054fc50c1b44b64810ff8455e3959"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -1952,12 +1952,13 @@
         "has_a_closed_record": false,
         "members": [
           "ot_a3_fp32_div_rne",
+          "ot_a3_fp32_div_rne_pipe",
           "ot_a3_fp32_transcendental_cr_rne",
           "ot_a3_hc_coefficients_rne",
           "ot_a3_hc_pre_t1_descriptor_rne",
           "ot_a3_hc_projection_rms_rne",
           "ot_a3_hc_reduction_store",
-          "ot_a3_hc_sinkhorn20_rne",
+          "ot_a3_hc_sinkhorn20_rne_pipe",
           "ot_a3_hc_stable_softmax_rne",
           "ot_a3_hc_stable_softmax_sinkhorn20_rne",
           "ot_a3_vector_mhc_pre_tile_scheduler",
@@ -1966,7 +1967,7 @@
           "ot_wide_div_small_seq",
           "ot_wide_mul_seq"
         ],
-        "modules_reached": 14,
+        "modules_reached": 15,
         "top": "ot_a3_hc_pre_t1_descriptor_rne"
       },
       {
@@ -2049,16 +2050,6 @@
         "top": "ot_a3_link_node"
       },
       {
-        "has_a_closed_record": true,
-        "members": [
-          "ot_a3_fp32_div_rne",
-          "ot_a3_fp32_div_rne_pipe",
-          "ot_a3_hc_sinkhorn20_rne_pipe"
-        ],
-        "modules_reached": 3,
-        "top": "ot_a3_hc_sinkhorn20_rne_pipe"
-      },
-      {
         "has_a_closed_record": false,
         "members": [
           "ot_a3_mac_lane_pipe",
@@ -2096,6 +2087,15 @@
         ],
         "modules_reached": 2,
         "top": "ot_a3_dma_ngram_hash"
+      },
+      {
+        "has_a_closed_record": false,
+        "members": [
+          "ot_a3_fp32_div_rne",
+          "ot_a3_hc_sinkhorn20_rne"
+        ],
+        "modules_reached": 2,
+        "top": "ot_a3_hc_sinkhorn20_rne"
       },
       {
         "has_a_closed_record": false,
@@ -2204,7 +2204,7 @@
       }
     ],
     "what": "A module nothing instantiates is the root of a separately elaborated subsystem.  No single top integrates this design, so every ASAP7 frequency is a statement about ONE island, and a whole-chip clock has not been measured because no netlist contains the whole chip.",
-    "with_a_closed_record": 9
+    "with_a_closed_record": 8
   },
   "uncovered_and_instantiated": [
     {
@@ -2260,12 +2260,6 @@
         "ot_a3_hc_projection_rms_rne"
       ],
       "module": "ot_a3_hc_reduction_store"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_hc_stable_softmax_sinkhorn20_rne"
-      ],
-      "module": "ot_a3_hc_sinkhorn20_rne"
     },
     {
       "instantiated_by": [
@@ -2365,6 +2359,7 @@
     "ot_a3_dma_fill",
     "ot_a3_engine_issue_bridge",
     "ot_a3_hc_pre_t1_descriptor_rne",
+    "ot_a3_hc_sinkhorn20_rne",
     "ot_a3_link_node",
     "ot_a3_operand_receiver",
     "ot_a3_partial_collector",
