@@ -83,6 +83,25 @@ module ot_a3_vector_mhc_post #(
     localparam [4:0] S_REDUCE_2      = 5'd11;
     localparam [4:0] S_COMBINE       = 5'd12;
     localparam [4:0] S_COMMIT        = 5'd13;
+    //: One wait state per pipelined unit. Every arithmetic cone in this engine was
+    //: combinational and the routed evidence is what that cost: 151.2 MHz at a
+    //: 3.4 ns target, 98,875 cells, the slowest member of ot_a3_engine_array and
+    //: below the 276.9 MHz design limiter. The worst path ran residual_total[25] to
+    //: result_buffer[359][10] -- ONE binary32 add and the BF16 narrowing sharing a
+    //: cycle -- and a general binary32 RNE add alone is about 6.6 ns on ASAP7.
+    //:
+    //: ot_a3_vector_add is the precedent and the number to expect: the same swap
+    //: took it from 154.9 MHz not met with 9,601 cells to 674.1 MHz CLOSED with
+    //: 4,907 -- 4.35x the frequency at HALF the cells, because a five-stage pipe
+    //: maps to less logic than one combinational cone of the same arithmetic.
+    localparam [4:0] S_BRANCH_PIPE   = 5'd14;
+    localparam [4:0] S_RESID_PIPE    = 5'd15;
+    localparam [4:0] S_REDUCE_1_PIPE = 5'd16;
+    localparam [4:0] S_REDUCE_2_PIPE = 5'd17;
+    localparam [4:0] S_COMBINE_PIPE  = 5'd18;
+    //: The narrowing and the buffer write, separate from S_COMMIT which
+    //: is this engine's output DRAIN and was always a distinct state.
+    localparam [4:0] S_NARROW        = 5'd19;
     localparam [4:0] S_DONE          = 5'd14;
 
     reg [4:0] state;
@@ -96,6 +115,8 @@ module ot_a3_vector_mhc_post #(
     reg [31:0] reduce_left;
     reg [31:0] reduce_right;
     reg [31:0] residual_total;
+    //: The final sum, registered, so the BF16 narrowing does not share its cone.
+    reg [31:0] combined;
     reg [31:0] pending_saturation_count;
     reg [31:0] products [0:MULTIPLIER-1];
     reg [31:0] result_buffer [0:MAX_OUTPUTS-1];
@@ -117,22 +138,46 @@ module ot_a3_vector_mhc_post #(
         ot_a3_format_pkg::decode_bf16(residual_rd_data[15:0]);
     wire post_finite = post_rd_data[30:23] != 8'hff;
     wire comb_finite = comb_rd_data[30:23] != 8'hff;
-    wire [33:0] branch_product = ot_fp32_rne_pkg::fp32_mul_rne(
-        post_rd_data, decoded_branch[31:0]
+    //: ONE PIPELINED MULTIPLIER, two pipelined adders. The multiplier serves the
+    //: branch product and each of the four residual products, which happen in
+    //: different states and never overlap. The two adders serve the reduction's
+    //: independent pair, and the left one is reused for the two dependent adds
+    //: after it -- rtl/proto/ot_fp32_mul_rne_pipe.sv and
+    //: rtl/proto/ot_fp32_add_rne_pipe.sv are both qualified bit-identical to the
+    //: ot_fp32_rne_pkg functions they replace, including the two places that
+    //: authority is deliberately not IEEE-754: (-0) + (-0) is +0 and every zero
+    //: result is canonical +0. So this is a latency change and not a numeric one.
+    reg         mul_valid;
+    reg  [31:0] mul_a, mul_b;
+    wire [31:0] mul_y;
+    wire [1:0]  mul_err;
+    wire        mul_done;
+    ot_fp32_mul_rne_pipe multiplier (
+        .clk(clk), .rst_n(rst_n), .valid_in(mul_valid),
+        .a(mul_a), .b(mul_b),
+        .y(mul_y), .err(mul_err), .valid_out(mul_done)
     );
-    wire [33:0] residual_product = ot_fp32_rne_pkg::fp32_mul_rne(
-        comb_rd_data, decoded_residual[31:0]
+
+    reg         add_valid;
+    reg  [31:0] add_l_a, add_l_b, add_r_a, add_r_b;
+    wire [31:0] add_l_y, add_r_y;
+    wire [1:0]  add_l_err, add_r_err;
+    wire        add_l_done, add_r_done;
+    ot_fp32_add_rne_pipe adder_left (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
+        .a(add_l_a), .b(add_l_b),
+        .y(add_l_y), .err(add_l_err), .valid_out(add_l_done)
     );
-    wire [33:0] pair_01 =
-        ot_fp32_rne_pkg::fp32_add_rne(products[0], products[1]);
-    wire [33:0] pair_23 =
-        ot_fp32_rne_pkg::fp32_add_rne(products[2], products[3]);
-    wire [33:0] residual_sum =
-        ot_fp32_rne_pkg::fp32_add_rne(reduce_left, reduce_right);
-    wire [33:0] combined =
-        ot_fp32_rne_pkg::fp32_add_rne(branch_product_value, residual_total);
+    ot_fp32_add_rne_pipe adder_right (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
+        .a(add_r_a), .b(add_r_b),
+        .y(add_r_y), .err(add_r_err), .valid_out(add_r_done)
+    );
+
+    //: The narrowing now sits alone in its cycle, because ``combined`` is a
+    //: register: it was sharing the add's cone, which is where the worst path ended.
     wire [18:0] narrowed =
-        ot_fp32_rne_pkg::fp32_to_bf16_rne(combined[31:0]);
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(combined);
 
     wire configuration_supported =
         (cfg_aux0 == HC_POST) && (cfg_aux2 == 16'd4) &&
@@ -146,6 +191,11 @@ module ot_a3_vector_mhc_post #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
+            mul_valid <= 1'b0; add_valid <= 1'b0;
+            mul_a <= 32'b0; mul_b <= 32'b0;
+            add_l_a <= 32'b0; add_l_b <= 32'b0;
+            add_r_a <= 32'b0; add_r_b <= 32'b0;
+            combined <= 32'b0;
             scan_kind <= 0;
             index <= 0;
             site <= 0;
@@ -175,6 +225,12 @@ module ot_a3_vector_mhc_post #(
             saturation_count <= 0;
             pending_saturation_count <= 0;
         end else begin
+            //: Both units latch on one cycle of valid_in; holding it would
+            //: issue a second operation. Done is never tested in the same
+            //: condition as a start here, because these are fixed-latency pipes
+            //: with no busy line -- the wait state only tests valid_out.
+            mul_valid <= 1'b0;
+            add_valid <= 1'b0;
             done <= 1'b0;
             branch_rd_en <= 1'b0;
             residual_rd_en <= 1'b0;
@@ -265,17 +321,36 @@ module ot_a3_vector_mhc_post #(
 
                 S_BRANCH_WAIT: state <= S_BRANCH;
 
+                //: The operand check stays HERE, ahead of the multiplier, so a
+                //: nonfinite operand is refused before it is issued and the refusal
+                //: order is the one this engine always had.
                 S_BRANCH: begin
                     if ((decoded_branch[33:32] != 0) || !post_finite) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if (branch_product[33:32] != 0) begin
-                        error_code <= ERR_PRODUCT_RANGE;
-                        state <= S_DONE;
                     end else begin
-                        branch_product_value <= branch_product[31:0];
-                        source <= 0;
-                        state <= S_RESID_ISSUE;
+                        mul_a <= post_rd_data;
+                        mul_b <= decoded_branch[31:0];
+                        mul_valid <= 1'b1;
+                        state <= S_BRANCH_PIPE;
+                    end
+                end
+
+                S_BRANCH_PIPE: begin
+                    if (mul_done) begin
+                        //: err 1 is a nonfinite operand, excluded above; err 2 is a
+                        //: product outside binary32, this engine's
+                        //: ERR_PRODUCT_RANGE.
+                        if (mul_err != 2'd0) begin
+                            error_code <= (mul_err == 2'd1)
+                                          ? ERR_OPERAND_NONFINITE
+                                          : ERR_PRODUCT_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            branch_product_value <= mul_y;
+                            source <= 0;
+                            state <= S_RESID_ISSUE;
+                        end
                     end
                 end
 
@@ -301,44 +376,103 @@ module ot_a3_vector_mhc_post #(
                     if ((decoded_residual[33:32] != 0) || !comb_finite) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if (residual_product[33:32] != 0) begin
-                        error_code <= ERR_PRODUCT_RANGE;
-                        state <= S_DONE;
                     end else begin
-                        products[source] <= residual_product[31:0];
-                        if (source == LAST_STREAM) begin
-                            state <= S_REDUCE_1;
+                        mul_a <= comb_rd_data;
+                        mul_b <= decoded_residual[31:0];
+                        mul_valid <= 1'b1;
+                        state <= S_RESID_PIPE;
+                    end
+                end
+
+                S_RESID_PIPE: begin
+                    if (mul_done) begin
+                        if (mul_err != 2'd0) begin
+                            error_code <= (mul_err == 2'd1)
+                                          ? ERR_OPERAND_NONFINITE
+                                          : ERR_PRODUCT_RANGE;
+                            state <= S_DONE;
                         end else begin
-                            source <= source + 1;
-                            state <= S_RESID_ISSUE;
+                            products[source] <= mul_y;
+                            if (source == LAST_STREAM) begin
+                                state <= S_REDUCE_1;
+                            end else begin
+                                source <= source + 1;
+                                state <= S_RESID_ISSUE;
+                            end
                         end
                     end
                 end
 
+                //: The independent pair, both adders issued on the same cycle so
+                //: they retire together -- same LATENCY, same valid_in.
                 S_REDUCE_1: begin
-                    if ((pair_01[33:32] != 0) || (pair_23[33:32] != 0)) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
-                        state <= S_DONE;
-                    end else begin
-                        reduce_left <= pair_01[31:0];
-                        reduce_right <= pair_23[31:0];
-                        state <= S_REDUCE_2;
+                    add_l_a <= products[0]; add_l_b <= products[1];
+                    add_r_a <= products[2]; add_r_b <= products[3];
+                    add_valid <= 1'b1;
+                    state <= S_REDUCE_1_PIPE;
+                end
+
+                S_REDUCE_1_PIPE: begin
+                    if (add_l_done && add_r_done) begin
+                        //: Either endpoint leaving binary32 is this engine's
+                        //: ERR_ACCUMULATE_RANGE, and both are tested together
+                        //: exactly as the one-cycle form tested pair_01 and pair_23.
+                        if (add_l_err != 2'd0 || add_r_err != 2'd0) begin
+                            error_code <= ERR_ACCUMULATE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            reduce_left <= add_l_y;
+                            reduce_right <= add_r_y;
+                            state <= S_REDUCE_2;
+                        end
                     end
                 end
 
                 S_REDUCE_2: begin
-                    if (residual_sum[33:32] != 0) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
-                        state <= S_DONE;
-                    end else begin
-                        residual_total <= residual_sum[31:0];
-                        state <= S_COMBINE;
+                    //: The left adder again; the right one is idle from here and its
+                    //: result is ignored, which is why both are issued together.
+                    add_l_a <= reduce_left; add_l_b <= reduce_right;
+                    add_r_a <= 32'b0; add_r_b <= 32'b0;
+                    add_valid <= 1'b1;
+                    state <= S_REDUCE_2_PIPE;
+                end
+
+                S_REDUCE_2_PIPE: begin
+                    if (add_l_done) begin
+                        if (add_l_err != 2'd0) begin
+                            error_code <= ERR_ACCUMULATE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            residual_total <= add_l_y;
+                            state <= S_COMBINE;
+                        end
                     end
                 end
 
                 S_COMBINE: begin
-                    if ((combined[33:32] != 0) ||
-                        (narrowed[18:17] != 0)) begin
+                    add_l_a <= branch_product_value; add_l_b <= residual_total;
+                    add_r_a <= 32'b0; add_r_b <= 32'b0;
+                    add_valid <= 1'b1;
+                    state <= S_COMBINE_PIPE;
+                end
+
+                S_COMBINE_PIPE: begin
+                    if (add_l_done) begin
+                        if (add_l_err != 2'd0) begin
+                            error_code <= ERR_ACCUMULATE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            combined <= add_l_y;
+                            state <= S_NARROW;
+                        end
+                    end
+                end
+
+                //: The narrowing and the store, with ``combined`` a register: the
+                //: one-cycle form did the final add, the narrowing, the range check
+                //: and the buffer write together, and that cone was the worst path.
+                S_NARROW: begin
+                    if (narrowed[18:17] != 0) begin
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else begin
