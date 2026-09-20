@@ -673,6 +673,49 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             )
         else:
             scores = np.zeros((span, int(width or 0)), dtype=np.float32)
+    #: THE STREAMED QUERY ROW, on the OUTPUT view.  A27 streams the two-dynamic-axis
+    #: score plane one query at a time because A18 encodes one request-dependent
+    #: extent per view, and ``POSITION_START`` is zero for the whole prefill, so
+    #: ``base + row`` is zero on every physical invocation and the causal horizon is
+    #: empty.  results/abi3/deepseek_v41_select_row_is_not_in_its_operands.json
+    #: records two derivations that were built, measured and refuted -- and both read
+    #: the SCORE view, whose resolved layout carries no dynamic term at all.
+    #:
+    #: The OUTPUT view does.  The select writes ONE row per launch into an index
+    #: array, so unlike the score plane its destination cannot be the same row every
+    #: time.  Measured over all 288 issues of the shipped V4.1 HBM cell at a 10-token
+    #: prompt (results/abi3/deepseek_v41_select_row_is_on_its_output_view.json):
+    #:
+    #:   descriptor 3322  dims [1, 512]   ONE term of stride 640 == strides[-2],
+    #:                    160 issues      its iteration exactly 0..9 = SPAN_TOKENS
+    #:   descriptor 7083  dims [1, 512]   ONE such term, iteration exactly 0..9
+    #:   descriptors 8421, 8434, 10817    dims [10, ...]: ZERO such terms
+    #:
+    #: So the rule is self-guarding: a view that already presents every query row
+    #: has no term walking them, and the streamed ones have exactly one.  The
+    #: one-row test below states the intent anyway, and the PREFILL test keeps decode
+    #: out -- there the joined window entries are circular-buffer slots that may
+    #: wrap, and the explicit position symbol remains the time coordinate.
+    #:
+    #: The phase is tested rather than ``SPAN_TOKENS`` because ``_symbol_value``
+    #: raises on an UNBOUND symbol rather than returning the default it is handed,
+    #: and a bench that binds no span is a legitimate caller: reading it turned
+    #: test_index_topk_selects_causally_and_emits_ascending_padded_slots into
+    #: "runtime symbol 0 is unbound".
+    streamed_row: int | None = None
+    if span == 1 and phase is Phase.PREFILL and len(out_view.strides) >= 2:
+        row_stride = int(out_view.strides[-2])
+        walking = [
+            iteration
+            for stride, iteration in getattr(out_view, "loop_terms", ())
+            if stride == row_stride
+        ]
+        #: Exactly one, or nothing: two terms of the same stride would not say
+        #: which walks the query rows, and guessing is what produced the two
+        #: refutations above.
+        if len(walking) == 1:
+            streamed_row = int(walking[0])
+
     selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
     considered = 0
     for row in range(span):
@@ -681,18 +724,11 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             block = window_rows[row]
             valid_window = block[block != np.uint64(PAD_INDEX)]
 
-        # A27's rule and nothing else: ``base + row``. A streamed prefill's row
-        # identity is NOT recoverable from this operator's own operands, and it was
-        # worth measuring rather than assuming. The score view the select reads --
-        # descriptor 3317 in the shipped V4.1 HBM cell -- resolves to dims (1, 256),
-        # strides (256, 1), element offset 0 and NO dynamic terms at all: a fixed
-        # one-row window, reused for every query. Two attempts to derive the row
-        # from it, matching a LOOP_INDUCTION term against the resolved width and
-        # then against the row stride, both found nothing and both left all 160
-        # issues of layer 2 selecting nothing. The producer's view (3312) does carry
-        # a row-walking term; the consumer's does not, and the consumer is this
-        # operator. See results/abi3/deepseek_v41_select_row_is_not_in_its_operands.json.
-        query_position = base + row
+        # ``base + row`` for a view that presents its rows, and the streamed row
+        # derived above for one that presents a single row of many. Both are the
+        # same quantity -- the query's index within the request's span -- and for a
+        # non-streamed view ``streamed_row`` is None and nothing changes.
+        query_position = base + (row if streamed_row is None else streamed_row)
         if (
             mode == MASK_CAUSAL
             and phase is Phase.PREFILL
