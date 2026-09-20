@@ -615,6 +615,29 @@ class ResolvedView:
     extent_unit: int = 1
     extent_numerator: int = 1
     extent_bias: int = 0
+    #: Every LOOP_INDUCTION dynamic term this view carries, as
+    #: ``(stride, iteration)``.  It is not new information -- the resolver has
+    #: already read both to compute the offset -- but a consumer cannot recover
+    #: it from the resolved view, and one consumer needs it.
+    #:
+    #: ROUTE.INDEX_TOPK's causal horizon is a function of the query's ABSOLUTE
+    #: position.  A18 encodes one request-dependent extent per view, and the
+    #: index score's plane needs two, so the HBM backend binds the candidate axis
+    #: and streams the plane ONE QUERY ROW PER DISPATCH.  Each dispatch then sees
+    #: a one-row view and computes row 0, so every row gets the horizon of
+    #: position zero and selects nothing -- measured, on all 160 issues of
+    #: DeepSeek-V4.1's layer 2 and all 80 of layer 8
+    #: (results/abi3/deepseek_v41_key_owning_layers_select_nothing.json).
+    #:
+    #: I expected the row to be recoverable here -- the loop whose term advances by
+    #: one row's worth of elements would be the query-row loop and its iteration the
+    #: row -- and it is NOT, for the view that matters. The score view the select
+    #: reads resolves with NO dynamic terms: a fixed one-row window at offset zero,
+    #: reused for every query. The field stays because it is how that was measured
+    #: and it is the cheapest way to measure it again
+    #: (results/abi3/deepseek_v41_select_row_is_not_in_its_operands.json), not
+    #: because anything derives behaviour from it.
+    loop_terms: tuple[tuple[int, int], ...] = ()
 
     @property
     def element_count(self) -> int:
@@ -676,6 +699,9 @@ class ViewResolver:
                 f"the rank-{rank} view that declares it"
             )
         leading_loop: int | None = None
+        #: (stride, iteration) for every LOOP_INDUCTION term, carried onto the
+        #: resolved view: see ResolvedView.loop_terms for the one consumer.
+        loop_terms: list[tuple[int, int]] = []
         for slot in range(payload["dynamic_term_count"]):
             kind = payload[f"term{slot}_kind"]
             index = payload[f"term{slot}_index"]
@@ -697,6 +723,8 @@ class ViewResolver:
             else:
                 raise MemoryError_(f"view {view_id}: bad selector kind {kind}")
             offset += value * stride
+            if kind == SelectorKind.LOOP_INDUCTION:
+                loop_terms.append((int(stride), int(value)))
             if kind == SelectorKind.LOOP_INDUCTION and self._walks_extent_axis(
                 payload, stride, index, axis, numerator, unit
             ):
@@ -765,6 +793,7 @@ class ViewResolver:
             extent_unit=unit,
             extent_numerator=numerator,
             extent_bias=bias,
+            loop_terms=tuple(loop_terms),
         )
 
     def _walks_extent_axis(

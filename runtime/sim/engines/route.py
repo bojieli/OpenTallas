@@ -681,6 +681,17 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             block = window_rows[row]
             valid_window = block[block != np.uint64(PAD_INDEX)]
 
+        # A27's rule and nothing else: ``base + row``. A streamed prefill's row
+        # identity is NOT recoverable from this operator's own operands, and it was
+        # worth measuring rather than assuming. The score view the select reads --
+        # descriptor 3317 in the shipped V4.1 HBM cell -- resolves to dims (1, 256),
+        # strides (256, 1), element offset 0 and NO dynamic terms at all: a fixed
+        # one-row window, reused for every query. Two attempts to derive the row
+        # from it, matching a LOOP_INDUCTION term against the resolved width and
+        # then against the row stride, both found nothing and both left all 160
+        # issues of layer 2 selecting nothing. The producer's view (3312) does carry
+        # a row-walking term; the consumer's does not, and the consumer is this
+        # operator. See results/abi3/deepseek_v41_select_row_is_not_in_its_operands.json.
         query_position = base + row
         if (
             mode == MASK_CAUSAL

@@ -74,6 +74,16 @@ def wrapper(ctx, sub, operator):
     #: a position for that position to attend to it -- so a sample of the first
     #: issues is biased towards empty selections and says nothing about the rest.
     if issues[descriptor_id] <= 512:
+        #: The SCORE view's own layout, because the streamed query row is derived
+        #: from it: which loop term walks its rows is a function of its strides,
+        #: and a derivation that matches no term silently selects nothing.
+        try:
+            score = ctx.input_view(operator, 0)
+            print(f"  score view {score.descriptor_id} dims {tuple(score.dims)} "
+                  f"strides {tuple(score.strides)} loop_terms {score.loop_terms} "
+                  f"offset {score.element_offset}", flush=True)
+        except Exception as error:
+            print(f"  score view unavailable: {error}", flush=True)
         view = ctx.output_view(operator, 0)
         raw = np.asarray(ctx.read(view)).astype(np.int64)
         raw = np.where(raw >= (1 << 31), raw - (1 << 32), raw)
@@ -85,6 +95,16 @@ def wrapper(ctx, sub, operator):
         )
     if descriptor_id not in seen:
         seen.add(descriptor_id)
+        #: The SCORE view's own layout, because the streamed query row is derived
+        #: from it: which loop term walks its rows is a function of its strides,
+        #: and a derivation that matches no term silently selects nothing.
+        try:
+            score = ctx.input_view(operator, 0)
+            print(f"  score view {score.descriptor_id} dims {tuple(score.dims)} "
+                  f"strides {tuple(score.strides)} loop_terms {score.loop_terms} "
+                  f"offset {score.element_offset}", flush=True)
+        except Exception as error:
+            print(f"  score view unavailable: {error}", flush=True)
         view = ctx.output_view(operator, 0)
         rows = np.asarray(ctx.read(view))
         rows = rows.reshape(-1, rows.shape[-1]) if rows.ndim > 1 else rows.reshape(1, -1)
@@ -115,7 +135,7 @@ def wrapper(ctx, sub, operator):
               f"dims {tuple(view.dims)} "
               f"range [{signed.min()}, {signed.max()}] symbols {symbols}", flush=True)
         if len(selections) >= MAX_OPERATORS:
-            pass  #: keep going: the issue count of the FIRST operator is the point
+            raise _Stop
     return result
 
 registry[key] = wrapper
