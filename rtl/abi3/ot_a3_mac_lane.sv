@@ -24,6 +24,37 @@
 // that leaves it and an accumulation that leaves it each stop the lane with a
 // distinct error and write no output element.
 //
+// THE E8M0 SCALE ADDRESS IS NOT DIVIDED ANY MORE, AND THAT WAS THIS LANE'S CLOCK.
+// Routed on ASAP7 at a 3.4 ns target the lane came back at 64.7 MHz -- the slowest
+// block in the ABI 3.0 datapath by a factor of four -- and the worst path ran
+// cfg_block_rows_b[15] to t_rd_addr[31] through 590 cells of which 724 were OA21
+// and AO21: the shape of a restoring divide. scale_index() below performs THREE
+// 32-bit divisions and a multiply, and S_ISSUE called it TWICE, so six divisions
+// shared one cycle with the address adds.
+//
+// None of the three quotients has to be divided per element, which is the same
+// observation ot_a3_lane_pipelined already acts on:
+//
+//   * ``k / block`` is a counter that wraps at ``block`` and increments on the
+//     wrap. k advances by one per reduction index, so the counter is exact for
+//     ANY block -- this lane keeps no divisibility restriction.
+//   * ``row / rows_per_block`` and ``col / rows_per_block`` are the same shape,
+//     wrapping at rows_per_block and adding a stride on the wrap.
+//   * ``depth / block`` -- the stride -- needs no divider EITHER. Advance the k
+//     counter once more at the end of a k loop and it holds exactly
+//     ``depth / block``, because the loop performed depth-1 advances and this is
+//     the depth'th. It is latched on the first S_STORE, which is strictly before
+//     row or column can first advance, so the stride is always current when a
+//     wrap needs it.
+//
+// So the issue path carries two 32-bit adds where it carried six divisions, a
+// multiply and two adds, and NOTHING about the latency changes: no admission
+// state, no extra cycle, the first lane-op still issues one cycle after start and
+// the rate is still one multiply-accumulate every five cycles. scale_index() is
+// kept as the CONTRACT the counters must reproduce, and
+// rtl/test/tb_a3_mac_lane_scale_index_equiv.sv checks the lane's emitted addresses
+// against it element by element rather than asserting they agree.
+//
 // Reduction is one multiply-accumulate every five cycles by construction --
 // address, memory latency, scale, multiply, accumulate.  That is a
 // control-sequencing choice made to keep one binary32 operation per pipeline
@@ -124,10 +155,50 @@ module ot_a3_mac_lane (
     wire [33:0] summed = ot_fp32_rne_pkg::fp32_add_rne(acc, product);
     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(acc);
 
+    //: The three quotients of A15's scale index, as counters. Widths: a stride is
+    //: depth/block <= 65535 and it is added at most 65535 times, so the running
+    //: scale offset needs 32 bits -- the same width scale_index() returns.
+    reg [15:0] k_mod_a, k_mod_b;
+    reg [31:0] k_scale_a, k_scale_b;
+    reg [15:0] row_mod_a, col_mod_b;
+    reg [31:0] row_scale_a, col_scale_b;
+    reg [31:0] cpr_a, cpr_b;          //: depth / block, the codes-per-row stride
+    reg        cpr_valid;
+
+    //: A view that declares no scale object carries no block size, so one is
+    //: substituted rather than dividing by zero -- exactly as scale_index() does,
+    //: and the address it produces is never read in that case.
+    wire [15:0] elements_per_block_a = (cfg_block_a == 16'd0) ? 16'd1 : cfg_block_a;
+    wire [15:0] elements_per_block_b = (cfg_block_b == 16'd0) ? 16'd1 : cfg_block_b;
+    wire [15:0] rows_per_block_a =
+        (cfg_block_rows_a == 16'd0) ? 16'd1 : cfg_block_rows_a;
+    wire [15:0] rows_per_block_b =
+        (cfg_block_rows_b == 16'd0) ? 16'd1 : cfg_block_rows_b;
+
+    //: One advance of the k counter: wrap at the block size, carry into the
+    //: quotient. Used per reduction index AND once more at the end of a k loop,
+    //: where the carried quotient is depth/block.
+    wire        k_a_wraps = (k_mod_a + 16'd1 == elements_per_block_a);
+    wire [15:0] k_mod_a_next = k_a_wraps ? 16'd0 : (k_mod_a + 16'd1);
+    wire [31:0] k_scale_a_next = k_a_wraps ? (k_scale_a + 32'd1) : k_scale_a;
+    wire        k_b_wraps = (k_mod_b + 16'd1 == elements_per_block_b);
+    wire [15:0] k_mod_b_next = k_b_wraps ? 16'd0 : (k_mod_b + 16'd1);
+    wire [31:0] k_scale_b_next = k_b_wraps ? (k_scale_b + 32'd1) : k_scale_b;
+
+    //: The stride to use THIS cycle: the latched one once it exists, and
+    //: otherwise the value the final k advance is producing right now -- which
+    //: matters when cfg_cols is one, because then the first S_STORE both latches
+    //: the stride and advances the row.
+    wire [31:0] cpr_a_now = cpr_valid ? cpr_a : k_scale_a_next;
+    wire [31:0] cpr_b_now = cpr_valid ? cpr_b : k_scale_b_next;
+
     // Amendment A15: the E8M0 code for element (row, column) of a view over
     // ``depth`` columns is
     //     (row / block_rows) * (depth / block) + (column / block)
     // and amendment A8 is the block_rows = 1 case of exactly that.
+    //: KEPT AS THE CONTRACT, not called on the issue path any more: the counters
+    //: above must reproduce this element by element, and
+    //: rtl/test/tb_a3_mac_lane_scale_index_equiv.sv checks that they do.
     function automatic [31:0] scale_index;
         input [15:0] element_row;
         input [15:0] element_column;
@@ -175,6 +246,11 @@ module ot_a3_mac_lane (
             value_a <= 32'b0;
             value_b <= 32'b0;
             product <= 32'b0;
+            k_mod_a <= 16'b0; k_mod_b <= 16'b0;
+            k_scale_a <= 32'b0; k_scale_b <= 32'b0;
+            row_mod_a <= 16'b0; col_mod_b <= 16'b0;
+            row_scale_a <= 32'b0; col_scale_b <= 32'b0;
+            cpr_a <= 32'b0; cpr_b <= 32'b0; cpr_valid <= 1'b0;
         end else begin
             done <= 1'b0;
             out_we <= 1'b0;
@@ -194,6 +270,12 @@ module ot_a3_mac_lane (
                         col <= 16'b0;
                         k <= 16'b0;
                         acc <= 32'b0;
+                        //: Every quotient counter restarts with the operation.
+                        k_mod_a <= 16'b0; k_mod_b <= 16'b0;
+                        k_scale_a <= 32'b0; k_scale_b <= 32'b0;
+                        row_mod_a <= 16'b0; col_mod_b <= 16'b0;
+                        row_scale_a <= 32'b0; col_scale_b <= 32'b0;
+                        cpr_valid <= 1'b0;
                         if ((cfg_rows == 0) || (cfg_cols == 0) ||
                             (cfg_depth == 0)) begin
                             error_code <= ERR_SHAPE;
@@ -214,13 +296,9 @@ module ot_a3_mac_lane (
                                  ({16'b0, col} * {16'b0, cfg_depth}) +
                                  {16'b0, k};
                     s_rd_en <= 1'b1;
-                    s_rd_addr <= cfg_scale_a_base +
-                                 scale_index(row, k, cfg_depth, cfg_block_a,
-                                             cfg_block_rows_a);
+                    s_rd_addr <= cfg_scale_a_base + row_scale_a + k_scale_a;
                     t_rd_en <= 1'b1;
-                    t_rd_addr <= cfg_scale_b_base +
-                                 scale_index(col, k, cfg_depth, cfg_block_b,
-                                             cfg_block_rows_b);
+                    t_rd_addr <= cfg_scale_b_base + col_scale_b + k_scale_b;
                     state <= S_WAIT;
                 end
 
@@ -273,6 +351,11 @@ module ot_a3_mac_lane (
                             state <= S_STORE;
                         end else begin
                             k <= k + 16'd1;
+                            //: k / block, one advance per reduction index.
+                            k_mod_a <= k_mod_a_next;
+                            k_scale_a <= k_scale_a_next;
+                            k_mod_b <= k_mod_b_next;
+                            k_scale_b <= k_scale_b_next;
                             state <= S_ISSUE;
                         end
                     end
@@ -293,16 +376,46 @@ module ot_a3_mac_lane (
                             saturation_count <= saturation_count + 32'd1;
                         acc <= 32'b0;
                         k <= 16'b0;
+                        //: THE DEPTH'TH ADVANCE. The k loop performed depth-1 of
+                        //: them, so this one carries k_scale to exactly
+                        //: depth / block -- the stride a row or column wrap adds.
+                        //: Latched once; the counters themselves restart for the
+                        //: next output element.
+                        if (!cpr_valid) begin
+                            cpr_a <= k_scale_a_next;
+                            cpr_b <= k_scale_b_next;
+                            cpr_valid <= 1'b1;
+                        end
+                        k_mod_a <= 16'b0; k_scale_a <= 32'b0;
+                        k_mod_b <= 16'b0; k_scale_b <= 32'b0;
                         if (col + 16'd1 == cfg_cols) begin
                             col <= 16'b0;
+                            //: Side B indexes on the COLUMN, which restarts with
+                            //: every row, so its counter restarts with it.
+                            col_mod_b <= 16'b0;
+                            col_scale_b <= 32'b0;
                             if (row + 16'd1 == cfg_rows) begin
                                 state <= S_DONE;
                             end else begin
                                 row <= row + 16'd1;
+                                //: row / rows_per_block, adding the stride on the
+                                //: wrap.
+                                if (row_mod_a + 16'd1 == rows_per_block_a) begin
+                                    row_mod_a <= 16'd0;
+                                    row_scale_a <= row_scale_a + cpr_a_now;
+                                end else begin
+                                    row_mod_a <= row_mod_a + 16'd1;
+                                end
                                 state <= S_ISSUE;
                             end
                         end else begin
                             col <= col + 16'd1;
+                            if (col_mod_b + 16'd1 == rows_per_block_b) begin
+                                col_mod_b <= 16'd0;
+                                col_scale_b <= col_scale_b + cpr_b_now;
+                            end else begin
+                                col_mod_b <= col_mod_b + 16'd1;
+                            end
                             state <= S_ISSUE;
                         end
                     end
