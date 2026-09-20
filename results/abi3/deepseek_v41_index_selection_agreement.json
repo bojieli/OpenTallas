@@ -1,9 +1,9 @@
 {
-  "answer": "THE SHAPES DO NOT EVEN MATCH at oracle layer 2 (device [1, 512] against oracle [10, 5], device selected NOTHING), oracle layer 8 (device [1, 512] against oracle [10, 5], device selected NOTHING)",
+  "answer": "THE SHAPES DO NOT EVEN MATCH at oracle layer 24 (device [10, 512] against oracle [10, 10], device selected NOTHING)",
   "comparisons": [
     {
       "device_dims": [
-        1,
+        10,
         512
       ],
       "device_selection_order": 0,
@@ -23,14 +23,95 @@
           "oracle_selected": 0,
           "row": 0,
           "symmetric_difference": 0
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 1,
+          "row": 1,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 1,
+          "row": 2,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 2,
+          "in_both": 2,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 2,
+          "row": 3,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 2,
+          "in_both": 2,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 2,
+          "row": 4,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 3,
+          "in_both": 3,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 3,
+          "row": 5,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 3,
+          "in_both": 3,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 3,
+          "row": 6,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 4,
+          "in_both": 4,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 4,
+          "row": 7,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 4,
+          "in_both": 4,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 4,
+          "row": 8,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 5,
+          "in_both": 5,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 5,
+          "row": 9,
+          "symmetric_difference": 0
         }
       ],
-      "rows_compared": 1,
+      "rows_compared": 10,
       "rows_that_differ": 0
     },
     {
       "device_dims": [
-        1,
+        10,
         512
       ],
       "device_selection_order": 1,
@@ -50,9 +131,90 @@
           "oracle_selected": 0,
           "row": 0,
           "symmetric_difference": 0
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 1,
+          "row": 1,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 1,
+          "row": 2,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 2,
+          "in_both": 2,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 2,
+          "row": 3,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 2,
+          "in_both": 2,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 2,
+          "row": 4,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 3,
+          "in_both": 3,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 3,
+          "row": 5,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 3,
+          "in_both": 3,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 3,
+          "row": 6,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 4,
+          "in_both": 4,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 4,
+          "row": 7,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 4,
+          "in_both": 4,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 4,
+          "row": 8,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 5,
+          "in_both": 5,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 5,
+          "row": 9,
+          "symmetric_difference": 0
         }
       ],
-      "rows_compared": 1,
+      "rows_compared": 10,
       "rows_that_differ": 0
     },
     {
@@ -311,9 +473,192 @@
       ],
       "rows_compared": 10,
       "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selection_order": 4,
+      "first_row_that_differs": {
+        "device_selected": 0,
+        "in_both": 0,
+        "only_device": [],
+        "only_oracle": [
+          10
+        ],
+        "oracle_selected": 1,
+        "row": 0,
+        "symmetric_difference": 1
+      },
+      "oracle_dims": [
+        10,
+        10
+      ],
+      "oracle_layer": 24,
+      "oracle_layer_owns_its_keys": false,
+      "per_row": [
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10
+          ],
+          "oracle_selected": 1,
+          "row": 0,
+          "symmetric_difference": 1
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11
+          ],
+          "oracle_selected": 2,
+          "row": 1,
+          "symmetric_difference": 2
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12
+          ],
+          "oracle_selected": 3,
+          "row": 2,
+          "symmetric_difference": 3
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13
+          ],
+          "oracle_selected": 4,
+          "row": 3,
+          "symmetric_difference": 4
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "oracle_selected": 5,
+          "row": 4,
+          "symmetric_difference": 5
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "oracle_selected": 6,
+          "row": 5,
+          "symmetric_difference": 6
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "oracle_selected": 7,
+          "row": 6,
+          "symmetric_difference": 7
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "oracle_selected": 8,
+          "row": 7,
+          "symmetric_difference": 8
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "oracle_selected": 9,
+          "row": 8,
+          "symmetric_difference": 9
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "oracle_selected": 10,
+          "row": 9,
+          "symmetric_difference": 10
+        }
+      ],
+      "rows_compared": 10,
+      "rows_that_differ": 10
     }
   ],
-  "device_selections": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41idx/device_index_selection.json",
+  "device_selections": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41sel_rows/selection.json",
   "not_a_claim": [
     "this is runtime.sim, not RTL",
     "identical selections would NOT mean the block agrees: it would rule the top-k out as the amplifier and send the bisection to the arithmetic",
@@ -341,31 +686,17 @@
   "shape_mismatches": [
     {
       "device_dims": [
-        1,
+        10,
         512
       ],
-      "device_rows_missing": 9,
+      "device_rows_missing": 0,
       "device_selected_nothing": true,
-      "device_selection_order": 0,
+      "device_selection_order": 4,
       "oracle_dims": [
         10,
-        5
+        10
       ],
-      "oracle_layer": 2
-    },
-    {
-      "device_dims": [
-        1,
-        512
-      ],
-      "device_rows_missing": 9,
-      "device_selected_nothing": true,
-      "device_selection_order": 1,
-      "oracle_dims": [
-        10,
-        5
-      ],
-      "oracle_layer": 8
+      "oracle_layer": 24
     }
   ]
 }

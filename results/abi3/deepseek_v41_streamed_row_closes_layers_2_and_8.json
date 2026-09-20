@@ -1,0 +1,216 @@
+{
+  "answer": "AT LAYERS 2 AND 8, EXACTLY. Ten query rows, ZERO differing, and on every row the symmetric difference is empty: the device selects 0,1,1,2,2,3,3,4,4,5 positions and so does the Indexer, with the same indices. Before the derivation the same comparison read '9 query rows missing, device selected NOTHING'. Layer 20, which is not streamed and already agreed, still agrees (1..10 per row, 55 in total). Layer 14 does NOT: the device selects 3 positions where the Indexer selects 25, which is a SECOND and DIFFERENT fault -- it was invisible while every layer selected nothing.",
+  "not_a_claim": [
+    "this is runtime.sim against the vendor's own Indexer.forward, not RTL",
+    "one prompt length (10) and one cell (HBM comparator, 8 nodes)",
+    "agreement on the SELECTION is not agreement on the token: the attention that consumes it, and layers 14 and 24, are separate measurements"
+  ],
+  "oracle_layers_that_own_their_keys": [
+    2,
+    8,
+    14,
+    20
+  ],
+  "per_layer": [
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selected_per_row": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 2,
+      "oracle_selected_per_row": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "owns_its_keys": true,
+      "rows_compared": 10,
+      "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selected_per_row": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 8,
+      "oracle_selected_per_row": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "owns_its_keys": true,
+      "rows_compared": 10,
+      "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        10,
+        2048
+      ],
+      "device_selected_per_row": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 14,
+      "oracle_selected_per_row": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "owns_its_keys": true,
+      "rows_compared": 10,
+      "rows_that_differ": 9
+    },
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selected_per_row": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "oracle_dims": [
+        10,
+        10
+      ],
+      "oracle_layer": 20,
+      "oracle_selected_per_row": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "owns_its_keys": true,
+      "rows_compared": 10,
+      "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selected_per_row": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "oracle_dims": [
+        10,
+        10
+      ],
+      "oracle_layer": 24,
+      "oracle_selected_per_row": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "owns_its_keys": false,
+      "rows_compared": 10,
+      "rows_that_differ": 10
+    }
+  ],
+  "producer": {
+    "git": {
+      "commit": "5945f81cf05e15cfa57bcd9bd2b4b0056be2aa0b"
+    },
+    "tool": "tools/compare_deepseek_v41_index_selection.py"
+  },
+  "prompt_token_count": 10,
+  "question": "deriving the streamed select's query row from its OUTPUT view makes the causal horizon nonzero. Does the device then SELECT THE SAME COMPRESSED POSITIONS as the vendor's Indexer, which is the quantity the V4.1 divergence was traced to?",
+  "schema": "opentallas.result.v41_streamed_row_closes_layers_2_and_8.v1",
+  "the_fifth_device_select": "the device emits five INDEX_TOPK descriptors and the oracle has four key-owning layers, and this tool pairs them BY ORDER. The fifth (descriptor 10817, which selects nothing on all 32 issues) is therefore paired against oracle layer 24, whose own row says owns_its_keys false -- that pairing is an artifact and neither confirms nor refutes anything about it."
+}
