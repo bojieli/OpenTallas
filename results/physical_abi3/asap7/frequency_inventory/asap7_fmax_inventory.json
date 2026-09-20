@@ -232,6 +232,16 @@
       "target_headroom": 0.0249054
     },
     {
+      "at_target_clock_period_ns": 3.4,
+      "block": "ot_a3_vector_mhc_post",
+      "family": "abi3_datapath",
+      "fmax_hz": 520496000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 8230.58,
+      "target_headroom": 0.4349264705882353
+    },
+    {
       "at_target_clock_period_ns": 4.0,
       "block": "ot_a3_program_header",
       "family": "abi3_datapath",
@@ -655,10 +665,10 @@
     "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 102,
-    "distinct_blocks_with_a_closed_routed_record": 64,
-    "post_route_record_count": 159,
-    "record_count": 267
+    "closed_routed_record_count": 103,
+    "distinct_blocks_with_a_closed_routed_record": 65,
+    "post_route_record_count": 165,
+    "record_count": 273
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -744,7 +754,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "39fd1a95086054fc50c1b44b64810ff8455e3959"
+      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -2010,6 +2020,52 @@
     },
     {
       "antenna_violating_nets": 0,
+      "block": "ot_a3_mac_lane",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 158883000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_counter_index_not_met.json",
+      "record_sha256": "d20253568de3d5b9097eac24f203e83f57db9d5c81e60392eb3420beabc473c3",
+      "setup_wns_ns": -2.89394,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 5035.87,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": -0.8511588235294119
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_mac_lane",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 64698100.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_not_met.json",
+      "record_sha256": "631e21ff048373892b9e7e255dad8953d832d62ff0ef0a5b8ef0cea0b4f75700",
+      "setup_wns_ns": -12.0564,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7493.39,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": -3.5460000000000003
+    },
+    {
+      "antenna_violating_nets": 0,
       "block": "ot_a3_mesh_router",
       "closed": true,
       "drc_errors": 0,
@@ -2596,6 +2652,29 @@
     },
     {
       "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_compress_project",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 239678000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 1,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_4p0ns_registered_index_not_met.json",
+      "record_sha256": "8a80e48ff478bbf1cf656bf866613f79030778b57fb4c9644a03886ea96fbc18",
+      "setup_wns_ns": -0.172265,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 12674.9,
+      "target_clock_period_ns": 4.0,
+      "target_headroom": -0.04306625
+    },
+    {
+      "antenna_violating_nets": 0,
       "block": "ot_a3_vector_convert",
       "closed": true,
       "drc_errors": 0,
@@ -2754,6 +2833,52 @@
       "standard_cell_area_um2": 3703.07,
       "target_clock_period_ns": 4.0,
       "target_headroom": 0.0442235
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_mhc_post",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 151191000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_not_met.json",
+      "record_sha256": "ab4cee78ade5b9820d7e11da6299814d0cd25748738fe684d0d123c6ac8501a1",
+      "setup_wns_ns": -3.21415,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 11822.7,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": -0.9453382352941176
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_mhc_post",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 520496000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
+      "record_sha256": "dca1c3f9b7d69115cf7e7c6ce4f6eeaf3ee4d59b19a2f8056f3cb8f50c64f7ec",
+      "setup_wns_ns": 1.47875,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8230.58,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": 0.4349264705882353
     },
     {
       "antenna_violating_nets": 0,
@@ -4987,6 +5112,29 @@
       "standard_cell_area_um2": 88633.4,
       "target_clock_period_ns": 4.5,
       "target_headroom": 0.28184888888888887
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_hc_sinkhorn20_rne",
+      "closed": false,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 197254000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne/pnr_3p4ns_not_met.json",
+      "record_sha256": "7479d2499832e1a3a27c7eacc95de1eedf6957806b4ebeb173078ce3900b65db",
+      "setup_wns_ns": -1.6696199999999999,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3375.01,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": -0.4910647058823529
     },
     {
       "antenna_violating_nets": 0,

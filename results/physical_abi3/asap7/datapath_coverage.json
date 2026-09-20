@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 63,
-    "uncovered_and_instantiated": 24,
+    "covered_by_a_closed_block": 64,
+    "uncovered_and_instantiated": 23,
     "uncovered_and_instantiated_by_nothing": 18,
-    "with_their_own_closed_record": 46
+    "with_their_own_closed_record": 47
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -550,7 +550,10 @@
       "ot_fp32_add_rne_pipe",
       "ot_mac_bf16_fp32_pipe"
     ],
-    "ot_a3_vector_mhc_post": [],
+    "ot_a3_vector_mhc_post": [
+      "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe"
+    ],
     "ot_a3_vector_mhc_pre_tile_scheduler": [],
     "ot_a3_vector_rms_norm": [
       "ot_fp32_rsqrt_rne"
@@ -1741,9 +1744,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_vector_mhc_post.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array"
       ],
@@ -1854,7 +1857,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "39fd1a95086054fc50c1b44b64810ff8455e3959"
+      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2316,12 +2319,6 @@
         "ot_probe_had1"
       ],
       "module": "ot_a3_vector_hadamard"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_vector_mhc_post"
     },
     {
       "instantiated_by": [

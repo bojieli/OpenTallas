@@ -45,6 +45,7 @@
     "ot_a3_vector_convert",
     "ot_a3_vector_fp4kv_dequant",
     "ot_a3_vector_index_score",
+    "ot_a3_vector_mhc_post",
     "ot_a3_vector_mhc_pre_tile_scheduler",
     "ot_a3_vector_scale",
     "ot_a3_vector_scale_pipe",
@@ -67,12 +68,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 64,
+    "distinct_blocks_with_a_closed_routed_record": 65,
     "pre_layout_only_records": 108,
-    "records_read": 267,
-    "routed_and_closed": 102,
-    "routed_not_closed": 57,
-    "routed_records": 159
+    "records_read": 273,
+    "routed_and_closed": 103,
+    "routed_not_closed": 62,
+    "routed_records": 165
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -81,7 +82,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "f7258c97fb62fac1eb07dfe930eb7e7d055ab101"
+      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -254,7 +255,7 @@
       "core_area_um2": 25076.3,
       "hold_wns_ns": 0.0432889,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 306130000.0,
       "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/pnr_3p4ns_sequential_closed.json",
       "record_sha256": "419ea3a7e06300ef3f9ccac7c9da70948b412e646c238b2ffbb7e0ddf1287fab",
@@ -310,7 +311,7 @@
       "core_area_um2": 25756.4,
       "hold_wns_ns": 0.0421609,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 306808000.0,
       "record": "results/physical_abi3/asap7/a3_fp32_transcendental_cr_rne/pnr_3p4ns_sequential_closed.json",
       "record_sha256": "9d6e9a9e721c83ee817864a4da9cea9d247f0b2ffd278a83c097f3b707f15508",
@@ -1577,6 +1578,66 @@
       "why_not_closed": null
     },
     {
+      "block": "ot_a3_mac_lane",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 12034.3,
+      "hold_wns_ns": 0.0534387,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 158883000.0,
+      "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_counter_index_not_met.json",
+      "record_sha256": "d20253568de3d5b9097eac24f203e83f57db9d5c81e60392eb3420beabc473c3",
+      "routed": true,
+      "setup_wns_ns": -2.89394,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 5035.87,
+      "status": "not_met",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 280
+      }
+    },
+    {
+      "block": "ot_a3_mac_lane",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 17183.3,
+      "hold_wns_ns": 0.0451354,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 64698100.0,
+      "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_not_met.json",
+      "record_sha256": "631e21ff048373892b9e7e255dad8953d832d62ff0ef0a5b8ef0cea0b4f75700",
+      "routed": true,
+      "setup_wns_ns": -12.0564,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7493.39,
+      "status": "not_met",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 248
+      }
+    },
+    {
       "block": "ot_a3_mesh_router",
       "closed": true,
       "closed_reason": null,
@@ -2282,6 +2343,42 @@
       "why_not_closed": null
     },
     {
+      "block": "ot_a3_vector_compress_project",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 30347,
+      "hold_wns_ns": 0.0502717,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 239678000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_4p0ns_registered_index_not_met.json",
+      "record_sha256": "8a80e48ff478bbf1cf656bf866613f79030778b57fb4c9644a03886ea96fbc18",
+      "routed": true,
+      "setup_wns_ns": -0.172265,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 1,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 12674.9,
+      "status": "not_met",
+      "target_clock_period_ns": 4.0,
+      "why_not_closed": {
+        "class": "routed_netlist_dirty",
+        "signal_integrity": {
+          "max_cap_violations": 0,
+          "max_fanout_violations": 1,
+          "max_slew_violations": 0
+        },
+        "violating": {
+          "max_fanout_violations": 1
+        }
+      }
+    },
+    {
       "block": "ot_a3_vector_convert",
       "closed": true,
       "closed_reason": null,
@@ -2477,6 +2574,62 @@
       "standard_cell_area_um2": 3703.07,
       "status": "pass",
       "target_clock_period_ns": 4.0,
+      "why_not_closed": null
+    },
+    {
+      "block": "ot_a3_vector_mhc_post",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 28421.9,
+      "hold_wns_ns": 0.048514400000000006,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 151191000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_not_met.json",
+      "record_sha256": "ab4cee78ade5b9820d7e11da6299814d0cd25748738fe684d0d123c6ac8501a1",
+      "routed": true,
+      "setup_wns_ns": -3.21415,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 11822.7,
+      "status": "not_met",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 8558
+      }
+    },
+    {
+      "block": "ot_a3_vector_mhc_post",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 20446.7,
+      "hold_wns_ns": 0.0366851,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 520496000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
+      "record_sha256": "dca1c3f9b7d69115cf7e7c6ce4f6eeaf3ee4d59b19a2f8056f3cb8f50c64f7ec",
+      "routed": true,
+      "setup_wns_ns": 1.47875,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8230.58,
+      "status": "pass",
+      "target_clock_period_ns": 3.4,
       "why_not_closed": null
     },
     {
@@ -4873,6 +5026,36 @@
       "closed": false,
       "closed_reason": null,
       "core_area_um2": 8011.13,
+      "hold_wns_ns": 0.0572429,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 197254000.0,
+      "record": "results/physical_abi3/asap7/hc_sinkhorn20_rne/pnr_3p4ns_not_met.json",
+      "record_sha256": "7479d2499832e1a3a27c7eacc95de1eedf6957806b4ebeb173078ce3900b65db",
+      "routed": true,
+      "setup_wns_ns": -1.6696199999999999,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 3375.01,
+      "status": "not_met",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 676
+      }
+    },
+    {
+      "block": "ot_a3_hc_sinkhorn20_rne",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 8011.13,
       "hold_wns_ns": 0.0555601,
       "macro_area_um2": 0,
       "matches_committed_version": true,
@@ -7141,8 +7324,8 @@
   "view": "asap7",
   "why_the_not_closed_records_are_not_closed": {
     "blocked_only_by_a_pre_layout_stage": 5,
-    "routed_netlist_dirty": 23,
-    "routed_timing_not_met": 24,
+    "routed_netlist_dirty": 24,
+    "routed_timing_not_met": 28,
     "signal_integrity_fields_absent": 5
   },
   "working_tree_cleanliness": {
@@ -7153,11 +7336,10 @@
       "results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json"
     ],
     "records_read_from_an_untracked_file": [
-      "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/pnr_3p4ns_sequential_closed.json",
-      "results/physical_abi3/asap7/a3_fp32_transcendental_cr_rne/pnr_3p4ns_sequential_closed.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
+      "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
       "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
