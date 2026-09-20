@@ -94,14 +94,21 @@ module ot_a3_vector_mhc_post #(
     //: took it from 154.9 MHz not met with 9,601 cells to 674.1 MHz CLOSED with
     //: 4,907 -- 4.35x the frequency at HALF the cells, because a five-stage pipe
     //: maps to less logic than one combinational cone of the same arithmetic.
-    localparam [4:0] S_BRANCH_PIPE   = 5'd14;
-    localparam [4:0] S_RESID_PIPE    = 5'd15;
-    localparam [4:0] S_REDUCE_1_PIPE = 5'd16;
-    localparam [4:0] S_REDUCE_2_PIPE = 5'd17;
-    localparam [4:0] S_COMBINE_PIPE  = 5'd18;
+    //: These start at 15, NOT 14: S_DONE below already holds 14, and giving
+    //: S_BRANCH_PIPE that code made ``state <= S_DONE`` land on the
+    //: S_BRANCH_PIPE arm -- the first arm in the case with that value -- where it
+    //: waited for a multiply nobody had issued. Every one of the six MHC_POST
+    //: cases deadlocked at its final S_COMMIT, ``busy`` never dropped, and each
+    //: later case that selected this engine hung behind it: 40 failures in
+    //: rtl/test/tb_a3_engine.sv, of which 6 were "engine never completed".
+    localparam [4:0] S_BRANCH_PIPE   = 5'd15;
+    localparam [4:0] S_RESID_PIPE    = 5'd16;
+    localparam [4:0] S_REDUCE_1_PIPE = 5'd17;
+    localparam [4:0] S_REDUCE_2_PIPE = 5'd18;
+    localparam [4:0] S_COMBINE_PIPE  = 5'd19;
     //: The narrowing and the buffer write, separate from S_COMMIT which
     //: is this engine's output DRAIN and was always a distinct state.
-    localparam [4:0] S_NARROW        = 5'd19;
+    localparam [4:0] S_NARROW        = 5'd20;
     localparam [4:0] S_DONE          = 5'd14;
 
     reg [4:0] state;

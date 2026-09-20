@@ -1,0 +1,16 @@
+{
+  "collision_count": 0,
+  "collisions": [],
+  "modules_with_state_constants": 68,
+  "not_a_claim": [
+    "this reads localparams whose name starts with S_; a state encoded some other way is not covered",
+    "a module with no collision is not thereby proved correct -- this finds one specific fault"
+  ],
+  "producer": {
+    "git": {
+      "commit": "dd4e360a9103b744e27da5f46be243ee545100a7"
+    },
+    "tool": "tools/audit_rtl_state_code_collisions.py"
+  },
+  "schema": "opentallas.derived.rtl_state_code_collisions.v1"
+}
