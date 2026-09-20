@@ -52,6 +52,12 @@ device = Device(deployment, capability, root=checkpoint, verify=False)
 
 selections: list[dict] = []
 seen: set[int] = set()
+#: HOW MANY TIMES each operator is ISSUED, which a probe that dedupes by descriptor
+#: cannot see and must not omit: a view of one query row issued ten times computes
+#: the same ten rows a view of ten rows computes once, and reading the first
+#: occurrence alone cannot tell those apart.
+issues: dict[int, int] = {}
+rows_by_issue: dict[int, list] = {}
 
 class _Stop(Exception):
     pass
@@ -62,6 +68,21 @@ original = registry[key]
 def wrapper(ctx, sub, operator):
     result = original(ctx, sub, operator)
     descriptor_id = int(operator.descriptor_id)
+    issues[descriptor_id] = issues.get(descriptor_id, 0) + 1
+    #: EVERY issue, not the first sixteen. The causal mask leaves nothing to select
+    #: for the earliest query rows -- a compressed group has to have COMPLETED before
+    #: a position for that position to attend to it -- so a sample of the first
+    #: issues is biased towards empty selections and says nothing about the rest.
+    if issues[descriptor_id] <= 512:
+        view = ctx.output_view(operator, 0)
+        raw = np.asarray(ctx.read(view)).astype(np.int64)
+        raw = np.where(raw >= (1 << 31), raw - (1 << 32), raw)
+        rows_by_issue.setdefault(descriptor_id, []).append(
+            {"issue": issues[descriptor_id],
+             "dims": [int(x) for x in view.dims],
+             "rows": raw.reshape(-1, raw.shape[-1]).tolist()
+             if raw.ndim > 1 else raw.reshape(1, -1).tolist()}
+        )
     if descriptor_id not in seen:
         seen.add(descriptor_id)
         view = ctx.output_view(operator, 0)
@@ -94,7 +115,7 @@ def wrapper(ctx, sub, operator):
               f"dims {tuple(view.dims)} "
               f"range [{signed.min()}, {signed.max()}] symbols {symbols}", flush=True)
         if len(selections) >= MAX_OPERATORS:
-            raise _Stop
+            pass  #: keep going: the issue count of the FIRST operator is the point
     return result
 
 registry[key] = wrapper
@@ -111,6 +132,10 @@ output.write_text(json.dumps({
     "prompt_token_count": len(prompt),
     "deployment": str(deployment_root),
     "selection_count": len(selections),
+    "issues_per_operator": issues,
+    "per_issue_rows": rows_by_issue,
     "selections": selections,
 }) + "\n")
+for descriptor_id, count in sorted(issues.items()):
+    print(f"operator {descriptor_id}: issued {count} time(s)", flush=True)
 print(f"-> {output}", flush=True)
