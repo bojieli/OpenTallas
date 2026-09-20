@@ -71,9 +71,20 @@ def wrapper(ctx, sub, operator):
         #: the vendor marks an out-of-range entry with -1 and so does this operator.
         signed = rows.astype(np.int64)
         signed = np.where(signed >= (1 << 31), signed - (1 << 32), signed)
+        #: The runtime symbol table AT THE SELECTION, because the row extent and
+        #: the operand-present predicate are both functions of it: layer 2's
+        #: select declares [span_tokens, 512] and is predicated on
+        #: ``context_groups_ratio2 > 0``, so a one-row all-padding output is
+        #: either a wrong span or a false predicate and only these values say
+        #: which.
+        try:
+            symbols = {str(k): int(v) for k, v in dict(ctx.symbols).items()}
+        except Exception:
+            symbols = {}
         selections.append({
             "order": len(selections),
             "operator": descriptor_id,
+            "symbols": symbols,
             "view": int(view.descriptor_id),
             "dims": [int(x) for x in view.dims],
             "dtype": str(view.dtype),
@@ -81,7 +92,7 @@ def wrapper(ctx, sub, operator):
         })
         print(f"selection {len(selections)-1}: operator {descriptor_id} "
               f"dims {tuple(view.dims)} "
-              f"range [{signed.min()}, {signed.max()}]", flush=True)
+              f"range [{signed.min()}, {signed.max()}] symbols {symbols}", flush=True)
         if len(selections) >= MAX_OPERATORS:
             raise _Stop
     return result

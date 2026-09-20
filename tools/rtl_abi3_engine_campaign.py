@@ -346,7 +346,14 @@ def simulator_case(
     compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
     executed: dict[str, Any] | None = None
     if compiled["returncode"] == 0:
-        executed = run_stage(f"{name}.run", run_command, build, timeout=3600)
+        # The engines this campaign drives became SEQUENTIAL today: index_score's
+        # reduction, mhc_post's multiplies and adds and compress_project's fused
+        # product-add are five-stage pipes now, so an engine that retired a result
+        # per cycle retires one per five and the bench's cycle count grew with it.
+        # Icarus timed out at 3,600 s on the first run after that change. The
+        # arithmetic is unchanged and so is the number of checks; only the wall
+        # time moved, which is what a timeout is for.
+        executed = run_stage(f"{name}.run", run_command, build, timeout=28800)
     log = compiled["log"] + (executed["log"] if executed else "")
     passed = (
         compiled["returncode"] == 0
@@ -388,7 +395,14 @@ def mutation_simulator_case(
     compiled = run_stage(f"{name}.compile", compile_command, build, timeout=1800)
     executed: dict[str, Any] | None = None
     if compiled["returncode"] == 0:
-        executed = run_stage(f"{name}.run", run_command, build, timeout=3600)
+        # The engines this campaign drives became SEQUENTIAL today: index_score's
+        # reduction, mhc_post's multiplies and adds and compress_project's fused
+        # product-add are five-stage pipes now, so an engine that retired a result
+        # per cycle retires one per five and the bench's cycle count grew with it.
+        # Icarus timed out at 3,600 s on the first run after that change. The
+        # arithmetic is unchanged and so is the number of checks; only the wall
+        # time moved, which is what a timeout is for.
+        executed = run_stage(f"{name}.run", run_command, build, timeout=28800)
     compile_log = compiled["log"]
     run_log = executed["log"] if executed else ""
     marker_present = bool(executed and marker in run_log)
