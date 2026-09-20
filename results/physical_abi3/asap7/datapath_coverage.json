@@ -550,9 +550,13 @@
       "ot_a3_fp4kv_dequant_lane",
       "ot_a3_fp4kv_fetch"
     ],
-    "ot_a3_vector_hadamard": [],
+    "ot_a3_vector_hadamard": [
+      "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe"
+    ],
     "ot_a3_vector_index_score": [
       "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe",
       "ot_mac_bf16_fp32_pipe"
     ],
     "ot_a3_vector_mhc_post": [
@@ -1862,7 +1866,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "d163f2cd642308e52e7af760e6593b35da88c442"
+      "commit": "8816a78ada14cc30a320e21be3211f638c10047f"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
