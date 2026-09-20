@@ -1,0 +1,183 @@
+{
+  "a100": {
+    "bf16_dense_ops_s": 312000000000000.0,
+    "bf16_evidence": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper",
+    "bf16_source": "configs/hardware/technology_inputs.json :: source_facts.a100_sxm_80gb.bf16_dense_ops_s",
+    "device_level_ops_s_per_mm2": 377723970944.30994,
+    "die_area_grade": "published",
+    "die_area_mm2": 826.0,
+    "die_area_source": "configs/hardware/technology.json :: reference_parts.a100_sxm_80gb.die_area_mm2.value",
+    "logic_area_fraction": 0.6,
+    "logic_area_fraction_grade": "assumed",
+    "logic_area_fraction_source": "configs/hardware/technology.json :: power.gpu_logic_area_fraction.value",
+    "logic_area_mm2": 495.59999999999997,
+    "logic_level_ops_s_per_mm2": 629539951573.85,
+    "ops_s_per_w": 780000000000.0,
+    "part": "a100_sxm_80gb",
+    "power_w": 400.0,
+    "process": "TSMC N7"
+  },
+  "area": {
+    "members_counted": {
+      "ot_a3_dma_index_mover": {
+        "area_um2": 1500.19,
+        "cells": 15218,
+        "closed": true,
+        "fmax_mhz": 460.6,
+        "record": "results/physical_abi3/asap7/dma_index_mover/pnr_4p0ns_closed.json"
+      },
+      "ot_a3_mac_lane": {
+        "area_um2": 2861.487,
+        "cells": 24857,
+        "closed": false,
+        "fmax_mhz": 162.2,
+        "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_mac_lane.json"
+      },
+      "ot_a3_mac_lane_pipe": {
+        "area_um2": 451.28,
+        "cells": 4639,
+        "closed": true,
+        "fmax_mhz": 608.6,
+        "record": "results/physical_abi3/asap7/mac_lane_pipe/pnr_4p0ns_fp8_capable_closed.json"
+      },
+      "ot_a3_selection_argmax": {
+        "area_um2": 320.862,
+        "cells": 2900,
+        "closed": true,
+        "fmax_mhz": 622.0,
+        "record": "results/physical_abi3/asap7/a3_selection_argmax/pnr_4p0ns_coverage.json"
+      },
+      "ot_a3_vector_add": {
+        "area_um2": 571.973,
+        "cells": 4907,
+        "closed": true,
+        "fmax_mhz": 674.1,
+        "record": "results/physical_abi3/asap7/a3_vector_add/pnr_4p0ns_pipelined_closed.json"
+      },
+      "ot_a3_vector_compress_project": {
+        "area_um2": 7811.16,
+        "cells": 54843,
+        "closed": true,
+        "fmax_mhz": 430.1,
+        "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json"
+      },
+      "ot_a3_vector_convert": {
+        "area_um2": 285.914,
+        "cells": 2657,
+        "closed": true,
+        "fmax_mhz": 717.4,
+        "record": "results/physical_abi3/asap7/a3_vector_convert/pnr_4p0ns_coverage.json"
+      },
+      "ot_a3_vector_index_score": {
+        "area_um2": 3703.07,
+        "cells": 32733,
+        "closed": true,
+        "fmax_mhz": 261.6,
+        "record": "results/physical_abi3/asap7/a3_vector_index_score/pnr_4p0ns_weight_split_closed.json"
+      },
+      "ot_a3_vector_mhc_post": {
+        "area_um2": 8230.58,
+        "cells": 59827,
+        "closed": true,
+        "fmax_mhz": 520.5,
+        "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json"
+      },
+      "ot_a3_vector_scale_pipe": {
+        "area_um2": 6539.28,
+        "cells": 45284,
+        "closed": true,
+        "fmax_mhz": 984.4,
+        "record": "results/physical_abi3/asap7/vector_scale_pipe/pnr_1p3ns_closed.json"
+      }
+    },
+    "members_with_no_routed_record": [
+      "ot_a3_vector_hadamard"
+    ],
+    "mm2_lower_bound": 0.032275796,
+    "standard_cell_um2_lower_bound": 32275.796000000002,
+    "why_a_lower_bound": "the sum omits ot_a3_engine_array's own glue -- issue decode, operand multiplexing, completion logic -- and omits every member with no routed record, so the ratio below is an UPPER bound"
+  },
+  "arithmetic": {
+    "basis": "ot_a3_mac_lane_pipe instantiates exactly ONE ot_mac_bf16_fp32_pipe; its LANES_IF of 8 interleaves eight output columns through that one unit to hide a five-stage latency and is not eight multipliers. The legacy ot_a3_mac_lane beside it retires one every five cycles.",
+    "bf16_ops_per_cycle": 2,
+    "macs_per_cycle": 1
+  },
+  "clock": {
+    "basis": "the fmax inventory's clock_limiter: the slowest ABI 3.0 block with a closed routed record, which is the whole-design operating point",
+    "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+    "hz": 276878000.0
+  },
+  "device_bf16_ops_s": 553756000.0,
+  "device_bf16_ops_s_per_mm2": 17157005206.006382,
+  "not_a_claim": [
+    "this is not a routed measurement of ot_a3_engine_array: it has no routed record, and the area here is a sum of its members' records",
+    "peak arithmetic only -- one MAC retired every cycle -- which this repository has measured and found does not hold",
+    "an UPPER bound on the ratio: the area is a lower bound, so the true ratio is lower than the number printed"
+  ],
+  "producer": {
+    "git": {
+      "commit": "e5a8a4a3382fdfc56f3bb5860aacf27b1adb80d3"
+    },
+    "tool": "tools/audit_engine_array_iso_area.py"
+  },
+  "projection_from_measured_records": {
+    "inputs": {
+      "compute_unit": {
+        "area_um2": 6021.03,
+        "cells": 50258,
+        "fmax_hz": 1090620000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_chain_banks2_slew15_0p95.json"
+      },
+      "one_lane": {
+        "area_um2": 509.352,
+        "cells": 4562,
+        "fmax_hz": 1040280000.0,
+        "record": "results/physical_abi3/asap7/mac_bf16_fp32_pipe_round_stage/physical.json"
+      },
+      "sixteen_lane_tile": {
+        "area_um2": 4201.14,
+        "cells": 33330,
+        "fmax_hz": 1203440000.0,
+        "record": "results/physical_abi3/asap7/mac_tile/pnr_lanes16_slew60.json"
+      },
+      "tile_area_per_lane_um2": 262.57125
+    },
+    "steps": [
+      {
+        "area_um2": 35967.584,
+        "basis": "both areas are routed records; the clock is unchanged",
+        "bf16_ops_s": 8860096000.0,
+        "clock_hz": 276878000.0,
+        "macs_per_cycle": 16,
+        "ops_s_per_mm2": 246335589290.62344,
+        "ratio_against_a100_logic_area": 0.3912946091424133,
+        "step": "swap the single MAC for the 16-lane ot_mac_tile, same clock"
+      },
+      {
+        "area_um2": 35967.584,
+        "basis": "ot_compute_unit's routed closed frequency, which is what a 16-lane tile with its operand delivery has been measured at",
+        "bf16_ops_s": 34899840000.0,
+        "clock_hz": 1090620000.0,
+        "macs_per_cycle": 16,
+        "ops_s_per_mm2": 970313713592.7728,
+        "ratio_against_a100_logic_area": 1.5413060142839043,
+        "step": "and run it at the MAC datapath's own routed clock"
+      },
+      {
+        "area_um2": 48571.004,
+        "basis": "ot_a3_tile64 is 64 lanes and has NEVER been routed, so its area is projected from ot_mac_tile's measured area per lane -- the one estimated quantity in this table, and it is an estimate of AREA which makes the ratio optimistic",
+        "bf16_ops_s": 139599360000.0,
+        "clock_hz": 1090620000.0,
+        "macs_per_cycle": 64,
+        "ops_s_per_mm2": 2874129593862.2144,
+        "ratio_against_a100_logic_area": 4.565444316404209,
+        "step": "64 lanes at that clock, tile area scaled per lane"
+      }
+    ]
+  },
+  "question": "what is the iso-area position of ot_a3_engine_array -- the datapath the nine-cell token matrix runs on -- rather than of ot_compute_unit?",
+  "ratio_against_a100_logic_area_UPPER_BOUND": 0.02725324288492552,
+  "ratio_against_a100_whole_die_UPPER_BOUND": 0.04542207147487587,
+  "schema": "opentallas.derived.engine_array_iso_area.v1",
+  "top": "ot_a3_engine_array"
+}
