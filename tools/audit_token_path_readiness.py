@@ -68,6 +68,22 @@ def main() -> int:
 
     hf = (head.get("findings") or {}).get("qwen3-8b-hbm-single-chip") or {}
 
+    #: The bridge's own admission bound on a matmul weight source's row count,
+    #: read out of the RTL rather than taken from a record that predates it.
+    bridge = (ROOT / "rtl/abi3/ot_a3_engine_issue_bridge.sv").read_text()
+    bound_match = re.search(
+        r"matmul_weight_source_ok.*?desc_view_dim0 <= 32'h([0-9a-fA-F]+)",
+        bridge, re.S)
+    head_row_bound = int(bound_match.group(1), 16) if bound_match else 0
+    shipped_head_rows = int(hf.get("shipped_weight_rows") or 0)
+    head_partitions_needed = (
+        -(-shipped_head_rows // head_row_bound) if head_row_bound else 0
+    )
+    #: REDUCTION.PARTITION_SUM's partial extent is what VOCABULARY_PARTITIONS binds,
+    #: and the driver states it from the deployment rather than capping it, so the
+    #: ceiling here is the symbol's own field width.
+    abi_partitions = 255
+
     checks = [
         {
             "id": "attention-geometry-is-a-parameter",
@@ -103,17 +119,31 @@ def main() -> int:
             "was_listed_as_blocking": False,
         },
         {
-            "id": "shipped-lm-head-is-too-wide",
-            "asks": "can the SHIPPED LM head width be admitted at all?",
-            "met": False,
-            "evidence": (f"largest weight rows measured to launch "
-                         f"{hf.get('largest_weight_rows_measured_to_launch')}, "
-                         f"smallest to refuse "
-                         f"{hf.get('smallest_weight_rows_measured_to_refuse')}, "
-                         f"shipped {hf.get('shipped_weight_rows')}"),
-            "note": ("This is why the token must come from a REDUCED configuration "
-                     "and not from the shipped one. It is a measurement, not a "
-                     "limitation to be argued away."),
+            "id": "shipped-lm-head-fits-in-the-vocabulary-partitions",
+            "asks": ("can the SHIPPED LM head width be admitted, in the vocabulary "
+                     "partitions the ABI provides?"),
+            #: DERIVED FROM THE RTL, not from the old measurement. The 4,096 figure
+            #: in abi3_g1d_head_admission.json was measured before the bound moved;
+            #: the bridge's matmul weight-source admission now reads
+            #: ``desc_view_dim0 <= 32'hffff``, and a check that hardcodes False
+            #: against a raised bound is exactly the stale blocker this tool exists
+            #: to catch. It caught two others in the same run.
+            "met": bool(head_row_bound) and head_partitions_needed <= abi_partitions,
+            "evidence": (
+                f"the bridge admits matmul weight rows up to {head_row_bound:,} "
+                f"(rtl/abi3/ot_a3_engine_issue_bridge.sv, matmul_weight_source_ok); "
+                f"the shipped Qwen3 head is {shipped_head_rows:,} rows, so it needs "
+                f"{head_partitions_needed} vocabulary partitions and the ABI's "
+                f"VOCABULARY_PARTITIONS symbol provides up to {abi_partitions}. The "
+                f"superseded measurement in abi3_g1d_head_admission.json is "
+                f"{hf.get('largest_weight_rows_measured_to_launch')} launching and "
+                f"{hf.get('smallest_weight_rows_measured_to_refuse')} refusing, taken "
+                f"before the bound was raised."
+            ),
+            "note": ("The reduced configuration is still required, but for the OTHER "
+                     "reason this tool states: the shipped forward pass is 7.57e9 "
+                     "multiply-accumulates and one lane retires one per cycle. Width "
+                     "of the head is no longer the blocker; simulation time is."),
             "was_listed_as_blocking": False,
         },
         {
