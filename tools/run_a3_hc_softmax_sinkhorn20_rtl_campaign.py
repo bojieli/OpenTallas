@@ -43,7 +43,12 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_fp32_div_rne.sv",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
     "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv",
+    # The composed block instantiates the PIPELINED twin, so both are here: the
+    # twin because it is what runs, and the original because the twin's claim is
+    # bit-exactness against it and its source belongs in the digest set.
     "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
     "rtl/abi3/ot_a3_hc_stable_softmax_sinkhorn20_rne.sv",
     "rtl/test/tb_a3_hc_softmax_sinkhorn20.sv",
 )

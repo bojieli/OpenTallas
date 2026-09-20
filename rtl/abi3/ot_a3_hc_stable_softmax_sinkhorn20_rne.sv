@@ -57,7 +57,26 @@ module ot_a3_hc_stable_softmax_sinkhorn20_rne (
     wire [511:0] sinkhorn_result_codes;
     wire [1:0] sinkhorn_result_error;
 
-    ot_a3_hc_sinkhorn20_rne sinkhorn20 (
+    //: THE PIPELINED TWIN, not the certifying original, and this is the whole
+    //: point of having built it. ot_a3_hc_sinkhorn20_rne routes at 196.6 MHz --
+    //: measured again on 2026-09-20 at 197.3 MHz -- which made it the ABI 3.0
+    //: datapath's clock limiter, and THIS instantiation is the only reason that
+    //: block is in the datapath at all. ot_a3_hc_sinkhorn20_rne_pipe closes at
+    //: 276.9 MHz for 1.01x the cycles, is bit-exact against the original over
+    //: rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv (which reports EQUIVALENT, not a
+    //: tolerance), and until now was instantiated by NOTHING but that bench.
+    //:
+    //: So the published limiter was being read off a module the datapath did not
+    //: contain: results/physical_abi3/asap7/sinkhorn20_pipe_equivalence.json says
+    //: so in its own not_a_claim -- "nothing instantiates the twin ... so this is a
+    //: qualified replacement and not a shipped one". It is shipped now. 1.41x the
+    //: frequency of the module this line used to name.
+    //:
+    //: The original is left byte-identical and keeps its bound vectors and its own
+    //: campaign; it is simply no longer in anything's instantiation closure, which
+    //: is the audit's "uncovered, instantiated by nothing" category for a retired
+    //: module covered by its replacement.
+    ot_a3_hc_sinkhorn20_rne_pipe sinkhorn20 (
         .clk(clk),
         .rst_n(rst_n),
         .in_valid(sinkhorn_in_valid),
