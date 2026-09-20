@@ -1,0 +1,19 @@
+{
+  "and_an_aux_slot_cannot_hold_it_either": "aux_id_2 and aux_id_3 are SYMBOL IDS, resolved through the runtime symbol table; they cannot carry a per-dispatch constant. Emitting one select operator per query row would not help: each would still name the same symbols, and the engine's default for an unnamed aux_id_3 is context - span, which is the LAST row's position for every one of them.",
+  "answer": "NO, for two reasons that only appear once the frontend and the engine are read together. Supplying the window does not give the streamed dispatch a row either.",
+  "not_a_claim": [
+    "this is a reading of the frontend and the engine, not a measurement; what was measured is that two runtime derivations found nothing (deepseek_v41_select_row_is_not_in_its_operands.json)",
+    "an A18 amendment is not attempted here. It moves every view record and every backend that writes one, and the three V4.1 cells are what it would buy"
+  ],
+  "producer": {
+    "git": {
+      "commit": "47224a3de5c6955a09494fc25572c8eccd0d1c94"
+    },
+    "tool": "read of the V4.1 frontend, the ROUTE.INDEX_TOPK engine and the aux contract"
+  },
+  "question": "two options were left: supply the joined window as the select's slot 1, or amend A18 for a second request-dependent extent. The first was called a frontend shape change. Is it actually available?",
+  "reason_one_the_state_contract": "the select's output is PUBLISHED AS STATE for the layers that do not own their keys to reuse, and the frontend says why it must be the compressed half alone: \"torch.cat([topk_idxs, compress_idxs], dim=-1) runs in the layer, after the selection -- its own or its source's -- is in hand. The published state is therefore the compressed half alone.\" The engine JOINS any window it is given (A19), so supplying one makes the select's output the joined array and the published state wrong for every reusing layer. The operator has no second output -- the engine reads output_view_0 only -- so it cannot publish both.",
+  "reason_two_the_window_would_be_streamed_too": "even with a mode bit saying \"this window carries the position and is not joined\" -- which is precedented, the ROM backend already rides _TOPK_RANKS_BLOCKS as a bit above the mask mode -- the engine requires the window's span to EQUAL the score's. A streamed select presents one score row, so it would be handed a one-row window, and that row's final valid index is the position of row zero. The carry needs a window row the dispatch cannot name, which is the same missing fact one level out.",
+  "schema": "opentallas.result.v41_select_window_option_also_fails.v1",
+  "what_is_left": "ONE option. A view must be able to carry two request-dependent extents, so the index score's plane is not streamed and the select sees every query row in one dispatch -- which is exactly the configuration layer 20 runs in today, correctly, with the same aux fields and no window. That is a wire-format amendment to A18 and there is no cheaper substitute: the row identity is absent from the descriptor, the view, the symbol table and the aux slots, and all four have now been checked."
+}
