@@ -101,6 +101,26 @@ module ot_a3_vector_compress_project #(
             accumulator, h_rd_data[15:0], weight_code
         );
 
+    //: THE STORE'S ADDRESS IS NOT THE PRODUCT-ADD'S WORK.  The routed critical path ran
+    //: kv_rd_data[12] to result_buffer[59][29] -- 110 cell arcs holding the operand
+    //: decode, the FUSED bf16 product-add AND the buffer index, which is
+    //: ``row * cfg_cols * 2 + (plane ? cfg_cols : 0) + col``: a 32-bit multiply and two
+    //: adds sharing the cycle with the multiply-accumulate.  The block came back at
+    //: 232.3 MHz not met.
+    //:
+    //: The index depends only on row, col and plane, which are registers that hold
+    //: still for the whole cfg_depth-long accumulation, so it is computed one cycle
+    //: ahead instead.  Three cycles separate a change of col, row or plane from the
+    //: store that uses it -- S_DOT_ISSUE, S_DOT_WAIT, S_DOT_STEP -- so the registered
+    //: value is current even at cfg_depth == 1, and the address written is the same
+    //: address.
+    reg [31:0] store_index_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) store_index_q <= 32'b0;
+        else store_index_q <=
+            ({16'b0, row} * {16'b0, cfg_cols} * 2) +
+            (plane ? {16'b0, cfg_cols} : 32'b0) + {16'b0, col};
+
     wire configuration_supported =
         (cfg_aux0 == COMPRESS_PROJECT) &&
         (cfg_dtype_a == FMT_BF16) && (cfg_dtype_b == FMT_BF16) &&
@@ -238,11 +258,9 @@ module ot_a3_vector_compress_project #(
                         depth_index <= depth_index + 1;
                         state <= S_DOT_ISSUE;
                     end else begin
-                        // Frozen projection_order: kv_then_gate.
-                        result_buffer[
-                            ({16'b0, row} * {16'b0, cfg_cols} * 2) +
-                            (plane ? {16'b0, cfg_cols} : 0) + {16'b0, col}
-                        ] <= accumulated[31:0];
+                        // Frozen projection_order: kv_then_gate.  The index is
+                        // the registered one, computed a cycle ahead.
+                        result_buffer[store_index_q] <= accumulated[31:0];
                         accumulator <= 0;
                         depth_index <= 0;
                         if (col + 1 < cfg_cols) begin

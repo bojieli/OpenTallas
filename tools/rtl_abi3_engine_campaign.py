@@ -183,8 +183,11 @@ MUTATIONS: tuple[dict[str, str], ...] = (
         "id": "compress_swap_output_planes",
         "source": "rtl/abi3/ot_a3_vector_compress_project.sv",
         "description": "store gate outputs before KV outputs",
-        "before": "(plane ? {16'b0, cfg_cols} : 0) + {16'b0, col}",
-        "after": "(plane ? 0 : {16'b0, cfg_cols}) + {16'b0, col}",
+        #: the index moved into a register computed a cycle ahead of the store, so
+        #: the plane offset lives there now.  What this mutation tests is unchanged:
+        #: swap the two output planes and the campaign must notice.
+        "before": "(plane ? {16'b0, cfg_cols} : 32'b0) + {16'b0, col};",
+        "after": "(plane ? 32'b0 : {16'b0, cfg_cols}) + {16'b0, col};",
     },
     {
         "id": "compress_split_product_add_rounding",
