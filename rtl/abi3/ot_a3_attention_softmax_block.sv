@@ -135,24 +135,70 @@ module ot_a3_attention_softmax_block #(
         end
     endfunction
 
-    //: The block's maximum over its VALID lanes, combinationally. LANES 32-bit
-    //: comparisons is a wide cone; a caller that needs the clock can register it
-    //: in stages, and at LANES=64 with an exponential per lane behind it the
-    //: comparison is not what sets this block's throughput.
+    //: The block's maximum over its VALID lanes, as a BALANCED TREE.
+    //:
+    //: It used to be a fold -- one loop carrying ``max_scan`` across its
+    //: iterations -- and a carried accumulator is a CHAIN, not a tree: at
+    //: LANES = 64 that is sixty-four 32-bit compare-and-select stages in series.
+    //: The routed record said so exactly: worst path scores[47] to block_max[30]
+    //: through 2,610 cells, WNS -31.83 ns at a 3.4 ns target, and the block came
+    //: back at 28.4 MHz over 137,537 cells. The old comment here guessed that
+    //: "the comparison is not what sets this block's throughput"; it was.
+    //:
+    //: The tree is log2(LANES) = 6 levels and is BIT-IDENTICAL, not merely
+    //: equivalent. The fold replaced only on STRICTLY greater while walking
+    //: ascending, so it kept the LOWEST-INDEX maximal lane; each tree node below
+    //: keeps its left child on a tie, and the left child is always the lower
+    //: index, so the tree keeps the lowest-index maximal lane too. That holds
+    //: without appealing to the zero canonicalisation further down -- which
+    //: matters, because ``monotonic`` is injective EXCEPT that +0 and -0 both map
+    //: to 32'h8000_0000, and a tie between those two is the one case where
+    //: "which maximal lane" would otherwise be observable.
+    //:
+    //: Lanes beyond LANES are padded unseen, so a non-power-of-two LANES needs no
+    //: special case: an unseen node contributes nothing at every level.
+    localparam integer TREE_LEVELS = LW;
+    localparam integer TREE_WIDTH = 1 << LW;
+    reg [31:0] tree_value [0:TREE_LEVELS][0:TREE_WIDTH-1];
+    reg        tree_seen  [0:TREE_LEVELS][0:TREE_WIDTH-1];
+    integer tree_level;
+    integer tree_node;
     reg [31:0] max_scan;
     reg        max_seen;
     always @* begin
-        max_scan = 32'd0;
-        max_seen = 1'b0;
-        for (i = 0; i < LANES; i = i + 1) begin
-            if (lane_valid[i]) begin
-                if (!max_seen ||
-                    (monotonic(scores[i*32 +: 32]) > monotonic(max_scan))) begin
-                    max_scan = scores[i*32 +: 32];
+        for (tree_node = 0; tree_node < TREE_WIDTH; tree_node = tree_node + 1) begin
+            tree_value[0][tree_node] =
+                (tree_node < LANES) ? scores[tree_node*32 +: 32] : 32'd0;
+            tree_seen[0][tree_node] =
+                (tree_node < LANES) ? lane_valid[tree_node] : 1'b0;
+        end
+        for (tree_level = 0; tree_level < TREE_LEVELS;
+             tree_level = tree_level + 1) begin
+            for (tree_node = 0;
+                 tree_node < (TREE_WIDTH >> (tree_level + 1));
+                 tree_node = tree_node + 1) begin
+                if (!tree_seen[tree_level][2*tree_node]) begin
+                    tree_value[tree_level+1][tree_node] =
+                        tree_value[tree_level][2*tree_node+1];
+                    tree_seen[tree_level+1][tree_node] =
+                        tree_seen[tree_level][2*tree_node+1];
+                end else if (!tree_seen[tree_level][2*tree_node+1]) begin
+                    tree_value[tree_level+1][tree_node] =
+                        tree_value[tree_level][2*tree_node];
+                    tree_seen[tree_level+1][tree_node] = 1'b1;
+                end else begin
+                    //: strictly greater, so a tie keeps the LEFT child
+                    tree_value[tree_level+1][tree_node] =
+                        (monotonic(tree_value[tree_level][2*tree_node+1]) >
+                         monotonic(tree_value[tree_level][2*tree_node]))
+                        ? tree_value[tree_level][2*tree_node+1]
+                        : tree_value[tree_level][2*tree_node];
+                    tree_seen[tree_level+1][tree_node] = 1'b1;
                 end
-                max_seen = 1'b1;
             end
         end
+        max_scan = tree_value[TREE_LEVELS][0];
+        max_seen = tree_seen[TREE_LEVELS][0];
     end
     //: Any nonfinite score is refused before it can poison a maximum.
     //: A lane's exponent field goes through a named reg. Indexing a part-select
