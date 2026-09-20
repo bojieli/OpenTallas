@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 66,
-    "uncovered_and_instantiated": 21,
+    "covered_by_a_closed_block": 67,
+    "uncovered_and_instantiated": 20,
     "uncovered_and_instantiated_by_nothing": 18,
-    "with_their_own_closed_record": 49
+    "with_their_own_closed_record": 50
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -1576,9 +1576,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_route_weight_normalize.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_issue_bridge"
       ],
@@ -1866,7 +1866,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "8816a78ada14cc30a320e21be3211f638c10047f"
+      "commit": "b0dba807070aa6720a8e79e8882dc3f5fb8158b5"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2303,12 +2303,6 @@
         "ot_a3_vector_rope"
       ],
       "module": "ot_a3_rope_lane_pipe"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_issue_bridge"
-      ],
-      "module": "ot_a3_route_weight_normalize"
     },
     {
       "instantiated_by": [
