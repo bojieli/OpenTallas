@@ -5,7 +5,15 @@
 module tb_a3_hc_transcendental;
     parameter integer CASES = 4200;
     parameter integer CASE_WORDS = 4;
-    parameter integer TIMEOUT_CYCLES = 256;
+    //: The engine's wide arithmetic is SEQUENTIAL: a series term is a carry-save
+    //: multiply plus a restoring divide plus two register stages, and the sigmoid
+    //: transform is one subtract per clock over a 328-bit numerator. A request
+    //: therefore takes some 2,850 cycles rather than the seventy the single-cycle
+    //: expression form took, which is the trade that let the module synthesise at
+    //: all. This limit is the bench refusing to hang, not a latency target -- and
+    //: the summary still publishes the observed maximum, so a regression that made
+    //: a request slower would show up there rather than passing silently.
+    parameter integer TIMEOUT_CYCLES = 8192;
 
     reg [31:0] cases [0:CASES*CASE_WORDS-1];
     reg [1023:0] cases_path;

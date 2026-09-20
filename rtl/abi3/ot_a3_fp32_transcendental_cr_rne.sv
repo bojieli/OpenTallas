@@ -13,6 +13,27 @@
 // enclosing endpoints to binary32 RNE gives the same code.  An interval that
 // is too wide fails closed instead of guessing a bit.
 //
+// EVERY WIDE MULTIPLY AND EVERY DIVISION HERE IS SEQUENTIAL, AND THAT IS WHY
+// THIS BLOCK HAS AN ASAP7 RECORD AT ALL. It used to spell five wide products and
+// four divisions as expressions in one cycle each, and the worst of them,
+// ``divide_fixed_ratio``, unrolled a restoring loop over all 328 numerator bits
+// with a 165-bit compare-and-subtract at every step -- some 54,000 levels of carry
+// logic in a single cycle. That is not slow, it is unbuildable: a synthesis of
+// this module ran EIGHT HOURS inside the pinned container and timed out in
+// 1_2_yosys without producing a netlist, so the module had no ASAP7 number, and
+// THIRTEEN of the design's twenty-seven uncovered modules sit behind it and its
+// positive-argument sibling.
+//
+// The three primitives that replace them keep the arithmetic exactly:
+// ot_wide_mul_seq (carry-save, so no cycle holds a wide carry chain),
+// ot_wide_div_small_seq (the same restoring loop, ten bits per clock) and
+// ot_wide_div_seq (one subtract per clock, because a 165-bit subtract is already
+// 3.37 ns on ASAP7 and a second would halve the achievable clock). Each is
+// checked against the expression it replaces over its own corpus in
+// rtl/test/tb_wide_mul_seq_equiv.sv, tb_wide_div_small_seq_equiv.sv and
+// tb_wide_div_seq_equiv.sv, so the enclosure, the certification and every refusal
+// are the ones this module already published.
+//
 // FRAC_BITS >= 157 represents every finite binary32 fraction used by this
 // range reduction exactly.  SERIES_TERMS must be positive and even; |x| < 150
 // makes y=|x|/256 < 0.586, so the Taylor terms decrease from the start and the
@@ -62,12 +83,32 @@ module ot_a3_fp32_transcendental_cr_rne #(
     localparam [31:0] FP32_HALF = 32'h3f00_0000;
     localparam [31:0] FP32_ONE = 32'h3f80_0000;
 
-    localparam [2:0] S_IDLE = 3'd0;
-    localparam [2:0] S_SERIES = 3'd1;
-    localparam [2:0] S_SQUARE = 3'd2;
-    localparam [2:0] S_TRANSFORM = 3'd3;
-    localparam [2:0] S_CERTIFY = 3'd4;
-    localparam [2:0] S_OUT = 3'd5;
+    //: One state per primitive the datapath waits on. The series step splits
+    //: five ways and the squaring two, because a sequential primitive has to be
+    //: started and then waited on, and because a 163-bit increment and a 163-bit
+    //: add in the same cycle is 6 ns where each alone is under 3.4.
+    localparam [3:0] S_IDLE      = 4'd0;
+    localparam [3:0] S_SER_MUL   = 4'd1;
+    localparam [3:0] S_SER_PROD  = 4'd2;
+    localparam [3:0] S_SER_DIV   = 4'd3;
+    localparam [3:0] S_SER_INC   = 4'd4;
+    localparam [3:0] S_SER_ACC   = 4'd5;
+    localparam [3:0] S_SQ_MUL    = 4'd6;
+    localparam [3:0] S_SQ_ACC    = 4'd7;
+    localparam [3:0] S_TR_DIV    = 4'd8;
+    localparam [3:0] S_TR_ACC    = 4'd9;
+    localparam [3:0] S_CERTIFY   = 4'd10;
+    localparam [3:0] S_OUT       = 4'd11;
+
+    //: Bits of each operand per clock, from the walk in
+    //: results/physical_abi3/asap7/wide_datapath_knobs.json. Ten is the
+    //: small-divisor divide's measured peak at 286.2 MHz; sixteen is not the
+    //: multiply's -- four measures 303.5 MHz -- but four would take 81 cycles per
+    //: product against sixteen's 21, so 3% of clock is not worth four times the
+    //: latency of 57 terms and eight squarings. The wide-denominator divide takes
+    //: one bit per clock because a 165-bit subtract is already 3.37 ns.
+    localparam integer MUL_BITS_PER_STEP = 16;
+    localparam integer DIV_BITS_PER_STEP = 10;
 
     // One is exactly bit FRAC_BITS in every Q0.FRAC_BITS value.
     localparam [FRAC_BITS+2:0] FIXED_ONE =
@@ -178,7 +219,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
         end
     endfunction
 
-    reg [2:0] state;
+    reg [3:0] state;
     reg operation_q;
     reg argument_sign;
     reg [7:0] term_index;
@@ -193,186 +234,158 @@ module ot_a3_fp32_transcendental_cr_rne #(
 
     wire [8:0] next_term_index = {1'b0, term_index} + 1'b1;
 
-    // The Taylor recurrence only divides by the next term number (1..57 at
-    // the default configuration).  Express that bounded small division as a
-    // restoring divider rather than SystemVerilog's general-purpose wide
-    // ``/`` and ``%`` operators.  Besides mapping to a much smaller circuit,
-    // this avoids asking event-driven simulators to build and reevaluate two
-    // arbitrary-width dividers for every Taylor term.  The low nine returned
-    // bits are the exact remainder; the remaining bits are the quotient.
-    function automatic [FRAC_BITS+16:0] divide_by_small;
-        input [FRAC_BITS+7:0] dividend;
-        input [8:0] divisor;
-        reg [FRAC_BITS+7:0] quotient;
-        reg [8:0] remainder;
-        reg [9:0] shifted_remainder;
-        integer divide_bit;
-        begin
-            quotient = 0;
-            remainder = 0;
-            shifted_remainder = 0;
-            for (divide_bit = FRAC_BITS + 7; divide_bit >= 0;
-                 divide_bit = divide_bit - 1) begin
-                shifted_remainder = {
-                    remainder[8:0], dividend[divide_bit]
-                };
-                if (shifted_remainder >= {1'b0, divisor}) begin
-                    remainder =
-                        shifted_remainder[8:0] - divisor;
-                    quotient[divide_bit] = 1'b1;
-                end else begin
-                    remainder = shifted_remainder[8:0];
-                end
-            end
-            divide_by_small = {quotient, remainder[8:0]};
-        end
-    endfunction
+    //: THE SERIES PRODUCT AND THE SQUARING SHARE ONE PAIR OF MULTIPLIERS. They
+    //: never run in the same state -- every squaring happens after the last term
+    //: -- so two instances serve both, at the widths the squaring needs, with the
+    //: reduced argument zero-extended for the series. That halves the multiplier
+    //: area against four instances and costs two operand multiplexers.
+    localparam integer ENDPOINT_W = FRAC_BITS + 3;        //: 163
+    localparam integer SERIES_DIVIDEND_W = FRAC_BITS + 8; //: 168
+    localparam integer PRODUCT_HIGH_W = 2 * ENDPOINT_W - FRAC_BITS;
 
-    reg [2*FRAC_BITS+7:0] lower_product;
-    reg [2*FRAC_BITS+7:0] upper_product;
-    reg [FRAC_BITS+7:0] lower_product_integer;
-    reg [FRAC_BITS+7:0] upper_product_integer;
-    reg [FRAC_BITS+16:0] lower_division;
-    reg [FRAC_BITS+16:0] upper_division;
+    reg mul_start;
+    wire mul_lower_busy, mul_upper_busy, mul_lower_done, mul_upper_done;
+    wire [PRODUCT_HIGH_W-1:0] mul_lower_high, mul_upper_high;
+    wire mul_lower_low_nonzero, mul_upper_low_nonzero;
+
+    //: Held stable for the whole multiply because the state is: the multiplier
+    //: reads ``a`` every cycle and latches ``b`` at the start, and the state does
+    //: not leave S_SER_MUL or S_SQ_MUL until ``done``.
+    wire series_phase = (state == S_SER_MUL);
+    wire [ENDPOINT_W-1:0] mul_a_lower = series_phase ? term_lower : interval_lower;
+    wire [ENDPOINT_W-1:0] mul_a_upper = series_phase ? term_upper : interval_upper;
+    wire [ENDPOINT_W-1:0] mul_b_lower = series_phase
+        ? {2'b00, reduced_argument} : interval_lower;
+    wire [ENDPOINT_W-1:0] mul_b_upper = series_phase
+        ? {2'b00, reduced_argument} : interval_upper;
+
+    ot_wide_mul_seq #(
+        .WA(ENDPOINT_W), .WB(ENDPOINT_W),
+        .BITS_PER_STEP(MUL_BITS_PER_STEP), .LOW_BITS(FRAC_BITS)
+    ) mul_lower (
+        .clk(clk), .rst_n(rst_n), .start(mul_start),
+        .a(mul_a_lower), .b(mul_b_lower),
+        .busy(mul_lower_busy), .done(mul_lower_done),
+        .product_high(mul_lower_high), .low_nonzero(mul_lower_low_nonzero)
+    );
+    ot_wide_mul_seq #(
+        .WA(ENDPOINT_W), .WB(ENDPOINT_W),
+        .BITS_PER_STEP(MUL_BITS_PER_STEP), .LOW_BITS(FRAC_BITS)
+    ) mul_upper (
+        .clk(clk), .rst_n(rst_n), .start(mul_start),
+        .a(mul_a_upper), .b(mul_b_upper),
+        .busy(mul_upper_busy), .done(mul_upper_done),
+        .product_high(mul_upper_high), .low_nonzero(mul_upper_low_nonzero)
+    );
+
+    //: The series dividend is the product's integer part, bits
+    //: [2*FRAC_BITS+7:FRAC_BITS]. An endpoint is below eight and the reduced
+    //: argument below one, so the product cannot reach bit 2*FRAC_BITS+4 and the
+    //: extension is zeros.
+    wire [SERIES_DIVIDEND_W-1:0] series_dividend_lower =
+        {{(SERIES_DIVIDEND_W-PRODUCT_HIGH_W){1'b0}}, mul_lower_high};
+    wire [SERIES_DIVIDEND_W-1:0] series_dividend_upper =
+        {{(SERIES_DIVIDEND_W-PRODUCT_HIGH_W){1'b0}}, mul_upper_high};
+
+    reg [SERIES_DIVIDEND_W-1:0] series_dividend_lower_q, series_dividend_upper_q;
+    reg [8:0]                   series_divisor_q;
+    reg                         series_upper_fraction_q;
+
+    reg  series_div_start;
+    wire series_div_lower_busy, series_div_upper_busy;
+    wire series_div_lower_done, series_div_upper_done;
+    wire [SERIES_DIVIDEND_W-1:0] series_quotient_lower, series_quotient_upper;
+    wire series_remainder_lower, series_remainder_upper;
+
+    ot_wide_div_small_seq #(
+        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(9),
+        .BITS_PER_STEP(DIV_BITS_PER_STEP)
+    ) series_div_lower (
+        .clk(clk), .rst_n(rst_n), .start(series_div_start),
+        .dividend(series_dividend_lower_q), .divisor(series_divisor_q),
+        .busy(series_div_lower_busy), .done(series_div_lower_done),
+        .quotient(series_quotient_lower), .inexact(series_remainder_lower)
+    );
+    ot_wide_div_small_seq #(
+        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(9),
+        .BITS_PER_STEP(DIV_BITS_PER_STEP)
+    ) series_div_upper (
+        .clk(clk), .rst_n(rst_n), .start(series_div_start),
+        .dividend(series_dividend_upper_q), .divisor(series_divisor_q),
+        .busy(series_div_upper_busy), .done(series_div_upper_done),
+        .quotient(series_quotient_upper), .inexact(series_remainder_upper)
+    );
+
+    //: The upper endpoint takes one ulp when the product discarded a fraction OR
+    //: the division left a remainder -- the same disjunction the expression form
+    //: carried, and still the reason the enclosure encloses.
     reg [FRAC_BITS+2:0] next_term_lower;
     reg [FRAC_BITS+2:0] next_term_upper;
-    reg upper_fraction_nonzero;
-    reg upper_division_remainder;
 
+    //: The squared endpoints. Same multipliers, different operands, and the upper
+    //: one rounds up when the product discarded anything.
+    reg [FRAC_BITS+2:0] square_lower_q, square_upper_q;
+
+    //: The sigmoid's rational transform. Its numerator is 328 bits and its
+    //: quotient is bounded by one in Q0.FRAC_BITS, so only the low FRAC_BITS+3
+    //: quotient bits are kept -- which is what the expression form did by testing
+    //: ``divide_bit <= FRAC_BITS+2``.
+    localparam integer TRANSFORM_NUM_W = 2 * FRAC_BITS + 8;
+    localparam integer TRANSFORM_DEN_W = FRAC_BITS + 4;
+
+    reg [TRANSFORM_NUM_W-1:0] transform_numerator_lower;
+    reg [TRANSFORM_NUM_W-1:0] transform_numerator_upper;
+    reg [TRANSFORM_DEN_W-1:0] transform_denominator_lower;
+    reg [TRANSFORM_DEN_W-1:0] transform_denominator_upper;
+
+    //: Built in a combinational block because it is pure selection and shifting:
+    //: an endpoint placed at bit FRAC_BITS, or a single bit at 2*FRAC_BITS.
     always @* begin
-        lower_product =
-            {{(FRAC_BITS+5){1'b0}}, term_lower} * reduced_argument;
-        upper_product =
-            {{(FRAC_BITS+5){1'b0}}, term_upper} * reduced_argument;
-        lower_product_integer =
-            lower_product[2*FRAC_BITS+7:FRAC_BITS];
-        upper_product_integer =
-            upper_product[2*FRAC_BITS+7:FRAC_BITS];
-        upper_fraction_nonzero = |upper_product[FRAC_BITS-1:0];
-        lower_division = divide_by_small(
-            lower_product_integer, next_term_index
-        );
-        upper_division = divide_by_small(
-            upper_product_integer, next_term_index
-        );
-        next_term_lower = lower_division[FRAC_BITS+11:9];
-        next_term_upper = upper_division[FRAC_BITS+11:9];
-        upper_division_remainder =
-            (upper_division[8:0] != 0) ||
-            upper_fraction_nonzero;
-        if (upper_division_remainder)
-            next_term_upper = next_term_upper + 1'b1;
-    end
-
-    reg [2*FRAC_BITS+7:0] square_lower_product;
-    reg [2*FRAC_BITS+7:0] square_upper_product;
-    reg [FRAC_BITS+2:0] square_lower;
-    reg [FRAC_BITS+2:0] square_upper;
-    reg square_upper_fraction;
-
-    always @* begin
-        square_lower_product = interval_lower * interval_lower;
-        square_upper_product = interval_upper * interval_upper;
-        square_lower =
-            square_lower_product[2*FRAC_BITS+2:FRAC_BITS];
-        square_upper =
-            square_upper_product[2*FRAC_BITS+2:FRAC_BITS];
-        square_upper_fraction = |square_upper_product[FRAC_BITS-1:0];
-        if (square_upper_fraction)
-            square_upper = square_upper + 1'b1;
-    end
-
-    reg [2*FRAC_BITS+7:0] transform_lower_numerator;
-    reg [2*FRAC_BITS+7:0] transform_upper_numerator;
-    reg [FRAC_BITS+3:0] transform_lower_denominator;
-    reg [FRAC_BITS+3:0] transform_upper_denominator;
-    reg [FRAC_BITS+2:0] transformed_lower;
-    reg [FRAC_BITS+2:0] transformed_upper;
-    reg [FRAC_BITS+3:0] transform_lower_division;
-    reg [FRAC_BITS+3:0] transform_upper_division;
-
-    // Exact restoring division for the sigmoid rational transform.  The
-    // quotient is bounded by one in Q0.FRAC_BITS, so FRAC_BITS+3 quotient
-    // bits cover the entire legal result.  The returned least-significant bit
-    // says whether the exact division had a nonzero remainder and therefore
-    // whether the enclosing upper endpoint must be rounded upward.
-    function automatic [FRAC_BITS+3:0] divide_fixed_ratio;
-        input [2*FRAC_BITS+7:0] numerator;
-        input [FRAC_BITS+3:0] denominator;
-        reg [FRAC_BITS+2:0] quotient;
-        reg [FRAC_BITS+3:0] remainder;
-        reg [FRAC_BITS+4:0] shifted_remainder;
-        reg [FRAC_BITS+4:0] remainder_difference;
-        integer divide_bit;
-        begin
-            quotient = 0;
-            remainder = 0;
-            shifted_remainder = 0;
-            remainder_difference = 0;
-            for (divide_bit = 2*FRAC_BITS + 7; divide_bit >= 0;
-                 divide_bit = divide_bit - 1) begin
-                shifted_remainder = {
-                    remainder, numerator[divide_bit]
-                };
-                if (shifted_remainder >= {1'b0, denominator}) begin
-                    remainder_difference =
-                        shifted_remainder - {1'b0, denominator};
-                    remainder = remainder_difference[FRAC_BITS+3:0];
-                    if (divide_bit <= FRAC_BITS + 2)
-                        quotient[divide_bit] = 1'b1;
-                end else begin
-                    remainder = shifted_remainder[FRAC_BITS+3:0];
-                end
-            end
-            divide_fixed_ratio = {quotient, remainder != 0};
-        end
-    endfunction
-
-    always @* begin
-        transform_lower_numerator = 0;
-        transform_upper_numerator = 0;
-        transform_lower_denominator = 1;
-        transform_upper_denominator = 1;
-        transformed_lower = interval_lower;
-        transformed_upper = interval_upper;
-        transform_lower_division = 0;
-        transform_upper_division = 0;
-        // The two wide rational divisions are meaningful only once, after
-        // range reconstruction has completed.  Qualifying them by state is
-        // important both for clock-gated hardware and for RTL simulation:
-        // without this guard they are reevaluated after every squaring step.
-        if (state == S_TRANSFORM && operation_q == OP_SIGMOID) begin
-            if (argument_sign) begin
-                // e/(1+e), monotonically increasing.
-                transform_lower_numerator = {
-                    5'b0, interval_lower, {FRAC_BITS{1'b0}}
-                };
-                transform_upper_numerator = {
-                    5'b0, interval_upper, {FRAC_BITS{1'b0}}
-                };
-                transform_lower_denominator = FIXED_ONE + interval_lower;
-                transform_upper_denominator = FIXED_ONE + interval_upper;
-            end else begin
-                // 1/(1+e), monotonically decreasing.
-                transform_lower_numerator[2*FRAC_BITS] = 1'b1;
-                transform_upper_numerator[2*FRAC_BITS] = 1'b1;
-                transform_lower_denominator = FIXED_ONE + interval_upper;
-                transform_upper_denominator = FIXED_ONE + interval_lower;
-            end
-            transform_lower_division = divide_fixed_ratio(
-                transform_lower_numerator, transform_lower_denominator
-            );
-            transform_upper_division = divide_fixed_ratio(
-                transform_upper_numerator, transform_upper_denominator
-            );
-            transformed_lower =
-                transform_lower_division[FRAC_BITS+3:1];
-            transformed_upper =
-                transform_upper_division[FRAC_BITS+3:1];
-            if (transform_upper_division[0])
-                transformed_upper = transformed_upper + 1'b1;
+        transform_numerator_lower = {TRANSFORM_NUM_W{1'b0}};
+        transform_numerator_upper = {TRANSFORM_NUM_W{1'b0}};
+        transform_denominator_lower = {{(TRANSFORM_DEN_W-1){1'b0}}, 1'b1};
+        transform_denominator_upper = {{(TRANSFORM_DEN_W-1){1'b0}}, 1'b1};
+        if (argument_sign) begin
+            //: e/(1+e), monotonically increasing.
+            transform_numerator_lower = {5'b0, interval_lower, {FRAC_BITS{1'b0}}};
+            transform_numerator_upper = {5'b0, interval_upper, {FRAC_BITS{1'b0}}};
+            transform_denominator_lower = {1'b0, FIXED_ONE} + {1'b0, interval_lower};
+            transform_denominator_upper = {1'b0, FIXED_ONE} + {1'b0, interval_upper};
+        end else begin
+            //: 1/(1+e), monotonically decreasing, so the endpoints swap.
+            transform_numerator_lower[2*FRAC_BITS] = 1'b1;
+            transform_numerator_upper[2*FRAC_BITS] = 1'b1;
+            transform_denominator_lower = {1'b0, FIXED_ONE} + {1'b0, interval_upper};
+            transform_denominator_upper = {1'b0, FIXED_ONE} + {1'b0, interval_lower};
         end
     end
+
+    reg  transform_div_start;
+    wire transform_lower_busy, transform_upper_busy;
+    wire transform_lower_done, transform_upper_done;
+    wire [FRAC_BITS+2:0] transform_quotient_lower, transform_quotient_upper;
+    wire transform_remainder_lower, transform_remainder_upper;
+
+    ot_wide_div_seq #(
+        .NUM_BITS(TRANSFORM_NUM_W), .DEN_BITS(TRANSFORM_DEN_W),
+        .QUOT_BITS(FRAC_BITS+3), .BITS_PER_STEP(1)
+    ) transform_div_lower (
+        .clk(clk), .rst_n(rst_n), .start(transform_div_start),
+        .numerator(transform_numerator_lower),
+        .denominator(transform_denominator_lower),
+        .busy(transform_lower_busy), .done(transform_lower_done),
+        .quotient(transform_quotient_lower), .inexact(transform_remainder_lower)
+    );
+    ot_wide_div_seq #(
+        .NUM_BITS(TRANSFORM_NUM_W), .DEN_BITS(TRANSFORM_DEN_W),
+        .QUOT_BITS(FRAC_BITS+3), .BITS_PER_STEP(1)
+    ) transform_div_upper (
+        .clk(clk), .rst_n(rst_n), .start(transform_div_start),
+        .numerator(transform_numerator_upper),
+        .denominator(transform_denominator_upper),
+        .busy(transform_upper_busy), .done(transform_upper_done),
+        .quotient(transform_quotient_upper), .inexact(transform_remainder_upper)
+    );
 
     wire [31:0] rounded_lower = fixed_to_fp32_rne(interval_lower);
     wire [31:0] rounded_upper = fixed_to_fp32_rne(interval_upper);
@@ -409,7 +422,23 @@ module ot_a3_fp32_transcendental_cr_rne #(
             interval_exact <= 1'b0;
             interval_lower_out <= 0;
             interval_upper_out <= 0;
+            series_dividend_lower_q <= 0;
+            series_dividend_upper_q <= 0;
+            series_divisor_q <= 9'd0;
+            series_upper_fraction_q <= 1'b0;
+            next_term_lower <= 0;
+            next_term_upper <= 0;
+            square_lower_q <= 0;
+            square_upper_q <= 0;
+            mul_start <= 1'b0;
+            series_div_start <= 1'b0;
+            transform_div_start <= 1'b0;
         end else begin
+            //: Every ``start`` is a single cycle: the primitives latch on it and
+            //: raise ``busy`` the cycle after, so holding it would restart them.
+            mul_start <= 1'b0;
+            series_div_start <= 1'b0;
+            transform_div_start <= 1'b0;
             if (out_valid && out_ready)
                 out_valid <= 1'b0;
 
@@ -457,12 +486,54 @@ module ot_a3_fp32_transcendental_cr_rne #(
                             term_upper <= FIXED_ONE;
                             sum_lower <= FIXED_ONE;
                             sum_upper <= FIXED_ONE;
-                            state <= S_SERIES;
+                            state <= S_SER_MUL;
                         end
                     end
                 end
 
-                S_SERIES: begin
+                //: term_{k+1} = term_k * y, high half kept, low half only as
+                //: "was anything discarded".
+                //: ``done`` IS TESTED BEFORE THE START CONDITION, here and in
+                //: every other state that waits on a primitive: a primitive drops
+                //: ``busy`` in the same cycle it raises ``done``, so testing "not
+                //: busy and not started" first restarts it forever. The
+                //: multiplier was caught doing exactly that -- looping at
+                //: steps_left 21 with the state never leaving S_SER_MUL.
+                S_SER_MUL: begin
+                    if (mul_lower_done && mul_upper_done) begin
+                        state <= S_SER_PROD;
+                    end else if (!mul_lower_busy && !mul_start) begin
+                        mul_start <= 1'b1;
+                    end
+                end
+
+                S_SER_PROD: begin
+                    series_dividend_lower_q <= series_dividend_lower;
+                    series_dividend_upper_q <= series_dividend_upper;
+                    series_divisor_q <= next_term_index;
+                    series_upper_fraction_q <= mul_upper_low_nonzero;
+                    state <= S_SER_DIV;
+                end
+
+                S_SER_DIV: begin
+                    if (series_div_lower_done && series_div_upper_done) begin
+                        state <= S_SER_INC;
+                    end else if (!series_div_lower_busy && !series_div_start) begin
+                        series_div_start <= 1'b1;
+                    end
+                end
+
+                //: Its own cycle, because a 163-bit increment and the 163-bit add
+                //: in S_SER_ACC are each under 3.4 ns and together are six.
+                S_SER_INC: begin
+                    next_term_lower <= series_quotient_lower[FRAC_BITS+2:0];
+                    next_term_upper <= series_quotient_upper[FRAC_BITS+2:0] +
+                        {{(FRAC_BITS+2){1'b0}},
+                         (series_remainder_upper || series_upper_fraction_q)};
+                    state <= S_SER_ACC;
+                end
+
+                S_SER_ACC: begin
                     if ({24'b0, term_index} < SERIES_TERMS) begin
                         term_lower <= next_term_lower;
                         term_upper <= next_term_upper;
@@ -474,6 +545,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
                             sum_lower <= sum_lower - next_term_upper;
                             sum_upper <= sum_upper - next_term_lower;
                         end
+                        state <= S_SER_MUL;
                     end else begin
                         // SERIES_TERMS is even, so its partial sum is the
                         // upper alternating bound and the next odd term gives
@@ -481,24 +553,50 @@ module ot_a3_fp32_transcendental_cr_rne #(
                         interval_lower <= sum_lower - next_term_upper;
                         interval_upper <= sum_upper;
                         square_index <= 0;
-                        state <= S_SQUARE;
+                        state <= S_SQ_MUL;
                     end
                 end
 
-                S_SQUARE: begin
-                    interval_lower <= square_lower;
-                    interval_upper <= square_upper;
+                //: Eight squarings reconstruct exp(x) from exp(|x|/256); the
+                //: multipliers are the series ones, with the interval on both
+                //: operand ports.
+                S_SQ_MUL: begin
+                    if (mul_lower_done && mul_upper_done) begin
+                        square_lower_q <= mul_lower_high[FRAC_BITS+2:0];
+                        square_upper_q <= mul_upper_high[FRAC_BITS+2:0] +
+                            {{(FRAC_BITS+2){1'b0}}, mul_upper_low_nonzero};
+                        state <= S_SQ_ACC;
+                    end else if (!mul_lower_busy && !mul_start) begin
+                        mul_start <= 1'b1;
+                    end
+                end
+
+                S_SQ_ACC: begin
+                    interval_lower <= square_lower_q;
+                    interval_upper <= square_upper_q;
                     if (square_index == 7) begin
                         state <= operation_q == OP_SIGMOID
-                            ? S_TRANSFORM : S_CERTIFY;
+                            ? S_TR_DIV : S_CERTIFY;
                     end else begin
                         square_index <= square_index + 1'b1;
+                        state <= S_SQ_MUL;
                     end
                 end
 
-                S_TRANSFORM: begin
-                    interval_lower <= transformed_lower;
-                    interval_upper <= transformed_upper;
+                //: The sigmoid transform: two exact wide divisions, one subtract
+                //: per clock, on an interval that has not been rounded yet.
+                S_TR_DIV: begin
+                    if (transform_lower_done && transform_upper_done) begin
+                        state <= S_TR_ACC;
+                    end else if (!transform_lower_busy && !transform_div_start) begin
+                        transform_div_start <= 1'b1;
+                    end
+                end
+
+                S_TR_ACC: begin
+                    interval_lower <= transform_quotient_lower;
+                    interval_upper <= transform_quotient_upper +
+                        {{(FRAC_BITS+2){1'b0}}, transform_remainder_upper};
                     state <= S_CERTIFY;
                 end
 

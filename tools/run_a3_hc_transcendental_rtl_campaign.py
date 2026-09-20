@@ -31,6 +31,13 @@ TOOLS_ROOT = Path(
 )
 
 RTL_SOURCES = (
+    # The three sequential wide-arithmetic primitives the engine is built from.
+    # They carry the multiplies and divisions that used to be single-cycle
+    # expressions, and without them yosys never finished this module: an 8-hour
+    # synthesis timed out in 1_2_yosys on the unrolled form.
+    "rtl/lib/ot_wide_mul_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_div_seq.sv",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
     "rtl/test/tb_a3_hc_transcendental.sv",
 )
@@ -253,7 +260,10 @@ def campaign(output: Path) -> dict[str, Any]:
             )
         process, iverilog_run_seconds = run(
             [str(vvp), str(iverilog_output), f"+CASES={VECTOR_DIR / 'cases.hex'}"],
-            timeout=180,
+            # A request is some 2,850 cycles rather than seventy now that the wide
+            # arithmetic is sequential, so 4,200 of them is tens of millions of
+            # cycles under an event-driven simulator.
+            timeout=36000,
         )
         iverilog_log = process.stdout + process.stderr
         if process.returncode:
@@ -292,7 +302,8 @@ def campaign(output: Path) -> dict[str, Any]:
                 str(verilator_dir / "sim_a3_hc_transcendental"),
                 f"+CASES={VECTOR_DIR / 'cases.hex'}",
             ],
-            timeout=120,
+            # See the Icarus run above: a request is some 2,850 cycles now.
+            timeout=7200,
         )
         verilator_log = process.stdout + process.stderr
         if process.returncode:
@@ -305,9 +316,15 @@ def campaign(output: Path) -> dict[str, Any]:
         ):
             raise RuntimeError("Icarus and Verilator normalized results differ")
 
+        # Every design source, not just the first: the engine instantiates three
+        # sequential primitives now, and ``hierarchy -check`` fails on a missing
+        # module rather than silently blackboxing it.
+        design_sources = [
+            item for item in RTL_SOURCES if not item.startswith("rtl/test/")
+        ]
         yosys_script = (
-            f"read_verilog -sv {ROOT / RTL_SOURCES[0]}; "
-            "hierarchy -check -top ot_a3_fp32_transcendental_cr_rne; "
+            "".join(f"read_verilog -sv {ROOT / item}; " for item in design_sources)
+            + "hierarchy -check -top ot_a3_fp32_transcendental_cr_rne; "
             "proc; opt; check; stat"
         )
         process, yosys_seconds = run(

@@ -47,6 +47,28 @@
 //     the ENCLOSURE is the claim: an interval that does not contain the result is
 //     wrong even when it rounds right, and a smaller SERIES_TERMS would expose it.
 //
+// THE WIDE ARITHMETIC IS SEQUENTIAL, AND THAT IS WHY THIS BLOCK IS NOT 17.5 MHz.
+// Every product and every division here used to be one cycle: two 163-by-161
+// multiplier trees and a 161-by-162 one, each ending in a 324-bit carry-propagate
+// adder, and two restoring divides UNROLLED over every bit of the dividend. The
+// routed evidence was a worst path of 2,135 cell delays from reduced[40] to
+// interval_upper[162] -- 57.2 ns against a 4 ns target, 373,426 cells, and a
+// seven-hour route. Measured alone at synthesis and pre-layout timing, the
+// unrolled divide is 20.5 MHz; every OTHER wide operation in this module already
+// clears 296 MHz, including the 163-bit adds, the 170-bit subtract, the
+// comparators and the 163-bit priority encode inside the rounding. So exactly two
+// things were the wall, and both are now sequential primitives:
+// ot_wide_mul_seq (carry-save, no wide carry chain anywhere) and
+// ot_wide_div_small_seq (the same restoring loop, ten bits per clock).
+//
+// NOTHING ABOUT THE ARITHMETIC CHANGED. Both primitives are bit-identical to the
+// expressions they replace -- the divider runs the same restoring steps in the
+// same order and the multiplier is checked against ``*`` itself -- so the
+// enclosure, the certification and every refusal are the ones this module already
+// published. rtl/test/tb_wide_div_small_seq_equiv.sv and
+// rtl/test/tb_wide_mul_seq_equiv.sv carry that check, and tb_a3_exp_pos.sv still
+// grades the whole module against exp_cr32.
+//
 // FAILS CLOSED, LIKE ITS SIBLING. A nonpositive or nonfinite argument is
 // ERR_ARGUMENT; an interval whose two endpoints do not round to the same
 // binary32 is ERR_UNCERTIFIED and publishes no result; a result beyond the
@@ -88,13 +110,41 @@ module ot_a3_fp32_exp_pos_cr_rne #(
     localparam [FRAC_BITS+1:0] LOG2E =
         162'h171547652b82fe1777d0ffda0d23a7d11d6aef551;
 
-    localparam [2:0] S_IDLE   = 3'd0;
-    localparam [2:0] S_REDUCE = 3'd1;
-    localparam [2:0] S_FIXUP  = 3'd2;
-    localparam [2:0] S_SERIES = 3'd3;
-    localparam [2:0] S_CERTIFY = 3'd4;
-    localparam [2:0] S_OUT    = 3'd5;
-    reg [2:0] state;
+    //: One state per sequential primitive it waits on. S_SERIES became four --
+    //: multiply, latch the product, divide, latch the term -- because an
+    //: increment and an add in the same cycle is 6 ns where each alone is under
+    //: 3.4, which is the one place the split is about timing rather than about
+    //: waiting for a primitive.
+    localparam [3:0] S_IDLE      = 4'd0;
+    localparam [3:0] S_REDUCE_MUL = 4'd1;
+    localparam [3:0] S_REDUCE    = 4'd2;
+    localparam [3:0] S_FIXUP     = 4'd3;
+    localparam [3:0] S_TERM_MUL  = 4'd4;
+    localparam [3:0] S_TERM_PROD = 4'd5;
+    localparam [3:0] S_TERM_DIV  = 4'd6;
+    localparam [3:0] S_TERM_INC  = 4'd7;
+    localparam [3:0] S_TERM_ACC  = 4'd8;
+    localparam [3:0] S_CERTIFY   = 4'd9;
+    localparam [3:0] S_OUT       = 4'd10;
+    reg [3:0] state;
+
+    //: Bits of each operand consumed per clock, from the walk in
+    //: results/physical_abi3/asap7/wide_datapath_knobs.json -- measurement rather
+    //: than preference, and NOT simply the two peaks.
+    //:
+    //: Ten IS the divide's peak, 286.2 MHz pre-layout against 20.5 MHz unrolled.
+    //: Sixteen is NOT the multiply's: four bits per clock measures 303.5 MHz and
+    //: sixteen 294.7. Four would take 81 cycles to emit the 324-bit product where
+    //: sixteen takes 21, so it buys 3% of clock for four times the latency of
+    //: every one of the 57 terms. Sixteen is the trade, stated because the record
+    //: shows the faster point and a reader should see why it was not taken.
+    //:
+    //: Neither is the block's ceiling. fixed_to_fp32_scaled with a variable power
+    //: measures 279.6 MHz, and that is what the enclosure's rounding costs: no
+    //: amount of sequencing the products and divides lifts it, because it is what
+    //: the arithmetic IS rather than how it is scheduled.
+    localparam integer DIV_BITS_PER_STEP = 10;
+    localparam integer MUL_BITS_PER_STEP = 16;
 
     integer i;
 
@@ -190,69 +240,113 @@ module ot_a3_fp32_exp_pos_cr_rne #(
         end
     endfunction
 
-    //: The Taylor recurrence divides only by the next term number, so a bounded
-    //: restoring divide -- the same shape ot_a3_fp32_transcendental_cr_rne uses,
-    //: and for the same reason: a general wide `/` builds an enormous circuit and
-    //: makes event-driven simulation crawl. The low bit returns whether the
-    //: division was inexact, so the upper endpoint can round away from zero.
-    function automatic [FRAC_BITS+3:0] divide_small;
-        input [FRAC_BITS+2:0] dividend;
-        input [8:0] divisor;
-        reg [FRAC_BITS+2:0] quotient;
-        reg [9:0] remainder;
-        integer bit_index;
-        begin
-            quotient = 0;
-            remainder = 0;
-            for (bit_index = FRAC_BITS + 2; bit_index >= 0;
-                 bit_index = bit_index - 1) begin
-                remainder = {remainder[8:0], dividend[bit_index]};
-                if (remainder >= {1'b0, divisor}) begin
-                    remainder = remainder - {1'b0, divisor};
-                    quotient[bit_index] = 1'b1;
-                end
-            end
-            divide_small = {quotient, |remainder};
-        end
-    endfunction
-
-    //: term_{k+1} = term_k * r / (k+1), both endpoints kept enclosing.
+    //: term_{k+1} = term_k * r / (k+1), both endpoints kept enclosing. The
+    //: product and the division are each a sequential primitive now, so the
+    //: recurrence is four states rather than one expression; the VALUES are the
+    //: ones the expressions produced.
     wire [8:0] next_index = term_index + 9'd1;
-    wire [2*FRAC_BITS+3:0] scaled_lower = term_lower * {2'b0, reduced};
-    wire [2*FRAC_BITS+3:0] scaled_upper = term_upper * {2'b0, reduced};
+
+    localparam integer TERM_W = FRAC_BITS + 3;   //: an enclosure endpoint
+    localparam integer RED_W  = FRAC_BITS + 1;   //: the reduced argument
+    localparam integer TERM_PRODUCT_HIGH = TERM_W + RED_W - FRAC_BITS;
+
+    reg  mul_start, div_start;
+    wire mul_lower_busy, mul_upper_busy, mul_lower_done, mul_upper_done;
+    wire [TERM_PRODUCT_HIGH-1:0] mul_lower_high, mul_upper_high;
+    wire mul_lower_low_nonzero, mul_upper_low_nonzero;
+
+    //: ``term * reduced`` keeps bits [2*FRAC_BITS+2:FRAC_BITS] and needs the low
+    //: FRAC_BITS only as "was anything discarded", which is what LOW_BITS means
+    //: here: those bits are OR-reduced as they leave and never stored.
+    ot_wide_mul_seq #(
+        .WA(TERM_W), .WB(RED_W),
+        .BITS_PER_STEP(MUL_BITS_PER_STEP), .LOW_BITS(FRAC_BITS)
+    ) mul_lower (
+        .clk(clk), .rst_n(rst_n), .start(mul_start),
+        .a(term_lower), .b(reduced),
+        .busy(mul_lower_busy), .done(mul_lower_done),
+        .product_high(mul_lower_high), .low_nonzero(mul_lower_low_nonzero)
+    );
+    ot_wide_mul_seq #(
+        .WA(TERM_W), .WB(RED_W),
+        .BITS_PER_STEP(MUL_BITS_PER_STEP), .LOW_BITS(FRAC_BITS)
+    ) mul_upper (
+        .clk(clk), .rst_n(rst_n), .start(mul_start),
+        .a(term_upper), .b(reduced),
+        .busy(mul_upper_busy), .done(mul_upper_done),
+        .product_high(mul_upper_high), .low_nonzero(mul_upper_low_nonzero)
+    );
+
     //: The product is Q0.(2*FRAC_BITS); take the high half as the lower endpoint
-    //: and add one ulp when anything was discarded.
-    wire [FRAC_BITS+2:0] prod_lower = scaled_lower[2*FRAC_BITS+2:FRAC_BITS];
-    wire                 prod_lower_inexact = |scaled_lower[FRAC_BITS-1:0];
-    wire [FRAC_BITS+2:0] prod_upper = scaled_upper[2*FRAC_BITS+2:FRAC_BITS] +
-                                      {{(FRAC_BITS+2){1'b0}},
-                                       (|scaled_upper[FRAC_BITS-1:0])};
-    wire [FRAC_BITS+3:0] div_lower = divide_small(prod_lower, next_index);
-    wire [FRAC_BITS+3:0] div_upper = divide_small(prod_upper, next_index);
-    wire [FRAC_BITS+2:0] next_term_lower = div_lower[FRAC_BITS+3:1];
-    wire [FRAC_BITS+2:0] next_term_upper = div_upper[FRAC_BITS+3:1] +
-                                           {{(FRAC_BITS+2){1'b0}}, div_upper[0]};
-    //: Unused, but named so the discarded-bit reasoning above is checkable.
-    wire _unused_inexact = prod_lower_inexact;
+    //: and add one ulp when anything was discarded. The increment is registered
+    //: away from the divide because a 163-bit increment and one divider step in
+    //: the same cycle is 6 ns where each alone is under 3.5.
+    reg [FRAC_BITS+2:0] prod_lower_q, prod_upper_q;
+    reg [8:0]           divisor_q;
+
+    wire div_lower_busy, div_upper_busy, div_lower_done, div_upper_done;
+    wire [FRAC_BITS+2:0] div_lower_quotient, div_upper_quotient;
+    wire div_lower_inexact, div_upper_inexact;
+
+    ot_wide_div_small_seq #(
+        .WIDTH(TERM_W), .DIVISOR_BITS(9), .BITS_PER_STEP(DIV_BITS_PER_STEP)
+    ) div_lower (
+        .clk(clk), .rst_n(rst_n), .start(div_start),
+        .dividend(prod_lower_q), .divisor(divisor_q),
+        .busy(div_lower_busy), .done(div_lower_done),
+        .quotient(div_lower_quotient), .inexact(div_lower_inexact)
+    );
+    ot_wide_div_small_seq #(
+        .WIDTH(TERM_W), .DIVISOR_BITS(9), .BITS_PER_STEP(DIV_BITS_PER_STEP)
+    ) div_upper (
+        .clk(clk), .rst_n(rst_n), .start(div_start),
+        .dividend(prod_upper_q), .divisor(divisor_q),
+        .busy(div_upper_busy), .done(div_upper_done),
+        .quotient(div_upper_quotient), .inexact(div_upper_inexact)
+    );
+
+    //: The rounded-away bit of the division rounds the UPPER endpoint away from
+    //: zero, so the enclosure still encloses.
+    reg [FRAC_BITS+2:0] next_term_lower, next_term_upper;
 
     //: The geometric tail: remainder < term_{N+1} * 4 for r < 0.75.
     wire [FRAC_BITS+2:0] tail_bound = next_term_upper << 2;
 
     //: n * ln2, and the reduced argument.
     //: n * ln2 in Q(INT_BITS).FRAC_BITS. n is below 185 and ln2 below one, so
-    //: the product stays under 128 and the integer field fits INT_BITS.
+    //: the product stays under 128 and the integer field fits INT_BITS. A
+    //: 161-by-16 constant product measures 534 MHz, so this one stays an
+    //: expression.
     wire [FRAC_BITS+17:0] n_times_ln2 =
         {{17{1'b0}}, LN2} * {{(FRAC_BITS+2){1'b0}}, n_power[15:0]};
     wire [WIDE:0] n_ln2_fixed = n_times_ln2[WIDE:0];
 
-    //: Named, because indexing an EXPRESSION is rejected by both elaborators --
-    //: the same shape as indexing a part-select, which has cost this session
-    //: five compile failures.
-    //: x_fixed is Q(INT_BITS).FRAC_BITS and LOG2E is Q1.FRAC_BITS, so the
-    //: product is Q(INT_BITS+1).(2*FRAC_BITS) and needs every one of these bits.
-    //: Sizing it at 2*FRAC_BITS+3 put the integer field past the end of the wire.
-    wire [2*FRAC_BITS+INT_BITS+2:0] x_times_log2e = x_fixed * LOG2E;
-    wire [8:0] n_estimate = x_times_log2e[2*FRAC_BITS+8 : 2*FRAC_BITS];
+    //: x * log2(e), for the floor that starts the range reduction. Sequential for
+    //: the same reason as the term products, and the CONSTANT is the multiplicand
+    //: so the per-step shifts and selects fold away at synthesis. Only nine bits
+    //: at 2*FRAC_BITS are read, so everything below is OR-reduced and dropped.
+    localparam integer LOG2E_W = FRAC_BITS + 2;
+    localparam integer REDUCE_LOW = 2 * FRAC_BITS;
+    localparam integer REDUCE_HIGH_W = LOG2E_W + WIDE + 1 - REDUCE_LOW;
+    reg  reduce_mul_start;
+    wire reduce_mul_busy, reduce_mul_done, reduce_low_nonzero;
+    wire [REDUCE_HIGH_W-1:0] reduce_high;
+    ot_wide_mul_seq #(
+        .WA(LOG2E_W), .WB(WIDE + 1),
+        .BITS_PER_STEP(MUL_BITS_PER_STEP), .LOW_BITS(REDUCE_LOW)
+    ) mul_reduce (
+        .clk(clk), .rst_n(rst_n), .start(reduce_mul_start),
+        .a(LOG2E), .b(x_fixed),
+        .busy(reduce_mul_busy), .done(reduce_mul_done),
+        .product_high(reduce_high), .low_nonzero(reduce_low_nonzero)
+    );
+    //: Bits [2*FRAC_BITS+8 : 2*FRAC_BITS] of the product, which is the integer
+    //: part of x*log2(e) and so the floor the reduction wants.
+    reg [8:0] n_estimate;
+    //: Named so the discarded-bit reasoning stays checkable: the reduction reads
+    //: only the integer part, and the fraction below it is deliberately dropped.
+    wire _unused_reduce_low = reduce_low_nonzero;
+
     wire [WIDE:0] x_minus_nln2 = x_fixed - n_ln2_fixed;
     wire [FRAC_BITS:0] reduced_next = x_minus_nln2[FRAC_BITS:0];
 
@@ -275,7 +369,21 @@ module ot_a3_fp32_exp_pos_cr_rne #(
             sum_upper <= {(FRAC_BITS+3){1'b0}};
             interval_lower <= {(FRAC_BITS+3){1'b0}};
             interval_upper <= {(FRAC_BITS+3){1'b0}};
+            prod_lower_q <= {(FRAC_BITS+3){1'b0}};
+            prod_upper_q <= {(FRAC_BITS+3){1'b0}};
+            next_term_lower <= {(FRAC_BITS+3){1'b0}};
+            next_term_upper <= {(FRAC_BITS+3){1'b0}};
+            divisor_q <= 9'd0;
+            n_estimate <= 9'd0;
+            mul_start <= 1'b0;
+            div_start <= 1'b0;
+            reduce_mul_start <= 1'b0;
         end else begin
+            //: Every ``start`` is a single cycle: the primitives latch on it and
+            //: raise ``busy`` the cycle after, so holding it would restart them.
+            mul_start <= 1'b0;
+            div_start <= 1'b0;
+            reduce_mul_start <= 1'b0;
             if (out_valid && out_ready) out_valid <= 1'b0;
 
             case (state)
@@ -293,8 +401,26 @@ module ot_a3_fp32_exp_pos_cr_rne #(
                             state <= S_OUT;
                         end else begin
                             x_fixed <= to_fixed(argument_code[30:0]);
-                            state <= S_REDUCE;
+                            state <= S_REDUCE_MUL;
                         end
+                    end
+                end
+
+                //: x_fixed was registered the cycle before, so the multiply
+                //: starts here rather than in S_IDLE.
+                //:
+                //: ``done`` IS TESTED BEFORE THE START CONDITION, in this state
+                //: and in every other one that waits on a primitive. A primitive
+                //: drops ``busy`` in the same cycle it raises ``done``, so testing
+                //: "not busy and not started" first restarts it forever: the
+                //: multiplier was caught looping at steps_left 21 with the state
+                //: never leaving S_TERM_MUL.
+                S_REDUCE_MUL: begin
+                    if (reduce_mul_done) begin
+                        n_estimate <= reduce_high[8:0];
+                        state <= S_REDUCE;
+                    end else if (!reduce_mul_busy && !reduce_mul_start) begin
+                        reduce_mul_start <= 1'b1;
                     end
                 end
 
@@ -324,11 +450,51 @@ module ot_a3_fp32_exp_pos_cr_rne #(
                         sum_lower <= {2'b0, 1'b1, {FRAC_BITS{1'b0}}};
                         sum_upper <= {2'b0, 1'b1, {FRAC_BITS{1'b0}}};
                         term_index <= 9'd0;
-                        state <= S_SERIES;
+                        state <= S_TERM_MUL;
                     end
                 end
 
-                S_SERIES: begin
+                //: term_{k+1} = term_k * r, high half kept, low half only as
+                //: "was anything discarded".
+                S_TERM_MUL: begin
+                    if (mul_lower_done && mul_upper_done) begin
+                        state <= S_TERM_PROD;
+                    end else if (!mul_lower_busy && !mul_start) begin
+                        mul_start <= 1'b1;
+                    end
+                end
+
+                //: The upper endpoint takes one ulp for whatever the product
+                //: discarded, so the enclosure still encloses. Registered here
+                //: rather than fed straight into the divide: a 163-bit increment
+                //: plus one divider step is 6 ns, and each alone is under 3.5.
+                S_TERM_PROD: begin
+                    prod_lower_q <= mul_lower_high[FRAC_BITS+2:0];
+                    prod_upper_q <= mul_upper_high[FRAC_BITS+2:0] +
+                                    {{(FRAC_BITS+2){1'b0}}, mul_upper_low_nonzero};
+                    divisor_q <= next_index;
+                    state <= S_TERM_DIV;
+                end
+
+                S_TERM_DIV: begin
+                    if (div_lower_done && div_upper_done) begin
+                        state <= S_TERM_INC;
+                    end else if (!div_lower_busy && !div_start) begin
+                        div_start <= 1'b1;
+                    end
+                end
+
+                //: The division's rounded-away bit rounds the upper endpoint away
+                //: from zero. Its own cycle, for the same 163-bit-increment
+                //: reason as S_TERM_PROD.
+                S_TERM_INC: begin
+                    next_term_lower <= div_lower_quotient;
+                    next_term_upper <= div_upper_quotient +
+                                       {{(FRAC_BITS+2){1'b0}}, div_upper_inexact};
+                    state <= S_TERM_ACC;
+                end
+
+                S_TERM_ACC: begin
                     if ({23'd0, term_index} < SERIES_TERMS) begin
                         term_lower <= next_term_lower;
                         term_upper <= next_term_upper;
@@ -337,9 +503,12 @@ module ot_a3_fp32_exp_pos_cr_rne #(
                         //: additively -- no alternation.
                         sum_lower <= sum_lower + next_term_lower;
                         sum_upper <= sum_upper + next_term_upper;
+                        state <= S_TERM_MUL;
                     end else begin
                         //: The truncated sum is the lower bound; the geometric
-                        //: tail bounds what is left.
+                        //: tail bounds what is left. term_index reached
+                        //: SERIES_TERMS, so this pass computed term_{N+1} without
+                        //: adding it -- which is what the tail bound needs.
                         interval_lower <= sum_lower;
                         interval_upper <= sum_upper + tail_bound;
                         state <= S_CERTIFY;
