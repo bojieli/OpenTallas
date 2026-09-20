@@ -1,0 +1,41 @@
+{
+ "answer": "1.62x, to 244.3 MHz, in two steps that change no value -- and then it is MAC-bound.  The remaining path is the operand decode and the FUSED bf16 product-add into the accumulator and nothing else, so the next step is not another cone-splitting but pipelining the MAC, which a loop-carried accumulation only tolerates if the four independent head chains are interleaved through it.",
+ "gated_by": "tools/rtl_abi3_engine_campaign.py at every step: pass on iverilog and verilator, 40,878 checks each, marker byte-identical, and all seven mutations caught by both",
+ "not_a_claim": [
+  "244.3 MHz is not a closure and is not filed as one",
+  "the 2.4x MAC-rate figure for the interleaved form is derived from the pipeline's II and latency, not measured -- no such route exists yet"
+ ],
+ "question": "ot_a3_vector_index_score routed at 151.0 MHz, the lowest block on the shipped indexer path.  How far do value-preserving changes take it, and what stops them?",
+ "schema": "opentallas.result.index_score_frequency_walk.v1",
+ "the_remaining_step": {
+  "what": "ot_mac_bf16_fp32_pipe in place of bf16_bf16_fp32_product_add_rne",
+  "what_it_costs": "a restructuring of the dot loop nest from head-outer to depth-outer",
+  "what_it_does_not_change": "any value: each head still accumulates d = 0 .. D-1 in order, the ReLU and weight stage are per head as now, and the reduction tree above is untouched",
+  "what_makes_it_work": "the four HEADS are independent -- each keeps its own accumulator and they meet only in the reduction tree above -- so four chains interleaved through one MAC keep it busy four cycles in five while leaving each head's accumulation in exactly the order it is in now.  Against today's one MAC per three cycles that is about 2.4x the MAC rate as well as the clock.",
+  "why_it_is_not_a_substitution": "the dot accumulation is loop-carried: acc(d+1) needs acc(d), so a five-stage MAC costs five cycles per depth step where one sufficed, which is a throughput loss against a clock gain"
+ },
+ "the_walk": [
+  {
+   "cells": 88180,
+   "critical_path": "reduce_right[29] -> result_buffer[17][1], 253 arcs, 60 HAxp5",
+   "fmax_mhz": 151.0,
+   "step": "everything combinational",
+   "what_was_in_the_cone": "the balanced head reduction's final fp32_add_rne"
+  },
+  {
+   "cells": 86948,
+   "critical_path": "k_rd_data[10] -> relu_value[24], 117 arcs",
+   "fmax_mhz": 235.7,
+   "step": "head reduction pipelined (all three adds)",
+   "what_was_in_the_cone": "operand decode, fused product-add, fp32-to-bf16 narrowing, ReLU"
+  },
+  {
+   "cells": 82749,
+   "critical_path": "k_rd_data[13] -> accumulator[31], 109 arcs",
+   "fmax_mhz": 244.3,
+   "step": "narrowing and ReLU off the product-add's cycle",
+   "what_is_in_the_cone": "operand decode and the fused product-add.  Nothing else."
+  }
+ ],
+ "why_it_is_not_filed_as_a_closure": "244.3 MHz is below the 276.9 MHz limiter, so a record that CLOSED at a target it can meet would become the limiter and lower the design's clock.  Coverage counts modules inside a closed block, so this block stays uncovered until it clears 276.9 -- which needs 13.3% more, and the cone says where from."
+}
