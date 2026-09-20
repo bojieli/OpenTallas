@@ -88,6 +88,28 @@ def wrapper(ctx, sub, operator):
         for slot, name in ((0, "score"), (1, "window"), (2, "ratio"), (3, "mask")):
             view = ctx.optional_input(operator, slot)
             row[name] = None if view is None else _layout(view)
+        #: THE COMPRESSION RATIO AS DATA, and the aux slots.  The horizon is
+        #: ``(position + 1) // ratio`` and the ratio is read from a memory object,
+        #: not from a symbol, so nothing in the view layouts above says what it is.
+        #: At layer 14 the device selects 0,0,0,0,0,0,0,1,1,1 where the vendor
+        #: selects 0,1,1,2,2,3,3,4,4,5, and the first is what a ratio of EIGHT
+        #: produces against the second's TWO -- which this records rather than
+        #: infers.
+        ratio_view = ctx.optional_input(operator, 2)
+        row["ratio"] = None
+        if ratio_view is not None:
+            try:
+                row["ratio"] = int(
+                    np.asarray(ctx.read(ratio_view), dtype=np.uint64).reshape(-1)[0]
+                )
+            except Exception as error:
+                row["ratio"] = f"unreadable: {error}"
+        row["aux"] = []
+        for slot in range(4):
+            try:
+                row["aux"].append(int(operator.payload[f"aux_id_{slot}"]))
+            except Exception:
+                row["aux"].append(None)
         try:
             row["symbols"] = {str(k): int(v) for k, v in dict(ctx.symbols).items()}
         except Exception:

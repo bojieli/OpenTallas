@@ -1,0 +1,93 @@
+{
+  "corrects": "results/abi3/deepseek_v41_streamed_row_closes_layers_2_and_8.json, which called layer 14 'a SECOND and DIFFERENT fault' where the device selects 3 positions against the Indexer's 25. THAT WAS A MIS-PAIRING, not a fault.",
+  "issue_counts_reconcile_exactly": {
+    "device": {
+      "10817": {
+        "instances": 4,
+        "issues": 32,
+        "ratio": 1,
+        "shape": "whole plane once per node"
+      },
+      "3322": {
+        "instances": 2,
+        "issues": 160,
+        "ratio": 2
+      },
+      "7083": {
+        "instances": 1,
+        "issues": 80,
+        "ratio": 2
+      },
+      "8421": {
+        "issues": 8,
+        "ratio": 8,
+        "role": "candidate block select"
+      },
+      "8434": {
+        "instances": 1,
+        "issues": 8,
+        "ratio": 1,
+        "shape": "whole plane once per node"
+      }
+    },
+    "note": "a streamed compressed select is issued once per (query row, node): 10 rows and NODE_COUNT 8, so 80 issues is one layer-instance. The counts then account for every instance the vendor needs, with none left over.",
+    "reconciliation": "vendor needs THREE ratio-2 instances (layers 2, 8, 14) and the device emits exactly three (2 from 3322 + 1 from 7083). Vendor needs FIVE ratio-1 instances (layer 20 owning its keys, plus 24, 28, 32, 36 reading its) and the device emits exactly five (1 from 8434 + 4 from 10817).",
+    "vendor": {
+      "index_source_layers": [
+        2,
+        8,
+        14,
+        20,
+        24,
+        28,
+        32,
+        36
+      ],
+      "kv_source_layers": [
+        2,
+        8,
+        14,
+        20
+      ],
+      "ratio_1_indexer_layers": [
+        20,
+        24,
+        28,
+        32,
+        36
+      ],
+      "ratio_2_key_owning_layers": [
+        2,
+        8,
+        14
+      ],
+      "their_compress_ratios": {
+        "14": 2,
+        "2": 2,
+        "20": 1,
+        "8": 2
+      }
+    }
+  },
+  "measured_ratios": {
+    "10817": 1,
+    "3322": 2,
+    "7083": 2,
+    "8421": 8,
+    "8434": 1
+  },
+  "not_a_claim": [
+    "which layer each descriptor serves is INFERRED from the instance counts, which reconcile exactly; the measurement does not label a descriptor with a layer",
+    "this is runtime.sim, not RTL; one prompt length (10) and one cell"
+  ],
+  "producer": {
+    "git": {
+      "commit": "02f9766363bfd5ae39551c99984cd5f1e1a3bea2"
+    },
+    "tool": "tools/probe_deepseek_v41_select_row_identity.py (ratio and aux recorded)"
+  },
+  "schema": "opentallas.result.v41_layer14_was_a_mispairing.v1",
+  "so_the_agreement_is": "every COMPRESSED select the device emits agrees with the vendor exactly. Descriptor 3322 covers two ratio-2 instances and its 160 issues collapsed onto 10 query rows with NO per-row disagreement -- the assembly asserts that and did not raise -- and the merged rows match the Indexer on all ten. 7083 and 8434 likewise: 0 of 10 differing.",
+  "what_remains": "descriptor 10817 -- four ratio-1 instances, the index layers that do NOT own their keys -- selects NOTHING on all 32 issues where the vendor selects 1..10 positions per row. That is the one open gap in V4.1's selection, and it is not the streamed row: 10817 presents all ten rows.",
+  "what_settled_it": "the compression ratio is read from a memory object, so it was measured rather than inferred. Descriptor 8421 reads ratio EIGHT; the vendor's inference_config.json gives candidate_block_size 8, candidate_topk_blocks 2048 and candidate_source_layer 20, and 8421's output is [10, 2048] with aux_id_0 2048. It is the CANDIDATE BLOCK select, not a compressed select. compare_deepseek_v41_index_selection.py pairs device selects against key-owning layers BY ORDER, so it landed on oracle layer 14."
+}

@@ -212,5 +212,11 @@
   "prompt_token_count": 10,
   "question": "deriving the streamed select's query row from its OUTPUT view makes the causal horizon nonzero. Does the device then SELECT THE SAME COMPRESSED POSITIONS as the vendor's Indexer, which is the quantity the V4.1 divergence was traced to?",
   "schema": "opentallas.result.v41_streamed_row_closes_layers_2_and_8.v1",
+  "superseded_in_part_by": {
+    "record": "results/abi3/deepseek_v41_layer14_was_a_mispairing.json",
+    "the_gap_that_is_real": "descriptor 10817, four ratio-1 instances for the index layers that do not own their keys, selects nothing on all 32 issues. It presents all ten rows, so the streamed row is not its cause.",
+    "what_it_corrects": "this record's 'layer 14 is a SECOND and DIFFERENT fault' is WRONG. The device select that comparison paired with oracle layer 14 -- descriptor 8421 -- reads compression ratio EIGHT, which the vendor's inference_config.json gives as candidate_block_size, alongside candidate_topk_blocks 2048 which is that descriptor's output width and its aux_id_0. It is the CANDIDATE BLOCK select, not a compressed select, and compare_deepseek_v41_index_selection.py pairs by ORDER. The per-descriptor issue counts then reconcile exactly: three ratio-2 instances for layers 2, 8 and 14, and five ratio-1 instances for 20, 24, 28, 32 and 36, with none left over. Every COMPRESSED select agrees with the Indexer.",
+    "what_survives": "the measured agreement itself: 0 of 10 rows differing on the ratio-2 streamed selects and on layer 20, with an empty symmetric difference on every row, where before the streamed-row derivation the same comparison read 'device selected NOTHING'."
+  },
   "the_fifth_device_select": "the device emits five INDEX_TOPK descriptors and the oracle has four key-owning layers, and this tool pairs them BY ORDER. The fifth (descriptor 10817, which selects nothing on all 32 issues) is therefore paired against oracle layer 24, whose own row says owns_its_keys false -- that pairing is an artifact and neither confirms nor refutes anything about it."
 }
