@@ -1,0 +1,54 @@
+{
+  "and_the_fallback_that_exists_for_exactly_this_is_not_wired": "amendment A27 anticipates the streamed case in this operator's own docstring: \"A18 can encode only one request-dependent extent on a view, so the HBM backend streams the two-dynamic-axis score plane one query at a time. During prefill POSITION_START remains zero for the whole request; the final valid absolute index in the joined causal window therefore carries the query position into each one-row slice.\" The engine implements it -- ``if mode == MASK_CAUSAL and phase is PREFILL and valid_window is not None: query_position = int(valid_window[-1])``. But layer 2's operator has input_view_1 = 0xFFFFFFFF: THE JOINED WINDOW OPERAND IS ABSENT, so valid_window is None and the carry cannot happen.",
+  "answer": "THE STREAMED SELECT HAS NO QUERY POSITION, so its causal horizon is zero on every slice. ROUTE.INDEX_TOPK computes ``query_position = base + row`` where ``base`` is the symbol aux_id_3 names, then admits ``min((query_position + 1) // ratio, candidates)`` groups. Layer 2's operator names POSITION_START for aux_id_3, which is ZERO for the whole prefill, and its score view covers ONE query row per issue, so ``row`` is zero too. query_position is therefore 0 on all 160 issues and the horizon is (0 + 1) // 2 = 0 candidates.",
+  "measured_descriptors": {
+    "operator_3322_layer_2_select": {
+      "aux_id_0": 512,
+      "aux_id_1": "0 = SPAN_TOKENS",
+      "aux_id_2": "3 = CONTEXT_LENGTH",
+      "aux_id_3": "1 = POSITION_START",
+      "input_view_0": 3317,
+      "input_view_1": "0xFFFFFFFF, ABSENT",
+      "input_view_2": 3318,
+      "input_view_3": "0xFFFFFFFF, ABSENT",
+      "issues": 160,
+      "issues_with_a_real_selection": 0,
+      "output_view_0": 3319,
+      "score_view_dims_per_issue": [
+        1,
+        1,
+        5
+      ]
+    },
+    "operator_8434_layer_20_select": {
+      "aux_id_3": "1 = POSITION_START, the same",
+      "input_view_1": "0xFFFFFFFF, ABSENT, the same",
+      "issues": 8,
+      "issues_with_a_real_selection": 8,
+      "score_view_dims_per_issue": [
+        10,
+        512
+      ],
+      "why_it_works": "it is NOT streamed one query per issue. Its score plane covers ten query rows in one issue, so ``row`` runs 0..9 and ``base + row`` is the right absolute position; with ratio 1 the horizon is row + 1. The same aux fields and the same absent window are harmless there."
+    }
+  },
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "the fix is not implemented here: this names the descriptor field, the engine line and the two ways to close it",
+    "whether closing it makes the three V4.1 cells emit the oracle's tokens is not established -- it removes the only measured structural fault in layer 2's attention, and what remains after that is what the next comparison measures"
+  ],
+  "producer": {
+    "git": {
+      "commit": "4e199141de3a3ef7cbb3549c3cf4072f171cb752"
+    },
+    "tool": "descriptor read plus runtime/sim/engines/route.py"
+  },
+  "question": "all 160 issues of layer 2's index selection and all 80 of layer 8's return the padding index in every slot, while layer 20's select the vendor's positions. The symbol table, the compressor and the score are all correct. WHY does every issue come back empty?",
+  "schema": "opentallas.result.v41_streamed_select_has_no_query_position.v1",
+  "the_fix_is_in_the_lowering": [
+    "supply the joined causal window as input_view_1 for a streamed select, which is A27's own documented mechanism and needs no engine change",
+    "or give a streamed select an aux_id_3 that advances with the streamed row instead of POSITION_START",
+    "either way it is compiler/backends/hbm_sram/lower.py, and the engine already implements both readings"
+  ],
+  "why_position_0_agreed_all_along": "at query position 0 no compression group has completed, so the vendor selects nothing either and both sides attend to the window alone. The device computes position 0 for EVERY query, which is why it agrees there and nowhere else -- exactly the signature results/abi3/deepseek_v41_divergence_enters_layer2_attention.json measured."
+}
