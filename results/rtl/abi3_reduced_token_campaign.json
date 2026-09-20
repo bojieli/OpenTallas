@@ -29,7 +29,7 @@
     "that id equals the first generated token of the reduced reference oracle, which a separate process produced by reading the fixture's shard off disk and running the released reference implementation"
   ],
   "git": {
-    "commit": "81347d7f70abcb37169504aa512b22b945eb870e",
+    "commit": "02f9766363bfd5ae39551c99984cd5f1e1a3bea2",
     "worktree_dirty": true
   },
   "oracle": {
@@ -77,7 +77,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "23021210",
+          "cycles": "103107755",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -93,8 +93,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "b344a8f716f82dbbb02949f2b1b3a0365a7818f96ae84999d6a7670fd89ed5bc",
-        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              23021210\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "4e1cdf7a7dbde4360d5a09728b191ec205cd4be8a97dba38a6ec01839046e880",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              103107755\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 1073,
         "self_check": {
@@ -144,7 +144,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "7919910",
+          "cycles": "12973713",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -160,8 +160,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "e5eec0700f993cf626f990e31c5fa58d77c407126b15f5c0bb9d7a391dba71e8",
-        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              7919910\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "4bafd24038db188af7be201f873e1619a40ad110df4c2d53dc48b8c0fa3d0aea",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              12973713\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 652,
         "self_check": {
@@ -213,7 +213,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "23021225",
+          "cycles": "103107770",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -229,8 +229,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "168636432a545ba9c7a0de27dd555bdc685c17a64581659cc2a75673479e711c",
-        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              23021225\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "ba1850b8d058d1107f99ee85d2f749896dd204706a4a49259327be2689847ff2",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              103107770\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 1073,
         "self_check": {
@@ -280,7 +280,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "7919922",
+          "cycles": "12973725",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -296,8 +296,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "f0cdfbd4d5514d4ba33f4bb108a8a21aa7c2c3da9710c6e0ac637d44c726df96",
-        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              7919922\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "d186db61bcfc4b9157bf8a88b45f1004e2392fca06dcf31d560512bd79de0ab0",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              12973725\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 652,
         "self_check": {
@@ -328,7 +328,7 @@
     },
     {
       "path": "rtl/ot_fp32_rsqrt_rne.sv",
-      "sha256": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b"
+      "sha256": "74d8b025beb655e48cbdeb1907b66bb61a90b6bb07e0b88db620acd2c0487b5c"
     },
     {
       "path": "rtl/ot_ta_command_decoder.sv",
@@ -388,7 +388,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_dependence_table.sv",
-      "sha256": "84613e989c9b4aa1a899f92944a2dfd77b9d519b22b42a8cb282d94dee3b9f3e"
+      "sha256": "7e6a7e28e4d4042f2aa5919317b8e8cecd8024f9de796b40fd22d2d59b5fa7ad"
     },
     {
       "path": "rtl/abi3/ot_a3_state_controller.sv",
@@ -396,23 +396,23 @@
     },
     {
       "path": "rtl/abi3/ot_a3_microsequencer.sv",
-      "sha256": "82f430c4638007b9d68a2c8e1b93fd88bbf7c6a95f6dd816f0b979d2650fd080"
+      "sha256": "7edfe75fd809a63d867b8969b99409cbe8b3b8681e4f9079dbd568705b3cbe6f"
     },
     {
       "path": "rtl/abi3/ot_a3_device_top.sv",
-      "sha256": "b0a1728672e646ad10d58e48d5fb3bacd831cf4ff0a376914c5a8cc4404dadbc"
+      "sha256": "a4ee87c03fed30df6527f34134197b35baeda4151dc9d8f5bb5bbe66d1776b06"
     },
     {
       "path": "rtl/abi3/ot_a3_mac_lane.sv",
-      "sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37"
+      "sha256": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989"
     },
     {
       "path": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
-      "sha256": "a2af0b4f4e5e9c841a142dc0971d599899015cd20f402d40ead68e01b98dbed5"
+      "sha256": "533f82e3f3973ee5c3eadbaa448e55e440fe4f40aa7996814819b8ec041e3949"
     },
     {
       "path": "rtl/abi3/ot_a3_mac_lane_pipe.sv",
-      "sha256": "9fa13df6e934783b2bd5a7fb5348e33f262322381c87a926145d9bfef41bb454"
+      "sha256": "7c1329ab6961e69c3f732394ae16c282806cafe9df8ed6a7d63adfea7e21f449"
     },
     {
       "path": "rtl/abi3/ot_a3_selection_argmax.sv",
@@ -424,7 +424,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_vector_add.sv",
-      "sha256": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9"
+      "sha256": "a90b1956829057be9e9d8e9177a173ac1df3e227bb2b7d1e306aefa0de184afd"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_convert.sv",
@@ -436,23 +436,23 @@
     },
     {
       "path": "rtl/abi3/ot_a3_vector_hadamard.sv",
-      "sha256": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162"
+      "sha256": "84991304d360d8f4b932d960224040953b743be0b3ba992f011e4dce2cf09969"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_index_score.sv",
-      "sha256": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb"
+      "sha256": "014055603236564f6e3829dd8f85a1328b526a1cf323b8664a657345ce241fbd"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_compress_project.sv",
-      "sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+      "sha256": "9fc09d982255e5afd165e52cf4d3c2baa053c1cbed053b1e622ffaa50a2eed37"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_mhc_post.sv",
-      "sha256": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071"
+      "sha256": "676930b1078743d160888dcb15b817006aa782ee916ee0d540cf6de29172729c"
     },
     {
       "path": "rtl/abi3/ot_a3_engine_array.sv",
-      "sha256": "3d3ed3333516d592c17c023ef9c2cdaa6d08f5d5c512ea7de8146fc395dec9f5"
+      "sha256": "fdd56acaca43f735bcaf78cbbb39f57af732e5e9ef81f4fa0397f4fc1bbc343a"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_rms_norm.sv",
@@ -472,11 +472,11 @@
     },
     {
       "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
-      "sha256": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e"
+      "sha256": "058e767b96f9d6da4550de1cec14d66bfd05247dd2ad11732210f1467663b4e6"
     },
     {
       "path": "rtl/abi3/ot_a3_qwen_gqa.sv",
-      "sha256": "f4abf66c4e623053328186987034fce4e0c438cd28d658745e86ac1fab5614ff"
+      "sha256": "3b8a689a36d42a5d4aba694830aa3836f69fa6f2c8e3aab2fcec47e358595114"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_silu_mul.sv",
@@ -487,12 +487,128 @@
       "sha256": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227"
     },
     {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_route_weight_normalize.sv",
+      "sha256": "5533fbceb04a8176b68630466356c6ec1ecd9b884c8aab0fd15f764147b22620"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_route_window_index.sv",
+      "sha256": "b2432ad9934709aa278dd62aaa3861c93a735654c6599412bc5025e480cad748"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_route_biased_topk.sv",
+      "sha256": "46e93ff4c3c5522155fbb2f69ee83c335fd80a06d16f89e137b66e1cee93e124"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_reduction_expert_sum.sv",
+      "sha256": "16bec8d8d5c1b8d583a685664566e756a43065f8a0373279fa454c7c4b39e086"
+    },
+    {
       "path": "rtl/abi3/ot_a3_place_table.sv",
       "sha256": "e99b729ea55ab4cbc073dd4e93bc73dcd3eba1f9926f0be6aa1bdcf720d10adf"
     },
     {
+      "path": "rtl/lib/ot_crc_pkg.sv",
+      "sha256": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b"
+    },
+    {
+      "path": "rtl/lib/ot_crc32c_tree_pkg.sv",
+      "sha256": "86dd6e51f74c4b8a72b3687d3083f6ed5299c65c838827ce3a15976d665eb44d"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_link_pkg.sv",
+      "sha256": "77c2b22e2ef2a81a638a532e4c2eb9e32d0d6747aee00074b205b2681f0a87b7"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "sha256": "acbe6172b6286934597d121a59e389fcd7e3d58286c1ff123d4b91847efe3ac6"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+      "sha256": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "681b1c2fb6c4e21de68ddd6343478a270623bc226a4c9bdee3608664488a225a"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+      "sha256": "6dd460362c0253cadfade71d6590a4a73d6120fbf56868ca2479d2e5a1cebb8c"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_av_walk.sv",
+      "sha256": "2e5d45f9dcb80303e3b5d46acb37a64a391f429d8c977bf7503101ed4c50e42e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_denominator.sv",
+      "sha256": "fb46aa837b7d860f6a2cc606406cbc2f7506be84410a44c61b80405e1e891eaa"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_epilogue.sv",
+      "sha256": "c961df1134df1f7ffda885388748698ad784a913269eb45bff53c9713c27d421"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "sha256": "b819f251012bb9f1e325969b24940c809b97a500f6d460a3cef32ceea4e6aff9"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_sparse.sv",
+      "sha256": "7d576ff2c3e5c0b7734be29623fa70c32fa8c199bf9de5cd68f71621cc6e8d84"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+      "sha256": "a85d44ee35095ae23333c1bea4b6331b81236ca56de76f592b0ec7bb2a4659b3"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+      "sha256": "b3174aa08d967fe6712e43bed6a086f3dfe53ce7fcb9834f6fa3e62676d2f73f"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+      "sha256": "52821cf9dfb2d487cf2de6ccd9ec61d5a4d3bba47b0ab9f9973a79b5523f3279"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_communication_decoder.sv",
+      "sha256": "9a354e38db995f5f8b4536656280074a9ac9427c79c5e87b9001bbcd9ce9f405"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_link_channel.sv",
+      "sha256": "c8856fce3b899cced1d8991f3354b0cc1249f6ee0150dbf6a90635b1f7bdc9da"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_link_endpoint.sv",
+      "sha256": "544994b3332313dc43d4ca84548d3946120a4957ec927751eaf9edc16baced0a"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_link_node.sv",
+      "sha256": "2a1d8e6fbfc22fb310bb76b89e6e92de30adf32b596c38e019b79f5129779309"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_mesh_router.sv",
+      "sha256": "641857a9f51868feba1438e2589b68d673cd969df1981effeddfda86e92ddb29"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_collective_engine.sv",
+      "sha256": "b4e28febf1ba99e87eff5d722a666375c76c938a6887f5ebfa79277d8a079f8d"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+      "sha256": "f5f6669b98e5f5daf672c219f870a2aea48bea58fa7d03986682297a4ccbe1fb"
+    },
+    {
+      "path": "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv",
+      "sha256": "abc9d2d88a8809365811e44134c72fa110b2dfeb17ad483f5442b0b669358320"
+    },
+    {
       "path": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-      "sha256": "24dcaff10c692e67c467c21cc2726809b31ff43c04a1dd64da90cc9f51b86bf7"
+      "sha256": "a103c46da8d718b09f6f37af029347855e00b4c3f380f8b33c76584e204e3a98"
     },
     {
       "path": "rtl/test/a3_engine_completion_adapter.sv",
@@ -501,6 +617,22 @@
     {
       "path": "rtl/test/a3_shipped_prefix_top.sv",
       "sha256": "ff1f4641c29d9dbed4235d42a2de1307fdfe4f8ba3c277711accae464791d0a0"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+      "sha256": "d7f76f43668bcb171b74dd156d61d79b3957859ccb662db8aea3b014cbcf77a6"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
     },
     {
       "path": "rtl/test/a3_reduced_token_driver.cpp",
