@@ -1,0 +1,73 @@
+{
+  "and_there_is_no_clock_domain_crossing_to_appeal_to": "the record's 'why they are different' argument needs the MAC datapath and the HC blocks to be in different clock domains. NO ABI 3.0 MODULE TAKES TWO CLOCKS, and the repository's CDC primitives -- ot_cdc_mailbox, ot_async_fifo, ot_sync_level, ot_sync_bits -- are instantiated only by rtl/ot_stage_top.sv, never by anything under rtl/abi3. As the RTL stands one clock feeds everything, so a chip holding both runs at the slower of the two.",
+  "answer": "IT IS NOT. ot_compute_unit is a three-module prototype -- ot_mac_tile plus two fakeram macros -- under rtl/proto. The ABI 3.0 datapath that executes a token is ot_a3_engine_array, fourteen modules under rtl/abi3, and it does NOT instantiate ot_compute_unit or ot_mac_tile: it has its own lanes. The two designs share no module at all. So the 2.077x peak and 1.952x sustained are measured on a MAC tile prototype, and they are real for that tile; they are not a measurement of the datapath the nine-cell token matrix runs on.",
+  "not_a_claim": [
+    "ot_compute_unit's 1.2897 GHz is not disputed: it is a routed, closed record with zero slew violations at a 0.8 ns target",
+    "this does not say the engine array cannot reach that clock; it says nothing has measured the engine array at all"
+  ],
+  "producer": {
+    "git": {
+      "commit": "637da358cfb39a5780f46b0f1da9bceb440d8eb6"
+    },
+    "tool": "hand-written from the coverage graph"
+  },
+  "question": "results/derived/iso_area_position_against_a100.json computes the iso-area ratios from ot_compute_unit's routed 1.2897 GHz and explains the gap to the 276.9 MHz datapath limiter by saying the limiter 'is a Sinkhorn/HC block and not in the MAC datapath the throughput is measured on'. Which design IS the MAC datapath the throughput is measured on, and is it the one that executes the models?",
+  "schema": "opentallas.result.iso_area_vehicle_is_not_the_token_datapath.v1",
+  "the_vehicles": {
+    "iso_area_vehicle": {
+      "closure": [
+        "fakeram7_128x64",
+        "fakeram_256x128",
+        "ot_mac_tile"
+      ],
+      "file": "rtl/proto/ot_compute_unit.sv",
+      "routed_fmax_hz": 1289720000.0,
+      "top": "ot_compute_unit"
+    },
+    "token_datapath": {
+      "closure": [
+        "ot_a3_dma_index_mover",
+        "ot_a3_mac_lane",
+        "ot_a3_mac_lane_pipe",
+        "ot_a3_selection_argmax",
+        "ot_a3_vector_add",
+        "ot_a3_vector_compress_project",
+        "ot_a3_vector_convert",
+        "ot_a3_vector_hadamard",
+        "ot_a3_vector_index_score",
+        "ot_a3_vector_mhc_post",
+        "ot_a3_vector_scale_pipe",
+        "ot_fp32_add_rne_pipe",
+        "ot_fp32_mul_rne_pipe",
+        "ot_mac_bf16_fp32_pipe"
+      ],
+      "file": "rtl/abi3/ot_a3_engine_array.sv",
+      "members_the_limiter_does_not_cover": [
+        {
+          "best_measured_fmax_mhz": 151.2,
+          "module": "ot_a3_vector_mhc_post"
+        },
+        {
+          "best_measured_fmax_mhz": 162.2,
+          "module": "ot_a3_mac_lane"
+        },
+        {
+          "best_measured_fmax_mhz": 239.7,
+          "module": "ot_a3_vector_compress_project"
+        },
+        {
+          "best_measured_fmax_mhz": null,
+          "module": "ot_a3_vector_hadamard"
+        }
+      ],
+      "routed": "NO RECORD: the umbrella route has timed out twice at fifteen hours in global route",
+      "slowest_measured_member_mhz": 151.2,
+      "top": "ot_a3_engine_array"
+    }
+  },
+  "what_follows": [
+    "the iso-area ratio applies to ot_compute_unit, which is what its own record says it measured; quoting it as the design's position -- which I have been doing -- overstates what is measured",
+    "the work that would make it apply to the token datapath is named and small in number: route ot_a3_engine_array, and lift the three measured members below the limiter",
+    "every one of those three is the same shape -- combinational binary32 multiplies and a chain of dependent binary32 adds in one cycle -- and the same shape has been lifted four times today, by ot_fp32_add_rne_pipe, ot_fp32_mul_rne_pipe and ot_mac_bf16_fp32_pipe, which ot_a3_engine_array already instantiates"
+  ]
+}
