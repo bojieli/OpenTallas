@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""The DEVICE's selected compressed positions, per ROUTE.INDEX_TOPK operator.
+
+results/abi3/deepseek_v41_divergence_enters_layer2_attention.json brackets the V4.1
+divergence inside layer 2's attention and shows it absent at prompt position 0. Two
+facts about layer 2 explain why that shape points at a SELECTION rather than at an
+arithmetic difference: it is the first layer with a nonzero compress_ratio, and it is
+the first kv_source_layer, so its Indexer owns its keys and picks the index_topk best
+compressed positions per query.
+
+A top-k is DISCRETE. A one-ulp difference in two nearly equal scores does not perturb
+the output by an ulp, it swaps which position is attended to, and the attention output
+then differs by far more than the scores did. That is the only mechanism in the block
+that turns the few-BF16-ulp drift measured through layers 0 and 1 into the 44.8x step
+measured across layer 2's attention, and at position 0 there is nothing to select.
+
+So this records what the device selected, and
+tools/compare_deepseek_v41_index_selection.py compares it against the vendor's own
+Indexer return -- which is exactly this quantity: ``index_score.topk(...).indices``
+sorted, with out-of-range entries set to -1.
+
+Usage: probe_deepseek_v41_device_index_selection.py DEPLOYMENT CAPABILITY WORKLOAD
+CHECKPOINT OUTPUT [MAX_OPERATORS]
+"""
+import json, sys
+from pathlib import Path
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from runtime.abi3.capability import Capability
+from runtime.abi3.deployment import Deployment
+from runtime.sim.engines import load_engines
+load_engines()
+from runtime.sim.device import Device
+from runtime.driver import GenerationDriver
+from runtime.abi3.constants import Major, Route
+from runtime.sim.engine import _REGISTRY as registry
+
+deployment_root, capability_path, workload_path, checkpoint, output = (
+    Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]),
+    Path(sys.argv[4]), Path(sys.argv[5]))
+MAX_OPERATORS = int(sys.argv[6]) if len(sys.argv) > 6 else 4
+
+deployment = Deployment.read(deployment_root)
+capability = Capability.from_dict(json.loads(capability_path.read_text()))
+workload = json.loads(workload_path.read_text())
+prompt = [int(t) for t in workload["token_ids"]]
+device = Device(deployment, capability, root=checkpoint, verify=False)
+
+selections: list[dict] = []
+seen: set[int] = set()
+
+class _Stop(Exception):
+    pass
+
+key = (int(Major.ROUTE), int(Route.INDEX_TOPK))
+original = registry[key]
+
+def wrapper(ctx, sub, operator):
+    result = original(ctx, sub, operator)
+    descriptor_id = int(operator.descriptor_id)
+    if descriptor_id not in seen:
+        seen.add(descriptor_id)
+        view = ctx.output_view(operator, 0)
+        rows = np.asarray(ctx.read(view))
+        rows = rows.reshape(-1, rows.shape[-1]) if rows.ndim > 1 else rows.reshape(1, -1)
+        #: The selected indices are an integer view; read them as signed, because
+        #: the vendor marks an out-of-range entry with -1 and so does this operator.
+        signed = rows.astype(np.int64)
+        signed = np.where(signed >= (1 << 31), signed - (1 << 32), signed)
+        selections.append({
+            "order": len(selections),
+            "operator": descriptor_id,
+            "view": int(view.descriptor_id),
+            "dims": [int(x) for x in view.dims],
+            "dtype": str(view.dtype),
+            "rows": signed.tolist(),
+        })
+        print(f"selection {len(selections)-1}: operator {descriptor_id} "
+              f"dims {tuple(view.dims)} "
+              f"range [{signed.min()}, {signed.max()}]", flush=True)
+        if len(selections) >= MAX_OPERATORS:
+            raise _Stop
+    return result
+
+registry[key] = wrapper
+driver = GenerationDriver(device)
+try:
+    driver.generate(prompt, max_new_tokens=1)
+except _Stop:
+    print("stopped after the requested number of selections", flush=True)
+finally:
+    registry[key] = original
+
+output.write_text(json.dumps({
+    "schema": "opentallas.probe.v41_device_index_selection.v1",
+    "prompt_token_count": len(prompt),
+    "deployment": str(deployment_root),
+    "selection_count": len(selections),
+    "selections": selections,
+}) + "\n")
+print(f"-> {output}", flush=True)

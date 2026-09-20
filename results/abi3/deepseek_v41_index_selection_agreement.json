@@ -1,0 +1,371 @@
+{
+  "answer": "THE SHAPES DO NOT EVEN MATCH at oracle layer 2 (device [1, 512] against oracle [10, 5], device selected NOTHING), oracle layer 8 (device [1, 512] against oracle [10, 5], device selected NOTHING)",
+  "comparisons": [
+    {
+      "device_dims": [
+        1,
+        512
+      ],
+      "device_selection_order": 0,
+      "first_row_that_differs": null,
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 2,
+      "oracle_layer_owns_its_keys": true,
+      "per_row": [
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 0,
+          "row": 0,
+          "symmetric_difference": 0
+        }
+      ],
+      "rows_compared": 1,
+      "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        1,
+        512
+      ],
+      "device_selection_order": 1,
+      "first_row_that_differs": null,
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 8,
+      "oracle_layer_owns_its_keys": true,
+      "per_row": [
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 0,
+          "row": 0,
+          "symmetric_difference": 0
+        }
+      ],
+      "rows_compared": 1,
+      "rows_that_differ": 0
+    },
+    {
+      "device_dims": [
+        10,
+        2048
+      ],
+      "device_selection_order": 2,
+      "first_row_that_differs": {
+        "device_selected": 0,
+        "in_both": 0,
+        "only_device": [],
+        "only_oracle": [
+          10
+        ],
+        "oracle_selected": 1,
+        "row": 1,
+        "symmetric_difference": 1
+      },
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 14,
+      "oracle_layer_owns_its_keys": true,
+      "per_row": [
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 0,
+          "row": 0,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10
+          ],
+          "oracle_selected": 1,
+          "row": 1,
+          "symmetric_difference": 1
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10
+          ],
+          "oracle_selected": 1,
+          "row": 2,
+          "symmetric_difference": 1
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11
+          ],
+          "oracle_selected": 2,
+          "row": 3,
+          "symmetric_difference": 2
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11
+          ],
+          "oracle_selected": 2,
+          "row": 4,
+          "symmetric_difference": 2
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12
+          ],
+          "oracle_selected": 3,
+          "row": 5,
+          "symmetric_difference": 3
+        },
+        {
+          "device_selected": 0,
+          "in_both": 0,
+          "only_device": [],
+          "only_oracle": [
+            10,
+            11,
+            12
+          ],
+          "oracle_selected": 3,
+          "row": 6,
+          "symmetric_difference": 3
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [
+            11,
+            12,
+            13
+          ],
+          "oracle_selected": 4,
+          "row": 7,
+          "symmetric_difference": 3
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [
+            11,
+            12,
+            13
+          ],
+          "oracle_selected": 4,
+          "row": 8,
+          "symmetric_difference": 3
+        },
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [
+            11,
+            12,
+            13,
+            14
+          ],
+          "oracle_selected": 5,
+          "row": 9,
+          "symmetric_difference": 4
+        }
+      ],
+      "rows_compared": 10,
+      "rows_that_differ": 9
+    },
+    {
+      "device_dims": [
+        10,
+        512
+      ],
+      "device_selection_order": 3,
+      "first_row_that_differs": null,
+      "oracle_dims": [
+        10,
+        10
+      ],
+      "oracle_layer": 20,
+      "oracle_layer_owns_its_keys": true,
+      "per_row": [
+        {
+          "device_selected": 1,
+          "in_both": 1,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 1,
+          "row": 0,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 2,
+          "in_both": 2,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 2,
+          "row": 1,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 3,
+          "in_both": 3,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 3,
+          "row": 2,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 4,
+          "in_both": 4,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 4,
+          "row": 3,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 5,
+          "in_both": 5,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 5,
+          "row": 4,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 6,
+          "in_both": 6,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 6,
+          "row": 5,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 7,
+          "in_both": 7,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 7,
+          "row": 6,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 8,
+          "in_both": 8,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 8,
+          "row": 7,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 9,
+          "in_both": 9,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 9,
+          "row": 8,
+          "symmetric_difference": 0
+        },
+        {
+          "device_selected": 10,
+          "in_both": 10,
+          "only_device": [],
+          "only_oracle": [],
+          "oracle_selected": 10,
+          "row": 9,
+          "symmetric_difference": 0
+        }
+      ],
+      "rows_compared": 10,
+      "rows_that_differ": 0
+    }
+  ],
+  "device_selections": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41idx/device_index_selection.json",
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "identical selections would NOT mean the block agrees: it would rule the top-k out as the amplifier and send the bisection to the arithmetic",
+    "the device emits one INDEX_TOPK per key-owning layer, so the pairing is by order and holds only while both sides agree on which layers own keys"
+  ],
+  "oracle_layers_that_own_their_keys": [
+    2,
+    8,
+    14,
+    20
+  ],
+  "oracle_layers_with_an_indexer": [
+    2,
+    8,
+    14,
+    20,
+    24,
+    28,
+    32,
+    36
+  ],
+  "prompt_token_count": 10,
+  "question": "layer 2's attention is where the V4.1 device departs from the comparator, and a top-k is the only discrete step in it. Do the two sides SELECT the same compressed positions?",
+  "schema": "opentallas.abi3.deepseek_v41_index_selection_agreement.v1",
+  "shape_mismatches": [
+    {
+      "device_dims": [
+        1,
+        512
+      ],
+      "device_rows_missing": 9,
+      "device_selected_nothing": true,
+      "device_selection_order": 0,
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 2
+    },
+    {
+      "device_dims": [
+        1,
+        512
+      ],
+      "device_rows_missing": 9,
+      "device_selected_nothing": true,
+      "device_selection_order": 1,
+      "oracle_dims": [
+        10,
+        5
+      ],
+      "oracle_layer": 8
+    }
+  ]
+}
