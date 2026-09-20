@@ -84,6 +84,10 @@ module ot_a3_vector_index_score #(
     localparam [4:0] S_REDUCE_2W   = 5'd15;
     //: the dot product's narrowing and ReLU, moved off the product-add's cycle
     localparam [4:0] S_DOT_FINAL   = 5'd16;
+    //: the interleaved dot loop: one six-cycle step per depth index, four MAC
+    //: issues and two cycles of slack, and a drain for the pipe's tail
+    localparam [4:0] S_DOT_RUN     = 5'd17;
+    localparam [4:0] S_DOT_DRAIN   = 5'd18;
 
     reg [4:0] state;
     reg [1:0] scan_kind;
@@ -93,6 +97,15 @@ module ot_a3_vector_index_score #(
     reg [1:0] head;
     reg [15:0] depth_index;
     reg [31:0] accumulator;
+    //: ONE ACCUMULATOR PER HEAD, because the four heads are what makes a pipelined
+    //: MAC usable here.  The dot accumulation is loop-carried -- acc(d+1) needs
+    //: acc(d) -- so a five-stage MAC serialised on one head costs five cycles per
+    //: depth step where the combinational one cost three, which is a throughput loss
+    //: against the clock gain.  The heads are INDEPENDENT: each keeps its own sum and
+    //: they meet only in the balanced tree above, so four chains interleaved through
+    //: one MAC keep it busy while every head still accumulates d = 0 .. D-1 in order.
+    reg [31:0] head_acc [0:HEADS-1];
+    reg [2:0]  dot_phase;
     reg [31:0] relu_value;
     reg [31:0] reduce_left;
     reg [31:0] reduce_right;
@@ -130,6 +143,58 @@ module ot_a3_vector_index_score #(
     //: value: the same fp32_to_bf16_rne of the same binary32 sum, one cycle later.
     wire [18:0] acc_narrowed =
         ot_fp32_rne_pkg::fp32_to_bf16_rne(accumulator);
+
+    //: THE MAC, PIPELINED.  ot_mac_bf16_fp32_pipe is RN(a*b + c) at one result per
+    //: cycle with a BF16 a and b and an FP32 c, qualified against the same
+    //: bf16_bf16_fp32_product_add_rne this block used combinationally, so the value
+    //: of every step is unchanged and only its timing moves.
+    //:
+    //: THE SIX-CYCLE STEP.  Phase 0 drives head 0's query address and the key
+    //: address; phases 1..4 issue head 0..3 with the data that arrived; phase 5 is
+    //: slack.  A result lands five cycles after its issue, so head h's issue in the
+    //: next step is exactly one cycle after that head's previous result is written --
+    //: which is why the step is six cycles and not five.  Four MACs per six cycles
+    //: against the combinational form's one per three: 2x the rate before the clock.
+    reg         mac_valid_in;
+    reg  [1:0]  mac_head;
+    wire [31:0] mac_y;
+    wire [1:0]  mac_err;
+    wire        mac_valid_out;
+    reg  [1:0]  mac_head_d1, mac_head_d2, mac_head_d3, mac_head_d4, mac_head_d5;
+
+    ot_mac_bf16_fp32_pipe dot_mac (
+        .clk(clk), .rst_n(rst_n),
+        .valid_in(mac_valid_in),
+        .a(q_rd_data[15:0]), .b(k_rd_data[15:0]),
+        .c(head_acc[mac_head]),
+        .y(mac_y), .err(mac_err), .valid_out(mac_valid_out)
+    );
+
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            mac_head_d1 <= 2'd0; mac_head_d2 <= 2'd0; mac_head_d3 <= 2'd0;
+            mac_head_d4 <= 2'd0; mac_head_d5 <= 2'd0;
+        end else begin
+            mac_head_d1 <= mac_head;    mac_head_d2 <= mac_head_d1;
+            mac_head_d3 <= mac_head_d2; mac_head_d4 <= mac_head_d3;
+            mac_head_d5 <= mac_head_d4;
+        end
+
+    //: the result lands in the slot it came from, five cycles later
+    integer ha;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            for (ha = 0; ha < HEADS; ha = ha + 1) head_acc[ha] <= 32'b0;
+        end else if ((state == S_IDLE) && start) begin
+            for (ha = 0; ha < HEADS; ha = ha + 1) head_acc[ha] <= 32'b0;
+        end else if ((state == S_REDUCE_1) || (state == S_DOT_ISSUE)) begin
+            for (ha = 0; ha < HEADS; ha = ha + 1) head_acc[ha] <= 32'b0;
+        end else if (mac_valid_out) begin
+            head_acc[mac_head_d5] <= mac_y;
+        end
+
+    wire [18:0] head_narrowed =
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(head_acc[head]);
     wire [33:0] weighted_product =
         ot_fp32_rne_pkg::fp32_mul_rne(relu_value, decoded_w[31:0]);
     wire [18:0] weighted_narrowed =
@@ -201,6 +266,9 @@ module ot_a3_vector_index_score #(
             reduce_right <= 0;
             add_pair_valid <= 1'b0;
             add_total_valid <= 1'b0;
+            dot_phase <= 3'd0;
+            mac_valid_in <= 1'b0;
+            mac_head <= 2'd0;
             q_rd_en <= 1'b0;
             q_rd_addr <= 0;
             k_rd_en <= 1'b0;
@@ -287,54 +355,98 @@ module ot_a3_vector_index_score #(
                     end
                 end
 
+                //: ENTRY.  Clears the four head accumulators (the always block above
+                //: watches for this state) and starts the interleaved loop.
                 S_DOT_ISSUE: begin
-                    q_rd_en <= 1'b1;
-                    q_rd_addr <= cfg_query_base +
-                        ({16'b0, row} * HEADS * {16'b0, cfg_depth}) +
-                        (head * {16'b0, cfg_depth}) + {16'b0, depth_index};
-                    k_rd_en <= 1'b1;
-                    k_rd_addr <= cfg_key_base +
-                        ({16'b0, candidate} * {16'b0, cfg_depth}) +
-                        {16'b0, depth_index};
-                    state <= S_DOT_WAIT;
+                    depth_index <= 0;
+                    dot_phase <= 3'd0;
+                    state <= S_DOT_RUN;
                 end
 
-                S_DOT_WAIT: state <= S_DOT_STEP;
+                //: ONE DEPTH INDEX PER EIGHT CYCLES, four MAC issues inside it.
+                //:
+                //: phases 0..3 drive head 0..3's query address, and the KEY address
+                //: every cycle -- the key is the same element for all four heads, so
+                //: re-driving it keeps k_rd_data stable and no holding register is
+                //: needed.  A memory answers two cycles after its address, so phases
+                //: 2..5 carry head 0..3's query word and are the issue cycles;
+                //: mac_valid_in is a register, so it is raised in phases 1..4.
+                //:
+                //: A result lands five cycles after its issue -- phases 7, 8, 9, 10 --
+                //: and the next step issues head h at its own phase 2+h, which is
+                //: absolute 10+h.  Head 0's result at 7 against its next issue at 10;
+                //: head 3's at 10 against 13.  Three cycles of margin on every head,
+                //: which is what buys the accumulator chain its safety without a
+                //: forwarding path in the issue cone.
+                S_DOT_RUN: begin
+                    if (dot_phase <= 3'd3) begin
+                        q_rd_en <= 1'b1;
+                        q_rd_addr <= cfg_query_base +
+                            ({16'b0, row} * HEADS * {16'b0, cfg_depth}) +
+                            ({30'b0, dot_phase[1:0]} * {16'b0, cfg_depth}) +
+                            {16'b0, depth_index};
+                        k_rd_en <= 1'b1;
+                        k_rd_addr <= cfg_key_base +
+                            ({16'b0, candidate} * {16'b0, cfg_depth}) +
+                            {16'b0, depth_index};
+                    end
+                    if ((dot_phase >= 3'd1) && (dot_phase <= 3'd4)) begin
+                        mac_valid_in <= 1'b1;
+                        mac_head <= dot_phase[1:0] - 2'd1;
+                    end else
+                        mac_valid_in <= 1'b0;
 
-                S_DOT_STEP: begin
-                    if ((decoded_q[33:32] != 0) ||
-                        (decoded_k[33:32] != 0)) begin
-                        error_code <= ERR_OPERAND_NONFINITE;
-                        state <= S_DONE;
-                    end else if (dot_sum[33:32] != 0) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
-                        state <= S_DONE;
-                    end else begin
-                        work_count <= work_count + 1;
-                        accumulator <= dot_sum[31:0];
+                    //: the operands of the issue happening THIS cycle
+                    if ((dot_phase >= 3'd2) && (dot_phase <= 3'd5)) begin
+                        if ((decoded_q[33:32] != 0) || (decoded_k[33:32] != 0)) begin
+                            error_code <= ERR_OPERAND_NONFINITE;
+                            mac_valid_in <= 1'b0;
+                            state <= S_DONE;
+                        end else
+                            work_count <= work_count + 1;
+                    end
+
+                    if (dot_phase == 3'd7) begin
                         if (depth_index + 1 == cfg_depth) begin
-                            //: the sum is latched; the narrowing and the ReLU read it
-                            //: from the register on the next cycle
-                            state <= S_DOT_FINAL;
+                            dot_phase <= 3'd0;
+                            state <= S_DOT_DRAIN;
                         end else begin
                             depth_index <= depth_index + 1;
-                            state <= S_DOT_ISSUE;
+                            dot_phase <= 3'd0;
                         end
-                    end
+                    end else
+                        dot_phase <= dot_phase + 3'd1;
                 end
 
+                //: the pipe's tail: the last issue was five cycles back at most, so
+                //: eight cycles of drain is more than enough and costs once per
+                //: candidate rather than once per depth index.
+                S_DOT_DRAIN: begin
+                    mac_valid_in <= 1'b0;
+                    if (mac_valid_out && (mac_err != 2'd0)) begin
+                        error_code <= ERR_ACCUMULATE_RANGE;
+                        state <= S_DONE;
+                    end
+                    if (dot_phase == 3'd7) begin
+                        head <= 0;
+                        state <= S_DOT_FINAL;
+                    end else
+                        dot_phase <= dot_phase + 3'd1;
+                end
+
+                //: per head, once all four accumulations are complete
                 S_DOT_FINAL: begin
-                    if (acc_narrowed[18:17] != 0) begin
+                    if (head_narrowed[18:17] != 0) begin
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else begin
-                        if (acc_narrowed[16])
+                        if (head_narrowed[16])
                             pending_saturation_count <=
                                 pending_saturation_count + 1;
                         // ReLU is applied after the architectural
                         // BF16 dot-product boundary.
-                        relu_value <= acc_narrowed[15]
-                            ? 32'b0 : {acc_narrowed[15:0], 16'b0};
+                        relu_value <= head_narrowed[15]
+                            ? 32'b0 : {head_narrowed[15:0], 16'b0};
                         state <= S_WEIGHT_ISSUE;
                     end
                 end
@@ -367,8 +479,10 @@ module ot_a3_vector_index_score #(
                         if (head == LAST_HEAD) begin
                             state <= S_REDUCE_1;
                         end else begin
+                            //: the accumulations are all done; the next head only
+                            //: needs its narrowing, ReLU and weight
                             head <= head + 1;
-                            state <= S_DOT_ISSUE;
+                            state <= S_DOT_FINAL;
                         end
                     end
                 end

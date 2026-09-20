@@ -173,11 +173,11 @@ MUTATIONS: tuple[dict[str, str], ...] = (
         #: -- and this mutation follows it.  What it tests is unchanged: drop the
         #: negative-score clamp and the campaign must notice.
         "before": (
-            "relu_value <= acc_narrowed[15]\n"
+            "relu_value <= head_narrowed[15]\n"
             "                            ? 32'b0 : "
-            "{acc_narrowed[15:0], 16'b0};"
+            "{head_narrowed[15:0], 16'b0};"
         ),
-        "after": "relu_value <= {acc_narrowed[15:0], 16'b0};",
+        "after": "relu_value <= {head_narrowed[15:0], 16'b0};",
     },
     {
         "id": "compress_swap_output_planes",

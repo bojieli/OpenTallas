@@ -77,6 +77,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_vector_convert.sv",
     "rtl/abi3/ot_a3_vector_scale.sv",
     "rtl/abi3/ot_a3_vector_hadamard.sv",
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
     "rtl/abi3/ot_a3_vector_index_score.sv",
     "rtl/abi3/ot_a3_vector_compress_project.sv",
     "rtl/abi3/ot_a3_vector_mhc_post.sv",
