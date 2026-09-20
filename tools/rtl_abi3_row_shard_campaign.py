@@ -105,6 +105,27 @@ SOURCES = (
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/test/tb_a3_row_shard.sv",
     "rtl/test/a3_row_shard_dpi.cpp",
+    #: ADDED because the RTL grew the instantiation and this list did not
+    #: follow it.  Both simulators refuse a module they were never given, so a
+    #: stale list stops the campaign at MODMISSING and reads like a regression.
+    #: tools/audit_rtl_campaign_source_lists.py derives these from the
+    #: instantiation graph and gates on them.
+    "rtl/abi3/ot_a3_attention_sparse.sv",
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
+    "rtl/abi3/ot_a3_attention_av_walk.sv",
+    "rtl/abi3/ot_a3_attention_denominator.sv",
+    "rtl/abi3/ot_a3_attention_epilogue.sv",
+    "rtl/abi3/ot_a3_attention_kv_index.sv",
+    "rtl/abi3/ot_a3_attention_qk_walk.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv",
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
 )
 BOUND_SOURCES = SOURCES + (
     "tools/abi3_row_shard.py",

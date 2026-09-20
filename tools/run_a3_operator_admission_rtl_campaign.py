@@ -114,6 +114,15 @@ BRIDGE_SOURCES = (
     "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
     "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+    #: ADDED because the RTL grew the instantiation and this list did not
+    #: follow it.  Both simulators refuse a module they were never given, so a
+    #: stale list stops the campaign at MODMISSING and reads like a regression.
+    #: tools/audit_rtl_campaign_source_lists.py derives these from the
+    #: instantiation graph and gates on them.
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
 )
 SILU_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",

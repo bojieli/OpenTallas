@@ -126,6 +126,14 @@ VEHICLE_SOURCES: tuple[str, ...] = (
     #: Packages first: the link tree names ot_a3_link_pkg and its CRC helper,
     #: and Verilator resolves a package only from a file it was given.
     "rtl/lib/ot_crc_pkg.sv",
+    #: ot_a3_wafer_multicast_adapter builds its four CRCs from the TREE package,
+    #: not from ot_crc_pkg::crc32c directly, and Verilator resolves a package only
+    #: from a file it was given: without this the elaboration stops with six
+    #: "Package/class for ':: reference' not found: 'ot_crc32c_tree_pkg'" and
+    #: suggests ot_fp32_rne_pkg, which reads like a campaign regression and is a
+    #: source list that did not follow the adapter.  It comes AFTER ot_crc_pkg
+    #: because its own states cite that package's polynomial.
+    "rtl/lib/ot_crc32c_tree_pkg.sv",
     "rtl/abi3/ot_a3_link_pkg.sv",
     "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
     "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
@@ -150,6 +158,15 @@ VEHICLE_SOURCES: tuple[str, ...] = (
     "rtl/abi3/ot_a3_engine_issue_bridge.sv",
     "rtl/test/a3_engine_completion_adapter.sv",
     "rtl/test/a3_shipped_prefix_top.sv",
+    #: ADDED because the RTL grew the instantiation and this list did not
+    #: follow it.  Both simulators refuse a module they were never given, so a
+    #: stale list stops the campaign at MODMISSING and reads like a regression.
+    #: tools/audit_rtl_campaign_source_lists.py derives these from the
+    #: instantiation graph and gates on them.
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
 )
 
 #: The reduced fixture's geometry, as parameters rather than as a second RTL.

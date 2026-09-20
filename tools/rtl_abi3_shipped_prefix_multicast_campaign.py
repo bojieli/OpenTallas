@@ -47,6 +47,14 @@ EXPECTED_IVERILOG_CHECKS = 12_587_599
 
 RTL_SOURCES = (
     "rtl/lib/ot_crc_pkg.sv",
+    #: ot_a3_wafer_multicast_adapter builds its four CRCs from the TREE package,
+    #: not from ot_crc_pkg::crc32c directly, and Verilator resolves a package only
+    #: from a file it was given: without this the elaboration stops with six
+    #: "Package/class for ':: reference' not found: 'ot_crc32c_tree_pkg'" and
+    #: suggests ot_fp32_rne_pkg, which reads like a campaign regression and is a
+    #: source list that did not follow the adapter.  It comes AFTER ot_crc_pkg
+    #: because its own states cite that package's polynomial.
+    "rtl/lib/ot_crc32c_tree_pkg.sv",
     "rtl/ot_fp32_rne_pkg.sv",
     "rtl/ot_fp32_rsqrt_rne.sv",
     "rtl/ot_ta_command_decoder.sv",
@@ -92,6 +100,40 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_link_endpoint.sv",
     "rtl/abi3/ot_a3_link_node.sv",
     "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+    #: ADDED because the RTL grew the instantiation and this list did not
+    #: follow it.  Both simulators refuse a module they were never given, so a
+    #: stale list stops the campaign at MODMISSING and reads like a regression.
+    #: tools/audit_rtl_campaign_source_lists.py derives these from the
+    #: instantiation graph and gates on them.
+    "rtl/abi3/ot_a3_attention_sparse.sv",
+    "rtl/abi3/ot_a3_collective_engine.sv",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv",
+    "rtl/abi3/ot_a3_mesh_router.sv",
+    "rtl/abi3/ot_a3_qwen_gqa.sv",
+    "rtl/abi3/ot_a3_reduction_expert_sum.sv",
+    "rtl/abi3/ot_a3_route_biased_topk.sv",
+    "rtl/abi3/ot_a3_route_weight_normalize.sv",
+    "rtl/abi3/ot_a3_route_window_index.sv",
+    "rtl/abi3/ot_a3_selection_token_append.sv",
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv",
+    "rtl/abi3/ot_a3_vector_silu_mul.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "rtl/abi3/ot_a3_attention_av_walk.sv",
+    "rtl/abi3/ot_a3_attention_denominator.sv",
+    "rtl/abi3/ot_a3_attention_epilogue.sv",
+    "rtl/abi3/ot_a3_attention_kv_index.sv",
+    "rtl/abi3/ot_a3_attention_qk_walk.sv",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv",
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
 )
 TEST_SOURCES = (
     "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv",
