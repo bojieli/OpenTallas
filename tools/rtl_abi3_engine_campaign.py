@@ -196,19 +196,44 @@ MUTATIONS: tuple[dict[str, str], ...] = (
             "replace the exact-product single-rounded dot step with a "
             "separately rounded binary32 multiply followed by add"
         ),
+        # REPOINTED: the engine's fused single-rounded product-add is
+        # ot_mac_bf16_fp32_pipe now, not a package function on a wire, so the
+        # mutant replaces the INSTANCE with a separately rounded multiply and add
+        # delayed five cycles to keep the interface. The fault is the same one:
+        # two roundings where the contract names one.
         "before": (
-            "wire [33:0] accumulated =\n"
-            "        ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne(\n"
-            "            accumulator, h_rd_data[15:0], weight_code\n"
-            "        );"
+            "    ot_mac_bf16_fp32_pipe product_add (\n"
+            "        .clk(clk), .rst_n(rst_n), .valid_in(mac_valid),\n"
+            "        .a(mac_a), .b(mac_b), .c(mac_c),\n"
+            "        .y(mac_y), .err(mac_err), .valid_out(mac_done)\n"
+            "    );"
         ),
         "after": (
-            "wire [33:0] split_product = ot_fp32_rne_pkg::fp32_mul_rne(\n"
-            "        decoded_hidden[31:0], decoded_weight[31:0]\n"
-            "    );\n"
-            "    wire [33:0] accumulated = ot_fp32_rne_pkg::fp32_add_rne(\n"
-            "        accumulator, split_product[31:0]\n"
-            "    );"
+            "    wire [33:0] mut_a = ot_a3_format_pkg::decode_bf16(mac_a);\n"
+            "    wire [33:0] mut_b = ot_a3_format_pkg::decode_bf16(mac_b);\n"
+            "    wire [33:0] mut_mul =\n"
+            "        ot_fp32_rne_pkg::fp32_mul_rne(mut_a[31:0], mut_b[31:0]);\n"
+            "    wire [33:0] mut_sum =\n"
+            "        ot_fp32_rne_pkg::fp32_add_rne(mac_c, mut_mul[31:0]);\n"
+            "    reg [31:0] mut_y0, mut_y1, mut_y2, mut_y3, mut_y4;\n"
+            "    reg [1:0]  mut_e0, mut_e1, mut_e2, mut_e3, mut_e4;\n"
+            "    reg [4:0]  mut_v;\n"
+            "    always @(posedge clk or negedge rst_n)\n"
+            "        if (!rst_n) begin\n"
+            "            mut_v <= 5'b0;\n"
+            "        end else begin\n"
+            "            mut_v <= {mut_v[3:0], mac_valid};\n"
+            "            mut_y0 <= mut_sum[31:0];\n"
+            "            mut_e0 <= (mut_mul[33:32] != 2'd0)\n"
+            "                      ? mut_mul[33:32] : mut_sum[33:32];\n"
+            "            mut_y1 <= mut_y0; mut_e1 <= mut_e0;\n"
+            "            mut_y2 <= mut_y1; mut_e2 <= mut_e1;\n"
+            "            mut_y3 <= mut_y2; mut_e3 <= mut_e2;\n"
+            "            mut_y4 <= mut_y3; mut_e4 <= mut_e3;\n"
+            "        end\n"
+            "    assign mac_y = mut_y4;\n"
+            "    assign mac_err = mut_e4;\n"
+            "    assign mac_done = mut_v[4];"
         ),
     },
     {

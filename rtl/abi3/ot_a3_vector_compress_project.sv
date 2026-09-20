@@ -68,6 +68,14 @@ module ot_a3_vector_compress_project #(
     localparam [3:0] S_DOT_WAIT   = 4'd5;
     localparam [3:0] S_DOT_STEP   = 4'd6;
     localparam [3:0] S_COMMIT     = 4'd7;
+    //: The pipelined multiply-accumulate's wait state. Routed at a 4 ns target this
+    //: engine came back at 239.7 MHz -- below the 276.9 MHz design limiter and the
+    //: last measured rung of ot_a3_engine_array -- and its worst path ran
+    //: kv_rd_data[12], an INPUT PORT, through the operand decode and the FUSED
+    //: bf16-by-bf16-into-fp32 product-add to result_buffer[209][29]: 119 cells,
+    //: missing the target by 0.172 ns. The store address was already moved off this
+    //: path; what is left is the arithmetic.
+    localparam [3:0] S_DOT_PIPE   = 4'd9;
     localparam [3:0] S_DONE       = 4'd8;
 
     reg [3:0] state;
@@ -96,10 +104,31 @@ module ot_a3_vector_compress_project #(
     wire [33:0] decoded_weight = plane ? decoded_gate : decoded_kv;
     wire [15:0] weight_code = plane
         ? gate_rd_data[15:0] : kv_rd_data[15:0];
-    wire [33:0] accumulated =
-        ot_fp32_rne_pkg::bf16_bf16_fp32_product_add_rne(
-            accumulator, h_rd_data[15:0], weight_code
-        );
+    //: rtl/proto/ot_mac_bf16_fp32_pipe.sv is the same RN(a*b+c) in five stages and
+    //: is qualified bit-identical to ot_fp32_rne_pkg's fused product-add, error
+    //: codes included -- 0 none, 1 nonfinite input, 2 a finite exact result outside
+    //: binary32, which this engine reports as ERR_OPERAND_NONFINITE and
+    //: ERR_ACCUMULATE_RANGE exactly as the one-cycle form did. So this is a latency
+    //: change and not a numeric one.
+    //:
+    //: THE COST, STATED: five cycles per reduction index instead of one, so a depth
+    //: step goes from three cycles to seven. Two of the three were always memory --
+    //: issue and wait -- so the arithmetic was a third of the loop and is now
+    //: five sevenths. An interleaved form over two columns would pay nothing at all,
+    //: because a chain issuing every six cycles needs its own result only after
+    //: five; it is not done here because it reorders the operand refusals, and the
+    //: order in which this engine refuses is part of what it publishes.
+    reg         mac_valid;
+    reg  [15:0] mac_a, mac_b;
+    reg  [31:0] mac_c;
+    wire [31:0] mac_y;
+    wire [1:0]  mac_err;
+    wire        mac_done;
+    ot_mac_bf16_fp32_pipe product_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(mac_valid),
+        .a(mac_a), .b(mac_b), .c(mac_c),
+        .y(mac_y), .err(mac_err), .valid_out(mac_done)
+    );
 
     //: THE STORE'S ADDRESS IS NOT THE PRODUCT-ADD'S WORK.  The routed critical path ran
     //: kv_rd_data[12] to result_buffer[59][29] -- 110 cell arcs holding the operand
@@ -131,6 +160,8 @@ module ot_a3_vector_compress_project #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            mac_valid <= 1'b0;
+            mac_a <= 16'b0; mac_b <= 16'b0; mac_c <= 32'b0;
             state <= S_IDLE;
             scan_kind <= 0;
             index <= 0;
@@ -154,6 +185,9 @@ module ot_a3_vector_compress_project #(
             out_count <= 0;
             work_count <= 0;
         end else begin
+            //: One cycle of valid_in: the unit latches on it and holding it
+            //: would issue a second product-add.
+            mac_valid <= 1'b0;
             done <= 1'b0;
             h_rd_en <= 1'b0;
             kv_rd_en <= 1'b0;
@@ -245,22 +279,39 @@ module ot_a3_vector_compress_project #(
 
                 S_DOT_WAIT: state <= S_DOT_STEP;
 
+                //: The operand check stays HERE, ahead of the unit, so a nonfinite
+                //: operand is refused before it is issued and the refusal order is
+                //: the one this engine always had.
                 S_DOT_STEP: begin
                     if ((decoded_hidden[33:32] != 0) ||
                         (decoded_weight[33:32] != 0)) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if (accumulated[33:32] != 0) begin
-                        error_code <= ERR_ACCUMULATE_RANGE;
+                    end else begin
+                        mac_a <= h_rd_data[15:0];
+                        mac_b <= weight_code;
+                        mac_c <= accumulator;
+                        mac_valid <= 1'b1;
+                        state <= S_DOT_PIPE;
+                    end
+                end
+
+                S_DOT_PIPE: begin
+                    if (!mac_done) begin
+                        //: waiting; the unit is five stages deep
+                    end else if (mac_err != 2'd0) begin
+                        error_code <= (mac_err == 2'd1)
+                                      ? ERR_OPERAND_NONFINITE
+                                      : ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else if (depth_index + 1 < cfg_depth) begin
-                        accumulator <= accumulated[31:0];
+                        accumulator <= mac_y;
                         depth_index <= depth_index + 1;
                         state <= S_DOT_ISSUE;
                     end else begin
                         // Frozen projection_order: kv_then_gate.  The index is
                         // the registered one, computed a cycle ahead.
-                        result_buffer[store_index_q] <= accumulated[31:0];
+                        result_buffer[store_index_q] <= mac_y;
                         accumulator <= 0;
                         depth_index <= 0;
                         if (col + 1 < cfg_cols) begin
