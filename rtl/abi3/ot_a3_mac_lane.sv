@@ -135,6 +135,25 @@ module ot_a3_mac_lane (
     localparam [3:0] S_ACC    = 4'd4;
     localparam [3:0] S_STORE  = 4'd5;
     localparam [3:0] S_DONE   = 4'd6;
+    //: One wait state per pipelined unit. Routed at a 3.4 ns target with the scale
+    //: address computed by counters this lane came back at 158.9 MHz, and its worst
+    //: path then ran acc[23] to k[2] through 256 cells: the combinational
+    //: fp32_add_rne(acc, product) feeding the loop counter. The three binary32
+    //: operations it performs per reduction index -- two scale multiplies, the
+    //: product, the accumulate -- are the remaining wall, and they are the same wall
+    //: ot_a3_vector_add, ot_a3_vector_mhc_post and ot_a3_vector_compress_project
+    //: each cleared today by substituting a five-stage pipe for a combinational cone.
+    //:
+    //: THE CYCLE COST FALLS ON NOTHING THE SHIPPED MODELS RUN. ot_a3_engine_array
+    //: routes a descriptor to ot_a3_mac_lane_pipe unless it declares a dtype pair or
+    //: a scale object that lane does not claim, and all 272 TENSOR.MATMUL operators
+    //: in the shipped V4.1 HBM cell are claimed -- 26 BF16 x BF16 and 246 involving
+    //: FP8_E4M3FN. So a reduction index here costs 20 cycles instead of 5 on paths no
+    //: shipped model takes, and the design clock stops being held at 158.9 MHz by a
+    //: lane that executes none of them.
+    localparam [3:0] S_SCALE_PIPE = 4'd8;
+    localparam [3:0] S_MUL_PIPE   = 4'd9;
+    localparam [3:0] S_ACC_PIPE   = 4'd10;
 
     reg [3:0]  state;
     reg [15:0] row;
@@ -149,10 +168,43 @@ module ot_a3_mac_lane (
     wire [33:0] decoded_b = ot_a3_format_pkg::decode_element(cfg_dtype_b, b_rd_data);
     wire [33:0] decoded_scale_a = ot_a3_format_pkg::decode_e8m0(s_rd_data[7:0]);
     wire [33:0] decoded_scale_b = ot_a3_format_pkg::decode_e8m0(t_rd_data[7:0]);
-    wire [33:0] scaled_a = ot_fp32_rne_pkg::fp32_mul_rne(decoded_a[31:0], decoded_scale_a[31:0]);
-    wire [33:0] scaled_b = ot_fp32_rne_pkg::fp32_mul_rne(decoded_b[31:0], decoded_scale_b[31:0]);
-    wire [33:0] raw_product = ot_fp32_rne_pkg::fp32_mul_rne(value_a, value_b);
-    wire [33:0] summed = ot_fp32_rne_pkg::fp32_add_rne(acc, product);
+    //: TWO PIPELINED MULTIPLIERS AND ONE PIPELINED ADDER. The two scale multiplies
+    //: are independent and share one valid_in so they retire together; the product
+    //: reuses the first of them, because the scales and the product never happen in
+    //: the same state. rtl/proto/ot_fp32_mul_rne_pipe.sv and
+    //: rtl/proto/ot_fp32_add_rne_pipe.sv are qualified bit-identical to the
+    //: ot_fp32_rne_pkg functions they replace, including the two places that
+    //: authority is deliberately not IEEE-754 -- (-0) + (-0) is +0 and every zero
+    //: result is canonical +0 -- so this is a latency change and not a numeric one.
+    reg         mul_valid;
+    reg  [31:0] mul_a_x, mul_a_y, mul_b_x, mul_b_y;
+    wire [31:0] mul_a_out, mul_b_out;
+    wire [1:0]  mul_a_err, mul_b_err;
+    wire        mul_a_done, mul_b_done;
+    ot_fp32_mul_rne_pipe multiplier_a (
+        .clk(clk), .rst_n(rst_n), .valid_in(mul_valid),
+        .a(mul_a_x), .b(mul_a_y),
+        .y(mul_a_out), .err(mul_a_err), .valid_out(mul_a_done)
+    );
+    ot_fp32_mul_rne_pipe multiplier_b (
+        .clk(clk), .rst_n(rst_n), .valid_in(mul_valid),
+        .a(mul_b_x), .b(mul_b_y),
+        .y(mul_b_out), .err(mul_b_err), .valid_out(mul_b_done)
+    );
+
+    reg         add_valid;
+    reg  [31:0] add_x, add_y;
+    wire [31:0] add_out;
+    wire [1:0]  add_err;
+    wire        add_done;
+    ot_fp32_add_rne_pipe accumulator_add (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
+        .a(add_x), .b(add_y),
+        .y(add_out), .err(add_err), .valid_out(add_done)
+    );
+
+    //: The narrowing reads the accumulator, which is a register, so it stands alone
+    //: in S_STORE's cycle exactly as it did before.
     wire [18:0] narrowed = ot_fp32_rne_pkg::fp32_to_bf16_rne(acc);
 
     //: The three quotients of A15's scale index, as counters. Widths: a stride is
@@ -251,8 +303,16 @@ module ot_a3_mac_lane (
             row_mod_a <= 16'b0; col_mod_b <= 16'b0;
             row_scale_a <= 32'b0; col_scale_b <= 32'b0;
             cpr_a <= 32'b0; cpr_b <= 32'b0; cpr_valid <= 1'b0;
+            mul_valid <= 1'b0; add_valid <= 1'b0;
+            mul_a_x <= 32'b0; mul_a_y <= 32'b0;
+            mul_b_x <= 32'b0; mul_b_y <= 32'b0;
+            add_x <= 32'b0; add_y <= 32'b0;
         end else begin
             done <= 1'b0;
+            //: One cycle of valid_in per issue: the units latch on
+            //: it and holding it would issue a second operation.
+            mul_valid <= 1'b0;
+            add_valid <= 1'b0;
             out_we <= 1'b0;
             a_rd_en <= 1'b0;
             b_rd_en <= 1'b0;
@@ -306,9 +366,10 @@ module ot_a3_mac_lane (
                     state <= S_SCALE;
                 end
 
+                //: Every operand check stays HERE, ahead of the units, so a
+                //: nonfinite operand or scale is refused before anything is issued
+                //: and the refusal order is the one this lane always had.
                 S_SCALE: begin
-                    // Operand words are valid this cycle.  Decode, and apply
-                    // the block scale when the view declares one.
                     if (decoded_a[33:32] != 2'd0 || decoded_b[33:32] != 2'd0) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
@@ -316,36 +377,73 @@ module ot_a3_mac_lane (
                                  (cfg_scale_b && decoded_scale_b[33:32] != 2'd0)) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if ((cfg_scale_a && scaled_a[33:32] != 2'd0) ||
-                                 (cfg_scale_b && scaled_b[33:32] != 2'd0)) begin
-                        error_code <= ERR_SCALE_RANGE;
-                        state <= S_DONE;
                     end else begin
-                        value_a <= cfg_scale_a ? scaled_a[31:0] : decoded_a[31:0];
-                        value_b <= cfg_scale_b ? scaled_b[31:0] : decoded_b[31:0];
-                        state <= S_MUL;
+                        //: Both scale multiplies on one valid_in, so they retire
+                        //: together and the ERR_SCALE_RANGE test below sees both --
+                        //: which is what the one-cycle form tested.
+                        mul_a_x <= decoded_a[31:0]; mul_a_y <= decoded_scale_a[31:0];
+                        mul_b_x <= decoded_b[31:0]; mul_b_y <= decoded_scale_b[31:0];
+                        mul_valid <= 1'b1;
+                        //: The unscaled operands are held, because a view that
+                        //: declares no scale object takes them unchanged.
+                        value_a <= decoded_a[31:0];
+                        value_b <= decoded_b[31:0];
+                        state <= S_SCALE_PIPE;
                     end
                 end
 
+                S_SCALE_PIPE: begin
+                    if (mul_a_done && mul_b_done) begin
+                        if ((cfg_scale_a && mul_a_err != 2'd0) ||
+                            (cfg_scale_b && mul_b_err != 2'd0)) begin
+                            error_code <= ERR_SCALE_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            if (cfg_scale_a) value_a <= mul_a_out;
+                            if (cfg_scale_b) value_b <= mul_b_out;
+                            state <= S_MUL;
+                        end
+                    end
+                end
+
+                //: The product reuses the first multiplier: the scales and the
+                //: product never happen in the same state.
                 S_MUL: begin
-                    if (raw_product[33:32] != 2'd0) begin
-                        error_code <= ERR_PRODUCT_RANGE;
-                        state <= S_DONE;
-                    end else begin
-                        // Canonicalise exact zero before it reaches the
-                        // accumulator, as the contract requires.
-                        product <= (raw_product[30:0] == 31'b0)
-                                   ? 32'b0 : raw_product[31:0];
-                        state <= S_ACC;
+                    mul_a_x <= value_a; mul_a_y <= value_b;
+                    mul_b_x <= 32'b0;   mul_b_y <= 32'b0;
+                    mul_valid <= 1'b1;
+                    state <= S_MUL_PIPE;
+                end
+
+                S_MUL_PIPE: begin
+                    if (mul_a_done) begin
+                        if (mul_a_err != 2'd0) begin
+                            error_code <= ERR_PRODUCT_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            // Canonicalise exact zero before it reaches the
+                            // accumulator, as the contract requires.
+                            product <= (mul_a_out[30:0] == 31'b0)
+                                       ? 32'b0 : mul_a_out;
+                            state <= S_ACC;
+                        end
                     end
                 end
 
                 S_ACC: begin
-                    if (summed[33:32] != 2'd0) begin
+                    add_x <= acc; add_y <= product;
+                    add_valid <= 1'b1;
+                    state <= S_ACC_PIPE;
+                end
+
+                S_ACC_PIPE: begin
+                    if (!add_done) begin
+                        //: waiting; the adder is five stages deep
+                    end else if (add_err != 2'd0) begin
                         error_code <= ERR_ACCUMULATE_RANGE;
                         state <= S_DONE;
                     end else begin
-                        acc <= summed[31:0];
+                        acc <= add_out;
                         mac_count <= mac_count + 32'd1;
                         if (k + 16'd1 == cfg_depth) begin
                             state <= S_STORE;
