@@ -25,6 +25,7 @@
     "ot_a3_link_tx_channel",
     "ot_a3_link_wire",
     "ot_a3_lq8",
+    "ot_a3_mac_lane",
     "ot_a3_mac_lane_pipe",
     "ot_a3_mac_lane_pipe_ctl",
     "ot_a3_mesh_router",
@@ -69,12 +70,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 66,
+    "distinct_blocks_with_a_closed_routed_record": 67,
     "pre_layout_only_records": 108,
-    "records_read": 274,
-    "routed_and_closed": 104,
-    "routed_not_closed": 62,
-    "routed_records": 166
+    "records_read": 276,
+    "routed_and_closed": 105,
+    "routed_not_closed": 63,
+    "routed_records": 168
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -83,7 +84,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
+      "commit": "d163f2cd642308e52e7af760e6593b35da88c442"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -1639,6 +1640,32 @@
       }
     },
     {
+      "block": "ot_a3_mac_lane",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 6983.09,
+      "hold_wns_ns": 0.0343211,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 652545000.0,
+      "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_pipelined_closed.json",
+      "record_sha256": "75f227107f1f755cc676e40a86e7978496625162ddfda34eff63fdfd9f44198b",
+      "routed": true,
+      "setup_wns_ns": 1.86754,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 2670.09,
+      "status": "pass",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": null
+    },
+    {
       "block": "ot_a3_mesh_router",
       "closed": true,
       "closed_reason": null,
@@ -2084,6 +2111,36 @@
       "why_not_closed": null
     },
     {
+      "block": "ot_a3_qwen_gqa",
+      "closed": false,
+      "closed_reason": null,
+      "core_area_um2": 168317,
+      "hold_wns_ns": 0.032984400000000004,
+      "macro_area_um2": 0,
+      "matches_committed_version": true,
+      "post_route_fmax_hz": 69657500.0,
+      "record": "results/physical_abi3/asap7/a3_qwen_gqa/pnr_3p4ns_not_met.json",
+      "record_sha256": "0a089236dc1fbfcf7bc64fa4cf8bf94229433fdb23aa6438279dbc7ae6b69b10",
+      "routed": true,
+      "setup_wns_ns": -10.956,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 66705.6,
+      "status": "not_met",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": {
+        "class": "routed_timing_not_met",
+        "hold_violations": 0,
+        "setup_violations": 68088
+      }
+    },
+    {
       "block": "ot_a3_tree_endpoint_fp32",
       "closed": true,
       "closed_reason": null,
@@ -2350,7 +2407,7 @@
       "core_area_um2": 19200,
       "hold_wns_ns": 0.0417219,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 430133000.0,
       "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
       "record_sha256": "9d472f8ee11a98d88c6278a0bd21c4278902e19e0528297bb69e80ee89974d5f",
@@ -7352,7 +7409,7 @@
   "why_the_not_closed_records_are_not_closed": {
     "blocked_only_by_a_pre_layout_stage": 5,
     "routed_netlist_dirty": 24,
-    "routed_timing_not_met": 28,
+    "routed_timing_not_met": 29,
     "signal_integrity_fields_absent": 5
   },
   "working_tree_cleanliness": {
@@ -7366,7 +7423,7 @@
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
-      "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
+      "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_pipelined_closed.json",
       "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",

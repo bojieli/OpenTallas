@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 65,
-    "uncovered_and_instantiated": 22,
+    "covered_by_a_closed_block": 66,
+    "uncovered_and_instantiated": 21,
     "uncovered_and_instantiated_by_nothing": 18,
-    "with_their_own_closed_record": 48
+    "with_their_own_closed_record": 49
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -455,7 +455,10 @@
     "ot_a3_lq8": [
       "ot_a3_lane_pipelined"
     ],
-    "ot_a3_mac_lane": [],
+    "ot_a3_mac_lane": [
+      "ot_fp32_add_rne_pipe",
+      "ot_fp32_mul_rne_pipe"
+    ],
     "ot_a3_mac_lane_pipe": [
       "ot_mac_bf16_fp32_pipe"
     ],
@@ -1354,9 +1357,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_mac_lane.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array"
       ],
@@ -1859,7 +1862,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
+      "commit": "d163f2cd642308e52e7af760e6593b35da88c442"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2277,12 +2280,6 @@
         "ot_a3_hc_coefficients_rne"
       ],
       "module": "ot_a3_hc_stable_softmax_sinkhorn20_rne"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_mac_lane"
     },
     {
       "instantiated_by": [

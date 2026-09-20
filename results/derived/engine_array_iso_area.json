@@ -27,11 +27,11 @@
         "record": "results/physical_abi3/asap7/dma_index_mover/pnr_4p0ns_closed.json"
       },
       "ot_a3_mac_lane": {
-        "area_um2": 2861.487,
-        "cells": 24857,
-        "closed": false,
-        "fmax_mhz": 162.2,
-        "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_mac_lane.json"
+        "area_um2": 2670.09,
+        "cells": 23783,
+        "closed": true,
+        "fmax_mhz": 652.5,
+        "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_pipelined_closed.json"
       },
       "ot_a3_mac_lane_pipe": {
         "area_um2": 451.28,
@@ -93,8 +93,8 @@
     "members_with_no_routed_record": [
       "ot_a3_vector_hadamard"
     ],
-    "mm2_lower_bound": 0.032275796,
-    "standard_cell_um2_lower_bound": 32275.796000000002,
+    "mm2_lower_bound": 0.032084399,
+    "standard_cell_um2_lower_bound": 32084.398999999998,
     "why_a_lower_bound": "the sum omits ot_a3_engine_array's own glue -- issue decode, operand multiplexing, completion logic -- and omits every member with no routed record, so the ratio below is an UPPER bound"
   },
   "arithmetic": {
@@ -108,7 +108,7 @@
     "hz": 276878000.0
   },
   "device_bf16_ops_s": 553756000.0,
-  "device_bf16_ops_s_per_mm2": 17157005206.006382,
+  "device_bf16_ops_s_per_mm2": 17259353993.197754,
   "not_a_claim": [
     "this is not a routed measurement of ot_a3_engine_array: it has no routed record, and the area here is a sum of its members' records",
     "peak arithmetic only -- one MAC retired every cycle -- which this repository has measured and found does not hold",
@@ -116,7 +116,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "f547e1ad063659daf91c8bd26fd7edd7a226f492"
+      "commit": "d163f2cd642308e52e7af760e6593b35da88c442"
     },
     "tool": "tools/audit_engine_array_iso_area.py"
   },
@@ -165,60 +165,60 @@
     },
     "steps": [
       {
-        "area_um2": 35967.584,
+        "area_um2": 35776.187,
         "basis": "both areas are routed records; the clock is unchanged",
         "bf16_ops_s": 8860096000.0,
         "clock_hz": 276878000.0,
         "macs_per_cycle": 16,
-        "ops_s_per_mm2": 246335589290.62344,
-        "ratio_against_a100_logic_area": 0.3912946091424133,
+        "ops_s_per_mm2": 247653446131.64056,
+        "ratio_against_a100_logic_area": 0.3933879740475674,
         "step": "swap the single MAC for the 16-lane ot_mac_tile, same clock"
       },
       {
-        "area_um2": 35967.584,
+        "area_um2": 35776.187,
         "basis": "ot_compute_unit's routed closed frequency, which is what a 16-lane tile with its operand delivery has been measured at",
         "bf16_ops_s": 35637440000.0,
         "clock_hz": 1113670000.0,
         "macs_per_cycle": 16,
-        "ops_s_per_mm2": 990821068215.2017,
-        "ratio_against_a100_logic_area": 1.5738811583572239,
+        "ops_s_per_mm2": 996121805825.7578,
+        "ratio_against_a100_logic_area": 1.582301176177069,
         "step": "and run it at the MAC datapath's own routed clock"
       },
       {
-        "area_um2": 48571.004,
+        "area_um2": 48379.607,
         "basis": "ot_a3_tile64 is 64 lanes and has NEVER been routed, so its area is projected from ot_mac_tile's measured area per lane -- the one estimated quantity in this table, and it is an estimate of AREA which makes the ratio optimistic",
         "bf16_ops_s": 142549760000.0,
         "clock_hz": 1113670000.0,
         "macs_per_cycle": 64,
-        "ops_s_per_mm2": 2934873654248.531,
-        "ratio_against_a100_logic_area": 4.661933920017858,
+        "ops_s_per_mm2": 2946484455733.5903,
+        "ratio_against_a100_logic_area": 4.680377231607587,
         "step": "64 lanes at that clock, tile area scaled per lane"
       },
       {
-        "area_um2": 61163.344000000005,
+        "area_um2": 60971.947,
         "basis": "ot_a3_lq8: EVERY number measured, an ABI 3.0 module rather than a proto, routed and closed. This is what the datapath would get by instantiating a part that already exists",
         "bf16_ops_s": 8204336000.0,
         "clock_hz": 512771000.0,
         "macs_per_cycle": 8,
-        "ops_s_per_mm2": 134138120374.84412,
-        "ratio_against_a100_logic_area": 0.2130732450569639,
+        "ops_s_per_mm2": 134559193263.09196,
+        "ratio_against_a100_logic_area": 0.21374210314483452,
         "step": "the ABI 3.0 eight-lane quad, at its own routed closed clock"
       },
       {
-        "area_um2": 266941.64400000003,
+        "area_um2": 266750.24700000003,
         "basis": "ot_a3_tile64's own composition -- eight ot_a3_lq8 -- with the quad's measured area and clock; only the assumption that eight quads cost eight quads is unmeasured",
         "bf16_ops_s": 65634688000.0,
         "clock_hz": 512771000.0,
         "macs_per_cycle": 64,
-        "ops_s_per_mm2": 245876540716.89163,
-        "ratio_against_a100_logic_area": 0.3905654281387547,
+        "ops_s_per_mm2": 246052960543.27548,
+        "ratio_against_a100_logic_area": 0.39084566424758754,
         "step": "sixty-four ABI 3.0 lanes as eight of those quads"
       }
     ]
   },
   "question": "what is the iso-area position of ot_a3_engine_array -- the datapath the nine-cell token matrix runs on -- rather than of ot_compute_unit?",
-  "ratio_against_a100_logic_area_UPPER_BOUND": 0.02725324288492552,
-  "ratio_against_a100_whole_die_UPPER_BOUND": 0.04542207147487587,
+  "ratio_against_a100_logic_area_UPPER_BOUND": 0.0274158199968872,
+  "ratio_against_a100_whole_die_UPPER_BOUND": 0.04569303332814533,
   "schema": "opentallas.derived.engine_array_iso_area.v1",
   "top": "ot_a3_engine_array"
 }

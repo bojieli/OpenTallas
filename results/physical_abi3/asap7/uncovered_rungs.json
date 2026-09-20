@@ -1,8 +1,8 @@
 {
   "counts": {
-    "measured": 2,
-    "measured_below_the_limiter": 2,
-    "uncovered_and_instantiated": 22,
+    "measured": 1,
+    "measured_below_the_limiter": 1,
+    "uncovered_and_instantiated": 21,
     "unmeasured": 20
   },
   "derived_from": [
@@ -30,7 +30,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "ae301c71ff85b67414b32aa577ef900d615d7170"
+      "commit": "d163f2cd642308e52e7af760e6593b35da88c442"
     },
     "tool": "tools/audit_asap7_uncovered_rungs.py"
   },
@@ -51,43 +51,6 @@
           "closed": false,
           "fmax_mhz": 69.7,
           "record": "results/physical_abi3/asap7/a3_qwen_gqa/pnr_3p4ns_not_met.json",
-          "status": "not_met"
-        }
-      ]
-    },
-    {
-      "below_the_limiter": true,
-      "best_measured_fmax_mhz": 162.2,
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_mac_lane",
-      "runs": [
-        {
-          "area_um2": 7493.39,
-          "cells": 75679,
-          "clock_period_ns": 3.4,
-          "closed": false,
-          "fmax_mhz": 64.7,
-          "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_not_met.json",
-          "status": "not_met"
-        },
-        {
-          "area_um2": 5035.87,
-          "cells": 50385,
-          "clock_period_ns": 3.4,
-          "closed": false,
-          "fmax_mhz": 158.9,
-          "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_counter_index_not_met.json",
-          "status": "not_met"
-        },
-        {
-          "area_um2": 2861.487,
-          "cells": 24857,
-          "clock_period_ns": 4.0,
-          "closed": false,
-          "fmax_mhz": 162.2,
-          "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_mac_lane.json",
           "status": "not_met"
         }
       ]
