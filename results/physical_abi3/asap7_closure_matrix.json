@@ -42,6 +42,7 @@
     "ot_a3_selection_token_append",
     "ot_a3_tree_endpoint_fp32",
     "ot_a3_vector_add",
+    "ot_a3_vector_compress_project",
     "ot_a3_vector_convert",
     "ot_a3_vector_fp4kv_dequant",
     "ot_a3_vector_index_score",
@@ -68,12 +69,12 @@
   ],
   "closed_is_not_status": "status is the verdict of the stages that ran; design.closed additionally requires the routed netlist to carry zero max-slew, max-cap and max-fanout violations. A record with POSITIVE setup and hold slack, zero DRC and zero antenna violations can still report closed=False -- measured on the half-depth compute unit for two max-slew violations, fixed by a 15% slew margin",
   "counts": {
-    "distinct_blocks_with_a_closed_routed_record": 65,
+    "distinct_blocks_with_a_closed_routed_record": 66,
     "pre_layout_only_records": 108,
-    "records_read": 273,
-    "routed_and_closed": 103,
+    "records_read": 274,
+    "routed_and_closed": 104,
     "routed_not_closed": 62,
-    "routed_records": 165
+    "routed_records": 166
   },
   "not_a_claim": [
     "ASAP7 is a predictive, non-manufacturable academic PDK; no row here is a silicon claim",
@@ -82,7 +83,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
+      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
     },
     "tool": "tools/audit_asap7_closure_matrix.py"
   },
@@ -2344,6 +2345,32 @@
     },
     {
       "block": "ot_a3_vector_compress_project",
+      "closed": true,
+      "closed_reason": null,
+      "core_area_um2": 19200,
+      "hold_wns_ns": 0.0417219,
+      "macro_area_um2": 0,
+      "matches_committed_version": null,
+      "post_route_fmax_hz": 430133000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
+      "record_sha256": "9d472f8ee11a98d88c6278a0bd21c4278902e19e0528297bb69e80ee89974d5f",
+      "routed": true,
+      "setup_wns_ns": 1.0751400000000002,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7811.16,
+      "status": "pass",
+      "target_clock_period_ns": 3.4,
+      "why_not_closed": null
+    },
+    {
+      "block": "ot_a3_vector_compress_project",
       "closed": false,
       "closed_reason": null,
       "core_area_um2": 30347,
@@ -2613,7 +2640,7 @@
       "core_area_um2": 20446.7,
       "hold_wns_ns": 0.0366851,
       "macro_area_um2": 0,
-      "matches_committed_version": null,
+      "matches_committed_version": true,
       "post_route_fmax_hz": 520496000.0,
       "record": "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
       "record_sha256": "dca1c3f9b7d69115cf7e7c6ce4f6eeaf3ee4d59b19a2f8056f3cb8f50c64f7ec",
@@ -7339,7 +7366,7 @@
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
       "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
-      "results/physical_abi3/asap7/a3_vector_mhc_post/pnr_3p4ns_pipelined_closed.json",
+      "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
       "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
       "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",

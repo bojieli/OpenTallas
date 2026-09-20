@@ -162,6 +162,16 @@
       "target_headroom": 0.400265
     },
     {
+      "at_target_clock_period_ns": 3.4,
+      "block": "ot_a3_vector_compress_project",
+      "family": "abi3_datapath",
+      "fmax_hz": 430133000.0,
+      "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 7811.16,
+      "target_headroom": 0.3162176470588236
+    },
+    {
       "at_target_clock_period_ns": 2.4,
       "block": "ot_a3_fp32_div_rne_pipe",
       "family": "abi3_datapath",
@@ -665,10 +675,10 @@
     "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 103,
-    "distinct_blocks_with_a_closed_routed_record": 65,
-    "post_route_record_count": 165,
-    "record_count": 273
+    "closed_routed_record_count": 104,
+    "distinct_blocks_with_a_closed_routed_record": 66,
+    "post_route_record_count": 166,
+    "record_count": 274
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -754,7 +764,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
+      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -2649,6 +2659,29 @@
       "standard_cell_area_um2": 571.973,
       "target_clock_period_ns": 4.0,
       "target_headroom": 0.6291325000000001
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_vector_compress_project",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 430133000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_3p4ns_pipelined_closed.json",
+      "record_sha256": "9d472f8ee11a98d88c6278a0bd21c4278902e19e0528297bb69e80ee89974d5f",
+      "setup_wns_ns": 1.0751400000000002,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7811.16,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": 0.3162176470588236
     },
     {
       "antenna_violating_nets": 0,

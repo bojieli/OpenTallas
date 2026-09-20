@@ -3,10 +3,10 @@
   "counts": {
     "abi3_modules": 105,
     "carry_no_timing_paths": 0,
-    "covered_by_a_closed_block": 64,
-    "uncovered_and_instantiated": 23,
+    "covered_by_a_closed_block": 65,
+    "uncovered_and_instantiated": 22,
     "uncovered_and_instantiated_by_nothing": 18,
-    "with_their_own_closed_record": 47
+    "with_their_own_closed_record": 48
   },
   "file_of_module": {
     "NAME": "rtl/proto/ot_compute_unit_gemm_probe.sv",
@@ -533,7 +533,9 @@
     "ot_a3_vector_add": [
       "ot_fp32_add_rne_pipe"
     ],
-    "ot_a3_vector_compress_project": [],
+    "ot_a3_vector_compress_project": [
+      "ot_mac_bf16_fp32_pipe"
+    ],
     "ot_a3_vector_convert": [],
     "ot_a3_vector_engram_gate": [
       "ot_a3_engram_exact_dot_tree",
@@ -1687,9 +1689,9 @@
     },
     {
       "carries_no_timing_paths": false,
-      "covered_by_a_closed_block": false,
+      "covered_by_a_closed_block": true,
       "file": "rtl/abi3/ot_a3_vector_compress_project.sv",
-      "has_its_own_closed_record": false,
+      "has_its_own_closed_record": true,
       "instantiated_by": [
         "ot_a3_engine_array"
       ],
@@ -1857,7 +1859,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
+      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
     },
     "tool": "tools/audit_asap7_datapath_coverage.py"
   },
@@ -2306,12 +2308,6 @@
         "ot_a3_engine_issue_bridge"
       ],
       "module": "ot_a3_route_weight_normalize"
-    },
-    {
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_vector_compress_project"
     },
     {
       "instantiated_by": [

@@ -1,8 +1,8 @@
 {
   "counts": {
-    "measured": 2,
-    "measured_below_the_limiter": 2,
-    "uncovered_and_instantiated": 23,
+    "measured": 1,
+    "measured_below_the_limiter": 1,
+    "uncovered_and_instantiated": 22,
     "unmeasured": 21
   },
   "derived_from": [
@@ -30,7 +30,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "cbb33a04d3029ff2bdb7cb32dd9b9a1a7120424c"
+      "commit": "e7a0d61401316df615d80e8a6ae31b898aa9d444"
     },
     "tool": "tools/audit_asap7_uncovered_rungs.py"
   },
@@ -68,25 +68,6 @@
           "closed": false,
           "fmax_mhz": 162.2,
           "record": "results/physical_abi3/asap7/engine_blocks/ot_a3_mac_lane.json",
-          "status": "not_met"
-        }
-      ]
-    },
-    {
-      "below_the_limiter": true,
-      "best_measured_fmax_mhz": 239.7,
-      "instantiated_by": [
-        "ot_a3_engine_array"
-      ],
-      "module": "ot_a3_vector_compress_project",
-      "runs": [
-        {
-          "area_um2": 12674.9,
-          "cells": 108674,
-          "clock_period_ns": 4.0,
-          "closed": false,
-          "fmax_mhz": 239.7,
-          "record": "results/physical_abi3/asap7/a3_vector_compress_project/pnr_4p0ns_registered_index_not_met.json",
           "status": "not_met"
         }
       ]
