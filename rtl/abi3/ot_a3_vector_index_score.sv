@@ -90,6 +90,14 @@ module ot_a3_vector_index_score #(
     localparam [4:0] S_DOT_DRAIN   = 5'd18;
     //: the weight product's narrowing and its saturation count, off the multiply's cycle
     localparam [4:0] S_WEIGHT_FINAL = 5'd19;
+    //: THE WEIGHT MULTIPLY, PIPELINED.  It was the last combinational
+    //: ot_fp32_rne_pkg multiply or add anywhere in ot_a3_engine_array, and with
+    //: every other member now between 306 and 652 MHz it is what would set the
+    //: array's frequency: this block routed at 290.5 MHz, a 3.44 ns period, and a
+    //: combinational binary32 multiply is most of that on ASAP7.  Five stages cost
+    //: five cycles once per head per candidate -- twenty per row against a dot loop
+    //: that runs the full depth -- so the state waits for the result instead.
+    localparam [4:0] S_WEIGHT_MUL  = 5'd20;
 
     reg [4:0] state;
     reg [1:0] scan_kind;
@@ -198,10 +206,19 @@ module ot_a3_vector_index_score #(
 
     wire [18:0] head_narrowed =
         ot_fp32_rne_pkg::fp32_to_bf16_rne(head_acc[head]);
-    wire [33:0] weighted_product =
-        ot_fp32_rne_pkg::fp32_mul_rne(relu_value, decoded_w[31:0]);
-    wire [18:0] weighted_narrowed =
-        ot_fp32_rne_pkg::fp32_to_bf16_rne(weighted_product[31:0]);
+    //: Both operands are registered before the multiplier sees them, and the
+    //: nonfinite refusal below still reads the decode directly, so it is taken in
+    //: the same cycle it always was.
+    reg         weight_mul_valid;
+    reg  [31:0] weight_mul_a, weight_mul_b;
+    wire [31:0] weight_mul_y;
+    wire [1:0]  weight_mul_err;
+    wire        weight_mul_done;
+    ot_fp32_mul_rne_pipe weight_multiplier (
+        .clk(clk), .rst_n(rst_n), .valid_in(weight_mul_valid),
+        .a(weight_mul_a), .b(weight_mul_b),
+        .y(weight_mul_y), .err(weight_mul_err), .valid_out(weight_mul_done)
+    );
     //: THE WEIGHT STAGE'S NARROWING, OFF THE MULTIPLY'S CYCLE.  With the dot loop
     //: interleaved the critical path moved here: w_rd_data[7] to
     //: pending_saturation_count[24], 134 cell arcs with 60 HAxp5, holding the weight
@@ -278,6 +295,9 @@ module ot_a3_vector_index_score #(
             reduce_right <= 0;
             add_pair_valid <= 1'b0;
             add_total_valid <= 1'b0;
+            weight_mul_valid <= 1'b0;
+            weight_mul_a <= 32'b0;
+            weight_mul_b <= 32'b0;
             weight_product_q <= 32'b0;
             dot_phase <= 3'd0;
             mac_valid_in <= 1'b0;
@@ -304,6 +324,8 @@ module ot_a3_vector_index_score #(
             k_rd_en <= 1'b0;
             w_rd_en <= 1'b0;
             out_we <= 1'b0;
+            //: one cycle wide, like the reduction's valids
+            weight_mul_valid <= 1'b0;
             case (state)
                 S_IDLE: begin
                     if (start) begin
@@ -477,14 +499,29 @@ module ot_a3_vector_index_score #(
                     if (decoded_w[33:32] != 0) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if (weighted_product[33:32] != 0) begin
-                        error_code <= ERR_PRODUCT_RANGE;
-                        state <= S_DONE;
                     end else begin
-                        //: the product is latched; its narrowing, its range check and
-                        //: the saturation count read it from the register next cycle
-                        weight_product_q <= weighted_product[31:0];
-                        state <= S_WEIGHT_FINAL;
+                        weight_mul_a <= relu_value;
+                        weight_mul_b <= decoded_w[31:0];
+                        weight_mul_valid <= 1'b1;
+                        state <= S_WEIGHT_MUL;
+                    end
+                end
+
+                //: The operand refusal above has already passed, so the only error
+                //: the multiplier can raise here is overflow -- which is exactly
+                //: what ``weighted_product[33:32] != 0`` reported.
+                S_WEIGHT_MUL: begin
+                    if (weight_mul_done) begin
+                        if (weight_mul_err != 2'd0) begin
+                            error_code <= ERR_PRODUCT_RANGE;
+                            state <= S_DONE;
+                        end else begin
+                            //: the product is latched; its narrowing, its range
+                            //: check and the saturation count read it from the
+                            //: register next cycle
+                            weight_product_q <= weight_mul_y;
+                            state <= S_WEIGHT_FINAL;
+                        end
                     end
                 end
 

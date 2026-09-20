@@ -31,6 +31,13 @@ TOOLS_ROOT = Path(
 
 RTL_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",
+    #: The correctly-rounded transcendental and the divider are sequential now:
+    #: they build their wide products and quotients a few bits per clock in these
+    #: three primitives, because combinational ones held the block at 17.5 MHz.
+    #: Both simulators refuse a missing module, so the list has to carry them.
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
     "rtl/abi3/ot_a3_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_instruction_decoder.sv",
@@ -45,6 +52,13 @@ RTL_SOURCES = (
 )
 SYNTH_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",
+    #: The correctly-rounded transcendental and the divider are sequential now:
+    #: they build their wide products and quotients a few bits per clock in these
+    #: three primitives, because combinational ones held the block at 17.5 MHz.
+    #: Both simulators refuse a missing module, so the list has to carry them.
+    "rtl/lib/ot_wide_div_seq.sv",
+    "rtl/lib/ot_wide_div_small_seq.sv",
+    "rtl/lib/ot_wide_mul_seq.sv",
     "rtl/abi3/ot_a3_fp32_div_rne.sv",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
     "rtl/abi3/ot_a3_qwen_gqa.sv",

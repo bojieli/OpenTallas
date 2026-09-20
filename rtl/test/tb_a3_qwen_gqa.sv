@@ -372,13 +372,23 @@ module tb_a3_qwen_gqa;
             @(negedge clk);
             start = 1'b0;
             timeout_cycles = 0;
-            while (!done && timeout_cycles < 1500000) begin
+            //: 1,500,000 was the budget while the exponential and the reciprocal were
+            //: COMBINATIONAL -- one cycle each, whatever the delay. Making them
+            //: correctly-rounded and sequential (2,880 and 3,212 cycles) to lift the
+            //: block off 17.5 MHz multiplied the softmax's cost by the context length,
+            //: and every case in this bench then died on this line rather than on a
+            //: comparison. The budget is the simulator's patience, not a latency
+            //: claim, so it is generous; the cycle count each case actually took is
+            //: printed below, which is where a latency regression would show.
+            while (!done && timeout_cycles < 64000000) begin
                 @(posedge clk);
                 #1;
                 timeout_cycles = timeout_cycles + 1;
             end
             if (!done)
-                $fatal(1, "case %0d timed out", case_index);
+                $fatal(1, "case %0d timed out after %0d cycles", case_index,
+                       timeout_cycles);
+            $display("case %0d retired in %0d cycles", case_index, timeout_cycles);
 
             check_equal("failed", failed, case_mem[base + 18]);
             check_equal("trap", trap_class, case_mem[base + 19]);

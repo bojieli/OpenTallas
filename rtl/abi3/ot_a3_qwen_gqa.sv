@@ -301,6 +301,22 @@ module ot_a3_qwen_gqa #(
     // The causal mask's own registered stage, reached only from S_KEY_RSP and
     // only for a masked position.
     localparam [5:0] S_MASK = 6'd17;
+    //: The score chain's TAIL, in its own stage. S_KEY_RSP's last-dimension branch
+    //: used to compute six binary32 operations in one cycle -- the product, the
+    //: accumulate, the narrowing, the softmax scale, its narrowing and the
+    //: comparison that updates the row maximum -- and the routed evidence is what
+    //: that cost: 69.7 MHz at a 3.4 ns target over 496,266 cells, the slowest
+    //: measured module the design limiter does not cover, with a worst path from
+    //: dimension_q[0] to maximum_code_q[17] through 594 cells of adder tree and
+    //: comparator.
+    //:
+    //: Only the LAST of HEAD_WIDTH dimensions runs that tail, so giving it a state
+    //: costs ONE cycle per score rather than one per dimension -- under a percent at
+    //: HEAD_WIDTH of 128 -- and takes five of the six operations off the dot cycle.
+    //: The mask addition beside it is already in its own stage for exactly this
+    //: reason, and says so: "in its own stage so that it is not on the score chain
+    //: above".
+    localparam [5:0] S_SCORE = 6'd18;
 
     reg [5:0] state;
     reg [31:0] query_row_base_q;
@@ -424,8 +440,11 @@ module ot_a3_qwen_gqa #(
     wire [33:0] score_sum = ot_fp32_rne_pkg::fp32_add_rne(
         dot_accumulator_q, score_product[31:0]
     );
+    //: The score chain's tail reads the REGISTERED dot, not the sum being formed:
+    //: S_SCORE runs a cycle after S_KEY_RSP has written it, which is what takes the
+    //: narrowing, the scale and the comparison off the product-and-add cycle.
     wire [18:0] score_bf16 = ot_fp32_rne_pkg::fp32_to_bf16_rne(
-        score_sum[31:0]
+        dot_accumulator_q
     );
     wire [33:0] scaled_score = ot_fp32_rne_pkg::fp32_mul_rne(
         {score_bf16[15:0], 16'd0}, SCALE_CODE
@@ -686,39 +705,51 @@ module ot_a3_qwen_gqa #(
                                 ? ERR_INPUT : ERR_NUMERIC;
                             state <= S_FINISH;
                         end else if (dimension_q == HEAD_WIDTH-1) begin
-                            if (score_bf16[18:17] != 0 ||
-                                scaled_score[33:32] != 0 ||
-                                scaled_score_bf16[18:17] != 0) begin
-                                fail_numeric();
-                            end else begin
-                                score_buffer[context_index_q] <=
-                                    scaled_score_bf16[15:0];
-                                saturation_count <= saturation_count +
-                                    score_bf16[16] + scaled_score_bf16[16];
-                                // The row maximum is over visible positions.
-                                // Position 0 is visible for every row, so the
-                                // initialising case needs no mask term.
-                                if (!context_masked &&
-                                    ((context_index_q == 0) ||
-                                     fp32_greater(
-                                        {scaled_score_bf16[15:0], 16'd0},
-                                        maximum_code_q
-                                     )))
-                                    maximum_code_q <= {
-                                        scaled_score_bf16[15:0], 16'd0
-                                    };
-                                dimension_q <= 0;
-                                dot_accumulator_q <= 0;
-                                if (context_masked)
-                                    state <= S_MASK;
-                                else
-                                    advance_context();
-                            end
+                            //: The dot is complete. Register it and let S_SCORE
+                            //: narrow, scale, store and compare, so none of that
+                            //: shares this cycle with the product and the add.
+                            dot_accumulator_q <= score_sum[31:0];
+                            state <= S_SCORE;
                         end else begin
                             dot_accumulator_q <= score_sum[31:0];
                             dimension_q <= dimension_q + 1'b1;
                             state <= S_KEY_REQ;
                         end
+                    end
+                end
+
+                //: The score chain's tail, on the REGISTERED dot: narrow, apply the
+                //: softmax scale, narrow again, store and update the row maximum.
+                //: Every check and every write is the one the last-dimension branch
+                //: performed; only the cycle they happen in has moved.
+                S_SCORE: begin
+                    if (score_bf16[18:17] != 0 ||
+                        scaled_score[33:32] != 0 ||
+                        scaled_score_bf16[18:17] != 0) begin
+                        fail_numeric();
+                    end else begin
+                        score_buffer[context_index_q] <=
+                            scaled_score_bf16[15:0];
+                        saturation_count <= saturation_count +
+                            score_bf16[16] + scaled_score_bf16[16];
+                        // The row maximum is over visible positions.
+                        // Position 0 is visible for every row, so the
+                        // initialising case needs no mask term.
+                        if (!context_masked &&
+                            ((context_index_q == 0) ||
+                             fp32_greater(
+                                {scaled_score_bf16[15:0], 16'd0},
+                                maximum_code_q
+                             )))
+                            maximum_code_q <= {
+                                scaled_score_bf16[15:0], 16'd0
+                            };
+                        dimension_q <= 0;
+                        dot_accumulator_q <= 0;
+                        if (context_masked)
+                            state <= S_MASK;
+                        else
+                            advance_context();
                     end
                 end
 
