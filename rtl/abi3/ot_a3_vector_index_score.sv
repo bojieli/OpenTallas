@@ -88,6 +88,8 @@ module ot_a3_vector_index_score #(
     //: issues and two cycles of slack, and a drain for the pipe's tail
     localparam [4:0] S_DOT_RUN     = 5'd17;
     localparam [4:0] S_DOT_DRAIN   = 5'd18;
+    //: the weight product's narrowing and its saturation count, off the multiply's cycle
+    localparam [4:0] S_WEIGHT_FINAL = 5'd19;
 
     reg [4:0] state;
     reg [1:0] scan_kind;
@@ -106,6 +108,7 @@ module ot_a3_vector_index_score #(
     //: one MAC keep it busy while every head still accumulates d = 0 .. D-1 in order.
     reg [31:0] head_acc [0:HEADS-1];
     reg [2:0]  dot_phase;
+    reg [31:0] weight_product_q;
     reg [31:0] relu_value;
     reg [31:0] reduce_left;
     reg [31:0] reduce_right;
@@ -199,6 +202,15 @@ module ot_a3_vector_index_score #(
         ot_fp32_rne_pkg::fp32_mul_rne(relu_value, decoded_w[31:0]);
     wire [18:0] weighted_narrowed =
         ot_fp32_rne_pkg::fp32_to_bf16_rne(weighted_product[31:0]);
+    //: THE WEIGHT STAGE'S NARROWING, OFF THE MULTIPLY'S CYCLE.  With the dot loop
+    //: interleaved the critical path moved here: w_rd_data[7] to
+    //: pending_saturation_count[24], 134 cell arcs with 60 HAxp5, holding the weight
+    //: decode, fp32_mul_rne, this narrowing AND a 32-bit counter increment in one
+    //: cycle.  Reading the REGISTERED product instead ends the multiply's cone at a
+    //: flop, and costs one cycle per head per candidate.  Same value: the same
+    //: fp32_to_bf16_rne of the same binary32 product, one cycle later.
+    wire [18:0] weight_q_narrowed =
+        ot_fp32_rne_pkg::fp32_to_bf16_rne(weight_product_q);
     //: THE BALANCED REDUCTION, PIPELINED.  The four head contributions reduce as a
     //: tree -- two pair adds, then one -- and each was a combinational
     //: ot_fp32_rne_pkg::fp32_add_rne between registers.  Routed, the final one was the
@@ -266,6 +278,7 @@ module ot_a3_vector_index_score #(
             reduce_right <= 0;
             add_pair_valid <= 1'b0;
             add_total_valid <= 1'b0;
+            weight_product_q <= 32'b0;
             dot_phase <= 3'd0;
             mac_valid_in <= 1'b0;
             mac_head <= 2'd0;
@@ -464,16 +477,27 @@ module ot_a3_vector_index_score #(
                     if (decoded_w[33:32] != 0) begin
                         error_code <= ERR_OPERAND_NONFINITE;
                         state <= S_DONE;
-                    end else if ((weighted_product[33:32] != 0) ||
-                                 (weighted_narrowed[18:17] != 0)) begin
+                    end else if (weighted_product[33:32] != 0) begin
                         error_code <= ERR_PRODUCT_RANGE;
                         state <= S_DONE;
                     end else begin
-                        if (weighted_narrowed[16])
+                        //: the product is latched; its narrowing, its range check and
+                        //: the saturation count read it from the register next cycle
+                        weight_product_q <= weighted_product[31:0];
+                        state <= S_WEIGHT_FINAL;
+                    end
+                end
+
+                S_WEIGHT_FINAL: begin
+                    if (weight_q_narrowed[18:17] != 0) begin
+                        error_code <= ERR_PRODUCT_RANGE;
+                        state <= S_DONE;
+                    end else begin
+                        if (weight_q_narrowed[16])
                             pending_saturation_count <=
                                 pending_saturation_count + 1;
                         contributions[head] <=
-                            {weighted_narrowed[15:0], 16'b0};
+                            {weight_q_narrowed[15:0], 16'b0};
                         accumulator <= 0;
                         depth_index <= 0;
                         if (head == LAST_HEAD) begin
