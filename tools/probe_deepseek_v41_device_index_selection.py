@@ -87,9 +87,33 @@ def wrapper(ctx, sub, operator):
         view = ctx.output_view(operator, 0)
         raw = np.asarray(ctx.read(view)).astype(np.int64)
         raw = np.where(raw >= (1 << 31), raw - (1 << 32), raw)
+        #: THE QUERY ROW THIS ISSUE COMPUTED, by the same rule the engine uses:
+        #: the iteration of the unique output loop term whose stride equals the
+        #: output's row stride. Without it a consumer cannot place a streamed
+        #: issue, and the comparison tool was reading the DEDUPED first issue of
+        #: each descriptor -- row zero, which legitimately selects nothing -- and
+        #: reporting "device selected NOTHING" for a device that selects correctly
+        #: on the other nine rows. See
+        #: results/abi3/deepseek_v41_select_row_is_on_its_output_view.json.
+        query_row = None
+        try:
+            if len(view.strides) >= 2:
+                row_stride = int(view.strides[-2])
+                walking = [
+                    iteration
+                    for stride, iteration in getattr(view, "loop_terms", ())
+                    if stride == row_stride
+                ]
+                if len(walking) == 1:
+                    query_row = int(walking[0])
+        except Exception:
+            query_row = None
         rows_by_issue.setdefault(descriptor_id, []).append(
             {"issue": issues[descriptor_id],
              "dims": [int(x) for x in view.dims],
+             "query_row": query_row,
+             "element_offset": int(view.element_offset),
+             "strides": [int(x) for x in view.strides],
              "rows": raw.reshape(-1, raw.shape[-1]).tolist()
              if raw.ndim > 1 else raw.reshape(1, -1).tolist()}
         )

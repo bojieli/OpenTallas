@@ -83,11 +83,58 @@ def main() -> int:
     args = parser.parse_args()
 
     device_side = json.loads(args.device_selections.read_text())
-    device_selections = [
-        np.asarray(s["rows"], dtype=np.int64) for s in device_side["selections"]
-    ]
+
+    #: ASSEMBLE A STREAMED SELECT FROM ITS ISSUES.  ``selections`` holds the FIRST
+    #: issue of each descriptor, which for a streamed select is query row zero --
+    #: and row zero legitimately selects nothing, because a compressed group has to
+    #: have completed before a position can attend to it.  Comparing that one row
+    #: against the oracle's ten reported "9 query rows missing, device selected
+    #: NOTHING" for a device that selects correctly on the other nine.
+    #:
+    #: ``per_issue_rows`` holds every issue with the query row it computed, derived
+    #: from its output view (results/abi3/
+    #: deepseek_v41_select_row_is_on_its_output_view.json). Where those rows are
+    #: present this stacks them into the [span, slots] array the oracle emits. The
+    #: same row is issued once per node and every copy agrees, which is asserted
+    #: rather than assumed.
+    per_issue = device_side.get("per_issue_rows") or {}
+    assembled: dict[int, np.ndarray] = {}
+    for descriptor, issues in per_issue.items():
+        by_row: dict[int, list[list[int]]] = {}
+        for issue in issues:
+            row_index = issue.get("query_row")
+            if row_index is None or len(issue["rows"]) != 1:
+                by_row = {}
+                break
+            existing = by_row.setdefault(int(row_index), issue["rows"][0])
+            if existing != issue["rows"][0]:
+                raise SystemExit(
+                    f"descriptor {descriptor} issued query row {row_index} twice "
+                    "with different selections; the per-node copies must agree "
+                    "for this assembly to mean anything"
+                )
+        if by_row and sorted(by_row) == list(range(len(by_row))):
+            assembled[int(descriptor)] = np.asarray(
+                [by_row[i] for i in range(len(by_row))], dtype=np.int64
+            )
+
+    device_selections = []
+    for entry in device_side["selections"]:
+        descriptor = int(entry.get("operator", -1))
+        if descriptor in assembled:
+            device_selections.append(assembled[descriptor])
+        else:
+            device_selections.append(np.asarray(entry["rows"], dtype=np.int64))
     if not device_selections:
         raise SystemExit("the device selection file holds nothing")
+    if assembled:
+        print(
+            "assembled from per-issue rows: "
+            + ", ".join(
+                f"descriptor {d} -> {tuple(a.shape)}"
+                for d, a in sorted(assembled.items())
+            )
+        )
 
     from compiler.frontend.deepseek_v41_tokenizer import (  # noqa: PLC0415
         load_verified_deepseek_v41_tokenizer,
