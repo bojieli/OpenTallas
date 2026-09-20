@@ -116,17 +116,38 @@
   ],
   "producer": {
     "git": {
-      "commit": "e5a8a4a3382fdfc56f3bb5860aacf27b1adb80d3"
+      "commit": "f547e1ad063659daf91c8bd26fd7edd7a226f492"
     },
     "tool": "tools/audit_engine_array_iso_area.py"
   },
   "projection_from_measured_records": {
+    "density_gap": {
+      "abi3_lane_over_bare_mac": 7.736457302611947,
+      "abi3_lane_over_proto_tile_per_lane": 13.994725241244042,
+      "abi3_lane_um2": 3940.58,
+      "abi3_quad_um2_per_lane": 3674.6125,
+      "bare_mac_um2": 509.352,
+      "proto_tile_um2_per_lane": 262.57125,
+      "what_it_means": "an ABI 3.0 lane is this many times the silicon of the bare MAC it contains, so buying width in the ABI 3.0 family costs that multiple of the arithmetic. It is the reason width alone does not reach the A100 here, and the proto tile's number is what sharing the operand tree and the accumulators is worth."
+    },
     "inputs": {
+      "abi3_eight_lane_quad": {
+        "area_um2": 29396.9,
+        "cells": 245217,
+        "fmax_hz": 512771000.0,
+        "record": "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0.json"
+      },
+      "abi3_one_lane": {
+        "area_um2": 3940.58,
+        "cells": 33471,
+        "fmax_hz": 504733000.0,
+        "record": "results/physical_abi3/asap7/a3_lane_pipelined/pnr_2p1ns_fixed.json"
+      },
       "compute_unit": {
-        "area_um2": 6021.03,
-        "cells": 50258,
-        "fmax_hz": 1090620000.0,
-        "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_chain_banks2_slew15_0p95.json"
+        "area_um2": 6023.17,
+        "cells": 50656,
+        "fmax_hz": 1113670000.0,
+        "record": "results/physical_abi3/asap7/compute_unit/pnr_halfdepth_banks2_0p95.json"
       },
       "one_lane": {
         "area_um2": 509.352,
@@ -156,22 +177,42 @@
       {
         "area_um2": 35967.584,
         "basis": "ot_compute_unit's routed closed frequency, which is what a 16-lane tile with its operand delivery has been measured at",
-        "bf16_ops_s": 34899840000.0,
-        "clock_hz": 1090620000.0,
+        "bf16_ops_s": 35637440000.0,
+        "clock_hz": 1113670000.0,
         "macs_per_cycle": 16,
-        "ops_s_per_mm2": 970313713592.7728,
-        "ratio_against_a100_logic_area": 1.5413060142839043,
+        "ops_s_per_mm2": 990821068215.2017,
+        "ratio_against_a100_logic_area": 1.5738811583572239,
         "step": "and run it at the MAC datapath's own routed clock"
       },
       {
         "area_um2": 48571.004,
         "basis": "ot_a3_tile64 is 64 lanes and has NEVER been routed, so its area is projected from ot_mac_tile's measured area per lane -- the one estimated quantity in this table, and it is an estimate of AREA which makes the ratio optimistic",
-        "bf16_ops_s": 139599360000.0,
-        "clock_hz": 1090620000.0,
+        "bf16_ops_s": 142549760000.0,
+        "clock_hz": 1113670000.0,
         "macs_per_cycle": 64,
-        "ops_s_per_mm2": 2874129593862.2144,
-        "ratio_against_a100_logic_area": 4.565444316404209,
+        "ops_s_per_mm2": 2934873654248.531,
+        "ratio_against_a100_logic_area": 4.661933920017858,
         "step": "64 lanes at that clock, tile area scaled per lane"
+      },
+      {
+        "area_um2": 61163.344000000005,
+        "basis": "ot_a3_lq8: EVERY number measured, an ABI 3.0 module rather than a proto, routed and closed. This is what the datapath would get by instantiating a part that already exists",
+        "bf16_ops_s": 8204336000.0,
+        "clock_hz": 512771000.0,
+        "macs_per_cycle": 8,
+        "ops_s_per_mm2": 134138120374.84412,
+        "ratio_against_a100_logic_area": 0.2130732450569639,
+        "step": "the ABI 3.0 eight-lane quad, at its own routed closed clock"
+      },
+      {
+        "area_um2": 266941.64400000003,
+        "basis": "ot_a3_tile64's own composition -- eight ot_a3_lq8 -- with the quad's measured area and clock; only the assumption that eight quads cost eight quads is unmeasured",
+        "bf16_ops_s": 65634688000.0,
+        "clock_hz": 512771000.0,
+        "macs_per_cycle": 64,
+        "ops_s_per_mm2": 245876540716.89163,
+        "ratio_against_a100_logic_area": 0.3905654281387547,
+        "step": "sixty-four ABI 3.0 lanes as eight of those quads"
       }
     ]
   },

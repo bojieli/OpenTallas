@@ -67,7 +67,14 @@ def _comparator() -> dict[str, Any]:
 
 
 def _routed(top: str, closed_only: bool = True) -> dict[str, Any] | None:
-    """The best routed record for a top by area, smallest first."""
+    """The DENSITY-optimal routed record for a top: the one maximising fmax/area.
+
+    Smallest area is the wrong criterion for an iso-area statement and it silently
+    chose the wrong operating point: ot_a3_lq8's smallest closed record is a 16 ns
+    route at 140.3 MHz, while a 2 ns route of the same module closes at 512.8 MHz for
+    2% more area. Throughput per unit silicon is what the comparison is about, so
+    that is what selects.
+    """
     found: list[dict[str, Any]] = []
     for path in sorted(RECORDS.rglob("*.json")):
         try:
@@ -89,7 +96,7 @@ def _routed(top: str, closed_only: bool = True) -> dict[str, Any] | None:
         })
     if not found:
         return None
-    return min(found, key=lambda r: r["area_um2"])
+    return max(found, key=lambda r: r["fmax_hz"] / r["area_um2"])
 
 
 def _projection(
@@ -99,6 +106,10 @@ def _projection(
     lane = _routed("ot_mac_bf16_fp32_pipe")
     tile = _routed("ot_mac_tile")
     unit = _routed("ot_compute_unit")
+    #: The ABI 3.0 lane family, which is what the datapath would actually
+    #: instantiate: one lane, and the eight-lane quad ot_a3_tile64 is built from.
+    abi3_lane = _routed("ot_a3_lane_pipelined")
+    abi3_quad = _routed("ot_a3_lq8")
     if not (lane and tile and unit):
         return {"unavailable": "a routed record for the one-lane MAC, the 16-lane "
                                "tile or the compute unit is missing"}
@@ -120,11 +131,38 @@ def _projection(
         }
 
     per_lane = tile["area_um2"] / 16.0
+    #: THE DENSITY GAP, measured. The proto tile shares its operand broadcast tree
+    #: and accumulators across sixteen lanes; the ABI 3.0 lane carries its own
+    #: admission, block-scale handling and accumulator slots. That difference is
+    #: what caps the ratio, and it is not an estimate.
+    density = {
+        "bare_mac_um2": lane["area_um2"],
+        "proto_tile_um2_per_lane": per_lane,
+        "abi3_lane_um2": abi3_lane["area_um2"] if abi3_lane else None,
+        "abi3_quad_um2_per_lane": (
+            abi3_quad["area_um2"] / 8.0 if abi3_quad else None
+        ),
+        "abi3_lane_over_proto_tile_per_lane": (
+            (abi3_quad["area_um2"] / 8.0) / per_lane if abi3_quad else None
+        ),
+        "abi3_lane_over_bare_mac": (
+            abi3_lane["area_um2"] / lane["area_um2"] if abi3_lane else None
+        ),
+        "what_it_means": (
+            "an ABI 3.0 lane is this many times the silicon of the bare MAC it "
+            "contains, so buying width in the ABI 3.0 family costs that multiple of "
+            "the arithmetic. It is the reason width alone does not reach the A100 "
+            "here, and the proto tile's number is what sharing the operand tree and "
+            "the accumulators is worth."
+        ),
+    }
     return {
         "inputs": {
             "one_lane": lane, "sixteen_lane_tile": tile, "compute_unit": unit,
+            "abi3_one_lane": abi3_lane, "abi3_eight_lane_quad": abi3_quad,
             "tile_area_per_lane_um2": per_lane,
         },
+        "density_gap": density,
         "steps": [
             step("swap the single MAC for the 16-lane ot_mac_tile, same clock", 16,
                  tile["area_um2"], clock_hz,
@@ -139,7 +177,18 @@ def _projection(
                  "is projected from ot_mac_tile's measured area per lane -- the one "
                  "estimated quantity in this table, and it is an estimate of AREA "
                  "which makes the ratio optimistic"),
-        ],
+        ] + ([
+            step("the ABI 3.0 eight-lane quad, at its own routed closed clock", 8,
+                 abi3_quad["area_um2"], abi3_quad["fmax_hz"],
+                 "ot_a3_lq8: EVERY number measured, an ABI 3.0 module rather than a "
+                 "proto, routed and closed. This is what the datapath would get by "
+                 "instantiating a part that already exists"),
+            step("sixty-four ABI 3.0 lanes as eight of those quads", 64,
+                 abi3_quad["area_um2"] * 8, abi3_quad["fmax_hz"],
+                 "ot_a3_tile64's own composition -- eight ot_a3_lq8 -- with the "
+                 "quad's measured area and clock; only the assumption that eight "
+                 "quads cost eight quads is unmeasured"),
+        ] if abi3_quad else []),
     }
 
 
