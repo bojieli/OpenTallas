@@ -1,0 +1,34 @@
+{
+  "answer": "NEITHER, and the reason is an ABI limit rather than an oversight. A18 encodes ONE request-dependent extent per view. The index score's plane needs TWO -- its rows are span_tokens and its columns are context_groups_ratio2 -- and BOTH are checked by an engine: ROUTE.INDEX_TOPK derives the query row from the row axis, and VECTOR.INDEX_SCORE requires its output to be exactly (batch, span, candidates) with candidates taken from the KEY view's own row count. So the candidate axis cannot be left at its static maximum to free the row axis, and the row axis cannot be left static without losing the query position.",
+  "not_a_claim": [
+    "no fix is implemented here",
+    "this does not say the frontend change is large in lines -- it says it moves the IR shape, and every digest bound to it",
+    "whether closing this makes the three cells emit the oracle's tokens is still unestablished; it removes the only measured structural fault in layer 2"
+  ],
+  "producer": {
+    "git": {
+      "commit": "ab484426da54c1460aaa16b410454f28971ec301"
+    },
+    "tool": "read of the lowering, the plan and the two engines"
+  },
+  "question": "the streamed index select computes query position 0 on every issue because aux_id_3 names POSITION_START and A27's joined-window fallback operand is absent. Which of the two fixes is the small one?",
+  "schema": "opentallas.result.v41_select_position_is_an_a18_limit.v1",
+  "the_decision_is_deliberate_and_documented": "compiler/backends/hbm_sram/lower.py, at the extent_axis choice: \"A18 names one axis. When the operand has a context axis that is the one: its kernel runs one token per dispatch, so the token axis is a static one with nothing for the amendment to say, and the candidate axis is the only extent the request moves.\" That premise is true for every operand except one whose CORRECTNESS depends on which token it is holding, and the causal horizon of a compressed selection is exactly that.",
+  "the_options_and_what_each_costs": [
+    {
+      "option": "supply the joined causal window as the select's input_view_1",
+      "what_it_costs": "the engine JOINS the window it is given (A19), and this graph already joins it in a separate CONCAT after the select -- selection_index_topk_indices_window_then_compressed_v1. Supplying it means removing that concat, which is a FRONTEND shape change: the IR, every V4.1 deployment digest and the records bound to them move",
+      "why_it_works": "A27's own mechanism, already implemented by the engine: the window's final valid absolute index carries the query position into each one-row slice"
+    },
+    {
+      "option": "a second request-dependent extent axis on a view",
+      "what_it_costs": "a wire-format amendment. A18's four fields become eight, or one field gains a second axis; every view record and every backend that writes one changes",
+      "why_it_works": "the plane stops being streamed, the select sees all ten query rows in one issue, and base + row is correct -- which is exactly why layer 20, whose plane is not streamed, works today with the same aux fields and the same absent window"
+    },
+    {
+      "option": "an aux_id_3 that advances with the streamed row",
+      "why_it_does_NOT_work": "aux_id_3 names a runtime SYMBOL and the streaming is a LOOP. No symbol varies per issue: POSITION_START is 0 for the whole prefill, SPAN_LAST_INDEX is 9 for every issue, and POSITION_END makes base + span exceed the context so the operator refuses. The engine's default, context - span, is 9 -- correct for the last row and wrong for the other nine"
+    }
+  ],
+  "what_this_settles": "the three V4.1 cells are not blocked on a numeric difference, a missing engine or a wrong constant. They are blocked on a view record that cannot say what the operator needs to know, and the repository already has the amendment that anticipated it (A27) and the operand slot it needs (in1). What is missing is the producer that fills it."
+}
