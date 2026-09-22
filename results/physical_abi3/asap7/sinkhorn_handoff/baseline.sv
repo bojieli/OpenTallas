@@ -171,19 +171,7 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                 input_invalid = 1'b1;
     end
 
-    // Prepare the following numerator while the divider owns the current one.
-    // Only a successful response may hand off another division in this group.
-    // Advance the lookahead on a handoff too: a zero numerator can
-    // complete in one cycle, so waiting for the new index would be too late.
-    wire [1:0] next_element = element_index + (div_handoff ? 2'd2 : 2'd1);
-    wire [3:0] next_selected = row_phase ? {group_index,next_element} :
-                                                        {next_element,group_index};
-    reg [31:0] next_numerator;
-    always @(posedge clk) next_numerator <= matrix[next_selected];
-    wire div_handoff = state == S_DIV_WAIT && div_out_valid &&
-                      div_result_error == ERR_NONE && element_index != 2'd3;
-    wire div_in_valid = state == S_DIV_ISSUE || div_handoff;
-    wire [31:0] div_numerator = state == S_DIV_ISSUE ? matrix[selected_index] : next_numerator;
+    wire div_in_valid = state == S_DIV_ISSUE;
     wire div_in_ready;
     wire div_out_valid;
     wire [31:0] div_result_code;
@@ -196,7 +184,7 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                 .rst_n(rst_n),
                 .in_valid(div_in_valid),
                 .in_ready(div_in_ready),
-                .numerator_code(div_numerator),
+                .numerator_code(matrix[selected_index]),
                 .denominator_code(denominator),
                 .out_valid(div_out_valid),
                 .out_ready(state == S_DIV_WAIT),
@@ -209,7 +197,7 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                 .rst_n(rst_n),
                 .in_valid(div_in_valid),
                 .in_ready(div_in_ready),
-                .numerator_code(div_numerator),
+                .numerator_code(matrix[selected_index]),
                 .denominator_code(denominator),
                 .out_valid(div_out_valid),
                 .out_ready(state == S_DIV_WAIT),
@@ -349,9 +337,7 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                             matrix[selected_index] <= div_result_code;
                             if (element_index != 3) begin
                                 element_index <= element_index + 1'b1;
-                                // Both divider variants permit replacement on
-                                // the output handshake; retain fallback if busy.
-                                state <= div_in_ready ? S_DIV_WAIT : S_DIV_ISSUE;
+                                state <= S_DIV_ISSUE;
                             end else if (group_index != 3) begin
                                 group_index <= group_index + 1'b1;
                                 element_index <= 0;

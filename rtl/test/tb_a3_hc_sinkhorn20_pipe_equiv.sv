@@ -181,6 +181,14 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
         m[32*15 +: 32] = TINY;
         check(m, "maxfinite beside smallest normal");
 
+        // Positive subnormal inputs underflow during normalization. Later
+        // phases exercise consecutive one-cycle zero-numerator divisions.
+        m = uniform(ONE);
+        for (i = 0; i < 3; i = i + 1)
+            for (j = 0; j < 4; j = j + 1)
+                m[32*(4*i+j) +: 32] = 32'h0000_0001;
+        check(m, "underflow then zero handoffs");
+
         // -- the three malformed classes the loader refuses -----------------
         m = uniform(ONE); m[32*7 +: 32] = 32'h0000_0000;
         check(m, "a zero element refuses");

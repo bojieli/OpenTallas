@@ -1,5 +1,5 @@
 {
-  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Parameter/source manifests distinguish revisions. Combined current shared-generation service not covered.",
+  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions through shared generation with binary head. All fail routed setup; one-hot head route pending.",
   "records": [
     {
       "record": "pnr_replay_cts12_1ns.json",
@@ -463,6 +463,69 @@
         "rtl/abi3/ot_a3_runtime_weight_banks.sv",
         "rtl/abi3/ot_a3_operand_bank_owner.sv",
         "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv"
+      ]
+    },
+    {
+      "record": "pnr_shared_generation_cts12_1ns.json",
+      "sha256": "d1fc895327dc4e8f1d8ddd75e9f252586752915f1fb72107bf62b6256fcfa2d8",
+      "standard_cell_area_um2": 3873.75,
+      "setup_wns_ns": -0.0363761,
+      "setup_violations": 1,
+      "hold_wns_ns": 0.0254807,
+      "macro_count": 2,
+      "max_slew_violations": 0,
+      "max_fanout_violations": 3,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "3e31adce7226cbb2b79800ec4dde6f108495ed8a79039ba74cbb8d658d0a5437",
+          "size_bytes": 10903
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+          "size_bytes": 5327
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "155b582e6a6c2e213f32873a417f70b5beb123c61cf1dc719589d938c9afde07",
+          "size_bytes": 5906
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298",
+          "size_bytes": 3336
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
       ]
     }
   ]

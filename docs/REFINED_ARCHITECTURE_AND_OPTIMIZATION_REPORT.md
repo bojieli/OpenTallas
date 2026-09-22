@@ -1645,3 +1645,38 @@ lint is clean, and the 92-case integrated corpus retains 17,103 matching outputs
 A containing-service route is required before claiming clock improvement.
 Evidence: `results/physical_abi3/asap7/runtime_auxiliary_onehot/` and
 `results/rtl/a3_lq8_auxiliary_onehot.json`.
+
+
+## Sinkhorn removes intra-group divider issue gaps
+
+The Sinkhorn parent can consume a successful division and launch the next
+element on the same edge. A 32-bit lookahead numerator is prepared during the
+current division; lookahead advances on handoff as well, covering one-cycle
+zero-numerator results after underflow. Error responses cannot launch new work.
+The denominator and per-element arithmetic order stay unchanged. The default
+divider remains the reference implementation.
+
+Matched 36-matrix tests pass with both divider choices, including a new
+underflow-to-zero case. Reference-divider cycles fall 759,229 to 744,721 (1.91%);
+pipelined-divider cycles fall 1,129,736 to 1,115,228 (1.28%). Each saves 14,508
+cycles. The full divider/equivalence/protocol pytest suite passes four tests.
+With the pipelined divider selected, matched 2 ns synthesis area increases from
+2,538.280 to 2,595.169 um² (2.24%); setup WNS improves -2.4381 to -2.1475 ns,
+but both fail. This is a latency/area tradeoff pending matched parent routing,
+not an area saving or a validated parent clock improvement. The numerical
+association is unchanged. Evidence, baseline/candidate sources and logs:
+`results/physical_abi3/asap7/sinkhorn_handoff/`.
+
+Older cycle-ratio commentary in the Sinkhorn RTL header describes historical
+stimulus and older arithmetic implementations. The source-bound comparisons
+above supersede those values for the current 36-matrix corpus.
+
+
+The combined cursor/depth3/join/shared-generation service with the old binary
+head also finishes: 3,873.750 um² standard cells, setup WNS -0.036376 ns with
+one failing path, hold WNS +0.025481 ns and three fanout violations. Reported
+hold, slew, capacitance, DRC and antenna violations are zero. The worst setup
+path starts at weight-prefetch head and ends at operand credit. This is a
+failed 1 ns baseline, not closure. Retained artifact hashes were verified;
+`runtime_operand_service/historical_revision_comparison.json` records its
+source manifest. The one-hot auxiliary-head containing route remains live.
