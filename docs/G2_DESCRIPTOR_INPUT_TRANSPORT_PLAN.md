@@ -578,8 +578,11 @@ the same 1 ns target, fanout limit and library transition limit. Its outcome is
 pending; no relaxed-limit closure or extrapolated frequency is claimed.
 
 The broader two-simulator default-lane quick D1 campaign at adder depths 3/2/1
-is active after repairing its missing reference dependencies; it is not yet a
-completed regression result.
+now passes, including deterministic quick-profile manifest checks. Both simulators
+report 56,992 checks at L3 and L2 and 56,996 at L1, with matching markers and
+14 exercised fault cases per depth. All recorded source hashes were checked.
+Evidence: `results/rtl/abi3_lane_pass_first_default_regression.json` and its
+companion source-binding audit.
 
 The next bank/transport integration must separate the logical issue stream from
 the unique fetched weight stream. Replaying a pass across rows advances issue
@@ -592,3 +595,39 @@ banks only after the final row of each pass, and keep compute admission and the
 future operand cursor alive across pass boundaries. This is in addition to
 schedule-aware output validation and tail masking. Above-bank-size passes still
 need a defined fallback and accumulator budget; no unlimited retention is assumed.
+
+## Pass ownership and compact fetch scheduling
+
+`ot_a3_weight_pass_scheduler` now schedules each column pass across all rows
+using the existing two-bank tile scheduler. A separate issue-base register
+preserves contiguous logical operand identities while the fetch base advances
+only over fetched data. Eligible passes of at most 1,024 words are retained and
+replayed; larger passes stream every row. Tail eligibility is checked separately.
+Banks are released on the final row of each pass through the existing ownership
+contract. Compute must remain admitted across these scheduler subcommands.
+The wrapper does not equate scheduling completion with drained memory or compute;
+the parent must revoke banks and drain/cancel external traffic on cancellation.
+
+Thirteen focused tests pass through real bank ownership, FIFO and SRAM models,
+with reference data checked word by word; three existing scheduler regressions
+also pass. Tests cover reuse enabled/disabled, one row, one-word depths,
+1,023/1,024/1,026-word pass boundaries, partial tails, high address bases,
+command payload mutation after acceptance, independent stalls, reset/restart,
+zero/overflow refusal and cancellation in admission/reservation states.
+Strict Verilator 5.050 lint passes. Assertion-backed traffic results:
+
+| Rows / local columns / K | Streaming fills | Pass-reuse fills | Issue words |
+|---|---:|---:|---:|
+| 6 / 7 / 160 | 6,720 | 1,120 | 6,720 |
+| 3 / 3 / 1024, interleave 1 | 9,216 | 3,072 | 9,216 |
+| 3 / 7 / 341 | 7,161 | 2,387 | 7,161 |
+| 3 / 7 / 342 | 7,182 | 6,498 | 7,182 |
+
+The last row streams the two oversized passes but reuses the smaller tail.
+These are bank-service results, not loaded G2 latency or traffic claims.
+Evidence: `results/rtl/weight_pass_reuse.json`. A 1 ns ASAP7 TT CTS12 route is
+active for this wrapper plus inner scheduler, with fanout 16 and library slew
+limits. Area and timing remain unqualified until that run completes.
+The compact/fallback coordinate sequence, runtime-service integration, output
+order validation and tail masking remain required before enabling pass reuse
+in G2. No additional SRAM has been introduced.

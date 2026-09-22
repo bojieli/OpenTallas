@@ -1,0 +1,98 @@
+{
+  "status": "pass",
+  "scope": "Pass scheduler with real bank ownership and SRAM simulation; not loaded G2 integration",
+  "tests": 13,
+  "existing_scheduler_regression_tests": 3,
+  "cases": [
+    {
+      "interleave": 3,
+      "rows": 6,
+      "local_cols": 7,
+      "depth": 160,
+      "issue_words": 6720,
+      "streaming_fills": 6720,
+      "reuse_fills": 1120
+    },
+    {
+      "interleave": 1,
+      "rows": 3,
+      "local_cols": 3,
+      "depth": 1024,
+      "issue_words": 9216,
+      "streaming_fills": 9216,
+      "reuse_fills": 3072
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 342,
+      "issue_words": 7182,
+      "streaming_fills": 7182,
+      "reuse_fills": 6498
+    },
+    {
+      "interleave": 3,
+      "rows": 1,
+      "local_cols": 7,
+      "depth": 160,
+      "issue_words": 1120,
+      "streaming_fills": 1120,
+      "reuse_fills": 1120
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 2,
+      "depth": 1,
+      "issue_words": 6,
+      "streaming_fills": 6,
+      "reuse_fills": 2
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 341,
+      "issue_words": 7161,
+      "streaming_fills": 7161,
+      "reuse_fills": 2387
+    }
+  ],
+  "counter_basis": "Each listed fill and issue count is enforced by simulation assertions, with data identity checked at every consumed word; both reuse enabled and disabled pass",
+  "lint": "Verilator 5.050 --lint-only --Wall: pass",
+  "physical": {
+    "status": "running",
+    "record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_cts12_1ns.json"
+  },
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "c826c8b71a8091a45c45eaafa135bb4aea7f41261ddc6c17c2f7e97b173160e0"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "e4b73f02c5fb4db23bed1107521ada6229d3c3f39b19944b113eafba8fd09207"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+      "sha256": "a571d2b16ee20cb94733a17fc6778ce8157ceffdcdafe9b5a954978e556a906a"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+      "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086"
+    },
+    {
+      "path": "rtl/test/tb_a3_runtime_weight_banks.sv",
+      "sha256": "bca837fd6c317b28b5983d4a084d0c850c62058993b119c3787c5309fcd863ff"
+    },
+    {
+      "path": "tests/test_weight_pass_reuse.py",
+      "sha256": "0a82567de36d90ad9bc0d4dc3355ec4821d96af8f2e7e26cf61afdbbb08f15e4"
+    }
+  ]
+}

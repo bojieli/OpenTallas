@@ -86,8 +86,9 @@ At K160, a pass covering three local column groups requires 480 packed words,
 which fits one 512-word bank. Replaying a whole-K pass across rows can preserve
 each output's sequential K association without spilling partial accumulators.
 The weight cursor, future operand cursor and arithmetic lane now implement and
-test this alternative order behind `PASS_FIRST`; the integrated schedule and
-multirow bank reuse are not yet implemented. See
+test this alternative order behind `PASS_FIRST`. A separate pass scheduler now
+verifies multirow reuse through the SRAM bank service, reducing the K160 example
+from 6,720 to 1,120 fills. The complete integrated schedule is still unfinished. See
 [the implementation checkpoint](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md).
 
 It requires coordinated changes to issue order, weight and auxiliary cursors,
