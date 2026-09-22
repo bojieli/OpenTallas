@@ -344,3 +344,18 @@ The matched containing CTS12 1 ns route is active as
 route also remains live and is retained as a separate baseline. Neither this
 intermediate path report nor functional results prove a routed timing/area gain.
 Snapshots and the decision manifest are in `bf16_weight_transport/command_lane_offsets/`.
+
+## Invariant-bound routed result
+
+The matched containing transport route confirms an area and setup improvement:
+standard-cell area falls from 6,295.850 to 6,094.540 um² (3.20%), and setup slack
+improves from -0.107403 to -0.0237331 ns at 1 ns. Hold slack is +0.0296842 ns.
+There is no transaction-cycle change. Both historical source snapshots and all
+retained artifacts have verified hashes in
+`bf16_weight_transport/invariant_bound_routed_comparison.json`.
+
+The candidate is not physically accepted: 26 slew violations remain, although
+capacitance, fanout, DRC and antenna checks pass. Its worst routed path is now
+column-stride multiplication into gather address capture, matching the path
+targeted by the subsequent command-owned lane offsets. That later route remains
+active. This result establishes neither current-source closure nor a system clock.

@@ -2733,3 +2733,18 @@ weight bytes from 105,576 to 17,596 and full fault/recovery campaign cycles from
 387,169 to 110,614. This is a matched test with line retention enabled in both.
 The containing transport baseline route misses 1 ns by 107 ps despite clean
 physical rules; its invariant-bound replacement is still being routed.
+
+## Containing transport measured bound improvement
+
+Capturing the legal BF16 start bound once per operation reduces matched routed
+transport cell area by 3.20% (6,295.850 to 6,094.540 um²) and improves setup slack
+from -107.403 to -23.733 ps at 1 ns without extra cycles. It still fails acceptance
+with negative setup slack and 26 slew violations. The next lane-offset route is
+active; no integrated clock claim follows from this intermediate improvement.
+
+The refreshed current-source evidence audit inventories 219 ASAP7 routed records,
+136 raw routed passes and 58 passes with current-source/required-artifact hashes
+verified. SKY130HD has 16 records, eight raw passes and two verified current
+passes. These are record counts across configurations, not unique blocks or
+all-target coverage. Source drift, incomplete artifact retention and unclosed
+configurations remain explicit in `results/physical_abi3/current_evidence_audit.json`.

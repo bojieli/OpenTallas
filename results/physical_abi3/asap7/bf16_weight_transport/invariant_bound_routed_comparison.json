@@ -1,0 +1,98 @@
+{
+  "status": "measured_area_and_setup_improvement_not_closed",
+  "scope": "Matched historical containing transport configurations, ASAP7 TT, 1 ns, CTS12, max fanout 16; active RTL now captures command lane offsets",
+  "records": [
+    {
+      "record": "pnr_cts12_1ns.json",
+      "record_sha256": "f54d855a033c20845eb9efd99252d4c4ca9261a0fa66306574f0b9594bc21a9c",
+      "source_bindings": [
+        {
+          "recorded_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+          "verified_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+          "sha256": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971"
+        },
+        {
+          "recorded_source": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+          "verified_source": "results/physical_abi3/asap7/bf16_weight_gather/invariant_bound/baseline.sv",
+          "sha256": "ca3cd61d63a6208752065ccb2c8f2dd745a5aabfa8d8275e98d64eb1f7eba1c5"
+        },
+        {
+          "recorded_source": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+          "verified_source": "results/physical_abi3/asap7/bf16_weight_transport/command_lane_offsets/ot_a3_bf16_weight_transport.sv",
+          "sha256": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9"
+        }
+      ],
+      "retained_artifacts_verified": true,
+      "area_um2": 6295.85,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0265599,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 18.0,
+          "setup_wns_ns": -0.10740300000000001,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ],
+      "verdict": "not_met"
+    },
+    {
+      "record": "pnr_invariant_bound_cts12_1ns.json",
+      "record_sha256": "10d25418f955a6077e300bdb95a1dc7f5a2e0e618ad073017a0ce47384352311",
+      "source_bindings": [
+        {
+          "recorded_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+          "verified_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+          "sha256": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971"
+        },
+        {
+          "recorded_source": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+          "verified_source": "results/physical_abi3/asap7/bf16_weight_transport/command_lane_offsets/ot_a3_bf16_weight_gather.sv",
+          "sha256": "a62e73540b89b95653b103df8e7a6ef8b9e80d4ef84ef5790602ad030f7ef15c"
+        },
+        {
+          "recorded_source": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+          "verified_source": "results/physical_abi3/asap7/bf16_weight_transport/command_lane_offsets/ot_a3_bf16_weight_transport.sv",
+          "sha256": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9"
+        }
+      ],
+      "retained_artifacts_verified": true,
+      "area_um2": 6094.54,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0296842,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 26.0,
+          "met": false,
+          "physically_clean": false,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 52.0,
+          "setup_wns_ns": -0.0237331,
+          "signal_integrity_clean": false,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ],
+      "verdict": "not_met"
+    }
+  ],
+  "area_reduction_percent": 3.197503117132716,
+  "setup_slack_improvement_ns": 0.08366990000000002,
+  "cycle_change": 0,
+  "remaining": "Invariant-bound run has 26 slew violations and negative setup slack; current lane-offset route still active"
+}
