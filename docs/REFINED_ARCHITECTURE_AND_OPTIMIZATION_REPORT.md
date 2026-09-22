@@ -1862,3 +1862,22 @@ slack and one fanout violation. Divider handoff is therefore a cycle/area tradeo
 at this tested period, not an integrated frequency gain. Later reduction and
 activity revisions are not covered. All retained candidate artifact hashes
 match. Evidence: `results/physical_abi3/asap7/sinkhorn_handoff/routed_handoff_comparison.json`.
+
+
+## Separate clock-tree fanout repair from RTL timing optimization
+
+Final reports identify all fanout failures in four recent containing-block
+routes as clock-buffer outputs. Sinkhorn divider-handoff candidate buffers drive
+21 and 19 sinks against the limit of 16. The one-hot auxiliary service has
+clock buffers driving 19, 17 and 17 sinks. These are CTS implementation issues;
+changing functional RTL merely to address those counts would target the wrong
+cause. Operand-credit setup failures remain a separate RTL/placement problem.
+All four final-report hashes and reported violation counts were verified.
+
+A current Sinkhorn route is launched at 2 ns with CTS cluster size 8 instead
+of 12, retaining max fanout16 and the library transition limit0.32ns. It includes
+the divider handoff, direct sum handoff and right-adder request suppression.
+Earlier2.4ns parent setup margin motivates this experiment, but does not prove
+2ns closure or guarantee smaller clusters remove every clock violation. No
+result is claimed until final setup/hold and all physical checks pass. Evidence:
+`results/physical_abi3/asap7/clock_fanout_diagnosis.json`.
