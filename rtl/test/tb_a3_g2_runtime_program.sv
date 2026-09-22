@@ -34,6 +34,7 @@ module tb_a3_g2_runtime_program;
  reg [31:0] agen=0,aw=0;
  integer outputs=0,fills=0,cycles=0,phase=0;
  reg [ROWS*COLS-1:0] seen=0;
+ reg [ROWS*COLS-1:0] expected_seen=0;
  reg release_output=0;
  wire part_valid;
  wire part_ready=!STRESS_OUTPUT || (release_output && cycles%7<3);
@@ -171,7 +172,7 @@ module tb_a3_g2_runtime_program;
    if(auxvalid && auxiliary_response_ready)auxvalid<=0;
    if(runtime_transport_cancel)begin wactive<=0;auxvalid<=0;end
    if(part_valid && (!output_layout_valid || output_object!=OUTPUT_OBJECT || output_element_base!=0 ||
-      output_rows!=ROWS || output_logical_cols!=COLS || output_padded_cols!=COLS || output_fp32))
+      output_rows!=ROWS || output_logical_cols!=LOGICAL_COLS || output_padded_cols!=COLS || output_fp32))
     $fatal(1,"output descriptor layout not owned through drain");
    if(held && (!part_valid || {part_we,part_addr,part_data,part_acc}!=held_payload))$fatal(1,"stalled output changed");
    held<=part_valid && !sink_ready;held_payload<={part_we,part_addr,part_data,part_acc};
@@ -181,6 +182,7 @@ module tb_a3_g2_runtime_program;
    else if(part_valid && sink_ready)begin
     outputs<=outputs+$countones(part_we);
     for(integer i=0;i<8;i=i+1)if(part_we[i])begin
+     if((part_addr[32*i+:32]%(COLS/8))*8+i>=LOGICAL_COLS)$fatal(1,"padded lane escaped output mask");
      if(part_addr[32*i+:32]>=LOCAL_OUTPUTS)$fatal(1,"wrong output address");
      if(seen[8*part_addr[32*i+:32]+i])$fatal(1,"duplicate output");
      seen[8*part_addr[32*i+:32]+i]<=1;
@@ -213,6 +215,8 @@ module tb_a3_g2_runtime_program;
   tick();runtime_transport_ack=0;runtime_writes_drained=0;tick();
  end endtask
  initial begin
+  for(integer r=0;r<ROWS;r=r+1)
+   for(integer c=0;c<LOGICAL_COLS;c=c+1)expected_seen[r*COLS+c]=1;
   $readmemh("program.hex",program_image);$readmemh("descriptor.hex",descriptor_image);
   $readmemh("activation_bytes.hex",activation_bytes);$readmemh("activation.hex",activation_image);$readmemh("weight.hex",weight_image);$readmemh("expected.hex",expected);
   tick();rst_n=1;tick();
@@ -230,28 +234,28 @@ module tb_a3_g2_runtime_program;
   if(fills!=((WEIGHT_ROW_REUSE && ROWS>1 && WEIGHT_WORDS/ROWS<=1024)?WEIGHT_WORDS/ROWS:WEIGHT_WORDS))$fatal(1,"weight reuse traffic accounting");
   if(SRAM_AUX && (mem_fills!=EXPECTED_ACTIVATION_FILLS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
   // Lane-distinct BF16 results must match the functional Device.
-  if(seen!={ROWS*COLS{1'b1}} || outputs!=ROWS*COLS)$fatal(1,"missing first outputs");
+  if(seen!=expected_seen || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"missing first outputs");
   if(fills<DEPTH)$fatal(1,"multi-tile refill not exercised");
   phase=2;launch();wait(dut.operand_issue);@(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
-  if(seen!=0 || outputs!=ROWS*COLS)$fatal(1,"aborted operation wrote output");
+  if(seen!=0 || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"aborted operation wrote output");
   phase=1;launch();
   if(STRESS_OUTPUT)begin
    // Hold the last result until after compute and external acknowledgements.
    wait(seen[8*(LOCAL_OUTPUTS-2)]);@(negedge clk);tail_hold=1;
   end
   drain(0);
-  if(seen!={ROWS*COLS{1'b1}} || outputs!=2*ROWS*COLS)$fatal(1,"missing restart outputs");
+  if(seen!=expected_seen || outputs!=2*ROWS*LOGICAL_COLS)$fatal(1,"missing restart outputs");
   if(runtime_generation!=3)$fatal(1,"generation restart");
   // A bad transport identity must become an ENGINE trap through the same ABI.
   phase=3;launch();drain(8'hfe);
-  if(seen!=0 || outputs!=2*ROWS*COLS)$fatal(1,"transport fault wrote output");
+  if(seen!=0 || outputs!=2*ROWS*LOGICAL_COLS)$fatal(1,"transport fault wrote output");
   phase=1;launch();drain(0);
-  if(seen!={ROWS*COLS{1'b1}} || outputs!=3*ROWS*COLS || runtime_generation!=5)$fatal(1,"transport fault recovery");
+  if(seen!=expected_seen || outputs!=3*ROWS*LOGICAL_COLS || runtime_generation!=5)$fatal(1,"transport fault recovery");
   if(STRESS_OUTPUT)begin
    // Abort while accepted results are queued: these must stay stable and drain.
    release_output=0;phase=4;launch();wait(part_valid);@(negedge clk);
    runtime_abort=1;tick();runtime_abort=0;tail_hold=1;release_output=1;drain(8'hff);
-   if(seen[7:0]!=8'hff || outputs!=3*ROWS*COLS+8)$fatal(1,"queued abort result lost");
+   if(seen[7:0]!=8'hff || outputs!=3*ROWS*LOGICAL_COLS+8)$fatal(1,"queued abort result lost");
    if(output_stalls==0 || reservation_stalls==0)$fatal(1,"backpressure not exercised");
   end
   if(SRAM_AUX)begin
@@ -259,7 +263,7 @@ module tb_a3_g2_runtime_program;
    phase=5;launch();drain(8'hfe);
    if(seen!=0)$fatal(1,"auxiliary fault wrote output");
    phase=1;launch();drain(0);
-   if(seen!={ROWS*COLS{1'b1}})$fatal(1,"auxiliary fault recovery lost outputs");
+   if(seen!=expected_seen)$fatal(1,"auxiliary fault recovery lost outputs");
   end
   $display("first operation weight fill_words=%0d",first_weight_fills);
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);

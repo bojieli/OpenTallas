@@ -387,8 +387,9 @@ module ot_a3_g2_array_issue_adapter #(
                             array_scale_b <= (d_scale_object != ot_a3_pkg::A3_NO_ID);
                             // cfg_cols must be a multiple of LANES: the LQ8
                             // gives lane i block columns c * LANES + i, so a
-                            // short final group has no owner.  Round up and
-                            // let the caller ignore the trailing columns.
+                            // short final group needs padded execution. Runtime
+                            // output enqueue masks the trailing columns; legacy
+                            // consumers must apply the published logical shape.
                             array_cols    <= (d_dim0[15:0] + LANE_MASK) & ~LANE_MASK;
                             logical_cols  <= d_dim0[15:0];
                             desc_req      <= 1'b1;

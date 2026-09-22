@@ -102,7 +102,9 @@ C now owns BF16/FP32 output precision and exported object/layout metadata.
 Metadata remains valid through output drain. A cancellation-priority correction
 prevents same-edge normal transitions from overriding clear; the 27-check adapter
 regression cancels all six active states and verifies recovery. Actual bounded
-output-object writes, stride translation and tail-lane masking remain unfinished.
+output-object writes and stride translation remain unfinished. Runtime output
+now masks padded tail lanes before enqueue; legacy consumers still need to
+apply the published logical shape.
 
 The divider rounding register and bounded exponent widths reduce matched routed
 area from 1,347.020 to 1,181.750 um² (12.27%) and turn a 2 ns setup failure into
@@ -2010,3 +2012,38 @@ route is running under `build/physical_runtime_service_split_stream_add_route`,
 with output `runtime_operand_service/pnr_split_stream_add_cts12_1ns.json`.
 No timing or area improvement is claimed before that route completes; the
 previous service route does not qualify this changed scheduler source.
+
+
+## Mask logical output tails inside runtime G2
+
+Runtime G2 now applies the descriptor's logical column count before enqueueing
+an output beat. The arithmetic still executes the padded width, but padded lanes
+no longer assert part_we. The complete masked beat remains stable under
+backpressure and queued results retain their mask through abort/drain. The tail
+mask is captured at launch; a 32-bit row-tail address advances only when a tail
+beat is enqueued. This uses the array's common ordered lane schedule and avoids
+runtime division, without adding queue latency or reducing credit capacity.
+Launch reinitializes both values; no reset of invalid payload is required.
+
+The loaded-program fixture now admits non-multiple-of-eight column counts,
+constructs logical ABI descriptors and golden outputs, and separately pads the
+external weight service. It rejects any output lane outside the logical shape
+and checks all expected logical results, held beats, abort and recovery.
+Nine adapter/prefix/output-queue tests pass. Current-source loaded campaigns:
+
+| Logical / padded columns | Accepted campaign outputs | Campaign cycles | First weight / activation fills |
+|---|---:|---:|---:|
+| 9 / 16 | 224 | 11,363 | 160 / 480 |
+| 53 / 56 | 1,280 | 25,013 | 560 / 720 |
+| 56 / 56 | 1,352 | 25,013 | 560 / 720 |
+
+Each campaign includes six-row contractions, output stalls, cancellation with
+queued outputs, bad transport identities and recovery. The aligned case retains
+its prior cycle count. The difference in output count reflects suppressed
+padding, not a throughput increase. This is a correctness/transport architecture
+improvement; it does not eliminate padded arithmetic, implement object writes
+or validate nonzero output bases and arbitrary strides. Physical cost of the
+added output control is not yet measured. Legacy runtime-disabled output is
+unchanged. Evidence is retained in the three
+`results/rtl/a3_g2_runtime_byte_transport_cols{9,53,56}_rolling_activation_auxdepth3_direct.json`
+records, with the previous N56 record archived under `before_output_tail_mask/`.

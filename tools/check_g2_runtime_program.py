@@ -29,8 +29,10 @@ if args.weight_response_gap < 1:
     parser.error("weight response gap must be positive")
 rows = 6 if args.output_backpressure else 1
 cols = args.cols if args.cols is not None else (24 if args.auxiliary_windows else 8)
-if cols < 8 or cols > 65528 or cols % 8:
-    parser.error("cols must be a positive multiple of eight up to 65528")
+if cols < 8 or cols > 65528:
+    parser.error("cols must be in 8..65528")
+logical_cols = cols
+cols = (logical_cols + 7) & ~7
 record_name = (
     "g2_runtime_byte_transport"
     if args.auxiliary_windows
@@ -45,7 +47,7 @@ if args.weight_response_gap != 1:
 if depth != 80:
     record_name += f"_depth{depth}"
 if args.cols is not None:
-    record_name += f"_cols{cols}"
+    record_name += f"_cols{logical_cols}"
 if args.activation_miss_aligned:
     record_name += "_rolling_activation"
 record_name += f"_auxdepth{args.auxiliary_depth}"
@@ -89,7 +91,7 @@ case = matmul_case(
     capability,
     OUT / "deployment",
     activation_codes=activation,
-    weight_codes=weight,
+    weight_codes=weight[:logical_cols],
     activation_dtype=DType.BF16,
     weight_dtype=DType.BF16,
 )
@@ -147,7 +149,9 @@ activation_payload = reference_device.memory[activation_object].read(
 )
 assert activation_payload == activation.astype("<u2").tobytes()
 hex_words("activation_bytes.hex", activation_payload, 2)
-hex_words("expected.hex", golden["output"].reshape(-1), 8)
+expected_padded = np.zeros((rows, cols), dtype=np.uint32)
+expected_padded[:, :logical_cols] = golden["output"]
+hex_words("expected.hex", expected_padded.reshape(-1), 8)
 # Independent page-residency oracle for the admitted row/pass/K issue order.
 # A later column pass can revisit a page evicted while reading the same row.
 resident_page = None
@@ -166,7 +170,7 @@ for row in range(rows):
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
     f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object}, OUTPUT_OBJECT=32'd{output_object};\n"
-    f"localparam integer ROWS={rows}, COLS={cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
+    f"localparam integer ROWS={rows}, COLS={cols}, LOGICAL_COLS={logical_cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
@@ -265,12 +269,13 @@ result = {
     "golden_output": golden["output"].reshape(-1).tolist(),
     "fixture": {
         "rows": rows,
-        "cols": cols,
+        "cols": logical_cols,
+        "padded_cols": cols,
         "depth": depth,
         "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
         "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
-        "output_addressing": "Logical flattened output index equals lane-local address times eight plus lane index",
+        "output_addressing": "Addresses use padded row width: row=address//(padded_cols/8), col=(address%(padded_cols/8))*8+lane; only col<cols is valid. Fixture base is zero.",
     },
     "command": cmd,
     "stdout": r.stdout,

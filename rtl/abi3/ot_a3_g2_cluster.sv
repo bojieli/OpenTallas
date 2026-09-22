@@ -761,6 +761,29 @@ module ot_a3_g2_cluster #(
         // No new results enter storage after an abort is observed. Previously
         // queued beats retain ready/valid stability and drain before completion.
         wire push_output=(|core_part_we) && !compute_abort && !runtime_fault && !runtime_abort;
+        // All lanes traverse the same row/column schedule. Track the final
+        // lane-local address of each row, avoiding division on the output path.
+        // Mask before enqueue so stalled beats keep their complete identity.
+        reg [31:0] output_row_tail;
+        reg [LANES-1:0] output_tail_mask;
+        wire [31:0] output_local_cols={16'b0,output_padded_cols}/LANES;
+        wire [LANES-1:0] logical_output_mask;
+        wire [LANES-1:0] row_tail_hit;
+        for(genvar output_lane=0;output_lane<LANES;output_lane=output_lane+1)begin : output_tail
+            assign row_tail_hit[output_lane]=core_part_we[output_lane] &&
+                core_part_addr[32*output_lane+:32]==output_row_tail;
+            assign logical_output_mask[output_lane]=core_part_we[output_lane] &&
+                (!row_tail_hit[output_lane] || output_tail_mask[output_lane]);
+            always @(posedge clk)begin
+                if(arr_start)output_tail_mask[output_lane]<=
+                    (output_logical_cols%LANES==0 || output_lane<output_logical_cols%LANES);
+            end
+        end
+        always @(posedge clk)begin
+            if(arr_start)output_row_tail<=arr_out_base+output_local_cols-1'b1;
+            else if(push_output && |row_tail_hit)
+                output_row_tail<=output_row_tail+output_local_cols;
+        end
         wire [LANES-1:0] queued_mask;
         assign part_we=part_valid?queued_mask:{LANES{1'b0}};
         assign operand_credit=service_credit && (!operand_last || output_credit);
@@ -768,7 +791,7 @@ module ot_a3_g2_cluster #(
             .clk(clk),.rst_n(rst_n),
             .reserve_valid(operand_issue && operand_last),.reserve_ready(output_credit),
             .stop_producer(core_done || compute_abort),
-            .push_valid(push_output),.push_data({core_part_we,core_part_addr,core_part_data,core_part_acc}),
+            .push_valid(push_output),.push_data({logical_output_mask,core_part_addr,core_part_data,core_part_acc}),
             .out_valid(part_valid),.out_ready(part_ready),
             .out_data({queued_mask,part_addr,part_data,part_acc}),
             .empty(output_empty),.protocol_error(output_error));
