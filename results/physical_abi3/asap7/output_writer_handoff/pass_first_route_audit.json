@@ -1,0 +1,38 @@
+{
+  "scope": "Current pass-first output writer at tested 1 ns",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_output_object_writer.sv",
+      "sha256": "6a768dab302f793c2ad17f1b9167e3c37f69492e15d15d68b87be830496f9c7b",
+      "size_bytes": 8605
+    }
+  ],
+  "retained_artifacts_verified": 7,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0508038,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.026358799999999998,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "area_um2": 1682.2
+}

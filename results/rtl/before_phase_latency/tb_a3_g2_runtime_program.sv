@@ -345,8 +345,7 @@ module tb_a3_g2_runtime_program;
   end
  end
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
- integer launch_cycle=0;
- task launch;begin launch_cycle=cycles;configured_object_bytes=64'd1;kick=1;tick();kick=0;end endtask
+ task launch;begin configured_object_bytes=64'd1;kick=1;tick();kick=0;end endtask
  task drain(input [7:0] err);begin
   wait(runtime_transport_cancel);@(negedge clk);
   repeat(4)begin tick();if(array_done || !array_busy)$fatal(1,"lost operation during drain");end
@@ -371,7 +370,6 @@ module tb_a3_g2_runtime_program;
    $fatal(1,"program did not retire successfully issued=%0d retired=%0d",count_issued,count_retired);
   if(err!=0 && (!trapped || trap_class!=ot_a3_pkg::A3_TRAP_ENGINE))$fatal(1,"abort did not reach sequencer");
   $display("program phase=%0d complete=%0d trap=%0d cycles=%0d",phase,complete,trap_class,cycles);
-  $display("phase latency phase=%0d elapsed_cycles=%0d",phase,cycles-launch_cycle);
   tick();runtime_transport_ack=0;runtime_writes_drained=0;tick();
  end endtask
  initial begin
@@ -451,8 +449,5 @@ module tb_a3_g2_runtime_program;
   $display("output stalls=%0d reservation stalls=%0d accepted_outputs=%0d",output_stalls,reservation_stalls,outputs);
   $display("PASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=%0d",fills);$finish;
  end
- // Bound deep streamed campaigns by work while retaining the small-case limit.
- localparam time WATCHDOG_NS=WEIGHT_OBJECT_READS?
-     ((64'(WEIGHT_WORDS)*3000>10000000)?64'(WEIGHT_WORDS)*3000:64'd10000000):64'd2000000;
- initial begin #(WATCHDOG_NS);$fatal(1,"timeout");end
+ initial begin #(WEIGHT_OBJECT_READS?10000000:2000000);$fatal(1,"timeout");end
 endmodule

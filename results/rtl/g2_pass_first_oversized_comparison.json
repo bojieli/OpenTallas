@@ -1,0 +1,46 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded M6/N53/K342: oversized full passes stream, tail replays. Phase cycles measure kick-to-program-done under modeled memory/stall/drain service, not whole-model inference.",
+  "source_manifests_match": true,
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "c40a564dac914a7c1d1ede80937062db230360c36f7d596dcb01f93a898b21e3",
+      "pass_first": false,
+      "campaign_cycles": 1498279,
+      "successful_phase_cycles": [
+        211549,
+        211563,
+        211543,
+        211545,
+        211541,
+        211546
+      ],
+      "median_successful_phase_cycles": 211545.5,
+      "first_weight_fills": 14364,
+      "first_weight_bytes": 438840,
+      "first_activation_fills": 7512
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "51eabc87aa9fe2496a22c034915e571a0498c33376b65de9660362858341014b",
+      "pass_first": true,
+      "campaign_cycles": 1421966,
+      "successful_phase_cycles": [
+        200643,
+        200665,
+        200641,
+        200637,
+        200642,
+        200641
+      ],
+      "median_successful_phase_cycles": 200641.5,
+      "first_weight_fills": 12654,
+      "first_weight_bytes": 404340,
+      "first_activation_fills": 6156
+    }
+  ],
+  "median_phase_cycle_reduction_percent": 5.15444667931958
+}

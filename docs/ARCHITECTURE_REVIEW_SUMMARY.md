@@ -153,3 +153,11 @@ See `results/rtl/g2_pass_first_comparison.json`. Current integrated physical
 characterization is active, and the pass scheduler still misses its 1 ns target.
 This checkpoint supersedes earlier statements that loaded integration is absent;
 it does not establish broad shape coverage or all-target closure.
+
+The pass-first output writer now passes its current-source 1 ns ASAP7 TT route
+at 1,682.200 µm², about 12.81% above the recorded row-first writer area. The loaded
+K342 boundary case also passes both schedules: median successful-phase time
+falls 211,545.5 to 200,641.5 cycles, while full passes still stream above capacity.
+These phase counters include the modeled memory/stall/drain service and are not
+whole-model inference latency. See the input transport plan for exact traffic,
+source-bound evidence and remaining capacity limits.

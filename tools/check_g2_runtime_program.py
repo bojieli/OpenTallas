@@ -5,6 +5,7 @@ from pathlib import Path
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import numpy as np
@@ -319,8 +320,13 @@ assert r.returncode == 0, r.stdout + r.stderr
 assert "PASS G2 runtime program" in r.stdout
 for p, h in hashes.items():
     assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
+phase_latencies=[{"phase":int(phase),"cycles":int(cycles)} for phase,cycles in
+    re.findall(r"phase latency phase=(\d+) elapsed_cycles=(\d+)",r.stdout)]
+assert phase_latencies and all(x["cycles"]>0 for x in phase_latencies)
 result = {
     "status": "pass",
+    "phase_latencies": phase_latencies,
+    "phase_latency_scope": "Kick-to-program-done under modeled memory, output stalls and explicit drain acknowledgements; not whole-model inference latency.",
     "object_writes": args.object_writes,
     "descriptor_input_layout": args.input_layout,
     "weight_object_reads": args.weight_object_reads,

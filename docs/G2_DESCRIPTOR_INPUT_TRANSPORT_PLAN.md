@@ -792,3 +792,49 @@ an inference-speedup claim. Evidence:
 This confirms the need to qualify locality across shapes and memory-service
 rates before selecting a default policy. Larger-than-pass-capacity behavior,
 broader formats/targets and complete current-source physical qualification remain.
+
+## Loaded oversized-pass qualification and operation timing
+
+The loaded M6/N53/K342 strided-object campaigns now pass in both schedules,
+including 2,234 exact outputs and 295 write acknowledgements each. The full
+three-column passes occupy 1,026 packed words and therefore stream each row;
+the one-column 342-word tail replays. This verifies mixed reuse/fallback through
+real dispatch, arithmetic, output writes, faults and recovery, beyond isolated
+bank/transport tests.
+
+| Measurement | Row-first | Pass-first |
+|---|---:|---:|
+| First-operation weight fills | 14,364 | 12,654 |
+| First-operation weight bytes | 438,840 | 404,340 |
+| First-operation activation fills | 7,512 | 6,156 |
+| Median successful-phase cycles | 211,545.5 | 200,641.5 |
+| Full fault/recovery campaign cycles | 1,498,279 | 1,421,966 |
+
+The median successful-phase reduction is 5.15%. New counters measure each phase
+from kick to program done, including modeled memory stalls, output backpressure
+and explicit drain acknowledgements. They separate successful operations from
+abort/fault work, but do not represent whole-model inference latency. Source
+manifests match and all current hashes verify. Evidence:
+`results/rtl/g2_pass_first_oversized_comparison.json`.
+
+The test watchdog now scales with admitted weight issue count for deeper
+campaigns; small workloads retain the previous limit. The K342 runs require
+14–15 million simulated ns for the complete fault/recovery sequence, exceeding
+the old fixed 10-million-ns cutoff. Exact output, traffic, fault and recovery
+assertions remain in force. The pre-instrumentation bench is retained at
+`results/rtl/before_phase_latency/tb_a3_g2_runtime_program.sv`.
+
+The pass-first output writer now passes all reported ASAP7 TT checks at 1 ns,
+CTS8: 1,682.200 um² cells, setup +0.0263588 ns, hold +0.0508038 ns and zero
+slew/capacitance/fanout/DRC/antenna violations. Current source and seven artifact
+hashes verify in `output_writer_handoff/pass_first_route_audit.json`. Compared
+with the recorded row-first writer's 1,491.180 um², pass scheduling costs about
+12.81% additional cell area. Both configurations meet the tested period; this
+is a quantified schedule-support cost, not an area reduction. The scheduler
+split-increment route and integrated G2 characterization remain active.
+
+The K342 outcome also bounds the current architecture: most full-pass traffic
+still repeats once a pass exceeds bank capacity. Future improvements must
+consider narrower adaptive passes or explicit depth tiling/accumulator budgets,
+including lane utilization and activation traffic, rather than treating this
+fallback as an efficiency endpoint.
