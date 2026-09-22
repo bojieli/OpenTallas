@@ -1,5 +1,10 @@
 # Refined accelerator architecture and optimization report
 
+For the consolidated review of the latest implemented architecture, measured
+before/after results, replay-capacity limitation and architecture-first plan, see
+[the architecture review summary](ARCHITECTURE_REVIEW_SUMMARY.md). Its status
+assessment supersedes the older summaries and checkpoints retained below.
+
 Date: 2026-09-22. Status: architecture implementation in progress.
 Implementation includes descriptor-owned bounded output writes, four write credits,
 direct writer handoff and acknowledgement-fault priority. Current-source writer,
