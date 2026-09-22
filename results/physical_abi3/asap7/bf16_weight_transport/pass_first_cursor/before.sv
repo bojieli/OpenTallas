@@ -5,13 +5,9 @@
 // response ownership. No memory request is authorized by this module alone.
 // Walk: output row, INTERLEAVE column groups, K, column group. Each group has
 // eight lanes. Tail lanes are masked; the next row replays the same weights.
-// PASS_FIRST exchanges the outer row/pass loops for multirow pass reuse.
 // Admission checks element-address overflow before publishing any coordinate.
 module ot_a3_weight_layout_cursor #(
- parameter integer INTERLEAVE=3,
- // Reuse a complete K pass across rows before advancing column groups.
- // The caller must use the same schedule for operands, execution and output.
- parameter bit PASS_FIRST=0
+ parameter integer INTERLEAVE=3
 )(
  input wire clk,rst_n,clear,
  input wire command_valid, output wire command_ready,
@@ -112,15 +108,10 @@ module ot_a3_weight_layout_cursor #(
      column_base<=column_base-(16'(column_in_pass)<<3);
     end else begin
      k_index<=0;
-     if(PASS_FIRST && row_index!=rows-1'b1)begin
-      row_index<=row_index+1'b1;
-      column_base<=column_base-(16'(column_in_pass)<<3);
-      k_base<=pass_base;element_base<=pass_base;
-     end else if(end_pass)begin
+     if(end_pass)begin
       row_index<=row_index+1'b1;column_base<=0;groups_left<=groups_total;
       pass_base<=origin;k_base<=origin;element_base<=origin;
      end else begin
-      if(PASS_FIRST)row_index<=0;
       column_base<=column_base+16'd8;groups_left<=groups_left-16'(INTERLEAVE);
       pass_base<=pass_base+pass_step;k_base<=pass_base+pass_step;element_base<=pass_base+pass_step;
      end

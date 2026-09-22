@@ -487,3 +487,27 @@ Depth tiling then requires preserving per-output FP32 accumulator state across
 tiles, with a quantified register/SRAM budget and unchanged addition order.
 The new schedule is not yet implemented; these measurements constrain the next
 architecture change while the current transport physical runs continue.
+# Pass-first cursor implementation checkpoint
+
+The weight layout cursor now exposes `PASS_FIRST=1` to walk column pass, row,
+K, group, with the original row-first order retained at the default value zero.
+The implementation resets the row index when advancing a pass and reuses its
+captured pass base for subsequent rows. It adds no admission or coordinate
+cycles. Execution, operand scheduling, weight-bank reuse and output sequence
+validation still need coordinated integration; this cursor change alone does
+not reduce loaded traffic.
+
+Both orders pass independent tensor-coordinate checks at interleave 1/3/5:
+80,696 coordinates each, 484,176 total. Coverage includes M6/N53/K160 above
+whole-row capacity, partial passes, strided views, stalls, cancellation, maximal
+extents and overflow refusal. Six existing composed transport tests also pass;
+strict Verilator 5.050 lint passes with pass-first enabled. Evidence:
+`results/rtl/weight_layout_pass_first.json`.
+
+The pre-final-line handoff containing route completed at 1 ns with 6,160.300 um²
+cell area, -0.00156786 ns setup slack, +0.0398271 ns hold slack and 11 slew
+violations. It remains unclosed. The critical path is gather slot selection to
+read-byte count. Launch-source bindings and seven retained artifacts are verified
+in `bf16_weight_transport/word_handoff_route_audit.json`. The original cursor
+source is retained under `pass_first_cursor/before.sv` for this and other earlier
+routes. The final-line route remains active and predates this cursor change.

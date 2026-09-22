@@ -85,7 +85,9 @@ The next proposed design is **column-pass-first reuse across output rows**.
 At K160, a pass covering three local column groups requires 480 packed words,
 which fits one 512-word bank. Replaying a whole-K pass across rows can preserve
 each output's sequential K association without spilling partial accumulators.
-This schedule is proposed, not implemented.
+The cursor now implements and tests this alternative order behind `PASS_FIRST`;
+the integrated schedule and multirow bank reuse are not yet implemented. See
+[the implementation checkpoint](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md).
 
 It requires coordinated changes to issue order, weight and auxiliary cursors,
 bank ownership, output addresses, tail masking and writer sequence validation.
@@ -123,9 +125,9 @@ service, output writer and standalone layout cursor, and at 2 ns for the current
 Sinkhorn configuration. These are block/configuration results, not a whole-chip
 clock guarantee or measured silicon performance.
 
-The latest completed lane-offset containing weight-transport route still has
-−0.0151573 ns setup slack and 11 slew violations at 1 ns. Handoff and final-line
-flag routes remain active at this review. Two integrated G2 runs also remain
+The latest completed handoff containing weight-transport route still has
+−0.00156786 ns setup slack and 11 slew violations at 1 ns. The final-line
+flag route remains active at this review. Two integrated G2 runs also remain
 active; their launch sources predate the current input transport, so they can
 provide historical baselines only. Current-source integrated G2 routing is still
 required. No energy percentage or all-target completion is established.
