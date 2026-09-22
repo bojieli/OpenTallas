@@ -528,3 +528,43 @@ stable-input run checks dimensions, formats, scales, addresses and completion
 against the same corpus. Evidence is retained in
 `results/rtl/a3_lq8_configuration_capture.json`. This does not yet constitute
 G2 runtime transport, cancellation or writeback integration.
+
+
+## Synthesizable runtime operand service boundary
+
+`ot_a3_lq8_runtime_operands` now assembles captured admission, checked stream
+extent, the weight burst scheduler, two SRAM banks and weight FIFO, the future
+auxiliary cursor/queue, and the complete-bundle join in synthesizable RTL.
+`--integrated-service` selects this module in the numerical checker; the testbench
+then implements only external backing services, generation selection, operation
+start/clear and verification. No production arithmetic is performed by its
+backing arrays. The service is currently explicitly eight-lane, matching its
+128-bit weight SRAM path; other array widths need their own validated adaptation.
+
+The public boundary provides command ready/valid, captured scale-enable outputs,
+tagged weight burst/beat transport, tagged auxiliary request/response transport,
+compute previews and operand credit/data. Command ownership persists until clear,
+not until prefetch has merely scheduled its final tile. A record launches only
+when geometry validates, compute confirms admission and the scheduler is ready.
+Protocol faults remain sticky until clear and suppress new operand credits.
+Unexpected responses are refused; the containing controller must handle the
+fault, cancel/drain external requests and abort compute. This wrapper does not
+silently manufacture completion or implement that parent policy.
+
+Clear revokes bank and queue state together using a local reset expression;
+physical reset-tree implementation and safe reset release remain engineering
+requirements. Parents must coordinate clear with compute and external transport.
+The G2 instance still uses its original staging block: wiring this service into
+G2 and implementing cancellation/final-write completion is the next boundary.
+
+The integrated Verilator run, with external LQ8 configuration disturbed after
+start, passes 92 cases, 17,103 matching outputs, 18 fault cases and 115,748 checks.
+Every per-operation count/cycle record matches the preceding testbench-wired
+configuration-capture run (322,385 aggregate cycles). The service accepted 49,040
+weight beats across 1,562 tile acquisitions; 6,654 cycles overlapped refill and
+arithmetic issue. All 26 focused tests pass. The new lifecycle test covers no
+external launch before compute admission, configuration capture, busy overwrite
+refusal, sticky malformed-response fault, clear, invalid geometry and restart.
+Top-level service lint with the behavioral SRAM model passes. Source-bound
+evidence is `results/rtl/a3_lq8_runtime_service.json`. Routed timing, area and
+whole-target coverage remain open.

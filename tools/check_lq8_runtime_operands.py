@@ -27,6 +27,7 @@ def main():
     )
     parser.add_argument("--rtl-weight-scheduler", action="store_true")
     parser.add_argument("--mutate-array-config", action="store_true")
+    parser.add_argument("--integrated-service", action="store_true")
     args = parser.parse_args()
     if args.rtl_weight_scheduler and not args.future_auxiliary:
         parser.error(
@@ -112,6 +113,10 @@ def main():
         service = service.replace(
             ".auxiliary_generation(generation)", ".auxiliary_generation(aux_generation)"
         )
+    if args.integrated_service:
+        if args.serial_refill:
+            parser.error("Integrated service uses overlapped refill")
+        service = (ROOT / "rtl/test/a3_lq8_integrated_service.svh").read_text()
     top = top.replace(
         "    ot_a3_lq8 #(\n",
         f"    localparam SERIAL_REFILL=1'b{int(args.serial_refill)};\n"
@@ -165,6 +170,7 @@ def main():
         "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
         "rtl/abi3/ot_a3_lq8_operand_admission.sv",
         "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
         "rtl/test/tb_a3_runtime_weight_banks.sv",
         "rtl/test/tb_a3_lq8.sv",
     ]
@@ -194,6 +200,7 @@ def main():
         *sources,
         "rtl/test/a3_lq8_top.sv",
         "rtl/test/a3_lq8_runtime_service.svh",
+        "rtl/test/a3_lq8_integrated_service.svh",
         "rtl/test/a3_lq8_scheduled_weights.svh",
         "rtl/test/a3_lq8_future_auxiliary.svh",
         "tools/check_lq8_runtime_operands.py",
@@ -230,6 +237,7 @@ def main():
         "status": "pass",
         "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
         "serial_refill": args.serial_refill,
+        "integrated_service": args.integrated_service,
         "mutate_array_config": args.mutate_array_config,
         "rtl_weight_scheduler": args.rtl_weight_scheduler,
         "future_auxiliary": args.future_auxiliary,

@@ -161,3 +161,15 @@ The source-bound comparison is `results/rtl/a3_lq8_configuration_capture.json`.
 This supports future overlapping command preparation; G2 runtime transport,
 operation cancellation and writeback integration remain open. Routed area and
 timing of the added registers are not yet measured.
+
+
+## Assembled RTL runtime service checkpoint
+
+Admission, scheduler, banked SRAM prefetch, future auxiliary queue and bundle
+joining now form one synthesizable eight-lane service with explicit external
+transport ports. It holds operation ownership until coordinated clear and
+surfaces persistent protocol errors to its parent. The 92-case numerical run
+matches the previous path's per-operation cycles exactly (322,385 aggregate);
+all 26 focused tests pass. See `results/rtl/a3_lq8_runtime_service.json`.
+G2 port wiring, parent cancellation/writeback policy, reusable activation SRAM,
+other target configurations and physical closure remain outstanding.
