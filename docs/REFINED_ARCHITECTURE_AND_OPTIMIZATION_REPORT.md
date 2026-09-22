@@ -173,3 +173,15 @@ matches the previous path's per-operation cycles exactly (322,385 aggregate);
 all 26 focused tests pass. See `results/rtl/a3_lq8_runtime_service.json`.
 G2 port wiring, parent cancellation/writeback policy, reusable activation SRAM,
 other target configurations and physical closure remain outstanding.
+
+
+## Completion ownership checkpoint
+
+A verified operation lifetime controller now waits for both transport-generation
+drain and accepted output writes before releasing completion. The integrated
+LQ8 corpus preserves all 92 numerical/fault results and charges explicit delayed
+acknowledgements: 323,397 aggregate cycles. All 27 focused
+tests pass. This establishes the completion handshake required for G2 runtime
+integration, but the controller is not yet wired into G2 and arithmetic abort
+is not yet qualified end to end. Evidence:
+`results/rtl/a3_lq8_completion_barrier.json`.

@@ -28,7 +28,10 @@ def main():
     parser.add_argument("--rtl-weight-scheduler", action="store_true")
     parser.add_argument("--mutate-array-config", action="store_true")
     parser.add_argument("--integrated-service", action="store_true")
+    parser.add_argument("--completion-barrier", action="store_true")
     args = parser.parse_args()
+    if args.completion_barrier and not args.integrated_service:
+        parser.error("Completion barrier requires --integrated-service")
     if args.rtl_weight_scheduler and not args.future_auxiliary:
         parser.error(
             "RTL scheduler requires captured geometry admission (--future-auxiliary)"
@@ -117,6 +120,17 @@ def main():
         if args.serial_refill:
             parser.error("Integrated service uses overlapped refill")
         service = (ROOT / "rtl/test/a3_lq8_integrated_service.svh").read_text()
+    if args.completion_barrier:
+        service = service.replace(
+            "wire clear_service=start_dut || dut_done;",
+            "wire clear_service=start_dut || lifetime_clear;",
+        )
+        service = service.replace(
+            "            if(aux_valid && aux_response_ready)aux_valid<=0;",
+            """            if(aux_valid && aux_response_ready)aux_valid<=0;
+            if(transport_cancel)begin backing_active<=0;aux_valid<=0;aux_pending<=0;end""",
+        )
+        service += (ROOT / "rtl/test/a3_lq8_completion_barrier.svh").read_text()
     top = top.replace(
         "    ot_a3_lq8 #(\n",
         f"    localparam SERIAL_REFILL=1'b{int(args.serial_refill)};\n"
@@ -135,6 +149,10 @@ def main():
         .operand_a_addr(preview_a),.operand_s_addr(preview_s),
         .operand_ws_addr(preview_ws),.operand_w_addr(preview_w),""",
     )
+    if args.completion_barrier:
+        top = top.replace(
+            ".busy(dut_busy), .done(dut_done)", ".busy(core_busy), .done(core_done)"
+        )
     if args.mutate_array_config:
         # Only disturb DUT inputs. Backing images and reference keep the
         # accepted command, so every expected result remains independently fixed.
@@ -171,6 +189,7 @@ def main():
         "rtl/abi3/ot_a3_lq8_operand_admission.sv",
         "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+        "rtl/abi3/ot_a3_runtime_operation_lifetime.sv",
         "rtl/test/tb_a3_runtime_weight_banks.sv",
         "rtl/test/tb_a3_lq8.sv",
     ]
@@ -201,6 +220,7 @@ def main():
         "rtl/test/a3_lq8_top.sv",
         "rtl/test/a3_lq8_runtime_service.svh",
         "rtl/test/a3_lq8_integrated_service.svh",
+        "rtl/test/a3_lq8_completion_barrier.svh",
         "rtl/test/a3_lq8_scheduled_weights.svh",
         "rtl/test/a3_lq8_future_auxiliary.svh",
         "tools/check_lq8_runtime_operands.py",
@@ -238,6 +258,7 @@ def main():
         "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
         "serial_refill": args.serial_refill,
         "integrated_service": args.integrated_service,
+        "completion_barrier": args.completion_barrier,
         "mutate_array_config": args.mutate_array_config,
         "rtl_weight_scheduler": args.rtl_weight_scheduler,
         "future_auxiliary": args.future_auxiliary,

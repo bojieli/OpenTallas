@@ -568,3 +568,56 @@ refusal, sticky malformed-response fault, clear, invalid geometry and restart.
 Top-level service lint with the behavioral SRAM model passes. Source-bound
 evidence is `results/rtl/a3_lq8_runtime_service.json`. Routed timing, area and
 whole-target coverage remain open.
+
+## Explicit operation completion barrier
+
+G2's issue adapter currently retires an operation directly on `array_done`;
+its partial outputs have no write-acknowledgement input. That boundary must
+change for runtime transport. `ot_a3_runtime_operation_lifetime` implements a
+single-operation ownership state machine for the integration: RUN, DRAIN,
+held COMPLETE, then IDLE. It captures the operation generation, records the
+compute result or runtime fault, clears local operand service state, and issues
+an external cancellation/drain request before allowing completion.
+
+`transport_ack` is a handshake in response to `transport_cancel`, promising no
+future response from that generation. An idle-looking acknowledgement during
+RUN is ignored. `writes_drained` must account for every accepted output write;
+both conditions are required, in either order, before completion. A service
+fault or explicit abort additionally holds `compute_abort`. Errors use local
+controller codes FE (service fault) and FF (explicit abort); parent integration
+must map these to architectural engine errors. Abort does not roll back writes
+already committed. Global reset requires coordinated transport reset.
+
+The controller's completion record remains stable until accepted, and starts
+while busy cannot replace its generation. Directed Icarus tests cover opposite
+acknowledgement orders, stale early acknowledgements, delayed completion
+acceptance, busy starts, service-fault priority, explicit abort and reset.
+Standalone controller lint passes. The runtime numerical checker can enable
+`--completion-barrier` to delay final completion beyond compute completion with
+separate behavioral transport and write acknowledgements. This models final
+write acknowledgement timing; the checker still captures output data in its
+existing result memory and is not a production writeback queue.
+
+This controller is not yet wired into G2. Required G2 changes are a separate
+runtime transport/cancel interface, a final-write acknowledgement interface,
+registered architectural error mapping, and the actual compute-abort connection.
+The corpus tests normal completion and core faults; the controller unit test
+covers abort requests. They do not establish integrated arithmetic abort or
+rollback semantics.
+
+The initial barrier integration also exposed an admission error-mapping rule:
+when LQ8 itself refuses a shape, preserve its existing error rather than
+converting the auxiliary geometry refusal to a generic service abort. The
+corpus bridge signals a geometry service fault only if compute tries to issue
+against that refusal. Production integration must retain this distinction while
+handling extra runtime-only limits (for example stream-address overflow).
+
+The corrected completion-barrier corpus passes all 92 cases, 17,103 output
+identities, 18 fault cases and 115,748 checks. Aggregate operation latency is
+323,397 cycles versus 322,385
+without the barrier (1,012 additional cycles
+for the selected acknowledgement delays). Useful issued work is equal per case;
+4 additional speculative weight beats were accepted before service clear.
+All 27 focused tests pass. Source-bound results are recorded in
+`results/rtl/a3_lq8_completion_barrier.json`. These delays are test conditions,
+not measured production transport or memory latency.
