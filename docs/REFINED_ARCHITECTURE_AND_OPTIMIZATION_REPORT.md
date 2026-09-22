@@ -2470,3 +2470,32 @@ retained under `results/physical_abi3/asap7/a3_g2_runtime_writer/launch_sources/
 and bind to the invocation's recorded hashes. A completed route must be treated
 as historical until the changed control logic is recharacterized. No current
 integrated timing claim is made.
+
+
+## Reject adapter view-payload reset candidates pending integrated timing
+
+Two measured candidates remove reset from 192 bits of captured view IDs/offsets.
+A local-capture variant also removes clear/reset from their enables, relying on
+view_have to revoke ownership; a narrower variant preserves original capture
+gating. Both pass the ten focused adapter/prefix cases. The local-capture variant
+also passes the full strided G2 campaign at unchanged 42,561 cycles, with 295
+acknowledged writes and 2,234 matching outputs, including cancellation/recovery.
+
+Matched ASAP7 1 ns synthesis/STA results with output-object resolution enabled:
+
+| Variant | Cell area um² | Setup WNS ns |
+|---|---:|---:|
+| Active baseline | 562.278 | -0.2165 |
+| Local capture, unreset view payload | 544.622 | -0.5283 |
+| Original capture gating, unreset payload | 543.484 | -0.3729 |
+
+Both candidates save area but worsen setup slack and total negative slack.
+Neither has a routed result. Both are rejected for now; active RTL is restored
+byte-identical to the baseline. Historical loaded evidence for local capture,
+exact source snapshots, source-bound physical records and the decision are
+retained under `results/physical_abi3/asap7/g2_issue_adapter_view_payload/`.
+The current loaded evidence is restored to its baseline record. This is an
+experiment outcome, not a claimed optimization or a reason to weaken the clock
+target. Integrated G2 remains live in synthesis and has progressed beyond the
+resource-sharing pass. Its eventual containing paths should guide further
+adapter work.
