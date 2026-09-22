@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.lq8_operand_credit.v1",
+  "status": "pass",
+  "simulator": "Verilator 5.050",
+  "scope": "Existing quick LQ8 corpus under deterministic shared issue-credit stalls. Fixed one-cycle behavioral memory, not integrated SRAM/refill service or physical timing. Icarus runs are separate and not covered by this verdict.",
+  "marker": "PASS: ABI3 lq8 cases=92 lane_ops=389495 products=592002 outputs=17103 faults=18 reference_cases=90 reference_outputs=17103 identity=17103 lanes=8 adder_stages=3",
+  "checks": 115748,
+  "sources": {
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "4269e07365f8b7e092c08fd5d3b4d9edf1d51650ceeccb3f210f046e206d50b4",
+    "rtl/abi3/ot_a3_lq8.sv": "36a6f8ceb41fc11e0d9a4f5d989f4623bdcdb8aa13982c05436a5531c21739a0",
+    "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+    "rtl/test/a3_lq8_top.sv": "e473a79c737d8927272498f1b7fc97c6c1afe1c9c938372ef2f8b77fa496338f",
+    "rtl/test/tb_a3_lq8.sv": "3ce4a259bd5c5704b89e38a3d4a9d93f4335af646ffa9fdd8bff8525401d4cc1",
+    "tools/check_lq8_operand_credits.py": "7b96ef450cbe94b0d2bfa1de63092eb6fe6618f1ebbb4c3e2573a13658de2cf6",
+    "build/runtime_credit_array/top.sv": "8c4331dda265573b46aba0790bec09cf39ca6c2e895119623c4df80a1cd4058e",
+    "build/runtime_credit_array/manifest.json": "04bc3515e01b93e9ec722c83051e4841e7fbfff1222e5a0392f6ecd9316a8671"
+  },
+  "log_sha256": "1a140da0a2d9e81acc328fba89285d3aa08e331c6319563c3fbcd255414a2f1f",
+  "counts": {
+    "cases": 92,
+    "lane_ops": 389495,
+    "products": 592002,
+    "outputs": 17103,
+    "faults": 18,
+    "reference_cases": 90,
+    "reference_outputs": 17103,
+    "identity": 17103,
+    "lanes": 8,
+    "adder_stages": 3
+  }
+}

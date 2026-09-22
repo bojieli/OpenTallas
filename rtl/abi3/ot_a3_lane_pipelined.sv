@@ -99,12 +99,23 @@
 // ---------------------------------------------------------------------------
 module ot_a3_lane_pipelined #(
     parameter integer ADDER_STAGES = 3,     // L: adder latency = interleaved columns
-    parameter integer ACC_SLOTS    = 8      // accumulator file slots (>= ADDER_STAGES)
+    parameter integer ACC_SLOTS    = 8,     // accumulator file slots (>= ADDER_STAGES)
+    parameter integer OPERAND_CREDITS = 0   // opt-in reservation before issue
 ) (
     input  wire        clk,
     input  wire        rst_n,
 
     input  wire        start,
+    // Credit guarantees the entire operand bundle for this issue's registered
+    // read request and fixed-latency response. It is NOT response-side ready.
+    // Deasserting inserts a bubble; existing tokens and slot timers drain.
+    input  wire        operand_credit,
+    // Preview is stable while a credit-starved issue waits. A bundle service
+    // may fetch all four planes from these addresses before granting credit.
+    output wire        operand_request,
+    output wire        operand_issue,
+    output wire [31:0] operand_a_addr, operand_b_addr,
+    output wire [31:0] operand_s_addr, operand_t_addr,
     input  wire [15:0] cfg_rows,           // M
     input  wire [15:0] cfg_cols,           // N
     input  wire [15:0] cfg_depth,          // K
@@ -197,6 +208,10 @@ module ot_a3_lane_pipelined #(
     // that col_i (< n_active <= L) never leaves the array.
     localparam integer COL_BITS = (ADDER_STAGES > 4) ? 3 : ((ADDER_STAGES > 2) ? 2 : 1);
     localparam integer COL_SLOTS = 1 << COL_BITS;
+
+    // Preserve the carry when rounding a maximum-width K up to a group.
+    wire [16:0] depth_plus_one = {1'b0,cfg_depth} + 17'd1;
+    wire [16:0] depth_plus_three = {1'b0,cfg_depth} + 17'd3;
 
     // -- latched configuration ---------------------------------------------------
     reg [1:0]  state;
@@ -374,11 +389,18 @@ module ot_a3_lane_pipelined #(
     wire        row_end   = (cols_left <= L16);
     wire [15:0] column    = pass_col0 + {13'b0, col_i};
     wire        open_col  = (kg == 16'd0);   // first k-group: the column is opened from the cursor
-    wire        can_issue = (state == S_RUN) && issue_active && !faulted &&
-                            (slot_wait[col_i] == 4'd0);
+    assign operand_request = (state == S_RUN) && issue_active && !faulted &&
+                             (slot_wait[col_i] == 4'd0);
+    wire        can_issue = operand_request &&
+                            ((OPERAND_CREDITS == 0) || operand_credit);
+    assign operand_issue = can_issue;
     wire [COL_BITS-1:0] col_idx = col_i[COL_BITS-1:0];
     wire [31:0] b_col_now     = open_col ? b_col_cursor    : b_col_base[col_idx];
     wire [31:0] col_scale_now = open_col ? col_cur_scale_b : col_scale_b[col_idx];
+    assign operand_a_addr = a_row_base + {16'b0, kg};
+    assign operand_b_addr = b_col_now + {16'b0, kg};
+    assign operand_s_addr = scale_a_base_r + row_scale_a + {16'b0, k_scale_a};
+    assign operand_t_addr = scale_b_base_r + col_scale_now + {16'b0, k_scale_b};
     // Counter wraps, compared one bit wider so that a zero bound never wraps.
     wire        row_wrap_a = (row_in_block_a == rpb_a_m1);
     wire        col_wrap_b = (col_cur_in_block_b == rpb_b_m1);
@@ -1086,13 +1108,13 @@ module ot_a3_lane_pipelined #(
             tok_i <= {TOKEN_BITS{1'b0}};
             if (can_issue) begin
                 a_rd_en <= 1'b1;
-                a_rd_addr <= a_row_base + {16'b0, kg};
+                a_rd_addr <= operand_a_addr;
                 b_rd_en <= 1'b1;
-                b_rd_addr <= b_col_now + {16'b0, kg};
+                b_rd_addr <= operand_b_addr;
                 s_rd_en <= 1'b1;
-                s_rd_addr <= scale_a_base_r + row_scale_a + {16'b0, k_scale_a};
+                s_rd_addr <= operand_s_addr;
                 t_rd_en <= 1'b1;
-                t_rd_addr <= scale_b_base_r + col_scale_now + {16'b0, k_scale_b};
+                t_rd_addr <= operand_t_addr;
                 tok_i <= make_token(1'b1, col_i, open_col, last_kg,
                                     last_kg ? tail_valid : group,
                                     out_row_base + {16'b0, column},
@@ -1255,14 +1277,14 @@ module ot_a3_lane_pipelined #(
                         case (cfg_group)
                             8'd2: begin
                                 mode <= 2'd1; group <= 3'd2; group_shift <= 2'd1;
-                                depth_words <= (cfg_depth + 16'd1) >> 1;
-                                kg_count_m1 <= ((cfg_depth + 16'd1) >> 1) - 16'd1;
+                                depth_words <= depth_plus_one[16:1];
+                                kg_count_m1 <= (depth_plus_one[16:1]) - 16'd1;
                                 tail_valid <= (cfg_depth[0] == 1'b0) ? 3'd2 : 3'd1;
                             end
                             8'd4: begin
                                 mode <= 2'd2; group <= 3'd4; group_shift <= 2'd2;
-                                depth_words <= (cfg_depth + 16'd3) >> 2;
-                                kg_count_m1 <= ((cfg_depth + 16'd3) >> 2) - 16'd1;
+                                depth_words <= {1'b0,depth_plus_three[16:2]};
+                                kg_count_m1 <= ({1'b0,depth_plus_three[16:2]}) - 16'd1;
                                 tail_valid <= (cfg_depth[1:0] == 2'b00) ? 3'd4 : {1'b0, cfg_depth[1:0]};
                             end
                             default: begin

@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.architecture_bottleneck_attribution.v1",
+  "scope": "One full-layer single-position Qwen functional/cycle replay with synthetic default input, not external-oracle token qualification, RTL execution, long-context or prefill characterization. Busy fractions are not an additive critical-path decomposition. Service efficiency uses the rate in each table, not two FLOPs per physical lane-cycle.",
+  "sources": {
+    "results/architecture/qwen_decode_full_symbols_cycle_baseline.json": "02b2a72da4e4212395c9120afab86cb3535971f02621796c7528f8b363f22427",
+    "runtime/cycle/model.py": "d711e210e9181fcd70e1d2938f4c6d78895df6f55e1fdcd776f970ace4c43827",
+    "runtime/cycle/machine.py": "8e8fe08c576c1ba6c491e20966fc647bf2a9bcc8abc3c2efcbf8542cc66a10df",
+    "tools/run_abi3_cycle_sweep.py": "33e6eed58045ddda44e8a65f4a9644b9e1314fe38e3fd4de59594551ad0955c8",
+    "build/architecture/qwen3-current-baseline/build_report.json": "3c8457a2a1256fe7854cd6c315d4df7e6c9e379d30aaa2d2cf5b29b518c07cbd"
+  },
+  "successful_execution": true,
+  "attention_operations": 36,
+  "tensor_operations": 254,
+  "commands": 691,
+  "runs": [
+    {
+      "cost_table_id": "abi3-cost-asap7-v1",
+      "total_cycles": 103126781,
+      "tensor_busy_cycles": 61577458,
+      "tensor_busy_fraction_of_total": 0.5971044320679417,
+      "tensor_work_units": 15134641792,
+      "tensor_service_efficiency_relative_to_table": 0.9600866359244644,
+      "dma_busy_cycles": 39292516
+    },
+    {
+      "cost_table_id": "abi3-cost-asap7-v2",
+      "total_cycles": 218830185,
+      "tensor_busy_cycles": 176048322,
+      "tensor_busy_fraction_of_total": 0.8044974325639765,
+      "tensor_work_units": 15134641792,
+      "tensor_service_efficiency_relative_to_table": 0.9709046841967863,
+      "dma_busy_cycles": 39292516
+    }
+  ],
+  "finding": "Historical 3.4% tensor-peak argument is not a current model measurement. Runtime refill and integrated service rate remain architectural questions; cost-table clocks are not integrated closure."
+}

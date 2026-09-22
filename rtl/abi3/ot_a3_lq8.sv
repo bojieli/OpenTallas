@@ -61,12 +61,22 @@
 module ot_a3_lq8 #(
     parameter integer LANES        = 8,     // a power of two
     parameter integer ADDER_STAGES = 3,     // L, passed to every lane
-    parameter integer ACC_SLOTS    = 8
+    parameter integer ACC_SLOTS    = 8,
+    parameter integer OPERAND_CREDITS = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
 
     input  wire        start,
+    // Shared reservation for all operand planes and lanes. Fixed-latency
+    // responses for already-issued reads must still arrive while credit is low.
+    input  wire        operand_credit,
+    // Current unissued bundle, selected from the first still-running lane.
+    // These previews do not advance while a complete bundle is unavailable.
+    output wire        operand_request,
+    output wire        operand_issue,
+    output reg [31:0]  operand_a_addr, operand_s_addr, operand_ws_addr,
+    output wire [31:0] operand_w_addr,
     input  wire [15:0] cfg_rows,           // M
     input  wire [15:0] cfg_cols,           // N over the whole block, a multiple of LANES
     input  wire [15:0] cfg_depth,          // K
@@ -163,6 +173,8 @@ module ot_a3_lq8 #(
 
     // -- lane request buses ------------------------------------------------------
     wire [LANES-1:0]    l_a_en, l_b_en, l_s_en, l_t_en;
+    wire [LANES-1:0] l_request, l_issue;
+    wire [32*LANES-1:0] l_preview_a, l_preview_s, l_preview_t;
     wire [32*LANES-1:0] l_a_addr, l_b_addr, l_s_addr, l_t_addr;
     wire [32*LANES-1:0] l_out_count, l_saturation_count, l_mac_count, l_product_count;
     wire [8*LANES-1:0]  l_error_code, l_error_detail;
@@ -177,10 +189,17 @@ module ot_a3_lq8 #(
         for (gi = 0; gi < LANES; gi = gi + 1) begin : gen_lane
             ot_a3_lane_pipelined #(
                 .ADDER_STAGES(ADDER_STAGES),
-                .ACC_SLOTS(ACC_SLOTS)
+                .ACC_SLOTS(ACC_SLOTS),
+                .OPERAND_CREDITS(OPERAND_CREDITS)
             ) u_lane (
                 .clk(clk), .rst_n(rst_n),
                 .start(lane_start),
+                .operand_credit(operand_credit),
+                .operand_request(l_request[gi]), .operand_issue(l_issue[gi]),
+                .operand_a_addr(l_preview_a[32*gi +: 32]),
+                .operand_b_addr(),
+                .operand_s_addr(l_preview_s[32*gi +: 32]),
+                .operand_t_addr(l_preview_t[32*gi +: 32]),
                 .cfg_rows(cfg_rows), .cfg_cols(cols_per_lane), .cfg_depth(cfg_depth),
                 .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b), .cfg_group(cfg_group),
                 .cfg_a_base(cfg_a_base), .cfg_b_base(32'b0),
@@ -257,6 +276,23 @@ module ot_a3_lq8 #(
     assign w_rd_addr  = w_ptr;
     assign ws_rd_en   = sel_valid && cfg_scale_b;
     assign ws_rd_addr = sel_t_addr;   // the lane already added cfg_ws_base
+
+    assign operand_request = |l_request;
+    assign operand_issue = |l_issue;
+    // w_ptr tracks the registered read port, one edge behind issue. Include
+    // its pending increment to preview the next stream word without adding
+    // another independently maintained stream cursor.
+    assign operand_w_addr = w_ptr + {31'b0, sel_valid};
+    wire [LANES-1:0] request_lowest = l_request & (~l_request + {{(LANES-1){1'b0}},1'b1});
+    integer pi;
+    always @* begin
+        operand_a_addr=0; operand_s_addr=0; operand_ws_addr=0;
+        for(pi=0;pi<LANES;pi=pi+1) begin
+            operand_a_addr=operand_a_addr | ({32{request_lowest[pi]}} & l_preview_a[32*pi +: 32]);
+            operand_s_addr=operand_s_addr | ({32{request_lowest[pi]}} & l_preview_s[32*pi +: 32]);
+            operand_ws_addr=operand_ws_addr | ({32{request_lowest[pi]}} & l_preview_t[32*pi +: 32]);
+        end
+    end
 
     // -- block counters: sums of the lanes' registered counters ------------------
     // The lanes clear their counters and classes only when they are started;

@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.runtime_weight_banks.functional.v1",
+  "status": "pass",
+  "scope": "Two-bank ownership plus behavioral one-cycle SRAM integration. Not cluster integration, physical closure, macro electrical verification, or workload speedup. Tags require scheduler generation discipline.",
+  "sources": {
+    "rtl/abi3/ot_a3_operand_bank_owner.sv": "47a63e598983334decd6b87e5aaaa1c83d4853b77984bf2e8a0f097b0f87e212",
+    "rtl/abi3/ot_a3_runtime_weight_banks.sv": "f86aa778f57f88b79d81dcfcac55245c8de1ce768b387f6a6e85552c0e828c16",
+    "rtl/test/tb_a3_operand_bank_owner.sv": "649b5551baf964b0bdaa4242a40923a3c84450013c1b031986c164fab7a2adff",
+    "rtl/test/tb_a3_runtime_weight_banks.sv": "f823756d37a1ba99b3c070143121c41e66922014aac057a9799d67887bf40374",
+    "tests/test_operand_bank_owner.py": "1c02ef9ef17ef9a4a9f965f36cab437c67060e91d3ec683f539ea7bad1730b3a"
+  },
+  "verification": {
+    "icarus": "tests/test_operand_bank_owner.py: 2 passed",
+    "verilator_version": "5.050",
+    "verilator_log": "PASS runtime weight banks: 4 concurrent read/write beats, 512-word fill/read, independent addresses, response backpressure, protected release, stale tags, bounds, reset\n- rtl/test/tb_a3_runtime_weight_banks.sv:95: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 11us; walltime 0.001 s; speed 13.728 ms/s\n- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB\n",
+    "rtl_lint": "passed with repository FakeRAM blackbox declarations"
+  },
+  "coverage": [
+    "opposite-bank simultaneous read/write with differing addresses",
+    "512-word fill and reversed readback",
+    "held response during opposite-bank full refill",
+    "response backpressure",
+    "release denied until response drained",
+    "stale and out-of-bounds reads refused",
+    "active-bank writes refused",
+    "reset revokes transactions"
+  ]
+}
