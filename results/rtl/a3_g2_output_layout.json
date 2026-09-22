@@ -1,0 +1,15 @@
+{
+  "scope": "Captured output tensor-view metadata through G2 output queue and drain; not an implemented object write service.",
+  "status": "pass",
+  "record": "results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+  "record_sha256": "e5fac2d82284b249d1dc6a4d1316fe3ffcbbd7cf45c1516d3b27d6e5f1c05c07",
+  "descriptor_output_object": 5,
+  "campaign_cycles": 25013,
+  "matching_outputs": 1352,
+  "checks": "Four focused issue/prefix tests pass; loaded G2 checks layout validity/object/base/shape/precision on every valid output, including stalls and abort drain. Adapter checks immutable object capture and validity revocation.",
+  "rtl_sources": {
+    "rtl/abi3/ot_a3_g2_array_issue_adapter.sv": "b425b1aa839ed8c74d75746fdc319d6157946eefd9be90b48d7a640ac478ce44",
+    "rtl/abi3/ot_a3_g2_cluster.sv": "ff368d4d7ca9509a7f61d1c871ed880693813468573d7e1700f0f590acd35825",
+    "rtl/test/tb_a3_g2_runtime_program.sv": "17837225ac61802147f85b528133c1a4d0af2fef239e465f96b7d910d95807ed"
+  }
+}

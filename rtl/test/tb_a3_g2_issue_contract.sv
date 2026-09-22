@@ -17,7 +17,10 @@ module tb_a3_g2_issue_contract;
  reg [31:0] b_cols=8,b_depth=80,c_rows=1,c_cols=8;
  reg [7:0] c_dtype=8'h10;
  reg c_fault=0,c_scaled=0,c_bad_header=0,cfg_out_fp32=0;
- wire array_out_fp32;
+ wire array_out_fp32,output_layout_valid;
+ wire [31:0] output_object;
+ wire [15:0] output_logical_cols;
+ reg [31:0] c_object=32'h12345678;
  integer launches=0,checks=0;
  ot_a3_g2_array_issue_adapter dut(
  .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
@@ -29,6 +32,7 @@ module tb_a3_g2_issue_contract;
  .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
  .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(cfg_out_fp32),.array_out_fp32(array_out_fp32),
  .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
+ .output_layout_valid(output_layout_valid),.output_object(output_object),.output_logical_cols(output_logical_cols),
  .array_done(array_done),.array_error_code(array_error_code));
  always @(posedge clk)begin
   desc_valid<=desc_req;
@@ -38,6 +42,7 @@ module tb_a3_g2_issue_contract;
    desc_data[47:32]<=ot_a3_pkg::A3_DESC_TENSOR_VIEW;
    desc_data[55:48]<=ot_a3_pkg::A3_TYPE_MAJOR;
    desc_data[351:320]<=32'd64;
+   desc_data[159:128]<=c_object;
    desc_data[519:512]<=(desc_id==12)?c_dtype:8'h10;
    desc_data[575:544]<=(desc_id==12 && c_scaled)?32'd99:ot_a3_pkg::A3_NO_ID;
    desc_data[735:704]<=(desc_id==10)?32'd1:(desc_id==12)?c_rows:b_cols;
@@ -58,6 +63,7 @@ module tb_a3_g2_issue_contract;
   wait(complete_valid);@(negedge clk);
   if(!complete_fault || complete_trap_class!=trap || complete_slot!=issue_slot || launches!=before_launch)
    $fatal(1,"wrong refusal");
+  if(output_layout_valid)$fatal(1,"refused layout published");
   checks=checks+1;tick();tick();
  end endtask
  initial begin
@@ -68,7 +74,11 @@ module tb_a3_g2_issue_contract;
   view(0,10,0);view(1,11,0);view(4,12,123);view(2,13,999);view(5,14,888);issue();
   wait(array_start);@(negedge clk);
   if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123 || array_out_fp32)$fatal(1,"ABI mapping");
+  if(!output_layout_valid || output_object!=c_object || output_logical_cols!=8)$fatal(1,"output layout missing");
+  c_object=32'h87654321;
+  repeat(4)begin tick();if(!output_layout_valid || output_object!=32'h12345678)$fatal(1,"layout changed while owned");end
   tick();array_done=1;tick();array_done=0;
+  if(output_layout_valid)$fatal(1,"completed layout still valid");
   if(!complete_valid || complete_fault)$fatal(1,"success completion");checks=checks+1;tick();tick();
   // No views may carry over when the IRS slot is recycled.
   view(0,10,0);view(1,11,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);

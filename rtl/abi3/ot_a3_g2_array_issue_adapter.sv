@@ -152,6 +152,10 @@ module ot_a3_g2_array_issue_adapter #(
     output reg  [31:0]   array_ws_base,
     output reg  [31:0]   array_out_base,
     output reg           array_out_fp32,
+    // Captured descriptor metadata, owned through array completion/drain.
+    output wire          output_layout_valid,
+    output reg [31:0]    output_object,
+    output wire [15:0]   output_logical_cols,
     input  wire          array_done,
     input  wire [7:0]    array_error_code,
 
@@ -177,6 +181,8 @@ module ot_a3_g2_array_issue_adapter #(
     localparam [2:0] S_DESC_C = 3'd6;
     // Logical N is distinct from the array's lane-padded column count.
     reg [15:0] logical_cols;
+    assign output_logical_cols=logical_cols;
+    assign output_layout_valid=rst_n && !clear && state==S_RUN;
 
     reg  [2:0]  state;
     reg  [4:0]  slot_q;
@@ -406,6 +412,7 @@ module ot_a3_g2_array_issue_adapter #(
                             refuse_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             state <= S_REFUSE;
                         end else begin
+                            output_object <= desc_data[159:128];
                             array_out_fp32 <= (d_dtype == 8'h12);
                             state <= S_CHECK;
                         end

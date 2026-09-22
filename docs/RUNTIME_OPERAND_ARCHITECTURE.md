@@ -1098,3 +1098,31 @@ short reads and reset cancellation. All four focused pytest cases pass and
 Verilator descriptor-store lint is clean. This is verified control-traffic and
 latency improvement; physical area, frequency and energy effects are unmeasured.
 Evidence: `results/rtl/a3_g2_descriptor_prefix_comparison.json`.
+
+
+## Publish descriptor-owned output layout through drain
+
+G2 now exposes `output_layout_valid`, `output_object`, `output_element_base`,
+`output_rows`, `output_logical_cols`, `output_padded_cols` and `output_fp32`.
+The object comes from C's descriptor header; shape/precision/base come from
+captured admission state. No additional descriptor read or execution cycle is
+added. The object payload is only meaningful when layout valid is asserted.
+Ownership extends through array completion, which in runtime mode includes
+queued-output and final-write drain. `runtime_generation` remains the associated
+runtime identity. Refused operations never publish a valid layout.
+
+The existing `part_addr` is still lane-local. A future writer must subtract
+`output_element_base` to obtain the lane-local index before recovering row and
+column using `output_padded_cols / LANES`; it must then apply logical columns,
+view strides and byte scaling for the actual object address. Multiplying the
+entire existing lane-local address by LANES incorrectly scales a nonzero view
+base. The metadata ports do not themselves implement that translation, object
+bounds, output writes or tail-lane masking. Full descriptor/stride transport
+remains a required architecture step.
+
+Four issue/prefix tests pass. The adapter test checks captured object stability
+and layout revocation. The loaded N56/K80 G2 campaign checks descriptor-derived
+object, base, shape, precision and ownership on every valid queued output,
+including stalls and abort drain; all 1,352 outputs match at unchanged counter
+25,013. Source hashes are verified. Evidence: `results/rtl/a3_g2_output_layout.json`;
+previous G2 evidence is retained under `results/rtl/before_output_layout/`.

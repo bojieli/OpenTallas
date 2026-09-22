@@ -197,6 +197,12 @@ module ot_a3_g2_cluster #(
     input wire runtime_service_fault,
     output wire runtime_transport_cancel,
     output wire [31:0] runtime_generation,
+    // Valid through arithmetic and output drain. Addresses below are element
+    // offsets; part_addr remains the lane-local execution address.
+    output wire output_layout_valid,
+    output wire [31:0] output_object,output_element_base,
+    output wire [15:0] output_rows,output_logical_cols,output_padded_cols,
+    output wire output_fp32,
     output wire weight_request_valid,
     input wire weight_request_ready,
     output wire [63:0] weight_request_tag,
@@ -590,6 +596,10 @@ module ot_a3_g2_cluster #(
     wire [31:0] arr_ws_base;
     wire [31:0] arr_out_base;
     wire        arr_out_fp32;
+    assign output_element_base=arr_out_base;
+    assign output_rows=arr_rows;
+    assign output_padded_cols=arr_cols;
+    assign output_fp32=arr_out_fp32;
 
     ot_a3_g2_array_issue_adapter #(
         .LANES(LANES)
@@ -642,6 +652,8 @@ module ot_a3_g2_cluster #(
         .array_ws_base(arr_ws_base),
         .array_out_base(arr_out_base),
         .array_out_fp32(arr_out_fp32),
+        .output_layout_valid(output_layout_valid),
+        .output_object(output_object),.output_logical_cols(output_logical_cols),
         .array_done(array_done),
         .array_error_code(array_error_code),
         .launch_count(adapter_launch_count),

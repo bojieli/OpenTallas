@@ -140,6 +140,8 @@ from runtime.sim.device import Device  # noqa: E402
 reference_device = Device(case.deployment, capability, verify=False)
 activation_view = reference_device.views.resolve(case.operand0_view, {}, {})
 activation_object = activation_view.object_id
+output_view = reference_device.views.resolve(case.output_view, {}, {})
+output_object = output_view.object_id
 activation_payload = reference_device.memory[activation_object].read(
     0, activation.nbytes
 )
@@ -163,7 +165,7 @@ for row in range(rows):
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
-    f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object};\n"
+    f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object}, OUTPUT_OBJECT=32'd{output_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
@@ -254,6 +256,7 @@ result = {
     "rtl_auxiliary_scheduler": args.auxiliary_windows,
     "object_byte_transport": args.auxiliary_windows,
     "activation_object": activation_object,
+    "descriptor_output_object": output_object,
     "activation_object_sha256": hashlib.sha256(activation_payload).hexdigest(),
     "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
     "sources": hashes,

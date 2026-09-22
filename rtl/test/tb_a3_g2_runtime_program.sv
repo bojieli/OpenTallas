@@ -21,6 +21,9 @@ module tb_a3_g2_runtime_program;
  wire runtime_transport_cancel,array_busy,array_done;
  wire [31:0] runtime_generation;
  wire [7:0] array_error_code;
+ wire output_layout_valid,output_fp32;
+ wire [31:0] output_object,output_element_base;
+ wire [15:0] output_rows,output_logical_cols,output_padded_cols;
  wire [7:0] part_we;wire [255:0] part_data,part_addr;
  wire weight_request_valid,weight_response_ready,auxiliary_request_valid,auxiliary_response_ready;
  wire [63:0] weight_request_tag;
@@ -153,6 +156,8 @@ module tb_a3_g2_runtime_program;
  .auxiliary_response_valid(SRAM_AUX?mem_response_valid:auxvalid),.auxiliary_response_ready(auxiliary_response_ready),
  .auxiliary_response_generation(SRAM_AUX?mem_generation:agen),.auxiliary_response_w(SRAM_AUX?mem_w:aw),
  .auxiliary_response_a_data(SRAM_AUX?mem_a:adata),.auxiliary_response_s_data(32'b0),.auxiliary_response_ws_data(64'b0),
+ .output_layout_valid(output_layout_valid),.output_object(output_object),.output_element_base(output_element_base),
+ .output_rows(output_rows),.output_logical_cols(output_logical_cols),.output_padded_cols(output_padded_cols),.output_fp32(output_fp32),
  .array_busy(array_busy),.array_done(array_done),.array_error_code(array_error_code),.part_we(part_we),.part_data(part_data),.part_addr(part_addr),.part_acc(part_acc));
  always @(posedge clk)begin
   if(!rst_n)begin wactive<=0;auxvalid<=0;end
@@ -165,6 +170,9 @@ module tb_a3_g2_runtime_program;
     if(auxiliary_request_a>=DEPTH*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
    if(auxvalid && auxiliary_response_ready)auxvalid<=0;
    if(runtime_transport_cancel)begin wactive<=0;auxvalid<=0;end
+   if(part_valid && (!output_layout_valid || output_object!=OUTPUT_OBJECT || output_element_base!=0 ||
+      output_rows!=ROWS || output_logical_cols!=COLS || output_padded_cols!=COLS || output_fp32))
+    $fatal(1,"output descriptor layout not owned through drain");
    if(held && (!part_valid || {part_we,part_addr,part_data,part_acc}!=held_payload))$fatal(1,"stalled output changed");
    held<=part_valid && !sink_ready;held_payload<={part_we,part_addr,part_data,part_acc};
    if(part_valid && !sink_ready)output_stalls<=output_stalls+1;
