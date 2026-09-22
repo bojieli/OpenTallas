@@ -567,6 +567,30 @@ def main(argv: list[str] | None = None) -> int:
         "model_id": MODEL_ID,
         "reduced": True,
         "snapshot": str(arguments.snapshot),
+        #: THE TOKENIZER THIS ORACLE TOKENIZED WITH.
+        #:
+        #: tools/run_accelerator_tokens.py refuses to execute unless the
+        #: workload/reference pair binds a 64-hex tokenizer_sha256: a comparison
+        #: between two sides that tokenized differently is a comparison of two
+        #: different prompts. Every FULL-model oracle binds it and no reduced one
+        #: did, so the reduced vehicles could not be deployed at all -- the runner
+        #: stopped with "the workload/reference pair does not bind a valid
+        #: tokenizer SHA-256" before reaching the accelerator.
+        #:
+        #: The digest is sha256 of the snapshot's own tokenizer.json, which is the
+        #: convention the released oracles already follow: the full V4.1 snapshot's
+        #: tokenizer.json hashes to c90dfa01249db1be4245780a052ede752e1361c612ac6
+        #: d08e2bdada7d599476b, exactly the value those oracles carry.
+        "tokenizer_sha256": _sha256_file(arguments.snapshot / "tokenizer.json"),
+        #: WHICH ROUTED-EXPERT NUMERIC PATH THIS GOLD WAS PRODUCED ON.
+        #:
+        #: run_accelerator_tokens.py requires the oracle's expert_numeric_path to
+        #: equal its own --expert-numeric-path, because "a gold produced through a
+        #: different numeric path is not this run's comparator". This tool takes
+        #: the path as an argument and branches on it, but never recorded it, so
+        #: the runner read None and refused every reduced vehicle -- including for
+        #: golds that WERE produced on the requested path.
+        "expert_numeric_path": arguments.expert_numeric_path,
         "torch_version": torch.__version__,
         "python_version": platform.python_version(),
         "dtype": "bfloat16",

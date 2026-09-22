@@ -41,6 +41,14 @@
       "queues": 2
     }
   },
+  "fabric": {
+    "cluster": {
+      "domain_size": 8,
+      "domains": 1,
+      "inter_domain_class": 0
+    },
+    "node_class": 0
+  },
   "features": [
     0,
     1,
@@ -51,18 +59,19 @@
     6,
     7,
     8,
-    10
+    10,
+    13
   ],
   "limits": {
     "max_context_positions": 262144,
     "max_descriptors": 65536,
-    "max_event_id": 1023,
-    "max_events": 1024,
+    "max_event_id": 4095,
+    "max_events": 4096,
     "max_expert_ids": 4096,
     "max_instructions": 65536,
     "max_loop_depth": 4,
     "max_loop_trip": 16777216,
-    "max_nodes": 32,
+    "max_nodes": 8,
     "max_outstanding_per_queue": 64,
     "max_retired_work": 70368744177664,
     "max_sessions": 8,
@@ -71,13 +80,13 @@
     "max_vocabulary": 262144
   },
   "link": {
-    "bisection_links": 64,
+    "bisection_links": 16,
     "chunk_bytes": 65536,
     "credit_bound": 32,
     "endpoints_per_node": 8,
-    "peers_per_node": 31,
+    "peers_per_node": 7,
     "retry_bound": 3,
-    "route_groups": 4,
+    "route_groups": 1,
     "virtual_channels": 4
   },
   "memory": {
@@ -85,6 +94,9 @@
       "burst_bytes": 64,
       "bytes": 103079215104,
       "channels": 8
+    },
+    "host": {
+      "resident_region_bytes": 222085385232
     },
     "sram": {
       "bank_bytes": 4194304,
@@ -95,6 +107,11 @@
   },
   "numeric_contracts": [
     "attention_kv_view_bf16_v1",
+    "bf16_add_rne_v1",
+    "bf16_bf16_fp32_blocked_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+    "bf16_byte_preserving_state_v1",
+    "bf16_payload_lookup_v1",
     "candidate_mask_admission_plane_v1",
     "candidate_mask_block_maximum_v1",
     "candidate_mask_block_top_k_v1",
@@ -104,23 +121,32 @@
     "compression_compress_project_bf16_v1",
     "compression_pool_compress_pool_f32_v1",
     "compression_state_compress_state_update_f32_raw_window_transaction_v1",
+    "conversion_binary32_tensor_to_bf16_rne_v1",
     "deepseek_rmsnorm_binary32_v1",
     "dispatch_reduce_expert_outputs_bf16_v1",
     "dispatch_routed_experts_bf16_v1",
     "engram_gate_fp32_v1",
+    "engram_gate_pinned_form_v1",
+    "exact_index_select_v1",
+    "exact_token_append_eos_v1",
     "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1",
     "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1",
+    "fp8_swiglu_bf16_activation_quantize_v1",
     "fp8_swiglu_bf16_clamped_silu_product_v1",
     "fp8_swiglu_bf16_down_contraction_v1",
     "fp8_swiglu_bf16_gate_contraction_v1",
     "fp8_swiglu_bf16_quantize_v1",
     "fp8_swiglu_bf16_up_contraction_v1",
+    "greedy_lowest_token_id_argmax_v1",
     "grouped_output_project_bf16_block_scaled_contraction_v1",
     "grouped_output_project_bf16_group_axis_v1",
     "grouped_output_project_bf16_group_columns_v1",
     "grouped_output_project_bf16_group_contraction_v1",
     "grouped_output_project_bf16_group_join_v1",
     "grouped_output_project_bf16_quantize_v1",
+    "grouped_output_project_bf16_v1",
+    "hadamard_rotate_128_bf16_v1",
+    "hc_head_bf16_v1",
     "hyper_connection_hc_collapse_bf16_v1",
     "hyper_connection_hc_pre_bf16_branch_collapse_v1",
     "hyper_connection_hc_pre_bf16_branch_weight_plane_v1",
@@ -128,6 +154,7 @@
     "hyper_connection_hc_pre_bf16_v1",
     "index_key_write_bf16_v1",
     "index_score_bf16_v1",
+    "indexing_compressed_dense_indices_v1",
     "indexing_window_indices_v1",
     "kv_window_write_bf16_v1",
     "lm_head_bf16_final_source_position_v1",
@@ -136,10 +163,14 @@
     "lookup_compressed_token_ids_v1",
     "lookup_engram_row_fp8_e4m3_reconstruct_v1",
     "lookup_engram_row_fp8_e4m3_row_read_v1",
+    "lookup_engram_row_fp8_e4m3_row_scale_read_v1",
+    "lookup_hash_route_indices_v1",
     "matrix_bf16_linear_bf16_softmax_and_head_scale_v1",
     "matrix_bf16_linear_bf16_v1",
+    "matrix_dense_fp8_linear_bf16_activation_quantize_v1",
     "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
     "matrix_dense_fp8_linear_bf16_quantize_v1",
+    "mxfp4_swiglu_bf16_activation_quantize_v1",
     "mxfp4_swiglu_bf16_clamped_silu_product_v1",
     "mxfp4_swiglu_bf16_down_contraction_v1",
     "mxfp4_swiglu_bf16_gate_contraction_v1",
@@ -155,9 +186,15 @@
     "quantization_fp4_qdq_bf16_reconstruct_v1",
     "quantization_fp8_qdq_bf16_quantize_v1",
     "quantization_fp8_qdq_bf16_reconstruct_v1",
+    "qwen3_gqa_fp32_softmax_bf16_v1",
+    "qwen3_rmsnorm_fp32_bf16_v1",
+    "qwen3_rope_fp32_bf16_v1",
+    "qwen3_silu_mul_bf16_v1",
     "rope_apply_bf16_coefficient_rows_v1",
     "rope_apply_bf16_rotate_v1",
+    "rope_apply_bf16_v1",
     "rope_inverse_bf16_rotate_v1",
+    "rope_inverse_bf16_v1",
     "routing_normalize_routed_weight_codes_route_scale_v1",
     "routing_normalize_routed_weight_codes_selected_sum_normalize_v1",
     "routing_normalize_routed_weight_codes_unbiased_score_gather_v1",
@@ -165,6 +202,9 @@
     "sampling_deepseek_v41_sample_binary32_greedy_argmax_v1",
     "sampling_deepseek_v41_sample_binary32_temperature_v1",
     "sampling_deepseek_v41_sample_binary32_token_append_v1",
+    "sampling_deepseek_v4_sample_binary32_greedy_argmax_v1",
+    "sampling_deepseek_v4_sample_binary32_temperature_v1",
+    "sampling_deepseek_v4_sample_binary32_token_append_v1",
     "selection_biased_topk_route_indices_v1",
     "selection_index_topk_indices_masked_topk_v1",
     "selection_index_topk_indices_window_then_compressed_v1",
@@ -177,5 +217,5 @@
   ],
   "schema": "opentallas.abi3.capability.v1",
   "technology_view": "shared-hbm-sram-chip-v3",
-  "topology_class": 1
+  "topology_class": 3
 }
