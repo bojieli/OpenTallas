@@ -20,9 +20,8 @@
 //   * The sequencer publishes one resolved view per operand just before it
 //     issues (publish_view: view_valid, view_descriptor_id, view_slot,
 //     view_extent, view_element_offset, view_rank, view_irs_slot).  This
-//     block captures operand slots 0, 1 and 2 -- the LQ8 computes C = A x B
-//     and needs three -- and drops slots 3..5, which belong to operators with
-//     more operands than this array serves.
+//     block captures operand slots 0, 1 and 4 for C = A x transpose(B).
+//     Input slots 2/3 and output slot 5 are outside this contraction mapping.
 //   * view_element_offset IS the resolved element offset of that operand, so
 //     cfg_a_base, cfg_w_base and cfg_out_base are taken straight from the
 //     views.  Nothing is invented.
@@ -31,7 +30,8 @@
 //     TENSOR_VIEW descriptors themselves, read back over this block's own
 //     descriptor-store port: dim[0] at payload[223:192] and dim[1] at
 //     payload[255:224], the same two fields ot_a3_view_resolver decodes for
-//     its bounding-range walk.  A is read as rows x depth, B as depth x cols.
+//     its bounding-range walk. A is rows x depth; B is cols x depth,
+//     following the ABI N-major weight layout.
 //   * cfg_dtype_a and cfg_dtype_b are the dtype byte at payload[7:0] of the
 //     two operand views.  The ABI dtype codes and ot_a3_format_pkg's FMT_*
 //     codes are the same numbers (BF16 = 0x10, FP8_E4M3FN = 0x20,
@@ -214,6 +214,11 @@ module ot_a3_g2_array_issue_adapter #(
 
     assign issue_ready = (state == S_IDLE);
 
+    // ABI slots 0..3 are inputs and 4..5 are outputs. Compact only the
+    // two contraction inputs and first output into this adapter's three slots.
+    wire contraction_view = (view_slot == 3'd0) || (view_slot == 3'd1) ||
+                            (view_slot == 3'd4);
+    wire [1:0] contraction_slot = (view_slot == 3'd4) ? 2'd2 : view_slot[1:0];
     wire all_views = (view_have == 3'b111) && (view_irs_q == issue_slot);
 
     integer i;
@@ -284,13 +289,13 @@ module ot_a3_g2_array_issue_adapter #(
                 views_captured <= views_captured + 32'd1;
                 if (view_reset || (view_irs_q != view_irs_slot)) begin
                     view_irs_q <= view_irs_slot;
-                    view_have  <= (view_slot < 3'd3) ? (3'b001 << view_slot[1:0]) : 3'b000;
-                end else if (view_slot < 3'd3) begin
-                    view_have[view_slot[1:0]] <= 1'b1;
+                    view_have  <= contraction_view ? (3'b001 << contraction_slot) : 3'b000;
+                end else if (contraction_view) begin
+                    view_have[contraction_slot] <= 1'b1;
                 end
-                if (view_slot < 3'd3) begin
-                    view_id[view_slot[1:0]]  <= view_descriptor_id;
-                    view_off[view_slot[1:0]] <= view_element_offset[31:0];
+                if (contraction_view) begin
+                    view_id[contraction_slot]  <= view_descriptor_id;
+                    view_off[contraction_slot] <= view_element_offset[31:0];
                 end
             end
             if (view_reset)
@@ -347,14 +352,14 @@ module ot_a3_g2_array_issue_adapter #(
                     end
                 end
 
-                // Operand B: depth x cols, its dtype and its scale binding.
+                // Operand B: cols x depth, its dtype and its scale binding.
                 S_DESC_B: begin
                     if (desc_valid) begin
                         if (!d_header_ok || !dim_ok(d_dim0) || !dim_ok(d_dim1)) begin
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
-                        end else if (d_dim0[15:0] != array_depth) begin
-                            // A's inner extent and B's leading extent are the
+                        end else if (d_dim1[15:0] != array_depth) begin
+                            // A's inner extent and B's inner extent are the
                             // same K or the operation is not this contraction.
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
@@ -365,7 +370,7 @@ module ot_a3_g2_array_issue_adapter #(
                             // gives lane i block columns c * LANES + i, so a
                             // short final group has no owner.  Round up and
                             // let the caller ignore the trailing columns.
-                            array_cols    <= (d_dim1[15:0] + LANE_MASK) & ~LANE_MASK;
+                            array_cols    <= (d_dim0[15:0] + LANE_MASK) & ~LANE_MASK;
                             state         <= S_CHECK;
                         end
                     end

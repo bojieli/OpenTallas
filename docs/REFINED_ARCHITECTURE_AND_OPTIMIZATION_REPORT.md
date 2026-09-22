@@ -1,8 +1,8 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation reviewed through commit `63090e65`; this report consolidates the
-completed checkpoints and the next acceptance gates.
+Implementation includes the G2 ABI dispatch correction following `63090e65`;
+this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
 
@@ -21,7 +21,7 @@ or whole-chip performance claim is made.
 
 | Area | Previous execution path | Refined architecture | Current implementation status |
 |---|---|---|---|
-| Runtime delivery | G2 host writes globally disabled while busy; operands preloaded | Separate idle-only program loader from runtime operand transport | Connected in optional G2 runtime mode; program-driven qualification pending |
+| Runtime delivery | G2 host writes globally disabled while busy; operands preloaded | Separate idle-only program loader from runtime operand transport | Connected in optional G2 runtime mode; bounded BF16 program-driven regression added |
 | Storage feasibility | Finite staging cannot hold complete Qwen contractions | Tile large operations through bounded scratchpads while keeping accumulators live | Weight path crosses many tiles in one live contraction; activation scratchpad integration pending |
 | Weight banks | Shared address and global read/write exclusion | Independent bank addresses, tagged ownership, opposite-bank refill | Two 512x128 SRAM wrappers verified |
 | Prefetch | Fixed-latency reads assumed at arithmetic issue | Independent tile read cursor and finite FIFO | Four-entry weight FIFO; copies survive bank release and overwrite |
@@ -30,7 +30,7 @@ or whole-chip performance claim is made.
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
 | Reuse | Stream execution repeats weights for rows | Retain resident weight tiles for bounded multi-row execution | Bank retain/replay verified; multi-row compute scheduling pending |
 | Numerical behavior | Multiple engines/prototypes use different reduction associations | Preserve sequential RNE or explicitly specify and qualify blocked association | Existing LQ8 numerical/fault corpus preserved; Qwen blocked implementation qualification pending |
-| Completion | Arithmetic completion alone cannot prove external work has drained | Generation-owned completion waits for transport and final writes | Connected in G2; delayed drain, abort and restart tested at adapter boundary |
+| Completion | Arithmetic completion alone cannot prove external work has drained | Generation-owned completion waits for transport and final writes | Connected in G2; delayed drain, abort and restart tested through a loaded program |
 | Physical optimization | Isolated block results and incomplete/stale coverage | Optimize selected architecture, then route containing blocks and every target configuration | Full recharacterization remains pending |
 
 The independent cursor follows row/pass/K/column order with counters and adders.
@@ -82,13 +82,15 @@ writes still use a fixed-throughput interface; a bounded backpressured output
 queue with issue-capacity reservation remains required. Runtime mode is opt-in
 (`RUNTIME_OPERANDS=1`), eight-lane only; legacy staging remains the default.
 
-Source review also finds a dispatch contract mismatch: the G2 issue adapter
-checks weight dimensions as `[K,N]`, whereas the ABI tensor engine specifies
-`[N,K]` for `A × transpose(B)`. The existing G2 test forces adapter outputs and
-therefore cannot detect this. The next qualification must load an admitted
-non-square program, reproduce and correct the mismatch, and verify descriptor
-refusals and completion through the actual sequencer. General view-offset
-translation and padded-column output bounds also require explicit qualification.
+Program-driven qualification exposed two dispatch contract defects, now fixed:
+the adapter captured output slot 2 instead of ABI slot 4, and checked weights as
+`[K,N]` instead of `[N,K]` for `A × transpose(B)`. A host-loaded, admitted
+`M=1,N=8,K=80` BF16 program now executes through the actual sequencer and adapter.
+Its signed, nonuniform operands match the functional Device's numerical output.
+The fixture service explicitly packs ABI N-major weights into lane words; this
+does not yet implement a general deployment-memory transport. General
+view-offset translation, other formats/shapes and padded-column output bounds
+still require qualification.
 
 ## Measured changes
 
@@ -126,7 +128,7 @@ that focused test checks admitted geometry, not full-depth arithmetic.
 
 The latest LQ8 completion-barrier corpus passes 92 cases, 17,103 matching
 outputs, 18 fault cases and 115,748 checks. Its evidence records 27 passing
-focused tests. The actual G2 runtime-boundary test passes multi-tile arithmetic,
+focused tests; the added ABI adapter regression brings the focused suite to 28. The actual G2 runtime-boundary test passes multi-tile arithmetic,
 delayed transport/write drain, abort after issue and restart. It bypasses program
 and descriptor dispatch by forcing adapter outputs and uses behavioral SRAM and
 external services. Both G2 generate branches elaborate with existing warnings;
@@ -148,7 +150,9 @@ Primary retained records:
 - `results/rtl/a3_lq8_configuration_capture.json`: stable versus mutated configuration.
 - `results/rtl/a3_lq8_runtime_service.json`: assembled synthesizable service.
 - `results/rtl/a3_lq8_completion_barrier.json`: numerical corpus with delayed drain.
-- `results/rtl/a3_g2_runtime_boundary.json`: G2 wiring, arithmetic, abort and restart.
+- `results/rtl/a3_g2_runtime_boundary.json`: historical G2 boundary wiring test.
+- `results/rtl/a3_g2_runtime_program.json`: loaded ABI program, numerical outputs,
+  abort/transport fault propagation and restart.
 
 Each record identifies its tested sources. Older records remain historical when
 sources change; they do not qualify the current tree automatically. Reproduction
@@ -158,8 +162,9 @@ commands and source/artifact digests are retained in the records and checkers.
 
 1. **Qualify production dispatch and output flow control.** Checked stream
    admission, G2 runtime transport and completion ownership are implemented.
-   Next fix the descriptor-layout mismatch under a loaded ABI program and test
-   real sequencer completion/fault propagation. Add bounded output buffering
+   A bounded loaded-program regression now covers corrected ABI slots/layout
+   and real sequencer completion/fault propagation. Extend shape/format and
+   deployment-memory mapping coverage. Add bounded output buffering
    with capacity reserved before issue and truthful final-write acknowledgement.
    Acceptance requires reset, fault, cancellation and independent backpressure
    tests without stale credits, lost outputs or unexplained permanent stalls.
@@ -205,6 +210,11 @@ and complete physical coverage. The full optimization goal remains active.
 | `ee76dd04` | Assembled synthesizable eight-lane runtime operand service |
 | `19b03edb` | Completion ownership across transport and output drain |
 | `63090e65` | Optional G2 runtime wiring and boundary abort/restart validation |
+
+The subsequent ABI dispatch correction captures slots 0/1/4 and decodes B as
+`[N,K]`. Eight focused contract checks cover valid mapping, ignored extra slots,
+stale-view rejection, mismatched K, zero N, descriptor faults and IRS ownership.
+The program regression uses real host writes and no forced internal signals.
 
 All listed commits were pushed to `token-path-end-to-end`. The configuration
 capture and widened grouped-depth count are correctness improvements as well

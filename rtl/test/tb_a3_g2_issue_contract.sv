@@ -1,0 +1,82 @@
+`timescale 1ns/1ps
+// Focused ABI slot/layout and refusal coverage; full program test is separate.
+module tb_a3_g2_issue_contract;
+ reg clk=0;always #5 clk=~clk;
+ reg rst_n=0,clear=0,issue_valid=0,view_valid=0,array_done=0;
+ reg [7:0] issue_family=ot_a3_pkg::A3_MAJOR_TENSOR,array_error_code=0;
+ reg [4:0] issue_slot=0,view_irs_slot=0;
+ reg [2:0] view_slot=0;
+ reg [31:0] view_descriptor_id=0;
+ reg [63:0] view_element_offset=0;
+ wire issue_ready,complete_valid,complete_fault,desc_req,array_start;
+ wire [15:0] complete_trap_class,array_rows,array_cols,array_depth;
+ wire [4:0] complete_slot;
+ wire [31:0] desc_id,array_out_base;
+ reg desc_valid=0,desc_fault=0;
+ reg [1535:0] desc_data=0;
+ reg [31:0] b_cols=8,b_depth=80;
+ integer launches=0,checks=0;
+ ot_a3_g2_array_issue_adapter dut(
+ .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
+ .issue_family(issue_family),.issue_sub(8'd0),.issue_descriptor_id(32'd0),.issue_slot(issue_slot),
+ .view_valid(view_valid),.view_slot(view_slot),.view_irs_slot(view_irs_slot),
+ .view_descriptor_id(view_descriptor_id),.view_element_offset(view_element_offset),
+ .complete_valid(complete_valid),.complete_fault(complete_fault),.complete_trap_class(complete_trap_class),.complete_slot(complete_slot),
+ .desc_req(desc_req),.desc_id(desc_id),.desc_valid(desc_valid),.desc_fault(desc_fault),.desc_data(desc_data),
+ .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
+ .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(1'b0),
+ .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
+ .array_done(array_done),.array_error_code(array_error_code));
+ always @(posedge clk)begin
+  desc_valid<=desc_req;
+  if(desc_req)begin
+   desc_data<=0;
+   desc_data[31:0]<=ot_a3_pkg::A3_DESCRIPTOR_MAGIC;
+   desc_data[47:32]<=ot_a3_pkg::A3_DESC_TENSOR_VIEW;
+   desc_data[55:48]<=ot_a3_pkg::A3_TYPE_MAJOR;
+   desc_data[351:320]<=32'd64;
+   desc_data[519:512]<=8'h10;
+   desc_data[575:544]<=ot_a3_pkg::A3_NO_ID;
+   desc_data[735:704]<=(desc_id==10)?32'd1:b_cols;
+   desc_data[767:736]<=(desc_id==10)?32'd80:b_depth;
+  end
+  if(array_start)launches<=launches+1;
+ end
+ task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
+ task view(input [2:0] slot,input [31:0] id,input [31:0] offset);begin
+  view_valid=1;view_slot=slot;view_descriptor_id=id;view_element_offset={32'd0,offset};tick();view_valid=0;
+ end endtask
+ task issue;begin
+  if(!issue_ready)$fatal(1,"adapter not ready");
+  issue_valid=1;tick();issue_valid=0;
+ end endtask
+ task expect_refusal(input [15:0] trap);integer before_launch;begin
+  before_launch=launches;issue();
+  wait(complete_valid);@(negedge clk);
+  if(!complete_fault || complete_trap_class!=trap || complete_slot!=issue_slot || launches!=before_launch)
+   $fatal(1,"wrong refusal");
+  checks=checks+1;tick();tick();
+ end endtask
+ initial begin
+  tick();rst_n=1;tick();
+  // Actual ABI uses slots 0,1,4; a third input cannot replace the output.
+  view(0,10,0);view(1,11,0);view(2,12,999);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  // Supply ignored slots as well: slot 2 must not overwrite compact output.
+  view(0,10,0);view(1,11,0);view(4,12,123);view(2,13,999);view(5,14,888);issue();
+  wait(array_start);@(negedge clk);
+  if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123)$fatal(1,"ABI mapping");
+  tick();array_done=1;tick();array_done=0;
+  if(!complete_valid || complete_fault)$fatal(1,"success completion");checks=checks+1;tick();tick();
+  // No views may carry over when the IRS slot is recycled.
+  view(0,10,0);view(1,11,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  // Reject old K-major interpretation, mismatched inner extent, and zero N.
+  b_cols=80;b_depth=8;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  b_cols=8;b_depth=79;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  b_cols=0;b_depth=80;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  // Malformed descriptor response and mismatched issue ownership also refuse.
+  b_cols=8;desc_fault=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);desc_fault=0;
+  view(0,10,0);view(1,11,0);view(4,12,0);issue_slot=1;expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  $display("PASS G2 issue contract checks=%0d",checks);$finish;
+ end
+ initial begin #100000;$fatal(1,"timeout");end
+endmodule

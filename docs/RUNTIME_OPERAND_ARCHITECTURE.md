@@ -666,3 +666,36 @@ geometry failure and transport faults), output buffering/acknowledgement,
 reusable auxiliary SRAM and multi-row reuse, followed by configuration-specific
 physical characterization. Existing G2 physical records are historical after
 these RTL edits; do not attribute their closure to the new runtime branch.
+
+
+## Program-driven G2 dispatch qualification
+
+`tools/check_g2_runtime_program.py` builds and verifies a real ABI BF16
+contraction (`M=1,N=8,K=80`) and runs the functional Device for its expected
+output. It host-loads the program and descriptor images into G2's behavioral
+SRAM macros; no internal RTL signals are forced. Activations vary across K and
+weights vary across lanes and K, including signs and zeros. The external
+fixture service repacks ABI N-major weights into eight-lane words; that packing
+is explicit test infrastructure, not a general hardware address translator.
+
+This test exposed two defects hidden by the earlier boundary test:
+
+- G2 captured slots 0/1/2, but ABI inputs occupy slots 0..3 and outputs 4..5.
+  The contraction now captures slots 0/1/4 into its three local view records.
+- G2 checked B as `[K,N]`; ABI weights are `[N,K]`. Admission now checks B's
+  second dimension against K and derives columns from its first dimension.
+
+The regression checks numerical outputs and lane-local output addresses,
+completion after transport and final-write drain, explicit abort, a corrupt
+transport tag, ENGINE-trap propagation and successful restart after each fault.
+Already committed writes remain outside rollback semantics. A separate
+Icarus test covers eight adapter contract/refusal cases, including stale view
+sets on recycled IRS slots and a third input that cannot replace an output.
+The focused suite now has 28 passing tests. Source-bound program evidence is
+`results/rtl/a3_g2_runtime_program.json`.
+
+This is one bounded, unscaled BF16 shape with modeled transport, not complete
+ABI/deployment or all-target qualification. Nonzero view-offset translation,
+partial column groups, additional formats and real output backpressure remain
+open. Both G2 branches elaborate with existing warnings; new physical evidence
+is still required before assigning a clock or area to these changes.
