@@ -4,6 +4,89 @@ Date: 2026-09-22. Status: architecture implementation in progress.
 Implementation includes the G2 offset-alias correction after `46ec89f6`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
+## Current review summary (2026-09-22)
+
+The project has meaningful local optimizations and a substantially improved
+runtime operand architecture, but significant system-level efficiency and
+integration gaps remain. The implemented changes primarily qualify optional
+G2/LQ8 runtime mode; they do not demonstrate an optimized accelerator across
+all targets. The sections below retain historical checkpoints; this summary
+supersedes their statements about running physical jobs.
+
+The refined architecture separates operation admission, bounded tile transport,
+local SRAM reuse, complete-operand issue credits, arithmetic and reserved output
+drain. Tagged dual weight banks overlap refill with execution. Independent
+auxiliary cursors and three reusable SRAM windows decouple memory latency from
+compute. Generation ownership prevents stale responses from becoming current
+operands; completion waits for queued outputs and external writes to drain.
+These are implemented architectural improvements. Multi-row weight reuse and a
+complete deployment memory system remain planned.
+
+| Verified change | Previous measurement | Refined measurement | Scope and limitation |
+|---|---:|---:|---|
+| Overlap weight refill and execution | 378,517 cycles | 326,833 cycles (13.65% lower) | Matched 92-case functional corpus; not model-token throughput |
+| Right-size auxiliary queue | 2,560 bits, eight entries | 640 bits, two entries | 75% fewer payload/identity bits; 0.15% more cycles in the compared experiment |
+| Reuse activation SRAM windows | 1,440 direct word deliveries | 480 activation fills | 66.7% less activation traffic for M=6,N=24,K=80; weights still repeat per row |
+| Mapper synthesis area | 789.931 um² | 681.313 um² | 13.75% lower; adds one mapping startup stage |
+| Scheduler synthesis area | 412.863 um² | 356.758 um² | 13.59% lower with unchanged planning latency |
+| Mapper routed standard-cell area | 1,044.51 um² | 876.389 um² | 16.10% lower in initial optimized route; two fanout violations remain |
+
+These comparisons use different experiments and must not be combined into one
+system speedup. The latest recorded focused suite has 36 passing tests. The
+loaded-program byte-transport campaign produces 584 matching accepted outputs
+across success, faults, aborts and recovery. The broader LQ8 numerical regression
+has 92 cases and 17,103 matching outputs. These are simulation results.
+
+The completed ASAP7 TT routes at a 1 ns target are:
+
+| Standalone design | Setup WNS (ns) | Hold WNS (ns) | Standard-cell area (um²) | Fanout violations |
+|---|---:|---:|---:|---:|
+| Baseline mapper | +0.103283 | +0.057078 | 1,044.510 | 0 |
+| Optimized mapper, initial route | +0.391994 | +0.059846 | 876.389 | 2 |
+| Optimized auxiliary scheduler | +0.118610 | +0.044861 | 468.208 | 4 |
+
+All three report zero setup/hold, DRC, antenna, slew and capacitance violations.
+The optimized routes therefore meet timing at this corner but do not yet pass
+all physical checks. Their records retain overall `not_met`, also reflecting
+failed pre-layout timing. No integrated G2 GHz claim follows. The mapper's flow
+power estimate rises from 3.748 to 5.936 mW; this is not activity-qualified energy
+per operation, and an energy improvement has not been established. Free-running
+payload arithmetic needs workload-based switching evaluation. A smaller-clock-
+cluster mapper reroute has been launched with the fanout limit held at 16; it
+has no accepted result at this report checkpoint.
+
+The two optimized route records and all seven retained artifacts per record
+were checked against their hashes. Their source hashes match the committed
+optimized snapshots and current production RTL. Evidence is retained in
+`results/physical_abi3/asap7/runtime_byte_mapper/pnr_resetless_1ns.json` and
+`results/physical_abi3/asap7/runtime_auxiliary_scheduler/pnr_optimized_1ns.json`.
+
+The next work is ordered by architectural impact:
+
+1. Complete descriptor-derived mapping, packed/strided weight transport and
+   output-object writes. Qualify format/shape coverage through real dispatch,
+   bounded transport and final-write completion.
+2. Implement bounded multi-row execution that reuses resident weight tiles.
+   Measure external bytes per useful output and accumulator capacity while
+   preserving the specified sequential FP32 RNE behavior.
+3. Establish a workload/resource budget for every supported target: dense/MoE,
+   decode/prefill, attention/KV, vector/reduction, routing and distributed
+   transport. Select memory banking, concurrency and queue depths from measured
+   starvation, conflicts and service rates.
+4. Optimize each selected component from routed critical paths: pipeline long
+   arithmetic and address/control paths, reduce mux depth and fanout, and tune
+   recurrence scheduling without silently changing numerical association.
+   Evaluate added cycles and register/switching cost alongside frequency.
+5. Recharacterize containing blocks and every target configuration. Require
+   setup/hold and physical-rule closure, then report workload latency,
+   throughput, traffic, area and activity-based energy together. ASAP7's initial
+   1 GHz engineering target is not a universal target for other technologies.
+
+Modern accelerator principles guide the design: local reuse, overlapped data
+movement, bounded credits, explicit ownership and workload-driven resource
+balance. All-target efficiency remains an acceptance requirement, not a result
+already achieved.
+
 ## Assessment
 
 The repository contains optimized blocks, but an efficient integrated accelerator
