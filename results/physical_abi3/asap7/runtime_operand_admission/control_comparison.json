@@ -1,0 +1,29 @@
+{
+  "scope": "Matched ASAP7 TT 1 ns synthesis and pre-layout STA; routed results pending",
+  "baseline_record": "prelayout_optimized_1ns.json",
+  "optimized_record": "prelayout_control_1ns.json",
+  "mapped_area_um2": {
+    "baseline": 741.145,
+    "optimized": 680.741
+  },
+  "mapped_area_reduction_percent": 8.150092087243388,
+  "sequential_area_um2": {
+    "baseline": 194.847,
+    "optimized": 150.583
+  },
+  "setup_wns_ns": {
+    "baseline": -1.3885105343251902,
+    "optimized": -1.2074713499574776
+  },
+  "admission_cycles": {
+    "unscaled": 3,
+    "scaled": 19
+  },
+  "integrated_final_completion_counter": 14357,
+  "integrated_matching_outputs": 584,
+  "limitations": [
+    "Both pre-layout timing checks fail at 1 ns",
+    "No measured energy saving",
+    "Containing G2 and all-target closure remain unproven"
+  ]
+}

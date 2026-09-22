@@ -75,7 +75,7 @@ reg [7:0] cfg_group=0;reg cfg_scale_a=0,cfg_scale_b=0;
 wire [31:0] generation,a_base,s_base,ws_base,w_base,stream_words;
 wire [15:0] rows,local_cols,depth_words,rows_per_scale_a,scale_stride_a,scale_stride_b,groups_per_scale_a,groups_per_scale_b;
 ot_a3_lq8_operand_admission dut(.*);
-integer checks=0,abort_stage,abort_scaled;
+integer checks=0,abort_stage,abort_scaled,abort_reset;
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
 task check_case(input [15:0] nr,nc,nk,input [7:0] ng,input sa,sb,input [15:0] ba,bb,rpb,input bad,input [15:0] words,cpa,cpb,input [31:0] wb);
 integer cycles;
@@ -106,16 +106,20 @@ tick();rst_n=1;
 """
         + "\n".join(vectors)
         + """
-// Clear every calculation edge and a held record on both admission paths.
+// Clear/reset every calculation edge and a held record on both paths.
+for(abort_reset=0;abort_reset<2;abort_reset=abort_reset+1)begin
 for(abort_scaled=0;abort_scaled<2;abort_scaled=abort_scaled+1)begin
  for(abort_stage=0;abort_stage<=(abort_scaled?19:3);abort_stage=abort_stage+1)begin
   cfg_rows=2;cfg_cols=24;cfg_depth=24;cfg_group=2;
   cfg_scale_a=1'(abort_scaled);cfg_scale_b=1'(abort_scaled);
   cfg_block_a=6;cfg_block_b=8;command_valid=1;tick();command_valid=0;
-  repeat(abort_stage)tick();clear=1;tick();clear=0;
+  repeat(abort_stage)tick();
+  if(abort_reset)begin rst_n=0;tick();rst_n=1;end
+  else begin clear=1;tick();clear=0;end
   repeat(20)tick();if(record_valid || !command_ready)$fatal(1,"clear left admission active");
   check_case(2,24,24,2,0,0,0,0,0,0,12,0,0,400);
  end
+end
 end
 $display("PASS admission cases=%0d capture, hold, overflow boundary and abort",checks);$finish;
 end
@@ -142,4 +146,4 @@ endmodule
     assert built.returncode == 0, built.stderr
     run = subprocess.run(["vvp", str(sim)], capture_output=True, text=True, timeout=30)
     assert run.returncode == 0, run.stdout + run.stderr
-    assert f"PASS admission cases={len(cases) + 2 + 24}" in run.stdout
+    assert f"PASS admission cases={len(cases) + 2 + 48}" in run.stdout

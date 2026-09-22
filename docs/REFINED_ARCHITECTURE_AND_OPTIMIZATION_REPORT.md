@@ -625,3 +625,39 @@ standalone routed-stage closure, while the overall record remains `not_met`
 because pre-layout STA fails. Evidence:
 `runtime_auxiliary_scheduler/pnr_optimized_cts12_1ns.json`. The 36-test focused
 runtime suite passes after the admission change.
+
+
+## Admission control-area checkpoint
+
+Admission now resets only ownership/publication state and error status. Command
+capture initializes payload and divider state before use; the two extent
+products advance from captured, held geometry without per-stage enables.
+Published records remain stable under backpressure, and clear/reset revokes
+publication even if invalid payload changes. This removes payload reset and
+pipeline-enable overhead while preserving three-cycle unscaled and 19-cycle
+scaled admission.
+
+Matched ASAP7 TT synthesis at 1 ns reduces mapped area from 741.145 to
+680.741 um² (8.15%) and sequential area from 194.847 to 150.583 um².
+Pre-layout setup WNS improves from -1.3885 to -1.2075 ns; both fail the target,
+and the revised worst path still starts at clear through command capture.
+Matched baseline/candidate full routes use fanout 16, transition 0.32 ns and
+CTS cluster size 12. They are running; no routed saving or timing closure is
+claimed for admission yet. Switching energy is unmeasured.
+
+All 36 focused runtime tests pass. Admission coverage now has 143 cases,
+including clear and reset at every calculation stage and while holding a
+record, followed by fresh-command recovery. Standalone lint is clean. The G2
+byte-transport regression retains 584 matching outputs, 480 first-operation
+activation fills, 1,440 reads and the exact 14,357 final completion counter.
+Evidence and source snapshots are under
+`results/physical_abi3/asap7/runtime_operand_admission/`, including
+`control_comparison.json`. These component improvements do not resolve the
+remaining deployment mapping, weight-reuse or all-target integration work.
+
+The full numerical/fault campaign with integrated runtime service, completion
+barrier and configuration mutation also passes: 92 cases, 17,103 matching
+outputs, 18 faults and 115,748 checks. Its aggregate operation count is
+323,316 cycles. This is a different harness from G2's
+loaded-program counter. Source-bound evidence is
+`results/rtl/a3_lq8_admission_control.json`.
