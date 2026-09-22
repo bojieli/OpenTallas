@@ -7,8 +7,8 @@
     3,
     5
   ],
-  "checked_coordinates_per_configuration": 73972,
-  "checked_coordinates_total": 221916,
+  "checked_coordinates_per_configuration": 73976,
+  "checked_coordinates_total": 221928,
   "coverage": [
     "strided and zero-stride views",
     "partial groups and tail lanes",
@@ -18,12 +18,14 @@
     "zero geometry refusal",
     "backpressure stability",
     "cancellation during admission and stalled publication",
-    "generation reuse after cancellation"
+    "generation reuse after cancellation",
+    "simultaneous maximum column and K extents with exact final-address carry",
+    "cancellation in every admission stage"
   ],
   "lint": "Verilator 5.050 --lint-only -Wall passes",
   "sources": {
     "rtl/abi3/ot_a3_weight_layout_cursor.sv": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971",
-    "tests/test_weight_layout_cursor.py": "cda918a5818217dee279893b7c8b3985f6fac5b3a01370cff57274ee530eae43"
+    "tests/test_weight_layout_cursor.py": "4974ed9b3de6b2d4ca5cf2ba2384ac197b2c8e953b8a1cec6856ea5ee497740e"
   },
   "admission_pipeline": "Two 8x32 partial products per dimension, registered combine; two extra admission cycles, no extra coordinate cycles"
 }

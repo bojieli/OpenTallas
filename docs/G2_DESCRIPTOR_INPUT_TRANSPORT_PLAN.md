@@ -139,3 +139,24 @@ The G2 physical run launched before this descriptor change is now a historical
 baseline. Its changed adapter/cluster sources are retained under
 `a3_g2_runtime_writer/descriptor_bounds_handoff_launch_sources/`. It cannot prove
 physical timing for input resolution.
+
+## Admission-pipeline physical comparison
+
+The matched CTS8 route confirms the admission pipeline removes the 1 ns setup
+failure: setup slack improves from -0.191066 to +0.0537158 ns. Hold slack is
++0.051455 ns, with zero slew, capacitance, DRC and antenna violations. Cell area
+increases from 1,301.800 to 1,375.970 um² (5.70%). Admission takes five cycles
+after acceptance instead of three; streaming still supports one coordinate per
+cycle when ready. This is a local timing/latency/area tradeoff, not a workload
+speedup measurement.
+
+Full physical acceptance still fails: two clock-tree nets have 18 and 17 loads
+against the unchanged fanout limit of 16. A CTS12 run is active using the same
+RTL and target period to repair the clock distribution. No fully closed 1 GHz
+cursor configuration is claimed yet. Source and retained artifact hashes were
+verified for both CTS8 records; comparison evidence is in
+`results/physical_abi3/asap7/weight_layout_cursor/admission_pipeline_comparison.json`.
+
+The strengthened functional corpus now checks 73,976 coordinates in each of
+three interleave configurations (221,928 total), plus simultaneous maximal
+column/K admission bounds and cancellation at every admission stage. All pass.

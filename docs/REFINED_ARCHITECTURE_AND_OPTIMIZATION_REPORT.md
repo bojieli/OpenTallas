@@ -2675,3 +2675,11 @@ The standalone cursor's first routed 1 ns attempt misses setup by 191 ps despite
 clean physical rules. Admission multiplication has been pipelined at its measured
 critical path; the revised route is pending. Both integrated G2 jobs predate the
 new input metadata and remain historical baselines, not current-source closure.
+
+## Cursor pipeline measured outcome
+
+The revised cursor CTS8 route now passes setup at 1 ns (+0.053716 ns versus
+-0.191066 ns), at 5.70% more cell area and two extra admission cycles. Streaming
+rate is unchanged. Two clock fanout violations prevent full physical acceptance;
+a CTS12 rerun is active with the same fanout limit. See the input transport plan
+for the source-bound comparison. Integrated input transport remains incomplete.

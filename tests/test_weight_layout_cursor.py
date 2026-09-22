@@ -26,7 +26,7 @@ wire [63:0] element_base;
 wire [7:0] lane_mask;
 wire [15:0] row_index,column_base,k_index;
 ot_a3_weight_layout_cursor #(.INTERLEAVE(INTERLEAVE)) dut(.*);
-integer checks=0,ticks=0;
+integer checks=0,ticks=0,stage;
 always @(posedge clk)begin ticks<=ticks+1;if(ticks>1000000)$fatal(1,"timeout");end
 reg held=0;
 reg [184:0] payload;
@@ -89,11 +89,17 @@ initial begin
  run(1,9,2,64'hffffffffffffff7c,16,3); // last active element is exactly UINT64_MAX
  reject(1,9,2,64'hfffffffffffffff0,16,3);
  reject(0,1,1,0,1,1);reject(1,0,1,0,1,1);reject(1,1,0,0,1,1);
+ // Both extent products are maximal; addition and final carry must remain exact.
+ launch(1,65535,65535,64'hffffffffffffffff-64'd2*64'd65534*64'hffffffff,32'hffffffff,32'hffffffff);
+ wait(coordinate_valid);if(command_error)$fatal(1,"maximal combined extent rejected");cancel();
+ reject(1,65535,65535,64'hffffffffffffffff-64'd2*64'd65534*64'hffffffff+1,32'hffffffff,32'hffffffff);
  // Revoke an outstanding stalled coordinate and reuse a new generation.
  launch(2,53,5,100,51,2);wait(coordinate_valid);repeat(4)@(negedge clk);cancel();
  run(1,17,3,29,7,3);
- // Cancel during admission, before the bound is available.
- launch(1,9,3,0,3,1);cancel();run(1,8,1,3,1,1);
+ // Cancel at every partial-product/combine/bound admission stage.
+ for(stage=0;stage<5;stage=stage+1)begin
+  launch(1,9,3,0,3,1);repeat(stage)@(negedge clk);cancel();run(1,8,1,3,1,1);
+ end
  $display("PASS layout cursor checks=%0d",checks);$finish;
 end
 endmodule
@@ -105,4 +111,4 @@ endmodule
                    check=True, capture_output=True, text=True)
     result = subprocess.run(['vvp', str(image)], check=True, capture_output=True,
                             text=True, timeout=60)
-    assert 'PASS layout cursor checks=73972' in result.stdout
+    assert 'PASS layout cursor checks=73976' in result.stdout
