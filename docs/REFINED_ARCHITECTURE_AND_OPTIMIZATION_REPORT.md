@@ -42,7 +42,7 @@ The major verified changes relative to earlier recorded versions are:
 | Rolling activation window, M6/N56/K80 | 1,440 activation fills; 35,175 cycles | 720 fills; 30,723 cycles | 50% fewer fills and 12.66% fewer campaign cycles; 1,352 matching outputs |
 | Rolling activation window, M6/N56/K352 | 8,896 fills; 160,789 cycles | 7,552 fills; 152,458 cycles | Helps deeper rows, but retention remains capacity-limited |
 | Unscaled admission | 19 cycles | 3 cycles | Scaled admission retains 19 cycles |
-| Auxiliary reservation queue | Eight entries, 2,560 bits | Two entries, 640 bits | 75% fewer payload/identity bits; compared corpus cost 0.15% more cycles |
+| Auxiliary reservation queue | Two entries, 640 bits; 30,723 campaign cycles | Three entries, 960 bits; 24,995 cycles | 18.64% fewer cycles in N56/K80 G2; +320 storage bits |
 | Mapper routed standard-cell area | 1,044.510 um² | 888.112 um² | 14.97% lower; refined CTS12 route passes reported physical checks at 1 ns |
 | Admission routed standard-cell area | 826.380 um² | 723.503 um² | 12.45% lower; both recorded routes pass physical checks at 1 ns |
 
@@ -57,7 +57,7 @@ resettable publication state from payload initialized at launch. The latter
 control change reduces matched synthesis area from 474.083 to 452.141 um²
 (4.63%) and sequential area from 195.605 to 150.640 um² (22.99%). Pre-layout
 setup WNS improves from -2.1575 to -0.7314 ns, but still fails. No request cycles
-are added; the G2 counter remains 30,723 and reset/cancellation/restart tests
+are added; the two-slot G2 counter remains 30,723 and reset/cancellation/restart tests
 pass. Standalone and containing-service routes are running, so a routed clock
 improvement is not yet established.
 
@@ -73,10 +73,14 @@ routes of later revisions remain pending. Standalone successes do not establish 
 operation; records can also retain overall `not_met` due to pre-layout failure.
 No activity-qualified energy benefit or all-target physical closure is claimed.
 
-The latest recorded focused suite passes 62 tests. The LQ8 corpus passes 92
+The latest recorded focused suite passes 66 tests. The LQ8 corpus passes 92
 cases with 17,103 matching outputs, 18 exercised faults and 115,748 checks.
 The latest loaded G2 N56 campaign passes 1,352 matching outputs with independent
-output backpressure, auxiliary refill, faults, aborts and recovery.
+output backpressure, auxiliary refill, faults, aborts and recovery. The runtime
+now defaults to three auxiliary slots: N56/K80 takes 24,995 campaign cycles
+versus 30,723 with two slots; N56/K352 takes 130,960 versus 152,458. Registered
+dispatch is optional and remains slower at equal capacity pending a sufficient
+routed frequency benefit.
 
 Architecture-first work proceeds in this order:
 
@@ -1134,3 +1138,80 @@ The record's overall status stays `not_met` because pre-layout STA failed.
 The reported slack-derived 1.296 GHz estimate is not a validated tighter clock.
 Evidence: `runtime_auxiliary_scheduler/pnr_rolling_cts12_1ns.json` and its
 retained artifacts under `results/physical_abi3/asap7/`.
+
+
+## Auxiliary dispatch boundary and service-capacity selection
+
+A registered auxiliary dispatch option now reserves an existing queue identity
+slot before presenting it to the external service. This cuts the direct cursor
+address/service output and ready path without another payload buffer. Separate
+unsent and pending counts ensure no response is accepted before dispatch;
+ordered responses and generation checks remain mandatory. Direct dispatch is
+still the default because matched equal-capacity campaigns show lower latency.
+
+G2 now exposes queue depth and dispatch policy as parameters. The checker accepts
+`--auxiliary-depth` and `--registered-auxiliary-requests`, writes policy-specific
+record names, and retains both values in evidence. This avoids source edits or
+record overwrites when comparing policies. Runtime service/G2 default to three
+reservations; the generic queue retains its two-slot direct default.
+
+| N/K, M=6 | Direct depth2 cycles | Direct depth3 cycles | Registered depth3 cycles |
+|---|---:|---:|---:|
+| 56/80 | 30,723 | 24,995 | 28,802 |
+| 56/352 | 152,458 | 130,960 | Not measured |
+
+All five matched campaigns produce 1,352 matching outputs. First-operation
+activation/weight fills stay 720/560 for K80 and 7,552/14,784 for K352. Three
+slots reduce cycles by 18.64% and 14.10% respectively, with unchanged first-
+operation traffic. These counters include aborts, faults and recovery, not
+whole-model latency. Increasing capacity adds 320 payload/identity bits
+(640 to 960). Matched standalone synthesis area rises from 408.708 to
+598.758 um² for direct depth2/depth3, so this is an explicit area/latency tradeoff.
+
+Registration at depth3 costs 662.297 um² and 15.23% more campaign cycles than
+direct depth3. Its frequency would need to improve by more than 15.23% merely
+to offset that cycle penalty in this campaign. Pre-layout WNS is -2.3173 ns
+for direct depth3 and -2.7223 ns for registered depth3; both fail. A containing-
+service direct-depth3 route is running. An earlier registered-depth2 route
+characterizes its captured experimental snapshot, not the new default. No
+routed timing/energy benefit is claimed for queue expansion or registration.
+
+Queue tests cover depths 1/2/3/8 in both policies, independent service/output
+stalls, full reservation before dispatch, rejected responses to undispatched
+requests, stale/orphan responses, ordering, and clear/restart. All 66 focused
+tests pass. The larger numerical corpus also exposed a checker assumption:
+a same-edge numerical fault in every lane legitimately cancels its speculative
+read. The preview assertion now permits a missing read only if every lane
+reports a fault; ordinary read/address checks and final numerical/fault oracles
+remain in place. This matches the existing lane writeback flush behavior rather
+than changing arithmetic or fault semantics.
+
+Evidence: `results/rtl/a3_auxiliary_dispatch_comparison.json`, policy-specific
+G2 records, and `runtime_auxiliary_prefetch/dispatch_comparison.json` under
+`results/physical_abi3/asap7/`. Large-row weight reuse still requires coordinated
+accumulator/loop-order changes; queue depth does not solve that limitation.
+
+
+Both depth-three numerical campaigns now pass 92 cases, 17,103 matching outputs,
+18 faults and 115,748 checks. Aggregate operation cycles are 322,816 for direct
+dispatch and 322,896 for registered dispatch; this behavioral auxiliary-service
+model differs from the loaded G2 byte-transport campaign and must not be mixed
+with its cycle totals. The registered run explicitly counts five fault-cancelled
+speculative reads; the direct run counts zero. All retained corpus source hashes
+match current files. Evidence: `results/rtl/a3_lq8_{direct,registered}_auxiliary_depth3.json`.
+
+## Matched absolute scale cursor routes
+
+The baseline and absolute-address cursor snapshots both complete routed
+ASAP7 TT checks at 1 ns with CTS12, fanout16 and the same transition limit.
+Baseline / absolute standard-cell area is 642.468 / 619.592 um² (3.56% lower);
+setup WNS is +0.0435101 / +0.131598 ns and hold WNS
++0.0570399 / +0.0563845 ns. Both have zero setup/hold, slew, capacitance,
+fanout, DRC and antenna violations. Retained artifact hashes match.
+
+Thus the absolute-address rewrite improves routed area and setup margin at the
+same clock despite its worse pre-layout result. These snapshots precede the
+later local-control edit. They do not establish a tighter validated clock or
+containing-service closure. Both records retain overall `not_met` because
+pre-layout STA failed. Evidence: `runtime_operand_cursor/routed_absolute_comparison.json`
+and its two route records under `results/physical_abi3/asap7/`.

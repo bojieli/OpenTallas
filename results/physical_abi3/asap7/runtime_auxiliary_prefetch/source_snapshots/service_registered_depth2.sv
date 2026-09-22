@@ -9,8 +9,8 @@
 module ot_a3_lq8_runtime_operands #(
     parameter integer INTERLEAVE=3,
     parameter integer TILE_WORDS=32,
-    parameter integer AUXILIARY_DEPTH=3,
-    parameter bit REGISTER_AUXILIARY_REQUESTS=0,
+    parameter integer AUXILIARY_DEPTH=2,
+    parameter bit REGISTER_AUXILIARY_REQUESTS=1,
     // Enable only when the transport stream repeats the same weights per row.
     parameter bit REUSE_WEIGHT_ROWS=0
 )(

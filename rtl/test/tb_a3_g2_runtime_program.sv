@@ -2,6 +2,8 @@
 // Host-load a real ABI program and compare outputs with the functional Device.
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
+ parameter integer AUXILIARY_DEPTH=3;
+ parameter bit REGISTER_AUXILIARY_REQUESTS=0;
  parameter integer WEIGHT_RESPONSE_GAP=1;
  parameter bit ACTIVATION_MISS_ALIGNED=0;
  `include "program_config.svh"
@@ -131,7 +133,8 @@ module tb_a3_g2_runtime_program;
    end
   end
  end
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE)) dut(
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
  .clk(clk),.rst_n(rst_n),.part_ready(sink_ready),.part_valid(part_valid),.start(kick),.host_we(host_we),.host_sel(host_sel),.host_row(host_row),.host_lane(host_lane),.host_wdata(host_wdata),
  .host_ready(host_ready),.host_write_refused(host_write_refused),
  .cfg_program_base(32'd0),.cfg_instruction_count(INSTRUCTION_COUNT),.cfg_entry_pc(32'd0),

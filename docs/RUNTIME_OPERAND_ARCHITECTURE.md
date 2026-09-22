@@ -1030,3 +1030,16 @@ outputs while invalid are unspecified and must not be consumed. This removes
 wide reset and start-priority control from payload without changing latency,
 request ordering or numerical behavior. Reset, clear-plus-start, invalid launch
 and full recovery are covered by the direct-index cursor tests.
+
+
+The runtime service and G2 now default to three auxiliary reservations, selected
+from matched backpressured byte-transport measurements (two slots remain
+selectable). G2 exposes `RUNTIME_AUXILIARY_DEPTH` and
+`RUNTIME_REGISTER_AUXILIARY_REQUESTS`; the latter defaults to zero. Optional
+registered dispatch uses the existing identity array as a request queue:
+reservation advances the cursor, dispatch advances a separate pointer, and only
+dispatched requests count as pending responses. Unsent, in-flight and complete
+entries together cannot exceed the configured depth. Clear resets all pointer
+and count ownership. This inserts one request stage without duplicating the
+160-bit identity payload, but increases same-capacity campaign cycles. It is a
+physical tradeoff option, not an established performance improvement.

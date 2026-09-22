@@ -44,6 +44,14 @@
         .auxiliary_response_generation(response_generation),.auxiliary_response_w(response_w),
         .auxiliary_response_a_data(response_a),.auxiliary_response_s_data(response_s),.auxiliary_response_ws_data(response_ws));
     integer op_issues=0,op_tiles=0,total_issues=0,total_fills=0,total_tiles=0,refill_issues=0;
+    // A retiring numerical fault flushes the lane's same-edge speculative
+    // read. Only an all-lane fault may suppress the shared read altogether.
+    wire [LANES-1:0] preview_lane_fault;
+    genvar pf;
+    generate for(pf=0;pf<LANES;pf=pf+1)begin: preview_faults
+        assign preview_lane_fault[pf]=lane_error_code[8*pf +: 8]!=0;
+    end endgenerate
+    integer fault_cancelled_previews=0;
     reg prior_issue=0;
     reg [31:0] prior_a,prior_s,prior_ws,prior_w;
     always @(posedge clk)begin
@@ -85,12 +93,15 @@
                 if(backing_valid && response_ready)refill_issues<=refill_issues+1;
             end
             if(protocol_error || (geometry_error && operand_request))$fatal(1,"runtime service fault");
-            if(prior_issue && (!d_w_en || d_w_addr!=prior_w || d_a_addr!=prior_a ||
+            if(prior_issue && !d_w_en && (&preview_lane_fault))
+                fault_cancelled_previews<=fault_cancelled_previews+1;
+            if(prior_issue && !(!d_w_en && (&preview_lane_fault)) && (!d_w_en || d_w_addr!=prior_w || d_a_addr!=prior_a ||
                 (cfg_scale_a && d_s_addr!=prior_s) || (cfg_scale_b && d_ws_addr!=prior_ws)))$fatal(1,"preview timing mismatch");
             prior_issue<=operand_issue;prior_a<=preview_a;prior_s<=preview_s;prior_ws<=preview_ws;prior_w<=preview_w;
         end
     end
     final begin
+        $display("RUNTIME fault_cancelled_previews=%0d",fault_cancelled_previews);
         if(total_issues==0 || total_tiles<2 || refill_issues==0)$fatal(1,"runtime path not exercised");
         $display("RUNTIME issues=%0d fills=%0d tiles=%0d refill_issue_overlap=%0d",total_issues,total_fills,total_tiles,refill_issues);
     end

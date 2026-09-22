@@ -10,7 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 @pytest.mark.parametrize("depth", [1, 2, 3, 8])
-def test_auxiliary_prefetch(tmp_path, depth):
+@pytest.mark.parametrize("registered", [0, 1])
+def test_auxiliary_prefetch(tmp_path, depth, registered):
     sim = tmp_path / "sim"
     subprocess.run(
         [
@@ -19,6 +20,7 @@ def test_auxiliary_prefetch(tmp_path, depth):
             "-s",
             "tb_a3_lq8_auxiliary_prefetch",
             f"-Ptb_a3_lq8_auxiliary_prefetch.DEPTH={depth}",
+            f"-Ptb_a3_lq8_auxiliary_prefetch.REGISTER_REQUESTS={registered}",
             "-o",
             str(sim),
             str(ROOT / "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv"),

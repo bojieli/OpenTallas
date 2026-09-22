@@ -149,6 +149,8 @@ module ot_a3_g2_cluster #(
     parameter integer ACC_SLOTS     = 8,
     parameter integer RUNTIME_OPERANDS = 0,
     parameter bit RUNTIME_WEIGHT_ROW_REUSE = 1,
+    parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
+    parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
     parameter integer OUTPUT_DEPTH = 4,
     // The control-plane performance knobs, forwarded to the sequencer.  They
     // are declared here so a route can select a configuration with --param
@@ -766,7 +768,8 @@ module ot_a3_g2_cluster #(
             else if(operand_issue)words_read<=words_read+1'b1;
         end
         assign staging_weight_words_read=words_read;
-        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE)) service(
+        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),
+            .AUXILIARY_DEPTH(RUNTIME_AUXILIARY_DEPTH),.REGISTER_AUXILIARY_REQUESTS(RUNTIME_REGISTER_AUXILIARY_REQUESTS)) service(
             .clk(clk),.rst_n(rst_n),.clear(service_clear),
             .command_valid(command_pending),.command_ready(command_ready),
             .cfg_generation(next_generation),.cfg_rows(arr_rows),.cfg_cols(arr_cols),.cfg_depth(arr_depth),

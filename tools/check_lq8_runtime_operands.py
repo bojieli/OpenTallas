@@ -29,7 +29,10 @@ def main():
     parser.add_argument("--mutate-array-config", action="store_true")
     parser.add_argument("--integrated-service", action="store_true")
     parser.add_argument("--completion-barrier", action="store_true")
+    parser.add_argument("--registered-auxiliary-requests", action="store_true")
     args = parser.parse_args()
+    if args.registered_auxiliary_requests and not args.integrated_service:
+        parser.error("Registered auxiliary requests require --integrated-service")
     if args.completion_barrier and not args.integrated_service:
         parser.error("Completion barrier requires --integrated-service")
     if args.rtl_weight_scheduler and not args.future_auxiliary:
@@ -120,6 +123,8 @@ def main():
         if args.serial_refill:
             parser.error("Integrated service uses overlapped refill")
         service = (ROOT / "rtl/test/a3_lq8_integrated_service.svh").read_text()
+        service = service.replace(".AUXILIARY_DEPTH(AUXILIARY_DEPTH)",
+            f".AUXILIARY_DEPTH(AUXILIARY_DEPTH),.REGISTER_AUXILIARY_REQUESTS({int(args.registered_auxiliary_requests)})")
     if args.completion_barrier:
         service = service.replace(
             "wire clear_service=start_dut || dut_done;",
@@ -258,6 +263,7 @@ def main():
         "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
         "serial_refill": args.serial_refill,
         "integrated_service": args.integrated_service,
+        "registered_auxiliary_requests": args.registered_auxiliary_requests,
         "completion_barrier": args.completion_barrier,
         "mutate_array_config": args.mutate_array_config,
         "rtl_weight_scheduler": args.rtl_weight_scheduler,

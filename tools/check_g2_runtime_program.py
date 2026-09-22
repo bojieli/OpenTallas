@@ -19,6 +19,8 @@ parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
 parser.add_argument("--cols", type=int, default=None)
 parser.add_argument("--activation-miss-aligned", action="store_true")
+parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
+parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
@@ -46,6 +48,8 @@ if args.cols is not None:
     record_name += f"_cols{cols}"
 if args.activation_miss_aligned:
     record_name += "_rolling_activation"
+record_name += f"_auxdepth{args.auxiliary_depth}"
+record_name += "_registered" if args.registered_auxiliary_requests else "_direct"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -209,6 +213,8 @@ cmd = [
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
+    f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
+    f"-GREGISTER_AUXILIARY_REQUESTS={int(args.registered_auxiliary_requests)}",
     f"-GWEIGHT_RESPONSE_GAP={args.weight_response_gap}",
     f"-GACTIVATION_MISS_ALIGNED={int(args.activation_miss_aligned)}",
     "--top-module",
@@ -239,6 +245,8 @@ for p, h in hashes.items():
 result = {
     "status": "pass",
     "weight_row_reuse": not args.no_weight_row_reuse,
+    "auxiliary_depth": args.auxiliary_depth,
+    "registered_auxiliary_requests": args.registered_auxiliary_requests,
     "weight_response_gap": args.weight_response_gap,
     "activation_miss_aligned": args.activation_miss_aligned,
     "output_backpressure": args.output_backpressure,

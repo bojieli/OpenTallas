@@ -1,0 +1,49 @@
+{
+  "scope": "Loaded G2 campaign with output backpressure and rolling activation windows; counters include faults/abort/drain, not model latency.",
+  "records": [
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth2_direct.json",
+      "sha256": "58ece22146aece7799da780d8de479cac88a1858611b4145b68619cd2ca331fe",
+      "depth": 2,
+      "registered": false,
+      "final_counter": 30723,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "3fce804543b0f58ee561d63b328d305526fa50ef14c545c3f9fa54b42836e568",
+      "depth": 3,
+      "registered": false,
+      "final_counter": 24995,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_registered.json",
+      "sha256": "29f37a27b67790004177dc50d39c4f7208c1c3050e452c78ee3048f2079705fd",
+      "depth": 3,
+      "registered": true,
+      "final_counter": 28802,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_depth352_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "fc5754b5c652380317a47521d990aa9e74eeb24a4eb9a7b68ac393e0d5e3ff8e",
+      "depth": 3,
+      "registered": false,
+      "final_counter": 130960,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_depth352_cols56_rolling_activation_auxdepth2_direct.json",
+      "sha256": "45ec0a5d1f67f14a22c295a4128b5bf177a72f3728289de4042fd073efe1f37b",
+      "depth": 2,
+      "registered": false,
+      "final_counter": 152458,
+      "accepted_outputs": 1352
+    }
+  ],
+  "decision": "Three-slot direct dispatch is the runtime default. Registration remains optional pending sufficient routed frequency improvement to offset its equal-capacity cycle penalty.",
+  "equal_capacity_cycle_ratio_registered_over_direct": 1.1523104620924185,
+  "payload_bits_two_slots": 640,
+  "payload_bits_three_slots": 960
+}
