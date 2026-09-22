@@ -16,7 +16,7 @@ The implemented G2/LQ8 runtime now supports pass-first execution end to end,
 including weight fetch, SRAM replay, operand issue, arithmetic and output writes.
 Pass width is independent of arithmetic pipeline depth. These are optional
 configurations; their evidence does not qualify every default or deployment.
-Automatic schedule selection, general activation-object transport, broader format
+Runtime schedule adaptation, general activation-object transport, broader format
 coverage and current-source integrated physical closure remain open.
 
 ## Refined architecture implemented today
@@ -147,7 +147,8 @@ Evidence: [transport audit](../results/physical_abi3/asap7/bf16_weight_transport
    row releases during the preceding row. The 172 passing tests include 72
    partial-row cases and final bank-release checks; its scheduler physical
    route passes at 1 ns. Prefetch and integrated qualification remain open. Select row-first/pass-first and pass width from capacity and measured
-   service cost; selection is currently static. For workloads exceeding even a
+   service cost. The loaded runner now offers a configuration-time capacity
+   heuristic; runtime adaptation and production compiler integration remain open. For workloads exceeding even a
    one-column whole-K pass, evaluate depth tiling with an explicit accumulator
    budget.
 2. **Complete actual input transport.** Extend descriptor-driven activation and
@@ -189,3 +190,11 @@ K513 loaded comparisons and scheduler route. Those results now qualify their
 retained historical sources. A current-source loaded K514 campaign passes
 2,234 exact outputs and 295 write acknowledgements. The repaired scheduler
 passes its 1 ns block route; integrated physical requalification is underway. The standalone transport and writer sources are unchanged.
+
+A configuration-time capacity policy is now available through the loaded
+runner's `--auto-schedule`. At K343 it selects two-column residency and reduces
+median successful-phase cycles 201,466.5 → 68,181.5 against manual three-column
+passes, with matching sources and full fault/recovery checks. It selects
+row-first for a resident K80 workload. See the
+[policy comparison](../results/rtl/g2_capacity_policy_comparison.json). This is
+a capacity heuristic, not an automatic runtime controller or a global optimum.

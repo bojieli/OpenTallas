@@ -25,6 +25,7 @@ parser.add_argument("--weight-object-reads", action="store_true")
 parser.add_argument("--input-layout", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--pass-first", action="store_true")
+parser.add_argument("--auto-schedule", action="store_true", help="Choose row/pass order and pass width from residency before elaboration")
 parser.add_argument("--pass-columns",type=int,choices=[1,2,3],default=3)
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
@@ -33,15 +34,6 @@ parser.add_argument("--activation-miss-aligned", action="store_true")
 parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
 parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
-if args.pass_columns!=3 and not args.pass_first:
-    parser.error("nondefault pass width requires --pass-first")
-if args.pass_first:
-    args.weight_object_reads=True
-    args.object_writes=True
-if args.strided_weights:
-    args.weight_object_reads = True
-if args.weight_object_reads:
-    args.input_layout = True
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
 depth = args.depth
@@ -53,6 +45,27 @@ if cols < 8 or cols > 65528:
     parser.error("cols must be in 8..65528")
 logical_cols = cols
 cols = (logical_cols + 7) & ~7
+schedule_policy = None
+if args.auto_schedule:
+    if args.pass_first or args.pass_columns != 3 or args.no_weight_row_reuse:
+        parser.error("--auto-schedule requires default schedule flags and enabled weight reuse")
+    from tools.g2_schedule_policy import choose_schedule
+    schedule_policy = choose_schedule(rows, logical_cols, depth)
+    args.pass_first = schedule_policy['pass_first']
+    args.pass_columns = schedule_policy['pass_columns']
+    # Compare schedules over the same actual object I/O path.
+    args.weight_object_reads = True
+    args.object_writes = True
+    print("schedule policy: " + json.dumps(schedule_policy), flush=True)
+if args.pass_columns!=3 and not args.pass_first:
+    parser.error("nondefault pass width requires --pass-first")
+if args.pass_first:
+    args.weight_object_reads=True
+    args.object_writes=True
+if args.strided_weights:
+    args.weight_object_reads = True
+if args.weight_object_reads:
+    args.input_layout = True
 record_name = (
     "g2_runtime_byte_transport"
     if args.auxiliary_windows
@@ -90,6 +103,8 @@ if args.pass_first:
     record_name += "_pass_first"
 if args.pass_columns!=3:
     record_name += f"_passcols{args.pass_columns}"
+if args.auto_schedule:
+    record_name += "_auto_schedule"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -262,6 +277,7 @@ tracked = sorted(
         sources
         + [
             "tools/check_g2_runtime_program.py",
+            "tools/g2_schedule_policy.py",
             "tools/build_abi3_engine_vectors.py",
             "runtime/sim/engines/tensor.py",
             "rtl/test/tb_a3_g2_issue_contract.sv",
@@ -331,6 +347,7 @@ phase_latencies=[{"phase":int(phase),"cycles":int(cycles)} for phase,cycles in
 assert phase_latencies and all(x["cycles"]>0 for x in phase_latencies)
 result = {
     "status": "pass",
+    "schedule_policy": schedule_policy,
     "phase_latencies": phase_latencies,
     "phase_latency_scope": "Kick-to-program-done under modeled memory, output stalls and explicit drain acknowledgements; not whole-model inference latency.",
     "object_writes": args.object_writes,

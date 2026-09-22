@@ -1038,3 +1038,33 @@ transactions pay the documented 34 additional apply cycles. See
 audit of current lowering or all supported targets.
 
 The partial-replay scheduler route completes at 1 ns: 1393.780 um² cells, setup +0.0337446 ns, hold +0.0513839 ns. All reported checks pass; current scheduler source hashes and 7 retained artifacts verify in `weight_pass_scheduler/partial_replay_route_audit.json`. This qualifies the scheduler boundary; prefetch and integrated G2 closure remain separate requirements.
+
+## Configuration-time residency policy
+
+`tools/check_g2_runtime_program.py --auto-schedule` now chooses row/pass order
+and width before hardware elaboration using `tools/g2_schedule_policy.py`. It
+keeps row-first for one row, for a resident whole weight row, and when even a
+one-column whole-K pass cannot fit. Otherwise it selects the widest supported
+pass (up to three columns) fitting 1,024 packed words. Explicit schedule flags
+or disabled reuse conflict with automatic selection and are rejected. The
+chosen policy and helper source hash are recorded with the loaded campaign.
+This is a conservative capacity heuristic for the loaded runner, not runtime
+adaptation, a production compiler policy or a latency/energy optimum.
+
+Fifteen unit cases cover the measured 341/342 and 512/513 boundaries, depth
+1,024/1,025, padding, single-row execution and bad geometry. Matched current
+M6/N53/K343 campaigns show median successful-phase cycles 201,466.5 →
+68,181.5 with automatic two-column residency versus manual three-column
+streaming. Both pass 2,234 exact outputs and 295 writes/acknowledgements. Weight
+bytes fall 405,512 → 73,352; activation fills rise 6,174 → 8,232. These are
+modeled service/drain cycles, not whole-model inference. Evidence:
+`results/rtl/g2_capacity_policy_comparison.json`.
+
+A separate M6/N55/K80 automatic campaign selects row-first and passes 2,318
+exact outputs and 295 writes/acknowledgements, with 560 weight fills and 720
+activation fills. It exercises the resident branch of the policy.
+
+The current two-column runtime operand service, including the repaired prefix
+prefetch and actual weight SRAM macros, is also under 1 ns physical
+characterization through `configs/hardware/runtime_partial_pass2_physical.json`.
+This containing boundary is needed in addition to the closed scheduler alone.
