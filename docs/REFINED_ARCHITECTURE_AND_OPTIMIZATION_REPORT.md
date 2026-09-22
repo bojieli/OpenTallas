@@ -1604,3 +1604,44 @@ results. The current combined-service route remains pending. All retained
 artifact hashes were verified; exact source manifests and recorded-commit
 matches are retained in `runtime_operand_service/historical_revision_comparison.json`.
 No slack-derived Fmax is promoted to an operating clock.
+
+
+## Matched divider routes validate the rounding pipeline at 2 ns
+
+All three ASAP7 TT, CTS12, fanout16 routes have completed. The original pipeline
+has routed area 1,347.020 um², setup WNS -0.281717 ns and 38 failing paths.
+The extra midpoint-register stage routes at 1,309.750 um² with +0.082792 ns
+setup slack. Bounding the signed power registers reduces area further to
+1,181.750 um² and gives +0.115352 ns setup and +0.057360 ns hold slack.
+The refined implementation is 12.27% smaller than the original routed pipeline.
+Both refined routed stages have zero setup/hold, slew, capacitance, fanout,
+DRC and antenna violations. All retained artifact hashes were checked; the
+bounded-power source hashes match current RTL. Overall records remain
+`not_met` due to pre-layout timing failure.
+
+This validates the standalone refined divider at the tested 2 ns (500 MHz)
+period. It does not establish a faster clock from slack or qualify a containing
+engine. The one-cycle cost per nontrivial division remains; existing tests show
+673 equivalent divisions, 35 Sinkhorn matrices and reset/backpressure coverage.
+No parent's divider choice has changed. Evidence:
+`results/physical_abi3/asap7/fp32_div_round_stage/routed_comparison.json` and
+three retained route records/artifact directories.
+
+
+## One-hot auxiliary head reduces selection overhead
+
+Historical containing-service routes identify FIFO-head selection followed by
+identity comparison as the issue-credit critical path. The auxiliary queue now
+uses a rotating one-hot head and parallel masked payload selection. It preserves
+all reservation, response identity and cancellation contracts without adding an
+issue cycle or duplicating payload. At three slots, one additional head bit
+replaces binary head decoding. Generic depth 1/2/3/8 remains supported.
+
+Matched three-slot/shared-generation synthesis reduces area from 549.523 to
+533.484 um² (2.92%); pre-layout setup WNS improves from -1.930 to -0.749 ns.
+Both pre-layout checks still fail. All 16 queue configurations pass, standalone
+lint is clean, and the 92-case integrated corpus retains 17,103 matching outputs,
+18 faults and 115,748 checks. Loaded G2 retains 25,013 cycles and 1,352 outputs.
+A containing-service route is required before claiming clock improvement.
+Evidence: `results/physical_abi3/asap7/runtime_auxiliary_onehot/` and
+`results/rtl/a3_lq8_auxiliary_onehot.json`.

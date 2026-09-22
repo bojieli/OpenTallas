@@ -35,10 +35,7 @@ module ot_a3_lq8_auxiliary_prefetch #(
     output wire [8*LANES-1:0] auxiliary_ws_data,
     output reg [CW-1:0] occupied
 );
-    reg [PW-1:0] tail,response_tail,dispatch_head;
-    reg [DEPTH-1:0] head_select;
-    reg [ID_BITS-1:0] head_identity;
-    reg [95+8*LANES:0] head_data;
+    reg [PW-1:0] head,tail,response_tail,dispatch_head;
     reg [CW-1:0] pending,complete,unsent;
     localparam integer ID_BITS=SINGLE_GENERATION?128:160;
     reg [ID_BITS-1:0] identities[0:DEPTH-1];
@@ -51,20 +48,10 @@ module ot_a3_lq8_auxiliary_prefetch #(
         always @(posedge clk)if(take && occupied==0)operation_generation<=request_generation;
     end else begin: per_entry_generation
         assign response_expected_generation=identities[response_tail][159:128];
-        assign head_generation=head_identity[159:128];
+        assign head_generation=identities[head][159:128];
         assign dispatch_generation=identities[dispatch_head][159:128];
     end endgenerate
     reg [95+8*LANES:0] data[0:DEPTH-1];
-    // Decode ownership in the head register, before the wide payload mux and
-    // downstream identity comparisons. The ring retains exactly one owner.
-    integer h;
-    always @* begin
-        head_identity=0;head_data=0;
-        for(h=0;h<DEPTH;h=h+1)begin
-            head_identity=head_identity | (identities[h] & {ID_BITS{head_select[h]}});
-            head_data=head_data | (data[h] & {(96+8*LANES){head_select[h]}});
-        end
-    end
     wire enabled=rst_n && !clear;
     // The registered mode reserves the existing identity slot before dispatch.
     // No duplicate request payload buffer: queued + pending + complete <= DEPTH.
@@ -80,8 +67,8 @@ module ot_a3_lq8_auxiliary_prefetch #(
     assign response_ready=enabled && pending!=0 && identity_matches;
     assign response_mismatch=enabled && response_valid && (pending==0 || !identity_matches);
     assign auxiliary_valid=enabled && complete!=0;
-    assign {auxiliary_generation,auxiliary_a,auxiliary_s,auxiliary_ws,auxiliary_w}={head_generation,head_identity[127:0]};
-    assign {auxiliary_ws_data,auxiliary_s_data,auxiliary_a_data}=head_data;
+    assign {auxiliary_generation,auxiliary_a,auxiliary_s,auxiliary_ws,auxiliary_w}={head_generation,identities[head][127:0]};
+    assign {auxiliary_ws_data,auxiliary_s_data,auxiliary_a_data}=data[head];
     wire take=request_valid && request_ready;
     wire send_request=service_valid && service_ready;
     wire push=response_valid && response_ready;
@@ -90,8 +77,8 @@ module ot_a3_lq8_auxiliary_prefetch #(
         next_ptr=(p==PW'(DEPTH-1))?{PW{1'b0}}:p+1'b1;
     endfunction
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin head_select<=DEPTH'(1);tail<=0;response_tail<=0;pending<=0;complete<=0;occupied<=0;dispatch_head<=0;unsent<=0;end
-        else if(clear)begin head_select<=DEPTH'(1);tail<=0;response_tail<=0;pending<=0;complete<=0;occupied<=0;dispatch_head<=0;unsent<=0;end
+        if(!rst_n)begin head<=0;tail<=0;response_tail<=0;pending<=0;complete<=0;occupied<=0;dispatch_head<=0;unsent<=0;end
+        else if(clear)begin head<=0;tail<=0;response_tail<=0;pending<=0;complete<=0;occupied<=0;dispatch_head<=0;unsent<=0;end
         else begin
             case({take,pop})
                 2'b10:occupied<=occupied+1'b1;
@@ -124,7 +111,7 @@ module ot_a3_lq8_auxiliary_prefetch #(
                 data[response_tail]<={response_ws_data,response_s_data,response_a_data};
                 response_tail<=next_ptr(response_tail);
             end
-            if(pop)head_select<=(head_select << 1) | DEPTH'(head_select[DEPTH-1]);
+            if(pop)head<=next_ptr(head);
         end
     end
 endmodule

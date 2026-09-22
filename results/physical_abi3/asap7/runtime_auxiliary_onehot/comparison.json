@@ -1,0 +1,12 @@
+{
+  "scope": "ASAP7 TT 1 ns synthesis/STA, DEPTH3 SINGLE_GENERATION1 direct dispatch. Both fail prelayout; full service routing required.",
+  "baseline_record": "../runtime_auxiliary_prefetch/prelayout_sharedgen1_1ns.json",
+  "candidate_record": "prelayout_1ns.json",
+  "area_before_um2": 549.523,
+  "area_after_um2": 533.484,
+  "setup_before_ns": -1.930042799965132,
+  "setup_after_ns": -0.7486864491641452,
+  "functional": "16 queue variants pass; 92-case integrated corpus, 17103 outputs and 115748 checks pass; loaded G2 remains 25013 cycles and 1352 outputs.",
+  "total_operation_cycles": 322816,
+  "change": "One-hot rotating head directly gates parallel payload mux; no extra issue cycle or payload storage."
+}
