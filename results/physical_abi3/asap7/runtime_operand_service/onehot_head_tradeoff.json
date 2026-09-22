@@ -1,0 +1,18 @@
+{
+  "scope": "Matched ASAP7 TT 1 ns CTS12 fanout16 containing operand-service snapshots. Both fail timing; neither certifies an operating clock.",
+  "baseline": "pnr_shared_generation_cts12_1ns.json",
+  "candidate": "pnr_onehot_head_cts12_1ns.json",
+  "standard_cell_area_before_um2": 3873.75,
+  "standard_cell_area_after_um2": 3810.96,
+  "area_reduction_percent": 1.6209099709583727,
+  "setup_before_ns": -0.0363761,
+  "setup_after_ns": -0.0708378,
+  "setup_violations_before": 1,
+  "setup_violations_after": 11,
+  "fanout_violations_before": 3,
+  "fanout_violations_after": 3,
+  "critical_path": "weight prefetch head -> operand_credit",
+  "decision": "Area improvement only; one-hot auxiliary head does not close issue-credit timing. Shared weight-generation candidate is being routed against the remaining weight-head path. Integrated configuration remains unqualified.",
+  "retained_artifacts_verified": true,
+  "source_commit_verified": "2474456b3052e600afc10926f8a6d850dbea669e"
+}

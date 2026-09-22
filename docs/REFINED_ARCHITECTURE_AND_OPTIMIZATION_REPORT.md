@@ -1773,3 +1773,24 @@ reduction change and cannot qualify it. Source snapshots, including an exact
 hash match to the measured source before comment cleanup, are retained under
 `results/physical_abi3/asap7/sinkhorn_sum_handoff/`. No parent clock improvement
 is claimed until its refined containing route passes.
+
+
+## Auxiliary one-hot containing route: area saving, timing regression
+
+The one-hot auxiliary-head service route completes at ASAP7 TT, 1 ns, CTS12
+and fanout16. Against the preceding shared-generation/binary-head service,
+standard-cell area falls 3,873.750 to 3,810.960 um² (1.62%). Both include two
+512x128 SRAM macros with 5,586 um² macro area, separate from standard cells.
+Setup WNS worsens -0.036376 to -0.070838 ns and failing paths rise from one
+to eleven. Hold WNS is +0.019930 ns; three fanout violations remain. Reported
+hold, slew, capacitance, DRC and antenna violations are zero.
+
+The worst path still runs from weight-prefetch head to operand credit. Thus the
+standalone auxiliary synthesis improvement does not establish integrated clock
+improvement. Retain this result as an area/timing tradeoff, not closure. The
+shared-weight-generation route targets the remaining generation mux and remains
+live; its result is necessary before deciding whether the combined implementation
+meets the target. No slack-extrapolated clock is accepted. All retained artifact
+hashes and all ten source hashes match the recorded commit. Evidence:
+`results/physical_abi3/asap7/runtime_operand_service/onehot_head_tradeoff.json`
+and `pnr_onehot_head_cts12_1ns.json` with retained artifacts.
