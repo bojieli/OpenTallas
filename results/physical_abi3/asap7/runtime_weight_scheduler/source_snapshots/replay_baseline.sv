@@ -52,14 +52,11 @@ module ot_a3_weight_tile_scheduler #(
     reg [31:0] generation,fill_base,tile_base,fill_left,tile_left;
     reg [9:0] index;
     reg replay;
-    reg [31:0] row_base,stream_base;
-    // Replay is admitted only for rows <=1024 words. These counters never
-    // represent a whole stream; keep that full-width count in tile_left.
-    reg [10:0] row_words,row_left;
+    reg [31:0] row_base,row_words,row_left,stream_base;
     wire reuse_command=ROW_REUSE && command_row_words!=0 &&
         command_row_words<=1024 && command_words>command_row_words;
     wire [31:0] chunk_limit=replay?32'd512:32'(TILE_WORDS);
-    wire [31:0] issue_left=replay && {21'b0,row_left}<tile_left?{21'b0,row_left}:tile_left;
+    wire [31:0] issue_left=replay && row_left<tile_left?row_left:tile_left;
     wire enabled=rst_n && !clear;
     wire [32:0] range_end={1'b0,command_base}+{1'b0,command_words};
     assign command_ready=enabled && !active;
@@ -82,7 +79,7 @@ module ot_a3_weight_tile_scheduler #(
     assign tile_valid=enabled && active && tile_left!=0;
     assign tile_tag={generation,tile_base};
     assign tile_stream_tag={generation,stream_base};
-    assign tile_retain=replay && tile_left>{21'b0,row_left};
+    assign tile_retain=replay && tile_left>row_left;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             active<=0;scheduled<=0;command_error<=0;state<=RESERVE;
@@ -98,7 +95,7 @@ module ot_a3_weight_tile_scheduler #(
                     active<=1;state<=RESERVE;generation<=command_generation;
                     fill_base<=command_base;tile_base<=command_base;
                     replay<=reuse_command;row_base<=command_base;
-                    row_words<=command_row_words[10:0];row_left<=command_row_words[10:0];stream_base<=command_base;
+                    row_words<=command_row_words;row_left<=command_row_words;stream_base<=command_base;
                     fill_left<=reuse_command?command_row_words:command_words;tile_left<=command_words;
                     index<=0;reserve_bank<=0;tile_bank<=0;
                 end
@@ -115,11 +112,11 @@ module ot_a3_weight_tile_scheduler #(
                 if(tile_valid && tile_ready)begin
                     stream_base<=stream_base+{22'b0,tile_words};
                     tile_left<=tile_left-{22'b0,tile_words};
-                    if(replay && row_left=={1'b0,tile_words})begin
+                    if(replay && row_left=={22'b0,tile_words})begin
                         tile_base<=row_base;row_left<=row_words;tile_bank<=0;
                     end else begin
                         tile_base<=tile_base+{22'b0,tile_words};tile_bank<=!tile_bank;
-                        if(replay)row_left<=row_left-{1'b0,tile_words};
+                        if(replay)row_left<=row_left-{22'b0,tile_words};
                     end
                 end
                 if(fill_left==0 && tile_left==0)begin active<=0;scheduled<=1;end

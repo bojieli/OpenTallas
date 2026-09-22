@@ -1,0 +1,34 @@
+{
+  "scope": "Standalone scheduler matched ASAP7 TT synthesis at 1 ns; no routed or containing-service closure claim",
+  "variants": {
+    "baseline": {
+      "record": "prelayout_replay_baseline_1ns.json",
+      "mapped_area_um2": 340.459,
+      "cells": 2535,
+      "setup_wns_ns": -0.42796144577059236,
+      "parameters": {
+        "ROW_REUSE": 1
+      }
+    },
+    "optimized": {
+      "record": "prelayout_replay_narrow_1ns.json",
+      "mapped_area_um2": 298.831,
+      "cells": 2232,
+      "setup_wns_ns": -0.29989100211939845,
+      "parameters": {
+        "ROW_REUSE": 1
+      }
+    },
+    "stream_only": {
+      "record": "prelayout_stream_1ns.json",
+      "mapped_area_um2": 228.658,
+      "cells": 1722,
+      "setup_wns_ns": -0.2803532972539761,
+      "parameters": {
+        "ROW_REUSE": 0
+      }
+    }
+  },
+  "replay_area_reduction_percent": 12.227022930808108,
+  "replay_over_stream_area_um2": 70.17300000000003
+}

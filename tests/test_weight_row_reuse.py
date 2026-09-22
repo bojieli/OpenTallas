@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
-@pytest.mark.parametrize('row_words', [1, 31, 32, 512, 513, 1024, 1025])
+@pytest.mark.parametrize('row_words', [1, 31, 32, 512, 513, 1024, 1025, 2049])
 def test_resident_row_replay(tmp_path, row_words):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''module tb;

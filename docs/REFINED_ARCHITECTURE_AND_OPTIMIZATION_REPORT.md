@@ -717,3 +717,40 @@ slew/capacitance/fanout, DRC and antenna violations. Source and retained artifac
 hashes pass. The record remains overall `not_met` due to pre-layout STA. The
 matched baseline route is still active; routed area savings are not established.
 Evidence: `runtime_operand_admission/pnr_control_cts12_1ns.json`.
+
+
+## Matched admission routed comparison and bounded replay counters
+
+Both admission variants now finish routing at ASAP7 TT, 1 ns, with CTS cluster
+size 12, max fanout 16 and max transition 0.32 ns. Standard-cell area falls from
+826.380 to 723.503 um² (12.45%). Setup WNS is +0.050442 / +0.055088 ns and hold
+WNS +0.055910 / +0.049710 ns for baseline / optimized. Both have zero setup/hold,
+slew/capacitance/fanout, DRC and antenna violations. Source and retained artifact
+hashes were checked. Overall records remain `not_met` because pre-layout timing
+fails. Flow power estimates are 27.882 / 21.593 mW; these are not workload energy
+measurements. The full comparison is in
+`runtime_operand_admission/control_comparison.json`.
+
+The resident-row scheduler's row length and remaining-row counters are now
+11 bits, matching the admitted 1,024-word bound. Full stream counts and addresses
+remain 32 bits, and the reuse eligibility check still examines the full input.
+This removes 42 register bits plus excess arithmetic/comparison width without
+changing refill or replay timing. A 2,049-word streamed-fallback case explicitly
+checks that high input bits cannot turn a nonresident row into a short replay.
+
+Matched synthesis at 1 ns reduces the replay scheduler's mapped area from
+340.459 to 298.831 um² (12.23%), cells from 2,535 to 2,232 and sequential area
+from 116.378 to 100.456 um². Pre-layout WNS improves from -0.4280 to -0.2999 ns;
+both still miss 1 ns. Matched full routes are running. This comparison isolates
+counter widths within the replay scheduler; it does not price the complete
+reuse service, its extra stream-tag capture or containing G2. Evidence and
+source snapshots are under `runtime_weight_scheduler/`.
+
+
+The matched `ROW_REUSE=0` scheduler maps to 228.658 um², so narrowed replay
+adds 70.173 um² (30.69%) at this standalone boundary. This makes the architecture
+tradeoff explicit: fewer external weight transfers require additional control.
+The containing service's total area and routed clock still need measurement.
+The latest integrated slow-weight campaign retains 584 matching outputs,
+240 first-operation weight fills and the exact 23,491 completion counter.
+All 44 focused runtime tests pass; standalone scheduler lint is clean.
