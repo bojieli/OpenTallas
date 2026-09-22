@@ -62,7 +62,7 @@
     "rtl/abi3/ot_a3_loop_stack.sv": "cbe7590d32f08145d3039343713f6868b818594d1bbff91f5e48e89d5d90bbc5",
     "rtl/abi3/ot_a3_lq8.sv": "d263afcc19c5c1883d3973227b338e9d2034a591cf5065a5ea3de8a444cbd785",
     "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
-    "rtl/abi3/ot_a3_lq8_operand_admission.sv": "15afc0519208dbc6250247a067b0a0037f8dc9c8925322a996f7fc753fe61ae4",
+    "rtl/abi3/ot_a3_lq8_operand_admission.sv": "628abd977f77c6dbc9b2704f1b476edb9d7e57c82dcaf23f9c190be693c30a26",
     "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
     "rtl/abi3/ot_a3_lq8_operand_join.sv": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
     "rtl/abi3/ot_a3_lq8_runtime_operands.sv": "c7f8f3bb147fc14b2744a4bdd21ccdf13f12bf9a0a9bf6ad925437fd5ef57a18",
@@ -382,7 +382,7 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=3247\nprogram phase=2 complete=0 trap=8 cycles=3813\nprogram phase=1 complete=1 trap=0 cycles=6909\nprogram phase=3 complete=0 trap=8 cycles=7078\nprogram phase=1 complete=1 trap=0 cycles=10160\nprogram phase=4 complete=0 trap=8 cycles=11112\nprogram phase=5 complete=0 trap=8 cycles=11292\nprogram phase=1 complete=1 trap=0 cycles=14375\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=11 fill_words=2432 read_requests=6010\noutput stalls=472 reservation stalls=18 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=6125\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:253: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 144us; walltime 0.100 s; speed 1.440 ms/s\n- Verilator: cpu 0.077 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=3247\nprogram phase=2 complete=0 trap=8 cycles=3812\nprogram phase=1 complete=1 trap=0 cycles=6908\nprogram phase=3 complete=0 trap=8 cycles=7075\nprogram phase=1 complete=1 trap=0 cycles=10154\nprogram phase=4 complete=0 trap=8 cycles=11099\nprogram phase=5 complete=0 trap=8 cycles=11277\nprogram phase=1 complete=1 trap=0 cycles=14357\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=11 fill_words=2432 read_requests=6010\noutput stalls=482 reservation stalls=19 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=6125\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:253: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 144us; walltime 0.116 s; speed 1.241 ms/s\n- Verilator: cpu 0.116 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
     "build/g2_runtime_byte_transport/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
     "build/g2_runtime_byte_transport/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
@@ -391,6 +391,6 @@
     "build/g2_runtime_byte_transport/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
     "build/g2_runtime_byte_transport/weight.hex": "4f7a12d3bea07c781c71fe2268406d732163a4971209ccd53e0cf22ec0b87cc4",
     "build/g2_runtime_byte_transport/program_config.svh": "c696e025b1f7d6f9f30193d345d7439ba7c966f5a3b07fbf01d0835cb4eaba19",
-    "build/g2_runtime_byte_transport/simulation.log": "e69c485c40510235e4d89e5a2cd79a129c0bdabccd5e72caf5ebe46705f7025b"
+    "build/g2_runtime_byte_transport/simulation.log": "6acd77f854ad1e416f8a9d4715444badc5df7bdc6ad7d8bcd0c0e8f03055f779"
   }
 }

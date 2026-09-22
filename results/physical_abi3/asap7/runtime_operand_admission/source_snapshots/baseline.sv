@@ -1,7 +1,6 @@
 `timescale 1ns/1ps
 // Capture and prepare cursor geometry once per operation. Two restoring
 // dividers share the numerator and take 16 steps, with no combinational divide.
-// Unscaled commands bypass scale division; the three extent/check stages remain.
 // This validates geometry, not arithmetic formats: the caller also requires
 // LQ8's successful format/shape admission before launching this record.
 module ot_a3_lq8_operand_admission #(
@@ -60,7 +59,7 @@ module ot_a3_lq8_operand_admission #(
         else begin
             if(record_valid && record_ready)record_valid<=0;
             if(command_valid && command_ready)begin
-                calculating<=1;step<=(cfg_scale_a || cfg_scale_b)?5'd0:5'd16;geometry_error<=0;
+                calculating<=1;step<=0;geometry_error<=0;
                 generation<=cfg_generation;rows<=cfg_rows;local_cols<=cfg_cols>>LG;
                 depth_words<=16'(rounded_depth>>group_shift);
                 rows_per_scale_a<=cfg_block_rows_a==0?16'd1:cfg_block_rows_a;

@@ -584,3 +584,44 @@ have not been weakened or rewritten; historical config reconstruction needs
 explicit version handling. Other physical-driver constraint and macro checks
 are run separately from that known failure. The architecture integration,
 weight-reuse and all-target optimization requirements remain open.
+
+
+## Unscaled admission latency checkpoint
+
+Unscaled commands previously executed all 16 restoring scale-divider steps even
+though both resulting scale strides were discarded. Admission now selects the
+three registered extent/check stages directly when both scale planes are off.
+This reduces command-to-record latency from 19 to 3 cycles without changing
+scaled admission, extent overflow checks, captured geometry or numerical order.
+Tests cover 119 cases including clear at every calculation stage and a held
+record on both paths, followed by fresh-command recovery. Standalone Verilator
+lint is clean.
+
+The loaded-program byte-transport campaign retains 584 matching outputs, 480
+first-operation activation fills and 1,440 reads. Its final completion counter
+falls from 14,375 to 14,357 under the existing independently stalled services;
+this measured saving is smaller than summing startup reductions because phases
+and stalls interact. Matched synthesis area stays 741.145 um². Pre-layout setup
+WNS changes from -1.4174 to -1.3885 ns, with the revised worst path beginning at
+clear. Neither meets 1 ns. Records and source snapshots are retained under
+`results/physical_abi3/asap7/runtime_operand_admission/`; physical control repair
+and routed validation remain necessary.
+
+Source review confirms the next reuse change must separate resident weight
+identity from monotonically advancing issue-stream identity. The current
+scheduler addresses every issued word and the prefetcher releases each tile;
+retaining a bank alone cannot replay it with the joiner's expected new stream
+address. A reuse implementation must preserve per-output K order, carry both
+identities, and measure traffic through the actual G2 path. No multi-row reuse
+implementation is claimed by this admission change.
+
+
+The scheduler CTS12 reroute has now completed: setup WNS
++0.128387 ns, hold WNS +0.045251 ns and standard-cell area
+472.071 um². Setup/hold, fanout, slew, capacitance, DRC
+and antenna violations are all zero at ASAP7 TT, 1 ns. The fanout limit remains
+16. Source and retained artifact hashes pass verification. This establishes
+standalone routed-stage closure, while the overall record remains `not_met`
+because pre-layout STA fails. Evidence:
+`runtime_auxiliary_scheduler/pnr_optimized_cts12_1ns.json`. The 36-test focused
+runtime suite passes after the admission change.

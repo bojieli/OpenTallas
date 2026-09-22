@@ -75,7 +75,7 @@ reg [7:0] cfg_group=0;reg cfg_scale_a=0,cfg_scale_b=0;
 wire [31:0] generation,a_base,s_base,ws_base,w_base,stream_words;
 wire [15:0] rows,local_cols,depth_words,rows_per_scale_a,scale_stride_a,scale_stride_b,groups_per_scale_a,groups_per_scale_b;
 ot_a3_lq8_operand_admission dut(.*);
-integer checks=0;
+integer checks=0,abort_stage,abort_scaled;
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
 task check_case(input [15:0] nr,nc,nk,input [7:0] ng,input sa,sb,input [15:0] ba,bb,rpb,input bad,input [15:0] words,cpa,cpb,input [31:0] wb);
 integer cycles;
@@ -91,7 +91,7 @@ begin
  cfg_rows=0;cfg_cols=0;cfg_depth=0;cfg_group=0;cfg_scale_a=0;cfg_scale_b=0;
  cfg_block_a=0;cfg_block_b=0;cfg_block_rows_a=0;
  cycles=0;while(!record_valid)begin tick();cycles=cycles+1;if(cycles>20)$fatal(1,"admission timeout");end
- if(cycles!=19 || geometry_error!==bad)$fatal(1,"admission verdict case %0d",checks);
+ if(cycles!=(sa || sb ? 19 : 3) || geometry_error!==bad)$fatal(1,"admission verdict case %0d",checks);
  repeat(4)begin
   if(command_ready || !record_valid || generation!=32'h123 || a_base!=100 || s_base!=200 || ws_base!=300 || w_base!=wb ||
      rows!=nr || local_cols!=nc/8 || depth_words!=words || rows_per_scale_a!=(rpb==0?16'd1:rpb))$fatal(1,"captured record changed");
@@ -106,8 +106,17 @@ tick();rst_n=1;
 """
         + "\n".join(vectors)
         + """
-command_valid=1;tick();command_valid=0;repeat(5)tick();clear=1;tick();clear=0;
-repeat(20)tick();if(record_valid || !command_ready)$fatal(1,"clear left divider active");
+// Clear every calculation edge and a held record on both admission paths.
+for(abort_scaled=0;abort_scaled<2;abort_scaled=abort_scaled+1)begin
+ for(abort_stage=0;abort_stage<=(abort_scaled?19:3);abort_stage=abort_stage+1)begin
+  cfg_rows=2;cfg_cols=24;cfg_depth=24;cfg_group=2;
+  cfg_scale_a=1'(abort_scaled);cfg_scale_b=1'(abort_scaled);
+  cfg_block_a=6;cfg_block_b=8;command_valid=1;tick();command_valid=0;
+  repeat(abort_stage)tick();clear=1;tick();clear=0;
+  repeat(20)tick();if(record_valid || !command_ready)$fatal(1,"clear left admission active");
+  check_case(2,24,24,2,0,0,0,0,0,0,12,0,0,400);
+ end
+end
 $display("PASS admission cases=%0d capture, hold, overflow boundary and abort",checks);$finish;
 end
 initial begin #100000;$fatal(1,"timeout");end
@@ -133,4 +142,4 @@ endmodule
     assert built.returncode == 0, built.stderr
     run = subprocess.run(["vvp", str(sim)], capture_output=True, text=True, timeout=30)
     assert run.returncode == 0, run.stdout + run.stderr
-    assert f"PASS admission cases={len(cases) + 2}" in run.stdout
+    assert f"PASS admission cases={len(cases) + 2 + 24}" in run.stdout
