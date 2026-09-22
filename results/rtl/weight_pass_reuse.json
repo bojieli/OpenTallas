@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "scope": "Pass scheduler with real bank ownership and SRAM simulation; not loaded G2 integration",
-  "tests": 13,
+  "tests": 14,
   "existing_scheduler_regression_tests": 3,
   "cases": [
     {
@@ -62,14 +62,14 @@
   "counter_basis": "Each listed fill and issue count is enforced by simulation assertions, with data identity checked at every consumed word; both reuse enabled and disabled pass",
   "lint": "Verilator 5.050 --lint-only --Wall: pass",
   "physical": {
-    "status": "not_met: setup -0.129225 ns and one fanout violation",
-    "record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_cts12_1ns.json",
-    "audit": "results/physical_abi3/asap7/weight_pass_scheduler/initial_route_audit.json"
+    "status": "running; registered tile handoff candidate",
+    "record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_tile_handoff_cts12_1ns.json",
+    "baseline": "results/physical_abi3/asap7/weight_pass_scheduler/initial_route_audit.json"
   },
   "sources": [
     {
       "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
-      "sha256": "c826c8b71a8091a45c45eaafa135bb4aea7f41261ddc6c17c2f7e97b173160e0"
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79"
     },
     {
       "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
@@ -93,7 +93,7 @@
     },
     {
       "path": "tests/test_weight_pass_reuse.py",
-      "sha256": "0a82567de36d90ad9bc0d4dc3355ec4821d96af8f2e7e26cf61afdbbb08f15e4"
+      "sha256": "a910d9019964737e2402e6a20721aaef78bedeca7c70ba4d4748112bdaf8e557"
     }
   ]
 }

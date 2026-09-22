@@ -37,13 +37,13 @@ module ot_a3_weight_pass_scheduler #(
     output wire [127:0] fill_data,
     output wire tile_valid,
     input wire tile_ready,
-    output reg tile_bank,
-    output reg [63:0] tile_tag,
+    output wire tile_bank,
+    output wire [63:0] tile_tag,
     output wire [63:0] tile_stream_tag,
-    output reg tile_retain,
-    output reg [9:0] tile_words
+    output wire tile_retain,
+    output wire [9:0] tile_words
 );
-    localparam [2:0] IDLE=0,EXTENT=1,STREAM=2,CHECK=3,LAUNCH=4,RUN=5,DRAIN=6;
+    localparam [2:0] IDLE=0,EXTENT=1,STREAM=2,CHECK=3,LAUNCH=4,RUN=5;
     reg [2:0] state;
     reg [31:0] generation,origin,fetch_base,issue_base;
     reg [15:0] rows,cols,cols_left,depth;
@@ -56,27 +56,6 @@ module ot_a3_weight_pass_scheduler #(
     wire inner_ready,inner_scheduled,inner_error;
     wire command_fire=command_valid && command_ready;
     wire tile_fire=tile_valid && tile_ready;
-    reg tile_pending;
-    wire inner_tile_valid,inner_tile_bank,inner_tile_retain;
-    wire [63:0] inner_tile_tag;
-    wire [9:0] inner_tile_words;
-    wire inner_tile_ready=enabled && (!tile_pending || tile_ready);
-    wire capture_tile=inner_tile_valid && inner_tile_ready;
-    wire pass_finished=state==DRAIN && (!tile_pending || tile_fire);
-    assign tile_valid=enabled && tile_pending;
-    // Register extent selection before the logical issue-address increment.
-    // An accepted tile may be replaced on the same edge without a bubble.
-    always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)tile_pending<=0;
-        else if(clear)tile_pending<=0;
-        else if(inner_tile_ready)tile_pending<=inner_tile_valid;
-    end
-    always @(posedge clk)begin
-        if(capture_tile)begin
-            tile_bank<=inner_tile_bank;tile_tag<=inner_tile_tag;
-            tile_retain<=inner_tile_retain;tile_words<=inner_tile_words;
-        end
-    end
     wire [32:0] range_end={1'b0,origin}+{1'b0,total_words[31:0]};
     assign command_ready=enabled && state==IDLE && !command_error;
     assign active=enabled && state!=IDLE;
@@ -105,8 +84,7 @@ module ot_a3_weight_pass_scheduler #(
                 end
                 LAUNCH:if(inner_ready)state<=RUN;
                 RUN:if(inner_error)begin command_error<=1;state<=IDLE;end
-                    else if(inner_scheduled)state<=DRAIN;
-                DRAIN:if(pass_finished)begin
+                    else if(inner_scheduled)begin
                         if(cols_left<=16'(INTERLEAVE))begin state<=IDLE;scheduled<=1;end
                         else state<=EXTENT;
                     end
@@ -129,7 +107,7 @@ module ot_a3_weight_pass_scheduler #(
                 total_words<=48'(rows)*48'(row_words);
                 pass_stream_words<=48'(rows)*48'(pass_words);
             end
-            if(pass_finished && cols_left>16'(INTERLEAVE))begin
+            if(state==RUN && inner_scheduled && cols_left>16'(INTERLEAVE))begin
                 cols_left<=cols_left-16'(INTERLEAVE);
                 fetch_base<=fetch_base+fetched_words;
             end
@@ -150,8 +128,8 @@ module ot_a3_weight_pass_scheduler #(
         .response_valid(response_valid),.response_ready(response_ready),.response_mismatch(response_mismatch),
         .response_tag(response_tag),.response_index(response_index),.response_data(response_data),
         .fill_valid(fill_valid),.fill_ready(fill_ready),.fill_bank(fill_bank),.fill_tag(fill_tag),.fill_data(fill_data),
-        .tile_valid(inner_tile_valid),.tile_ready(inner_tile_ready),.tile_bank(inner_tile_bank),.tile_tag(inner_tile_tag),
-        .tile_stream_tag(),.tile_retain(inner_tile_retain),.tile_words(inner_tile_words));
+        .tile_valid(tile_valid),.tile_ready(tile_ready),.tile_bank(tile_bank),.tile_tag(tile_tag),
+        .tile_stream_tag(),.tile_retain(tile_retain),.tile_words(tile_words));
     /* verilator lint_on PINCONNECTEMPTY */
     initial if(INTERLEAVE<1 || INTERLEAVE>65535)$fatal(1,"invalid pass width");
 endmodule

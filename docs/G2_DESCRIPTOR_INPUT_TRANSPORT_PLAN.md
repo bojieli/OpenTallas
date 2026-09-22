@@ -676,3 +676,28 @@ The critical path runs from inner replay selection through tile extent to
 `issue_base[19]`. Next work is a registered tile handoff to separate extent
 selection from logical issue-address advancement, including correct stall,
 pass-transition and final-completion ownership. The target remains 1 ns.
+
+## Registered pass-tile handoff
+
+The pass scheduler now captures tile bank, ownership tag, retain flag and word
+count in a one-entry elastic register before logical issue-address advancement.
+That separates the measured replay/extent selection path from the issue-base
+adder. The stage accepts a replacement on the same edge as consumption. Payload
+registers use ownership validity rather than a reset tree. A pass-drain state
+holds command ownership until the final staged tile is accepted, before moving
+to the next pass or publishing scheduling completion.
+
+Fourteen focused tests pass, including a new final-tile stall, exact completion
+count, clear of a held tile and restart. A deliberate early-completion mutation
+is rejected with `lost stalled final ownership`; evidence is retained in
+`results/rtl/weight_pass_early_completion_mutation.json`. Strict Verilator lint
+passes. Matched before/after simulations of all twelve bank-service workload/
+reuse configurations preserve fill counts, outputs and total cycles under the
+same stalls. The counters include the final restarted operation and fixed drain
+check, not inference latency. Evidence: `results/rtl/weight_pass_tile_handoff.json`.
+
+A new 1 ns ASAP7 TT CTS12 route is active with unchanged transition/fanout limits.
+No timing or area improvement is claimed pending that result. The failing
+baseline's source is retained under `weight_pass_scheduler/tile_handoff/before.sv`
+and its audit now binds to that snapshot. Runtime/output integration and loaded
+G2 measurements remain required.

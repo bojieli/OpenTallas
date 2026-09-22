@@ -1,5 +1,5 @@
 {
-  "scope": "Initial pass scheduler; current sources verified",
+  "scope": "Historical pre-handoff scheduler route; launch source retained",
   "sources": [
     {
       "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
@@ -41,5 +41,17 @@
   },
   "area_um2": 1377.01,
   "critical_path": "inner.replay -> issue_base[19]",
-  "next_action": "Register tile metadata before issue-address advancement; preserve ready/valid ownership and completion semantics"
+  "next_action": "Register tile metadata before issue-address advancement; preserve ready/valid ownership and completion semantics",
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "verified": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "e4b73f02c5fb4db23bed1107521ada6229d3c3f39b19944b113eafba8fd09207"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "verified": "results/physical_abi3/asap7/weight_pass_scheduler/tile_handoff/before.sv",
+      "sha256": "c826c8b71a8091a45c45eaafa135bb4aea7f41261ddc6c17c2f7e97b173160e0"
+    }
+  ]
 }

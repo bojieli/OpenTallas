@@ -96,7 +96,7 @@ initial begin
  rst_n=0;tick();rst_n=1;command_generation=8;launch();
  wait(consumed==1);@(negedge clk);rst_n=0;tick();rst_n=1;
  command_generation=9;launch();finish_run();
- $display("PASS pass reuse fills=%0d outputs=%0d",fills,consumed);$finish;
+ $display("PASS pass reuse fills=%0d outputs=%0d cycles=%0d",fills,consumed,ticks);$finish;
 end
 initial begin #2000000;$fatal(1,"timeout");end
 endmodule
@@ -175,3 +175,73 @@ endmodule
     run = subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=30)
     assert run.returncode == 0, run.stdout+run.stderr
     assert 'PASS pass admission' in run.stdout
+
+
+def test_registered_final_tile_ownership(tmp_path):
+    if shutil.which('iverilog') is None:
+        pytest.skip('iverilog unavailable')
+    bench = tmp_path/'tb.sv'
+    bench.write_text(r'''module tb;
+reg clk=0;always #5 clk=~clk;
+reg rst_n=0,clear=0,command_valid=0,tile_ready=0,backing=0;
+wire command_ready,active,scheduled,command_error,fetch_valid,tile_valid;
+wire response_ready,response_mismatch;
+wire [63:0] fetch_tag,tile_tag,tile_stream_tag;
+wire [9:0] tile_words;wire tile_bank,tile_retain;
+reg [63:0] response_tag;
+integer accepted=0,completions=0;
+ot_a3_weight_pass_scheduler dut(
+.clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(command_valid),.command_ready(command_ready),
+.command_generation(32'd7),.command_base(32'd100),.command_rows(16'd2),
+.command_local_cols(16'd1),.command_depth_words(16'd1),
+.active(active),.scheduled(scheduled),.command_error(command_error),
+.reserve_ready(1'b1),.fetch_valid(fetch_valid),.fetch_ready(!backing),.fetch_tag(fetch_tag),
+.response_valid(backing),.response_ready(response_ready),.response_mismatch(response_mismatch),
+.response_tag(response_tag),.response_index(10'd0),.response_data(128'd17),.fill_ready(1'b1),
+.tile_valid(tile_valid),.tile_ready(tile_ready),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),
+.tile_words(tile_words),.tile_bank(tile_bank),.tile_retain(tile_retain));
+always @(posedge clk)begin
+ if(!rst_n || clear)begin backing<=0;accepted<=0;completions<=0;end
+ else begin
+  if(fetch_valid && !backing)begin backing<=1;response_tag<=fetch_tag;end
+  if(backing && response_ready)backing<=0;
+  if(command_error || response_mismatch)$fatal(1,"protocol error");
+  if(tile_valid && tile_ready)begin
+   if(tile_tag!={32'd7,32'd100} || tile_stream_tag!={32'd7,32'(100+accepted)} ||
+      tile_words!=1 || tile_bank || tile_retain!=(accepted==0))$fatal(1,"tile identity");
+   accepted<=accepted+1;
+  end
+  if(scheduled)begin
+   if(accepted!=2 || tile_valid)$fatal(1,"early completion");completions<=completions+1;
+  end
+ end
+end
+task tick;begin @(negedge clk);end endtask
+task launch;begin command_valid=1;tick();command_valid=0;end endtask
+initial begin
+ tick();rst_n=1;launch();wait(tile_valid);tick();
+ tile_ready=1;tick();tile_ready=0;
+ wait(tile_valid);repeat(12)begin
+  tick();if(!active || scheduled || command_ready || tile_stream_tag!={32'd7,32'd101})$fatal(1,"lost stalled final ownership");
+ end
+ tile_ready=1;tick();tile_ready=0;wait(scheduled);repeat(4)tick();
+ if(completions!=1 || active || !command_ready)$fatal(1,"completion count");
+ // A held tile is revoked by clear and cannot leak into the next command.
+ clear=1;tick();clear=0;launch();wait(tile_valid);tick();clear=1;
+ #1;if(tile_valid || command_ready)$fatal(1,"clear publication");
+ tick();clear=0;#1;if(tile_valid || active || !command_ready)$fatal(1,"clear ownership");
+ launch();tile_ready=1;wait(scheduled);repeat(4)tick();
+ if(accepted!=2 || completions!=1)$fatal(1,"restart failed");
+ $display("PASS registered final tile ownership");$finish;
+end
+initial begin #10000;$fatal(1,"timeout");end
+endmodule
+''')
+    sim = tmp_path/'sim'
+    subprocess.run(['iverilog','-g2012','-s','tb','-o',str(sim),
+                    str(ROOT/'rtl/abi3/ot_a3_weight_pass_scheduler.sv'),
+                    str(ROOT/'rtl/abi3/ot_a3_weight_tile_scheduler.sv'),str(bench)],
+                   check=True,capture_output=True,timeout=30)
+    run = subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=30)
+    assert run.returncode == 0, run.stdout+run.stderr
+    assert 'PASS registered final tile ownership' in run.stdout

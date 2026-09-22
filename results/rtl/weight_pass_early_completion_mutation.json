@@ -1,0 +1,8 @@
+{
+  "status": "pass",
+  "meaning": "Directed regression rejected deliberate early-completion mutation",
+  "mutation": "Declare completion on inner_scheduled before staged final tile acceptance",
+  "returncode": 1,
+  "output": "FATAL: /home/ubuntu/OpenTallas/build/pass_scheduler_handoff_tests/test_registered_final_tile_own0/tb.sv:42: lost stalled final ownership\n       Time: 110000 Scope: tb\n",
+  "test_sha256": "a910d9019964737e2402e6a20721aaef78bedeca7c70ba4d4748112bdaf8e557"
+}
