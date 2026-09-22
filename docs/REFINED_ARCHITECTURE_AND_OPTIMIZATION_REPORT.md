@@ -6,86 +6,99 @@ this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Current review summary (2026-09-22)
 
-The project has meaningful local optimizations and a substantially improved
-runtime operand architecture, but significant system-level efficiency and
-integration gaps remain. The implemented changes primarily qualify optional
-G2/LQ8 runtime mode; they do not demonstrate an optimized accelerator across
-all targets. The sections below retain historical checkpoints; this summary
-supersedes their statements about running physical jobs.
+**The runtime architecture is substantially better, but significant architectural
+and integration problems remain. The project is not yet demonstrated to be a
+well-optimized accelerator across all targets.** Most new evidence qualifies
+optional G2/LQ8 runtime mode, not the legacy default or every deployed engine.
+This summary supersedes status statements in the historical checkpoints below.
 
-The refined architecture separates operation admission, bounded tile transport,
-local SRAM reuse, complete-operand issue credits, arithmetic and reserved output
-drain. Tagged dual weight banks overlap refill with execution. Independent
-auxiliary cursors and three reusable SRAM windows decouple memory latency from
-compute. Generation ownership prevents stale responses from becoming current
-operands; completion waits for queued outputs and external writes to drain.
-These are implemented architectural improvements. Bounded resident-row weight reuse is now implemented (see the replay checkpoint
-below); tiled multi-row scheduling and a complete deployment memory system remain planned.
+The implemented architecture separates checked operation admission, bounded
+transport, local SRAM reuse, complete-operand issue credits, arithmetic, and
+reserved output drain. Two tagged 512x128 weight banks overlap refill and
+execution and retain eligible weight rows for replay. Three auxiliary SRAM
+windows retain activation and scale data. Independent future-address cursors
+prepare operands before issue; generation ownership and cancellation/drain
+contracts keep old responses out of new operations. Completion includes queued
+outputs and transport drain. The arithmetic remains the actual eight-lane LQ8
+implementation with its sequential FP32 RNE association.
 
-| Verified change | Previous measurement | Refined measurement | Scope and limitation |
+```mermaid
+flowchart LR
+    A[Checked admission and captured geometry] --> B[Bounded tile scheduling]
+    B --> C[Tagged dual weight SRAM banks and replay]
+    A --> D[Future auxiliary cursor and three SRAM windows]
+    C --> E[Complete operand join and issue credits]
+    D --> E
+    E --> F[Eight-lane LQ8 arithmetic]
+    F --> G[Reserved output queue and write drain]
+```
+
+The major verified changes relative to earlier recorded versions are:
+
+| Change | Earlier version | Refined version | What the measurement establishes |
 |---|---:|---:|---|
-| Overlap weight refill and execution | 378,517 cycles | 326,833 cycles (13.65% lower) | Matched 92-case functional corpus; not model-token throughput |
-| Right-size auxiliary queue | 2,560 bits, eight entries | 640 bits, two entries | 75% fewer payload/identity bits; 0.15% more cycles in the compared experiment |
-| Reuse activation SRAM windows | 1,440 direct word deliveries | 480 activation fills | 66.7% less activation traffic for M=6,N=24,K=80; weights still repeat per row |
-| Mapper synthesis area | 789.931 um² | 681.313 um² | 13.75% lower; adds one mapping startup stage |
-| Scheduler synthesis area | 412.863 um² | 356.758 um² | 13.59% lower with unchanged planning latency |
-| Mapper routed standard-cell area | 1,044.51 um² | 876.389 um² | 16.10% lower in initial optimized route; two fanout violations remain |
+| Resident weight-row replay, M6/N24/K80 | 1,440 weight fills | 240 fills | 83.3% less first-operation weight traffic; fits existing banks |
+| Replay plus earlier first-bank availability, slow weight service | 50,311 campaign cycles | 21,731 cycles | 56.8% fewer cycles with response gap 8; 584 matching outputs |
+| Rolling activation window, M6/N56/K80 | 1,440 activation fills; 35,175 cycles | 720 fills; 30,723 cycles | 50% fewer fills and 12.66% fewer campaign cycles; 1,352 matching outputs |
+| Rolling activation window, M6/N56/K352 | 8,896 fills; 160,789 cycles | 7,552 fills; 152,458 cycles | Helps deeper rows, but retention remains capacity-limited |
+| Unscaled admission | 19 cycles | 3 cycles | Scaled admission retains 19 cycles |
+| Auxiliary reservation queue | Eight entries, 2,560 bits | Two entries, 640 bits | 75% fewer payload/identity bits; compared corpus cost 0.15% more cycles |
+| Mapper routed standard-cell area | 1,044.510 um² | 888.112 um² | 14.97% lower; refined CTS12 route passes reported physical checks at 1 ns |
+| Admission routed standard-cell area | 826.380 um² | 723.503 um² | 12.45% lower; both recorded routes pass physical checks at 1 ns |
 
-These comparisons use different experiments and must not be combined into one
-system speedup. The latest recorded focused suite has 36 passing tests. The
-loaded-program byte-transport campaign produces 584 matching accepted outputs
-across success, faults, aborts and recovery. The broader LQ8 numerical regression
-has 92 cases and 17,103 matching outputs. These are simulation results.
+These are separate source-bound experiments, not additive system speedups.
+Campaign counters include faults, aborts, recovery and drain; they are not
+whole-model inference latency. Rolling windows and runtime mode remain explicit
+options. Weight replay is bounded to eligible rows of at most 1,024 words;
+larger rows fall back to streaming and still repeat weight traffic across rows.
 
-The completed ASAP7 TT routes at a 1 ns target are:
+The latest cursor change moves weight-scale addition before column selection by
+retaining absolute per-column addresses. It preserves the G2 counter of 30,723
+and passes the expanded functional checks. Its synthesis area falls only 0.50%
+(476.446 to 474.083 um²), while pre-layout setup WNS worsens from -1.9173 to
+-2.1575 ns on a high-fanout start path. Matched routes are pending. This is a
+structural candidate, not an established clock improvement.
 
-| Standalone design | Setup WNS (ns) | Hold WNS (ns) | Standard-cell area (um²) | Fanout violations |
-|---|---:|---:|---:|---:|
-| Baseline mapper | +0.103283 | +0.057078 | 1,044.510 | 0 |
-| Optimized mapper, initial route | +0.391994 | +0.059846 | 876.389 | 2 |
-| Optimized auxiliary scheduler | +0.118610 | +0.044861 | 468.208 | 4 |
+Physical evidence is mixed. At ASAP7 TT and a 1 ns target, the refined mapper,
+fixed-page auxiliary scheduler and admission snapshots have positive routed
+setup/hold slack and zero reported slew, capacitance, fanout, DRC and antenna
+violations. The historical replay-control scheduler route saves area
+(453.788 to 415.632 um² relative to the preceding early-fill snapshot), but
+fails setup: -0.0222674 ns WNS and 36 violating paths. The subsequent bounded
+extent rewrite has an expression-equivalence proof, but containing-service
+routes remain pending. Standalone successes do not establish integrated GHz
+operation; records can also retain overall `not_met` due to pre-layout failure.
+No activity-qualified energy benefit or all-target physical closure is claimed.
 
-All three report zero setup/hold, DRC, antenna, slew and capacitance violations.
-The optimized routes therefore meet timing at this corner but do not yet pass
-all physical checks. Their records retain overall `not_met`, also reflecting
-failed pre-layout timing. No integrated G2 GHz claim follows. The mapper's flow
-power estimate rises from 3.748 to 5.936 mW; this is not activity-qualified energy
-per operation, and an energy improvement has not been established. Free-running
-payload arithmetic needs workload-based switching evaluation. A smaller-clock-
-cluster mapper reroute has been launched with the fanout limit held at 16; it
-has now completed; see the clock-tree repair checkpoint below.
+The latest recorded focused suite passes 62 tests. The LQ8 corpus passes 92
+cases with 17,103 matching outputs, 18 exercised faults and 115,748 checks.
+The latest loaded G2 N56 campaign passes 1,352 matching outputs with independent
+output backpressure, auxiliary refill, faults, aborts and recovery.
 
-The two optimized route records and all seven retained artifacts per record
-were checked against their hashes. Their source hashes match the committed
-optimized snapshots and current production RTL. Evidence is retained in
-`results/physical_abi3/asap7/runtime_byte_mapper/pnr_resetless_1ns.json` and
-`results/physical_abi3/asap7/runtime_auxiliary_scheduler/pnr_optimized_1ns.json`.
-
-The next work is ordered by architectural impact:
+Architecture-first work proceeds in this order:
 
 1. Complete descriptor-derived mapping, packed/strided weight transport and
-   output-object writes. Qualify format/shape coverage through real dispatch,
-   bounded transport and final-write completion.
-2. Implement bounded multi-row execution that reuses resident weight tiles.
-   Measure external bytes per useful output and accumulator capacity while
-   preserving the specified sequential FP32 RNE behavior.
-3. Establish a workload/resource budget for every supported target: dense/MoE,
+   output-object writes through real bounded services. Qualify format/shape
+   coverage and final-write acknowledgement through actual dispatch.
+2. Extend retention beyond resident whole-row replay: bounded multi-row tile
+   reuse, accumulator capacity and activation boundary/deep-row retention.
+   Measure bytes per useful output without changing FP32 association.
+3. Establish workload/resource budgets for every supported target: dense/MoE,
    decode/prefill, attention/KV, vector/reduction, routing and distributed
-   transport. Select memory banking, concurrency and queue depths from measured
-   starvation, conflicts and service rates.
-4. Optimize each selected component from routed critical paths: pipeline long
-   arithmetic and address/control paths, reduce mux depth and fanout, and tune
-   recurrence scheduling without silently changing numerical association.
-   Evaluate added cycles and register/switching cost alongside frequency.
-5. Recharacterize containing blocks and every target configuration. Require
-   setup/hold and physical-rule closure, then report workload latency,
-   throughput, traffic, area and activity-based energy together. ASAP7's initial
-   1 GHz engineering target is not a universal target for other technologies.
+   transport. Choose banking, concurrency and queue depths from measured
+   starvation, conflicts, occupancy and service rates.
+4. Optimize each instantiated component from containing-block routed paths.
+   Pipeline long arithmetic/address/control paths, localize high-fanout enables,
+   and reduce selection depth. Count added cycles, registers and switching
+   alongside frequency; preserve recurrence and backpressure semantics.
+5. Recharacterize every target and containing block with memory and clock-tree
+   costs. Require setup/hold and physical-rule closure, then compare workload
+   latency, throughput, traffic, area and activity-based energy. The initial
+   ASAP7 1 GHz target is not a universal target for other technologies.
 
-Modern accelerator principles guide the design: local reuse, overlapped data
-movement, bounded credits, explicit ownership and workload-driven resource
-balance. All-target efficiency remains an acceptance requirement, not a result
-already achieved.
+Local reuse, overlapped data movement, bounded credits, explicit ownership and
+balanced engines are the architectural direction. Full-target efficiency remains
+an acceptance requirement, and the full optimization goal remains active.
 
 ## Assessment
 
@@ -1004,3 +1017,35 @@ snapshot. The prior column-pass comparison references archived records under
 `results/rtl/activation_fixed_page_baseline/`, preserving its original digests.
 Production descriptor mapping, wider retention, integrated physical closure and
 all-target optimization remain open.
+
+
+## Absolute scale cursor and replay-control route checkpoint
+
+The operand cursor now holds the next absolute weight-scale address for each
+local column. Accepted requests advance that column at a scale-group boundary;
+the output selects a stored address without a subsequent scale-offset adder.
+Disabled scaling, per-K scaling, grouped scaling, partial passes, stalls, clear
+and modulo-32 address wrap are checked across interleave 1, 3 and 5. No request
+or issue cycles were added. Standalone lint and all 62 focused tests pass.
+The numerical corpus and loaded G2 campaign retain their matching outputs and
+counters. Evidence: `results/rtl/a3_lq8_absolute_scale_cursor.json` and
+`results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation.json`.
+The earlier rolling comparison now points to an exact archived record under
+`results/rtl/before_absolute_scale_cursor/`, preserving its original digest.
+
+Matched cursor synthesis snapshots and records are retained under
+`results/physical_abi3/asap7/runtime_operand_cursor/`. Area is 476.446 / 474.083
+um² for baseline / absolute addressing; setup WNS is -1.9173 / -2.1575 ns.
+The worse start-control path prevents a timing-improvement claim. Matched CTS12
+routes at 1 ns, fanout 16 and library transition constraints remain pending.
+
+The completed historical replay-control scheduler route is retained at
+`runtime_weight_scheduler/pnr_replay_control_cts12_1ns.json`, with its netlists,
+reports and configuration. It characterizes `source_snapshots/replay_control.sv`,
+before the bounded extent rewrite. Routed standard-cell area is 415.632 um²,
+setup WNS -0.0222674 ns with 36 violating paths, and hold WNS +0.0518399 ns.
+Reported slew, capacitance, fanout, DRC and antenna violations are zero. The
+critical path runs from tile_left[9] to tile_base[28]. This result is a timing
+failure despite its 8.41% area saving against the prior early-fill snapshot.
+The later extent rewrite addresses that selection structure but still requires
+routed confirmation. Retained artifact hashes have been checked.

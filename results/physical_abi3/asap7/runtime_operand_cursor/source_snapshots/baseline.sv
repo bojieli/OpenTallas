@@ -27,7 +27,7 @@ module ot_a3_lq8_operand_cursor #(
     reg [15:0] rows_left,cols_left,cols_q,depth_q,kg;
     reg [IW-1:0] col;
     reg [15:0] rpb_a,rows_in_scale,sa_stride,sb_stride,bwa,bwb,kga,kgb;
-    reg [15:0] ksa;
+    reg [15:0] ksa,ksb;
     reg [31:0] a_base,s_base,ws_cursor;
     reg [31:0] ws_columns[0:INTERLEAVE-1];
     wire [15:0] pass_cols=(cols_left<16'(INTERLEAVE))?cols_left:16'(INTERLEAVE);
@@ -38,10 +38,7 @@ module ot_a3_lq8_operand_cursor #(
     assign request_valid=rst_n && !clear && active;
     assign a_address=a_base+{16'b0,kg};
     assign s_address=s_base+{16'b0,ksa};
-    // Each column stores its next absolute scale address. Advance on that
-    // column's accepted request, removing addition after the output mux.
-    wire advance_ws=bwb!=0 && kgb==bwb-1'b1;
-    assign ws_address=kg==0?ws_cursor:ws_columns[col];
+    assign ws_address=(kg==0?ws_cursor:ws_columns[col])+{16'b0,ksb};
     assign last=end_col && end_k && end_row && rows_left==1;
     integer i;
     always @(posedge clk or negedge rst_n)begin
@@ -49,7 +46,7 @@ module ot_a3_lq8_operand_cursor #(
             active<=0;invalid_geometry<=0;generation<=0;
             rows_left<=0;cols_left<=0;cols_q<=0;depth_q<=0;kg<=0;col<=0;
             rpb_a<=0;rows_in_scale<=0;sa_stride<=0;sb_stride<=0;bwa<=0;bwb<=0;
-            kga<=0;kgb<=0;ksa<=0;a_base<=0;s_base<=0;ws_cursor<=0;
+            kga<=0;kgb<=0;ksa<=0;ksb<=0;a_base<=0;s_base<=0;ws_cursor<=0;
             ws_base_q<=0;w_address<=0;
             for(i=0;i<INTERLEAVE;i=i+1)ws_columns[i]<=0;
         end else if(clear)begin active<=0;invalid_geometry<=0;end
@@ -62,19 +59,19 @@ module ot_a3_lq8_operand_cursor #(
             rpb_a<=cfg_rows_per_scale_a;rows_in_scale<=0;
             sa_stride<=cfg_scale_stride_a;sb_stride<=cfg_scale_stride_b;
             bwa<=cfg_groups_per_scale_a;bwb<=cfg_groups_per_scale_b;
-            kga<=0;kgb<=0;ksa<=0;
+            kga<=0;kgb<=0;ksa<=0;ksb<=0;
             a_base<=cfg_a_base;s_base<=cfg_s_base;ws_cursor<=cfg_ws_base;
             ws_base_q<=cfg_ws_base;w_address<=cfg_w_base;
         end else if(request_valid && request_ready)begin
             w_address<=w_address+1'b1;
             if(kg==0)begin
-                ws_columns[col]<=ws_cursor+{31'd0,advance_ws};
+                ws_columns[col]<=ws_cursor;
                 ws_cursor<=ws_cursor+{16'b0,sb_stride};
-            end else if(advance_ws)ws_columns[col]<=ws_columns[col]+1'b1;
+            end
             if(end_col)begin
                 col<=0;
                 if(end_k)begin
-                    kg<=0;kga<=0;kgb<=0;ksa<=0;
+                    kg<=0;kga<=0;kgb<=0;ksa<=0;ksb<=0;
                     if(end_row)begin
                         cols_left<=cols_q;ws_cursor<=ws_base_q;
                         if(rows_left==1)active<=0;
@@ -93,7 +90,7 @@ module ot_a3_lq8_operand_cursor #(
                         else kga<=kga+1'b1;
                     end
                     if(bwb!=0)begin
-                        if(kgb==bwb-1'b1)begin kgb<=0;end
+                        if(kgb==bwb-1'b1)begin kgb<=0;ksb<=ksb+1'b1;end
                         else kgb<=kgb+1'b1;
                     end
                 end

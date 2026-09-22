@@ -66,7 +66,7 @@
     "rtl/abi3/ot_a3_lq8.sv": "d263afcc19c5c1883d3973227b338e9d2034a591cf5065a5ea3de8a444cbd785",
     "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
     "rtl/abi3/ot_a3_lq8_operand_admission.sv": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
-    "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "10a1b62da978066b7a4e80fac630db9079b3f67f201a3a7491e459ad63715583",
+    "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
     "rtl/abi3/ot_a3_lq8_operand_join.sv": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
     "rtl/abi3/ot_a3_lq8_runtime_operands.sv": "b4e89524a14c0266b34e76488cafa7ba283d326bf5e803544bfc00f61255ed60",
     "rtl/abi3/ot_a3_mac_lane.sv": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989",
@@ -582,7 +582,7 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=7315\nprogram phase=2 complete=0 trap=8 cycles=7878\nprogram phase=1 complete=1 trap=0 cycles=15042\nprogram phase=3 complete=0 trap=8 cycles=15209\nprogram phase=1 complete=1 trap=0 cycles=22356\nprogram phase=4 complete=0 trap=8 cycles=23397\nprogram phase=5 complete=0 trap=8 cycles=23576\nprogram phase=1 complete=1 trap=0 cycles=30723\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=15 fill_words=3392 read_requests=13690\noutput stalls=598 reservation stalls=21 accepted_outputs=1352\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=3209\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:258: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 307us; walltime 0.162 s; speed 1.894 ms/s\n- Verilator: cpu 0.159 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=7315\nprogram phase=2 complete=0 trap=8 cycles=7878\nprogram phase=1 complete=1 trap=0 cycles=15042\nprogram phase=3 complete=0 trap=8 cycles=15209\nprogram phase=1 complete=1 trap=0 cycles=22356\nprogram phase=4 complete=0 trap=8 cycles=23397\nprogram phase=5 complete=0 trap=8 cycles=23576\nprogram phase=1 complete=1 trap=0 cycles=30723\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=15 fill_words=3392 read_requests=13690\noutput stalls=598 reservation stalls=21 accepted_outputs=1352\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=3209\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:258: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 307us; walltime 0.229 s; speed 1.343 ms/s\n- Verilator: cpu 0.176 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
     "build/g2_runtime_byte_transport_cols56_rolling_activation/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
     "build/g2_runtime_byte_transport_cols56_rolling_activation/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
@@ -591,6 +591,6 @@
     "build/g2_runtime_byte_transport_cols56_rolling_activation/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
     "build/g2_runtime_byte_transport_cols56_rolling_activation/weight.hex": "c4586298b09647441df890d2fe8a878f667e2b776870823034de78a85cfae855",
     "build/g2_runtime_byte_transport_cols56_rolling_activation/program_config.svh": "2449dc434d4c9f1d3d59a05bc48bcaf01c2b53f077b9dbbb07f9ac4751b0a55e",
-    "build/g2_runtime_byte_transport_cols56_rolling_activation/simulation.log": "09dd43aff5d2b735a1984e537e1fa3250b7163fac8b53fbe648801557f560e52"
+    "build/g2_runtime_byte_transport_cols56_rolling_activation/simulation.log": "bdbf9610c38eefcebd2103c9adab4f6ede7e64c239a428d1fb99195f4f841850"
   }
 }

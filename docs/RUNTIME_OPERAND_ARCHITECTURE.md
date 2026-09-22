@@ -1010,3 +1010,13 @@ multi-pass row reuse when fixed-page boundaries split a row. The policy is an
 explicit parameter (default fixed pages), qualified through the G2 checker's
 `--activation-miss-aligned` flag. Deep rows still require repeated replacement;
 this is not a second cached page or an unbounded activation store.
+
+
+The future auxiliary cursor stores absolute next weight-scale addresses per
+local column. A scale-group boundary advances the accepted column's stored
+address, moving addition before output selection. Disabled scale groups retain
+their base address; arithmetic wraps modulo 32 bits as before. Requests remain
+stable under stalls, and row/pass restart reloads column bases. This adds no
+issue cycles. Expanded interleave/group/wraparound tests pass, but matched
+pre-layout timing worsens on start-control fanout; routed clock improvement is
+not established.
