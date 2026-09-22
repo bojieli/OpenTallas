@@ -1,0 +1,48 @@
+{
+  "scope": "Historical pre-handoff route; not current-source closure",
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "verified": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "verified": "results/physical_abi3/asap7/bf16_weight_transport/gather_handoff/before.sv",
+      "sha256": "0635dd8dc457734b7a4b402d53a54df53412157beddf937df1bd21b9f4b0924a"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "verified": "results/physical_abi3/asap7/bf16_weight_transport/gather_handoff/transport_before.sv",
+      "sha256": "1e6040a98299ec31736b09cb6bc1e602887fdbf74ee85ab7c6ce834ea7b72bc3"
+    }
+  ],
+  "retained_artifacts_verified": true,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.040214799999999995,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 11.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 4.0,
+        "setup_wns_ns": -0.0151573,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 6159.82
+}

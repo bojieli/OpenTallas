@@ -416,3 +416,15 @@ mutation and were rejected by source-hash validation; the retained campaign
 records come from subsequent stable-source reruns. Physical jobs were not
 restarted. Lane-offset and handoff routes remain active, so no new clock
 closure or area comparison is claimed at this checkpoint.
+
+## Command lane-offset final route
+
+The pre-handoff command-lane-offset route completed at 1 ns with 6,159.820 um²
+cell area, -0.0151573 ns setup and +0.0402148 ns hold slack. Eleven slew
+violations remain; capacitance, fanout, DRC and antenna checks pass. Relative
+to the invariant-bound route, setup improves by 8.58 ps and slew violations
+fall from 26 to 11, while area rises 1.07%. The worst path now runs from cache
+slot selection into read-byte-count generation. This is not physical closure.
+The historical sources and retained artifacts are verified in
+`bf16_weight_transport/command_lane_offsets_route_audit.json`. The newer handoff
+route remains active and must be assessed before selecting the next pipeline.
