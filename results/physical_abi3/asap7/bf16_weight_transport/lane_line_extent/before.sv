@@ -43,7 +43,6 @@ module ot_a3_bf16_weight_gather #(
  reg [63:0] last_element_offset;
  reg [4:0] last_line_bytes;
  reg [7:0] mask;
- reg [7:0] lane_final_line;
  reg [SLOT_BITS-1:0] slot;
  reg [65:0] addresses[0:7];
  reg [34:0] lane_offsets[0:7];
@@ -152,16 +151,10 @@ module ot_a3_bf16_weight_gather #(
    for(l=0;l<8;l=l+1)
     addresses[l]<=({2'd0,coordinate_element_base}+{31'd0,lane_offsets[l]})<<1;
   end
-  // Addresses are stable during BOUNDS and throughout the gather. Compute
-  // final-line membership before cache miss selection; only a single bit
-  // per lane is selected on the read-byte-count path.
-  if(state==BOUNDS)begin
-   for(l=0;l<8;l=l+1)lane_final_line[l]<=addresses[l][63:4]==last_element_offset[63:4];
-  end
   if(state==LOOKUP && !protocol_error)begin
    if(miss)begin
     miss_lane<=selected_lane;read_offset<={addresses[selected_lane][63:4],4'd0};
-    read_bytes<=lane_final_line[selected_lane]?last_line_bytes:5'd16;
+    read_bytes<=addresses[selected_lane][63:4]==last_element_offset[63:4]?last_line_bytes:5'd16;
    end else word_data<=assembled;
   end
   if(response_valid && expected_response && !response_error && !protocol_error)begin

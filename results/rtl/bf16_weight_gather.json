@@ -5,7 +5,7 @@
   "cases": 8,
   "checked_words_per_case": 1129,
   "sources": {
-    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0db0272552bac476a0be9e7e56225570aa9ba28ee86de5d8b1dc77137ed02997",
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "70119b4ec736f120f6c3ca6d9f6a4c489568c962809c8093191876a0f45052a8",
     "tests/test_bf16_weight_gather.py": "3f8555eeba16b375930ecc820367f5c3b10b9dd2259530171722cdb980820d26"
   },
   "workload": {
@@ -87,5 +87,6 @@
     "cycles_disabled": 32,
     "cycles_enabled": 25,
     "same_edge_fault_blocks_successor": true
-  }
+  },
+  "line_extent_stage": "Final-line membership registered per lane during existing BOUNDS stage; zero added cycles"
 }

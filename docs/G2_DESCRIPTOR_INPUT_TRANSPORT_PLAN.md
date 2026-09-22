@@ -428,3 +428,21 @@ slot selection into read-byte-count generation. This is not physical closure.
 The historical sources and retained artifacts are verified in
 `bf16_weight_transport/command_lane_offsets_route_audit.json`. The newer handoff
 route remains active and must be assessed before selecting the next pipeline.
+
+## Per-lane final-line flags
+
+To shorten the measured cache-slot-to-read-byte-count path, the gather now
+registers whether each lane addresses the final reachable object line during
+the existing BOUNDS stage. Miss selection chooses a single flag instead of
+selecting a 60-bit address followed by a wide comparison. This adds eight
+payload bits and zero pipeline cycles. Sixteen focused tests and strict lint
+pass. Loaded strided campaigns retain exactly 105,552 resident and 361,689
+streaming cycles, with unchanged traffic, outputs and acknowledgements.
+
+The matched containing route is active as
+`bf16_weight_transport/pnr_lane_line_extent_cts12_1ns.json`. Area/timing benefit
+remains unproven. The previous handoff route continues separately. The baseline
+gather source and source-bound functional evidence are retained in
+`bf16_weight_transport/lane_line_extent/`. Earlier matched handoff campaign
+records were archived before their current-path refresh so their comparison
+hashes remain valid.
