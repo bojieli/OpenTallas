@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded strided-weight G2, six-row streaming without resident replay; campaign cycles include faults and recovery",
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_no_weight_reuse_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_no_word_handoff.json",
+      "sha256": "dbbad15683dfc6d6a2810bd2ab6d228299f6bc7b34ea1a4bcd3c29e50dfdab1b",
+      "handoff": false,
+      "campaign_cycles": 387169
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_no_weight_reuse_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "8c9e75c0702017e564a1535ac29d8ec30a796b87783bc6dc4a083e8bff73ecf4",
+      "handoff": true,
+      "campaign_cycles": 361689
+    }
+  ],
+  "cycle_reduction_percent": 6.5811054087491545,
+  "matching_outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "first_operation_weight_reads_each": 6600,
+  "first_operation_weight_bytes_each": 105576,
+  "mutation_evidence": "results/rtl/bf16_gather_handoff_fault_mutation.json"
+}

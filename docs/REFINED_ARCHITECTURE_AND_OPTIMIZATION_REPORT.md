@@ -2757,3 +2757,12 @@ reduces the matched strided-weight G2 campaign from 110,614 to 105,552 cycles
 Sixteen focused cases cover ordering, burst-boundary suppression, stalls and
 same-edge fault priority. The containing physical route is running; no clock or
 area benefit is yet claimed for this handoff.
+
+## Streaming handoff confirmation
+
+With resident replay disabled, the matched loaded strided G2 handoff campaign
+reduces cycles from 387,169 to 361,689 (6.58%), retaining identical weight traffic,
+2,234 outputs and 295 write acknowledgements. A negative mutation confirms the
+same-edge fault-priority test detects successor admission after an unexpected
+response. Retained runs have matching source manifests; containing physical
+qualification is still pending.

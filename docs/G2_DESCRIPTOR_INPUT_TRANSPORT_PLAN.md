@@ -397,3 +397,22 @@ improvement, not an inference-latency measurement.
 The containing handoff CTS12 1 ns route is active; timing/area impact remains
 unproven. Previous pre-handoff gather/transport snapshots are retained in
 `bf16_weight_transport/gather_handoff/` for the still-running lane-offset route.
+
+## Streaming handoff and fault-priority qualification
+
+The handoff now also passes a matched loaded campaign with resident-row replay
+disabled, repeatedly filling banks across six complete strided rows. Cycles drop
+from 387,169 to 361,689 (6.58%) with unchanged first-operation reads (6,600),
+bytes (105,576), 2,234 matching outputs and 295 writes/acknowledgements. This
+complements the resident-row comparison and exercises handoff across full row
+and bank-refill boundaries. The source manifests and golden outputs match.
+Evidence: `results/rtl/g2_streamed_weight_handoff_comparison.json`.
+
+Removing the same-edge unexpected-response guard from coordinate readiness
+causes the targeted test to fail with “fault admitted successor.” That negative
+mutation is retained in `results/rtl/bf16_gather_handoff_fault_mutation.json`.
+The production guard was restored. Initial loaded checks overlapped this brief
+mutation and were rejected by source-hash validation; the retained campaign
+records come from subsequent stable-source reruns. Physical jobs were not
+restarted. Lane-offset and handoff routes remain active, so no new clock
+closure or area comparison is claimed at this checkpoint.
