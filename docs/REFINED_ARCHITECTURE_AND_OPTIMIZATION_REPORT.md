@@ -2565,3 +2565,37 @@ integrated G2 run remain live. Evidence is retained in
 `output_writer_handoff/ack_priority.json` and `ack_priority_regression.json`
 under `results/physical_abi3/asap7/`; previous loaded evidence is archived under
 `results/rtl/before_writer_ack_priority/`.
+
+
+## Check integrated synthesis inventory and retain handoff route
+
+The integrated G2 run's flattened intermediate `mem.json` contains the intended
+runtime/writer parameter values and nine SRAM instances: five fakeram_256x128,
+two fakeram_2048x128 and two fakeram_512x128, totaling 819,200 bits. The remaining
+14 inferred memories are read-only lookup tables: eight 16x3 and six 64x5,
+totaling 2,304 bits. There are no unresolved nonprimitive instances or inferred
+writable memory cells at this checkpoint. This does not prove final placed
+inventory or rule out storage implemented as registers; it verifies the explicit
+macro mapping and hierarchy at this intermediate stage.
+
+`tools/audit_g2_synth_inventory.py` checks parameters, exact macro counts,
+unmapped writable memories and unresolved hierarchy against the launch config.
+Three regression tests exercise missing banks, disabled runtime, writable
+replacement and unresolved-module rejection. The live-run audit passes and
+retains input hashes in
+`results/physical_abi3/asap7/a3_g2_runtime_writer/synthesis_inventory.json`.
+The integrated run remains active in synthesis; no integrated timing result is
+available.
+
+The writer handoff route completes at ASAP7 TT 1 ns CTS8: 1,486.910 um²,
++0.0404385 ns setup WNS and +0.050826 ns hold WNS. All reported timing, fanout,
+slew, capacitance, DRC and antenna violation counts are zero. Compared with the
+preceding captured-bound writer route, cell area rises 1,483.980 to 1,486.910 um²
+(+0.20%) while the handoff reduces the sustained request interval from three to
+two cycles. This qualifies the historical handoff snapshot at tested 1 GHz,
+not the flow's extrapolated 1,042.14 MHz. Its source matches the retained
+`output_writer_handoff/before_ack_priority.sv`; all artifact hashes match.
+The route predates the required acknowledgement-priority correctness fix. A
+same-constraint route for current corrected RTL is now running as
+`output_writer_handoff/pnr_ack_priority_cts8_1ns.json`. No current writer or G2
+closure is inferred from this historical result.
