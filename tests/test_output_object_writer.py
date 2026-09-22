@@ -70,6 +70,9 @@ initial begin
  // Bound check is atomic for a whole beat, including a crossing final element.
  command_object_bytes=7*(FP32?4:2)+14*(FP32?4:2)+(FP32?4:2)-1;
  launch();beat(0,0);repeat(3)tick();if(!protocol_error || write_valid || requests!=4)$fatal(1,"partial out-of-bounds write");checks=checks+1;
+ // Subtraction underflow must not turn a short object into a large bound.
+ command_object_bytes=(FP32?4:2)-1;launch();beat(0,0);repeat(3)tick();
+ if(!protocol_error || write_valid || requests!=4)$fatal(1,"short object underflow");checks=checks+1;
  // Exact object end is legal.
  command_object_bytes=7*(FP32?4:2)+14*(FP32?4:2)+(FP32?4:2);
  launch();beat(0,0);check_write(0,0);
@@ -107,7 +110,7 @@ endmodule
                    check=True, capture_output=True, text=True)
     result = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert 'PASS output writer checks=14' in result.stdout
+    assert 'PASS output writer checks=15' in result.stdout
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
 @pytest.mark.parametrize('depth', [1, 2, 4, 8])

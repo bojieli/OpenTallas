@@ -2235,3 +2235,39 @@ near-neutral synthesized area but no demonstrated physical timing benefit.
 Evidence: `output_object_writer/prelayout_ordered_credits4_1ns.json`.
 Object descriptor binding, deployment wrapper integration and current-source
 physical closure remain unfinished.
+
+
+## Routed writer evidence targets invariant bounds work
+
+The earlier single-outstanding local-payload writer route completes at ASAP7 TT
+1 ns CTS8: 1,613.350 um² standard-cell area, +0.000922 ns setup WNS and
++0.051571 ns hold WNS. All reported timing, fanout, slew, capacitance, DRC and
+antenna violation counts are zero under its recorded constraints (fanout16 and
+library transition limits). The strict verdict passes. Its source hash matches
+`output_object_writer/local_payload/writer.sv`, not the current four-credit RTL;
+all retained artifact hashes match. This shows physical buffering repairs the
+large prelayout fanout delay, but its 0.92 ps setup margin leaves little room.
+The route's actual critical path is write_fp32 to protocol_error through the
+per-lane object bounds calculation. It does not qualify the whole G2 path.
+
+The current revision computes `object_bytes - element_bytes` once on command
+capture and retains an explicit subtraction-underflow flag. Each beat compares
+its active-lane offsets against this last valid start, removing eight repeated
+size additions and precision selection from the validation path. Exact object
+end remains accepted; objects smaller than one element refuse before publication.
+No issue stage or acknowledgement delay is added.
+
+Matched four-credit synthesis area decreases 1,230.611 to 1,165.451 um² (5.29%).
+Prelayout WNS changes -7.1451 to -7.0296 ns; it still fails and does not establish
+routed timing. A current-source 1 ns CTS8 route is running, with unchanged
+constraints relative to the earlier writer route. Evidence:
+`results/physical_abi3/asap7/output_object_writer/prelayout_captured_bound_1ns.json`
+and the completed `pnr_local_payload_cts8_1ns.json` with retained artifacts.
+
+Seven focused writer/lifetime tests pass, including 15 checks per precision,
+maximum unsigned strides, exact bounds, short-object subtraction underflow,
+credit exhaustion and acknowledgement/error drain. Loaded N53 remains at
+25,087 campaign cycles, 169 acknowledged writes and 1,280 matching outputs.
+The current loaded record is source-hash verified; the prior depth-four record
+is archived under `results/rtl/before_writer_captured_bound/`. Deployment object
+binding and all-target integration/physical coverage remain outstanding.

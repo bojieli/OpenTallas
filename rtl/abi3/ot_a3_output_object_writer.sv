@@ -53,7 +53,10 @@ module ot_a3_output_object_writer #(
  // is below 2^51. Steps themselves need only 34 bits.
  reg [50:0] row_offset,cursor_offset;
  reg [33:0] row_step,col_step;
- reg [63:0] object_bytes;
+ // Last legal byte start is command-invariant. Compute subtraction once,
+ // rather than adding element size to each lane on every bounds-check path.
+ reg [63:0] last_offset;
+ reg object_too_small;
  reg [LANES-1:0] tail_mask;
  reg beat_invalid;
  wire enabled=rst_n && !clear;
@@ -66,15 +69,14 @@ module ot_a3_output_object_writer #(
  assign drained=state==IDLE && pending==0;
  wire accept_part=part_valid && part_ready;
  wire [LANES-1:0] expected_mask=cols_left==1?tail_mask:{LANES{1'b1}};
- wire [63:0] element_bytes=write_fp32?64'd4:64'd2;
  integer lane;
  reg invalid_input,invalid_bounds;
  always @* begin
   invalid_input=(rows_left==0 || part_mask!=expected_mask);
-  invalid_bounds=0;
+  invalid_bounds=object_too_small;
   for(integer i=0;i<LANES;i=i+1)begin
    if(part_mask[i] && part_address[32*i+:32]!=expected_address)invalid_input=1;
-   if(write_mask[i] && ({1'b0,write_offset[64*i+:64]}+{1'b0,element_bytes})>{1'b0,object_bytes})
+   if(write_mask[i] && write_offset[64*i+:64]>last_offset)
     invalid_bounds=1;
   end
  end
@@ -83,7 +85,9 @@ module ot_a3_output_object_writer #(
  always @(posedge clk)begin
   if(!active)begin
    write_generation<=command_generation;write_object<=command_object;
-   write_fp32<=command_fp32;object_bytes<=command_object_bytes;
+   write_fp32<=command_fp32;
+   last_offset<=command_object_bytes-(command_fp32?64'd4:64'd2);
+   object_too_small<=command_object_bytes<(command_fp32?64'd4:64'd2);
    expected_address<=command_element_base;
    row_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
    cursor_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
