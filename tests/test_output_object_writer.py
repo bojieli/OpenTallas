@@ -131,9 +131,10 @@ reg [255:0] part_address=0,part_data=0;
 wire [31:0] write_generation,write_object;
 wire [7:0] write_mask;wire [511:0] write_offset;wire [255:0] write_data;wire write_fp32;
 reg [31:0] response_generation=19;
-integer sent=0,acked=0;
+integer sent=0,acked=0,cycles=0,started,old_sent;
 ot_a3_output_object_writer #(.OUTSTANDING(DEPTH)) dut(.*);
 always @(posedge clk)begin
+ cycles<=cycles+1;
  if(write_valid && write_ready)sent<=sent+1;
  if(response_valid && response_ready && response_generation==19)acked<=acked+1;
 end
@@ -164,7 +165,16 @@ initial begin
  if(!protocol_error || dut.pending!=DEPTH-1)$fatal(1,"error accounting");
  response_valid=1;repeat(DEPTH-1)tick();response_valid=0;
  if(!drained || sent!=acked)$fatal(1,"error drain");
- $display("PASS ordered credits depth=%0d",DEPTH);$finish;
+ clear=1;tick();clear=0;command_valid=1;tick();command_valid=0;
+ started=cycles;old_sent=sent;response_valid=1;part_valid=1;
+ for(integer j=0;j<8;j=j+1)begin
+  for(integer k=0;k<8;k=k+1)part_address[32*k+:32]=j;
+  #1;while(!part_ready)tick();tick();
+ end
+ part_valid=0;while(!drained)tick();response_valid=0;
+ if(sent-old_sent!=8 || sent!=acked || protocol_error)$fatal(1,"continuous stream lost writes");
+ if(DEPTH>1 && cycles-started!=17)$fatal(1,"handoff bubble cycles=%0d",cycles-started);
+ $display("PASS ordered credits depth=%0d stream_cycles=%0d",DEPTH,cycles-started);$finish;
 end
 initial begin #30000;$fatal(1,"timeout");end
 endmodule

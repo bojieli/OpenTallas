@@ -63,11 +63,7 @@ module ot_a3_output_object_writer #(
  assign command_ready=enabled && !active && state==IDLE;
  // After fault, consume queued results without publishing new writes so the
  // parent can abort and drain. An already published request must still finish.
- // Reserve credit for both the outgoing request and its replacement. Keep
- // response retirement off the ready path; depth-one mode still waits for ack.
- wire replace_slot=state==SEND && write_ready && !protocol_error && pending<OUTSTANDING-1;
- assign part_ready=enabled && active &&
-     ((state==IDLE && (protocol_error || pending<OUTSTANDING)) || replace_slot);
+ assign part_ready=enabled && active && state==IDLE && (protocol_error || pending<OUTSTANDING);
  assign write_valid=enabled && state==SEND;
  assign response_ready=enabled && (pending!=0 || request_fire);
  assign drained=state==IDLE && pending==0;
@@ -104,7 +100,7 @@ module ot_a3_output_object_writer #(
   end
   // Capture invalid payload freely while idle. State alone owns publication;
   // remove reset/ready/error fanout from the wide data and offset register bank.
-  if(state==IDLE || replace_slot)begin
+  if(state==IDLE)begin
    write_mask<=part_mask;write_data<=part_data;beat_invalid<=invalid_input;
    for(lane=0;lane<LANES;lane=lane+1)
     write_offset[64*lane+:64]<={13'b0,(cursor_offset+51'(col_step)*51'(lane))};
@@ -141,7 +137,7 @@ module ot_a3_output_object_writer #(
     IDLE:if(accept_part && !protocol_error)state<=CHECK;
     CHECK:if(protocol_error || beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
           else state<=SEND;
-    SEND:if(write_ready)state<=(accept_part && !protocol_error)?CHECK:IDLE;
+    SEND:if(write_ready)state<=IDLE;
    endcase
   end
  end

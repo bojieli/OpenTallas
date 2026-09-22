@@ -1,0 +1,6 @@
+{
+  "scope": "New continuous-stream regression applied to retained pre-handoff RTL at depth4",
+  "expected_failure": true,
+  "stdout": "FATAL: /tmp/pytest-of-ubuntu/pytest-4258/test_ordered_write_credits_2_current/credits.sv:58: handoff bubble cycles=24\n       Time: 800000 Scope: tb\n",
+  "exit_code": 1
+}

@@ -2499,3 +2499,38 @@ experiment outcome, not a claimed optimization or a reason to weaken the clock
 target. Integrated G2 remains live in synthesis and has progressed beyond the
 resource-sharing pass. Its eventual containing paths should guide further
 adapter work.
+
+
+## Remove the output writer's idle bubble with reserved-credit handoff
+
+The writer can now capture a replacement beat on the same edge its current
+request is accepted, provided credit remains for both transactions. The new
+beat still passes the registered bounds-check state. Response retirement is
+kept off the ready path: the credit comparison conservatively reserves the
+outgoing request before permitting replacement. A stalled outgoing request
+cannot be overwritten. Faulted operations consume unissued data without new
+publication, while already published writes still drain. Depth-one behavior
+retains acknowledgement serialization.
+
+Six focused writer tests and the lifetime test pass. A continuously offered
+eight-beat stream with same-edge acknowledgements takes 17 cycles at depths
+2/4/8, versus 24 cycles on the retained baseline; applying the new assertion to
+the baseline fails specifically at 24 cycles. This reduces the steady request
+interval from three to two cycles without an extra payload buffer. Existing
+coverage includes stalled writes, exact object bounds, tail masks, exhausted
+credits, wrong generation, error drain and recovery.
+
+The loaded strided N53 campaign preserves 295 writes/acknowledgements, 2,234
+matching outputs and 42,561 cycles, while output-stall cycles decrease 1,448 to
+938 (35.22%). No whole-campaign latency gain is claimed. Matched ASAP7 1 ns
+synthesis area changes 1,165.451 to 1,155.129 um² (-0.89%); sequential area is
+unchanged. Prelayout WNS improves -7.0296 to -1.4978 ns but remains failing.
+The change alters control mapping as well as scheduling; a matched CTS8 1 ns
+route is running to measure its physical effect. The prior writer closure is
+historical for this changed source, not current qualification.
+
+The baseline source, synthesis result and failing-baseline stream check are
+retained under `results/physical_abi3/asap7/output_writer_handoff/`. Previous
+loaded evidence is archived under `results/rtl/before_writer_handoff/`; current
+loaded source hashes match. Integrated G2 characterization remains live for its
+earlier launch revision. Full current-source cluster closure remains required.
