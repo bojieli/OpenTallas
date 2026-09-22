@@ -15,8 +15,8 @@
     wire backing_valid=backing_active && ticks[2:0]!=0;
     ot_a3_weight_tile_scheduler #(.TILE_WORDS(TILE_WORDS)) scheduler(
         .clk(clk),.rst_n(runtime_reset_n),.clear(1'b0),
-        .command_valid(runtime_active && !scheduler_sent),.command_ready(scheduler_ready),
-        .command_generation(generation),.command_base(cfg_w_base),.command_words(stream_end-cfg_w_base),
+        .command_valid(record_valid && !geometry_error && operand_request && !scheduler_sent),.command_ready(scheduler_ready),
+        .command_generation(record_generation),.command_base(record_w),.command_words(record_stream_words),
         .active(),.scheduled(),.command_error(),
         .reserve_valid(reserve_valid),.reserve_ready(reserve_ready),.reserve_bank(reserve_bank),
         .reserve_tag(reserve_tag),.reserve_words(fill_words),
@@ -30,7 +30,7 @@
     always @(posedge clk)begin
         if(!runtime_reset_n)begin scheduler_sent<=0;backing_active<=0;end
         else begin
-            if(runtime_active && !scheduler_sent && scheduler_ready)scheduler_sent<=1;
+            if(record_valid && !geometry_error && operand_request && !scheduler_sent && scheduler_ready)scheduler_sent<=1;
             if(fetch_valid && fetch_ready)begin
                 backing_active<=1;backing_tag<=fetch_tag;backing_address<=fetch_address;
                 backing_words<=fetch_words;backing_index<=0;

@@ -476,3 +476,29 @@ results are recorded in `results/rtl/a3_lq8_weight_scheduler.json` for the verif
 outputs, 18 fault cases and 115,748 checks. Aggregate operation latency was
 320824 cycles with external burst request/beat stalls. This is functional
 RTL evidence, not routed timing. All 25 focused regression tests passed.
+
+
+## Checked stream extent admission
+
+Admission now produces `stream_words` from captured rows, lane-local columns
+and grouped depth. A 32-bit rows-by-columns product and a 48-bit product with
+depth are separated by register edges. The full extent is checked for zero and
+32-bit count overflow, and the base-plus-extent sum is checked against the
+exclusive 2^32 word-address limit before publishing a valid geometry record.
+The highest word address may be used; crossing it is rejected. Record latency
+is now 19 edges after acceptance (16 divider steps, two product steps, publish).
+
+The integrated RTL scheduler takes generation, base and count from this record,
+after LQ8 also requests operands. Its selected generated top no longer calculates
+`stream_end` behaviorally or starts weight fetches before geometry validation.
+The full 92-case run passes 17,103 matching outputs and 115,748 checks in
+322,385 aggregate operation cycles, with the extra admission startup included.
+This is not an additional performance improvement claim; it replaces unchecked
+testbench arithmetic and establishes an implementable operation boundary.
+
+All 25 focused tests pass. Admission covers 95 records, including wide products,
+word-count overflow, an exact exclusive-end boundary, crossing that boundary,
+input mutation, stalled record consumption and abort. Standalone admission lint
+is clean. Source-bound evidence is `results/rtl/a3_lq8_checked_extent.json`.
+Full format admission, G2 lifetime/fault integration and reusable activation
+storage remain open. Product-stage routed timing and area are unmeasured.

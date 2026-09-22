@@ -136,3 +136,15 @@ The architecture changes address the central problem: supplying useful work to
 arithmetic within finite storage and explicit ownership. Remaining work is
 substantial, especially production integration, reuse, numerical qualification
 and complete physical coverage. The full optimization goal remains active.
+
+
+## Subsequent checked-admission checkpoint
+
+Total stream-length calculation now resides in RTL admission rather than the
+testbench. Registered products preserve a 48-bit extent; zero/count overflow and
+base-plus-length overflow are rejected before weight scheduling. The latest
+92-case numerical run passes with 322,385 aggregate cycles, including the
+additional admission startup, and all 25 focused tests pass. See
+`results/rtl/a3_lq8_checked_extent.json`. Production G2 operation lifetime and
+transport integration remain unfinished; this does not change the report's
+physical or all-target completion limits.

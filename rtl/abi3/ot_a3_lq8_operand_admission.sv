@@ -18,12 +18,18 @@ module ot_a3_lq8_operand_admission #(
     output reg record_valid,
     input wire record_ready,
     output reg geometry_error,
+    output reg [31:0] stream_words,
     output reg [31:0] generation,a_base,s_base,ws_base,w_base,
     output reg [15:0] rows,local_cols,depth_words,rows_per_scale_a,
     output reg [15:0] scale_stride_a,scale_stride_b,groups_per_scale_a,groups_per_scale_b
 );
     localparam integer LG=$clog2(LANES);
     reg calculating;
+    // Separate products across admission edges; never put two multipliers
+    // in series on a request/issue path. Preserve the full 48-bit extent.
+    reg [31:0] output_elements;
+    reg [47:0] stream_extent;
+    wire [48:0] stream_limit={17'b0,w_base}+{1'b0,stream_extent};
     reg [4:0] step;
     reg [15:0] numerator,divisor_a,divisor_b,remainder_a,remainder_b,quotient_a,quotient_b;
     reg scaled_a,scaled_b,invalid_q;
@@ -43,6 +49,7 @@ module ot_a3_lq8_operand_admission #(
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             calculating<=0;record_valid<=0;geometry_error<=0;step<=0;
+            output_elements<=0;stream_extent<=0;stream_words<=0;
             numerator<=0;divisor_a<=0;divisor_b<=0;remainder_a<=0;remainder_b<=0;
             quotient_a<=0;quotient_b<=0;scaled_a<=0;scaled_b<=0;invalid_q<=0;
             generation<=0;a_base<=0;s_base<=0;ws_base<=0;w_base<=0;
@@ -67,11 +74,17 @@ module ot_a3_lq8_operand_admission #(
                     (cfg_group!=1 && cfg_group!=2 && cfg_group!=4) ||
                     (cfg_scale_a && block_bad_a) || (cfg_scale_b && block_bad_b);
             end else if(calculating)begin
-                if(step==16)begin
+                if(step==18)begin
                     calculating<=0;record_valid<=1;
-                    geometry_error<=invalid_q || (scaled_a && remainder_a!=0) || (scaled_b && remainder_b!=0);
+                    geometry_error<=invalid_q || (scaled_a && remainder_a!=0) || (scaled_b && remainder_b!=0) ||
+                        stream_extent==0 || |stream_extent[47:32] || stream_limit>49'h100000000;
+                    stream_words<=stream_extent[31:0];
                     scale_stride_a<=scaled_a?quotient_a:16'd0;
                     scale_stride_b<=scaled_b?quotient_b:16'd0;
+                end else if(step==16)begin
+                    output_elements<=32'(rows)*32'(local_cols);step<=17;
+                end else if(step==17)begin
+                    stream_extent<=48'(output_elements)*48'(depth_words);step<=18;
                 end else begin
                     remainder_a<=fits_a?shifted_a[15:0]-divisor_a:shifted_a[15:0];
                     remainder_b<=fits_b?shifted_b[15:0]-divisor_b:shifted_b[15:0];

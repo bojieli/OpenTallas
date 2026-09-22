@@ -9,6 +9,7 @@
     reg admission_sent=0;
     wire admission_ready,record_valid,geometry_error;
     wire cursor_start=record_valid && !geometry_error && operand_request && !cursor_started;
+    wire [31:0] record_stream_words;
     wire [31:0] record_generation,record_a,record_s,record_ws,record_w;
     wire [15:0] record_rows,record_cols,depth_words,record_rpb,record_cpa,record_cpb,record_bwa,record_bwb;
     ot_a3_lq8_operand_admission #(.LANES(LANES)) admission(
@@ -18,7 +19,7 @@
         .cfg_group(cfg_group),.cfg_scale_a(cfg_scale_a),.cfg_scale_b(cfg_scale_b),
         .cfg_block_a(cfg_block_a),.cfg_block_b(cfg_block_b),.cfg_block_rows_a(cfg_block_rows_a),
         .cfg_a_base(cfg_a_base),.cfg_s_base(cfg_scale_a_base),.cfg_ws_base(cfg_ws_base),.cfg_w_base(cfg_w_base),
-        .record_valid(record_valid),.record_ready(cursor_start),.geometry_error(geometry_error),
+        .record_valid(record_valid),.record_ready(cursor_start),.geometry_error(geometry_error),.stream_words(record_stream_words),
         .generation(record_generation),.a_base(record_a),.s_base(record_s),.ws_base(record_ws),.w_base(record_w),
         .rows(record_rows),.local_cols(record_cols),.depth_words(depth_words),.rows_per_scale_a(record_rpb),
         .scale_stride_a(record_cpa),.scale_stride_b(record_cpb),

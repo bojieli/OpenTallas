@@ -27,6 +27,10 @@ def main():
     )
     parser.add_argument("--rtl-weight-scheduler", action="store_true")
     args = parser.parse_args()
+    if args.rtl_weight_scheduler and not args.future_auxiliary:
+        parser.error(
+            "RTL scheduler requires captured geometry admission (--future-auxiliary)"
+        )
     if args.rtl_weight_scheduler and args.serial_refill:
         parser.error("RTL scheduler currently implements overlapped refill only")
     out = args.build.resolve()
@@ -44,11 +48,14 @@ def main():
     if args.rtl_weight_scheduler:
         service = service.replace(
             "generation=0,fill_base=0,acquire_base=0,stream_end=0",
-            "generation=0,stream_end=0",
+            "generation=0",
         )
         service = service.replace(
             "    reg fill_bank=0,acquire_bank=0,filling=0;\n    reg [9:0] fill_index=0;\n",
             "",
+        )
+        service = re.sub(
+            r"            stream_end<=cfg_w_base.*?;\n", "", service, flags=re.S
         )
         first = service.index("    wire [9:0] fill_words=")
         end = service.index("    ot_a3_weight_tile_prefetch prefetch(", first)
