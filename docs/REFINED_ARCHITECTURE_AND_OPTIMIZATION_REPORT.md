@@ -1,8 +1,9 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes runtime tail masking (`7a01be96`) and the subsequent
-descriptor stride capture; the current-source Sinkhorn route is retained. The opening review is current;
+Implementation includes descriptor-owned bounded output writes, four write credits,
+direct writer handoff and acknowledgement-fault priority. Current-source writer,
+operand-service and Sinkhorn routes are retained. The opening review is current;
 later checkpoints preserve the history of individual experiments.
 
 ## Current review summary (2026-09-22)
@@ -31,7 +32,9 @@ flowchart LR
     C --> E[Complete operand join and issue credits]
     D --> E
     E --> F[Eight-lane LQ8 arithmetic]
-    F --> G[Reserved output queue and write drain]
+    F --> G[Tail mask and reserved output queue]
+    G --> H[Descriptor-bounded strided writer with four credits]
+    H --> I[Ordered acknowledgements and operation drain]
 ```
 
 The major verified changes relative to earlier recorded versions are:
@@ -44,6 +47,7 @@ The major verified changes relative to earlier recorded versions are:
 | Rolling activation window, M6/N56/K352 | 8,896 fills; 160,789 cycles | 7,552 fills; 152,458 cycles | Helps deeper rows, but retention remains capacity-limited |
 | Unscaled admission | 19 cycles | 3 cycles | Scaled admission retains 19 cycles |
 | Auxiliary reservation queue | Two entries, 640 bits; 30,723 campaign cycles | Three entries, now 896 bits with shared generation; 24,995 cycles | 18.64% fewer cycles in N56/K80 G2; +256 storage bits versus original queue |
+| Writer handoff, eight continuous beats with same-edge acknowledgements | 24 cycles | 17 cycles | 29.2% fewer cycles at credit depths 2/4/8; depth 1 remains serial |
 | Mapper routed standard-cell area | 1,044.510 um² | 888.112 um² | 14.97% lower; refined CTS12 route passes reported physical checks at 1 ns |
 | Admission routed standard-cell area | 826.380 um² | 723.503 um² | 12.45% lower; both recorded routes pass physical checks at 1 ns |
 
@@ -70,9 +74,10 @@ The latest completed containing-block physical results are:
 | Configuration | Tested period | Routed standard-cell area | Setup / hold WNS | Verdict |
 |---|---:|---:|---:|---|
 | Runtime operand service, split stream increment, CTS8 | 1 ns | 3,807.230 um², plus 5,586 um² SRAM macros | +0.009551 / +0.021035 ns | Passes all reported timing and physical checks |
+| Output writer, four credits, handoff and acknowledgement-fault priority, CTS8 | 1 ns | 1,491.180 um² | +0.026531 / +0.050892 ns | Current-source and retained-artifact audit passes; zero reported violations |
 | Sinkhorn, pipelined divider, direct handoffs, suppressed unused right-adder requests, CTS8 | 2 ns | 3,099.550 um² | +0.092189 / +0.027670 ns | Passes setup, hold, slew, capacitance, fanout, DRC and antenna checks |
 
-Both are ASAP7 TT results for the recorded configurations. Sinkhorn establishes
+These are ASAP7 TT predictive-PDK results for the recorded configurations. Sinkhorn establishes
 500 MHz at this tested corner and block boundary; it does not establish a
 whole-chip clock or other-corner closure. Its current source hashes and all
 seven retained artifact hashes match. The older 2.4 ns CTS12 sum-handoff route
@@ -84,30 +89,42 @@ is not a validated operating point.
 
 Compared with the preceding auxiliary one-hot service, shared weight generation
 reduces routed standard-cell area from 3,810.960 to 3,716.890 um² (2.47%) and
-shrinks the setup miss from 70.8 to 2.4 ps. Macro area is unchanged. This improves
-the implementation but does not yet close the 1 ns target. No activity-qualified
+shrinks the setup miss from 70.8 to 2.4 ps. Macro area is unchanged. That intermediate version missed the 1 ns target; the subsequent split-stream
+increment CTS8 result in the table closes it. No activity-qualified
 energy benefit or all-target physical closure is claimed.
 
 The LQ8 corpus passes 92 cases with 17,103 matching outputs, 18 exercised faults
-and 115,748 checks. The current loaded G2 N56/K80 campaign passes 1,352 matching
-outputs in 25,040 campaign cycles after stride capture, including output backpressure, refill, faults,
-abort and recovery. Earlier 24,995-cycle queue results in the table isolate the
-queue change before descriptor revisions. Reading C for checked shape/output
-precision increased that checkpoint to 25,082 cycles; reducing auxiliary
-descriptor reads from 18 to 9 SRAM beats then reduced it to 25,013. These are
-campaign counts, not inference latency or directly additive speedups.
+and 115,748 checks. The latest retained loaded G2 strided-output campaign
+(M6/N53/K80) passes 2,234 matching outputs with 295 writes and 295 acknowledgements
+in 42,561 campaign cycles, including 938 output stalls. It exercises tail masking,
+nonzero output base, row/column gaps, abort, late write failure, object-binding
+failure and recovery. Sentinel checks protect unwritten padding and gaps. These
+are full fault/recovery campaign counters, not inference latency.
 
-C now owns BF16/FP32 output precision and exported object/layout metadata,
-including its two unsigned element strides. G2 now reads 96-byte prefixes for
-A/B and a 128-byte prefix for C, totaling 10 auxiliary SRAM beats. The earlier
-uniform 128-byte checkpoint used 12 beats; historical counts below retain their
-original configurations.
-Metadata remains valid through output drain. A cancellation-priority correction
-prevents same-edge normal transitions from overriding clear; the 27-check adapter
-regression cancels all six active states and verifies recovery. Actual bounded
-output-object writes and stride translation remain unfinished. Runtime output
-now masks padded tail lanes before enqueue; legacy consumers still need to
-apply the published logical shape.
+C owns BF16/FP32 output precision, rank-two layout, unsigned element strides and
+its output object reference. The adapter resolves that MEMORY_OBJECT, validates
+write permission and captures its 64-bit capacity before launch. Host-provided
+capacity is ignored. A/B use three SRAM beats each, C four, and the object three:
+13 auxiliary beats including object resolution. Metadata remains valid through drain.
+Adapter cancellation covers all seven active states when object resolution is enabled.
+
+The synthesizable G2 cluster now contains the bounded output writer. It checks
+complete element bounds for each active lane, translates strides and supports four
+outstanding writes. Tail lanes are masked before enqueue. Ordered, exactly-once
+acknowledgements are required; generation identifies the operation, not individual
+writes. Completion waits for queued data and accepted writes to drain. A late
+error on the final acknowledgement faults the operation; same-edge error responses
+cannot publish a successor write. Physical address/storage binding remains external.
+Runtime operands and object writes remain opt-in; legacy mode is not qualified by
+these runtime results.
+
+The integrated G2 physical run remains in synthesis at this checkpoint. Its launch
+sources predate descriptor-owned capacity and the writer handoff/fault fix, so even
+a successful route will be a historical baseline. The intermediate inventory verifies
+nine SRAM macros totaling 819,200 bits: five 256x128, two 2048x128 and two 512x128.
+Only 2,304 bits of inferred ROM remain at that checkpoint, with no writable inferred
+memories or unresolved nonprimitive hierarchy. This is not final placement evidence.
+Current-source integrated timing and all-target closure remain open.
 
 The divider rounding register and bounded exponent widths reduce matched routed
 area from 1,347.020 to 1,181.750 um² (12.27%) and turn a 2 ns setup failure into
@@ -120,17 +137,19 @@ tests cover 673 divisions, 36 matrices in both divider modes, reset and stalls.
 
 Current evidence:
 
-- [Loaded G2 campaign](../results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json)
+- [Loaded G2 campaign](../results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output.json)
 - [G2 cancellation regression](../results/rtl/a3_g2_issue_clear.json)
-- [Operand service route](../results/physical_abi3/asap7/runtime_operand_service/pnr_weight_generation_cts12_1ns.json)
+- [Operand service route](../results/physical_abi3/asap7/runtime_operand_service/pnr_split_stream_add_cts8_1ns.json)
+- [Current writer route and hash audit](../results/physical_abi3/asap7/output_writer_handoff/ack_priority_route_audit.json)
+- [Integrated SRAM inventory](../results/physical_abi3/asap7/a3_g2_runtime_writer/synthesis_inventory.json)
 - [Current Sinkhorn route](../results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json)
 - [Matched divider routes](../results/physical_abi3/asap7/fp32_div_round_stage/routed_comparison.json)
 
 Architecture-first work proceeds in this order:
 
-1. Complete descriptor-derived mapping, packed/strided weight transport and
-   output-object writes through real bounded services. Qualify format/shape
-   coverage and final-write acknowledgement through actual dispatch.
+1. Complete descriptor-derived input/weight mapping and packed/strided input
+   transport, including external physical-memory binding. Extend the implemented
+   bounded output service across required formats and shapes through real dispatch.
 2. Extend retention beyond resident whole-row replay: bounded multi-row tile
    reuse, accumulator capacity and activation boundary/deep-row retention.
    Measure bytes per useful output without changing FP32 association.
@@ -2599,3 +2618,30 @@ The route predates the required acknowledgement-priority correctness fix. A
 same-constraint route for current corrected RTL is now running as
 `output_writer_handoff/pnr_ack_priority_cts8_1ns.json`. No current writer or G2
 closure is inferred from this historical result.
+
+## Descriptor-capture experiment review (2026-09-22)
+
+Separating payload capture from the descriptor admission verdict was evaluated to
+reduce validation fanout. Both alternatives regressed the measured 1 ns ASAP7 TT
+pre-layout result with RESOLVE_OUTPUT_OBJECT=1 and were rejected:
+
+| Variant | Cell area (um²) | Setup WNS (ns) | Decision |
+|---|---:|---:|---|
+| Baseline | 562.278 | -0.216469 | Restore unchanged; still fails this pre-layout target |
+| Capture all descriptor payloads before verdict | 564.655 | -0.373500 | Reject |
+| Capture object capacity before verdict only | 562.743 | -0.395301 | Reject |
+
+The all-payload candidate passed the loaded campaign with unchanged counters, but
+functional equivalence alone did not justify a timing/area regression. Snapshots,
+physical records and its campaign are retained in
+`results/physical_abi3/asap7/g2_descriptor_capture/`. Active RTL and the current
+loaded campaign record were restored to the pre-experiment baseline. These results
+are ideal-clock pre-layout probes, not routed operating-frequency measurements.
+
+The corrected writer route separately completes at 1 ns with 1,491.180 um² cell
+area, +0.0265311 ns setup and +0.0508919 ns hold slack, and zero reported setup,
+hold, slew, capacitance, fanout, DRC or antenna violations. Compared with the earlier
+four-credit writer without handoff (1,483.980 um²), area increases by 0.49%; the
+handoff regression reduces eight-beat transaction cycles from 24 to 17. This is a
+local transaction improvement, not a measured full-model speedup. The current
+source and required retained artifacts pass the evidence audit.
