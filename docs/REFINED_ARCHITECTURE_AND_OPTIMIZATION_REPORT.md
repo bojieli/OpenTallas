@@ -2337,3 +2337,41 @@ The current source hashes match; the previous record is archived under
 `results/rtl/before_selective_stride_prefix/`. This reduces admission traffic
 and latency without discarding required C layout metadata. Current G2 physical
 closure and the descriptor store's changed physical cost remain unmeasured.
+
+
+## Integrate the object writer into synthesizable G2
+
+`RUNTIME_OBJECT_WRITES=1` now instantiates the writer inside
+`ot_a3_g2_cluster`, requires runtime operands, and uses `WRITE_OUTSTANDING`
+(default four) for acknowledgement credits. Queue acceptance is gated by writer
+readiness; the cluster directly includes writer errors in service faults and
+writer drain in its completion barrier. The external `runtime_writes_drained`
+contract remains an additional barrier for the surrounding transport. The writer
+is cleared only when output-layout ownership ends, after accepted writes drain.
+The memory request and response interfaces are now real cluster ports rather
+than testbench-only wiring. Default-disabled mode retains the external partial
+sink. `part_accepted` reports actual beat acceptance; with the internal writer
+enabled, partial outputs are monitoring signals, not a second write channel.
+
+The cluster takes a trusted object ID/capacity binding and captures capacity
+at launch. A mismatch between that ID and C's descriptor produces a service
+fault without writes. Host mutation after launch cannot replace the captured
+bound. Resolving this trusted binding from MEMORY_OBJECT descriptors remains
+required; the new ports do not claim that deployment gap is closed.
+
+The loaded testbench now instantiates only the behavioral memory service; the
+writer and lifetime wiring are synthesized cluster logic. The previous ten
+phases retain exactly 36,567 cycles, 253 acknowledged writes and 1,916 matching
+outputs. Added binding-fault/recovery phases expand the full campaign to
+42,461 cycles, 295 writes/acknowledgements and 2,234 matching outputs. Every
+operation changes the host capacity to zero after launch to verify capture.
+The mismatched-object phase performs no writes and recovers. Late write faults,
+tail masking, output stalls, queued abort drain and byte-memory golden checks
+continue to pass. Writer-disabled N53 runtime also passes with 1,280 outputs
+at 25,024 cycles. Twenty-one focused writer/lifetime/queue/descriptor/adapter
+tests pass. Prior evidence is archived under `results/rtl/before_cluster_object_writer/`.
+
+Standalone 1 ns writer and operand-service routes do not qualify this containing
+G2 revision. Its integrated timing, clock-tree cost and deployment wrappers remain
+required work. The implementation adds no pipeline stage in this integration;
+its purpose is to make the bounded write/completion architecture real RTL.

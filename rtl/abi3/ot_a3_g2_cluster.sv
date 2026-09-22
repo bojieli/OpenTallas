@@ -152,6 +152,8 @@ module ot_a3_g2_cluster #(
     parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
     parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
     parameter integer OUTPUT_DEPTH = 4,
+    parameter bit RUNTIME_OBJECT_WRITES = 0,
+    parameter integer WRITE_OUTSTANDING = 4,
     // The control-plane performance knobs, forwarded to the sequencer.  They
     // are declared here so a route can select a configuration with --param
     // instead of editing a default in a scratch worktree: a record produced
@@ -195,6 +197,24 @@ module ot_a3_g2_cluster #(
     input wire runtime_transport_ack,runtime_writes_drained,runtime_abort,
     // Sticky external transport/auxiliary failure; cleared after cancellation.
     input wire runtime_service_fault,
+    // Trusted object binding must match C's object and remain valid at launch.
+    // MEMORY_OBJECT descriptor resolution remains a deployment responsibility.
+    input wire [31:0] cfg_output_object,
+    input wire [63:0] cfg_output_object_bytes,
+    output wire object_write_valid,
+    input wire object_write_ready,
+    output wire [31:0] object_write_generation,object_write_object,
+    output wire [LANES-1:0] object_write_mask,
+    output wire [64*LANES-1:0] object_write_offset,
+    output wire [32*LANES-1:0] object_write_data,
+    output wire object_write_fp32,
+    input wire object_response_valid,
+    output wire object_response_ready,
+    input wire [31:0] object_response_generation,
+    input wire object_response_error,
+    output wire object_writer_drained,object_writer_error,
+    // Monitor pulse: actual queued-beat acceptance, including writer credits.
+    output wire part_accepted,
     output wire runtime_transport_cancel,
     output wire [31:0] runtime_generation,
     // Valid through arithmetic and output drain. Addresses below are element
@@ -303,7 +323,9 @@ module ot_a3_g2_cluster #(
     output wire [7:0]    view_rank,
     output wire [4:0]    view_irs_slot,
 
-    // Runtime mode: part_valid holds mask/address/data/acc until part_ready.
+    // Runtime mode: part_valid holds mask/address/data/acc until part_accepted.
+    // With object writes enabled, part_ready permits dequeue but writer credit
+    // also gates acceptance; partial outputs are monitors, not a second writer.
     // A beat atomically transfers all masked lanes. Queued pre-abort results
     // still drain; runtime_generation remains stable until completion.
     // Legacy mode: fixed-throughput pulses; part_ready is ignored.
@@ -692,6 +714,49 @@ module ot_a3_g2_cluster #(
     wire [32*LANES-1:0] core_part_addr,core_part_data,core_part_acc;
     wire operand_request,operand_issue,operand_credit,operand_last;
     wire [31:0] operand_a,operand_s,operand_ws,operand_w;
+    wire queued_output_ready;
+    assign part_accepted=part_valid && (RUNTIME_OPERANDS==0 || queued_output_ready);
+    generate if(RUNTIME_OBJECT_WRITES)begin : object_transport
+        if(!RUNTIME_OPERANDS)begin : invalid_mode
+            initial $error("Object writes require runtime operands");
+        end
+        wire writer_ready;
+        reg binding_error;
+        reg [63:0] bound_object_bytes;
+        always @(posedge clk)if(arr_start)bound_object_bytes<=cfg_output_object_bytes;
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)binding_error<=0;
+            else if(!output_layout_valid)binding_error<=0;
+            else if(arr_start)binding_error<=cfg_output_object!=output_object;
+        end
+        wire writer_error;
+        assign object_writer_error=writer_error || binding_error;
+        assign queued_output_ready=part_ready && writer_ready;
+        ot_a3_output_object_writer #(.LANES(LANES),.OUTSTANDING(WRITE_OUTSTANDING)) writer(
+            .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
+            .command_valid(output_layout_valid && array_busy),.command_ready(),
+            .command_generation(runtime_generation),.command_object(output_object),
+            .command_element_base(output_element_base),.command_row_stride(output_row_stride),
+            .command_col_stride(output_col_stride),.command_rows(output_rows),
+            .command_cols(output_logical_cols),.command_padded_cols(output_padded_cols),
+            .command_fp32(output_fp32),
+            .command_object_bytes(binding_error?64'd0:bound_object_bytes),
+            .part_valid(part_valid && part_ready),.part_ready(writer_ready),
+            .part_mask(part_we),.part_address(part_addr),.part_data(part_data),
+            .write_valid(object_write_valid),.write_ready(object_write_ready),
+            .write_generation(object_write_generation),.write_object(object_write_object),
+            .write_mask(object_write_mask),.write_offset(object_write_offset),
+            .write_data(object_write_data),.write_fp32(object_write_fp32),
+            .response_valid(object_response_valid),.response_ready(object_response_ready),
+            .response_generation(object_response_generation),.response_error(object_response_error),
+            .drained(object_writer_drained),.protocol_error(writer_error));
+    end else begin : external_output_transport
+        assign queued_output_ready=part_ready;
+        assign object_write_valid=0;assign object_write_generation=0;assign object_write_object=0;
+        assign object_write_mask=0;assign object_write_offset=0;assign object_write_data=0;
+        assign object_write_fp32=0;assign object_response_ready=0;
+        assign object_writer_drained=1;assign object_writer_error=0;
+    end endgenerate
     generate if(RUNTIME_OPERANDS==0)begin : legacy_operands
     ot_a3_g2_array_staging staging (
         .clk(clk),
@@ -740,7 +805,7 @@ module ot_a3_g2_cluster #(
         wire [31:0] completed_generation;
         wire [7:0] completed_error;
         wire output_error,output_empty,output_credit,service_credit;
-        wire runtime_fault=runtime_service_fault || protocol_error || output_error || (geometry_error && operand_request);
+        wire runtime_fault=runtime_service_fault || object_writer_error || protocol_error || output_error || (geometry_error && operand_request);
         wire service_clear=lifetime_clear;
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)begin next_generation<=0;command_pending<=0;end
@@ -754,7 +819,7 @@ module ot_a3_g2_cluster #(
             .clk(clk),.rst_n(rst_n),.start(arr_start),.start_ready(lifetime_ready),
             .command_generation(next_generation+1'b1),.compute_done(core_done),.compute_error(core_error),
             .service_fault(runtime_fault),.abort_valid(runtime_abort),
-            .transport_ack(runtime_transport_ack),.writes_drained(runtime_writes_drained && output_empty),
+            .transport_ack(runtime_transport_ack),.writes_drained(runtime_writes_drained && output_empty && object_writer_drained),
             .transport_cancel(runtime_transport_cancel),.transport_generation(runtime_generation),
             .service_clear(lifetime_clear),.compute_abort(compute_abort),.busy(array_busy),
             .completion_valid(array_done),.completion_ready(1'b1),
@@ -794,7 +859,7 @@ module ot_a3_g2_cluster #(
             .reserve_valid(operand_issue && operand_last),.reserve_ready(output_credit),
             .stop_producer(core_done || compute_abort),
             .push_valid(push_output),.push_data({logical_output_mask,core_part_addr,core_part_data,core_part_acc}),
-            .out_valid(part_valid),.out_ready(part_ready),
+            .out_valid(part_valid),.out_ready(queued_output_ready),
             .out_data({queued_mask,part_addr,part_data,part_acc}),
             .empty(output_empty),.protocol_error(output_error));
         assign array_error_code=array_done?completed_error:core_error;

@@ -44,9 +44,9 @@ module tb_a3_g2_runtime_program;
  wire [255:0] part_acc;
  integer output_stalls=0,reservation_stalls=0;
  reg tail_hold=0;
- wire writer_part_ready,writer_drained,writer_error;
+ wire writer_drained,writer_error,part_accepted;
  wire sink_enable=part_ready && !tail_hold;
- wire sink_ready=sink_enable && (!OBJECT_WRITES || writer_part_ready);
+ wire sink_ready=part_accepted;
  wire object_write_valid,object_write_ready,object_response_ready;
  wire [31:0] object_write_generation,object_write_object;
  wire [7:0] object_write_mask;
@@ -57,6 +57,8 @@ module tb_a3_g2_runtime_program;
  reg ack_fault[0:7];
  reg [2:0] ack_head=0,ack_tail=0;
  integer late_write_faults=0;
+ reg [63:0] configured_object_bytes=0;
+ integer writes_before_bad_binding;
  reg [3:0] ack_count=0;
  wire object_ack=ack_count!=0 && cycles>=ack_due[ack_head] &&
   (!ack_fault[ack_head] || dut.runtime_operands.lifetime.state==2);
@@ -67,26 +69,13 @@ module tb_a3_g2_runtime_program;
  reg [7:0] output_memory[0:2*ROWS*LOGICAL_COLS-1];
  reg [ROWS*LOGICAL_COLS-1:0] object_seen=0;
  assign object_write_ready=ack_count<8 && cycles%5!=0;
- ot_a3_output_object_writer #(.OUTSTANDING(WRITE_OUTSTANDING)) writer(
-  .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
-  .command_valid(OBJECT_WRITES && output_layout_valid && array_busy),.command_ready(),
-  .command_generation(runtime_generation),.command_object(output_object),
-  .command_element_base(output_element_base),.command_row_stride(output_row_stride),.command_col_stride(output_col_stride),
-  .command_rows(output_rows),.command_cols(output_logical_cols),.command_padded_cols(output_padded_cols),
-  .command_fp32(output_fp32),.command_object_bytes(64'(2*ROWS*LOGICAL_COLS)),
-  .part_valid(OBJECT_WRITES && part_valid && sink_enable),.part_ready(writer_part_ready),
-  .part_mask(part_we),.part_address(part_addr),.part_data(part_data),
-  .write_valid(object_write_valid),.write_ready(object_write_ready),
-  .write_generation(object_write_generation),.write_object(object_write_object),.write_mask(object_write_mask),
-  .write_offset(object_write_offset),.write_data(object_write_data),.write_fp32(object_write_fp32),
-  .response_valid(object_ack),.response_ready(object_response_ready),.response_generation(object_ack_generation),.response_error(ack_fault[ack_head]),
-  .drained(writer_drained),.protocol_error(writer_error));
  // Behavioral object memory accepts complete checked beats and delays commit ack.
  // Golden comparison is independent of the writer's incremental address cursor.
  always @(posedge clk)begin
   if(!rst_n)begin ack_head<=0;ack_tail<=0;ack_count<=0;object_writes<=0;object_acks<=0;end
   else begin
    if(kick)object_seen<=0;
+   if(dut.arr_start)configured_object_bytes<=0; // captured bounds must survive host mutation
    if(object_write_valid && object_write_ready)begin
     if(object_write_object!=OUTPUT_OBJECT || object_write_generation!=runtime_generation || object_write_fp32)
      $fatal(1,"object write identity");
@@ -213,16 +202,23 @@ module tb_a3_g2_runtime_program;
    end
   end
  end
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
- .clk(clk),.rst_n(rst_n),.part_ready(sink_ready),.part_valid(part_valid),.start(kick),.host_we(host_we),.host_sel(host_sel),.host_row(host_row),.host_lane(host_lane),.host_wdata(host_wdata),
+ .cfg_output_object(phase==7?OUTPUT_OBJECT^32'd1:OUTPUT_OBJECT),.cfg_output_object_bytes(configured_object_bytes),
+ .object_write_valid(object_write_valid),.object_write_ready(object_write_ready),
+ .object_write_generation(object_write_generation),.object_write_object(object_write_object),
+ .object_write_mask(object_write_mask),.object_write_offset(object_write_offset),.object_write_data(object_write_data),
+ .object_write_fp32(object_write_fp32),.object_response_valid(object_ack),.object_response_ready(object_response_ready),
+ .object_response_generation(object_ack_generation),.object_response_error(ack_fault[ack_head]),
+ .object_writer_drained(writer_drained),.object_writer_error(writer_error),.part_accepted(part_accepted),
+ .clk(clk),.rst_n(rst_n),.part_ready(sink_enable),.part_valid(part_valid),.start(kick),.host_we(host_we),.host_sel(host_sel),.host_row(host_row),.host_lane(host_lane),.host_wdata(host_wdata),
  .host_ready(host_ready),.host_write_refused(host_write_refused),
  .cfg_program_base(32'd0),.cfg_instruction_count(INSTRUCTION_COUNT),.cfg_entry_pc(32'd0),
  .cfg_max_retired_work(MAX_WORK),.cfg_state_count(32'd0),
  .cfg_array_group(8'd1),.cfg_array_block_a(16'd0),.cfg_array_block_rows_a(16'd0),.cfg_array_block_b(16'd0),
  .cfg_array_scale_a_base(32'd0),.cfg_array_ws_base(32'd0),.cfg_array_out_fp32(1'b0),
  .done(done),.complete(complete),.trapped(trapped),.trap_class(trap_class),.count_issued(count_issued),.count_retired(count_retired),
- .runtime_service_fault((SRAM_AUX && (mem_error || manager_error || mapper_error)) || (OBJECT_WRITES && writer_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained && (!OBJECT_WRITES || writer_drained)),
+ .runtime_service_fault((SRAM_AUX && (mem_error || manager_error || mapper_error))),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),
  .weight_request_address(weight_request_address),.weight_request_words(weight_request_words),
@@ -273,7 +269,7 @@ module tb_a3_g2_runtime_program;
   end
  end
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
- task launch;begin kick=1;tick();kick=0;end endtask
+ task launch;begin configured_object_bytes=64'(2*ROWS*LOGICAL_COLS);kick=1;tick();kick=0;end endtask
  task drain(input [7:0] err);begin
   wait(runtime_transport_cancel);@(negedge clk);
   repeat(4)begin tick();if(array_done || !array_busy)$fatal(1,"lost operation during drain");end
@@ -358,6 +354,11 @@ module tb_a3_g2_runtime_program;
    phase=1;launch();drain(0);
    if(seen!=expected_seen)$fatal(1,"late write fault recovery lost output");
    $display("late write faults=%0d recovered=1",late_write_faults);
+   writes_before_bad_binding=object_writes;
+   phase=7;launch();drain(8'hfe);
+   if(object_writes!=writes_before_bad_binding || seen!=0)$fatal(1,"mismatched object binding wrote data");
+   phase=1;launch();drain(0);
+   $display("object binding fault=1 recovery=1 captured_capacity=1");
   end
   if(OBJECT_WRITES && (object_writes==0 || object_writes!=object_acks))$fatal(1,"writer unexercised");
   $display("object writes=%0d acknowledgements=%0d",object_writes,object_acks);
