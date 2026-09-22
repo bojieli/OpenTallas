@@ -2534,3 +2534,34 @@ retained under `results/physical_abi3/asap7/output_writer_handoff/`. Previous
 loaded evidence is archived under `results/rtl/before_writer_handoff/`; current
 loaded source hashes match. Integrated G2 characterization remains live for its
 earlier launch revision. Full current-source cluster closure remains required.
+
+
+## Give incoming acknowledgement faults priority over write validation
+
+Review of overlapping writes exposed a race independent of the handoff speedup:
+when an error acknowledgement arrived on the edge completing successor CHECK,
+protocol_error was set but the old value allowed state to advance to SEND. The
+next beat could become published after the fault was already observed. CHECK
+now tests the incoming acknowledgement fault directly as well as the stored
+fault flag. Already published SEND transactions retain ready/valid stability;
+only not-yet-published validation is cancelled. Wrong-generation responses still
+cannot release outstanding credits.
+
+A new regression holds one accepted write outstanding, validates its successor,
+and returns a bus error on that validation edge. It fails the preceding RTL at
+credit depths 2/4/8 and passes the corrected RTL. The retained negative build at
+depth four fails specifically with `failed ack published unchecked successor`.
+All six writer cases plus the lifetime test pass, including the 17-cycle
+continuous-stream handoff check. The loaded strided G2 campaign remains correct
+at 42,561 cycles, 295 acknowledged writes, 2,234 matching outputs and 938
+output-stall cycles. Current loaded source hashes match.
+
+Matched prelayout area changes 1,155.129 to 1,160.886 um² (+0.50%) with unchanged
+sequential area; WNS changes -1.4978 to -1.3362 ns while TNS worsens slightly.
+This is a required correctness fix, not a routed timing claim. The live handoff
+route covers the retained `output_writer_handoff/before_ack_priority.sv`
+snapshot, not this changed control condition. Both that route and the earlier
+integrated G2 run remain live. Evidence is retained in
+`output_writer_handoff/ack_priority.json` and `ack_priority_regression.json`
+under `results/physical_abi3/asap7/`; previous loaded evidence is archived under
+`results/rtl/before_writer_ack_priority/`.

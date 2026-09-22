@@ -174,7 +174,16 @@ initial begin
  part_valid=0;while(!drained)tick();response_valid=0;
  if(sent-old_sent!=8 || sent!=acked || protocol_error)$fatal(1,"continuous stream lost writes");
  if(DEPTH>1 && cycles-started!=17)$fatal(1,"handoff bubble cycles=%0d",cycles-started);
- $display("PASS ordered credits depth=%0d stream_cycles=%0d",DEPTH,cycles-started);$finish;
+ $display("stream depth=%0d cycles=%0d",DEPTH,cycles-started);
+ if(DEPTH>1)begin
+  clear=1;tick();clear=0;command_valid=1;tick();command_valid=0;
+  beat(0); // one write waits for its acknowledgement
+  for(integer k=0;k<8;k=k+1)part_address[32*k+:32]=1;
+  part_valid=1;tick();part_valid=0; // replacement now in CHECK
+  old_sent=sent;response_valid=1;response_error=1;tick();response_valid=0;response_error=0;
+  if(write_valid || !protocol_error || !drained || sent!=old_sent)$fatal(1,"failed ack published unchecked successor");
+ end
+ $display("PASS ordered credits depth=%0d",DEPTH);$finish;
 end
 initial begin #30000;$fatal(1,"timeout");end
 endmodule

@@ -44,7 +44,6 @@ module ot_a3_output_object_writer #(
  wire ack_fire=response_valid && response_ready;
  wire ack_matches=response_generation==write_generation;
  wire retire=ack_fire && ack_matches;
- wire response_fault=ack_fire && (!ack_matches || response_error);
  reg [1:0] state;
  reg active;
  reg [31:0] expected_address;
@@ -129,7 +128,7 @@ module ot_a3_output_object_writer #(
     2'b01:pending<=pending-1'b1;
     default:begin end
    endcase
-   if(response_fault)protocol_error<=1;
+   if(ack_fire && (!ack_matches || response_error))protocol_error<=1;
    if(command_valid && command_ready)begin
     active<=1;
     if(command_rows==0 || command_cols==0 || command_padded_cols==0 ||
@@ -140,7 +139,7 @@ module ot_a3_output_object_writer #(
    end
    case(state)
     IDLE:if(accept_part && !protocol_error)state<=CHECK;
-    CHECK:if(protocol_error || response_fault || beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
+    CHECK:if(protocol_error || beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
           else state<=SEND;
     SEND:if(write_ready)state<=(accept_part && !protocol_error)?CHECK:IDLE;
    endcase
