@@ -3,13 +3,13 @@
   "weight_response_gap_comparisons": {
     "1": {
       "stream": {
-        "record": "a3_g2_runtime_byte_transport_no_weight_reuse.json",
+        "record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_no_weight_reuse.json",
         "first_weight_fills": 1440,
         "final_completion_counter": 14357,
         "accepted_outputs": 584
       },
       "reuse": {
-        "record": "a3_g2_runtime_byte_transport.json",
+        "record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport.json",
         "first_weight_fills": 240,
         "final_completion_counter": 14357,
         "accepted_outputs": 584
@@ -17,13 +17,13 @@
     },
     "8": {
       "stream": {
-        "record": "a3_g2_runtime_byte_transport_no_weight_reuse_weight_gap8.json",
+        "record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_no_weight_reuse_weight_gap8.json",
         "first_weight_fills": 1440,
         "final_completion_counter": 50311,
         "accepted_outputs": 584
       },
       "reuse": {
-        "record": "a3_g2_runtime_byte_transport_weight_gap8.json",
+        "record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_weight_gap8.json",
         "first_weight_fills": 240,
         "final_completion_counter": 23491,
         "accepted_outputs": 584

@@ -129,7 +129,7 @@
     "rtl/abi3/ot_a3_view_resolver.sv": "1ed236afcbbfba09d59e7d0437cd48a4ecf73b91ae42f3175268a75f0d265ba8",
     "rtl/abi3/ot_a3_wafer_multicast_adapter.sv": "f5f6669b98e5f5daf672c219f870a2aea48bea58fa7d03986682297a4ccbe1fb",
     "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "85fb7b3fc3b4eba2f75cb0570792297c0439b7c9081222b0732705562929f3d0",
-    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "019ec5b6cde0026a0d1e7a2f3dfea85b087ff2933d1e2a9bdd0761500b29fcdf",
+    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "a6d9500915c93f84a23da822d8ebc37efc972b87ca811f82511d587fb82d9a10",
     "rtl/abi3/ot_probe_add40.sv": "6a6d1525c4c9540102fb9028d944e2876614a01bd46e40d0371b11eb2a927031",
     "rtl/abi3/ot_probe_add8.sv": "ea6eaed6c001a79395727610e7abcbf7bed9ffc36b4a4c0a42eebb0e2726a5bf",
     "rtl/abi3/ot_probe_bf16_add.sv": "4934ad5587a3eb6560e73e399d7707a334e30daacf119ccd026e47edde0dceb0",
@@ -195,7 +195,7 @@
     "tests/test_operand_byte_mapper.py": "ff0b43765ecfb565b881fd92707a44d29b942c95de38cc7494769347989e4ef1",
     "tests/test_reserved_output_queue.py": "1596dcee2fa2690671aaa4131762d6bd95d4c97d5270d1b8069611f541fd7718",
     "tests/test_runtime_auxiliary_windows.py": "5121b20807778475a84cbfd3a8096c64e36152390e3cf8a42a49cc83345f3156",
-    "tests/test_weight_row_reuse.py": "53da3f9a1a721266642a51f07641b89fbe11e4ba646870c8dbb06b5490cd68aa",
+    "tests/test_weight_row_reuse.py": "7bfedd908a3a8a26c9844b4ecddb9b0d7229b36a5e1ed845775d660ed88ac999",
     "tools/build_abi3_engine_vectors.py": "c9678ad2016cecf85e293af7c14a7dc9d63db5031d2c8248409c6751a645a765",
     "tools/check_g2_runtime_program.py": "13284f801bece4a02509f91eb297f23b76f43704435e57c3bad25caa042d26af"
   },
@@ -387,7 +387,7 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=4772\nprogram phase=2 complete=0 trap=8 cycles=6855\nprogram phase=1 complete=1 trap=0 cycles=11473\nprogram phase=3 complete=0 trap=8 cycles=11643\nprogram phase=1 complete=1 trap=0 cycles=16243\nprogram phase=4 complete=0 trap=8 cycles=18708\nprogram phase=5 complete=0 trap=8 cycles=18887\nprogram phase=1 complete=1 trap=0 cycles=23491\nfirst operation weight fill_words=240\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=12 fill_words=2432 read_requests=6010\noutput stalls=474 reservation stalls=19 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=1442\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:257: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 235us; walltime 0.234 s; speed 1.005 ms/s\n- Verilator: cpu 0.176 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=4724\nprogram phase=2 complete=0 trap=8 cycles=5288\nprogram phase=1 complete=1 trap=0 cycles=9856\nprogram phase=3 complete=0 trap=8 cycles=10027\nprogram phase=1 complete=1 trap=0 cycles=14579\nprogram phase=4 complete=0 trap=8 cycles=16999\nprogram phase=5 complete=0 trap=8 cycles=17177\nprogram phase=1 complete=1 trap=0 cycles=21731\nfirst operation weight fill_words=240\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=12 fill_words=2432 read_requests=6010\noutput stalls=481 reservation stalls=18 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=1251\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:257: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 217us; walltime 0.185 s; speed 1.174 ms/s\n- Verilator: cpu 0.164 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
     "build/g2_runtime_byte_transport_weight_gap8/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
     "build/g2_runtime_byte_transport_weight_gap8/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
@@ -396,6 +396,6 @@
     "build/g2_runtime_byte_transport_weight_gap8/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
     "build/g2_runtime_byte_transport_weight_gap8/weight.hex": "53e3e8a558f7186ec84a93cb31bf240fc41ecdc28540f5e1b8d58efd0ec4e113",
     "build/g2_runtime_byte_transport_weight_gap8/program_config.svh": "e88cb75331bd7015caf79fdd2bb8a799e952b56af47e105ec9dd6a785292f9c8",
-    "build/g2_runtime_byte_transport_weight_gap8/simulation.log": "b588d86491c951277972b99d91013b71912e8331d1293828cd165ba982f64aa0"
+    "build/g2_runtime_byte_transport_weight_gap8/simulation.log": "c1f68f96fc2c5c2cbc6f2191a59ecbfa0c64ce549c1365d8198b7dc20dce5776"
   }
 }

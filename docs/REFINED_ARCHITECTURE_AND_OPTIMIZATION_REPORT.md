@@ -789,3 +789,41 @@ A full route of `ot_a3_lq8_runtime_operands` with `REUSE_WEIGHT_ROWS=1` and both
 cursors, queues, replay, ownership, SRAM and the operand join in one timing
 boundary. It remains below the full G2 integration boundary and is not yet a
 closure result. The two standalone weight-scheduler routes also remain active.
+
+
+## Earlier resident-bank availability
+
+Replay now splits a row to minimize the initial complete fill while keeping
+the remainder within the second 512-word bank. With TILE_WORDS=32, the first
+bank holds min(row_words, max(32, row_words-512)); the second holds the exact
+remainder. Thus a 576-word row uses 64+512 rather than 512+64, and a 240-word
+row uses 32+208 rather than one 240-word bank. Both still fit existing SRAM.
+Publication remains whole-bank and ordered: no read of an incomplete bank is
+allowed, and ownership/stream identities and final release are unchanged.
+
+Matched integrated campaign counters improve from 31,838 to 31,574 at depth
+192 with fast transport, and from 23,491 to 21,731 at depth 80 with an eight-
+cycle weight response gap (7.49% lower). The depth-340 counter changes from
+54,359 to 54,338; depth-352 streamed fallback stays at 55,487. Each retains
+584 matching outputs and identical successful-operation weight-fill counts.
+Depth-192 replay still trails stream-only's 31,145 counter by 1.38%, so the
+fast-memory startup regression is reduced, not eliminated. All counters include
+success, fault, abort and drain phases; none is a whole-model speedup.
+
+The split requires control: bounded implementation synthesis area is 326.651
+um² versus 298.831 for fixed splitting (+9.31%); pre-layout WNS is -0.8701 ns
+versus -0.2999 ns. It remains smaller than the original wide-counter replay
+scheduler (340.459 um²). A full route is running to assess repaired timing and
+routed cost before accepting any frequency claim. The initial wide split
+calculation is retained as a measured experiment (324.246 um², -1.0856 ns WNS);
+the selected implementation uses the admitted range to implement subtraction
+by bit selection. This latency/area/timing tradeoff remains explicit.
+
+All 44 focused tests pass and standalone scheduler lint is clean. Boundary
+tests now assert the first-bank split as well as data, tags, stalls, final
+release and restart. Evidence is `results/rtl/a3_g2_early_resident_fill_comparison.json`.
+The prior resident-capacity and stream/reuse comparisons now reference archived
+records in `results/rtl/resident_reuse_before_early_fill/` so updated runs cannot
+silently change their baseline. The full operand-service route launched before
+this split still characterizes its recorded older source snapshot, not this
+candidate. Complete G2 and all-target closure remain open.

@@ -49,6 +49,8 @@ always @(posedge clk)begin
   held<=word_valid && !word_ready;held_payload<={word_data,word_tag,word_index,word_last};
   if(fetch_valid && fetch_ready)begin
    backing<=1;response_tag<=fetch_tag;burst_base<=fetch_address;burst_words<=fetch_words;response_index<=0;
+   if(fills==0 && ROW_WORDS<=1024 && fetch_words!=
+      ((ROW_WORDS<=32)?ROW_WORDS:((ROW_WORDS>544)?ROW_WORDS-512:32)))$fatal(1,"first bank not minimized");
    if(fetch_tag!={command_generation,fetch_address})$fatal(1,"fetch ownership tag");
   end
   if(response_valid && response_ready)begin

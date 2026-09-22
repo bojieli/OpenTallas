@@ -981,3 +981,12 @@ sequence per row when this option is enabled. The legacy G2 mode is unaffected.
 The seven cases in `tests/test_weight_row_reuse.py` exercise both capacity edges,
 stream fallback and cancellation through actual bank ownership and prefetch.
 Physical area/timing and larger-than-capacity multi-row scheduling remain open.
+
+
+The current replay split makes the first bank available earlier: its extent is
+min(row_words, max(TILE_WORDS, row_words-512)), followed by an exact second-bank
+tail. Each bank is still completely filled before acquisition. The first-bank
+extent is captured on command acceptance, so stalled reserve/fetch/tile payloads
+cannot change. This uses both banks for some rows that formerly used one, trading
+extra acquisition control for earlier compute/refill overlap. No incremental
+read permission or additional SRAM is introduced.

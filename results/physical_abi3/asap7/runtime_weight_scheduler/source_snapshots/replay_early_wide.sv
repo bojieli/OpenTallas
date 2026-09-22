@@ -59,10 +59,10 @@ module ot_a3_weight_tile_scheduler #(
     reg [9:0] first_words;
     // Start with a small complete bank while the other fills. For rows above
     // 512+TILE_WORDS, grow the first bank just enough to fit the tail in 512.
-    // Eligibility separately checks the full input. Inside that bound,
-    // subtracting 512 is a bit selection, including the 1024 -> 512 case.
-    wire [9:0] planned_first=command_row_words[10:0]>11'(512+TILE_WORDS)?
-        {command_row_words[10],command_row_words[8:0]}:10'(TILE_WORDS);
+    wire [31:0] first_needed=command_row_words>32'd512 ?
+        command_row_words-32'd512:32'd0;
+    wire [9:0] planned_first=first_needed>32'(TILE_WORDS)?
+        first_needed[9:0]:10'(TILE_WORDS);
     wire reuse_command=ROW_REUSE && command_row_words!=0 &&
         command_row_words<=1024 && command_words>command_row_words;
     wire [31:0] fill_limit=replay?(reserve_bank?32'd512:{22'b0,first_words}):32'(TILE_WORDS);
