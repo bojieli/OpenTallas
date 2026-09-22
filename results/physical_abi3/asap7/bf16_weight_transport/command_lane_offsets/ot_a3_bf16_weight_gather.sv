@@ -13,10 +13,11 @@ module ot_a3_bf16_weight_gather #(
 )(
  input wire clk,rst_n,clear,
  input wire command_valid,output wire command_ready,
- input wire [31:0] command_generation,command_object,command_lane_stride,
+ input wire [31:0] command_generation,command_object,
  input wire [63:0] command_object_bytes,
  input wire coordinate_valid,output wire coordinate_ready,
  input wire [63:0] coordinate_element_base,
+ input wire [31:0] coordinate_lane_stride,
  input wire [7:0] coordinate_mask,
  input wire [SLOT_BITS-1:0] coordinate_slot,
  input wire [31:0] coordinate_index,
@@ -44,7 +45,6 @@ module ot_a3_bf16_weight_gather #(
  reg [7:0] mask;
  reg [SLOT_BITS-1:0] slot;
  reg [65:0] addresses[0:7];
- reg [34:0] lane_offsets[0:7];
  reg [127:0] cache_data[0:SLOTS-1][0:7];
  reg [59:0] cache_tag[0:SLOTS-1][0:7];
  reg [7:0] cache_valid[0:SLOTS-1];
@@ -128,9 +128,6 @@ module ot_a3_bf16_weight_gather #(
  always @(posedge clk)begin
   if(command_valid && command_ready)begin
    generation<=command_generation;object_id<=command_object;
-   // Descriptor strides are immutable for the generation. Compute lane
-   // multiples once, removing multiply/add depth from every coordinate.
-   for(l=0;l<8;l=l+1)lane_offsets[l]<=35'(command_lane_stride)*35'(l);
    // BF16 addresses are even. A final single byte cannot hold an element;
    // its preceding complete line is the last reachable line for capacity %16=1.
    last_element_offset<=command_object_bytes-64'd2;
@@ -139,7 +136,7 @@ module ot_a3_bf16_weight_gather #(
   if(coordinate_valid && coordinate_ready)begin
    mask<=coordinate_mask;slot<=coordinate_slot;word_index<=coordinate_index;
    for(l=0;l<8;l=l+1)
-    addresses[l]<=({2'd0,coordinate_element_base}+{31'd0,lane_offsets[l]})<<1;
+    addresses[l]<=({2'd0,coordinate_element_base}+66'(coordinate_lane_stride)*66'(l))<<1;
   end
   if(state==LOOKUP && !protocol_error)begin
    if(miss)begin

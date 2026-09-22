@@ -19,7 +19,7 @@ reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,coordinate_valid=0,word_ready=0;
 reg [31:0] command_generation=3,command_object=17;
 reg [63:0] command_object_bytes,coordinate_element_base;
-reg [31:0] coordinate_lane_stride,coordinate_index=0;
+reg [31:0] command_lane_stride=0,fixture_stride=0,coordinate_index=0;
 reg [7:0] coordinate_mask;
 reg [SB-1:0] coordinate_slot;
 wire command_ready,coordinate_ready,word_valid,read_valid,response_ready,protocol_error,drained;
@@ -36,7 +36,7 @@ wire [63:0] response_tag=wrong_response?64'hbadbad00:ZERO?read_tag:saved_tag;
 wire response_error=fail_response;
 wire [63:0] response_offset=ZERO?read_offset:saved_offset;
 reg [127:0] response_data;
-function automatic [7:0] byte_value(input [63:0] addr);byte_value=8'(addr*17+3);endfunction
+function automatic [7:0] byte_value(input [63:0] addr);byte_value=8'((addr^(addr>>8)^(addr>>16)^(addr>>32)^(addr>>48))*17+3);endfunction
 always @*begin
  for(integer n=0;n<16;n=n+1)response_data[8*n+:8]=byte_value(response_offset+64'(n));
 end
@@ -61,10 +61,10 @@ always @(posedge clk)begin
   if(!ZERO && response_valid && response_ready && !wrong_response)pending<=0;
  end
 end
-task reset_command(input [63:0] capacity);
+task reset_command(input [63:0] capacity,input [31:0] stride=0);
  begin
   @(negedge clk);clear=1;coordinate_valid=0;word_ready=0;wrong_response=0;fail_response=0;block_read=0;
-  @(negedge clk);clear=0;command_generation=command_generation+1;command_object_bytes=capacity;
+  @(negedge clk);clear=0;command_generation=command_generation+1;command_object_bytes=capacity;command_lane_stride=stride;fixture_stride=stride;
   #1;if(!command_ready)$fatal(1,"command not ready");command_valid=1;
   @(negedge clk);command_valid=0;
  end
@@ -72,7 +72,8 @@ endtask
 task submit(input [63:0] base,input [31:0] stride,input [7:0] mask,input integer slot_number);
  begin
   while(!coordinate_ready)@(negedge clk);
-  coordinate_element_base=base;coordinate_lane_stride=stride;coordinate_mask=mask;coordinate_slot=SB'(slot_number);
+  if(stride!=fixture_stride)$fatal(1,"fixture stride differs from command");
+  coordinate_element_base=base;coordinate_mask=mask;coordinate_slot=SB'(slot_number);
   coordinate_valid=1;@(negedge clk);coordinate_valid=0;
  end
 endtask
@@ -96,7 +97,7 @@ integer row,p,k,c,l,start_reads,start_bytes,stop,start_ticks,work_ticks;
 reg [7:0] mask;
 initial begin
  repeat(2)@(negedge clk);rst_n=1;
- reset_command(8480);start_reads=reads;start_bytes=bytes_read;start_ticks=ticks;
+ reset_command(8480,80);command_lane_stride=32'hfffffff1;start_reads=reads;start_bytes=bytes_read;start_ticks=ticks;
  for(row=0;row<2;row=row+1)for(p=0;p<7;p=p+SLOTS)for(k=0;k<80;k=k+1)begin
   stop=p+SLOTS<7?p+SLOTS:7;
   for(c=p;c<stop;c=c+1)begin
@@ -107,17 +108,18 @@ initial begin
  work_ticks=ticks-start_ticks;
  if(reads-start_reads!=(RETAIN?1060:8480) || bytes_read-start_bytes!=(RETAIN?16960:135680))$fatal(1,"line reuse reads=%0d bytes=%0d",reads-start_reads,bytes_read-start_bytes);
  // Nonunit strides, nonzero base, truncated last line, and zero-stride aliases.
- reset_command(55);submit(7,2,8'hff,0);check_word(7,2,8'hff);
- submit(26,0,8'hff,0);check_word(26,0,8'hff);
+ reset_command(55,2);submit(7,2,8'hff,0);check_word(7,2,8'hff);
+ reset_command(55,0);submit(26,0,8'hff,0);check_word(26,0,8'hff);
  // Reachable last-line handling at 0/1/2/3-byte capacity remainders.
  reset_command(17);submit(7,0,1,0);check_word(7,0,1);
  reset_command(18);submit(8,0,1,0);check_word(8,0,1);
  reset_command(2);submit(0,0,1,0);check_word(0,0,1);
  reset_command(3);submit(0,0,1,0);check_word(0,0,1);
  reset_command(64'hffffffffffffffff);submit(64'h7ffffffffffffffe,0,1,0);check_word(64'h7ffffffffffffffe,0,1);
+ reset_command(64'hffffffffffffffff,32'hffffffff);submit(0,32'hffffffff,8'hff,0);check_word(0,32'hffffffff,8'hff);
  reset_command(1);expect_fault();
  // Every active lane is checked before any read is published.
- reset_command(10);start_reads=reads;submit(0,1,8'hff,0);expect_fault();if(reads!=start_reads)$fatal(1,"partial invalid read");
+ reset_command(10,1);start_reads=reads;submit(0,1,8'hff,0);expect_fault();if(reads!=start_reads)$fatal(1,"partial invalid read");
  reset_command(64'hffffffffffffffff);submit(64'h8000000000000000,0,1,0);expect_fault();
  reset_command(16);fail_response=1;submit(0,0,1,0);expect_fault();
  // A foreign response while a request is held cannot withdraw that request.
@@ -132,7 +134,7 @@ initial begin
  end
  // clear is paired with cancellation of the behavioral external transport.
  reset_command(16);block_read=1;submit(0,0,1,0);wait(read_valid);
- reset_command(16);submit(0,1,8'hff,0);check_word(0,1,8'hff);
+ reset_command(16,1);submit(0,1,8'hff,0);check_word(0,1,8'hff);
  $display("PASS gather checks=%0d retain=%0d workload_cycles=%0d",checks,RETAIN,work_ticks);$finish;
 end
 endmodule
@@ -142,5 +144,5 @@ endmodule
                     '-o',str(sim),str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)],check=True,capture_output=True,text=True)
     r=subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=60)
     assert r.returncode==0,r.stdout+r.stderr
-    assert f'PASS gather checks=1128 retain={retain}' in r.stdout
+    assert f'PASS gather checks=1129 retain={retain}' in r.stdout
     print(f'slots={slots} zero_latency={zero_latency} '+r.stdout.splitlines()[0])

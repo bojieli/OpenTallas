@@ -322,3 +322,25 @@ artifacts are verified in `bf16_weight_transport/baseline_source_audit.json`.
 The invariant-bound candidate route remains active; no current transport clock
 closure is claimed. Activation-stride transport, other formats, deep-row reuse
 and all-target balancing remain unfinished.
+
+## Command-owned lane-offset optimization
+
+The invariant-bound transport's global-route worst path moved to column-stride
+multiplication followed by lane-address addition (-51 ps at the intermediate
+1 ns stage). The next implementation captures eight 35-bit lane element offsets
+from the descriptor stride at command admission. Each coordinate now adds its
+base to those retained offsets without repeating the stride multiplication.
+The gather interface takes the stride with the command, matching its immutable
+operation ownership. No coordinate or admission cycle was added.
+
+Fourteen gather/transport configurations pass, including a maximum 32-bit stride
+and an oracle that depends on high address bits. Changing the command stride
+after admission leaves live addresses unchanged. Both loaded strided G2 campaigns
+pass with identical counters: resident replay 110,614 cycles, streaming 387,169,
+2,234 matching outputs and 295 write acknowledgements each. Strict lint passes.
+
+The matched containing CTS12 1 ns route is active as
+`bf16_weight_transport/pnr_command_lane_offsets_cts12_1ns.json`. The invariant-bound
+route also remains live and is retained as a separate baseline. Neither this
+intermediate path report nor functional results prove a routed timing/area gain.
+Snapshots and the decision manifest are in `bf16_weight_transport/command_lane_offsets/`.

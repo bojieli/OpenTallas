@@ -27,10 +27,11 @@
   ],
   "sources": {
     "rtl/abi3/ot_a3_weight_layout_cursor.sv": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971",
-    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "a62e73540b89b95653b103df8e7a6ef8b9e80d4ef84ef5790602ad030f7ef15c",
-    "rtl/abi3/ot_a3_bf16_weight_transport.sv": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9",
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0635dd8dc457734b7a4b402d53a54df53412157beddf937df1bd21b9f4b0924a",
+    "rtl/abi3/ot_a3_bf16_weight_transport.sv": "1e6040a98299ec31736b09cb6bc1e602887fdbf74ee85ab7c6ce834ea7b72bc3",
     "tests/test_bf16_weight_transport.py": "cac797bd4b0d05f87b863414a3800e3542d6798ad1642622302fc7908a3ab385"
   },
   "lint": "Verilator 5.050 --lint-only -Wall passes",
-  "bound_implementation": "Capture last legal element offset once at command admission; no per-lane end-address addition"
+  "bound_implementation": "Capture last legal element offset once at command admission; no per-lane end-address addition",
+  "lane_offsets": "Descriptor column stride captured as eight lane offsets at command admission; no coordinate-cycle increase"
 }

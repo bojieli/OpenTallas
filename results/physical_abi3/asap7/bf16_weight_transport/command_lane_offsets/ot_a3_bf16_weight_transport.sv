@@ -42,6 +42,7 @@ module ot_a3_bf16_weight_transport #(
  reg [SB-1:0] slot;
  wire cursor_command_ready,gather_command_ready,cursor_valid,cursor_ready,cursor_last,cursor_error;
  wire [63:0] element_base;
+ wire [31:0] lane_stride;
  wire [15:0] column_base;
  wire [7:0] lane_mask;
  wire gather_ready,gather_valid,gather_error;
@@ -62,13 +63,13 @@ module ot_a3_bf16_weight_transport #(
   .command_generation(command_generation),.command_rows(command_rows),.command_cols(command_cols),.command_depth(command_depth),
   .command_element_base(command_element_base),.command_column_stride(command_column_stride),.command_k_stride(command_k_stride),
   .coordinate_valid(cursor_valid),.coordinate_ready(cursor_ready),.generation(),.element_base(element_base),
-  .lane_stride(),.lane_mask(lane_mask),.row_index(),.column_base(column_base),.k_index(),.last(cursor_last),.command_error(cursor_error));
+  .lane_stride(lane_stride),.lane_mask(lane_mask),.row_index(),.column_base(column_base),.k_index(),.last(cursor_last),.command_error(cursor_error));
  /* verilator lint_on PINCONNECTEMPTY */
  ot_a3_bf16_weight_gather #(.SLOTS(INTERLEAVE),.RETAIN_LINES(RETAIN_LINES)) gather(
   .clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(launch),.command_ready(gather_command_ready),
-  .command_generation(command_generation),.command_object(command_object),.command_object_bytes(command_object_bytes),.command_lane_stride(command_column_stride),
+  .command_generation(command_generation),.command_object(command_object),.command_object_bytes(command_object_bytes),
   .coordinate_valid(cursor_valid && burst_active && !protocol_error),.coordinate_ready(gather_ready),
-  .coordinate_element_base(element_base),.coordinate_mask(lane_mask),
+  .coordinate_element_base(element_base),.coordinate_lane_stride(lane_stride),.coordinate_mask(lane_mask),
   .coordinate_slot(slot),.coordinate_index(next_address[31:0]),
   .word_valid(gather_valid),.word_ready(response_ready && burst_active),.word_data(response_data),.word_index(gathered_index),
   .read_valid(read_valid),.read_ready(read_ready),.read_tag(read_tag),.read_object(read_object),.read_offset(read_offset),.read_bytes(read_bytes),
