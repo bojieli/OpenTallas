@@ -69,7 +69,7 @@ The latest completed containing-block physical results are:
 
 | Configuration | Tested period | Routed standard-cell area | Setup / hold WNS | Verdict |
 |---|---:|---:|---:|---|
-| Runtime operand service, split stream increment, CTS12 | 1 ns | 3,737.520 um², plus 5,586 um² SRAM macros | +0.010967 / +0.020029 ns | Timing passes; one clock fanout violation prevents physical closure |
+| Runtime operand service, split stream increment, CTS8 | 1 ns | 3,807.230 um², plus 5,586 um² SRAM macros | +0.009551 / +0.021035 ns | Passes all reported timing and physical checks |
 | Sinkhorn, pipelined divider, direct handoffs, suppressed unused right-adder requests, CTS8 | 2 ns | 3,099.550 um² | +0.092189 / +0.027670 ns | Passes setup, hold, slew, capacitance, fanout, DRC and antenna checks |
 
 Both are ASAP7 TT results for the recorded configurations. Sinkhorn establishes
@@ -2181,3 +2181,57 @@ loaded record is archived under `results/rtl/before_writer_local_payload/`.
 Outstanding depth and object-descriptor integration remain required architecture
 work; this revision reduces implementation cost without claiming those gaps are
 closed.
+
+
+## Containing operand service closes at tested 1 ns
+
+The CTS8 follow-up completes and passes the strict physical verdict at ASAP7
+TT, 1 ns. Setup WNS is +0.009551 ns, hold WNS +0.021035 ns; setup/hold, slew,
+capacitance, fanout, DRC and antenna violation counts are all zero. Standard-cell
+area is 3,807.230 um², plus unchanged 5,586 um² SRAM macro area. Compared with
+the same RTL at CTS12, fixing clock fanout adds 69.710 um² (1.87%). Compared with
+the prior shared-generation implementation at CTS12, total cell area is 2.43%
+higher; the earlier design failed setup. This qualifies this containing service
+at 1 GHz for the recorded corner, not G2, all corners or all deployment targets.
+All active source hashes and retained artifact hashes match. The flow estimate
+of 1,009.64 MHz is not a tested frequency. Evidence:
+`results/physical_abi3/asap7/runtime_operand_service/pnr_split_stream_add_cts8_1ns.json`.
+
+## Overlap output writes with bounded ordered acknowledgement credits
+
+The writer now defaults to four outstanding atomic beats, configurable from
+1 to 256. It reuses its payload registers after request acceptance while a small
+counter retains acknowledgement ownership. The upstream queue admits another
+beat only with available write credit; no issued write is discarded on a fault.
+Matching acknowledgements release credits, including a response on the request
+acceptance edge. Wrong-generation responses fault without releasing a credit.
+Drain requires both empty local processing and zero outstanding writes. After a
+fault, queued unissued results drain without publication. A request already
+published remains stable and must be accepted/acknowledged before completion.
+
+This interface explicitly requires ordered, exactly-once acknowledgements from
+the external memory service. Generation is operation identity, not a per-write
+transaction identifier; out-of-order or duplicate-response tolerance requires a
+different protocol. The loaded fixture now models an eight-entry ordered
+acknowledgement queue with fixed delayed responses, so it can exercise overlap
+rather than serialize the writer artificially.
+
+Seventeen focused tests pass, including credit depths 1/2/4/8, exhausted-credit
+stalls, same-edge request/ack, wrong-generation responses, late bus errors and
+full fault drain. The matched loaded N53 runs each complete 169 writes and 169
+acknowledgements, with 1,280 matching outputs. Four credits reduce output-stall
+cycles 1,859 to 952 (48.79%) and reservation-stall cycles 34 to 26. Campaign
+latency changes 25,101 to 25,087 cycles (0.056%); the large stall reduction does
+not imply a comparable application speedup. First-operation weight/activation
+fills remain 560/720. Exact records and source hashes are retained in
+`results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth{1,4}.json`.
+
+The writer route already running covers the previous single-outstanding source
+snapshot in `output_object_writer/local_payload/writer.sv`; it cannot qualify
+this changed RTL. Current four-credit synthesis/STA completes at 1,230.611 um² versus
+1,231.190 um² for the preceding single-credit design. Prelayout setup WNS
+is -7.1451 ns versus -6.7882 ns; both fail 1 ns. The throughput change has
+near-neutral synthesized area but no demonstrated physical timing benefit.
+Evidence: `output_object_writer/prelayout_ordered_credits4_1ns.json`.
+Object descriptor binding, deployment wrapper integration and current-source
+physical closure remain unfinished.

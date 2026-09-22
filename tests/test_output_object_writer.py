@@ -30,7 +30,7 @@ wire write_fp32;
 reg [31:0] response_generation=17;
 integer requests=0,checks=0;
 reg [840:0] held;
-ot_a3_output_object_writer dut(.*);
+ot_a3_output_object_writer #(.OUTSTANDING(1)) dut(.*);
 always @(posedge clk)if(write_valid && write_ready)requests<=requests+1;
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
 task launch;begin
@@ -108,3 +108,67 @@ endmodule
     result = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
     assert 'PASS output writer checks=14' in result.stdout
+
+@pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
+@pytest.mark.parametrize('depth', [1, 2, 4, 8])
+def test_ordered_write_credits(tmp_path, depth):
+    bench = tmp_path / 'credits.sv'
+    bench.write_text(r'''module tb;
+parameter integer DEPTH=4;
+reg clk=0;always #5 clk=~clk;
+reg rst_n=0,clear=0,command_valid=0,part_valid=0,write_ready=1,response_valid=0,response_error=0;
+wire command_ready,part_ready,write_valid,response_ready,drained,protocol_error;
+wire [31:0] command_generation=19,command_object=3,command_element_base=0;
+wire [31:0] command_row_stride=128,command_col_stride=1;
+wire [15:0] command_rows=1,command_cols=128,command_padded_cols=128;
+wire command_fp32=1;
+wire [63:0] command_object_bytes=512;
+wire [7:0] part_mask=255;
+reg [255:0] part_address=0,part_data=0;
+wire [31:0] write_generation,write_object;
+wire [7:0] write_mask;wire [511:0] write_offset;wire [255:0] write_data;wire write_fp32;
+reg [31:0] response_generation=19;
+integer sent=0,acked=0;
+ot_a3_output_object_writer #(.OUTSTANDING(DEPTH)) dut(.*);
+always @(posedge clk)begin
+ if(write_valid && write_ready)sent<=sent+1;
+ if(response_valid && response_ready && response_generation==19)acked<=acked+1;
+end
+task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
+task beat(input integer address);begin
+ wait(part_ready);for(integer i=0;i<8;i=i+1)part_address[32*i+:32]=address;
+ part_valid=1;tick();part_valid=0;wait(write_valid);tick();
+end endtask
+initial begin
+ tick();rst_n=1;command_valid=1;tick();command_valid=0;
+ for(integer i=0;i<DEPTH;i=i+1)beat(i);
+ if(sent!=DEPTH || part_ready || drained)$fatal(1,"credit bound");
+ repeat(5)begin tick();if(part_ready || drained)$fatal(1,"unacked credit released");end
+ // Invalid generation cannot free a slot; valid responses still drain a fault.
+ response_generation=20;response_valid=1;tick();response_valid=0;
+ if(!protocol_error || drained || dut.pending!=DEPTH)$fatal(1,"wrong ack credit");
+ response_generation=19;response_valid=1;
+ repeat(DEPTH)tick();response_valid=0;if(!drained)$fatal(1,"fault drain");
+ clear=1;tick();clear=0;command_valid=1;tick();command_valid=0;
+ // Every new request may be acknowledged on its own acceptance edge.
+ response_valid=1;
+ for(integer i=0;i<4;i=i+1)beat(i);
+ response_valid=0;
+ if(!drained || protocol_error || sent!=acked)$fatal(1,"same-edge acknowledgement");
+ // A delayed error does not discard any other outstanding writes.
+ for(integer i=0;i<DEPTH;i=i+1)beat(i+4);
+ response_error=1;response_valid=1;tick();response_error=0;response_valid=0;
+ if(!protocol_error || dut.pending!=DEPTH-1)$fatal(1,"error accounting");
+ response_valid=1;repeat(DEPTH-1)tick();response_valid=0;
+ if(!drained || sent!=acked)$fatal(1,"error drain");
+ $display("PASS ordered credits depth=%0d",DEPTH);$finish;
+end
+initial begin #30000;$fatal(1,"timeout");end
+endmodule
+''')
+    subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.DEPTH={depth}',
+                    '-o', str(tmp_path/'sim'), str(ROOT/'rtl/abi3/ot_a3_output_object_writer.sv'), str(bench)],
+                   check=True, capture_output=True, text=True)
+    result = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert 'PASS ordered credits' in result.stdout

@@ -3,6 +3,7 @@
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter bit OBJECT_WRITES=0;
+ parameter integer WRITE_OUTSTANDING=4;
  parameter integer AUXILIARY_DEPTH=3;
  parameter bit REGISTER_AUXILIARY_REQUESTS=0;
  parameter integer WEIGHT_RESPONSE_GAP=1;
@@ -52,13 +53,18 @@ module tb_a3_g2_runtime_program;
  wire [511:0] object_write_offset;
  wire [255:0] object_write_data;
  wire object_write_fp32;
- reg object_ack=0;
- reg [31:0] object_ack_generation=0;
- integer object_delay=0,object_writes=0,object_acks=0;
+ reg [31:0] ack_due[0:7],ack_generation[0:7];
+ reg [2:0] ack_head=0,ack_tail=0;
+ reg [3:0] ack_count=0;
+ wire object_ack=ack_count!=0 && cycles>=ack_due[ack_head];
+ wire [31:0] object_ack_generation=ack_generation[ack_head];
+ wire object_request_fire=object_write_valid && object_write_ready;
+ wire object_ack_fire=object_ack && object_response_ready;
+ integer object_writes=0,object_acks=0;
  reg [7:0] output_memory[0:2*ROWS*LOGICAL_COLS-1];
  reg [ROWS*LOGICAL_COLS-1:0] object_seen=0;
- assign object_write_ready=!object_ack && object_delay==0 && cycles%5!=0;
- ot_a3_output_object_writer writer(
+ assign object_write_ready=ack_count<8 && cycles%5!=0;
+ ot_a3_output_object_writer #(.OUTSTANDING(WRITE_OUTSTANDING)) writer(
   .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
   .command_valid(OBJECT_WRITES && output_layout_valid && array_busy),.command_ready(),
   .command_generation(runtime_generation),.command_object(output_object),
@@ -75,7 +81,7 @@ module tb_a3_g2_runtime_program;
  // Behavioral object memory accepts complete checked beats and delays commit ack.
  // Golden comparison is independent of the writer's incremental address cursor.
  always @(posedge clk)begin
-  if(!rst_n)begin object_ack<=0;object_delay<=0;object_writes<=0;object_acks<=0;end
+  if(!rst_n)begin ack_head<=0;ack_tail<=0;ack_count<=0;object_writes<=0;object_acks<=0;end
   else begin
    if(kick)object_seen<=0;
    if(object_write_valid && object_write_ready)begin
@@ -91,11 +97,15 @@ module tb_a3_g2_runtime_program;
      if(object_write_data[32*i+:32]!=expected[(object_write_offset[64*i+:64]/(2*LOGICAL_COLS))*COLS+(object_write_offset[64*i+:64]/2)%LOGICAL_COLS])
       $fatal(1,"object write value/address");
     end
-    object_writes<=object_writes+1;object_ack_generation<=object_write_generation;object_delay<=11;
+    object_writes<=object_writes+1;ack_generation[ack_tail]<=object_write_generation;ack_due[ack_tail]<=cycles+12;ack_tail<=ack_tail+1'b1;
    end
-   if(object_delay!=0)begin object_delay<=object_delay-1;if(object_delay==1)object_ack<=1;end
-   if(object_ack && object_response_ready)begin object_ack<=0;object_acks<=object_acks+1;end
-   if(array_done && OBJECT_WRITES && (!writer_drained || object_ack || object_delay!=0 || object_writes!=object_acks))
+   case({object_request_fire,object_ack_fire})
+    2'b10:ack_count<=ack_count+1'b1;
+    2'b01:ack_count<=ack_count-1'b1;
+    default:begin end
+   endcase
+   if(object_ack_fire)begin ack_head<=ack_head+1'b1;object_acks<=object_acks+1;end
+   if(array_done && OBJECT_WRITES && (!writer_drained || object_ack || ack_count!=0 || object_writes!=object_acks))
     $fatal(1,"completion bypassed actual write acknowledgements");
   end
  end

@@ -1,12 +1,13 @@
 `timescale 1ns/1ps
-// Bounded rank-two output transport. One atomic lane beat may be outstanding;
+// Bounded rank-two output transport with ordered acknowledgement credits;
 // the upstream reserved queue holds further beats. Acknowledgement, not request
-// acceptance, releases the transaction. Command layout is immutable until clear.
+// acceptance, releases each outstanding transaction. Command layout is immutable until clear.
 // clear/global reset require transport quiescence; never clear an unacked write.
 // Ordered lane-local addresses are checked against the command schedule. Object
 // offsets use logical element strides, independent of padded execution width.
 module ot_a3_output_object_writer #(
- parameter integer LANES=8
+ parameter integer LANES=8,
+ parameter integer OUTSTANDING=4
 )(
  input wire clk,rst_n,clear,
  input wire command_valid,
@@ -34,7 +35,15 @@ module ot_a3_output_object_writer #(
  output wire drained,
  output reg protocol_error
 );
- localparam [1:0] IDLE=0,CHECK=1,SEND=2,WAIT_ACK=3;
+ localparam [1:0] IDLE=0,CHECK=1,SEND=2;
+ localparam integer COUNT_BITS=$clog2(OUTSTANDING+1);
+ reg [COUNT_BITS-1:0] pending;
+ // The external service must acknowledge accepted writes exactly once in
+ // request order. Generation alone is not an out-of-order transaction ID.
+ wire request_fire=write_valid && write_ready;
+ wire ack_fire=response_valid && response_ready;
+ wire ack_matches=response_generation==write_generation;
+ wire retire=ack_fire && ack_matches;
  reg [1:0] state;
  reg active;
  reg [31:0] expected_address;
@@ -51,10 +60,10 @@ module ot_a3_output_object_writer #(
  assign command_ready=enabled && !active && state==IDLE;
  // After fault, consume queued results without publishing new writes so the
  // parent can abort and drain. An already published request must still finish.
- assign part_ready=enabled && active && state==IDLE;
+ assign part_ready=enabled && active && state==IDLE && (protocol_error || pending<OUTSTANDING);
  assign write_valid=enabled && state==SEND;
- assign response_ready=enabled && state==WAIT_ACK;
- assign drained=state==IDLE;
+ assign response_ready=enabled && (pending!=0 || request_fire);
+ assign drained=state==IDLE && pending==0;
  wire accept_part=part_valid && part_ready;
  wire [LANES-1:0] expected_mask=cols_left==1?tail_mask:{LANES{1'b1}};
  wire [63:0] element_bytes=write_fp32?64'd4:64'd2;
@@ -103,9 +112,15 @@ module ot_a3_output_object_writer #(
   end
  end
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin state<=IDLE;active<=0;protocol_error<=0;end
-  else if(clear)begin state<=IDLE;active<=0;protocol_error<=0;end
+  if(!rst_n)begin state<=IDLE;active<=0;protocol_error<=0;pending<=0;end
+  else if(clear)begin state<=IDLE;active<=0;protocol_error<=0;pending<=0;end
   else begin
+   case({request_fire,retire})
+    2'b10:pending<=pending+1'b1;
+    2'b01:pending<=pending-1'b1;
+    default:begin end
+   endcase
+   if(ack_fire && (!ack_matches || response_error))protocol_error<=1;
    if(command_valid && command_ready)begin
     active<=1;
     if(command_rows==0 || command_cols==0 || command_padded_cols==0 ||
@@ -116,19 +131,15 @@ module ot_a3_output_object_writer #(
    end
    case(state)
     IDLE:if(accept_part && !protocol_error)state<=CHECK;
-    CHECK:if(beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
+    CHECK:if(protocol_error || beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
           else state<=SEND;
-    SEND:if(write_ready)state<=WAIT_ACK;
-    WAIT_ACK:if(response_valid)begin
-     if(response_generation!=write_generation)protocol_error<=1;
-     else begin
-      if(response_error)protocol_error<=1;
-      state<=IDLE;
-     end
-    end
+    SEND:if(write_ready)state<=IDLE;
    endcase
   end
  end
+ generate if(OUTSTANDING<1 || OUTSTANDING>256)begin : bad_depth
+  initial $error("OUTSTANDING must be in 1..256");
+ end endgenerate
  generate if(LANES<1 || LANES>64 || (LANES&(LANES-1))!=0)begin : bad_lanes
   initial $error("LANES must be a power of two in 1..64");
  end endgenerate
