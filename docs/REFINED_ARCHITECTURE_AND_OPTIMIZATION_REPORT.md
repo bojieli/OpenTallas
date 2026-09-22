@@ -1,8 +1,8 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation baseline: `0eff1c55`, with the subsequently completed current-source
-Sinkhorn route retained alongside this report. The opening review is current;
+Implementation includes runtime tail masking (`7a01be96`) and the subsequent
+descriptor stride capture; the current-source Sinkhorn route is retained. The opening review is current;
 later checkpoints preserve the history of individual experiments.
 
 ## Current review summary (2026-09-22)
@@ -91,14 +91,17 @@ energy benefit or all-target physical closure is claimed.
 
 The LQ8 corpus passes 92 cases with 17,103 matching outputs, 18 exercised faults
 and 115,748 checks. The current loaded G2 N56/K80 campaign passes 1,352 matching
-outputs in 25,013 campaign cycles, including output backpressure, refill, faults,
+outputs in 25,040 campaign cycles after stride capture, including output backpressure, refill, faults,
 abort and recovery. Earlier 24,995-cycle queue results in the table isolate the
 queue change before descriptor revisions. Reading C for checked shape/output
 precision increased that checkpoint to 25,082 cycles; reducing auxiliary
 descriptor reads from 18 to 9 SRAM beats then reduced it to 25,013. These are
 campaign counts, not inference latency or directly additive speedups.
 
-C now owns BF16/FP32 output precision and exported object/layout metadata.
+C now owns BF16/FP32 output precision and exported object/layout metadata,
+including its two unsigned element strides. G2 reads a 128-byte auxiliary
+descriptor prefix to reach these fields (12 A/B/C SRAM beats versus the earlier
+9). The added reads raise N56 campaign cycles from 25,013 to 25,040.
 Metadata remains valid through output drain. A cancellation-priority correction
 prevents same-edge normal transitions from overriding clear; the 27-check adapter
 regression cancels all six active states and verifies recovery. Actual bounded
@@ -2047,3 +2050,36 @@ added output control is not yet measured. Legacy runtime-disabled output is
 unchanged. Evidence is retained in the three
 `results/rtl/a3_g2_runtime_byte_transport_cols{9,53,56}_rolling_activation_auxdepth3_direct.json`
 records, with the previous N56 record archived under `before_output_tail_mask/`.
+
+
+## Capture descriptor strides for bounded output transport
+
+The G2 issue adapter captures C's unsigned 32-bit stride0/stride1 as
+`output_row_stride` and `output_col_stride`, published by the cluster under
+`output_layout_valid` through arithmetic/output drain. Strides are in elements;
+they are not inferred from the padded execution width. No stride multiplication
+or object-address mapping is inserted into the arithmetic path. Payload is
+captured before launch and remains immutable until the next admitted operation.
+
+The ABI fields occupy descriptor bytes 112..119. G2 therefore selects four
+256-bit auxiliary descriptor words (128 bytes), replacing its three-word prefix.
+The sequencer still reads six words. This is 12 auxiliary SRAM beats across
+A/B/C versus the earlier 9, and remains below the original 18. The adapter now
+also rejects non-rank-two A/B/C descriptors instead of interpreting their first
+two dimensions as a complete matrix.
+
+Five focused pytest cases pass: the adapter has 30 checks, including all three
+rank refusals, full-width stride capture, immutability and cancellation; the
+prefix store now covers 1/3/4/6 words with arbitration, bounds and reset checks.
+Loaded N9, N53 and N56 campaigns all pass descriptor stride checks on every
+queued output, including stalls and abort drain. Accepted outputs remain
+224/1,280/1,352; campaign cycles are 11,390/25,040/25,040 respectively. N53/N56
+first-operation fills remain 560 weight and 720 activation words. The wider
+prefix costs 27 campaign cycles; this is an architectural mapping prerequisite,
+not a latency optimization. Previous records are archived in
+`results/rtl/before_output_strides/` and current records retain source hashes.
+
+The actual writer, object bounds and acknowledgement path remain required.
+These ports do not yet establish end-to-end support for arbitrary strided
+outputs. Functional rank/metadata checks do not qualify physical timing or
+all-target deployment.

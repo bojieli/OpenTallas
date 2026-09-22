@@ -18,7 +18,9 @@ module tb_a3_g2_issue_contract;
  reg [7:0] c_dtype=8'h10;
  reg c_fault=0,c_scaled=0,c_bad_header=0,cfg_out_fp32=0;
  wire array_out_fp32,output_layout_valid;
- wire [31:0] output_object;
+ wire [31:0] output_object,output_row_stride,output_col_stride;
+ reg [31:0] c_row_stride=32'h80000123,c_col_stride=32'h40000007;
+ reg [7:0] a_rank=2,b_rank=2,c_rank=2;
  wire [15:0] output_logical_cols;
  reg [31:0] c_object=32'h12345678;
  integer launches=0,checks=0,cancel_state;
@@ -32,6 +34,7 @@ module tb_a3_g2_issue_contract;
  .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
  .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(cfg_out_fp32),.array_out_fp32(array_out_fp32),
  .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
+ .output_row_stride(output_row_stride),.output_col_stride(output_col_stride),
  .output_layout_valid(output_layout_valid),.output_object(output_object),.output_logical_cols(output_logical_cols),
  .array_done(array_done),.array_error_code(array_error_code));
  always @(posedge clk)begin
@@ -43,6 +46,9 @@ module tb_a3_g2_issue_contract;
    desc_data[55:48]<=ot_a3_pkg::A3_TYPE_MAJOR;
    desc_data[351:320]<=32'd64;
    desc_data[159:128]<=c_object;
+   desc_data[527:520]<=(desc_id==10)?a_rank:(desc_id==11)?b_rank:c_rank;
+   desc_data[927:896]<=c_row_stride;
+   desc_data[959:928]<=c_col_stride;
    desc_data[519:512]<=(desc_id==12)?c_dtype:8'h10;
    desc_data[575:544]<=(desc_id==12 && c_scaled)?32'd99:ot_a3_pkg::A3_NO_ID;
    desc_data[735:704]<=(desc_id==10)?32'd1:(desc_id==12)?c_rows:b_cols;
@@ -74,14 +80,18 @@ module tb_a3_g2_issue_contract;
   view(0,10,0);view(1,11,0);view(4,12,123);view(2,13,999);view(5,14,888);issue();
   wait(array_start);@(negedge clk);
   if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123 || array_out_fp32)$fatal(1,"ABI mapping");
-  if(!output_layout_valid || output_object!=c_object || output_logical_cols!=8)$fatal(1,"output layout missing");
-  c_object=32'h87654321;
-  repeat(4)begin tick();if(!output_layout_valid || output_object!=32'h12345678)$fatal(1,"layout changed while owned");end
+  if(!output_layout_valid || output_object!=c_object || output_logical_cols!=8 || output_row_stride!=c_row_stride || output_col_stride!=c_col_stride)$fatal(1,"output layout missing");
+  c_object=32'h87654321;c_row_stride=13;c_col_stride=3;
+  repeat(4)begin tick();if(!output_layout_valid || output_object!=32'h12345678 || output_row_stride!=32'h80000123 || output_col_stride!=32'h40000007)$fatal(1,"layout changed while owned");end
   tick();array_done=1;tick();array_done=0;
   if(output_layout_valid)$fatal(1,"completed layout still valid");
   if(!complete_valid || complete_fault)$fatal(1,"success completion");checks=checks+1;tick();tick();
   // No views may carry over when the IRS slot is recycled.
   view(0,10,0);view(1,11,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  // A shape prefix alone cannot qualify non-matrix descriptors.
+  a_rank=3;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);a_rank=2;
+  b_rank=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);b_rank=2;
+  c_rank=3;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_rank=2;
   // Reject old K-major interpretation, mismatched inner extent, and zero N.
   b_cols=80;b_depth=8;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
   b_cols=8;b_depth=79;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);

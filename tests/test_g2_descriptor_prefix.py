@@ -7,7 +7,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
-@pytest.mark.parametrize("words", [1, 3, 6])
+@pytest.mark.parametrize("words", [1, 3, 4, 6])
 def test_descriptor_prefix(tmp_path, words):
     sim = tmp_path / "sim"
     subprocess.run([

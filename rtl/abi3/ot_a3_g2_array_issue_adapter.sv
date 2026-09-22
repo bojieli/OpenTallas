@@ -116,7 +116,8 @@ module ot_a3_g2_array_issue_adapter #(
     input  wire          desc_valid,
     input  wire          desc_fault,
     // The fixed header, shape, dtype and scale binding are read for A/B/C.
-    // Object mapping and stride transport are still external to this adapter.
+    // C's first two element strides are captured for output transport; the
+    // adapter does not perform object address translation or bound checks.
     /* verilator lint_off UNUSEDSIGNAL */
     input  wire [1535:0] desc_data,
     /* verilator lint_on UNUSEDSIGNAL */
@@ -155,6 +156,7 @@ module ot_a3_g2_array_issue_adapter #(
     // Captured descriptor metadata, owned through array completion/drain.
     output wire          output_layout_valid,
     output reg [31:0]    output_object,
+    output reg [31:0]    output_row_stride,output_col_stride,
     output wire [15:0]   output_logical_cols,
     input  wire          array_done,
     input  wire [7:0]    array_error_code,
@@ -202,6 +204,9 @@ module ot_a3_g2_array_issue_adapter #(
     wire [7:0]  d_type_major     = desc_data[55:48];
     wire [31:0] d_payload_offset = desc_data[351:320];
     wire [7:0]  d_dtype          = desc_data[519:512];    // payload[7:0]
+    wire [7:0]  d_rank           = desc_data[527:520];
+    wire [31:0] d_stride0        = desc_data[927:896];
+    wire [31:0] d_stride1        = desc_data[959:928];
     wire [31:0] d_scale_object   = desc_data[575:544];    // payload[63:32]
     wire [31:0] d_dim0           = desc_data[735:704];    // payload[223:192]
     wire [31:0] d_dim1           = desc_data[767:736];    // payload[255:224]
@@ -356,7 +361,7 @@ module ot_a3_g2_array_issue_adapter #(
                 // Operand A: rows x depth, its dtype and its scale binding.
                 S_DESC_A: begin
                     if (desc_valid) begin
-                        if (!d_header_ok || !dim_ok(d_dim0) || !dim_ok(d_dim1)) begin
+                        if (!d_header_ok || d_rank!=2 || !dim_ok(d_dim0) || !dim_ok(d_dim1)) begin
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
                         end else begin
@@ -374,7 +379,7 @@ module ot_a3_g2_array_issue_adapter #(
                 // Operand B: cols x depth, its dtype and its scale binding.
                 S_DESC_B: begin
                     if (desc_valid) begin
-                        if (!d_header_ok || !dim_ok(d_dim0) || !dim_ok(d_dim1)) begin
+                        if (!d_header_ok || d_rank!=2 || !dim_ok(d_dim0) || !dim_ok(d_dim1)) begin
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
                         end else if (d_dim1[15:0] != array_depth) begin
@@ -403,7 +408,7 @@ module ot_a3_g2_array_issue_adapter #(
                 // precision; a host hint cannot silently change the ABI object.
                 S_DESC_C: begin
                     if (desc_valid) begin
-                        if (!d_header_ok || d_dim0 != {16'd0,array_rows} ||
+                        if (!d_header_ok || d_rank!=2 || d_dim0 != {16'd0,array_rows} ||
                             d_dim1 != {16'd0,logical_cols}) begin
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state <= S_REFUSE;
@@ -414,6 +419,8 @@ module ot_a3_g2_array_issue_adapter #(
                             state <= S_REFUSE;
                         end else begin
                             output_object <= desc_data[159:128];
+                            output_row_stride <= d_stride0;
+                            output_col_stride <= d_stride1;
                             array_out_fp32 <= (d_dtype == 8'h12);
                             state <= S_CHECK;
                         end

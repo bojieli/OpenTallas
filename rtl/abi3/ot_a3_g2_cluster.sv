@@ -201,6 +201,7 @@ module ot_a3_g2_cluster #(
     // offsets; part_addr remains the lane-local execution address.
     output wire output_layout_valid,
     output wire [31:0] output_object,output_element_base,
+    output wire [31:0] output_row_stride,output_col_stride,
     output wire [15:0] output_rows,output_logical_cols,output_padded_cols,
     output wire output_fp32,
     output wire weight_request_valid,
@@ -406,7 +407,7 @@ module ot_a3_g2_cluster #(
 
     // The issue adapter consumes header and shape through byte 95. Avoid
     // fetching the unused tail on each A/B/C admission; sequencer reads stay full.
-    ot_a3_g2_descriptor_store #(.AUXILIARY_WORDS(3)) descriptor_store (
+    ot_a3_g2_descriptor_store #(.AUXILIARY_WORDS(4)) descriptor_store (
         .clk(clk),
         .rst_n(rst_n),
         .desc_req(desc_req),
@@ -654,6 +655,7 @@ module ot_a3_g2_cluster #(
         .array_out_fp32(arr_out_fp32),
         .output_layout_valid(output_layout_valid),
         .output_object(output_object),.output_logical_cols(output_logical_cols),
+        .output_row_stride(output_row_stride),.output_col_stride(output_col_stride),
         .array_done(array_done),
         .array_error_code(array_error_code),
         .launch_count(adapter_launch_count),
