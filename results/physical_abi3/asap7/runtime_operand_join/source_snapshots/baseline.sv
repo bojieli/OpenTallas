@@ -52,17 +52,16 @@ module ot_a3_lq8_operand_join #(
     reg pending;
     reg [BUNDLE_BITS-1:0] reserved_bundle,delivered_bundle;
     assign {ws_rd_data,w_rd_data,s_rd_data,a_rd_data}=delivered_bundle;
-    // Reset ownership, not the two 288-bit payload stages. A consumed issue
-    // writes the reservation before pending permits delivery; cancelled data
-    // cannot be observed by a valid lane token after reset/clear.
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)pending<=0;
-        else if(clear)pending<=0;
-        else pending<=consume;
-    end
-    always @(posedge clk)begin
-        if(consume)reserved_bundle<={scale_b?auxiliary_ws_data:{8*LANES{1'b0}},
-            weight_data,scale_a?auxiliary_s_data:32'b0,auxiliary_a_data};
-        if(enabled && pending)delivered_bundle<=reserved_bundle;
+        if(!rst_n)begin
+            pending<=0;reserved_bundle<=0;delivered_bundle<=0;
+        end else if(clear)begin
+            pending<=0;reserved_bundle<=0;delivered_bundle<=0;
+        end else begin
+            pending<=consume;
+            if(consume)reserved_bundle<={scale_b?auxiliary_ws_data:{8*LANES{1'b0}},
+                weight_data,scale_a?auxiliary_s_data:32'b0,auxiliary_a_data};
+            if(pending)delivered_bundle<=reserved_bundle;
+        end
     end
 endmodule

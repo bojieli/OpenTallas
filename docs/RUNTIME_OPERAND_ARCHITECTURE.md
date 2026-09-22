@@ -1043,3 +1043,11 @@ entries together cannot exceed the configured depth. Clear resets all pointer
 and count ownership. This inserts one request stage without duplicating the
 160-bit identity payload, but increases same-capacity campaign cycles. It is a
 physical tradeoff option, not an established performance improvement.
+
+
+The operand join resets pending ownership only. Its reserved and delivered
+288-bit payload stages are written before any valid lane token consumes them;
+clear/reset cancel pending transfer, and data outputs are unspecified while no
+valid read is owed. The two-edge issue-to-delivery contract is unchanged.
+Disabled scale payloads still deliver zero. This removes wide asynchronous
+payload-reset trees; it does not relax identity checks or allow unreserved issue.

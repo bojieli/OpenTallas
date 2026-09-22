@@ -29,14 +29,26 @@ module tb_a3_lq8_operand_join;
         auxiliary_s_addr=9;refused();scale_a=0;#1;if(!operand_credit)$fatal(1,"disabled scale required");
         scale_a=1;auxiliary_s_addr=4;auxiliary_ws_addr=9;refused();auxiliary_ws_addr=5;
         issue_enable=1;tick();
-        if(w_rd_data!=0)$fatal(1,"delivery too early");
+        // Output payload is unspecified until the first reserved delivery.
         weight_data=128'hdef;auxiliary_a_data=64'h321;tick();
         if(w_rd_data!=128'h123 || a_rd_data!=64'h456 || s_rd_data!=32'habc || ws_rd_data!=64'h789)$fatal(1,"first bundle alignment");
         issue_enable=0;tick();
         if(w_rd_data!=128'hdef || a_rd_data!=64'h321)$fatal(1,"back-to-back bundle alignment");
         issue_enable=1;weight_data=128'hbad;tick();clear=1;refused();tick();
         clear=0;issue_enable=0;weight_valid=0;auxiliary_valid=0;tick();
-        if(w_rd_data!=0 || a_rd_data!=0)$fatal(1,"clear left pending delivery");
+        if(w_rd_data!==128'hdef || a_rd_data!==64'h321)$fatal(1,"cancelled bundle delivered");
+        // Restart must replace stale payload only on the second issue edge.
+        generation=8;weight_generation=8;auxiliary_generation=8;
+        weight_valid=1;auxiliary_valid=1;issue_enable=1;
+        weight_data=128'hfed;auxiliary_a_data=64'h654;
+        scale_a=0;scale_b=0;tick();
+        if(w_rd_data!==128'hdef)$fatal(1,"restart delivered too early");
+        issue_enable=0;tick();
+        if(w_rd_data!==128'hfed || a_rd_data!==64'h654 || s_rd_data!==0 || ws_rd_data!==0)$fatal(1,"restart delivery");
+        // Reset also cancels a pending reservation without publishing it.
+        issue_enable=1;weight_data=128'hbad;tick();rst_n=0;tick();
+        issue_enable=0;rst_n=1;tick();
+        if(w_rd_data!==128'hfed)$fatal(1,"reset left pending delivery");
         $display("PASS LQ8 operand join identity, readiness, full-rate alignment and flush");$finish;
     end
 endmodule

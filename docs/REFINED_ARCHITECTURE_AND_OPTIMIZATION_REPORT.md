@@ -1215,3 +1215,34 @@ later local-control edit. They do not establish a tighter validated clock or
 containing-service closure. Both records retain overall `not_met` because
 pre-layout STA failed. Evidence: `runtime_operand_cursor/routed_absolute_comparison.json`
 and its two route records under `results/physical_abi3/asap7/`.
+
+
+## Join payload reset overhead reduction
+
+The operand join now resets its pending ownership bit rather than both 288-bit
+payload stages. Issue captures all planes atomically; pending qualifies the
+following delivery edge. Clear/reset cancel pending transfer, and a new valid
+issue overwrites payload before its lane token consumes it. Data while inactive
+is unspecified, not reset to zero. Disabled scales still deliver zero. Identity
+comparisons, credit reservation and two-edge delivery timing are unchanged.
+
+Matched ASAP7 TT 1 ns synthesis area falls from 429.248 to 348.972 um² (18.70%);
+sequential area falls from 218.729 to 168.341 um² (23.04%). Pre-layout setup WNS
+improves from -2.2029 to -1.7696 ns, but still fails. Matched standalone routes
+have been launched with unchanged CTS12/fanout16/transition constraints. This
+is an area/control optimization, not yet a routed clock claim.
+
+All 66 focused tests pass; the join test explicitly checks cancelled pending
+payload, restart, reset and disabled scale delivery. Standalone lint is clean.
+The loaded G2 N56/K80 campaign retains 1,352 matching outputs, 720 activation
+fills, 560 weight fills and counter 24,995. Its prior exact record is archived
+under `results/rtl/before_join_payload/`; the queue comparison references that
+archive, preserving the original digest. Evidence: `runtime_operand_join/payload_comparison.json`
+and paired snapshots/records under `results/physical_abi3/asap7/`.
+
+The full integrated numerical corpus also passes 92 cases, 17,103 matching
+outputs, 18 faults and 115,748 checks, retaining aggregate operation cycles
+322,816. Its source hashes match current RTL. Evidence:
+`results/rtl/a3_lq8_join_payload.json`. Containing-service characterization of
+this join revision is still required after the ongoing source revisions finish;
+standalone results cannot establish integrated closure.
