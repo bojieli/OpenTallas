@@ -1119,3 +1119,18 @@ Evidence: `runtime_operand_cursor/local_control_comparison.json`, its paired
 pre-layout records and `source_snapshots/local_control.sv`; numerical evidence
 is `results/rtl/a3_lq8_cursor_local_control.json`. All-target characterization,
 large-row reuse and deployment transport remain unfinished.
+
+
+## Rolling activation scheduler routed acceptance
+
+The miss-aligned activation scheduler has completed ASAP7 TT routing at 1 ns
+with CTS12, fanout16 and the library transition limit. Routed setup WNS is
++0.228329 ns and hold WNS +0.0440081 ns, with zero setup/hold, slew,
+capacitance, fanout, DRC and antenna violations. Standard-cell area is
+495.545 um². All retained artifact hashes and the recorded RTL source hash
+match. This closes the routed standalone checkpoint for the implemented rolling
+window policy; the containing system and other targets remain unqualified.
+The record's overall status stays `not_met` because pre-layout STA failed.
+The reported slack-derived 1.296 GHz estimate is not a validated tighter clock.
+Evidence: `runtime_auxiliary_scheduler/pnr_rolling_cts12_1ns.json` and its
+retained artifacts under `results/physical_abi3/asap7/`.
