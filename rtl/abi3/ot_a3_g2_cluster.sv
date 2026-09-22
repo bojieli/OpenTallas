@@ -189,6 +189,8 @@ module ot_a3_g2_cluster #(
     // promise that this generation cannot return more data; writes_drained covers
     // every accepted partial write. Global reset must reset transport as well.
     input wire runtime_transport_ack,runtime_writes_drained,runtime_abort,
+    // Sticky external transport/auxiliary failure; cleared after cancellation.
+    input wire runtime_service_fault,
     output wire runtime_transport_cancel,
     output wire [31:0] runtime_generation,
     output wire weight_request_valid,
@@ -718,7 +720,7 @@ module ot_a3_g2_cluster #(
         wire [31:0] completed_generation;
         wire [7:0] completed_error;
         wire output_error,output_empty,output_credit,service_credit;
-        wire runtime_fault=protocol_error || output_error || (geometry_error && operand_request);
+        wire runtime_fault=runtime_service_fault || protocol_error || output_error || (geometry_error && operand_request);
         wire service_clear=lifetime_clear;
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)begin next_generation<=0;command_pending<=0;end

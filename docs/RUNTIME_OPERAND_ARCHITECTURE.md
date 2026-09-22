@@ -794,3 +794,43 @@ sources are hashed in `results/rtl/a3_g2_runtime_auxiliary.json`. This does not
 qualify scaled formats through a loaded program or general deployment memory
 mapping; the focused test separately verifies both scale planes and their reuse.
 Physical characterization and multi-row weight reuse remain pending.
+
+
+## Synthesizable auxiliary refill scheduler
+
+The current `--auxiliary-windows` campaign uses
+`ot_a3_auxiliary_window_scheduler` instead of its earlier behavioral manager.
+The scheduler captures one generation and three 32-bit base/word-count pairs
+at command acceptance. Zero-length unused planes are legal; attempting to fill
+one faults. For the lowest missing plane, registered stages check bounds,
+subtract its base, align the offset to a 256-word page, compute the remaining
+extent and publish the exact base/length. A plane ending exactly at 2^32 is
+legal. Immutable captured bounds survive live command-input changes.
+
+One burst is outstanding. Its tag combines operation generation and a monotonic
+burst serial; every accepted response must echo that tag and the next index.
+The scheduler installs the window before issuing fetch, forwards only matching
+responses into SRAM, and advances the serial after the last accepted fill.
+Wrong, duplicate, stale or unsolicited responses raise sticky protocol_error
+and cannot publish data. Window/fetch/fill outputs obey ready/valid stalls.
+Clear cancels scheduler state and must coincide with coordinated cancellation
+of external transport and SRAM residency. The caller must not reuse generation
+identity while an older response can still return.
+
+The parent connects scheduler/window faults to G2's new
+`runtime_service_fault` input. This reports local FE through the existing ENGINE
+trap path, resets arithmetic, drains queued writes and waits for transport
+acknowledgement. Integrators with no external service fault source must tie the
+input low. Legacy mode ignores it. The program test corrupts an auxiliary burst
+tag and verifies no output before error completion and successful restart.
+
+`results/rtl/a3_g2_runtime_auxiliary_scheduler.json` records eight transactions,
+584 accepted matching outputs, and 480 activation fill words serving 1,440 reads
+in the first successful operation. External request and response stalls are
+explicit. `results/rtl/a3_auxiliary_window_scheduler.json` records focused tests
+for all planes, unaligned bases, 256-word and partial tails, address-space end,
+invalid bounds, input mutation, handshake stalls, tag/index faults and clear.
+The focused suite has 35 passing tests; standalone scheduler lint is clean.
+This remains service-word addressing. The production deployment mapper and
+external burst transport are not implemented by this scheduler, and no routed
+frequency or area claim follows from these simulations.

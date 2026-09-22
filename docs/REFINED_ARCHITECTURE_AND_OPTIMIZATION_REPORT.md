@@ -1,7 +1,7 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes reusable auxiliary SRAM windows after `b0b2105a`;
+Implementation includes the RTL auxiliary refill scheduler after `2b5f7540`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
@@ -22,11 +22,11 @@ or whole-chip performance claim is made.
 | Area | Previous execution path | Refined architecture | Current implementation status |
 |---|---|---|---|
 | Runtime delivery | G2 host writes globally disabled while busy; operands preloaded | Separate idle-only program loader from runtime operand transport | Connected in optional G2 runtime mode; bounded BF16 program-driven regression added |
-| Storage feasibility | Finite staging cannot hold complete Qwen contractions | Tile large operations through bounded scratchpads while keeping accumulators live | Weight stream and activation windows cross storage boundaries during one live contraction; production refill manager pending |
+| Storage feasibility | Finite staging cannot hold complete Qwen contractions | Tile large operations through bounded scratchpads while keeping accumulators live | Weight stream and activation windows cross storage boundaries during one live contraction; deployment address translation pending |
 | Weight banks | Shared address and global read/write exclusion | Independent bank addresses, tagged ownership, opposite-bank refill | Two 512x128 SRAM wrappers verified |
 | Prefetch | Fixed-latency reads assumed at arithmetic issue | Independent tile read cursor and finite FIFO | Four-entry weight FIFO; copies survive bank release and overwrite |
 | Operand readiness | No original issue backpressure | Grant credit only for a complete, correctly identified operand bundle | LQ8 issue stalls, generation/address join and response timing verified |
-| Auxiliary storage | Fixed windows or direct external-array responses | Three independently rebased, generation-tagged SRAM windows with exact fills | Synthesizable service tested on G2 auxiliary port; external refill manager still modeled |
+| Auxiliary storage | Fixed windows or direct external-array responses | Three independently rebased, generation-tagged SRAM windows with exact fills | SRAM service and RTL refill scheduler tested on G2 auxiliary port; external transport modeled |
 | Auxiliary requests | Initial runtime adapter requested only the current issue | Independent future-address cursor plus reserved response slots | Captured RTL geometry admission, cursor and two-entry queue integrated |
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
 | Reuse | Stream execution repeats weights for rows | Retain resident weight tiles for bounded multi-row execution | Bank retain/replay verified; multi-row compute scheduling pending |
@@ -68,7 +68,7 @@ flowchart LR
     A --> C[Future auxiliary cursor]
     C --> Q[Two-entry auxiliary request and response queue]
     X[Reusable activation and scale SRAM windows] --> Q
-    E[External window refill manager] --> X
+    E[RTL bounded refill scheduler] --> X
     F --> J[Identity check and complete-bundle credit]
     Q --> J
     J --> L[LQ8 with captured configuration and live accumulators]
@@ -81,7 +81,7 @@ flowchart LR
 
 The diagram describes the connected runtime path, not a fully qualified deployed
 machine. The auxiliary SRAM service is now RTL, tested on the G2 external auxiliary
-port; its window manager and deployment address translation remain modeled. Runtime output
+port; its refill scheduler is RTL and deployment address translation remains modeled. Runtime output
 writes now use a bounded ready/valid queue, with capacity reserved before the
 final K-group issues. Completion checks internal queue emptiness as well as the
 external write-drain acknowledgement. The legacy mode retains its pulse port. Runtime mode is opt-in
@@ -184,8 +184,8 @@ commands and source/artifact digests are retained in the records and checkers.
    tests without stale credits, lost outputs or unexplained permanent stalls.
 2. **Reusable activation and scale storage.** Replace external-array models with
    bounded SRAM service and address translation. The three-plane SRAM window
-   service now exists and is tested through G2; implement its production refill
-   manager and deployment address translation next. Measure bytes, bank conflicts,
+   service now exists and is tested through G2; its production refill
+   scheduler is now RTL. Implement deployment address translation next. Measure bytes, bank conflicts,
    starvation and live capacity for all required planes.
 3. **Multi-row weight reuse.** Schedule bounded independent accumulators around
    resident tiles for prefill; retain decode's column-parallel behavior. Require
@@ -307,3 +307,39 @@ tests; the new service has clean standalone lint. SRAM behavior is simulated;
 new routed area, frequency and power remain unmeasured. Production window
 scheduling, deployment byte-to-word mapping and scaled-format program coverage
 are still required before promoting this service into a complete memory system.
+
+
+## RTL auxiliary refill scheduler checkpoint
+
+The fixture's behavioral miss-to-window controller has been replaced by
+`ot_a3_auxiliary_window_scheduler`. It captures generation and service-word
+bounds once per operation, selects a missing plane, validates its address, and
+plans a page relative to the plane base. Separate registered stages handle
+bounds, offset, page remainder and final burst geometry. No per-word divider or
+multiplier is used. Unaligned bases do not cause reads before an object; final
+bursts stop at the exact declared extent, including a legal end at 2^32.
+
+The scheduler installs ownership before requesting a burst and publishes fills
+only for the expected generation/serial tag and ordered index. Window install,
+fetch and fill tolerate independent stalls. Clear requires coordinated
+transport cancellation; stale or unsolicited responses fault. G2 now accepts
+`runtime_service_fault`, allowing an attached auxiliary service to enter its
+existing FE/ENGINE drain-and-complete path. Runtime integrations must connect
+this input, or tie it low when no external service fault source exists.
+
+The admitted M=6,N=24,K=80 program runs through the RTL scheduler and SRAM with
+stalled external burst transport. Its first operation retains 480 fill words
+for 1,440 reads. Eight transactions test success, explicit abort, weight-transport
+fault, queued-output abort, auxiliary-transport fault and recovery; 584 accepted
+outputs match the functional Device. Additional scheduling/transport cycles are
+charged, not claimed as a speedup. Evidence:
+`results/rtl/a3_g2_runtime_auxiliary_scheduler.json` and
+`results/rtl/a3_auxiliary_window_scheduler.json`.
+
+The focused suite has 35 passing tests, with clean standalone scheduler lint.
+The controller and SRAM are connected outside the G2 wrapper through its public
+auxiliary ports. The external burst source and admitted service-word bounds are
+still supplied by the fixture. Production deployment byte/object translation,
+scaled-format program coverage, transport integration, multi-row weight reuse
+and routed physical characterization remain open. Earlier auxiliary-window
+results describe the historical behavioral-manager checkpoint.

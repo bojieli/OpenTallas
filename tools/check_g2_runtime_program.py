@@ -18,7 +18,7 @@ args = parser.parse_args()
 rows = 6 if args.output_backpressure else 1
 cols = 24 if args.auxiliary_windows else 8
 record_name = (
-    "g2_runtime_auxiliary"
+    "g2_runtime_auxiliary_scheduler"
     if args.auxiliary_windows
     else "g2_runtime_output"
     if args.output_backpressure
@@ -133,6 +133,7 @@ tracked = sorted(
             "tests/test_g2_issue_contract.py",
             "tests/test_reserved_output_queue.py",
             "tests/test_runtime_auxiliary_windows.py",
+            "tests/test_auxiliary_window_scheduler.py",
         ]
         + [
             str(p.relative_to(ROOT))
@@ -179,6 +180,7 @@ result = {
     "status": "pass",
     "output_backpressure": args.output_backpressure,
     "auxiliary_sram_windows": args.auxiliary_windows,
+    "rtl_auxiliary_scheduler": args.auxiliary_windows,
     "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
     "sources": hashes,
     "program_sha256": hashlib.sha256(image).hexdigest(),

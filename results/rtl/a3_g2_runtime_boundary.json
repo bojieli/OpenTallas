@@ -10,6 +10,7 @@
     "rtl/abi3/ot_a3_attention_qk_walk.sv": "6dd460362c0253cadfade71d6590a4a73d6120fbf56868ca2479d2e5a1cebb8c",
     "rtl/abi3/ot_a3_attention_softmax_block.sv": "a8c70e8481707f5a19ad0e48b6f9008776d1c668a524511e8dcc6db6d19c15f2",
     "rtl/abi3/ot_a3_attention_sparse.sv": "7d576ff2c3e5c0b7734be29623fa70c32fa8c199bf9de5cd68f71621cc6e8d84",
+    "rtl/abi3/ot_a3_auxiliary_window_scheduler.sv": "831e964eeb599e696e022012b9bd0a20084db550fac9e202d04d0ed6a8bc8a54",
     "rtl/abi3/ot_a3_collective_engine.sv": "b4e28febf1ba99e87eff5d722a666375c76c938a6887f5ebfa79277d8a079f8d",
     "rtl/abi3/ot_a3_communication_decoder.sv": "9a354e38db995f5f8b4536656280074a9ac9427c79c5e87b9001bbcd9ce9f405",
     "rtl/abi3/ot_a3_dependence_table.sv": "7e6a7e28e4d4042f2aa5919317b8e8cecd8024f9de796b40fd22d2d59b5fa7ad",
@@ -32,7 +33,7 @@
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
     "rtl/abi3/ot_a3_g2_array_issue_adapter.sv": "947517a3290b7229d4d4f7459c1c4044f7fb397c5e1a409e7a84efcd51d0b09f",
     "rtl/abi3/ot_a3_g2_array_staging.sv": "8a525191c355af62966958ed2e663108c99e0be78b4487b2040141b8c129b16f",
-    "rtl/abi3/ot_a3_g2_cluster.sv": "e08706eeeb3816b2a085037ccae42218e84bd42557221db4d8b8746bcd6e5dcb",
+    "rtl/abi3/ot_a3_g2_cluster.sv": "11e728c66d3c54850b9c91a5a0245aa56769bbde0a3d73b862fc6a26df10aa0d",
     "rtl/abi3/ot_a3_g2_descriptor_store.sv": "4a3a6834829ccdcbebf16c187bf4e86279cbf3b642e691b1aa69d91df8a5c0f1",
     "rtl/abi3/ot_a3_g2_issue_record_ram.sv": "7ed2ce5fd92488eac16df022ab8e7c3ee430ba5e700f307404e745f62e698f80",
     "rtl/abi3/ot_a3_g2_program_store.sv": "34324981faa0f7ddb94649ddbdfc30c901edefa0cffd2ee210532cef1e173a78",
@@ -87,6 +88,7 @@
     "rtl/abi3/ot_a3_route_index_topk.sv": "16fbd1e11b899bbb17f22b00f7c40da58471b92bf2b1378b4884090082979761",
     "rtl/abi3/ot_a3_route_weight_normalize.sv": "5533fbceb04a8176b68630466356c6ec1ecd9b884c8aab0fd15f764147b22620",
     "rtl/abi3/ot_a3_route_window_index.sv": "b2432ad9934709aa278dd62aaa3861c93a735654c6599412bc5025e480cad748",
+    "rtl/abi3/ot_a3_runtime_auxiliary_windows.sv": "244e6028a6553e4332945bfd668ab4e4cccc7a038c0bcebefa85985f736e62ac",
     "rtl/abi3/ot_a3_runtime_operation_lifetime.sv": "eaa9f8e6790773490eb35ca0a0b8d8043e915f56c028e2861a8ba91ec17c4cdb",
     "rtl/abi3/ot_a3_runtime_weight_banks.sv": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
     "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
@@ -176,7 +178,7 @@
     "rtl/proto/ot_mac_tile.sv": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
     "rtl/proto/ot_mac_tile_h.sv": "1f3ac8099b0bdef7f2e38e2c1c6b65f68416965f38f2e63e8458c456e976f63d",
     "rtl/proto/ot_vector_add_unit.sv": "8577e2247b803e95bbcae6d7359ccd2e39451bcd216cc9411d5dd818a3f76986",
-    "rtl/test/tb_a3_g2_runtime_boundary.sv": "3e680026bf41fa6acb1908b4ebe140e0251c298195ad15dd8e4d379a31d08bdf"
+    "rtl/test/tb_a3_g2_runtime_boundary.sv": "736203eb5a4436b969c9ca3fe9c3baf9e7ed65e8584d9ea50c1f924928c1a4f8"
   },
   "command": [
     "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
@@ -205,5 +207,5 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_boundary.sv"
   ],
-  "stdout": "PASS G2 runtime boundary multi-tile arithmetic, abort, drain and restart fills=194\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_boundary.sv:83: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 7us; walltime 0.003 s; speed 2.113 ms/s\n- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB\n"
+  "stdout": "PASS G2 runtime boundary multi-tile arithmetic, abort, drain and restart fills=194\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_boundary.sv:83: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 7us; walltime 0.004 s; speed 1.712 ms/s\n- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB\n"
 }

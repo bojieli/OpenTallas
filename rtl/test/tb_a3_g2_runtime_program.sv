@@ -37,20 +37,47 @@ module tb_a3_g2_runtime_program;
  wire [31:0] mem_generation,mem_w;
  wire [63:0] mem_a;
  wire [2:0] mem_missing;
- reg [1:0] mem_state=0;
- reg [31:0] mem_base=0;
- reg [8:0] mem_extent=0,mem_index=0;
- wire mem_window_ready,mem_fill_ready;
+ wire [31:0] mem_base,mem_window_generation,mem_fill_generation;
+ wire [8:0] mem_extent,mem_fill_index;
+ wire [1:0] mem_plane,mem_fill_plane;
+ wire mem_window_valid,mem_fill_valid,mem_window_ready,mem_fill_ready;
+ wire [63:0] mem_fill_data;
+ wire manager_active,manager_error,manager_ready,fetch_valid,fetch_response_ready;
+ wire [63:0] fetch_tag;
+ wire [1:0] fetch_plane;
+ wire [31:0] fetch_address;
+ wire [8:0] fetch_words;
+ reg fetch_active=0;
+ reg [63:0] saved_fetch_tag=0;
+ reg [31:0] saved_fetch_address=0;
+ reg [8:0] saved_fetch_words=0,fetch_index=0;
  integer mem_fills=0,mem_windows=0,mem_requests=0;
  integer first_mem_fills=0,first_mem_requests=0;
- // Fixture window manager supplies exact bounded pages; SRAM data is read by
- // synthesizable service RTL. Deployment byte-to-word translation is external.
+ // RTL owns window planning/fill publication. The fixture supplies only the
+ // external burst transport and admitted plane bounds in service-word units.
+ ot_a3_auxiliary_window_scheduler auxiliary_manager(
+  .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
+  .command_valid(SRAM_AUX && auxiliary_request_valid && !manager_active),.command_ready(manager_ready),
+  .command_generation(auxiliary_request_generation),.command_bases(96'd0),
+  .command_words({32'd0,32'd0,32'(80*ROWS)}),
+  .request_valid(SRAM_AUX && auxiliary_request_valid),.request_generation(auxiliary_request_generation),
+  .request_addresses({32'd0,32'd0,auxiliary_request_a}),.missing_planes(mem_missing),
+  .window_valid(mem_window_valid),.window_ready(mem_window_ready),.window_plane(mem_plane),
+  .window_generation(mem_window_generation),.window_base(mem_base),.window_words(mem_extent),
+  .fill_valid(mem_fill_valid),.fill_ready(mem_fill_ready),.fill_plane(mem_fill_plane),
+  .fill_generation(mem_fill_generation),.fill_index(mem_fill_index),.fill_data(mem_fill_data),
+  .fetch_valid(fetch_valid),.fetch_ready(!fetch_active && cycles%5!=0),.fetch_tag(fetch_tag),
+  .fetch_plane(fetch_plane),.fetch_address(fetch_address),.fetch_words(fetch_words),
+  .response_valid(fetch_active && cycles%3!=0),.response_ready(fetch_response_ready),
+  .response_tag(saved_fetch_tag),.response_index(fetch_index),
+  .response_data(activation_image[saved_fetch_address+fetch_index]),
+  .active(manager_active),.protocol_error(manager_error));
  ot_a3_runtime_auxiliary_windows auxiliary_memory(
   .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
-  .window_valid(SRAM_AUX && mem_state==1),.window_ready(mem_window_ready),
-  .window_plane(2'd0),.window_generation(runtime_generation),.window_base(mem_base),.window_words(mem_extent),
-  .fill_valid(SRAM_AUX && mem_state==2),.fill_ready(mem_fill_ready),.fill_plane(2'd0),
-  .fill_generation(runtime_generation),.fill_index(mem_index),.fill_data(activation_image[mem_base+mem_index]),
+  .window_valid(mem_window_valid),.window_ready(mem_window_ready),
+  .window_plane(mem_plane),.window_generation(mem_window_generation),.window_base(mem_base),.window_words(mem_extent),
+  .fill_valid(mem_fill_valid),.fill_ready(mem_fill_ready),.fill_plane(mem_fill_plane),
+  .fill_generation(mem_fill_generation),.fill_index(mem_fill_index),.fill_data(mem_fill_data),
   .request_valid(SRAM_AUX && auxiliary_request_valid),.request_ready(mem_request_ready),
   .request_generation(auxiliary_request_generation),.request_a(auxiliary_request_a),
   .request_s(32'd0),.request_ws(32'd0),.request_w(auxiliary_request_w),
@@ -59,24 +86,20 @@ module tb_a3_g2_runtime_program;
   .response_generation(mem_generation),.response_w(mem_w),.response_a_data(mem_a),
   .response_s_data(),.response_ws_data(),.protocol_error(mem_error));
  always @(posedge clk)begin
-  if(!rst_n || runtime_transport_cancel)mem_state<=0;
+  if(!rst_n || runtime_transport_cancel)fetch_active<=0;
   else if(SRAM_AUX)begin
-   if(mem_error)$fatal(1,"auxiliary memory protocol error");
+   if((mem_error || manager_error) && phase!=5)$fatal(1,"unexpected auxiliary service error");
    if(auxiliary_request_valid && mem_request_ready)mem_requests<=mem_requests+1;
-   case(mem_state)
-    0:if(auxiliary_request_valid && mem_missing[0])begin
-      mem_base<=auxiliary_request_a & 32'hffffff00;
-      mem_extent<=9'(((80*ROWS-(auxiliary_request_a & 32'hffffff00))<256)?
-                  (80*ROWS-(auxiliary_request_a & 32'hffffff00)):256);
-      mem_state<=1;
-     end
-    1:if(mem_window_ready)begin mem_state<=2;mem_index<=0;mem_windows<=mem_windows+1;end
-    2:if(mem_fill_ready)begin
-      mem_fills<=mem_fills+1;
-      if(mem_index==mem_extent-1)mem_state<=0;else mem_index<=mem_index+1'b1;
-     end
-    default:mem_state<=0;
-   endcase
+   if(mem_window_valid && mem_window_ready)mem_windows<=mem_windows+1;
+   if(mem_fill_valid && mem_fill_ready)mem_fills<=mem_fills+1;
+   if(fetch_valid && !fetch_active && cycles%5!=0)begin
+    if(fetch_plane!=0 || fetch_address+fetch_words>80*ROWS)$fatal(1,"unbounded auxiliary burst");
+    fetch_active<=1;saved_fetch_tag<=fetch_tag ^ ((phase==5)?64'd1:64'd0);saved_fetch_address<=fetch_address;
+    saved_fetch_words<=fetch_words;fetch_index<=0;
+   end
+   if(fetch_active && cycles%3!=0 && fetch_response_ready)begin
+    if(fetch_index==saved_fetch_words-1)fetch_active<=0;else fetch_index<=fetch_index+1'b1;
+   end
   end
  end
  ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1)) dut(
@@ -87,7 +110,7 @@ module tb_a3_g2_runtime_program;
  .cfg_array_group(8'd1),.cfg_array_block_a(16'd0),.cfg_array_block_rows_a(16'd0),.cfg_array_block_b(16'd0),
  .cfg_array_scale_a_base(32'd0),.cfg_array_ws_base(32'd0),.cfg_array_out_fp32(1'b0),
  .done(done),.complete(complete),.trapped(trapped),.trap_class(trap_class),.count_issued(count_issued),.count_retired(count_retired),
- .runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
+ .runtime_service_fault(SRAM_AUX && (mem_error || manager_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),
  .weight_request_address(weight_request_address),.weight_request_words(weight_request_words),
@@ -189,6 +212,13 @@ module tb_a3_g2_runtime_program;
    runtime_abort=1;tick();runtime_abort=0;tail_hold=1;release_output=1;drain(8'hff);
    if(seen[7:0]!=8'hff || outputs!=3*ROWS*COLS+8)$fatal(1,"queued abort result lost");
    if(output_stalls==0 || reservation_stalls==0)$fatal(1,"backpressure not exercised");
+  end
+  if(SRAM_AUX)begin
+   // Corrupt an auxiliary burst identity and require precise G2 error/recovery.
+   phase=5;launch();drain(8'hfe);
+   if(seen!=0)$fatal(1,"auxiliary fault wrote output");
+   phase=1;launch();drain(0);
+   if(seen!={ROWS*COLS{1'b1}})$fatal(1,"auxiliary fault recovery lost outputs");
   end
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);
   $display("auxiliary SRAM windows=%0d fill_words=%0d read_requests=%0d",mem_windows,mem_fills,mem_requests);

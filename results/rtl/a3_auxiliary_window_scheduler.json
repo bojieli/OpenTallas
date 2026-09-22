@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "scope": "Three-plane bounded refill scheduler, captured word bounds, exact tails, response faults, stalls and cancellation. Not deployment byte-address translation or physical closure.",
+  "sources": {
+    "rtl/abi3/ot_a3_auxiliary_window_scheduler.sv": "831e964eeb599e696e022012b9bd0a20084db550fac9e202d04d0ed6a8bc8a54",
+    "tests/test_auxiliary_window_scheduler.py": "07993998e04522f24bb05763a31cd2fa67c001712f207544a2296cee6e594101"
+  },
+  "runs": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_auxiliary_window_scheduler.py"
+      ],
+      "stdout": ".                                                                        [100%]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--Wall",
+        "--top-module",
+        "ot_a3_auxiliary_window_scheduler",
+        "rtl/abi3/ot_a3_auxiliary_window_scheduler.sv"
+      ],
+      "stdout": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.039 MB sources in 2 modules, into 0.056 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.010 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.010 s on 1 threads; allocated 33.152 MB\n",
+      "stderr": ""
+    }
+  ]
+}
