@@ -8,14 +8,19 @@ ROOT=Path(__file__).resolve().parents[1]
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
 @pytest.mark.parametrize('burst', [1, 32, 512])
 @pytest.mark.parametrize('resident', [0, 1])
-def test_transport(tmp_path, burst, resident):
-    rows,cols,depth=2,53,80
+@pytest.mark.parametrize('pass_first,compact,depth', [(0,0,80),(1,0,160),(1,1,160),(1,1,342)])
+def test_transport(tmp_path, burst, resident, pass_first, compact, depth):
+    rows,cols=2,53
     base,s0,s1=7,111,2
     capacity=2*(base+(cols-1)*s0+(depth-1)*s1+1)
     expected=[]
-    def byte(a): return (a*17+3)&255
-    for row in range(rows):
-        for p in range(0,(cols+7)//8,3):
+    def byte(a): return (a*17+(a>>8)*13+3)&255
+    groups=(cols+7)//8
+    order=[(row,p) for row in range(rows) for p in range(0,groups,3)]
+    if pass_first:
+        order.sort(key=lambda rp:(rp[1],rp[0]))
+    for row,p in order:
+        if not(compact and row>0 and min(3,groups-p)*depth<=1024):
             for k in range(depth):
                 for c in range(p,min(p+3,(cols+7)//8)):
                     word=0
@@ -25,10 +30,11 @@ def test_transport(tmp_path, burst, resident):
                             word|=(byte(a)|(byte(a+1)<<8))<<(16*lane)
                     expected.append(word)
     (tmp_path/'expected.hex').write_text(''.join(f'{w:032x}\n' for w in expected))
+    total=groups*depth if resident and not pass_first else len(expected)
     bench=tmp_path/'tb.sv'
     bench.write_text(r'''
 module tb;
-parameter integer BURST=32,RESIDENT=0;
+parameter integer BURST=32,RESIDENT=0,PASS_FIRST=0,COMPACT=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,request_valid=0;
 reg [31:0] command_generation=9,command_object=13,command_service_base=32'hfffff000;
@@ -56,12 +62,12 @@ wire response_ready=ticks%7<4;
 reg [127:0] expected[0:1119];
 integer expected_index=0;
 reg [63:0] expected_tag;
-ot_a3_bf16_weight_transport dut(.*);
-function automatic [7:0] byte_value(input [63:0] a);byte_value=8'(a*17+3);endfunction
+ot_a3_bf16_weight_transport #(.PASS_FIRST(PASS_FIRST),.COMPACT_PASS_REUSE(COMPACT)) dut(.*);
+function automatic [7:0] byte_value(input [63:0] a);byte_value=8'(a*17+(a>>8)*13+3);endfunction
 always @*for(integer l=0;l<16;l=l+1)memory_data[l*8+:8]=byte_value(saved_offset+64'(l));
 reg held=0;reg [201:0] payload;
 always @(posedge clk)begin
- ticks<=ticks+1;if(ticks>200000)$fatal(1,"timeout");
+ ticks<=ticks+1;if(ticks>1000000)$fatal(1,"timeout");
  if(clear || !rst_n)begin pending<=0;held<=0;end
  else begin
   if(held && (!response_valid || payload!=={response_tag,response_index,response_data}))$fatal(1,"response changed while stalled");
@@ -121,11 +127,16 @@ initial begin
  $display("PASS transport words=%0d checks=%0d",received,checks);$finish;
 end
 endmodule
-'''.replace('command_object_bytes=11876',f'command_object_bytes={capacity}'))
+'''.replace('command_object_bytes=11876',f'command_object_bytes={capacity}')
+       .replace('command_depth=80',f'command_depth={depth}')
+       .replace("command_service_base=32'hfffff000", "command_service_base=32'hffff0000")
+       .replace('expected[0:1119]',f'expected[0:{len(expected)-1}]')
+       .replace('total=RESIDENT?560:1120;',f'total={total};'))
     sim=tmp_path/'sim'
     sources=['ot_a3_weight_layout_cursor','ot_a3_bf16_weight_gather','ot_a3_bf16_weight_transport']
     subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.BURST={burst}',f'-Ptb.RESIDENT={resident}','-o',str(sim),
+                    f'-Ptb.PASS_FIRST={pass_first}',f'-Ptb.COMPACT={compact}',
                     *[str(ROOT/'rtl/abi3'/f'{s}.sv') for s in sources],str(bench)],check=True,capture_output=True,text=True)
     r=subprocess.run(['vvp',str(sim)],cwd=tmp_path,capture_output=True,text=True,timeout=60)
     assert r.returncode==0,r.stdout+r.stderr
-    assert f'PASS transport words={560 if resident else 1120} checks=7' in r.stdout
+    assert f'PASS transport words={total} checks=7' in r.stdout

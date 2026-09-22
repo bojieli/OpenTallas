@@ -127,9 +127,10 @@ service, output writer and standalone layout cursor, and at 2 ns for the current
 Sinkhorn configuration. These are block/configuration results, not a whole-chip
 clock guarantee or measured silicon performance.
 
-The latest completed final-line containing weight-transport route has
-+0.0547659 ns setup slack but nine slew violations at 1 ns. A current-source
-route with 10% slew repair margin is active; the acceptance limits are unchanged. Two integrated G2 runs also remain
+The pre-compact containing weight transport now passes all reported checks at
+1 ns with 10% slew repair margin: +0.0169131 ns setup and +0.0361992 ns hold
+slack, 6,141.480 µm² cells. Its exact sources are retained. The new compact-fetch
+mode is functionally tested and under separate physical characterization. Two integrated G2 runs also remain
 active; their launch sources predate the current input transport, so they can
 provide historical baselines only. Current-source integrated G2 routing is still
 required. No energy percentage or all-target completion is established.

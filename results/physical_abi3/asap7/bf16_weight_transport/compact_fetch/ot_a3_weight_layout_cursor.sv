@@ -11,10 +11,7 @@ module ot_a3_weight_layout_cursor #(
  parameter integer INTERLEAVE=3,
  // Reuse a complete K pass across rows before advancing column groups.
  // The caller must use the same schedule for operands, execution and output.
- parameter bit PASS_FIRST=0,
- // Fetch a reusable pass only once; larger passes still visit every row.
- // This is the fetch walk, not the arithmetic issue walk.
- parameter bit COMPACT_PASS_REUSE=0
+ parameter bit PASS_FIRST=0
 )(
  input wire clk,rst_n,clear,
  input wire command_valid, output wire command_ready,
@@ -45,24 +42,19 @@ module ot_a3_weight_layout_cursor #(
  reg [47:0] column_extent,k_extent;
  reg [48:0] extent;
  reg bound_overflow;
- reg [31:0] remaining_words,full_pass_words;
- reg full_pass_reusable;
  wire [15:0] pass_groups=groups_left<16'(INTERLEAVE)?groups_left:16'(INTERLEAVE);
  wire end_column=16'(column_in_pass)==pass_groups-1'b1;
  wire end_k=k_index==depth-1'b1;
  wire end_pass=groups_left<=16'(INTERLEAVE);
- wire compact_pass=COMPACT_PASS_REUSE && (full_pass_reusable || remaining_words<=1024);
- wire end_row=compact_pass || row_index==rows-1'b1;
  wire take=coordinate_valid && coordinate_ready;
  assign command_ready=rst_n && !clear && state==IDLE && !command_error;
  assign coordinate_valid=rst_n && !clear && state==RUN && !command_error;
- assign last=end_column && end_k && end_pass && end_row;
+ assign last=end_column && end_k && end_pass && row_index==rows-1'b1;
  genvar l;
  generate for(l=0;l<8;l=l+1)begin:g_mask
   assign lane_mask[l]=({1'b0,column_base}+17'(l))<{1'b0,cols};
  end endgenerate
  initial if(INTERLEAVE<1 || INTERLEAVE>65535)$fatal(1,"invalid interleave");
- initial if(COMPACT_PASS_REUSE && !PASS_FIRST)$fatal(1,"compact reuse requires pass-first order");
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin state<=IDLE;command_error<=0;end
   else if(clear)begin state<=IDLE;command_error<=0;end
@@ -97,9 +89,6 @@ module ot_a3_weight_layout_cursor #(
   // Two 8x32 partial products per dimension break the routed 16x32
   // admission path. Registers add two admission cycles, none per coordinate.
   if(state==MULTIPLY)begin
-   remaining_words<=32'(groups_total)*32'(depth);
-   full_pass_words<=32'(INTERLEAVE)*32'(depth);
-   full_pass_reusable<=32'(depth)<=32'(1024/INTERLEAVE);
    column_lo<=40'(last_column[7:0])*40'(lane_stride);
    column_hi<=40'(last_column[15:8])*40'(lane_stride);
    k_lo<=40'(last_k[7:0])*40'(k_step);
@@ -123,7 +112,7 @@ module ot_a3_weight_layout_cursor #(
      column_base<=column_base-(16'(column_in_pass)<<3);
     end else begin
      k_index<=0;
-     if(PASS_FIRST && !end_row)begin
+     if(PASS_FIRST && row_index!=rows-1'b1)begin
       row_index<=row_index+1'b1;
       column_base<=column_base-(16'(column_in_pass)<<3);
       k_base<=pass_base;element_base<=pass_base;
@@ -132,7 +121,6 @@ module ot_a3_weight_layout_cursor #(
       pass_base<=origin;k_base<=origin;element_base<=origin;
      end else begin
       if(PASS_FIRST)row_index<=0;
-      remaining_words<=remaining_words-full_pass_words;
       column_base<=column_base+16'd8;groups_left<=groups_left-16'(INTERLEAVE);
       pass_base<=pass_base+pass_step;k_base<=pass_base+pass_step;element_base<=pass_base+pass_step;
      end

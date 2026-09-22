@@ -7,9 +7,7 @@
 module ot_a3_bf16_weight_transport #(
  parameter integer INTERLEAVE=3,
  parameter bit RETAIN_LINES=1,
- parameter bit WORD_HANDOFF=1,
- parameter bit PASS_FIRST=0,
- parameter bit COMPACT_PASS_REUSE=0
+ parameter bit WORD_HANDOFF=1
 )(
  input wire clk,rst_n,clear,
  input wire command_valid,output wire command_ready,
@@ -63,8 +61,7 @@ module ot_a3_bf16_weight_transport #(
  assign protocol_error=local_error || cursor_error || gather_error;
  // Row/K coordinates are observation-only at this boundary.
  /* verilator lint_off PINCONNECTEMPTY */
- ot_a3_weight_layout_cursor #(.INTERLEAVE(INTERLEAVE),.PASS_FIRST(PASS_FIRST),
-  .COMPACT_PASS_REUSE(COMPACT_PASS_REUSE)) cursor(
+ ot_a3_weight_layout_cursor #(.INTERLEAVE(INTERLEAVE)) cursor(
   .clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(launch),.command_ready(cursor_command_ready),
   .command_generation(command_generation),.command_rows(command_rows),.command_cols(command_cols),.command_depth(command_depth),
   .command_element_base(command_element_base),.command_column_stride(command_column_stride),.command_k_stride(command_k_stride),

@@ -631,3 +631,37 @@ limits. Area and timing remain unqualified until that run completes.
 The compact/fallback coordinate sequence, runtime-service integration, output
 order validation and tail masking remain required before enabling pass reuse
 in G2. No additional SRAM has been introduced.
+
+## Compact descriptor fetch sequence
+
+The descriptor cursor and composed BF16 weight transport now expose
+`PASS_FIRST` and `COMPACT_PASS_REUSE`. Compact mode emits one copy of a pass
+when its packed size is at most 1,024 words; otherwise it emits one copy per row.
+Each tail pass is checked separately, matching the pass scheduler's mixed
+reuse/streaming policy. Compact mode requires pass-first order. Generation,
+sequential external fetch addresses and burst indices keep their existing checks.
+
+The cursor captures total remaining weight words and full-pass size during
+existing admission stages. Full-pass eligibility uses a constant depth bound;
+tail eligibility uses the remaining-word count. Advancing a pass subtracts its
+size. No per-coordinate division, multiplication, or extra cycle is introduced.
+The arithmetic/future operand cursors continue to visit every output row;
+only the fetched-weight cursor omits retained copies.
+
+Nine cursor configurations and 24 composed transport configurations pass,
+along with 13 bank-scheduler regressions. Transport coverage includes N53,
+K80/K160/K342, bursts of 1/32/512, stalls, malformed requests, strided byte
+addresses, masked lanes and mixed oversized passes with a reusable tail. The
+byte oracle now depends on higher address bits as well as low bits. Strict
+Verilator lint passes with compact mode enabled. Evidence:
+`results/rtl/compact_pass_weight_transport.json`. A current compact-mode 1 ns
+ASAP7 TT CTS12 route is active, using 10% slew repair margin with unchanged
+fanout and library transition limits. Runtime and output integration remain open.
+
+The preceding containing transport route with 10% slew margin now passes all
+reported checks at 1 ns: 6,141.480 um² cell area, +0.0169131 ns setup and
++0.0361992 ns hold slack, zero slew/cap/fanout/DRC/antenna violations. This
+qualifies the pre-compact transport configuration only. Source snapshots are
+retained in `bf16_weight_transport/compact_fetch/`; all source and seven artifact
+hashes match `line_extent_slew10_route_audit.json`. No extrapolated frequency or
+current compact-mode closure is claimed.
