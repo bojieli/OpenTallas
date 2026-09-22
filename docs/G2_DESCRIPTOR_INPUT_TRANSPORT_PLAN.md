@@ -359,3 +359,19 @@ capacitance, fanout, DRC and antenna checks pass. Its worst routed path is now
 column-stride multiplication into gather address capture, matching the path
 targeted by the subsequent command-owned lane offsets. That later route remains
 active. This result establishes neither current-source closure nor a system clock.
+
+## Integrated memory-capacity audit
+
+The historical descriptor-bounds/handoff G2 run remains live. Its intermediate
+flattened synthesis checkpoint retains five 256x128, two 2048x128 and two
+512x128 SRAM macros. The inventory checker now derives the capacity from these
+observed macro geometries and counts, instead of merely echoing the configured
+bit total. It verifies 819,200 macro bits and rejects mismatched or unknown
+capacities. Six checker regressions pass. The remaining 2,304 inferred bits are
+ROM, with no writable inferred memories or unresolved hierarchy at this stage.
+
+Evidence is retained in
+`a3_g2_runtime_writer/descriptor_bounds_handoff_synthesis_inventory.json`. This
+checkpoint predates integrated weight-object reads and is not final placed SRAM
+or current integrated timing evidence. The command-lane-offset transport route
+remains active; no new timing result is claimed here.

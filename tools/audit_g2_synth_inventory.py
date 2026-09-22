@@ -4,6 +4,7 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -33,6 +34,21 @@ def audit(netlist, config):
         elif not kind.startswith('$'):
             unknown[kind] += 1
     counts = dict(Counter(m['type'] for m in macros))
+    macro_bits = 0
+    capacity_known = True
+    for kind, count in counts.items():
+        geometry = re.fullmatch(r'fakeram_(\d+)x(\d+)', kind)
+        if geometry is None:
+            capacity_known = False
+            issues.append('unknown macro capacity: '+kind)
+        else:
+            depth, width = map(int, geometry.groups())
+            if depth == 0 or width == 0:
+                capacity_known = False
+                issues.append('invalid macro capacity: '+kind)
+            macro_bits += count * depth * width
+    if capacity_known and macro_bits != config['expected_memory_bits']:
+        issues.append('macro bit capacity differs from configuration')
     if counts != config['expected_memory_instances']:
         issues.append('macro inventory differs from configuration')
     if unknown:
@@ -41,6 +57,7 @@ def audit(netlist, config):
             'scope': 'Intermediate flattened synthesis inventory only; not final placed macros, routed area, timing or deployment coverage.',
             'parameters': parameters, 'macro_instances': macros, 'macro_counts': counts,
             'expected_macro_bits': config['expected_memory_bits'],
+            'observed_macro_bits': macro_bits if capacity_known else None,
             'inferred_memories': roms, 'inferred_rom_bits': sum(r['WIDTH']*r['SIZE'] for r in roms if not r['WR_PORTS']),
             'unresolved_types': dict(unknown), 'cell_types': dict(Counter(c['type'] for c in top['cells'].values()))}
 

@@ -33,3 +33,31 @@ def test_inventory_rejects_unflattened_unknown_logic():
     net, config = fixture()
     net['modules']['ot_a3_g2_cluster']['cells']['unknown'] = {'type': 'unresolved_bank'}
     assert audit(net, config)['status'] == 'fail'
+
+
+def test_inventory_derives_capacity_and_rejects_wrong_bit_budget():
+    net, config = fixture()
+    assert audit(net, config)['observed_macro_bits'] == 512 * 128
+    config['expected_memory_bits'] += 1
+    result = audit(net, config)
+    assert result['status'] == 'fail'
+    assert 'macro bit capacity differs from configuration' in result['issues']
+
+
+def test_inventory_refuses_unknown_capacity_even_when_count_matches():
+    net, config = fixture()
+    net['modules']['ot_a3_g2_cluster']['cells']['bank']['type'] = 'fakeram_custom'
+    config['expected_memory_instances'] = {'fakeram_custom': 1}
+    result = audit(net, config)
+    assert result['status'] == 'fail'
+    assert result['observed_macro_bits'] is None
+
+
+def test_inventory_counts_multiple_macro_geometries():
+    net, config = fixture()
+    net['modules']['ot_a3_g2_cluster']['cells']['other'] = {'type': 'fakeram_256x128'}
+    config['expected_memory_instances']['fakeram_256x128'] = 1
+    config['expected_memory_bits'] += 256 * 128
+    result = audit(net, config)
+    assert result['status'] == 'pass'
+    assert result['observed_macro_bits'] == (512 + 256) * 128
