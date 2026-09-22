@@ -1729,3 +1729,25 @@ outputs and first-operation fills 560 weight / 720 activation. The integrated
 Source-bound evidence: `results/physical_abi3/asap7/runtime_weight_generation/`
 and `results/rtl/a3_lq8_weight_generation.json`; previous G2 evidence is archived
 in `results/rtl/before_weight_generation/`.
+
+
+## Sinkhorn parent cancellation and stalled-result qualification
+
+The same-edge divider handoff now has direct parent-level protocol coverage
+with both divider choices. Each run cancels all ten active controller states
+and a same-edge division replacement, checks that cancelled results do not
+escape after reset, and completes eleven fresh matrices against the certifying
+implementation. Each run also holds successful and error outputs for 108 cycles
+in total, checking stable matrix/error/valid and no command acceptance while
+stalled. Error output must remain atomic and zero. Both tests pass; thousands
+of divider handoffs are exercised. Evidence:
+`results/rtl/a3_sinkhorn_handoff_protocol.json`.
+
+The current physical inventory was regenerated after the recent source changes.
+It records 202 ASAP7 routed experiments, of which 129 pass routed checks and
+54 also match current sources and required artifacts; SKY130 retains 16/8/2.
+These are record counts, not target coverage or signoff. The auditor now reads
+`acceptance.status` for the overall flow verdict, preserving pre-layout failures
+even when routed checks pass. Five auditor tests pass. Evidence:
+`results/physical_abi3/current_evidence_audit.json`. All-target deployment
+integration, numerical-mode coverage and containing-block closure remain open.

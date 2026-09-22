@@ -82,7 +82,7 @@ def inspect_record(path: Path, root: Path) -> dict | None:
         'standard_cell_area_um2': metrics.get('standard_cell_area_um2'),
         'false_path_from_ports': design.get('false_path_from_ports', []),
         'signal_integrity_constraints': route.get('signal_integrity_constraints'),
-        'overall_record_status': record.get('status'),
+        'overall_record_status': record.get('acceptance', {}).get('status', record.get('status')),
     }
 
 

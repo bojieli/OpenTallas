@@ -51,3 +51,24 @@ def test_divider_reset_and_output_backpressure(tmp_path):
     run = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
     assert run.returncode == 0, run.stdout + run.stderr
     assert 'PASS divider protocol reset_phases=4 stalled_results=8 replacement=1' in run.stdout
+
+
+@pytest.mark.parametrize('divider', [0, 1])
+def test_sinkhorn_reset_and_output_backpressure(tmp_path, divider):
+    verilator = Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+    if not verilator.is_file():
+        pytest.skip('pinned Verilator unavailable')
+    top = 'tb_a3_hc_sinkhorn20_pipe_protocol'
+    names = ['rtl/ot_fp32_rne_pkg.sv', 'rtl/abi3/ot_a3_fp32_div_rne.sv',
+             'rtl/abi3/ot_a3_fp32_div_rne_pipe.sv',
+             'rtl/proto/ot_fp32_add_positive_rne_pipe.sv',
+             'rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv',
+             'rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv', f'rtl/test/{top}.sv']
+    command = [str(verilator), '--binary', '--timing', '-j', '4', '-Wno-fatal',
+               '--top-module', top, f'-GPIPELINED_DIVIDER={divider}',
+               '--Mdir', str(tmp_path/'obj'), '-o', 'sim', *[str(ROOT/n) for n in names]]
+    subprocess.run(command, check=True, capture_output=True, text=True, timeout=120)
+    result = subprocess.run([str(tmp_path/'obj/sim')], capture_output=True, text=True, timeout=120)
+    (tmp_path/'simulation.log').write_text(result.stdout + result.stderr)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f'PASS Sinkhorn protocol divider={divider} resets=11 recoveries=11 stalls=108' in result.stdout

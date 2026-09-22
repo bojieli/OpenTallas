@@ -71,3 +71,14 @@ def test_nonfinite_timing_is_missing_evidence(tmp_path):
     row = inspect_record(path, tmp_path)
     assert not row['routed_checks_pass']
     assert 'setup_wns_ns' in row['missing_metrics']
+
+
+def test_routed_pass_preserves_overall_prelayout_failure(tmp_path):
+    path, record = fixture(tmp_path)
+    record['acceptance'] = {'status': 'not_met', 'reason': 'static_timing'}
+    record['status'] = 'legacy_status'
+    path.write_text(json.dumps(record))
+    row = inspect_record(path, tmp_path)
+    assert row['routed_checks_pass']
+    assert row['current_source_and_artifact_verified']
+    assert row['overall_record_status'] == 'not_met'
