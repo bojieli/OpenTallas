@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "scope": "Three-plane bounded SRAM window protocol and standalone lint. Behavioral SRAM; no physical characterization or deployment byte-address translation.",
+  "sources": {
+    "rtl/abi3/ot_a3_runtime_auxiliary_windows.sv": "244e6028a6553e4332945bfd668ab4e4cccc7a038c0bcebefa85985f736e62ac",
+    "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+    "tests/test_runtime_auxiliary_windows.py": "5121b20807778475a84cbfd3a8096c64e36152390e3cf8a42a49cc83345f3156"
+  },
+  "runs": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_runtime_auxiliary_windows.py"
+      ],
+      "stdout": ".                                                                        [100%]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--Wall",
+        "--top-module",
+        "ot_a3_runtime_auxiliary_windows",
+        "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+        "rtl/abi3/ot_a3_runtime_auxiliary_windows.sv"
+      ],
+      "stdout": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.065 MB sources in 9 modules, into 0.074 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.014 s (elab=0.001, cvt=0.006, bld=0.000); cpu 0.013 s on 1 threads; allocated 33.152 MB\n",
+      "stderr": ""
+    }
+  ]
+}

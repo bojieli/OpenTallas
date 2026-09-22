@@ -1,7 +1,7 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes the G2 output-backpressure checkpoint after `9abdeb01`;
+Implementation includes reusable auxiliary SRAM windows after `b0b2105a`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
@@ -22,10 +22,11 @@ or whole-chip performance claim is made.
 | Area | Previous execution path | Refined architecture | Current implementation status |
 |---|---|---|---|
 | Runtime delivery | G2 host writes globally disabled while busy; operands preloaded | Separate idle-only program loader from runtime operand transport | Connected in optional G2 runtime mode; bounded BF16 program-driven regression added |
-| Storage feasibility | Finite staging cannot hold complete Qwen contractions | Tile large operations through bounded scratchpads while keeping accumulators live | Weight path crosses many tiles in one live contraction; activation scratchpad integration pending |
+| Storage feasibility | Finite staging cannot hold complete Qwen contractions | Tile large operations through bounded scratchpads while keeping accumulators live | Weight stream and activation windows cross storage boundaries during one live contraction; production refill manager pending |
 | Weight banks | Shared address and global read/write exclusion | Independent bank addresses, tagged ownership, opposite-bank refill | Two 512x128 SRAM wrappers verified |
 | Prefetch | Fixed-latency reads assumed at arithmetic issue | Independent tile read cursor and finite FIFO | Four-entry weight FIFO; copies survive bank release and overwrite |
 | Operand readiness | No original issue backpressure | Grant credit only for a complete, correctly identified operand bundle | LQ8 issue stalls, generation/address join and response timing verified |
+| Auxiliary storage | Fixed windows or direct external-array responses | Three independently rebased, generation-tagged SRAM windows with exact fills | Synthesizable service tested on G2 auxiliary port; external refill manager still modeled |
 | Auxiliary requests | Initial runtime adapter requested only the current issue | Independent future-address cursor plus reserved response slots | Captured RTL geometry admission, cursor and two-entry queue integrated |
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
 | Reuse | Stream execution repeats weights for rows | Retain resident weight tiles for bounded multi-row execution | Bank retain/replay verified; multi-row compute scheduling pending |
@@ -66,7 +67,8 @@ flowchart LR
     B --> F[Four-entry weight FIFO]
     A --> C[Future auxiliary cursor]
     C --> Q[Two-entry auxiliary request and response queue]
-    X[External activation and scale service] --> Q
+    X[Reusable activation and scale SRAM windows] --> Q
+    E[External window refill manager] --> X
     F --> J[Identity check and complete-bundle credit]
     Q --> J
     J --> L[LQ8 with captured configuration and live accumulators]
@@ -78,7 +80,8 @@ flowchart LR
 ```
 
 The diagram describes the connected runtime path, not a fully qualified deployed
-machine. External activation/scale service is modeled in current tests. Runtime output
+machine. The auxiliary SRAM service is now RTL, tested on the G2 external auxiliary
+port; its window manager and deployment address translation remain modeled. Runtime output
 writes now use a bounded ready/valid queue, with capacity reserved before the
 final K-group issues. Completion checks internal queue emptiness as well as the
 external write-drain acknowledgement. The legacy mode retains its pulse port. Runtime mode is opt-in
@@ -157,6 +160,10 @@ Primary retained records:
   abort/transport fault propagation and restart.
 - `results/rtl/a3_g2_runtime_output.json`: six-row loaded-program output
   backpressure, reservation stalls, completion gating and queued-result abort.
+- `results/rtl/a3_g2_runtime_auxiliary.json`: six-row, 24-column program through
+  reusable activation SRAM windows, output backpressure and fault recovery.
+- `results/rtl/a3_runtime_auxiliary_windows.json`: focused window protocol and
+  synchronous SRAM tests plus standalone lint.
 - `results/rtl/a3_lq8_output_interface_regression.json`: 92-case LQ8 regression
   after adding the final-group preview; this harness does not contain the queue.
 
@@ -176,7 +183,9 @@ commands and source/artifact digests are retained in the records and checkers.
    Acceptance requires reset, fault, cancellation and independent backpressure
    tests without stale credits, lost outputs or unexplained permanent stalls.
 2. **Reusable activation and scale storage.** Replace external-array models with
-   bounded SRAM service and address translation. Measure bytes, bank conflicts,
+   bounded SRAM service and address translation. The three-plane SRAM window
+   service now exists and is tested through G2; implement its production refill
+   manager and deployment address translation next. Measure bytes, bank conflicts,
    starvation and live capacity for all required planes.
 3. **Multi-row weight reuse.** Schedule bounded independent accumulators around
    resident tiles for prefill; retain decode's column-parallel behavior. Require
@@ -266,3 +275,35 @@ workload tuning and physical characterization. The separate 92-case numerical
 regression retains 17,103 matching outputs, 18 faults, 115,748 checks and
 323,397 aggregate cycles; that regression checks the LQ8 interface change,
 while the six-row G2 test checks the queue integration.
+
+
+## Reusable auxiliary SRAM checkpoint
+
+`ot_a3_runtime_auxiliary_windows` implements three 256-word windows using two
+64-bit SRAM macros and one 32-bit macro: 2 KiB of activations, 1 KiB of activation
+scales and 2 KiB of weight scales. Each plane independently captures a full
+32-bit base, exact extent and generation. Reads subtract the base and check
+bounds before indexing SRAM. An incomplete fill is never resident; wrong
+indices/generations fault. All enabled planes must be resident before accepting
+a request. The complete response remains stable under consumer stalls, and
+replacement cannot overwrite a pending response. A resident stream sustains
+one accepted read per cycle with a ready consumer in the focused simulation.
+
+The loaded-program fixture attaches this RTL service to G2's existing auxiliary
+port and supplies bounded window refills from a modeled manager. For
+`M=6,N=24,K=80`, the first successful operation makes 1,440 auxiliary requests
+but fills just 480 activation words in two windows (256 and 224). This is a
+threefold reuse factor and 66.7% fewer external activation words than direct
+one-word-per-request delivery for this operation. It is not a whole-system
+speedup or an all-plane bandwidth saving. The fixture still streams weights
+for each row; multi-row weight reuse remains open.
+
+The campaign validates 440 accepted outputs across successful execution,
+explicit abort, transport fault, restart and an abort with a result queued.
+Standalone tests exercise all three planes, scale reuse across activation-window
+replacement, consecutive reads, held responses, full-address rebasing, bounds,
+generations, malformed fills and clear. The focused suite now has 34 passing
+tests; the new service has clean standalone lint. SRAM behavior is simulated;
+new routed area, frequency and power remain unmeasured. Production window
+scheduling, deployment byte-to-word mapping and scaled-format program coverage
+are still required before promoting this service into a complete memory system.

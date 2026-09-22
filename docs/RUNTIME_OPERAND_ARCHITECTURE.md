@@ -745,3 +745,52 @@ of-two depth, delayed producers, random simultaneous traffic, reservation
 cancellation and protocol-fault detection. Area/timing remain uncharacterized;
 this closes the modeled output-backpressure integration gap, not real memory
 write service, numerical format coverage or whole-system physical closure.
+
+
+## Reusable auxiliary SRAM windows
+
+`ot_a3_runtime_auxiliary_windows` serves the existing G2 auxiliary ready/valid
+interface. It holds independent 256-word activation64, activation-scale32 and
+weight-scale64 SRAM windows. A window descriptor supplies plane, generation,
+full service-word base and exact length (1..256); base+length may equal 2^32
+but cannot exceed it. The parent must bound that descriptor to the source object.
+The module does not invent padding reads or interpret deployment byte strides.
+
+Window install invalidates only its selected plane. Ordered, generation-matched
+fill beats advance a per-plane count; only the final accepted beat publishes
+residency. The service reports a missing-plane mask for a pending request and
+accepts it only when all enabled planes match the generation and bounds.
+Address subtraction precedes SRAM indexing; high addresses cannot alias low
+windows. Disabled scale planes return zero. One complete response is held, with
+synchronous SRAM reads supporting consecutive requests when the receiver is
+ready. Window installs/fills wait until any held response drains. Simultaneous
+window install and fill gives install priority, and input ready signals make
+that choice explicit. This first implementation serializes filling against
+reading; independently overlapped fills and bank ownership are later tuning
+choices, not assumed free bandwidth.
+
+Protocol errors stop new requests and remain sticky until coordinated clear.
+Clear invalidates windows and the response; the parent must cancel/drain the
+fill transport as well. The integrated test clears this service on G2's
+transport cancellation and supplies no late fill responses. The SRAM RTL is
+external to G2's core wrapper, attached through its existing auxiliary ports;
+the fixture's miss-to-window scheduler is behavioral. A deployed parent must
+implement window scheduling, transport fault propagation and object addressing.
+
+Reproduce with:
+
+```
+python3 tools/check_g2_runtime_program.py --output-backpressure --auxiliary-windows
+python3 -m pytest -q tests/test_runtime_auxiliary_windows.py
+```
+
+The loaded, admitted BF16 program uses M=6,N=24,K=80. Three lane-local columns
+reuse each activation word. Its first successful operation accepts 1,440 SRAM
+reads from 480 filled words in two exact windows, saving 960 external activation
+word deliveries compared with direct per-request service. The full campaign
+checks 440 accepted outputs, output stalls, delayed completion, aborts, transport
+fault and restart against the functional Device. Numerical input/outputs and
+sources are hashed in `results/rtl/a3_g2_runtime_auxiliary.json`. This does not
+qualify scaled formats through a loaded program or general deployment memory
+mapping; the focused test separately verifies both scale planes and their reuse.
+Physical characterization and multi-row weight reuse remain pending.

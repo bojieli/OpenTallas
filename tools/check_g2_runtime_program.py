@@ -13,9 +13,17 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-backpressure", action="store_true")
+parser.add_argument("--auxiliary-windows", action="store_true")
 args = parser.parse_args()
 rows = 6 if args.output_backpressure else 1
-record_name = "g2_runtime_output" if args.output_backpressure else "g2_runtime_program"
+cols = 24 if args.auxiliary_windows else 8
+record_name = (
+    "g2_runtime_auxiliary"
+    if args.auxiliary_windows
+    else "g2_runtime_output"
+    if args.output_backpressure
+    else "g2_runtime_program"
+)
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -41,6 +49,7 @@ weight = np.repeat(
     80,
     axis=1,
 )
+weight = np.tile(weight, (cols // 8, 1))
 weight[:, 2::7] ^= np.uint16(0x8000)
 weight[:, 5::11] = 0
 case = matmul_case(
@@ -85,9 +94,10 @@ hex_words("descriptor.hex", desc, 32)
 hex_words(
     "weight.hex",
     [
-        sum(int(weight[lane, k]) << (16 * lane) for lane in range(8))
+        sum(int(weight[column * 8 + lane, k]) << (16 * lane) for lane in range(8))
         for _ in range(rows)
         for k in range(80)
+        for column in range(cols // 8)
     ],
     32,
 )
@@ -96,7 +106,7 @@ hex_words("expected.hex", golden["output"].reshape(-1), 8)
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
-    f"localparam integer ROWS={rows}, STRESS_OUTPUT={int(args.output_backpressure)};\n"
+    f"localparam integer ROWS={rows}, COLS={cols}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
 packages = [
@@ -122,6 +132,7 @@ tracked = sorted(
             "rtl/test/tb_a3_g2_issue_contract.sv",
             "tests/test_g2_issue_contract.py",
             "tests/test_reserved_output_queue.py",
+            "tests/test_runtime_auxiliary_windows.py",
         ]
         + [
             str(p.relative_to(ROOT))
@@ -167,6 +178,7 @@ for p, h in hashes.items():
 result = {
     "status": "pass",
     "output_backpressure": args.output_backpressure,
+    "auxiliary_sram_windows": args.auxiliary_windows,
     "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
     "sources": hashes,
     "program_sha256": hashlib.sha256(image).hexdigest(),
@@ -174,11 +186,11 @@ result = {
     "golden_output": golden["output"].reshape(-1).tolist(),
     "fixture": {
         "rows": rows,
-        "cols": 8,
+        "cols": cols,
         "depth": 80,
         "dtype": "BF16",
         "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
-        "output_addressing": "Lane-local address maps to row; logical column equals lane index",
+        "output_addressing": "Logical flattened output index equals lane-local address times eight plus lane index",
     },
     "command": cmd,
     "stdout": r.stdout,
