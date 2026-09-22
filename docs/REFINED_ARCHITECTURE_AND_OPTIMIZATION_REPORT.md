@@ -2148,3 +2148,36 @@ are retained under `results/physical_abi3/asap7/output_object_writer/`.
 Pipelining the measured paths and reducing address/control width are required
 before this writer is deployment-ready; no physical performance benefit is
 claimed from its functional integration.
+
+
+## Reduce writer payload control and address width
+
+The first writer timing report identifies a reset/ready-derived payload-enable
+path with roughly 10.7 ns in two unbuffered control gates. The revision captures
+command payload while inactive and beat payload while IDLE; valid state still
+exclusively controls publication. Accepted beats alone advance the address
+cursor. This removes reset/ready/error logic from the wide data/offset enables
+without changing handshake or acknowledgement latency.
+
+For 16-bit rows/columns and unsigned 32-bit element strides/base, the largest
+admitted element address, scaled by at most four, is below 2^51. Row and column
+cursors now use 51 bits and steps use 34 bits, with explicit unsigned extension
+to the 64-bit transport interface. Invalid extra beats can never publish a
+wrapped cursor. Both BF16/FP32 tests now exercise maximum unsigned strides as
+well as bounds, tails, stalls, wrong acknowledgements, errors and recovery.
+
+Matched ASAP7 1 ns synthesis reduces area 1,379.588 to 1,231.190 um² (10.76%),
+and sequential area 345.779 to 307.288 um² (11.13%). Prelayout WNS improves
+-10.119062 to -6.788245 ns but still fails. The new worst path is still dominated
+by unbuffered control fanout, so a current-source CTS8 1 ns route is running to
+measure the design after buffering/physical repair. No routed writer clock is
+claimed. Evidence and exact source/report snapshots are retained under
+`results/physical_abi3/asap7/output_object_writer/`.
+
+The focused writer tests pass 14 checks per precision; the lifetime regression
+also passes. Loaded G2 N53 retains 169 writes/acks, 1,280 matching outputs and
+25,101 campaign cycles. All loaded evidence source hashes match. The prior
+loaded record is archived under `results/rtl/before_writer_local_payload/`.
+Outstanding depth and object-descriptor integration remain required architecture
+work; this revision reduces implementation cost without claiming those gaps are
+closed.

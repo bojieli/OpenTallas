@@ -88,6 +88,14 @@ initial begin
  if(!protocol_error || !drained)$fatal(1,"write error lost");checks=checks+1;
  // Recovery must replace all captured geometry and identity.
  launch();beat(0,0);check_write(0,0);
+ // Maximum unsigned strides exercise the retained upper address bits.
+ command_row_stride=32'hffffffff;command_col_stride=32'hffffffff;
+ command_object_bytes=64'hffffffffffffffff;launch();beat(0,0);
+ wait(write_valid);@(negedge clk);
+ for(integer i=0;i<8;i=i+1)
+  if(write_offset[64*i+:64]!=(64'd7+64'(i)*64'hffffffff)*(FP32?4:2))$fatal(1,"wide stride truncated");
+ write_ready=1;tick();write_ready=0;response_valid=1;tick();response_valid=0;
+ if(protocol_error || !drained)$fatal(1,"wide stride ack");checks=checks+1;
  $display("PASS output writer checks=%0d",checks);$finish;
 end
 initial begin #20000;$fatal(1,"timeout");end
@@ -99,4 +107,4 @@ endmodule
                    check=True, capture_output=True, text=True)
     result = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert 'PASS output writer checks=13' in result.stdout
+    assert 'PASS output writer checks=14' in result.stdout
