@@ -80,3 +80,29 @@ the same external bandwidth/latency assumptions. Report packing costs explicitly
 Physical acceptance requires current-source containing-block synthesis with the
 actual SRAM macros, followed by setup/hold and physical-rule closure. A standalone
 cursor frequency cannot qualify the integrated transport.
+
+## Implemented coordinate cursor checkpoint
+
+`rtl/abi3/ot_a3_weight_layout_cursor.sv` now implements the logical weight walk
+with descriptor-relative element base, lane stride, tail mask, row/K/column
+coordinates and generation. Three admission stages compute a maximum element
+address and refuse overflow before publication. The per-coordinate path uses
+registered additions and wrap state; products occur only during admission.
+Payload registers use state ownership rather than a global reset tree.
+
+The standalone regression checks 73,972 coordinates at each of INTERLEAVE=1/3/5
+(221,916 total), including 65,535-column and 65,535-depth cases, zero/nonunit
+strides, exact 64-bit address limit, overflow, stalls, cancellation and recovery.
+Verilator strict lint passes. Evidence: `results/rtl/weight_layout_cursor.json`.
+
+The initial 1 ns pre-layout probe measures 1,177.847 um² and -1.022568 ns setup
+slack; its critical path starts in clear and reaches a payload-register enable.
+The initial source snapshot is retained with the record. A subsequent lint-only
+cleanup stores only the overflow bit of the bound, and that source is now in an
+ASAP7 TT 1 ns CTS8 routed characterization with fanout limit 16. No routed result
+is yet claimed.
+
+This cursor is not connected to the cluster yet. Descriptor capture, permissions,
+object-capacity checks, dtype conversion, line reuse, packed-word assembly and
+response ownership remain mandatory integration work. Its coordinates do not
+authorize physical reads. No workload speedup is claimed from this checkpoint.
