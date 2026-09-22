@@ -5,8 +5,8 @@
   "cases": 8,
   "checked_words_per_case": 1129,
   "sources": {
-    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0635dd8dc457734b7a4b402d53a54df53412157beddf937df1bd21b9f4b0924a",
-    "tests/test_bf16_weight_gather.py": "fc399d5bcb17cf5c3ee8844d9adf793d33cd60113b743061a8fc3936f485fb70"
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0db0272552bac476a0be9e7e56225570aa9ba28ee86de5d8b1dc77137ed02997",
+    "tests/test_bf16_weight_gather.py": "3f8555eeba16b375930ecc820367f5c3b10b9dd2259530171722cdb980820d26"
   },
   "workload": {
     "rows": 2,
@@ -80,5 +80,12 @@
   ],
   "lint": "Verilator 5.050 --lint-only -Wall passes",
   "bound_implementation": "Capture last legal element offset once at command admission; no per-lane end-address addition",
-  "lane_offsets": "Descriptor column stride captured as eight lane offsets at command admission; no coordinate-cycle increase"
+  "lane_offsets": "Descriptor column stride captured as eight lane offsets at command admission; no coordinate-cycle increase",
+  "handoff_tests": {
+    "cases": 2,
+    "continuous_words": 8,
+    "cycles_disabled": 32,
+    "cycles_enabled": 25,
+    "same_edge_fault_blocks_successor": true
+  }
 }

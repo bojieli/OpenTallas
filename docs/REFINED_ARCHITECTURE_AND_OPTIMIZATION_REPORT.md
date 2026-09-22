@@ -2748,3 +2748,12 @@ verified. SKY130HD has 16 records, eight raw passes and two verified current
 passes. These are record counts across configurations, not unique blocks or
 all-target coverage. Source drift, incomplete artifact retention and unclosed
 configurations remain explicit in `results/physical_abi3/current_evidence_audit.json`.
+
+## Loaded gather handoff improvement
+
+Allowing the cached gather to accept a coordinate on its output-acceptance edge
+reduces the matched strided-weight G2 campaign from 110,614 to 105,552 cycles
+(4.58%), with unchanged memory traffic, 2,234 matching outputs and 295 writes/acks.
+Sixteen focused cases cover ordering, burst-boundary suppression, stalls and
+same-edge fault priority. The containing physical route is running; no clock or
+area benefit is yet claimed for this handoff.

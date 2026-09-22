@@ -18,6 +18,7 @@ parser.add_argument("--strided-output", action="store_true")
 parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
+parser.add_argument("--no-weight-word-handoff", action="store_true")
 parser.add_argument("--no-weight-line-retention", action="store_true")
 parser.add_argument("--weight-object-reads", action="store_true")
 parser.add_argument("--input-layout", action="store_true")
@@ -75,6 +76,8 @@ if args.no_weight_line_retention:
     record_name += "_no_weight_line_retention"
 if args.strided_weights:
     record_name += "_strided_weights"
+if args.no_weight_word_handoff:
+    record_name += "_no_word_handoff"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -263,6 +266,7 @@ cmd = [
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     f"-GWRITE_OUTSTANDING={args.write_outstanding}",
+    f"-GWEIGHT_WORD_HANDOFF={int(not args.no_weight_word_handoff)}",
     f"-GWEIGHT_LINE_REUSE={int(not args.no_weight_line_retention)}",
     f"-GWEIGHT_OBJECT_READS={int(args.weight_object_reads)}",
     f"-GINPUT_LAYOUT={int(args.input_layout)}",
@@ -303,6 +307,7 @@ result = {
     "descriptor_input_layout": args.input_layout,
     "weight_object_reads": args.weight_object_reads,
     "strided_weights": args.strided_weights,
+    "weight_word_handoff": not args.no_weight_word_handoff,
     "weight_line_retention": not args.no_weight_line_retention,
     "weight_object_sha256": hashlib.sha256(weight_payload).hexdigest(),
     "strided_output": args.strided_output,

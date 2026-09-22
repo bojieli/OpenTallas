@@ -6,6 +6,7 @@ module tb_a3_g2_runtime_program;
  parameter bit INPUT_LAYOUT=0;
  parameter bit WEIGHT_OBJECT_READS=0;
  parameter bit WEIGHT_LINE_REUSE=1;
+ parameter bit WEIGHT_WORD_HANDOFF=1;
  wire input_layout_valid;
  wire [31:0] input_a_object,input_b_object,input_a_row_stride,input_a_k_stride,input_b_column_stride,input_b_k_stride;
  wire [63:0] input_a_object_bytes,input_b_object_bytes;
@@ -264,7 +265,7 @@ module tb_a3_g2_runtime_program;
       !dut.runtime_operands.descriptor_weight_transport.transport.gather.active)
    $fatal(1,"weight read ownership cleared before cancellation acknowledgement");
  end endgenerate
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_WEIGHT_WORD_HANDOFF(WEIGHT_WORD_HANDOFF),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
  .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
  .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),

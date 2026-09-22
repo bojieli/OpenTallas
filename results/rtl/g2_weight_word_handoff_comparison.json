@@ -1,0 +1,29 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded G2 strided-weight campaign; fault/recovery counters, not inference latency",
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_no_word_handoff.json",
+      "sha256": "b25f70154ba7faa6cde8a9af7129ef51ba3fe37809ede7519fb5f052a7520da3",
+      "handoff": false,
+      "campaign_cycles": 110614
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "33ceb183658c19d1a0a9eb5c096167898df3f31bd0403349d0be06448f21af32",
+      "handoff": true,
+      "campaign_cycles": 105552
+    }
+  ],
+  "cycle_reduction_percent": 4.576274250998969,
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "first_weight_bytes_each": 17596,
+  "focused_tests": 16,
+  "eight_continuous_words_cycles": {
+    "disabled": 32,
+    "enabled": 25
+  },
+  "physical_route": "results/physical_abi3/asap7/bf16_weight_transport/pnr_word_handoff_cts12_1ns.json",
+  "physical_status": "running; no closure claim"
+}

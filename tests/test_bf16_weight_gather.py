@@ -146,3 +146,61 @@ endmodule
     assert r.returncode==0,r.stdout+r.stderr
     assert f'PASS gather checks=1129 retain={retain}' in r.stdout
     print(f'slots={slots} zero_latency={zero_latency} '+r.stdout.splitlines()[0])
+
+
+@pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
+@pytest.mark.parametrize('handoff', [0, 1])
+def test_handoff_fault_priority(tmp_path, handoff):
+    bench = tmp_path/'tb.sv'
+    bench.write_text(r'''
+module tb;
+parameter bit HANDOFF=1;
+reg clk=0;always #5 clk=~clk;
+reg rst_n=0,clear=0,command_valid=0,coordinate_valid=0,word_ready=0,response_valid=0;
+wire command_ready,coordinate_ready,word_valid,read_valid,response_ready,protocol_error,drained;
+wire [127:0] word_data;wire [31:0] word_index,read_object;wire [63:0] read_tag,read_offset;wire [4:0] read_bytes;
+reg [31:0] coordinate_index=0;
+ot_a3_bf16_weight_gather #(.WORD_HANDOFF(HANDOFF)) dut(
+.clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(command_valid),.command_ready(command_ready),
+.command_generation(32'd1),.command_object(32'd2),.command_lane_stride(32'd0),.command_object_bytes(64'd16),
+.coordinate_valid(coordinate_valid),.coordinate_ready(coordinate_ready),.coordinate_element_base(64'd0),
+.coordinate_mask(8'd0),.coordinate_slot(2'd0),.coordinate_index(coordinate_index),
+.word_valid(word_valid),.word_ready(word_ready),.word_data(word_data),.word_index(word_index),
+.read_valid(read_valid),.read_ready(1'b1),.read_tag(read_tag),.read_object(read_object),.read_offset(read_offset),.read_bytes(read_bytes),
+.response_valid(response_valid),.response_ready(response_ready),.response_tag(64'hbad),.response_data(128'd0),.response_error(1'b0),
+.protocol_error(protocol_error),.drained(drained));
+integer ticks=0,start_ticks,received=0;
+always @(posedge clk)begin
+ ticks<=ticks+1;if(ticks>1000)$fatal(1,"timeout");
+ if(read_valid)$fatal(1,"masked coordinate read memory");
+end
+initial begin
+ repeat(2)@(negedge clk);rst_n=1;command_valid=1;
+ @(negedge clk);command_valid=0;coordinate_valid=1;word_ready=1;start_ticks=ticks;
+ while(received<8)begin
+  @(posedge clk);
+  if(word_valid && word_ready)begin
+   if(word_index!=received || word_data!=0)$fatal(1,"handoff ordering");received=received+1;
+  end
+  if(coordinate_valid && coordinate_ready)coordinate_index<=coordinate_index+1;
+  @(negedge clk);if(coordinate_index==8)coordinate_valid=0;
+ end
+ if(ticks-start_ticks!=(HANDOFF?25:32))$fatal(1,"handoff cycles=%0d",ticks-start_ticks);
+ // Park a published word, then inject a foreign response on its acceptance
+ // edge with a successor coordinate waiting. That successor must not enter.
+ word_ready=0;coordinate_valid=1;
+ @(negedge clk);coordinate_valid=0;wait(word_valid);@(negedge clk);
+ word_ready=1;coordinate_valid=1;response_valid=1;#1;
+ if(coordinate_ready)$fatal(1,"fault admitted successor");
+ @(negedge clk);coordinate_valid=0;response_valid=0;
+ if(!protocol_error || !drained || word_valid)$fatal(1,"fault retirement");
+ $display("PASS handoff cycles=%0d fault_priority",HANDOFF?25:32);$finish;
+end
+endmodule
+''')
+    sim=tmp_path/'sim'
+    subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.HANDOFF={handoff}', '-o',str(sim),
+                    str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)],check=True,capture_output=True,text=True)
+    r=subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=30)
+    assert r.returncode==0,r.stdout+r.stderr
+    assert 'fault_priority' in r.stdout

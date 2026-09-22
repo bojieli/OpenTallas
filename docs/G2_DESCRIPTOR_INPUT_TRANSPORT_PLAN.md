@@ -375,3 +375,25 @@ Evidence is retained in
 checkpoint predates integrated weight-object reads and is not final placed SRAM
 or current integrated timing evidence. The command-lane-offset transport route
 remains active; no new timing result is claimed here.
+
+## Gather word handoff implementation
+
+The gather can now capture a successor coordinate on the same edge that its
+published output word is accepted. `WORD_HANDOFF=1` is forwarded through the
+transport and cluster (`RUNTIME_WEIGHT_WORD_HANDOFF`); disabling it provides a
+matched comparison. Stalled output data and identity remain stable. A same-edge
+unexpected response blocks successor acceptance, while the published output
+still retires. The burst adapter suppresses handoff on the final response beat
+and accounts for the retiring predecessor when validating the final coordinate.
+
+Sixteen focused cases pass, including continuous-word handoff and fault priority.
+Eight ready words take 25 cycles versus 32 without handoff. The matched loaded
+strided-weight G2 campaign drops from 110,614 to 105,552 cycles (4.58%) with
+unchanged traffic, 2,234 matching outputs and 295 write acknowledgements. Source
+manifests and golden outputs match across the two configurations. Evidence:
+`results/rtl/g2_weight_word_handoff_comparison.json`. This is a campaign-cycle
+improvement, not an inference-latency measurement.
+
+The containing handoff CTS12 1 ns route is active; timing/area impact remains
+unproven. Previous pre-handoff gather/transport snapshots are retained in
+`bf16_weight_transport/gather_handoff/` for the still-running lane-offset route.

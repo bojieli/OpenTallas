@@ -9,7 +9,6 @@
 module ot_a3_bf16_weight_gather #(
  parameter integer SLOTS=3,
  parameter bit RETAIN_LINES=1,
- parameter bit WORD_HANDOFF=1,
  parameter integer SLOT_BITS=SLOTS<2?1:$clog2(SLOTS)
 )(
  input wire clk,rst_n,clear,
@@ -58,7 +57,7 @@ module ot_a3_bf16_weight_gather #(
  wire expected_response=(state==WAIT_RESPONSE || (state==REQUEST && read_ready)) && response_tag==read_tag;
  wire unexpected_response=response_valid && !expected_response;
  assign command_ready=enabled && !active && !protocol_error;
- assign coordinate_ready=enabled && active && (state==IDLE || (WORD_HANDOFF && state==SEND && word_ready)) && !protocol_error && !unexpected_response;
+ assign coordinate_ready=enabled && active && state==IDLE && !protocol_error;
  assign word_valid=enabled && state==SEND;
  assign read_valid=enabled && state==REQUEST;
  assign read_tag={generation,sequence_id};
@@ -115,16 +114,7 @@ module ot_a3_bf16_weight_gather #(
     end
     REQUEST:if(read_ready)state<=WAIT_RESPONSE;
     WAIT_RESPONSE:begin end
-    SEND:if(word_ready)begin
-     state<=IDLE;
-     if(coordinate_valid && coordinate_ready)begin
-      if(32'(coordinate_slot)>=SLOTS)protocol_error<=1;
-      else begin
-       if(!RETAIN_LINES)cache_valid[coordinate_slot]<=0;
-       state<=BOUNDS;
-      end
-     end
-    end
+    SEND:if(word_ready)state<=IDLE;
     default:state<=IDLE;
    endcase
    if(response_valid && expected_response)begin

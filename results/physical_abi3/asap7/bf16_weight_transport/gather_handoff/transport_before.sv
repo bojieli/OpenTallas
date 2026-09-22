@@ -6,8 +6,7 @@
 // This adapter preserves the scheduler's generation/address tag and beat index.
 module ot_a3_bf16_weight_transport #(
  parameter integer INTERLEAVE=3,
- parameter bit RETAIN_LINES=1,
- parameter bit WORD_HANDOFF=1
+ parameter bit RETAIN_LINES=1
 )(
  input wire clk,rst_n,clear,
  input wire command_valid,output wire command_ready,
@@ -50,12 +49,9 @@ module ot_a3_bf16_weight_transport #(
  wire enabled=rst_n && !clear;
  wire launch=command_valid && command_ready;
  wire coordinate_fire=cursor_valid && cursor_ready;
- wire response_fire=response_valid && response_ready;
- wire final_response=response_fire && response_index==burst_words-1'b1;
- wire [10:0] incoming_index={1'b0,response_index}+{10'd0,response_fire};
  assign command_ready=enabled && !active && cursor_command_ready && gather_command_ready && !protocol_error;
  assign request_ready=enabled && active && !burst_active && !protocol_error;
- assign cursor_ready=gather_ready && burst_active && !final_response && !protocol_error;
+ assign cursor_ready=gather_ready && burst_active && !protocol_error;
  assign response_valid=gather_valid && burst_active;
  assign response_tag=burst_tag;
  assign protocol_error=local_error || cursor_error || gather_error;
@@ -68,10 +64,10 @@ module ot_a3_bf16_weight_transport #(
   .coordinate_valid(cursor_valid),.coordinate_ready(cursor_ready),.generation(),.element_base(element_base),
   .lane_stride(),.lane_mask(lane_mask),.row_index(),.column_base(column_base),.k_index(),.last(cursor_last),.command_error(cursor_error));
  /* verilator lint_on PINCONNECTEMPTY */
- ot_a3_bf16_weight_gather #(.SLOTS(INTERLEAVE),.RETAIN_LINES(RETAIN_LINES),.WORD_HANDOFF(WORD_HANDOFF)) gather(
+ ot_a3_bf16_weight_gather #(.SLOTS(INTERLEAVE),.RETAIN_LINES(RETAIN_LINES)) gather(
   .clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(launch),.command_ready(gather_command_ready),
   .command_generation(command_generation),.command_object(command_object),.command_object_bytes(command_object_bytes),.command_lane_stride(command_column_stride),
-  .coordinate_valid(cursor_valid && burst_active && !final_response && !protocol_error),.coordinate_ready(gather_ready),
+  .coordinate_valid(cursor_valid && burst_active && !protocol_error),.coordinate_ready(gather_ready),
   .coordinate_element_base(element_base),.coordinate_mask(lane_mask),
   .coordinate_slot(slot),.coordinate_index(next_address[31:0]),
   .word_valid(gather_valid),.word_ready(response_ready && burst_active),.word_data(response_data),.word_index(gathered_index),
@@ -94,7 +90,7 @@ module ot_a3_bf16_weight_transport #(
     else slot<=slot+1'b1;
     if(cursor_last)begin
      exhausted<=1;
-     if(incoming_index!={1'b0,burst_words}-1'b1)local_error<=1;
+     if(response_index!=burst_words-1'b1)local_error<=1;
     end
    end
    if(response_valid && response_ready)begin

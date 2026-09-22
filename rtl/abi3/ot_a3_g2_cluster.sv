@@ -151,6 +151,7 @@ module ot_a3_g2_cluster #(
     parameter bit RESOLVE_INPUT_OBJECTS = 0,
     parameter bit RUNTIME_WEIGHT_OBJECT_READS = 0,
     parameter bit RUNTIME_WEIGHT_LINE_REUSE = 1,
+    parameter bit RUNTIME_WEIGHT_WORD_HANDOFF = 1,
     parameter bit RUNTIME_WEIGHT_ROW_REUSE = 1,
     parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
     parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
@@ -847,7 +848,7 @@ module ot_a3_g2_cluster #(
         if(RUNTIME_WEIGHT_OBJECT_READS)begin : descriptor_weight_transport
             // The compute bank service clears immediately on drain. External
             // read ownership survives until transport cancellation is acknowledged.
-            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE)) transport(
+            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE),.WORD_HANDOFF(RUNTIME_WEIGHT_WORD_HANDOFF)) transport(
                 .clk(clk),.rst_n(rst_n),
                 .clear(!input_layout_valid || (lifetime_clear && runtime_transport_ack)),
                 .command_valid(command_pending && service_command_ready),.command_ready(transport_command_ready),
