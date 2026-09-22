@@ -318,3 +318,63 @@ def test_source_root_must_hold_rtl_and_rebinds_relative_paths(tmp_path, capsys):
         assert flow.ROOT == pinned.resolve()
     finally:
         flow.ROOT = original
+
+
+def test_cts_cluster_size_is_explicit_isolated_and_keeps_sdc():
+    view, corner = _asap7()
+    original = dict(view["pnr"]["extra_config"])
+    selected = flow.with_cts_cluster_size(view, 12)
+    assert view["pnr"]["extra_config"] == original
+    assert flow.with_cts_cluster_size(view, None) is view
+    lines = flow.orfs_config_lines("nick", LANE_BLOCK, "asap7", selected["pnr"], 35, 0.6)
+    assert "export CTS_CLUSTER_SIZE = 12" in lines
+    default = flow.orfs_config_lines("nick", LANE_BLOCK, "asap7", view["pnr"], 35, 0.6)
+    assert all("CTS_CLUSTER_SIZE" not in line for line in default)
+    for bad in [0, -1]:
+        with pytest.raises(ValueError, match="positive"):
+            flow.with_cts_cluster_size(view, bad)
+    with pytest.raises(ValueError, match="platform"):
+        flow.with_cts_cluster_size({"pnr": None}, 12)
+
+
+def test_cts_cluster_cli_rejects_invalid_runs_before_tools(tmp_path, capsys):
+    args = ["--view", "asap7", "--clock-period-ns", "1",
+            "--output", str(tmp_path / "route.json")]
+    assert flow.build_parser().parse_args(args).cts_cluster_size is None
+    assert flow.build_parser().parse_args(args + ["--cts-cluster-size", "12"]).cts_cluster_size == 12
+    for stages, size, message in [("synth,sta", "12", "requires stage pnr"),
+                                   ("pnr", "0", "must be positive")]:
+        assert flow.main(args + ["--stages", stages, "--cts-cluster-size", size]) == 2
+        assert message in capsys.readouterr().err
+    assert not (tmp_path / "route.json").exists()
+
+
+def test_cts_cluster_preserves_explicit_signal_integrity_limits():
+    view, corner = _asap7()
+    selected = flow.with_cts_cluster_size(view, 12)
+    original = flow.resolve_signal_integrity_constraints(view, corner, 0.32, 16, None)
+    candidate = flow.resolve_signal_integrity_constraints(selected, corner, 0.32, 16, None)
+    assert candidate == original
+    assert candidate["sdc_lines"] == ["set_max_fanout 16 [current_design]",
+                                      "set_max_transition 320 [current_design]"]
+
+
+def test_cts_route_record_reproduces_config():
+    import hashlib
+    import json
+
+    path = ROOT / "results/physical_abi3/asap7/runtime_byte_mapper/pnr_optimized_cts12_1ns.json"
+    record = json.loads(path.read_text())
+    pnr = record["place_and_route"]
+    design = record["design"]
+    block = {key: design[key] for key in
+             ("top", "parameters", "clock_port", "false_path_from_ports")}
+    block["sources"] = [source["path"] for source in design["sources"]]
+    view = flow.with_cts_cluster_size(flow.VIEWS[record["view"]["name"]],
+                                      pnr["clock_tree_config"]["CTS_CLUSTER_SIZE"])
+    lines = flow.orfs_config_lines(pnr["design_nickname"], block, pnr["platform"],
+                                   view["pnr"], pnr["core_utilization_percent"],
+                                   pnr["place_density"], pnr["signal_integrity_constraints"],
+                                   pnr.get("memory_macros"))
+    assert hashlib.sha256(("\n".join(lines) + "\n").encode()).hexdigest() == pnr["artifacts"]["config.mk"]["sha256"]
+    assert pnr["signal_integrity_constraints"]["max_fanout"] == 16

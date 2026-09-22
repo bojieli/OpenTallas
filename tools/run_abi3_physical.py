@@ -2181,6 +2181,8 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--place-density", type=float, default=0.60)
+    parser.add_argument("--cts-cluster-size", type=int, default=None,
+                        help="ORFS clock sink clustering size; controls clock-tree fanout without relaxing SDC limits")
     parser.add_argument("--keep-heavy-artifacts", action="store_true")
     parser.add_argument(
         "--max-transition-ns",
@@ -2323,6 +2325,21 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def with_cts_cluster_size(view: dict[str, Any], size: int | None) -> dict[str, Any]:
+    """Copy the view so a CTS experiment cannot change another run's defaults."""
+    if size is None:
+        return view
+    if size < 1:
+        raise ValueError("--cts-cluster-size must be positive")
+    if view.get("pnr") is None:
+        raise ValueError("--cts-cluster-size requires a place-and-route platform")
+    result = dict(view)
+    result["pnr"] = dict(view["pnr"])
+    result["pnr"]["extra_config"] = dict(view["pnr"]["extra_config"])
+    result["pnr"]["extra_config"]["CTS_CLUSTER_SIZE"] = size
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     global ROOT
     args = build_parser().parse_args(argv)
@@ -2376,6 +2393,14 @@ def main(argv: list[str] | None = None) -> int:
         view["pnr"] = dict(view["pnr"])
         view["pnr"]["extra_config"] = dict(view["pnr"]["extra_config"])
         view["pnr"]["extra_config"]["ASAP7_USE_VT"] = " ".join(flavours)
+
+    try:
+        if args.cts_cluster_size is not None and "pnr" not in stages:
+            raise ValueError("--cts-cluster-size requires stage pnr")
+        view = with_cts_cluster_size(view, args.cts_cluster_size)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
 
     if args.block:
         block = dict(BLOCKS[args.block])
@@ -2563,6 +2588,11 @@ def main(argv: list[str] | None = None) -> int:
                 constraints,
                 memory_macros,
             )
+            if args.cts_cluster_size is not None:
+                record["place_and_route"]["clock_tree_config"] = {
+                    "CTS_CLUSTER_SIZE": args.cts_cluster_size,
+                    "basis": "explicit command-line sink clustering; SDC fanout limit unchanged",
+                }
             record["stages_completed"].append("pnr")
 
         record["flow_completed"] = True

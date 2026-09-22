@@ -53,7 +53,7 @@ power estimate rises from 3.748 to 5.936 mW; this is not activity-qualified ener
 per operation, and an energy improvement has not been established. Free-running
 payload arithmetic needs workload-based switching evaluation. A smaller-clock-
 cluster mapper reroute has been launched with the fanout limit held at 16; it
-has no accepted result at this report checkpoint.
+has now completed; see the clock-tree repair checkpoint below.
 
 The two optimized route records and all seven retained artifacts per record
 were checked against their hashes. Their source hashes match the committed
@@ -548,3 +548,39 @@ plus generation/plane refusal. The G2 byte-transport campaign still produces
 584 accepted matching outputs with the same 14,375 final completion counter.
 The full architecture, all-target optimization and physical coverage goals
 remain unfinished.
+
+
+## Clock-tree repair checkpoint
+
+The mapper reroute with `--cts-cluster-size 12` eliminates both clock-leaf fanout
+violations without changing the SDC fanout limit of 16 or 0.32 ns transition
+limit. At ASAP7 TT and a 1 ns target, setup WNS is +0.386740 ns and hold WNS is
++0.058446 ns. Setup/hold path violations, slew/capacitance/fanout violations,
+DRC and antenna counts are all zero. Routed standard-cell area is 888.112 um²,
+14.97% below the 1,044.51 um² baseline, including the repaired clock tree.
+This is standalone routed-stage closure; pre-layout STA still fails, so the
+record's overall `not_met` verdict is preserved. The extrapolated flow Fmax is
+not a validated operating point. Flow power is 6.235 mW, and no energy saving
+is claimed.
+
+The driver now accepts an explicit clock sink clustering size, rejects invalid
+sizes or runs without PNR, copies configuration rather than changing defaults,
+and records the selection in `place_and_route.clock_tree_config`. Tests verify
+CLI rejection, unchanged signal-integrity constraints and byte-for-byte
+reconstruction of the completed CTS12 route configuration. Source and retained
+artifact hashes were verified. Evidence:
+`results/physical_abi3/asap7/runtime_byte_mapper/pnr_optimized_cts12_1ns.json`.
+
+The scheduler's four violations were traced to clock-leaf buffers, each with
+17 loads against the limit of 16. A CTS12 reroute is running with the same
+constraints. Its result remains unqualified until all finish checks are read.
+
+A separate historical physical-driver regression still fails for the old G2
+cluster config hash. Both the committed driver and the CTS-modified driver
+produce the same mismatch. Removing the later-added
+`SYNTH_MEMORY_MAX_BITS` config line reproduces that record's exact expected
+hash, establishing the historical schema difference. The old record and test
+have not been weakened or rewritten; historical config reconstruction needs
+explicit version handling. Other physical-driver constraint and macro checks
+are run separately from that known failure. The architecture integration,
+weight-reuse and all-target optimization requirements remain open.
