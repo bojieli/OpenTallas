@@ -1448,3 +1448,18 @@ outputs, 18 faults and 115,748 checks, with the same aggregate operation cycles
 322,816. All corpus and loaded G2 source hashes match current sources.
 Evidence: `results/rtl/a3_lq8_shared_generation.json`. All-target architecture,
 large-row reuse and complete physical qualification remain outstanding.
+
+
+## Join payload route confirms area saving
+
+The matched baseline and unreset-payload join routes complete at ASAP7 TT,
+1 ns, CTS12 and fanout16. Routed standard-cell area falls from 553.253 to
+461.749 um² (16.54%). Setup WNS is +0.212610 / +0.205734 ns and hold WNS
++0.0658206 / +0.0545622 ns. Both have zero setup/hold, slew, capacitance,
+fanout, DRC and antenna violations. All retained artifact hashes match.
+The implementation therefore saves routed area while retaining closure at
+the tested period; it does not improve setup margin or prove a tighter clock.
+Overall records remain `not_met` because pre-layout STA failed. Evidence:
+`runtime_operand_join/routed_payload_comparison.json` and paired route artifacts
+under `results/physical_abi3/asap7/`. The combined service route includes this
+join revision but remains pending.
