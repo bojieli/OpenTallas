@@ -1,0 +1,32 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded M6/N53/K342, static pass width 3 versus 2 with unchanged three-stage arithmetic. Phase latency includes modeled memory/stall/drain service.",
+  "source_manifests_match": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "d7266f120fc2ec17cd9026985d23c3e1c5d66128af41111117c29276cd6a797f",
+      "pass_columns": 3,
+      "adder_stages": 3,
+      "median_successful_phase_cycles": 200641.5,
+      "campaign_cycles": 1421966,
+      "weight_fills": 12654,
+      "weight_bytes": 404340,
+      "activation_fills": 6156
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2.json",
+      "sha256": "17528afc3d282224cfbe78b479ac9e1466d73d7b0a3ec34e9bbc4e4ac7aee430",
+      "pass_columns": 2,
+      "adder_stages": 3,
+      "median_successful_phase_cycles": 67785.5,
+      "campaign_cycles": 489896,
+      "weight_fills": 2394,
+      "weight_bytes": 73140,
+      "activation_fills": 8208
+    }
+  ],
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "phase_cycle_reduction_percent": 66.2156134199555
+}

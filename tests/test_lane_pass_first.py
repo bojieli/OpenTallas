@@ -9,10 +9,10 @@ from tools.rtl_abi3_lane_campaign import RTL_SOURCES
 ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
-@pytest.mark.parametrize("interleave", [1, 2, 3])
+@pytest.mark.parametrize("interleave,adder_stages", [(1,1),(2,2),(3,3),(1,3),(2,3),(5,3),(7,3)])
 @pytest.mark.parametrize("depth", [1, 4, 160])
 @pytest.mark.parametrize("pass_first", [0, 1])
-def test_lane_pass_first(tmp_path, interleave, depth, pass_first):
+def test_lane_pass_first(tmp_path, interleave, adder_stages, depth, pass_first):
     rows, cols = 3, 7
     block = 1 if depth == 1 else 4
     stride = depth // block
@@ -65,7 +65,7 @@ reg [63:0] a_rd_data,b_rd_data;reg [31:0] s_rd_data,t_rd_data;
 reg [63:0] am[0:{len(a)-1}],bm[0:{len(b)-1}];
 reg [31:0] sa[0:{len(scales_a)-1}],sb[0:{len(scales_b)-1}];
 reg [127:0] req[0:{len(addresses)-1}];reg [63:0] expected[0:{len(expected)-1}];
-ot_a3_lane_pipelined #(.ADDER_STAGES({interleave}),.OPERAND_CREDITS(1),.PASS_FIRST({pass_first})) dut(
+ot_a3_lane_pipelined #(.ADDER_STAGES({adder_stages}),.PASS_COLUMNS({interleave}),.OPERAND_CREDITS(1),.PASS_FIRST({pass_first})) dut(
 .clk(clk),.rst_n(rst_n),.start(start),.operand_credit(credit),.operand_issue(operand_issue),
 .operand_a_addr(operand_a_addr),.operand_b_addr(operand_b_addr),.operand_s_addr(operand_s_addr),.operand_t_addr(operand_t_addr),
 .cfg_rows(16'd{rows}),.cfg_cols(16'd{cols}),.cfg_depth(16'd{depth}),

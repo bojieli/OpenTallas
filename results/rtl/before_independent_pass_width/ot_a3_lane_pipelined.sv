@@ -101,7 +101,6 @@ module ot_a3_lane_pipelined #(
     parameter integer ADDER_STAGES = 3,     // L: adder latency = interleaved columns
     parameter integer ACC_SLOTS    = 8,     // accumulator file slots (>= ADDER_STAGES)
     parameter integer OPERAND_CREDITS = 0,  // opt-in reservation before issue
-    parameter integer PASS_COLUMNS = ADDER_STAGES,
     parameter bit PASS_FIRST = 0           // pass, row, K, interleaved column
 ) (
     input  wire        clk,
@@ -167,12 +166,10 @@ module ot_a3_lane_pipelined #(
     output reg         op_retire           // one-cycle pulse per retired lane-op
 );
     localparam integer L = ADDER_STAGES;
-    localparam [15:0]  L16 = 16'(PASS_COLUMNS);
-    localparam [2:0]   L3 = 3'(PASS_COLUMNS);
+    localparam [15:0]  L16 = ADDER_STAGES;
+    localparam [2:0]   L3 = ADDER_STAGES;
     localparam [3:0]   L_WAIT = ADDER_STAGES - 1;
     initial begin
-        if (PASS_COLUMNS < 1 || PASS_COLUMNS > 7 || PASS_COLUMNS > ACC_SLOTS)
-            $fatal(1, "invalid lane pass width");
         if (ADDER_STAGES < 1 || ADDER_STAGES > 3)
             $fatal(1, "lane adder supports one, two or three stages");
         if (ACC_SLOTS < ADDER_STAGES || ACC_SLOTS > 8)
@@ -217,7 +214,7 @@ module ot_a3_lane_pipelined #(
 
     // Column-indexed walk state is sized to the next power of two above L so
     // that col_i (< n_active <= L) never leaves the array.
-    localparam integer COL_BITS = (PASS_COLUMNS > 4) ? 3 : ((PASS_COLUMNS > 2) ? 2 : 1);
+    localparam integer COL_BITS = (ADDER_STAGES > 4) ? 3 : ((ADDER_STAGES > 2) ? 2 : 1);
     localparam integer COL_SLOTS = 1 << COL_BITS;
 
     // Preserve the carry when rounding a maximum-width K up to a group.

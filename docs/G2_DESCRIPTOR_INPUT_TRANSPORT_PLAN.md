@@ -838,3 +838,51 @@ still repeats once a pass exceeds bank capacity. Future improvements must
 consider narrower adaptive passes or explicit depth tiling/accumulator budgets,
 including lane utilization and activation traffic, rather than treating this
 fallback as an efficiency endpoint.
+
+## Independent pass width preserves reuse without shortening arithmetic
+
+`PASS_COLUMNS` now controls the lane's column interleave independently of
+`ADDER_STAGES`. The array and cluster propagate it consistently to execution,
+future operands, bank scheduling, object transport and the output writer. The
+default remains the adder depth; the loaded runner exposes pass widths 1/2/3
+for pass-first mode. Accumulator recurrence wait remains tied to actual adder
+latency. Narrower passes can insert issue bubbles but fit deeper whole-K passes
+into the existing banks without a partial-accumulator spill or extra SRAM.
+This is static configuration, not an automatic per-command selection policy.
+
+Forty-three lane tests pass, covering both orders, K1/K4/K160, pass/adder pairs
+1/1, 2/2, 3/3, 1/3, 2/3, 5/3 and 7/3, with exact signed FP32 accumulation,
+scales, stalls and reset recovery. Evidence:
+`results/rtl/lane_independent_pass_width.json`.
+
+Matched loaded M6/N53/K342 pass-first campaigns, both with the unchanged
+three-stage arithmetic pipeline, show:
+
+| Measurement | Three-column pass | Two-column pass |
+|---|---:|---:|
+| Median successful-operation cycles | 200,641.5 | 67,785.5 |
+| Full fault/recovery campaign cycles | 1,421,966 | 489,896 |
+| First-operation weight fills | 12,654 | 2,394 |
+| First-operation weight bytes | 404,340 | 73,140 |
+| First-operation activation fills | 6,156 | 8,208 |
+
+The two-column 684-word passes fit retention capacity. Median successful-phase
+cycles fall 66.22% despite 33.33% more activation fills. Both runs pass 2,234 exact
+outputs and 295 write acknowledgements with identical source manifests, including
+abort, fault and recovery coverage. Phase cycles include modeled memory/stalls
+and drain, not whole-model inference. Evidence:
+`results/rtl/g2_independent_pass_width_comparison.json`. Earlier K342 evidence is
+archived under `before_independent_pass_width/` and its comparison rebound.
+
+Current-source two-column integrated G2 characterization at 1 ns is active via
+`configs/hardware/g2_pass_columns2_physical.json`. Existing three-column runs
+remain historical launch baselines after these RTL changes; snapshots retain
+source binding. All-target closure and adaptive policy remain outstanding.
+
+The split tile increment route also completes: 1,429.280 um² cells, setup
+-0.0565655 ns, hold +0.0517601 ns, zero slew/cap/fanout/DRC/antenna violations at
+1 ns. It still fails setup, but improves the preceding handoff route's -105.825 ps
+by 49.26 ps at 0.33% more area and no added cycles. The critical path remains
+inner replay/extent to tile-base advancement. Source and seven artifact hashes
+verify in `weight_pass_scheduler/split_tile_address_route_audit.json`; no
+extrapolated Fmax is accepted as closure.

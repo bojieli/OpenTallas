@@ -161,3 +161,11 @@ falls 211,545.5 to 200,641.5 cycles, while full passes still stream above capaci
 These phase counters include the modeled memory/stall/drain service and are not
 whole-model inference latency. See the input transport plan for exact traffic,
 source-bound evidence and remaining capacity limits.
+
+Pass width is now independent of arithmetic pipeline depth. At M6/N53/K342,
+two-column passes with the same three-stage adder fit SRAM retention and reduce
+median successful-operation cycles from 200,641.5 to 67,785.5 (66.22%) versus
+three-column passes. Weight bytes fall from 404,340 to 73,140; activation fills
+rise from 6,156 to 8,208. Both loaded campaigns pass identical numerical and
+fault/recovery checks. This is an explicit configuration choice, with physical
+characterization active and adaptive workload selection still open.

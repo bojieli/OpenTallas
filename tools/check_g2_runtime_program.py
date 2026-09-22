@@ -25,6 +25,7 @@ parser.add_argument("--weight-object-reads", action="store_true")
 parser.add_argument("--input-layout", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--pass-first", action="store_true")
+parser.add_argument("--pass-columns",type=int,choices=[1,2,3],default=3)
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
 parser.add_argument("--cols", type=int, default=None)
@@ -32,6 +33,8 @@ parser.add_argument("--activation-miss-aligned", action="store_true")
 parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
 parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
+if args.pass_columns!=3 and not args.pass_first:
+    parser.error("nondefault pass width requires --pass-first")
 if args.pass_first:
     args.weight_object_reads=True
     args.object_writes=True
@@ -85,6 +88,8 @@ if args.no_weight_word_handoff:
     record_name += "_no_word_handoff"
 if args.pass_first:
     record_name += "_pass_first"
+if args.pass_columns!=3:
+    record_name += f"_passcols{args.pass_columns}"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -166,9 +171,9 @@ hex_words(
     [
         sum(int(weight[column * 8 + lane, k]) << (16 * lane) for lane in range(8))
         for _ in range(rows)
-        for pass_base in range(0, cols // 8, 3)
+        for pass_base in range(0, cols // 8, args.pass_columns)
         for k in range(depth)
-        for column in range(pass_base, min(pass_base + 3, cols // 8))
+        for column in range(pass_base, min(pass_base + args.pass_columns, cols // 8))
     ],
     32,
 )
@@ -207,7 +212,7 @@ hex_words("expected.hex", expected_padded.reshape(-1), 8)
 # A later column pass can revisit a page evicted while reading the same row.
 resident_page = None
 expected_activation_fills = 0
-issue_order=[(row,p) for row in range(rows) for p in range(0,cols//8,3)]
+issue_order=[(row,p) for row in range(rows) for p in range(0,cols//8,args.pass_columns)]
 if args.pass_first:
     issue_order.sort(key=lambda rp:(rp[1],rp[0]))
 for row,pass_base in issue_order:
@@ -222,9 +227,9 @@ for row,pass_base in issue_order:
 expected_weight_fills=rows*(cols//8)*depth
 if not args.no_weight_row_reuse and rows>1:
     if args.pass_first:
-        expected_weight_fills=sum(min(3,cols//8-p)*depth *
-            (1 if min(3,cols//8-p)*depth<=1024 else rows)
-            for p in range(0,cols//8,3))
+        expected_weight_fills=sum(min(args.pass_columns,cols//8-p)*depth *
+            (1 if min(args.pass_columns,cols//8-p)*depth<=1024 else rows)
+            for p in range(0,cols//8,args.pass_columns))
     elif (cols//8)*depth<=1024:
         expected_weight_fills=(cols//8)*depth
 (OUT / "program_config.svh").write_text(
@@ -289,6 +294,7 @@ cmd = [
     f"-GWEIGHT_OBJECT_READS={int(args.weight_object_reads)}",
     f"-GINPUT_LAYOUT={int(args.input_layout)}",
     f"-GOBJECT_WRITES={int(args.object_writes)}",
+    f"-GPASS_COLUMNS={args.pass_columns}",
     f"-GPASS_FIRST={int(args.pass_first)}",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
     f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
@@ -337,6 +343,7 @@ result = {
     "strided_output": args.strided_output,
     "write_outstanding": args.write_outstanding,
     "pass_first": args.pass_first,
+    "pass_columns": args.pass_columns,
     "weight_row_reuse": not args.no_weight_row_reuse,
     "auxiliary_depth": args.auxiliary_depth,
     "registered_auxiliary_requests": args.registered_auxiliary_requests,

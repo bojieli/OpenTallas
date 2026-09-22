@@ -63,7 +63,6 @@ module ot_a3_lq8 #(
     parameter integer ADDER_STAGES = 3,     // L, passed to every lane
     parameter integer ACC_SLOTS    = 8,
     parameter integer OPERAND_CREDITS = 0,
-    parameter integer PASS_COLUMNS = ADDER_STAGES,
     parameter bit PASS_FIRST = 0
 ) (
     input  wire        clk,
@@ -248,7 +247,7 @@ module ot_a3_lq8 #(
                 .ADDER_STAGES(ADDER_STAGES),
                 .ACC_SLOTS(ACC_SLOTS),
                 .OPERAND_CREDITS(OPERAND_CREDITS),
-                .PASS_FIRST(PASS_FIRST),.PASS_COLUMNS(PASS_COLUMNS)
+                .PASS_FIRST(PASS_FIRST)
             ) u_lane (
                 .clk(clk), .rst_n(rst_n),
                 .start(lane_start),

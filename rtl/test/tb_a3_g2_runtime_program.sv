@@ -3,6 +3,7 @@
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter bit PASS_FIRST=0;
+ parameter integer PASS_COLUMNS=3;
  parameter bit OBJECT_WRITES=0;
  parameter bit INPUT_LAYOUT=0;
  parameter bit WEIGHT_OBJECT_READS=0;
@@ -266,7 +267,7 @@ module tb_a3_g2_runtime_program;
       !dut.runtime_operands.descriptor_weight_transport.transport.gather.active)
    $fatal(1,"weight read ownership cleared before cancellation acknowledgement");
  end endgenerate
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_PASS_FIRST(PASS_FIRST),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_WEIGHT_WORD_HANDOFF(WEIGHT_WORD_HANDOFF),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_PASS_FIRST(PASS_FIRST),.PASS_COLUMNS(PASS_COLUMNS),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_WEIGHT_WORD_HANDOFF(WEIGHT_WORD_HANDOFF),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
  .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
  .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),
@@ -402,7 +403,7 @@ module tb_a3_g2_runtime_program;
   phase=1;launch();
   if(STRESS_OUTPUT)begin
    // Hold the last result until after compute and external acknowledgements.
-   wait(seen[8*((PASS_FIRST && (COLS/8)%3==1)?LOCAL_OUTPUTS-1-COLS/8:LOCAL_OUTPUTS-2)]);@(negedge clk);tail_hold=1;
+   wait(seen[8*((PASS_FIRST && (COLS/8)%PASS_COLUMNS==1)?LOCAL_OUTPUTS-1-COLS/8:LOCAL_OUTPUTS-2)]);@(negedge clk);tail_hold=1;
   end
   drain(0);
   if(seen!=expected_seen || outputs!=2*ROWS*LOGICAL_COLS)$fatal(1,"missing restart outputs");

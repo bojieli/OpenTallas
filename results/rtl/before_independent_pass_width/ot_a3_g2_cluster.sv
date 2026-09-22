@@ -146,7 +146,6 @@ module ot_a3_g2_cluster #(
     parameter integer STATE_COMPAT  = 0,     // as routed: a3_microsequencer
     parameter integer LANES         = 8,     // as routed: a3_lq8_array
     parameter integer ADDER_STAGES  = 3,
-    parameter integer PASS_COLUMNS = ADDER_STAGES,
     parameter integer ACC_SLOTS     = 8,
     parameter integer RUNTIME_OPERANDS = 0,
     parameter bit RESOLVE_INPUT_OBJECTS = 0,
@@ -762,7 +761,7 @@ module ot_a3_g2_cluster #(
         wire writer_error;
         assign object_writer_error=writer_error || binding_error;
         assign queued_output_ready=part_ready && writer_ready;
-        ot_a3_output_object_writer #(.LANES(LANES),.OUTSTANDING(WRITE_OUTSTANDING),.PASS_FIRST(RUNTIME_PASS_FIRST),.INTERLEAVE(PASS_COLUMNS)) writer(
+        ot_a3_output_object_writer #(.LANES(LANES),.OUTSTANDING(WRITE_OUTSTANDING),.PASS_FIRST(RUNTIME_PASS_FIRST),.INTERLEAVE(ADDER_STAGES)) writer(
             .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
             .command_valid(output_layout_valid && array_busy),.command_ready(),
             .command_generation(runtime_generation),.command_object(output_object),
@@ -852,7 +851,7 @@ module ot_a3_g2_cluster #(
         if(RUNTIME_WEIGHT_OBJECT_READS)begin : descriptor_weight_transport
             // The compute bank service clears immediately on drain. External
             // read ownership survives until transport cancellation is acknowledged.
-            ot_a3_bf16_weight_transport #(.INTERLEAVE(PASS_COLUMNS),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE),.WORD_HANDOFF(RUNTIME_WEIGHT_WORD_HANDOFF),.PASS_FIRST(RUNTIME_PASS_FIRST),
+            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE),.WORD_HANDOFF(RUNTIME_WEIGHT_WORD_HANDOFF),.PASS_FIRST(RUNTIME_PASS_FIRST),
                 .COMPACT_PASS_REUSE(RUNTIME_PASS_FIRST && RUNTIME_WEIGHT_ROW_REUSE)) transport(
                 .clk(clk),.rst_n(rst_n),
                 .clear(!input_layout_valid || (lifetime_clear && runtime_transport_ack)),
@@ -948,7 +947,7 @@ module ot_a3_g2_cluster #(
             else if(operand_issue)words_read<=words_read+1'b1;
         end
         assign staging_weight_words_read=words_read;
-        ot_a3_lq8_runtime_operands #(.INTERLEAVE(PASS_COLUMNS),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),.PASS_FIRST(RUNTIME_PASS_FIRST),
+        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),.PASS_FIRST(RUNTIME_PASS_FIRST),
             .AUXILIARY_DEPTH(RUNTIME_AUXILIARY_DEPTH),.REGISTER_AUXILIARY_REQUESTS(RUNTIME_REGISTER_AUXILIARY_REQUESTS)) service(
             .clk(clk),.rst_n(rst_n),.clear(service_clear),
             .command_valid(command_pending && transport_command_ready),.command_ready(service_command_ready),
@@ -991,7 +990,7 @@ module ot_a3_g2_cluster #(
 
     ot_a3_lq8 #(
         .LANES(LANES),
-        .ADDER_STAGES(ADDER_STAGES),.PASS_COLUMNS(PASS_COLUMNS),
+        .ADDER_STAGES(ADDER_STAGES),
         .ACC_SLOTS(ACC_SLOTS),.OPERAND_CREDITS(RUNTIME_OPERANDS),.PASS_FIRST(RUNTIME_PASS_FIRST)
     ) array (
         .clk(clk),

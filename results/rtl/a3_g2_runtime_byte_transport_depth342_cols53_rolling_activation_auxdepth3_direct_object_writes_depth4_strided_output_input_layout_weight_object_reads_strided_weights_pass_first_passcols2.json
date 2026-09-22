@@ -3,43 +3,43 @@
   "phase_latencies": [
     {
       "phase": 1,
-      "cycles": 200643
+      "cycles": 67804
     },
     {
       "phase": 2,
-      "cycles": 798
+      "cycles": 2862
     },
     {
       "phase": 1,
-      "cycles": 200665
+      "cycles": 67808
     },
     {
       "phase": 3,
-      "cycles": 206
+      "cycles": 205
     },
     {
       "phase": 1,
-      "cycles": 200641
+      "cycles": 67787
     },
     {
       "phase": 4,
-      "cycles": 15899
+      "cycles": 11743
     },
     {
       "phase": 5,
-      "cycles": 206
+      "cycles": 205
     },
     {
       "phase": 1,
-      "cycles": 200637
+      "cycles": 67783
     },
     {
       "phase": 6,
-      "cycles": 200643
+      "cycles": 67790
     },
     {
       "phase": 1,
-      "cycles": 200642
+      "cycles": 67784
     },
     {
       "phase": 7,
@@ -47,7 +47,7 @@
     },
     {
       "phase": 1,
-      "cycles": 200641
+      "cycles": 67780
     }
   ],
   "phase_latency_scope": "Kick-to-program-done under modeled memory, output stalls and explicit drain acknowledgements; not whole-model inference latency.",
@@ -61,7 +61,7 @@
   "strided_output": true,
   "write_outstanding": 4,
   "pass_first": true,
-  "pass_columns": 3,
+  "pass_columns": 2,
   "weight_row_reuse": true,
   "auxiliary_depth": 3,
   "registered_auxiliary_requests": false,
@@ -597,8 +597,8 @@
     "cols": 53,
     "padded_cols": 56,
     "depth": 342,
-    "expected_weight_fills": 12654,
-    "expected_activation_fills": 6156,
+    "expected_weight_fills": 2394,
+    "expected_activation_fills": 8208,
     "dtype": "BF16",
     "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes",
     "weight_element_base": 11,
@@ -629,7 +629,7 @@
     "-GWEIGHT_OBJECT_READS=1",
     "-GINPUT_LAYOUT=1",
     "-GOBJECT_WRITES=1",
-    "-GPASS_COLUMNS=3",
+    "-GPASS_COLUMNS=2",
     "-GPASS_FIRST=1",
     "-GWEIGHT_ROW_REUSE=1",
     "-GAUXILIARY_DEPTH=3",
@@ -638,9 +638,9 @@
     "-GACTIVATION_MISS_ALIGNED=1",
     "--top-module",
     "tb_a3_g2_runtime_program",
-    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first",
+    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2",
     "--Mdir",
-    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/obj",
+    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/obj",
     "-o",
     "sim",
     "-y",
@@ -658,16 +658,16 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=200794\nphase latency phase=1 elapsed_cycles=200643\nprogram phase=2 complete=0 trap=8 cycles=201594\nphase latency phase=2 elapsed_cycles=798\nprogram phase=1 complete=1 trap=0 cycles=402261\nphase latency phase=1 elapsed_cycles=200665\nprogram phase=3 complete=0 trap=8 cycles=402469\nphase latency phase=3 elapsed_cycles=206\nprogram phase=1 complete=1 trap=0 cycles=603112\nphase latency phase=1 elapsed_cycles=200641\nprogram phase=4 complete=0 trap=8 cycles=619013\nphase latency phase=4 elapsed_cycles=15899\nprogram phase=5 complete=0 trap=8 cycles=619221\nphase latency phase=5 elapsed_cycles=206\nprogram phase=1 complete=1 trap=0 cycles=819860\nphase latency phase=1 elapsed_cycles=200637\nprogram phase=6 complete=0 trap=8 cycles=1020505\nphase latency phase=6 elapsed_cycles=200643\nprogram phase=1 complete=1 trap=0 cycles=1221149\nphase latency phase=1 elapsed_cycles=200642\nlate write faults=1 recovered=1\nprogram phase=7 complete=0 trap=8 cycles=1221323\nphase latency phase=7 elapsed_cycles=172\nprogram phase=1 complete=1 trap=0 cycles=1421966\nphase latency phase=1 elapsed_cycles=200641\nobject binding fault=1 recovery=1 captured_capacity=1\nobject writes=295 acknowledgements=295\nweight object reads=179062 bytes=2864908 first_reads=25272 first_bytes=404340\nfirst operation weight fill_words=12654\nfirst operation SRAM fill_words=6156 read_requests=14364\nauxiliary SRAM windows=194 fill_words=43862 read_requests=101581\noutput stalls=16874 reservation stalls=18 accepted_outputs=2234\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=89636\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:453: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 14ms; walltime 9.030 s; speed 1.575 ms/s\n- Verilator: cpu 8.977 s on 1 threads; allocated 8 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=67955\nphase latency phase=1 elapsed_cycles=67804\nprogram phase=2 complete=0 trap=8 cycles=70819\nphase latency phase=2 elapsed_cycles=2862\nprogram phase=1 complete=1 trap=0 cycles=138629\nphase latency phase=1 elapsed_cycles=67808\nprogram phase=3 complete=0 trap=8 cycles=138836\nphase latency phase=3 elapsed_cycles=205\nprogram phase=1 complete=1 trap=0 cycles=206625\nphase latency phase=1 elapsed_cycles=67787\nprogram phase=4 complete=0 trap=8 cycles=218370\nphase latency phase=4 elapsed_cycles=11743\nprogram phase=5 complete=0 trap=8 cycles=218577\nphase latency phase=5 elapsed_cycles=205\nprogram phase=1 complete=1 trap=0 cycles=286362\nphase latency phase=1 elapsed_cycles=67783\nprogram phase=6 complete=0 trap=8 cycles=354154\nphase latency phase=6 elapsed_cycles=67790\nprogram phase=1 complete=1 trap=0 cycles=421940\nphase latency phase=1 elapsed_cycles=67784\nlate write faults=1 recovered=1\nprogram phase=7 complete=0 trap=8 cycles=422114\nphase latency phase=7 elapsed_cycles=172\nprogram phase=1 complete=1 trap=0 cycles=489896\nphase latency phase=1 elapsed_cycles=67780\nobject binding fault=1 recovery=1 captured_capacity=1\nobject writes=295 acknowledgements=295\nweight object reads=33743 bytes=539804 first_reads=4572 first_bytes=73140\nfirst operation weight fill_words=2394\nfirst operation SRAM fill_words=8208 read_requests=14364\nauxiliary SRAM windows=257 fill_words=58226 read_requests=101247\noutput stalls=3845 reservation stalls=23 accepted_outputs=2234\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=17614\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:453: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 5ms; walltime 4.077 s; speed 1.202 ms/s\n- Verilator: cpu 4.038 s on 1 threads; allocated 8 MB\n",
   "artifacts": {
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/activation.hex": "a7040c14907f6b29639df745362d33928b4ad18222fa3c68afe5e5bff1be0a95",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/activation_bytes.hex": "27b96f9bb26c3c44a817749d427e13bab7e8365eb85f93866ee88413b7bd1566",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/descriptor.hex": "c972562647f7e27c92e4eac7109ba300657e05d4fa7180094e1c8afbd96baf0d",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/expected.hex": "0a52ee7df1410e1887f19a8995671d84d1b693987bc3f12a10e73ee84c363791",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/weight.hex": "60a9bbc40ecde7aaad63f4b7735294c1aa3d059bbcb19c700e711c723b154f96",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/weight_bytes.hex": "3050e543d0b025b336dd8a57d8ecef8c62324340a2394667fee8b3bab80c5250",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/program_config.svh": "6890434cff7a24bb29be05f12714fb08cfb7ed45a1eaf7629b0dd3967168264f",
-    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first/simulation.log": "9ada045e6b69ea221748e83f8b7e50f19266d587f9b03cb230afc0ed7db04e12"
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/activation.hex": "a7040c14907f6b29639df745362d33928b4ad18222fa3c68afe5e5bff1be0a95",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/activation_bytes.hex": "27b96f9bb26c3c44a817749d427e13bab7e8365eb85f93866ee88413b7bd1566",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/descriptor.hex": "c972562647f7e27c92e4eac7109ba300657e05d4fa7180094e1c8afbd96baf0d",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/expected.hex": "0a52ee7df1410e1887f19a8995671d84d1b693987bc3f12a10e73ee84c363791",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/weight.hex": "977ad4790a98888e585de4cf974e95982879dd4f74070effd4f5bc900ee91648",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/weight_bytes.hex": "3050e543d0b025b336dd8a57d8ecef8c62324340a2394667fee8b3bab80c5250",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/program_config.svh": "94f714b77b3288f58f7fc5f3c0f427d1cec7c061f5b9cd521ce5af18b7810a96",
+    "build/g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2/simulation.log": "5e88672c9284db480073d65b9ee16bf439b253647dd7ed6f431c690e0ea9363d"
   }
 }
