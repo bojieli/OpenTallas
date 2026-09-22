@@ -2409,3 +2409,32 @@ SKY130 has 16 routed records, eight raw passes and two current verified records.
 These counts describe records, not unique blocks or deployment coverage.
 Historical routes, source snapshots and best standalone values cannot establish
 all-target completion. Evidence: `results/physical_abi3/current_evidence_audit.json`.
+
+
+## Qualify strided nonzero-base output views through integrated G2
+
+The program fixture can now build an actual admitted ABI output view with
+nonzero element offset and unsigned row/column strides. The new N53 case uses
+base 7, row stride 111 and column stride 2, with a 1,334-byte output object.
+The output shape remains six by 53 and execution remains padded to 56. The
+functional Device executes the same descriptor view before RTL comparison;
+no test-only descriptor bit patch bypasses admission.
+
+The loaded test subtracts the lane-local output base before recovering logical
+row/column identity. Object writes are checked independently by decoding byte
+addresses through the descriptor strides. All logical elements must be written
+exactly once, and bytes outside the view remain at their sentinel value. This
+covers leading offset bytes, inter-column gaps and row padding in addition to
+the arithmetic tail mask. Captured-capacity mutation, mismatched object binding,
+late write faults, abort drain and recovery remain in the campaign.
+
+Both contiguous and strided configurations pass with 295 writes/acknowledgements,
+2,234 matching output elements and 42,461 campaign cycles. This establishes no
+extra cycle cost for this admitted strided view; it does not qualify all layouts,
+precisions, dynamic extents or deployment object resolution. The synthesis RTL
+is unchanged, so the live integrated G2 physical run remains source-consistent.
+Current-source evidence is retained in
+`results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output.json`
+and the matching contiguous record. The preceding contiguous record is archived
+under `results/rtl/before_strided_output/`. The program generator records base,
+strides and exact object capacity in both the RTL fixture and evidence.

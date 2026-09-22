@@ -66,29 +66,40 @@ module tb_a3_g2_runtime_program;
  wire object_request_fire=object_write_valid && object_write_ready;
  wire object_ack_fire=object_ack && object_response_ready;
  integer object_writes=0,object_acks=0;
- reg [7:0] output_memory[0:2*ROWS*LOGICAL_COLS-1];
+ reg [7:0] output_memory[0:OUTPUT_BYTES-1];
  reg [ROWS*LOGICAL_COLS-1:0] object_seen=0;
+ function automatic integer object_index(input [63:0] offset);
+  integer e,r,c;
+  begin
+   e=integer'(offset/2)-OUTPUT_BASE;r=e/OUTPUT_ROW_STRIDE;c=(e%OUTPUT_ROW_STRIDE)/OUTPUT_COL_STRIDE;
+   if(offset%2 || e<0 || r>=ROWS || c>=LOGICAL_COLS || e%OUTPUT_ROW_STRIDE%OUTPUT_COL_STRIDE!=0)object_index=-1;
+   else object_index=r*LOGICAL_COLS+c;
+  end
+ endfunction
  assign object_write_ready=ack_count<8 && cycles%5!=0;
  // Behavioral object memory accepts complete checked beats and delays commit ack.
  // Golden comparison is independent of the writer's incremental address cursor.
  always @(posedge clk)begin
   if(!rst_n)begin ack_head<=0;ack_tail<=0;ack_count<=0;object_writes<=0;object_acks<=0;end
   else begin
-   if(kick)object_seen<=0;
+   if(kick)begin
+    object_seen<=0;
+    for(integer byte_index=0;byte_index<OUTPUT_BYTES;byte_index=byte_index+1)output_memory[byte_index]<=8'ha5;
+   end
    if(dut.arr_start)configured_object_bytes<=0; // captured bounds must survive host mutation
    if(object_write_valid && object_write_ready)begin
     if(object_write_object!=OUTPUT_OBJECT || object_write_generation!=runtime_generation || object_write_fp32)
      $fatal(1,"object write identity");
     ack_fault[ack_tail]<=0;
     for(integer i=0;i<8;i=i+1)if(object_write_mask[i])begin
-     if(object_write_offset[64*i+:64]>=2*ROWS*LOGICAL_COLS || object_write_offset[64*i+:64]%2!=0)
+     if(object_write_offset[64*i+:64]>=OUTPUT_BYTES || object_index(object_write_offset[64*i+:64])<0)
       $fatal(1,"object write bounds/alignment");
-     if(object_seen[object_write_offset[64*i+:64]/2])$fatal(1,"duplicate object write");
-     object_seen[object_write_offset[64*i+:64]/2]<=1;
-     if(phase==6 && object_write_offset[64*i+:64]==2*(ROWS*LOGICAL_COLS-1))ack_fault[ack_tail]<=1;
+     if(object_seen[object_index(object_write_offset[64*i+:64])])$fatal(1,"duplicate object write");
+     object_seen[object_index(object_write_offset[64*i+:64])]<=1;
+     if(phase==6 && object_index(object_write_offset[64*i+:64])==ROWS*LOGICAL_COLS-1)ack_fault[ack_tail]<=1;
      output_memory[object_write_offset[64*i+:64]]<=object_write_data[32*i+:8];
      output_memory[object_write_offset[64*i+:64]+1]<=object_write_data[32*i+8+:8];
-     if(object_write_data[32*i+:32]!=expected[(object_write_offset[64*i+:64]/(2*LOGICAL_COLS))*COLS+(object_write_offset[64*i+:64]/2)%LOGICAL_COLS])
+     if(object_write_data[32*i+:32]!=expected[(object_index(object_write_offset[64*i+:64])/LOGICAL_COLS)*COLS+object_index(object_write_offset[64*i+:64])%LOGICAL_COLS])
       $fatal(1,"object write value/address");
     end
     object_writes<=object_writes+1;ack_generation[ack_tail]<=object_write_generation;ack_due[ack_tail]<=cycles+12;ack_tail<=ack_tail+1'b1;
@@ -244,8 +255,8 @@ module tb_a3_g2_runtime_program;
     if(auxiliary_request_a>=DEPTH*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
    if(auxvalid && auxiliary_response_ready)auxvalid<=0;
    if(runtime_transport_cancel)begin wactive<=0;auxvalid<=0;end
-   if(part_valid && (!output_layout_valid || output_object!=OUTPUT_OBJECT || output_element_base!=0 ||
-      output_row_stride!=LOGICAL_COLS || output_col_stride!=1 ||
+   if(part_valid && (!output_layout_valid || output_object!=OUTPUT_OBJECT || output_element_base!=OUTPUT_BASE ||
+      output_row_stride!=OUTPUT_ROW_STRIDE || output_col_stride!=OUTPUT_COL_STRIDE ||
       output_rows!=ROWS || output_logical_cols!=LOGICAL_COLS || output_padded_cols!=COLS || output_fp32))
     $fatal(1,"output descriptor layout not owned through drain");
    if(held && (!part_valid || {part_we,part_addr,part_data,part_acc}!=held_payload))$fatal(1,"stalled output changed");
@@ -256,11 +267,11 @@ module tb_a3_g2_runtime_program;
    else if(part_valid && sink_ready)begin
     outputs<=outputs+$countones(part_we);
     for(integer i=0;i<8;i=i+1)if(part_we[i])begin
-     if((part_addr[32*i+:32]%(COLS/8))*8+i>=LOGICAL_COLS)$fatal(1,"padded lane escaped output mask");
-     if(part_addr[32*i+:32]>=LOCAL_OUTPUTS)$fatal(1,"wrong output address");
-     if(seen[8*part_addr[32*i+:32]+i])$fatal(1,"duplicate output");
-     seen[8*part_addr[32*i+:32]+i]<=1;
-     if((phase!=1 && phase!=4 && phase!=6) || part_data[32*i+:32]!=expected[8*part_addr[32*i+:32]+i])$fatal(1,"wrong result or write after abort");
+     if(((part_addr[32*i+:32]-OUTPUT_BASE)%(COLS/8))*8+i>=LOGICAL_COLS)$fatal(1,"padded lane escaped output mask");
+     if(part_addr[32*i+:32]<OUTPUT_BASE || part_addr[32*i+:32]-OUTPUT_BASE>=LOCAL_OUTPUTS)$fatal(1,"wrong output address");
+     if(seen[8*(part_addr[32*i+:32]-OUTPUT_BASE)+i])$fatal(1,"duplicate output");
+     seen[8*(part_addr[32*i+:32]-OUTPUT_BASE)+i]<=1;
+     if((phase!=1 && phase!=4 && phase!=6) || part_data[32*i+:32]!=expected[8*(part_addr[32*i+:32]-OUTPUT_BASE)+i])$fatal(1,"wrong result or write after abort");
     end
    end
    if(host_write_refused)$fatal(1,"host write refused");
@@ -269,7 +280,7 @@ module tb_a3_g2_runtime_program;
   end
  end
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
- task launch;begin configured_object_bytes=64'(2*ROWS*LOGICAL_COLS);kick=1;tick();kick=0;end endtask
+ task launch;begin configured_object_bytes=64'(OUTPUT_BYTES);kick=1;tick();kick=0;end endtask
  task drain(input [7:0] err);begin
   wait(runtime_transport_cancel);@(negedge clk);
   repeat(4)begin tick();if(array_done || !array_busy)$fatal(1,"lost operation during drain");end
@@ -282,9 +293,11 @@ module tb_a3_g2_runtime_program;
   wait(array_done);@(negedge clk);
   if(array_error_code!=err)$fatal(1,"wrong completion error");
   if(OBJECT_WRITES && err==0)begin
+   for(integer b=0;b<OUTPUT_BYTES;b=b+1)
+    if(object_index(64'(b & ~1))<0 && output_memory[b]!=8'ha5)$fatal(1,"write corrupted output gap");
    if(object_seen!={ROWS*LOGICAL_COLS{1'b1}})$fatal(1,"missing committed object outputs");
    for(integer r=0;r<ROWS;r=r+1)for(integer c=0;c<LOGICAL_COLS;c=c+1)
-    if({16'b0,output_memory[2*(r*LOGICAL_COLS+c)+1],output_memory[2*(r*LOGICAL_COLS+c)]}!=expected[r*COLS+c])
+    if({16'b0,output_memory[2*(OUTPUT_BASE+r*OUTPUT_ROW_STRIDE+c*OUTPUT_COL_STRIDE)+1],output_memory[2*(OUTPUT_BASE+r*OUTPUT_ROW_STRIDE+c*OUTPUT_COL_STRIDE)]}!=expected[r*COLS+c])
      $fatal(1,"committed object memory differs from golden");
   end
   wait(done);@(negedge clk);

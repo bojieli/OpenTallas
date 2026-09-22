@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--write-outstanding", type=int, choices=[1, 2, 4, 8], default=4)
+parser.add_argument("--strided-output", action="store_true")
 parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
@@ -56,6 +57,8 @@ record_name += f"_auxdepth{args.auxiliary_depth}"
 record_name += "_registered" if args.registered_auxiliary_requests else "_direct"
 if args.object_writes:
     record_name += f"_object_writes_depth{args.write_outstanding}"
+if args.strided_output:
+    record_name += "_strided_output"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -98,6 +101,8 @@ case = matmul_case(
     weight_codes=weight[:logical_cols],
     activation_dtype=DType.BF16,
     weight_dtype=DType.BF16,
+    output_strides=(2*logical_cols+5, 2) if args.strided_output else None,
+    output_element_offset=7 if args.strided_output else 0,
 )
 admission = verify_deployment(case.deployment, capability)
 assert admission.admitted, admission.errors
@@ -148,6 +153,9 @@ activation_view = reference_device.views.resolve(case.operand0_view, {}, {})
 activation_object = activation_view.object_id
 output_view = reference_device.views.resolve(case.output_view, {}, {})
 output_object = output_view.object_id
+output_base = 7 if args.strided_output else 0
+output_row_stride, output_col_stride = output_view.strides
+output_bytes = 2*(output_base+(rows-1)*output_row_stride+(logical_cols-1)*output_col_stride+1)
 activation_payload = reference_device.memory[activation_object].read(
     0, activation.nbytes
 )
@@ -175,6 +183,7 @@ for row in range(rows):
     f"localparam integer INSTRUCTION_COUNT={count};\n"
     f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object}, OUTPUT_OBJECT=32'd{output_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, LOGICAL_COLS={logical_cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
+    f"localparam integer OUTPUT_BASE={output_base}, OUTPUT_ROW_STRIDE={output_row_stride}, OUTPUT_COL_STRIDE={output_col_stride}, OUTPUT_BYTES={output_bytes};\n"
     f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
@@ -257,6 +266,7 @@ for p, h in hashes.items():
 result = {
     "status": "pass",
     "object_writes": args.object_writes,
+    "strided_output": args.strided_output,
     "write_outstanding": args.write_outstanding,
     "weight_row_reuse": not args.no_weight_row_reuse,
     "auxiliary_depth": args.auxiliary_depth,
@@ -283,7 +293,10 @@ result = {
         "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
         "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
-        "output_addressing": "Addresses use padded row width: row=address//(padded_cols/8), col=(address%(padded_cols/8))*8+lane; only col<cols is valid. Fixture base is zero.",
+        "output_element_base": output_base,
+        "output_strides": [output_row_stride, output_col_stride],
+        "output_object_bytes": output_bytes,
+        "output_addressing": "Subtract output_element_base from lane-local address; derive row and column using padded width and lane. Byte offset=2*(base+row*row_stride+column*col_stride).",
     },
     "command": cmd,
     "stdout": r.stdout,

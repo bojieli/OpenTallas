@@ -584,6 +584,8 @@ def matmul_case(
     block_rows_a: int = 0,
     block_rows_b: int = 0,
     expect_fault: bool = False,
+    output_strides: tuple[int, int] | None = None,
+    output_element_offset: int = 0,
 ) -> Case:
     """One TENSOR.MATMUL over real operand bytes under the sequential contract."""
     w = Workspace(name, capability, root)
@@ -626,7 +628,17 @@ def matmul_case(
         scale_block_rows=block_rows_b,
         key="view.weight",
     )
-    view_out = w.scratch_view(DType.BF16, [rows, cols], key="view.out")
+    if output_strides is None and output_element_offset == 0:
+        view_out = w.scratch_view(DType.BF16, [rows, cols], key="view.out")
+    else:
+        strides = output_strides or (cols, 1)
+        if output_element_offset < 0 or any(v < 0 for v in strides):
+            raise ValueError("Output offsets and strides must be unsigned")
+        elements = output_element_offset + (rows-1)*strides[0] + (cols-1)*strides[1] + 1
+        object_id = w.scratch(2*elements)
+        view_out = w.builder.tensor_view(object_id=object_id, dtype=DType.BF16,
+            dims=[rows, cols], strides=strides, element_offset=output_element_offset,
+            permissions=READ_WRITE, key="view.out")
     numeric = w.builder.numeric(
         contract="bf16_bf16_fp32_sequential_rne_v1",
         input_dtype=activation_dtype,
