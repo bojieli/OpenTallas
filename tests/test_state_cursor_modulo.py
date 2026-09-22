@@ -8,7 +8,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
-def test_ring_cursor_commit_and_cancel(tmp_path):
+@pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
+def test_ring_cursor_commit_and_cancel(tmp_path, simulator):
     rng = random.Random(831)
     cases = [(c, c-1 if c else 0, s) for c in
              [0, 1, 2, 3, 7, 32, 513, 1024, 65535, 0x80000000, 0xffffffff]
@@ -98,10 +99,20 @@ initial begin #1000000;$fatal(1,"timeout");end
 endmodule
 '''.replace('CALLS', '\n'.join(calls))
     (tmp_path/'tb.sv').write_text(bench)
-    built = subprocess.run(['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),
-                            str(ROOT/'rtl/abi3/ot_a3_pkg.sv'),
-                            str(ROOT/'rtl/abi3/ot_a3_state_controller.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
+    sources = [str(ROOT/'rtl/abi3/ot_a3_pkg.sv'),
+               str(ROOT/'rtl/abi3/ot_a3_state_controller.sv'), str(tmp_path/'tb.sv')]
+    if simulator == 'iverilog':
+        command = ['iverilog', '-g2012', '-s', 'tb', '-o', str(tmp_path/'sim'), *sources]
+        executable = ['vvp', str(tmp_path/'sim')]
+    else:
+        verilator = Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+        if not verilator.exists():
+            pytest.skip('pinned Verilator unavailable')
+        command = [str(verilator), '--binary', '--timing', '-Wno-fatal',
+                   '--top-module', 'tb', '--Mdir', str(tmp_path/'obj'), *sources]
+        executable = [str(tmp_path/'obj/Vtb')]
+    built = subprocess.run(command, capture_output=True, text=True, timeout=120)
     assert built.returncode == 0, built.stderr
-    run = subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True,timeout=30)
+    run = subprocess.run(executable, capture_output=True, text=True, timeout=30)
     assert run.returncode == 0, run.stdout+run.stderr
     assert 'PASS ring cursor' in run.stdout

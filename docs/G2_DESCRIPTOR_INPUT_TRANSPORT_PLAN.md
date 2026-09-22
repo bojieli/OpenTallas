@@ -1013,3 +1013,26 @@ Matched before/after state-controller physical runs at 1 ns CTS12 are active.
 The earlier source is retained; no frequency or area gain is claimed yet.
 Containing microsequencer and G2 requalification is still required after this
 change. The general-ring apply latency must be charged to transaction drain.
+
+## State-enabled integration scope and cross-simulator checks
+
+The focused ring-cursor arithmetic, cancellation, restart, clear and policy
+tests now pass both Icarus and pinned Verilator, independently of the broader
+control-plane campaign. Both exercise 255 arithmetic cases and 34 cancellation
+positions. Source hashes are updated in the focused verification record.
+
+G2 defaults to STATE_COMPAT=0: compiling the controller source does not mean
+it is instantiated. Two fresh integrated configurations therefore have distinct
+scopes: `g2_replay_state_modulo_physical.json` retains the default state-disabled
+configuration; `g2_state_enabled_replay_physical.json` explicitly sets
+STATE_COMPAT=1 to qualify the sequential modulo inside G2. Both use current
+source manifests, two-column passes and the partial-replay repair, with a 1 ns
+target. Their physical jobs remain active; no integrated closure is claimed.
+
+The four registered frozen deployment bundles contain no STATE descriptors,
+as verified by decoding their retained descriptor tables. They cannot provide
+an end-to-end performance claim for this optimization. The state-enabled path
+remains a supported configuration requiring qualification, and general-ring
+transactions pay the documented 34 additional apply cycles. See
+`results/rtl/state_cursor_modulo/frozen_deployment_scope.json`; this is not an
+audit of current lowering or all supported targets.
