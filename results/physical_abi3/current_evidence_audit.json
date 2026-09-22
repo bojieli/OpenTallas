@@ -8,20 +8,20 @@
   "frequency_basis": "1000 / tested period ns only after routed checks, current source hashes and required retained artifacts pass; never slack-extrapolated Fmax.",
   "views": {
     "asap7": {
-      "routed_records": 202,
-      "routed_checks_pass": 129,
-      "current_source_and_artifact_verified": 54,
-      "source_issues": 117,
+      "routed_records": 212,
+      "routed_checks_pass": 133,
+      "current_source_and_artifact_verified": 57,
+      "source_issues": 123,
       "artifact_issues": 43,
       "missing_metrics": 7,
       "violation_counts": {
-        "setup_violations": 44,
-        "setup_wns_ns": 44,
+        "setup_violations": 46,
+        "setup_wns_ns": 46,
         "hold_violations": 5,
         "max_slew_violations": 22,
         "hold_wns_ns": 5,
         "max_cap_violations": 1,
-        "max_fanout_violations": 7
+        "max_fanout_violations": 12
       }
     },
     "sky130hd": {
@@ -6500,6 +6500,122 @@
       "overall_record_status": "pass"
     },
     {
+      "record": "results/physical_abi3/asap7/output_object_writer/pnr_captured_bound_credits4_cts8_1ns.json",
+      "sha256": "8d2c881f26e3d0b0bd9f3d69de8532383504458bef55ad3a5b13cc76655bdd9a",
+      "view": "asap7",
+      "top": "ot_a3_output_object_writer",
+      "parameters": {},
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": 1000.0,
+      "routed_checks_pass": true,
+      "current_source_and_artifact_verified": true,
+      "source_issues": [],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [],
+      "setup_wns_ns": 0.0386682,
+      "hold_wns_ns": 0.049168,
+      "standard_cell_area_um2": 1483.98,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
+      "record": "results/physical_abi3/asap7/output_object_writer/pnr_local_payload_cts8_1ns.json",
+      "sha256": "b2a8b05c0d67a4793abbb20c320d30dd3e01371e5c67483fb985546871b00df1",
+      "view": "asap7",
+      "top": "ot_a3_output_object_writer",
+      "parameters": {},
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": true,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "changed_source:rtl/abi3/ot_a3_output_object_writer.sv"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [],
+      "setup_wns_ns": 0.00092204,
+      "hold_wns_ns": 0.0515712,
+      "standard_cell_area_um2": 1613.35,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
       "record": "results/physical_abi3/asap7/probe_fp32_mul/combinational_2p0ns.json",
       "sha256": "25ea1f33f6c11f08fb0f535ccc87b6c965f7da4b6e15231c8cbd58948d312dd9",
       "view": "asap7",
@@ -8162,6 +8278,7 @@
         "changed_source:rtl/abi3/ot_a3_lq8_operand_cursor.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8260,6 +8377,7 @@
         "changed_source:rtl/abi3/ot_a3_lq8_runtime_operands.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8359,6 +8477,7 @@
         "changed_source:rtl/abi3/ot_a3_lq8_runtime_operands.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8458,6 +8577,7 @@
         "changed_source:rtl/abi3/ot_a3_lq8_operand_cursor.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8469,6 +8589,104 @@
       "setup_wns_ns": -0.08615170000000001,
       "hold_wns_ns": 0.0259038,
       "standard_cell_area_um2": 3813.31,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "not_met"
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_onehot_head_cts12_1ns.json",
+      "sha256": "5896d84e400199e9b0c9c02990c1c068f71d2996d31f0e67696d790da1d0b989",
+      "view": "asap7",
+      "top": "ot_a3_lq8_runtime_operands",
+      "parameters": {
+        "REUSE_WEIGHT_ROWS": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "changed_source:rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "setup_violations",
+        "max_fanout_violations",
+        "setup_wns_ns"
+      ],
+      "setup_wns_ns": -0.0708378,
+      "hold_wns_ns": 0.0199304,
+      "standard_cell_area_um2": 3810.96,
       "false_path_from_ports": [],
       "signal_integrity_constraints": {
         "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
@@ -8556,6 +8774,7 @@
         "changed_source:rtl/abi3/ot_a3_lq8_runtime_operands.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8754,6 +8973,7 @@
       "source_issues": [
         "changed_source:rtl/abi3/ot_a3_lq8_runtime_operands.sv",
         "changed_source:rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv",
         "changed_source:rtl/abi3/ot_a3_weight_tile_prefetch.sv"
       ],
       "artifact_issues": [],
@@ -8766,6 +8986,283 @@
       "setup_wns_ns": -0.0363761,
       "hold_wns_ns": 0.0254807,
       "standard_cell_area_um2": 3873.75,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "not_met"
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_split_stream_add_cts12_1ns.json",
+      "sha256": "3d2139ae058e86d5a82340f79814fc9e9a65dcd916b6e8cf57b67b680f3b2d81",
+      "view": "asap7",
+      "top": "ot_a3_lq8_runtime_operands",
+      "parameters": {
+        "REUSE_WEIGHT_ROWS": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "max_fanout_violations"
+      ],
+      "setup_wns_ns": 0.010967000000000001,
+      "hold_wns_ns": 0.0200292,
+      "standard_cell_area_um2": 3737.52,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "not_met"
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_split_stream_add_cts8_1ns.json",
+      "sha256": "42bd523843788cfd7348b86728ae0b2e2d707907210457e2f202885cb84d1b16",
+      "view": "asap7",
+      "top": "ot_a3_lq8_runtime_operands",
+      "parameters": {
+        "REUSE_WEIGHT_ROWS": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": 1000.0,
+      "routed_checks_pass": true,
+      "current_source_and_artifact_verified": true,
+      "source_issues": [],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [],
+      "setup_wns_ns": 0.009551470000000001,
+      "hold_wns_ns": 0.021035,
+      "standard_cell_area_um2": 3807.23,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_weight_generation_cts12_1ns.json",
+      "sha256": "b4f86b8f7432ccf11315d7f2121a84c9f529e79ef2e062751ec89c29f3609871",
+      "view": "asap7",
+      "top": "ot_a3_lq8_runtime_operands",
+      "parameters": {
+        "REUSE_WEIGHT_ROWS": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 1.0,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "changed_source:rtl/abi3/ot_a3_weight_tile_scheduler.sv"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "setup_violations",
+        "setup_wns_ns"
+      ],
+      "setup_wns_ns": -0.00241152,
+      "hold_wns_ns": 0.0280759,
+      "standard_cell_area_um2": 3716.89,
       "false_path_from_ports": [],
       "signal_integrity_constraints": {
         "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
@@ -9206,6 +9703,378 @@
         ]
       },
       "overall_record_status": "not_met"
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json",
+      "sha256": "192db717744f5360e7e07a1e907dbd4d1381ba66c5c1ff91e50eea08942af711",
+      "view": "asap7",
+      "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "parameters": {
+        "PIPELINED_DIVIDER": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 2.0,
+      "verified_current_frequency_mhz": 500.0,
+      "routed_checks_pass": true,
+      "current_source_and_artifact_verified": true,
+      "source_issues": [],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [],
+      "setup_wns_ns": 0.0921885,
+      "hold_wns_ns": 0.027670200000000002,
+      "standard_cell_area_um2": 3099.55,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_handoff/pnr_baseline_cts12_2p4ns.json",
+      "sha256": "2745660689091e179fd288d9b78f266ea32817404a7b22ef474388222b179679",
+      "view": "asap7",
+      "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "parameters": {
+        "PIPELINED_DIVIDER": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 2.4,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "snapshot_or_external_sources_require_active_binding"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "max_fanout_violations"
+      ],
+      "setup_wns_ns": 0.46377999999999997,
+      "hold_wns_ns": 0.0320207,
+      "standard_cell_area_um2": 3038.27,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_handoff/pnr_candidate_cts12_2p4ns.json",
+      "sha256": "3f8e059387b21a291e3de71a34cbccdc9f5670079c2baf1fc4ffe35ccae3b424",
+      "view": "asap7",
+      "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "parameters": {
+        "PIPELINED_DIVIDER": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 2.4,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "changed_source:rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "max_fanout_violations"
+      ],
+      "setup_wns_ns": 0.416412,
+      "hold_wns_ns": 0.0267971,
+      "standard_cell_area_um2": 3107.28,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_sum_handoff/pnr_candidate_cts12_2p4ns.json",
+      "sha256": "3b595615865b44c142e75ac410c9378386f2b2da8ae6ad96c60b172debffd35b",
+      "view": "asap7",
+      "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "parameters": {
+        "PIPELINED_DIVIDER": 1
+      },
+      "corner": "TT",
+      "tested_period_ns": 2.4,
+      "verified_current_frequency_mhz": null,
+      "routed_checks_pass": false,
+      "current_source_and_artifact_verified": false,
+      "source_issues": [
+        "changed_source:rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv"
+      ],
+      "artifact_issues": [],
+      "missing_metrics": [],
+      "violations": [
+        "max_fanout_violations"
+      ],
+      "setup_wns_ns": 0.493474,
+      "hold_wns_ns": 0.029831600000000003,
+      "standard_cell_area_um2": 3048.3,
+      "false_path_from_ports": [],
+      "signal_integrity_constraints": {
+        "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+        "library_declares_fanout_limit": false,
+        "library_default_max_fanout": [
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_fanout_count": 0
+          },
+          {
+            "default_max_fanout": null,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_fanout_count": 0
+          }
+        ],
+        "library_default_max_transition": [
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 224
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "pin_max_transition_count": 37
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 185
+          },
+          {
+            "default_max_transition": 320.0,
+            "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "pin_max_transition_count": 94
+          },
+          {
+            "default_max_transition": 4000.0,
+            "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "pin_max_transition_count": 158
+          }
+        ],
+        "max_fanout": 16,
+        "max_fanout_source": "command line",
+        "max_transition_library_units": 320.0,
+        "max_transition_ns": 0.32,
+        "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+        "sdc_lines": [
+          "set_max_fanout 16 [current_design]",
+          "set_max_transition 320 [current_design]"
+        ]
+      },
+      "overall_record_status": "pass"
     },
     {
       "record": "results/physical_abi3/asap7/vector_add_unit/pnr.json",

@@ -1555,7 +1555,10 @@ def orfs_config_lines(
     when a memory macro was named; without either the file is byte-for-byte
     the config.mk of every earlier record.
     """
-    params = " ".join(f"{k} {v}" for k, v in sorted(block["parameters"].items()))
+    # ORFS applies top parameters sequentially, deriving the module each time.
+    # Preserve explicit --param order: dependent features must be enabled after
+    # their prerequisites, or a valid final configuration can fail mid-derive.
+    params = " ".join(f"{k} {v}" for k, v in block["parameters"].items())
     config = [
         f"export DESIGN_NICKNAME = {nickname}",
         f"export DESIGN_NAME = {block['top']}",

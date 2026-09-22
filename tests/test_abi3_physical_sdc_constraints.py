@@ -131,7 +131,7 @@ def test_legacy_orfs_config_has_no_slew_margin():
     lines = flow.orfs_config_lines("nick", LANE_BLOCK, "asap7", view["pnr"], 35, 0.6, None)
     assert not any(line.startswith("export SLEW_MARGIN") for line in lines)
     assert "export CORNER = TC" in lines
-    assert "export VERILOG_TOP_PARAMS = ACC_SLOTS 8 ADDER_STAGES 3" in lines
+    assert "export VERILOG_TOP_PARAMS = ADDER_STAGES 3 ACC_SLOTS 8" in lines
 
 
 # --------------------------------------------------------------------------
@@ -378,3 +378,10 @@ def test_cts_route_record_reproduces_config():
                                    pnr.get("memory_macros"))
     assert hashlib.sha256(("\n".join(lines) + "\n").encode()).hexdigest() == pnr["artifacts"]["config.mk"]["sha256"]
     assert pnr["signal_integrity_constraints"]["max_fanout"] == 16
+
+
+def test_orfs_preserves_dependent_parameter_order():
+    view, _ = _asap7()
+    block = dict(LANE_BLOCK, parameters={"RUNTIME_OPERANDS": 1, "RUNTIME_OBJECT_WRITES": 1})
+    lines = flow.orfs_config_lines("g2", block, "asap7", view["pnr"], 25, 0.6, None)
+    assert "export VERILOG_TOP_PARAMS = RUNTIME_OPERANDS 1 RUNTIME_OBJECT_WRITES 1" in lines

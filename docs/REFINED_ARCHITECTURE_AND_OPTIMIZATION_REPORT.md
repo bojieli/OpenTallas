@@ -2375,3 +2375,37 @@ Standalone 1 ns writer and operand-service routes do not qualify this containing
 G2 revision. Its integrated timing, clock-tree cost and deployment wrappers remain
 required work. The implementation adds no pipeline stage in this integration;
 its purpose is to make the bounded write/completion architecture real RTL.
+
+
+## Recharacterize integrated runtime G2 and fix parameter elaboration order
+
+A current-source integrated G2 physical run is now in progress at ASAP7 TT,
+1 ns, CTS8, fanout16 and explicit library transition limits. It includes the
+eight-lane LQ8 array, sequencer, program/descriptor/issue-record SRAMs, runtime
+operand banks, reserved output queue and four-credit object writer. External
+auxiliary windows and backing memory remain ports. The expected internal SRAM
+inventory is five 256x128, two 2048x128 and two 512x128 macros (819,200 bits);
+these counts must still be checked against the synthesized/placed netlist.
+The invocation, ordered parameters, source hashes and expected memory inventory
+are retained in `configs/hardware/g2_runtime_writer_physical.json`.
+
+The first attempt failed before synthesis because the driver alphabetized
+ORFS top-parameter overrides. ORFS derives the module after each override,
+so it enabled RUNTIME_OBJECT_WRITES while RUNTIME_OPERANDS still had its default
+zero value, triggering the valid RTL configuration guard. The driver now
+preserves explicit parameter order; no guard was removed and no valid-design
+behavior changed. A regression checks prerequisite-before-dependent ordering.
+The corrected actual ORFS run passes hierarchy elaboration and proceeds into
+synthesis. The original failure is retained as
+`results/physical_abi3/asap7/a3_g2_runtime_writer/failed_parameter_order.json`;
+the new output is `pnr_ordered_cts8_1ns.json`. The physical SDC/environment suite
+passes with its environment-dependent skips. No integrated clock, area or
+closure result exists yet.
+
+The refreshed current evidence inventory reports 212 ASAP7 routed records,
+133 passing raw routed checks and 57 with current-source/artifact verification.
+123 records have source issues and 43 have artifact issues; categories overlap.
+SKY130 has 16 routed records, eight raw passes and two current verified records.
+These counts describe records, not unique blocks or deployment coverage.
+Historical routes, source snapshots and best standalone values cannot establish
+all-target completion. Evidence: `results/physical_abi3/current_evidence_audit.json`.
