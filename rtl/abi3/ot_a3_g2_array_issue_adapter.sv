@@ -112,6 +112,7 @@ module ot_a3_g2_array_issue_adapter #(
 
     // -- descriptor store, this block's own read port --------------------
     output reg           desc_req,
+    output reg           desc_short,
     output reg  [31:0]   desc_id,
     input  wire          desc_valid,
     input  wire          desc_fault,
@@ -253,7 +254,7 @@ module ot_a3_g2_array_issue_adapter #(
             complete_slot       <= 5'd0;
             complete_fault      <= 1'b0;
             complete_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
-            desc_req            <= 1'b0;
+            desc_req            <= 1'b0;desc_short<=0;
             desc_id             <= 32'd0;
             array_start         <= 1'b0;
             array_rows          <= 16'd0;
@@ -352,7 +353,7 @@ module ot_a3_g2_array_issue_adapter #(
                             array_w_base       <= view_off[1];
                             array_out_base     <= view_off[2];
                             desc_req           <= 1'b1;
-                            desc_id            <= view_id[0];
+                            desc_id            <= view_id[0];desc_short<=1;
                             state              <= S_DESC_A;
                         end
                     end
@@ -370,7 +371,7 @@ module ot_a3_g2_array_issue_adapter #(
                             array_dtype_a <= d_dtype;
                             array_scale_a <= (d_scale_object != ot_a3_pkg::A3_NO_ID);
                             desc_req      <= 1'b1;
-                            desc_id       <= view_id[1];
+                            desc_id       <= view_id[1];desc_short<=1;
                             state         <= S_DESC_B;
                         end
                     end
@@ -398,7 +399,7 @@ module ot_a3_g2_array_issue_adapter #(
                             array_cols    <= (d_dim0[15:0] + LANE_MASK) & ~LANE_MASK;
                             logical_cols  <= d_dim0[15:0];
                             desc_req      <= 1'b1;
-                            desc_id       <= view_id[2];
+                            desc_id       <= view_id[2];desc_short<=0;
                             state         <= S_DESC_C;
                         end
                     end

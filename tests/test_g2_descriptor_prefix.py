@@ -7,17 +7,18 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("short", [0, 1])
 @pytest.mark.parametrize("words", [1, 3, 4, 6])
-def test_descriptor_prefix(tmp_path, words):
+def test_descriptor_prefix(tmp_path, words, short):
     sim = tmp_path / "sim"
     subprocess.run([
         "iverilog", "-g2012", "-DOT_A3_FAKERAM_BEHAVIOURAL",
         "-s", "tb_a3_g2_descriptor_prefix",
-        f"-Ptb_a3_g2_descriptor_prefix.WORDS={words}", "-o", str(sim),
+        f"-Ptb_a3_g2_descriptor_prefix.WORDS={words}", f"-Ptb_a3_g2_descriptor_prefix.SHORT={short}", "-o", str(sim),
         str(ROOT / "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv"),
         str(ROOT / "rtl/abi3/ot_a3_g2_descriptor_store.sv"),
         str(ROOT / "rtl/test/tb_a3_g2_descriptor_prefix.sv"),
     ], check=True, capture_output=True, text=True, timeout=30)
     result = subprocess.run(["vvp", str(sim)], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert f"PASS descriptor prefix words={words} checks=9 saved_cycles={6-words}" in result.stdout
+    assert f"PASS descriptor prefix words={words} checks=9 saved_cycles={6-(max(1,words-1) if short else words)}" in result.stdout

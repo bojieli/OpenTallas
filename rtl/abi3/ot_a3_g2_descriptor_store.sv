@@ -45,7 +45,8 @@
 module ot_a3_g2_descriptor_store #(
     // Full records for the sequencer; an engine may consume a bounded prefix.
     // Each word is 256 bits. Unread auxiliary words are returned as zero.
-    parameter integer AUXILIARY_WORDS = 6
+    parameter integer AUXILIARY_WORDS = 6,
+    parameter integer AUXILIARY_SHORT_WORDS = AUXILIARY_WORDS
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -59,6 +60,7 @@ module ot_a3_g2_descriptor_store #(
 
     // -- master B: the array issue adapter -----------------------------
     input  wire          aux_req,
+    input  wire          aux_short,
     input  wire [31:0]   aux_id,
     output reg           aux_valid,
     output reg           aux_fault,
@@ -87,8 +89,12 @@ module ot_a3_g2_descriptor_store #(
 
     reg  [1:0]  state;
     reg  [2:0]  beat;
-    wire [2:0] read_words = cur_is_seq ? 3'd6 : 3'(AUXILIARY_WORDS);
+    reg aux_short_q,cur_short;
+    wire [2:0] read_words = cur_is_seq ? 3'd6 :
+        cur_short ? 3'(AUXILIARY_SHORT_WORDS) : 3'(AUXILIARY_WORDS);
     initial begin
+        if (AUXILIARY_SHORT_WORDS<1 || AUXILIARY_SHORT_WORDS>AUXILIARY_WORDS)
+            $fatal(1,"invalid auxiliary short prefix");
         if (AUXILIARY_WORDS < 1 || AUXILIARY_WORDS > 6)
             $fatal(1,"AUXILIARY_WORDS must be in 1..6");
     end
@@ -115,7 +121,8 @@ module ot_a3_g2_descriptor_store #(
 
     wire [1535:0] record = {word5, word4, word3, word2, word1, word0};
     assign desc_data = desc_fault ? 1536'd0 : record;
-    assign aux_data  = aux_fault ? 1536'd0 :
+    assign aux_data  = aux_fault ? 1536'd0 : cur_short ?
+        {{(6-AUXILIARY_SHORT_WORDS)*256{1'b0}}, record[AUXILIARY_SHORT_WORDS*256-1:0]} :
         {{(6-AUXILIARY_WORDS)*256{1'b0}}, record[AUXILIARY_WORDS*256-1:0]};
 
     assign host_accept = host_we && (state == S_IDLE) &&
@@ -146,6 +153,7 @@ module ot_a3_g2_descriptor_store #(
             seq_id           <= 32'd0;
             aux_pending      <= 1'b0;
             aux_id_q         <= 32'd0;
+            aux_short_q<=0;cur_short<=0;
             word0 <= 256'd0; word1 <= 256'd0; word2 <= 256'd0;
             word3 <= 256'd0; word4 <= 256'd0; word5 <= 256'd0;
             desc_valid       <= 1'b0;
@@ -179,12 +187,14 @@ module ot_a3_g2_descriptor_store #(
                     dropped_requests <= dropped_requests + 32'd1;
                 aux_pending <= 1'b1;
                 aux_id_q    <= aux_id;
+                aux_short_q <= (AUXILIARY_SHORT_WORDS!=AUXILIARY_WORDS) && aux_short;
             end
 
             case (state)
                 S_IDLE: begin
                     if (seq_pending || aux_pending) begin
                         cur_is_seq <= seq_pending;
+                        cur_short <= !seq_pending && aux_short_q;
                         if (seq_pending) seq_pending <= 1'b0;
                         else             aux_pending <= 1'b0;
                         base <= pick_base;

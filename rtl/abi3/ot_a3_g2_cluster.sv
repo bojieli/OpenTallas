@@ -399,15 +399,15 @@ module ot_a3_g2_cluster #(
     wire          desc_valid;
     wire          desc_fault;
     wire [1535:0] desc_data;
-    wire          aux_desc_req;
+    wire          aux_desc_req,aux_desc_short;
     wire [31:0]   aux_desc_id;
     wire          aux_desc_valid;
     wire          aux_desc_fault;
     wire [1535:0] aux_desc_data;
 
-    // The issue adapter consumes header and shape through byte 95. Avoid
-    // fetching the unused tail on each A/B/C admission; sequencer reads stay full.
-    ot_a3_g2_descriptor_store #(.AUXILIARY_WORDS(4)) descriptor_store (
+    // A/B consume 96 bytes; C needs 128 bytes including strides. Capture the
+    // requested prefix with its identity; sequencer reads remain full.
+    ot_a3_g2_descriptor_store #(.AUXILIARY_WORDS(4),.AUXILIARY_SHORT_WORDS(3)) descriptor_store (
         .clk(clk),
         .rst_n(rst_n),
         .desc_req(desc_req),
@@ -415,7 +415,7 @@ module ot_a3_g2_cluster #(
         .desc_valid(desc_valid),
         .desc_fault(desc_fault),
         .desc_data(desc_data),
-        .aux_req(aux_desc_req),
+        .aux_req(aux_desc_req),.aux_short(aux_desc_short),
         .aux_id(aux_desc_id),
         .aux_valid(aux_desc_valid),
         .aux_fault(aux_desc_fault),
@@ -623,7 +623,7 @@ module ot_a3_g2_cluster #(
         .complete_slot(seq_complete_slot),
         .complete_fault(seq_complete_fault),
         .complete_trap_class(seq_complete_trap_class),
-        .desc_req(aux_desc_req),
+        .desc_req(aux_desc_req),.desc_short(aux_desc_short),
         .desc_id(aux_desc_id),
         .desc_valid(aux_desc_valid),
         .desc_fault(aux_desc_fault),

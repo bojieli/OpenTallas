@@ -98,9 +98,10 @@ descriptor reads from 18 to 9 SRAM beats then reduced it to 25,013. These are
 campaign counts, not inference latency or directly additive speedups.
 
 C now owns BF16/FP32 output precision and exported object/layout metadata,
-including its two unsigned element strides. G2 reads a 128-byte auxiliary
-descriptor prefix to reach these fields (12 A/B/C SRAM beats versus the earlier
-9). The added reads raise N56 campaign cycles from 25,013 to 25,040.
+including its two unsigned element strides. G2 now reads 96-byte prefixes for
+A/B and a 128-byte prefix for C, totaling 10 auxiliary SRAM beats. The earlier
+uniform 128-byte checkpoint used 12 beats; historical counts below retain their
+original configurations.
 Metadata remains valid through output drain. A cancellation-priority correction
 prevents same-edge normal transitions from overriding clear; the 27-check adapter
 regression cancels all six active states and verifies recovery. Actual bounded
@@ -2299,3 +2300,40 @@ The mutation record includes active-source hashes, mutant hash, baseline-record
 hash and failing output: `results/rtl/a3_g2_late_write_fault_mutation.json`.
 Seventeen focused tests also pass. No new timing or latency optimization is
 claimed from expanded verification; current writer routing remains live.
+
+
+## Current four-credit writer closes at 1 ns with lower routed area
+
+The current captured-bound, four-outstanding writer passes its ASAP7 TT 1 ns
+CTS8 route: 1,483.980 um² standard-cell area, +0.038668 ns setup WNS and
++0.049168 ns hold WNS. All reported setup/hold, slew, capacitance, fanout, DRC
+and antenna violation counts are zero under the recorded fanout16/library
+transition constraints. Active-source and retained artifact hashes match.
+Compared with the earlier local-payload single-outstanding route, area falls
+1,613.350 to 1,483.980 um² (8.02%) and setup margin rises 0.922 to 38.668 ps.
+This compares the combined credit/bounds changes; it does not isolate either
+change's routed contribution. Tested operation is 1 GHz at this corner, not the
+flow's extrapolated 1,040.22 MHz or an integrated G2 clock. Evidence:
+`results/physical_abi3/asap7/output_object_writer/pnr_captured_bound_credits4_cts8_1ns.json`.
+
+## Fetch stride metadata only for the output descriptor
+
+A/B admission consumes header and shape within 96 bytes; C additionally needs
+its strides within 128 bytes. The issue adapter now sends a short-prefix flag
+with each descriptor request. The store captures that flag with pending request
+identity, preserves sequencer priority, and zeroes all unread auxiliary words.
+Its generic default retains the original fixed-prefix behavior. G2 selects
+three words for A/B and four for C: ten SRAM beats instead of twelve, saving
+two descriptor service cycles per admitted contraction before stall alignment.
+Sequencer requests still fetch all six words.
+
+Nine focused tests pass: eight store variants cover long/short prefixes,
+queued arbitration, changing the prefix pin after capture, faults, bounds,
+read counts, zero tail and reset; the adapter contract also passes. The loaded
+N53 four-credit campaign drops 36,589 to 36,567 cycles while retaining 253
+writes/acknowledgements, 1,916 matching output elements and late-write-error
+recovery. First-operation fills remain 560 weight and 720 activation words.
+The current source hashes match; the previous record is archived under
+`results/rtl/before_selective_stride_prefix/`. This reduces admission traffic
+and latency without discarding required C layout metadata. Current G2 physical
+closure and the descriptor store's changed physical cost remain unmeasured.
