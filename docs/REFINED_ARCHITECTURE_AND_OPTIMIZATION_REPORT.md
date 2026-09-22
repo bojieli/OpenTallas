@@ -856,3 +856,45 @@ record hashes as current evidence is refreshed. Physical evidence is
 `runtime_weight_scheduler/prelayout_replay_control_1ns.json` with source snapshot
 `source_snapshots/replay_control.sv`. Broader integration and all-target goals
 remain unfinished.
+
+
+## Routed fixed-split scheduler results and FIFO address placement
+
+The historical fixed-split replay scheduler routes now both pass the inspected
+ASAP7 TT 1 ns routed checks: setup/hold, slew/capacitance/fanout, DRC and antenna
+violations are zero. Narrowing resident counters reduces routed standard-cell
+area from 472.931 to 452.301 um² (4.36%), with setup WNS improving from
++0.008983 to +0.028176 ns. Hold WNS is +0.056632 / +0.055871 ns. Retained
+artifact hashes and source snapshots were verified. Overall records still
+report `not_met` because pre-layout timing fails. These characterize the
+recorded fixed-split sources, not current early-fill logic. Evidence is under
+`runtime_weight_scheduler/pnr_replay_{baseline,narrow}_cts12_1ns.json`.
+
+The containing operand-service floorplan report identifies a path from weight
+FIFO head selection to operand_credit through stream-address addition and
+identity checking. This is an intermediate report, not final routed timing.
+The service now selects `ABSOLUTE_STREAM_ADDRESS` in its prefetcher: each queued
+weight captures stream_base+received_index on insertion, instead of computing
+base+word_index after selecting the FIFO head. Bank read/release still uses the
+original owner tag. The existing 64-bit tag carries generation and absolute
+issue address, so no extra FIFO bits or issue stage is added. Default relative
+mode remains for consumers using the old base-plus-index interface.
+
+The two address modes are tested across eight row sizes, including both SRAM
+banks, exact capacity, oversized fallback, independent stalls and cancellation.
+The FIFO index still reports position within its tile; only the low stream-tag
+bits change meaning when the explicit option is enabled. The full service's
+operand join consumes the absolute field directly. A new 1 ns route with both
+SRAM macros is running; no mapped-area or frequency improvement is claimed
+for this change before its physical result. Earlier service and scheduler
+routes remain bound to their recorded source snapshots.
+
+
+Validation for absolute FIFO addresses passes 52 focused runtime tests plus
+three G2 campaigns, each retaining 584 matching outputs and its exact previous
+completion counter (21,731 slow-weight; 31,574 depth192; 55,487 fallback).
+The full integrated LQ8 service campaign passes 92 cases, 17,103 matching outputs,
+18 faults and 115,748 checks; source-bound evidence is
+`results/rtl/a3_lq8_absolute_address.json`. This covers the generic streamed
+service as well as G2 resident-replay checks. Source digests were verified
+against the current tree. Physical closure of the revised service remains open.

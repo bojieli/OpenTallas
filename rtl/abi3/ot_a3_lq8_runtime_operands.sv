@@ -108,14 +108,14 @@ module ot_a3_lq8_runtime_operands #(
     wire word_valid,word_ready;
     wire [127:0] word_data;
     wire [63:0] word_tag;
-    wire [9:0] word_index;
-    ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1)) prefetch(
+
+    ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1),.ABSOLUTE_STREAM_ADDRESS(1)) prefetch(
         .clk(clk),.rst_n(service_rst_n),.reserve_valid(reserve_valid),.reserve_bank(reserve_bank),
         .reserve_tag(reserve_tag),.reserve_words(reserve_words),.reserve_ready(reserve_ready),
         .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_tag(fill_tag),.fill_data(fill_data),.fill_ready(fill_ready),
         .cancel_valid(1'b0),.cancel_bank(1'b0),.cancel_tag(64'b0),.cancel_ready(),
         .tile_valid(tile_valid),.tile_bank(tile_bank),.tile_retain(tile_retain),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),.tile_words(tile_words),.tile_ready(tile_ready),
-        .word_valid(word_valid),.word_ready(word_ready),.word_data(word_data),.word_tag(word_tag),.word_index(word_index),
+        .word_valid(word_valid),.word_ready(word_ready),.word_data(word_data),.word_tag(word_tag),.word_index(),
         .word_last(),.tile_released(),.released_tag(),.ready_banks(),.active_banks(),.reserved_slots());
     wire future_valid,future_ready;
     wire [31:0] future_generation,future_a,future_s,future_ws,future_w;
@@ -152,7 +152,7 @@ module ot_a3_lq8_runtime_operands #(
         .operand_a_addr(operand_a),.operand_s_addr(operand_s),.operand_ws_addr(operand_ws),.operand_w_addr(operand_w),
         .scale_a(auxiliary_scale_a),.scale_b(auxiliary_scale_b),.operand_credit(join_credit),.identity_mismatch(join_mismatch),
         .weight_valid(word_valid),.weight_ready(word_ready),.weight_generation(word_tag[63:32]),
-        .weight_address(word_tag[31:0]+{22'b0,word_index}),.weight_data(word_data),
+        .weight_address(word_tag[31:0]),.weight_data(word_data),
         .auxiliary_valid(aux_valid),.auxiliary_ready(aux_ready),.auxiliary_generation(aux_generation),
         .auxiliary_a_addr(aux_a),.auxiliary_s_addr(aux_s),.auxiliary_ws_addr(aux_ws),
         .auxiliary_a_data(aux_a_data),.auxiliary_s_data(aux_s_data),.auxiliary_ws_data(aux_ws_data),

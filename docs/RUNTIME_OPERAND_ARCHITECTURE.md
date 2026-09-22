@@ -990,3 +990,13 @@ extent is captured on command acceptance, so stalled reserve/fetch/tile payloads
 cannot change. This uses both banks for some rows that formerly used one, trading
 extra acquisition control for earlier compute/refill overlap. No incremental
 read permission or additional SRAM is introduced.
+
+
+The runtime service now enables `ABSOLUTE_STREAM_ADDRESS` on weight prefetch.
+FIFO insertion registers stream_base+received_index into the existing tag's
+low 32 bits; generation remains in the upper bits. This moves address arithmetic
+before FIFO storage rather than after head selection on the issue-credit path.
+The join receives that absolute stream address directly. The index port retains
+its tile-local meaning and must not be added again in this mode. Bank ownership,
+SRAM access and release continue to use the unmodified resident owner tag.
+Consumers without this option keep the relative tag/index interface.

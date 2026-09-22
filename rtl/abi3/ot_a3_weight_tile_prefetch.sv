@@ -6,9 +6,12 @@
 // One tile is acquired at a time; queued words from older tiles remain ordered.
 // Optional stream tags relabel copied words for resident replay. SRAM access
 // and release continue to use the original owner tag; queued tags never change.
+// ABSOLUTE_STREAM_ADDRESS stores stream base+index at insertion, removing the
+// address adder after FIFO selection on the consumer's issue-credit path.
 module ot_a3_weight_tile_prefetch #(
     parameter integer TAG_BITS=64,
     parameter bit SEPARATE_STREAM_TAG=0,
+    parameter bit ABSOLUTE_STREAM_ADDRESS=0,
     parameter integer FIFO_DEPTH=4,
     parameter integer PW=(FIFO_DEPTH<2)?1:$clog2(FIFO_DEPTH),
     parameter integer CW=$clog2(FIFO_DEPTH+1)
@@ -112,7 +115,10 @@ module ot_a3_weight_tile_prefetch #(
         endcase
         if(pop)head<=next_ptr(head);
         if(push)begin
-          data_mem[tail]<=response_data;tag_mem[tail]<=SEPARATE_STREAM_TAG?stream_tag_q:response_tag;
+          data_mem[tail]<=response_data;
+          if(ABSOLUTE_STREAM_ADDRESS)
+            tag_mem[tail]<={stream_tag_q[TAG_BITS-1:32],stream_tag_q[31:0]+{22'b0,received}};
+          else tag_mem[tail]<=SEPARATE_STREAM_TAG?stream_tag_q:response_tag;
           index_mem[tail]<=received;last_mem[tail]<=received==words_q-1'b1;
           tail<=next_ptr(tail);received<=received+1'b1;
           if(received==words_q-1'b1)state<=RELEASE;
