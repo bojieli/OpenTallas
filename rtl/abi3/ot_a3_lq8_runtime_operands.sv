@@ -110,7 +110,7 @@ module ot_a3_lq8_runtime_operands #(
     wire [127:0] word_data;
     wire [63:0] word_tag;
 
-    ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1),.ABSOLUTE_STREAM_ADDRESS(1)) prefetch(
+    ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1),.ABSOLUTE_STREAM_ADDRESS(1),.SINGLE_GENERATION(1)) prefetch(
         .clk(clk),.rst_n(service_rst_n),.reserve_valid(reserve_valid),.reserve_bank(reserve_bank),
         .reserve_tag(reserve_tag),.reserve_words(reserve_words),.reserve_ready(reserve_ready),
         .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_tag(fill_tag),.fill_data(fill_data),.fill_ready(fill_ready),

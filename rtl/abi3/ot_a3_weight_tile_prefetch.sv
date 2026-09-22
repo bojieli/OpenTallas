@@ -12,6 +12,9 @@ module ot_a3_weight_tile_prefetch #(
     parameter integer TAG_BITS=64,
     parameter bit SEPARATE_STREAM_TAG=0,
     parameter bit ABSOLUTE_STREAM_ADDRESS=0,
+    // All acquired tiles and queued words belong to one generation until reset.
+    // Only valid with absolute stream identities; generic mixed streams stay off.
+    parameter bit SINGLE_GENERATION=0,
     parameter integer FIFO_DEPTH=4,
     parameter integer PW=(FIFO_DEPTH<2)?1:$clog2(FIFO_DEPTH),
     parameter integer CW=$clog2(FIFO_DEPTH+1)
@@ -53,7 +56,20 @@ module ot_a3_weight_tile_prefetch #(
     reg [PW-1:0] head,tail;
     reg [CW-1:0] count;
     reg [127:0] data_mem[0:FIFO_DEPTH-1];
-    reg [TAG_BITS-1:0] tag_mem[0:FIFO_DEPTH-1];
+    localparam integer FIFO_TAG_BITS=SINGLE_GENERATION?32:TAG_BITS;
+    reg [FIFO_TAG_BITS-1:0] tag_mem[0:FIFO_DEPTH-1];
+    generate if(SINGLE_GENERATION)begin: shared_generation
+      reg [TAG_BITS-33:0] generation_q;
+      initial begin
+        if(!ABSOLUTE_STREAM_ADDRESS || TAG_BITS<=32)
+          $fatal(1,"Shared generation requires absolute stream tags wider than 32 bits");
+      end
+      always @(posedge clk)
+        if(tile_valid && tile_ready)generation_q<=tile_stream_tag[TAG_BITS-1:32];
+      assign word_tag={generation_q,tag_mem[head]};
+    end else begin: per_entry_generation
+      assign word_tag=tag_mem[head];
+    end endgenerate
     reg [9:0] index_mem[0:FIFO_DEPTH-1];
     reg last_mem[0:FIFO_DEPTH-1];
     function automatic [PW-1:0] next_ptr(input [PW-1:0] p);
@@ -73,7 +89,6 @@ module ot_a3_weight_tile_prefetch #(
     wire pop=word_valid && word_ready;
     assign word_valid=rst_n && count!=0;
     assign word_data=data_mem[head];
-    assign word_tag=tag_mem[head];
     assign word_index=index_mem[head];
     assign word_last=last_mem[head];
     // Refuse a mismatched tile length before acquisition, rather than hanging
@@ -117,8 +132,8 @@ module ot_a3_weight_tile_prefetch #(
         if(push)begin
           data_mem[tail]<=response_data;
           if(ABSOLUTE_STREAM_ADDRESS)
-            tag_mem[tail]<={stream_tag_q[TAG_BITS-1:32],stream_tag_q[31:0]+{22'b0,received}};
-          else tag_mem[tail]<=SEPARATE_STREAM_TAG?stream_tag_q:response_tag;
+            tag_mem[tail]<=FIFO_TAG_BITS'({stream_tag_q[TAG_BITS-1:32],stream_tag_q[31:0]+{22'b0,received}});
+          else tag_mem[tail]<=FIFO_TAG_BITS'(SEPARATE_STREAM_TAG?stream_tag_q:response_tag);
           index_mem[tail]<=received;last_mem[tail]<=received==words_q-1'b1;
           tail<=next_ptr(tail);received<=received+1'b1;
           if(received==words_q-1'b1)state<=RELEASE;

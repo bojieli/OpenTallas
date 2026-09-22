@@ -8,13 +8,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
-@pytest.mark.parametrize('absolute_address', [0, 1])
+@pytest.mark.parametrize('absolute_address,single_generation', [(0, 0), (1, 0), (1, 1)])
 @pytest.mark.parametrize('row_words', [1, 31, 32, 512, 513, 1024, 1025, 2049])
-def test_resident_row_replay(tmp_path, row_words, absolute_address):
+def test_resident_row_replay(tmp_path, row_words, absolute_address, single_generation):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''module tb;
 parameter integer ROW_WORDS=1;
 parameter bit ABSOLUTE_ADDRESS=0;
+parameter bit SINGLE_GENERATION=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0;
 reg [31:0] command_generation=7,command_base=100,command_words=3*ROW_WORDS;
@@ -40,7 +41,7 @@ wire [127:0] word_data;wire [63:0] word_tag,released_tag;wire [9:0] word_index;
 wire [1:0] ready_banks,active_banks;wire [3:0] reserved_slots;
 wire word_ready=ticks%11<6;
 ot_a3_weight_tile_scheduler #(.TILE_WORDS(32),.ROW_REUSE(1)) scheduler(.*);
-ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1),.ABSOLUTE_STREAM_ADDRESS(ABSOLUTE_ADDRESS)) prefetch(.*);
+ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1),.ABSOLUTE_STREAM_ADDRESS(ABSOLUTE_ADDRESS),.SINGLE_GENERATION(SINGLE_GENERATION)) prefetch(.*);
 reg held=0;reg [202:0] held_payload;
 always @(posedge clk)begin
  if(!rst_n)begin backing<=0;response_index<=0;fills<=0;consumed<=0;held<=0;ticks<=0;end
@@ -88,7 +89,7 @@ endmodule
 ''')
     names = ['ot_a3_weight_tile_scheduler', 'ot_a3_weight_tile_prefetch',
              'ot_a3_runtime_weight_banks', 'ot_a3_operand_bank_owner']
-    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}',
+    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}', f'-Ptb.SINGLE_GENERATION={single_generation}',
                             '-o', str(tmp_path/'sim'),
                             *[str(ROOT/'rtl/abi3'/f'{n}.sv') for n in names],
                             str(ROOT/'rtl/test/tb_a3_runtime_weight_banks.sv'), str(bench)],

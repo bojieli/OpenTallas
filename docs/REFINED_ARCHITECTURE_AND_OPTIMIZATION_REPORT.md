@@ -1702,3 +1702,30 @@ queues still test release while the complete tile remains stalled. Reset with
 an in-flight response, exact identity, retention/replay and reservation bounds
 remain covered. Evidence and rejected source snapshot:
 `results/physical_abi3/asap7/runtime_weight_onehot/comparison.json`.
+
+
+## Share generation ownership across the weight FIFO
+
+The runtime owns one operation until clear. Its four-entry weight FIFO therefore
+now selects `SINGLE_GENERATION=1`: one shared generation register replaces four
+identical generation fields, while each word retains its absolute stream address.
+This removes generation selection after the binary head without changing SRAM
+ownership, replay, release, queue capacity or issue latency. Generic prefetch
+keeps the mixed-generation implementation by default. The specialization requires
+absolute stream identities and one generation across all acquired/queued tiles
+until reset. The runtime's operation clear resets the prefetch before reuse.
+
+Logical FIFO payload/identity storage falls from 812 to 716 bits including the
+shared generation. Matched same-source synthesis at ASAP7 TT, 1 ns, reduces area
+from 885.703 to 805.631 um² (9.04%); setup WNS improves -0.934839 to -0.609647 ns.
+Both pre-layout checks still fail, and these numbers do not include a physical
+SRAM timing qualification. The SRAM-inclusive containing-service route remains
+the acceptance gate for clock improvement.
+
+All 29 prefetch/replay tests pass. Loaded G2 retains 25,013 cycles, 1,352 matching
+outputs and first-operation fills 560 weight / 720 activation. The integrated
+92-case corpus retains 17,103 matching outputs, 18 faults, 115,748 checks and
+322,816 aggregate operation cycles. Lint reports only existing unused signals.
+Source-bound evidence: `results/physical_abi3/asap7/runtime_weight_generation/`
+and `results/rtl/a3_lq8_weight_generation.json`; previous G2 evidence is archived
+in `results/rtl/before_weight_generation/`.
