@@ -38,3 +38,16 @@ def test_pipelined_arithmetic(tmp_path, sinkhorn):
     assert 'FAILURES 0' in result.stdout
     assert 'EQUIVALENT' in result.stdout
     assert f'CASES {35 if sinkhorn else 673}' in result.stdout
+
+
+@pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
+def test_divider_reset_and_output_backpressure(tmp_path):
+    top = 'tb_a3_fp32_div_pipe_protocol'
+    subprocess.run(['iverilog', '-g2012', '-s', top, '-o', str(tmp_path/'sim'),
+                    str(ROOT/'rtl/ot_fp32_rne_pkg.sv'),
+                    str(ROOT/'rtl/abi3/ot_a3_fp32_div_rne_pipe.sv'),
+                    str(ROOT/f'rtl/test/{top}.sv')],
+                   check=True, capture_output=True, text=True, timeout=30)
+    run = subprocess.run(['vvp', str(tmp_path/'sim')], capture_output=True, text=True, timeout=30)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert 'PASS divider protocol reset_phases=4 stalled_results=8 replacement=1' in run.stdout

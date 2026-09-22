@@ -1394,3 +1394,22 @@ not closure of current RTL. Compared with the original replay service's
 3,872.080 um² and -0.109286 ns WNS, area improves but timing does not improve
 monotonically. Evidence: `runtime_operand_service/historical_revision_comparison.json`
 and retained route artifacts under `results/physical_abi3/asap7/`.
+
+
+## Divider pipeline ownership and backpressure qualification
+
+The arithmetic equivalence benches held output-ready high and reset only at
+startup. A new directed protocol test closes that gap for the rounding-stage
+pipeline: it resets during each of STEP_MUL, STEP_CMP, ROUND_MUL and ROUND_CMP,
+waits to detect any escaped cancelled result, then completes a fresh division.
+Eight results are held for seven cycles each while another command is presented;
+ready must stay low and result/error/valid remain unchanged. A final case consumes
+an output and accepts a replacement on the same edge. Directed results include
+rounded 1/3, exact division, divide-by-zero refusal and zero input.
+
+The test passes against current RTL. It adds no implementation change or clock
+claim. Evidence: `results/rtl/a3_divider_pipeline_protocol.json` and
+`tests/test_divider_pipeline_equivalence.py::test_divider_reset_and_output_backpressure`.
+Physical baseline/candidate comparisons remain live. The absolute-scale runtime
+service has reached detailed routing; later service and join revisions remain
+in progress. No result is inferred from intermediate placement or routing logs.
