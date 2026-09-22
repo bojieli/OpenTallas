@@ -98,13 +98,9 @@ module ot_a3_g2_array_issue_adapter #(
     input  wire          view_valid,
     input  wire [31:0]   view_descriptor_id,
     input  wire [2:0]    view_slot,
-    // Only the low 32 bits of the element offset reach the LQ8: its base
-    // address fields are 32 bits wide.  An operand whose resolved offset needs
-    // more than 32 bits does not fit this array and its high bits are
-    // deliberately unread.
-    /* verilator lint_off UNUSEDSIGNAL */
+    // The current service addresses are 32 bits. Capture an overflow bit per
+    // view and refuse before launch; never alias a 64-bit ABI offset by truncation.
     input  wire [63:0]   view_element_offset,
-    /* verilator lint_on UNUSEDSIGNAL */
     input  wire [4:0]    view_irs_slot,
 
     // -- completion back to the sequencer --------------------------------
@@ -183,6 +179,7 @@ module ot_a3_g2_array_issue_adapter #(
     // -- the captured view set -------------------------------------------
     reg  [4:0]  view_irs_q;
     reg  [2:0]  view_have;
+    reg  [2:0]  view_offset_overflow;
     reg         view_reset;
     reg  [31:0] view_id   [0:2];
     reg  [31:0] view_off  [0:2];
@@ -229,6 +226,7 @@ module ot_a3_g2_array_issue_adapter #(
             refuse_class        <= ot_a3_pkg::A3_TRAP_NONE;
             view_irs_q          <= 5'd0;
             view_have           <= 3'b000;
+            view_offset_overflow<=3'b000;
             view_reset          <= 1'b0;
             for (i = 0; i < 3; i = i + 1) begin
                 view_id[i]  <= 32'd0;
@@ -271,6 +269,7 @@ module ot_a3_g2_array_issue_adapter #(
             if (clear) begin
                 state      <= S_IDLE;
                 view_have  <= 3'b000;
+                view_offset_overflow<=3'b000;
                 view_reset <= 1'b0;
             end
 
@@ -282,16 +281,21 @@ module ot_a3_g2_array_issue_adapter #(
             // block would size an operation from a stale operand.  The views
             // of instruction N + 1 are always published after instruction N's
             // issue handshake, so the drop is safe.
-            if (view_reset)
+            if (view_reset)begin
                 view_have <= 3'b000;
+                view_offset_overflow<=3'b000;
+            end
 
             if (view_valid) begin
                 views_captured <= views_captured + 32'd1;
                 if (view_reset || (view_irs_q != view_irs_slot)) begin
                     view_irs_q <= view_irs_slot;
                     view_have  <= contraction_view ? (3'b001 << contraction_slot) : 3'b000;
+                    view_offset_overflow<=contraction_view && (|view_element_offset[63:32]) ?
+                                          (3'b001 << contraction_slot) : 3'b000;
                 end else if (contraction_view) begin
                     view_have[contraction_slot] <= 1'b1;
+                    view_offset_overflow[contraction_slot]<=|view_element_offset[63:32];
                 end
                 if (contraction_view) begin
                     view_id[contraction_slot]  <= view_descriptor_id;
@@ -313,6 +317,9 @@ module ot_a3_g2_array_issue_adapter #(
                             // A TENSOR issue whose three operand views did not
                             // resolve is not runnable here.
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
+                            state        <= S_REFUSE;
+                        end else if (|view_offset_overflow) begin
+                            refuse_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             state        <= S_REFUSE;
                         end else begin
                             // The two configuration values the ABI does carry

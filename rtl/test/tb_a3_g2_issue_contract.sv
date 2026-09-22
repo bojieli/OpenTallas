@@ -43,8 +43,8 @@ module tb_a3_g2_issue_contract;
   if(array_start)launches<=launches+1;
  end
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
- task view(input [2:0] slot,input [31:0] id,input [31:0] offset);begin
-  view_valid=1;view_slot=slot;view_descriptor_id=id;view_element_offset={32'd0,offset};tick();view_valid=0;
+ task view(input [2:0] slot,input [31:0] id,input [63:0] offset);begin
+  view_valid=1;view_slot=slot;view_descriptor_id=id;view_element_offset=offset;tick();view_valid=0;
  end endtask
  task issue;begin
   if(!issue_ready)$fatal(1,"adapter not ready");
@@ -76,6 +76,16 @@ module tb_a3_g2_issue_contract;
   // Malformed descriptor response and mismatched issue ownership also refuse.
   b_cols=8;desc_fault=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);desc_fault=0;
   view(0,10,0);view(1,11,0);view(4,12,0);issue_slot=1;expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);
+  issue_slot=0;
+  // Each required operand must reject offsets whose high bits would alias.
+  view(0,10,64'h100000000);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);
+  view(0,10,0);view(1,11,64'h8000000000000010);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);
+  view(0,10,0);view(1,11,0);view(4,12,64'hffffffff00000000);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);
+  // Replacing a captured view clears its own overflow; ignored slots do not
+  // poison valid operands, and a new IRS set does not inherit the old fault.
+  view(0,10,64'h100000000);view(0,10,0);view(1,11,0);view(4,12,0);view(2,13,64'hffffffffffffffff);issue();
+  wait(array_start);@(negedge clk);tick();array_done=1;tick();array_done=0;
+  if(!complete_valid || complete_fault)$fatal(1,"offset refusal leaked into next issue");checks=checks+1;tick();tick();
   $display("PASS G2 issue contract checks=%0d",checks);$finish;
  end
  initial begin #100000;$fatal(1,"timeout");end

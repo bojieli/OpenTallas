@@ -1,7 +1,7 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes contiguous object-byte burst mapping after `ebd224aa`;
+Implementation includes the G2 offset-alias correction after `46ec89f6`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
@@ -375,7 +375,28 @@ This is a contiguous byte-word mapping primitive, not full deployment mapping.
 The parent still supplies admitted mapping records. Hardware descriptor-to-record
 construction, strided/sub-byte layouts, packed/tiled weight translation, general
 view offsets, output-object writes, scaled-format program coverage and production
-transport remain open. In particular, the G2 adapter still truncates high view
-offset bits; this mapper does not repair that upstream interface. Those gaps
+transport remain open. At that mapper checkpoint the G2 adapter still truncated high view
+offset bits; the subsequent correction below closes that aliasing defect. Those gaps
 must be resolved before general ABI deployment qualification. Multi-row weight
 reuse and routed characterization remain required by the full optimization goal.
+
+
+## G2 view-offset alias correction
+
+The current G2 operand ports are 32-bit service addresses, but resolved ABI view
+offsets are 64 bits. The prior adapter silently discarded the high half. A new
+regression reproduced a launch for an offset of 2^32, which would address zero
+instead of the intended view. The adapter now captures one overflow bit for
+each required view and returns CAPABILITY before descriptor fetch or arithmetic
+launch if any high bits are set. This adds three status bits, not a claimed
+mapped-area result. Replaced views overwrite their own status; new view sets,
+clear and consumed issues discard stale status. Ignored operand slots do not
+poison the contraction's required views.
+
+The adapter test now contains 12 contract checks, including high activation,
+weight and output offsets and subsequent valid execution. The 36-test focused
+suite and loaded-program numerical regressions pass. Source-bound evidence is
+`results/rtl/a3_g2_issue_contract.json`. This prevents silent aliasing within the
+current hardware limit; it does not implement wide-offset deployment mapping.
+The full goal still requires descriptor-derived mapping records, packed/strided
+weights, output-object writes, reuse and routed physical optimization.

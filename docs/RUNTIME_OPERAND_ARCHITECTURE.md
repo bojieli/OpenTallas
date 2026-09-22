@@ -873,3 +873,20 @@ and memory-object descriptors, preserving full view offsets, implementing packed
 weight/scale addressing and output-object writes, then removing the modeled
 transport. This primitive alone does not qualify those missing paths or establish
 frequency, area or energy results.
+
+
+## Reject high view offsets before narrowing
+
+G2 now preserves whether each required ABI view offset has nonzero high 32 bits.
+It refuses that issue with CAPABILITY before requesting descriptors or starting
+arithmetic. Previously offset 2^32 silently became zero. Per-view overflow state
+tracks replacement, IRS ownership, issue consumption and clear alongside the
+existing view-valid set; unused slots do not affect it. The focused adapter test
+now has 12 checks and includes each required operand plus valid recovery.
+`results/rtl/a3_g2_issue_contract.json` binds evidence to the correction.
+
+This is a checked limitation of the existing 32-bit service-word interface.
+Supporting wider deployment offsets requires constructing object-relative byte
+mapping records while preserving the full ABI offset; merely truncating that
+offset into a service base is no longer accepted. General low nonzero offsets
+also remain unqualified for packed operands and lane-local output mapping.
