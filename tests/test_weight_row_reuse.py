@@ -12,15 +12,31 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.mark.parametrize('base', [100, 0x7ffffdf0, 0xffff0000])
 @pytest.mark.parametrize('row_words', [1, 31, 32, 512, 513, 1024, 1025, 2049])
 def test_resident_row_replay(tmp_path, row_words, absolute_address, single_generation, base):
+    _run_replay(tmp_path, row_words, absolute_address, single_generation, base, row_words)
+
+
+@pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
+@pytest.mark.parametrize('absolute_address,single_generation', [(0, 0), (1, 0), (1, 1)])
+@pytest.mark.parametrize('row_words', [31, 33, 513, 544, 545, 1024])
+@pytest.mark.parametrize('tail_kind', ['one', 'bank_end', 'bank_next', 'row_minus_one'])
+def test_partial_resident_row(tmp_path, row_words, absolute_address, single_generation, tail_kind):
+    first = min(row_words, max(32, row_words - 512))
+    tail = {'one': 1, 'bank_end': first, 'bank_next': min(first + 1, row_words),
+            'row_minus_one': row_words - 1}[tail_kind]
+    _run_replay(tmp_path, row_words, absolute_address, single_generation, 0xffff0000, tail)
+
+
+def _run_replay(tmp_path, row_words, absolute_address, single_generation, base, tail_words):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''module tb;
 parameter integer ROW_WORDS=1;
+parameter integer TAIL_WORDS=ROW_WORDS;
 parameter [31:0] BASE=100;
 parameter bit ABSOLUTE_ADDRESS=0;
 parameter bit SINGLE_GENERATION=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0;
-reg [31:0] command_generation=7,command_base=BASE,command_words=3*ROW_WORDS;
+reg [31:0] command_generation=7,command_base=BASE,command_words=2*ROW_WORDS+TAIL_WORDS;
 wire [31:0] command_row_words=ROW_WORDS;
 wire command_ready,active,scheduled,command_error;
 wire reserve_valid,reserve_ready,reserve_bank,fetch_valid,fetch_ready;
@@ -91,7 +107,7 @@ endmodule
 ''')
     names = ['ot_a3_weight_tile_scheduler', 'ot_a3_weight_tile_prefetch',
              'ot_a3_runtime_weight_banks', 'ot_a3_operand_bank_owner']
-    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.BASE={base}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}', f'-Ptb.SINGLE_GENERATION={single_generation}',
+    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.BASE={base}', f'-Ptb.TAIL_WORDS={tail_words}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}', f'-Ptb.SINGLE_GENERATION={single_generation}',
                             '-o', str(tmp_path/'sim'),
                             *[str(ROOT/'rtl/abi3'/f'{n}.sv') for n in names],
                             str(ROOT/'rtl/test/tb_a3_runtime_weight_banks.sv'), str(bench)],

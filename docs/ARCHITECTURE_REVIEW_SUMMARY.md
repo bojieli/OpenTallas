@@ -117,7 +117,7 @@ Areas are standard-cell area and exclude SRAM unless separately stated.
 | Earlier runtime operand service | 1 ns | 3,807.230, plus 5,586 SRAM | +0.009551 / +0.021035 | Pass for its recorded configuration; does not qualify current pass-first integration |
 | Sinkhorn with pipelined divider | 2 ns | 3,099.550 | +0.092189 / +0.027670 | Pass for recorded configuration |
 | Pass scheduler after split tile increment | 1 ns | 1,429.280 | −0.056566 / +0.051760 | Historical setup failure |
-| Pass scheduler with parallel extent selection | 1 ns | 1,380.650 | +0.029694 / +0.051666 | Pass; current sources and seven retained artifacts verified |
+| Pass scheduler with parallel extent selection | 1 ns | 1,380.650 | +0.029694 / +0.051666 | Historical pass before partial-row fix; seven retained artifacts verified |
 
 The scheduler's split tile increment improves setup by 49.26 ps against the
 preceding elastic-handoff version, at 0.33% more cell area and no added cycles.
@@ -139,16 +139,16 @@ Evidence: [transport audit](../results/physical_abi3/asap7/bf16_weight_transport
 
 ## Architectural gaps and optimization targets
 
-1. **Finish the replay contract and schedule policy.** A generic truncated final
-   row can stall: a 92-word command over a stored 31-word row emits a shorter
-   final extent, while prefetch requires an exact stored/acquired length match.
-   This reproduces before and after the latest change. Current G2 commands
-   complete passes, so its tested configurations are unaffected. Resolve with
-   explicit admission refusal or prefix acquisition plus release of all unused
-   retained banks. Changing the equality alone is insufficient. Then select
-   row-first/pass-first and pass width from capacity and measured service cost;
-   selection is currently static. For workloads exceeding even a one-column
-   whole-K pass, evaluate depth tiling with an explicit accumulator budget.
+1. **Finish schedule policy and qualify the repaired replay contract.** The
+   generic 92-word command over a stored 31-word row now passes. Prefetch accepts
+   a bounded prefix; the scheduler retains each bank only if its corresponding
+   start in the next row is needed. A second bank omitted by the final partial
+   row releases during the preceding row. The 172 passing tests include 72
+   partial-row cases and final bank-release checks; a fresh physical route is
+   running. Select row-first/pass-first and pass width from capacity and measured
+   service cost; selection is currently static. For workloads exceeding even a
+   one-column whole-K pass, evaluate depth tiling with an explicit accumulator
+   budget.
 2. **Complete actual input transport.** Extend descriptor-driven activation and
    weight paths across required formats, bases, strides, capacities and physical
    bindings. Validate through real dispatch with delayed memory responses.
@@ -179,6 +179,12 @@ These targets align the design with modern accelerator practice: local data
 reuse, overlapped transport, bounded credits and balanced engines. The remaining
 work is to demonstrate that balance and physical feasibility across all targets.
 
-The [partial-row reproducer](../results/rtl/partial_replay_extent_gap/result.json)
-is an explicitly retained known failure. Detailed implementation checkpoints and
+The [original partial-row failure](../results/rtl/partial_replay_extent_gap/result.json)
+is retained alongside [the fix evidence](../results/rtl/partial_replay_extent_gap/fixed.json). Detailed implementation checkpoints and
 source snapshots are in the [input transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md).
+
+The partial-row repair changes scheduler and prefetch RTL after the recorded
+K513 loaded comparisons and scheduler route. Those results now qualify their
+retained historical sources. A current-source loaded K514 campaign passes
+2,234 exact outputs and 295 write acknowledgements; physical requalification
+is underway. The standalone transport and writer sources are unchanged.

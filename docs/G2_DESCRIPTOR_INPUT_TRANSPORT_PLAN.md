@@ -956,3 +956,29 @@ cannot equal one. The bench now recognizes a one-column final pass with
 with the same sources for comparison. The old bench, failed log and preceding
 K512/K513 records are retained in `results/rtl/before_single_column_stall/`.
 No hardware change was needed for this testbench correction.
+
+## Partial-row ownership repair
+
+The generic replay gap is repaired without cleanup states or extra storage.
+At each tile start, `tile_left > row_words` means the corresponding bank start
+will be needed again next row. This replaces `tile_left > row_left`, which
+retained the second bank merely because any later row existed. If the final
+partial row omits bank one, that bank now releases during the preceding row.
+Prefetch admits nonempty prefixes no longer than the stored extent, while
+retaining the existing response-copy/release sequencing and original bank tags.
+
+The original 31-word row / 92-word command reproducer now passes. In total,
+172 scheduler, bank, prefetch and runtime tests pass, including 72 partial-row
+cases crossing both bank boundaries, all three FIFO identity modes, stalls,
+cancellation/restart and final free-bank assertions. The 3,664 independent
+extent cases and strict scheduler lint also pass. Evidence is retained in
+`results/rtl/partial_replay_extent_gap/fixed.json`; the original failure remains
+as historical evidence. Prior scheduler/prefetch sources are snapshotted in
+`results/rtl/before_partial_replay_fix/`, and the prior passing scheduler route
+audit is rebound to its snapshot.
+
+The current-source loaded K514 single-column campaign passes 2,234 exact
+outputs and 295 write acknowledgements, including faults, abort/restart and
+drain. It uses 3,598 first-operation weight fills and 109,604 weight bytes.
+The fresh 1 ns CTS12 scheduler route is running; current-source physical
+closure remains pending.

@@ -1,0 +1,27 @@
+{
+  "status": "pass",
+  "scope": "Partial final resident rows consume bounded prefixes and release every bank on its last use; no new state, storage or command cycles",
+  "tests_passed": 172,
+  "partial_row_cases": 72,
+  "extent_oracle_cases": 3664,
+  "original_reproducer": {
+    "row_words": 31,
+    "command_words": 92,
+    "stdout": "PASS row reuse words=31 fills=31 outputs=92"
+  },
+  "coverage": "Rows 31/33/513/544/545/1024; tails of one word, bank end, bank end+1, row-1; per-tile/absolute/shared-generation identities; stalls, reset/restart, exact traffic and all banks free",
+  "sources": {
+    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "5c487e4c9cdda627b515b196f3e7062b73a47571e471f7ae86986553a232ad6f",
+    "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "02d17765059b71c26dd6d1be88b216b802dcb720dae43e1e787c98a1633b6837",
+    "tests/test_weight_row_reuse.py": "6c1b496e7409d77224a644ee6fb30d415dad48ab087ad8b35853b2c4fcb21fac",
+    "rtl/test/tb_a3_weight_tile_prefetch.sv": "34e4357be13dd8a767574a555c35e2aa102dfec03cdf517e8baed4feea542029"
+  },
+  "physical": "running: results/physical_abi3/asap7/weight_pass_scheduler/pnr_partial_replay_cts12_1ns.json",
+  "loaded_campaign": {
+    "record": "results/rtl/a3_g2_runtime_byte_transport_depth514_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols1.json",
+    "sha256": "c21af5fdc23912f70fc4b3386cb7deef225a51b8d5c555722eb551db9141cbd3",
+    "outputs": 2234,
+    "writes_and_acknowledgements": 295,
+    "current_sources_verified": true
+  }
+}

@@ -91,11 +91,10 @@ module ot_a3_weight_tile_prefetch #(
     assign word_data=data_mem[head];
     assign word_index=index_mem[head];
     assign word_last=last_mem[head];
-    // Acquire a nonempty prefix of the stored tile. The scheduler owns
-    // reuse decisions and releases each bank on its last use, including
-    // banks omitted by a partial final row. Never read beyond stored data.
+    // Refuse a mismatched tile length before acquisition, rather than hanging
+    // on a later out-of-range read or silently discarding a reserved suffix.
     wire [9:0] acquire_words;
-    wire tile_shape=tile_words!=0 && tile_words<=10'd512 && tile_words<=acquire_words;
+    wire tile_shape=tile_words!=0 && tile_words<=10'd512 && tile_words==acquire_words;
     assign tile_ready=rst_n && state==IDLE && tile_shape && acquire_ready;
     ot_a3_runtime_weight_banks #(.TAG_BITS(TAG_BITS)) banks(
       .clk(clk),.rst_n(rst_n),

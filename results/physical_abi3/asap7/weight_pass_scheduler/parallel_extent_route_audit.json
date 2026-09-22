@@ -1,5 +1,5 @@
 {
-  "scope": "Current parallel extent pass scheduler at tested 1 ns",
+  "scope": "Historical parallel extent scheduler before partial-row retention fix",
   "sources": [
     {
       "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
@@ -58,5 +58,17 @@
     "area_reduction_percent": 3.4024124034478853,
     "setup_improvement_ps": 86.25970000000001,
     "added_cycles": 0
-  }
+  },
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "verified": "results/rtl/before_partial_replay_fix/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "bab84da38682c7f6ff29c076700e15317a6b8b6df4807c227422d78996c13570"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "verified": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79"
+    }
+  ]
 }

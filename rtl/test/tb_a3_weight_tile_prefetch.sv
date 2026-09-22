@@ -63,9 +63,9 @@ module tb_a3_weight_tile_prefetch;
  initial begin
  tick();@(negedge clk);rst_n=1;
  load(0,64'h100,32);
- // Both undersized and oversized acquisitions must refuse without ownership.
- tile_bank=0;tile_tag=64'h100;tile_words=31;tile_valid=1;#1;
- if(tile_ready)$fatal(1,"short acquisition accepted");tick();@(negedge clk);
+ // Empty and oversized acquisitions must refuse without ownership.
+ tile_bank=0;tile_tag=64'h100;tile_words=0;tile_valid=1;#1;
+ if(tile_ready)$fatal(1,"empty acquisition accepted");tick();@(negedge clk);
  tile_words=33;#1;if(tile_ready)$fatal(1,"long acquisition accepted");tick();@(negedge clk);tile_valid=0;
  launch(0,64'h100,32);word_ready=1;
  load(1,64'h200,2);
@@ -104,7 +104,8 @@ module tb_a3_weight_tile_prefetch;
  #1;if(word_valid || reserved_slots!=0 || active_banks!=0)$fatal(1,"reset did not revoke in-flight state");
  tick();@(negedge clk);rst_n=1;
  repeat(3)tick();if(word_valid)$fatal(1,"old response survived reset");
- load(0,64'h600,2);launch(0,64'h600,2);word_ready=1;
+ // Consume only the final prefix of a larger stored bank.
+ load(0,64'h600,4);launch(0,64'h600,2);word_ready=1;
  wait(consumed==76);@(negedge clk);word_ready=0;
  rst_n=0;#1;if(word_valid || tile_ready)$fatal(1,"reset left credits");
  $display("PASS tile prefetch words=%0d max_contiguous=%0d refill_consume_overlap=%0d depth=%0d",consumed,max_streak,overlap,FIFO_DEPTH);

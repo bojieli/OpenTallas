@@ -100,10 +100,7 @@ module ot_a3_weight_tile_scheduler #(
     assign tile_valid=enabled && active && tile_left!=0;
     assign tile_tag={generation,tile_base};
     assign tile_stream_tag={generation,stream_base};
-    // The same bank is used again only if the stream extends beyond its
-    // corresponding start in the next row. A partial final row may not use
-    // bank one: release it on the preceding row instead of orphaning it.
-    assign tile_retain=replay && tile_left>{21'b0,row_words};
+    assign tile_retain=replay && tile_left>{21'b0,row_left};
     // Capture invalid payload too: only the registered active verdict permits
     // publication. Keep the wide range check off every payload-register enable.
     // Each command initializes all payload before any reserve/fetch/tile valid.
