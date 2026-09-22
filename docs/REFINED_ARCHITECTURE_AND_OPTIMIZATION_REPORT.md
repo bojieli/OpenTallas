@@ -1927,3 +1927,21 @@ then recovers with fresh views. It fails on the previous adapter at DESC_A and
 passes on the revision. All four issue/prefix pytest cases pass; loaded G2
 retains 1,352 matching outputs and 25,013 cycles. Evidence:
 `results/rtl/a3_g2_issue_clear.json`. No physical benefit is claimed.
+
+
+## Shared weight generation and sum-handoff routes complete
+
+At ASAP7 TT1ns CTS12, shared-weight-generation service area is 3,716.890 um²
+versus 3,810.960 for the prior one-hot auxiliary revision (2.47% lower).
+Setup WNS improves -0.070838 to -0.002412 ns, with three failing setup paths.
+Hold WNS is +0.028076 ns; all reported hold, slew, capacitance, fanout, DRC and
+antenna violations are zero. Macro area remains 5,586 um² for two banks. This
+is a verified routed area gain and much smaller timing miss, but still not 1ns
+closure. The reported slack-extrapolated 997.59MHz is not an operating point.
+
+At2.4ns CTS12 the Sinkhorn direct-sum-handoff snapshot routes at3,048.300 um²,
+versus3,107.280 for divider handoff alone (1.90% lower). Setup WNS is+0.493474ns
+and hold WNS+0.029832ns. Timing passes; two fanout violations still prevent full
+physical closure. This snapshot predates right-adder request suppression. All
+retained artifact hashes were verified. Records and source manifests are linked
+in `results/physical_abi3/asap7/weight_generation_and_sum_routes.json`.

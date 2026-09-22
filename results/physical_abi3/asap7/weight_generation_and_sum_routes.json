@@ -1,0 +1,190 @@
+{
+  "scope": "Final route checkpoints. Operand service fails1ns setup despite clean physical checks. Historical sum-handoff Sinkhorn meets2.4ns timing but fails fanout. Current activity-suppressed Sinkhorn at2ns still pending.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_weight_generation_cts12_1ns.json",
+      "sha256": "b4f86b8f7432ccf11315d7f2121a84c9f529e79ef2e062751ec89c29f3609871",
+      "metrics": {
+        "antenna_violating_nets": 0,
+        "antenna_violating_pins": 0,
+        "clock_count": 1,
+        "core_area_um2": 24990.8,
+        "die_area_um2": 26348.4,
+        "drc_errors": 0,
+        "flow_error_counts": {
+          "cts__flow__errors__count": 0,
+          "detailedplace__flow__errors__count": 0,
+          "detailedroute__flow__errors__count": 0,
+          "finish__flow__errors__count": 0,
+          "floorplan__flow__errors__count": 0,
+          "globalplace__flow__errors__count": 0,
+          "globalroute__flow__errors__count": 0,
+          "placeopt__flow__errors__count": 0,
+          "synth__flow__errors__count": 0
+        },
+        "fmax_hz": 997594000.0,
+        "hold_tns_ns": 0.0,
+        "hold_violations": 0,
+        "hold_wns_ns": 0.0280759,
+        "instance_count": 111650,
+        "library_time_unit_ns": 0.001,
+        "macro_area_um2": 5586,
+        "macro_count": 2,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0,
+        "missing_metadata_keys": [],
+        "power_total_w": 0.0191495,
+        "raw_timing_library_units": {
+          "hold_tns_ns": 0,
+          "hold_wns_ns": 28.0759,
+          "setup_tns_ns": -4.82836,
+          "setup_wns_ns": -2.41152
+        },
+        "routed_nets": 31380,
+        "routed_wirelength_um": 155593,
+        "sequential_area_um2": 1140.8,
+        "sequential_cell_count": 3808,
+        "setup_tns_ns": -0.00482836,
+        "setup_violations": 3,
+        "setup_wns_ns": -0.00241152,
+        "standard_cell_area_um2": 3716.89,
+        "standard_cell_count": 31419,
+        "utilization_fraction": 0.372252,
+        "vias": 259413
+      },
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "20966d69c546b09adf23f95db7ac7ff5ab538f21742760fd8b3cbc66289ff9d3",
+          "size_bytes": 10925
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+          "size_bytes": 5327
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "afd0c4982547cce2b6fa7dc0d23d9bf663d96c52228ae5f6ce3ea8319a564f67",
+          "size_bytes": 6517
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298",
+          "size_bytes": 3336
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "a571d2b16ee20cb94733a17fc6778ce8157ceffdcdafe9b5a954978e556a906a",
+          "size_bytes": 7227
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_sum_handoff/pnr_candidate_cts12_2p4ns.json",
+      "sha256": "3b595615865b44c142e75ac410c9378386f2b2da8ae6ad96c60b172debffd35b",
+      "metrics": {
+        "antenna_violating_nets": 0,
+        "antenna_violating_pins": 0,
+        "clock_count": 1,
+        "core_area_um2": 7818.96,
+        "die_area_um2": 8579.02,
+        "drc_errors": 0,
+        "flow_error_counts": {
+          "cts__flow__errors__count": 0,
+          "detailedplace__flow__errors__count": 0,
+          "detailedroute__flow__errors__count": 0,
+          "finish__flow__errors__count": 0,
+          "floorplan__flow__errors__count": 0,
+          "globalplace__flow__errors__count": 0,
+          "globalroute__flow__errors__count": 0,
+          "placeopt__flow__errors__count": 0,
+          "synth__flow__errors__count": 0
+        },
+        "fmax_hz": 524514000.0,
+        "hold_tns_ns": 0.0,
+        "hold_violations": 0,
+        "hold_wns_ns": 0.029831600000000003,
+        "instance_count": 68030,
+        "library_time_unit_ns": 0.001,
+        "macro_area_um2": 0,
+        "macro_count": 0,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 2,
+        "max_slew_violations": 0,
+        "missing_metadata_keys": [],
+        "power_total_w": 0.00225107,
+        "raw_timing_library_units": {
+          "hold_tns_ns": 0,
+          "hold_wns_ns": 29.8316,
+          "setup_tns_ns": 0,
+          "setup_wns_ns": 493.474
+        },
+        "routed_nets": 27687,
+        "routed_wirelength_um": 129236,
+        "sequential_area_um2": 863.457,
+        "sequential_cell_count": 2293,
+        "setup_tns_ns": 0.0,
+        "setup_violations": 0,
+        "setup_wns_ns": 0.493474,
+        "standard_cell_area_um2": 3048.3,
+        "standard_cell_count": 26517,
+        "utilization_fraction": 0.38986,
+        "vias": 239299
+      },
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+          "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+          "size_bytes": 12418
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "size_bytes": 18599
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_positive_rne_pipe.sv",
+          "sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+          "size_bytes": 9283
+        },
+        {
+          "path": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
+          "sha256": "a7f115c0bef8ee2c5c08db0eaca970aa5c8c4c283c9c5b60ae4ed11d1931e4c3",
+          "size_bytes": 14731
+        }
+      ]
+    }
+  ]
+}
