@@ -1,0 +1,22 @@
+{
+  "scope": "Matched standalone scheduler ASAP7 TT, ROW_REUSE=1, 1 ns synthesis/pre-layout timing. No routed improvement established.",
+  "baseline": "prelayout_replay_control_1ns.json",
+  "candidate": "prelayout_replay_extent_1ns.json",
+  "area_um2": {
+    "baseline": 301.176,
+    "candidate": 298.977
+  },
+  "setup_wns_ns": {
+    "baseline": -0.6646206944705256,
+    "candidate": -0.5739256870480774
+  },
+  "proof": {
+    "scope": "Combinational length expression only, not full sequential equivalence",
+    "constraints": "10-bit limit <=512; all stream32/row11 values, replay 0 or 1",
+    "command": "yosys -Q -T -p 'read_verilog -sv results/physical_abi3/asap7/runtime_weight_scheduler/extent_proof/proof.sv; prep -top proof; sat -set valid 1 -prove equal 1 -verify'",
+    "artifacts": {
+      "proof.sv": "9bf0f45ba0d116951446478af6d2d4c453fa756abeee05814d23f95c9c9437ed",
+      "proof.log": "1c7e7bad34a76c2fe4215968df2ef192374b6624be529f75473424c99a6361f1"
+    }
+  }
+}

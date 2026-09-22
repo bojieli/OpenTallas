@@ -898,3 +898,30 @@ The full integrated LQ8 service campaign passes 92 cases, 17,103 matching output
 `results/rtl/a3_lq8_absolute_address.json`. This covers the generic streamed
 service as well as G2 resident-replay checks. Source digests were verified
 against the current tree. Physical closure of the revised service remains open.
+
+
+## Scheduler extent-selection path reduction
+
+The absolute-address service's intermediate floorplan worst path starts at
+scheduler.tile_left and ends at scheduler.tile_base. Tile length previously
+selected a 32-bit minimum of row remainder and stream remainder before clamping
+to the bank limit. It now clamps the stream remainder first, then compares the
+resulting 10-bit chunk with the 11-bit resident-row remainder. This preserves
+both minima, including zero and partial tails, while removing the wide mux
+before the variable-limit comparison and address update.
+
+Matched scheduler synthesis area changes from 301.176 to 298.977 um², and
+pre-layout setup WNS from -0.6646 to -0.5739 ns. No cycle or storage is added.
+Both still fail 1 ns before physical repair. This is an incremental reduction
+of a containing-service path identified in floorplan, not proof of routed
+closure or clock improvement. Earlier live physical runs characterize their
+captured source versions and do not validate this new expression.
+
+Yosys SAT proves the old/new length expressions equivalent for every 32-bit
+stream remainder, 11-bit row remainder and replay flag under bank limit <=512.
+The proof covers this combinational expression only. Its source, log, command
+and hashes are retained in `runtime_weight_scheduler/extent_proof/` and
+`extent_comparison.json`. All 52 focused tests pass, standalone scheduler lint
+is clean, and three loaded G2 campaigns retain 584 matching outputs each with
+exact counters 21,731, 31,574 and 55,487. The complete architecture and all-target
+physical goals remain unfinished.
