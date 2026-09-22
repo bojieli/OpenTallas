@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.runtime_operand_route_review.v1",
+  "record": "pnr_replay_cts12_1ns.json",
+  "record_sha256": "bec10d14a429428b72ef1a7a238e7bc0251d2ff31d14e39cc2f6d565a8985e9a",
+  "source_commit": "8380348e003bc1b5dee6a5032550ee14889876a2",
+  "source_hashes_match_commit": true,
+  "retained_artifact_hashes_verified": 7,
+  "target_period_ns": 1.0,
+  "setup_wns_ns": -0.10928600000000001,
+  "setup_violations": 19,
+  "hold_wns_ns": 0.0218128,
+  "hold_violations": 0,
+  "standard_cell_area_um2": 3872.08,
+  "macro_count": 2,
+  "macro_area_um2": 5586,
+  "critical_path": {
+    "startpoint": "cursor.col[0]",
+    "endpoint": "auxiliary_request_ws[29]",
+    "data_arrival_ns": 0.90929,
+    "data_required_ns": 0.8,
+    "report": "results/physical_abi3/asap7/runtime_operand_service/pnr_replay_cts12_1ns_artifacts/6_finish.rpt",
+    "mechanism": "Column selection followed by scale-offset addition on service output."
+  },
+  "next_action": "Characterize committed absolute per-column scale addresses in the containing service with the same macros and constraints. Do not infer closure from standalone cursor or slack-extrapolated Fmax.",
+  "interpretation": "Historical replay snapshot, before FIFO absolute addresses, bounded extent rewrite and absolute scale cursor; not current RTL timing."
+}

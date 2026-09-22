@@ -65,8 +65,9 @@ setup/hold slack and zero reported slew, capacitance, fanout, DRC and antenna
 violations. The historical replay-control scheduler route saves area
 (453.788 to 415.632 um² relative to the preceding early-fill snapshot), but
 fails setup: -0.0222674 ns WNS and 36 violating paths. The subsequent bounded
-extent rewrite has an expression-equivalence proof, but containing-service
-routes remain pending. Standalone successes do not establish integrated GHz
+extent rewrite has an expression-equivalence proof. The first historical
+containing-service route now fails setup by 109 ps on the weight-scale output;
+routes of later revisions remain pending. Standalone successes do not establish integrated GHz
 operation; records can also retain overall `not_met` due to pre-layout failure.
 No activity-qualified energy benefit or all-target physical closure is claimed.
 
@@ -1049,3 +1050,33 @@ critical path runs from tile_left[9] to tile_base[28]. This result is a timing
 failure despite its 8.41% area saving against the prior early-fill snapshot.
 The later extent rewrite addresses that selection structure but still requires
 routed confirmation. Retained artifact hashes have been checked.
+
+
+## Containing-service routed bottleneck confirmed
+
+The full runtime operand service's historical replay snapshot has completed
+ASAP7 TT routing at 1 ns, including two 512x128 SRAM macros. Source hashes for
+all ten RTL inputs match recorded commit `8380348e`; all seven retained artifact
+hashes match. This snapshot predates the FIFO absolute-address, bounded-extent
+and absolute scale-cursor changes, so it is a baseline for those revisions.
+
+The route has 3,872.080 um² standard-cell area plus 5,586 um² of SRAM macro area.
+Setup WNS is -0.109286 ns with 19 violating paths; hold WNS is +0.0218128 ns
+with zero violations. Reported slew, capacitance, fanout, DRC and antenna
+violations are zero. The design fails its 1 ns setup requirement. The flow's
+901.48 MHz slack-derived estimate is not a separately validated operating point.
+
+The critical path is `cursor.col[0]` to `auxiliary_request_ws[29]`: column
+selection followed by scale-offset addition produces a 0.90929 ns arrival
+against a 0.80000 ns output requirement. This final routed path confirms the
+motivation for the already committed absolute per-column scale addresses;
+it does not prove the replacement is faster. A new containing-service route
+now measures current commit `c1d7d14e` with the same 1 ns, fanout-16, library
+transition limit, CTS12 and two-macro configuration. Prior live revision runs
+continue independently. If the current route still fails, its final paths will
+determine whether to register the service request boundary or localize control.
+
+Evidence: `runtime_operand_service/pnr_replay_cts12_1ns.json`, retained
+`pnr_replay_cts12_1ns_artifacts/6_finish.rpt` and `replay_route_review.json` under
+`results/physical_abi3/asap7/`. This is containing-service evidence, not full G2
+or all-target closure.
