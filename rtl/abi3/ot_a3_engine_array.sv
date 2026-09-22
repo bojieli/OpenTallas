@@ -405,7 +405,17 @@ module ot_a3_engine_array (
         (cfg_cols == cfg_input1_dims[63:32]) &&
         (cfg_depth == cfg_input0_dims[127:96]) &&
         (cfg_slots == cfg_input0_dims[95:64]) &&
-        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        //: THE LITERAL RANK, not desc_out0_rank. This conjunction already
+        //: pins desc_out0_rank to 4'd3, and `&&` builds every operand in
+        //: hardware, so passing the variable synthesised shape_elements'
+        //: 64x32 multiply cascade with a RANK-SELECTED operand -- putting
+        //: cfg_view_ranks on the multiplier's operand select. Routed, three
+        //: chained multiplies were 2,572 ps of a 5,446 ps path (54%) from
+        //: cfg_view_ranks[16] to tie_multiplicity[12]. Substituting the
+        //: literal is bit-identical: where the conjunction is true the two
+        //: agree by construction, and where it is false the predicate is
+        //: false whatever shape_elements returned.
+        (cfg_count == shape_elements(4'd3, cfg_output0_dims)) &&
         (cfg_dtype_a == desc_in0_dtype) &&
         (cfg_dtype_b == desc_in1_dtype) && cfg_profile_valid &&
         (profile_input_dtype == FMT_BF16) &&
@@ -442,7 +452,17 @@ module ot_a3_engine_array (
         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&
         (cfg_cols == cfg_input1_dims[31:0]) &&
         (cfg_depth == cfg_input0_dims[95:64]) &&
-        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        //: THE LITERAL RANK, not desc_out0_rank. This conjunction already
+        //: pins desc_out0_rank to 4'd4, and `&&` builds every operand in
+        //: hardware, so passing the variable synthesised shape_elements'
+        //: 64x32 multiply cascade with a RANK-SELECTED operand -- putting
+        //: cfg_view_ranks on the multiplier's operand select. Routed, three
+        //: chained multiplies were 2,572 ps of a 5,446 ps path (54%) from
+        //: cfg_view_ranks[16] to tie_multiplicity[12]. Substituting the
+        //: literal is bit-identical: where the conjunction is true the two
+        //: agree by construction, and where it is false the predicate is
+        //: false whatever shape_elements returned.
+        (cfg_count == shape_elements(4'd4, cfg_output0_dims)) &&
         (cfg_block_a == cfg_aux0[15:0]) &&
         (cfg_dtype_a == desc_in0_dtype) &&
         (cfg_dtype_b == desc_in1_dtype) && cfg_profile_valid &&
@@ -487,7 +507,17 @@ module ot_a3_engine_array (
         (cfg_input3_dims[127:96] == 4) &&
         (cfg_rows == (cfg_input0_dims[31:0] * cfg_input0_dims[63:32])) &&
         (cfg_cols == cfg_input0_dims[95:64]) && (cfg_slots == 4) &&
-        (cfg_count == shape_elements(desc_out0_rank, cfg_output0_dims)) &&
+        //: THE LITERAL RANK, not desc_out0_rank. This conjunction already
+        //: pins desc_out0_rank to 4'd4, and `&&` builds every operand in
+        //: hardware, so passing the variable synthesised shape_elements'
+        //: 64x32 multiply cascade with a RANK-SELECTED operand -- putting
+        //: cfg_view_ranks on the multiplier's operand select. Routed, three
+        //: chained multiplies were 2,572 ps of a 5,446 ps path (54%) from
+        //: cfg_view_ranks[16] to tie_multiplicity[12]. Substituting the
+        //: literal is bit-identical: where the conjunction is true the two
+        //: agree by construction, and where it is false the predicate is
+        //: false whatever shape_elements returned.
+        (cfg_count == shape_elements(4'd4, cfg_output0_dims)) &&
         (cfg_block_a == cfg_aux0[15:0]) &&
         (cfg_block_b == cfg_aux2[15:0]) &&
         (cfg_dtype_a == desc_in0_dtype) &&

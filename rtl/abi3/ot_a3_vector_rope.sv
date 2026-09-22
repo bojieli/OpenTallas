@@ -396,50 +396,103 @@ module ot_a3_vector_rope #(
     assign out_addr = lane_mode ? lane_out_addr : adapter_out_addr;
     assign out_data = lane_mode ? lane_out_data : adapter_out_data;
 
-    ot_ta_rope_bf16_sram_engine #(
-        .PROFILE_COMMAND_INDEX(32'd0),
-        .PROFILE_KERNEL_INDEX(32'd0),
-        //: The core was already parameterised; only this wrapper was not, so
-        //: the geometry stopped here and the core never heard about it.
-        .PROFILE_QUERY_HEADS(QUERY_HEADS),
-        .PROFILE_KEY_HEADS(KEY_HEADS),
-        .PROFILE_HEAD_WIDTH(HEAD_WIDTH)
-    ) qualified_rope (
-        .clk(clk),
-        .rst_n(rst_n),
-        .cmd_valid(core_cmd_valid),
-        .cmd_ready(core_cmd_ready),
-        .abi_major(16'd2),
-        .abi_minor(16'd2),
-        .expected_command_index(32'd0),
-        .command_record(CORE_COMMAND),
-        .sram_read_valid(core_read_valid),
-        .sram_read_ready(core_read_ready),
-        .sram_read_address(core_read_address),
-        .sram_response_valid(core_response_valid),
-        .sram_response_ready(core_response_ready),
-        .sram_response_data(core_response_data),
-        .sram_write_valid(core_write_valid),
-        .sram_write_ready(core_write_ready),
-        .sram_write_address(core_write_address),
-        .sram_write_data(core_write_data),
-        .sram_write_byte_enable(core_write_byte_enable),
-        .done_valid(core_done_valid),
-        .done_ready(core_done_ready),
-        .done_error(core_done_error),
-        .done_command_index(core_done_command_index),
-        .done_coefficient_read_count(core_done_coefficient_reads),
-        .done_query_read_count(core_done_query_reads),
-        .done_key_read_count(core_done_key_reads),
-        .done_output_write_count(core_done_writes),
-        .done_element_count(core_done_elements),
-        .done_multiplication_count(core_done_multiplications),
-        .done_addition_count(core_done_additions),
-        .done_multiplication_saturation_count(
-            core_done_multiplication_saturations
-        ),
-        .done_addition_saturation_count(core_done_addition_saturations)
-    );
+    //: THE LEGACY CORE IS INSTANTIATED ONLY WHEN IT IS USED.
+    //:
+    //: Routing this block at a 3.4 ns target came back at WNS -7162 ps -- a
+    //: 10.56 ns path -- and the worst path was entirely inside this core:
+    //: qualified_rope.column_index[1] to qualified_rope.output_buffer[1017][4],
+    //: 422 cell stages, 11,055 ps of datapath. Its STATE_COMPUTE resolves FOUR
+    //: DEPENDENT binary32 operations in one cycle -- two fp32_mul_rne, two
+    //: fp32_to_bf16_rne, an fp32_add_rne and a fourth narrowing -- with a
+    //: 128-word array read in front of them and a 5,120-word write decode
+    //: behind. ot_a3_rope_lane_pipe.sv:19 already says this in words: "IT IS NOT
+    //: A PIPELINE AT ALL", and cuts the same six calls in the same order, one
+    //: per registered stage, so it is bit-identical by construction.
+    //:
+    //: In that same routed run the pipelined lane's own path MET, at +34.74 ps.
+    //: The core's `output_buffer` is 81,920 flops that all share that one cone,
+    //: which is why global route reported 82,138 violating endpoints with 81,920
+    //: of them in that array -- 99.7 percent -- and why detailed route ran out
+    //: of its twelve hours.
+    //:
+    //: Setting LANE_AT_SPAN1 alone does NOT remove any of that. It makes
+    //: S_DISPATCH unreachable, but nothing proves that to the synthesiser, so
+    //: the core keeps its area and its path. The instantiation has to go, which
+    //: is what this generate does; the else arm ties off every one of the twenty
+    //: wires the core drives, because a wire left undriven is an X in
+    //: simulation and a dangling input to the adapter logic above.
+    //:
+    //: tests/test_a3_rope_span.py builds BOTH values of the parameter on one
+    //: operand stream and asserts the output images are identical word for word,
+    //: which is what licenses selecting the lane at all.
+    generate if (LANE_AT_SPAN1 == 0) begin : g_qualified_core
+        ot_ta_rope_bf16_sram_engine #(
+            .PROFILE_COMMAND_INDEX(32'd0),
+            .PROFILE_KERNEL_INDEX(32'd0),
+            //: The core was already parameterised; only this wrapper was not, so
+            //: the geometry stopped here and the core never heard about it.
+            .PROFILE_QUERY_HEADS(QUERY_HEADS),
+            .PROFILE_KEY_HEADS(KEY_HEADS),
+            .PROFILE_HEAD_WIDTH(HEAD_WIDTH)
+        ) qualified_rope (
+            .clk(clk),
+            .rst_n(rst_n),
+            .cmd_valid(core_cmd_valid),
+            .cmd_ready(core_cmd_ready),
+            .abi_major(16'd2),
+            .abi_minor(16'd2),
+            .expected_command_index(32'd0),
+            .command_record(CORE_COMMAND),
+            .sram_read_valid(core_read_valid),
+            .sram_read_ready(core_read_ready),
+            .sram_read_address(core_read_address),
+            .sram_response_valid(core_response_valid),
+            .sram_response_ready(core_response_ready),
+            .sram_response_data(core_response_data),
+            .sram_write_valid(core_write_valid),
+            .sram_write_ready(core_write_ready),
+            .sram_write_address(core_write_address),
+            .sram_write_data(core_write_data),
+            .sram_write_byte_enable(core_write_byte_enable),
+            .done_valid(core_done_valid),
+            .done_ready(core_done_ready),
+            .done_error(core_done_error),
+            .done_command_index(core_done_command_index),
+            .done_coefficient_read_count(core_done_coefficient_reads),
+            .done_query_read_count(core_done_query_reads),
+            .done_key_read_count(core_done_key_reads),
+            .done_output_write_count(core_done_writes),
+            .done_element_count(core_done_elements),
+            .done_multiplication_count(core_done_multiplications),
+            .done_addition_count(core_done_additions),
+            .done_multiplication_saturation_count(
+                core_done_multiplication_saturations
+            ),
+            .done_addition_saturation_count(core_done_addition_saturations)
+        );
+    end else begin : g_no_qualified_core
+        assign core_cmd_ready = 1'b0;
+        assign core_read_valid = 1'b0;
+        assign core_read_address = 64'd0;
+        assign core_response_ready = 1'b0;
+        assign core_write_valid = 1'b0;
+        assign core_write_address = 64'd0;
+        assign core_write_data = 16'd0;
+        assign core_write_byte_enable = 2'd0;
+        assign core_done_valid = 1'b0;
+        assign core_done_error = 8'd0;
+        assign core_done_command_index = 32'd0;
+        assign core_done_coefficient_reads = 32'd0;
+        assign core_done_query_reads = 32'd0;
+        assign core_done_key_reads = 32'd0;
+        assign core_done_writes = 32'd0;
+        assign core_done_elements = 32'd0;
+        assign core_done_multiplications = 32'd0;
+        assign core_done_additions = 32'd0;
+        assign core_done_multiplication_saturations = 32'd0;
+        assign core_done_addition_saturations = 32'd0;
+    end endgenerate
+
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

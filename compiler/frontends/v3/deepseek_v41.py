@@ -3911,7 +3911,19 @@ def export_deepseek_v41_kernel_graph(
             if mode.uses_candidates and mode.index_source:
                 op = start("CANDIDATE_MASK_READ", "attention.indexer.pool_read", layer)
                 source_mask = published_mask[profile.candidate_source_layer]
-                pool_mask = act(f"{op}.admission", "u8", (span, committed))
+                #: view(), NOT act().  A STATE_READ emits no operator
+                #: descriptor: its result carries the state's data only if the
+                #: planner BINDS the output tensor to the state object, and
+                #: _bind_state_tensors selects the outputs to bind by
+                #: role == "state" (compiler/backends/hbm_sram/plan.py). Declared
+                #: as an activation this fell out of that binder, took an
+                #: activation-arena buffer of the right shape, and read ZEROS
+                #: forever -- which is the hazard the binder's own comment warns
+                #: about. The admission plane is all-zero, so
+                #: ROUTE.INDEX_TOPK's `admitted` is empty and `take` is 0, and
+                #: every one of the four V4.1 index layers that reads the
+                #: candidate pool (24, 28, 32, 36) selected NOTHING.
+                pool_mask = view(f"{op}.admission", "u8", (span, committed))
                 emit(
                     op,
                     "STATE_READ",
@@ -3969,7 +3981,14 @@ def export_deepseek_v41_kernel_graph(
         elif ratio:
             op = start("SHARED_INDEX_REUSE", "attention.indexer.reuse", layer)
             source_layer = index_owner(layer)
-            reused = act(f"{op}.selection", "u32", (span, INDEX_TOPK_WIDTH))
+            #: view(), NOT act(), for the same reason as the pool read above --
+            #: and note the contrast with the OWNING layer's declaration of the
+            #: same quantity a few lines up, which already uses view() with an
+            #: identical dtype and shape. Here the symptom was worse than an
+            #: empty selection: zero is not PAD_INDEX, so the ten
+            #: REDUCTION.GROUPED_CONCAT operators that read this joined a
+            #: selection of row zero repeated rather than nothing at all.
+            reused = view(f"{op}.selection", "u32", (span, INDEX_TOPK_WIDTH))
             emit(
                 op,
                 "STATE_READ",
