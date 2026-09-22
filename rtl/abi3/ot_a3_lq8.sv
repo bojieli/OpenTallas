@@ -135,13 +135,67 @@ module ot_a3_lq8 #(
     output wire [31:0] mac_count,
     output wire [31:0] product_count
 );
+    // Capture one immutable operation record before lane_start reaches lanes.
+    reg [15:0] cfg_rows_q;
+    reg [15:0] cfg_cols_q;
+    reg [15:0] cfg_depth_q;
+    reg [7:0] cfg_dtype_a_q;
+    reg [7:0] cfg_dtype_b_q;
+    reg [7:0] cfg_group_q;
+    reg [31:0] cfg_a_base_q;
+    reg cfg_scale_a_q;
+    reg [15:0] cfg_block_a_q;
+    reg [15:0] cfg_block_rows_a_q;
+    reg [31:0] cfg_scale_a_base_q;
+    reg cfg_scale_b_q;
+    reg [15:0] cfg_block_b_q;
+    reg [31:0] cfg_ws_base_q;
+    reg [31:0] cfg_out_base_q;
+    reg cfg_out_fp32_q;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin
+            cfg_rows_q <= 0;
+            cfg_cols_q <= 0;
+            cfg_depth_q <= 0;
+            cfg_dtype_a_q <= 0;
+            cfg_dtype_b_q <= 0;
+            cfg_group_q <= 0;
+            cfg_a_base_q <= 0;
+            cfg_scale_a_q <= 0;
+            cfg_block_a_q <= 0;
+            cfg_block_rows_a_q <= 0;
+            cfg_scale_a_base_q <= 0;
+            cfg_scale_b_q <= 0;
+            cfg_block_b_q <= 0;
+            cfg_ws_base_q <= 0;
+            cfg_out_base_q <= 0;
+            cfg_out_fp32_q <= 0;
+        end else if(start && !busy) begin
+            cfg_rows_q <= cfg_rows;
+            cfg_cols_q <= cfg_cols;
+            cfg_depth_q <= cfg_depth;
+            cfg_dtype_a_q <= cfg_dtype_a;
+            cfg_dtype_b_q <= cfg_dtype_b;
+            cfg_group_q <= cfg_group;
+            cfg_a_base_q <= cfg_a_base;
+            cfg_scale_a_q <= cfg_scale_a;
+            cfg_block_a_q <= cfg_block_a;
+            cfg_block_rows_a_q <= cfg_block_rows_a;
+            cfg_scale_a_base_q <= cfg_scale_a_base;
+            cfg_scale_b_q <= cfg_scale_b;
+            cfg_block_b_q <= cfg_block_b;
+            cfg_ws_base_q <= cfg_ws_base;
+            cfg_out_base_q <= cfg_out_base;
+            cfg_out_fp32_q <= cfg_out_fp32;
+        end
+    end
     localparam integer LOG_LANES = $clog2(LANES);
 
     localparam [7:0] ERR_NONE  = ot_a3_lane_pkg::ERR_NONE;
     localparam [7:0] ERR_SHAPE = ot_a3_lane_pkg::ERR_SHAPE;
     localparam [7:0] DETAIL_NONE = ot_a3_lane_pkg::DETAIL_NONE;
     // Block-level details start at 16; 0..12 are the lane's, 13..15 reserved.
-    localparam [7:0] DETAIL_BLOCK_COLUMNS      = 8'd16;  // cfg_cols not a multiple of LANES
+    localparam [7:0] DETAIL_BLOCK_COLUMNS      = 8'd16;  // cfg_cols_q not a multiple of LANES
     localparam [7:0] DETAIL_BLOCK_STREAM_WIDTH = 8'd17;  // g weight codes exceed 2 B per lane-op
 
     localparam S_IDLE = 1'b0;
@@ -156,7 +210,7 @@ module ot_a3_lq8 #(
         end
     endgenerate
 
-    wire [15:0] cols_per_lane = cfg_cols >> LOG_LANES;
+    wire [15:0] cols_per_lane = cfg_cols_q >> LOG_LANES;
     wire        cols_ok = (cfg_cols[LOG_LANES-1:0] == {LOG_LANES{1'b0}});
     // The stream carries 2 B of weight per lane per lane-op in every format
     // (section 4.2): g is set by the weight format -- one BF16, two E4M3FN,
@@ -200,12 +254,12 @@ module ot_a3_lq8 #(
                 .operand_b_addr(),
                 .operand_s_addr(l_preview_s[32*gi +: 32]),
                 .operand_t_addr(l_preview_t[32*gi +: 32]),
-                .cfg_rows(cfg_rows), .cfg_cols(cols_per_lane), .cfg_depth(cfg_depth),
-                .cfg_dtype_a(cfg_dtype_a), .cfg_dtype_b(cfg_dtype_b), .cfg_group(cfg_group),
-                .cfg_a_base(cfg_a_base), .cfg_b_base(32'b0),
-                .cfg_scale_a(cfg_scale_a), .cfg_scale_b(cfg_scale_b),
-                .cfg_block_a(cfg_block_a), .cfg_block_b(cfg_block_b),
-                .cfg_block_rows_a(cfg_block_rows_a), .cfg_block_rows_b(16'd0),
+                .cfg_rows(cfg_rows_q), .cfg_cols(cols_per_lane), .cfg_depth(cfg_depth_q),
+                .cfg_dtype_a(cfg_dtype_a_q), .cfg_dtype_b(cfg_dtype_b_q), .cfg_group(cfg_group_q),
+                .cfg_a_base(cfg_a_base_q), .cfg_b_base(32'b0),
+                .cfg_scale_a(cfg_scale_a_q), .cfg_scale_b(cfg_scale_b_q),
+                .cfg_block_a(cfg_block_a_q), .cfg_block_b(cfg_block_b_q),
+                .cfg_block_rows_a(cfg_block_rows_a_q), .cfg_block_rows_b(16'd0),
                 // The weight-scale table base goes to the lanes, not to an
                 // adder on the block's output.  The lane already forms
                 // scale_b_base_r + col_scale_b + k_scale_b into a register, so
@@ -215,8 +269,8 @@ module ot_a3_lq8 #(
                 // address sequence is unchanged.  That output path measured
                 // 1,761 ps, the worst of the block's outputs (OpenSTA
                 // report_checks on the mapped netlist).
-                .cfg_scale_a_base(cfg_scale_a_base), .cfg_scale_b_base(cfg_ws_base),
-                .cfg_out_base(cfg_out_base), .cfg_out_fp32(cfg_out_fp32),
+                .cfg_scale_a_base(cfg_scale_a_base_q), .cfg_scale_b_base(cfg_ws_base_q),
+                .cfg_out_base(cfg_out_base_q), .cfg_out_fp32(cfg_out_fp32_q),
                 .a_rd_en(l_a_en[gi]), .a_rd_addr(l_a_addr[32*gi +: 32]), .a_rd_data(a_rd_data),
                 .b_rd_en(l_b_en[gi]), .b_rd_addr(l_b_addr[32*gi +: 32]),
                 .b_rd_data({48'b0, w_rd_data[16*gi +: 16]}),
@@ -270,12 +324,12 @@ module ot_a3_lq8 #(
 
     assign a_rd_en    = sel_valid;
     assign a_rd_addr  = sel_a_addr;
-    assign s_rd_en    = sel_valid && cfg_scale_a;
+    assign s_rd_en    = sel_valid && cfg_scale_a_q;
     assign s_rd_addr  = sel_s_addr;
     assign w_rd_en    = sel_valid;
     assign w_rd_addr  = w_ptr;
-    assign ws_rd_en   = sel_valid && cfg_scale_b;
-    assign ws_rd_addr = sel_t_addr;   // the lane already added cfg_ws_base
+    assign ws_rd_en   = sel_valid && cfg_scale_b_q;
+    assign ws_rd_addr = sel_t_addr;   // the lane already added cfg_ws_base_q
 
     assign operand_request = |l_request;
     assign operand_issue = |l_issue;

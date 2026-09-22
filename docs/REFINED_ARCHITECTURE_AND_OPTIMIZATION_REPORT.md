@@ -148,3 +148,16 @@ additional admission startup, and all 25 focused tests pass. See
 `results/rtl/a3_lq8_checked_extent.json`. Production G2 operation lifetime and
 transport integration remain unfinished; this does not change the report's
 physical or all-target completion limits.
+
+
+## Captured compute configuration checkpoint
+
+LQ8 now captures its operation configuration at start, so later external input
+changes cannot alter lane admission, scales or output geometry. This adds 251
+configuration bits and no extra launch stage. A 92-case run complementing all
+17 configuration inputs outside start exactly matches the stable-input run's
+outputs, fault results, counters and per-operation cycles (322,385 aggregate).
+The source-bound comparison is `results/rtl/a3_lq8_configuration_capture.json`.
+This supports future overlapping command preparation; G2 runtime transport,
+operation cancellation and writeback integration remain open. Routed area and
+timing of the added registers are not yet measured.

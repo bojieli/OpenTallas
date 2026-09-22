@@ -502,3 +502,29 @@ input mutation, stalled record consumption and abort. Standalone admission lint
 is clean. Source-bound evidence is `results/rtl/a3_lq8_checked_extent.json`.
 Full format admission, G2 lifetime/fault integration and reusable activation
 storage remain open. Product-stage routed timing and area are unmeasured.
+
+
+## Immutable LQ8 configuration capture
+
+LQ8 now captures its operation configuration on an idle start edge, before its
+registered `lane_start` reaches the lanes. Lane admission, scale read enables
+and output geometry use the captured fields. Block-level column/stream-format
+checks still inspect the incoming command on that same acceptance edge; the
+weight pointer captures its base directly, avoiding a redundant base register.
+Starts while busy cannot overwrite the current record. This adds 251 explicit
+configuration register bits with no new launch pipeline stage. Physical area
+and timing require recharacterization; this is not an area reduction claim.
+
+The G2 adapter currently keeps these signals stable, but future queued command
+preparation must not change a running operation through live input wires.
+Capturing at LQ8 makes that boundary explicit while preserving its interface.
+The standalone lane retains its existing stable-configuration requirement;
+LQ8 now provides that stability to every lane throughout admission and execution.
+
+`tools/check_lq8_runtime_operands.py --mutate-array-config` complements every
+external DUT configuration field whenever start is low, while the backing service
+and independent references retain the accepted command. Comparing this with the
+stable-input run checks dimensions, formats, scales, addresses and completion
+against the same corpus. Evidence is retained in
+`results/rtl/a3_lq8_configuration_capture.json`. This does not yet constitute
+G2 runtime transport, cancellation or writeback integration.

@@ -26,6 +26,7 @@ def main():
         "--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=2
     )
     parser.add_argument("--rtl-weight-scheduler", action="store_true")
+    parser.add_argument("--mutate-array-config", action="store_true")
     args = parser.parse_args()
     if args.rtl_weight_scheduler and not args.future_auxiliary:
         parser.error(
@@ -129,6 +130,18 @@ def main():
         .operand_a_addr(preview_a),.operand_s_addr(preview_s),
         .operand_ws_addr(preview_ws),.operand_w_addr(preview_w),""",
     )
+    if args.mutate_array_config:
+        # Only disturb DUT inputs. Backing images and reference keep the
+        # accepted command, so every expected result remains independently fixed.
+        begin = top.index("    ) u_dut (")
+        end = top.index("\n    );", begin)
+        section = top[begin:end]
+        section = re.sub(
+            r"\.(cfg_\w+)\((cfg_\w+)\)",
+            lambda m: f".{m[1]}(start_dut ? {m[2]} : ~{m[2]})",
+            section,
+        )
+        top = top[:begin] + section + top[end:]
     (out / "top.sv").write_text(top)
     subprocess.run(
         [
@@ -217,6 +230,7 @@ def main():
         "status": "pass",
         "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
         "serial_refill": args.serial_refill,
+        "mutate_array_config": args.mutate_array_config,
         "rtl_weight_scheduler": args.rtl_weight_scheduler,
         "future_auxiliary": args.future_auxiliary,
         "auxiliary_depth": args.auxiliary_depth if args.future_auxiliary else 0,
