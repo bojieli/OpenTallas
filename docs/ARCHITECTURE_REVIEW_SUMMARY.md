@@ -108,14 +108,16 @@ Areas are standard-cell area and exclude SRAM unless separately stated.
 | Pass-first output writer | 1 ns | 1,682.200 | +0.026359 / +0.050804 | Pass; 12.81% more area than recorded row-first writer |
 | Earlier runtime operand service | 1 ns | 3,807.230, plus 5,586 SRAM | +0.009551 / +0.021035 | Pass for its recorded configuration; does not qualify current pass-first integration |
 | Sinkhorn with pipelined divider | 2 ns | 3,099.550 | +0.092189 / +0.027670 | Pass for recorded configuration |
-| Pass scheduler after split tile increment | 1 ns | 1,429.280 | −0.056566 / +0.051760 | Fails setup; other reported checks pass |
+| Pass scheduler after split tile increment | 1 ns | 1,429.280 | −0.056566 / +0.051760 | Historical setup failure |
+| Pass scheduler with parallel extent selection | 1 ns | 1,380.650 | +0.029694 / +0.051666 | Pass; current sources and seven retained artifacts verified |
 
 The scheduler's split tile increment improves setup by 49.26 ps against the
 preceding elastic-handoff version, at 0.33% more cell area and no added cycles.
-The newest candidate replaces serial extent minima with parallel comparisons
+Parallel extent selection replaces serial minima with parallel comparisons
 and masked selection. It passes 93 scheduler/bank/runtime tests and 3,664
-independent extent cases, but its physical result remains pending at this review.
-Functional tests do not establish timing closure.
+independent extent cases. Its completed route improves setup by another
+86.26 ps and reduces cell area by 3.40% without added cycles. All reported
+timing and physical checks pass at the tested 1 ns period.
 
 Existing integrated two- and three-column G2 physical jobs also remain active.
 Their launch sources predate subsequent scheduler changes; they can establish
@@ -124,7 +126,7 @@ closure or activity-qualified energy improvement is claimed.
 
 Evidence: [transport audit](../results/physical_abi3/asap7/bf16_weight_transport/compact_pass_route_audit.json),
 [writer audit](../results/physical_abi3/asap7/output_writer_handoff/pass_first_route_audit.json),
-[scheduler route](../results/physical_abi3/asap7/weight_pass_scheduler/pnr_split_tile_address_cts12_1ns.json),
+[scheduler route audit](../results/physical_abi3/asap7/weight_pass_scheduler/parallel_extent_route_audit.json),
 [extent verification](../results/rtl/weight_parallel_extent.json).
 
 ## Architectural gaps and optimization targets

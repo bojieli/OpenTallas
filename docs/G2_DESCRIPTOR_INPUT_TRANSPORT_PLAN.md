@@ -910,3 +910,19 @@ replay. Supporting that generic case requires prefix acquisition and correct
 release of unused retained banks, or an explicit admission refusal. The limit
 remains open rather than silently widening the bank contract during timing work.
 The original failing expansion was stopped; its failure is not counted as a pass.
+
+## Parallel extent scheduler closes its 1 ns block target
+
+The completed ASAP7 TT CTS12 route reports 1,380.650 um² standard cells,
++0.0296942 ns setup and +0.0516658 ns hold slack. Setup, hold, slew,
+capacitance, fanout, DRC and antenna checks all pass. Against the preceding
+split-increment route, setup improves 86.26 ps and cell area falls 3.40%;
+RTL adds no cycles. Both current source hashes and all seven retained
+artifact hashes verify in `weight_pass_scheduler/parallel_extent_route_audit.json`.
+This establishes the tested 1 ns block target, not an extrapolated operating
+frequency or integrated accelerator closure. The partial-row limitation remains
+open. Existing integrated G2 jobs retain their historical launch sources.
+
+A current-source loaded M6/N53/K512 two-column pass campaign is running to
+exercise exact 1,024-word retention capacity, with real strided weight reads,
+strided output writes, output backpressure and fault/recovery coverage.

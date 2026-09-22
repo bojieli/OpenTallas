@@ -1,0 +1,62 @@
+{
+  "scope": "Current parallel extent pass scheduler at tested 1 ns",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "bab84da38682c7f6ff29c076700e15317a6b8b6df4807c227422d78996c13570",
+      "size_bytes": 8957
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+      "size_bytes": 7555
+    }
+  ],
+  "retained_artifacts_verified": 7,
+  "verified_artifact_names": [
+    "1_2_yosys.v",
+    "5_route_drc.rpt",
+    "6_final.v",
+    "6_finish.rpt",
+    "config.mk",
+    "constraint.sdc",
+    "metadata.json"
+  ],
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0516658,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.0296942,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "area_um2": 1380.65,
+  "comparison": {
+    "scope": "Matched 1 ns ASAP7 TT CTS12 scheduler routes: split increment versus parallel extent selection; no added cycles",
+    "before_record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_split_tile_address_cts12_1ns.json",
+    "after_record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_parallel_extent_cts12_1ns.json",
+    "before_area_um2": 1429.28,
+    "after_area_um2": 1380.65,
+    "area_reduction_percent": 3.4024124034478853,
+    "setup_improvement_ps": 86.25970000000001,
+    "added_cycles": 0
+  }
+}
