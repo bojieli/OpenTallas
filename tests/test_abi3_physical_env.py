@@ -357,15 +357,29 @@ def test_verdict_rejects_route_with_drc_or_antenna_violations():
         "drc_errors": 0,
         "antenna_violating_nets": 0,
         "antenna_violating_pins": 0,
+        "max_slew_violations": 0,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
     }
     assert flow.evaluate_verdict({"place_and_route": {"metrics": dict(base)}})[
         "status"
     ] == flow.STATUS_PASS
-    for dirty in ("drc_errors", "antenna_violating_nets", "antenna_violating_pins"):
+    for dirty in ("drc_errors", "antenna_violating_nets", "antenna_violating_pins",
+                  "max_slew_violations", "max_cap_violations", "max_fanout_violations"):
         metrics = dict(base)
         metrics[dirty] = 7
         verdict = flow.evaluate_verdict({"place_and_route": {"metrics": metrics}})
         assert verdict["status"] == flow.STATUS_NOT_MET, f"{dirty} was not rejected"
+
+
+    for key in base:
+        for invalid in (None, float('nan'), float('inf'), 'unavailable'):
+            metrics = dict(base)
+            metrics[key] = invalid
+            assert flow.evaluate_verdict({'place_and_route': {'metrics': metrics}})['status'] == flow.STATUS_NOT_MET
+        metrics = dict(base)
+        del metrics[key]
+        assert flow.evaluate_verdict({'place_and_route': {'metrics': metrics}})['status'] == flow.STATUS_NOT_MET
 
 
 def test_verdict_does_not_invent_a_result_without_timing():

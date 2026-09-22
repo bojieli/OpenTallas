@@ -53,6 +53,7 @@ import argparse
 import fnmatch
 import hashlib
 import json
+import math
 import os
 import platform
 import re
@@ -1844,7 +1845,11 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
 
         def number(key: str) -> float | None:
             value = m.get(key)
-            return None if value is None else float(value)
+            try:
+                parsed = float(value)
+            except (TypeError, ValueError):
+                return None
+            return parsed if math.isfinite(parsed) else None
 
         setup_wns = number("setup_wns_ns")
         hold_wns = number("hold_wns_ns")
@@ -1861,7 +1866,11 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
             and setup_viol == 0
             and hold_viol == 0
         )
-        clean_ok = drc == 0 and ant_nets == 0 and ant_pins == 0
+        signal_checks = {key: number(key) for key in (
+            "max_slew_violations", "max_cap_violations", "max_fanout_violations"
+        )}
+        signal_ok = all(value == 0 for value in signal_checks.values())
+        clean_ok = drc == 0 and ant_nets == 0 and ant_pins == 0 and signal_ok
         checks.append(
             {
                 "stage": "place_and_route",
@@ -1869,6 +1878,8 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
                 "met": bool(timing_ok and clean_ok),
                 "timing_met": bool(timing_ok),
                 "physically_clean": bool(clean_ok),
+                "signal_integrity_clean": bool(signal_ok),
+                **signal_checks,
                 "setup_wns_ns": setup_wns,
                 "setup_violations": setup_viol,
                 "hold_wns_ns": hold_wns,
@@ -2625,7 +2636,8 @@ def main(argv: list[str] | None = None) -> int:
         "criterion": (
             "pass requires every timing-bearing stage that ran to meet setup "
             "and hold with zero violating paths; place-and-route additionally "
-            "requires zero DRC and zero antenna violations"
+            "requires finite reported timing and zero DRC, antenna, max-slew, "
+            "max-capacitance and max-fanout violations"
         ),
         "note": (
             "status is the engineering result, not whether the script "

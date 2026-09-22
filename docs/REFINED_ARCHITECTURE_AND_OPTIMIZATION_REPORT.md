@@ -1832,3 +1832,22 @@ Divider-handoff and sum-handoff routes remain in progress. No frequency is
 inferred from positive slack. Evidence:
 `results/physical_abi3/asap7/sinkhorn_handoff/routed_baseline_review.json` and
 `pnr_baseline_cts12_2p4ns.json` with its retained artifacts.
+
+
+## Runner verdict now enforces all routed physical checks
+
+The physical driver previously permitted `acceptance.status=pass` with nonzero
+slew, capacitance or fanout violations, even though `design.closed` rejected
+those results. Its routed verdict now requires zero for all three in addition
+to setup/hold, DRC and antenna checks. Missing, nonnumeric or nonfinite routed
+metrics cannot pass. This aligns future run summaries with the project closure
+criterion; it is a tooling correction, not a circuit improvement.
+
+The physical environment, SDC/provenance and current-evidence audit tests finish
+without failures; their existing environment/fixture skips remain. Regression
+coverage independently injects every physical violation and missing/nonfinite
+metric. Rechecking the unchanged Sinkhorn baseline correctly yields `not_met`,
+with timing met and signal integrity not clean due to its one fanout violation.
+Historical records and live runs retain their original driver provenance and
+verdict; their raw metrics still require independent review. Evidence:
+`results/physical_abi3/physical_verdict_regression.json`.
