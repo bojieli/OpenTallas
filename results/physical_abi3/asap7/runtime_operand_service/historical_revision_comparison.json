@@ -1,5 +1,5 @@
 {
-  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Absolute-scale revision predates local cursor control, depth3, join payload and shared generation changes.",
+  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Parameter/source manifests distinguish revisions. Combined current shared-generation service not covered.",
   "records": [
     {
       "record": "pnr_replay_cts12_1ns.json",
@@ -243,6 +243,226 @@
           "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
           "size_bytes": 8528
         }
+      ]
+    },
+    {
+      "record": "pnr_cursor_control_cts12_1ns.json",
+      "sha256": "bd02da8a5c5d18d9641074f31c38d746acdb0c69c82577d27c4e7922c71cbf5f",
+      "standard_cell_area_um2": 3740.95,
+      "setup_wns_ns": -0.00250089,
+      "setup_violations": 1,
+      "hold_wns_ns": 0.019467400000000003,
+      "macro_count": 2,
+      "max_slew_violations": 0,
+      "max_fanout_violations": 0,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "b4e89524a14c0266b34e76488cafa7ba283d326bf5e803544bfc00f61255ed60",
+          "size_bytes": 10784
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+          "size_bytes": 5327
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+          "size_bytes": 4111
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ],
+      "recorded_commit_matching_sources": [
+        "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+        "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+        "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv"
+      ]
+    },
+    {
+      "record": "pnr_registered_auxiliary_cts12_1ns.json",
+      "sha256": "0be18fa16c4a3942e9b6e07786732ea73ec74add4026ff47650d1e463ba45455",
+      "standard_cell_area_um2": 3772.62,
+      "setup_wns_ns": -0.0254717,
+      "setup_violations": 5,
+      "hold_wns_ns": 0.0283771,
+      "macro_count": 2,
+      "max_slew_violations": 13,
+      "max_fanout_violations": 0,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "4ede0b76b80faf810feef3cd6a345e4cb7a2fa74b89fc10b2b209936489c37d0",
+          "size_bytes": 10881
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+          "size_bytes": 5327
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "5e6c5bc35b3d18c24051c46cb674a916c4c95753c76af717d2f440af27899050",
+          "size_bytes": 4947
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ],
+      "recorded_commit_matching_sources": [
+        "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+        "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+        "rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv"
+      ]
+    },
+    {
+      "record": "pnr_auxdepth3_direct_cts12_1ns.json",
+      "sha256": "08b8c6ed118263dc26db01a848da5c7fdf26eb180a263d116dbe8ebafa64b80e",
+      "standard_cell_area_um2": 3972.32,
+      "setup_wns_ns": -0.0593953,
+      "setup_violations": 1,
+      "hold_wns_ns": 0.029437400000000002,
+      "macro_count": 2,
+      "max_slew_violations": 0,
+      "max_fanout_violations": 2,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "006bccca9afd061912b852676166d9bd007965167b31a19ae55fa953255e8485",
+          "size_bytes": 10881
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+          "size_bytes": 5327
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "5e6c5bc35b3d18c24051c46cb674a916c4c95753c76af717d2f440af27899050",
+          "size_bytes": 4947
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ],
+      "recorded_commit_matching_sources": [
+        "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+        "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+        "rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv"
       ]
     }
   ]

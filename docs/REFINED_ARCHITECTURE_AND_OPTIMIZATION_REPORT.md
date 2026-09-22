@@ -1582,3 +1582,25 @@ short reads and reset cancellation. All four focused pytest cases pass and
 Verilator descriptor-store lint is clean. This is verified control-traffic and
 latency improvement; physical area, frequency and energy effects are unmeasured.
 Evidence: `results/rtl/a3_g2_descriptor_prefix_comparison.json`.
+
+
+## Historical service routes expose issue-credit selection
+
+Three further ASAP7 TT 1 ns CTS12 service snapshots finish, each with two SRAM
+macros (5,586 um² separate from standard cells). They are historical revisions,
+not qualification of the combined current service.
+
+| Snapshot | Standard cells (um²) | Setup WNS (ns) | Setup paths failing | Hold WNS (ns) | Other violations |
+|---|---:|---:|---:|---:|---|
+| Local cursor control, two direct auxiliary slots | 3,740.950 | -0.002501 | 1 | +0.019467 | None reported |
+| Registered auxiliary dispatch, two slots | 3,772.620 | -0.025472 | 5 | +0.028377 | 13 slew |
+| Three direct auxiliary slots, before join/shared generation | 3,972.320 | -0.059395 | 1 | +0.029437 | 2 fanout |
+
+All have zero reported hold, capacitance, DRC and antenna violations. Their
+worst setup paths start at weight-prefetch head (first two) or auxiliary queue
+head (third) and end at operand credit. Registered request dispatch does not
+resolve that issue-side selection/comparison path and is not selected by these
+results. The current combined-service route remains pending. All retained
+artifact hashes were verified; exact source manifests and recorded-commit
+matches are retained in `runtime_operand_service/historical_revision_comparison.json`.
+No slack-derived Fmax is promoted to an operating clock.
