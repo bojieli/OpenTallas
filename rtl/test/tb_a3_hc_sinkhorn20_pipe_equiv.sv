@@ -26,7 +26,12 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-module tb_a3_hc_sinkhorn20_pipe_equiv;
+module tb_a3_hc_sinkhorn20_pipe_equiv #(
+    //: passed through to the twin so BOTH divider configurations can be
+    //: proven bit-exact against the reference and their cycle costs read
+    //: off the same stimulus; the header's 1.55x figure was measured here
+    parameter integer PIPELINED_DIVIDER = 0
+);
     localparam integer TIMEOUT_CYCLES = 2000000;
 
     reg clk = 1'b0;
@@ -49,7 +54,9 @@ module tb_a3_hc_sinkhorn20_pipe_equiv;
         .result_codes(ref_codes), .result_error(ref_error)
     );
 
-    ot_a3_hc_sinkhorn20_rne_pipe pipelined (
+    ot_a3_hc_sinkhorn20_rne_pipe #(
+        .PIPELINED_DIVIDER(PIPELINED_DIVIDER)
+    ) pipelined (
         .clk(clk), .rst_n(rst_n),
         .in_valid(start && pipe_ready), .in_ready(pipe_ready),
         .matrix_codes(matrix),
