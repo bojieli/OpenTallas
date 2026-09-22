@@ -1,0 +1,25 @@
+{
+  "scope": "Same ASAP7 TT 1 ns standalone cursor synthesis/ideal-clock STA; routing and containing service are pending.",
+  "versions": [
+    {
+      "record": "prelayout_absolute_1ns.json",
+      "sha256": "7b84423222f3baa13ad0a446e851a9265bea4a23c5413fdacab474fd33e8495b",
+      "area_um2": 474.083,
+      "sequential_area_um2": 195.605,
+      "setup_wns_ns": -2.1574955241965736
+    },
+    {
+      "record": "prelayout_local_control_1ns.json",
+      "sha256": "4849ee5a60a6a8344f7ba0914b14ef0745ba4d940927906936d0e426ccba7a54",
+      "area_um2": 452.141,
+      "sequential_area_um2": 150.64,
+      "setup_wns_ns": -0.7313502055430486
+    }
+  ],
+  "change": "Reset only publication state; capture geometry and payload before publication; per-column local write enables. No added issue cycles.",
+  "functional_evidence": [
+    "results/rtl/a3_lq8_cursor_local_control.json",
+    "results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation.json"
+  ],
+  "limitations": "Payload is unspecified while request_valid is false. Pre-layout setup still fails; no routed frequency claim."
+}

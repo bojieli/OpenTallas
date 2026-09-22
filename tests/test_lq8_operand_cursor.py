@@ -43,9 +43,10 @@ wire [31:0] generation,a_address,s_address,ws_address,w_address;
 reg [127:0] expected[0:{len(expected) - 1}];
 reg held=0;reg [127:0] held_address;
 reg [31:0] cfg_a_base=100;
+reg [15:0] cfg_rows=5;
 ot_a3_lq8_operand_cursor #(.INTERLEAVE({interleave})) dut(
 .clk(clk),.rst_n(rst_n),.clear(clear),.start(start),.cfg_generation(32'd9),
-.cfg_rows(16'd5),.cfg_local_cols(16'd7),.cfg_depth_words(16'd12),
+.cfg_rows(cfg_rows),.cfg_local_cols(16'd7),.cfg_depth_words(16'd12),
 .cfg_rows_per_scale_a(16'd2),.cfg_scale_stride_a(16'd4),.cfg_scale_stride_b(16'd{scale_stride}),
 .cfg_groups_per_scale_a(16'd3),.cfg_groups_per_scale_b(16'd{scale_group}),
 .cfg_a_base(cfg_a_base),.cfg_s_base(32'd200),.cfg_ws_base(32'd{scale_base}),.cfg_w_base(32'd400),
@@ -72,9 +73,30 @@ initial begin
  cfg_a_base=100;seen=0;start=1;@(negedge clk);start=0;
  wait(seen>4);@(negedge clk);clear=1;@(negedge clk);
  if(active || request_valid)$fatal(1,"clear did not abort");
+ // Clear wins over launch; payload capture must never publish a request.
+ start=1;@(negedge clk);
+ if(active || request_valid)$fatal(1,"clear lost priority over start");
+ start=0;clear=0;seen=0;
+ @(negedge clk);start=1;@(negedge clk);start=0;
+ wait(seen=={len(expected)});@(negedge clk);
+ if(active || invalid_geometry)$fatal(1,"restart after clear failed");
+ // Reset an in-flight operation, then consume a complete new generation.
+ seen=0;start=1;@(negedge clk);start=0;
+ wait(seen>4);@(negedge clk);rst_n=0;
+ @(negedge clk);
+ if(active || request_valid || invalid_geometry)$fatal(1,"reset did not revoke ownership");
+ seen=0;rst_n=1;start=1;@(negedge clk);start=0;
+ wait(seen=={len(expected)});@(negedge clk);
+ if(active || invalid_geometry)$fatal(1,"restart after reset failed");
+ // An invalid launch may capture payload, but cannot publish it.
+ cfg_rows=0;start=1;@(negedge clk);start=0;
+ if(active || request_valid || !invalid_geometry)$fatal(1,"invalid launch was published");
+ cfg_rows=5;seen=0;start=1;@(negedge clk);start=0;
+ wait(seen=={len(expected)});@(negedge clk);
+ if(active || invalid_geometry)$fatal(1,"recovery after invalid launch failed");
  $display("PASS cursor interleave={interleave} words={len(expected)}");$finish;
 end
-initial begin #100000;$fatal(1,"timeout");end
+initial begin #400000;$fatal(1,"timeout");end
 endmodule
 ''')
     sim = tmp_path / "sim"

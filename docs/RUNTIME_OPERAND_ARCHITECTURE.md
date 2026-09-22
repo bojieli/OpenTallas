@@ -1020,3 +1020,13 @@ stable under stalls, and row/pass restart reloads column bases. This adds no
 issue cycles. Expanded interleave/group/wraparound tests pass, but matched
 pre-layout timing worsens on start-control fanout; routed clock improvement is
 not established.
+
+
+Only the cursor's publication/error state is reset. Launch captures every
+geometry/counter/base payload before publishing a request; per-column scale
+addresses initialize on the first K traversal before later K reads. Column
+writes use local accepted-request enables. Reset/clear revoke validity; address
+outputs while invalid are unspecified and must not be consumed. This removes
+wide reset and start-priority control from payload without changing latency,
+request ordering or numerical behavior. Reset, clear-plus-start, invalid launch
+and full recovery are covered by the direct-index cursor tests.

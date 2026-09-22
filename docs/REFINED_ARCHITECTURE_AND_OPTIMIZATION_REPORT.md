@@ -52,12 +52,14 @@ whole-model inference latency. Rolling windows and runtime mode remain explicit
 options. Weight replay is bounded to eligible rows of at most 1,024 words;
 larger rows fall back to streaming and still repeat weight traffic across rows.
 
-The latest cursor change moves weight-scale addition before column selection by
-retaining absolute per-column addresses. It preserves the G2 counter of 30,723
-and passes the expanded functional checks. Its synthesis area falls only 0.50%
-(476.446 to 474.083 um²), while pre-layout setup WNS worsens from -1.9173 to
--2.1575 ns on a high-fanout start path. Matched routes are pending. This is a
-structural candidate, not an established clock improvement.
+The cursor now retains absolute per-column scale addresses and separates
+resettable publication state from payload initialized at launch. The latter
+control change reduces matched synthesis area from 474.083 to 452.141 um²
+(4.63%) and sequential area from 195.605 to 150.640 um² (22.99%). Pre-layout
+setup WNS improves from -2.1575 to -0.7314 ns, but still fails. No request cycles
+are added; the G2 counter remains 30,723 and reset/cancellation/restart tests
+pass. Standalone and containing-service routes are running, so a routed clock
+improvement is not yet established.
 
 Physical evidence is mixed. At ASAP7 TT and a 1 ns target, the refined mapper,
 fixed-page auxiliary scheduler and admission snapshots have positive routed
@@ -1080,3 +1082,40 @@ Evidence: `runtime_operand_service/pnr_replay_cts12_1ns.json`, retained
 `pnr_replay_cts12_1ns_artifacts/6_finish.rpt` and `replay_route_review.json` under
 `results/physical_abi3/asap7/`. This is containing-service evidence, not full G2
 or all-target closure.
+
+
+## Cursor publication and payload control separation
+
+The cursor previously used resettable flops for every geometry and address
+register and placed column writes under a common reset/clear/start priority
+chain. It now resets only `active` and `invalid_geometry`. Launch initializes
+all geometry, counters and base addresses before asserting request validity;
+per-column addresses are written at K=0 before any later K reads them. Each
+column has a local accepted-request write enable. Clear/reset can leave or
+capture unpublished payload, but revoke publication immediately through the
+existing validity contract. No interface stages or issue cycles are added.
+Consumers must continue to qualify payload with `request_valid`.
+
+The 12 direct-index cursor cases now cover a complete restart after cancellation,
+clear coincident with start, reset during an operation, and invalid launch
+followed by valid recovery, in addition to stalls, scale groups and wraparound.
+All 62 focused tests pass and standalone Verilator lint is clean. The integrated
+numerical corpus passes 92 cases, 17,103 matching outputs, 18 exercised faults
+and 115,748 checks; all recorded source hashes match. The loaded N56/K80 G2
+campaign preserves 1,352 outputs, 720 activation fills, 560 weight fills and
+counter 30,723. Its previous exact record is archived under
+`results/rtl/before_cursor_local_control/`.
+
+Matched ASAP7 TT, 1 ns synthesis area falls from 474.083 to 452.141 um² (4.63%);
+sequential area falls from 195.605 to 150.640 um² (22.99%). Total mapped cell
+count rises from 3,213 to 3,408, so the gain is cell-area reduction rather than
+fewer cells. Pre-layout setup WNS improves from -2.1575 to -0.7314 ns; it still
+fails, with the worst path now originating at internal state rather than start.
+This is not routed timing closure. New standalone and two-SRAM containing-service
+routes retain the existing 1 ns, CTS12, fanout16 and library transition limits.
+Earlier source revisions continue their own live runs.
+
+Evidence: `runtime_operand_cursor/local_control_comparison.json`, its paired
+pre-layout records and `source_snapshots/local_control.sv`; numerical evidence
+is `results/rtl/a3_lq8_cursor_local_control.json`. All-target characterization,
+large-row reuse and deployment transport remain unfinished.
