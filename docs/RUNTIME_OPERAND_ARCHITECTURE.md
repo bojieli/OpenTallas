@@ -1051,3 +1051,14 @@ clear/reset cancel pending transfer, and data outputs are unspecified while no
 valid read is owed. The two-edge issue-to-delivery contract is unchanged.
 Disabled scale payloads still deliver zero. This removes wide asynchronous
 payload-reset trees; it does not relax identity checks or allow unreserved issue.
+
+
+Runtime auxiliary reservations share one generation register through
+`SINGLE_GENERATION=1`. The service owns one captured command until clear, so
+all queue identities have the same generation. Each entry retains its full
+activation, scale, weight-scale and stream addresses. Response and join
+checks still compare the generation and relevant addresses; only duplicate
+storage is removed. At three entries, payload/identity storage becomes 896 bits
+instead of 960. The generic queue defaults to per-entry generations for callers
+that can mix operations. Shared mode must not be used with mixed generations
+while entries remain occupied; after drain the next request captures ownership.

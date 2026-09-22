@@ -132,7 +132,7 @@ module ot_a3_lq8_runtime_operands #(
     wire [31:0] aux_generation,aux_a,aux_s,aux_ws;
     wire [63:0] aux_a_data,aux_ws_data;
     wire [31:0] aux_s_data;
-    ot_a3_lq8_auxiliary_prefetch #(.DEPTH(AUXILIARY_DEPTH),.REGISTER_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) auxiliary_queue(
+    ot_a3_lq8_auxiliary_prefetch #(.DEPTH(AUXILIARY_DEPTH),.REGISTER_REQUESTS(REGISTER_AUXILIARY_REQUESTS),.SINGLE_GENERATION(1)) auxiliary_queue(
         .clk(clk),.rst_n(service_rst_n),.clear(1'b0),
         .request_valid(future_valid),.request_ready(future_ready),
         .request_generation(future_generation),.request_a(future_a),.request_s(future_s),.request_ws(future_ws),.request_w(future_w),

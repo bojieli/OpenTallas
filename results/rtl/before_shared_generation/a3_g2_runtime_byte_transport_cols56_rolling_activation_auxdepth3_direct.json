@@ -38,7 +38,7 @@
     "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
     "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
     "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
-    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "bbd5ef82bf97b53be2d835b17b9466570cbf9179cddb7c7f75b231ea4e7633a5",
     "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
     "rtl/abi3/ot_a3_fp32_sqrt_rne.sv": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
     "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
@@ -66,11 +66,11 @@
     "rtl/abi3/ot_a3_link_pkg.sv": "77c2b22e2ef2a81a638a532e4c2eb9e32d0d6747aee00074b205b2681f0a87b7",
     "rtl/abi3/ot_a3_loop_stack.sv": "cbe7590d32f08145d3039343713f6868b818594d1bbff91f5e48e89d5d90bbc5",
     "rtl/abi3/ot_a3_lq8.sv": "d263afcc19c5c1883d3973227b338e9d2034a591cf5065a5ea3de8a444cbd785",
-    "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "155b582e6a6c2e213f32873a417f70b5beb123c61cf1dc719589d938c9afde07",
+    "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "5e6c5bc35b3d18c24051c46cb674a916c4c95753c76af717d2f440af27899050",
     "rtl/abi3/ot_a3_lq8_operand_admission.sv": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
     "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
     "rtl/abi3/ot_a3_lq8_operand_join.sv": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298",
-    "rtl/abi3/ot_a3_lq8_runtime_operands.sv": "3e31adce7226cbb2b79800ec4dde6f108495ed8a79039ba74cbb8d658d0a5437",
+    "rtl/abi3/ot_a3_lq8_runtime_operands.sv": "006bccca9afd061912b852676166d9bd007965167b31a19ae55fa953255e8485",
     "rtl/abi3/ot_a3_mac_lane.sv": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989",
     "rtl/abi3/ot_a3_mac_lane_pipe.sv": "7c1329ab6961e69c3f732394ae16c282806cafe9df8ed6a7d63adfea7e21f449",
     "rtl/abi3/ot_a3_mesh_router.sv": "641857a9f51868feba1438e2589b68d673cd969df1981effeddfda86e92ddb29",
@@ -586,7 +586,7 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=5906\nprogram phase=2 complete=0 trap=8 cycles=6470\nprogram phase=1 complete=1 trap=0 cycles=12222\nprogram phase=3 complete=0 trap=8 cycles=12389\nprogram phase=1 complete=1 trap=0 cycles=18128\nprogram phase=4 complete=0 trap=8 cycles=19078\nprogram phase=5 complete=0 trap=8 cycles=19256\nprogram phase=1 complete=1 trap=0 cycles=24995\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=15 fill_words=3392 read_requests=13696\noutput stalls=436 reservation stalls=18 accepted_outputs=1352\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=3209\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:261: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 250us; walltime 0.192 s; speed 1.304 ms/s\n- Verilator: cpu 0.191 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=5906\nprogram phase=2 complete=0 trap=8 cycles=6470\nprogram phase=1 complete=1 trap=0 cycles=12222\nprogram phase=3 complete=0 trap=8 cycles=12389\nprogram phase=1 complete=1 trap=0 cycles=18128\nprogram phase=4 complete=0 trap=8 cycles=19078\nprogram phase=5 complete=0 trap=8 cycles=19256\nprogram phase=1 complete=1 trap=0 cycles=24995\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=15 fill_words=3392 read_requests=13696\noutput stalls=436 reservation stalls=18 accepted_outputs=1352\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=3209\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:261: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 250us; walltime 0.105 s; speed 2.374 ms/s\n- Verilator: cpu 0.104 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
     "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
     "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
@@ -595,6 +595,6 @@
     "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
     "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/weight.hex": "c4586298b09647441df890d2fe8a878f667e2b776870823034de78a85cfae855",
     "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/program_config.svh": "2449dc434d4c9f1d3d59a05bc48bcaf01c2b53f077b9dbbb07f9ac4751b0a55e",
-    "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/simulation.log": "543f64dd62b4b94d1c88e810117030b3a6d498f9abb1533efaafced332fa42c8"
+    "build/g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct/simulation.log": "ce8ae0f878ad5b0c14294895f46eeb3ab0d24a55b732ed3b9cd967956e470c01"
   }
 }

@@ -2,6 +2,7 @@
 module tb_a3_lq8_auxiliary_prefetch;
     parameter integer DEPTH=8;
     parameter bit REGISTER_REQUESTS=0;
+    parameter bit SINGLE_GENERATION=0;
     localparam integer CW=$clog2(DEPTH+1);
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0,clear=0,run=0,inject_stale=0,inject_early=0;
@@ -17,7 +18,7 @@ module tb_a3_lq8_auxiliary_prefetch;
     wire [63:0] auxiliary_a_data,auxiliary_ws_data;
     wire [31:0] auxiliary_s_data;
     wire [CW-1:0] occupied;
-    ot_a3_lq8_auxiliary_prefetch #(.DEPTH(DEPTH),.REGISTER_REQUESTS(REGISTER_REQUESTS)) dut(
+    ot_a3_lq8_auxiliary_prefetch #(.DEPTH(DEPTH),.REGISTER_REQUESTS(REGISTER_REQUESTS),.SINGLE_GENERATION(SINGLE_GENERATION)) dut(
         .clk(clk),.rst_n(rst_n),.clear(clear),
         .request_valid(request_valid),.request_ready(request_ready),
         .request_generation(generation),.request_a(32'(accepted+10)),.request_s(32'(accepted+20)),

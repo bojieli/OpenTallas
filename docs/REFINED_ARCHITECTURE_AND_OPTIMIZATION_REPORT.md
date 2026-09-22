@@ -1413,3 +1413,38 @@ claim. Evidence: `results/rtl/a3_divider_pipeline_protocol.json` and
 Physical baseline/candidate comparisons remain live. The absolute-scale runtime
 service has reached detailed routing; later service and join revisions remain
 in progress. No result is inferred from intermediate placement or routing logs.
+
+
+## Share operation generation across auxiliary reservations
+
+The runtime service already captures and owns one operation until clear. Its
+three auxiliary entries therefore need only one 32-bit generation register,
+rather than three identical copies. `SINGLE_GENERATION=1` enables that contract;
+the generic queue retains per-entry generations by default. Full per-entry
+addresses, response-order checking and generation rejection remain in place.
+The shared register is captured when the empty queue accepts a request; no
+new operation may mix with occupied entries. Clear/drain revoke queue ownership.
+
+Three-slot data/identity storage falls from 960 to 896 bits. Same-source ASAP7
+TT 1 ns synthesis, comparing the parameter disabled/enabled, gives 606.646 /
+549.523 um² (9.42% lower), with pre-layout WNS -2.7223 / -1.9300 ns. Both fail
+pre-layout timing. The older pre-parameter direct queue mapped to 598.758 um²;
+the new runtime specialization is 8.22% smaller than that checkpoint too.
+Physical timing and energy benefits remain unproven. A new containing-service
+route includes the current absolute-address cursor, local cursor control,
+three-slot direct queue, join payload reset reduction and shared generation.
+Older runs continue against their recorded snapshots.
+
+All 74 focused tests pass, including both dispatch policies, both generation
+storage modes and depths 1/2/3/8. Standalone lint is clean. The loaded N56/K80
+G2 campaign retains 1,352 matching outputs, 720 activation fills, 560 weight
+fills and counter 24,995. Previous evidence is archived under
+`results/rtl/before_shared_generation/`. Evidence:
+`runtime_auxiliary_prefetch/shared_generation_comparison.json` and its paired
+source-bound records under `results/physical_abi3/asap7/`.
+
+The shared-generation integrated corpus also passes 92 cases, 17,103 matching
+outputs, 18 faults and 115,748 checks, with the same aggregate operation cycles
+322,816. All corpus and loaded G2 source hashes match current sources.
+Evidence: `results/rtl/a3_lq8_shared_generation.json`. All-target architecture,
+large-row reuse and complete physical qualification remain outstanding.

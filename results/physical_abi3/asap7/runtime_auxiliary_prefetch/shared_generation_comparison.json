@@ -1,0 +1,21 @@
+{
+  "scope": "Matched ASAP7 TT 1 ns synthesis with DEPTH=3, direct requests; both pre-layout timing checks fail.",
+  "records": [
+    {
+      "record": "prelayout_sharedgen0_1ns.json",
+      "sha256": "5358f3903ecd16c86d6416a4846b2c28924a5be1e235d2b4a39f350013355174",
+      "area_um2": 606.646,
+      "setup_wns_ns": -2.7223379215323855
+    },
+    {
+      "record": "prelayout_sharedgen1_1ns.json",
+      "sha256": "5ebf3c45377b0408af74f5904d7210f04d2fbad10a14b0128e4889a420722ca6",
+      "area_um2": 549.523,
+      "setup_wns_ns": -1.930042799965132
+    }
+  ],
+  "storage_bits_before": 960,
+  "storage_bits_after": 896,
+  "contract": "SINGLE_GENERATION requires all queued requests to belong to the same generation until drain/clear. Generic default remains per-entry generations. Runtime owns one command until clear.",
+  "change": "One shared 32-bit generation register replaces three repeated copies; full per-entry addresses and response identity checks retained."
+}
