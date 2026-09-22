@@ -82,6 +82,19 @@ begin
 end endtask
 initial begin tick();rst_n=1;tick();
 CALLS
+ // Clear in every pipeline stage, including a stalled valid burst, must
+ // hide unreset payload and allow a new command with a different mapping.
+ for(integer stage=0;stage<8;stage=stage+1)begin
+  clear=1;tick();clear=0;command_valid=1;
+  command_objects={3{32'd17}};command_word_bases=0;
+  command_byte_bases={3{64'd1024}};command_object_bytes={3{64'd4096}};
+  command_word_shifts={3{2'd1}};tick();command_valid=0;
+  request_plane=0;request_address=16;request_words=2;request_valid=1;tick();request_valid=0;
+  repeat(stage)tick();clear=1;#1;
+  if(burst_valid || request_ready || command_ready)$fatal(1,"clear did not suppress publication");
+  tick();clear=0;repeat(9)begin tick();if(burst_valid)$fatal(1,"stale payload published after clear");end
+  check_map(0,64'd2048,64'd4096,2'd2,32'd2,9'd3,0,64'd2056);
+ end
  // Stale generation and invalid plane must fault before publication.
  clear=1;tick();clear=0;command_valid=1;tick();command_valid=0;
  request_valid=1;request_tag=64'h800000000;request_words=1;tick();request_valid=0;
@@ -116,4 +129,4 @@ endmodule
         ["vvp", str(image)], capture_output=True, text=True, timeout=30
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "PASS operand byte mapper checks=106" in result.stdout
+    assert "PASS operand byte mapper checks=114" in result.stdout

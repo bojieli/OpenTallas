@@ -919,3 +919,39 @@ candidate were launched at 1 ns with max-transition and max-fanout 16 constraint
 and remain in progress at this checkpoint. Their results, signal-integrity
 checks and source hashes must be inspected before assessing closure. Wider
 architecture integration and all-target physical coverage remain unfinished.
+
+
+## Auxiliary scheduler control-area and mapper route checkpoint
+
+The auxiliary refill scheduler now resets ownership/publication state and error
+flags while allowing invalid payload registers to remain unreset. Mapping
+records are overwritten on command capture; planning intermediates advance
+through the existing CHECK/PLAN/SIZE stages without a global payload enable.
+Published window fields remain held under stalls. This preserves refill planning
+latency and the integrated campaign's exact cycle counters and numerical outputs.
+
+Matched ASAP7 TT synthesis at 1 ns reduces scheduler mapped area from 412.863
+to 356.758 um² (13.59%) and cells from 2,717 to 2,508. Pre-layout setup WNS
+improves from -0.5576 to -0.4085 ns; both still miss 1 ns before physical repair.
+The comparison and source snapshots are under
+`results/physical_abi3/asap7/runtime_auxiliary_scheduler/`. An optimized full
+route is running. Payload switching energy is unmeasured.
+
+The original byte mapper's full route has now completed at the 1 ns target:
+setup WNS +0.103283 ns, hold WNS +0.057078 ns, standard-cell area 1,044.51 um²,
+zero setup/hold violations, and zero reported DRC, antenna, slew, capacitance and
+fanout violations. The source hash matches `source_snapshots/baseline.sv`, and
+all retained artifact hashes were checked. This is **baseline standalone routed
+stage closure at the tested TT configuration**, not closure of the revised RTL
+or integrated G2. The record's overall NOT_MET verdict remains because its
+separate pre-layout STA stage fails; no verdict was overwritten. The optimized
+mapper route remains active, so the 13.75% synthesis-area saving cannot yet be
+claimed as a routed saving. Evidence: `runtime_byte_mapper/pnr_1ns.json` under
+`results/physical_abi3/asap7/`, with reports and netlists beside it.
+
+All 36 focused tests pass. Mapper coverage now clears every pipeline stage and
+a stalled valid output, then verifies a fresh mapping, for 114 mapping cases
+plus generation/plane refusal. The G2 byte-transport campaign still produces
+584 accepted matching outputs with the same 14,375 final completion counter.
+The full architecture, all-target optimization and physical coverage goals
+remain unfinished.

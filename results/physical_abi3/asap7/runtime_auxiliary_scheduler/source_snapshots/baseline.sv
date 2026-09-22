@@ -61,49 +61,44 @@ module ot_a3_auxiliary_window_scheduler(
  assign fetch_tag={generation,serial};assign fetch_plane=plane;
  assign fetch_address=burst_base;assign fetch_words=burst_words;
  assign response_ready=enabled && state==FILL && identity_ok && fill_ready;
- // Mapping and planning payloads are overwritten before their valid state.
- // Keep reset/clear on ownership and publication, not on every payload bit.
  integer i;
- always @(posedge clk)begin
-  if(command_valid && command_ready)begin
-   generation<=command_generation;
-   for(i=0;i<3;i=i+1)begin bases[i]<=command_bases[32*i+:32];words[i]<=command_words[32*i+:32];end
-  end
-  if(enabled && state==IDLE && active && request_valid &&
-     request_generation==generation && (|missing_planes))begin
-   plane<=selected;base_q<=bases[selected];words_q<=words[selected];
-   address_q<=request_addresses[32*selected+:32];
-  end
-  // Feed-forward results settle in the same CHECK/PLAN/SIZE sequence; they
-  // need no global enable mux. Published window fields remain explicitly held.
-  offset_q<=24'((address_q-base_q)>>8);
-  page_q<={offset_q,8'b0};
-  remaining_q<=words_q-{offset_q,8'b0};
-  if(state==SIZE)begin
-   burst_base<=base_q+page_q;
-   burst_words<=remaining_q>32'd256 ? 9'd256 : remaining_q[8:0];
-  end
- end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   state<=IDLE;active<=0;protocol_error<=0;serial<=0;index<=0;
+   state<=IDLE;generation<=0;active<=0;protocol_error<=0;
+   base_q<=0;words_q<=0;address_q<=0;offset_q<=0;page_q<=0;remaining_q<=0;
+   burst_base<=0;burst_words<=0;serial<=0;plane<=0;index<=0;
+   for(i=0;i<3;i=i+1)begin bases[i]<=0;words[i]<=0;end
   end else if(clear)begin state<=IDLE;active<=0;protocol_error<=0;end
-  else if(!protocol_error)begin
-   if(command_valid && command_ready)begin active<=1;serial<=0;end
+  else if(enabled)begin
+   if(command_valid && command_ready)begin
+    active<=1;generation<=command_generation;serial<=0;
+    for(i=0;i<3;i=i+1)begin bases[i]<=command_bases[32*i+:32];words[i]<=command_words[32*i+:32];end
+   end
    // An unrequested, duplicate, stale or misordered beat is never written.
    if(response_valid && (state!=FILL || !identity_ok))protocol_error<=1;
    case(state)
     IDLE:if(active && request_valid)begin
      if(request_generation!=generation)protocol_error<=1;
-     else if(|missing_planes)state<=CHECK;
+     else if(|missing_planes)begin
+      plane<=selected;base_q<=bases[selected];words_q<=words[selected];
+      address_q<=request_addresses[32*selected+:32];state<=CHECK;
+     end
     end
     CHECK:begin
      if(words_q==0 || end_q>33'h100000000 || address_q<base_q || {1'b0,address_q}>=end_q)
       protocol_error<=1;
-     else state<=PLAN;
+     else begin offset_q<=24'((address_q-base_q)>>8);state<=PLAN;end
     end
-    PLAN:state<=SIZE;
-    SIZE:state<=INSTALL;
+    PLAN:begin
+     page_q<={offset_q,8'b0};
+     remaining_q<=words_q-{offset_q,8'b0};
+     state<=SIZE;
+    end
+    SIZE:begin
+     burst_base<=base_q+page_q;
+     burst_words<=remaining_q>32'd256 ? 9'd256 : remaining_q[8:0];
+     state<=INSTALL;
+    end
     INSTALL:if(window_ready)state<=FETCH;
     FETCH:if(fetch_ready)begin state<=FILL;index<=0;end
     FILL:if(response_valid && response_ready)begin
