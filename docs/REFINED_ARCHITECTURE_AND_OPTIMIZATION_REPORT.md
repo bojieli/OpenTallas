@@ -1299,3 +1299,30 @@ slack-derived estimate is not a validated tighter clock. Overall `not_met`
 remains due to failed pre-layout STA. Containing-service runs remain live.
 Evidence: `runtime_operand_cursor/pnr_local_control_cts12_1ns.json` and the
 updated `routed_absolute_comparison.json` under `results/physical_abi3/asap7/`.
+
+
+## Divider comparison exploration: retain existing implementation
+
+The existing pipelined divider already splits multiplication and comparison.
+Its retained seeded 2.4 ns route reports a critical path from `lower_code[13]`
+to `product_q[42]`, through midpoint preparation and multiplication. The composed
+softmax/Sinkhorn path already instantiates the pipelined reduction twin; the
+unmodified certifying Sinkhorn block is not evidence that no pipeline exists.
+
+Two candidate rewrites reduce the comparison's 97-bit exponent-dependent
+alignment to exact 49-bit leading-one alignment when top powers match. A second
+candidate uses a balanced leading-zero normalization tree. Matched 1 ns ASAP7
+synthesis gives baseline / narrow / balanced areas 1,121.627 / 1,046.669 /
+1,023.577 um², but pre-layout setup WNS worsens from -1.2901 to -1.9287 /
+-2.3928 ns. Both candidate divider runs pass 673 cases against the certifying
+reference; the balanced run retains 35,335 candidate cycles versus 21,982
+reference cycles. The candidates do not change the pipelined divider's schedule.
+
+Neither rewrite is selected: active divider RTL remains unchanged. These are
+area-reducing experiments with worse timing, not delivered high-clock
+optimizations. The Sinkhorn Icarus bench also has a preexisting indefinite-width
+random-expression concatenation that prevents elaboration; no containing-block
+qualification is claimed. Snapshots, measurements and the balanced equivalence
+log are retained in `results/physical_abi3/asap7/fp32_div_normalized_compare/`.
+Future work should target the measured midpoint/multiply stage and evaluate
+added iteration latency against a routed frequency improvement.
