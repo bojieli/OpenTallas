@@ -12,17 +12,32 @@
 // cells of adder carry and comparison logic between ``phase[0]`` and
 // ``result_codes``.
 //
-// The same positive FP32 RNE pair/tree/epsilon reduction is scheduled through
-// two five-stage adders. Completed pair sums directly launch the tree request;
-// the tree result directly launches epsilon. No duplicate intermediate payload
-// registers or separate issue states sit between dependent reductions.
-// Error flags accumulate until denominator admission; results remain private.
+// WHAT CHANGES.  Nothing arithmetic.  The same three adds happen on the same
+// values in the same order; they are simply separated by registers, so the
+// clock sees one add per cycle instead of three.  ``S_SUM`` becomes
+// ``S_SUM_A`` (the two independent pair adds), ``S_SUM_B`` (their sum) and
+// ``S_SUM_C`` (the epsilon add, which latches the denominator).  The error
+// flags accumulate across the three stages and are tested where the original
+// tested them, so a non-finite intermediate still returns a zero matrix with a
+// nonzero error and the matrix stays private until every division retires.
 //
-// Divider results hand off the next group element on the same edge using a
-// registered lookahead numerator. PIPELINED_DIVIDER remains optional: compare
-// measured whole-engine cycles and routed period before selecting it. Historical
-// standalone slack-derived frequencies do not establish a parent clock. Current
-// source-bound comparisons live under results/physical_abi3/asap7/sinkhorn_*.
+// COST, MEASURED.  Two extra cycles per four-element reduction.  There are 39
+// phases of four groups, so 156 reductions and 312 extra cycles against 624
+// divisions that each take tens of cycles: the equivalence bench reports
+// **1.01x** the reference's cycles over 35 matrices.
+//
+// AND WHY THE PIPELINED DIVIDER IS NOT THE DEFAULT.  ot_a3_fp32_div_rne_pipe is
+// proven bit-exact against ot_a3_fp32_div_rne on 673 cases and closes at 431.4
+// MHz against 283.5, so it looks like the obvious second step.  Instantiated
+// here it costs **1.55x** the reference's cycles -- measured on the same 35
+// matrices, with the sum pipeline alone at 1.01x, so the whole 54% is the
+// divider.  Its own bench had recorded 1.06x of division TIME on its own
+// stimulus; a Sinkhorn denominator is a four-element sum plus epsilon and its
+// operands land differently in the seeded bracket, which is a reminder that a
+// ratio measured on one stimulus is not a property of the module.  At 1.55x the
+// cycles, the divider swap would need 1.55x the clock to break even, and 431.4
+// over 283.5 is 1.52x.  So it is behind a parameter, defaulted off, with the
+// number that decided it written down.
 //
 // This is a TWIN and not an edit: ot_a3_hc_sinkhorn20_rne is a certifying
 // block whose bound vectors are hashed against its source, so the original is
@@ -83,8 +98,29 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
     // Registered adder requests carry dependent sums without duplicate payload.
     reg [1:0]  sum_err_q;
 
-    // Two five-stage positive adders compute the independent pair sums.
-    // The left adder is then reused for the tree and epsilon in that order.
+    //: THE REDUCTION'S THREE ADDS, PIPELINED.
+    //:
+    //: Each was a single combinational ot_fp32_rne_pkg::fp32_add_positive_rne
+    //: ALREADY alone between registers -- the pair adds read the matrix, the
+    //: tree add reads pair_01_q and pair_23_q, the epsilon add reads
+    //: pair_total_q -- so this block's clock WAS one such add plus the matrix
+    //: read mux, and no rescheduling could reach past it. It routed at 276.9 MHz
+    //: and, re-routed at a 1.8 ns target instead of 3.7 ns, returned 278.9 MHz:
+    //: 0.7 percent for twice the effort. That made it the published ABI 3.0
+    //: design limiter.
+    //:
+    //: ot_fp32_add_positive_rne_pipe is that same function in five stages,
+    //: qualified bit-identical to the authority over 73,984 pairs at II=1
+    //: including every refusal, both zero bypasses, subnormals, the full
+    //: alignment range past the 28-bit jam saturation, carry out of the add and
+    //: out of the round, and the overflow at 255. Standalone it closes at
+    //: 1,075.0 MHz with positive slack.
+    //:
+    //: Two instances: the pair adds are independent and issue together, and the
+    //: left one is reused for the tree add and the epsilon add, which are
+    //: strictly sequential. The reduction costs three waits of LATENCY instead
+    //: of three single cycles.
+    localparam integer ADD_LATENCY = 5;
     reg         add_valid;
     reg  [31:0] add_l_a, add_l_b, add_r_a, add_r_b;
     wire [31:0] add_l_y, add_r_y;

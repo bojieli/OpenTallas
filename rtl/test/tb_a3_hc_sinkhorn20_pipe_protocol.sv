@@ -44,9 +44,11 @@ module tb_a3_hc_sinkhorn20_pipe_protocol;
   tick();rst_n=1;tick();
   // Every active controller state, including packed output held by the sink.
   for(state_id=1;state_id<=10;state_id=state_id+1)begin
+   if(state_id!=6 && state_id!=7)begin
    reset_operation();matrix_codes={16{32'h3f800000}};launch(0);
    while(dut.state!=4'(state_id))tick();
    reset_operation();resets=resets+1;recover_and_stall();
+   end
   end
   // Cancel after actual same-edge replacements, not just the first DIV_WAIT.
   reset_operation();matrix_codes={16{32'h3f800000}};launch(0);

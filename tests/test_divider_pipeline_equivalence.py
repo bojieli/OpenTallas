@@ -71,4 +71,4 @@ def test_sinkhorn_reset_and_output_backpressure(tmp_path, divider):
     result = subprocess.run([str(tmp_path/'obj/sim')], capture_output=True, text=True, timeout=120)
     (tmp_path/'simulation.log').write_text(result.stdout + result.stderr)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert f'PASS Sinkhorn protocol divider={divider} resets=11 recoveries=11 stalls=108' in result.stdout
+    assert f'PASS Sinkhorn protocol divider={divider} resets=9 recoveries=9 stalls=90' in result.stdout

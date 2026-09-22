@@ -1751,3 +1751,25 @@ These are record counts, not target coverage or signoff. The auditor now reads
 even when routed checks pass. Five auditor tests pass. Evidence:
 `results/physical_abi3/current_evidence_audit.json`. All-target deployment
 integration, numerical-mode coverage and containing-block closure remain open.
+
+
+## Direct reduction handoff removes duplicate Sinkhorn state
+
+Completed pair sums now directly launch the tree addition, and the completed
+tree directly launches epsilon through the existing registered adder inputs.
+This removes two issue states and three 32-bit intermediate registers without
+changing FP32 association or error accumulation. Both divider choices remain
+supported and the default is unchanged. The protocol test now cancels all eight
+active states plus a divider handoff, with nine recovery comparisons and 90
+stalled cycles per configuration; removed states are no longer sampled.
+
+All six divider/Sinkhorn arithmetic and protocol tests pass. For the same
+36-matrix corpus, reference-divider cycles decrease 744,721 to 735,047 and
+pipelined-divider cycles decrease 1,115,228 to 1,105,554: 9,674 cycles saved in
+each. Pipelined-divider synthesis area decreases 2,595.169 to 2,537.794 um²
+(2.21%) and setup WNS improves from -2.147 to -0.946 ns at the 2 ns target.
+Both still fail pre-layout timing. Existing live Sinkhorn routes precede this
+reduction change and cannot qualify it. Source snapshots, including an exact
+hash match to the measured source before comment cleanup, are retained under
+`results/physical_abi3/asap7/sinkhorn_sum_handoff/`. No parent clock improvement
+is claimed until its refined containing route passes.
