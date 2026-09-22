@@ -1326,3 +1326,35 @@ qualification is claimed. Snapshots, measurements and the balanced equivalence
 log are retained in `results/physical_abi3/asap7/fp32_div_normalized_compare/`.
 Future work should target the measured midpoint/multiply stage and evaluate
 added iteration latency against a routed frequency improvement.
+
+
+## Final-rounding divider pipeline candidate
+
+The retained pipelined-divider route identifies `lower_code` to `product_q` as
+the critical path. A new register boundary captures the final RNE midpoint and
+its power before multiplication. It runs once after the bracket closes, adding
+one cycle per nontrivial finite division rather than one cycle to every search
+iteration. Argument refusals and zero results keep their fast path. The iterative
+candidate comparison and final rounding rules are unchanged.
+
+The 673-case divider equivalence suite passes with zero failures. Candidate
+cycles rise from 35,335 to 36,001 (1.88%); the certifying reference takes 21,982.
+Matched 1 ns synthesis area rises from 1,121.627 to 1,163.456 um² (3.73%), while
+pre-layout setup WNS improves from -1.2901 to -1.2229 ns. This still fails the
+1 ns target and does not establish a clock win. Matched baseline/candidate
+routes at 2 ns with CTS12, fanout16 and library transition constraints are live.
+Containing Sinkhorn equivalence now passes. No parent is switched from
+its existing divider choice based on these preliminary results.
+
+
+The containing Sinkhorn equivalence bench passes 35 matrices with the pipelined
+divider selected. Matched Verilator runs take 1,073,995 baseline cycles and
+1,092,715 candidate cycles, an increase of 18,720 (1.74%); the certifying
+reference takes 641,128. This fixes the latency cost against the actual
+containing workload; a routed frequency gain must exceed it to reduce elapsed
+time in that comparison. The bench now drives/samples at negative edges and
+uses explicit 8/23-bit random fields, removing active-edge races and an Icarus
+elaboration failure. Two reproducible pytest cases pass the 673-division and
+35-matrix equivalence suites. Evidence and source hashes are retained in
+`results/physical_abi3/asap7/fp32_div_round_stage/`. Physical results remain
+pending, and no GHz claim is made for this divider.

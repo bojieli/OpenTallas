@@ -79,11 +79,11 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
         input [255:0] label;
         begin
             matrix = m;
-            while (!(ref_ready && pipe_ready)) @(posedge clk);
+            while (!(ref_ready && pipe_ready)) @(negedge clk);
             got_ref = 1'b0; got_pipe = 1'b0;
             ref_took = 0; pipe_took = 0; elapsed = 0;
             start = 1'b1;
-            @(posedge clk);
+            @(negedge clk);
             start = 1'b0;
             while (!(got_ref && got_pipe) && elapsed < TIMEOUT_CYCLES) begin
                 if (ref_valid && !got_ref) begin
@@ -98,7 +98,7 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
                     saw_pipe_error = pipe_error;
                     pipe_took = elapsed;
                 end
-                @(posedge clk);
+                @(negedge clk);
                 elapsed = elapsed + 1;
             end
             cases = cases + 1;
@@ -122,7 +122,7 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
                                      saw_pipe_codes[32*word +: 32]);
                 end
             end
-            @(posedge clk);
+            @(negedge clk);
         end
     endtask
 
@@ -150,9 +150,9 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
     initial begin
         start = 1'b0;
         matrix = 0;
-        repeat (4) @(posedge clk);
+        repeat (4) @(negedge clk);
         rst_n = 1'b1;
-        repeat (2) @(posedge clk);
+        repeat (2) @(negedge clk);
 
         // -- named inputs --------------------------------------------------
         check(uniform(ONE),     "uniform one");
@@ -198,8 +198,8 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
                 // exponent in [110, 140] keeps every element finite, normal
                 // and within a range the reduction cannot overflow.
                 m[32*j +: 32] = {1'b0,
-                                 8'd110 + ({$random(seed)} % 31),
-                                 {$random(seed)} & 23'h7fffff};
+                                 8'(110 + ({$random(seed)} % 31)),
+                                 23'({$random(seed)})};
             end
             check(m, "random positive finite");
         end

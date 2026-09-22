@@ -1,0 +1,40 @@
+"""Pipeline changes preserve the certifying divider and Sinkhorn arithmetic."""
+from pathlib import Path
+import shutil
+import subprocess
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
+@pytest.mark.parametrize('sinkhorn', [False, True])
+def test_pipelined_arithmetic(tmp_path, sinkhorn):
+    names = ['rtl/ot_fp32_rne_pkg.sv', 'rtl/abi3/ot_a3_fp32_div_rne.sv',
+             'rtl/abi3/ot_a3_fp32_div_rne_pipe.sv']
+    top = 'tb_a3_fp32_div_pipe_equiv'
+    params = []
+    if sinkhorn:
+        top = 'tb_a3_hc_sinkhorn20_pipe_equiv'
+        names += ['rtl/proto/ot_fp32_add_positive_rne_pipe.sv',
+                  'rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv',
+                  'rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv']
+        params = [f'-P{top}.PIPELINED_DIVIDER=1']
+    names.append(f'rtl/test/{top}.sv')
+    verilator = Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+    if sinkhorn and verilator.is_file():
+        command = [str(verilator), '--binary', '--timing', '-j', '4', '-Wno-fatal',
+                   '--top-module', top, '-GPIPELINED_DIVIDER=1',
+                   '--Mdir', str(tmp_path/'obj'), '-o', 'sim', *[str(ROOT/n) for n in names]]
+        subprocess.run(command, check=True, capture_output=True, text=True, timeout=120)
+        run = [str(tmp_path/'obj/sim')]
+    else:
+        subprocess.run(['iverilog', '-g2012', '-s', top, *params, '-o', str(tmp_path/'sim'),
+                        *[str(ROOT/n) for n in names]], check=True, capture_output=True, text=True, timeout=30)
+        run = ['vvp', str(tmp_path/'sim')]
+    result = subprocess.run(run, capture_output=True, text=True, timeout=300)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert 'FAILURES 0' in result.stdout
+    assert 'EQUIVALENT' in result.stdout
+    assert f'CASES {35 if sinkhorn else 673}' in result.stdout
