@@ -189,6 +189,7 @@ def main():
         "rtl/abi3/ot_a3_runtime_weight_banks.sv",
         "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
         "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
         "rtl/abi3/ot_a3_lq8_operand_join.sv",
         "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
         "rtl/abi3/ot_a3_lq8_operand_admission.sv",

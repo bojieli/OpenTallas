@@ -62,8 +62,7 @@ module ot_a3_lq8 #(
     parameter integer LANES        = 8,     // a power of two
     parameter integer ADDER_STAGES = 3,     // L, passed to every lane
     parameter integer ACC_SLOTS    = 8,
-    parameter integer OPERAND_CREDITS = 0,
-    parameter bit PASS_FIRST = 0
+    parameter integer OPERAND_CREDITS = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -246,8 +245,7 @@ module ot_a3_lq8 #(
             ot_a3_lane_pipelined #(
                 .ADDER_STAGES(ADDER_STAGES),
                 .ACC_SLOTS(ACC_SLOTS),
-                .OPERAND_CREDITS(OPERAND_CREDITS),
-                .PASS_FIRST(PASS_FIRST)
+                .OPERAND_CREDITS(OPERAND_CREDITS)
             ) u_lane (
                 .clk(clk), .rst_n(rst_n),
                 .start(lane_start),

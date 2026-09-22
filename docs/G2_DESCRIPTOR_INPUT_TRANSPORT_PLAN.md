@@ -701,3 +701,31 @@ No timing or area improvement is claimed pending that result. The failing
 baseline's source is retained under `weight_pass_scheduler/tile_handoff/before.sv`
 and its audit now binds to that snapshot. Runtime/output integration and loaded
 G2 measurements remain required.
+
+## Runtime pass-service composition
+
+The runtime operand service now selects the pass scheduler and pass-first future
+cursor together with `PASS_FIRST=1`; row-first scheduling remains the default.
+Its existing `REUSE_WEIGHT_ROWS` switch selects pass reuse in this mode. The
+LQ8 array exposes a matching `PASS_FIRST` parameter to all lanes. Cluster-level
+activation is deferred until output validation and tail-mask schedule agree.
+
+Four composed runtime tests plus the existing service lifetime regression pass.
+The tests connect the real object-memory transport, both SRAM banks, auxiliary
+queue and operand join. An independent issue-address oracle verifies every
+returned activation, scale and weight bundle. At three rows/N53/K160, pass reuse
+fetches 1,120 words for 3,360 issues versus 3,360 fetched words when disabled.
+At K342, mixed streaming and tail reuse fetches 6,498 rather than 7,182 words
+for 7,182 issues. Independent stalls, strided object bytes, tail masks, retained
+command ownership, cancellation and restart are covered. Evidence:
+`results/rtl/runtime_pass_transport.json`. This is a composed input-service test;
+it does not run pass-first loaded G2 arithmetic or its output writer.
+
+The default loaded G2 strided-object regression still passes with 2,234 outputs,
+295 writes/acknowledgements, 105,552 campaign cycles and 17,596 first-operation
+weight bytes. Source hashes match. Pre-change loaded evidence and RTL snapshots
+are retained under `results/rtl/before_runtime_pass_integration/`.
+Verilator 5.050 elaborates the enabled runtime service without warnings; array
+elaboration succeeds with existing width warnings in the arithmetic sources.
+Neither result is a new physical qualification. The pass-scheduler handoff and
+compact transport physical runs remain active.

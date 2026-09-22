@@ -12,8 +12,7 @@ module ot_a3_lq8_runtime_operands #(
     parameter integer AUXILIARY_DEPTH=3,
     parameter bit REGISTER_AUXILIARY_REQUESTS=0,
     // Enable only when the transport stream repeats the same weights per row.
-    parameter bit REUSE_WEIGHT_ROWS=0,
-    parameter bit PASS_FIRST=0
+    parameter bit REUSE_WEIGHT_ROWS=0
 )(
     input wire clk,rst_n,clear,
     input wire command_valid,
@@ -94,21 +93,6 @@ module ot_a3_lq8_runtime_operands #(
     always @(posedge clk)row_words<=32'(cols)*32'(depth_words);
     wire [9:0] reserve_words,tile_words;
     wire [127:0] fill_data;
-    generate if(PASS_FIRST)begin : pass_schedule
-    ot_a3_weight_pass_scheduler #(.INTERLEAVE(INTERLEAVE),.TILE_WORDS(TILE_WORDS),.REUSE_PASSES(REUSE_WEIGHT_ROWS)) scheduler(
-        .clk(clk),.rst_n(service_rst_n),.clear(1'b0),
-        .command_valid(launch),.command_ready(scheduler_ready),
-        .command_generation(generation),.command_base(base_w),.command_rows(rows),.command_local_cols(cols),.command_depth_words(depth_words),
-        .active(),.scheduled(),.command_error(scheduler_error),
-        .reserve_valid(reserve_valid),.reserve_ready(reserve_ready),.reserve_bank(reserve_bank),
-        .reserve_tag(reserve_tag),.reserve_words(reserve_words),
-        .fetch_valid(weight_request_valid),.fetch_ready(weight_request_ready),.fetch_tag(weight_request_tag),
-        .fetch_address(weight_request_address),.fetch_words(weight_request_words),
-        .response_valid(weight_response_valid),.response_ready(weight_response_ready),.response_mismatch(weight_mismatch),
-        .response_tag(weight_response_tag),.response_index(weight_response_index),.response_data(weight_response_data),
-        .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_ready(fill_ready),.fill_tag(fill_tag),.fill_data(fill_data),
-        .tile_valid(tile_valid),.tile_ready(tile_ready),.tile_bank(tile_bank),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),.tile_retain(tile_retain),.tile_words(tile_words));
-    end else begin : row_schedule
     ot_a3_weight_tile_scheduler #(.TILE_WORDS(TILE_WORDS),.ROW_REUSE(REUSE_WEIGHT_ROWS)) scheduler(
         .clk(clk),.rst_n(service_rst_n),.clear(1'b0),
         .command_valid(launch),.command_ready(scheduler_ready),
@@ -122,7 +106,6 @@ module ot_a3_lq8_runtime_operands #(
         .response_tag(weight_response_tag),.response_index(weight_response_index),.response_data(weight_response_data),
         .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_ready(fill_ready),.fill_tag(fill_tag),.fill_data(fill_data),
         .tile_valid(tile_valid),.tile_ready(tile_ready),.tile_bank(tile_bank),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),.tile_retain(tile_retain),.tile_words(tile_words));
-    end endgenerate
     wire word_valid,word_ready;
     wire [127:0] word_data;
     wire [63:0] word_tag;
@@ -137,7 +120,7 @@ module ot_a3_lq8_runtime_operands #(
         .word_last(),.tile_released(),.released_tag(),.ready_banks(),.active_banks(),.reserved_slots());
     wire future_valid,future_ready;
     wire [31:0] future_generation,future_a,future_s,future_ws,future_w;
-    ot_a3_lq8_operand_cursor #(.INTERLEAVE(INTERLEAVE),.PASS_FIRST(PASS_FIRST)) cursor(
+    ot_a3_lq8_operand_cursor #(.INTERLEAVE(INTERLEAVE)) cursor(
         .clk(clk),.rst_n(service_rst_n),.clear(1'b0),.start(launch),
         .cfg_generation(generation),.cfg_rows(rows),.cfg_local_cols(cols),.cfg_depth_words(depth_words),
         .cfg_rows_per_scale_a(rpb),.cfg_scale_stride_a(cpa),.cfg_scale_stride_b(cpb),
