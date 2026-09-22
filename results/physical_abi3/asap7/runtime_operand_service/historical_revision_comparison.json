@@ -1,5 +1,5 @@
 {
-  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Later cursor/join/depth3 changes not covered.",
+  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Absolute-scale revision predates local cursor control, depth3, join payload and shared generation changes.",
   "records": [
     {
       "record": "pnr_replay_cts12_1ns.json",
@@ -146,6 +146,67 @@
           "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
           "sha256": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
           "size_bytes": 4762
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+          "size_bytes": 4111
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ]
+    },
+    {
+      "record": "pnr_absolute_scale_cts12_1ns.json",
+      "sha256": "9c7541f54047ca5cbe0d486cf89a8c2780c023ea79ec05e46d7e798ef38b11cb",
+      "standard_cell_area_um2": 3791.4,
+      "setup_wns_ns": -0.0226179,
+      "setup_violations": 1,
+      "hold_wns_ns": 0.020264900000000002,
+      "macro_count": 2,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "b4e89524a14c0266b34e76488cafa7ba283d326bf5e803544bfc00f61255ed60",
+          "size_bytes": 10784
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "10a1b62da978066b7a4e80fac630db9079b3f67f201a3a7491e459ad63715583",
+          "size_bytes": 4980
         },
         {
           "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",

@@ -42,7 +42,7 @@ The major verified changes relative to earlier recorded versions are:
 | Rolling activation window, M6/N56/K80 | 1,440 activation fills; 35,175 cycles | 720 fills; 30,723 cycles | 50% fewer fills and 12.66% fewer campaign cycles; 1,352 matching outputs |
 | Rolling activation window, M6/N56/K352 | 8,896 fills; 160,789 cycles | 7,552 fills; 152,458 cycles | Helps deeper rows, but retention remains capacity-limited |
 | Unscaled admission | 19 cycles | 3 cycles | Scaled admission retains 19 cycles |
-| Auxiliary reservation queue | Two entries, 640 bits; 30,723 campaign cycles | Three entries, 960 bits; 24,995 cycles | 18.64% fewer cycles in N56/K80 G2; +320 storage bits |
+| Auxiliary reservation queue | Two entries, 640 bits; 30,723 campaign cycles | Three entries, now 896 bits with shared generation; 24,995 cycles | 18.64% fewer cycles in N56/K80 G2; +256 storage bits versus original queue |
 | Mapper routed standard-cell area | 1,044.510 um² | 888.112 um² | 14.97% lower; refined CTS12 route passes reported physical checks at 1 ns |
 | Admission routed standard-cell area | 826.380 um² | 723.503 um² | 12.45% lower; both recorded routes pass physical checks at 1 ns |
 
@@ -52,14 +52,17 @@ whole-model inference latency. Rolling windows and runtime mode remain explicit
 options. Weight replay is bounded to eligible rows of at most 1,024 words;
 larger rows fall back to streaming and still repeat weight traffic across rows.
 
-The cursor now retains absolute per-column scale addresses and separates
-resettable publication state from payload initialized at launch. The latter
-control change reduces matched synthesis area from 474.083 to 452.141 um²
-(4.63%) and sequential area from 195.605 to 150.640 um² (22.99%). Pre-layout
-setup WNS improves from -2.1575 to -0.7314 ns, but still fails. No request cycles
-are added; the two-slot G2 counter remains 30,723 and reset/cancellation/restart tests
-pass. Standalone and containing-service routes are running, so a routed clock
-improvement is not yet established.
+The cursor now retains absolute per-column scale addresses and uses local
+payload enables. Matched standalone routes reduce standard-cell area from
+642.468 to 568.897 um² (11.45%); setup slack improves from +0.043510 to
++0.166790 ns at 1 ns. The operand join resets only its ownership token, reducing
+routed area from 553.253 to 461.749 um² (16.54%) at the same tested period.
+Both refined routed stages have positive hold slack and zero reported physical
+violations. The join has slightly less setup margin; its result is an area
+improvement. Neither change adds request cycles. Evidence is retained in
+`runtime_operand_cursor/routed_absolute_comparison.json` and
+`runtime_operand_join/routed_payload_comparison.json` under
+`results/physical_abi3/asap7/`.
 
 Physical evidence is mixed. At ASAP7 TT and a 1 ns target, the refined mapper,
 fixed-page auxiliary scheduler and admission snapshots have positive routed
@@ -67,13 +70,15 @@ setup/hold slack and zero reported slew, capacitance, fanout, DRC and antenna
 violations. The historical replay-control scheduler route saves area
 (453.788 to 415.632 um² relative to the preceding early-fill snapshot), but
 fails setup: -0.0222674 ns WNS and 36 violating paths. The subsequent bounded
-extent rewrite has an expression-equivalence proof. The first historical
-containing-service route now fails setup by 109 ps on the weight-scale output;
-routes of later revisions remain pending. Standalone successes do not establish integrated GHz
+extent rewrite has an expression-equivalence proof. The historical containing-service progression improves from a 109 ps setup
+miss in the replay revision to a 23 ps miss with absolute scale addresses.
+The latter still has one violating path, now from auxiliary queue head to
+operand credit. It predates the combined current RTL; later service revisions
+remain under evaluation. Standalone successes do not establish integrated GHz
 operation; records can also retain overall `not_met` due to pre-layout failure.
 No activity-qualified energy benefit or all-target physical closure is claimed.
 
-The latest recorded focused suite passes 66 tests. The LQ8 corpus passes 92
+The latest recorded focused suite passes 74 tests. The LQ8 corpus passes 92
 cases with 17,103 matching outputs, 18 exercised faults and 115,748 checks.
 The latest loaded G2 N56 campaign passes 1,352 matching outputs with independent
 output backpressure, auxiliary refill, faults, aborts and recovery. The runtime
@@ -107,6 +112,32 @@ Local reuse, overlapped data movement, bounded credits, explicit ownership and
 balanced engines are the architectural direction. Full-target efficiency remains
 an acceptance requirement, and the full optimization goal remains active.
 
+## Workload-specific architecture targets
+
+The following are design priorities and acceptance gates, not completed
+implementations. Technology-specific clock/area budgets and measured service
+rates must determine replication and queue sizes.
+
+| Workload or subsystem | Architectural priority | Evidence required before component tuning is accepted |
+|---|---|---|
+| Dense decode | Keep weights streaming and columns busy with bounded prefetch | Bytes per output, lane starvation and latency under realistic memory stalls |
+| Dense prefill | Reuse each weight tile across multiple rows with bounded accumulator storage | Traffic reduction for rows exceeding SRAM capacity, preserving sequential FP32 association |
+| MoE | Balance expert dispatch, grouped work, weight locality and gather capacity | Expert skew, queue occupancy, overflow/backpressure and end-to-end token latency |
+| Attention and KV | Coordinate cache layout, banking, append/read traffic and reductions | Long-context bandwidth, bank conflicts, cache-boundary correctness and sustained service rate |
+| Vector and reduction | Match supporting-engine throughput to tensor production | Measured producer/consumer rates and transaction time including pipeline latency |
+| Distributed transport | Bound outstanding transfers and retain operation ownership through drain | Congestion, delayed responses, cancellation/restart and completion after final writes |
+| Every deployment/technology target | Bind descriptors, formats and engines to a realizable memory/clock organization | Current-source integrated functional coverage and routed setup/hold/physical closure |
+
+Architecture acceptance comes first: actual descriptor-driven input/output
+transport; deep-row reuse with an explicit accumulator budget; and balanced
+service rates across engines. Component changes then follow measured containing
+paths. A pipeline is retained only when its achieved clock and added cycles
+improve the relevant latency or throughput within the area budget. For example,
+the divider rounding stage adds one cycle per nontrivial division and passes
+673 arithmetic cases plus 35 Sinkhorn matrices, but its net timing benefit
+remains pending matched routing. No parent engine's divider selection has been
+changed on the strength of that experiment alone.
+
 ## Assessment
 
 The repository contains optimized blocks, but an efficient integrated accelerator
@@ -130,7 +161,7 @@ or whole-chip performance claim is made.
 | Prefetch | Fixed-latency reads assumed at arithmetic issue | Independent tile read cursor and finite FIFO | Four-entry weight FIFO; copies survive bank release and overwrite |
 | Operand readiness | No original issue backpressure | Grant credit only for a complete, correctly identified operand bundle | LQ8 issue stalls, generation/address join and response timing verified |
 | Auxiliary storage | Fixed windows or direct external-array responses | Three independently rebased, generation-tagged SRAM windows with exact fills | SRAM service and RTL refill scheduler tested on G2 auxiliary port; external transport modeled |
-| Auxiliary requests | Initial runtime adapter requested only the current issue | Independent future-address cursor plus reserved response slots | Captured RTL geometry admission, cursor and two-entry queue integrated |
+| Auxiliary requests | Initial runtime adapter requested only the current issue | Independent future-address cursor plus reserved response slots | Captured RTL geometry admission, cursor and three-entry direct queue integrated; shared operation generation |
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
 | Reuse | Stream execution repeats weights for rows | Retain resident weights across activation rows | G2 replays packed weight rows up to 1,024 words; larger-row tiled scheduling remains pending |
 | Numerical behavior | Multiple engines/prototypes use different reduction associations | Preserve sequential RNE or explicitly specify and qualify blocked association | Existing LQ8 numerical/fault corpus preserved; Qwen blocked implementation qualification pending |
@@ -1473,3 +1504,28 @@ only as a source-bound experiment; active bank-owner RTL is restored to the
 baseline. No controller change is selected without containing-path evidence
 that justifies its area cost. Evidence: `runtime_bank_owner/comparison.json`,
 snapshots and candidate functional records under `results/physical_abi3/asap7/`.
+
+
+## Absolute-scale containing-service route checkpoint
+
+The historical absolute-scale service route completes at ASAP7 TT, 1 ns,
+CTS12 and fanout16 with two 512x128 SRAM macros. Compared with the immediately
+preceding extent revision, standard-cell area changes from 3,813.310 to
+3,791.400 um², setup WNS improves from -0.086152 to -0.022618 ns, and setup
+violations fall from 19 to one. Hold WNS is +0.020265 ns; reported hold,
+slew, capacitance, fanout, DRC and antenna violations are zero. SRAM macro
+area remains 5,586 um², separate from standard-cell area.
+
+The worst setup path is now auxiliary queue head to operand credit, rather
+than cursor state to the weight-scale output. This supports the address-path
+change, while showing that issue-credit selection remains a containing-block
+constraint. The route still fails its tested period. Its slack-derived
+977.882 MHz estimate is not a validated operating frequency.
+
+All retained artifact hashes and all ten source hashes were verified; sources
+match recorded commit `c1d7d14e4d3e6f16155dcdbc0b28ff981267685e`.
+This snapshot predates local cursor control, the three-entry queue, unreset join
+payload and shared generation. It cannot certify their combined implementation.
+Evidence: `results/physical_abi3/asap7/runtime_operand_service/` records
+`pnr_absolute_scale_cts12_1ns.json`, its retained artifacts, and
+`historical_revision_comparison.json`.
