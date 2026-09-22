@@ -84,10 +84,18 @@ change. Conversely, the K80 result shows why pass-first should not be assumed
 optimal for all workloads. Its first-success cumulative counter changes only
 13,734 → 13,600; the campaign percentage also reflects fault/recovery work.
 
+A subsequent current-source K513 comparison confirms one-column residency:
+median successful-phase cycles fall 300,448.5 → 143,226.5 (52.33%) versus
+two-column passes, with the same three-stage adder. Weight bytes fall
+604,752 → 109,392 while activation fills rise 75%. Both full campaigns pass
+after correcting the testbench final-output hold for pass width one. See the
+[single-column comparison](../results/rtl/g2_single_column_residency_comparison.json).
+
 The loaded comparisons each check 2,234 exact outputs and 295 writes and
 acknowledgements, with reference arithmetic, stalls, abort/restart, generation,
-bounds and late-fault checks. These measurements predate the latest scheduler
-extent-selection change and remain evidence for their exact recorded sources.
+bounds and late-fault checks. The earlier table measurements predate the latest scheduler
+extent-selection change; the K513 comparison verifies current sources. Each
+remains evidence for its exact recorded sources.
 
 Evidence:
 [row/pass comparison](../results/rtl/g2_pass_first_comparison.json),

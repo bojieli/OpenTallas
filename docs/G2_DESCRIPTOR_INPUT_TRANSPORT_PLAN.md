@@ -923,6 +923,36 @@ This establishes the tested 1 ns block target, not an extrapolated operating
 frequency or integrated accelerator closure. The partial-row limitation remains
 open. Existing integrated G2 jobs retain their historical launch sources.
 
-A current-source loaded M6/N53/K512 two-column pass campaign is running to
-exercise exact 1,024-word retention capacity, with real strided weight reads,
-strided output writes, output backpressure and fault/recovery coverage.
+The loaded M6/N53/K512 two-column pass campaign passes at exact 1,024-word
+retention capacity: 3,584 weight fills, 109,180 first-operation weight bytes,
+2,234 exact outputs and 295 writes/acks. It uses the current hardware with
+the pre-single-column-stall-fix bench retained below.
+
+## Single-column residency beyond the two-column capacity boundary
+
+Matched current-source M6/N53/K513 campaigns retain the same three-stage
+adder and compare two-column streaming passes with one-column resident
+passes. Both complete all 2,234 exact outputs and 295 writes/acknowledgements,
+including faults, abort/restart, final-write failure, sentinels and drain.
+
+| Metric | Two columns | One column |
+|---|---:|---:|
+| Median successful-phase cycles | 300,448.5 | 143,226.5 |
+| Campaign cycles | 2,121,076 | 1,014,299 |
+| First-operation weight fills | 18,981 | 3,591 |
+| First-operation weight bytes | 604,752 | 109,392 |
+| First-operation activation fills | 12,312 | 21,546 |
+
+Successful-phase cycles fall 52.33% despite 75% more activation fills. This
+is static schedule selection, not automatic adaptation; phase time includes
+modeled memory/stalls/drain, not whole-model inference. The K512 versus K513
+two-column observations are different workloads and must not be called a
+matched speedup. Evidence: `results/rtl/g2_single_column_residency_comparison.json`.
+
+The first width-one attempt exposed a bench bug after a successful initial
+operation: the final-output hold selected an earlier pass because modulo one
+cannot equal one. The bench now recognizes a one-column final pass with
+`(local_cols-1)%pass_width==0`. The full rerun passes, and width two is rerun
+with the same sources for comparison. The old bench, failed log and preceding
+K512/K513 records are retained in `results/rtl/before_single_column_stall/`.
+No hardware change was needed for this testbench correction.

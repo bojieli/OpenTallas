@@ -403,9 +403,7 @@ module tb_a3_g2_runtime_program;
   phase=1;launch();
   if(STRESS_OUTPUT)begin
    // Hold the last result until after compute and external acknowledgements.
-   // The final pass has one column when (local_cols-1)%pass_width==0,
-   // including width one. Its penultimate result is in the previous row.
-   wait(seen[8*((PASS_FIRST && (COLS/8-1)%PASS_COLUMNS==0)?LOCAL_OUTPUTS-1-COLS/8:LOCAL_OUTPUTS-2)]);@(negedge clk);tail_hold=1;
+   wait(seen[8*((PASS_FIRST && (COLS/8)%PASS_COLUMNS==1)?LOCAL_OUTPUTS-1-COLS/8:LOCAL_OUTPUTS-2)]);@(negedge clk);tail_hold=1;
   end
   drain(0);
   if(seen!=expected_seen || outputs!=2*ROWS*LOGICAL_COLS)$fatal(1,"missing restart outputs");
