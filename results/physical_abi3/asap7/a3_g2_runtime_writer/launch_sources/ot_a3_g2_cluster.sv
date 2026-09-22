@@ -197,8 +197,8 @@ module ot_a3_g2_cluster #(
     input wire runtime_transport_ack,runtime_writes_drained,runtime_abort,
     // Sticky external transport/auxiliary failure; cleared after cancellation.
     input wire runtime_service_fault,
-    // External object identity must match C at launch. Capacity comes from
-    // the referenced MEMORY_OBJECT descriptor; cfg capacity is compatibility-only.
+    // Trusted object binding must match C's object and remain valid at launch.
+    // MEMORY_OBJECT descriptor resolution remains a deployment responsibility.
     input wire [31:0] cfg_output_object,
     input wire [63:0] cfg_output_object_bytes,
     output wire object_write_valid,
@@ -220,7 +220,6 @@ module ot_a3_g2_cluster #(
     // Valid through arithmetic and output drain. Addresses below are element
     // offsets; part_addr remains the lane-local execution address.
     output wire output_layout_valid,
-    output wire [63:0] output_object_bytes,
     output wire [31:0] output_object,output_element_base,
     output wire [31:0] output_row_stride,output_col_stride,
     output wire [15:0] output_rows,output_logical_cols,output_padded_cols,
@@ -626,7 +625,7 @@ module ot_a3_g2_cluster #(
     assign output_fp32=arr_out_fp32;
 
     ot_a3_g2_array_issue_adapter #(
-        .LANES(LANES),.RESOLVE_OUTPUT_OBJECT(RUNTIME_OBJECT_WRITES)
+        .LANES(LANES)
     ) issue_adapter (
         .clk(clk),
         .rst_n(rst_n),
@@ -677,7 +676,7 @@ module ot_a3_g2_cluster #(
         .array_out_base(arr_out_base),
         .array_out_fp32(arr_out_fp32),
         .output_layout_valid(output_layout_valid),
-        .output_object(output_object),.output_object_bytes(output_object_bytes),.output_logical_cols(output_logical_cols),
+        .output_object(output_object),.output_logical_cols(output_logical_cols),
         .output_row_stride(output_row_stride),.output_col_stride(output_col_stride),
         .array_done(array_done),
         .array_error_code(array_error_code),
@@ -723,7 +722,8 @@ module ot_a3_g2_cluster #(
         end
         wire writer_ready;
         reg binding_error;
-
+        reg [63:0] bound_object_bytes;
+        always @(posedge clk)if(arr_start)bound_object_bytes<=cfg_output_object_bytes;
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)binding_error<=0;
             else if(!output_layout_valid)binding_error<=0;
@@ -740,7 +740,7 @@ module ot_a3_g2_cluster #(
             .command_col_stride(output_col_stride),.command_rows(output_rows),
             .command_cols(output_logical_cols),.command_padded_cols(output_padded_cols),
             .command_fp32(output_fp32),
-            .command_object_bytes(binding_error?64'd0:output_object_bytes),
+            .command_object_bytes(binding_error?64'd0:bound_object_bytes),
             .part_valid(part_valid && part_ready),.part_ready(writer_ready),
             .part_mask(part_we),.part_address(part_addr),.part_data(part_data),
             .write_valid(object_write_valid),.write_ready(object_write_ready),

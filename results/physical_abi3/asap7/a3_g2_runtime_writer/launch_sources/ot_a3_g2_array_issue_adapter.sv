@@ -79,8 +79,7 @@
 // completion.
 // ---------------------------------------------------------------------------
 module ot_a3_g2_array_issue_adapter #(
-    parameter integer LANES = 8,
-    parameter bit RESOLVE_OUTPUT_OBJECT = 0
+    parameter integer LANES = 8
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -158,7 +157,6 @@ module ot_a3_g2_array_issue_adapter #(
     // Captured descriptor metadata, owned through array completion/drain.
     output wire          output_layout_valid,
     output reg [31:0]    output_object,
-    output reg [63:0]    output_object_bytes,
     output reg [31:0]    output_row_stride,output_col_stride,
     output wire [15:0]   output_logical_cols,
     input  wire          array_done,
@@ -183,7 +181,6 @@ module ot_a3_g2_array_issue_adapter #(
     localparam [2:0] S_CHECK  = 3'd3;
     localparam [2:0] S_RUN    = 3'd4;
     localparam [2:0] S_REFUSE = 3'd5;
-    localparam [2:0] S_DESC_OBJECT = 3'd7;
     localparam [2:0] S_DESC_C = 3'd6;
     // Logical N is distinct from the array's lane-padded column count.
     reg [15:0] logical_cols;
@@ -426,22 +423,7 @@ module ot_a3_g2_array_issue_adapter #(
                             output_row_stride <= d_stride0;
                             output_col_stride <= d_stride1;
                             array_out_fp32 <= (d_dtype == 8'h12);
-                            if(RESOLVE_OUTPUT_OBJECT)begin
-                                desc_req<=1;desc_short<=1;desc_id<=desc_data[159:128];
-                                state<=S_DESC_OBJECT;
-                            end else state <= S_CHECK;
-                        end
-                    end
-                end
-
-                S_DESC_OBJECT:begin
-                    if(desc_valid)begin
-                        if(desc_fault || d_magic!=ot_a3_pkg::A3_DESCRIPTOR_MAGIC ||
-                           d_type_major!=ot_a3_pkg::A3_TYPE_MAJOR || d_payload_offset!=64 ||
-                           d_type!=ot_a3_pkg::A3_DESC_MEMORY_OBJECT || !desc_data[257] || desc_data[703:640]==0)begin
-                            refuse_class<=ot_a3_pkg::A3_TRAP_DESCRIPTOR;state<=S_REFUSE;
-                        end else begin
-                            output_object_bytes<=desc_data[703:640];state<=S_CHECK;
+                            state <= S_CHECK;
                         end
                     end
                 end

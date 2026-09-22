@@ -2438,3 +2438,35 @@ Current-source evidence is retained in
 and the matching contiguous record. The preceding contiguous record is archived
 under `results/rtl/before_strided_output/`. The program generator records base,
 strides and exact object capacity in both the RTL fixture and evidence.
+
+
+## Resolve output capacity from MEMORY_OBJECT before launch
+
+With internal object writes enabled, G2 now reads the MEMORY_OBJECT referenced
+by C, using a three-word auxiliary prefix. Admission checks the descriptor
+header/type, write permission and nonzero 64-bit size. The captured capacity
+feeds the internal writer through output drain. The host capacity port remains
+for source compatibility but is no longer authoritative. External object-ID
+matching still prevents binding the output to a different external service.
+Object-relative requests continue to leave physical placement/base-address
+translation to that service; this change resolves capacity, not the whole memory
+transport. Descriptor CRC/full deployment admission remains the existing control
+plane's responsibility.
+
+Ten focused adapter/prefix tests pass. Adapter resolution mode checks full-width
+capacity, read-only/empty/wrong-type refusal, cancellation in the new descriptor
+state and recovery (34 checks versus 30 without resolution). Both contiguous
+and strided loaded N53 programs pass with deliberately incorrect host capacity
+of one byte. Each completes 295 writes/acks, 2,234 matching outputs and the
+existing fault/recovery campaigns. The descriptor-derived bound is checked on
+every output beat. Campaign latency increases 42,461 to 42,561 cycles due to
+the additional object read and stall alignment. This closes a configuration
+correctness gap; it is not a latency improvement. Prior evidence is archived
+under `results/rtl/before_descriptor_object_bounds/`.
+
+The integrated physical job remains live and covers its earlier launch sources,
+not this new descriptor-resolution revision. The changed launch files are
+retained under `results/physical_abi3/asap7/a3_g2_runtime_writer/launch_sources/`
+and bind to the invocation's recorded hashes. A completed route must be treated
+as historical until the changed control logic is recharacterized. No current
+integrated timing claim is made.

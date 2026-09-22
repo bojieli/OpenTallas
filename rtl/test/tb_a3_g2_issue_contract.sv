@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 // Focused ABI slot/layout and refusal coverage; full program test is separate.
 module tb_a3_g2_issue_contract;
+ parameter bit RESOLVE=0;
+ wire [63:0] output_object_bytes;
+ reg object_bad_type=0,object_readonly=0,object_empty=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,clear=0,issue_valid=0,view_valid=0,array_done=0;
  reg [7:0] issue_family=ot_a3_pkg::A3_MAJOR_TENSOR,array_error_code=0;
@@ -24,7 +27,7 @@ module tb_a3_g2_issue_contract;
  wire [15:0] output_logical_cols;
  reg [31:0] c_object=32'h12345678;
  integer launches=0,checks=0,cancel_state;
- ot_a3_g2_array_issue_adapter dut(
+ ot_a3_g2_array_issue_adapter #(.RESOLVE_OUTPUT_OBJECT(RESOLVE)) dut(
  .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
  .issue_family(issue_family),.issue_sub(8'd0),.issue_descriptor_id(32'd0),.issue_slot(issue_slot),
  .view_valid(view_valid),.view_slot(view_slot),.view_irs_slot(view_irs_slot),
@@ -34,6 +37,7 @@ module tb_a3_g2_issue_contract;
  .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
  .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(cfg_out_fp32),.array_out_fp32(array_out_fp32),
  .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
+ .output_object_bytes(output_object_bytes),
  .output_row_stride(output_row_stride),.output_col_stride(output_col_stride),
  .output_layout_valid(output_layout_valid),.output_object(output_object),.output_logical_cols(output_logical_cols),
  .array_done(array_done),.array_error_code(array_error_code));
@@ -52,6 +56,11 @@ module tb_a3_g2_issue_contract;
    desc_data[519:512]<=(desc_id==12)?c_dtype:8'h10;
    desc_data[575:544]<=(desc_id==12 && c_scaled)?32'd99:ot_a3_pkg::A3_NO_ID;
    desc_data[735:704]<=(desc_id==10)?32'd1:(desc_id==12)?c_rows:b_cols;
+   if(desc_id!=10 && desc_id!=11 && desc_id!=12)begin
+    desc_data[47:32]<=object_bad_type?ot_a3_pkg::A3_DESC_TENSOR_VIEW:ot_a3_pkg::A3_DESC_MEMORY_OBJECT;
+    desc_data[257]<=!object_readonly;
+    desc_data[703:640]<=object_empty?64'd0:64'h100000123;
+   end
    desc_data[767:736]<=(desc_id==10)?32'd80:(desc_id==12)?c_cols:b_depth;
   end
   if(array_start)launches<=launches+1;
@@ -81,6 +90,7 @@ module tb_a3_g2_issue_contract;
   wait(array_start);@(negedge clk);
   if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123 || array_out_fp32)$fatal(1,"ABI mapping");
   if(!output_layout_valid || output_object!=c_object || output_logical_cols!=8 || output_row_stride!=c_row_stride || output_col_stride!=c_col_stride)$fatal(1,"output layout missing");
+  if(RESOLVE && output_object_bytes!=64'h100000123)$fatal(1,"object capacity truncated");
   c_object=32'h87654321;c_row_stride=13;c_col_stride=3;
   repeat(4)begin tick();if(!output_layout_valid || output_object!=32'h12345678 || output_row_stride!=32'h80000123 || output_col_stride!=32'h40000007)$fatal(1,"layout changed while owned");end
   tick();array_done=1;tick();array_done=0;
@@ -126,8 +136,13 @@ module tb_a3_g2_issue_contract;
   c_bad_header=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_bad_header=0;
   c_dtype=8'h20;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_dtype=8'h10;
   c_scaled=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_scaled=0;
+  if(RESOLVE)begin
+   object_bad_type=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);object_bad_type=0;
+   object_readonly=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);object_readonly=0;
+   object_empty=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);object_empty=0;
+  end
   // Clear wins over views, issue, descriptor response, launch and completion.
-  for(cancel_state=1;cancel_state<=6;cancel_state=cancel_state+1)begin
+  for(cancel_state=1;cancel_state<=(RESOLVE?7:6);cancel_state=cancel_state+1)begin
    if(cancel_state==5)b_cols=0;
    view(0,10,0);view(1,11,0);view(4,12,0);issue();
    while(dut.state!=3'(cancel_state))tick();
