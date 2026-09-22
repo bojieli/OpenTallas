@@ -1,0 +1,48 @@
+{
+  "scope": "Historical transport baseline before invariant-bound optimization; not current-source closure",
+  "bindings": [
+    {
+      "recorded_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "verified_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971"
+    },
+    {
+      "recorded_source": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "verified_source": "results/physical_abi3/asap7/bf16_weight_gather/invariant_bound/baseline.sv",
+      "sha256": "ca3cd61d63a6208752065ccb2c8f2dd745a5aabfa8d8275e98d64eb1f7eba1c5"
+    },
+    {
+      "recorded_source": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "verified_source": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "sha256": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9"
+    }
+  ],
+  "artifacts_verified": true,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0265599,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 18.0,
+        "setup_wns_ns": -0.10740300000000001,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 6295.85
+}

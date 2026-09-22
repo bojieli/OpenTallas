@@ -289,3 +289,36 @@ A matched CTS12 1 ns containing route is running as
 remain unproven. The baseline source, global-route diagnostic and experiment
 manifest are retained in `bf16_weight_gather/invariant_bound/`; that intermediate
 report is not final physical acceptance.
+
+## Loaded strided-weight and row-wrap qualification
+
+The fixture builder now creates actual BF16 weight objects with explicit element
+offset and strides, filling gaps with poison values. `--strided-weights` selects
+base 11, column stride 165 and K stride 2 for the N53/K80 campaign, producing a
+17,500-byte object. The Device model and RTL consume that same descriptor and
+object. The external test service supplies bytes only, without repacking.
+
+Both six-row streaming and resident-row replay pass 2,234 matching outputs and
+295 writes/acknowledgements through the full fault/recovery campaign. Streaming
+uses 6,600 first-operation reads / 105,576 bytes and 387,169 campaign cycles;
+resident replay uses 1,100 reads / 17,596 bytes and 110,614 cycles. That is
+83.33% less first-operation weight traffic and 71.43% fewer campaign cycles in
+this matched strided configuration. The line cache remains enabled in both.
+Traffic can exceed object size because separate lane cache entries may fetch a
+shared boundary line; every individual read remains within the object.
+Evidence: `results/rtl/g2_strided_weight_row_reuse_comparison.json`.
+
+This exercises a nonzero service base distinct from byte offsets, partial lane
+groups, K/column strides, complete row wrapping and bounded final-line reads
+through the actual cluster. The original packed mode still passes at 42,561
+cycles. The test watchdog was extended for real object-memory campaigns so
+slower valid streaming cases can complete; no hardware timing was relaxed.
+
+The pre-invariant-bound containing transport route is now terminal: area
+6,295.850 um², setup -0.107403 ns, hold +0.0265599 ns at 1 ns. Slew, capacitance,
+fanout, DRC and antenna checks pass. Its worst path confirms the repeated
+end-address bounds bottleneck. The historical source binding and retained
+artifacts are verified in `bf16_weight_transport/baseline_source_audit.json`.
+The invariant-bound candidate route remains active; no current transport clock
+closure is claimed. Activation-stride transport, other formats, deep-row reuse
+and all-target balancing remain unfinished.

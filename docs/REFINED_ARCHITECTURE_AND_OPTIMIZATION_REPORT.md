@@ -2723,3 +2723,13 @@ The standalone gather's first 1 ns route fails by 13 ps and has slew/capacitance
 violations. Containing transport and current integrated physical qualification
 remain required. See the input transport plan and
 `results/rtl/g2_weight_object_line_retention_comparison.json` for evidence.
+
+## Strided object-memory and replay qualification
+
+Loaded G2 now passes real strided weight-object bytes (base 11, strides 165/2)
+as well as strided output writes. Streaming and resident replay produce the same
+2,234 outputs and 295 write acknowledgements. Resident replay reduces first-run
+weight bytes from 105,576 to 17,596 and full fault/recovery campaign cycles from
+387,169 to 110,614. This is a matched test with line retention enabled in both.
+The containing transport baseline route misses 1 ns by 107 ps despite clean
+physical rules; its invariant-bound replacement is still being routed.

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--write-outstanding", type=int, choices=[1, 2, 4, 8], default=4)
+parser.add_argument("--strided-weights", action="store_true")
 parser.add_argument("--strided-output", action="store_true")
 parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
@@ -28,6 +29,8 @@ parser.add_argument("--activation-miss-aligned", action="store_true")
 parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
 parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
+if args.strided_weights:
+    args.weight_object_reads = True
 if args.weight_object_reads:
     args.input_layout = True
 if args.depth < 2 or args.depth > 65535:
@@ -70,6 +73,8 @@ if args.weight_object_reads:
     record_name += "_weight_object_reads"
 if args.no_weight_line_retention:
     record_name += "_no_weight_line_retention"
+if args.strided_weights:
+    record_name += "_strided_weights"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -114,6 +119,8 @@ case = matmul_case(
     weight_dtype=DType.BF16,
     output_strides=(2*logical_cols+5, 2) if args.strided_output else None,
     output_element_offset=7 if args.strided_output else 0,
+    weight_strides=(2*depth+5, 2) if args.strided_weights else None,
+    weight_element_offset=11 if args.strided_weights else 0,
 )
 admission = verify_deployment(case.deployment, capability)
 assert admission.admitted, admission.errors
@@ -174,8 +181,14 @@ activation_payload = reference_device.memory[activation_object].read(
 )
 assert activation_payload == activation.astype("<u2").tobytes()
 hex_words("activation_bytes.hex", activation_payload, 2)
-weight_payload = reference_device.memory[weight_object].read(0, 2*logical_cols*depth)
-assert weight_payload == weight[:logical_cols].astype("<u2").tobytes()
+weight_base = 11 if args.strided_weights else 0
+weight_column_stride, weight_k_stride = weight_view.strides
+weight_object_bytes = 2*(weight_base+(logical_cols-1)*weight_column_stride+(depth-1)*weight_k_stride+1)
+weight_payload = reference_device.memory[weight_object].read(0, weight_object_bytes)
+for column in range(logical_cols):
+    for k in range(depth):
+        offset = 2*(weight_base+column*weight_column_stride+k*weight_k_stride)
+        assert int.from_bytes(weight_payload[offset:offset+2], "little") == int(weight[column, k])
 hex_words("weight_bytes.hex", weight_payload, 2)
 expected_padded = np.zeros((rows, cols), dtype=np.uint32)
 expected_padded[:, :logical_cols] = golden["output"]
@@ -198,6 +211,7 @@ for row in range(rows):
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
     f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object}, OUTPUT_OBJECT=32'd{output_object};\n"
+    f"localparam integer WEIGHT_BASE={weight_base}, WEIGHT_COLUMN_STRIDE={weight_column_stride}, WEIGHT_K_STRIDE={weight_k_stride}, WEIGHT_OBJECT_BYTES={weight_object_bytes};\n"
     f"localparam [31:0] WEIGHT_OBJECT=32'd{weight_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, LOGICAL_COLS={logical_cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam integer OUTPUT_BASE={output_base}, OUTPUT_ROW_STRIDE={output_row_stride}, OUTPUT_COL_STRIDE={output_col_stride}, OUTPUT_BYTES={output_bytes};\n"
@@ -288,6 +302,7 @@ result = {
     "object_writes": args.object_writes,
     "descriptor_input_layout": args.input_layout,
     "weight_object_reads": args.weight_object_reads,
+    "strided_weights": args.strided_weights,
     "weight_line_retention": not args.no_weight_line_retention,
     "weight_object_sha256": hashlib.sha256(weight_payload).hexdigest(),
     "strided_output": args.strided_output,
@@ -317,6 +332,9 @@ result = {
         "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
         "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes" if args.weight_object_reads else "External fixture service repacks ABI N-major weights into eight-lane words",
+        "weight_element_base": weight_base,
+        "weight_strides": [weight_column_stride, weight_k_stride],
+        "weight_object_bytes": weight_object_bytes,
         "output_element_base": output_base,
         "output_strides": [output_row_stride, output_col_stride],
         "output_object_bytes": output_bytes,

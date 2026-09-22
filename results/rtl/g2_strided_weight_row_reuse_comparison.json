@@ -1,0 +1,69 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded strided-weight/output G2 with line retention; campaign includes fault/recovery, not inference latency",
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_no_weight_reuse_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "b0597e66a3b1a6d271dd393cd30c6b151bfaa728cf3b5917654eada0ff3d69a4",
+      "row_reuse": false,
+      "campaign_cycles": 387169,
+      "first_operation_reads": 6600,
+      "first_operation_bytes": 105576,
+      "fixture": {
+        "rows": 6,
+        "cols": 53,
+        "padded_cols": 56,
+        "depth": 80,
+        "expected_activation_fills": 720,
+        "dtype": "BF16",
+        "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes",
+        "weight_element_base": 11,
+        "weight_strides": [
+          165,
+          2
+        ],
+        "weight_object_bytes": 17500,
+        "output_element_base": 7,
+        "output_strides": [
+          111,
+          2
+        ],
+        "output_object_bytes": 1334,
+        "output_addressing": "Subtract output_element_base from lane-local address; derive row and column using padded width and lane. Byte offset=2*(base+row*row_stride+column*col_stride)."
+      }
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "61cd655c573d014dbf08a8322404ad4586348a57ae400d9680cb6d78be93bf3a",
+      "row_reuse": true,
+      "campaign_cycles": 110614,
+      "first_operation_reads": 1100,
+      "first_operation_bytes": 17596,
+      "fixture": {
+        "rows": 6,
+        "cols": 53,
+        "padded_cols": 56,
+        "depth": 80,
+        "expected_activation_fills": 720,
+        "dtype": "BF16",
+        "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes",
+        "weight_element_base": 11,
+        "weight_strides": [
+          165,
+          2
+        ],
+        "weight_object_bytes": 17500,
+        "output_element_base": 7,
+        "output_strides": [
+          111,
+          2
+        ],
+        "output_object_bytes": 1334,
+        "output_addressing": "Subtract output_element_base from lane-local address; derive row and column using padded width and lane. Byte offset=2*(base+row*row_stride+column*col_stride)."
+      }
+    }
+  ],
+  "cycle_reduction_percent": 71.43004734366646,
+  "weight_byte_reduction_percent": 83.33333333333334,
+  "identical_source_manifests_and_golden_outputs": true
+}

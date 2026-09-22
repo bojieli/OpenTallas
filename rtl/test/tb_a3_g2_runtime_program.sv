@@ -95,8 +95,8 @@ module tb_a3_g2_runtime_program;
    end
    if(INPUT_LAYOUT && input_layout_valid)begin
     if(input_a_object!=ACTIVATION_OBJECT || input_b_object!=WEIGHT_OBJECT ||
-       input_a_object_bytes!=64'(2*DEPTH*ROWS) || input_b_object_bytes!=64'(2*DEPTH*LOGICAL_COLS) ||
-       input_a_row_stride!=DEPTH || input_a_k_stride!=1 || input_b_column_stride!=DEPTH || input_b_k_stride!=1)
+       input_a_object_bytes!=64'(2*DEPTH*ROWS) || input_b_object_bytes!=64'(WEIGHT_OBJECT_BYTES) ||
+       input_a_row_stride!=DEPTH || input_a_k_stride!=1 || input_b_column_stride!=WEIGHT_COLUMN_STRIDE || input_b_k_stride!=WEIGHT_K_STRIDE)
      $fatal(1,"descriptor input layout mismatch");
    end
    if(dut.arr_start)configured_object_bytes<=0; // captured bounds must survive host mutation
@@ -235,14 +235,14 @@ module tb_a3_g2_runtime_program;
  reg [63:0] wobj_saved_tag=0,wobj_saved_offset=0;
  integer wobj_delay=0,wobj_reads=0,wobj_total_bytes=0;
  integer first_wobj_reads=0,first_wobj_bytes=0;
- reg [7:0] weight_bytes[0:2*LOGICAL_COLS*DEPTH-1];
+ reg [7:0] weight_bytes[0:WEIGHT_OBJECT_BYTES-1];
  reg [127:0] wobj_data;
  wire wobj_ready=!wobj_pending && !runtime_transport_cancel && cycles%5!=0;
  wire wobj_response_valid=wobj_pending && wobj_delay==0 && !runtime_transport_cancel;
  always @*begin
   wobj_data=0;
   for(integer b=0;b<16;b=b+1)
-   if(wobj_saved_offset+64'(b)<64'(2*LOGICAL_COLS*DEPTH))
+   if(wobj_saved_offset+64'(b)<64'(WEIGHT_OBJECT_BYTES))
     wobj_data[8*b+:8]=weight_bytes[wobj_saved_offset+64'(b)];
  end
  always @(posedge clk)begin
@@ -250,7 +250,7 @@ module tb_a3_g2_runtime_program;
   else begin
    if(wobj_valid && wobj_ready)begin
     if(wobj_object!=WEIGHT_OBJECT || wobj_offset[3:0]!=0 || wobj_bytes==0 ||
-       wobj_offset+64'(wobj_bytes)>64'(2*LOGICAL_COLS*DEPTH))$fatal(1,"weight object read bounds");
+       wobj_offset+64'(wobj_bytes)>64'(WEIGHT_OBJECT_BYTES))$fatal(1,"weight object read bounds");
     wobj_pending<=1;wobj_saved_offset<=wobj_offset;wobj_delay<=3;
     wobj_saved_tag<=wobj_tag ^ ((phase==3)?64'h100000000:64'd0);
     wobj_reads<=wobj_reads+1;wobj_total_bytes<=wobj_total_bytes+integer'(wobj_bytes);
@@ -447,5 +447,5 @@ module tb_a3_g2_runtime_program;
   $display("output stalls=%0d reservation stalls=%0d accepted_outputs=%0d",output_stalls,reservation_stalls,outputs);
   $display("PASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=%0d",fills);$finish;
  end
- initial begin #(WEIGHT_OBJECT_READS && !WEIGHT_LINE_REUSE?10000000:2000000);$fatal(1,"timeout");end
+ initial begin #(WEIGHT_OBJECT_READS?10000000:2000000);$fatal(1,"timeout");end
 endmodule

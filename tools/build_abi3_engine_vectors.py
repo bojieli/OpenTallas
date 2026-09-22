@@ -586,6 +586,8 @@ def matmul_case(
     expect_fault: bool = False,
     output_strides: tuple[int, int] | None = None,
     output_element_offset: int = 0,
+    weight_strides: tuple[int, int] | None = None,
+    weight_element_offset: int = 0,
 ) -> Case:
     """One TENSOR.MATMUL over real operand bytes under the sequential contract."""
     w = Workspace(name, capability, root)
@@ -619,15 +621,40 @@ def matmul_case(
         scale_block_rows=block_rows_a,
         key="view.activation",
     )
-    view_b = w.const_view(
-        payload(weight_codes, weight_dtype),
-        weight_dtype,
-        [cols, depth],
-        scale_object_id=scale_b_object,
-        scale_block_elements=block_b,
-        scale_block_rows=block_rows_b,
-        key="view.weight",
-    )
+    if weight_strides is None and weight_element_offset == 0:
+        view_b = w.const_view(
+            payload(weight_codes, weight_dtype),
+            weight_dtype,
+            [cols, depth],
+            scale_object_id=scale_b_object,
+            scale_block_elements=block_b,
+            scale_block_rows=block_rows_b,
+            key="view.weight",
+        )
+    else:
+        if weight_dtype != DType.BF16:
+            raise ValueError("Strided weight fixtures currently require BF16")
+        strides = weight_strides or (depth, 1)
+        if weight_element_offset < 0 or any(v < 0 for v in strides):
+            raise ValueError("Weight offsets and strides must be unsigned")
+        elements = weight_element_offset + (cols-1)*strides[0] + (depth-1)*strides[1] + 1
+        storage = np.full(elements, 0xA55A, dtype="<u2")
+        written = np.zeros(elements, dtype=bool)
+        for column in range(cols):
+            for k in range(depth):
+                index = weight_element_offset + column*strides[0] + k*strides[1]
+                value = weight_codes[column, k]
+                if written[index] and storage[index] != value:
+                    raise ValueError("Overlapping weight fixture elements disagree")
+                storage[index] = value
+                written[index] = True
+        object_id = w.data_object(storage.tobytes())
+        view_b = w.builder.tensor_view(object_id=object_id, dtype=weight_dtype,
+            dims=[cols, depth], strides=strides, element_offset=weight_element_offset,
+            permissions=READ, scale_object_id=scale_b_object,
+            scale_block_elements=block_b, scale_block_rows=block_rows_b,
+            layout_class=LayoutClass.BLOCK_SCALED if scale_b_object != NO_ID else LayoutClass.DENSE,
+            key="view.weight")
     if output_strides is None and output_element_offset == 0:
         view_out = w.scratch_view(DType.BF16, [rows, cols], key="view.out")
     else:
