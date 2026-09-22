@@ -1283,3 +1283,19 @@ nonfinite checks and unbound snapshots, and verify frequency is derived only
 from the tested period. Evidence:
 `results/physical_abi3/current_evidence_audit.json`. This audit makes the remaining
 coverage gaps explicit; it does not satisfy all-target physical completion.
+
+
+## Cursor local-control route completes
+
+The current cursor RTL with absolute scale addresses and local payload control
+passes ASAP7 TT routed checks at 1 ns: standard-cell area 568.897 um², setup
+WNS +0.166790 ns and hold WNS +0.0510321 ns. Setup/hold, slew, capacitance,
+fanout, DRC and antenna violations are zero. All source and retained artifact
+hashes match. Relative to the preceding absolute-address snapshot, routed area
+falls 8.18% (619.592 to 568.897 um²), with setup slack improving from +0.131598 ns.
+Relative to the original cursor, area falls 11.45% (642.468 to 568.897 um²).
+These are standalone results at the same 1 ns period; the 1.200 GHz
+slack-derived estimate is not a validated tighter clock. Overall `not_met`
+remains due to failed pre-layout STA. Containing-service runs remain live.
+Evidence: `runtime_operand_cursor/pnr_local_control_cts12_1ns.json` and the
+updated `routed_absolute_comparison.json` under `results/physical_abi3/asap7/`.

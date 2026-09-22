@@ -1,5 +1,5 @@
 {
-  "scope": "Matched ASAP7 TT 1 ns CTS12 standalone cursor snapshots. Both routed stages pass; overall records fail due pre-layout. Before later local-control change.",
+  "scope": "Matched ASAP7 TT 1 ns CTS12 standalone cursor progression: baseline, absolute addressing, local control. All routed stages pass; overall records fail due pre-layout.",
   "records": [
     {
       "record": "pnr_baseline_cts12_1ns.json",
@@ -14,6 +14,13 @@
       "area_um2": 619.592,
       "setup_wns_ns": 0.13159800000000002,
       "hold_wns_ns": 0.056384500000000004
+    },
+    {
+      "record": "pnr_local_control_cts12_1ns.json",
+      "sha256": "e88600fe5cf00f9d4d795c801ddcd69daa63b56d09f4dcca6cb4d934a33dde29",
+      "area_um2": 568.897,
+      "setup_wns_ns": 0.16679,
+      "hold_wns_ns": 0.051032100000000004
     }
   ]
 }
