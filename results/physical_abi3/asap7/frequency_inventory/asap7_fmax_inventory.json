@@ -292,6 +292,16 @@
       "target_headroom": 0.552175
     },
     {
+      "at_target_clock_period_ns": 3.4,
+      "block": "ot_a3_qwen_kv_scatter_adapter",
+      "family": "abi3_datapath",
+      "fmax_hz": 601439000.0,
+      "record": "results/physical_abi3/asap7/a3_qwen_kv_scatter_adapter/pnr_3p4ns_coverage.json",
+      "slew_margin_percent": 60.0,
+      "standard_cell_area_um2": 13473.7,
+      "target_headroom": 0.5109764705882353
+    },
+    {
       "at_target_clock_period_ns": 1.8,
       "block": "ot_a3_dependence_table",
       "family": "abi3_datapath",
@@ -695,10 +705,10 @@
     "target_headroom": 0.02386535135135135
   },
   "counts": {
-    "closed_routed_record_count": 106,
-    "distinct_blocks_with_a_closed_routed_record": 68,
-    "post_route_record_count": 169,
-    "record_count": 277
+    "closed_routed_record_count": 107,
+    "distinct_blocks_with_a_closed_routed_record": 69,
+    "post_route_record_count": 170,
+    "record_count": 278
   },
   "excluded_from_the_limiter_as_superseded": [
     {
@@ -784,7 +794,7 @@
   ],
   "producer": {
     "git": {
-      "commit": "b0dba807070aa6720a8e79e8882dc3f5fb8158b5"
+      "commit": "a78c6a32cb6e2043004cb3537889b401c9ba7a97"
     },
     "tool": "tools/audit_asap7_fmax_inventory.py"
   },
@@ -2495,6 +2505,29 @@
       "standard_cell_area_um2": 66705.6,
       "target_clock_period_ns": 3.4,
       "target_headroom": -3.2223529411764704
+    },
+    {
+      "antenna_violating_nets": 0,
+      "block": "ot_a3_qwen_kv_scatter_adapter",
+      "closed": true,
+      "drc_errors": 0,
+      "family": "abi3_datapath",
+      "fmax_hz": 601439000.0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "post_route": true,
+      "purpose": "characterization",
+      "record": "results/physical_abi3/asap7/a3_qwen_kv_scatter_adapter/pnr_3p4ns_coverage.json",
+      "record_sha256": "a621f86bd2c6afee87e2cdd3e80c791fd52ab36f018674bd35d2b1119c2e601e",
+      "setup_wns_ns": 1.73732,
+      "slew_margin_percent": 60.0,
+      "stages": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 13473.7,
+      "target_clock_period_ns": 3.4,
+      "target_headroom": 0.5109764705882353
     },
     {
       "antenna_violating_nets": 0,
