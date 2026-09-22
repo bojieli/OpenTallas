@@ -1,0 +1,63 @@
+{
+  "status": "pass",
+  "scope": "Future operand cursor supports both orders; integrated lane/bank/output schedule remains row-first",
+  "configurations": 96,
+  "shapes": [
+    [
+      5,
+      7,
+      12
+    ],
+    [
+      3,
+      7,
+      1
+    ],
+    [
+      1,
+      2,
+      12
+    ],
+    [
+      6,
+      7,
+      160
+    ]
+  ],
+  "interleave": [
+    1,
+    3,
+    5
+  ],
+  "pass_first": [
+    0,
+    1
+  ],
+  "pytest": {
+    "command": "python3 -m pytest -q tests/test_lq8_operand_cursor.py tests/test_lq8_runtime_service.py tests/test_lq8_auxiliary_prefetch.py",
+    "passed": 113
+  },
+  "lint": {
+    "version": "Verilator 5.050",
+    "options": "--lint-only --Wall",
+    "PASS_FIRST": [
+      0,
+      1
+    ],
+    "status": "pass"
+  },
+  "physical": {
+    "record": "results/physical_abi3/asap7/runtime_operand_cursor/pnr_pass_first_cts12_1ns.json",
+    "status": "running; no timing or area claim"
+  },
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "sha256": "f877b618a11ed5cd8bf79f763419bb8e82349110158e6c8482d0213227b7141c"
+    },
+    {
+      "path": "tests/test_lq8_operand_cursor.py",
+      "sha256": "be2f26ab86eee48acd1239c7a3922e2da782a06db13d3ee1c2c4dea86c909027"
+    }
+  ]
+}

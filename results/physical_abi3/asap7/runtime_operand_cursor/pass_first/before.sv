@@ -5,8 +5,7 @@
 // arbitrarily behind this cursor. clear aborts the generation at any position.
 // Weight scale rows correspond to lane-local columns (LQ8 block_rows_b = 1).
 module ot_a3_lq8_operand_cursor #(
-    parameter integer INTERLEAVE=3,
-    parameter bit PASS_FIRST=0
+    parameter integer INTERLEAVE=3
 )(
     input wire clk,rst_n,clear,start,
     input wire [31:0] cfg_generation,
@@ -36,10 +35,6 @@ module ot_a3_lq8_operand_cursor #(
     wire end_k=kg==depth_q-1'b1;
     wire end_row=cols_left<=16'(INTERLEAVE);
     reg [31:0] ws_base_q;
-    reg [15:0] rows_q;
-    reg [31:0] a_origin,s_origin,ws_pass_base;
-    // At depth one the last column's scale increment occurs on this edge.
-    wire [31:0] next_ws_pass=ws_cursor+(kg==0?{16'b0,sb_stride}:32'd0);
     assign request_valid=rst_n && !clear && active;
     assign a_address=a_base+{16'b0,kg};
     assign s_address=s_base+{16'b0,ksa};
@@ -73,8 +68,6 @@ module ot_a3_lq8_operand_cursor #(
             kga<=0;kgb<=0;ksa<=0;
             a_base<=cfg_a_base;s_base<=cfg_s_base;ws_cursor<=cfg_ws_base;
             ws_base_q<=cfg_ws_base;w_address<=cfg_w_base;
-            rows_q<=cfg_rows;a_origin<=cfg_a_base;s_origin<=cfg_s_base;
-            ws_pass_base<=cfg_ws_base;
         end else if(take)begin
             w_address<=w_address+1'b1;
             if(kg==0)ws_cursor<=ws_cursor+{16'b0,sb_stride};
@@ -82,20 +75,7 @@ module ot_a3_lq8_operand_cursor #(
                 col<=0;
                 if(end_k)begin
                     kg<=0;kga<=0;kgb<=0;ksa<=0;
-                    if(PASS_FIRST)begin
-                        if(rows_left!=1)begin
-                            rows_left<=rows_left-1'b1;
-                            a_base<=a_base+{16'b0,depth_q};
-                            ws_cursor<=ws_pass_base;
-                            if(rows_in_scale==rpb_a-1'b1)begin
-                                rows_in_scale<=0;s_base<=s_base+{16'b0,sa_stride};
-                            end else rows_in_scale<=rows_in_scale+1'b1;
-                        end else if(!end_row)begin
-                            rows_left<=rows_q;cols_left<=cols_left-pass_cols;
-                            a_base<=a_origin;s_base<=s_origin;rows_in_scale<=0;
-                            ws_pass_base<=next_ws_pass;
-                        end
-                    end else if(end_row)begin
+                    if(end_row)begin
                         cols_left<=cols_q;ws_cursor<=ws_base_q;
                         if(rows_left!=1)begin
                             rows_left<=rows_left-1'b1;

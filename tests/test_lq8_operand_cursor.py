@@ -11,22 +11,25 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 @pytest.mark.parametrize("interleave", [1, 3, 5])
 @pytest.mark.parametrize("scale_group,scale_base", [(0, 300), (1, 300), (4, 300), (4, 0xFFFFFFFC)])
-def test_future_cursor(tmp_path, interleave, scale_group, scale_base):
-    rows, cols, depth = 5, 7, 12
+@pytest.mark.parametrize("pass_first", [0, 1])
+@pytest.mark.parametrize("rows,cols,depth", [(5, 7, 12), (3, 7, 1), (1, 2, 12), (6, 7, 160)])
+def test_future_cursor(tmp_path, interleave, scale_group, scale_base, pass_first, rows, cols, depth):
     scale_stride = depth // scale_group if scale_group else 0
     expected = []
-    for row in range(rows):
-        for base_col in range(0, cols, interleave):
-            for k in range(depth):
-                for col in range(base_col, min(base_col + interleave, cols)):
-                    expected.append(
-                        (
-                            100 + row * depth + k,
-                            200 + (row // 2) * 4 + k // 3,
-                            (scale_base + col * scale_stride + (k // scale_group if scale_group else 0)) & 0xFFFFFFFF,
-                            400 + len(expected),
-                        )
+    order = [(row, col) for row in range(rows) for col in range(0, cols, interleave)]
+    if pass_first:
+        order.sort(key=lambda rc: (rc[1], rc[0]))
+    for row, base_col in order:
+        for k in range(depth):
+            for col in range(base_col, min(base_col + interleave, cols)):
+                expected.append(
+                    (
+                        100 + row * depth + k,
+                        200 + (row // 2) * 4 + k // 3,
+                        (scale_base + col * scale_stride + (k // scale_group if scale_group else 0)) & 0xFFFFFFFF,
+                        400 + len(expected),
                     )
+                )
     image = tmp_path / "expected.hex"
     image.write_text(
         "".join(f"{a:08x}{s:08x}{ws:08x}{w:08x}\n" for a, s, ws, w in expected)
@@ -43,10 +46,10 @@ wire [31:0] generation,a_address,s_address,ws_address,w_address;
 reg [127:0] expected[0:{len(expected) - 1}];
 reg held=0;reg [127:0] held_address;
 reg [31:0] cfg_a_base=100;
-reg [15:0] cfg_rows=5;
-ot_a3_lq8_operand_cursor #(.INTERLEAVE({interleave})) dut(
+reg [15:0] cfg_rows={rows};
+ot_a3_lq8_operand_cursor #(.INTERLEAVE({interleave}),.PASS_FIRST({pass_first})) dut(
 .clk(clk),.rst_n(rst_n),.clear(clear),.start(start),.cfg_generation(32'd9),
-.cfg_rows(cfg_rows),.cfg_local_cols(16'd7),.cfg_depth_words(16'd12),
+.cfg_rows(cfg_rows),.cfg_local_cols(16'd{cols}),.cfg_depth_words(16'd{depth}),
 .cfg_rows_per_scale_a(16'd2),.cfg_scale_stride_a(16'd4),.cfg_scale_stride_b(16'd{scale_stride}),
 .cfg_groups_per_scale_a(16'd3),.cfg_groups_per_scale_b(16'd{scale_group}),
 .cfg_a_base(cfg_a_base),.cfg_s_base(32'd200),.cfg_ws_base(32'd{scale_base}),.cfg_w_base(32'd400),
@@ -91,12 +94,12 @@ initial begin
  // An invalid launch may capture payload, but cannot publish it.
  cfg_rows=0;start=1;@(negedge clk);start=0;
  if(active || request_valid || !invalid_geometry)$fatal(1,"invalid launch was published");
- cfg_rows=5;seen=0;start=1;@(negedge clk);start=0;
+ cfg_rows={rows};seen=0;start=1;@(negedge clk);start=0;
  wait(seen=={len(expected)});@(negedge clk);
  if(active || invalid_geometry)$fatal(1,"recovery after invalid launch failed");
  $display("PASS cursor interleave={interleave} words={len(expected)}");$finish;
 end
-initial begin #400000;$fatal(1,"timeout");end
+initial begin #4000000;$fatal(1,"timeout");end
 endmodule
 ''')
     sim = tmp_path / "sim"

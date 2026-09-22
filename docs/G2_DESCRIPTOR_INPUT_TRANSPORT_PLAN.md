@@ -1,8 +1,10 @@
 # G2 descriptor-driven input transport
 
-Status: implementation plan, 2026-09-22. This document does not claim the input
-transport is implemented. It defines the next integration change following the
-bounded output writer.
+Status: implementation in progress, 2026-09-22. Optional BF16 weight-object
+transport is integrated; general input transport and pass-first execution remain
+open. The sections below retain the original plan and successive checkpoints;
+later checkpoints supersede earlier status statements. See the
+[current architecture summary](ARCHITECTURE_REVIEW_SUMMARY.md).
 
 ## Observed boundary
 
@@ -511,3 +513,28 @@ read-byte count. Launch-source bindings and seven retained artifacts are verifie
 in `bf16_weight_transport/word_handoff_route_audit.json`. The original cursor
 source is retained under `pass_first_cursor/before.sv` for this and other earlier
 routes. The final-line route remains active and predates this cursor change.
+
+## Pass-first future operand schedule
+
+The future operand cursor now supports the same pass/row/K/column walk as the
+weight layout cursor. It retains activation and scale origins at admission,
+restores them for each pass, and replays the weight-scale pass origin for each
+row. Its sequential stream address remains monotonic. The depth-one transition
+includes the final same-edge column-scale increment. No request bubbles or
+additional admission cycles are introduced.
+
+The 96 cursor configurations cover both schedules, interleave 1/3/5, scaled and
+unscaled weight groups, wrapping scale addresses, one-row and depth-one shapes,
+and M6/local-N7/K160. They verify every address against independent tensor
+indexing with stalls, input mutation, clear/reset and restart. Together with
+runtime ownership and auxiliary reservation tests, 113 tests pass. Strict
+Verilator lint passes for both schedule parameters. Evidence is retained in
+`results/rtl/lq8_operand_cursor_pass_first.json`.
+
+The pass-first operand cursor is under physical characterization at 1 ns,
+ASAP7 TT, CTS12 with fanout 16 and the library transition limit. No physical
+benefit is claimed before completion. The pre-change source is retained at
+`results/physical_abi3/asap7/runtime_operand_cursor/pass_first/before.sv`.
+The lane issue order, bank reuse and output sequencing still require coordinated
+changes before enabling this mode in the runtime service or claiming loaded
+traffic reduction.
