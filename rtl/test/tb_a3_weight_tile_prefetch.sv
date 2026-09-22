@@ -71,6 +71,11 @@ module tb_a3_weight_tile_prefetch;
  load(1,64'h200,2);
  wait(consumed==32);@(negedge clk);word_ready=0;
  launch(1,64'h200,2);
+ // A one-entry FIFO cannot retain both words: consume the first before
+ // stalling the last copy. Larger FIFOs retain the entire two-word tile.
+ if(FIFO_DEPTH==1)begin
+  word_ready=1;wait(consumed==33);@(negedge clk);word_ready=0;
+ end
  // Queue copies survive bank release and overwrite while consumer is stalled.
  wait(tile_released);@(negedge clk);
  if(released_tag!==64'h200)$fatal(1,"wrong release identity");

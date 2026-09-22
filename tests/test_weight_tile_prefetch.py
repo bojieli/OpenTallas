@@ -16,7 +16,7 @@ SOURCES = [
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
-@pytest.mark.parametrize("depth", [3, 4, 8])
+@pytest.mark.parametrize("depth", [1, 2, 3, 4, 8])
 def test_tile_prefetch_overlap_and_order(tmp_path, depth):
     sim = tmp_path / "sim"
     built = subprocess.run(
@@ -37,4 +37,6 @@ def test_tile_prefetch_overlap_and_order(tmp_path, depth):
     assert built.returncode == 0, built.stderr
     run = subprocess.run(["vvp", str(sim)], capture_output=True, text=True, timeout=30)
     assert run.returncode == 0, run.stdout + run.stderr
-    assert "PASS tile prefetch words=76 max_contiguous=32" in run.stdout
+    assert "PASS tile prefetch words=76" in run.stdout
+    if depth >= 3:
+        assert "max_contiguous=32" in run.stdout

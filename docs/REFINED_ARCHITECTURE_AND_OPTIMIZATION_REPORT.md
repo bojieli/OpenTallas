@@ -1680,3 +1680,25 @@ path starts at weight-prefetch head and ends at operand credit. This is a
 failed 1 ns baseline, not closure. Retained artifact hashes were verified;
 `runtime_operand_service/historical_revision_comparison.json` records its
 source manifest. The one-hot auxiliary-head containing route remains live.
+
+
+## Weight FIFO one-hot experiment rejected
+
+The combined-service failure starts at the weight FIFO head, so its selection
+was tested with the same rotating one-hot structure used for the auxiliary
+queue. Matched ASAP7 TT 1 ns synthesis makes the weight prefetch larger:
+885.703 to 897.817 um² (+1.37%). Setup WNS worsens from -0.934839 to
+-1.632666 ns; both fail. The active weight-prefetch RTL is restored byte-for-byte
+to baseline. No containing route was launched for this rejected candidate.
+This result does not invalidate the separately measured auxiliary change;
+the two FIFOs have different payload/control connectivity.
+
+The candidate passed the original 19 prefetch/replay tests. The restored
+baseline passes 21 tests after expanding standalone FIFO depths to 1/2/3/4/8.
+The depth-one stimulus consumes the first word before waiting for a two-word
+tile to release, then verifies the remaining copy survives bank overwrite;
+waiting with both words stalled would exceed that queue's capacity. Larger
+queues still test release while the complete tile remains stalled. Reset with
+an in-flight response, exact identity, retention/replay and reservation bounds
+remain covered. Evidence and rejected source snapshot:
+`results/physical_abi3/asap7/runtime_weight_onehot/comparison.json`.
