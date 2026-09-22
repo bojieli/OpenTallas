@@ -1000,3 +1000,13 @@ The join receives that absolute stream address directly. The index port retains
 its tile-local meaning and must not be added again in this mode. Bank ownership,
 SRAM access and release continue to use the unmodified resident owner tag.
 Consumers without this option keep the relative tag/index interface.
+
+
+The auxiliary refill scheduler supports `ACTIVATION_MISS_ALIGNED=1` to use a
+rolling activation window starting at the actual miss. Scale planes continue
+using fixed base-relative pages. Extents are min(256, object_end-miss), checked
+before publication, and SRAM capacity is unchanged. This improves measured
+multi-pass row reuse when fixed-page boundaries split a row. The policy is an
+explicit parameter (default fixed pages), qualified through the G2 checker's
+`--activation-miss-aligned` flag. Deep rows still require repeated replacement;
+this is not a second cached page or an unbounded activation store.

@@ -960,3 +960,47 @@ A new containing-service route now characterizes the latest verified absolute-
 address and bounded-extent RTL with both SRAM macros. Older service routes remain
 active and are not restarted. Complete G2 and all-target physical closure remain
 unproven.
+
+
+## Rolling activation windows reduce repeated fills
+
+`ot_a3_auxiliary_window_scheduler.ACTIVATION_MISS_ALIGNED=1` now starts an
+activation refill at the missed address, retaining up to 256 following words.
+It uses the same SRAM and registered CHECK/PLAN/SIZE stages. Scale planes keep
+base-relative fixed-page behavior. Captured object bounds and exact tails still
+prevent reads before or beyond the admitted object; generation, ordered fill,
+held publication, clear and fault contracts are unchanged. The generic default
+remains fixed pages, and the loaded-program checker selects the measured policy
+with `--activation-miss-aligned`. Integrators can choose based on access pattern;
+this is not a universal cache-policy win.
+
+Matched G2 campaigns (six rows) show:
+
+| N / K | Activation fills fixed → rolling | Final campaign counter fixed → rolling | Matching outputs |
+|---|---:|---:|---:|
+| 32 / 80 | 960 → 720 | 23,074 → 21,601 | 776 |
+| 56 / 80 | 1,440 → 720 | 35,175 → 30,723 | 1,352 |
+| 56 / 352 | 8,896 → 7,552 | 160,789 → 152,458 | 1,352 |
+
+The first two cases reduce activation traffic by 25% and 50%, without adding
+SRAM; campaign cycles fall 6.38% and 12.66%. Deep rows still exceed a window and
+remain a retention limitation. Counters include faults, aborts and drain; these
+are modeled-service campaign results, not whole-model latency or energy claims.
+
+Matched synthesis at ASAP7 TT, 1 ns costs 357.783 um² for fixed pages and
+376.031 um² for rolling activation (+18.248 um², 5.10%). Pre-layout WNS is
+-0.3522 / -0.3179 ns, so both fail before physical repair. A rolling-scheduler
+route with CTS12, fanout16 and 0.32 ns transition limit is running. These new
+same-source parameter comparisons should not be conflated with historical
+fixed-page snapshots that have slightly different synthesis mapping.
+
+All 53 focused tests pass; scheduler tests cover both policies, unaligned object
+bases, exact tails, legal 2^32 end, all planes, input mutation, stalls, malformed
+responses and cancellation. Standalone lint is clean. Six loaded-program runs
+pass the functional Device oracle and protocol checks; source hashes match.
+Evidence: `results/rtl/a3_g2_rolling_activation_comparison.json`, plus
+`runtime_auxiliary_scheduler/prelayout_rolling{0,1}_1ns.json` and its shared source
+snapshot. The prior column-pass comparison references archived records under
+`results/rtl/activation_fixed_page_baseline/`, preserving its original digests.
+Production descriptor mapping, wider retention, integrated physical closure and
+all-target optimization remain open.

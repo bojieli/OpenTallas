@@ -18,6 +18,7 @@ parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
 parser.add_argument("--cols", type=int, default=None)
+parser.add_argument("--activation-miss-aligned", action="store_true")
 args = parser.parse_args()
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
@@ -43,6 +44,8 @@ if depth != 80:
     record_name += f"_depth{depth}"
 if args.cols is not None:
     record_name += f"_cols{cols}"
+if args.activation_miss_aligned:
+    record_name += "_rolling_activation"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -147,7 +150,10 @@ for row in range(rows):
     for pass_base in range(0, cols // 8, 3):
         for k in range(depth):
             page = ((row * depth + k) // 256) * 256
-            if page != resident_page:
+            address = row * depth + k
+            hit = resident_page is not None and resident_page <= address < min(resident_page + 256, rows * depth)
+            if not hit:
+                page = address if args.activation_miss_aligned else page
                 expected_activation_fills += min(256, rows * depth - page)
                 resident_page = page
 (OUT / "program_config.svh").write_text(
@@ -204,6 +210,7 @@ cmd = [
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
     f"-GWEIGHT_RESPONSE_GAP={args.weight_response_gap}",
+    f"-GACTIVATION_MISS_ALIGNED={int(args.activation_miss_aligned)}",
     "--top-module",
     "tb_a3_g2_runtime_program",
     "-I" + str(OUT),
@@ -233,6 +240,7 @@ result = {
     "status": "pass",
     "weight_row_reuse": not args.no_weight_row_reuse,
     "weight_response_gap": args.weight_response_gap,
+    "activation_miss_aligned": args.activation_miss_aligned,
     "output_backpressure": args.output_backpressure,
     "auxiliary_sram_windows": args.auxiliary_windows,
     "rtl_auxiliary_scheduler": args.auxiliary_windows,

@@ -3,6 +3,7 @@
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter integer WEIGHT_RESPONSE_GAP=1;
+ parameter bit ACTIVATION_MISS_ALIGNED=0;
  `include "program_config.svh"
  localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=DEPTH*LOCAL_OUTPUTS;
  reg [127:0] program_image[0:PROGRAM_WORDS-1],descriptor_image[0:DESCRIPTOR_WORDS-1],weight_image[0:WEIGHT_WORDS-1];
@@ -83,7 +84,7 @@ module tb_a3_g2_runtime_program;
  integer first_mem_fills=0,first_mem_requests=0,first_weight_fills=0;
  // RTL owns window planning/fill publication. The fixture supplies only the
  // external burst transport and admitted plane bounds in service-word units.
- ot_a3_auxiliary_window_scheduler auxiliary_manager(
+ ot_a3_auxiliary_window_scheduler #(.ACTIVATION_MISS_ALIGNED(ACTIVATION_MISS_ALIGNED)) auxiliary_manager(
   .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
   .command_valid(SRAM_AUX && auxiliary_request_valid && !manager_active),.command_ready(manager_ready),
   .command_generation(auxiliary_request_generation),.command_bases(96'd0),

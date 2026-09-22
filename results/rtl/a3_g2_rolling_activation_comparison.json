@@ -1,0 +1,59 @@
+{
+  "scope": "Matched fixed/rolling activation windows in real loaded G2 BF16 campaigns, modeled external memory; no whole-model speed or energy claim",
+  "pairs": [
+    {
+      "depth": 80,
+      "cols": 32,
+      "fixed": {
+        "record": "a3_g2_runtime_byte_transport_cols32.json",
+        "sha256": "ca96aa676b1833b3d9c196cd4c8d85d5060648bb4973f6d6a13893ab006ddff2",
+        "activation_fills": 960,
+        "final_completion_counter": 23074,
+        "accepted_outputs": 776
+      },
+      "rolling": {
+        "record": "a3_g2_runtime_byte_transport_cols32_rolling_activation.json",
+        "sha256": "2d479a548537e23efdafd7334cf844db6cef41a993f5a72f454c6fdbd6c1bcef",
+        "activation_fills": 720,
+        "final_completion_counter": 21601,
+        "accepted_outputs": 776
+      }
+    },
+    {
+      "depth": 80,
+      "cols": 56,
+      "fixed": {
+        "record": "a3_g2_runtime_byte_transport_cols56.json",
+        "sha256": "e8bc4bae973d0052c9e7b24244fb048ec49ff93d98a9e57916b0354eb2046a75",
+        "activation_fills": 1440,
+        "final_completion_counter": 35175,
+        "accepted_outputs": 1352
+      },
+      "rolling": {
+        "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation.json",
+        "sha256": "0b12e578a1307a8d3e0cf1e260602e831313b9326f78a87ce970ea8c91fa403c",
+        "activation_fills": 720,
+        "final_completion_counter": 30723,
+        "accepted_outputs": 1352
+      }
+    },
+    {
+      "depth": 352,
+      "cols": 56,
+      "fixed": {
+        "record": "a3_g2_runtime_byte_transport_depth352_cols56.json",
+        "sha256": "b6d4d4170e0c0bf435918455c1a34aa0184cf9da0f39fede34697966e6d8da1b",
+        "activation_fills": 8896,
+        "final_completion_counter": 160789,
+        "accepted_outputs": 1352
+      },
+      "rolling": {
+        "record": "a3_g2_runtime_byte_transport_depth352_cols56_rolling_activation.json",
+        "sha256": "49c284b28165f5bd1c76e065205891a75b562887f89b65a4f75d767fe0b33dac",
+        "activation_fills": 7552,
+        "final_completion_counter": 152458,
+        "accepted_outputs": 1352
+      }
+    }
+  ]
+}

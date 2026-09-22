@@ -9,9 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
-def test_auxiliary_window_scheduler(tmp_path):
+@pytest.mark.parametrize("rolling", [0, 1])
+def test_auxiliary_window_scheduler(tmp_path, rolling):
     bench = tmp_path / "tb.sv"
     bench.write_text("""module tb;
+parameter bit ROLLING=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,request_valid=0,window_ready=0,fill_ready=0,fetch_ready=0,response_valid=0;
 reg [31:0] command_generation=7,request_generation=7;
@@ -24,7 +26,7 @@ wire [1:0] window_plane,fill_plane,fetch_plane;
 wire [31:0] window_generation,window_base,fill_generation,fetch_address;
 wire [8:0] window_words,fill_index,fetch_words;
 wire [63:0] fill_data,fetch_tag;
-ot_a3_auxiliary_window_scheduler dut(.*);
+ot_a3_auxiliary_window_scheduler #(.ACTIVATION_MISS_ALIGNED(ROLLING)) dut(.*);
 integer bursts=0,beats=0;
 reg [63:0] saved_tag;
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
@@ -73,7 +75,7 @@ initial begin
  command({32'hfffffff0,32'd700,32'd3},{32'd16,32'd1,32'd513});
  // Pages start at the object's base, not at global 256-word boundaries.
  plan(0,3,3,256);fill(256);
- plan(0,258,3,256);if(saved_tag!=64'h700000001)$fatal(1,"burst serial did not advance");fill(256);
+ plan(0,258,ROLLING?258:3,256);if(saved_tag!=64'h700000001)$fatal(1,"burst serial did not advance");fill(256);
  plan(0,259,259,256);fill(256);
  plan(0,515,515,1);fill(1);
  plan(1,700,700,1);fill(1);
@@ -111,6 +113,7 @@ endmodule
             "-g2012",
             "-s",
             "tb",
+            f"-Ptb.ROLLING={rolling}",
             "-o",
             str(image),
             str(ROOT / "rtl/abi3/ot_a3_auxiliary_window_scheduler.sv"),
