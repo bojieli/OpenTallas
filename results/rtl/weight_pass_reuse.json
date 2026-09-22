@@ -62,8 +62,9 @@
   "counter_basis": "Each listed fill and issue count is enforced by simulation assertions, with data identity checked at every consumed word; both reuse enabled and disabled pass",
   "lint": "Verilator 5.050 --lint-only --Wall: pass",
   "physical": {
-    "status": "running",
-    "record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_cts12_1ns.json"
+    "status": "not_met: setup -0.129225 ns and one fanout violation",
+    "record": "results/physical_abi3/asap7/weight_pass_scheduler/pnr_cts12_1ns.json",
+    "audit": "results/physical_abi3/asap7/weight_pass_scheduler/initial_route_audit.json"
   },
   "sources": [
     {

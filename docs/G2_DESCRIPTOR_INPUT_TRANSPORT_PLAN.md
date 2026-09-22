@@ -665,3 +665,14 @@ qualifies the pre-compact transport configuration only. Source snapshots are
 retained in `bf16_weight_transport/compact_fetch/`; all source and seven artifact
 hashes match `line_extent_slew10_route_audit.json`. No extrapolated frequency or
 current compact-mode closure is claimed.
+
+## Initial pass scheduler route identifies handoff path
+
+The wrapper plus inner scheduler completes its first 1 ns ASAP7 TT CTS12 route
+at 1,377.010 um² cell area, setup -0.129225 ns, hold +0.0524116 ns and one fanout
+violation. This fails acceptance. Current-source and seven retained artifact
+hashes are verified in `weight_pass_scheduler/initial_route_audit.json`.
+The critical path runs from inner replay selection through tile extent to
+`issue_base[19]`. Next work is a registered tile handoff to separate extent
+selection from logical issue-address advancement, including correct stall,
+pass-transition and final-completion ownership. The target remains 1 ns.
