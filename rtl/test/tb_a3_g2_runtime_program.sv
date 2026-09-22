@@ -54,9 +54,12 @@ module tb_a3_g2_runtime_program;
  wire [255:0] object_write_data;
  wire object_write_fp32;
  reg [31:0] ack_due[0:7],ack_generation[0:7];
+ reg ack_fault[0:7];
  reg [2:0] ack_head=0,ack_tail=0;
+ integer late_write_faults=0;
  reg [3:0] ack_count=0;
- wire object_ack=ack_count!=0 && cycles>=ack_due[ack_head];
+ wire object_ack=ack_count!=0 && cycles>=ack_due[ack_head] &&
+  (!ack_fault[ack_head] || dut.runtime_operands.lifetime.state==2);
  wire [31:0] object_ack_generation=ack_generation[ack_head];
  wire object_request_fire=object_write_valid && object_write_ready;
  wire object_ack_fire=object_ack && object_response_ready;
@@ -76,7 +79,7 @@ module tb_a3_g2_runtime_program;
   .write_valid(object_write_valid),.write_ready(object_write_ready),
   .write_generation(object_write_generation),.write_object(object_write_object),.write_mask(object_write_mask),
   .write_offset(object_write_offset),.write_data(object_write_data),.write_fp32(object_write_fp32),
-  .response_valid(object_ack),.response_ready(object_response_ready),.response_generation(object_ack_generation),.response_error(1'b0),
+  .response_valid(object_ack),.response_ready(object_response_ready),.response_generation(object_ack_generation),.response_error(ack_fault[ack_head]),
   .drained(writer_drained),.protocol_error(writer_error));
  // Behavioral object memory accepts complete checked beats and delays commit ack.
  // Golden comparison is independent of the writer's incremental address cursor.
@@ -87,11 +90,13 @@ module tb_a3_g2_runtime_program;
    if(object_write_valid && object_write_ready)begin
     if(object_write_object!=OUTPUT_OBJECT || object_write_generation!=runtime_generation || object_write_fp32)
      $fatal(1,"object write identity");
+    ack_fault[ack_tail]<=0;
     for(integer i=0;i<8;i=i+1)if(object_write_mask[i])begin
      if(object_write_offset[64*i+:64]>=2*ROWS*LOGICAL_COLS || object_write_offset[64*i+:64]%2!=0)
       $fatal(1,"object write bounds/alignment");
      if(object_seen[object_write_offset[64*i+:64]/2])$fatal(1,"duplicate object write");
      object_seen[object_write_offset[64*i+:64]/2]<=1;
+     if(phase==6 && object_write_offset[64*i+:64]==2*(ROWS*LOGICAL_COLS-1))ack_fault[ack_tail]<=1;
      output_memory[object_write_offset[64*i+:64]]<=object_write_data[32*i+:8];
      output_memory[object_write_offset[64*i+:64]+1]<=object_write_data[32*i+8+:8];
      if(object_write_data[32*i+:32]!=expected[(object_write_offset[64*i+:64]/(2*LOGICAL_COLS))*COLS+(object_write_offset[64*i+:64]/2)%LOGICAL_COLS])
@@ -104,6 +109,11 @@ module tb_a3_g2_runtime_program;
     2'b01:ack_count<=ack_count-1'b1;
     default:begin end
    endcase
+   if(object_ack_fire && ack_fault[ack_head])begin
+    if(dut.runtime_operands.lifetime.state!=2 || dut.core_busy || array_done)
+     $fatal(1,"write fault not exercised after arithmetic completion");
+    late_write_faults<=late_write_faults+1;
+   end
    if(object_ack_fire)begin ack_head<=ack_head+1'b1;object_acks<=object_acks+1;end
    if(array_done && OBJECT_WRITES && (!writer_drained || object_ack || ack_count!=0 || object_writes!=object_acks))
     $fatal(1,"completion bypassed actual write acknowledgements");
@@ -254,7 +264,7 @@ module tb_a3_g2_runtime_program;
      if(part_addr[32*i+:32]>=LOCAL_OUTPUTS)$fatal(1,"wrong output address");
      if(seen[8*part_addr[32*i+:32]+i])$fatal(1,"duplicate output");
      seen[8*part_addr[32*i+:32]+i]<=1;
-     if((phase!=1 && phase!=4) || part_data[32*i+:32]!=expected[8*part_addr[32*i+:32]+i])$fatal(1,"wrong result or write after abort");
+     if((phase!=1 && phase!=4 && phase!=6) || part_data[32*i+:32]!=expected[8*part_addr[32*i+:32]+i])$fatal(1,"wrong result or write after abort");
     end
    end
    if(host_write_refused)$fatal(1,"host write refused");
@@ -338,6 +348,16 @@ module tb_a3_g2_runtime_program;
    if(seen!=0)$fatal(1,"auxiliary fault wrote output");
    phase=1;launch();drain(0);
    if(seen!=expected_seen)$fatal(1,"auxiliary fault recovery lost outputs");
+  end
+  if(OBJECT_WRITES)begin
+   // Fail the final write acknowledgement only after compute enters drain.
+   // The fault must traverse writer -> lifetime -> adapter -> sequencer.
+   phase=6;launch();drain(8'hfe);
+   if(late_write_faults!=1 || !writer_drained || object_writes!=object_acks)
+    $fatal(1,"late write fault did not drain precisely");
+   phase=1;launch();drain(0);
+   if(seen!=expected_seen)$fatal(1,"late write fault recovery lost output");
+   $display("late write faults=%0d recovered=1",late_write_faults);
   end
   if(OBJECT_WRITES && (object_writes==0 || object_writes!=object_acks))$fatal(1,"writer unexercised");
   $display("object writes=%0d acknowledgements=%0d",object_writes,object_acks);

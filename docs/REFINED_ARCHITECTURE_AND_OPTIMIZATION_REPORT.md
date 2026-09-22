@@ -2271,3 +2271,31 @@ credit exhaustion and acknowledgement/error drain. Loaded N53 remains at
 The current loaded record is source-hash verified; the prior depth-four record
 is archived under `results/rtl/before_writer_captured_bound/`. Deployment object
 binding and all-target integration/physical coverage remain outstanding.
+
+
+## Verify late write failure through the loaded G2 completion path
+
+The loaded object-write campaign now injects a bus error on the final output
+acknowledgement only after arithmetic is idle and the runtime lifetime controller
+has entered DRAIN. The error traverses the actual writer, lifetime, issue adapter
+and sequencer and must produce an ENGINE trap. A fresh loaded operation then
+must complete and match the golden output bytes. Completion checks continue to
+require zero outstanding memory acknowledgements and an empty writer.
+
+Both one-credit and four-credit configurations pass the expanded campaign:
+253 writes and acknowledgements, 1,916 matching output elements and one exercised
+late error with successful recovery. Campaign cycles are 36,602 and 36,589;
+output-stall counts are 2,641 and 1,284 respectively. These counts include two
+additional operations and are not directly comparable with the earlier
+25,101/25,087-cycle campaigns. The earlier records are archived under
+`results/rtl/before_late_write_fault_campaign/`.
+
+An isolated mutation build removes only the lifetime controller's DRAIN
+service_fault capture, reproducing the pre-fix behavior without modifying active
+RTL. It passes the preceding campaign phases and fails at the final-write error
+with `wrong completion error`. This proves the loaded regression detects the
+late-error propagation bug rather than merely exercising an unrelated fault.
+The mutation record includes active-source hashes, mutant hash, baseline-record
+hash and failing output: `results/rtl/a3_g2_late_write_fault_mutation.json`.
+Seventeen focused tests also pass. No new timing or latency optimization is
+claimed from expanded verification; current writer routing remains live.
