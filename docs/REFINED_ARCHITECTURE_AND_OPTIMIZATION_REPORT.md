@@ -1358,3 +1358,39 @@ elaboration failure. Two reproducible pytest cases pass the 673-division and
 35-matrix equivalence suites. Evidence and source hashes are retained in
 `results/physical_abi3/asap7/fp32_div_round_stage/`. Physical results remain
 pending, and no GHz claim is made for this divider.
+
+
+## Bounded divider powers recover pipeline area
+
+The pipelined divider now stores finite operand powers in signed 9-bit
+registers (-149..104), the rounding midpoint power in signed 9 bits
+(-150..103), and product powers in signed 10 bits (conservative bound
+-299..208). Explicit signed extension precedes the bounded midpoint/divisor
+addition. Function calls sign-extend back to integer comparison arithmetic.
+The numerical algorithm, phase transitions and latency are unchanged.
+
+Both equivalence tests pass: 673 divider cases and 35 Sinkhorn matrices against
+the certifying implementations. Matched synthesis at ASAP7 TT, 1 ns reduces
+area from 1,163.456 to 1,117.644 um² (3.94%); sequential area is 120.226 um².
+Pre-layout setup WNS improves from -1.2229 to -1.1291 ns but still fails. The
+new area is slightly below the 1,121.627 um² pre-rounding-stage baseline.
+A matched bounded-power route at 2 ns is running alongside the earlier baseline
+and wide-power rounding-stage routes. No tighter operating clock or net elapsed-
+time improvement is claimed. Evidence: `fp32_div_round_stage/bounded_power_comparison.json`
+under `results/physical_abi3/asap7/`.
+
+## Additional historical containing-service routes
+
+Two source-recorded runtime-service revisions have completed at ASAP7 TT,
+1 ns, CTS12 and two SRAM macros. FIFO absolute-address placement gives
+3,791.270 um² standard-cell area, -0.115214 ns setup WNS (46 violations), and
++0.0197887 ns hold WNS. The subsequent bounded-extent rewrite gives
+3,813.310 um², -0.0861517 ns setup WNS (19 violations), and +0.0259038 ns hold
+WNS. Both have zero hold, slew, capacitance, fanout, DRC and antenna violations.
+All retained artifact hashes match. The worst paths still end at the auxiliary
+weight-scale service output, from cursor K state; both predate the absolute
+scale cursor/local-control/three-slot/join revisions. These are timing failures,
+not closure of current RTL. Compared with the original replay service's
+3,872.080 um² and -0.109286 ns WNS, area improves but timing does not improve
+monotonically. Evidence: `runtime_operand_service/historical_revision_comparison.json`
+and retained route artifacts under `results/physical_abi3/asap7/`.

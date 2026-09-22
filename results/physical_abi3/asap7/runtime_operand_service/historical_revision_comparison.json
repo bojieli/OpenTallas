@@ -1,0 +1,188 @@
+{
+  "scope": "ASAP7 TT 1 ns CTS12 fanout16 two-SRAM historical service revisions. All fail routed setup. Later cursor/join/depth3 changes not covered.",
+  "records": [
+    {
+      "record": "pnr_replay_cts12_1ns.json",
+      "sha256": "bec10d14a429428b72ef1a7a238e7bc0251d2ff31d14e39cc2f6d565a8985e9a",
+      "standard_cell_area_um2": 3872.08,
+      "setup_wns_ns": -0.10928600000000001,
+      "setup_violations": 19,
+      "hold_wns_ns": 0.0218128,
+      "macro_count": 2,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "ee02ee8557beefba1f0cbdfa8f700aa204e395885cc040f308fc2c72b8c9c5a7",
+          "size_bytes": 10811
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
+          "size_bytes": 4762
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+          "size_bytes": 4111
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "019ec5b6cde0026a0d1e7a2f3dfea85b087ff2933d1e2a9bdd0761500b29fcdf",
+          "size_bytes": 6593
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "85fb7b3fc3b4eba2f75cb0570792297c0439b7c9081222b0732705562929f3d0",
+          "size_bytes": 6075
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ]
+    },
+    {
+      "record": "pnr_absolute_address_cts12_1ns.json",
+      "sha256": "150dd12d780a477e2e3c0d523aafe68a36120c974ede48e82480dddab9acbb76",
+      "standard_cell_area_um2": 3791.27,
+      "setup_wns_ns": -0.115214,
+      "setup_violations": 46,
+      "hold_wns_ns": 0.0197887,
+      "macro_count": 2,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "a6ac39a2c311474e53b94815bf2998b746de3a8ca7f6cd303491553c64080b1d",
+          "size_bytes": 10788
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
+          "size_bytes": 4762
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+          "size_bytes": 4111
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "78b788de991cc5ac061f96348fc1d7c9362d05f7a3e48fdaf6f652e11bac6803",
+          "size_bytes": 7432
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ]
+    },
+    {
+      "record": "pnr_extent_cts12_1ns.json",
+      "sha256": "157c02b9b770f9cdc645843c2702b27b0328f9fe33d17d07cfd6fe1f9be3a30f",
+      "standard_cell_area_um2": 3813.31,
+      "setup_wns_ns": -0.08615170000000001,
+      "setup_violations": 19,
+      "hold_wns_ns": 0.0259038,
+      "macro_count": 2,
+      "source_manifest": [
+        {
+          "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+          "sha256": "b4e89524a14c0266b34e76488cafa7ba283d326bf5e803544bfc00f61255ed60",
+          "size_bytes": 10784
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+          "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+          "size_bytes": 5316
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+          "sha256": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
+          "size_bytes": 4762
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+          "sha256": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+          "size_bytes": 4111
+        },
+        {
+          "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+          "sha256": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+          "size_bytes": 3228
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+          "sha256": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+          "size_bytes": 7661
+        },
+        {
+          "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+          "sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+          "size_bytes": 6422
+        },
+        {
+          "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+          "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+          "size_bytes": 4073
+        },
+        {
+          "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+          "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+          "size_bytes": 4672
+        },
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+          "size_bytes": 8528
+        }
+      ]
+    }
+  ]
+}
