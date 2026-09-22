@@ -29,8 +29,9 @@
   ],
   "lint": "Verilator 5.050 --lint-only --Wall with PASS_FIRST=1 COMPACT_PASS_REUSE=1: pass",
   "physical": {
-    "status": "running",
-    "record": "results/physical_abi3/asap7/bf16_weight_transport/pnr_compact_pass_slew10_cts12_1ns.json"
+    "status": "pass at tested 1 ns; current-source and artifact hashes verified",
+    "record": "results/physical_abi3/asap7/bf16_weight_transport/pnr_compact_pass_slew10_cts12_1ns.json",
+    "audit": "results/physical_abi3/asap7/bf16_weight_transport/compact_pass_route_audit.json"
   },
   "sources": [
     {

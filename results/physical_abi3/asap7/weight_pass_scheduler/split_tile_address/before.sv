@@ -109,12 +109,6 @@ module ot_a3_weight_tile_scheduler #(
     wire [31:0] advanced_stream_base={
         stream_low_sum[10]?stream_high_next:stream_base[31:10],
         stream_low_sum[9:0]};
-    // Apply the same bounded carry split to the resident bank identity.
-    // The measured replay/extent path must not traverse a full-width adder.
-    wire [10:0] tile_low_sum={1'b0,tile_base[9:0]}+{1'b0,tile_words};
-    wire [21:0] tile_high_next=tile_base[31:10]+22'd1;
-    wire [31:0] advanced_tile_base={
-        tile_low_sum[10]?tile_high_next:tile_base[31:10],tile_low_sum[9:0]};
     always @(posedge clk)begin
         if(command_fire)begin
             generation<=command_generation;
@@ -138,7 +132,7 @@ module ot_a3_weight_tile_scheduler #(
                 if(replay && row_left=={1'b0,tile_words})begin
                     tile_base<=row_base;row_left<=row_words;tile_bank<=0;
                 end else begin
-                    tile_base<=advanced_tile_base;tile_bank<=!tile_bank;
+                    tile_base<=tile_base+{22'b0,tile_words};tile_bank<=!tile_bank;
                     if(replay)row_left<=row_left-{1'b0,tile_words};
                 end
             end

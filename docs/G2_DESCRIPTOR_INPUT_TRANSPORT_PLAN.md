@@ -764,3 +764,31 @@ hold +0.0528268 ns with one fanout violation at 1 ns. It remains unclosed. Compa
 with the initial route, setup improves 23.4 ps while area rises 3.45%. The critical
 path now runs from inner replay to inner tile-base advancement. Source/artifact
 verification is retained in `weight_pass_scheduler/tile_handoff_route_audit.json`.
+
+## Compact transport closure and bounded tile increment
+
+The compact-pass containing weight transport now passes all reported checks at
+ASAP7 TT 1 ns, CTS12 with 10% slew margin: 6,324.760 um² cell area, setup
++0.0728253 ns and hold +0.0320716 ns. Source and seven retained artifact hashes
+are verified in `bf16_weight_transport/compact_pass_route_audit.json`.
+This qualifies the compact input transport block, not integrated G2.
+
+The next scheduler candidate applies bounded carry splitting to tile-base
+advancement: a ten-bit low sum and parallel upper increment replace the full
+32-bit adder after replay extent selection. It adds no cycles. Ninety-three
+bank, replay and runtime-composition tests pass, with strict Verilator lint.
+The 1 ns CTS12 route is active. The pre-change tile scheduler is retained in
+`weight_pass_scheduler/split_tile_address/before.sv`, also binding the integrated
+G2 launch and the earlier scheduler routes. Timing benefit remains unproven.
+
+Matched current-source M6/N53/K80 loaded campaigns also pass both schedules,
+with 2,234 outputs and 295 write acknowledgements each. Weight bytes remain
+17,596; activation fills rise from 720 to 1,440 with pass-first order. Campaign
+cycles change from 105,552 to 99,777 (5.47% fewer), while the cumulative first
+successful completion counters are 13,734 and 13,600. These are bench counters;
+abort positions and resulting work differ, so the aggregate reduction is not
+an inference-speedup claim. Evidence:
+`results/rtl/g2_pass_first_resident_shape_comparison.json`.
+This confirms the need to qualify locality across shapes and memory-service
+rates before selecting a default policy. Larger-than-pass-capacity behavior,
+broader formats/targets and complete current-source physical qualification remain.
