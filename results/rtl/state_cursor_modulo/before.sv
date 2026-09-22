@@ -172,22 +172,14 @@ module ot_a3_state_controller
     // A25: the ring head, which is the slot the next absolute position writes.
     wire [32:0] apply_sum = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_span};
     wire [32:0] apply_capacity = {1'b0, slot_capacity[apply_slot]};
-    // Ring commits are infrequent transaction-drain work. Keep a general
-    // 33-by-32 remainder off the common control clock: one restoring step
-    // per cycle, with exact mask bypass for power-of-two capacities.
-    reg [1:0] modulo_state;
-    reg [32:0] modulo_shift;
-    reg [31:0] modulo_rem, modulo_den;
-    reg [5:0] modulo_left;
-    wire [32:0] modulo_trial = {modulo_rem, modulo_shift[32]};
-    wire [31:0] modulo_sub = modulo_trial[31:0] - modulo_den;
-    wire [31:0] modulo_next = modulo_trial >= {1'b0, modulo_den}
-        ? modulo_sub : modulo_trial[31:0];
-    wire [31:0] capacity_mask = apply_capacity[31:0] - 32'd1;
-    wire capacity_pow2 = (apply_capacity[31:0] & capacity_mask) == 0;
-    wire needs_modulo = apply_saturating && apply_capacity != 0 && !capacity_pow2;
-    wire [31:0] apply_wrapped = apply_capacity == 0 ? apply_end[31:0]
-        : capacity_pow2 ? (apply_sum[31:0] & capacity_mask) : modulo_rem;
+    // A remainder modulo a 32-bit capacity is a 32-bit value; the extra bit
+    // the 33-bit divide carries is provably zero and is not read.
+    /* verilator lint_off UNUSED */
+    wire [32:0] apply_remainder = apply_sum % apply_capacity;
+    /* verilator lint_on UNUSED */
+    wire [31:0] apply_wrapped =
+        (apply_saturating && (apply_capacity != 33'd0))
+            ? apply_remainder[31:0] : apply_end[31:0];
 
     integer i;
     always @(posedge clk or negedge rst_n) begin
@@ -207,8 +199,6 @@ module ot_a3_state_controller
             slot_open <= {SLOTS{1'b0}};
             pending_count <= {(SLOT_W+1){1'b0}};
             apply_index <= {SLOT_W{1'b0}};
-            modulo_state <= 0; modulo_shift <= 0; modulo_rem <= 0;
-            modulo_den <= 0; modulo_left <= 0;
             op_done <= 1'b0;
             op_ok <= 1'b0;
             op_trap_class <= ot_a3_pkg::A3_TRAP_NONE;
@@ -228,7 +218,6 @@ module ot_a3_state_controller
             apply_done <= 1'b0;
 
             if (clear) begin
-                modulo_state <= 0;
                 slot_used <= {SLOTS{1'b0}};
                 slot_open <= {SLOTS{1'b0}};
                 pending_count <= {(SLOT_W+1){1'b0}};
@@ -243,7 +232,6 @@ module ot_a3_state_controller
                 count_rows_committed <= 32'd0;
                 count_bytes_written <= 64'd0;
             end else if (discard_all) begin
-                modulo_state <= 0;
                 // A trap poisons the whole transaction: nothing staged is
                 // applied and every open prepare is released.  Releasing the
                 // whole declared set -- not only the slots that reached a
@@ -256,7 +244,6 @@ module ot_a3_state_controller
                 apply_done <= 1'b1;
                 count_discards <= count_discards + session_state_count;
             end else if (commit_all) begin
-                modulo_state <= 0;
                 if (pending_count == {(SLOT_W+1){1'b0}}) begin
                     apply_done <= 1'b1;
                 end else begin
@@ -264,19 +251,6 @@ module ot_a3_state_controller
                     apply_index <= {SLOT_W{1'b0}};
                 end
             end else if (apply_busy) begin
-                if (modulo_state == 1) begin
-                    modulo_rem <= modulo_next;
-                    modulo_shift <= {modulo_shift[31:0], 1'b0};
-                    modulo_left <= modulo_left - 1'b1;
-                    if (modulo_left == 1) modulo_state <= 2;
-                end else if (needs_modulo && modulo_state == 0) begin
-                    modulo_shift <= apply_sum;
-                    modulo_rem <= 0;
-                    modulo_den <= apply_capacity[31:0];
-                    modulo_left <= 33;
-                    modulo_state <= 1;
-                end else begin
-                modulo_state <= 0;
                 slot_cursor[apply_slot] <=
                     apply_saturating ? apply_wrapped : apply_end[31:0];
                 slot_generation[apply_slot] <= slot_generation[apply_slot] + 32'd1;
@@ -296,7 +270,6 @@ module ot_a3_state_controller
                     pending_count <= {(SLOT_W+1){1'b0}};
                 end else begin
                     apply_index <= apply_index + 1'b1;
-                end
                 end
             end else if (op_valid) begin
                 op_done <= 1'b1;

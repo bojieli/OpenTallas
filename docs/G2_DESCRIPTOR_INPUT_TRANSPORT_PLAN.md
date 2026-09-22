@@ -982,3 +982,34 @@ outputs and 295 write acknowledgements, including faults, abort/restart and
 drain. It uses 3,598 first-operation weight fills and 109,604 weight bytes.
 The fresh 1 ns CTS12 scheduler route is running; current-source physical
 closure remains pending.
+
+## Broader control-path bottleneck: transactional ring cursor
+
+The refreshed physical-record audit (`current_evidence_after_replay.json`)
+records 231 ASAP7 routes, of which 141 pass routed checks and only 57 also
+match sources and retained artifacts at that audit checkpoint. This counts
+records/configurations, not unique targets or complete hierarchy coverage.
+The state-controller edit below subsequently makes its containing records
+historical; regenerate the audit for any future current-source claim.
+
+The retained microsequencer DEP_CHECK_STAGES=1 route at 2.6 ns misses setup
+by 10.7579 ns. Its worst register path runs from `apply_index` through the
+state controller's general 33-bit modulo into a state cursor. The new
+implementation uses 33 bounded restoring steps under the existing apply-busy
+contract. Power-of-two capacities use an exact mask and retain one-cycle
+apply; general rings cost 35 apply cycles, 34 more than before. Non-ring
+policies retain their one-cycle path. This removes a long combinational
+division from the common clock; timing/area benefit still requires measurement.
+
+255 Python-integer-oracle cases cover capacities zero/one, powers of two,
+nonpowers, large spans and 33-bit sums. Tests also cover every one of 34
+pre-publication cancellation positions, restart, clear, sequential staged
+commits to the same slot and non-ring accounting. The full ABI control-plane
+campaign passes Icarus and Verilator: 65 cases, 53 programs, 185 issues,
+460 views, 11 traps and 4,555 checks per simulator. Evidence is under
+`results/rtl/state_cursor_modulo/` and `abi3_state_modulo_campaign.json`.
+
+Matched before/after state-controller physical runs at 1 ns CTS12 are active.
+The earlier source is retained; no frequency or area gain is claimed yet.
+Containing microsequencer and G2 requalification is still required after this
+change. The general-ring apply latency must be charged to transaction drain.

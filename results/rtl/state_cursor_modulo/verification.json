@@ -1,0 +1,32 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Replace combinational ring cursor modulo with bounded sequential restoring reduction; common power-of-two and non-ring apply remain one cycle",
+  "arithmetic_cases": 255,
+  "cancel_positions": 34,
+  "additional_checks": [
+    "REQUEST_SPAN accounting and one-cycle apply",
+    "UNSTAGED generation advance without cursor/bytes change",
+    "clear in flight",
+    "multiple staged commits to same slot"
+  ],
+  "apply_cycles": {
+    "power_of_two": 1,
+    "non_ring": 1,
+    "general_ring": 35
+  },
+  "sources": {
+    "rtl/abi3/ot_a3_state_controller.sv": "f5640be1d6bef809fb31f15c45bde568efe11b4fe2a76e4ea8e7b793c8a581df",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "tests/test_state_cursor_modulo.py": "2689515c3553f7d33b16cf4e61b8e600d10c135d967e508f7165b0e7c9bb4054"
+  },
+  "integration_campaign": "results/rtl/abi3_state_modulo_campaign.json",
+  "integration_checks_per_simulator": 4555,
+  "simulators": [
+    "Icarus 11",
+    "Verilator 5.050"
+  ],
+  "physical_candidates": [
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns.json",
+    "results/physical_abi3/asap7/state_controller/pnr_combinational_modulo_cts12_1ns.json"
+  ]
+}
