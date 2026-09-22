@@ -6,6 +6,7 @@ module tb_a3_g2_runtime_program;
  reg [127:0] program_image[0:PROGRAM_WORDS-1],descriptor_image[0:DESCRIPTOR_WORDS-1],weight_image[0:WEIGHT_WORDS-1];
  reg [31:0] expected[0:ROWS*COLS-1];
  reg [63:0] activation_image[0:80*ROWS-1],adata=0;
+ reg [7:0] activation_bytes[0:160*ROWS-1];
  reg host_we=0;reg [2:0] host_sel=0;reg [31:0] host_row=0;reg [5:0] host_lane=0;reg [127:0] host_wdata=0;
  wire host_ready,host_write_refused,done,complete,trapped;
  wire [15:0] trap_class;wire [31:0] count_issued,count_retired;
@@ -43,6 +44,31 @@ module tb_a3_g2_runtime_program;
  wire mem_window_valid,mem_fill_valid,mem_window_ready,mem_fill_ready;
  wire [63:0] mem_fill_data;
  wire manager_active,manager_error,manager_ready,fetch_valid,fetch_response_ready;
+ wire mapper_ready,mapper_command_ready,mapper_error,byte_valid;
+ wire [31:0] byte_object;
+ wire [63:0] byte_tag,byte_offset;
+ wire [11:0] byte_count;
+ wire [8:0] byte_words;
+ wire [1:0] byte_shift;
+ reg mapper_started=0;
+ wire byte_ready=!fetch_active && cycles%5!=0;
+ wire [31:0] response_byte_address=saved_fetch_address+{22'd0,fetch_index,1'b0};
+ wire [63:0] transport_data={48'd0,activation_bytes[response_byte_address+1],activation_bytes[response_byte_address]};
+ always @(posedge clk)begin
+  if(!rst_n || runtime_transport_cancel)mapper_started<=0;
+  else if(SRAM_AUX && auxiliary_request_valid && mapper_command_ready)mapper_started<=1;
+ end
+ ot_a3_operand_byte_mapper byte_mapper(
+  .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
+  .command_valid(SRAM_AUX && auxiliary_request_valid && !mapper_started),.command_ready(mapper_command_ready),
+  .command_generation(auxiliary_request_generation),.command_objects({64'd0,ACTIVATION_OBJECT}),
+  .command_word_bases(96'd0),.command_byte_bases(192'd0),
+  .command_object_bytes({128'd0,64'(160*ROWS)}),.command_word_shifts(6'd1),
+  .request_valid(fetch_valid),.request_ready(mapper_ready),.request_tag(fetch_tag),
+  .request_plane(fetch_plane),.request_address(fetch_address),.request_words(fetch_words),
+  .burst_valid(byte_valid),.burst_ready(byte_ready),.burst_tag(byte_tag),.burst_object(byte_object),
+  .burst_offset(byte_offset),.burst_bytes(byte_count),.burst_words(byte_words),.burst_shift(byte_shift),
+  .protocol_error(mapper_error));
  wire [63:0] fetch_tag;
  wire [1:0] fetch_plane;
  wire [31:0] fetch_address;
@@ -66,11 +92,11 @@ module tb_a3_g2_runtime_program;
   .window_generation(mem_window_generation),.window_base(mem_base),.window_words(mem_extent),
   .fill_valid(mem_fill_valid),.fill_ready(mem_fill_ready),.fill_plane(mem_fill_plane),
   .fill_generation(mem_fill_generation),.fill_index(mem_fill_index),.fill_data(mem_fill_data),
-  .fetch_valid(fetch_valid),.fetch_ready(!fetch_active && cycles%5!=0),.fetch_tag(fetch_tag),
+  .fetch_valid(fetch_valid),.fetch_ready(mapper_ready),.fetch_tag(fetch_tag),
   .fetch_plane(fetch_plane),.fetch_address(fetch_address),.fetch_words(fetch_words),
   .response_valid(fetch_active && cycles%3!=0),.response_ready(fetch_response_ready),
   .response_tag(saved_fetch_tag),.response_index(fetch_index),
-  .response_data(activation_image[saved_fetch_address+fetch_index]),
+  .response_data(transport_data),
   .active(manager_active),.protocol_error(manager_error));
  ot_a3_runtime_auxiliary_windows auxiliary_memory(
   .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
@@ -88,14 +114,14 @@ module tb_a3_g2_runtime_program;
  always @(posedge clk)begin
   if(!rst_n || runtime_transport_cancel)fetch_active<=0;
   else if(SRAM_AUX)begin
-   if((mem_error || manager_error) && phase!=5)$fatal(1,"unexpected auxiliary service error");
+   if((mem_error || manager_error || mapper_error) && phase!=5)$fatal(1,"unexpected auxiliary service error");
    if(auxiliary_request_valid && mem_request_ready)mem_requests<=mem_requests+1;
    if(mem_window_valid && mem_window_ready)mem_windows<=mem_windows+1;
    if(mem_fill_valid && mem_fill_ready)mem_fills<=mem_fills+1;
-   if(fetch_valid && !fetch_active && cycles%5!=0)begin
-    if(fetch_plane!=0 || fetch_address+fetch_words>80*ROWS)$fatal(1,"unbounded auxiliary burst");
-    fetch_active<=1;saved_fetch_tag<=fetch_tag ^ ((phase==5)?64'd1:64'd0);saved_fetch_address<=fetch_address;
-    saved_fetch_words<=fetch_words;fetch_index<=0;
+   if(byte_valid && byte_ready)begin
+    if(byte_object!=ACTIVATION_OBJECT || byte_shift!=1 || byte_offset+64'(byte_count)>160*ROWS || byte_count!={2'd0,byte_words,1'b0})$fatal(1,"unbounded object byte burst");
+    fetch_active<=1;saved_fetch_tag<=byte_tag ^ ((phase==5)?64'd1:64'd0);saved_fetch_address<=byte_offset[31:0];
+    saved_fetch_words<=byte_words;fetch_index<=0;
    end
    if(fetch_active && cycles%3!=0 && fetch_response_ready)begin
     if(fetch_index==saved_fetch_words-1)fetch_active<=0;else fetch_index<=fetch_index+1'b1;
@@ -110,7 +136,7 @@ module tb_a3_g2_runtime_program;
  .cfg_array_group(8'd1),.cfg_array_block_a(16'd0),.cfg_array_block_rows_a(16'd0),.cfg_array_block_b(16'd0),
  .cfg_array_scale_a_base(32'd0),.cfg_array_ws_base(32'd0),.cfg_array_out_fp32(1'b0),
  .done(done),.complete(complete),.trapped(trapped),.trap_class(trap_class),.count_issued(count_issued),.count_retired(count_retired),
- .runtime_service_fault(SRAM_AUX && (mem_error || manager_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
+ .runtime_service_fault(SRAM_AUX && (mem_error || manager_error || mapper_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),
  .weight_request_address(weight_request_address),.weight_request_words(weight_request_words),
@@ -174,7 +200,7 @@ module tb_a3_g2_runtime_program;
  end endtask
  initial begin
   $readmemh("program.hex",program_image);$readmemh("descriptor.hex",descriptor_image);
-  $readmemh("activation.hex",activation_image);$readmemh("weight.hex",weight_image);$readmemh("expected.hex",expected);
+  $readmemh("activation_bytes.hex",activation_bytes);$readmemh("activation.hex",activation_image);$readmemh("weight.hex",weight_image);$readmemh("expected.hex",expected);
   tick();rst_n=1;tick();
   host_we=1;host_sel=0;
   for(integer j=0;j<PROGRAM_WORDS;j=j+1)begin host_row=j;host_wdata=program_image[j];tick();end

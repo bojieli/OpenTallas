@@ -18,7 +18,7 @@ args = parser.parse_args()
 rows = 6 if args.output_backpressure else 1
 cols = 24 if args.auxiliary_windows else 8
 record_name = (
-    "g2_runtime_auxiliary_scheduler"
+    "g2_runtime_byte_transport"
     if args.auxiliary_windows
     else "g2_runtime_output"
     if args.output_backpressure
@@ -102,10 +102,22 @@ hex_words(
     32,
 )
 hex_words("activation.hex", activation.reshape(-1), 16)
+# Read the actual deployment object's bytes, not prepacked service words.
+from runtime.sim.device import Device  # noqa: E402
+
+reference_device = Device(case.deployment, capability, verify=False)
+activation_view = reference_device.views.resolve(case.operand0_view, {}, {})
+activation_object = activation_view.object_id
+activation_payload = reference_device.memory[activation_object].read(
+    0, activation.nbytes
+)
+assert activation_payload == activation.astype("<u2").tobytes()
+hex_words("activation_bytes.hex", activation_payload, 2)
 hex_words("expected.hex", golden["output"].reshape(-1), 8)
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
+    f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
@@ -134,6 +146,7 @@ tracked = sorted(
             "tests/test_reserved_output_queue.py",
             "tests/test_runtime_auxiliary_windows.py",
             "tests/test_auxiliary_window_scheduler.py",
+            "tests/test_operand_byte_mapper.py",
         ]
         + [
             str(p.relative_to(ROOT))
@@ -181,6 +194,9 @@ result = {
     "output_backpressure": args.output_backpressure,
     "auxiliary_sram_windows": args.auxiliary_windows,
     "rtl_auxiliary_scheduler": args.auxiliary_windows,
+    "object_byte_transport": args.auxiliary_windows,
+    "activation_object": activation_object,
+    "activation_object_sha256": hashlib.sha256(activation_payload).hexdigest(),
     "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
     "sources": hashes,
     "program_sha256": hashlib.sha256(image).hexdigest(),

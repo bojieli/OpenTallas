@@ -3,6 +3,9 @@
   "output_backpressure": true,
   "auxiliary_sram_windows": false,
   "rtl_auxiliary_scheduler": false,
+  "object_byte_transport": false,
+  "activation_object": 1,
+  "activation_object_sha256": "d43f7f23d8f7001b52aebf56b610bc8a76afaf6693bbb50aa4dd26c379b3ae9c",
   "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
   "sources": {
     "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
@@ -69,6 +72,7 @@
     "rtl/abi3/ot_a3_microsequencer.sv": "7edfe75fd809a63d867b8969b99409cbe8b3b8681e4f9079dbd568705b3cbe6f",
     "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
     "rtl/abi3/ot_a3_operand_bundle_bridge.sv": "cc29c6eddd930caa58158b8454458a1d43ebdb2b99c39dc6f50e9560f613850c",
+    "rtl/abi3/ot_a3_operand_byte_mapper.sv": "f4d5e2dfc675beb09549c3641bb25ce6dc82d8fa1036c7a09ead0947ae3360a6",
     "rtl/abi3/ot_a3_operand_receiver.sv": "2a290a799c00cc05fabf99fc21082927ee929f68009c03d4a9fbb52f228dfe9d",
     "rtl/abi3/ot_a3_partial_collector.sv": "7397c884a9e2957ae5f4fb3195bd592977ea8e9c791c47828b745ceddcaba97a",
     "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
@@ -182,14 +186,15 @@
     "rtl/proto/ot_mac_tile_h.sv": "1f3ac8099b0bdef7f2e38e2c1c6b65f68416965f38f2e63e8458c456e976f63d",
     "rtl/proto/ot_vector_add_unit.sv": "8577e2247b803e95bbcae6d7359ccd2e39451bcd216cc9411d5dd818a3f76986",
     "rtl/test/tb_a3_g2_issue_contract.sv": "0563dbdd7e0d00a4c0326324cbc4de61e8242127645730e715c7059be87293f1",
-    "rtl/test/tb_a3_g2_runtime_program.sv": "fc87f6618452d773971279edf3dff907a45acf9b7403d63ea64d373126b6dbbd",
+    "rtl/test/tb_a3_g2_runtime_program.sv": "702c7b572ca1d143bd9de3002ea74a4d8456a644f224019fcf7aeedd00f43994",
     "runtime/sim/engines/tensor.py": "84133ca80f502c287f111c9a1ee1b47030c9680805ff0f185a23e16c3691dc9b",
     "tests/test_auxiliary_window_scheduler.py": "07993998e04522f24bb05763a31cd2fa67c001712f207544a2296cee6e594101",
     "tests/test_g2_issue_contract.py": "f5f16b8204929611aa58efea141fb77515f723781000ad440bd245ea425fca9b",
+    "tests/test_operand_byte_mapper.py": "c532a2e8a7bdfb1267c88ce80f77d6af95a4013df986220047b80c87673e5c22",
     "tests/test_reserved_output_queue.py": "1596dcee2fa2690671aaa4131762d6bd95d4c97d5270d1b8069611f541fd7718",
     "tests/test_runtime_auxiliary_windows.py": "5121b20807778475a84cbfd3a8096c64e36152390e3cf8a42a49cc83345f3156",
     "tools/build_abi3_engine_vectors.py": "c9678ad2016cecf85e293af7c14a7dc9d63db5031d2c8248409c6751a645a765",
-    "tools/check_g2_runtime_program.py": "f6543ffbd1d83bce872a60128bb652d54ab0c8d95b68c4340eb755ed7e7f363c"
+    "tools/check_g2_runtime_program.py": "ad4cbb341e839e24786bfd69978d1ea482bb4aaf58f4f13d100ff7c77e9dec3a"
   },
   "program_sha256": "78dbdfd9db0bc3b10126e05390f891485b6ed4b0693c4930f584b0d0520d8341",
   "descriptor_sha256": "a9527d71136a52d90f3d2b979c1677a829af7b135d37409cffe909a712949c5f",
@@ -281,14 +286,15 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=1817\nprogram phase=2 complete=0 trap=8 cycles=2021\nprogram phase=1 complete=1 trap=0 cycles=3688\nprogram phase=3 complete=0 trap=8 cycles=3857\nprogram phase=1 complete=1 trap=0 cycles=5508\nprogram phase=4 complete=0 trap=8 cycles=5975\nfirst operation SRAM fill_words=0 read_requests=0\nauxiliary SRAM windows=0 fill_words=0 read_requests=0\noutput stalls=1031 reservation stalls=17 accepted_outputs=152\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=1602\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:227: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 60us; walltime 0.040 s; speed 1.506 ms/s\n- Verilator: cpu 0.040 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=1817\nprogram phase=2 complete=0 trap=8 cycles=2021\nprogram phase=1 complete=1 trap=0 cycles=3688\nprogram phase=3 complete=0 trap=8 cycles=3857\nprogram phase=1 complete=1 trap=0 cycles=5508\nprogram phase=4 complete=0 trap=8 cycles=5975\nfirst operation SRAM fill_words=0 read_requests=0\nauxiliary SRAM windows=0 fill_words=0 read_requests=0\noutput stalls=1031 reservation stalls=17 accepted_outputs=152\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=1602\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:253: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 60us; walltime 0.020 s; speed 2.947 ms/s\n- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
     "build/g2_runtime_output/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
+    "build/g2_runtime_output/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
     "build/g2_runtime_output/descriptor.hex": "8f1e8c2827d32d348b3c3d3c069b3429a77dfd90a47d087d28124be480b02768",
     "build/g2_runtime_output/expected.hex": "e4babaa6a325486841f4107623efd90e6d2878b7951ffb40582d431a8d12886f",
     "build/g2_runtime_output/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
     "build/g2_runtime_output/weight.hex": "95ea7c3390b3ab3b5cba37b5998287828083d5b0a03f1df21fcab7eefc4b5e59",
-    "build/g2_runtime_output/program_config.svh": "4dba024d761ca3a5301cb3669db2e99d68b4247d8c6095acb7cde99995bae658",
-    "build/g2_runtime_output/simulation.log": "26308407dde83079d4ca529b19d3da4f88ef6edada36ed44f9f3fbf63ed4195f"
+    "build/g2_runtime_output/program_config.svh": "a582c25ff297b33baadb3885022ec3bef0203309d3be459233d230aa3bc32f59",
+    "build/g2_runtime_output/simulation.log": "483bdcbed133b0bb49ca76da5a5f0662fc7a047e7e4c2be7745f89a7a83f3bb5"
   }
 }

@@ -1,7 +1,7 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes the RTL auxiliary refill scheduler after `2b5f7540`;
+Implementation includes contiguous object-byte burst mapping after `ebd224aa`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
@@ -343,3 +343,39 @@ still supplied by the fixture. Production deployment byte/object translation,
 scaled-format program coverage, transport integration, multi-row weight reuse
 and routed physical characterization remain open. Earlier auxiliary-window
 results describe the historical behavioral-manager checkpoint.
+
+
+## Contiguous object-byte transport checkpoint
+
+`ot_a3_operand_byte_mapper` now translates a bounded service-word refill request
+into an object ID, 64-bit object-relative byte offset and exact byte length.
+It captures immutable per-plane object/base/size/word-width records, supports
+1/2/4/8-byte contiguous words, and rejects stale generations, invalid planes,
+word-address overflow and byte ranges outside the object before asserting burst
+valid. Offset scaling, base addition, end calculation and bounds validation use
+separate registered stages. The final bounds verdict is registered before the
+held transport request, removing the wide comparison from its ready/valid path.
+No physical timing improvement is claimed without characterization.
+
+The loaded-program auxiliary campaign now reads bytes from the deployment's
+actual activation object. For BF16, the mapper requests two bytes per service
+word and the external byte transport packs each response into the low 16 bits
+of the auxiliary 64-bit word. This replaces direct indexing of prepacked
+activation words. Object identity and the exact byte range are checked at the
+transport boundary. The reference object bytes and source/artifact digests are
+recorded in `results/rtl/a3_g2_runtime_byte_transport.json`.
+
+The mapper passes 106 randomized/boundary mappings plus stale-generation and
+invalid-plane checks, with standalone clean lint. The focused suite has 36
+passing tests. Integrated coverage retains the six-row, 24-column BF16 program,
+activation reuse, output backpressure, aborts, weight and auxiliary transport
+faults, and restart. Evidence: `results/rtl/a3_operand_byte_mapper.json`.
+
+This is a contiguous byte-word mapping primitive, not full deployment mapping.
+The parent still supplies admitted mapping records. Hardware descriptor-to-record
+construction, strided/sub-byte layouts, packed/tiled weight translation, general
+view offsets, output-object writes, scaled-format program coverage and production
+transport remain open. In particular, the G2 adapter still truncates high view
+offset bits; this mapper does not repair that upstream interface. Those gaps
+must be resolved before general ABI deployment qualification. Multi-row weight
+reuse and routed characterization remain required by the full optimization goal.

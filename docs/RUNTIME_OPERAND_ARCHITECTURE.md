@@ -834,3 +834,42 @@ The focused suite has 35 passing tests; standalone scheduler lint is clean.
 This remains service-word addressing. The production deployment mapper and
 external burst transport are not implemented by this scheduler, and no routed
 frequency or area claim follows from these simulations.
+
+
+## Object-relative contiguous byte mapping
+
+The current `--auxiliary-windows` regression inserts
+`ot_a3_operand_byte_mapper` between the refill scheduler and external transport.
+Its operation record contains generation, three object IDs, service-word bases,
+64-bit byte bases, 64-bit object sizes and two-bit word-size shifts. Mapping is:
+`byte_offset = byte_base + ((request_address - word_base) << shift)`;
+`byte_length = request_words << shift`. Only contiguous 1/2/4/8-byte words are
+represented. Packed nibbles and strided/tiled layouts require another mapping
+contract and are not silently treated as this layout.
+
+Request capture rejects invalid planes, wrong generation, zero/overlong bursts,
+addresses below the service base and a service end beyond 2^32. Separate pipeline
+stages scale the offset, add the byte base, form the byte end and validate against
+the object extent. Arithmetic retains carry through 65 bits; byte overflow cannot
+wrap into an apparently valid low address. Only after validation is burst_valid
+asserted, and all fields remain held until burst_ready. One mapping is in flight.
+Clear must accompany scheduler/transport cancellation and drops the mapping record.
+
+The BF16 fixture exports raw bytes from the actual activation memory object in
+the functional Device, not a prepacked service-word array. RTL requests that
+object ID and byte range; the transport reads two bytes per word, forms the
+little-endian BF16 code, and zero-extends the response to 64 bits. The fixture
+still supplies admitted mapping configuration and implements the byte transport.
+Mapper errors join scheduler/window errors on `runtime_service_fault`.
+
+`results/rtl/a3_g2_runtime_byte_transport.json` records this integrated path;
+`results/rtl/a3_operand_byte_mapper.json` records 106 randomized/boundary mappings,
+input mutation, backpressure, generation/plane refusal and clear, plus clean
+standalone lint. The total focused suite has 36 passing tests. The earlier
+scheduler-only evidence remains a historical prepacked-transport checkpoint.
+
+Next deployment gates include constructing mapping records from actual ABI view
+and memory-object descriptors, preserving full view offsets, implementing packed
+weight/scale addressing and output-object writes, then removing the modeled
+transport. This primitive alone does not qualify those missing paths or establish
+frequency, area or energy results.
