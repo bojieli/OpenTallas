@@ -185,3 +185,18 @@ tests pass. This establishes the completion handshake required for G2 runtime
 integration, but the controller is not yet wired into G2 and arithmetic abort
 is not yet qualified end to end. Evidence:
 `results/rtl/a3_lq8_completion_barrier.json`.
+
+## G2 runtime wiring checkpoint
+
+G2 now offers `RUNTIME_OPERANDS=1`, connecting the bounded runtime service,
+compute issue credits and completion barrier through explicit external
+transport/cancel and final-write-drain ports. The preloaded comparison mode
+remains the default. Runtime faults/abort suppress partial writes and reset the
+core before generation drain; committed writes are not rolled back.
+
+The actual G2 boundary test exercises multi-tile arithmetic, delayed drain,
+abort after issue and restart. It forces the issue adapter's outputs, so full
+program/descriptor execution is not yet qualified. Both generate branches
+elaborate; 27 focused tests pass. See `results/rtl/a3_g2_runtime_boundary.json`.
+Reusable activation SRAM, backpressured output buffering, multi-row reuse and
+new routed physical evidence remain required before promoting runtime mode.

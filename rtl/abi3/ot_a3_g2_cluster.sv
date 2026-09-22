@@ -147,6 +147,7 @@ module ot_a3_g2_cluster #(
     parameter integer LANES         = 8,     // as routed: a3_lq8_array
     parameter integer ADDER_STAGES  = 3,
     parameter integer ACC_SLOTS     = 8,
+    parameter integer RUNTIME_OPERANDS = 0,
     // The control-plane performance knobs, forwarded to the sequencer.  They
     // are declared here so a route can select a configuration with --param
     // instead of editing a default in a scratch worktree: a record produced
@@ -182,6 +183,33 @@ module ot_a3_g2_cluster #(
     input  wire [31:0]   cfg_array_scale_a_base,
     input  wire [31:0]   cfg_array_ws_base,
     input  wire          cfg_array_out_fp32,
+
+    // Runtime mode keeps the program loader idle-only. Transport acknowledgements
+    // promise that this generation cannot return more data; writes_drained covers
+    // every accepted partial write. Global reset must reset transport as well.
+    input wire runtime_transport_ack,runtime_writes_drained,runtime_abort,
+    output wire runtime_transport_cancel,
+    output wire [31:0] runtime_generation,
+    output wire weight_request_valid,
+    input wire weight_request_ready,
+    output wire [63:0] weight_request_tag,
+    output wire [31:0] weight_request_address,
+    output wire [9:0] weight_request_words,
+    input wire weight_response_valid,
+    output wire weight_response_ready,
+    input wire [63:0] weight_response_tag,
+    input wire [9:0] weight_response_index,
+    input wire [127:0] weight_response_data,
+    output wire auxiliary_request_valid,
+    input wire auxiliary_request_ready,
+    output wire [31:0] auxiliary_request_generation,auxiliary_request_a,
+                       auxiliary_request_s,auxiliary_request_ws,auxiliary_request_w,
+    output wire auxiliary_scale_a,auxiliary_scale_b,
+    input wire auxiliary_response_valid,
+    output wire auxiliary_response_ready,
+    input wire [31:0] auxiliary_response_generation,auxiliary_response_w,
+    input wire [63:0] auxiliary_response_a_data,auxiliary_response_ws_data,
+    input wire [31:0] auxiliary_response_s_data,
 
     // -- host load port --------------------------------------------------
     // One 128-bit write port over every store, in the spirit of
@@ -629,6 +657,12 @@ module ot_a3_g2_cluster #(
     wire [31:0]  ws_rd_addr;
     wire [8*LANES-1:0] ws_rd_data;
 
+    wire core_busy,core_done,core_rst_n;
+    wire [7:0] core_error,core_detail,core_error_lane;
+    wire [LANES-1:0] core_part_we;
+    wire operand_request,operand_issue,operand_credit;
+    wire [31:0] operand_a,operand_s,operand_ws,operand_w;
+    generate if(RUNTIME_OPERANDS==0)begin : legacy_operands
     ot_a3_g2_array_staging staging (
         .clk(clk),
         .rst_n(rst_n),
@@ -654,14 +688,109 @@ module ot_a3_g2_cluster #(
         .weight_words_read(staging_weight_words_read)
     );
 
+        assign core_rst_n=rst_n;
+        assign operand_credit=1'b1;
+        assign array_busy=core_busy;assign array_done=core_done;
+        assign array_error_code=core_error;assign array_error_detail=core_detail;assign array_error_lane=core_error_lane;
+        assign part_we=core_part_we;
+        assign runtime_transport_cancel=0;assign runtime_generation=0;
+        assign weight_request_valid=0;assign weight_request_tag=0;assign weight_request_address=0;assign weight_request_words=0;
+        assign weight_response_ready=0;assign auxiliary_request_valid=0;
+        assign auxiliary_request_generation=0;assign auxiliary_request_a=0;assign auxiliary_request_s=0;
+        assign auxiliary_request_ws=0;assign auxiliary_request_w=0;
+        assign auxiliary_scale_a=0;assign auxiliary_scale_b=0;assign auxiliary_response_ready=0;
+    end else begin : runtime_operands
+        if(LANES!=8)begin : unsupported_width
+            initial $error("G2 runtime service requires eight lanes");
+        end
+        reg [31:0] next_generation;
+        reg command_pending;
+        wire command_ready,service_busy,geometry_error,protocol_error,lifetime_clear,compute_abort,lifetime_ready;
+        wire [31:0] completed_generation;
+        wire [7:0] completed_error;
+        wire runtime_fault=protocol_error || (geometry_error && operand_request);
+        wire service_clear=lifetime_clear;
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)begin next_generation<=0;command_pending<=0;end
+            else begin
+                if(arr_start)begin next_generation<=next_generation+1'b1;command_pending<=1;end
+                if(command_pending && command_ready)command_pending<=0;
+                if(lifetime_clear)command_pending<=0;
+            end
+        end
+        ot_a3_runtime_operation_lifetime lifetime(
+            .clk(clk),.rst_n(rst_n),.start(arr_start),.start_ready(lifetime_ready),
+            .command_generation(next_generation+1'b1),.compute_done(core_done),.compute_error(core_error),
+            .service_fault(runtime_fault),.abort_valid(runtime_abort),
+            .transport_ack(runtime_transport_ack),.writes_drained(runtime_writes_drained),
+            .transport_cancel(runtime_transport_cancel),.transport_generation(runtime_generation),
+            .service_clear(lifetime_clear),.compute_abort(compute_abort),.busy(array_busy),
+            .completion_valid(array_done),.completion_ready(1'b1),
+            .completion_generation(completed_generation),.completion_error(completed_error));
+        assign core_rst_n=rst_n && !compute_abort;
+        // Suppress same-cycle external writes as a runtime abort is observed.
+        assign part_we=core_part_we & {LANES{!compute_abort && !runtime_fault && !runtime_abort}};
+        assign array_error_code=array_done?completed_error:core_error;
+        assign array_error_detail=compute_abort?completed_error:core_detail;
+        assign array_error_lane=compute_abort?8'b0:core_error_lane;
+        assign host_stage_accept=0;
+        assign staging_window_faults=0;assign staging_write_refusals=0;
+        reg [31:0] words_read;
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)words_read<=0;
+            else if(operand_issue)words_read<=words_read+1'b1;
+        end
+        assign staging_weight_words_read=words_read;
+        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES)) service(
+            .clk(clk),.rst_n(rst_n),.clear(service_clear),
+            .command_valid(command_pending),.command_ready(command_ready),
+            .cfg_generation(next_generation),.cfg_rows(arr_rows),.cfg_cols(arr_cols),.cfg_depth(arr_depth),
+            .cfg_group(arr_group),.cfg_scale_a(arr_scale_a),.cfg_scale_b(arr_scale_b),
+            .cfg_block_a(arr_block_a),.cfg_block_b(arr_block_b),.cfg_block_rows_a(arr_block_rows_a),
+            .cfg_a_base(arr_a_base),.cfg_s_base(arr_scale_a_base),.cfg_ws_base(arr_ws_base),.cfg_w_base(arr_w_base),
+            .compute_admitted(operand_request),.operand_request(operand_request),.operand_issue(operand_issue),
+            .operand_a(operand_a),.operand_s(operand_s),.operand_ws(operand_ws),.operand_w(operand_w),
+            .operand_credit(operand_credit),.a_data(a_rd_data),.s_data(s_rd_data),.w_data(w_rd_data),.ws_data(ws_rd_data),
+            .busy(service_busy),.geometry_error(geometry_error),.protocol_error(protocol_error),
+            .weight_request_valid(weight_request_valid),
+            .weight_request_ready(weight_request_ready),
+            .weight_request_tag(weight_request_tag),
+            .weight_request_address(weight_request_address),
+            .weight_request_words(weight_request_words),
+            .weight_response_valid(weight_response_valid),
+            .weight_response_ready(weight_response_ready),
+            .weight_response_tag(weight_response_tag),
+            .weight_response_index(weight_response_index),
+            .weight_response_data(weight_response_data),
+            .auxiliary_request_valid(auxiliary_request_valid),
+            .auxiliary_request_ready(auxiliary_request_ready),
+            .auxiliary_request_generation(auxiliary_request_generation),
+            .auxiliary_request_a(auxiliary_request_a),
+            .auxiliary_request_s(auxiliary_request_s),
+            .auxiliary_request_ws(auxiliary_request_ws),
+            .auxiliary_request_w(auxiliary_request_w),
+            .auxiliary_scale_a(auxiliary_scale_a),
+            .auxiliary_scale_b(auxiliary_scale_b),
+            .auxiliary_response_valid(auxiliary_response_valid),
+            .auxiliary_response_ready(auxiliary_response_ready),
+            .auxiliary_response_generation(auxiliary_response_generation),
+            .auxiliary_response_w(auxiliary_response_w),
+            .auxiliary_response_a_data(auxiliary_response_a_data),
+            .auxiliary_response_ws_data(auxiliary_response_ws_data),
+            .auxiliary_response_s_data(auxiliary_response_s_data)
+        );
+    end endgenerate
+
     ot_a3_lq8 #(
         .LANES(LANES),
         .ADDER_STAGES(ADDER_STAGES),
-        .ACC_SLOTS(ACC_SLOTS)
+        .ACC_SLOTS(ACC_SLOTS),.OPERAND_CREDITS(RUNTIME_OPERANDS)
     ) array (
         .clk(clk),
-        .rst_n(rst_n),
-        .start(arr_start),
+        .rst_n(core_rst_n),
+        .start(arr_start),.operand_credit(operand_credit),
+        .operand_request(operand_request),.operand_issue(operand_issue),
+        .operand_a_addr(operand_a),.operand_s_addr(operand_s),.operand_ws_addr(operand_ws),.operand_w_addr(operand_w),
         .cfg_rows(arr_rows),
         .cfg_cols(arr_cols),
         .cfg_depth(arr_depth),
@@ -691,15 +820,15 @@ module ot_a3_g2_cluster #(
         .ws_rd_en(ws_rd_en),
         .ws_rd_addr(ws_rd_addr),
         .ws_rd_data(ws_rd_data),
-        .out_we(part_we),
+        .out_we(core_part_we),
         .out_addr(part_addr),
         .out_data(part_data),
         .out_acc(part_acc),
-        .busy(array_busy),
-        .done(array_done),
-        .error_code(array_error_code),
-        .error_detail(array_error_detail),
-        .error_lane(array_error_lane),
+        .busy(core_busy),
+        .done(core_done),
+        .error_code(core_error),
+        .error_detail(core_detail),
+        .error_lane(core_error_lane),
         .lane_error_code(lane_error_code),
         .lane_error_detail(lane_error_detail),
         .lane_busy(lane_busy),

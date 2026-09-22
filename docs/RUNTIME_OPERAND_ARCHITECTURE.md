@@ -621,3 +621,48 @@ for the selected acknowledgement delays). Useful issued work is equal per case;
 All 27 focused tests pass. Source-bound results are recorded in
 `results/rtl/a3_lq8_completion_barrier.json`. These delays are test conditions,
 not measured production transport or memory latency.
+
+## G2 runtime-mode connection
+
+`ot_a3_g2_cluster` now has an opt-in `RUNTIME_OPERANDS=1` generate branch.
+It instantiates the runtime operand service and operation lifetime controller,
+connects LQ8 previews/credits/data, and exposes weight and auxiliary transport
+ports independently of the existing idle-only program/descriptor loader. The
+legacy preloaded branch remains the default comparison configuration. Runtime
+mode explicitly requires eight lanes and replaces the preloaded staging block;
+staging host writes are refused in this mode rather than silently populating
+unused memory. Activation/scales still arrive through the external auxiliary
+service; reusable activation SRAM remains open.
+
+Adapter completion observes the lifetime barrier rather than raw core done.
+External `runtime_transport_ack` responds to the generation-tagged cancellation
+request and guarantees no later response from that generation.
+`runtime_writes_drained` covers all accepted partial writes. These inputs must
+be driven by a real transport/writeback implementation, not tied to optimistic
+constants in a deployed system. The partial port remains a fixed-throughput
+sink contract with no per-beat ready; backpressured output buffering is a
+remaining integration requirement.
+
+Runtime service faults or explicit abort reset the core and suppress partial
+write enables, then wait for transport/write drain before engine-error
+completion. Already-committed writes are not rolled back. FE/FF local runtime
+error codes propagate as nonzero array errors through the existing adapter's
+engine-trap mapping. Global reset must coordinate with transport; generations
+are incremented on each operation and must not alias undrained traffic.
+
+`tools/check_g2_runtime_boundary.py` elaborates the actual G2 module with
+behavioral SRAM and forces the issue adapter's array-configuration outputs.
+It checks BF16 80-term contractions across three weight tiles, delayed transport
+and write acknowledgement, explicit abort after arithmetic issue, output
+suppression and restart with a fresh generation. Program fetch, descriptors and
+sequencer issue are deliberately bypassed: this is an actual cluster-boundary
+integration test, not end-to-end ABI program qualification. Source-bound output
+is `results/rtl/a3_g2_runtime_boundary.json`. Both runtime and legacy branches
+elaborate in pinned Verilator with existing repository width/pin warnings;
+this is not warning-free lint or routed closure. All 27 focused tests pass.
+
+Next gates are program-driven cluster regressions (including runtime-only
+geometry failure and transport faults), output buffering/acknowledgement,
+reusable auxiliary SRAM and multi-row reuse, followed by configuration-specific
+physical characterization. Existing G2 physical records are historical after
+these RTL edits; do not attribute their closure to the new runtime branch.
