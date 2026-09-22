@@ -955,3 +955,29 @@ plus generation/plane refusal. The G2 byte-transport campaign still produces
 584 accepted matching outputs with the same 14,375 final completion counter.
 The full architecture, all-target optimization and physical coverage goals
 remain unfinished.
+
+
+## Resident weight-row replay
+
+The G2 runtime service may retain an entire packed weight row (local columns
+multiplied by grouped depth) in its two 512-word SRAM banks. For multi-row
+commands with row extent at most 1,024 words, refill covers only the first row.
+The scheduler acquires those resident banks again for subsequent activation
+rows; final uses release them. Larger row extents stream as before. No compute
+loop order or FP32 accumulation association changes.
+
+Bank tags identify resident data. New tile stream tags identify each copy's
+logical issue range and are captured into the existing prefetch FIFO. These
+identities must remain separate: changing an owner tag would break SRAM
+permissions, while replaying the owner tag at the join would mismatch the
+monotonic arithmetic weight address. Publication remains held under stalls.
+The generation is common to both identities and reset/clear cancels all banks,
+queues and compute together under the existing transport-drain contract.
+
+`ot_a3_lq8_runtime_operands.REUSE_WEIGHT_ROWS` defaults to zero for arbitrary
+external streams. G2 selects `RUNTIME_WEIGHT_ROW_REUSE=1` for its shared B
+contraction operand. The external producer must supply the same packed weight
+sequence per row when this option is enabled. The legacy G2 mode is unaffected.
+The seven cases in `tests/test_weight_row_reuse.py` exercise both capacity edges,
+stream fallback and cancellation through actual bank ownership and prefetch.
+Physical area/timing and larger-than-capacity multi-row scheduling remain open.

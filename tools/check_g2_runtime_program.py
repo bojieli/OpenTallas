@@ -14,7 +14,11 @@ sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
+parser.add_argument("--no-weight-row-reuse", action="store_true")
+parser.add_argument("--weight-response-gap", type=int, default=1)
 args = parser.parse_args()
+if args.weight_response_gap < 1:
+    parser.error("weight response gap must be positive")
 rows = 6 if args.output_backpressure else 1
 cols = 24 if args.auxiliary_windows else 8
 record_name = (
@@ -24,6 +28,10 @@ record_name = (
     if args.output_backpressure
     else "g2_runtime_program"
 )
+if args.no_weight_row_reuse:
+    record_name += "_no_weight_reuse"
+if args.weight_response_gap != 1:
+    record_name += f"_weight_gap{args.weight_response_gap}"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -147,6 +155,7 @@ tracked = sorted(
             "tests/test_runtime_auxiliary_windows.py",
             "tests/test_auxiliary_window_scheduler.py",
             "tests/test_operand_byte_mapper.py",
+            "tests/test_weight_row_reuse.py",
         ]
         + [
             str(p.relative_to(ROOT))
@@ -164,6 +173,8 @@ cmd = [
     "4",
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
+    f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
+    f"-GWEIGHT_RESPONSE_GAP={args.weight_response_gap}",
     "--top-module",
     "tb_a3_g2_runtime_program",
     "-I" + str(OUT),
@@ -191,6 +202,8 @@ for p, h in hashes.items():
     assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
 result = {
     "status": "pass",
+    "weight_row_reuse": not args.no_weight_row_reuse,
+    "weight_response_gap": args.weight_response_gap,
     "output_backpressure": args.output_backpressure,
     "auxiliary_sram_windows": args.auxiliary_windows,
     "rtl_auxiliary_scheduler": args.auxiliary_windows,

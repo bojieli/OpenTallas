@@ -11,6 +11,7 @@ module tb_a3_weight_tile_prefetch;
  wire reserve_ready,fill_ready,cancel_ready,tile_ready,word_valid,word_last,tile_released;
  wire [127:0] word_data;
  wire [63:0] word_tag,released_tag;
+ wire [63:0] tile_stream_tag=tile_tag;
  wire [9:0] word_index;
  wire [1:0] ready_banks,active_banks;
  wire [CW:0] reserved_slots;

@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 // Host-load a real ABI program and compare outputs with the functional Device.
 module tb_a3_g2_runtime_program;
+ parameter bit WEIGHT_ROW_REUSE=1;
+ parameter integer WEIGHT_RESPONSE_GAP=1;
  `include "program_config.svh"
  localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=80*LOCAL_OUTPUTS;
  reg [127:0] program_image[0:PROGRAM_WORDS-1],descriptor_image[0:DESCRIPTOR_WORDS-1],weight_image[0:WEIGHT_WORDS-1];
@@ -78,7 +80,7 @@ module tb_a3_g2_runtime_program;
  reg [31:0] saved_fetch_address=0;
  reg [8:0] saved_fetch_words=0,fetch_index=0;
  integer mem_fills=0,mem_windows=0,mem_requests=0;
- integer first_mem_fills=0,first_mem_requests=0;
+ integer first_mem_fills=0,first_mem_requests=0,first_weight_fills=0;
  // RTL owns window planning/fill publication. The fixture supplies only the
  // external burst transport and admitted plane bounds in service-word units.
  ot_a3_auxiliary_window_scheduler auxiliary_manager(
@@ -128,7 +130,7 @@ module tb_a3_g2_runtime_program;
    end
   end
  end
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1)) dut(
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE)) dut(
  .clk(clk),.rst_n(rst_n),.part_ready(sink_ready),.part_valid(part_valid),.start(kick),.host_we(host_we),.host_sel(host_sel),.host_row(host_row),.host_lane(host_lane),.host_wdata(host_wdata),
  .host_ready(host_ready),.host_write_refused(host_write_refused),
  .cfg_program_base(32'd0),.cfg_instruction_count(INSTRUCTION_COUNT),.cfg_entry_pc(32'd0),
@@ -140,7 +142,7 @@ module tb_a3_g2_runtime_program;
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),
  .weight_request_address(weight_request_address),.weight_request_words(weight_request_words),
- .weight_response_valid(wactive),.weight_response_ready(weight_response_ready),
+ .weight_response_valid(wactive && cycles%WEIGHT_RESPONSE_GAP==0),.weight_response_ready(weight_response_ready),
  .weight_response_tag(wtag),.weight_response_index(wi),.weight_response_data(weight_image[wbase+wi]),
  .auxiliary_request_valid(auxiliary_request_valid),.auxiliary_request_ready(SRAM_AUX?mem_request_ready:!auxvalid),
  .auxiliary_request_generation(auxiliary_request_generation),.auxiliary_request_w(auxiliary_request_w),.auxiliary_request_a(auxiliary_request_a),
@@ -154,7 +156,7 @@ module tb_a3_g2_runtime_program;
    cycles<=cycles+1;
    if(weight_request_valid && !wactive)begin wactive<=1;wtag<=weight_request_tag ^ ((phase==3) ? 64'd1 : 64'd0);wi<=0;wn<=weight_request_words;wbase<=weight_request_address;
     if(weight_request_address+weight_request_words>WEIGHT_WORDS)$fatal(1,"weight address out of bounds");end
-   if(wactive && weight_response_ready)begin fills<=fills+1;if(wi==wn-1)wactive<=0;else wi<=wi+1'b1;end
+   if(wactive && cycles%WEIGHT_RESPONSE_GAP==0 && weight_response_ready)begin fills<=fills+1;if(wi==wn-1)wactive<=0;else wi<=wi+1'b1;end
    if(!SRAM_AUX && auxiliary_request_valid && !auxvalid)begin auxvalid<=1;agen<=auxiliary_request_generation;aw<=auxiliary_request_w;adata<=activation_image[auxiliary_request_a];
     if(auxiliary_request_a>=80*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
    if(auxvalid && auxiliary_response_ready)auxvalid<=0;
@@ -212,7 +214,8 @@ module tb_a3_g2_runtime_program;
    @(negedge clk);repeat(16)tick();release_output=1;
   end
   drain(0);
-  first_mem_fills=mem_fills;first_mem_requests=mem_requests;
+  first_mem_fills=mem_fills;first_mem_requests=mem_requests;first_weight_fills=fills;
+  if(fills!=((WEIGHT_ROW_REUSE && ROWS>1 && WEIGHT_WORDS/ROWS<=1024)?WEIGHT_WORDS/ROWS:WEIGHT_WORDS))$fatal(1,"weight reuse traffic accounting");
   if(SRAM_AUX && (mem_fills!=80*ROWS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
   // Lane-distinct BF16 results must match the functional Device.
   if(seen!={ROWS*COLS{1'b1}} || outputs!=ROWS*COLS)$fatal(1,"missing first outputs");
@@ -246,6 +249,7 @@ module tb_a3_g2_runtime_program;
    phase=1;launch();drain(0);
    if(seen!={ROWS*COLS{1'b1}})$fatal(1,"auxiliary fault recovery lost outputs");
   end
+  $display("first operation weight fill_words=%0d",first_weight_fills);
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);
   $display("auxiliary SRAM windows=%0d fill_words=%0d read_requests=%0d",mem_windows,mem_fills,mem_requests);
   if(SRAM_AUX && (mem_windows<3 || mem_requests<WEIGHT_WORDS*3))$fatal(1,"SRAM service not exercised");

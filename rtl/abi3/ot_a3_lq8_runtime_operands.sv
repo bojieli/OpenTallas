@@ -9,7 +9,9 @@
 module ot_a3_lq8_runtime_operands #(
     parameter integer INTERLEAVE=3,
     parameter integer TILE_WORDS=32,
-    parameter integer AUXILIARY_DEPTH=2
+    parameter integer AUXILIARY_DEPTH=2,
+    // Enable only when the transport stream repeats the same weights per row.
+    parameter bit REUSE_WEIGHT_ROWS=0
 )(
     input wire clk,rst_n,clear,
     input wire command_valid,
@@ -84,13 +86,16 @@ module ot_a3_lq8_runtime_operands #(
         .rows(rows),.local_cols(cols),.depth_words(depth_words),.rows_per_scale_a(rpb),
         .scale_stride_a(cpa),.scale_stride_b(cpb),.groups_per_scale_a(bwa),.groups_per_scale_b(bwb));
     wire reserve_valid,reserve_ready,reserve_bank,fill_valid,fill_ready,fill_bank,tile_valid,tile_ready,tile_bank;
-    wire [63:0] reserve_tag,fill_tag,tile_tag;
+    wire [63:0] reserve_tag,fill_tag,tile_tag,tile_stream_tag;
+    wire tile_retain;
+    reg [31:0] row_words;
+    always @(posedge clk)row_words<=32'(cols)*32'(depth_words);
     wire [9:0] reserve_words,tile_words;
     wire [127:0] fill_data;
-    ot_a3_weight_tile_scheduler #(.TILE_WORDS(TILE_WORDS)) scheduler(
+    ot_a3_weight_tile_scheduler #(.TILE_WORDS(TILE_WORDS),.ROW_REUSE(REUSE_WEIGHT_ROWS)) scheduler(
         .clk(clk),.rst_n(service_rst_n),.clear(1'b0),
         .command_valid(launch),.command_ready(scheduler_ready),
-        .command_generation(generation),.command_base(base_w),.command_words(stream_words),
+        .command_generation(generation),.command_base(base_w),.command_words(stream_words),.command_row_words(row_words),
         .active(),.scheduled(),.command_error(scheduler_error),
         .reserve_valid(reserve_valid),.reserve_ready(reserve_ready),.reserve_bank(reserve_bank),
         .reserve_tag(reserve_tag),.reserve_words(reserve_words),
@@ -99,17 +104,17 @@ module ot_a3_lq8_runtime_operands #(
         .response_valid(weight_response_valid),.response_ready(weight_response_ready),.response_mismatch(weight_mismatch),
         .response_tag(weight_response_tag),.response_index(weight_response_index),.response_data(weight_response_data),
         .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_ready(fill_ready),.fill_tag(fill_tag),.fill_data(fill_data),
-        .tile_valid(tile_valid),.tile_ready(tile_ready),.tile_bank(tile_bank),.tile_tag(tile_tag),.tile_words(tile_words));
+        .tile_valid(tile_valid),.tile_ready(tile_ready),.tile_bank(tile_bank),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),.tile_retain(tile_retain),.tile_words(tile_words));
     wire word_valid,word_ready;
     wire [127:0] word_data;
     wire [63:0] word_tag;
     wire [9:0] word_index;
-    ot_a3_weight_tile_prefetch prefetch(
+    ot_a3_weight_tile_prefetch #(.SEPARATE_STREAM_TAG(1)) prefetch(
         .clk(clk),.rst_n(service_rst_n),.reserve_valid(reserve_valid),.reserve_bank(reserve_bank),
         .reserve_tag(reserve_tag),.reserve_words(reserve_words),.reserve_ready(reserve_ready),
         .fill_valid(fill_valid),.fill_bank(fill_bank),.fill_tag(fill_tag),.fill_data(fill_data),.fill_ready(fill_ready),
         .cancel_valid(1'b0),.cancel_bank(1'b0),.cancel_tag(64'b0),.cancel_ready(),
-        .tile_valid(tile_valid),.tile_bank(tile_bank),.tile_retain(1'b0),.tile_tag(tile_tag),.tile_words(tile_words),.tile_ready(tile_ready),
+        .tile_valid(tile_valid),.tile_bank(tile_bank),.tile_retain(tile_retain),.tile_tag(tile_tag),.tile_stream_tag(tile_stream_tag),.tile_words(tile_words),.tile_ready(tile_ready),
         .word_valid(word_valid),.word_ready(word_ready),.word_data(word_data),.word_tag(word_tag),.word_index(word_index),
         .word_last(),.tile_released(),.released_tag(),.ready_banks(),.active_banks(),.reserved_slots());
     wire future_valid,future_ready;

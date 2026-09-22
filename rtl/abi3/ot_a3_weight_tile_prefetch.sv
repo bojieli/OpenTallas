@@ -4,8 +4,11 @@
 // the consumer still drains the queue. Tags/indices travel with every copy.
 // Each issued read reserves a FIFO slot, including its in-flight response.
 // One tile is acquired at a time; queued words from older tiles remain ordered.
+// Optional stream tags relabel copied words for resident replay. SRAM access
+// and release continue to use the original owner tag; queued tags never change.
 module ot_a3_weight_tile_prefetch #(
     parameter integer TAG_BITS=64,
+    parameter bit SEPARATE_STREAM_TAG=0,
     parameter integer FIFO_DEPTH=4,
     parameter integer PW=(FIFO_DEPTH<2)?1:$clog2(FIFO_DEPTH),
     parameter integer CW=$clog2(FIFO_DEPTH+1)
@@ -24,6 +27,7 @@ module ot_a3_weight_tile_prefetch #(
     output wire cancel_ready,
     input wire tile_valid,tile_bank,tile_retain,
     input wire [TAG_BITS-1:0] tile_tag,
+    input wire [TAG_BITS-1:0] tile_stream_tag,
     input wire [9:0] tile_words,
     output wire tile_ready,
     output wire word_valid,
@@ -40,7 +44,7 @@ module ot_a3_weight_tile_prefetch #(
     localparam [1:0] IDLE=0, READ=1, RELEASE=2;
     reg [1:0] state;
     reg bank_q,retain_q;
-    reg [TAG_BITS-1:0] tag_q;
+    reg [TAG_BITS-1:0] tag_q,stream_tag_q;
     reg [9:0] words_q,issued,received;
     reg outstanding;
     reg [PW-1:0] head,tail;
@@ -91,7 +95,7 @@ module ot_a3_weight_tile_prefetch #(
       .ready_banks(ready_banks),.active_banks(active_banks));
     always @(posedge clk or negedge rst_n) begin
       if(!rst_n) begin
-        state<=IDLE;bank_q<=0;retain_q<=0;tag_q<=0;words_q<=0;
+        state<=IDLE;bank_q<=0;retain_q<=0;tag_q<=0;stream_tag_q<=0;words_q<=0;
         issued<=0;received<=0;outstanding<=0;head<=0;tail<=0;count<=0;
         tile_released<=0;released_tag<=0;
       end else begin
@@ -108,7 +112,7 @@ module ot_a3_weight_tile_prefetch #(
         endcase
         if(pop)head<=next_ptr(head);
         if(push)begin
-          data_mem[tail]<=response_data;tag_mem[tail]<=response_tag;
+          data_mem[tail]<=response_data;tag_mem[tail]<=SEPARATE_STREAM_TAG?stream_tag_q:response_tag;
           index_mem[tail]<=received;last_mem[tail]<=received==words_q-1'b1;
           tail<=next_ptr(tail);received<=received+1'b1;
           if(received==words_q-1'b1)state<=RELEASE;
@@ -116,7 +120,7 @@ module ot_a3_weight_tile_prefetch #(
         if(read_fire)issued<=issued+1'b1;
         if(tile_valid && tile_ready)begin
           state<=READ;bank_q<=tile_bank;tag_q<=tile_tag;words_q<=tile_words;retain_q<=tile_retain;
-          issued<=0;received<=0;
+          stream_tag_q<=tile_stream_tag;issued<=0;received<=0;
         end
         if(state==RELEASE && release_ready)begin
           state<=IDLE;tile_released<=1;released_tag<=tag_q;

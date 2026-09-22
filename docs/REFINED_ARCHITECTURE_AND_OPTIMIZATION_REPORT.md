@@ -19,8 +19,8 @@ drain. Tagged dual weight banks overlap refill with execution. Independent
 auxiliary cursors and three reusable SRAM windows decouple memory latency from
 compute. Generation ownership prevents stale responses from becoming current
 operands; completion waits for queued outputs and external writes to drain.
-These are implemented architectural improvements. Multi-row weight reuse and a
-complete deployment memory system remain planned.
+These are implemented architectural improvements. Bounded resident-row weight reuse is now implemented (see the replay checkpoint
+below); tiled multi-row scheduling and a complete deployment memory system remain planned.
 
 | Verified change | Previous measurement | Refined measurement | Scope and limitation |
 |---|---:|---:|---|
@@ -112,7 +112,7 @@ or whole-chip performance claim is made.
 | Auxiliary storage | Fixed windows or direct external-array responses | Three independently rebased, generation-tagged SRAM windows with exact fills | SRAM service and RTL refill scheduler tested on G2 auxiliary port; external transport modeled |
 | Auxiliary requests | Initial runtime adapter requested only the current issue | Independent future-address cursor plus reserved response slots | Captured RTL geometry admission, cursor and two-entry queue integrated |
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
-| Reuse | Stream execution repeats weights for rows | Retain resident weight tiles for bounded multi-row execution | Bank retain/replay verified; multi-row compute scheduling pending |
+| Reuse | Stream execution repeats weights for rows | Retain resident weights across activation rows | G2 replays packed weight rows up to 1,024 words; larger-row tiled scheduling remains pending |
 | Numerical behavior | Multiple engines/prototypes use different reduction associations | Preserve sequential RNE or explicitly specify and qualify blocked association | Existing LQ8 numerical/fault corpus preserved; Qwen blocked implementation qualification pending |
 | Output flow control | Fixed-throughput partial-write pulses | Reserve queue storage before final K-group issue; hold complete beats under ready/valid | Four-entry runtime output queue; six-row loaded-program stress passes |
 | Completion | Arithmetic completion alone cannot prove external work has drained | Generation-owned completion waits for transport and final writes | Connected in G2; delayed drain, abort and restart tested through a loaded program |
@@ -661,3 +661,59 @@ outputs, 18 faults and 115,748 checks. Its aggregate operation count is
 323,316 cycles. This is a different harness from G2's
 loaded-program counter. Source-bound evidence is
 `results/rtl/a3_lq8_admission_control.json`.
+
+
+## Bounded resident weight-row replay checkpoint
+
+G2 runtime mode now reuses a packed weight row across activation rows when it
+fits the two existing 512x128 SRAM banks (at most 1,024 words, or 16 KiB).
+Rows up to 512 words use one bank; larger resident rows use a full first bank
+and an exact-tail second bank. The scheduler fetches the row once, retains
+ownership through intermediate rows, and releases each bank after its final
+use. Single-row operations and weight rows beyond capacity retain the existing
+streamed TILE_WORDS path. No additional weight SRAM is allocated.
+
+Resident ownership and issue order now have separate tags. SRAM acquire/read/
+release uses the original generation/address tag. The prefetch FIFO copies each
+word with the current monotonically advancing issue-stream tag, so the operand
+join continues checking exact stream identity while the underlying bank is
+replayed. Backpressure cannot relabel queued words. Accumulation order, output
+reservation and cancellation ownership are unchanged.
+
+The generic runtime service enables this behavior only through
+`REUSE_WEIGHT_ROWS`, default off because arbitrary service streams need not
+repeat weights. G2's contraction path enables it through
+`RUNTIME_WEIGHT_ROW_REUSE`, default on in runtime mode, consistent with its
+shared B operand. `--no-weight-row-reuse` in the loaded-program checker provides
+a matched baseline on the same sources. Runtime mode itself remains opt-in.
+A registered local-column/depth product supplies the resident-row extent;
+its control/register cost still requires physical characterization.
+
+Seven focused scheduler-plus-bank-plus-FIFO tests cover resident lengths
+1/31/32/512/513/1,024 and streamed fallback at 1,025, independent response/output
+stalls, stream-tag order, exact fill counts, final bank release, cancellation
+and fresh-generation recovery. The full focused suite now has 43 passing tests.
+The actual G2 program covers abort, malformed weight/auxiliary transport,
+queued-result drain and restart. This is bounded whole-row reuse, not tiled
+multi-row compute scheduling for weight rows larger than SRAM capacity.
+
+
+Matched loaded-program runs confirm first-operation weight fills fall from
+1,440 to 240 (83.33% fewer) for M=6,N=24,K=80. With one response word per cycle,
+both variants finish the campaign at counter 14,357. With one word every eight
+cycles, streamed refill finishes at 50,311 versus 23,491 with resident replay
+(53.31% lower). All four runs produce 584 matching outputs and preserve the
+fault/abort/restart checks. This is a modeled transport sensitivity experiment;
+the counters include startup, successful operations, faults and drain stalls,
+not a whole-model throughput measurement. Evidence:
+`results/rtl/a3_g2_weight_row_reuse_comparison.json` and its four referenced
+source-bound records. Resident loading delays first use until the complete bank
+is filled; larger bursts trade startup latency for fewer external refills.
+
+The optimized admission route has also completed at ASAP7 TT, 1 ns:
+setup WNS +0.055088 ns, hold WNS +0.049710 ns,
+standard-cell area 723.503 um², and zero reported setup/hold,
+slew/capacitance/fanout, DRC and antenna violations. Source and retained artifact
+hashes pass. The record remains overall `not_met` due to pre-layout STA. The
+matched baseline route is still active; routed area savings are not established.
+Evidence: `runtime_operand_admission/pnr_control_cts12_1ns.json`.

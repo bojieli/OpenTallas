@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "weight_row_reuse": true,
+  "weight_row_reuse": false,
   "weight_response_gap": 1,
   "output_backpressure": true,
   "auxiliary_sram_windows": true,
@@ -363,13 +363,13 @@
     "4",
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
-    "-GWEIGHT_ROW_REUSE=1",
+    "-GWEIGHT_ROW_REUSE=0",
     "-GWEIGHT_RESPONSE_GAP=1",
     "--top-module",
     "tb_a3_g2_runtime_program",
-    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport",
+    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_no_weight_reuse",
     "--Mdir",
-    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport/obj",
+    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_no_weight_reuse/obj",
     "-o",
     "sim",
     "-y",
@@ -387,15 +387,15 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=3247\nprogram phase=2 complete=0 trap=8 cycles=3812\nprogram phase=1 complete=1 trap=0 cycles=6908\nprogram phase=3 complete=0 trap=8 cycles=7075\nprogram phase=1 complete=1 trap=0 cycles=10154\nprogram phase=4 complete=0 trap=8 cycles=11099\nprogram phase=5 complete=0 trap=8 cycles=11277\nprogram phase=1 complete=1 trap=0 cycles=14357\nfirst operation weight fill_words=240\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=11 fill_words=2432 read_requests=6010\noutput stalls=482 reservation stalls=19 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=1453\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:257: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 144us; walltime 0.089 s; speed 1.605 ms/s\n- Verilator: cpu 0.089 s on 1 threads; allocated 7 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=3247\nprogram phase=2 complete=0 trap=8 cycles=3812\nprogram phase=1 complete=1 trap=0 cycles=6908\nprogram phase=3 complete=0 trap=8 cycles=7075\nprogram phase=1 complete=1 trap=0 cycles=10154\nprogram phase=4 complete=0 trap=8 cycles=11099\nprogram phase=5 complete=0 trap=8 cycles=11277\nprogram phase=1 complete=1 trap=0 cycles=14357\nfirst operation weight fill_words=1440\nfirst operation SRAM fill_words=480 read_requests=1440\nauxiliary SRAM windows=11 fill_words=2432 read_requests=6010\noutput stalls=482 reservation stalls=19 accepted_outputs=584\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=6125\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:257: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 144us; walltime 0.102 s; speed 1.406 ms/s\n- Verilator: cpu 0.085 s on 1 threads; allocated 7 MB\n",
   "artifacts": {
-    "build/g2_runtime_byte_transport/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
-    "build/g2_runtime_byte_transport/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
-    "build/g2_runtime_byte_transport/descriptor.hex": "88d1edb91352e0a71b7f153785d68a0e85d4921ce76869872926b40bcc5589ad",
-    "build/g2_runtime_byte_transport/expected.hex": "e98b5190b924662508379e063037c5f434cbeac91ec326927f1c5523c1dccd93",
-    "build/g2_runtime_byte_transport/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
-    "build/g2_runtime_byte_transport/weight.hex": "4f7a12d3bea07c781c71fe2268406d732163a4971209ccd53e0cf22ec0b87cc4",
-    "build/g2_runtime_byte_transport/program_config.svh": "c696e025b1f7d6f9f30193d345d7439ba7c966f5a3b07fbf01d0835cb4eaba19",
-    "build/g2_runtime_byte_transport/simulation.log": "f60070c9ae11202a4398e8d68ece9f3ac61022721d8bda47ca29645e63d4607f"
+    "build/g2_runtime_byte_transport_no_weight_reuse/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
+    "build/g2_runtime_byte_transport_no_weight_reuse/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
+    "build/g2_runtime_byte_transport_no_weight_reuse/descriptor.hex": "88d1edb91352e0a71b7f153785d68a0e85d4921ce76869872926b40bcc5589ad",
+    "build/g2_runtime_byte_transport_no_weight_reuse/expected.hex": "e98b5190b924662508379e063037c5f434cbeac91ec326927f1c5523c1dccd93",
+    "build/g2_runtime_byte_transport_no_weight_reuse/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
+    "build/g2_runtime_byte_transport_no_weight_reuse/weight.hex": "4f7a12d3bea07c781c71fe2268406d732163a4971209ccd53e0cf22ec0b87cc4",
+    "build/g2_runtime_byte_transport_no_weight_reuse/program_config.svh": "c696e025b1f7d6f9f30193d345d7439ba7c966f5a3b07fbf01d0835cb4eaba19",
+    "build/g2_runtime_byte_transport_no_weight_reuse/simulation.log": "d93bdd92c598e5dcd614f6fcc2e47a9fb19fefc2166288f1747fc9e846dd1add"
   }
 }
