@@ -65,7 +65,8 @@ improvement. Neither change adds request cycles. Evidence is retained in
 `runtime_operand_join/routed_payload_comparison.json` under
 `results/physical_abi3/asap7/`.
 
-The latest containing-block physical results are:
+The latest completed containing-block physical results are (the service predates
+the split stream-address addition candidate described at the end):
 
 | Configuration | Tested period | Routed standard-cell area | Setup / hold WNS | Verdict |
 |---|---:|---:|---:|---|
@@ -1986,3 +1987,26 @@ hashes and all seven retained artifact hashes were checked. This qualifies the
 clock. Source/constraint manifests, netlists and final reports are retained in
 `results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json`
 and its companion artifact directory. The opening review incorporates this result.
+
+
+## Shorten the scheduler extent-to-address path: candidate under routing
+
+The remaining service setup path starts at scheduler replay selection and ends
+at stream_base[28], through tile extent selection and the full-width address
+addition. The candidate splits the increment at bit 10: the upper 22-bit
+increment is calculated independently, while the selected ten-bit tile extent
+feeds a ten-bit low sum and carry selection. This preserves modulo-32-bit
+address arithmetic with no added register or issue cycle. It targets the
+measured containing-block path, not an assumed standalone bottleneck.
+
+All 80 focused scheduler, FIFO and row-replay tests pass. Replay coverage now
+uses bases 100, 0x7ffffdf0 and 0xffff0000 across eight row sizes and all three
+stream-tag/generation modes, exercising low-address carries and the bit-31
+boundary with real bank ownership, stalls, cancellation and recovery. The
+integrated LQ8 corpus passes 92 cases, 17,103 outputs, 18 exercised faults and
+115,748 checks; source hashes match the retained record
+`results/rtl/a3_lq8_split_stream_add.json`. A matched ASAP7 TT 1 ns CTS12 service
+route is running under `build/physical_runtime_service_split_stream_add_route`,
+with output `runtime_operand_service/pnr_split_stream_add_cts12_1ns.json`.
+No timing or area improvement is claimed before that route completes; the
+previous service route does not qualify this changed scheduler source.

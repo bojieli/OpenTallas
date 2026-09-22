@@ -9,16 +9,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
 @pytest.mark.parametrize('absolute_address,single_generation', [(0, 0), (1, 0), (1, 1)])
+@pytest.mark.parametrize('base', [100, 0x7ffffdf0, 0xffff0000])
 @pytest.mark.parametrize('row_words', [1, 31, 32, 512, 513, 1024, 1025, 2049])
-def test_resident_row_replay(tmp_path, row_words, absolute_address, single_generation):
+def test_resident_row_replay(tmp_path, row_words, absolute_address, single_generation, base):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''module tb;
 parameter integer ROW_WORDS=1;
+parameter [31:0] BASE=100;
 parameter bit ABSOLUTE_ADDRESS=0;
 parameter bit SINGLE_GENERATION=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0;
-reg [31:0] command_generation=7,command_base=100,command_words=3*ROW_WORDS;
+reg [31:0] command_generation=7,command_base=BASE,command_words=3*ROW_WORDS;
 wire [31:0] command_row_words=ROW_WORDS;
 wire command_ready,active,scheduled,command_error;
 wire reserve_valid,reserve_ready,reserve_bank,fetch_valid,fetch_ready;
@@ -33,7 +35,7 @@ reg [31:0] burst_base=0;
 integer ticks=0,fills=0,consumed=0;
 wire response_valid=backing && ticks%5!=0;
 wire response_ready,response_mismatch;
-wire [127:0] response_data=128'((burst_base+32'(response_index)-100)%ROW_WORDS+17);
+wire [127:0] response_data=128'((burst_base+32'(response_index)-BASE)%ROW_WORDS+17);
 assign fetch_ready=!backing && ticks%3!=0;
 wire cancel_valid=0,cancel_bank=0;wire [63:0] cancel_tag=0;
 wire cancel_ready,word_valid,word_last,tile_released;
@@ -61,7 +63,7 @@ always @(posedge clk)begin
    if(response_index==burst_words-1)backing<=0;else response_index<=response_index+1'b1;
   end
   if(word_valid && word_ready)begin
-   if(word_tag[63:32]!=command_generation || word_tag[31:0]+(ABSOLUTE_ADDRESS?32'd0:32'(word_index))!=32'(100+consumed))$fatal(1,"issue identity lost at %0d",consumed);
+   if(word_tag[63:32]!=command_generation || word_tag[31:0]+(ABSOLUTE_ADDRESS?32'd0:32'(word_index))!=32'(BASE+consumed))$fatal(1,"issue identity lost at %0d",consumed);
    if(word_data!=128'(consumed%ROW_WORDS+17))$fatal(1,"wrong resident data");
    consumed<=consumed+1;
   end
@@ -89,7 +91,7 @@ endmodule
 ''')
     names = ['ot_a3_weight_tile_scheduler', 'ot_a3_weight_tile_prefetch',
              'ot_a3_runtime_weight_banks', 'ot_a3_operand_bank_owner']
-    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}', f'-Ptb.SINGLE_GENERATION={single_generation}',
+    built = subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.ROW_WORDS={row_words}', f'-Ptb.BASE={base}', f'-Ptb.ABSOLUTE_ADDRESS={absolute_address}', f'-Ptb.SINGLE_GENERATION={single_generation}',
                             '-o', str(tmp_path/'sim'),
                             *[str(ROOT/'rtl/abi3'/f'{n}.sv') for n in names],
                             str(ROOT/'rtl/test/tb_a3_runtime_weight_banks.sv'), str(bench)],

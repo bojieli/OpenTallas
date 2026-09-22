@@ -101,6 +101,14 @@ module ot_a3_weight_tile_scheduler #(
     wire fill_fire=fill_valid && fill_ready;
     wire tile_fire=tile_valid && tile_ready;
     wire last_fill=index==reserve_words-1'b1;
+    // A tile increment fits in ten bits. Compute the upper increment in
+    // parallel with extent selection, so the selected extent only traverses
+    // a ten-bit addition and carry mux on its way to the stream register.
+    wire [10:0] stream_low_sum={1'b0,stream_base[9:0]}+{1'b0,tile_words};
+    wire [21:0] stream_high_next=stream_base[31:10]+22'd1;
+    wire [31:0] advanced_stream_base={
+        stream_low_sum[10]?stream_high_next:stream_base[31:10],
+        stream_low_sum[9:0]};
     always @(posedge clk)begin
         if(command_fire)begin
             generation<=command_generation;
@@ -119,7 +127,7 @@ module ot_a3_weight_tile_scheduler #(
                 end else index<=index+1'b1;
             end
             if(tile_fire)begin
-                stream_base<=stream_base+{22'b0,tile_words};
+                stream_base<=advanced_stream_base;
                 tile_left<=tile_left-{22'b0,tile_words};
                 if(replay && row_left=={1'b0,tile_words})begin
                     tile_base<=row_base;row_left<=row_words;tile_bank<=0;
