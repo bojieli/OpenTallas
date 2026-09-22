@@ -79,8 +79,8 @@ initial begin
  poison_index=0;
  wait(scheduled);@(negedge clk);
  if(filled!=1031 || acquired!=1031 || fetched!=1031 || active)$fatal(1,"incomplete schedule");
- command_valid=1;command_words=0;tick();command_valid=0;if(!command_error || active)$fatal(1,"zero accepted");
- command_valid=1;command_base=32'hfffffffe;command_words=3;tick();command_valid=0;if(!command_error || active)$fatal(1,"overflow accepted");
+ command_valid=1;command_words=0;tick();command_valid=0;if(!command_error || active || reserve_valid || fetch_valid || tile_valid || fill_valid)$fatal(1,"zero accepted");
+ command_valid=1;command_base=32'hfffffffe;command_words=3;tick();command_valid=0;if(!command_error || active || reserve_valid || fetch_valid || tile_valid || fill_valid)$fatal(1,"overflow accepted");
  command_valid=1;command_base=100;command_words=3;tick();command_valid=0;clear=1;#1;
  if(reserve_valid || tile_valid || fetch_valid || response_ready)$fatal(1,"clear left credit");tick();clear=0;#1;
  if(active || !command_ready)$fatal(1,"clear left active schedule");

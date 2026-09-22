@@ -3,7 +3,7 @@
   "runs": [
     {
       "baseline_record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_depth192.json",
-      "candidate_record": "a3_g2_runtime_byte_transport_depth192.json",
+      "candidate_record": "resident_reuse_early_before_control/a3_g2_runtime_byte_transport_depth192.json",
       "candidate_record_sha256": "60e1a0db5b520d3f8fdbb972341521453f6e5c8f0761aecf7bc7299cd9eceeb9",
       "baseline": {
         "final_completion_counter": 31838,
@@ -18,7 +18,7 @@
     },
     {
       "baseline_record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_weight_gap8.json",
-      "candidate_record": "a3_g2_runtime_byte_transport_weight_gap8.json",
+      "candidate_record": "resident_reuse_early_before_control/a3_g2_runtime_byte_transport_weight_gap8.json",
       "candidate_record_sha256": "3bb40aa2034d6b36e0414246a853aa0233303c69cfecfb7fd94a95b950c2a469",
       "baseline": {
         "final_completion_counter": 23491,
@@ -33,7 +33,7 @@
     },
     {
       "baseline_record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_depth340.json",
-      "candidate_record": "a3_g2_runtime_byte_transport_depth340.json",
+      "candidate_record": "resident_reuse_early_before_control/a3_g2_runtime_byte_transport_depth340.json",
       "candidate_record_sha256": "7fbfb00a690039663f75922f6690a6e73c96b1b8fc0a656efed62508db45c581",
       "baseline": {
         "final_completion_counter": 54359,
@@ -48,7 +48,7 @@
     },
     {
       "baseline_record": "resident_reuse_before_early_fill/a3_g2_runtime_byte_transport_depth352.json",
-      "candidate_record": "a3_g2_runtime_byte_transport_depth352.json",
+      "candidate_record": "resident_reuse_early_before_control/a3_g2_runtime_byte_transport_depth352.json",
       "candidate_record_sha256": "b8828e790ad4e40e58b905db77b37636df270c3951a2548f7fa72d720c8dee95",
       "baseline": {
         "final_completion_counter": 55487,

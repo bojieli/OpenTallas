@@ -827,3 +827,32 @@ records in `results/rtl/resident_reuse_before_early_fill/` so updated runs canno
 silently change their baseline. The full operand-service route launched before
 this split still characterizes its recorded older source snapshot, not this
 candidate. Complete G2 and all-target closure remain open.
+
+
+## Replay scheduler admission/control repair
+
+The early-fill scheduler's pre-layout worst path began at command_words,
+traversed the full range check and then drove payload-register enables. Command
+capture now writes payload independently of that verdict; only registered
+active state authorizes reserve/fetch/tile publication. Reset and clear revoke
+ownership/publication state. Every accepted command initializes all payload
+before use; invalid commands may change unpublished fields but never request
+transport or acquire storage. Tests explicitly check those invalid-command
+publication gates. No pipeline or command-startup cycle is added.
+
+Matched ASAP7 TT synthesis area falls from 326.651 to 301.176 um² (7.80%),
+and sequential area from 103.868 to 80.714 um². This is only 0.78% above the
+fixed-split narrow scheduler's 298.831 um² while retaining the early-fill
+latency benefit. Pre-layout WNS improves from -0.8701 to -0.6646 ns but still
+fails 1 ns. A matched-constraint CTS12 route is running; no repaired frequency
+or routed-area claim follows yet. Payload switching energy is unmeasured.
+
+All 44 focused runtime tests pass and standalone scheduler lint is clean.
+Loaded-program depth-192 fast transport, depth-80 slow transport and depth-352
+fallback retain 584 matching outputs and exact final counters 31,574, 21,731
+and 55,487. The early-fill comparison now points to archived pre-control records
+in `results/rtl/resident_reuse_early_before_control/`, preserving its source and
+record hashes as current evidence is refreshed. Physical evidence is
+`runtime_weight_scheduler/prelayout_replay_control_1ns.json` with source snapshot
+`source_snapshots/replay_control.sv`. Broader integration and all-target goals
+remain unfinished.
