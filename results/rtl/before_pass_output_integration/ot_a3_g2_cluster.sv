@@ -153,7 +153,6 @@ module ot_a3_g2_cluster #(
     parameter bit RUNTIME_WEIGHT_LINE_REUSE = 1,
     parameter bit RUNTIME_WEIGHT_WORD_HANDOFF = 1,
     parameter bit RUNTIME_WEIGHT_ROW_REUSE = 1,
-    parameter bit RUNTIME_PASS_FIRST = 0,
     parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
     parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
     parameter integer OUTPUT_DEPTH = 4,
@@ -761,7 +760,7 @@ module ot_a3_g2_cluster #(
         wire writer_error;
         assign object_writer_error=writer_error || binding_error;
         assign queued_output_ready=part_ready && writer_ready;
-        ot_a3_output_object_writer #(.LANES(LANES),.OUTSTANDING(WRITE_OUTSTANDING),.PASS_FIRST(RUNTIME_PASS_FIRST),.INTERLEAVE(ADDER_STAGES)) writer(
+        ot_a3_output_object_writer #(.LANES(LANES),.OUTSTANDING(WRITE_OUTSTANDING)) writer(
             .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
             .command_valid(output_layout_valid && array_busy),.command_ready(),
             .command_generation(runtime_generation),.command_object(output_object),
@@ -786,8 +785,6 @@ module ot_a3_g2_cluster #(
         assign object_write_fp32=0;assign object_response_ready=0;
         assign object_writer_drained=1;assign object_writer_error=0;
     end endgenerate
-    initial if(RUNTIME_PASS_FIRST && (!RUNTIME_OPERANDS || !RUNTIME_WEIGHT_OBJECT_READS || !RUNTIME_OBJECT_WRITES))
-        $fatal(1,"pass-first requires runtime object input and output transport");
     initial if(RUNTIME_WEIGHT_OBJECT_READS && (!RUNTIME_OPERANDS || !RESOLVE_INPUT_OBJECTS))
         $error("Weight object reads require runtime operands and input object resolution");
     generate if(RUNTIME_OPERANDS==0)begin : legacy_operands
@@ -851,8 +848,7 @@ module ot_a3_g2_cluster #(
         if(RUNTIME_WEIGHT_OBJECT_READS)begin : descriptor_weight_transport
             // The compute bank service clears immediately on drain. External
             // read ownership survives until transport cancellation is acknowledged.
-            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE),.WORD_HANDOFF(RUNTIME_WEIGHT_WORD_HANDOFF),.PASS_FIRST(RUNTIME_PASS_FIRST),
-                .COMPACT_PASS_REUSE(RUNTIME_PASS_FIRST && RUNTIME_WEIGHT_ROW_REUSE)) transport(
+            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE),.WORD_HANDOFF(RUNTIME_WEIGHT_WORD_HANDOFF)) transport(
                 .clk(clk),.rst_n(rst_n),
                 .clear(!input_layout_valid || (lifetime_clear && runtime_transport_ack)),
                 .command_valid(command_pending && service_command_ready),.command_ready(transport_command_ready),
@@ -947,7 +943,7 @@ module ot_a3_g2_cluster #(
             else if(operand_issue)words_read<=words_read+1'b1;
         end
         assign staging_weight_words_read=words_read;
-        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),.PASS_FIRST(RUNTIME_PASS_FIRST),
+        ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),
             .AUXILIARY_DEPTH(RUNTIME_AUXILIARY_DEPTH),.REGISTER_AUXILIARY_REQUESTS(RUNTIME_REGISTER_AUXILIARY_REQUESTS)) service(
             .clk(clk),.rst_n(rst_n),.clear(service_clear),
             .command_valid(command_pending && transport_command_ready),.command_ready(service_command_ready),
@@ -991,7 +987,7 @@ module ot_a3_g2_cluster #(
     ot_a3_lq8 #(
         .LANES(LANES),
         .ADDER_STAGES(ADDER_STAGES),
-        .ACC_SLOTS(ACC_SLOTS),.OPERAND_CREDITS(RUNTIME_OPERANDS),.PASS_FIRST(RUNTIME_PASS_FIRST)
+        .ACC_SLOTS(ACC_SLOTS),.OPERAND_CREDITS(RUNTIME_OPERANDS)
     ) array (
         .clk(clk),
         .rst_n(core_rst_n),

@@ -1,0 +1,44 @@
+{
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "e4b73f02c5fb4db23bed1107521ada6229d3c3f39b19944b113eafba8fd09207",
+      "size_bytes": 8142
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+      "size_bytes": 7555
+    }
+  ],
+  "retained_artifacts_verified": 7,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0528268,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 1.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 69.0,
+        "setup_wns_ns": -0.105825,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 1424.52,
+  "critical_path": "inner.replay -> inner.tile_base[29]",
+  "scope": "Current registered-handoff wrapper route; not met"
+}

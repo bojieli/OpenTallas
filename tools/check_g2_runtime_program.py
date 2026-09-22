@@ -23,6 +23,7 @@ parser.add_argument("--no-weight-line-retention", action="store_true")
 parser.add_argument("--weight-object-reads", action="store_true")
 parser.add_argument("--input-layout", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
+parser.add_argument("--pass-first", action="store_true")
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
 parser.add_argument("--cols", type=int, default=None)
@@ -30,6 +31,9 @@ parser.add_argument("--activation-miss-aligned", action="store_true")
 parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
 parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
+if args.pass_first:
+    args.weight_object_reads=True
+    args.object_writes=True
 if args.strided_weights:
     args.weight_object_reads = True
 if args.weight_object_reads:
@@ -78,6 +82,8 @@ if args.strided_weights:
     record_name += "_strided_weights"
 if args.no_weight_word_handoff:
     record_name += "_no_word_handoff"
+if args.pass_first:
+    record_name += "_pass_first"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -200,16 +206,26 @@ hex_words("expected.hex", expected_padded.reshape(-1), 8)
 # A later column pass can revisit a page evicted while reading the same row.
 resident_page = None
 expected_activation_fills = 0
-for row in range(rows):
-    for pass_base in range(0, cols // 8, 3):
-        for k in range(depth):
-            page = ((row * depth + k) // 256) * 256
-            address = row * depth + k
-            hit = resident_page is not None and resident_page <= address < min(resident_page + 256, rows * depth)
-            if not hit:
-                page = address if args.activation_miss_aligned else page
-                expected_activation_fills += min(256, rows * depth - page)
-                resident_page = page
+issue_order=[(row,p) for row in range(rows) for p in range(0,cols//8,3)]
+if args.pass_first:
+    issue_order.sort(key=lambda rp:(rp[1],rp[0]))
+for row,pass_base in issue_order:
+    for k in range(depth):
+        page = ((row * depth + k) // 256) * 256
+        address = row * depth + k
+        hit = resident_page is not None and resident_page <= address < min(resident_page + 256, rows * depth)
+        if not hit:
+            page = address if args.activation_miss_aligned else page
+            expected_activation_fills += min(256, rows * depth - page)
+            resident_page = page
+expected_weight_fills=rows*(cols//8)*depth
+if not args.no_weight_row_reuse and rows>1:
+    if args.pass_first:
+        expected_weight_fills=sum(min(3,cols//8-p)*depth *
+            (1 if min(3,cols//8-p)*depth<=1024 else rows)
+            for p in range(0,cols//8,3))
+    elif (cols//8)*depth<=1024:
+        expected_weight_fills=(cols//8)*depth
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
@@ -218,6 +234,7 @@ for row in range(rows):
     f"localparam [31:0] WEIGHT_OBJECT=32'd{weight_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, LOGICAL_COLS={logical_cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam integer OUTPUT_BASE={output_base}, OUTPUT_ROW_STRIDE={output_row_stride}, OUTPUT_COL_STRIDE={output_col_stride}, OUTPUT_BYTES={output_bytes};\n"
+    f"localparam integer EXPECTED_WEIGHT_FILLS={expected_weight_fills};\n"
     f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
@@ -271,6 +288,7 @@ cmd = [
     f"-GWEIGHT_OBJECT_READS={int(args.weight_object_reads)}",
     f"-GINPUT_LAYOUT={int(args.input_layout)}",
     f"-GOBJECT_WRITES={int(args.object_writes)}",
+    f"-GPASS_FIRST={int(args.pass_first)}",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
     f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
     f"-GREGISTER_AUXILIARY_REQUESTS={int(args.registered_auxiliary_requests)}",
@@ -312,6 +330,7 @@ result = {
     "weight_object_sha256": hashlib.sha256(weight_payload).hexdigest(),
     "strided_output": args.strided_output,
     "write_outstanding": args.write_outstanding,
+    "pass_first": args.pass_first,
     "weight_row_reuse": not args.no_weight_row_reuse,
     "auxiliary_depth": args.auxiliary_depth,
     "registered_auxiliary_requests": args.registered_auxiliary_requests,
@@ -334,6 +353,7 @@ result = {
         "cols": logical_cols,
         "padded_cols": cols,
         "depth": depth,
+        "expected_weight_fills": expected_weight_fills,
         "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
         "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes" if args.weight_object_reads else "External fixture service repacks ABI N-major weights into eight-lane words",

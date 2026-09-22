@@ -8,10 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which('iverilog') is None, reason='iverilog unavailable')
 @pytest.mark.parametrize('fp32', [0, 1])
-def test_output_object_writer(tmp_path, fp32):
+@pytest.mark.parametrize('pass_first,interleave', [(0,3),(1,1),(1,3)])
+def test_output_object_writer(tmp_path, fp32, pass_first, interleave):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''module tb;
 parameter bit FP32=0;
+parameter bit PASS_FIRST=0;
+parameter integer INTERLEAVE=3;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,part_valid=0,write_ready=0,response_valid=0,response_error=0;
 wire command_ready,part_ready,write_valid,response_ready,drained,protocol_error;
@@ -30,7 +33,7 @@ wire write_fp32;
 reg [31:0] response_generation=17;
 integer requests=0,checks=0;
 reg [840:0] held;
-ot_a3_output_object_writer #(.OUTSTANDING(1)) dut(.*);
+ot_a3_output_object_writer #(.OUTSTANDING(1),.PASS_FIRST(PASS_FIRST),.INTERLEAVE(INTERLEAVE)) dut(.*);
 always @(posedge clk)if(write_valid && write_ready)requests<=requests+1;
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
 task launch;begin
@@ -62,7 +65,11 @@ task check_write(input integer row,input integer col);begin
 end endtask
 initial begin
  tick();rst_n=1;launch();
- for(integer r=0;r<2;r=r+1)for(integer c=0;c<2;c=c+1)begin beat(r,c);check_write(r,c);end
+ if(PASS_FIRST && INTERLEAVE==1)begin
+  for(integer c=0;c<2;c=c+1)for(integer r=0;r<2;r=r+1)begin beat(r,c);check_write(r,c);end
+ end else begin
+  for(integer r=0;r<2;r=r+1)for(integer c=0;c<2;c=c+1)begin beat(r,c);check_write(r,c);end
+ end
  // An extra row, malformed lane identity, or padded mask never emits a request.
  beat(2,0);repeat(3)tick();if(!protocol_error || write_valid || requests!=4)$fatal(1,"extra row escaped");checks=checks+1;
  launch();part_valid=1;part_mask=8'hff;part_address=0;tick();part_valid=0;repeat(3)tick();
@@ -105,6 +112,7 @@ initial begin #20000;$fatal(1,"timeout");end
 endmodule
 ''')
     subprocess.run(['iverilog', '-g2012', '-s', 'tb', f'-Ptb.FP32={fp32}',
+                    f'-Ptb.PASS_FIRST={pass_first}', f'-Ptb.INTERLEAVE={interleave}',
                     '-o', str(tmp_path/'sim'),
                     str(ROOT/'rtl/abi3/ot_a3_output_object_writer.sv'), str(bench)],
                    check=True, capture_output=True, text=True)

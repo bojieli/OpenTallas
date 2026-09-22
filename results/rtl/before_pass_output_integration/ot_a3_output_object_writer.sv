@@ -7,9 +7,7 @@
 // offsets use logical element strides, independent of padded execution width.
 module ot_a3_output_object_writer #(
  parameter integer LANES=8,
- parameter integer OUTSTANDING=4,
- parameter bit PASS_FIRST=0,
- parameter integer INTERLEAVE=3
+ parameter integer OUTSTANDING=4
 )(
  input wire clk,rst_n,clear,
  input wire command_valid,
@@ -51,9 +49,6 @@ module ot_a3_output_object_writer #(
  reg active;
  reg [31:0] expected_address;
  reg [15:0] rows_left,cols_left,local_cols;
- reg [15:0] rows_total,pass_cols_left,pass_remaining;
- reg [31:0] pass_address,row_address;
- reg [50:0] pass_offset;
  // rows/cols are 16 bits and element strides/base are 32 bits. Even
  // base+(rows-1)*row_stride+(cols-1)*col_stride, scaled by four,
  // is below 2^51. Steps themselves need only 34 bits.
@@ -99,10 +94,6 @@ module ot_a3_output_object_writer #(
    last_offset<=command_object_bytes-(command_fp32?64'd4:64'd2);
    object_too_small<=command_object_bytes<(command_fp32?64'd4:64'd2);
    expected_address<=command_element_base;
-   pass_address<=command_element_base;row_address<=command_element_base;
-   pass_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
-   rows_total<=command_rows;pass_cols_left<=command_padded_cols/LANES;
-   pass_remaining<=16'(INTERLEAVE);
    row_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
    cursor_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
    row_step<={2'b0,command_row_stride}<<(command_fp32?2:1);
@@ -121,29 +112,7 @@ module ot_a3_output_object_writer #(
   end
   if(accept_part && !protocol_error)begin
    expected_address<=expected_address+1'b1;
-   if(PASS_FIRST)begin
-    if(pass_remaining==1 || cols_left==1)begin
-     pass_remaining<=16'(INTERLEAVE);
-     if(rows_left>1)begin
-      rows_left<=rows_left-1'b1;cols_left<=pass_cols_left;
-      row_address<=row_address+{16'd0,local_cols};
-      expected_address<=row_address+{16'd0,local_cols};
-      row_offset<=row_offset+row_step;cursor_offset<=row_offset+row_step;
-     end else if(cols_left==1)rows_left<=0;
-     else begin
-      rows_left<=rows_total;pass_cols_left<=pass_cols_left-16'(INTERLEAVE);
-      cols_left<=pass_cols_left-16'(INTERLEAVE);
-      pass_address<=pass_address+32'(INTERLEAVE);
-      row_address<=pass_address+32'(INTERLEAVE);expected_address<=pass_address+32'(INTERLEAVE);
-      pass_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
-      row_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
-      cursor_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
-     end
-    end else begin
-     pass_remaining<=pass_remaining-1'b1;cols_left<=cols_left-1'b1;
-     cursor_offset<=cursor_offset+51'(col_step)*51'(LANES);
-    end
-   end else if(cols_left==1)begin
+   if(cols_left==1)begin
     rows_left<=rows_left-1'b1;cols_left<=local_cols;
     row_offset<=row_offset+row_step;cursor_offset<=row_offset+row_step;
    end else begin
@@ -180,7 +149,6 @@ module ot_a3_output_object_writer #(
  generate if(OUTSTANDING<1 || OUTSTANDING>256)begin : bad_depth
   initial $error("OUTSTANDING must be in 1..256");
  end endgenerate
- initial if(INTERLEAVE<1 || INTERLEAVE>65535)$fatal(1,"invalid output pass width");
  generate if(LANES<1 || LANES>64 || (LANES&(LANES-1))!=0)begin : bad_lanes
   initial $error("LANES must be a power of two in 1..64");
  end endgenerate

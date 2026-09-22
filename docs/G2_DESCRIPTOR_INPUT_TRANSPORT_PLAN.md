@@ -729,3 +729,38 @@ Verilator 5.050 elaborates the enabled runtime service without warnings; array
 elaboration succeeds with existing width warnings in the arithmetic sources.
 Neither result is a new physical qualification. The pass-scheduler handoff and
 compact transport physical runs remain active.
+
+## Loaded pass-first G2 integration
+
+`RUNTIME_PASS_FIRST=1` now selects pass order consistently in the array, runtime
+service, compact weight transport and output writer. It requires runtime object
+reads and writes. The writer retains pass/row address and byte-offset origins,
+checks each lane-local address against pass/row order, and maps to descriptor
+strides. Existing unique row-tail addresses remain valid: final-column outputs
+arrive in row order during the final pass. Legacy defaults remain unchanged.
+
+The loaded M6/N53/K160 strided-input/output campaign now passes with 2,234 exact
+outputs and 295 writes/acknowledgements in both schedules. Matched current-source
+results: row-first 708,336 campaign cycles versus pass-first 203,111 (71.33% fewer).
+First-operation weight fills drop 6,720 to 1,120; object bytes drop 207,336 to
+34,556 (83.33%). Activation fills rise 2,496 to 2,880 (15.38%), exposing the
+loop-order locality tradeoff. These are fault/recovery campaigns, not model
+inference latency. Evidence: `results/rtl/g2_pass_first_comparison.json`.
+
+The bench independently computes residency in the selected order and checks
+exact weight-fill counts. Its final-output stall now selects the penultimate
+scheduled result; the old row-major address arrived before the final pass and
+caused a testbench deadlock. Numerical results, output gaps and tail masks,
+queued abort, pending-read abort ownership, wrong-generation responses,
+auxiliary faults, final-write error, object-binding failure and recovery pass.
+Ten standalone writer tests cover both orders and BF16/FP32 output, bounded
+strides and acknowledgement faults. Pass-first writer and complete current G2
+1 ns physical characterization runs are active. The integrated launch config is
+`configs/hardware/g2_pass_first_physical.json`; all launch source hashes are
+retained. Broader shape/format qualification and all-target optimization remain.
+
+The registered pass-scheduler route completes at 1,424.520 um², setup -0.105825 ns,
+hold +0.0528268 ns with one fanout violation at 1 ns. It remains unclosed. Compared
+with the initial route, setup improves 23.4 ps while area rises 3.45%. The critical
+path now runs from inner replay to inner tile-base advancement. Source/artifact
+verification is retained in `weight_pass_scheduler/tile_handoff_route_audit.json`.

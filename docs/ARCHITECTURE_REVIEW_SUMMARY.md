@@ -140,3 +140,16 @@ Evidence: [capacity boundary](../results/rtl/g2_weight_replay_capacity_boundary.
 [streaming handoff comparison](../results/rtl/g2_streamed_weight_handoff_comparison.json),
 [input transport design and route records](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md),
 and [full implementation history](REFINED_ARCHITECTURE_AND_OPTIMIZATION_REPORT.md).
+
+## Latest loaded architecture result
+
+Pass-first execution is now connected through G2 input scheduling, arithmetic
+and descriptor output writes. A matched M6/N53/K160 strided campaign reduces
+cycles from 708,336 to 203,111 (71.33%) and first-operation weight bytes from
+207,336 to 34,556 (83.33%), with 2,234 exact outputs and 295 writes/acks in each.
+Activation fills increase from 2,496 to 2,880; this tradeoff must be measured
+across workloads. Counters include fault/recovery phases, not inference latency.
+See `results/rtl/g2_pass_first_comparison.json`. Current integrated physical
+characterization is active, and the pass scheduler still misses its 1 ns target.
+This checkpoint supersedes earlier statements that loaded integration is absent;
+it does not establish broad shape coverage or all-target closure.
