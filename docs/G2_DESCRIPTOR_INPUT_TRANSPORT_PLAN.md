@@ -446,3 +446,44 @@ gather source and source-bound functional evidence are retained in
 `bf16_weight_transport/lane_line_extent/`. Earlier matched handoff campaign
 records were archived before their current-path refresh so their comparison
 hashes remain valid.
+
+## Measured whole-row capacity boundary and schedule dependencies
+
+Loaded real-object campaigns on either side of the existing 1,024-word replay
+limit pass 2,234 outputs and 295 writes/acknowledgements each:
+
+| M/N/K | Packed words per weight row | First-operation weight fills | Object bytes read | Activation fills | Campaign cycles |
+|---|---:|---:|---:|---:|---:|
+| 6/53/144 | 1,008 | 1,008 | 31,164 | 2,400 | 196,707 |
+| 6/53/160 | 1,120 | 6,720 | 207,336 | 2,496 | 708,336 |
+
+These are different workloads, so their cycle ratio is not an optimization
+speedup. They expose the capacity discontinuity: the larger row streams six
+times, despite a three-column-group K160 pass occupying only 480 packed words.
+Evidence: `results/rtl/g2_weight_replay_capacity_boundary.json`.
+
+A column-pass-first traversal could retain a complete pass and reuse it across
+output rows before advancing to the next pass. Each output's K accumulation
+would still be sequential, and no cross-row partial accumulator spill is needed
+when the full K pass fits. However, implementation must change these together:
+
+- Lane issue control currently walks row, column pass, K, interleaved column.
+  Its activation bases, output addresses, slot reuse and scale cursors must
+  follow the new pass, row, K, column order.
+- The future operand cursor, weight layout cursor and resident bank scheduler
+  must share the same traversal contract. Changing only fetch addresses would
+  silently pair weights and activations incorrectly.
+- Tail masking currently tracks row-tail addresses incrementally; pass-first
+  output order needs explicit coordinates or a matching ordered cursor.
+- The output-object writer validates the old row-major beat sequence. Either
+  a bounded reorder stage restores that order or the writer and its validation
+  adopt the admitted pass-first schedule. Reorder storage must be budgeted,
+  not hidden in the test fixture.
+- Activation reuse must be measured again: changing traversal can increase
+  activation refills across rows and negate some weight-traffic savings.
+
+For K passes exceeding bank capacity, full-pass retention is insufficient.
+Depth tiling then requires preserving per-output FP32 accumulator state across
+tiles, with a quantified register/SRAM budget and unchanged addition order.
+The new schedule is not yet implemented; these measurements constrain the next
+architecture change while the current transport physical runs continue.
