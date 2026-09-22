@@ -1463,3 +1463,13 @@ Overall records remain `not_met` because pre-layout STA failed. Evidence:
 `runtime_operand_join/routed_payload_comparison.json` and paired route artifacts
 under `results/physical_abi3/asap7/`. The combined service route includes this
 join revision but remains pending.
+
+
+A bank-owner payload-reset experiment passes 74 focused tests, the 92-case
+numerical corpus and loaded G2 with unchanged cycles/outputs. However, matched
+synthesis area rises from 264.348 to 286.526 um² (8.39%), while pre-layout WNS
+improves from -0.2711 to -0.0483 ns and still fails. The candidate is retained
+only as a source-bound experiment; active bank-owner RTL is restored to the
+baseline. No controller change is selected without containing-path evidence
+that justifies its area cost. Evidence: `runtime_bank_owner/comparison.json`,
+snapshots and candidate functional records under `results/physical_abi3/asap7/`.
