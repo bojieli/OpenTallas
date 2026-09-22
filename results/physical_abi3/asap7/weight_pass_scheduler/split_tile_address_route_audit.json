@@ -1,5 +1,5 @@
 {
-  "scope": "Current split tile increment scheduler; not closed at 1 ns",
+  "scope": "Historical split-increment route before parallel extent selection",
   "sources": [
     {
       "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
@@ -39,5 +39,17 @@
     "reason": "did not meet in: place_and_route",
     "status": "not_met"
   },
-  "area_um2": 1429.28
+  "area_um2": 1429.28,
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "verified": "results/physical_abi3/asap7/weight_pass_scheduler/parallel_extent/before.sv",
+      "sha256": "0c9b2243cf186636003b4ede868ebdf76cfe5bb9fa1db1f3a76e1bac4f3acf3b"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "verified": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79"
+    }
+  ]
 }

@@ -66,23 +66,16 @@ module ot_a3_weight_tile_scheduler #(
     wire reuse_command=ROW_REUSE && command_row_words!=0 &&
         command_row_words<=1024 && command_words>command_row_words;
     wire [31:0] fill_limit=replay?(reserve_bank?32'd512:{22'b0,first_words}):32'(TILE_WORDS);
-    wire [9:0] tile_limit=replay?(tile_bank?10'd512:first_words):10'(TILE_WORDS);
-    // Select min(stream remainder, bank limit, replay row remainder) with
-    // parallel comparisons. Avoid a selected minimum feeding a second compare
-    // before the routed tile-address adder. Upper stream bits only qualify
-    // the narrow comparisons; a bank extent never exceeds 512 words.
-    wire stream_below_limit=tile_left[31:10]==0 && tile_left[9:0]<=tile_limit;
-    wire stream_below_row=tile_left[31:11]==0 && tile_left[10:0]<=row_left;
-    wire choose_stream=stream_below_limit && (!replay || stream_below_row);
-    wire choose_row=replay && !stream_below_row && row_left<={1'b0,tile_limit};
-    wire choose_limit=!choose_stream && !choose_row;
+    wire [31:0] tile_limit=replay?(tile_bank?32'd512:{22'b0,first_words}):32'(TILE_WORDS);
+    // Clamp the stream count to a bank-sized chunk before comparing row
+    // remainder. Both minima are preserved, including partial final rows,
+    // without a 32-bit row/stream mux feeding the variable tile-limit compare.
+    wire [9:0] stream_chunk=tile_left<tile_limit?tile_left[9:0]:tile_limit[9:0];
     wire enabled=rst_n && !clear;
     wire [32:0] range_end={1'b0,command_base}+{1'b0,command_words};
     assign command_ready=enabled && !active;
     assign reserve_words=fill_left<fill_limit?fill_left[9:0]:fill_limit[9:0];
-    assign tile_words=({10{choose_stream}} & tile_left[9:0]) |
-                      ({10{choose_row}} & row_left[9:0]) |
-                      ({10{choose_limit}} & tile_limit);
+    assign tile_words=replay && row_left<{1'b0,stream_chunk}?row_left[9:0]:stream_chunk;
     assign reserve_tag={generation,fill_base};
     assign fetch_tag=reserve_tag;
     assign fetch_address=fill_base;

@@ -886,3 +886,27 @@ by 49.26 ps at 0.33% more area and no added cycles. The critical path remains
 inner replay/extent to tile-base advancement. Source and seven artifact hashes
 verify in `weight_pass_scheduler/split_tile_address_route_audit.json`; no
 extrapolated Fmax is accepted as closure.
+
+## Parallel extent selection candidate and explicit partial-row limit
+
+The scheduler's measured replay-to-tile-address path still traversed two serial
+minimum selections. The candidate now compares stream remainder, row remainder
+and bank capacity in parallel, then selects their minimum with mutually exclusive
+masks. Bank extents are ten bits; high stream bits only qualify the narrow
+comparisons. No registers, issue bubbles or extra admission cycles are added.
+Ninety-three bank/runtime regressions pass, strict Verilator lint passes, and
+3,664 independent integer-minimum cases cover equalities, zero, large stream
+counts and partial remainders. Evidence: `results/rtl/weight_parallel_extent.json`.
+The 1 ns ASAP7 TT CTS12 route is active; no timing/area benefit is claimed yet.
+
+An additional generic partial-row experiment exposed an existing unsupported
+composition: 92 issue words with a 31-word resident row stalls on the shortened
+last tile because prefetch requires tile extent equal to stored bank extent.
+The same failure is reproduced with both the pre-change scheduler and candidate.
+Bench and failure evidence are retained in `results/rtl/partial_replay_extent_gap/`.
+Current G2 admission and pass scheduling issue complete rows/passes, and their
+loaded/composed regressions pass; this does not qualify arbitrary partial-row
+replay. Supporting that generic case requires prefix acquisition and correct
+release of unused retained banks, or an explicit admission refusal. The limit
+remains open rather than silently widening the bank contract during timing work.
+The original failing expansion was stopped; its failure is not counted as a pass.

@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "regression_tests": 93,
+  "extent_oracle_cases": 3664,
+  "lint": "Verilator 5.050 --lint-only --Wall: pass",
+  "scope": "Parallel extent selection preserves integer minimum and existing complete-row/pass bank-service behavior; generic partial-row bank extent mismatch remains separately recorded",
+  "known_failure": "results/rtl/partial_replay_extent_gap/result.json",
+  "physical": "running: results/physical_abi3/asap7/weight_pass_scheduler/pnr_parallel_extent_cts12_1ns.json",
+  "sources": {
+    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "bab84da38682c7f6ff29c076700e15317a6b8b6df4807c227422d78996c13570",
+    "rtl/abi3/ot_a3_weight_pass_scheduler.sv": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+    "tests/test_weight_extent_selection.py": "ff2c628233e55c781e5b9b98b13eab819bcffbeafeafb498bb5573879e546acb",
+    "tests/test_weight_row_reuse.py": "3e111907a6593836b60c21c550c9e548ed138471dddf861c1ca211d42d563379",
+    "tests/test_weight_pass_reuse.py": "a910d9019964737e2402e6a20721aaef78bedeca7c70ba4d4748112bdaf8e557",
+    "tests/test_runtime_pass_transport.py": "88aea36fb6c604a7d5d53549302da14e7c7030605a3231080358966ee709ecbe"
+  }
+}
