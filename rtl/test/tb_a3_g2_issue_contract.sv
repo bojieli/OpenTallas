@@ -21,7 +21,7 @@ module tb_a3_g2_issue_contract;
  wire [31:0] output_object;
  wire [15:0] output_logical_cols;
  reg [31:0] c_object=32'h12345678;
- integer launches=0,checks=0;
+ integer launches=0,checks=0,cancel_state;
  ot_a3_g2_array_issue_adapter dut(
  .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
  .issue_family(issue_family),.issue_sub(8'd0),.issue_descriptor_id(32'd0),.issue_slot(issue_slot),
@@ -116,6 +116,23 @@ module tb_a3_g2_issue_contract;
   c_bad_header=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_bad_header=0;
   c_dtype=8'h20;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_dtype=8'h10;
   c_scaled=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_scaled=0;
+  // Clear wins over views, issue, descriptor response, launch and completion.
+  for(cancel_state=1;cancel_state<=6;cancel_state=cancel_state+1)begin
+   if(cancel_state==5)b_cols=0;
+   view(0,10,0);view(1,11,0);view(4,12,0);issue();
+   while(dut.state!=3'(cancel_state))tick();
+   clear=1;issue_valid=1;view_valid=1;array_done=1;
+   #1;if(issue_ready || output_layout_valid)$fatal(1,"clear advertised ownership");
+   tick();clear=0;issue_valid=0;view_valid=0;array_done=0;b_cols=8;#1;
+   if(!issue_ready || complete_valid || array_start || desc_req || output_layout_valid || dut.view_have!=0)
+    $fatal(1,"clear lost priority state=%0d",cancel_state);
+   repeat(3)begin tick();if(complete_valid || array_start || output_layout_valid)$fatal(1,"cancelled work escaped");end
+   checks=checks+1;
+  end
+  // A complete new view set must recover after the final cancelled descriptor.
+  view(0,10,0);view(1,11,0);view(4,12,0);issue();wait(array_start);@(negedge clk);
+  tick();array_done=1;tick();array_done=0;
+  if(!complete_valid || complete_fault)$fatal(1,"clear recovery failed");checks=checks+1;
   $display("PASS G2 issue contract checks=%0d",checks);$finish;
  end
  initial begin #100000;$fatal(1,"timeout");end

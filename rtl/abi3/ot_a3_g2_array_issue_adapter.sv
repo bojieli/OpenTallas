@@ -221,7 +221,7 @@ module ot_a3_g2_array_issue_adapter #(
         end
     endfunction
 
-    assign issue_ready = (state == S_IDLE);
+    assign issue_ready = rst_n && !clear && (state == S_IDLE);
 
     // ABI slots 0..3 are inputs and 4..5 are outputs. Compact only the
     // two contraction inputs and first output into this adapter's three slots.
@@ -283,7 +283,7 @@ module ot_a3_g2_array_issue_adapter #(
                 view_have  <= 3'b000;
                 view_offset_overflow<=3'b000;
                 view_reset <= 1'b0;
-            end
+            end else begin
 
             // -- capture the resolved views ------------------------------
             // The captured set is dropped as soon as an issue consumes it.
@@ -458,6 +458,7 @@ module ot_a3_g2_array_issue_adapter #(
 
                 default: state <= S_IDLE;
             endcase
+            end // clear has priority over all capture and state transitions
         end
     end
 endmodule

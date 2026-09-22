@@ -30,4 +30,4 @@ def test_g2_issue_contract(tmp_path):
     result = subprocess.run(
         ["vvp", str(image)], check=True, capture_output=True, text=True, timeout=30
     )
-    assert "PASS G2 issue contract checks=20" in result.stdout
+    assert "PASS G2 issue contract checks=27" in result.stdout

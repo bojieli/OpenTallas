@@ -1,0 +1,16 @@
+{
+  "scope": "G2 issue adapter clear priority, not physical optimization. Descriptor producer must drain outstanding replies before reuse after cancellation.",
+  "status": "pass",
+  "contract_checks": 27,
+  "focused_pytest_cases": 4,
+  "baseline_regression": "Old adapter fails clear lost priority state=1 with the new bench.",
+  "record": "results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+  "sha256": "a7d0863e8bded99f2e57d4143fb5bd31c367a748d22e2ad439d1077d68559d6f",
+  "cycles": 25013,
+  "outputs": 1352,
+  "sources": {
+    "rtl/abi3/ot_a3_g2_array_issue_adapter.sv": "c7fc30a994e3a57da10ff8c6b332783016be6d12e6ed87ade69661ae67a41bf3",
+    "rtl/test/tb_a3_g2_issue_contract.sv": "4928b836551b15b630446ad21bd7794e233537450b345cc104dfcff818171ae5",
+    "tests/test_g2_issue_contract.py": "648517e80e6f766d979a9955170fcb03e5840aa7406bbfaf34064f509a849c0e"
+  }
+}

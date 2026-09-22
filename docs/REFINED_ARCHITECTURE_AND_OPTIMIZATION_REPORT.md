@@ -1909,3 +1909,21 @@ object, base, shape, precision and ownership on every valid queued output,
 including stalls and abort drain; all 1,352 outputs match at unchanged counter
 25,013. Source hashes are verified. Evidence: `results/rtl/a3_g2_output_layout.json`;
 previous G2 evidence is retained under `results/rtl/before_output_layout/`.
+
+
+## Clear has priority over G2 adapter ownership transitions
+
+The output-layout review exposed an existing cancellation bug: the adapter
+assigned IDLE on clear, then executed normal view capture and state transitions
+in the same sequential block, which could overwrite the cancellation. Clear
+now excludes that normal work and suppresses issue-ready. Default pulses are
+cleared, so a same-edge descriptor response, launch or completion cannot escape.
+The descriptor producer still must drain outstanding untagged replies before
+reuse after cancellation; this change does not add a response-generation field.
+
+The expanded 27-check adapter regression cancels each of six active states
+while issue/view/done inputs are asserted and verifies no later publication,
+then recovers with fresh views. It fails on the previous adapter at DESC_A and
+passes on the revision. All four issue/prefix pytest cases pass; loaded G2
+retains 1,352 matching outputs and 25,013 cycles. Evidence:
+`results/rtl/a3_g2_issue_clear.json`. No physical benefit is claimed.
