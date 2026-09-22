@@ -1813,3 +1813,22 @@ or energy saving is claimed. With pipelined divider selected, matched ASAP7 TT
 setup WNS worsens from -0.946 to -0.986 ns. Both fail. Existing live routes predate
 this activity change and cannot qualify current parent timing. Evidence and
 source snapshots: `results/physical_abi3/asap7/sinkhorn_adder_activity/`.
+
+
+## Sinkhorn parent baseline meets timing but retains fanout violation
+
+The matched parent baseline with `PIPELINED_DIVIDER=1`, before divider/sum
+handoffs, completes at ASAP7 TT, 2.4 ns, CTS12 and fanout16. Routed standard-cell
+area is 3,038.270 um², setup WNS +0.463780 ns and hold WNS +0.032021 ns.
+There are no setup/hold, slew, capacitance, DRC or antenna violations, but one
+maximum-fanout violation remains. The runner reports `acceptance.status=pass`
+because its engineering verdict checks timing/DRC/antenna; `design.closed` is
+false, and the stricter project acceptance also fails. This is timing success
+at the tested period, not physical closure or a certified operating clock.
+
+All retained artifact hashes and manifest source hashes were checked. The
+parent source is a retained historical snapshot, not the current implementation.
+Divider-handoff and sum-handoff routes remain in progress. No frequency is
+inferred from positive slack. Evidence:
+`results/physical_abi3/asap7/sinkhorn_handoff/routed_baseline_review.json` and
+`pnr_baseline_cts12_2p4ns.json` with its retained artifacts.
