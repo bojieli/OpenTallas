@@ -1,0 +1,37 @@
+{
+  "scope": "Loaded G2 BF16 M6 K80, one/two/three local-column passes, modeled SRAM and external transport",
+  "status": "pass",
+  "runs": [
+    {
+      "record": "a3_g2_runtime_byte_transport.json",
+      "sha256": "8050038814de8c69af7e96eae42bd305fe348d7fe10d32faeb990835c022faa0",
+      "cols": 24,
+      "unique_activation_words": 480,
+      "activation_fills": 480,
+      "weight_fills": 240,
+      "accepted_outputs": 584,
+      "final_completion_counter": 14357
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols32.json",
+      "sha256": "425972bef11dd7465665aa8bcf039fc8b9800167ab7a69feeba8166eb1c6861b",
+      "cols": 32,
+      "unique_activation_words": 480,
+      "activation_fills": 960,
+      "weight_fills": 320,
+      "accepted_outputs": 776,
+      "final_completion_counter": 23074
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56.json",
+      "sha256": "113735cdf6fdc4deda692245edee8de47ab4c5b554700fdf931851747b425ef4",
+      "cols": 56,
+      "unique_activation_words": 480,
+      "activation_fills": 1440,
+      "weight_fills": 560,
+      "accepted_outputs": 1352,
+      "final_completion_counter": 35175
+    }
+  ],
+  "finding": "Single activation window refills pages on later passes of rows crossing window boundaries; retain both pages or choose row-aware windows before increasing arithmetic width."
+}

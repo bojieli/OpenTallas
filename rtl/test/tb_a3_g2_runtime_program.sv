@@ -216,7 +216,7 @@ module tb_a3_g2_runtime_program;
   drain(0);
   first_mem_fills=mem_fills;first_mem_requests=mem_requests;first_weight_fills=fills;
   if(fills!=((WEIGHT_ROW_REUSE && ROWS>1 && WEIGHT_WORDS/ROWS<=1024)?WEIGHT_WORDS/ROWS:WEIGHT_WORDS))$fatal(1,"weight reuse traffic accounting");
-  if(SRAM_AUX && (mem_fills!=DEPTH*ROWS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
+  if(SRAM_AUX && (mem_fills!=EXPECTED_ACTIVATION_FILLS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
   // Lane-distinct BF16 results must match the functional Device.
   if(seen!={ROWS*COLS{1'b1}} || outputs!=ROWS*COLS)$fatal(1,"missing first outputs");
   if(fills<DEPTH)$fatal(1,"multi-tile refill not exercised");

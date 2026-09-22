@@ -17,6 +17,7 @@ parser.add_argument("--auxiliary-windows", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
+parser.add_argument("--cols", type=int, default=None)
 args = parser.parse_args()
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
@@ -24,7 +25,9 @@ depth = args.depth
 if args.weight_response_gap < 1:
     parser.error("weight response gap must be positive")
 rows = 6 if args.output_backpressure else 1
-cols = 24 if args.auxiliary_windows else 8
+cols = args.cols if args.cols is not None else (24 if args.auxiliary_windows else 8)
+if cols < 8 or cols > 65528 or cols % 8:
+    parser.error("cols must be a positive multiple of eight up to 65528")
 record_name = (
     "g2_runtime_byte_transport"
     if args.auxiliary_windows
@@ -38,6 +41,8 @@ if args.weight_response_gap != 1:
     record_name += f"_weight_gap{args.weight_response_gap}"
 if depth != 80:
     record_name += f"_depth{depth}"
+if args.cols is not None:
+    record_name += f"_cols{cols}"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -115,8 +120,9 @@ hex_words(
     [
         sum(int(weight[column * 8 + lane, k]) << (16 * lane) for lane in range(8))
         for _ in range(rows)
+        for pass_base in range(0, cols // 8, 3)
         for k in range(depth)
-        for column in range(cols // 8)
+        for column in range(pass_base, min(pass_base + 3, cols // 8))
     ],
     32,
 )
@@ -133,11 +139,23 @@ activation_payload = reference_device.memory[activation_object].read(
 assert activation_payload == activation.astype("<u2").tobytes()
 hex_words("activation_bytes.hex", activation_payload, 2)
 hex_words("expected.hex", golden["output"].reshape(-1), 8)
+# Independent page-residency oracle for the admitted row/pass/K issue order.
+# A later column pass can revisit a page evicted while reading the same row.
+resident_page = None
+expected_activation_fills = 0
+for row in range(rows):
+    for pass_base in range(0, cols // 8, 3):
+        for k in range(depth):
+            page = ((row * depth + k) // 256) * 256
+            if page != resident_page:
+                expected_activation_fills += min(256, rows * depth - page)
+                resident_page = page
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
     f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
+    f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
 packages = [
@@ -230,6 +248,7 @@ result = {
         "rows": rows,
         "cols": cols,
         "depth": depth,
+        "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
         "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
         "output_addressing": "Logical flattened output index equals lane-local address times eight plus lane index",

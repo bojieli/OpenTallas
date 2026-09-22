@@ -925,3 +925,38 @@ and hashes are retained in `runtime_weight_scheduler/extent_proof/` and
 is clean, and three loaded G2 campaigns retain 584 matching outputs each with
 exact counters 21,731, 31,574 and 55,487. The complete architecture and all-target
 physical goals remain unfinished.
+
+
+## Multiple column passes expose activation replacement cost
+
+The loaded-program checker now accepts `--cols` and packs external weights in
+actual pass/K/local-column order, rather than assuming every local column fits
+one interleave pass. For M=6,K=80, N=24/32/56 exercises one/two/three passes.
+Distinct per-column patterns and the functional Device oracle check indexing;
+the exact first-operation traffic oracle walks the admitted address order and
+counts page misses, including repeated pages. The previous assertion that every
+activation word was filled once applied only to the earlier single-pass fixture.
+
+All three campaigns pass success, faults, aborts, queued output drain and restart.
+N=32 produces 776 matching accepted outputs and N=56 produces 1,352; counters
+are 23,074 and 35,175. Weight fills remain 320 and 560, with resident replay
+across six rows. Activation fills are 960 and 1,440 for just 480 unique words,
+versus 480 fills for N=24. Later column passes revisit pages evicted while
+crossing the same row. This is an architectural retention bottleneck: preserving
+both boundary pages or using row-aware windows can reduce traffic before adding
+compute capacity. No improved retention implementation is claimed yet. Evidence:
+`results/rtl/a3_g2_column_pass_campaign.json` and its source-bound records.
+
+The historical early-fill scheduler route is complete at ASAP7 TT, 1 ns:
+453.788 um² standard-cell area, +0.011893 ns setup WNS and +0.055627 ns hold WNS,
+with zero setup/hold, slew/capacitance/fanout, DRC and antenna violations. It is
+0.33% larger than the fixed-split narrow route (452.301 um²), much less than the
+synthesis-only overhead. Source snapshot and retained artifact hashes pass.
+Overall `not_met` remains due to pre-layout STA. This is the recorded early-fill
+snapshot before subsequent control and extent edits, not current RTL closure.
+Evidence: `runtime_weight_scheduler/pnr_replay_early_cts12_1ns.json`.
+
+A new containing-service route now characterizes the latest verified absolute-
+address and bounded-extent RTL with both SRAM macros. Older service routes remain
+active and are not restarted. Complete G2 and all-target physical closure remain
+unproven.
