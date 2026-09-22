@@ -50,6 +50,9 @@ module ot_a3_runtime_operation_lifetime(
                 state<=DRAIN;
             end
             DRAIN:begin
+                // A write may fail after arithmetic has finished. Completion
+                // must include that fault, including the final ack edge.
+                if(service_fault)begin completion_error<=SERVICE_ERROR;aborted<=1;end
                 if(transport_cancel && transport_ack)transport_finished<=1;
                 if((transport_finished || (transport_cancel && transport_ack)) && writes_drained)state<=COMPLETE;
             end

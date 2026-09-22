@@ -65,12 +65,11 @@ improvement. Neither change adds request cycles. Evidence is retained in
 `runtime_operand_join/routed_payload_comparison.json` under
 `results/physical_abi3/asap7/`.
 
-The latest completed containing-block physical results are (the service predates
-the split stream-address addition candidate described at the end):
+The latest completed containing-block physical results are:
 
 | Configuration | Tested period | Routed standard-cell area | Setup / hold WNS | Verdict |
 |---|---:|---:|---:|---|
-| Runtime operand service, shared weight generation, CTS12 | 1 ns | 3,716.890 um², plus 5,586 um² SRAM macros | -0.002412 / +0.028076 ns | Fails setup on three paths; other reported physical checks clean |
+| Runtime operand service, split stream increment, CTS12 | 1 ns | 3,737.520 um², plus 5,586 um² SRAM macros | +0.010967 / +0.020029 ns | Timing passes; one clock fanout violation prevents physical closure |
 | Sinkhorn, pipelined divider, direct handoffs, suppressed unused right-adder requests, CTS8 | 2 ns | 3,099.550 um² | +0.092189 / +0.027670 ns | Passes setup, hold, slew, capacitance, fanout, DRC and antenna checks |
 
 Both are ASAP7 TT results for the recorded configurations. Sinkhorn establishes
@@ -2083,3 +2082,69 @@ The actual writer, object bounds and acknowledgement path remain required.
 These ports do not yet establish end-to-end support for arbitrary strided
 outputs. Functional rank/metadata checks do not qualify physical timing or
 all-target deployment.
+
+
+## Stream-address change meets setup; clock fanout remains
+
+The matched split-stream-add route completes at ASAP7 TT 1 ns CTS12. Setup WNS
+improves from -0.002412 to +0.010967 ns, with zero violating setup paths. Hold WNS
+is +0.020029 ns with no violations. Standard-cell area changes from 3,716.890 to
+3,737.520 um² (+0.56%); SRAM area remains 5,586 um². All source hashes and retained
+artifact hashes match. This is a measured timing/area tradeoff, with no added
+RTL cycles. One clock pin, `clkbuf_5_0__f_clk_regs/Y`, drives 20 sinks against a
+limit of 16. Slew, capacitance, DRC and antenna counts are zero. The strict
+verdict remains `not_met`; the 1,011.09 MHz flow estimate is not a tested clock.
+
+A same-RTL CTS8 follow-up is running at the same 1 ns period and fanout limit.
+Evidence: `results/physical_abi3/asap7/runtime_operand_service/split_stream_add_comparison.json`
+and the retained `pnr_split_stream_add_cts12_1ns` record/artifacts.
+
+## Bounded object writer and actual acknowledgement drain
+
+`ot_a3_output_object_writer` now implements rank-two, ordered output transport
+at the G2 part interface. It captures immutable object/generation/layout data,
+checks lane-local execution identity and logical tail masks, and computes
+object-relative byte offsets with incremental row/column cursors. BF16 and
+FP32 use two/four bytes per element. Every active lane's complete element must
+fit in the object before the whole beat is published. The write mask, offsets,
+data and identity remain stable under backpressure. A matching generation
+acknowledgement retires the request; wrong-generation replies fault without
+releasing outstanding work. Bus errors fault the operation. Clearing requires
+quiescent transport; abort does not roll back writes already accepted.
+
+The implementation currently supports one outstanding atomic beat, with the
+existing G2 reserved queue upstream. The external service must return exactly
+one acknowledgement per accepted beat. After a fault, unissued queued results
+can be consumed without publishing writes, while already published transactions
+still drain. This establishes the bounded interface and correctness path, not
+an optimal memory service rate; multiple outstanding tagged requests, bandwidth
+sizing, physical characterization and integration into deployment wrappers remain
+required. Object capacity is supplied by the test's trusted object binding;
+MEMORY_OBJECT descriptor resolution is not yet connected.
+
+The loaded G2 fixture's `--object-writes` mode connects this synthesizable writer
+to real descriptor metadata and feeds its drained/error signals into operation
+lifetime. Behavioral object memory applies the accepted byte writes, delays each
+acknowledgement by 11 cycles, rejects duplicate writes and checks committed
+bytes against the functional Device output. N53 completes 169 writes and 169
+acknowledgements, with 1,280 matching campaign outputs in 25,101 cycles. No
+completion bypasses outstanding writes. This includes tail masking, output
+backpressure, abort with queued data and transport faults/recovery. The added
+service is measured against the prior sink-only 25,040-cycle checkpoint; neither
+count is inference latency. The external memory itself is behavioral.
+
+Review of late write errors exposed a lifetime bug: service faults arriving
+in DRAIN after arithmetic completion were not captured. DRAIN now records the
+service error, including the final acknowledgement edge. The regression injects
+that exact race. Thirteen focused writer/lifetime/queue/adapter/prefix tests
+pass; writer tests cover both precisions, strided nonzero-base addressing,
+atomic bounds including exact end, request stalls, tail/address violations,
+wrong-generation acknowledgement, bus error and recovery. Loaded evidence:
+`results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes.json`.
+The standalone ASAP7 1 ns synthesis/STA baseline completes at 1,379.588 um²
+with -10.119062 ns setup WNS and 1,108 violating endpoints. It is not suitable
+for the target clock in this form. The failing baseline and setup/hold reports
+are retained under `results/physical_abi3/asap7/output_object_writer/`.
+Pipelining the measured paths and reducing address/control width are required
+before this writer is deployment-ready; no physical performance benefit is
+claimed from its functional integration.

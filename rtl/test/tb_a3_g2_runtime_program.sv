@@ -2,6 +2,7 @@
 // Host-load a real ABI program and compare outputs with the functional Device.
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
+ parameter bit OBJECT_WRITES=0;
  parameter integer AUXILIARY_DEPTH=3;
  parameter bit REGISTER_AUXILIARY_REQUESTS=0;
  parameter integer WEIGHT_RESPONSE_GAP=1;
@@ -42,7 +43,62 @@ module tb_a3_g2_runtime_program;
  wire [255:0] part_acc;
  integer output_stalls=0,reservation_stalls=0;
  reg tail_hold=0;
- wire sink_ready=part_ready && !tail_hold;
+ wire writer_part_ready,writer_drained,writer_error;
+ wire sink_enable=part_ready && !tail_hold;
+ wire sink_ready=sink_enable && (!OBJECT_WRITES || writer_part_ready);
+ wire object_write_valid,object_write_ready,object_response_ready;
+ wire [31:0] object_write_generation,object_write_object;
+ wire [7:0] object_write_mask;
+ wire [511:0] object_write_offset;
+ wire [255:0] object_write_data;
+ wire object_write_fp32;
+ reg object_ack=0;
+ reg [31:0] object_ack_generation=0;
+ integer object_delay=0,object_writes=0,object_acks=0;
+ reg [7:0] output_memory[0:2*ROWS*LOGICAL_COLS-1];
+ reg [ROWS*LOGICAL_COLS-1:0] object_seen=0;
+ assign object_write_ready=!object_ack && object_delay==0 && cycles%5!=0;
+ ot_a3_output_object_writer writer(
+  .clk(clk),.rst_n(rst_n),.clear(!output_layout_valid),
+  .command_valid(OBJECT_WRITES && output_layout_valid && array_busy),.command_ready(),
+  .command_generation(runtime_generation),.command_object(output_object),
+  .command_element_base(output_element_base),.command_row_stride(output_row_stride),.command_col_stride(output_col_stride),
+  .command_rows(output_rows),.command_cols(output_logical_cols),.command_padded_cols(output_padded_cols),
+  .command_fp32(output_fp32),.command_object_bytes(64'(2*ROWS*LOGICAL_COLS)),
+  .part_valid(OBJECT_WRITES && part_valid && sink_enable),.part_ready(writer_part_ready),
+  .part_mask(part_we),.part_address(part_addr),.part_data(part_data),
+  .write_valid(object_write_valid),.write_ready(object_write_ready),
+  .write_generation(object_write_generation),.write_object(object_write_object),.write_mask(object_write_mask),
+  .write_offset(object_write_offset),.write_data(object_write_data),.write_fp32(object_write_fp32),
+  .response_valid(object_ack),.response_ready(object_response_ready),.response_generation(object_ack_generation),.response_error(1'b0),
+  .drained(writer_drained),.protocol_error(writer_error));
+ // Behavioral object memory accepts complete checked beats and delays commit ack.
+ // Golden comparison is independent of the writer's incremental address cursor.
+ always @(posedge clk)begin
+  if(!rst_n)begin object_ack<=0;object_delay<=0;object_writes<=0;object_acks<=0;end
+  else begin
+   if(kick)object_seen<=0;
+   if(object_write_valid && object_write_ready)begin
+    if(object_write_object!=OUTPUT_OBJECT || object_write_generation!=runtime_generation || object_write_fp32)
+     $fatal(1,"object write identity");
+    for(integer i=0;i<8;i=i+1)if(object_write_mask[i])begin
+     if(object_write_offset[64*i+:64]>=2*ROWS*LOGICAL_COLS || object_write_offset[64*i+:64]%2!=0)
+      $fatal(1,"object write bounds/alignment");
+     if(object_seen[object_write_offset[64*i+:64]/2])$fatal(1,"duplicate object write");
+     object_seen[object_write_offset[64*i+:64]/2]<=1;
+     output_memory[object_write_offset[64*i+:64]]<=object_write_data[32*i+:8];
+     output_memory[object_write_offset[64*i+:64]+1]<=object_write_data[32*i+8+:8];
+     if(object_write_data[32*i+:32]!=expected[(object_write_offset[64*i+:64]/(2*LOGICAL_COLS))*COLS+(object_write_offset[64*i+:64]/2)%LOGICAL_COLS])
+      $fatal(1,"object write value/address");
+    end
+    object_writes<=object_writes+1;object_ack_generation<=object_write_generation;object_delay<=11;
+   end
+   if(object_delay!=0)begin object_delay<=object_delay-1;if(object_delay==1)object_ack<=1;end
+   if(object_ack && object_response_ready)begin object_ack<=0;object_acks<=object_acks+1;end
+   if(array_done && OBJECT_WRITES && (!writer_drained || object_ack || object_delay!=0 || object_writes!=object_acks))
+    $fatal(1,"completion bypassed actual write acknowledgements");
+  end
+ end
  wire mem_request_ready,mem_response_valid,mem_error;
  wire [31:0] mem_generation,mem_w;
  wire [63:0] mem_a;
@@ -146,7 +202,7 @@ module tb_a3_g2_runtime_program;
  .cfg_array_group(8'd1),.cfg_array_block_a(16'd0),.cfg_array_block_rows_a(16'd0),.cfg_array_block_b(16'd0),
  .cfg_array_scale_a_base(32'd0),.cfg_array_ws_base(32'd0),.cfg_array_out_fp32(1'b0),
  .done(done),.complete(complete),.trapped(trapped),.trap_class(trap_class),.count_issued(count_issued),.count_retired(count_retired),
- .runtime_service_fault(SRAM_AUX && (mem_error || manager_error || mapper_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
+ .runtime_service_fault((SRAM_AUX && (mem_error || manager_error || mapper_error)) || (OBJECT_WRITES && writer_error)),.runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained && (!OBJECT_WRITES || writer_drained)),
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),
  .weight_request_address(weight_request_address),.weight_request_words(weight_request_words),
@@ -209,6 +265,12 @@ module tb_a3_g2_runtime_program;
   end
   wait(array_done);@(negedge clk);
   if(array_error_code!=err)$fatal(1,"wrong completion error");
+  if(OBJECT_WRITES && err==0)begin
+   if(object_seen!={ROWS*LOGICAL_COLS{1'b1}})$fatal(1,"missing committed object outputs");
+   for(integer r=0;r<ROWS;r=r+1)for(integer c=0;c<LOGICAL_COLS;c=c+1)
+    if({16'b0,output_memory[2*(r*LOGICAL_COLS+c)+1],output_memory[2*(r*LOGICAL_COLS+c)]}!=expected[r*COLS+c])
+     $fatal(1,"committed object memory differs from golden");
+  end
   wait(done);@(negedge clk);
   if(err==0 && (!complete || trapped || count_issued!=1 || count_retired!=2))
    $fatal(1,"program did not retire successfully issued=%0d retired=%0d",count_issued,count_retired);
@@ -267,6 +329,8 @@ module tb_a3_g2_runtime_program;
    phase=1;launch();drain(0);
    if(seen!=expected_seen)$fatal(1,"auxiliary fault recovery lost outputs");
   end
+  if(OBJECT_WRITES && (object_writes==0 || object_writes!=object_acks))$fatal(1,"writer unexercised");
+  $display("object writes=%0d acknowledgements=%0d",object_writes,object_acks);
   $display("first operation weight fill_words=%0d",first_weight_fills);
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);
   $display("auxiliary SRAM windows=%0d fill_words=%0d read_requests=%0d",mem_windows,mem_fills,mem_requests);

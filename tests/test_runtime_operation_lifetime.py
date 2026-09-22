@@ -46,7 +46,11 @@ initial begin
  transport_ack=1;tick();transport_ack=0;complete_check(8,8'hfe);
  writes_drained=0;launch(9);abort_valid=1;tick();abort_valid=0;
  transport_ack=1;writes_drained=1;tick();transport_ack=0;complete_check(9,8'hff);
- launch(10);rst_n=0;#1;if(busy || transport_cancel || completion_valid || compute_abort)$fatal(1,"reset credits");
+ // A failing final write ack cannot publish successful completion.
+ writes_drained=0;launch(10);compute_error=0;compute_done=1;tick();compute_done=0;
+ service_fault=1;transport_ack=1;writes_drained=1;tick();service_fault=0;transport_ack=0;
+ complete_check(10,8'hfe);
+ launch(11);rst_n=0;#1;if(busy || transport_cancel || completion_valid || compute_abort)$fatal(1,"reset credits");
  tick();rst_n=1;tick();if(!start_ready)$fatal(1,"reset ownership");
  $display("PASS lifetime drain ordering, generation, fault priority, completion stalls and reset");$finish;
 end

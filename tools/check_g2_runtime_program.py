@@ -12,6 +12,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
@@ -52,6 +53,8 @@ if args.activation_miss_aligned:
     record_name += "_rolling_activation"
 record_name += f"_auxdepth{args.auxiliary_depth}"
 record_name += "_registered" if args.registered_auxiliary_requests else "_direct"
+if args.object_writes:
+    record_name += "_object_writes"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -218,6 +221,7 @@ cmd = [
     "4",
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
+    f"-GOBJECT_WRITES={int(args.object_writes)}",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
     f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
     f"-GREGISTER_AUXILIARY_REQUESTS={int(args.registered_auxiliary_requests)}",
@@ -250,6 +254,7 @@ for p, h in hashes.items():
     assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
 result = {
     "status": "pass",
+    "object_writes": args.object_writes,
     "weight_row_reuse": not args.no_weight_row_reuse,
     "auxiliary_depth": args.auxiliary_depth,
     "registered_auxiliary_requests": args.registered_auxiliary_requests,
