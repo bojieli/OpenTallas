@@ -4,11 +4,11 @@ module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter integer WEIGHT_RESPONSE_GAP=1;
  `include "program_config.svh"
- localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=80*LOCAL_OUTPUTS;
+ localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=DEPTH*LOCAL_OUTPUTS;
  reg [127:0] program_image[0:PROGRAM_WORDS-1],descriptor_image[0:DESCRIPTOR_WORDS-1],weight_image[0:WEIGHT_WORDS-1];
  reg [31:0] expected[0:ROWS*COLS-1];
- reg [63:0] activation_image[0:80*ROWS-1],adata=0;
- reg [7:0] activation_bytes[0:160*ROWS-1];
+ reg [63:0] activation_image[0:DEPTH*ROWS-1],adata=0;
+ reg [7:0] activation_bytes[0:2*DEPTH*ROWS-1];
  reg host_we=0;reg [2:0] host_sel=0;reg [31:0] host_row=0;reg [5:0] host_lane=0;reg [127:0] host_wdata=0;
  wire host_ready,host_write_refused,done,complete,trapped;
  wire [15:0] trap_class;wire [31:0] count_issued,count_retired;
@@ -65,7 +65,7 @@ module tb_a3_g2_runtime_program;
   .command_valid(SRAM_AUX && auxiliary_request_valid && !mapper_started),.command_ready(mapper_command_ready),
   .command_generation(auxiliary_request_generation),.command_objects({64'd0,ACTIVATION_OBJECT}),
   .command_word_bases(96'd0),.command_byte_bases(192'd0),
-  .command_object_bytes({128'd0,64'(160*ROWS)}),.command_word_shifts(6'd1),
+  .command_object_bytes({128'd0,64'(2*DEPTH*ROWS)}),.command_word_shifts(6'd1),
   .request_valid(fetch_valid),.request_ready(mapper_ready),.request_tag(fetch_tag),
   .request_plane(fetch_plane),.request_address(fetch_address),.request_words(fetch_words),
   .burst_valid(byte_valid),.burst_ready(byte_ready),.burst_tag(byte_tag),.burst_object(byte_object),
@@ -87,7 +87,7 @@ module tb_a3_g2_runtime_program;
   .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
   .command_valid(SRAM_AUX && auxiliary_request_valid && !manager_active),.command_ready(manager_ready),
   .command_generation(auxiliary_request_generation),.command_bases(96'd0),
-  .command_words({32'd0,32'd0,32'(80*ROWS)}),
+  .command_words({32'd0,32'd0,32'(DEPTH*ROWS)}),
   .request_valid(SRAM_AUX && auxiliary_request_valid),.request_generation(auxiliary_request_generation),
   .request_addresses({32'd0,32'd0,auxiliary_request_a}),.missing_planes(mem_missing),
   .window_valid(mem_window_valid),.window_ready(mem_window_ready),.window_plane(mem_plane),
@@ -121,7 +121,7 @@ module tb_a3_g2_runtime_program;
    if(mem_window_valid && mem_window_ready)mem_windows<=mem_windows+1;
    if(mem_fill_valid && mem_fill_ready)mem_fills<=mem_fills+1;
    if(byte_valid && byte_ready)begin
-    if(byte_object!=ACTIVATION_OBJECT || byte_shift!=1 || byte_offset+64'(byte_count)>160*ROWS || byte_count!={2'd0,byte_words,1'b0})$fatal(1,"unbounded object byte burst");
+    if(byte_object!=ACTIVATION_OBJECT || byte_shift!=1 || byte_offset+64'(byte_count)>2*DEPTH*ROWS || byte_count!={2'd0,byte_words,1'b0})$fatal(1,"unbounded object byte burst");
     fetch_active<=1;saved_fetch_tag<=byte_tag ^ ((phase==5)?64'd1:64'd0);saved_fetch_address<=byte_offset[31:0];
     saved_fetch_words<=byte_words;fetch_index<=0;
    end
@@ -158,7 +158,7 @@ module tb_a3_g2_runtime_program;
     if(weight_request_address+weight_request_words>WEIGHT_WORDS)$fatal(1,"weight address out of bounds");end
    if(wactive && cycles%WEIGHT_RESPONSE_GAP==0 && weight_response_ready)begin fills<=fills+1;if(wi==wn-1)wactive<=0;else wi<=wi+1'b1;end
    if(!SRAM_AUX && auxiliary_request_valid && !auxvalid)begin auxvalid<=1;agen<=auxiliary_request_generation;aw<=auxiliary_request_w;adata<=activation_image[auxiliary_request_a];
-    if(auxiliary_request_a>=80*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
+    if(auxiliary_request_a>=DEPTH*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
    if(auxvalid && auxiliary_response_ready)auxvalid<=0;
    if(runtime_transport_cancel)begin wactive<=0;auxvalid<=0;end
    if(held && (!part_valid || {part_we,part_addr,part_data,part_acc}!=held_payload))$fatal(1,"stalled output changed");
@@ -216,10 +216,10 @@ module tb_a3_g2_runtime_program;
   drain(0);
   first_mem_fills=mem_fills;first_mem_requests=mem_requests;first_weight_fills=fills;
   if(fills!=((WEIGHT_ROW_REUSE && ROWS>1 && WEIGHT_WORDS/ROWS<=1024)?WEIGHT_WORDS/ROWS:WEIGHT_WORDS))$fatal(1,"weight reuse traffic accounting");
-  if(SRAM_AUX && (mem_fills!=80*ROWS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
+  if(SRAM_AUX && (mem_fills!=DEPTH*ROWS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
   // Lane-distinct BF16 results must match the functional Device.
   if(seen!={ROWS*COLS{1'b1}} || outputs!=ROWS*COLS)$fatal(1,"missing first outputs");
-  if(fills<80)$fatal(1,"multi-tile refill not exercised");
+  if(fills<DEPTH)$fatal(1,"multi-tile refill not exercised");
   phase=2;launch();wait(dut.operand_issue);@(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
   if(seen!=0 || outputs!=ROWS*COLS)$fatal(1,"aborted operation wrote output");
   phase=1;launch();

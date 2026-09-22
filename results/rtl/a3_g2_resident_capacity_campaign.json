@@ -1,0 +1,91 @@
+{
+  "scope": "Actual G2 loaded-program BF16 M6 N24, distinct local-column data; modeled external transport and SRAM; no physical frequency/energy claim",
+  "status": "pass",
+  "runs": [
+    {
+      "record": "a3_g2_runtime_byte_transport.json",
+      "record_sha256": "615c3696b2d3861379d48f88f3c1114f81c600b7b05466bd7bc9178e9f3f376f",
+      "depth": 80,
+      "reuse": true,
+      "weight_response_gap": 1,
+      "first_weight_fills": 240,
+      "accepted_outputs": 584,
+      "final_completion_counter": 14357
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_no_weight_reuse.json",
+      "record_sha256": "bf699a6bfc18f63b59c6dabc507d0bf578e1ebcd70e9a57b17817194733762a3",
+      "depth": 80,
+      "reuse": false,
+      "weight_response_gap": 1,
+      "first_weight_fills": 1440,
+      "accepted_outputs": 584,
+      "final_completion_counter": 14357
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_weight_gap8.json",
+      "record_sha256": "992573124aff06c96b66bac890a6f9354ec60587c8b58100d7bcf69488d354e1",
+      "depth": 80,
+      "reuse": true,
+      "weight_response_gap": 8,
+      "first_weight_fills": 240,
+      "accepted_outputs": 584,
+      "final_completion_counter": 23491
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_no_weight_reuse_weight_gap8.json",
+      "record_sha256": "ce8ad95cdbb1eb11bee197a89a389d64a2837b2a47ec580c1886beb139f33f20",
+      "depth": 80,
+      "reuse": false,
+      "weight_response_gap": 8,
+      "first_weight_fills": 1440,
+      "accepted_outputs": 584,
+      "final_completion_counter": 50311
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_depth192.json",
+      "record_sha256": "47f844a315fa7f1bbed8ee0cc1d7c4f9b3d48f57108671d74f96d2fa6f73fc0e",
+      "depth": 192,
+      "reuse": true,
+      "weight_response_gap": 1,
+      "first_weight_fills": 576,
+      "accepted_outputs": 584,
+      "final_completion_counter": 31838
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_depth340.json",
+      "record_sha256": "f59ad0d62007b28b7bf8ff86a90c989477aa5ee867bb6804bfa3dca4c9e61a55",
+      "depth": 340,
+      "reuse": true,
+      "weight_response_gap": 1,
+      "first_weight_fills": 1020,
+      "accepted_outputs": 584,
+      "final_completion_counter": 54359
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_depth352.json",
+      "record_sha256": "4f229b3d17e1d77912015814666dc7686a141044f39a853e332493450bb6cdcd",
+      "depth": 352,
+      "reuse": true,
+      "weight_response_gap": 1,
+      "first_weight_fills": 6336,
+      "accepted_outputs": 584,
+      "final_completion_counter": 55487
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_no_weight_reuse_depth192.json",
+      "record_sha256": "adb0e1d6519376119c46e9f216c8374783008e322f82fc0fa4f93d5acffb46ea",
+      "depth": 192,
+      "reuse": false,
+      "weight_response_gap": 1,
+      "first_weight_fills": 3456,
+      "accepted_outputs": 584,
+      "final_completion_counter": 31145
+    }
+  ],
+  "findings": [
+    "576 and 1020 words replay through both banks; 1056 words stream",
+    "Depth192 fast-service replay reduces weight fills 83.33% but increases campaign counter 2.23%",
+    "Depth80 gap8 replay preserves prior measured 53.31% campaign counter reduction"
+  ]
+}

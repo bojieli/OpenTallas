@@ -754,3 +754,38 @@ The containing service's total area and routed clock still need measurement.
 The latest integrated slow-weight campaign retains 584 matching outputs,
 240 first-operation weight fills and the exact 23,491 completion counter.
 All 44 focused runtime tests pass; standalone scheduler lint is clean.
+
+
+## Integrated resident-capacity qualification
+
+The loaded-program fixture now accepts `--depth` and uses distinct patterns
+across local columns as well as lanes and K. Previously local-column patterns
+were repeated, weakening its ability to detect a replay address alias. Activation
+word/byte storage and mapper bounds now derive from depth. The same real ABI
+program, SRAM, byte mapper, scheduler, arithmetic and fault/drain paths are used.
+
+For six rows and 24 columns, depth 192 exercises a 576-word resident row across
+both SRAM banks; depth 340 exercises 1,020 resident words with an exact second-
+bank tail; depth 352 exercises 1,056 words and streamed fallback. All produce
+584 matching accepted outputs over eight success/fault/abort transactions.
+First-operation weight fills are 576, 1,020 and 6,336 respectively. The first
+two reuse each resident row six times; the third deliberately refills all rows.
+
+A matched depth-192 stream-only run fills 3,456 words versus replay's 576, but
+its campaign completion counter is 31,145 versus replay's 31,838: replay is
+2.23% slower under the fast modeled weight service. Complete-bank admission
+adds startup latency even when bandwidth is plentiful. This evidence rules out
+claiming universal latency improvement from reuse. Shorter initial resident
+chunks or incremental read authorization need an explicit ownership protocol;
+they cannot be implemented by simply reading an incomplete bank. The existing
+capacity fallback and `RUNTIME_WEIGHT_ROW_REUSE` override remain available.
+Evidence: the `a3_g2_runtime_byte_transport_depth192`, `depth340`, `depth352`
+and `a3_g2_runtime_byte_transport_no_weight_reuse_depth192` JSON records under
+`results/rtl/`.
+
+A full route of `ot_a3_lq8_runtime_operands` with `REUSE_WEIGHT_ROWS=1` and both
+`fakeram_512x128` macros is now running at the 1 ns ASAP7 TT target, with fanout
+16, transition 0.32 ns and CTS cluster size 12. This will include admission,
+cursors, queues, replay, ownership, SRAM and the operand join in one timing
+boundary. It remains below the full G2 integration boundary and is not yet a
+closure result. The two standalone weight-scheduler routes also remain active.
