@@ -1246,3 +1246,40 @@ outputs, 18 faults and 115,748 checks, retaining aggregate operation cycles
 `results/rtl/a3_lq8_join_payload.json`. Containing-service characterization of
 this join revision is still required after the ongoing source revisions finish;
 standalone results cannot establish integrated closure.
+
+
+## Cross-target current-source evidence audit
+
+`python3 tools/audit_current_physical_evidence.py` now inventories routed
+records in both physical views, separately checking current source hashes,
+required retained artifact hashes, explicit setup/hold and physical-rule metrics,
+and tested clock period. It never promotes slack-extrapolated Fmax to a verified
+frequency. Retained snapshot sources require explicit binding to active RTL;
+a matching snapshot hash alone cannot certify the current design. Records with
+missing/nonfinite checks remain unverified. The tool does not infer coverage
+through a current module graph from a historical top, since parameter/generate
+elaboration and changed descendants can invalidate that inference.
+
+At this checkpoint, 189 ASAP7 routed records contain 124 routed-check passes,
+but only 53 also pass current-source and required-artifact verification. Of 16
+SKY130 routed records, eight pass routed checks and two meet the additional
+current-evidence checks. These are record counts, not module or target coverage
+percentages; multiple configurations and historical versions repeat tops. Source,
+artifact, missing-metric and violation categories overlap. The scan includes
+existing worktree changes and therefore is not a claim about pristine HEAD.
+The report retains each input record digest and exact configuration/constraints.
+
+Current-source failures outside the runtime operand work include dependency-
+check microsequencer configurations, FP32 division and Sinkhorn. Some lack
+retained reports, so those records identify a recharacterization need but do
+not supply a portable critical-path diagnosis. Probes and legacy blocks are
+listed explicitly, not assumed to be deployed engines. The next cross-target
+steps are to bind actual deployment configurations to elaborated tops, restore
+missing critical-path evidence, and prioritize arithmetic/control revisions by
+containing-block and workload cost. Existing live routes are not restarted.
+
+Four regression tests reject stale sources, damaged artifacts, missing or
+nonfinite checks and unbound snapshots, and verify frequency is derived only
+from the tested period. Evidence:
+`results/physical_abi3/current_evidence_audit.json`. This audit makes the remaining
+coverage gaps explicit; it does not satisfy all-target physical completion.
