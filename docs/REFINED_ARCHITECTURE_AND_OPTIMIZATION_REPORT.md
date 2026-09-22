@@ -1,8 +1,9 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes the G2 offset-alias correction after `46ec89f6`;
-this report consolidates the completed checkpoints and next acceptance gates.
+Implementation baseline: `0eff1c55`, with the subsequently completed current-source
+Sinkhorn route retained alongside this report. The opening review is current;
+later checkpoints preserve the history of individual experiments.
 
 ## Current review summary (2026-09-22)
 
@@ -64,36 +65,60 @@ improvement. Neither change adds request cycles. Evidence is retained in
 `runtime_operand_join/routed_payload_comparison.json` under
 `results/physical_abi3/asap7/`.
 
-Physical evidence is mixed. At ASAP7 TT and a 1 ns target, the refined mapper,
-fixed-page auxiliary scheduler and admission snapshots have positive routed
-setup/hold slack and zero reported slew, capacitance, fanout, DRC and antenna
-violations. The historical replay-control scheduler route saves area
-(453.788 to 415.632 um² relative to the preceding early-fill snapshot), but
-fails setup: -0.0222674 ns WNS and 36 violating paths. The subsequent bounded
-extent rewrite has an expression-equivalence proof. The historical containing-service progression improves from a 109 ps setup
-miss in the replay revision to a 23 ps miss with absolute scale addresses.
-The latter still has one violating path, now from auxiliary queue head to
-operand credit. It predates the combined current RTL; later service revisions
-remain under evaluation. Standalone successes do not establish integrated GHz
-operation; records can also retain overall `not_met` due to pre-layout failure.
-No activity-qualified energy benefit or all-target physical closure is claimed.
+The latest containing-block physical results are:
 
-The latest recorded focused suite passes 74 tests. The LQ8 corpus passes 92
-cases with 17,103 matching outputs, 18 exercised faults and 115,748 checks.
-The latest loaded G2 N56 campaign passes 1,352 matching outputs with independent
-output backpressure, auxiliary refill, faults, aborts and recovery. The runtime
-now defaults to three auxiliary slots: N56/K80 takes 24,995 campaign cycles
-versus 30,723 with two slots; N56/K352 takes 130,960 versus 152,458. Registered
-dispatch is optional and remains slower at equal capacity pending a sufficient
-routed frequency benefit.
+| Configuration | Tested period | Routed standard-cell area | Setup / hold WNS | Verdict |
+|---|---:|---:|---:|---|
+| Runtime operand service, shared weight generation, CTS12 | 1 ns | 3,716.890 um², plus 5,586 um² SRAM macros | -0.002412 / +0.028076 ns | Fails setup on three paths; other reported physical checks clean |
+| Sinkhorn, pipelined divider, direct handoffs, suppressed unused right-adder requests, CTS8 | 2 ns | 3,099.550 um² | +0.092189 / +0.027670 ns | Passes setup, hold, slew, capacitance, fanout, DRC and antenna checks |
 
-The next deployment checkpoint reads C's descriptor before launch and derives
-BF16/FP32 output precision from it. Shape, descriptor validity, supported dtype
-and absence of output scaling are checked. The compatibility host precision
-input is no longer authoritative. The loaded N56/K80 campaign remains correct
-with 1,352 accepted outputs and unchanged first-operation fill counts; its
-counter rises from 24,995 to 25,082 (0.35%) for descriptor admission and resulting
-stall alignment. This closes a configuration correctness gap, not a speedup.
+Both are ASAP7 TT results for the recorded configurations. Sinkhorn establishes
+500 MHz at this tested corner and block boundary; it does not establish a
+whole-chip clock or other-corner closure. Its current source hashes and all
+seven retained artifact hashes match. The older 2.4 ns CTS12 sum-handoff route
+has two clock fanout failures; changing CTS and RTL together prevents attributing
+the current area difference to one change. The service's latest critical path
+runs from scheduler replay selection through tile extent to stream-base addition.
+That is the next measured local timing target; a slack-extrapolated frequency
+is not a validated operating point.
+
+Compared with the preceding auxiliary one-hot service, shared weight generation
+reduces routed standard-cell area from 3,810.960 to 3,716.890 um² (2.47%) and
+shrinks the setup miss from 70.8 to 2.4 ps. Macro area is unchanged. This improves
+the implementation but does not yet close the 1 ns target. No activity-qualified
+energy benefit or all-target physical closure is claimed.
+
+The LQ8 corpus passes 92 cases with 17,103 matching outputs, 18 exercised faults
+and 115,748 checks. The current loaded G2 N56/K80 campaign passes 1,352 matching
+outputs in 25,013 campaign cycles, including output backpressure, refill, faults,
+abort and recovery. Earlier 24,995-cycle queue results in the table isolate the
+queue change before descriptor revisions. Reading C for checked shape/output
+precision increased that checkpoint to 25,082 cycles; reducing auxiliary
+descriptor reads from 18 to 9 SRAM beats then reduced it to 25,013. These are
+campaign counts, not inference latency or directly additive speedups.
+
+C now owns BF16/FP32 output precision and exported object/layout metadata.
+Metadata remains valid through output drain. A cancellation-priority correction
+prevents same-edge normal transitions from overriding clear; the 27-check adapter
+regression cancels all six active states and verifies recovery. Actual bounded
+output-object writes, stride translation and tail-lane masking remain unfinished.
+
+The divider rounding register and bounded exponent widths reduce matched routed
+area from 1,347.020 to 1,181.750 um² (12.27%) and turn a 2 ns setup failure into
+a pass for the standalone divider. Nontrivial division adds one cycle. Sinkhorn
+handoffs remove controller bubbles: the 36-matrix pipelined-divider corpus drops
+from 1,129,736 to 1,105,554 cycles (2.14%). Suppressing unused right-adder requests
+reduces requests from 468 to 156 per valid matrix without a cycle change; it is
+an activity reduction, not a measured energy percentage. Six arithmetic/protocol
+tests cover 673 divisions, 36 matrices in both divider modes, reset and stalls.
+
+Current evidence:
+
+- [Loaded G2 campaign](../results/rtl/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json)
+- [G2 cancellation regression](../results/rtl/a3_g2_issue_clear.json)
+- [Operand service route](../results/physical_abi3/asap7/runtime_operand_service/pnr_weight_generation_cts12_1ns.json)
+- [Current Sinkhorn route](../results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json)
+- [Matched divider routes](../results/physical_abi3/asap7/fp32_div_round_stage/routed_comparison.json)
 
 Architecture-first work proceeds in this order:
 
@@ -141,10 +166,12 @@ transport; deep-row reuse with an explicit accumulator budget; and balanced
 service rates across engines. Component changes then follow measured containing
 paths. A pipeline is retained only when its achieved clock and added cycles
 improve the relevant latency or throughput within the area budget. For example,
-the divider rounding stage adds one cycle per nontrivial division and passes
-673 arithmetic cases plus 35 Sinkhorn matrices, but its net timing benefit
-remains pending matched routing. No parent engine's divider selection has been
-changed on the strength of that experiment alone.
+the divider rounding stage adds one cycle per nontrivial division, with
+673 arithmetic cases and 36 Sinkhorn matrices now covered. Matched standalone
+routes establish its timing improvement; the current Sinkhorn route separately
+qualifies the containing block at 2 ns with PIPELINED_DIVIDER=1. The module
+default remains PIPELINED_DIVIDER=0; other parent configurations need their own
+qualification.
 
 ## Assessment
 
@@ -1945,3 +1972,17 @@ and hold WNS+0.029832ns. Timing passes; two fanout violations still prevent full
 physical closure. This snapshot predates right-adder request suppression. All
 retained artifact hashes were verified. Records and source manifests are linked
 in `results/physical_abi3/asap7/weight_generation_and_sum_routes.json`.
+
+
+## Current Sinkhorn closes the tested 2 ns configuration
+
+The route previously pending in the historical checkpoints has completed.
+With PIPELINED_DIVIDER=1 and CTS cluster size 8, the current implementation
+passes the strict physical verdict at ASAP7 TT, 2 ns: 3,099.550 um² standard-cell
+area, +0.092189 ns setup WNS and +0.027670 ns hold WNS, with zero reported setup,
+hold, slew, capacitance, fanout, DRC and antenna violations. All five active-source
+hashes and all seven retained artifact hashes were checked. This qualifies the
+500 MHz block configuration only. The flow's 524.161 MHz estimate is not a tested
+clock. Source/constraint manifests, netlists and final reports are retained in
+`results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json`
+and its companion artifact directory. The opening review incorporates this result.
