@@ -1076,3 +1076,25 @@ N56/K80 regression passes with 1,352 outputs and counter 25,082 versus 24,995;
 this is a correctness step toward descriptor-driven transport, not a throughput
 optimization. Output object/stride translation and tail-lane masking remain
 unimplemented. See `results/rtl/a3_g2_output_descriptor_comparison.json`.
+
+
+## Bounded descriptor-prefix reads reduce admission overhead
+
+The G2 array adapter consumes only bytes 0..95 of each A/B/C descriptor.
+`ot_a3_g2_descriptor_store` now supports a compile-time auxiliary prefix length;
+G2 selects three 256-bit words instead of six. The sequencer still reads all
+192 bytes. Unread auxiliary tail words are zero, preventing stale data from
+appearing as part of the shortened record. Default standalone behavior remains
+six words. No SRAM capacity or additional payload buffer is required.
+
+Each adapter descriptor read saves three cycles and three SRAM read beats;
+A/B/C admission uses nine rather than eighteen beats. The loaded N56/K80
+campaign falls from 25,082 to 25,013 cycles (0.275%) with 1,352 matching outputs
+and unchanged first-operation weight/activation fills of 560/720. Fault/abort
+phases are timing-sensitive, so total fill counts are not an inference metric.
+The prefix bench tests lengths 1/3/6, exact SRAM read counts and latency,
+simultaneous-master priority, descriptor bounds, zero tail, full reads after
+short reads and reset cancellation. All four focused pytest cases pass and
+Verilator descriptor-store lint is clean. This is verified control-traffic and
+latency improvement; physical area, frequency and energy effects are unmeasured.
+Evidence: `results/rtl/a3_g2_descriptor_prefix_comparison.json`.

@@ -398,7 +398,9 @@ module ot_a3_g2_cluster #(
     wire          aux_desc_fault;
     wire [1535:0] aux_desc_data;
 
-    ot_a3_g2_descriptor_store descriptor_store (
+    // The issue adapter consumes header and shape through byte 95. Avoid
+    // fetching the unused tail on each A/B/C admission; sequencer reads stay full.
+    ot_a3_g2_descriptor_store #(.AUXILIARY_WORDS(3)) descriptor_store (
         .clk(clk),
         .rst_n(rst_n),
         .desc_req(desc_req),

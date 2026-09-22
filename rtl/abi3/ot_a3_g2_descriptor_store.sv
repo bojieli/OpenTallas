@@ -12,7 +12,8 @@
 // ADAPTER, AND WHAT IT COSTS.  rtl/abi3/ot_a3_device_top.sv models the
 // descriptor store as a 1,536-bit-wide array with `desc_valid <= desc_req`:
 // one cycle from request to record.  Against two 128-bit macros the same read
-// takes about ten cycles.  As with the program store, that is a real change
+// takes about ten cycles. Auxiliary prefix mode omits unused trailing beats;
+// the sequencer always receives the full record. As with the program store, that is a real change
 // in control-plane cycles and no figure measured against the one-cycle model
 // carries over.  A one-cycle 1,536-bit port would need twelve macros ganged
 // in width (384 KiB, 132,090 um^2 of macro) for a 64 KiB store; the six-beat
@@ -41,7 +42,11 @@
 // host_lane selects which of the two macros in it.  Accepted only while the
 // store is idle.
 // ---------------------------------------------------------------------------
-module ot_a3_g2_descriptor_store (
+module ot_a3_g2_descriptor_store #(
+    // Full records for the sequencer; an engine may consume a bounded prefix.
+    // Each word is 256 bits. Unread auxiliary words are returned as zero.
+    parameter integer AUXILIARY_WORDS = 6
+) (
     input  wire          clk,
     input  wire          rst_n,
 
@@ -82,6 +87,11 @@ module ot_a3_g2_descriptor_store (
 
     reg  [1:0]  state;
     reg  [2:0]  beat;
+    wire [2:0] read_words = cur_is_seq ? 3'd6 : 3'(AUXILIARY_WORDS);
+    initial begin
+        if (AUXILIARY_WORDS < 1 || AUXILIARY_WORDS > 6)
+            $fatal(1,"AUXILIARY_WORDS must be in 1..6");
+    end
     /* verilator lint_off UNUSEDSIGNAL */
     reg  [11:0] base;      // bit 11 cannot be reached: 340 * 6 + 5 = 2,045
     /* verilator lint_on UNUSEDSIGNAL */
@@ -105,7 +115,8 @@ module ot_a3_g2_descriptor_store (
 
     wire [1535:0] record = {word5, word4, word3, word2, word1, word0};
     assign desc_data = desc_fault ? 1536'd0 : record;
-    assign aux_data  = aux_fault  ? 1536'd0 : record;
+    assign aux_data  = aux_fault ? 1536'd0 :
+        {{(6-AUXILIARY_WORDS)*256{1'b0}}, record[AUXILIARY_WORDS*256-1:0]};
 
     assign host_accept = host_we && (state == S_IDLE) &&
                          !seq_pending && !aux_pending &&
@@ -194,11 +205,11 @@ module ot_a3_g2_descriptor_store (
                     end
                 end
 
-                // Beat b's address is presented in cycle b and its data is
-                // valid in cycle b + 1, so the last address goes out at
-                // beat 4 and the last word lands at beat 6.
+                // The registered SRAM address takes two edges to reach a payload
+                // register. Fetch only the selected prefix; the initial read
+                // was launched in S_IDLE. Sequencer reads retain all six words.
                 S_READ: begin
-                    if (beat <= 3'd4) begin
+                    if ({1'b0,beat} + 4'd2 <= {1'b0,read_words}) begin
                         ram_ce   <= 1'b1;
                         ram_addr <= base[10:0] + {8'd0, beat} + 11'd1;
                     end
@@ -211,7 +222,7 @@ module ot_a3_g2_descriptor_store (
                         3'd6: word5 <= ram_row;
                         default: ;
                     endcase
-                    if (beat == 3'd6) begin
+                    if (beat == read_words) begin
                         state <= S_RESP;
                     end else begin
                         beat <= beat + 3'd1;

@@ -1,0 +1,22 @@
+{
+  "scope": "G2 N56/K80 loaded program with output descriptor admission, depth3 direct queue, rolling activation, output stalls, fault/abort/recovery. Behavioral SRAM; no physical/energy claim.",
+  "records": [
+    {
+      "record": "before_descriptor_prefix/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "95ad6b37c8bf39d4b1a48333cdd8a82fc3e24e982b050549140290c3643887eb",
+      "campaign_cycles": 25082,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "27b2d3e3f26055174ab9fe1f8871eb13cb233d8e9ff686a403de46461b559f74",
+      "campaign_cycles": 25013,
+      "accepted_outputs": 1352
+    }
+  ],
+  "auxiliary_descriptor_beats_before": 6,
+  "auxiliary_descriptor_beats_after": 3,
+  "saved_cycles_per_adapter_descriptor": 3,
+  "cycle_reduction_percent": 0.27509767961087633,
+  "validation": "pytest tests/test_g2_descriptor_prefix.py tests/test_g2_issue_contract.py: 4 passed; prefix bench checks payload, SRAM reads, cycle savings, arbitration, bounds and reset. Verilator 5.050 descriptor-store lint clean."
+}
