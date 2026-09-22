@@ -63,16 +63,26 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
     localparam [1:0] ERR_NONFINITE = 2'd1;
     localparam [5:0] FINAL_PHASE = 6'd38;
 
-    localparam [2:0] S_IDLE      = 3'd0;
-    localparam [2:0] S_SUM_A     = 3'd1;
-    localparam [2:0] S_DIV_ISSUE = 3'd2;
-    localparam [2:0] S_DIV_WAIT  = 3'd3;
-    localparam [2:0] S_PACK      = 3'd4;
-    localparam [2:0] S_OUT       = 3'd5;
-    localparam [2:0] S_SUM_B     = 3'd6;
-    localparam [2:0] S_SUM_C     = 3'd7;
+    //: WIDENED to four bits. The three-bit encoding had all eight values in
+    //: use, so the pipelined-adder wait states below could not be added without
+    //: colliding with an existing one -- and a collision is silent: both
+    //: elaborators accept two localparams with one value and a case takes the
+    //: FIRST arm, which is how ot_a3_vector_mhc_post deadlocked every MHC_POST
+    //: case earlier. tools/audit_rtl_state_code_collisions.py gates that now,
+    //: and the new codes start at 8, one past the old maximum.
+    localparam [3:0] S_IDLE      = 4'd0;
+    localparam [3:0] S_SUM_A     = 4'd1;
+    localparam [3:0] S_DIV_ISSUE = 4'd2;
+    localparam [3:0] S_DIV_WAIT  = 4'd3;
+    localparam [3:0] S_PACK      = 4'd4;
+    localparam [3:0] S_OUT       = 4'd5;
+    localparam [3:0] S_SUM_B     = 4'd6;
+    localparam [3:0] S_SUM_C     = 4'd7;
+    localparam [3:0] S_SUM_A_WAIT = 4'd8;
+    localparam [3:0] S_SUM_B_WAIT = 4'd9;
+    localparam [3:0] S_SUM_C_WAIT = 4'd10;
 
-    reg [2:0] state;
+    reg [3:0] state;
     reg [31:0] matrix [0:15];
     reg [31:0] denominator;
     reg [5:0] phase;
@@ -94,10 +104,44 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
     reg [31:0] pair_total_q;
     reg [1:0]  sum_err_q;
 
-    reg [33:0] pair_01;
-    reg [33:0] pair_23;
-    reg [33:0] pair_total;
-    reg [33:0] sum_with_epsilon;
+    //: THE REDUCTION'S THREE ADDS, PIPELINED.
+    //:
+    //: Each was a single combinational ot_fp32_rne_pkg::fp32_add_positive_rne
+    //: ALREADY alone between registers -- the pair adds read the matrix, the
+    //: tree add reads pair_01_q and pair_23_q, the epsilon add reads
+    //: pair_total_q -- so this block's clock WAS one such add plus the matrix
+    //: read mux, and no rescheduling could reach past it. It routed at 276.9 MHz
+    //: and, re-routed at a 1.8 ns target instead of 3.7 ns, returned 278.9 MHz:
+    //: 0.7 percent for twice the effort. That made it the published ABI 3.0
+    //: design limiter.
+    //:
+    //: ot_fp32_add_positive_rne_pipe is that same function in five stages,
+    //: qualified bit-identical to the authority over 73,984 pairs at II=1
+    //: including every refusal, both zero bypasses, subnormals, the full
+    //: alignment range past the 28-bit jam saturation, carry out of the add and
+    //: out of the round, and the overflow at 255. Standalone it closes at
+    //: 1,075.0 MHz with positive slack.
+    //:
+    //: Two instances: the pair adds are independent and issue together, and the
+    //: left one is reused for the tree add and the epsilon add, which are
+    //: strictly sequential. The reduction costs three waits of LATENCY instead
+    //: of three single cycles.
+    localparam integer ADD_LATENCY = 5;
+    reg         add_valid;
+    reg  [31:0] add_l_a, add_l_b, add_r_a, add_r_b;
+    wire [31:0] add_l_y, add_r_y;
+    wire [1:0]  add_l_err, add_r_err;
+    wire        add_l_done, add_r_done;
+    ot_fp32_add_positive_rne_pipe adder_left (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
+        .a(add_l_a), .b(add_l_b),
+        .y(add_l_y), .err(add_l_err), .valid_out(add_l_done)
+    );
+    ot_fp32_add_positive_rne_pipe adder_right (
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
+        .a(add_r_a), .b(add_r_b),
+        .y(add_r_y), .err(add_r_err), .valid_out(add_r_done)
+    );
 
     wire row_phase = phase[0];
 
@@ -118,18 +162,6 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
             selected_index = {2'b0, group_index} + {element_index, 2'b00};
         end
 
-        pair_01 = ot_fp32_rne_pkg::fp32_add_positive_rne(
-            matrix[group_index_0], matrix[group_index_1]
-        );
-        pair_23 = ot_fp32_rne_pkg::fp32_add_positive_rne(
-            matrix[group_index_2], matrix[group_index_3]
-        );
-        pair_total = ot_fp32_rne_pkg::fp32_add_positive_rne(
-            pair_01_q, pair_23_q
-        );
-        sum_with_epsilon = ot_fp32_rne_pkg::fp32_add_positive_rne(
-            pair_total_q, HC_EPSILON
-        );
 
         input_invalid = 1'b0;
         for (load_index = 0; load_index < 16; load_index = load_index + 1)
@@ -190,11 +222,16 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
             pair_01_q <= 0;
             pair_23_q <= 0;
             pair_total_q <= 0;
+            add_valid <= 1'b0;
+            add_l_a <= 32'd0; add_l_b <= 32'd0;
+            add_r_a <= 32'd0; add_r_b <= 32'd0;
             sum_err_q <= ERR_NONE;
             for (load_index = 0; load_index < 16;
                  load_index = load_index + 1)
                 matrix[load_index] <= 0;
         end else begin
+            //: one cycle wide: holding it would issue a second add
+            add_valid <= 1'b0;
             case (state)
                 S_IDLE: begin
                     if (in_valid && in_ready) begin
@@ -217,33 +254,70 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                     end
                 end
 
-                // Stage A: the two independent pair adds.
+                // Stage A: the two independent pair adds, issued together.
                 S_SUM_A: begin
-                    pair_01_q <= pair_01[31:0];
-                    pair_23_q <= pair_23[31:0];
-                    sum_err_q <= pair_01[33:32] | pair_23[33:32];
-                    state <= S_SUM_B;
+                    add_l_a <= matrix[group_index_0];
+                    add_l_b <= matrix[group_index_1];
+                    add_r_a <= matrix[group_index_2];
+                    add_r_b <= matrix[group_index_3];
+                    add_valid <= 1'b1;
+                    state <= S_SUM_A_WAIT;
+                end
+
+                //: both adders share one valid and have one latency, so they
+                //: retire on the same cycle; waiting on the left one waits on
+                //: both, and the right one's error is read here too
+                S_SUM_A_WAIT: begin
+                    if (add_l_done) begin
+                        pair_01_q <= add_l_y;
+                        pair_23_q <= add_r_y;
+                        sum_err_q <= add_l_err | add_r_err;
+                        state <= S_SUM_B;
+                    end
                 end
 
                 // Stage B: their sum.
                 S_SUM_B: begin
-                    pair_total_q <= pair_total[31:0];
-                    sum_err_q <= sum_err_q | pair_total[33:32];
-                    state <= S_SUM_C;
+                    add_l_a <= pair_01_q;
+                    add_l_b <= pair_23_q;
+                    add_r_a <= 32'd0;
+                    add_r_b <= 32'd0;
+                    add_valid <= 1'b1;
+                    state <= S_SUM_B_WAIT;
                 end
 
-                // Stage C: the contract's epsilon, and the same test the
-                // single-cycle original applied to the whole reduction.
+                S_SUM_B_WAIT: begin
+                    if (add_l_done) begin
+                        pair_total_q <= add_l_y;
+                        sum_err_q <= sum_err_q | add_l_err;
+                        state <= S_SUM_C;
+                    end
+                end
+
+                // Stage C: the contract's epsilon.
                 S_SUM_C: begin
-                    if ((sum_err_q | sum_with_epsilon[33:32]) != ERR_NONE) begin
+                    add_l_a <= pair_total_q;
+                    add_l_b <= HC_EPSILON;
+                    add_r_a <= 32'd0;
+                    add_r_b <= 32'd0;
+                    add_valid <= 1'b1;
+                    state <= S_SUM_C_WAIT;
+                end
+
+                //: the same test the single-cycle original applied to the whole
+                //: reduction, on the pipelined result
+                S_SUM_C_WAIT: begin
+                    if (add_l_done) begin
+                    if ((sum_err_q | add_l_err) != ERR_NONE) begin
                         result_codes <= 0;
-                        result_error <= sum_err_q | sum_with_epsilon[33:32];
+                        result_error <= sum_err_q | add_l_err;
                         out_valid <= 1'b1;
                         state <= S_OUT;
                     end else begin
-                        denominator <= sum_with_epsilon[31:0];
+                        denominator <= add_l_y;
                         element_index <= 0;
                         state <= S_DIV_ISSUE;
+                    end
                     end
                 end
 
