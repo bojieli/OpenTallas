@@ -2645,3 +2645,18 @@ four-credit writer without handoff (1,483.980 um²), area increases by 0.49%; th
 handoff regression reduces eight-beat transaction cycles from 24 to 17. This is a
 local transaction improvement, not a measured full-model speedup. The current
 source and required retained artifacts pass the evidence audit.
+
+## Current integrated characterization launch
+
+A separate current-source G2 run is now active with descriptor-owned output
+capacity, four-credit handoff and acknowledgement-fault priority. Its source
+hashes and full invocation are retained in
+`configs/hardware/g2_descriptor_bounds_handoff_physical.json`; output is
+`results/physical_abi3/asap7/a3_g2_runtime_writer/pnr_descriptor_bounds_handoff_cts8_1ns.json`.
+The flow has entered synthesis; no timing result is claimed. The earlier
+`pnr_ordered_cts8_1ns` run remains live as the historical comparison.
+
+The next input-transport integration is specified in
+[G2 descriptor input transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md),
+including the weight-layout mismatch, bounded line gather/assembly, ownership
+and acceptance criteria. It remains an implementation target.
