@@ -2683,3 +2683,17 @@ The revised cursor CTS8 route now passes setup at 1 ns (+0.053716 ns versus
 rate is unchanged. Two clock fanout violations prevent full physical acceptance;
 a CTS12 rerun is active with the same fanout limit. See the input transport plan
 for the source-bound comparison. Integrated input transport remains incomplete.
+
+## Latest input-transport checkpoint
+
+The pipelined layout cursor now fully passes the 1 ns ASAP7 TT CTS12 route,
+including fanout, at 1,359.880 um² with +0.0561202/+0.0514614 ns setup/hold slack.
+Current-source and retained-artifact hashes are verified. This closes the local
+cursor repair, not the integrated input path.
+
+A new bounded BF16 line gather implements per-lane/interleaved-slot retention.
+Its matched two-row N53/K80 standalone test reduces memory reads and bytes by
+87.5%, and delayed-response transaction cycles from 56,853 to 12,013. Eight
+functional configurations pass. Physical characterization and connection to the
+G2 weight-request ownership path remain in progress; no integrated speedup is
+claimed. See the input transport plan for the measured configuration and limits.

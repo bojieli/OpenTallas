@@ -160,3 +160,39 @@ verified for both CTS8 records; comparison evidence is in
 The strengthened functional corpus now checks 73,976 coordinates in each of
 three interleave configurations (221,928 total), plus simultaneous maximal
 column/K admission bounds and cancellation at every admission stage. All pass.
+
+## Bounded BF16 line gather and closed cursor checkpoint
+
+`ot_a3_bf16_weight_gather` now assembles eight BF16 lanes from byte-addressed
+object memory. It reserves one coordinate at a time, checks all active lane
+bounds before reading, masks tail lanes, and retains a 16-byte line for each
+lane/interleaved column slot. The default three slots hold 384 bytes of data,
+plus 24 line tags and validity bits. Cache data has no reset tree. All hit lanes
+assemble together; misses share one outstanding tagged read. Partial final
+lines use a bounded byte count.
+
+Published reads remain stable through backpressure and later faults. A foreign
+response does not retire the expected read; the expected response must still
+drain. Clear requires external cancellation acknowledgement or completed drain.
+Both same-edge and delayed read responses are covered. Input object permission
+admission remains the parent's responsibility; this module checks byte capacity.
+
+With three slots and a two-row N53/K80 BF16 stream, retention reduces measured
+reads from 8,480 to 1,060 and transferred bytes from 135,680 to 16,960 (87.5%).
+Delayed-response workload cycles fall from 56,853 to 12,013; immediate-response
+cycles fall from 22,933 to 7,773. These compare retention enabled/disabled in the
+same bounded service and traversal, not against the old prepacked G2 interface.
+Eight standalone regressions pass, each checking 1,123 assembled words plus
+fault/cancellation cases. Evidence: `results/rtl/bf16_weight_gather.json`.
+A 1 ns CTS12 physical run is active; no gather physical closure is claimed.
+
+The cursor's revised CTS12 route now passes every reported timing and physical
+check at 1 ns: area 1,359.880 um², setup +0.0561202 ns, hold +0.0514614 ns, zero
+fanout/slew/capacitance/DRC/antenna violations. Current RTL and retained artifacts
+pass the audit in `weight_layout_cursor/admission_pipeline_cts12_audit.json`.
+This supersedes the earlier pending cursor repair. CTS8 remains a failed record.
+
+The gather and cursor still require a shared wrapper tied to G2's weight request
+tags and bank reservations. The loaded G2 fixture still supplies prepacked
+weights. Format coverage beyond BF16, multiple outstanding misses, line-storage
+implementation/area, and integrated service-rate qualification remain open.

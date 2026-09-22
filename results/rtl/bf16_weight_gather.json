@@ -1,0 +1,77 @@
+{
+  "status": "pass",
+  "scope": "Standalone BF16 weight gather, byte-addressed behavioral object memory; not yet G2 integration or physical closure",
+  "command": "python3 -m pytest -q -s tests/test_bf16_weight_gather.py",
+  "cases": 8,
+  "checked_words_per_case": 1123,
+  "sources": {
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "ca3cd61d63a6208752065ccb2c8f2dd745a5aabfa8d8275e98d64eb1f7eba1c5",
+    "tests/test_bf16_weight_gather.py": "1f1e22ad6de928950ef9c065c3f60f9dbb7bc50d5d4b25471653f7cbc725547b"
+  },
+  "workload": {
+    "rows": 2,
+    "logical_cols": 53,
+    "depth": 80,
+    "dtype": "BF16",
+    "object_bytes": 8480,
+    "output_words": 1120
+  },
+  "comparisons": [
+    {
+      "slots": 1,
+      "zero_latency_response": false,
+      "without_retention_cycles": 56853,
+      "retained_cycles": 12053,
+      "without_retention_reads": 8480,
+      "retained_reads": 1060,
+      "without_retention_bytes": 135680,
+      "retained_bytes": 16960
+    },
+    {
+      "slots": 1,
+      "zero_latency_response": true,
+      "without_retention_cycles": 22933,
+      "retained_cycles": 7813,
+      "without_retention_reads": 8480,
+      "retained_reads": 1060,
+      "without_retention_bytes": 135680,
+      "retained_bytes": 16960
+    },
+    {
+      "slots": 3,
+      "zero_latency_response": false,
+      "without_retention_cycles": 56853,
+      "retained_cycles": 12013,
+      "without_retention_reads": 8480,
+      "retained_reads": 1060,
+      "without_retention_bytes": 135680,
+      "retained_bytes": 16960
+    },
+    {
+      "slots": 3,
+      "zero_latency_response": true,
+      "without_retention_cycles": 22933,
+      "retained_cycles": 7773,
+      "without_retention_reads": 8480,
+      "retained_reads": 1060,
+      "without_retention_bytes": 135680,
+      "retained_bytes": 16960
+    }
+  ],
+  "coverage": [
+    "aligned K reuse",
+    "strides and nonzero base",
+    "masked tail lanes",
+    "bounded final-line read",
+    "zero stride",
+    "capacity rejection before first read",
+    "element-to-byte overflow",
+    "immediate and delayed responses",
+    "response error",
+    "foreign response while published request stalls",
+    "foreign response cannot retire an accepted read",
+    "read and word backpressure stability",
+    "cancellation and generation restart"
+  ],
+  "lint": "Verilator 5.050 --lint-only -Wall passes"
+}
