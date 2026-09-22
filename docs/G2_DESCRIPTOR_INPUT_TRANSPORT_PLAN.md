@@ -196,3 +196,29 @@ The gather and cursor still require a shared wrapper tied to G2's weight request
 tags and bank reservations. The loaded G2 fixture still supplies prepacked
 weights. Format coverage beyond BF16, multiple outstanding misses, line-storage
 implementation/area, and integrated service-rate qualification remain open.
+
+## Composed burst transport checkpoint
+
+`ot_a3_bf16_weight_transport` now composes the actual layout cursor and cached
+gather behind the G2 scheduler's burst contract. Service addresses are checked
+separately from object element offsets. Each assembled word retains its burst
+generation/address tag and zero-based bank-fill index. A slot counter follows
+the actual partial/full interleaved column passes without a per-word divider.
+Resident replay can stop requests after the first row while the transport keeps
+operation ownership until clear.
+
+Six composed regressions compare 5,040 words with an independently generated
+strided tensor-index oracle, using burst sizes 1/32/512 in full-stream and
+resident-first-row modes. They cover tail padding, high service bases, stalled
+responses, invalid generation/address/extent, range overflow and a burst that
+extends beyond the cursor's logical shape. The last case faults instead of
+hanging. Strict Verilator lint passes. Evidence: `results/rtl/bf16_weight_transport.json`.
+
+A containing-transport 1 ns CTS12 route is now active, alongside the standalone
+gather route. Neither has a physical acceptance result at this checkpoint.
+G2 cluster integration remains next. Its operation lifetime asserts service
+clear as soon as it enters drain; the memory-facing transport must instead
+retain ownership until the external cancellation acknowledgement. The existing
+packed bank service and the new external read owner therefore require distinct
+clear timing. The loaded program test must exercise this boundary, rather than
+assuming the current compute-service clear is safe for pending memory requests.

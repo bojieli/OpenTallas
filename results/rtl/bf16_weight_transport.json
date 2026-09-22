@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "scope": "Composed cursor and cached BF16 gather behind scheduler-compatible bursts; not yet instantiated in G2",
+  "command": "python3 -m pytest -q tests/test_bf16_weight_transport.py",
+  "cases": 6,
+  "burst_words": [
+    1,
+    32,
+    512
+  ],
+  "streaming_words_per_case": 1120,
+  "resident_first_row_words_per_case": 560,
+  "matching_words_total": 5040,
+  "fault_checks_per_case": 6,
+  "coverage": [
+    "strided object bytes and nonzero base",
+    "masked tail columns",
+    "burst boundaries crossing K, column pass and row",
+    "high service address distinct from object offset",
+    "response tags and beat indices held through stalls",
+    "resident-row early stop",
+    "zero and oversized bursts",
+    "wrong generation",
+    "nonsequential request address",
+    "32-bit service range overflow",
+    "burst beyond logical tensor shape"
+  ],
+  "sources": {
+    "rtl/abi3/ot_a3_weight_layout_cursor.sv": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971",
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "ca3cd61d63a6208752065ccb2c8f2dd745a5aabfa8d8275e98d64eb1f7eba1c5",
+    "rtl/abi3/ot_a3_bf16_weight_transport.sv": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9",
+    "tests/test_bf16_weight_transport.py": "cac797bd4b0d05f87b863414a3800e3542d6798ad1642622302fc7908a3ab385"
+  },
+  "lint": "Verilator 5.050 --lint-only -Wall passes"
+}
