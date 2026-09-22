@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "object_writes": true,
-  "descriptor_input_layout": false,
+  "descriptor_input_layout": true,
   "strided_output": true,
   "write_outstanding": 4,
   "weight_row_reuse": true,
@@ -556,7 +556,7 @@
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     "-GWRITE_OUTSTANDING=4",
-    "-GINPUT_LAYOUT=0",
+    "-GINPUT_LAYOUT=1",
     "-GOBJECT_WRITES=1",
     "-GWEIGHT_ROW_REUSE=1",
     "-GAUXILIARY_DEPTH=3",
@@ -565,9 +565,9 @@
     "-GACTIVATION_MISS_ALIGNED=1",
     "--top-module",
     "tb_a3_g2_runtime_program",
-    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output",
+    "-I/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout",
     "--Mdir",
-    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/obj",
+    "/home/ubuntu/OpenTallas/build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/obj",
     "-o",
     "sim",
     "-y",
@@ -585,15 +585,15 @@
     "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_g2_cluster.sv",
     "/home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv"
   ],
-  "stdout": "program phase=1 complete=1 trap=0 cycles=5930\nprogram phase=2 complete=0 trap=8 cycles=6504\nprogram phase=1 complete=1 trap=0 cycles=12284\nprogram phase=3 complete=0 trap=8 cycles=12462\nprogram phase=1 complete=1 trap=0 cycles=18220\nprogram phase=4 complete=0 trap=8 cycles=19193\nprogram phase=5 complete=0 trap=8 cycles=19382\nprogram phase=1 complete=1 trap=0 cycles=25136\nprogram phase=6 complete=0 trap=8 cycles=30894\nprogram phase=1 complete=1 trap=0 cycles=36651\nlate write faults=1 recovered=1\nprogram phase=7 complete=0 trap=8 cycles=36807\nprogram phase=1 complete=1 trap=0 cycles=42561\nobject binding fault=1 recovery=1 captured_capacity=1\nobject writes=295 acknowledgements=295\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=24 fill_words=5552 read_requests=23776\noutput stalls=938 reservation stalls=27 accepted_outputs=2234\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=4888\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:400: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 426us; walltime 0.344 s; speed 1.236 ms/s\n- Verilator: cpu 0.343 s on 1 threads; allocated 8 MB\n",
+  "stdout": "program phase=1 complete=1 trap=0 cycles=5942\nprogram phase=2 complete=0 trap=8 cycles=6534\nprogram phase=1 complete=1 trap=0 cycles=12334\nprogram phase=3 complete=0 trap=8 cycles=12530\nprogram phase=1 complete=1 trap=0 cycles=18304\nprogram phase=4 complete=0 trap=8 cycles=19295\nprogram phase=5 complete=0 trap=8 cycles=19502\nprogram phase=1 complete=1 trap=0 cycles=25276\nprogram phase=6 complete=0 trap=8 cycles=31055\nprogram phase=1 complete=1 trap=0 cycles=36829\nlate write faults=1 recovered=1\nprogram phase=7 complete=0 trap=8 cycles=37003\nprogram phase=1 complete=1 trap=0 cycles=42776\nobject binding fault=1 recovery=1 captured_capacity=1\nobject writes=295 acknowledgements=295\nfirst operation weight fill_words=560\nfirst operation SRAM fill_words=720 read_requests=3360\nauxiliary SRAM windows=24 fill_words=5552 read_requests=23776\noutput stalls=961 reservation stalls=18 accepted_outputs=2234\nPASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=4888\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:400: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 428us; walltime 0.162 s; speed 2.633 ms/s\n- Verilator: cpu 0.162 s on 1 threads; allocated 8 MB\n",
   "artifacts": {
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/descriptor.hex": "9fcb4f61c6d02bca5750f2db7367f4fe7ab651164ba01a3a1fa683d359be85d0",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/expected.hex": "ed752dd3fc9d8cc36d0d9c3123a12b3f9503b6acf65ece85c439520349b369ca",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/weight.hex": "c4586298b09647441df890d2fe8a878f667e2b776870823034de78a85cfae855",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/program_config.svh": "eafd43c4af89cbadb85380fe4e64e978e0f24fd991c71e63803165cd9e7a35cd",
-    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output/simulation.log": "5930e4d19505bcfa1888722c320d0109c2ef39e6dd9afff53d562c243afecf72"
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/activation.hex": "5d0c668f08db5d3665e6f5199654bf85cbaccb60f09dabcfccf758c92381dad6",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/activation_bytes.hex": "e0adf76679badfa0234d826dc9c5f2ba836db3a8c477c36a789f4451be87267f",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/descriptor.hex": "9fcb4f61c6d02bca5750f2db7367f4fe7ab651164ba01a3a1fa683d359be85d0",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/expected.hex": "ed752dd3fc9d8cc36d0d9c3123a12b3f9503b6acf65ece85c439520349b369ca",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/program.hex": "f45bc7446214f072262f706098fe3aaa4b70585bdca72dcca90ccd6ab114a0c1",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/weight.hex": "c4586298b09647441df890d2fe8a878f667e2b776870823034de78a85cfae855",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/program_config.svh": "eafd43c4af89cbadb85380fe4e64e978e0f24fd991c71e63803165cd9e7a35cd",
+    "build/g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout/simulation.log": "f1a7895584c0561235e26e44ee98b965e3c7a9949a369c551a975eda00db1088"
   }
 }

@@ -3,7 +3,8 @@
 Date: 2026-09-22. Status: architecture implementation in progress.
 Implementation includes descriptor-owned bounded output writes, four write credits,
 direct writer handoff and acknowledgement-fault priority. Current-source writer,
-operand-service and Sinkhorn routes are retained. The opening review is current;
+operand-service and Sinkhorn routes are retained. The opening review summarizes the output/runtime baseline; the latest input-transport
+checkpoint at the end describes subsequent work;
 later checkpoints preserve the history of individual experiments.
 
 ## Current review summary (2026-09-22)
@@ -2660,3 +2661,17 @@ The next input-transport integration is specified in
 [G2 descriptor input transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md),
 including the weight-layout mismatch, bounded line gather/assembly, ownership
 and acceptance criteria. It remains an implementation target.
+
+## Input descriptor and cursor implementation checkpoint
+
+Optional input object resolution is now present in the synthesizable adapter and
+cluster. It captures A/B strides and object identities, checks both object read
+permissions and capacities, and holds metadata through drain. The loaded
+`--input-layout` campaign passes in 42,776 cycles with 2,234 matching outputs and
+295 write acknowledgements. Weights remain prepacked; this is not complete input
+transport. See [the detailed integration checkpoint](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md).
+
+The standalone cursor's first routed 1 ns attempt misses setup by 191 ps despite
+clean physical rules. Admission multiplication has been pipelined at its measured
+critical path; the revised route is pending. Both integrated G2 jobs predate the
+new input metadata and remain historical baselines, not current-source closure.

@@ -106,3 +106,36 @@ This cursor is not connected to the cluster yet. Descriptor capture, permissions
 object-capacity checks, dtype conversion, line reuse, packed-word assembly and
 response ownership remain mandatory integration work. Its coordinates do not
 authorize physical reads. No workload speedup is claimed from this checkpoint.
+
+## Descriptor-record integration and routed cursor checkpoint
+
+The adapter and cluster now expose optional `RESOLVE_INPUT_OBJECTS=1`. This
+reads four beats for each A/B tensor view, captures object identity and both
+strides, resolves two readable nonempty MEMORY_OBJECT descriptors, and publishes
+immutable 64-bit capacities through completion/drain. The default remains zero
+while downstream weight assembly is unfinished. With output object resolution
+also enabled, admission uses 21 auxiliary beats rather than 13.
+
+The loaded campaign's `--input-layout` mode checks the descriptor-derived records
+and feeds A's identity/capacity into the actual activation byte mapper. It passes
+2,234 matching outputs and 295 writes/acknowledgements in 42,776 campaign cycles,
+versus 42,561 before input resolution. This extra admission work is not a
+performance improvement. Stride-aware input fetch and weight assembly are still
+required; the campaign's weights remain prepacked. Focused adapter tests cover
+input resolution independently of output resolution, invalid type/header/payload
+offset, read permission, empty objects, descriptor service faults and cancellation
+in both new states.
+
+The first cursor route is physically clean but misses setup: 1,301.800 um²,
+-0.191066 ns setup and +0.051554 ns hold at 1 ns. Its actual critical path is
+command_cols through the admission extent multiplication. The next implementation
+splits each 16x32 product into two registered 8x32 products and a registered
+combine. This adds two admission cycles, with no additional coordinate cycles.
+The full cursor corpus passes and strict lint passes; its matched route is now
+running. Selection remains subject to timing/area results. The original routed
+source is retained as `weight_layout_cursor/before_admission_pipeline.sv`.
+
+The G2 physical run launched before this descriptor change is now a historical
+baseline. Its changed adapter/cluster sources are retained under
+`a3_g2_runtime_writer/descriptor_bounds_handoff_launch_sources/`. It cannot prove
+physical timing for input resolution.

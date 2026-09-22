@@ -80,8 +80,7 @@
 // ---------------------------------------------------------------------------
 module ot_a3_g2_array_issue_adapter #(
     parameter integer LANES = 8,
-    parameter bit RESOLVE_OUTPUT_OBJECT = 0,
-    parameter bit RESOLVE_INPUT_OBJECTS = 0
+    parameter bit RESOLVE_OUTPUT_OBJECT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -162,13 +161,6 @@ module ot_a3_g2_array_issue_adapter #(
     output reg [63:0]    output_object_bytes,
     output reg [31:0]    output_row_stride,output_col_stride,
     output wire [15:0]   output_logical_cols,
-    // A/B metadata is published only after both readable objects are resolved.
-    // It does not change the packed-word service contract by itself.
-    output wire          input_layout_valid,
-    output reg [31:0]    input_a_object,input_b_object,
-    output reg [63:0]    input_a_object_bytes,input_b_object_bytes,
-    output reg [31:0]    input_a_row_stride,input_a_k_stride,
-    output reg [31:0]    input_b_column_stride,input_b_k_stride,
     input  wire          array_done,
     input  wire [7:0]    array_error_code,
 
@@ -185,23 +177,20 @@ module ot_a3_g2_array_issue_adapter #(
     localparam integer LANE_MASK_I = LANES - 1;
     localparam [15:0]  LANE_MASK   = LANE_MASK_I[15:0];
 
-    localparam [3:0] S_IDLE   = 4'd0;
-    localparam [3:0] S_DESC_A = 4'd1;
-    localparam [3:0] S_DESC_B = 4'd2;
-    localparam [3:0] S_CHECK  = 4'd3;
-    localparam [3:0] S_RUN    = 4'd4;
-    localparam [3:0] S_REFUSE = 4'd5;
-    localparam [3:0] S_DESC_OBJECT = 4'd7;
-    localparam [3:0] S_DESC_C = 4'd6;
-    localparam [3:0] S_DESC_A_OBJECT=4'd8,S_DESC_B_OBJECT=4'd9;
+    localparam [2:0] S_IDLE   = 3'd0;
+    localparam [2:0] S_DESC_A = 3'd1;
+    localparam [2:0] S_DESC_B = 3'd2;
+    localparam [2:0] S_CHECK  = 3'd3;
+    localparam [2:0] S_RUN    = 3'd4;
+    localparam [2:0] S_REFUSE = 3'd5;
+    localparam [2:0] S_DESC_OBJECT = 3'd7;
+    localparam [2:0] S_DESC_C = 3'd6;
     // Logical N is distinct from the array's lane-padded column count.
     reg [15:0] logical_cols;
     assign output_logical_cols=logical_cols;
     assign output_layout_valid=rst_n && !clear && state==S_RUN;
 
-    assign input_layout_valid=RESOLVE_INPUT_OBJECTS && output_layout_valid;
-
-    reg  [3:0]  state;
+    reg  [2:0]  state;
     reg  [4:0]  slot_q;
     reg  [15:0] refuse_class;
 
@@ -367,7 +356,7 @@ module ot_a3_g2_array_issue_adapter #(
                             array_w_base       <= view_off[1];
                             array_out_base     <= view_off[2];
                             desc_req           <= 1'b1;
-                            desc_id            <= view_id[0];desc_short<=!RESOLVE_INPUT_OBJECTS;
+                            desc_id            <= view_id[0];desc_short<=1;
                             state              <= S_DESC_A;
                         end
                     end
@@ -380,16 +369,12 @@ module ot_a3_g2_array_issue_adapter #(
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
                         end else begin
-                            if(RESOLVE_INPUT_OBJECTS)begin
-                                input_a_object<=desc_data[159:128];
-                                input_a_row_stride<=d_stride0;input_a_k_stride<=d_stride1;
-                            end
                             array_rows    <= d_dim0[15:0];
                             array_depth   <= d_dim1[15:0];
                             array_dtype_a <= d_dtype;
                             array_scale_a <= (d_scale_object != ot_a3_pkg::A3_NO_ID);
                             desc_req      <= 1'b1;
-                            desc_id       <= view_id[1];desc_short<=!RESOLVE_INPUT_OBJECTS;
+                            desc_id       <= view_id[1];desc_short<=1;
                             state         <= S_DESC_B;
                         end
                     end
@@ -407,10 +392,6 @@ module ot_a3_g2_array_issue_adapter #(
                             refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
                             state        <= S_REFUSE;
                         end else begin
-                            if(RESOLVE_INPUT_OBJECTS)begin
-                                input_b_object<=desc_data[159:128];
-                                input_b_column_stride<=d_stride0;input_b_k_stride<=d_stride1;
-                            end
                             array_dtype_b <= d_dtype;
                             array_scale_b <= (d_scale_object != ot_a3_pkg::A3_NO_ID);
                             // cfg_cols must be a multiple of LANES: the LQ8
@@ -421,9 +402,8 @@ module ot_a3_g2_array_issue_adapter #(
                             array_cols    <= (d_dim0[15:0] + LANE_MASK) & ~LANE_MASK;
                             logical_cols  <= d_dim0[15:0];
                             desc_req      <= 1'b1;
-                            desc_id       <= RESOLVE_INPUT_OBJECTS?input_a_object:view_id[2];
-                            desc_short    <= RESOLVE_INPUT_OBJECTS;
-                            state         <= RESOLVE_INPUT_OBJECTS?S_DESC_A_OBJECT:S_DESC_C;
+                            desc_id       <= view_id[2];desc_short<=0;
+                            state         <= S_DESC_C;
                         end
                     end
                 end
@@ -450,25 +430,6 @@ module ot_a3_g2_array_issue_adapter #(
                                 desc_req<=1;desc_short<=1;desc_id<=desc_data[159:128];
                                 state<=S_DESC_OBJECT;
                             end else state <= S_CHECK;
-                        end
-                    end
-                end
-
-                S_DESC_A_OBJECT,S_DESC_B_OBJECT:begin
-                    if(desc_valid)begin
-                        if(desc_fault || d_magic!=ot_a3_pkg::A3_DESCRIPTOR_MAGIC ||
-                           d_type_major!=ot_a3_pkg::A3_TYPE_MAJOR || d_payload_offset!=64 ||
-                           d_type!=ot_a3_pkg::A3_DESC_MEMORY_OBJECT || !desc_data[256] || desc_data[703:640]==0)begin
-                            refuse_class<=ot_a3_pkg::A3_TRAP_DESCRIPTOR;state<=S_REFUSE;
-                        end else begin
-                            desc_req<=1;
-                            if(state==S_DESC_A_OBJECT)begin
-                                input_a_object_bytes<=desc_data[703:640];
-                                desc_id<=input_b_object;desc_short<=1;state<=S_DESC_B_OBJECT;
-                            end else begin
-                                input_b_object_bytes<=desc_data[703:640];
-                                desc_id<=view_id[2];desc_short<=0;state<=S_DESC_C;
-                            end
                         end
                     end
                 end

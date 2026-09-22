@@ -17,6 +17,7 @@ parser.add_argument("--strided-output", action="store_true")
 parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
+parser.add_argument("--input-layout", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--depth", type=int, default=80)
@@ -59,6 +60,8 @@ if args.object_writes:
     record_name += f"_object_writes_depth{args.write_outstanding}"
 if args.strided_output:
     record_name += "_strided_output"
+if args.input_layout:
+    record_name += "_input_layout"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -151,6 +154,8 @@ from runtime.sim.device import Device  # noqa: E402
 reference_device = Device(case.deployment, capability, verify=False)
 activation_view = reference_device.views.resolve(case.operand0_view, {}, {})
 activation_object = activation_view.object_id
+weight_view = reference_device.views.resolve(case.operand1_view, {}, {})
+weight_object = weight_view.object_id
 output_view = reference_device.views.resolve(case.output_view, {}, {})
 output_object = output_view.object_id
 output_base = 7 if args.strided_output else 0
@@ -182,6 +187,7 @@ for row in range(rows):
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
     f"localparam [31:0] ACTIVATION_OBJECT=32'd{activation_object}, OUTPUT_OBJECT=32'd{output_object};\n"
+    f"localparam [31:0] WEIGHT_OBJECT=32'd{weight_object};\n"
     f"localparam integer ROWS={rows}, COLS={cols}, LOGICAL_COLS={logical_cols}, DEPTH={depth}, STRESS_OUTPUT={int(args.output_backpressure)}, SRAM_AUX={int(args.auxiliary_windows)};\n"
     f"localparam integer OUTPUT_BASE={output_base}, OUTPUT_ROW_STRIDE={output_row_stride}, OUTPUT_COL_STRIDE={output_col_stride}, OUTPUT_BYTES={output_bytes};\n"
     f"localparam integer EXPECTED_ACTIVATION_FILLS={expected_activation_fills};\n"
@@ -232,6 +238,7 @@ cmd = [
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     f"-GWRITE_OUTSTANDING={args.write_outstanding}",
+    f"-GINPUT_LAYOUT={int(args.input_layout)}",
     f"-GOBJECT_WRITES={int(args.object_writes)}",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
     f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
@@ -266,6 +273,7 @@ for p, h in hashes.items():
 result = {
     "status": "pass",
     "object_writes": args.object_writes,
+    "descriptor_input_layout": args.input_layout,
     "strided_output": args.strided_output,
     "write_outstanding": args.write_outstanding,
     "weight_row_reuse": not args.no_weight_row_reuse,

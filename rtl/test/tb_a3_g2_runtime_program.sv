@@ -3,6 +3,10 @@
 module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter bit OBJECT_WRITES=0;
+ parameter bit INPUT_LAYOUT=0;
+ wire input_layout_valid;
+ wire [31:0] input_a_object,input_b_object,input_a_row_stride,input_a_k_stride,input_b_column_stride,input_b_k_stride;
+ wire [63:0] input_a_object_bytes,input_b_object_bytes;
  parameter integer WRITE_OUTSTANDING=4;
  parameter integer AUXILIARY_DEPTH=3;
  parameter bit REGISTER_AUXILIARY_REQUESTS=0;
@@ -87,6 +91,12 @@ module tb_a3_g2_runtime_program;
     object_seen<=0;
     for(integer byte_index=0;byte_index<OUTPUT_BYTES;byte_index=byte_index+1)output_memory[byte_index]<=8'ha5;
    end
+   if(INPUT_LAYOUT && input_layout_valid)begin
+    if(input_a_object!=ACTIVATION_OBJECT || input_b_object!=WEIGHT_OBJECT ||
+       input_a_object_bytes!=64'(2*DEPTH*ROWS) || input_b_object_bytes!=64'(2*DEPTH*LOGICAL_COLS) ||
+       input_a_row_stride!=DEPTH || input_a_k_stride!=1 || input_b_column_stride!=DEPTH || input_b_k_stride!=1)
+     $fatal(1,"descriptor input layout mismatch");
+   end
    if(dut.arr_start)configured_object_bytes<=0; // captured bounds must survive host mutation
    if(object_write_valid && object_write_ready)begin
     if(object_write_object!=OUTPUT_OBJECT || object_write_generation!=runtime_generation || object_write_fp32)
@@ -147,9 +157,9 @@ module tb_a3_g2_runtime_program;
  ot_a3_operand_byte_mapper byte_mapper(
   .clk(clk),.rst_n(rst_n),.clear(runtime_transport_cancel),
   .command_valid(SRAM_AUX && auxiliary_request_valid && !mapper_started),.command_ready(mapper_command_ready),
-  .command_generation(auxiliary_request_generation),.command_objects({64'd0,ACTIVATION_OBJECT}),
+  .command_generation(auxiliary_request_generation),.command_objects({64'd0,INPUT_LAYOUT?input_a_object:ACTIVATION_OBJECT}),
   .command_word_bases(96'd0),.command_byte_bases(192'd0),
-  .command_object_bytes({128'd0,64'(2*DEPTH*ROWS)}),.command_word_shifts(6'd1),
+  .command_object_bytes({128'd0,INPUT_LAYOUT?input_a_object_bytes:64'(2*DEPTH*ROWS)}),.command_word_shifts(6'd1),
   .request_valid(fetch_valid),.request_ready(mapper_ready),.request_tag(fetch_tag),
   .request_plane(fetch_plane),.request_address(fetch_address),.request_words(fetch_words),
   .burst_valid(byte_valid),.burst_ready(byte_ready),.burst_tag(byte_tag),.burst_object(byte_object),
@@ -214,8 +224,12 @@ module tb_a3_g2_runtime_program;
    end
   end
  end
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
+ .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
+ .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),
+ .input_a_row_stride(input_a_row_stride),.input_a_k_stride(input_a_k_stride),
+ .input_b_column_stride(input_b_column_stride),.input_b_k_stride(input_b_k_stride),
  .cfg_output_object(phase==7?OUTPUT_OBJECT^32'd1:OUTPUT_OBJECT),.cfg_output_object_bytes(configured_object_bytes),
  .object_write_valid(object_write_valid),.object_write_ready(object_write_ready),
  .object_write_generation(object_write_generation),.object_write_object(object_write_object),

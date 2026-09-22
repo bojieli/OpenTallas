@@ -25,7 +25,7 @@ module ot_a3_weight_layout_cursor #(
  output reg command_error
 );
  localparam integer CW=INTERLEAVE<2?1:$clog2(INTERLEAVE);
- localparam [2:0] IDLE=0,MULTIPLY=1,COMBINE=2,EXTENT=3,BOUND=4,CHECK=5,RUN=6;
+ localparam [2:0] IDLE=0,EXTENT=1,BOUND=2,CHECK=3,RUN=4;
  reg [2:0] state;
  reg [15:0] rows,cols,depth,groups_left,groups_total;
  reg [CW-1:0] column_in_pass;
@@ -33,8 +33,6 @@ module ot_a3_weight_layout_cursor #(
  reg [34:0] group_step;
  reg [63:0] pass_step;
  reg [31:0] k_step;
- reg [15:0] last_column,last_k;
- reg [39:0] column_lo,column_hi,k_lo,k_hi;
  reg [47:0] column_extent,k_extent;
  reg [48:0] extent;
  reg bound_overflow;
@@ -57,10 +55,8 @@ module ot_a3_weight_layout_cursor #(
   else case(state)
    IDLE:if(command_valid && command_ready)begin
     if(command_rows==0 || command_cols==0 || command_depth==0)command_error<=1;
-    else state<=MULTIPLY;
+    else state<=EXTENT;
    end
-   MULTIPLY:state<=COMBINE;
-   COMBINE:state<=EXTENT;
    EXTENT:state<=BOUND;
    BOUND:state<=CHECK;
    CHECK:if(bound_overflow)begin command_error<=1;state<=IDLE;end else state<=RUN;
@@ -80,19 +76,8 @@ module ot_a3_weight_layout_cursor #(
    groups_total<=16'(({1'b0,command_cols}+17'd7)>>3);
    groups_left<=16'(({1'b0,command_cols}+17'd7)>>3);
    row_index<=0;column_base<=0;k_index<=0;column_in_pass<=0;
-   last_column<=command_cols-16'd1;last_k<=command_depth-16'd1;
-  end
-  // Two 8x32 partial products per dimension break the routed 16x32
-  // admission path. Registers add two admission cycles, none per coordinate.
-  if(state==MULTIPLY)begin
-   column_lo<=40'(last_column[7:0])*40'(lane_stride);
-   column_hi<=40'(last_column[15:8])*40'(lane_stride);
-   k_lo<=40'(last_k[7:0])*40'(k_step);
-   k_hi<=40'(last_k[15:8])*40'(k_step);
-  end
-  if(state==COMBINE)begin
-   column_extent<={8'd0,column_lo}+{column_hi,8'd0};
-   k_extent<={8'd0,k_lo}+{k_hi,8'd0};
+   column_extent<=48'(command_cols-16'd1)*48'(command_column_stride);
+   k_extent<=48'(command_depth-16'd1)*48'(command_k_stride);
   end
   if(state==EXTENT)extent<={1'b0,column_extent}+{1'b0,k_extent};
   if(state==BOUND)bound_overflow<=1'(({1'b0,origin}+{16'd0,extent})>>64);

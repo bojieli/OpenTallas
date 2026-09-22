@@ -22,7 +22,8 @@
   ],
   "lint": "Verilator 5.050 --lint-only -Wall passes",
   "sources": {
-    "rtl/abi3/ot_a3_weight_layout_cursor.sv": "8425d445e7f7f89cf9825b02017dc3302c7ae6b658319753bad38106e633379e",
+    "rtl/abi3/ot_a3_weight_layout_cursor.sv": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971",
     "tests/test_weight_layout_cursor.py": "cda918a5818217dee279893b7c8b3985f6fac5b3a01370cff57274ee530eae43"
-  }
+  },
+  "admission_pipeline": "Two 8x32 partial products per dimension, registered combine; two extra admission cycles, no extra coordinate cycles"
 }

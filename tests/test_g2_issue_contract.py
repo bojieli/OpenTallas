@@ -10,13 +10,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 @pytest.mark.parametrize("resolve", [0, 1])
-def test_g2_issue_contract(tmp_path, resolve):
+@pytest.mark.parametrize("inputs", [0, 1])
+def test_g2_issue_contract(tmp_path, resolve, inputs):
     image = tmp_path / "sim"
     subprocess.run(
         [
             "iverilog",
             "-g2012",
             f"-Ptb_a3_g2_issue_contract.RESOLVE={resolve}",
+            f"-Ptb_a3_g2_issue_contract.INPUTS={inputs}",
             "-s",
             "tb_a3_g2_issue_contract",
             "-o",
@@ -32,4 +34,4 @@ def test_g2_issue_contract(tmp_path, resolve):
     result = subprocess.run(
         ["vvp", str(image)], check=True, capture_output=True, text=True, timeout=30
     )
-    assert f"PASS G2 issue contract checks={30+4*resolve}" in result.stdout
+    assert f"PASS G2 issue contract checks={30+4*resolve+14*inputs}" in result.stdout

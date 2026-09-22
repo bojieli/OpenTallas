@@ -148,7 +148,6 @@ module ot_a3_g2_cluster #(
     parameter integer ADDER_STAGES  = 3,
     parameter integer ACC_SLOTS     = 8,
     parameter integer RUNTIME_OPERANDS = 0,
-    parameter bit RESOLVE_INPUT_OBJECTS = 0,
     parameter bit RUNTIME_WEIGHT_ROW_REUSE = 1,
     parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
     parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
@@ -220,11 +219,6 @@ module ot_a3_g2_cluster #(
     output wire [31:0] runtime_generation,
     // Valid through arithmetic and output drain. Addresses below are element
     // offsets; part_addr remains the lane-local execution address.
-    output wire input_layout_valid,
-    output wire [31:0] input_a_object,input_b_object,
-    output wire [63:0] input_a_object_bytes,input_b_object_bytes,
-    output wire [31:0] input_a_row_stride,input_a_k_stride,
-    output wire [31:0] input_b_column_stride,input_b_k_stride,
     output wire output_layout_valid,
     output wire [63:0] output_object_bytes,
     output wire [31:0] output_object,output_element_base,
@@ -632,8 +626,7 @@ module ot_a3_g2_cluster #(
     assign output_fp32=arr_out_fp32;
 
     ot_a3_g2_array_issue_adapter #(
-        .LANES(LANES),.RESOLVE_OUTPUT_OBJECT(RUNTIME_OBJECT_WRITES),
-        .RESOLVE_INPUT_OBJECTS(RESOLVE_INPUT_OBJECTS)
+        .LANES(LANES),.RESOLVE_OUTPUT_OBJECT(RUNTIME_OBJECT_WRITES)
     ) issue_adapter (
         .clk(clk),
         .rst_n(rst_n),
@@ -683,11 +676,6 @@ module ot_a3_g2_cluster #(
         .array_ws_base(arr_ws_base),
         .array_out_base(arr_out_base),
         .array_out_fp32(arr_out_fp32),
-        .input_layout_valid(input_layout_valid),
-        .input_a_object(input_a_object),.input_b_object(input_b_object),
-        .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),
-        .input_a_row_stride(input_a_row_stride),.input_a_k_stride(input_a_k_stride),
-        .input_b_column_stride(input_b_column_stride),.input_b_k_stride(input_b_k_stride),
         .output_layout_valid(output_layout_valid),
         .output_object(output_object),.output_object_bytes(output_object_bytes),.output_logical_cols(output_logical_cols),
         .output_row_stride(output_row_stride),.output_col_stride(output_col_stride),
