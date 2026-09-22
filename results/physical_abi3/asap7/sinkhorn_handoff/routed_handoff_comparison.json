@@ -1,0 +1,166 @@
+{
+  "scope": "ASAP7 TT2.4ns CTS12 fanout16 matched divider-handoff baseline/candidate. Both meet routed timing but neither meets all physical checks. Later sum/activity changes not covered.",
+  "records": [
+    {
+      "record": "pnr_baseline_cts12_2p4ns.json",
+      "sha256": "2745660689091e179fd288d9b78f266ea32817404a7b22ef474388222b179679",
+      "metrics": {
+        "antenna_violating_nets": 0,
+        "antenna_violating_pins": 0,
+        "clock_count": 1,
+        "core_area_um2": 7814.19,
+        "die_area_um2": 8569.39,
+        "drc_errors": 0,
+        "flow_error_counts": {
+          "cts__flow__errors__count": 0,
+          "detailedplace__flow__errors__count": 0,
+          "detailedroute__flow__errors__count": 0,
+          "finish__flow__errors__count": 0,
+          "floorplan__flow__errors__count": 0,
+          "globalplace__flow__errors__count": 0,
+          "globalroute__flow__errors__count": 0,
+          "placeopt__flow__errors__count": 0,
+          "synth__flow__errors__count": 0
+        },
+        "fmax_hz": 516470000.0,
+        "hold_tns_ns": 0.0,
+        "hold_violations": 0,
+        "hold_wns_ns": 0.0320207,
+        "instance_count": 67907,
+        "library_time_unit_ns": 0.001,
+        "macro_area_um2": 0,
+        "macro_count": 0,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 1,
+        "max_slew_violations": 0,
+        "missing_metadata_keys": [],
+        "power_total_w": 0.00227867,
+        "raw_timing_library_units": {
+          "hold_tns_ns": 0,
+          "hold_wns_ns": 32.0207,
+          "setup_tns_ns": 0,
+          "setup_wns_ns": 463.78
+        },
+        "routed_nets": 27584,
+        "routed_wirelength_um": 122736,
+        "sequential_area_um2": 891.275,
+        "sequential_cell_count": 2359,
+        "setup_tns_ns": 0.0,
+        "setup_violations": 0,
+        "setup_wns_ns": 0.46377999999999997,
+        "standard_cell_area_um2": 3038.27,
+        "standard_cell_count": 26388,
+        "utilization_fraction": 0.388814,
+        "vias": 231479
+      },
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+          "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+          "size_bytes": 12418
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "size_bytes": 18599
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_positive_rne_pipe.sv",
+          "sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+          "size_bytes": 9283
+        },
+        {
+          "path": "results/physical_abi3/asap7/sinkhorn_handoff/baseline.sv",
+          "sha256": "bd866bb68c951ac5a36c2a88a22eabe43f54a51703b0d07ce474492ad1cea5da",
+          "size_bytes": 16454
+        }
+      ]
+    },
+    {
+      "record": "pnr_candidate_cts12_2p4ns.json",
+      "sha256": "3f8e059387b21a291e3de71a34cbccdc9f5670079c2baf1fc4ffe35ccae3b424",
+      "metrics": {
+        "antenna_violating_nets": 0,
+        "antenna_violating_pins": 0,
+        "clock_count": 1,
+        "core_area_um2": 7967.68,
+        "die_area_um2": 8742.06,
+        "drc_errors": 0,
+        "flow_error_counts": {
+          "cts__flow__errors__count": 0,
+          "detailedplace__flow__errors__count": 0,
+          "detailedroute__flow__errors__count": 0,
+          "finish__flow__errors__count": 0,
+          "floorplan__flow__errors__count": 0,
+          "globalplace__flow__errors__count": 0,
+          "globalroute__flow__errors__count": 0,
+          "placeopt__flow__errors__count": 0,
+          "synth__flow__errors__count": 0
+        },
+        "fmax_hz": 504137000.0,
+        "hold_tns_ns": 0.0,
+        "hold_violations": 0,
+        "hold_wns_ns": 0.0267971,
+        "instance_count": 69205,
+        "library_time_unit_ns": 0.001,
+        "macro_area_um2": 0,
+        "macro_count": 0,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 2,
+        "max_slew_violations": 0,
+        "missing_metadata_keys": [],
+        "power_total_w": 0.00236098,
+        "raw_timing_library_units": {
+          "hold_tns_ns": 0,
+          "hold_wns_ns": 26.7971,
+          "setup_tns_ns": 0,
+          "setup_wns_ns": 416.412
+        },
+        "routed_nets": 28090,
+        "routed_wirelength_um": 134645,
+        "sequential_area_um2": 900.607,
+        "sequential_cell_count": 2391,
+        "setup_tns_ns": 0.0,
+        "setup_violations": 0,
+        "setup_wns_ns": 0.416412,
+        "standard_cell_area_um2": 3107.28,
+        "standard_cell_count": 26927,
+        "utilization_fraction": 0.389985,
+        "vias": 243396
+      },
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+          "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+          "size_bytes": 12418
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "size_bytes": 18599
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_positive_rne_pipe.sv",
+          "sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+          "size_bytes": 9283
+        },
+        {
+          "path": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
+          "sha256": "1d0f3e62b508554c5f2946c7d6578b9a0a17151d2894f7cdaad02fbfb1a4cc03",
+          "size_bytes": 17509
+        }
+      ]
+    }
+  ],
+  "decision": "Handoff reduces cycles but costs routed area and setup margin. Two candidate fanout violations prevent closure. Await refined sum-handoff route; no current-parent clock claim."
+}

@@ -1851,3 +1851,14 @@ with timing met and signal integrity not clean due to its one fanout violation.
 Historical records and live runs retain their original driver provenance and
 verdict; their raw metrics still require independent review. Evidence:
 `results/physical_abi3/physical_verdict_regression.json`.
+
+
+The divider-handoff candidate parent route also completes at 2.4 ns: area
+3107.280 um², setup WNS +0.416412 ns and hold WNS
++0.026797 ns. Timing passes, but two fanout violations prevent physical
+closure. Its legacy runner reports PASS; the stricter verdict now rejects such
+results. The preceding baseline area is 3,038.270 um² with +0.463780 ns setup
+slack and one fanout violation. Divider handoff is therefore a cycle/area tradeoff
+at this tested period, not an integrated frequency gain. Later reduction and
+activity revisions are not covered. All retained candidate artifact hashes
+match. Evidence: `results/physical_abi3/asap7/sinkhorn_handoff/routed_handoff_comparison.json`.
