@@ -2,6 +2,7 @@
 """Qualify a host-loaded ABI contraction through the G2 runtime path."""
 
 from pathlib import Path
+import argparse
 import hashlib
 import json
 import subprocess
@@ -10,7 +11,12 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-OUT = ROOT / "build/g2_runtime_program"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--output-backpressure", action="store_true")
+args = parser.parse_args()
+rows = 6 if args.output_backpressure else 1
+record_name = "g2_runtime_output" if args.output_backpressure else "g2_runtime_program"
+OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
     engine_capability,
@@ -24,8 +30,9 @@ from tools.build_abi3_engine_vectors import (  # noqa: E402
 capability = engine_capability()
 # Non-square and lane-distinct: the wrong B shape or transposition cannot pass.
 activation = np.resize(
-    np.array([0x3F80, 0x3F00, 0xBF80, 0x3E80, 0x4000], dtype=np.uint16), (1, 80)
+    np.array([0x3F80, 0x3F00, 0xBF80, 0x3E80, 0x4000], dtype=np.uint16), (rows, 80)
 )
+activation[1::2] ^= np.uint16(0x8000)
 weight = np.repeat(
     np.array(
         [0x3F80, 0x4000, 0x4040, 0x4080, 0xBF80, 0xC000, 0xC040, 0xC080],
@@ -77,7 +84,11 @@ for record in case.deployment.table._records:
 hex_words("descriptor.hex", desc, 32)
 hex_words(
     "weight.hex",
-    [sum(int(weight[lane, k]) << (16 * lane) for lane in range(8)) for k in range(80)],
+    [
+        sum(int(weight[lane, k]) << (16 * lane) for lane in range(8))
+        for _ in range(rows)
+        for k in range(80)
+    ],
     32,
 )
 hex_words("activation.hex", activation.reshape(-1), 16)
@@ -85,6 +96,7 @@ hex_words("expected.hex", golden["output"].reshape(-1), 8)
 (OUT / "program_config.svh").write_text(
     f"localparam integer PROGRAM_WORDS={count * 2}, DESCRIPTOR_WORDS={len(desc)};\n"
     f"localparam integer INSTRUCTION_COUNT={count};\n"
+    f"localparam integer ROWS={rows}, STRESS_OUTPUT={int(args.output_backpressure)};\n"
     f"localparam [63:0] MAX_WORK=64'd{work};\n"
 )
 packages = [
@@ -109,6 +121,7 @@ tracked = sorted(
             "runtime/sim/engines/tensor.py",
             "rtl/test/tb_a3_g2_issue_contract.sv",
             "tests/test_g2_issue_contract.py",
+            "tests/test_reserved_output_queue.py",
         ]
         + [
             str(p.relative_to(ROOT))
@@ -153,18 +166,19 @@ for p, h in hashes.items():
     assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
 result = {
     "status": "pass",
+    "output_backpressure": args.output_backpressure,
     "scope": "Host-loaded admitted ABI program and descriptors through actual G2 sequencer/adapter/runtime/LQ8, compared with functional Device. Behavioral SRAM and external services; no physical closure.",
     "sources": hashes,
     "program_sha256": hashlib.sha256(image).hexdigest(),
     "descriptor_sha256": hashlib.sha256(case.deployment.table.encode()).hexdigest(),
     "golden_output": golden["output"].reshape(-1).tolist(),
     "fixture": {
-        "rows": 1,
+        "rows": rows,
         "cols": 8,
         "depth": 80,
         "dtype": "BF16",
         "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
-        "output_addressing": "Lane-local address zero maps to logical column equal to lane index",
+        "output_addressing": "Lane-local address maps to row; logical column equals lane index",
     },
     "command": cmd,
     "stdout": r.stdout,
@@ -174,7 +188,7 @@ result = {
         + [OUT / "program_config.svh", OUT / "simulation.log"]
     },
 }
-(ROOT / "results/rtl/a3_g2_runtime_program.json").write_text(
+(ROOT / "results/rtl" / f"a3_{record_name}.json").write_text(
     json.dumps(result, indent=2) + "\n"
 )
 print(r.stdout)

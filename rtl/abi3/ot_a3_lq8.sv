@@ -75,6 +75,7 @@ module ot_a3_lq8 #(
     // These previews do not advance while a complete bundle is unavailable.
     output wire        operand_request,
     output wire        operand_issue,
+    output wire        operand_last,     // issuing this bundle reserves one result beat
     output reg [31:0]  operand_a_addr, operand_s_addr, operand_ws_addr,
     output wire [31:0] operand_w_addr,
     input  wire [15:0] cfg_rows,           // M
@@ -227,7 +228,7 @@ module ot_a3_lq8 #(
 
     // -- lane request buses ------------------------------------------------------
     wire [LANES-1:0]    l_a_en, l_b_en, l_s_en, l_t_en;
-    wire [LANES-1:0] l_request, l_issue;
+    wire [LANES-1:0] l_request, l_issue, l_last;
     wire [32*LANES-1:0] l_preview_a, l_preview_s, l_preview_t;
     wire [32*LANES-1:0] l_a_addr, l_b_addr, l_s_addr, l_t_addr;
     wire [32*LANES-1:0] l_out_count, l_saturation_count, l_mac_count, l_product_count;
@@ -250,6 +251,7 @@ module ot_a3_lq8 #(
                 .start(lane_start),
                 .operand_credit(operand_credit),
                 .operand_request(l_request[gi]), .operand_issue(l_issue[gi]),
+                .operand_last(l_last[gi]),
                 .operand_a_addr(l_preview_a[32*gi +: 32]),
                 .operand_b_addr(),
                 .operand_s_addr(l_preview_s[32*gi +: 32]),
@@ -338,6 +340,7 @@ module ot_a3_lq8 #(
     // another independently maintained stream cursor.
     assign operand_w_addr = w_ptr + {31'b0, sel_valid};
     wire [LANES-1:0] request_lowest = l_request & (~l_request + {{(LANES-1){1'b0}},1'b1});
+    assign operand_last = |(request_lowest & l_last);
     integer pi;
     always @* begin
         operand_a_addr=0; operand_s_addr=0; operand_ws_addr=0;

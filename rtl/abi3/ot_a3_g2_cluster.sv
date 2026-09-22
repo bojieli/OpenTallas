@@ -148,6 +148,7 @@ module ot_a3_g2_cluster #(
     parameter integer ADDER_STAGES  = 3,
     parameter integer ACC_SLOTS     = 8,
     parameter integer RUNTIME_OPERANDS = 0,
+    parameter integer OUTPUT_DEPTH = 4,
     // The control-plane performance knobs, forwarded to the sequencer.  They
     // are declared here so a route can select a configuration with --param
     // instead of editing a default in a scratch worktree: a record produced
@@ -289,6 +290,12 @@ module ot_a3_g2_cluster #(
     output wire [7:0]    view_rank,
     output wire [4:0]    view_irs_slot,
 
+    // Runtime mode: part_valid holds mask/address/data/acc until part_ready.
+    // A beat atomically transfers all masked lanes. Queued pre-abort results
+    // still drain; runtime_generation remains stable until completion.
+    // Legacy mode: fixed-throughput pulses; part_ready is ignored.
+    input wire part_ready,
+    output wire part_valid,
     // -- the array's partial port and status -----------------------------
     output wire [LANES-1:0]    part_we,
     output wire [32*LANES-1:0] part_addr,
@@ -660,7 +667,8 @@ module ot_a3_g2_cluster #(
     wire core_busy,core_done,core_rst_n;
     wire [7:0] core_error,core_detail,core_error_lane;
     wire [LANES-1:0] core_part_we;
-    wire operand_request,operand_issue,operand_credit;
+    wire [32*LANES-1:0] core_part_addr,core_part_data,core_part_acc;
+    wire operand_request,operand_issue,operand_credit,operand_last;
     wire [31:0] operand_a,operand_s,operand_ws,operand_w;
     generate if(RUNTIME_OPERANDS==0)begin : legacy_operands
     ot_a3_g2_array_staging staging (
@@ -692,7 +700,8 @@ module ot_a3_g2_cluster #(
         assign operand_credit=1'b1;
         assign array_busy=core_busy;assign array_done=core_done;
         assign array_error_code=core_error;assign array_error_detail=core_detail;assign array_error_lane=core_error_lane;
-        assign part_we=core_part_we;
+        assign part_we=core_part_we;assign part_valid=|core_part_we;
+        assign part_addr=core_part_addr;assign part_data=core_part_data;assign part_acc=core_part_acc;
         assign runtime_transport_cancel=0;assign runtime_generation=0;
         assign weight_request_valid=0;assign weight_request_tag=0;assign weight_request_address=0;assign weight_request_words=0;
         assign weight_response_ready=0;assign auxiliary_request_valid=0;
@@ -708,7 +717,8 @@ module ot_a3_g2_cluster #(
         wire command_ready,service_busy,geometry_error,protocol_error,lifetime_clear,compute_abort,lifetime_ready;
         wire [31:0] completed_generation;
         wire [7:0] completed_error;
-        wire runtime_fault=protocol_error || (geometry_error && operand_request);
+        wire output_error,output_empty,output_credit,service_credit;
+        wire runtime_fault=protocol_error || output_error || (geometry_error && operand_request);
         wire service_clear=lifetime_clear;
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)begin next_generation<=0;command_pending<=0;end
@@ -722,14 +732,26 @@ module ot_a3_g2_cluster #(
             .clk(clk),.rst_n(rst_n),.start(arr_start),.start_ready(lifetime_ready),
             .command_generation(next_generation+1'b1),.compute_done(core_done),.compute_error(core_error),
             .service_fault(runtime_fault),.abort_valid(runtime_abort),
-            .transport_ack(runtime_transport_ack),.writes_drained(runtime_writes_drained),
+            .transport_ack(runtime_transport_ack),.writes_drained(runtime_writes_drained && output_empty),
             .transport_cancel(runtime_transport_cancel),.transport_generation(runtime_generation),
             .service_clear(lifetime_clear),.compute_abort(compute_abort),.busy(array_busy),
             .completion_valid(array_done),.completion_ready(1'b1),
             .completion_generation(completed_generation),.completion_error(completed_error));
         assign core_rst_n=rst_n && !compute_abort;
-        // Suppress same-cycle external writes as a runtime abort is observed.
-        assign part_we=core_part_we & {LANES{!compute_abort && !runtime_fault && !runtime_abort}};
+        // No new results enter storage after an abort is observed. Previously
+        // queued beats retain ready/valid stability and drain before completion.
+        wire push_output=(|core_part_we) && !compute_abort && !runtime_fault && !runtime_abort;
+        wire [LANES-1:0] queued_mask;
+        assign part_we=part_valid?queued_mask:{LANES{1'b0}};
+        assign operand_credit=service_credit && (!operand_last || output_credit);
+        ot_a3_reserved_output_queue #(.WIDTH(97*LANES),.DEPTH(OUTPUT_DEPTH)) output_queue(
+            .clk(clk),.rst_n(rst_n),
+            .reserve_valid(operand_issue && operand_last),.reserve_ready(output_credit),
+            .stop_producer(core_done || compute_abort),
+            .push_valid(push_output),.push_data({core_part_we,core_part_addr,core_part_data,core_part_acc}),
+            .out_valid(part_valid),.out_ready(part_ready),
+            .out_data({queued_mask,part_addr,part_data,part_acc}),
+            .empty(output_empty),.protocol_error(output_error));
         assign array_error_code=array_done?completed_error:core_error;
         assign array_error_detail=compute_abort?completed_error:core_detail;
         assign array_error_lane=compute_abort?8'b0:core_error_lane;
@@ -750,7 +772,7 @@ module ot_a3_g2_cluster #(
             .cfg_a_base(arr_a_base),.cfg_s_base(arr_scale_a_base),.cfg_ws_base(arr_ws_base),.cfg_w_base(arr_w_base),
             .compute_admitted(operand_request),.operand_request(operand_request),.operand_issue(operand_issue),
             .operand_a(operand_a),.operand_s(operand_s),.operand_ws(operand_ws),.operand_w(operand_w),
-            .operand_credit(operand_credit),.a_data(a_rd_data),.s_data(s_rd_data),.w_data(w_rd_data),.ws_data(ws_rd_data),
+            .operand_credit(service_credit),.a_data(a_rd_data),.s_data(s_rd_data),.w_data(w_rd_data),.ws_data(ws_rd_data),
             .busy(service_busy),.geometry_error(geometry_error),.protocol_error(protocol_error),
             .weight_request_valid(weight_request_valid),
             .weight_request_ready(weight_request_ready),
@@ -789,7 +811,7 @@ module ot_a3_g2_cluster #(
         .clk(clk),
         .rst_n(core_rst_n),
         .start(arr_start),.operand_credit(operand_credit),
-        .operand_request(operand_request),.operand_issue(operand_issue),
+        .operand_request(operand_request),.operand_issue(operand_issue),.operand_last(operand_last),
         .operand_a_addr(operand_a),.operand_s_addr(operand_s),.operand_ws_addr(operand_ws),.operand_w_addr(operand_w),
         .cfg_rows(arr_rows),
         .cfg_cols(arr_cols),
@@ -821,9 +843,9 @@ module ot_a3_g2_cluster #(
         .ws_rd_addr(ws_rd_addr),
         .ws_rd_data(ws_rd_data),
         .out_we(core_part_we),
-        .out_addr(part_addr),
-        .out_data(part_data),
-        .out_acc(part_acc),
+        .out_addr(core_part_addr),
+        .out_data(core_part_data),
+        .out_acc(core_part_acc),
         .busy(core_busy),
         .done(core_done),
         .error_code(core_error),

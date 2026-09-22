@@ -19,7 +19,7 @@ module tb_a3_g2_runtime_boundary;
  integer outputs=0,fills=0,cycles=0,phase=0;
  reg [7:0] seen=0;
  ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1)) dut(
- .clk(clk),.rst_n(rst_n),.start(1'b0),.host_we(1'b0),
+ .clk(clk),.rst_n(rst_n),.part_ready(1'b1),.start(1'b0),.host_we(1'b0),
  .runtime_abort(runtime_abort),.runtime_transport_ack(runtime_transport_ack),.runtime_writes_drained(runtime_writes_drained),
  .runtime_transport_cancel(runtime_transport_cancel),.runtime_generation(runtime_generation),
  .weight_request_valid(weight_request_valid),.weight_request_ready(!wactive),.weight_request_tag(weight_request_tag),

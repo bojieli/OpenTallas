@@ -699,3 +699,49 @@ ABI/deployment or all-target qualification. Nonzero view-offset translation,
 partial column groups, additional formats and real output backpressure remain
 open. Both G2 branches elaborate with existing warnings; new physical evidence
 is still required before assigning a clock or area to these changes.
+
+
+## Bounded output backpressure and reservations
+
+The subsequent runtime implementation replaces the fixed-throughput partial
+sink with `part_valid`/`part_ready`. `part_we` is a held lane mask, not a pulse:
+consumers write only on the ready/valid handshake. The mask, lane-local addresses,
+results and accumulator codes transfer atomically and stay stable during stalls.
+The legacy generate branch retains its old pulse behavior and ignores ready.
+
+`ot_a3_reserved_output_queue` defaults to four entries. Its capacity includes
+both queued results and outstanding result reservations. LQ8 publishes
+`operand_last` from the first requesting live lane; lockstep live lanes share
+that final-K position. G2 reserves one beat when such a bundle actually issues.
+Only final groups require output credit, so earlier products can accumulate
+while output storage is full. Downstream ready is absent from the credit
+combinational path. The output queue supports simultaneous insertion and drain;
+a full reservation budget returns credit on the following cycle.
+
+The completion barrier now requires the local queue to be empty AND the
+external `runtime_writes_drained` acknowledgement. Producer stop releases
+reservations for faulted/flushed results. On explicit abort or service fault,
+new results are suppressed and the core stops; already queued outputs retain
+their ready/valid contract and drain before error completion. Such writes are
+not rolled back. Global reset must reset the downstream transaction as well.
+An unreserved/overflowing core result raises a sticky internal protocol error;
+it indicates a hardware invariant violation, and global reset is required.
+
+Reproduce the loaded-program stress with:
+
+```
+python3 tools/check_g2_runtime_program.py --output-backpressure
+python3 -m pytest -q tests/test_reserved_output_queue.py
+```
+
+The stress uses `M=6,N=8,K=80`, deliberately fills the queue, varies sink ready,
+holds the final result beyond compute completion and external acknowledgements,
+and aborts with a valid beat queued. It reports 1,031 output-stall cycles,
+17 final-group reservation stalls and 152 correct accepted outputs. Numerical
+expectations come from the functional Device. Evidence resides in
+`results/rtl/a3_g2_runtime_output.json`; the original single-row always-ready
+program remains a separate regression. The five queue tests include non-power-
+of-two depth, delayed producers, random simultaneous traffic, reservation
+cancellation and protocol-fault detection. Area/timing remain uncharacterized;
+this closes the modeled output-backpressure integration gap, not real memory
+write service, numerical format coverage or whole-system physical closure.

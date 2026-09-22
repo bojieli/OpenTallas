@@ -114,6 +114,7 @@ module ot_a3_lane_pipelined #(
     // may fetch all four planes from these addresses before granting credit.
     output wire        operand_request,
     output wire        operand_issue,
+    output wire        operand_last,     // final K group of the previewed column
     output wire [31:0] operand_a_addr, operand_b_addr,
     output wire [31:0] operand_s_addr, operand_t_addr,
     input  wire [15:0] cfg_rows,           // M
@@ -394,6 +395,7 @@ module ot_a3_lane_pipelined #(
     wire        can_issue = operand_request &&
                             ((OPERAND_CREDITS == 0) || operand_credit);
     assign operand_issue = can_issue;
+    assign operand_last = last_kg;
     wire [COL_BITS-1:0] col_idx = col_i[COL_BITS-1:0];
     wire [31:0] b_col_now     = open_col ? b_col_cursor    : b_col_base[col_idx];
     wire [31:0] col_scale_now = open_col ? col_cur_scale_b : col_scale_b[col_idx];

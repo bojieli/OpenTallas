@@ -1,7 +1,7 @@
 # Refined accelerator architecture and optimization report
 
 Date: 2026-09-22. Status: architecture implementation in progress.
-Implementation includes the G2 ABI dispatch correction following `63090e65`;
+Implementation includes the G2 output-backpressure checkpoint after `9abdeb01`;
 this report consolidates the completed checkpoints and next acceptance gates.
 
 ## Assessment
@@ -30,6 +30,7 @@ or whole-chip performance claim is made.
 | Tile control | Behavioral controller in early integration test | Synthesizable reserve/fetch/fill/acquire scheduler | Integrated with SRAM and LQ8; external transport remains modeled |
 | Reuse | Stream execution repeats weights for rows | Retain resident weight tiles for bounded multi-row execution | Bank retain/replay verified; multi-row compute scheduling pending |
 | Numerical behavior | Multiple engines/prototypes use different reduction associations | Preserve sequential RNE or explicitly specify and qualify blocked association | Existing LQ8 numerical/fault corpus preserved; Qwen blocked implementation qualification pending |
+| Output flow control | Fixed-throughput partial-write pulses | Reserve queue storage before final K-group issue; hold complete beats under ready/valid | Four-entry runtime output queue; six-row loaded-program stress passes |
 | Completion | Arithmetic completion alone cannot prove external work has drained | Generation-owned completion waits for transport and final writes | Connected in G2; delayed drain, abort and restart tested through a loaded program |
 | Physical optimization | Isolated block results and incomplete/stale coverage | Optimize selected architecture, then route containing blocks and every target configuration | Full recharacterization remains pending |
 
@@ -69,7 +70,7 @@ flowchart LR
     F --> J[Identity check and complete-bundle credit]
     Q --> J
     J --> L[LQ8 with captured configuration and live accumulators]
-    L --> W[Output writes]
+    L --> W[Reserved output queue and downstream writes]
     L --> D[Completion barrier]
     W --> D
     T --> D
@@ -77,9 +78,10 @@ flowchart LR
 ```
 
 The diagram describes the connected runtime path, not a fully qualified deployed
-machine. External activation/scale service is modeled in current tests. Output
-writes still use a fixed-throughput interface; a bounded backpressured output
-queue with issue-capacity reservation remains required. Runtime mode is opt-in
+machine. External activation/scale service is modeled in current tests. Runtime output
+writes now use a bounded ready/valid queue, with capacity reserved before the
+final K-group issues. Completion checks internal queue emptiness as well as the
+external write-drain acknowledgement. The legacy mode retains its pulse port. Runtime mode is opt-in
 (`RUNTIME_OPERANDS=1`), eight-lane only; legacy staging remains the default.
 
 Program-driven qualification exposed two dispatch contract defects, now fixed:
@@ -128,7 +130,7 @@ that focused test checks admitted geometry, not full-depth arithmetic.
 
 The latest LQ8 completion-barrier corpus passes 92 cases, 17,103 matching
 outputs, 18 fault cases and 115,748 checks. Its evidence records 27 passing
-focused tests; the added ABI adapter regression brings the focused suite to 28. The actual G2 runtime-boundary test passes multi-tile arithmetic,
+focused tests; the added ABI adapter regression brings the focused suite to 28. Five output-queue capacity variants now bring it to 33. The actual G2 runtime-boundary test passes multi-tile arithmetic,
 delayed transport/write drain, abort after issue and restart. It bypasses program
 and descriptor dispatch by forcing adapter outputs and uses behavioral SRAM and
 external services. Both G2 generate branches elaborate with existing warnings;
@@ -153,6 +155,10 @@ Primary retained records:
 - `results/rtl/a3_g2_runtime_boundary.json`: historical G2 boundary wiring test.
 - `results/rtl/a3_g2_runtime_program.json`: loaded ABI program, numerical outputs,
   abort/transport fault propagation and restart.
+- `results/rtl/a3_g2_runtime_output.json`: six-row loaded-program output
+  backpressure, reservation stalls, completion gating and queued-result abort.
+- `results/rtl/a3_lq8_output_interface_regression.json`: 92-case LQ8 regression
+  after adding the final-group preview; this harness does not contain the queue.
 
 Each record identifies its tested sources. Older records remain historical when
 sources change; they do not qualify the current tree automatically. Reproduction
@@ -164,8 +170,9 @@ commands and source/artifact digests are retained in the records and checkers.
    admission, G2 runtime transport and completion ownership are implemented.
    A bounded loaded-program regression now covers corrected ABI slots/layout
    and real sequencer completion/fault propagation. Extend shape/format and
-   deployment-memory mapping coverage. Add bounded output buffering
-   with capacity reserved before issue and truthful final-write acknowledgement.
+   deployment-memory mapping coverage. Bounded output buffering and reservation
+   before final-group issue are implemented; connect a real downstream write
+   service that truthfully reports final-write acknowledgement.
    Acceptance requires reset, fault, cancellation and independent backpressure
    tests without stale credits, lost outputs or unexplained permanent stalls.
 2. **Reusable activation and scale storage.** Replace external-array models with
@@ -219,7 +226,8 @@ The program regression uses real host writes and no forced internal signals.
 All listed commits were pushed to `token-path-end-to-end`. The configuration
 capture and widened grouped-depth count are correctness improvements as well
 as prerequisites for safe overlap. Runtime faults and abort reset the core and
-suppress subsequent partial writes; already committed writes are not rolled back.
+suppress new partial results; already queued results drain and already committed
+writes are not rolled back.
 
 The next optimization decisions should be ranked by workload latency and bytes
 moved per useful result. Pipelining follows architecture qualification, using
@@ -228,3 +236,33 @@ establish improved throughput or energy. Each supported configuration needs its
 own measured memory, engine and transport budgets before selecting queue sizes,
 replication factors and clock domains. No single topology or GHz target is
 assumed optimal across all technologies and workloads.
+
+
+## Reserved output queue checkpoint
+
+Runtime G2 now exports `part_valid`/`part_ready`. A transfer atomically accepts
+the lanes in `part_we` with their lane-local addresses, results and FP32
+accumulators. While stalled, the entire payload remains stable. Four entries
+store 3,104 payload bits at eight lanes, excluding occupancy/pointer control.
+This is declared storage, not a mapped area estimate. Queue depth is configurable.
+
+The lane exposes whether its next operand is the final K group; G2 reserves one
+result beat when that group issues. Nonfinal products can continue accumulating
+while the output queue is full. Credit depends on local registered occupancy,
+not downstream ready, avoiding a combinational ready path back through the
+arithmetic pipeline. Reservation and queued occupancy share one capacity budget;
+unused reservations are released only when compute stops. On abort, existing
+queued writes remain valid and drain, while new core results are suppressed.
+
+The six-row BF16 program test observes 1,031 stalled-output cycles, 17 blocked
+final-group issue cycles, and 152 correct accepted results across successful
+runs and a queued-result abort. It explicitly holds the last result after compute
+completion and external acknowledgements to verify the internal drain gate.
+Five randomized queue tests cover depths 1/2/3/4/8, delayed production,
+simultaneous events, cancellation and unreserved-result detection. The new
+queue has clean standalone Verilator lint. These are functional checks; the
+selected depth and the added output multiplexing/register cost still require
+workload tuning and physical characterization. The separate 92-case numerical
+regression retains 17,103 matching outputs, 18 faults, 115,748 checks and
+323,397 aggregate cycles; that regression checks the LQ8 interface change,
+while the six-row G2 test checks the queue integration.
