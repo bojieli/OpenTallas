@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "scope": "Standalone lane, both schedule orders; integrated bank/output schedule not yet changed",
+  "tests": 19,
+  "adder_stages": [
+    1,
+    2,
+    3
+  ],
+  "depths": [
+    1,
+    4,
+    160
+  ],
+  "rows": 3,
+  "local_columns": 7,
+  "coverage": [
+    "all four operand addresses in pass/row/K/column order",
+    "exact FP32 sequential accumulation with signed disparate-magnitude BF16 inputs",
+    "row and column block scales",
+    "nonzero output base and pass-first publication order",
+    "operand credit stalls",
+    "reset during issue and complete recovery",
+    "unsupported five-stage configuration refused"
+  ],
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "sha256": "46abe872a88d16e15aefc75055a90a6bcd0df6f153606c4a1f6f132ec802386b"
+    },
+    {
+      "path": "tests/test_lane_pass_first.py",
+      "sha256": "ac7c8895c839afddb0acdfea77f55483a183a9c5714d0de3fc95bb278d06c84a"
+    },
+    {
+      "path": "tools/rtl_abi3_lane_campaign.py",
+      "sha256": "b9ac9fb4a083abbc31af39da703f1fd152f97aad786c047c5fca2f5b796400f4"
+    }
+  ],
+  "pass_first": [
+    0,
+    1
+  ]
+}

@@ -538,3 +538,57 @@ benefit is claimed before completion. The pre-change source is retained at
 The lane issue order, bank reuse and output sequencing still require coordinated
 changes before enabling this mode in the runtime service or claiming loaded
 traffic reduction.
+
+## Pass-first arithmetic lane and physical outcomes
+
+The arithmetic lane now supports pass-first issue, preserving per-output K
+association and physical row-major output addresses while publishing in pass/row
+order. Captured pass origins restore weight and scale cursors for each row;
+activation/output origins restore the first row on pass advance. The depth-one,
+one-column boundary bypasses the simultaneously captured pass origin. Existing
+accumulator slots and recurrence scheduling are retained; no partial spill store
+or extra issue cycle is introduced. Runtime G2 has not enabled this schedule.
+
+Nineteen focused tests pass: both schedule orders with adder depths 1/2/3 at
+K1/K4/K160, three rows and seven local columns, plus rejection of unsupported
+depth five. They compare every
+operand address and exact FP32 output, exercise signed BF16 values with large
+magnitude differences, both row-block scale streams, nonzero output bases,
+credit stalls and reset/recovery. Evidence: `results/rtl/lane_pass_first.json`.
+Testing also exposed the old unsupported-adder-depth problem: arithmetic uses
+at most three stages while tokens used the requested depth. Invalid depths now
+fail explicitly. The default-lane campaign source list now includes the two
+FP32 pipeline modules required by its current sequential reference.
+
+The pass-first operand cursor route passes all recorded physical checks at
+ASAP7 TT 1 ns, CTS12: 645.573 um² cells, setup +0.177739 ns, hold +0.0506798 ns.
+Source and seven retained artifact hashes are verified in
+`runtime_operand_cursor/pass_first_route_audit.json`. This is standalone cursor
+closure; it does not qualify the lane or integrated schedule.
+
+The containing final-line transport route also completes: 6,175.290 um² cells,
+setup +0.0547659 ns, hold +0.0395379 ns at 1 ns. Nine slew violations keep its
+verdict NOT_MET; other reported checks pass. The previous handoff route had
+6,160.300 um² and -0.00156786 ns setup slack with eleven slew violations. The
+new critical path is gather slot selection to assembled word data. Verified
+historical source bindings and seven artifacts are retained in
+`bf16_weight_transport/lane_line_extent_route_audit.json`.
+A current-source transport route with 10% slew repair margin is active, keeping
+the same 1 ns target, fanout limit and library transition limit. Its outcome is
+pending; no relaxed-limit closure or extrapolated frequency is claimed.
+
+The broader two-simulator default-lane quick D1 campaign at adder depths 3/2/1
+is active after repairing its missing reference dependencies; it is not yet a
+completed regression result.
+
+The next bank/transport integration must separate the logical issue stream from
+the unique fetched weight stream. Replaying a pass across rows advances issue
+addresses without reading those repeated weights again. The current transport
+requires sequential external request addresses and its coordinate cursor still
+walks every row; simply launching per-pass scheduler commands would violate
+that contract at the second pass. Use explicit pass ownership and distinct
+fetch/issue bases (or an equally checked schedule-aware skip), release retained
+banks only after the final row of each pass, and keep compute admission and the
+future operand cursor alive across pass boundaries. This is in addition to
+schedule-aware output validation and tail masking. Above-bank-size passes still
+need a defined fallback and accumulator budget; no unlimited retention is assumed.

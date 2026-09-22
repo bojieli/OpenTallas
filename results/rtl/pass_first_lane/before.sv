@@ -100,8 +100,7 @@
 module ot_a3_lane_pipelined #(
     parameter integer ADDER_STAGES = 3,     // L: adder latency = interleaved columns
     parameter integer ACC_SLOTS    = 8,     // accumulator file slots (>= ADDER_STAGES)
-    parameter integer OPERAND_CREDITS = 0,  // opt-in reservation before issue
-    parameter bit PASS_FIRST = 0           // pass, row, K, interleaved column
+    parameter integer OPERAND_CREDITS = 0   // opt-in reservation before issue
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -169,12 +168,6 @@ module ot_a3_lane_pipelined #(
     localparam [15:0]  L16 = ADDER_STAGES;
     localparam [2:0]   L3 = ADDER_STAGES;
     localparam [3:0]   L_WAIT = ADDER_STAGES - 1;
-    initial begin
-        if (ADDER_STAGES < 1 || ADDER_STAGES > 3)
-            $fatal(1, "lane adder supports one, two or three stages");
-        if (ACC_SLOTS < ADDER_STAGES || ACC_SLOTS > 8)
-            $fatal(1, "invalid lane accumulator capacity");
-    end
 
     // In-flight lane-ops are bounded by the pipeline itself, not by the
     // address space: a token occupies exactly one of the eight front-end
@@ -286,10 +279,6 @@ module ot_a3_lane_pipelined #(
     reg [15:0] col_cur_in_block_b;          // (next column to open) mod rpb_b
     reg [31:0] col_cur_scale_b;             // ((next column to open) / rpb_b) * cpr_b
     reg [31:0] col_scale_b  [0:COL_SLOTS-1];
-    // Operation and pass origins are owned by the admitted issue walk. They
-    // need no reset distribution; start/first-column capture precedes use.
-    reg [31:0] a_origin, out_origin, b_pass_origin, scale_pass_origin;
-    reg [15:0] scale_pass_row;
 
     // -- accumulator file --------------------------------------------------------
     reg [31:0] acc_file [0:ACC_SLOTS-1];
@@ -1135,11 +1124,6 @@ module ot_a3_lane_pipelined #(
                 slot_wait[col_i] <= L_WAIT;
                 inflight <= inflight + {{(INFLIGHT_BITS-1){1'b0}}, 1'b1};
                 if (open_col) begin
-                    if (PASS_FIRST && row == 0 && col_i == 0) begin
-                        b_pass_origin <= b_col_cursor;
-                        scale_pass_origin <= col_cur_scale_b;
-                        scale_pass_row <= col_cur_in_block_b;
-                    end
                     // The column is opened: keep its bases for the later
                     // k-groups and step the cursor to the next column.
                     b_col_base[col_idx] <= b_col_cursor;
@@ -1160,29 +1144,7 @@ module ot_a3_lane_pipelined #(
                         kg_in_block_b <= 16'd0;
                         k_scale_a <= 16'd0;
                         k_scale_b <= 16'd0;
-                        if (PASS_FIRST) begin
-                            if (row != rows_r_m1) begin
-                                row <= row + 16'd1;
-                                a_row_base <= a_row_base + {16'b0, depth_words};
-                                out_row_base <= out_row_base + {16'b0, cols_r};
-                                // A one-column, depth-one pass captures its
-                                // origin on this very edge; use that capture.
-                                b_col_cursor <= (open_col && col_i == 0) ? b_col_cursor : b_pass_origin;
-                                col_cur_scale_b <= (open_col && col_i == 0) ? col_cur_scale_b : scale_pass_origin;
-                                col_cur_in_block_b <= (open_col && col_i == 0) ? col_cur_in_block_b : scale_pass_row;
-                                if (row_wrap_a) begin
-                                    row_in_block_a <= 16'd0;
-                                    row_scale_a <= row_scale_a + {16'b0, cpr_a};
-                                end else row_in_block_a <= row_in_block_a + 16'd1;
-                            end else if (row_end) begin
-                                issue_active <= 1'b0;
-                            end else begin
-                                row <= 0;a_row_base <= a_origin;out_row_base <= out_origin;
-                                row_in_block_a <= 0;row_scale_a <= 0;
-                                pass_col0 <= pass_col0 + {13'b0, n_active};
-                                cols_left <= cols_left - {13'b0, n_active};
-                            end
-                        end else if (row_end) begin
+                        if (row_end) begin
                             // End of the row: the column cursor returns to
                             // column 0 (this overrides the step above).
                             pass_col0 <= 16'd0;
@@ -1312,8 +1274,6 @@ module ot_a3_lane_pipelined #(
                         rows_r_m1 <= cfg_rows - 16'd1;
                         cols_r <= cfg_cols;
                         b_base_r <= cfg_b_base;
-                        a_origin <= cfg_a_base;out_origin <= cfg_out_base;
-                        b_pass_origin <= cfg_b_base;scale_pass_origin <= 0;scale_pass_row <= 0;
                         scale_a_base_r <= cfg_scale_a_base;
                         scale_b_base_r <= cfg_scale_b_base;
                         case (cfg_group)

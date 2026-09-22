@@ -55,6 +55,8 @@ TOOLS_ROOT = Path(os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/o
 
 RTL_SOURCES = (
     "rtl/ot_fp32_rne_pkg.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
     "rtl/abi3/ot_a3_format_pkg.sv",
     "rtl/abi3/ot_a3_engine_pkg.sv",
     "rtl/abi3/ot_a3_lane_pkg.sv",

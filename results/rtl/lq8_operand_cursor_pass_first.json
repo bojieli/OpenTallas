@@ -48,7 +48,8 @@
   },
   "physical": {
     "record": "results/physical_abi3/asap7/runtime_operand_cursor/pnr_pass_first_cts12_1ns.json",
-    "status": "running; no timing or area claim"
+    "status": "pass at tested 1 ns; source/artifact audit retained",
+    "audit": "results/physical_abi3/asap7/runtime_operand_cursor/pass_first_route_audit.json"
   },
   "sources": [
     {
