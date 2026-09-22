@@ -40,8 +40,7 @@ module ot_a3_bf16_weight_gather #(
  reg [2:0] state;
  reg active;
  reg [31:0] generation,object_id,sequence_id;
- reg [63:0] last_element_offset;
- reg [4:0] last_line_bytes;
+ reg [63:0] capacity;
  reg [7:0] mask;
  reg [SLOT_BITS-1:0] slot;
  reg [65:0] addresses[0:7];
@@ -71,7 +70,7 @@ module ot_a3_bf16_weight_gather #(
    if(mask[lane])begin
     // addresses are even BF16 byte offsets, so a valid element never crosses
     // a 16-byte line. Keep both overflow bits until capacity validation.
-    if(addresses[lane][65:64]!=0 || addresses[lane]>{2'd0,last_element_offset})invalid_address=1;
+    if(addresses[lane][65:64]!=0 || addresses[lane]+66'd2>{2'd0,capacity})invalid_address=1;
     if(32'(slot)<SLOTS)begin
      if(!cache_valid[slot][lane] || cache_tag[slot][lane]!=addresses[lane][63:4])begin
       if(!miss)selected_lane=3'(lane);
@@ -127,11 +126,7 @@ module ot_a3_bf16_weight_gather #(
  // Payload is protected by validity and ownership. No payload reset tree.
  always @(posedge clk)begin
   if(command_valid && command_ready)begin
-   generation<=command_generation;object_id<=command_object;
-   // BF16 addresses are even. A final single byte cannot hold an element;
-   // its preceding complete line is the last reachable line for capacity %16=1.
-   last_element_offset<=command_object_bytes-64'd2;
-   last_line_bytes<=command_object_bytes[3:1]==0?5'd16:{1'b0,command_object_bytes[3:0]};
+   generation<=command_generation;object_id<=command_object;capacity<=command_object_bytes;
   end
   if(coordinate_valid && coordinate_ready)begin
    mask<=coordinate_mask;slot<=coordinate_slot;word_index<=coordinate_index;
@@ -141,7 +136,7 @@ module ot_a3_bf16_weight_gather #(
   if(state==LOOKUP && !protocol_error)begin
    if(miss)begin
     miss_lane<=selected_lane;read_offset<={addresses[selected_lane][63:4],4'd0};
-    read_bytes<=addresses[selected_lane][63:4]==last_element_offset[63:4]?last_line_bytes:5'd16;
+    read_bytes<=addresses[selected_lane][63:4]==capacity[63:4]?{1'b0,capacity[3:0]}:5'd16;
    end else word_data<=assembled;
   end
   if(response_valid && expected_response && !response_error && !protocol_error)begin

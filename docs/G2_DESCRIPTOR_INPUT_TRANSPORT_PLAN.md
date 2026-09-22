@@ -266,3 +266,26 @@ activation stride transport, non-BF16 formats/scales, multiple outstanding line
 misses, deep-row accumulator/reuse architecture, and all-target engine balance.
 The current line cache is a bounded register implementation; its area must be
 accounted for when evaluating the integrated SRAM and control organization.
+
+## Containing bounds-path optimization
+
+The containing transport's baseline global-route path runs from a lane address
+through end-address addition and bounds comparison into gather control, missing
+the 1 ns target by 150 ps at that intermediate stage. This differs from the
+standalone gather's worst path. The new implementation captures the final legal
+BF16 starting offset (`object_bytes - 2`) at command admission and compares
+addresses directly. It also captures the final reachable line's byte count,
+including the special case where the object ends with one unusable byte.
+No per-coordinate cycle was added.
+
+Fourteen standalone/composed tests pass. Gather tests now check 1,128 words per
+configuration and cover object remainders 1/2/3, minimum capacity and the maximum
+valid BF16 address. Both loaded G2 modes pass with exactly unchanged campaign
+cycles (82,676 retained; 269,291 unretained), traffic and matching outputs.
+Strict containing-transport lint passes.
+
+A matched CTS12 1 ns containing route is running as
+`bf16_weight_transport/pnr_invariant_bound_cts12_1ns.json`. Timing and area benefit
+remain unproven. The baseline source, global-route diagnostic and experiment
+manifest are retained in `bf16_weight_gather/invariant_bound/`; that intermediate
+report is not final physical acceptance.

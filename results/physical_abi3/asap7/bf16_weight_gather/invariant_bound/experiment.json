@@ -1,0 +1,16 @@
+{
+  "decision": "candidate implemented; matched containing route pending",
+  "motivation": "Containing global-route path from gather.addresses[0][1] to gather.state through end-address addition and bounds comparison",
+  "baseline_report": "containing_baseline_global_route.rpt",
+  "baseline_report_sha256": "8d4288249e02f4c25d7f9fddfdee254c915e844b150aba36bbdd20ea3fa29c8b",
+  "baseline_source_sha256": "ca3cd61d63a6208752065ccb2c8f2dd745a5aabfa8d8275e98d64eb1f7eba1c5",
+  "candidate_source_sha256": "a62e73540b89b95653b103df8e7a6ef8b9e80d4ef84ef5790602ad030f7ef15c",
+  "functional_tests": 14,
+  "loaded_campaign_cycles": {
+    "retention": 82676,
+    "no_retention": 269291
+  },
+  "cycle_change": 0,
+  "pending_route": "results/physical_abi3/asap7/bf16_weight_transport/pnr_invariant_bound_cts12_1ns.json",
+  "warning": "Global-route timing is diagnostic evidence, not final routed acceptance"
+}

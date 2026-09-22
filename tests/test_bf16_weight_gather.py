@@ -109,6 +109,13 @@ initial begin
  // Nonunit strides, nonzero base, truncated last line, and zero-stride aliases.
  reset_command(55);submit(7,2,8'hff,0);check_word(7,2,8'hff);
  submit(26,0,8'hff,0);check_word(26,0,8'hff);
+ // Reachable last-line handling at 0/1/2/3-byte capacity remainders.
+ reset_command(17);submit(7,0,1,0);check_word(7,0,1);
+ reset_command(18);submit(8,0,1,0);check_word(8,0,1);
+ reset_command(2);submit(0,0,1,0);check_word(0,0,1);
+ reset_command(3);submit(0,0,1,0);check_word(0,0,1);
+ reset_command(64'hffffffffffffffff);submit(64'h7ffffffffffffffe,0,1,0);check_word(64'h7ffffffffffffffe,0,1);
+ reset_command(1);expect_fault();
  // Every active lane is checked before any read is published.
  reset_command(10);start_reads=reads;submit(0,1,8'hff,0);expect_fault();if(reads!=start_reads)$fatal(1,"partial invalid read");
  reset_command(64'hffffffffffffffff);submit(64'h8000000000000000,0,1,0);expect_fault();
@@ -135,5 +142,5 @@ endmodule
                     '-o',str(sim),str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)],check=True,capture_output=True,text=True)
     r=subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=60)
     assert r.returncode==0,r.stdout+r.stderr
-    assert f'PASS gather checks=1123 retain={retain}' in r.stdout
+    assert f'PASS gather checks=1128 retain={retain}' in r.stdout
     print(f'slots={slots} zero_latency={zero_latency} '+r.stdout.splitlines()[0])
