@@ -1,0 +1,20 @@
+{
+  "scope": "Loaded BF16 G2 N56/K80 campaign with rolling activation, depth3 direct dispatch, backpressure, faults and recovery. Output descriptor admission adds a read; not a performance improvement. FP32 selection tested separately at adapter boundary.",
+  "records": [
+    {
+      "record": "before_output_descriptor/a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "1587e70f8bb1d7a36db934bd1a2e4957771654d869b4ae18695b090d392c56ea",
+      "campaign_cycles": 24995,
+      "accepted_outputs": 1352
+    },
+    {
+      "record": "a3_g2_runtime_byte_transport_cols56_rolling_activation_auxdepth3_direct.json",
+      "sha256": "95ad6b37c8bf39d4b1a48333cdd8a82fc3e24e982b050549140290c3643887eb",
+      "campaign_cycles": 25082,
+      "accepted_outputs": 1352
+    }
+  ],
+  "cycle_increase_percent": 0.3480696139227746,
+  "contract_test": "python3 -m pytest -q tests/test_g2_issue_contract.py",
+  "contract_checks": 20
+}

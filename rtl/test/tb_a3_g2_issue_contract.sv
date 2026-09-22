@@ -14,7 +14,10 @@ module tb_a3_g2_issue_contract;
  wire [31:0] desc_id,array_out_base;
  reg desc_valid=0,desc_fault=0;
  reg [1535:0] desc_data=0;
- reg [31:0] b_cols=8,b_depth=80;
+ reg [31:0] b_cols=8,b_depth=80,c_rows=1,c_cols=8;
+ reg [7:0] c_dtype=8'h10;
+ reg c_fault=0,c_scaled=0,c_bad_header=0,cfg_out_fp32=0;
+ wire array_out_fp32;
  integer launches=0,checks=0;
  ot_a3_g2_array_issue_adapter dut(
  .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
@@ -22,23 +25,23 @@ module tb_a3_g2_issue_contract;
  .view_valid(view_valid),.view_slot(view_slot),.view_irs_slot(view_irs_slot),
  .view_descriptor_id(view_descriptor_id),.view_element_offset(view_element_offset),
  .complete_valid(complete_valid),.complete_fault(complete_fault),.complete_trap_class(complete_trap_class),.complete_slot(complete_slot),
- .desc_req(desc_req),.desc_id(desc_id),.desc_valid(desc_valid),.desc_fault(desc_fault),.desc_data(desc_data),
+ .desc_req(desc_req),.desc_id(desc_id),.desc_valid(desc_valid),.desc_fault(desc_fault || (c_fault && desc_id==12)),.desc_data(desc_data),
  .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
- .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(1'b0),
+ .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(cfg_out_fp32),.array_out_fp32(array_out_fp32),
  .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
  .array_done(array_done),.array_error_code(array_error_code));
  always @(posedge clk)begin
   desc_valid<=desc_req;
   if(desc_req)begin
    desc_data<=0;
-   desc_data[31:0]<=ot_a3_pkg::A3_DESCRIPTOR_MAGIC;
+   desc_data[31:0]<=(desc_id==12 && c_bad_header)?0:ot_a3_pkg::A3_DESCRIPTOR_MAGIC;
    desc_data[47:32]<=ot_a3_pkg::A3_DESC_TENSOR_VIEW;
    desc_data[55:48]<=ot_a3_pkg::A3_TYPE_MAJOR;
    desc_data[351:320]<=32'd64;
-   desc_data[519:512]<=8'h10;
-   desc_data[575:544]<=ot_a3_pkg::A3_NO_ID;
-   desc_data[735:704]<=(desc_id==10)?32'd1:b_cols;
-   desc_data[767:736]<=(desc_id==10)?32'd80:b_depth;
+   desc_data[519:512]<=(desc_id==12)?c_dtype:8'h10;
+   desc_data[575:544]<=(desc_id==12 && c_scaled)?32'd99:ot_a3_pkg::A3_NO_ID;
+   desc_data[735:704]<=(desc_id==10)?32'd1:(desc_id==12)?c_rows:b_cols;
+   desc_data[767:736]<=(desc_id==10)?32'd80:(desc_id==12)?c_cols:b_depth;
   end
   if(array_start)launches<=launches+1;
  end
@@ -64,7 +67,7 @@ module tb_a3_g2_issue_contract;
   // Supply ignored slots as well: slot 2 must not overwrite compact output.
   view(0,10,0);view(1,11,0);view(4,12,123);view(2,13,999);view(5,14,888);issue();
   wait(array_start);@(negedge clk);
-  if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123)$fatal(1,"ABI mapping");
+  if(array_rows!=1 || array_cols!=8 || array_depth!=80 || array_out_base!=123 || array_out_fp32)$fatal(1,"ABI mapping");
   tick();array_done=1;tick();array_done=0;
   if(!complete_valid || complete_fault)$fatal(1,"success completion");checks=checks+1;tick();tick();
   // No views may carry over when the IRS slot is recycled.
@@ -86,6 +89,23 @@ module tb_a3_g2_issue_contract;
   view(0,10,64'h100000000);view(0,10,0);view(1,11,0);view(4,12,0);view(2,13,64'hffffffffffffffff);issue();
   wait(array_start);@(negedge clk);tick();array_done=1;tick();array_done=0;
   if(!complete_valid || complete_fault)$fatal(1,"offset refusal leaked into next issue");checks=checks+1;tick();tick();
+  // The output descriptor controls precision even when the host hint disagrees.
+  c_dtype=8'h12;cfg_out_fp32=0;
+  view(0,10,0);view(1,11,0);view(4,12,0);issue();
+  wait(array_start);@(negedge clk);
+  if(!array_out_fp32)$fatal(1,"FP32 output descriptor ignored");
+  tick();array_done=1;tick();array_done=0;checks=checks+1;tick();tick();
+  c_dtype=8'h10;cfg_out_fp32=1;
+  view(0,10,0);view(1,11,0);view(4,12,0);issue();
+  wait(array_start);@(negedge clk);
+  if(array_out_fp32)$fatal(1,"host overrode BF16 descriptor");
+  tick();array_done=1;tick();array_done=0;checks=checks+1;tick();tick();
+  c_rows=2;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_rows=1;
+  c_cols=16;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_cols=8;
+  c_fault=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_fault=0;
+  c_bad_header=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_DESCRIPTOR);c_bad_header=0;
+  c_dtype=8'h20;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_dtype=8'h10;
+  c_scaled=1;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);c_scaled=0;
   $display("PASS G2 issue contract checks=%0d",checks);$finish;
  end
  initial begin #100000;$fatal(1,"timeout");end

@@ -31,7 +31,8 @@
 //     descriptor-store port: dim[0] at payload[223:192] and dim[1] at
 //     payload[255:224], the same two fields ot_a3_view_resolver decodes for
 //     its bounding-range walk. A is rows x depth; B is cols x depth,
-//     following the ABI N-major weight layout.
+//     following the ABI N-major weight layout. C is read as rows x cols
+//     before launch; its BF16/FP32 dtype selects the output representation.
 //   * cfg_dtype_a and cfg_dtype_b are the dtype byte at payload[7:0] of the
 //     two operand views.  The ABI dtype codes and ot_a3_format_pkg's FMT_*
 //     codes are the same numbers (BF16 = 0x10, FP8_E4M3FN = 0x20,
@@ -44,7 +45,7 @@
 // WHAT IS NOT DERIVED, AND WHY -- the interface gap this block names rather
 // than papers over.  The MX block geometry (cfg_group, cfg_block_a,
 // cfg_block_rows_a, cfg_block_b), the two scale-table base addresses
-// (cfg_scale_a_base, cfg_ws_base) and cfg_out_fp32 are ABI NUMERIC-descriptor
+// (cfg_scale_a_base, cfg_ws_base) are ABI NUMERIC-descriptor
 // and schedule properties.  The TENSOR_VIEW payload does not carry them and
 // the sequencer's view port does not publish them, so this block cannot read
 // them from anywhere without a change to ot_a3_view_resolver or
@@ -114,9 +115,8 @@ module ot_a3_g2_array_issue_adapter #(
     output reg  [31:0]   desc_id,
     input  wire          desc_valid,
     input  wire          desc_fault,
-    // Six header fields and four payload fields of the 192-byte record are
-    // read; the rest of the descriptor belongs to blocks this cluster does
-    // not contain.
+    // The fixed header, shape, dtype and scale binding are read for A/B/C.
+    // Object mapping and stride transport are still external to this adapter.
     /* verilator lint_off UNUSEDSIGNAL */
     input  wire [1535:0] desc_data,
     /* verilator lint_on UNUSEDSIGNAL */
@@ -128,7 +128,10 @@ module ot_a3_g2_array_issue_adapter #(
     input  wire [15:0]   cfg_block_b,
     input  wire [31:0]   cfg_scale_a_base,
     input  wire [31:0]   cfg_ws_base,
+    // Retained for source compatibility; output precision comes from C.
+    /* verilator lint_off UNUSEDSIGNAL */
     input  wire          cfg_out_fp32,
+    /* verilator lint_on UNUSEDSIGNAL */
 
     // -- LQ8 control ------------------------------------------------------
     output reg           array_start,
@@ -171,6 +174,9 @@ module ot_a3_g2_array_issue_adapter #(
     localparam [2:0] S_CHECK  = 3'd3;
     localparam [2:0] S_RUN    = 3'd4;
     localparam [2:0] S_REFUSE = 3'd5;
+    localparam [2:0] S_DESC_C = 3'd6;
+    // Logical N is distinct from the array's lane-padded column count.
+    reg [15:0] logical_cols;
 
     reg  [2:0]  state;
     reg  [4:0]  slot_q;
@@ -330,7 +336,7 @@ module ot_a3_g2_array_issue_adapter #(
                             array_block_b      <= cfg_block_b;
                             array_scale_a_base <= cfg_scale_a_base;
                             array_ws_base      <= cfg_ws_base;
-                            array_out_fp32     <= cfg_out_fp32;
+                            // Output precision is captured from its descriptor.
                             array_a_base       <= view_off[0];
                             array_w_base       <= view_off[1];
                             array_out_base     <= view_off[2];
@@ -378,7 +384,30 @@ module ot_a3_g2_array_issue_adapter #(
                             // short final group has no owner.  Round up and
                             // let the caller ignore the trailing columns.
                             array_cols    <= (d_dim0[15:0] + LANE_MASK) & ~LANE_MASK;
-                            state         <= S_CHECK;
+                            logical_cols  <= d_dim0[15:0];
+                            desc_req      <= 1'b1;
+                            desc_id       <= view_id[2];
+                            state         <= S_DESC_C;
+                        end
+                    end
+                end
+
+                // C is rows x logical columns. Its descriptor owns output
+                // precision; a host hint cannot silently change the ABI object.
+                S_DESC_C: begin
+                    if (desc_valid) begin
+                        if (!d_header_ok || d_dim0 != {16'd0,array_rows} ||
+                            d_dim1 != {16'd0,logical_cols}) begin
+                            refuse_class <= ot_a3_pkg::A3_TRAP_DESCRIPTOR;
+                            state <= S_REFUSE;
+                        end else if ((d_dtype != 8'h10 && d_dtype != 8'h12) ||
+                                     d_scale_object != ot_a3_pkg::A3_NO_ID) begin
+                            // The lane emits BF16 or FP32, without output scales.
+                            refuse_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
+                            state <= S_REFUSE;
+                        end else begin
+                            array_out_fp32 <= (d_dtype == 8'h12);
+                            state <= S_CHECK;
                         end
                     end
                 end

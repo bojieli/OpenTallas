@@ -186,6 +186,7 @@ module ot_a3_g2_cluster #(
     input  wire [15:0]   cfg_array_block_b,
     input  wire [31:0]   cfg_array_scale_a_base,
     input  wire [31:0]   cfg_array_ws_base,
+    // Compatibility input: adapter now derives output precision from C.
     input  wire          cfg_array_out_fp32,
 
     // Runtime mode keeps the program loader idle-only. Transport acknowledgements

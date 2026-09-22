@@ -87,6 +87,14 @@ versus 30,723 with two slots; N56/K352 takes 130,960 versus 152,458. Registered
 dispatch is optional and remains slower at equal capacity pending a sufficient
 routed frequency benefit.
 
+The next deployment checkpoint reads C's descriptor before launch and derives
+BF16/FP32 output precision from it. Shape, descriptor validity, supported dtype
+and absence of output scaling are checked. The compatibility host precision
+input is no longer authoritative. The loaded N56/K80 campaign remains correct
+with 1,352 accepted outputs and unchanged first-operation fill counts; its
+counter rises from 24,995 to 25,082 (0.35%) for descriptor admission and resulting
+stall alignment. This closes a configuration correctness gap, not a speedup.
+
 Architecture-first work proceeds in this order:
 
 1. Complete descriptor-derived mapping, packed/strided weight transport and
@@ -1529,3 +1537,26 @@ payload and shared generation. It cannot certify their combined implementation.
 Evidence: `results/physical_abi3/asap7/runtime_operand_service/` records
 `pnr_absolute_scale_cts12_1ns.json`, its retained artifacts, and
 `historical_revision_comparison.json`.
+
+
+## Derive output precision from the deployment descriptor
+
+The issue adapter previously read only A and B, and selected output precision
+from `cfg_out_fp32`. It now reads C through the same descriptor-store port,
+checks its header and M/N against A/B, derives BF16 or FP32 output selection,
+and refuses unsupported output dtypes or scale bindings before array launch.
+Logical N is retained independently of the existing lane-padded execution N.
+The compatibility precision input remains present but cannot override C.
+
+The focused adapter bench passes 20 checks, including conflicting host hints,
+C shape/header/store faults and unsupported output formats/scales. The real
+loaded G2 N56/K80 campaign passes all 1,352 expected outputs with backpressure,
+fault, abort, write drain and recovery. First-operation weight/activation fills
+remain 560/720; campaign cycles increase from 24,995 to 25,082. The added read
+is an admission cost and has no claimed clock benefit. Evidence and the previous
+source-bound record are retained in `results/rtl/a3_g2_output_descriptor_comparison.json`
+and `results/rtl/before_output_descriptor/`.
+
+This does not yet implement output-object byte writes, stride mapping, tail-lane
+masking, numeric-descriptor scale geometry or descriptor-derived memory bounds.
+Those remain deployment architecture requirements before broad component tuning.

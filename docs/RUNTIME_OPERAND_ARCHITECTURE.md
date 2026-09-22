@@ -1062,3 +1062,17 @@ storage is removed. At three entries, payload/identity storage becomes 896 bits
 instead of 960. The generic queue defaults to per-entry generations for callers
 that can mix operations. Shared mode must not be used with mixed generations
 while entries remain occupied; after drain the next request captures ownership.
+
+
+### Output descriptor admission
+
+G2 now reads the output tensor-view descriptor after A/B, validates its M/N,
+and selects BF16/FP32 output precision from its dtype. Unsupported output types
+and scaled outputs return CAPABILITY; descriptor/store or shape faults return
+DESCRIPTOR. The legacy host precision hint remains an interface compatibility
+input but no longer controls execution. Logical N is captured separately from
+lane-padded N. This adds one descriptor transaction before launch. The loaded
+N56/K80 regression passes with 1,352 outputs and counter 25,082 versus 24,995;
+this is a correctness step toward descriptor-driven transport, not a throughput
+optimization. Output object/stride translation and tail-lane masking remain
+unimplemented. See `results/rtl/a3_g2_output_descriptor_comparison.json`.
