@@ -81,7 +81,8 @@
 module ot_a3_g2_array_issue_adapter #(
     parameter integer LANES = 8,
     parameter bit RESOLVE_OUTPUT_OBJECT = 0,
-    parameter bit RESOLVE_INPUT_OBJECTS = 0
+    parameter bit RESOLVE_INPUT_OBJECTS = 0,
+    parameter bit REQUIRE_BF16_WEIGHT_STREAM = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -486,7 +487,8 @@ module ot_a3_g2_array_issue_adapter #(
                 end
 
                 S_CHECK: begin
-                    if (array_cols == 16'd0) begin
+                    if (array_cols == 16'd0 || (REQUIRE_BF16_WEIGHT_STREAM &&
+                        (array_dtype_b!=8'h10 || array_group!=8'd1))) begin
                         refuse_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                         state        <= S_REFUSE;
                     end else begin

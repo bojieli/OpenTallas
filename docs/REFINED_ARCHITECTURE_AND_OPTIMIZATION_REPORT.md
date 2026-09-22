@@ -7,6 +7,13 @@ operand-service and Sinkhorn routes are retained. The opening review summarizes 
 checkpoint at the end describes subsequent work;
 later checkpoints preserve the history of individual experiments.
 
+Latest integration checkpoint: optional G2 BF16 weight-object reads now use a
+synthesizable descriptor cursor and cached gather inside the cluster. The loaded
+campaign supplies actual ABI weight bytes. Matched retention cuts first-operation
+weight bytes by 87.5% and full fault/recovery campaign cycles by 69.30%. The gather
+and integrated path are not physically closed; details and limits are in the
+latest checkpoint below.
+
 ## Current review summary (2026-09-22)
 
 **The runtime architecture is substantially better, but significant architectural
@@ -2697,3 +2704,22 @@ Its matched two-row N53/K80 standalone test reduces memory reads and bytes by
 functional configurations pass. Physical characterization and connection to the
 G2 weight-request ownership path remain in progress; no integrated speedup is
 claimed. See the input transport plan for the measured configuration and limits.
+
+## Integrated weight-object traffic and latency result
+
+The cluster now reads actual BF16 weight-object bytes through its internal cursor
+and cached gather. With retention enabled, the loaded campaign passes 2,234
+outputs and 295 write acknowledgements in 82,676 cycles, versus 269,291 with
+retention disabled. First-operation weight bytes decrease from 67,840 to 8,480.
+This matched comparison includes the same memory service and does not use the
+prepacked fixture as a performance baseline. Fault/recovery campaign counters
+are not inference latency.
+
+Pending reads retain ownership through cancellation acknowledgement; a deliberate
+early-clear mutation fails the regression. BF16/group-one capability checks and
+22 focused tests pass. The old mode still passes its 42,561-cycle regression.
+
+The standalone gather's first 1 ns route fails by 13 ps and has slew/capacitance
+violations. Containing transport and current integrated physical qualification
+remain required. See the input transport plan and
+`results/rtl/g2_weight_object_line_retention_comparison.json` for evidence.

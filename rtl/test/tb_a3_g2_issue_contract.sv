@@ -3,6 +3,8 @@
 module tb_a3_g2_issue_contract;
  parameter bit RESOLVE=0;
  parameter bit INPUTS=0;
+ parameter bit STREAM=0;
+ reg [7:0] b_dtype=8'h10,group_size=1;
  wire input_layout_valid;
  wire [31:0] input_a_object,input_b_object,input_a_row_stride,input_a_k_stride,input_b_column_stride,input_b_k_stride;
  wire [63:0] input_a_object_bytes,input_b_object_bytes;
@@ -34,14 +36,14 @@ module tb_a3_g2_issue_contract;
  wire [15:0] output_logical_cols;
  reg [31:0] c_object=32'h12345678;
  integer launches=0,checks=0,cancel_state,bad_case,bad_object;
- ot_a3_g2_array_issue_adapter #(.RESOLVE_OUTPUT_OBJECT(RESOLVE),.RESOLVE_INPUT_OBJECTS(INPUTS)) dut(
+ ot_a3_g2_array_issue_adapter #(.RESOLVE_OUTPUT_OBJECT(RESOLVE),.RESOLVE_INPUT_OBJECTS(INPUTS),.REQUIRE_BF16_WEIGHT_STREAM(STREAM)) dut(
  .clk(clk),.rst_n(rst_n),.clear(clear),.issue_valid(issue_valid),.issue_ready(issue_ready),
  .issue_family(issue_family),.issue_sub(8'd0),.issue_descriptor_id(32'd0),.issue_slot(issue_slot),
  .view_valid(view_valid),.view_slot(view_slot),.view_irs_slot(view_irs_slot),
  .view_descriptor_id(view_descriptor_id),.view_element_offset(view_element_offset),
  .complete_valid(complete_valid),.complete_fault(complete_fault),.complete_trap_class(complete_trap_class),.complete_slot(complete_slot),
  .desc_req(desc_req),.desc_short(desc_short),.desc_id(desc_id),.desc_valid(desc_valid),.desc_fault(desc_fault || (c_fault && desc_id==12) || (bad_input_kind==6 && desc_id==bad_input_object)),.desc_data(desc_data),
- .cfg_group(8'd1),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
+ .cfg_group(group_size),.cfg_block_a(16'd0),.cfg_block_rows_a(16'd0),.cfg_block_b(16'd0),
  .cfg_scale_a_base(32'd0),.cfg_ws_base(32'd0),.cfg_out_fp32(cfg_out_fp32),.array_out_fp32(array_out_fp32),
  .array_start(array_start),.array_rows(array_rows),.array_cols(array_cols),.array_depth(array_depth),.array_out_base(array_out_base),
  .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
@@ -64,7 +66,7 @@ module tb_a3_g2_issue_contract;
    desc_data[527:520]<=(desc_id==10)?a_rank:(desc_id==11)?b_rank:c_rank;
    desc_data[927:896]<=(desc_id==10)?32'd113:(desc_id==11)?32'h80000003:c_row_stride;
    desc_data[959:928]<=(desc_id==10)?32'd2:(desc_id==11)?32'd7:c_col_stride;
-   desc_data[519:512]<=(desc_id==12)?c_dtype:8'h10;
+   desc_data[519:512]<=(desc_id==12)?c_dtype:(desc_id==11)?b_dtype:8'h10;
    desc_data[575:544]<=(desc_id==12 && c_scaled)?32'd99:ot_a3_pkg::A3_NO_ID;
    desc_data[735:704]<=(desc_id==10)?32'd1:(desc_id==12)?c_rows:b_cols;
    if(desc_id!=10 && desc_id!=11 && desc_id!=12)begin
@@ -183,6 +185,10 @@ module tb_a3_g2_issue_contract;
     end
    end
    bad_input_object=0;bad_input_kind=0;
+  end
+  if(STREAM)begin
+   b_dtype=8'h20;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);b_dtype=8'h10;
+   group_size=2;view(0,10,0);view(1,11,0);view(4,12,0);expect_refusal(ot_a3_pkg::A3_TRAP_CAPABILITY);group_size=1;
   end
   // Clear wins over views, issue, descriptor response, launch and completion.
   for(cancel_state=1;cancel_state<=(INPUTS?9:(RESOLVE?7:6));cancel_state=cancel_state+1)begin

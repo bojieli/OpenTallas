@@ -1,0 +1,27 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded G2 real weight-object-byte transport; full fault/recovery campaign counters, not inference latency",
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_no_weight_line_retention.json",
+      "sha256": "6a78fc446fcf8aa9fbd62702440a9406fecae1bc6198fd3deed5903d1429ca04",
+      "retention": false,
+      "campaign_cycles": 269291,
+      "first_operation_line_reads": 4240,
+      "first_operation_weight_bytes": 67840,
+      "matching_outputs": 2234
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads.json",
+      "sha256": "668bd8e273329b292a7649b52d8bdaa3f3c166703010a4e3cfac6b197af449c1",
+      "retention": true,
+      "campaign_cycles": 82676,
+      "first_operation_line_reads": 530,
+      "first_operation_weight_bytes": 8480,
+      "matching_outputs": 2234
+    }
+  ],
+  "campaign_cycle_reduction_percent": 69.29863976144766,
+  "first_operation_weight_byte_reduction_percent": 87.5,
+  "identical_source_manifests_and_golden_outputs": true
+}

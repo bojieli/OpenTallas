@@ -4,6 +4,8 @@ module tb_a3_g2_runtime_program;
  parameter bit WEIGHT_ROW_REUSE=1;
  parameter bit OBJECT_WRITES=0;
  parameter bit INPUT_LAYOUT=0;
+ parameter bit WEIGHT_OBJECT_READS=0;
+ parameter bit WEIGHT_LINE_REUSE=1;
  wire input_layout_valid;
  wire [31:0] input_a_object,input_b_object,input_a_row_stride,input_a_k_stride,input_b_column_stride,input_b_k_stride;
  wire [63:0] input_a_object_bytes,input_b_object_bytes;
@@ -224,12 +226,55 @@ module tb_a3_g2_runtime_program;
    end
   end
  end
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ // Actual byte-addressed weight object backing the cluster's internal gather.
+ wire wobj_valid,wobj_response_ready;
+ wire [63:0] wobj_tag,wobj_offset;
+ wire [31:0] wobj_object;
+ wire [4:0] wobj_bytes;
+ reg wobj_pending=0;
+ reg [63:0] wobj_saved_tag=0,wobj_saved_offset=0;
+ integer wobj_delay=0,wobj_reads=0,wobj_total_bytes=0;
+ integer first_wobj_reads=0,first_wobj_bytes=0;
+ reg [7:0] weight_bytes[0:2*LOGICAL_COLS*DEPTH-1];
+ reg [127:0] wobj_data;
+ wire wobj_ready=!wobj_pending && !runtime_transport_cancel && cycles%5!=0;
+ wire wobj_response_valid=wobj_pending && wobj_delay==0 && !runtime_transport_cancel;
+ always @*begin
+  wobj_data=0;
+  for(integer b=0;b<16;b=b+1)
+   if(wobj_saved_offset+64'(b)<64'(2*LOGICAL_COLS*DEPTH))
+    wobj_data[8*b+:8]=weight_bytes[wobj_saved_offset+64'(b)];
+ end
+ always @(posedge clk)begin
+  if(!rst_n || (runtime_transport_cancel && runtime_transport_ack))wobj_pending<=0;
+  else begin
+   if(wobj_valid && wobj_ready)begin
+    if(wobj_object!=WEIGHT_OBJECT || wobj_offset[3:0]!=0 || wobj_bytes==0 ||
+       wobj_offset+64'(wobj_bytes)>64'(2*LOGICAL_COLS*DEPTH))$fatal(1,"weight object read bounds");
+    wobj_pending<=1;wobj_saved_offset<=wobj_offset;wobj_delay<=3;
+    wobj_saved_tag<=wobj_tag ^ ((phase==3)?64'h100000000:64'd0);
+    wobj_reads<=wobj_reads+1;wobj_total_bytes<=wobj_total_bytes+integer'(wobj_bytes);
+   end
+   if(wobj_pending && wobj_delay>0)wobj_delay<=wobj_delay-1;
+   if(wobj_response_valid && wobj_response_ready)wobj_pending<=0;
+  end
+ end
+ generate if(WEIGHT_OBJECT_READS)begin : check_read_ownership
+  always @(posedge clk)if(rst_n && runtime_transport_cancel && !runtime_transport_ack && wobj_pending &&
+      !dut.runtime_operands.descriptor_weight_transport.transport.gather.active)
+   $fatal(1,"weight read ownership cleared before cancellation acknowledgement");
+ end endgenerate
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
  .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
  .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),
  .input_a_row_stride(input_a_row_stride),.input_a_k_stride(input_a_k_stride),
  .input_b_column_stride(input_b_column_stride),.input_b_k_stride(input_b_k_stride),
+ .weight_object_read_valid(wobj_valid),.weight_object_read_ready(wobj_ready),
+ .weight_object_read_tag(wobj_tag),.weight_object_read_object(wobj_object),
+ .weight_object_read_offset(wobj_offset),.weight_object_read_bytes(wobj_bytes),
+ .weight_object_response_valid(wobj_response_valid),.weight_object_response_ready(wobj_response_ready),
+ .weight_object_response_tag(wobj_saved_tag),.weight_object_response_data(wobj_data),.weight_object_response_error(1'b0),
  .cfg_output_object(phase==7?OUTPUT_OBJECT^32'd1:OUTPUT_OBJECT),.cfg_output_object_bytes(configured_object_bytes),
  .object_write_valid(object_write_valid),.object_write_ready(object_write_ready),
  .object_write_generation(object_write_generation),.object_write_object(object_write_object),
@@ -264,8 +309,9 @@ module tb_a3_g2_runtime_program;
   if(!rst_n)begin wactive<=0;auxvalid<=0;end
   else begin
    cycles<=cycles+1;
-   if(weight_request_valid && !wactive)begin wactive<=1;wtag<=weight_request_tag ^ ((phase==3) ? 64'd1 : 64'd0);wi<=0;wn<=weight_request_words;wbase<=weight_request_address;
+   if(!WEIGHT_OBJECT_READS && weight_request_valid && !wactive)begin wactive<=1;wtag<=weight_request_tag ^ ((phase==3) ? 64'd1 : 64'd0);wi<=0;wn<=weight_request_words;wbase<=weight_request_address;
     if(weight_request_address+weight_request_words>WEIGHT_WORDS)$fatal(1,"weight address out of bounds");end
+   if(WEIGHT_OBJECT_READS && dut.runtime_operands.weight_response_valid_i && dut.runtime_operands.weight_response_ready_i)fills<=fills+1;
    if(wactive && cycles%WEIGHT_RESPONSE_GAP==0 && weight_response_ready)begin fills<=fills+1;if(wi==wn-1)wactive<=0;else wi<=wi+1'b1;end
    if(!SRAM_AUX && auxiliary_request_valid && !auxvalid)begin auxvalid<=1;agen<=auxiliary_request_generation;aw<=auxiliary_request_w;adata<=activation_image[auxiliary_request_a];
     if(auxiliary_request_a>=DEPTH*ROWS || auxiliary_request_w>=WEIGHT_WORDS)$fatal(1,"auxiliary address out of bounds");end
@@ -328,7 +374,7 @@ module tb_a3_g2_runtime_program;
   for(integer r=0;r<ROWS;r=r+1)
    for(integer c=0;c<LOGICAL_COLS;c=c+1)expected_seen[r*COLS+c]=1;
   $readmemh("program.hex",program_image);$readmemh("descriptor.hex",descriptor_image);
-  $readmemh("activation_bytes.hex",activation_bytes);$readmemh("activation.hex",activation_image);$readmemh("weight.hex",weight_image);$readmemh("expected.hex",expected);
+  $readmemh("weight_bytes.hex",weight_bytes);$readmemh("activation_bytes.hex",activation_bytes);$readmemh("activation.hex",activation_image);$readmemh("weight.hex",weight_image);$readmemh("expected.hex",expected);
   tick();rst_n=1;tick();
   host_we=1;host_sel=0;
   for(integer j=0;j<PROGRAM_WORDS;j=j+1)begin host_row=j;host_wdata=program_image[j];tick();end
@@ -340,13 +386,14 @@ module tb_a3_g2_runtime_program;
    @(negedge clk);repeat(16)tick();release_output=1;
   end
   drain(0);
+  first_wobj_reads=wobj_reads;first_wobj_bytes=wobj_total_bytes;
   first_mem_fills=mem_fills;first_mem_requests=mem_requests;first_weight_fills=fills;
   if(fills!=((WEIGHT_ROW_REUSE && ROWS>1 && WEIGHT_WORDS/ROWS<=1024)?WEIGHT_WORDS/ROWS:WEIGHT_WORDS))$fatal(1,"weight reuse traffic accounting");
   if(SRAM_AUX && (mem_fills!=EXPECTED_ACTIVATION_FILLS || mem_requests!=WEIGHT_WORDS))$fatal(1,"SRAM reuse accounting");
   // Lane-distinct BF16 results must match the functional Device.
   if(seen!=expected_seen || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"missing first outputs");
   if(fills<DEPTH)$fatal(1,"multi-tile refill not exercised");
-  phase=2;launch();wait(dut.operand_issue);@(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
+  phase=2;launch();wait(dut.operand_issue);if(WEIGHT_OBJECT_READS)wait(wobj_pending);@(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
   if(seen!=0 || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"aborted operation wrote output");
   phase=1;launch();
   if(STRESS_OUTPUT)begin
@@ -392,6 +439,7 @@ module tb_a3_g2_runtime_program;
   end
   if(OBJECT_WRITES && (object_writes==0 || object_writes!=object_acks))$fatal(1,"writer unexercised");
   $display("object writes=%0d acknowledgements=%0d",object_writes,object_acks);
+  $display("weight object reads=%0d bytes=%0d first_reads=%0d first_bytes=%0d",wobj_reads,wobj_total_bytes,first_wobj_reads,first_wobj_bytes);
   $display("first operation weight fill_words=%0d",first_weight_fills);
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);
   $display("auxiliary SRAM windows=%0d fill_words=%0d read_requests=%0d",mem_windows,mem_fills,mem_requests);
@@ -399,5 +447,5 @@ module tb_a3_g2_runtime_program;
   $display("output stalls=%0d reservation stalls=%0d accepted_outputs=%0d",output_stalls,reservation_stalls,outputs);
   $display("PASS G2 runtime program multi-tile arithmetic, abort, transport fault, drain and restart fills=%0d",fills);$finish;
  end
- initial begin #2000000;$fatal(1,"timeout");end
+ initial begin #(WEIGHT_OBJECT_READS && !WEIGHT_LINE_REUSE?10000000:2000000);$fatal(1,"timeout");end
 endmodule

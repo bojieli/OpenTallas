@@ -222,3 +222,47 @@ retain ownership until the external cancellation acknowledgement. The existing
 packed bank service and the new external read owner therefore require distinct
 clear timing. The loaded program test must exercise this boundary, rather than
 assuming the current compute-service clear is safe for pending memory requests.
+
+## Loaded G2 weight-object integration
+
+The synthesizable cluster now contains the composed transport when
+`RUNTIME_WEIGHT_OBJECT_READS=1`, requiring runtime operands and input object
+resolution. `RUNTIME_WEIGHT_LINE_REUSE=1` enables its line retention. Unsupported
+weight dtype/group combinations refuse at admission; this first transport mode
+requires BF16 weights and group size one. The default prepacked mode is unchanged.
+
+The new object-read port carries object identity, byte offset, bounded byte count
+and generation/sequence tag. The prior packed request outputs are monitors in
+this mode; external packed responses are ignored. Weight element offsets and
+strides come from the descriptor record, with the adapter's existing 32-bit
+resolved-base capability limit still enforced.
+
+The loaded program's `--weight-object-reads` mode now supplies actual deployment
+weight bytes. It passes 2,234 matching outputs and 295 writes/acknowledgements,
+including wrong read generation, queued abort, late write failure, binding failure
+and recovery. Abort is explicitly exercised with an outstanding weight read.
+The transport retains its read ownership until cancellation acknowledgement;
+mutating its clear to the compute service's early clear causes the new assertion
+to fail. The negative result is retained in
+`results/rtl/g2_weight_object_early_clear_mutation.json`.
+
+Matched retention-disabled/enabled loaded runs use identical source manifests,
+golden outputs and external memory timing. First-operation weight reads drop
+from 4,240 to 530 and bytes from 67,840 to 8,480 (87.5%). Full fault/recovery
+campaign cycles drop from 269,291 to 82,676 (69.30%). These are not model inference
+latencies. The previous prepacked-service campaign still passes at 42,561 cycles;
+it omits the new gather work and is not the fair retention baseline. Comparison:
+`results/rtl/g2_weight_object_line_retention_comparison.json`.
+
+The initial standalone gather route is not accepted: area 4,816.740 um², setup
+-0.0131266 ns, hold +0.0336196 ns, 15 slew and three capacitance violations at
+1 ns. Fanout, DRC and antenna checks pass. The critical path runs from slot
+selection to read byte-count generation. Source/artifact binding is verified;
+the containing transport route remains live and must guide the next pipeline
+change. No physical closure for the integrated weight path is claimed.
+
+Remaining architecture work includes strided/nonzero-base loaded weight fixtures,
+activation stride transport, non-BF16 formats/scales, multiple outstanding line
+misses, deep-row accumulator/reuse architecture, and all-target engine balance.
+The current line cache is a bounded register implementation; its area must be
+accounted for when evaluating the integrated SRAM and control organization.

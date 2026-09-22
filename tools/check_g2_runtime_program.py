@@ -17,6 +17,8 @@ parser.add_argument("--strided-output", action="store_true")
 parser.add_argument("--object-writes", action="store_true")
 parser.add_argument("--output-backpressure", action="store_true")
 parser.add_argument("--auxiliary-windows", action="store_true")
+parser.add_argument("--no-weight-line-retention", action="store_true")
+parser.add_argument("--weight-object-reads", action="store_true")
 parser.add_argument("--input-layout", action="store_true")
 parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--weight-response-gap", type=int, default=1)
@@ -26,6 +28,8 @@ parser.add_argument("--activation-miss-aligned", action="store_true")
 parser.add_argument("--auxiliary-depth", type=int, choices=[1, 2, 3, 4, 8], default=3)
 parser.add_argument("--registered-auxiliary-requests", action="store_true")
 args = parser.parse_args()
+if args.weight_object_reads:
+    args.input_layout = True
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
 depth = args.depth
@@ -62,6 +66,10 @@ if args.strided_output:
     record_name += "_strided_output"
 if args.input_layout:
     record_name += "_input_layout"
+if args.weight_object_reads:
+    record_name += "_weight_object_reads"
+if args.no_weight_line_retention:
+    record_name += "_no_weight_line_retention"
 OUT = ROOT / "build" / record_name
 OUT.mkdir(parents=True, exist_ok=True)
 from tools.build_abi3_engine_vectors import (  # noqa: E402
@@ -166,6 +174,9 @@ activation_payload = reference_device.memory[activation_object].read(
 )
 assert activation_payload == activation.astype("<u2").tobytes()
 hex_words("activation_bytes.hex", activation_payload, 2)
+weight_payload = reference_device.memory[weight_object].read(0, 2*logical_cols*depth)
+assert weight_payload == weight[:logical_cols].astype("<u2").tobytes()
+hex_words("weight_bytes.hex", weight_payload, 2)
 expected_padded = np.zeros((rows, cols), dtype=np.uint32)
 expected_padded[:, :logical_cols] = golden["output"]
 hex_words("expected.hex", expected_padded.reshape(-1), 8)
@@ -238,6 +249,8 @@ cmd = [
     "-Wno-fatal",
     "-DOT_A3_FAKERAM_BEHAVIOURAL",
     f"-GWRITE_OUTSTANDING={args.write_outstanding}",
+    f"-GWEIGHT_LINE_REUSE={int(not args.no_weight_line_retention)}",
+    f"-GWEIGHT_OBJECT_READS={int(args.weight_object_reads)}",
     f"-GINPUT_LAYOUT={int(args.input_layout)}",
     f"-GOBJECT_WRITES={int(args.object_writes)}",
     f"-GWEIGHT_ROW_REUSE={int(not args.no_weight_row_reuse)}",
@@ -274,6 +287,9 @@ result = {
     "status": "pass",
     "object_writes": args.object_writes,
     "descriptor_input_layout": args.input_layout,
+    "weight_object_reads": args.weight_object_reads,
+    "weight_line_retention": not args.no_weight_line_retention,
+    "weight_object_sha256": hashlib.sha256(weight_payload).hexdigest(),
     "strided_output": args.strided_output,
     "write_outstanding": args.write_outstanding,
     "weight_row_reuse": not args.no_weight_row_reuse,
@@ -300,7 +316,7 @@ result = {
         "depth": depth,
         "expected_activation_fills": expected_activation_fills,
         "dtype": "BF16",
-        "weight_packing": "External fixture service repacks ABI N-major weights into eight-lane words",
+        "weight_packing": "Synthesizable cluster cursor and cached gather read ABI object bytes" if args.weight_object_reads else "External fixture service repacks ABI N-major weights into eight-lane words",
         "output_element_base": output_base,
         "output_strides": [output_row_stride, output_col_stride],
         "output_object_bytes": output_bytes,

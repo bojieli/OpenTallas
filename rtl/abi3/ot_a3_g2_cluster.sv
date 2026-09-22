@@ -149,6 +149,8 @@ module ot_a3_g2_cluster #(
     parameter integer ACC_SLOTS     = 8,
     parameter integer RUNTIME_OPERANDS = 0,
     parameter bit RESOLVE_INPUT_OBJECTS = 0,
+    parameter bit RUNTIME_WEIGHT_OBJECT_READS = 0,
+    parameter bit RUNTIME_WEIGHT_LINE_REUSE = 1,
     parameter bit RUNTIME_WEIGHT_ROW_REUSE = 1,
     parameter integer RUNTIME_AUXILIARY_DEPTH = 3,
     parameter bit RUNTIME_REGISTER_AUXILIARY_REQUESTS = 0,
@@ -241,6 +243,18 @@ module ot_a3_g2_cluster #(
     input wire [63:0] weight_response_tag,
     input wire [9:0] weight_response_index,
     input wire [127:0] weight_response_data,
+    // Optional BF16 weight object transport. Packed weight request outputs
+    // become monitors in this mode; external packed responses are ignored.
+    output wire weight_object_read_valid,
+    input wire weight_object_read_ready,
+    output wire [63:0] weight_object_read_tag,weight_object_read_offset,
+    output wire [31:0] weight_object_read_object,
+    output wire [4:0] weight_object_read_bytes,
+    input wire weight_object_response_valid,
+    output wire weight_object_response_ready,
+    input wire [63:0] weight_object_response_tag,
+    input wire [127:0] weight_object_response_data,
+    input wire weight_object_response_error,
     output wire auxiliary_request_valid,
     input wire auxiliary_request_ready,
     output wire [31:0] auxiliary_request_generation,auxiliary_request_a,
@@ -633,7 +647,8 @@ module ot_a3_g2_cluster #(
 
     ot_a3_g2_array_issue_adapter #(
         .LANES(LANES),.RESOLVE_OUTPUT_OBJECT(RUNTIME_OBJECT_WRITES),
-        .RESOLVE_INPUT_OBJECTS(RESOLVE_INPUT_OBJECTS)
+        .RESOLVE_INPUT_OBJECTS(RESOLVE_INPUT_OBJECTS),
+        .REQUIRE_BF16_WEIGHT_STREAM(RUNTIME_WEIGHT_OBJECT_READS)
     ) issue_adapter (
         .clk(clk),
         .rst_n(rst_n),
@@ -769,6 +784,8 @@ module ot_a3_g2_cluster #(
         assign object_write_fp32=0;assign object_response_ready=0;
         assign object_writer_drained=1;assign object_writer_error=0;
     end endgenerate
+    initial if(RUNTIME_WEIGHT_OBJECT_READS && (!RUNTIME_OPERANDS || !RESOLVE_INPUT_OBJECTS))
+        $error("Weight object reads require runtime operands and input object resolution");
     generate if(RUNTIME_OPERANDS==0)begin : legacy_operands
     ot_a3_g2_array_staging staging (
         .clk(clk),
@@ -801,6 +818,8 @@ module ot_a3_g2_cluster #(
         assign array_error_code=core_error;assign array_error_detail=core_detail;assign array_error_lane=core_error_lane;
         assign part_we=core_part_we;assign part_valid=|core_part_we;
         assign part_addr=core_part_addr;assign part_data=core_part_data;assign part_acc=core_part_acc;
+        assign weight_object_read_valid=0;assign weight_object_read_tag=0;assign weight_object_read_offset=0;
+        assign weight_object_read_object=0;assign weight_object_read_bytes=0;assign weight_object_response_ready=0;
         assign runtime_transport_cancel=0;assign runtime_generation=0;
         assign weight_request_valid=0;assign weight_request_tag=0;assign weight_request_address=0;assign weight_request_words=0;
         assign weight_response_ready=0;assign auxiliary_request_valid=0;
@@ -813,12 +832,50 @@ module ot_a3_g2_cluster #(
         end
         reg [31:0] next_generation;
         reg command_pending;
-        wire command_ready,service_busy,geometry_error,protocol_error,lifetime_clear,compute_abort,lifetime_ready;
+        wire command_ready,service_command_ready,service_busy,geometry_error,protocol_error,lifetime_clear,compute_abort,lifetime_ready;
         wire [31:0] completed_generation;
         wire [7:0] completed_error;
         wire output_error,output_empty,output_credit,service_credit;
-        wire runtime_fault=runtime_service_fault || object_writer_error || protocol_error || output_error || (geometry_error && operand_request);
+        wire runtime_fault=weight_transport_error || runtime_service_fault || object_writer_error || protocol_error || output_error || (geometry_error && operand_request);
         wire service_clear=lifetime_clear;
+        wire weight_transport_error,transport_command_ready;
+        wire weight_request_ready_i,weight_response_valid_i,weight_response_ready_i;
+        wire [63:0] weight_response_tag_i;
+        wire [9:0] weight_response_index_i;
+        wire [127:0] weight_response_data_i;
+        assign command_ready=service_command_ready && transport_command_ready;
+        if(RUNTIME_WEIGHT_OBJECT_READS)begin : descriptor_weight_transport
+            // The compute bank service clears immediately on drain. External
+            // read ownership survives until transport cancellation is acknowledged.
+            ot_a3_bf16_weight_transport #(.INTERLEAVE(ADDER_STAGES),.RETAIN_LINES(RUNTIME_WEIGHT_LINE_REUSE)) transport(
+                .clk(clk),.rst_n(rst_n),
+                .clear(!input_layout_valid || (lifetime_clear && runtime_transport_ack)),
+                .command_valid(command_pending && service_command_ready),.command_ready(transport_command_ready),
+                .command_generation(next_generation),.command_object(input_b_object),.command_service_base(arr_w_base),
+                .command_object_bytes(input_b_object_bytes),.command_element_base({32'd0,arr_w_base}),
+                .command_rows(arr_rows),.command_cols(output_logical_cols),.command_depth(arr_depth),
+                .command_column_stride(input_b_column_stride),.command_k_stride(input_b_k_stride),
+                .request_valid(weight_request_valid),.request_ready(weight_request_ready_i),
+                .request_tag(weight_request_tag),.request_address(weight_request_address),.request_words(weight_request_words),
+                .response_valid(weight_response_valid_i),.response_ready(weight_response_ready_i),
+                .response_tag(weight_response_tag_i),.response_index(weight_response_index_i),.response_data(weight_response_data_i),
+                .read_valid(weight_object_read_valid),.read_ready(weight_object_read_ready),
+                .read_tag(weight_object_read_tag),.read_offset(weight_object_read_offset),
+                .read_object(weight_object_read_object),.read_bytes(weight_object_read_bytes),
+                .memory_valid(weight_object_response_valid),.memory_ready(weight_object_response_ready),
+                .memory_tag(weight_object_response_tag),.memory_data(weight_object_response_data),.memory_error(weight_object_response_error),
+                .protocol_error(weight_transport_error),.transport_drained());
+            assign weight_response_ready=0;
+        end else begin : packed_weight_transport
+            assign transport_command_ready=1;assign weight_transport_error=0;
+            assign weight_request_ready_i=weight_request_ready;
+            assign weight_response_valid_i=weight_response_valid;assign weight_response_ready=weight_response_ready_i;
+            assign weight_response_tag_i=weight_response_tag;assign weight_response_index_i=weight_response_index;
+            assign weight_response_data_i=weight_response_data;
+            assign weight_object_read_valid=0;assign weight_object_read_tag=0;assign weight_object_read_offset=0;
+            assign weight_object_read_object=0;assign weight_object_read_bytes=0;assign weight_object_response_ready=0;
+        end
+
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)begin next_generation<=0;command_pending<=0;end
             else begin
@@ -888,7 +945,7 @@ module ot_a3_g2_cluster #(
         ot_a3_lq8_runtime_operands #(.INTERLEAVE(ADDER_STAGES),.REUSE_WEIGHT_ROWS(RUNTIME_WEIGHT_ROW_REUSE),
             .AUXILIARY_DEPTH(RUNTIME_AUXILIARY_DEPTH),.REGISTER_AUXILIARY_REQUESTS(RUNTIME_REGISTER_AUXILIARY_REQUESTS)) service(
             .clk(clk),.rst_n(rst_n),.clear(service_clear),
-            .command_valid(command_pending),.command_ready(command_ready),
+            .command_valid(command_pending && transport_command_ready),.command_ready(service_command_ready),
             .cfg_generation(next_generation),.cfg_rows(arr_rows),.cfg_cols(arr_cols),.cfg_depth(arr_depth),
             .cfg_group(arr_group),.cfg_scale_a(arr_scale_a),.cfg_scale_b(arr_scale_b),
             .cfg_block_a(arr_block_a),.cfg_block_b(arr_block_b),.cfg_block_rows_a(arr_block_rows_a),
@@ -898,15 +955,15 @@ module ot_a3_g2_cluster #(
             .operand_credit(service_credit),.a_data(a_rd_data),.s_data(s_rd_data),.w_data(w_rd_data),.ws_data(ws_rd_data),
             .busy(service_busy),.geometry_error(geometry_error),.protocol_error(protocol_error),
             .weight_request_valid(weight_request_valid),
-            .weight_request_ready(weight_request_ready),
+            .weight_request_ready(weight_request_ready_i),
             .weight_request_tag(weight_request_tag),
             .weight_request_address(weight_request_address),
             .weight_request_words(weight_request_words),
-            .weight_response_valid(weight_response_valid),
-            .weight_response_ready(weight_response_ready),
-            .weight_response_tag(weight_response_tag),
-            .weight_response_index(weight_response_index),
-            .weight_response_data(weight_response_data),
+            .weight_response_valid(weight_response_valid_i),
+            .weight_response_ready(weight_response_ready_i),
+            .weight_response_tag(weight_response_tag_i),
+            .weight_response_index(weight_response_index_i),
+            .weight_response_data(weight_response_data_i),
             .auxiliary_request_valid(auxiliary_request_valid),
             .auxiliary_request_ready(auxiliary_request_ready),
             .auxiliary_request_generation(auxiliary_request_generation),
