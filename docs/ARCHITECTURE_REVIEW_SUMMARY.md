@@ -118,6 +118,7 @@ Areas are standard-cell area and exclude SRAM unless separately stated.
 | Sinkhorn with pipelined divider | 2 ns | 3,099.550 | +0.092189 / +0.027670 | Pass for recorded configuration |
 | Pass scheduler after split tile increment | 1 ns | 1,429.280 | −0.056566 / +0.051760 | Historical setup failure |
 | Pass scheduler with parallel extent selection | 1 ns | 1,380.650 | +0.029694 / +0.051666 | Historical pass before partial-row fix; seven retained artifacts verified |
+| Pass scheduler with partial-row ownership fix | 1 ns | 1,393.780 | +0.033745 / +0.051384 | Current-source pass; seven retained artifacts verified |
 
 The scheduler's split tile increment improves setup by 49.26 ps against the
 preceding elastic-handoff version, at 0.33% more cell area and no added cycles.
@@ -144,8 +145,8 @@ Evidence: [transport audit](../results/physical_abi3/asap7/bf16_weight_transport
    a bounded prefix; the scheduler retains each bank only if its corresponding
    start in the next row is needed. A second bank omitted by the final partial
    row releases during the preceding row. The 172 passing tests include 72
-   partial-row cases and final bank-release checks; a fresh physical route is
-   running. Select row-first/pass-first and pass width from capacity and measured
+   partial-row cases and final bank-release checks; its scheduler physical
+   route passes at 1 ns. Prefetch and integrated qualification remain open. Select row-first/pass-first and pass width from capacity and measured
    service cost; selection is currently static. For workloads exceeding even a
    one-column whole-K pass, evaluate depth tiling with an explicit accumulator
    budget.
@@ -186,5 +187,5 @@ source snapshots are in the [input transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT
 The partial-row repair changes scheduler and prefetch RTL after the recorded
 K513 loaded comparisons and scheduler route. Those results now qualify their
 retained historical sources. A current-source loaded K514 campaign passes
-2,234 exact outputs and 295 write acknowledgements; physical requalification
-is underway. The standalone transport and writer sources are unchanged.
+2,234 exact outputs and 295 write acknowledgements. The repaired scheduler
+passes its 1 ns block route; integrated physical requalification is underway. The standalone transport and writer sources are unchanged.

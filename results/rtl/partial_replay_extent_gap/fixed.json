@@ -16,7 +16,7 @@
     "tests/test_weight_row_reuse.py": "6c1b496e7409d77224a644ee6fb30d415dad48ab087ad8b35853b2c4fcb21fac",
     "rtl/test/tb_a3_weight_tile_prefetch.sv": "34e4357be13dd8a767574a555c35e2aa102dfec03cdf517e8baed4feea542029"
   },
-  "physical": "running: results/physical_abi3/asap7/weight_pass_scheduler/pnr_partial_replay_cts12_1ns.json",
+  "physical": "pass: results/physical_abi3/asap7/weight_pass_scheduler/partial_replay_route_audit.json",
   "loaded_campaign": {
     "record": "results/rtl/a3_g2_runtime_byte_transport_depth514_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols1.json",
     "sha256": "c21af5fdc23912f70fc4b3386cb7deef225a51b8d5c555722eb551db9141cbd3",

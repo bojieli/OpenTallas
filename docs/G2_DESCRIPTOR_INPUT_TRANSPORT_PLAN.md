@@ -1036,3 +1036,5 @@ remains a supported configuration requiring qualification, and general-ring
 transactions pay the documented 34 additional apply cycles. See
 `results/rtl/state_cursor_modulo/frozen_deployment_scope.json`; this is not an
 audit of current lowering or all supported targets.
+
+The partial-replay scheduler route completes at 1 ns: 1393.780 um² cells, setup +0.0337446 ns, hold +0.0513839 ns. All reported checks pass; current scheduler source hashes and 7 retained artifacts verify in `weight_pass_scheduler/partial_replay_route_audit.json`. This qualifies the scheduler boundary; prefetch and integrated G2 closure remain separate requirements.
