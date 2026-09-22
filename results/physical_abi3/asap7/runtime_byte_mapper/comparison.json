@@ -1,0 +1,31 @@
+{
+  "status": "prelayout_improved_target_not_met",
+  "scope": "Matched ASAP7 TT synthesis and pre-layout STA at 1 ns. Routed runs remain active; no integrated clock or energy claim.",
+  "baseline": "prelayout_baseline_1ns.json",
+  "optimized": "prelayout_optimized_1ns.json",
+  "cell_area_um2": {
+    "baseline": 789.931,
+    "optimized": 681.313
+  },
+  "cell_area_reduction_percent": 13.750314900921733,
+  "cell_count": {
+    "baseline": 4870,
+    "optimized": 4557
+  },
+  "setup_wns_ns": {
+    "baseline": -1.685892543421213,
+    "optimized": -1.5765090407282716
+  },
+  "changes": [
+    "Register selected plane/address before subtraction",
+    "Remove reset from validity-gated payload registers",
+    "Use feed-forward payload stages instead of global enable/clear muxes"
+  ],
+  "functional_evidence": "results/rtl/a3_g2_runtime_byte_transport.json",
+  "limitations": [
+    "Added one mapping startup cycle",
+    "Control fanout still dominates prelayout timing",
+    "Switching energy of feed-forward stages unmeasured",
+    "Both versions miss 1 ns before route"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "status": "pass",
-  "scope": "Captured contiguous service-word to object-byte burst translation, 106 boundary/random cases plus generation/plane refusal and clear. Not strided or sub-byte layouts or physical closure.",
+  "scope": "Registered plane selection and validity-gated unreset payload mapper; 106 boundary/random mappings plus refusal/clear. Not routed closure.",
   "sources": {
-    "rtl/abi3/ot_a3_operand_byte_mapper.sv": "f4d5e2dfc675beb09549c3641bb25ce6dc82d8fa1036c7a09ead0947ae3360a6",
+    "rtl/abi3/ot_a3_operand_byte_mapper.sv": "7faeef6b3d75a55413b8580b76b075ce69172fbbd0a4fc5303d936a69b4aece5",
     "tests/test_operand_byte_mapper.py": "c532a2e8a7bdfb1267c88ce80f77d6af95a4013df986220047b80c87673e5c22"
   },
   "runs": [
@@ -26,7 +26,7 @@
         "ot_a3_operand_byte_mapper",
         "rtl/abi3/ot_a3_operand_byte_mapper.sv"
       ],
-      "stdout": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.039 MB sources in 2 modules, into 0.048 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.009 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.009 s on 1 threads; allocated 33.145 MB\n",
+      "stdout": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.039 MB sources in 2 modules, into 0.045 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.010 s (elab=0.001, cvt=0.005, bld=0.000); cpu 0.010 s on 1 threads; allocated 33.148 MB\n",
       "stderr": ""
     }
   ]

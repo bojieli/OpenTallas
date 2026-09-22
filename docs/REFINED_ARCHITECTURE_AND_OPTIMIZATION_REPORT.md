@@ -400,3 +400,32 @@ suite and loaded-program numerical regressions pass. Source-bound evidence is
 current hardware limit; it does not implement wide-offset deployment mapping.
 The full goal still requires descriptor-derived mapping records, packed/strided
 weights, output-object writes, reuse and routed physical optimization.
+
+
+## Byte-mapper physical optimization checkpoint
+
+Matched ASAP7 TT synthesis/STA at a 1 ns target identified plane selection plus
+subtraction and high-fanout payload enables as bottlenecks. The implementation
+now registers plane selection before relative-address arithmetic and resets only
+state, ownership and error flags. Payload registers are overwritten before
+publication; feed-forward arithmetic avoids a global clear/enable mux on each
+stage. Reset/clear still suppress all valid outputs. The separate selection
+stage adds one mapping startup cycle; no burst is published before bounds pass.
+
+Mapped cell area falls from 789.931 to 681.313 um² (13.75%), and cell count from
+4,870 to 4,557. Pre-layout setup WNS improves from -1.6859 to -1.5765 ns but
+**both designs miss the 1 ns target**. Unbuffered control fanout dominates the
+revised pre-layout path. No achieved GHz claim follows from these results.
+Feed-forward payload switching energy has not been measured. The physical
+comparison is `results/physical_abi3/asap7/runtime_byte_mapper/comparison.json`;
+source snapshots and complete synthesis/STA records are retained beside it.
+
+All 36 focused tests pass. The loaded byte-transport campaign retains 584
+matching outputs, 480 first-operation activation fills and 1,440 reads. Its
+cumulative counter at final completion increases from 14,356 to 14,375 cycles
+under the test's transport stalls; this is an area/control optimization with a
+latency cost, not a claimed workload speedup. Full routes for baseline and
+candidate were launched at 1 ns with max-transition and max-fanout 16 constraints
+and remain in progress at this checkpoint. Their results, signal-integrity
+checks and source hashes must be inspected before assessing closure. Wider
+architecture integration and all-target physical coverage remain unfinished.
