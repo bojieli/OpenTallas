@@ -1794,3 +1794,22 @@ meets the target. No slack-extrapolated clock is accepted. All retained artifact
 hashes and all ten source hashes match the recorded commit. Evidence:
 `results/physical_abi3/asap7/runtime_operand_service/onehot_head_tradeoff.json`
 and `pnr_onehot_head_cts12_1ns.json` with retained artifacts.
+
+
+## Suppress unused right-adder requests in Sinkhorn
+
+The right positive adder is only needed for the pair sum, but formerly received
+zero-plus-zero requests for the tree and epsilon stages too. Its valid input is
+now restricted to the pair stage and its operand registers hold between pair
+requests. The left adder retains all required pair/tree/epsilon work. No cycles,
+arithmetic order or output contracts change. Both divider choices pass all six
+arithmetic/protocol pytest cases; protocol counters verify 468 left and 156 right
+requests per valid matrix, versus 468 right requests previously.
+
+This removes 312 redundant requests and repeated zero-operand injection per
+valid matrix. The adder pipeline is not clock-gated, so no proportional switching
+or energy saving is claimed. With pipelined divider selected, matched ASAP7 TT
+2 ns synthesis area is essentially unchanged (2,537.794 to 2,536.452 um²), while
+setup WNS worsens from -0.946 to -0.986 ns. Both fail. Existing live routes predate
+this activity change and cannot qualify current parent timing. Evidence and
+source snapshots: `results/physical_abi3/asap7/sinkhorn_adder_activity/`.

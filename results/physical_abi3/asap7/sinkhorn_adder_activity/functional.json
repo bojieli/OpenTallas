@@ -1,0 +1,19 @@
+{
+  "scope": "Six arithmetic/protocol pytest cases pass. Parent test asserts468 left and156 right requests per valid matrix, both divider choices; previous right requests468. Stable operands replace repeated zero injection; no energy measurement.",
+  "sources": {
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv": "c9ee6d15c8d8c14c49501373670842cc49642b43042fa858467beee584d91e38",
+    "rtl/proto/ot_fp32_add_positive_rne_pipe.sv": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+    "rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv": "b54d1e715a011252df4ee6f4a5a9b7a5f0778e6224803bf2cfa45a946ac6ed99",
+    "tests/test_divider_pipeline_equivalence.py": "62d925675004a9107433d97e86400c75946e46119f9584bc906468bd1d956b62"
+  },
+  "protocol_runs": [
+    {
+      "test": "test_sinkhorn_reset_and_output0",
+      "stdout": "PASS Sinkhorn protocol divider=0 resets=9 recoveries=9 stalls=90 handoffs=5149\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv:74: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3ms; walltime 0.276 s; speed 9.472 ms/s\n- Verilator: cpu 0.254 s on 1 threads; allocated 6 MB\n"
+    },
+    {
+      "test": "test_sinkhorn_reset_and_output1",
+      "stdout": "PASS Sinkhorn protocol divider=1 resets=9 recoveries=9 stalls=90 handoffs=5149\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv:74: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 4ms; walltime 0.416 s; speed 9.424 ms/s\n- Verilator: cpu 0.397 s on 1 threads; allocated 6 MB\n"
+    }
+  ]
+}

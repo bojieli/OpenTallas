@@ -9,12 +9,20 @@ module tb_a3_hc_sinkhorn20_pipe_protocol;
  wire [1:0] result_error,ref_error;
  reg [513:0] saved;
  integer state_id,resets=0,recoveries=0,stalls=0,handoffs=0,k;
+ integer left_requests=0,right_requests=0;
  ot_a3_hc_sinkhorn20_rne_pipe #(.PIPELINED_DIVIDER(PIPELINED_DIVIDER)) dut(.*);
  ot_a3_hc_sinkhorn20_rne reference_impl(
  .clk(clk),.rst_n(rst_n),.in_valid(ref_start),.in_ready(ref_ready),
  .matrix_codes(matrix_codes),.out_valid(ref_valid),.out_ready(1'b0),
  .result_codes(ref_codes),.result_error(ref_error));
  always @(posedge clk)if(rst_n && dut.div_handoff && dut.div_in_ready)handoffs<=handoffs+1;
+ always @(posedge clk)if(rst_n)begin
+  if(dut.adder_left.valid_in)left_requests<=left_requests+1;
+  if(dut.adder_right.valid_in)begin
+   right_requests<=right_requests+1;
+   if(dut.state!=dut.S_SUM_A_WAIT)$fatal(1,"right adder issued outside pair stage");
+  end
+ end
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
  task reset_operation;begin
   rst_n=0;in_valid=0;ref_start=0;out_ready=0;tick();rst_n=1;
@@ -26,9 +34,11 @@ module tb_a3_hc_sinkhorn20_pipe_protocol;
   in_valid=1;ref_start=with_reference;tick();in_valid=0;ref_start=0;
  end endtask
  task recover_and_stall;begin
+  left_requests=0;right_requests=0;
   matrix_codes={16{32'h3f000000}};launch(1);
   while(!out_valid || !ref_valid)tick();
   if(result_error!=0 || {result_error,result_codes}!={ref_error,ref_codes})$fatal(1,"recovery not equivalent");
+  if(left_requests!=468 || right_requests!=156)$fatal(1,"redundant adder requests left=%0d right=%0d",left_requests,right_requests);
   saved={result_error,result_codes};
   // A waiting replacement may not overwrite a held result or become accepted.
   in_valid=1;matrix_codes={16{32'h7f800000}};

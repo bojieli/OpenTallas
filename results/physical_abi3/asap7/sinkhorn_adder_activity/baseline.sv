@@ -96,7 +96,7 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
         .y(add_l_y), .err(add_l_err), .valid_out(add_l_done)
     );
     ot_fp32_add_positive_rne_pipe adder_right (
-        .clk(clk), .rst_n(rst_n), .valid_in(add_valid && state==S_SUM_A_WAIT),
+        .clk(clk), .rst_n(rst_n), .valid_in(add_valid),
         .a(add_r_a), .b(add_r_b),
         .y(add_r_y), .err(add_r_err), .valid_out(add_r_done)
     );
@@ -231,12 +231,15 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                     state <= S_SUM_A_WAIT;
                 end
 
-                // Both pair requests share one latency and retire together.
-                // The right adder is not issued for the later dependent sums.
+                //: both adders share one valid and have one latency, so they
+                //: retire on the same cycle; waiting on the left one waits on
+                //: both, and the right one's error is read here too
                 S_SUM_A_WAIT: begin
                     if (add_l_done) begin
                         add_l_a <= add_l_y;
                         add_l_b <= add_r_y;
+                        add_r_a <= 32'd0;
+                        add_r_b <= 32'd0;
                         add_valid <= 1'b1;
                         sum_err_q <= add_l_err | add_r_err;
                         state <= S_SUM_B_WAIT;
@@ -249,6 +252,8 @@ module ot_a3_hc_sinkhorn20_rne_pipe #(
                     if (add_l_done) begin
                         add_l_a <= add_l_y;
                         add_l_b <= HC_EPSILON;
+                        add_r_a <= 32'd0;
+                        add_r_b <= 32'd0;
                         add_valid <= 1'b1;
                         sum_err_q <= sum_err_q | add_l_err;
                         state <= S_SUM_C_WAIT;

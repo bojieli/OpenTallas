@@ -1,0 +1,22 @@
+{
+  "scope": "ASAP7 TT2ns synthesis with pipelined divider1; both fail prelayout. Matched area effectively unchanged; no parent clock/energy gain claim.",
+  "records": [
+    {
+      "record": "prelayout_baseline_2ns.json",
+      "sha256": "0cd2141700159f35e10629228992c7c8388b85dea92e171ac751d0a5706d257b",
+      "area_um2": 2537.794,
+      "setup_wns_ns": -0.9464356003422609
+    },
+    {
+      "record": "prelayout_candidate_2ns.json",
+      "sha256": "0e3e20809cf054b8d1926201adab32123ed1847fe20ad9d6b0843045f449d9b0",
+      "area_um2": 2536.452,
+      "setup_wns_ns": -0.9863070399849426
+    }
+  ],
+  "right_adder_requests_before": 468,
+  "right_adder_requests_after": 156,
+  "left_adder_requests": 468,
+  "change": "Right adder valid limited to pair stage; operand registers held during later reductions instead of receiving zeros. No schedule or arithmetic changes.",
+  "decision": "Retain redundant activity removal. Area changes -0.053%, setup worsens about40ps prelayout. Existing routes predate this change; current parent closure unproven."
+}
