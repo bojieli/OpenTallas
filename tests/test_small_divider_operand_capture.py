@@ -21,16 +21,18 @@ def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk):
                           "@(negedge clk); start = 1'b0; dividend=~a; divisor=~d;")
     bench = bench.replace('.BITS_PER_STEP(1)', f'.BITS_PER_STEP({first_chunk})')
     reference = r'''
-    wire [DUTS-1:0] ref_busy, ref_done;
+    wire [DUTS-1:0] ref_busy, ref_done, ref_inexact;
+    wire [WIDTH-1:0] ref_quotient [0:DUTS-1];
     genvar r;
     generate for(r=0;r<DUTS;r=r+1)begin : old_units
         old_divider #(.WIDTH(WIDTH),.DIVISOR_BITS(DBITS),.BITS_PER_STEP(r==0 ? FIRST_CHUNK : (1<<r))) ref_dut(
             .clk(clk),.rst_n(rst_n),.start(start),.dividend(reference_dividend),
             .divisor(reference_divisor),.busy(ref_busy[r]),.done(ref_done[r]),
-            .quotient(),.inexact());
+            .quotient(ref_quotient[r]),.inexact(ref_inexact[r]));
         always @(negedge clk) if(rst_n)
-            if(busy[r] !== ref_busy[r] || done[r] !== ref_done[r])
-                $fatal(1,"changed handshake latency chunk %0d",1<<r);
+            if({busy[r],done[r],quotient[r],inexact[r]} !==
+               {ref_busy[r],ref_done[r],ref_quotient[r],ref_inexact[r]})
+                $fatal(1,"changed public output chunk %0d",1<<r);
     end endgenerate
     initial begin #10000000; $fatal(1,"timeout");end
 '''

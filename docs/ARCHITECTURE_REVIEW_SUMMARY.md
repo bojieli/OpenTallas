@@ -705,3 +705,24 @@ containing routed closure. This evidence prevents selecting a shorter
 combinational path while overlooking its service-rate cost. The production
 ten-step default remains unchanged; the three-step block route is active.
 See the [step-width comparison](../results/rtl/small_divider_step3/comparison.json).
+
+## Small-divider idle enables and softmax service specialization target
+
+Removing idle hold enables from the small divider's reinitialized scratch
+registers reduces matched four-step mapped area 230.481 → 217.184 µm²
+(5.77%) and improves pre-layout slack −1.0746 → −0.5103 ns at 1 ns.
+Eight dual-simulator configurations pass with all public outputs compared
+every cycle; the containing softmax retains its nine passing cases, two
+refusals and 767,158 cycles. A matched route is active. Internal scratch state
+can switch while idle, so no energy reduction is claimed. See the
+[idle-enable comparison](../results/rtl/small_divider_idle_enable/comparison.json).
+
+Source attribution now identifies both endpoints of the containing softmax's
+−10.4575 ns pre-layout path as registers in `ot_wide_div_seq`, the sigmoid
+transform service. A rerun retaining source attributes has exactly the same
+netlist lines as the timing record (only final assignment ordering differs).
+Softmax requests only EXP_NONPOS, yet this wide-divider hardware remains.
+The next architecture change is explicit exp-only elaboration specialization
+that removes the unused transform service while preserving the full engine's
+sigmoid default, followed by numerical and containing physical qualification.
+See the [source attribution](../results/rtl/softmax_control_attribution/finding.json).

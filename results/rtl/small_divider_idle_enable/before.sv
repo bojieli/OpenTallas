@@ -114,11 +114,6 @@ module ot_wide_div_small_seq #(
             steps_left <= {COUNT_BITS{1'b0}};
         end else begin
             done <= 1'b0;
-            // Scratch state is reinitialized on every accepted operation.
-            // Let it advance while idle instead of loading running with wide
-            // hold enables; public results still update only on completion.
-            work <= quot_next;
-            rem <= next_rem;
             if (!running) begin
                 if (start) begin
                     work <= {{(PADDED-WIDTH){1'b0}}, dividend};
@@ -127,6 +122,8 @@ module ot_wide_div_small_seq #(
                     running <= 1'b1;
                 end
             end else begin
+                work <= quot_next;
+                rem <= next_rem;
                 if (steps_left == ONE_STEP) begin
                     running <= 1'b0;
                     done <= 1'b1;
