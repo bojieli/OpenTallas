@@ -334,7 +334,9 @@ module ot_hdc_matvec #(
     endfunction
     localparam integer NL = G * W;
     localparam integer LV = $clog2(NL);
-    localparam integer CW = 1 + 32 + 32 + NW;       // {valid, key, value, row}
+    //: The key is an invertible function of the value, so the tree carries only
+    //: the key and recovers the value at the end (half the tree's wiring).
+    localparam integer CW = 1 + 32 + NW;            // {valid, key, row}
     wire [CW*NL-1:0] alv [0:LV];
     reg  [LV:0] tv;
     always @(posedge clk or negedge rst_n) begin
@@ -349,7 +351,7 @@ module ot_hdc_matvec #(
             //: sized on its own: an integer term would widen a concatenated sum
             wire [NW-1:0] row = r_nb[NW-1:0] + EQ * (W * IL) + EL;
             always @(posedge clk)
-                c <= {r_mask[e], okey(res[32*e +: 32]), res[32*e +: 32], row};
+                c <= {r_mask[e], okey(res[32*e +: 32]), row};
             assign alv[0][CW*e +: CW] = c;
         end
         for (lv = 1; lv <= LV; lv = lv + 1) begin : g_alvl
@@ -370,7 +372,7 @@ module ot_hdc_matvec #(
     wire [CW-1:0] top = alv[LV][CW-1:0];
     wire          top_v = top[CW-1];
     wire [31:0]   top_key = top[CW-2 -: 32];
-    wire [31:0]   top_val = top[CW-34 -: 32];
+    wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;   // okey inverted
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
     always @(posedge clk or negedge rst_n) begin
