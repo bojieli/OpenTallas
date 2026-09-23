@@ -1,0 +1,48 @@
+{
+  "sources": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+      "verilator_content_hash": "Gmi90xEIhUaKzWUEc5JRAzX4lp32HmgFrelMDc04"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+      "verilator_content_hash": "wDwVBZRWeHngxyPAjQmBOu1ZDkdXDSHD2K6awQuW"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/test/tb_a3_hc_transcendental.sv",
+      "sha256": "5a073c6cf80839cf31fc9bdf39231b0af8e1aa84358bb4dc309cf5c4646fe99c",
+      "verilator_content_hash": "Wgc8bPgIOc8xBJvfOSMbCvjhqoQ1i7TcMJz1xGRv"
+    }
+  ],
+  "vectors": {
+    "testdata/rtl/a3_hc_transcendental/cases.hex": "201c790f7e503840d4e78ba7a302a28de11e5cd340c6fc86914301eb64d110be",
+    "testdata/rtl/a3_hc_transcendental/index.json": "fb76c2157c3732e74ad3b4ce2b3795286e00502853604164355773e66700f1e4"
+  }
+}

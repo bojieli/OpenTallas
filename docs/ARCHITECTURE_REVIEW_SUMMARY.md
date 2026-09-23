@@ -618,3 +618,33 @@ Its controller source matches `state_parallel_admission/before.sv`; all seven
 retained artifacts verify. The later parallel-admission implementation remains
 in routing and must be judged from its own result. See the
 [payload-capture route audit](../results/physical_abi3/asap7/state_controller/payload_capture_route_audit.json).
+
+## Wide-divider storage reuse
+
+The sigmoid transform's wide divider now stores emitted quotient bits in the
+consumed portion of the numerator shift register. With 328 numerator bits and
+a 163-bit quotient window, this removes the separate quotient register while
+preserving every restoring step and the output cycle. Wider-than-numerator
+quotient configurations retain a separate register as a compatibility branch.
+
+Matched synthesis reduces cell area 626.633 → 546.518 µm² (12.785%) and
+sequential cells 829 → 667 (162 fewer). Both fail the tested 1 ns pre-layout
+target: worst setup slack improves −10.2250 → −6.2810 ns but remains negative.
+The remaining pre-layout worst path includes high-fanout control nets, so this
+is an area/control-load improvement, not a routed frequency result. A fresh
+1 ns route and containing-softmax synthesis with both divider updates are active.
+
+The full containing exponential/sigmoid corpus passes 4,200 cases, including
+2,100 sigmoid cases, with 6,637,132 checks. The normalized summary matches the
+recorded reference campaign: 4,155 accepted, 45 refused, 1,534 output stalls,
+maximum latency 3,212 cycles and 23 active-reset cycles. This is a reusable
+arithmetic corpus, not whole-model or exhaustive binary32 qualification.
+
+All ten unit configurations now pass across Icarus and Verilator, each checking
+146 completed divisions and 14 reset interruptions against both old RTL and
+an independent division/modulo oracle. Tests compare all public outputs each
+cycle and include partial chunks and wider quotient fallback. Two large Icarus
+cases initially hit a 120-second wall limit; both completed successfully after
+raising it to 600 seconds. No test case or arithmetic scope was removed.
+Source manifests, reports and logs are retained in the
+[wide-divider checkpoint](../results/rtl/wide_divider_shared_shift/checkpoint.json).

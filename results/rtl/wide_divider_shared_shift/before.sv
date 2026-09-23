@@ -53,6 +53,7 @@ module ot_wide_div_seq #(
     localparam [COUNT_BITS-1:0] ONE_STEP = {{(COUNT_BITS-1){1'b0}}, 1'b1};
 
     reg [PADDED-1:0]     work;      //: numerator bits not yet consumed, MSB first
+    reg [QUOT_BITS-1:0]  quot;
     reg [DEN_BITS-1:0]   rem;
     reg [COUNT_BITS-1:0] steps_left;
     reg                  running;
@@ -86,29 +87,8 @@ module ot_wide_div_seq #(
         next_rem = walk;
     end
 
-    // Consumed numerator bits make room for quotient digits below the
-    // remaining numerator. No produced digit reaches the next input chunk
-    // before completion. Preserve the wider-than-numerator parameter case
-    // with its own register, where that non-overlap argument does not apply.
-    wire [PADDED-1:0] work_next;
-    wire [QUOT_BITS-1:0] quot_next;
-    generate
-        if (QUOT_BITS <= PADDED) begin : shared_shift
-            assign work_next = (work << BITS_PER_STEP) |
-                {{(PADDED-BITS_PER_STEP){1'b0}}, step_digit};
-            assign quot_next = work_next[QUOT_BITS-1:0];
-        end else begin : separate_shift
-            reg [QUOT_BITS-1:0] quot;
-            assign work_next = work << BITS_PER_STEP;
-            assign quot_next = (quot << BITS_PER_STEP) |
-                {{(QUOT_BITS-BITS_PER_STEP){1'b0}}, step_digit};
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) quot <= 0;
-                else if (!running && start) quot <= 0;
-                else if (running) quot <= quot_next;
-            end
-        end
-    endgenerate
+    wire [QUOT_BITS-1:0] quot_next = (quot << BITS_PER_STEP) |
+                                     {{(QUOT_BITS-BITS_PER_STEP){1'b0}}, step_digit};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -116,6 +96,7 @@ module ot_wide_div_seq #(
             quotient <= {QUOT_BITS{1'b0}};
             inexact <= 1'b0;
             work <= {PADDED{1'b0}};
+            quot <= {QUOT_BITS{1'b0}};
             rem <= {DEN_BITS{1'b0}};
             steps_left <= {COUNT_BITS{1'b0}};
         end else begin
@@ -123,12 +104,14 @@ module ot_wide_div_seq #(
             if (!running) begin
                 if (start) begin
                     work <= {{(PADDED-NUM_BITS){1'b0}}, numerator};
+                    quot <= {QUOT_BITS{1'b0}};
                     rem <= {DEN_BITS{1'b0}};
                     steps_left <= STEPS_CODE[COUNT_BITS-1:0];
                     running <= 1'b1;
                 end
             end else begin
-                work <= work_next;
+                work <= work << BITS_PER_STEP;
+                quot <= quot_next;
                 rem <= next_rem;
                 if (steps_left == ONE_STEP) begin
                     running <= 1'b0;
