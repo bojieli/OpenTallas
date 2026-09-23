@@ -144,3 +144,8 @@ The [attention placement study](DEEPSEEK_V41_ATTENTION_PLACEMENT.md) now compare
 group-local K-sharded output projection against feature gathering and output-row
 sharding. It also separates packed `wo_a` storage from the vendor's BF16 execution
 materialization, so memory comparisons can use matching deployment formats.
+
+The [resource-constrained array screen](DEEPSEEK_V41_RESOURCE_CONSTRAINED_ARRAYS.md)
+now gives layer-local 80/120-chip capacity candidates and derives expert-read
+ceilings from chip ownership, without presuming all installed bandwidth is active.
+These are placement-specific bounds, not a claim against optimized striped HBM.
