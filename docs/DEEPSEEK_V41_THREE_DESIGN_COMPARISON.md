@@ -149,3 +149,8 @@ The [resource-constrained array screen](DEEPSEEK_V41_RESOURCE_CONSTRAINED_ARRAYS
 now gives layer-local 80/120-chip capacity candidates and derives expert-read
 ceilings from chip ownership, without presuming all installed bandwidth is active.
 These are placement-specific bounds, not a claim against optimized striped HBM.
+
+The [expert striping tradeoff](DEEPSEEK_V41_EXPERT_STRIPING.md) now prices the
+read-time benefit against growing dispatch and partial-return traffic. The best
+shard count depends on local service and fabric, and is not monotonically improved
+by using more chips. Numerical qualification and physical rate evidence remain open.
