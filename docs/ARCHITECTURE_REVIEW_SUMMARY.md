@@ -296,3 +296,14 @@ Evidence: [parallel admission verification](../results/rtl/state_parallel_admiss
 A new 1 ns CTS12 physical run is active; synthesis/routed benefit and current
 state-enabled integration remain pending. Earlier state jobs continue against
 their own launch sources.
+
+
+The parallel state-admission flow has completed synthesis. At matched 1 ns
+CTS12 settings, mapped cell area falls 3,492.799 → 3,448.841 µm² (1.26%),
+with unchanged 2,618 reset and 1,088 ordinary flops. Source-bound artifacts are
+in the [state synthesis comparison](../results/rtl/state_parallel_admission/synthesis/comparison.json).
+This does not establish final routed area, timing or energy. Early floorplan
+repair now reports paths ending at the byte-written counter, whose apply path
+contains a 32-by-32 row-byte product followed by a 64-bit accumulation. Final
+extracted timing must determine whether and how to pipeline that accounting
+while preserving transaction completion and statistics semantics.
