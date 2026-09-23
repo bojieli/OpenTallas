@@ -1005,3 +1005,21 @@ The [current step comparison](../results/rtl/small_divider_step4_current/compari
 retains both numerical logs, exact source/vector hashes and the isolated softmax
 configuration. Current softmax source hashes include the pre-existing workspace
 engine tuning. This comparison is operator-corpus evidence, not model throughput.
+
+## Apply candidates now verify reset, clear and discard restart
+
+All three isolated apply candidates pass expanded cancellation checks in Icarus
+and Verilator (six tests total). Each retains 90 transaction/carry/latency checks
+and now covers 21 cancellations: seven positions across capture/product and
+ring-remainder stages, each under discard, clear and asynchronous reset. The
+reset case checks publication state immediately between clock edges. Every case
+waits 40 cycles to detect stale completion and then commits a fresh operation
+without another clear, checking exact row, byte and applied-commit counters.
+The scope is cancellation before first retirement; existing partial-retirement
+semantics are not changed. See the
+[cancellation evidence](../results/rtl/state_apply_cancellation/validation.json).
+
+The first apply pipeline route is still live in global-route timing repair; its
+intermediate worst path remains in the commit counter. The overlap and counter
+candidates and operand-service hold retry remain in physical implementation.
+None of those intermediate stages is a final timing-acceptance result.

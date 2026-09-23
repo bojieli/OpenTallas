@@ -18,7 +18,7 @@ reg rst_n=0,clear=0,valid=0,commit_all=0,discard_all=0;
 reg [7:0] sub=0;reg [31:0] id=0,rows=0;reg [511:0] payload=0;
 ot_a3_state_controller #(.SLOTS(3)) dut(PORTS);
 old_state #(.SLOTS(3)) ref_dut(PORTS);
-integer t,i,waits,dut_cycles,ref_cycles,transactions=0,cancellations=0;
+integer t,i,mode,waits,dut_cycles,ref_cycles,transactions=0,cancellations=0;
 reg [63:0] expected_bytes;
 reg [31:0] rb,span,cap,policy;
 task command(input [7:0] op);begin
@@ -61,6 +61,7 @@ initial begin
   transactions=transactions+1;
  end
  // Cancel each new pipeline stage before its first retirement; no stale result.
+ for(mode=0;mode<3;mode=mode+1)begin
  for(t=0;t<7;t=t+1)begin
   clear=1;@(negedge clk);clear=0;id=1;rows=7;payload=0;
   payload[128+:32]=32'hffffffff;payload[192+:32]=100;
@@ -69,10 +70,32 @@ initial begin
   // Cover capture/product and early/middle/final remainder iterations.
   waits=t<2?t:(t==2?0:(t==3?1:(t==4?2:(t==5?16:33))));
   repeat(waits)@(negedge clk);
-  discard_all=1;@(negedge clk);discard_all=0;
-  repeat(5)@(negedge clk);
+  case(mode)
+   0: begin discard_all=1;@(negedge clk);discard_all=0;end
+   1: begin clear=1;@(negedge clk);clear=0;end
+   2: begin
+    #1;rst_n=0;#1;
+    if(dut.apply_busy || dut.apply_done || dut.count_bytes_written!=0)
+     $fatal(1,"asynchronous reset publication");
+    repeat(2)@(negedge clk);rst_n=1;
+   end
+  endcase
+  repeat(40)begin
+   @(negedge clk);
+   if(dut.apply_busy || dut.apply_done || dut.count_bytes_written!=0)
+    $fatal(1,"stale publication after cancellation");
+  end
   if(dut.count_bytes_written!=0 || dut.count_commits_applied!=0 || dut.pending_count!=0 || dut.apply_busy)$fatal(1,"cancelled payload retired");
+  // Do not clear before restart: prove cancellation itself invalidated payload.
+  id=1;rows=3;
+  command(1);command(2);commit_all=1;@(negedge clk);commit_all=0;waits=0;
+  while(dut.apply_busy)begin
+   @(negedge clk);waits=waits+1;if(waits>100)$fatal(1,"restart timeout");
+  end
+  if(dut.count_commits_applied!=1 || dut.count_rows_committed!=3 ||
+     dut.count_bytes_written!=64'h2fffffffd)$fatal(1,"restart payload");
   cancellations=cancellations+1;
+ end
  end
  $display("PASS apply pipeline transactions=%0d cancellations=%0d",transactions,cancellations);$finish;
 end
@@ -86,4 +109,4 @@ endmodule
         cmd=[str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'),'--binary','--timing','-j','2','-Wno-fatal','--top-module','tb','--Mdir',str(tmp_path/'obj'),*sources];run=[str(tmp_path/'obj/Vtb')]
     p=subprocess.run(cmd,capture_output=True,text=True,timeout=240);assert p.returncode==0,p.stdout+p.stderr
     p=subprocess.run(run,capture_output=True,text=True,timeout=60);assert p.returncode==0,p.stdout+p.stderr
-    assert 'PASS apply pipeline transactions=90 cancellations=7' in p.stdout
+    assert 'PASS apply pipeline transactions=90 cancellations=21' in p.stdout
