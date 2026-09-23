@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.rom-density-evidence.v1",
+  "status": "evidence_register_not_qualified_n5_macro",
+  "units": "decimal bytes; MB = 1e6 bytes",
+  "anchors": {
+    "taalas_hc1_whole_die": {
+      "weights_per_mm2_whole_die": 9853081.28588957,
+      "bytes_per_mm2_at_4_bits_whole_die": 4926540.642944785,
+      "process_nm": 6,
+      "organization": "compute-in-ROM: one select transistor per <=4-bit weight, pre-computed products, digital accumulation (reconstruction; Taalas publishes no microarchitecture)",
+      "evidence": "published: shipping part, 815 mm2 N6, 53B transistors, all Llama-3.1-8B weights on die, 16,960 tok/s per user at BS=1, 200-250 W (configs/hardware/technology.json reference_parts.taalas_hc1). Self-run by Taalas; no third-party measurement.",
+      "caveat": "Whole-die figure including KV SRAM, accumulators, I/O and control, so the ROM array alone is denser. It is a joint density/rate/power point only for its organization and 3/6-bit weights; it does not qualify digital readout of BF16/FP8 into separate MACs."
+    },
+    "n7_compiler_rom_2048x64_table": {
+      "bytes_per_mm2": 4300000,
+      "process_nm": 7,
+      "macro_bits": "2048 rows x 64 bits (16 KiB), one 64-bit word per access",
+      "evidence": "reported: TOM (arXiv 2602.20662) Table II, memory-compiler-generated ROM; compiler characterization, not fabricated by that work",
+      "caveat": "Same paper's Figs. 9-10 imply standard compiler ROM 14.2/5.2 = 2.73 MB/mm2 and compiler SRAM 14.2/3.3 = 4.30 MB/mm2 at 2048x128; the two statements are inconsistent, so 4.30 is treated as the upper end of compiler-class ROM"
+    },
+    "n7_compiler_rom_fig9_implied": {
+      "bytes_per_mm2": 2730000,
+      "process_nm": 7,
+      "evidence": "derived: TOM Fig. 9, 14.2 MB/mm2 stated as 5.2x a standard compiler ROM at 65% zero bits"
+    },
+    "n7_uhd_sram_macro": {
+      "bytes_per_mm2": 3650000,
+      "process_nm": 7,
+      "evidence": "published: 29.2 Mb/mm2 ultra-high-density 7nm FinFET SRAM macro (VLSI 2020, researchgate 343565282)"
+    },
+    "n2_sram_macro": {
+      "bytes_per_mm2": 4762500,
+      "process_nm": 2,
+      "evidence": "published: TSMC 38.1 Mb/mm2 SRAM in 2nm nanosheet (ISSCC 2025), 0.021 um2 bitcell"
+    },
+    "n7_to_n5_bitcell_scale": {
+      "value": 1.2857,
+      "evidence": "derived: TSMC HD 6T bitcell 0.027 um2 (N7) over 0.021 um2 (N5, ISSCC 2020 135Mb test chip); applied to cell-dominated macros only"
+    },
+    "sparse_ternary_logic_rom": {
+      "bytes_per_mm2": 15000000,
+      "process_nm": 7,
+      "evidence": "synthesized and placed-and-routed: TOM sparsity-aware logic ROM at 70% zero-bit ratio",
+      "caveat": "Density comes from synthesizing constant ternary weights into gates; it rises with zero-bit ratio (Fig. 9 spans 60-95%). Not applicable to arbitrary FP4/FP8/BF16 bit patterns without a measured zero-bit ratio and rebuild."
+    },
+    "qlc_rom_28nm": {
+      "bytes_per_mm2": 2460000,
+      "process_nm": 28,
+      "evidence": "reported: ASSCC 2024 4-bit/transistor QLC ROM, via TOM Table III; TOM's 7nm-scaled 8.06 MB/mm2 is a projection using compiler-ROM scaling, not a measurement"
+    },
+    "planning_value": {
+      "bytes_per_mm2": 9379500,
+      "process_nm": 5,
+      "evidence": "assumed: rom_hbm_review_v3 planning density; no compiler-class or fabricated N5 macro supports it at an organization with local wide ports"
+    }
+  },
+  "density_classes_for_sweeps": {
+    "compiler_class_n7_no_scaling": 4300000,
+    "compiler_class_n5_bitcell_scaled": 5528500,
+    "beyond_compiler_planning": 9379500,
+    "hc1_referenced_compute_in_rom_whole_die_4bit": 4926541
+  },
+  "bandwidth_observation": "A 16 KiB compiler macro at 4.30 MB/mm2 occupies 0.00381 mm2 and returns 8 B per access. At an assumed 0.5-1 GHz that is 1.05-2.1 TB/s of raw port rate per mm2 of ROM, far above any sweep in this study. For compiler-class organizations the binding resources are capacity per mm2, wiring from many small macros to compute, and read energy, not port count. This is an inference from geometry, not a measured delivered rate.",
+  "energy_observation": "TOM reports 25.8 W before and 5.33 W after power gating for 200 TB/s aggregate ternary ROM bandwidth plus compute (PowerArtist estimate, synthesized design). That bounds its read-plus-compute energy near 0.016 pJ/bit before gating. It is a simulated logic-ROM figure, not a compiler-macro or fabricated read energy.",
+  "hc1_observation": "HC1 holds 4.93 MB/mm2 of 4-bit weights averaged over its whole die, above compiler-class ROM array-only density (2.73-4.30 MB/mm2 at N7). Its per-die select rate, 1.27e14 weights/s, is comparable to the per-die rate a fabricated SRAM organization delivers (GC200 per-byte rate on ~1.4 GB, about 76 TB/s). The ROM advantage it demonstrates is therefore weight capacity per die at a comparable local rate, which becomes a speed advantage when a competitor must reach off-die memory."
+}

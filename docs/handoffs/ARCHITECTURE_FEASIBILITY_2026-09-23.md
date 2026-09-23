@@ -30,6 +30,46 @@ Verify feasibility before new implementation or workload/RTL simulation. Work on
 `main`; commit and push meaningful progress. Preserve unrelated dirty files.
 Do not spawn agents without explicit authorization. Do not mark the goal complete.
 
+## Continuation progress (same day, second session)
+
+The user directed that the ROM design **reference Taalas HC1**, the shipping part
+that decodes Llama-3.1-8B at 16,960 tokens/s per user on one 815 mm² N6 die. Done:
+
+1. **Qwen compact screen finished and tested** →
+   [QWEN_COMPACT_RESOURCE_SCREEN.md](../QWEN_COMPACT_RESOURCE_SCREEN.md). Under the
+   shipped BF16/sequential contract, equal-area ROM and HBM tie (1.0×); the
+   recurrence binds both at 888.832 µs. The v1 draft's 275/1,101/1,125 ceilings are
+   superseded.
+2. **ROM density evidence register** →
+   `configs/architecture/rom_density_evidence.json`. Compiler-class N7 ROM is
+   2.73–4.30 MB/mm² (TOM paper, internally inconsistent), no denser than SRAM.
+   HC1 averages 4.93 MB/mm² of 4-bit weights over its whole die, but only for
+   compute-in-ROM select cells.
+3. **HC1-referenced designs** →
+   [HC1_REFERENCED_ARRAY_DESIGN.md](../HC1_REFERENCED_ARRAY_DESIGN.md). Qwen3-8B on
+   one HC1-class die: 15.1–16.8K tokens/s, **7.6–8.4× a same-format HBM die**
+   (2K context only; 8K KV exceeds HC1's SRAM ceiling). V4.1 on an 80-die HC1-class
+   array: ~3.4–5.1K tokens/s per user, **0.87–1.21× an equal-area HBM array with
+   the same hardwired dataflow** (0.96–1.29× equal power). The 40-layer dependency
+   chain binds both; ROM keeps a power/cost advantage (≤20 kW vs 72.5 kW).
+4. `tools/audit_v41_streaming_schedule.py` remains unaccepted and is now
+   **superseded** by the HC1 envelope's stage model; do not quote it.
+
+Still open, in priority order:
+
+- **Numerical contract for an HC1-class Qwen die** (3/6-bit weights, parallel
+  accumulation). This decides whether the one several-fold result is a design.
+- **Shorten the V4.1 dependency chain**: stage latency below HC1's 0.368 µs
+  (needs evidence that HC1 is throughput-bound) and fewer hops per layer. This is
+  the only lever for a per-user ROM advantage on V4.1.
+- **Aggregate throughput** with the HC1 per-stream (no batch amortization) law vs
+  a batched HBM array, using the existing roofline per-stream study.
+- **Wafer designs** (secondary) on the same envelope, with explicit external
+  KV/Engram interfaces.
+- The repository's own HC1 reconstruction still fails capacity (1.6× cell per bit
+  instead of one select transistor per ≤4-bit weight). Fixing it changes a
+  validation gate and needs its own review.
+
 ## Repository and checkpoint
 
 - Workspace: `/home/ubuntu/OpenTallas`; branch `main`.

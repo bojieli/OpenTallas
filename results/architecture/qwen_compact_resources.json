@@ -1,73 +1,3699 @@
 {
-  "active_bf16_weight_bytes": 15136811008,
-  "capacity_rows": [
+  "assumptions": [
+    "Die 815 mm2; fixed per-die caps (exact functions, reduction, fabric, control, clock/power reserve) from rom_hbm_review_v3.",
+    "KV: 8K BF16 single sequence in SRAM at the config density, split evenly across dies; served at the config per-cluster KV rate.",
+    "Compute: every remaining mm2 becomes lanes at the unqualified legacy tile area; one BF16 weight per lane-cycle at 65% utilization caps consumable stream.",
+    "HBM twin: same dies, compute and KV SRAM; ROM area becomes a 50 mm2 PHY and SRAM weight cache; 4.5 TB/s/die HBM; cache bandwidth per byte from fabricated GC200.",
+    "ROM aggregate rates are sensitivities with no qualified macro. ROM density is swept over rom_density_evidence classes; dies are the minimum holding the full BF16 checkpoint at that density.",
+    "Relaxed association is not admitted: the committed BF16 witness shows blocked sums differ from sequential RNE. It is shown only to expose the memory term."
+  ],
+  "break_even_rom_aggregate_TB_s_relaxed_association": {
+    "beyond_compiler_planning:5x400": 40.70951040810292,
+    "beyond_compiler_planning:6x300": 43.78873658722935,
+    "compiler_class_n5_bitcell_scaled:11x300": 166.6137380753986,
+    "compiler_class_n5_bitcell_scaled:8x400": 126.62045786086064,
+    "compiler_class_n7_no_scaling:10x400": 246.3297937062969,
+    "compiler_class_n7_no_scaling:13x300": 345.5540926454306
+  },
+  "candidates": [
     {
-      "minimum_dies_for_full_bf16_checkpoint": 6,
-      "non_rom_mm2_per_815mm2_die": 515,
+      "aggregate_compute_bound_tokens_s": 41090.00519386959,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 43.80446167521367,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 22828.724786403214
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 26.868064594819803,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 37218.90709585391
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.013022563169632033,
+          "rom_over_optimized_hbm_single_sequence": 0.007987566906450017
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 220.98346716503966,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 24.016532834960334,
+        "lanes": 48551
+      },
+      "dies": 13,
+      "hbm_twin": {
+        "cached_weight_bytes": 12574250000,
+        "concurrent_8k_sequences_by_kv_capacity": 1935,
+        "hbm_rate_used_TB_s": 58.5,
+        "optimized_cache_mm2_per_die": 270.8154936198978,
+        "optimized_cached_weight_bytes": 13621206882.6,
+        "optimized_compute_mm2_per_die": 200.16797354514188,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 820.5119,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16434600000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
       "rom_mm2_per_die": 300,
-      "usable_ROM_bytes_per_die": 2757573000.0
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 10595
     },
     {
-      "minimum_dies_for_full_bf16_checkpoint": 5,
-      "non_rom_mm2_per_815mm2_die": 415,
+      "aggregate_compute_bound_tokens_s": 41090.00519386959,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 43.80446167521367,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 22828.724786403214
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 26.868064594819803,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 37218.90709585391
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.05209025267852813,
+          "rom_over_optimized_hbm_single_sequence": 0.03195026762580007
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 220.98346716503966,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 24.016532834960334,
+        "lanes": 48551
+      },
+      "dies": 13,
+      "hbm_twin": {
+        "cached_weight_bytes": 12574250000,
+        "concurrent_8k_sequences_by_kv_capacity": 1935,
+        "hbm_rate_used_TB_s": 58.5,
+        "optimized_cache_mm2_per_die": 270.8154936198978,
+        "optimized_cached_weight_bytes": 13621206882.6,
+        "optimized_compute_mm2_per_die": 200.16797354514188,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 820.5119,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16434600000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 10595
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 41090.00519386959,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 43.80446167521367,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 22828.724786403214
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 26.868064594819803,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 37218.90709585391
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 0.20836101071411253,
+          "rom_over_optimized_hbm_single_sequence": 0.12780107050320028
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 220.98346716503966,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 24.016532834960334,
+        "lanes": 48551
+      },
+      "dies": 13,
+      "hbm_twin": {
+        "cached_weight_bytes": 12574250000,
+        "concurrent_8k_sequences_by_kv_capacity": 1935,
+        "hbm_rate_used_TB_s": 58.5,
+        "optimized_cache_mm2_per_die": 270.8154936198978,
+        "optimized_cached_weight_bytes": 13621206882.6,
+        "optimized_compute_mm2_per_die": 200.16797354514188,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 820.5119,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16434600000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 10595
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 41090.00519386959,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 888.832,
+              "rom_weights": 18.44800911236022
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 2666.496,
+              "rom_weights": 18.44800911236022
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 43.80446167521367,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "hbm_uncached_weights": 43.80446167521367,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 22828.724786403214
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 26.868064594819803,
+            "terms_us": {
+              "arithmetic": 26.868064594819803,
+              "hbm_uncached_weights": 25.90776282735042,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 37218.90709585391
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 24.336818534868296,
+            "terms_us": {
+              "arithmetic": 24.336818534868296,
+              "kv_service": 15.123692307692307,
+              "recurrence": 0.0,
+              "rom_weights": 18.44800911236022
+            },
+            "tokens_s_ceiling": 41090.00519386959
+          },
+          "rom_over_hbm_single_sequence": 1.7999255577491913,
+          "rom_over_optimized_hbm_single_sequence": 1.1040089137503692
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 220.98346716503966,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 24.016532834960334,
+        "lanes": 48551
+      },
+      "dies": 13,
+      "hbm_twin": {
+        "cached_weight_bytes": 12574250000,
+        "concurrent_8k_sequences_by_kv_capacity": 1935,
+        "hbm_rate_used_TB_s": 58.5,
+        "optimized_cache_mm2_per_die": 270.8154936198978,
+        "optimized_cached_weight_bytes": 13621206882.6,
+        "optimized_compute_mm2_per_die": 200.16797354514188,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 820.5119,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16434600000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 820.5119,
+      "total_die_mm2": 10595
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16273.559442349413,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "arithmetic",
+            "floor_us": 61.449371512273785,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 16273.559442349411
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 52.43565029331289,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 19070.99453151113
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.018268192134993727,
+          "rom_over_optimized_hbm_single_sequence": 0.01558851637872732
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 113.77850731455158,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 31.221492685448435,
+        "lanes": 24997
+      },
+      "dies": 10,
+      "hbm_twin": {
+        "cached_weight_bytes": 13541500000,
+        "concurrent_8k_sequences_by_kv_capacity": 1488,
+        "hbm_rate_used_TB_s": 45.0,
+        "optimized_cache_mm2_per_die": 330.442186461618,
+        "optimized_cached_weight_bytes": 12784808194.2,
+        "optimized_compute_mm2_per_die": 133.3363208529336,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 324.961,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16856000000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
       "rom_mm2_per_die": 400,
-      "usable_ROM_bytes_per_die": 3676764000.0
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 8150
     },
     {
-      "minimum_dies_for_full_bf16_checkpoint": 4,
-      "non_rom_mm2_per_815mm2_die": 315,
+      "aggregate_compute_bound_tokens_s": 16273.559442349413,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "arithmetic",
+            "floor_us": 61.449371512273785,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 16273.559442349411
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 52.43565029331289,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 19070.99453151113
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.07307276853997491,
+          "rom_over_optimized_hbm_single_sequence": 0.06235406551490928
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 113.77850731455158,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 31.221492685448435,
+        "lanes": 24997
+      },
+      "dies": 10,
+      "hbm_twin": {
+        "cached_weight_bytes": 13541500000,
+        "concurrent_8k_sequences_by_kv_capacity": 1488,
+        "hbm_rate_used_TB_s": 45.0,
+        "optimized_cache_mm2_per_die": 330.442186461618,
+        "optimized_cached_weight_bytes": 12784808194.2,
+        "optimized_compute_mm2_per_die": 133.3363208529336,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 324.961,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16856000000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 8150
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16273.559442349413,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "arithmetic",
+            "floor_us": 61.449371512273785,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 16273.559442349411
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 52.43565029331289,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 19070.99453151113
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 0.29229107415989963,
+          "rom_over_optimized_hbm_single_sequence": 0.24941626205963713
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 113.77850731455158,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 31.221492685448435,
+        "lanes": 24997
+      },
+      "dies": 10,
+      "hbm_twin": {
+        "cached_weight_bytes": 13541500000,
+        "concurrent_8k_sequences_by_kv_capacity": 1488,
+        "hbm_rate_used_TB_s": 45.0,
+        "optimized_cache_mm2_per_die": 330.442186461618,
+        "optimized_cached_weight_bytes": 12784808194.2,
+        "optimized_compute_mm2_per_die": 133.3363208529336,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 324.961,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16856000000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 8150
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16273.559442349413,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 888.832,
+              "rom_weights": 46.5803927486683
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 2666.496,
+              "rom_weights": 46.5803927486683
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "arithmetic",
+            "floor_us": 61.449371512273785,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "hbm_uncached_weights": 35.45135573333333,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 16273.559442349411
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 52.43565029331289,
+            "terms_us": {
+              "arithmetic": 52.43565029331289,
+              "hbm_uncached_weights": 52.26672919555554,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 19070.99453151113
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 61.449371512273785,
+            "terms_us": {
+              "arithmetic": 61.449371512273785,
+              "kv_service": 19.6608,
+              "recurrence": 0.0,
+              "rom_weights": 46.5803927486683
+            },
+            "tokens_s_ceiling": 16273.559442349411
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 0.8533146719464737
+        }
+      },
+      "density_class": "compiler_class_n7_no_scaling",
+      "die_budget": {
+        "compute_mm2": 113.77850731455158,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 31.221492685448435,
+        "lanes": 24997
+      },
+      "dies": 10,
+      "hbm_twin": {
+        "cached_weight_bytes": 13541500000,
+        "concurrent_8k_sequences_by_kv_capacity": 1488,
+        "hbm_rate_used_TB_s": 45.0,
+        "optimized_cache_mm2_per_die": 330.442186461618,
+        "optimized_cached_weight_bytes": 12784808194.2,
+        "optimized_compute_mm2_per_die": 133.3363208529336,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 324.961,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 4300000.0,
+      "rom_capacity_bytes": 16856000000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 324.961,
+      "total_die_mm2": 8150
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 34080.988285111656,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 90.84971733333333,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 11007.188897802918
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 40.359809129856814,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 24777.124113310885
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.02700857715564602,
+          "rom_over_optimized_hbm_single_sequence": 0.011998507544843337
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 216.6168248314105,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 28.38317516858949,
+        "lanes": 47591
+      },
+      "dies": 11,
+      "hbm_twin": {
+        "cached_weight_bytes": 10639750000,
+        "concurrent_8k_sequences_by_kv_capacity": 1635,
+        "hbm_rate_used_TB_s": 49.5,
+        "optimized_cache_mm2_per_die": 309.13364645080947,
+        "optimized_cached_weight_bytes": 13156418859.3,
+        "optimized_compute_mm2_per_die": 157.48317838060103,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 680.5513,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17879169000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 8965
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 34080.988285111656,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 90.84971733333333,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 11007.188897802918
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 40.359809129856814,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 24777.124113310885
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.10803430862258408,
+          "rom_over_optimized_hbm_single_sequence": 0.04799403017937335
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 216.6168248314105,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 28.38317516858949,
+        "lanes": 47591
+      },
+      "dies": 11,
+      "hbm_twin": {
+        "cached_weight_bytes": 10639750000,
+        "concurrent_8k_sequences_by_kv_capacity": 1635,
+        "hbm_rate_used_TB_s": 49.5,
+        "optimized_cache_mm2_per_die": 309.13364645080947,
+        "optimized_cached_weight_bytes": 13156418859.3,
+        "optimized_compute_mm2_per_die": 157.48317838060103,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 680.5513,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17879169000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 8965
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 34080.988285111656,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 90.84971733333333,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 11007.188897802918
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 40.359809129856814,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 24777.124113310885
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 0.4321372344903363,
+          "rom_over_optimized_hbm_single_sequence": 0.1919761207174934
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 216.6168248314105,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 28.38317516858949,
+        "lanes": 47591
+      },
+      "dies": 11,
+      "hbm_twin": {
+        "cached_weight_bytes": 10639750000,
+        "concurrent_8k_sequences_by_kv_capacity": 1635,
+        "hbm_rate_used_TB_s": 49.5,
+        "optimized_cache_mm2_per_die": 309.13364645080947,
+        "optimized_cached_weight_bytes": 13156418859.3,
+        "optimized_compute_mm2_per_die": 157.48317838060103,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 680.5513,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17879169000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 8965
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 34080.988285111656,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 888.832,
+              "rom_weights": 22.241983826935606
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 2666.496,
+              "rom_weights": 22.241983826935606
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 90.84971733333333,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "hbm_uncached_weights": 90.84971733333333,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 11007.188897802918
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 40.359809129856814,
+            "terms_us": {
+              "arithmetic": 40.359809129856814,
+              "hbm_uncached_weights": 40.00792219595961,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 24777.124113310885
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 29.341872120441177,
+            "terms_us": {
+              "arithmetic": 29.341872120441177,
+              "kv_service": 17.873454545454546,
+              "recurrence": 0.0,
+              "rom_weights": 22.241983826935606
+            },
+            "tokens_s_ceiling": 34080.988285111656
+          },
+          "rom_over_hbm_single_sequence": 3.0962481521430383,
+          "rom_over_optimized_hbm_single_sequence": 1.3755021821439923
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 216.6168248314105,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 28.38317516858949,
+        "lanes": 47591
+      },
+      "dies": 11,
+      "hbm_twin": {
+        "cached_weight_bytes": 10639750000,
+        "concurrent_8k_sequences_by_kv_capacity": 1635,
+        "hbm_rate_used_TB_s": 49.5,
+        "optimized_cache_mm2_per_die": 309.13364645080947,
+        "optimized_cached_weight_bytes": 13156418859.3,
+        "optimized_compute_mm2_per_die": 157.48317838060103,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 680.5513,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17879169000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 680.5513,
+      "total_die_mm2": 8965
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 12125.64742766825,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 119.54475022222223,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 8365.068295689236
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 102.22341610048366,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 9782.49444351399
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.03553928074517716,
+          "rom_over_optimized_hbm_single_sequence": 0.03038984712229397
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 105.97313414318944,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 39.026865856810545,
+        "lanes": 23282
+      },
+      "dies": 8,
+      "hbm_twin": {
+        "cached_weight_bytes": 10833200000,
+        "concurrent_8k_sequences_by_kv_capacity": 1188,
+        "hbm_rate_used_TB_s": 36.0,
+        "optimized_cache_mm2_per_die": 370.4781714913414,
+        "optimized_cached_weight_bytes": 11467040364.0,
+        "optimized_compute_mm2_per_die": 85.49496265184801,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 242.1328,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17337376000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 6520
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 12125.64742766825,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 119.54475022222223,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 8365.068295689236
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 102.22341610048366,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 9782.49444351399
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.14215712298070865,
+          "rom_over_optimized_hbm_single_sequence": 0.12155938848917588
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 105.97313414318944,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 39.026865856810545,
+        "lanes": 23282
+      },
+      "dies": 8,
+      "hbm_twin": {
+        "cached_weight_bytes": 10833200000,
+        "concurrent_8k_sequences_by_kv_capacity": 1188,
+        "hbm_rate_used_TB_s": 36.0,
+        "optimized_cache_mm2_per_die": 370.4781714913414,
+        "optimized_cached_weight_bytes": 11467040364.0,
+        "optimized_compute_mm2_per_die": 85.49496265184801,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 242.1328,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17337376000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 6520
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 12125.64742766825,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 119.54475022222223,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 8365.068295689236
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 102.22341610048366,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 9782.49444351399
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 0.5686284919228346,
+          "rom_over_optimized_hbm_single_sequence": 0.48623755395670354
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 105.97313414318944,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 39.026865856810545,
+        "lanes": 23282
+      },
+      "dies": 8,
+      "hbm_twin": {
+        "cached_weight_bytes": 10833200000,
+        "concurrent_8k_sequences_by_kv_capacity": 1188,
+        "hbm_rate_used_TB_s": 36.0,
+        "optimized_cache_mm2_per_die": 370.4781714913414,
+        "optimized_cached_weight_bytes": 11467040364.0,
+        "optimized_compute_mm2_per_die": 85.49496265184801,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 242.1328,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17337376000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 6520
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 12125.64742766825,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 888.832,
+              "rom_weights": 62.51450034030912
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 2666.496,
+              "rom_weights": 62.51450034030912
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 119.54475022222223,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "hbm_uncached_weights": 119.54475022222223,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 8365.068295689236
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "arithmetic",
+            "floor_us": 102.22341610048366,
+            "terms_us": {
+              "arithmetic": 102.22341610048366,
+              "hbm_uncached_weights": 101.93807344444444,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 9782.49444351399
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 82.46982323749612,
+            "terms_us": {
+              "arithmetic": 82.46982323749612,
+              "kv_service": 24.576,
+              "recurrence": 0.0,
+              "rom_weights": 62.51450034030912
+            },
+            "tokens_s_ceiling": 12125.64742766825
+          },
+          "rom_over_hbm_single_sequence": 1.4495574930233324,
+          "rom_over_optimized_hbm_single_sequence": 1.2395251024862908
+        }
+      },
+      "density_class": "compiler_class_n5_bitcell_scaled",
+      "die_budget": {
+        "compute_mm2": 105.97313414318944,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 39.026865856810545,
+        "lanes": 23282
+      },
+      "dies": 8,
+      "hbm_twin": {
+        "cached_weight_bytes": 10833200000,
+        "concurrent_8k_sequences_by_kv_capacity": 1188,
+        "hbm_rate_used_TB_s": 36.0,
+        "optimized_cache_mm2_per_die": 370.4781714913414,
+        "optimized_cached_weight_bytes": 11467040364.0,
+        "optimized_compute_mm2_per_die": 85.49496265184801,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 242.1328,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 5528500.0,
+      "rom_capacity_bytes": 17337376000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 242.1328,
+      "total_die_mm2": 6520
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16560.008462417172,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 345.6781854814815,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2892.8640625879807
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 224.52183657925926,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 4453.90976323582
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.10276615291322178,
+          "rom_over_optimized_hbm_single_sequence": 0.06674776239676142
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 192.96417885758592,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 52.03582114241406,
+        "lanes": 42395
+      },
+      "dies": 6,
+      "hbm_twin": {
+        "cached_weight_bytes": 5803500000,
+        "concurrent_8k_sequences_by_kv_capacity": 886,
+        "hbm_rate_used_TB_s": 27.0,
+        "optimized_cache_mm2_per_die": 390.9158878418196,
+        "optimized_cached_weight_bytes": 9074721420.36,
+        "optimized_compute_mm2_per_die": 52.048291015766345,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 330.681,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 16545438000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 4890
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16560.008462417172,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 345.6781854814815,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2892.8640625879807
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 224.52183657925926,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 4453.90976323582
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.4110646116528871,
+          "rom_over_optimized_hbm_single_sequence": 0.26699104958704567
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 192.96417885758592,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 52.03582114241406,
+        "lanes": 42395
+      },
+      "dies": 6,
+      "hbm_twin": {
+        "cached_weight_bytes": 5803500000,
+        "concurrent_8k_sequences_by_kv_capacity": 886,
+        "hbm_rate_used_TB_s": 27.0,
+        "optimized_cache_mm2_per_die": 390.9158878418196,
+        "optimized_cached_weight_bytes": 9074721420.36,
+        "optimized_compute_mm2_per_die": 52.048291015766345,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 330.681,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 16545438000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 4890
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16560.008462417172,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 345.6781854814815,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2892.8640625879807
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 224.52183657925926,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 4453.90976323582
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 1.6442584466115484,
+          "rom_over_optimized_hbm_single_sequence": 1.0679641983481827
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 192.96417885758592,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 52.03582114241406,
+        "lanes": 42395
+      },
+      "dies": 6,
+      "hbm_twin": {
+        "cached_weight_bytes": 5803500000,
+        "concurrent_8k_sequences_by_kv_capacity": 886,
+        "hbm_rate_used_TB_s": 27.0,
+        "optimized_cache_mm2_per_die": 390.9158878418196,
+        "optimized_cached_weight_bytes": 9074721420.36,
+        "optimized_compute_mm2_per_die": 52.048291015766345,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 330.681,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 16545438000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 4890
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 16560.008462417172,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 888.832,
+              "rom_weights": 45.77466200961047
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 2666.496,
+              "rom_weights": 45.77466200961047
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 345.6781854814815,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "hbm_uncached_weights": 345.6781854814815,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2892.8640625879807
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 224.52183657925926,
+            "terms_us": {
+              "arithmetic": 223.88134961263776,
+              "hbm_uncached_weights": 224.52183657925926,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 4453.90976323582
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 60.38644257154176,
+            "terms_us": {
+              "arithmetic": 60.38644257154176,
+              "kv_service": 32.768,
+              "recurrence": 0.0,
+              "rom_weights": 45.77466200961047
+            },
+            "tokens_s_ceiling": 16560.008462417172
+          },
+          "rom_over_hbm_single_sequence": 5.7244336768463455,
+          "rom_over_optimized_hbm_single_sequence": 3.7180835137499786
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 192.96417885758592,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 52.03582114241406,
+        "lanes": 42395
+      },
+      "dies": 6,
+      "hbm_twin": {
+        "cached_weight_bytes": 5803500000,
+        "concurrent_8k_sequences_by_kv_capacity": 886,
+        "hbm_rate_used_TB_s": 27.0,
+        "optimized_cache_mm2_per_die": 390.9158878418196,
+        "optimized_cached_weight_bytes": 9074721420.36,
+        "optimized_compute_mm2_per_die": 52.048291015766345,
+        "weight_cache_mm2_per_die": 250
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 330.681,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 16545438000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 300,
+      "rom_rate_used_TB_s": 330.681,
+      "total_die_mm2": 4890
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 5904.104915896581,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.2642395414652455,
+          "rom_over_optimized_hbm_single_sequence": 0.2642395414652455
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.7927186243957365,
+          "rom_over_optimized_hbm_single_sequence": 0.7927186243957365
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 371.8249336888889,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2689.437714891691
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 337.1047807191111,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2966.4367199622693
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 3363.7357795555554,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "rom_weights": 3363.7357795555554
+            },
+            "tokens_s_ceiling": 297.2885106130804
+          },
+          "rom_over_hbm_single_sequence": 0.11053928074517716,
+          "rom_over_optimized_hbm_single_sequence": 0.1002173781805336
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 82.55701462910315,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 62.44298537089687,
+        "lanes": 18138
+      },
+      "dies": 5,
+      "hbm_twin": {
+        "cached_weight_bytes": 6770750000,
+        "concurrent_8k_sequences_by_kv_capacity": 738,
+        "hbm_rate_used_TB_s": 22.5,
+        "optimized_cache_mm2_per_die": 390.3827057027656,
+        "optimized_cached_weight_bytes": 7551953441.820001,
+        "optimized_compute_mm2_per_die": 42.17430892633755,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 117.897,
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 4.5,
+      "total_die_mm2": 4075
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 5904.104915896581,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 371.8249336888889,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2689.437714891691
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 337.1047807191111,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2966.4367199622693
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 840.9339448888888,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "rom_weights": 840.9339448888888
+            },
+            "tokens_s_ceiling": 1189.1540424523216
+          },
+          "rom_over_hbm_single_sequence": 0.44215712298070864,
+          "rom_over_optimized_hbm_single_sequence": 0.4008695127221344
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 82.55701462910315,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 62.44298537089687,
+        "lanes": 18138
+      },
+      "dies": 5,
+      "hbm_twin": {
+        "cached_weight_bytes": 6770750000,
+        "concurrent_8k_sequences_by_kv_capacity": 738,
+        "hbm_rate_used_TB_s": 22.5,
+        "optimized_cache_mm2_per_die": 390.3827057027656,
+        "optimized_cached_weight_bytes": 7551953441.820001,
+        "optimized_compute_mm2_per_die": 42.17430892633755,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 117.897,
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 18.0,
+      "total_die_mm2": 4075
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 5904.104915896581,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 371.8249336888889,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2689.437714891691
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 337.1047807191111,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2966.4367199622693
+          },
+          "rom": {
+            "binding": "rom_weights",
+            "floor_us": 210.2334862222222,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "rom_weights": 210.2334862222222
+            },
+            "tokens_s_ceiling": 4756.6161698092865
+          },
+          "rom_over_hbm_single_sequence": 1.7686284919228346,
+          "rom_over_optimized_hbm_single_sequence": 1.6034780508885376
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 82.55701462910315,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 62.44298537089687,
+        "lanes": 18138
+      },
+      "dies": 5,
+      "hbm_twin": {
+        "cached_weight_bytes": 6770750000,
+        "concurrent_8k_sequences_by_kv_capacity": 738,
+        "hbm_rate_used_TB_s": 22.5,
+        "optimized_cache_mm2_per_die": 390.3827057027656,
+        "optimized_cached_weight_bytes": 7551953441.820001,
+        "optimized_compute_mm2_per_die": 42.17430892633755,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 117.897,
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 72.0,
+      "total_die_mm2": 4075
+    },
+    {
+      "aggregate_compute_bound_tokens_s": 5904.104915896581,
+      "contracts": {
+        "sequential_rne_recurrence_1": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 888.832,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 888.832,
+              "rom_weights": 128.39012873949295
+            },
+            "tokens_s_ceiling": 1125.072004608295
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "sequential_rne_recurrence_3": {
+          "hbm_equal_area": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom": {
+            "binding": "recurrence",
+            "floor_us": 2666.496,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 2666.496,
+              "rom_weights": 128.39012873949295
+            },
+            "tokens_s_ceiling": 375.0240015360983
+          },
+          "rom_over_hbm_single_sequence": 1.0,
+          "rom_over_optimized_hbm_single_sequence": 1.0
+        },
+        "unqualified_relaxed_association": {
+          "hbm_equal_area": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 371.8249336888889,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "hbm_uncached_weights": 371.8249336888889,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2689.437714891691
+          },
+          "hbm_equal_area_optimized_split": {
+            "binding": "hbm_uncached_weights",
+            "floor_us": 337.1047807191111,
+            "terms_us": {
+              "arithmetic": 331.5812066254307,
+              "hbm_uncached_weights": 337.1047807191111,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "sram_cached_weights": 18.94736842105263
+            },
+            "tokens_s_ceiling": 2966.4367199622693
+          },
+          "rom": {
+            "binding": "arithmetic",
+            "floor_us": 169.37368394446,
+            "terms_us": {
+              "arithmetic": 169.37368394446,
+              "kv_service": 39.3216,
+              "recurrence": 0.0,
+              "rom_weights": 128.39012873949295
+            },
+            "tokens_s_ceiling": 5904.104915896581
+          },
+          "rom_over_hbm_single_sequence": 2.195293418845489,
+          "rom_over_optimized_hbm_single_sequence": 1.9903019930159427
+        }
+      },
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": 82.55701462910315,
+        "fits": true,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 62.44298537089687,
+        "lanes": 18138
+      },
+      "dies": 5,
+      "hbm_twin": {
+        "cached_weight_bytes": 6770750000,
+        "concurrent_8k_sequences_by_kv_capacity": 738,
+        "hbm_rate_used_TB_s": 22.5,
+        "optimized_cache_mm2_per_die": 390.3827057027656,
+        "optimized_cached_weight_bytes": 7551953441.820001,
+        "optimized_compute_mm2_per_die": 42.17430892633755,
+        "weight_cache_mm2_per_die": 350
+      },
+      "holds_full_checkpoint": true,
+      "lane_consumable_weight_TB_s": 117.897,
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_concurrent_8k_sequences_by_kv_capacity": 1,
+      "rom_mm2_per_die": 400,
+      "rom_rate_used_TB_s": 117.897,
+      "total_die_mm2": 4075
+    },
+    {
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": -33.05373171362109,
+        "fits": false,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 78.05373171362109,
+        "lanes": 0
+      },
+      "dies": 4,
+      "holds_full_checkpoint": true,
+      "infeasible": "no area remains for compute after ROM, KV SRAM and fixed caps",
+      "rom_aggregate_TB_s_assumed": 4.5,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
       "rom_mm2_per_die": 500,
-      "usable_ROM_bytes_per_die": 4595955000.0
+      "total_die_mm2": 3260
     },
     {
-      "minimum_dies_for_full_bf16_checkpoint": 3,
-      "non_rom_mm2_per_815mm2_die": 0,
-      "rom_mm2_per_die": 815,
-      "usable_ROM_bytes_per_die": 7491406650.0
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": -33.05373171362109,
+        "fits": false,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 78.05373171362109,
+        "lanes": 0
+      },
+      "dies": 4,
+      "holds_full_checkpoint": true,
+      "infeasible": "no area remains for compute after ROM, KV SRAM and fixed caps",
+      "rom_aggregate_TB_s_assumed": 18,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_mm2_per_die": 500,
+      "total_die_mm2": 3260
+    },
+    {
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": -33.05373171362109,
+        "fits": false,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 78.05373171362109,
+        "lanes": 0
+      },
+      "dies": 4,
+      "holds_full_checkpoint": true,
+      "infeasible": "no area remains for compute after ROM, KV SRAM and fixed caps",
+      "rom_aggregate_TB_s_assumed": 72,
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_mm2_per_die": 500,
+      "total_die_mm2": 3260
+    },
+    {
+      "density_class": "beyond_compiler_planning",
+      "die_budget": {
+        "compute_mm2": -33.05373171362109,
+        "fits": false,
+        "fixed_mm2": 270,
+        "kv_sram_mm2": 78.05373171362109,
+        "lanes": 0
+      },
+      "dies": 4,
+      "holds_full_checkpoint": true,
+      "infeasible": "no area remains for compute after ROM, KV SRAM and fixed caps",
+      "rom_aggregate_TB_s_assumed": "sram_matched",
+      "rom_bytes_per_mm2": 9379500.0,
+      "rom_capacity_bytes": 18383820000.0,
+      "rom_mm2_per_die": 500,
+      "total_die_mm2": 3260
     }
   ],
   "context": 8192,
   "full_bf16_checkpoint_bytes": 16381470720,
-  "ideal_SRAM_area_mm2_for_KV_only": 312.21492685448436,
+  "hbm_single_die_weight_floor_us": 3363.7357795555554,
   "input_sha256": {
+    "configs/architecture/rom_density_evidence.json": "c25d5a89a2d22ba035797e58b4e25a1c81e1a37701b3ad6c8dbffefd0b016f9d",
     "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
     "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
     "results/architecture/redesign_recurrence_feasibility.json": "d0604f3234c418de9997b85804679225ef277862ff58de5b5e6f8d8ebdd802ad",
-    "tools/audit_qwen_compact_resources.py": "d8afe6c96f9a3f966465fbd54bb6820950c9a5bd2325c233d8f232485c0cd0cd"
+    "tools/audit_qwen_compact_resources.py": "9083dcd53388ba907ce2ddf7a4b001450a2e8b99431ddad22a8f40ec8538bc6b"
   },
-  "kv_bytes": 1207959552,
   "limits": [
-    "Full retained BF16 checkpoint, no quantization or external weight capacity credited.",
-    "All-ROM die allocation is a capacity impossibility screen, not a viable compute die.",
-    "KV assumes 8K BF16 cache and excludes allocator, ECC and scratch. Reading all dense KV once is a byte-service screen, not an executable attention ledger.",
-    "Shared weight/KV service rows assume one aggregate bottleneck and perfect concurrency across assigned regions; separate ports require separate bounds.",
-    "Maximum of independent memory and recurrence floors is a necessary bound, not proof that overlap is realizable.",
-    "Sequential bound assumes whole-producer dependencies and unchanged whole-K RNE contract at 1GHz; a different admitted numerical/scheduling design needs a new bound.",
-    "Bandwidth values are sensitivities only, not qualified ROM rates. Power, bank locality, compute throughput, attention and cross-chip service still need qualification.",
-    "A compact multi-die package may be local at system level but is not a single physical tile with free inter-die links."
+    "Floors take a maximum of independent bounds; a finite schedule may add them. Tokens/s values are ceilings.",
+    "Recurrence floors are whole-K sequential RNE at 1 GHz with fully parallel outputs; attention, nonlinear, control and inter-die service omitted.",
+    "Energy, bank conflicts, inter-die links inside the package and prefill are not priced here.",
+    "4 x 500 mm2 ROM leaves negative compute area after fixed caps and KV; its rows are shown as infeasible, not as a design."
   ],
-  "minimum_ROM_area_mm2_full_checkpoint": 1782.161783568377,
-  "schema": "opentallas.qwen-compact-resources.v1",
-  "service_sensitivity": [
-    {
-      "aggregate_delivered_weight_and_KV_TB_s_assumed": 4.5,
-      "conditional_single_sequence_tokens_s_ceiling": 275.3174162635661,
-      "single_shared_service_weight_KV_floor_us": 3632.1712355555555,
-      "unchanged_sequential_contract_combined_floor_us": 3632.1712355555555
-    },
-    {
-      "aggregate_delivered_weight_and_KV_TB_s_assumed": 18,
-      "conditional_single_sequence_tokens_s_ceiling": 1101.2696650542644,
-      "single_shared_service_weight_KV_floor_us": 908.0428088888889,
-      "unchanged_sequential_contract_combined_floor_us": 908.0428088888889
-    },
-    {
-      "aggregate_delivered_weight_and_KV_TB_s_assumed": 72,
-      "conditional_single_sequence_tokens_s_ceiling": 1125.072004608295,
-      "single_shared_service_weight_KV_floor_us": 227.01070222222222,
-      "unchanged_sequential_contract_combined_floor_us": 888.832
-    }
-  ],
+  "minimum_ROM_area_mm2_full_checkpoint": {
+    "beyond_compiler_planning": 1782.161783568377,
+    "compiler_class_n5_bitcell_scaled": 3023.5663288377664,
+    "compiler_class_n7_no_scaling": 3887.392197437114
+  },
+  "schema": "opentallas.qwen-compact-resources.v2",
   "single_die_density_multiplier_required_if_all_815mm2_ROM": 2.186701574930524,
-  "status": "capacity_and_contract_bounds_not_physical_performance"
+  "status": "equal_area_resource_ceilings_not_physical_performance",
+  "work": {
+    "attention_ops": 4831838208,
+    "kv_bytes": 1207959552,
+    "linear_ops": 15136811008.0,
+    "ops": 19968649216.0,
+    "weight_bytes": 15136811008
+  }
 }

@@ -6,6 +6,18 @@ inconsistent layouts, but cannot yet attach a demonstrated local ROM service rat
 to the proposed N5 capacity. This is a feasibility finding, not a conclusion that
 ROM cannot work. It prevents an unsupported comparison with the HBM baseline.
 
+## Update: the shipping HC1 is joint evidence for one organization
+
+Taalas HC1 (815 mm² N6, all Llama-3.1-8B weights on die, 16,960 tokens/s per user,
+200–250 W) supplies what this gate lacked, **for compute-in-ROM with ≤4-bit select
+cells**: joint capacity (≥8.03 B weights per die, 4.93 MB/mm² of 4-bit weights over
+the whole die), rate (≥1.27×10¹⁴ weight-selects/s), latency and power. It is
+self-reported and not third-party measured. It does not qualify BF16/FP8 digital
+readout into separate MACs, which is what the planning density was attached to.
+The [HC1-referenced design](HC1_REFERENCED_ARRAY_DESIGN.md) builds the V4.1 array
+from it. Compiler-class ROM for digital readout is only 2.73–4.30 MB/mm² at N7
+([register](../configs/architecture/rom_density_evidence.json)), no denser than SRAM.
+
 ## Evidence that is available
 
 | Source | What it supports | What it does not establish |

@@ -6,6 +6,13 @@ historical sensitivity cases, not fixed design requirements. See the
 [resource-first method](RESOURCE_FIRST_PERFORMANCE_METHOD.md) for current acceptance
 criteria and the single-sequence versus aggregate-throughput distinction.
 
+**Current result (2026-09-23):** the ROM array is now referenced to the shipping
+Taalas HC1; see [HC1-referenced design](HC1_REFERENCED_ARRAY_DESIGN.md). An 80-die
+HC1-class array reaches roughly 3,400–5,100 tokens/s per user. That is 0.87–1.21×
+an HBM array given the same hardwired dataflow at equal area, and 0.96–1.29× at
+equal power. The dependency chain binds both; ROM's surviving advantage is power
+and cost. Qwen3-8B on one HC1-class die is 7.6–8.4× a same-format HBM die.
+
 The user has specified **three designs**, with a 100 µs/token decode feasibility
 target. This supersedes the earlier wafer-first ordering.
 
