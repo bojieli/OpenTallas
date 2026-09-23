@@ -382,3 +382,32 @@ fault-controllable service; numerical tests use the actual certifying RTL.
 Matched containing-softmax synthesis/STA jobs at 1 ns are active for reuse
 on/off. No physical area, routed timing or energy benefit is claimed.
 Evidence: [reuse comparison](../results/rtl/softmax_exp_reuse/comparison.json).
+
+
+## Small-divisor storage reuse
+
+The exponential's small-divisor unit now shares one shift register between
+unconsumed dividend bits and accumulated quotient bits. Quotient bits enter
+below the remaining dividend and cannot reach the consumed high chunk before
+the last step. This removes redundant state without changing restoring steps,
+quotient, inexact flag or latency.
+
+At WIDTH=163, DIVISOR_BITS=6 and BITS_PER_STEP=10, matched synthesis reduces
+cell area 330.457 → 251.898 µm² (23.77%) and sequential cells 500 → 347.
+The RTL removes a 170-bit logical register; synthesis already eliminated some
+constant stages, so mapped savings are 153 flops. Both ten-step configurations
+miss the tested 1 ns pre-layout target; no routed clock claim is made.
+A four-bit-per-step candidate is routing at 1 ns. Its additional cycles must
+be weighed against clock improvement before changing any consumer default.
+
+Both Icarus and Verilator pass 354 arguments at six step widths (2,124
+quotient/inexact comparisons each). The containing softmax's nine reference
+cases and two refusals also pass with exactly the prior 767,158 cycles,
+276 physical exponential evaluations and 121 cache hits.
+Evidence: [shared-shift comparison](../results/rtl/small_divider_shared_shift/comparison.json).
+Earlier softmax synthesis jobs bind their pre-shared-shift launch sources;
+they remain useful for the isolated cache comparison, not current closure.
+
+The historical KV-index baseline also terminated at pin placement (2,189 pins,
+1,976 positions). Its corrected 22%-utilization retry is now active alongside
+the matching prefix-count retry. Neither failure is a timing verdict.

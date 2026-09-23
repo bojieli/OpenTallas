@@ -58,10 +58,8 @@ module ot_wide_div_small_seq #(
     localparam [31:0] STEPS_CODE = STEPS;
     localparam [COUNT_BITS-1:0] ONE_STEP = {{(COUNT_BITS-1){1'b0}}, 1'b1};
 
-    reg [PADDED-1:0]       work;        //: unconsumed dividend above produced quotient
-    // Each step consumes the high chunk and inserts quotient bits below.
-    // Produced bits cannot reach the high chunk before the final step, so a
-    // separate quotient shift register would duplicate PADDED storage bits.
+    reg [PADDED-1:0]       work;        //: dividend bits not yet consumed, MSB first
+    reg [PADDED-1:0]       quot;        //: quotient bits shifted in from the bottom
     reg [DIVISOR_BITS:0]   rem;         //: partial remainder, always < divisor
     reg [COUNT_BITS-1:0]   steps_left;
     reg                    running;
@@ -92,7 +90,7 @@ module ot_wide_div_small_seq #(
     //: Named rather than indexed in place: indexing an EXPRESSION is rejected
     //: by both elaborators, which is the same shape that has cost this
     //: repository several compile failures.
-    wire [PADDED-1:0] quot_next = (work << BITS_PER_STEP) |
+    wire [PADDED-1:0] quot_next = (quot << BITS_PER_STEP) |
                                  {{(PADDED-BITS_PER_STEP){1'b0}}, step_digit};
 
     always @(posedge clk or negedge rst_n) begin
@@ -102,6 +100,7 @@ module ot_wide_div_small_seq #(
             quotient <= {WIDTH{1'b0}};
             inexact <= 1'b0;
             work <= {PADDED{1'b0}};
+            quot <= {PADDED{1'b0}};
             rem <= {(DIVISOR_BITS+1){1'b0}};
             steps_left <= {COUNT_BITS{1'b0}};
         end else begin
@@ -109,12 +108,14 @@ module ot_wide_div_small_seq #(
             if (!running) begin
                 if (start) begin
                     work <= {{(PADDED-WIDTH){1'b0}}, dividend};
+                    quot <= {PADDED{1'b0}};
                     rem <= {(DIVISOR_BITS+1){1'b0}};
                     steps_left <= STEPS_CODE[COUNT_BITS-1:0];
                     running <= 1'b1;
                 end
             end else begin
-                work <= quot_next;
+                work <= work << BITS_PER_STEP;
+                quot <= quot_next;
                 rem <= next_rem;
                 if (steps_left == ONE_STEP) begin
                     running <= 1'b0;

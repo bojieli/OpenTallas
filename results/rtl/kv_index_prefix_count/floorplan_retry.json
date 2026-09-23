@@ -4,5 +4,12 @@
   "failed_record_sha256": "667abd7f2c258249bc4e45b8638d3b43540f5a09b4f7bed13a10cba2bf04d805",
   "reason": "2189 IO pins exceed 1980 positions; perimeter 195.99 um must reach at least 210.14 um.",
   "retry": "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns.json",
-  "change": "core utilization 22 percent, matching earlier 4 ns characterization, to increase perimeter; 1 ns target unchanged."
+  "change": "core utilization 22 percent, matching earlier 4 ns characterization, to increase perimeter; 1 ns target unchanged.",
+  "baseline_failure": {
+    "record": "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_cts12_1ns.json",
+    "sha256": "3000b8c311d82911c1236633aaa4545beec7552410dcacefef817ce12a8fd81b",
+    "reason": "2189 pins exceed 1976 available positions; same terminal IO placement failure",
+    "retry": "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns.json",
+    "core_utilization_percent": 22
+  }
 }
