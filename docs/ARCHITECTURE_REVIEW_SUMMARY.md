@@ -815,3 +815,24 @@ Despite the very small setup miss, it is NOT_MET. It costs 67.84% more routed
 area than passing tree16, so tree16 remains selected. Its source and seven
 artifact hashes verify in the
 [tree32 audit](../results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_audit.json).
+
+## Wide-divider clock-tree repair closes the tested block
+
+The shared-storage wide divider's CTS8 retry completes final extracted ASAP7 TT
+routing at 1 ns with +0.0480609 ns setup slack, +0.0452266 ns hold slack and zero
+setup, hold, DRC, antenna, slew, capacitance or fanout violations. The earlier
+CTS12 route met setup/hold but failed one clock fanout check. Both runs have
+identical RTL source hashes and mapped-netlist hashes; the fanout limit remains
+16. Reducing the clock-tree cluster size from 12 to 8 increases routed cell area
+827.809 → 843.205 µm² (1.86%) and resolves that acceptance failure. This is a
+standalone block result at the tested period, not containing-engine closure.
+The current source and all seven retained artifact hashes verify in the
+[CTS8 audit](../results/physical_abi3/asap7/wide_divider/shared_shift_cts8_1ns_audit.json).
+
+The existing exponential-only softmax route is still live and predates tree16
+multiplier integration. A separate current-tree-containing 1 ns route now runs
+in `build/physical_softmax_exp_only_tree16_cts12_1ns`, targeting
+`a3_attention_softmax_block/exp_only_tree16_cts12_1ns.json`. This will assess the
+combined implementation rather than projecting standalone multiplier timing
+onto the engine. The apply-pipeline state-controller route is also confirmed live;
+neither pending run supplies a final result yet.
