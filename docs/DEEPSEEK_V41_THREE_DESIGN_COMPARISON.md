@@ -10,8 +10,10 @@ criteria and the single-sequence versus aggregate-throughput distinction.
 Taalas HC1; see [HC1-referenced design](HC1_REFERENCED_ARRAY_DESIGN.md). An 80-die
 HC1-class array reaches roughly 3,400–5,100 tokens/s per user. That is 0.87–1.21×
 an HBM array given the same hardwired dataflow at equal area, and 0.96–1.29× at
-equal power. The dependency chain binds both; ROM's surviving advantage is power
-and cost. Qwen3-8B on one HC1-class die is 7.6–8.4× a same-format HBM die.
+equal power, **at batch 1 only**. The roofline framework agrees there (1.23–1.60×)
+and shows the large advantage at multi-user batch (4.4–19.8× per user at batch
+64–256), in aggregate (up to 44–71×) and on wafers (3.0–5.7× at batch 1). Qwen3-8B
+on one HC1-class die is 7.6–8.4× a same-format HBM die.
 
 The user has specified **three designs**, with a 100 µs/token decode feasibility
 target. This supersedes the earlier wafer-first ordering.

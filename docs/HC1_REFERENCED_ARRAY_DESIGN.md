@@ -141,6 +141,38 @@ without an interconnect good enough to stripe experts 16–32 ways. Against ship
 GPU systems, which pay kernel-launch and collective-software latency this baseline
 omits, the gap is far larger. That comparison measures dataflow, though, not ROM.
 
+## Reconciliation with the roofline framework
+
+This envelope was written as a standalone script, not on `src/opentallas/roofline.py`.
+Its scope is **batch 1, per user**. At that point the framework agrees:
+`results/roofline/candidates/deepseek-v41-flash/*/analytical.json` gives the best
+V4.1 array at **1.23× (N5 vs B200) and 1.60× (N6 vs A100)**. In both, ROM and GPU are
+link-latency-bound: 160 hop events per token cost ~560 µs of a 612/750 µs step.
+
+The absolute rates differ: the framework gives 1,633 vs 1,332 tokens/s, against
+3,400–5,100 here. The framework charges NVLink5 domains plus InfiniBand scale-out,
+about 3.5 µs per hop, on **both** sides. This envelope charges 0.1–1 µs die-to-die
+links and 3 hops per layer, also on both sides. The ratio is small either way
+because the link chain is common.
+
+The framework's large ROM advantages come from regimes this envelope omits:
+
+| V4.1, 200K context | N5 vs B200 | N6 vs A100 |
+|---|---:|---:|
+| Array, per user, batch 1 | 1.23× | 1.60× |
+| Array, per user, batch 64 / 256 | 4.4× / 7.4× | 8.4× / 19.8× |
+| Array, aggregate, best | up to 44× | up to 71× |
+| Wafer, per user, batch 1 | 3.0× | 5.7× |
+| Tokens per joule, array, batch 1 | 4.9× | 4.9× |
+
+The mechanism is batching. Serving b users, an HBM step reads the **union** of
+engaged experts. For the B200 ×43 array that rises from 13 GB at batch 1 to 192 GB
+at batch 64, and its weight read goes from 162 µs to 1,217 µs per step. ROM weights
+are not fetched at all, so ROM per-user speed barely moves. On a wafer, on-wafer
+links remove most of the ~560 µs link chain. **The several-fold V4.1 advantage is
+therefore a multi-user serving and wafer result, not a batch-1 array result.** This
+envelope's 0.87–1.29× applies only to the batch-1 array case.
+
 ## Aggregate throughput
 
 Compute-in-ROM does not amortize a weight across a batch (see mechanism doc §4),

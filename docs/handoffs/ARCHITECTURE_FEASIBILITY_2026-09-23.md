@@ -50,8 +50,11 @@ that decodes Llama-3.1-8B at 16,960 tokens/s per user on one 815 mm² N6 die. Do
    one HC1-class die: 15.1–16.8K tokens/s, **7.6–8.4× a same-format HBM die**
    (2K context only; 8K KV exceeds HC1's SRAM ceiling). V4.1 on an 80-die HC1-class
    array: ~3.4–5.1K tokens/s per user, **0.87–1.21× an equal-area HBM array with
-   the same hardwired dataflow** (0.96–1.29× equal power). The 40-layer dependency
-   chain binds both; ROM keeps a power/cost advantage (≤20 kW vs 72.5 kW).
+   the same hardwired dataflow** (0.96–1.29× equal power), **batch 1 only**. The
+   roofline framework agrees at batch 1 (1.23–1.60×). Its larger V4.1 advantages
+   come from multi-user batching (4.4–19.8× per user at batch 64–256), aggregate
+   throughput (up to 44–71×) and wafers (3.0–5.7×). The standalone envelope omitted
+   batching; future V4.1 work should extend the framework rather than parallel scripts.
 4. `tools/audit_v41_streaming_schedule.py` remains unaccepted and is now
    **superseded** by the HC1 envelope's stage model; do not quote it.
 
