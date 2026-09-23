@@ -11,12 +11,13 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("variant", ["tree", "operand_shift"])
 @pytest.mark.parametrize("simulator", ["iverilog", "verilator"])
 @pytest.mark.parametrize("largest_chunk", [16, 32])
 @pytest.mark.parametrize(
     "wa,wb,low", [(163, 161, 160), (163, 163, 160), (162, 170, 320)]
 )
-def test_balanced_multiplier_exact_product(tmp_path, largest_chunk, wa, wb, low, simulator):
+def test_balanced_multiplier_exact_product(tmp_path, largest_chunk, wa, wb, low, simulator, variant):
     executable = os.environ.get("VERILATOR", "verilator") if simulator == "verilator" else simulator
     if shutil.which(executable) is None:
         pytest.skip(f"{executable} unavailable")
@@ -50,11 +51,34 @@ def test_balanced_multiplier_exact_product(tmp_path, largest_chunk, wa, wb, low,
         end
     end endgenerate
     """.replace("LARGEST", str(largest_chunk))
+    bench = bench.replace("        if (errors == 0)", r"""
+        // Cancel early and late work, allow idle scratch to drift, then restart.
+        for (trial=0; trial<4; trial=trial+1) begin
+            @(negedge clk); a={WA{1'b1}}; b={WB{1'b1}}; start=1;
+            @(negedge clk); start=0;
+            repeat(1+trial*3) @(negedge clk);
+            #1; rst_n=0; #1;
+            if (busy!==0 || done!==0) $fatal(1,"reset protocol");
+            repeat(2) @(negedge clk); rst_n=1;
+            repeat(WA+WB) begin
+                @(negedge clk);
+                if(busy!==0 || done!==0) $fatal(1,"stale completion");
+                for(w=0;w<DUTS;w=w+1)
+                    if(product_high[w]!==0 || low_nonzero[w]!==0)
+                        $fatal(1,"idle payload leaked after reset");
+            end
+            check({WA{1'b1}}, {WB{1'b1}});
+        end
+        if (errors == 0)""")
     bench = bench.replace("endmodule", reference + "\nendmodule")
     source = tmp_path / "tb.sv"
     source.write_text(bench)
     sim = tmp_path / "sim.vvp"
-    sources = [str(ROOT / "rtl/lib/ot_wide_mul_tree_seq.sv"),
+    candidate = tmp_path / "candidate.sv"
+    candidate.write_text((ROOT / "results/rtl/mul_operand_shift/candidate.sv").read_text()
+                         .replace("module ot_wide_mul_seq", "module ot_wide_mul_tree_seq"))
+    selected = ROOT / "rtl/lib/ot_wide_mul_tree_seq.sv" if variant == "tree" else candidate
+    sources = [str(selected),
                str(ROOT / "results/rtl/wide_mul_tree_integration/before.sv"), str(source)]
     if simulator == "iverilog":
         command = [executable, "-g2012", "-s", "tb_wide_mul_seq_equiv",
@@ -75,7 +99,7 @@ def test_balanced_multiplier_exact_product(tmp_path, largest_chunk, wa, wb, low,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "FAIL" not in result.stdout
-    count = 127 + 2 * ((wb + 7) // 8)
+    count = 131 + 2 * ((wb + 7) // 8)
     assert (
         f"PASS tb_wide_mul_seq_equiv {count} products x 4 chunk widths" in result.stdout
     )

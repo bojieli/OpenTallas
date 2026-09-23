@@ -1,0 +1,6 @@
+LATENCY active_cycles=5962513 fixup_attempts=2201
+PASS a3_exp_pos: 2201 arguments bit-identical to exp_cr32, and 4 refusals fail closed
+- /home/ubuntu/OpenTallas/build/mul_operand_shift_latency/tb.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12ms; walltime 85.159 s; speed 140.085 us/s
+- Verilator: cpu 85.009 s on 1 threads; allocated 6 MB

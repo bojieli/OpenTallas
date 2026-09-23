@@ -1349,3 +1349,24 @@ A Docker client's zero CPU usage does not describe its OpenROAD workload.
 The table entries labelled “deleted” during repair are removed cells, not
 remaining physical violations. Active stage and acceptance must come from
 actual stage logs and the final canonical record respectively.
+
+## Multiplier operand storage removes the measured running-to-payload hold path
+
+An isolated production-multiplier derivative loads b_work at request acceptance
+and shifts every subsequent clock, including idle, removing its reset and idle
+hold enable. Protocol/public reset remains unchanged; each accepted request
+initializes every operand bit before use. The change targets the running-to-b_work
+path identified in the range-pipeline attribution, with no added cycles.
+
+Matched standalone synthesis (WA163/WB161/LOW160/CHUNK16) reduces area
+2,049.919 → 2,021.505 µm² (1.39%), and improves prelayout 1 ns setup slack
+−2.589396 → −2.369256 ns. Both still fail prelayout timing. A standalone CTS12
+1 ns physical run is active. Production remains unchanged pending qualification.
+
+Twelve strengthened differential tests pass across both simulators, three width
+configurations and chunk2/4/8/16/32, checking independent exact products and
+handshake timing. Four asynchronous cancellation/restart scenarios per test check
+that idle scratch does not leak through public outputs. The containing positive
+range pipeline passes 2,201 numerical arguments plus four refusals/overflows in
+both matched runs at exactly 5,962,513 active cycles. Source hashes verify.
+See the [candidate comparison](../results/rtl/mul_operand_shift/comparison.json).

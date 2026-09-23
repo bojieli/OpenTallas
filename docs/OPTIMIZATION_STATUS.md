@@ -129,3 +129,10 @@ have finished and both fail timing acceptance. The counter still fails setup;
 the operand service still fails hold. Neither is selected. Fresh positive-range
 attribution identifies multiplier running-to-operand control fanout as the next
 prelayout path to investigate. Other matched physical runs remain pending.
+
+Latest implementation experiment: multiplier operand storage now has an isolated
+candidate that removes idle hold/reset from private b_work after attribution
+identified its running-control path. Mapped area falls 1.39%; prelayout slack
+improves but still fails. Twelve product/protocol tests and the complete positive
+range-pipeline corpus pass with unchanged cycles. Standalone physical qualification
+is active; production remains unchanged.
