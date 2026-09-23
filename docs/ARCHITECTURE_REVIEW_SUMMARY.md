@@ -1044,3 +1044,21 @@ corpus does not add reset/backpressure coverage of that engine. No new physical
 clock claim follows from committing these changes; engine routes remain pending.
 Before snapshots, exact source inventories, vectors and logs are retained in the
 [series tuning integration](../results/rtl/series_divisor_integration/integration.json).
+
+## Matched positive-engine sizing result and protocol validation
+
+With identical current tree multiplier and scratch-reset small divider, matched
+positive-engine synthesis changes mapped area 8,139.934 → 8,141.105 µm² when
+integrating the series-width tuning: effectively unchanged (+0.0144%), not an
+engine area reduction. Pre-layout 1 ns worst slack improves −8.150277 →
+−7.497389 ns and remains NOT_MET. Retained timing reports include the actual
+mapped paths; neither this slack nor inferred Fmax establishes routed frequency.
+See the [matched comparison](../results/rtl/series_divisor_integration/positive_matched/comparison.json).
+
+New positive-engine protocol tests pass in both Icarus and Verilator. They reset
+during range multiplication, term multiplication, term division and a stalled
+output, verify immediate output invalidation and 4,000 cycles without a stale
+result, then restart with exact exp(1). Each restart holds the output for nine
+cycles while another input is offered, checking result stability and blocked
+admission, then verifies retirement. This supplements the 2,201-case arithmetic
+corpus; no RTL behavior changed in this validation step.

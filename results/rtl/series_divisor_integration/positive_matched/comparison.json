@@ -1,0 +1,91 @@
+{
+  "scope": "Matched positive-engine synthesis, same current arithmetic primitives, only prior versus integrated engine sizing/step interface differs; default steps unchanged.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/divisor9_current_primitives_synth_sta_1ns.json",
+      "record_sha256": "0134b4d5b5ccde1e6e8e7c4398fb115369591387db1743aa192093fb55f67cad",
+      "area_um2": 8139.934,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "results/rtl/series_divisor_integration/before_ot_a3_fp32_exp_pos_cr_rne.sv",
+          "sha256": "acbe6172b6286934597d121a59e389fcd7e3d58286c1ff123d4b91847efe3ac6",
+          "size_bytes": 26993
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.04886380208886728,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 4701,
+            "setup_wns_ns": -8.15027693038945,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/divisor6_current_primitives_synth_sta_1ns.json",
+      "record_sha256": "829ab0260472f6ffb5ea9ae060f339b8aedba4a2f11146710252d1ae44c1312e",
+      "area_um2": 8141.105,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+          "sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+          "size_bytes": 28160
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.04886380208886728,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 4688,
+            "setup_wns_ns": -7.497389405956954,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_change_percent": 0.014385866027888383,
+  "conclusion": "No total engine area reduction demonstrated. Prelayout timing improves but remains not met; no routed clock claim.",
+  "protocol": "Icarus and Verilator pass reset during range multiply, term multiply, term divide and stalled result; 4000 cycles without stale output after reset and four exact exp(1) restarts each with nine-cycle output stalls.",
+  "protocol_test_sha256": "897d28408ed351907bc6e6d4897e9e31d22deea71a64c22dcf93408d70c7a108"
+}
