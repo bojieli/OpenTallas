@@ -1,0 +1,54 @@
+{
+  "record": "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns.json",
+  "record_sha256": "ec99bf71d218cd74089e8c61a4c80cf95017e4ab8338a157cfc4d20a4c0a2fed",
+  "source_bindings": [
+    {
+      "launch_path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "matching_source": "results/rtl/small_divider_operand_capture/before.sv",
+      "sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81",
+      "matches_current_source": false
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/1_2_yosys.v": "cad57df248dd145fbf002f8710e6ab102a295b60f20cb318a737f725cd4b0722",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/6_final.v": "c625b3cd0773961873a75491bc8cd283b9529d90b836f3d50795395e59c62f46",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/6_finish.rpt": "b792910060c9f705db55c026911b08b2c7bd781d4e166488da5eadebf87bbd2b",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/config.mk": "b064d26374a504626937a9112102900d4d0dc29e980e6c5d704b22508e2fb4fe",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns_artifacts/metadata.json": "7ca641d698ded46be4439e2c930335733ccfa32375eda32175673c4fc7cb8b0e"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0529275,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 9.0,
+        "setup_wns_ns": -0.105676,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "routed_cell_area_um2": 323.399,
+  "scope": "Final extracted block result at tested 1 ns; applies only to bound sources and recorded parameters, not integrated closure.",
+  "critical_path": {
+    "startpoint": "divisor[4]",
+    "endpoint": "rem[5]",
+    "next_action": "Capture divisor at acceptance without extra transaction cycles; matched route active."
+  }
+}

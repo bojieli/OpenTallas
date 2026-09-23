@@ -66,14 +66,6 @@ module ot_wide_div_small_seq #(
     reg [COUNT_BITS-1:0]   steps_left;
     reg                    running;
 
-    // Capture both operands at acceptance. The small divisor register breaks
-    // the external-input path into the entire restoring chain, without an
-    // added cycle: the first chunk is evaluated after the start edge.
-    reg [DIVISOR_BITS-1:0] divisor_q;
-    always @(posedge clk) begin
-        if (!running && start) divisor_q <= divisor;
-    end
-
     assign busy = running;
 
     //: One cycle: BITS_PER_STEP steps of the unrolled loop, MSB of the chunk
@@ -89,8 +81,8 @@ module ot_wide_div_small_seq #(
         step_digit = {BITS_PER_STEP{1'b0}};
         for (j = BITS_PER_STEP - 1; j >= 0; j = j - 1) begin
             walk = {walk[DIVISOR_BITS-1:0], chunk[j]};
-            if (walk >= {1'b0, divisor_q}) begin
-                walk = walk - {1'b0, divisor_q};
+            if (walk >= {1'b0, divisor}) begin
+                walk = walk - {1'b0, divisor};
                 step_digit[j] = 1'b1;
             end
         end

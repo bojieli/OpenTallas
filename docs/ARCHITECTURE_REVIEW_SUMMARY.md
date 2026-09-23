@@ -519,3 +519,55 @@ pre-CTS mapped costs, not final routed results. The tree32 softmax's measured
 extracted timing before selecting production chunk width. The default has
 not changed. Reports and configurations are retained in the
 [mapped multiplier checkpoint](../results/rtl/wide_mul_tree_qualification/mapped_checkpoint/comparison.json).
+
+## Current softmax lane-write cost
+
+Matched synthesis is complete with the shared-shift divider: old/local lane
+writes map to 12,088.974 / 12,070.904 µm² (0.15% less) and 8,665 / 8,576
+sequential cells (89 fewer). Pre-layout worst slack at 1 ns worsens from
+−7.5201 to −8.3641 ns. Local enables are therefore a bounded-state and small
+area simplification, not demonstrated clock improvement. The candidate's
+worst path still has large unbuffered control loads: its launch and following
+NAND nets connect 484 and 482 cell terminals. Current physical implementation
+must resolve this; a pre-layout slack-derived frequency is not a clock result.
+Both records predate the divisor capture below. Source bindings, constraints,
+mapping reports and critical paths are retained in the
+[lane-write physical checkpoint](../results/rtl/softmax_lane_write/physical_checkpoint/comparison.json).
+
+## Small-divider operand capture after failed four-step route
+
+The four-bit shared-shift divider completed final extracted routing at 1 ns:
+setup slack −0.105676 ns with nine violations, hold +0.0529275 ns, area
+323.399 µm². DRC, antenna, slew, capacitance and fanout checks are clean.
+Its worst setup path starts at external `divisor[4]` and ends at `rem[5]`.
+All source and retained artifact hashes are verified in the
+[route audit](../results/physical_abi3/asap7/small_divider/step4_route_audit.json).
+
+The divider now captures the divisor on the existing start edge. This adds
+six payload flops in the measured configuration and removes the external
+operand from the restoring-chain timing path without adding a transaction
+cycle. The payload needs no reset because every accepted operation writes it
+before use. The resulting interface also permits changing both external
+operands after acceptance.
+
+Four tests pass across Icarus and Verilator: 354 arguments at six chunk sizes
+for each of two divisor widths, totaling 4,248 numerical comparisons per
+simulator. Tests change operands immediately after acceptance and compare
+busy/done timing with the previous stable-input implementation. The containing
+softmax passes nine reference cases and two refusals at the same 767,158 cycles,
+276 evaluations and 121 hits. A matched four-step 1 ns route is active; no new
+clock claim or consumer step-width default change is made.
+See [operand-capture evidence](../results/rtl/small_divider_operand_capture/comparison.json).
+
+## Single-credit transport route fails capacitance acceptance
+
+The matched pre-coalescing single-credit transport completed at 1 ns with
++0.0525722 ns setup and +0.0398299 ns hold slack, zero setup/hold violations,
+and 6,462.820 µm² routed cell area. It has two maximum-capacitance violations:
+24.65 and 24.06 against a 23.04 limit in report units. Other physical checks
+are clean. Its engineering verdict is NOT_MET because of capacitance, despite
+meeting timing; the driver's generic trailing timing-failure label should not
+be interpreted as the specific failure. The four-credit baseline remains a
+passing recorded configuration. Neither result proves current coalesced
+transport closure. All source and seven artifact bindings are verified in the
+[single-credit audit](../results/physical_abi3/asap7/bf16_weight_transport/credits1_before_coalescing_route_audit.json).

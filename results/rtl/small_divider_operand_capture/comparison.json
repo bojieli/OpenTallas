@@ -1,0 +1,105 @@
+{
+  "scope": "Capture small-divisor operand at start, eliminating external divisor path through the restoring chain. No extra transaction cycles; divisor no longer needs to remain stable while busy. Physical improvement pending.",
+  "motivation": {
+    "record": "results/physical_abi3/asap7/small_divider/shared_shift_step4_cts12_1ns.json",
+    "tested_period_ns": 1,
+    "setup_slack_ns": -0.105676,
+    "setup_violations": 9,
+    "worst_path": "divisor[4] -> rem[5]",
+    "baseline_routed_area_um2": 323.399
+  },
+  "implementation": {
+    "storage_added_bits": "DIVISOR_BITS (6 in measured configuration)",
+    "reset": "Payload register not reset; every accepted operation overwrites it before arithmetic use. Existing running and result resets preserved.",
+    "transaction_cycles_changed": false
+  },
+  "validation": {
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ],
+    "tests_passed": 4,
+    "divisor_widths": [
+      6,
+      9
+    ],
+    "chunk_widths": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "arguments_per_configuration": 354,
+    "comparisons_per_simulator": 4248,
+    "checks": "Independent restoring reference for quotient/inexact, external inputs changed after acceptance, busy/done compared each cycle with old unit given stable inputs.",
+    "containing_softmax": "9 numerical cases plus 2 refusals pass with unchanged 767158 cycles, 276 evaluations and 121 hits."
+  },
+  "softmax_sources": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7",
+      "verilator_content_hash": "OwxGLS0o5RR7t3JsBVVQ98hlSt22EpBeIXty7mHo"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+      "verilator_content_hash": "Gmi90xEIhUaKzWUEc5JRAzX4lp32HmgFrelMDc04"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+      "verilator_content_hash": "odZJFSgYMU6bOIXfNXY3Q70H4ZVeDkeoHcIE3s55"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+      "verilator_content_hash": "wDwVBZRWeHngxyPAjQmBOu1ZDkdXDSHD2K6awQuW"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4"
+    },
+    {
+      "path": "rtl/test/tb_a3_softmax_block.sv",
+      "sha256": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181",
+      "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh"
+    }
+  ],
+  "rtl_sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+  "baseline_sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81",
+  "physical_pending": "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns.json",
+  "next_action": "Audit captured-operand final route before choosing consumer step width; consumer default remains ten steps. Continue containing timing and control-fanout optimization."
+}

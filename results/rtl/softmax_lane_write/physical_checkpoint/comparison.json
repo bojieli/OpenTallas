@@ -1,0 +1,147 @@
+{
+  "scope": "Matched containing softmax synth and prelayout STA with shared shift divider. Sources predate divisor operand capture. No routed comparison.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/shared_shift_synth_sta_1ns.json",
+      "record_sha256": "4099a6b833413028fd8244e8d1220a62914e825c7aefa20888f2e68c4bd5b855",
+      "mapped_cell_area_um2": 12088.974,
+      "sequential_cell_count": 8665,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 8113,
+            "setup_wns_ns": -7.520081476492545,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "source_bindings": [
+        {
+          "launch_path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "matching_source": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "matching_source": "results/rtl/softmax_lane_write/before.sv",
+          "sha256": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "matching_source": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+        },
+        {
+          "launch_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "matching_source": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_seq.sv",
+          "matching_source": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "matching_source": "results/rtl/small_divider_operand_capture/before.sv",
+          "sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_mul_seq.sv",
+          "matching_source": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+        }
+      ],
+      "retained_artifacts": {
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/setup_path.rpt": "d9729cb99e2c4d666afe60fc945dd685a8ceda51fd4814a7c8a5eeecbe2413ab",
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/synth.ys": "d7b4643c177b2d3027980a4a39555a7f9f68f44f3041116e5afd1c3b3fc77ce7",
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/hold_path.rpt": "4315f0a80d9a494ecfeb959bd84fd6ddff14ba347e44cfb2f6d765052a582921",
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/stat.txt": "95b604d652a0d6413b722996e5146d23cff5de3e14dcc5917bc8185cc01a5139",
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/softmax_lane_write/physical_checkpoint/shared_shift/sta.tcl": "15da214f808924fbef64a920c8787ac5c12c1dccdb249e9c59e5e8394d050008"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/local_lane_write_synth_sta_1ns.json",
+      "record_sha256": "30764a676469820436b4294ed024d2e82517ac6c541273a1906c801d113f700e",
+      "mapped_cell_area_um2": 12070.904,
+      "sequential_cell_count": 8576,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 6408,
+            "setup_wns_ns": -8.364093451288747,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "source_bindings": [
+        {
+          "launch_path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "matching_source": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "matching_source": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "matching_source": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+        },
+        {
+          "launch_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "matching_source": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_seq.sv",
+          "matching_source": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "matching_source": "results/rtl/small_divider_operand_capture/before.sv",
+          "sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_mul_seq.sv",
+          "matching_source": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+        }
+      ],
+      "retained_artifacts": {
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/setup_path.rpt": "79f46d230a3956c695ad9b067a705a43130dbac0f1dd2ef3a4c2c44f6c347935",
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/synth.ys": "67920f9f3104e3b797ef67bea6082e78a61e5e1b4b162d4c477e203ffe7b0c39",
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/hold_path.rpt": "c9e9af536ec38ba6764d53aab90af6e801bece72cb6dcbe688f4c36218082ee8",
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/stat.txt": "fdc428d557eb6cd19ab3ef93ef8ca46d2fcc4d4498c6fd268d6b9aa11d316629",
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/softmax_lane_write/physical_checkpoint/local_lane_write/sta.tcl": "bee010db2412db3dac40d94cc3b49fb4aaa450a50a92a083b8294ca7232a4c2b"
+      }
+    }
+  ],
+  "area_reduction_percent": 0.14947505057086863,
+  "decision": "Local lane enables save 0.15% mapped area and reduce sequential storage, but prelayout worst slack worsens. Retain bounded state simplification without clock claim; prioritize current mapped control fanout and containing extracted qualification."
+}
