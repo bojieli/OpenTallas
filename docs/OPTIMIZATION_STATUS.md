@@ -1,5 +1,7 @@
 # Accelerator optimization status
 
+**Paused for continuation:** start with the [2026-09-23 architecture handoff](handoffs/ARCHITECTURE_FEASIBILITY_2026-09-23.md). It records current scope, findings, unfinished drafts, validation and workspace cautions.
+
 **Current method:** derive latency and tokens/s from physically constrained
 architectures; **100 µs/token is a sensitivity marker, not a fixed design target**.
 The HBM accelerator array is the primary baseline, the ROM chip array the primary

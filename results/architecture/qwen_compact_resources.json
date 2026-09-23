@@ -1,0 +1,73 @@
+{
+  "active_bf16_weight_bytes": 15136811008,
+  "capacity_rows": [
+    {
+      "minimum_dies_for_full_bf16_checkpoint": 6,
+      "non_rom_mm2_per_815mm2_die": 515,
+      "rom_mm2_per_die": 300,
+      "usable_ROM_bytes_per_die": 2757573000.0
+    },
+    {
+      "minimum_dies_for_full_bf16_checkpoint": 5,
+      "non_rom_mm2_per_815mm2_die": 415,
+      "rom_mm2_per_die": 400,
+      "usable_ROM_bytes_per_die": 3676764000.0
+    },
+    {
+      "minimum_dies_for_full_bf16_checkpoint": 4,
+      "non_rom_mm2_per_815mm2_die": 315,
+      "rom_mm2_per_die": 500,
+      "usable_ROM_bytes_per_die": 4595955000.0
+    },
+    {
+      "minimum_dies_for_full_bf16_checkpoint": 3,
+      "non_rom_mm2_per_815mm2_die": 0,
+      "rom_mm2_per_die": 815,
+      "usable_ROM_bytes_per_die": 7491406650.0
+    }
+  ],
+  "context": 8192,
+  "full_bf16_checkpoint_bytes": 16381470720,
+  "ideal_SRAM_area_mm2_for_KV_only": 312.21492685448436,
+  "input_sha256": {
+    "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "results/architecture/redesign_recurrence_feasibility.json": "d0604f3234c418de9997b85804679225ef277862ff58de5b5e6f8d8ebdd802ad",
+    "tools/audit_qwen_compact_resources.py": "d8afe6c96f9a3f966465fbd54bb6820950c9a5bd2325c233d8f232485c0cd0cd"
+  },
+  "kv_bytes": 1207959552,
+  "limits": [
+    "Full retained BF16 checkpoint, no quantization or external weight capacity credited.",
+    "All-ROM die allocation is a capacity impossibility screen, not a viable compute die.",
+    "KV assumes 8K BF16 cache and excludes allocator, ECC and scratch. Reading all dense KV once is a byte-service screen, not an executable attention ledger.",
+    "Shared weight/KV service rows assume one aggregate bottleneck and perfect concurrency across assigned regions; separate ports require separate bounds.",
+    "Maximum of independent memory and recurrence floors is a necessary bound, not proof that overlap is realizable.",
+    "Sequential bound assumes whole-producer dependencies and unchanged whole-K RNE contract at 1GHz; a different admitted numerical/scheduling design needs a new bound.",
+    "Bandwidth values are sensitivities only, not qualified ROM rates. Power, bank locality, compute throughput, attention and cross-chip service still need qualification.",
+    "A compact multi-die package may be local at system level but is not a single physical tile with free inter-die links."
+  ],
+  "minimum_ROM_area_mm2_full_checkpoint": 1782.161783568377,
+  "schema": "opentallas.qwen-compact-resources.v1",
+  "service_sensitivity": [
+    {
+      "aggregate_delivered_weight_and_KV_TB_s_assumed": 4.5,
+      "conditional_single_sequence_tokens_s_ceiling": 275.3174162635661,
+      "single_shared_service_weight_KV_floor_us": 3632.1712355555555,
+      "unchanged_sequential_contract_combined_floor_us": 3632.1712355555555
+    },
+    {
+      "aggregate_delivered_weight_and_KV_TB_s_assumed": 18,
+      "conditional_single_sequence_tokens_s_ceiling": 1101.2696650542644,
+      "single_shared_service_weight_KV_floor_us": 908.0428088888889,
+      "unchanged_sequential_contract_combined_floor_us": 908.0428088888889
+    },
+    {
+      "aggregate_delivered_weight_and_KV_TB_s_assumed": 72,
+      "conditional_single_sequence_tokens_s_ceiling": 1125.072004608295,
+      "single_shared_service_weight_KV_floor_us": 227.01070222222222,
+      "unchanged_sequential_contract_combined_floor_us": 888.832
+    }
+  ],
+  "single_die_density_multiplier_required_if_all_815mm2_ROM": 2.186701574930524,
+  "status": "capacity_and_contract_bounds_not_physical_performance"
+}
