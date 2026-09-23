@@ -1,0 +1,70 @@
+{
+  "scope": "Matched WIDTH168 DIVISOR_BITS6 STEP10; default workspace transcendental engine configuration. Prelayout only.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/small_divider/reset_step10_width168_synth_sta_1ns.json",
+      "sha256": "e6ae6fd21e91ec17311cc73216f14130999cf0585d0f946e1c5afbf2c30345f3",
+      "area_um2": 247.687,
+      "sources": [
+        {
+          "path": "results/rtl/small_divider_scratch_reset/before.sv",
+          "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+          "size_bytes": 6639
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.053119883704137706,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 183,
+            "setup_wns_ns": -1.2415626354439568,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/small_divider/unreset_step10_width168_synth_sta_1ns.json",
+      "sha256": "b2b220836f16421fbe7acdcc677fd847e7b9bb8155893a33420d588f305314b2",
+      "area_um2": 231.397,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.04886380208886728,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 183,
+            "setup_wns_ns": -1.2877853279689901,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 6.5768490070128856,
+  "decision": "Retain reset-removal area improvement. No default step change or timing success claim; prelayout slack slightly regresses. Current default-config route launched for physical measurement.",
+  "physical_pending": "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns.json"
+}

@@ -9,12 +9,13 @@ ROOT = Path(__file__).resolve().parents[1]
     'results/rtl/small_divider_scratch_reset/candidate.sv'])
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
 @pytest.mark.parametrize('divisor_bits', [6, 9])
-@pytest.mark.parametrize('first_chunk', [1, 3])
-def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk, rtl_source):
+@pytest.mark.parametrize('width,first_chunk', [(163, 1), (163, 3), (168, 10)])
+def test_operand_capture(tmp_path, simulator, divisor_bits, width, first_chunk, rtl_source):
     before = tmp_path/'before.sv'
     before.write_text((ROOT/'results/rtl/small_divider_operand_capture/before.sv').read_text().replace(
         'module ot_wide_div_small_seq #(', 'module old_divider #('))
     bench = (ROOT/'rtl/test/tb_wide_div_small_seq_equiv.sv').read_text()
+    bench = bench.replace('integer WIDTH = 163', f'integer WIDTH = {width}')
     bench = bench.replace('integer DBITS = 9', f'integer DBITS = {divisor_bits}')
     bench = bench.replace('reg [WIDTH:0] want;', 'reg [DBITS-1:0] reference_divisor;\n    reg [WIDTH-1:0] reference_dividend;\n    reg [WIDTH:0] want;')
     bench = bench.replace("dividend = a; divisor = d; start = 1'b1;",

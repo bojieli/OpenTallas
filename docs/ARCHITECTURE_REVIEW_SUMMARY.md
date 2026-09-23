@@ -925,3 +925,19 @@ identical module body and retains 767,158 cycles. Source inventories and logs
 are retained alongside the [updated selection](../results/rtl/small_divider_scratch_reset/comparison.json).
 The active tree16-containing softmax route predates this small-divider integration
 and must retain that historical source binding when it completes.
+
+## Check the divider at the containing engine's default geometry
+
+Matched WIDTH168 / DIVISOR_BITS6 / STEP10 synthesis confirms that scratch-reset
+removal also reduces area at the current workspace transcendental engine's
+default geometry: 247.687 → 231.397 µm² (6.58%). However, pre-layout 1 ns slack
+slightly worsens −1.241563 → −1.287785 ns. The STEP4 route therefore must not be
+used to claim default-engine clock closure. A current STEP10/WIDTH168 1 ns route
+is running to measure this configuration directly.
+
+Eight additional parameterized tests pass across Icarus/Verilator, six-/nine-bit
+divisors and integrated/retained candidate sources at WIDTH168. Each exercises
+354 arguments with chunk widths 10/2/4/8/16/32, compares every public output to
+historical RTL, and tests reset interruption/restart. The new geometry supplements
+the existing WIDTH163 tests. Consumer step widths remain unchanged. See the
+[default-geometry comparison](../results/rtl/small_divider_scratch_reset/default_step10/comparison.json).
