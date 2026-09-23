@@ -102,8 +102,7 @@ module ot_a3_attention_softmax_block #(
     reg [3:0] state;
 
     localparam integer LW = (LANES <= 1) ? 1 : $clog2(LANES);
-    localparam integer LCW = (LANES <= 1) ? 1 : $clog2(LANES + 1);
-    reg [LCW-1:0] lane;
+    reg [31:0] lane;
     //: THE SUBTRACT'S OWN HANDSHAKE.  Keying the issue off ``sub_valid_in``
     //: instead LIVELOCKS: that register is high for exactly one cycle and the
     //: result is five away, so the issue re-fires every second cycle and the
@@ -267,32 +266,15 @@ module ot_a3_attention_softmax_block #(
         .result_code(exp_result), .result_error(exp_error)
     );
 
-    // A single 32-bit result bus feeds locally decoded lane enables. Avoid
-    // lowering variable part-select writes into a full-width shift/mask mux.
-    // Start clears every lane, so skipped padding already contains exact +0.
-    wire probability_write = (state == S_OFF_W && exp_cache_hit) ||
-        (state == S_EXP_W && exp_out_valid && exp_error == 0);
-    wire [31:0] probability_value = state == S_OFF_W ? exp_cache_result : exp_result;
-    genvar probability_lane;
-    generate for (probability_lane = 0; probability_lane < LANES;
-                  probability_lane = probability_lane + 1) begin : lane_output
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) probabilities[probability_lane*32 +: 32] <= 0;
-            else if (state == S_IDLE && start)
-                probabilities[probability_lane*32 +: 32] <= 0;
-            else if (probability_write && lane == probability_lane)
-                probabilities[probability_lane*32 +: 32] <= probability_value;
-        end
-    end endgenerate
-
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             exp_cache_valid <= 0;
             state <= S_IDLE;
-            lane <= {LCW{1'b0}}; offset_q <= 32'd0; block_max <= 32'd0;
+            lane <= 32'd0; offset_q <= 32'd0; block_max <= 32'd0;
             any_valid <= 1'b0;
             busy <= 1'b0; done <= 1'b0;
             updated_max <= 32'd0; rescale <= 32'd0;
+            probabilities <= {LANES{32'd0}};
             error_code <= ERR_NONE; exp_count <= 32'd0;
             sub_valid_in <= 1'b0; sub_a <= 32'd0; sub_b <= 32'd0;
             sub_pending <= 1'b0;
@@ -308,6 +290,7 @@ module ot_a3_attention_softmax_block #(
                 S_IDLE: begin
                     if (start) begin
                         exp_count <= 32'd0;
+                        probabilities <= {LANES{32'd0}};
                         error_code <= ERR_NONE;
                         //: The reference refuses a first block with no valid
                         //: lane; a later block may legally be all padding.
@@ -335,7 +318,7 @@ module ot_a3_attention_softmax_block #(
 
                 S_SUBMAX: begin
                     updated_max <= canonical;
-                    lane <= {LCW{1'b0}};
+                    lane <= 32'd0;
                     if (cfg_first) begin
                         //: +0, which is what the reference uses for block 0.
                         rescale <= 32'd0;
@@ -385,10 +368,11 @@ module ot_a3_attention_softmax_block #(
                     end else if (!lane_valid[lane_sel]) begin
                         //: +0 WITHOUT TOUCHING THE EXPONENTIAL, which would
                         //: refuse the -inf the reference masks with.
-                        lane <= lane + 1'b1;
+                        probabilities[lane*32 +: 32] <= 32'd0;
+                        lane <= lane + 32'd1;
                     end else if (!sub_pending) begin
                         sub_valid_in <= 1'b1;
-                        sub_a <= scores[lane_sel*32 +: 32];
+                        sub_a <= scores[lane*32 +: 32];
                         sub_b <= updated_max;
                         sub_pending <= 1'b1;
                     end else if (sub_valid_out) begin
@@ -400,7 +384,8 @@ module ot_a3_attention_softmax_block #(
 
                 S_OFF_W: begin
                     if (exp_cache_hit) begin
-                        lane <= lane + 1'b1;
+                        probabilities[lane*32 +: 32] <= exp_cache_result;
+                        lane <= lane + 32'd1;
                         // exp_count counts logical evaluations, including hits.
                         exp_count <= exp_count + 32'd1;
                         state <= S_OFF_S;
@@ -418,7 +403,8 @@ module ot_a3_attention_softmax_block #(
                             error_code <= ERR_SELECT_NONFINITE;
                             busy <= 1'b0; done <= 1'b1; state <= S_DONE;
                         end else begin
-                            lane <= lane + 1'b1;
+                            probabilities[lane*32 +: 32] <= exp_result;
+                            lane <= lane + 32'd1;
                             state <= S_OFF_S;
                         end
                     end

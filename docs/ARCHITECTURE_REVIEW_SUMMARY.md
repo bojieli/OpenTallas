@@ -484,3 +484,38 @@ Production consumers retain their current implementation pending the routed
 area/timing tradeoff and containing-engine qualification. The experiment,
 source snapshots and logs are retained in the
 [multiplier comparison](../results/rtl/wide_mul_tree_qualification/comparison.json).
+
+## Local softmax lane writes
+
+Softmax probability storage now uses one shared 32-bit value bus and a local
+write enable for each lane, replacing variable part-select writes into the
+full output vector. Invalid lanes need no separate zero write: operation start
+clears all entries and each lane is visited once. The lane cursor now has
+`clog2(LANES+1)` bits (seven at LANES=64), preserving the terminal sentinel.
+No pipeline stages or service cycles are added.
+
+Ten tests pass across Icarus and Verilator. Cycle-by-cycle comparison against
+retained previous RTL covers every public output during 24 transactions at
+each of LANES=1,3,64,65, including reset interruption, admission refusals and
+service failures. The real softmax's nine reference cases and two refusals
+pass at exactly 767,158 cycles, 276 physical evaluations and 121 cache hits.
+All nine containing sparse-attention transactions pass, with every recorded
+phase count identical to before (2,388,699 aggregate active cycles).
+
+Matched current-source synthesis/STA runs before and after this change are
+active. They include shared-divider storage; the older cache on/off timing records
+were launched before that divider change. Consequently the older fanout self-loop is
+a historical warning, not a demonstrated current critical path. No mapped
+area reduction or clock improvement is claimed for local lane writes until
+the new records complete. See [lane-write comparison](../results/rtl/softmax_lane_write/comparison.json).
+
+## Current multiplier mapped-area tradeoff
+
+Matched ORFS synthesis from the live chain16/tree16/tree32 routes gives
+1,583.301 / 1,595.110 / 2,654.683 µm² standard-cell area, respectively.
+Tree16 is 0.75% larger than chain16; tree32 is 67.67% larger. These are
+pre-CTS mapped costs, not final routed results. The tree32 softmax's measured
+22.45% cycle reduction must be weighed against complete-engine area and
+extracted timing before selecting production chunk width. The default has
+not changed. Reports and configurations are retained in the
+[mapped multiplier checkpoint](../results/rtl/wide_mul_tree_qualification/mapped_checkpoint/comparison.json).

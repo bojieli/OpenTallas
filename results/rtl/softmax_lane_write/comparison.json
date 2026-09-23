@@ -1,0 +1,25 @@
+{
+  "scope": "Local per-lane softmax probability write enables and bounded lane counter; same numerical behavior, observable output cycles and service counts. Physical cost comparison still active.",
+  "changes": [
+    "Share 32-bit probability value and locally decode a write enable for each lane instead of dynamic full-vector writes.",
+    "Remove redundant zero write when skipping invalid lane: every lane clears at operation start and is visited once.",
+    "Bound lane counter to clog2(LANES+1), retaining the end sentinel; 7 bits at LANES=64 instead of 32."
+  ],
+  "verification": {
+    "equivalence": "24 transactions at each LANES=1,3,64,65, both Icarus and Verilator; compare every public output each cycle, including resets, refusals and service failures.",
+    "tests_passed": 10,
+    "softmax": "9 numerical cases plus 2 refusals pass, 767158 cycles, 276 physical exponentials, 121 cache hits, identical to previous.",
+    "attention": "9 complete reference transactions pass; all phase counts and aggregate cycles identical to before.",
+    "attention_active_cycles": 2388699
+  },
+  "source_hashes": {
+    "rtl/abi3/ot_a3_attention_softmax_block.sv": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7",
+    "results/rtl/softmax_lane_write/before.sv": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37",
+    "tests/test_softmax_lane_write.py": "b48f4d0e64109bdc9c301364a97cabce059f9cfec7cefefa84f69598ee040b62"
+  },
+  "physical_pending": [
+    "results/physical_abi3/asap7/a3_attention_softmax_block/shared_shift_synth_sta_1ns.json",
+    "results/physical_abi3/asap7/a3_attention_softmax_block/local_lane_write_synth_sta_1ns.json"
+  ],
+  "next_action": "Compare current-source mapped costs and critical paths; retain, revise or reject local enables based on evidence, then route containing engine. Previous pre-shared-divider softmax fanout path is historical."
+}
