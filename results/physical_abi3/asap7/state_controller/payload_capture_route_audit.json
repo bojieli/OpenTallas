@@ -1,0 +1,53 @@
+{
+  "scope": "Historical baseline; final extracted block result at tested 1 ns, not current-source or integrated closure.",
+  "record": "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns.json",
+  "record_sha256": "a117a4fd41161820818ecc4799189b1d3abb08e5d6395b5a69765b2dd6a3a2e8",
+  "source_bindings": [
+    {
+      "launch_path": "rtl/abi3/ot_a3_pkg.sv",
+      "matching_source": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_state_controller.sv",
+      "matching_source": "results/rtl/state_parallel_admission/before.sv",
+      "sha256": "f60c152c5bdcae2c2db7e5fc1bc9317ed8bad1cdba4c0780afeb90b6d688ba6b"
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/1_2_yosys.v": "94e1c60b934d9eaf40f8e60a7a755783e81c30be44b01512041eb36e9489b457",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/6_final.v": "a03a133a09bb3f43e62792509ac46105fa96e49b3d0354d2d5af6b01c58e4673",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/6_finish.rpt": "ad19a5531ffb46dcd7d22711f431d401041f366f709ccb100584ce67379ca234",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns_artifacts/metadata.json": "e533cc9688e129ef7e72344fcab363d92a190cb988d6b361c9cce0e1bba4cf0f"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0469687,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 1319.0,
+        "setup_wns_ns": -0.9113640000000001,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "routed_cell_area_um2": 4238.7
+}

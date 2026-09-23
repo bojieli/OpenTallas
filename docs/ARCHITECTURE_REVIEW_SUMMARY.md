@@ -591,3 +591,30 @@ The physical driver's failure message now says "failed engineering acceptance"
 instead of unconditionally saying "did NOT meet timing". This reflects the
 single-credit transport's capacitance-only failure without changing any verdict
 criteria. The existing physical environment/acceptance tests pass.
+
+## Matched KV routes confirm area and timing improvement
+
+The old population-count KV-index baseline has now completed with the same
+1 ns period, 22% utilization, CTS and signal-integrity constraints as the
+current prefix-count design. Baseline setup slack is −0.139148 ns with 72
+violations; current setup slack is +0.145303 ns with zero violations. Routed
+cell area falls 1,080.380 → 911.483 µm² (**15.63%**), and setup margin improves
+by 0.284451 ns. Both have clean hold, DRC, antenna, slew, capacitance and
+fanout checks. Source bindings and all seven artifacts per route verify.
+
+This supports retaining the prefix-boundary count: it closes the tested block
+period with less routed area and no functional latency change. It remains
+block evidence, not integrated attention closure. See the
+[matched route comparison](../results/physical_abi3/asap7/a3_attention_kv_index/prefix_count_matched_comparison.json).
+
+## Historical state payload-capture route
+
+The payload-capture state controller completed final routing at 1 ns with
+−0.911364 ns setup slack and 1,319 setup violations, hold +0.0469687 ns,
+and 4,238.700 µm² routed cell area. Other physical checks are clean. The
+worst setup path is `op_descriptor_id[3]` → `count_commits[25]`, so the
+payload-storage area change alone did not resolve descriptor admission timing.
+Its controller source matches `state_parallel_admission/before.sv`; all seven
+retained artifacts verify. The later parallel-admission implementation remains
+in routing and must be judged from its own result. See the
+[payload-capture route audit](../results/physical_abi3/asap7/state_controller/payload_capture_route_audit.json).
