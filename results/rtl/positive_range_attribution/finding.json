@@ -1,0 +1,42 @@
+{
+  "scope": "Fresh STA on attributed netlist; prelayout only, not original cell-name reuse or routed timing.",
+  "mapped_connectivity_verified": true,
+  "endpoints": [
+    {
+      "timing_cell": "_128094_",
+      "synthesis_cell": "$auto$ff.cc:337:slice$85620",
+      "signals": {
+        "mul_lower.busy": [
+          0
+        ],
+        "mul_lower.running": [
+          0
+        ],
+        "mul_lower_busy": [
+          0
+        ]
+      }
+    },
+    {
+      "timing_cell": "_127580_",
+      "synthesis_cell": "$auto$ff.cc:337:slice$75328",
+      "signals": {
+        "mul_lower.b_work": [
+          1
+        ],
+        "mul_lower.chunk": [
+          1
+        ]
+      }
+    }
+  ],
+  "input_sha256": {
+    "build/positive_range_attribution/mapped.json": "188f66fcbc2313183c76e6bc7523b8afa6a3aead86803955151e90accac31d00",
+    "build/positive_range_attribution/before_abc.json": "afc073aefd257a96d202966a9cfdff786b512d277067c681ada656e61f80b047",
+    "build/positive_range_attribution/mapped.raw.v": "6e89955ae0ec22056da63ee095fc4a92ddda116588cfc0fee36814e753b1b64c",
+    "build/positive_range_attribution/setup_path.rpt": "dd2d41d3a59000560b70bdc795dceaa43bed91f7e203fc638ac9bb68942193a9",
+    "build/positive_range_attribution/sta.tcl": "9560062ab580a123b7bbca51d06ac6e2e4e3e8aea3217d40c8c022932af2782a",
+    "build/positive_range_attribution/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+    "build/positive_range_pipeline_synth/mapped.raw.v": "882dd3dbab6a260fafdf5f6f49cc4b23a893c475bc178b48bf97d2f401013b3d"
+  }
+}

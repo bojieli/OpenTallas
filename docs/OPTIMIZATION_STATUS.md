@@ -57,7 +57,7 @@ added, and none establishes whole-model energy efficiency.
 |---|---|---|
 | Serial state apply pipeline | Final 1 ns setup improves to −0.370 ns, but still fails; adds area and two cycles per entry | Not selected |
 | Overlapping state apply | Preserves 35-cycle general-ring apply, but other policies grow from one to three cycles. Final setup −0.494 ns and two fanout violations | Not selected |
-| Parallel commit-counter increment | Small pre-layout improvement; complete controller route pending | Await route |
+| Parallel commit-counter increment | Final setup −0.351 ns, 1,356 violations; physical checks pass | Not selected |
 | Per-slot parallel bounds checks | Shorter admission path, but 11.8% more mapped area and timing still fails | Not selected |
 | Retained remaining capacity per slot | Commit-counter pre-layout slack −1.485 → −0.733 ns; 9.84% more area; no added cycles relative to overlap candidate | Stronger admission candidate; route pending |
 | Reset-free private state payload | 4.60% less mapped area than retained-capacity candidate, worse pre-layout timing | Not selected |
@@ -84,7 +84,7 @@ regress. Conversely, improved pre-layout slack is not proof of routed closure.
 - Two-entry cache: eight protocol tests and fresh complete-attention comparison.
   All nine attention transactions remain exact; 2,388,699 → 2,374,287 active cycles.
 - Latest recorded inventory: nine current-source extracted passing configurations
-  out of 255 recorded routes. This is a historical-record inventory, **not**
+  out of 256 recorded routes. This is a historical-record inventory, **not**
   “nine of 255 required blocks complete” and not a hierarchy-coverage metric.
 
 Physical acceptance includes setup, hold, fanout, slew, capacitance, DRC and
@@ -123,3 +123,9 @@ integrated and all-target work is substantial.
 
 Future progress updates should identify: **production change, experiment, or
 verification**, then state its effect on the next integration decision.
+
+Latest decision update: the counter candidate and operand-service hold20 retry
+have finished and both fail timing acceptance. The counter still fails setup;
+the operand service still fails hold. Neither is selected. Fresh positive-range
+attribution identifies multiplier running-to-operand control fanout as the next
+prelayout path to investigate. Other matched physical runs remain pending.

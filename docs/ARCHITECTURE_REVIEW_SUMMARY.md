@@ -1322,3 +1322,30 @@ counted twice. This demonstrates containing-engine service savings, not a clock
 or whole-model speedup; the candidate's prelayout slack regression still prevents
 production selection. Reproduction commands, logs and exact source inventories
 are retained in the [attention comparison](../results/rtl/softmax_cache2/attention/comparison.json).
+
+## Counter route and operand hold retry complete; next exponential path identified
+
+The parallel commit-counter candidate finishes at 4,267.250 µm², setup
+−0.350772 ns with 1,356 violations, and hold +0.0466789 ns at ASAP7 TT 1 ns.
+DRC, antenna, slew, capacitance and fanout checks pass. The worst setup path
+remains op_descriptor_id[20] → count_commits[3]. It is not selected: admission
+still fails and area exceeds both earlier apply candidates. Its final audit
+verifies the measured sources and all seven retained artifacts.
+
+The operand-service hold20 retry finishes at 4,694.700 µm², setup +0.00623679 ns,
+but hold −0.0010327 ns with two hold violations. All physical checks pass.
+The repair-margin retry does not close hold and is not accepted. Its sources
+and seven retained artifacts also verify; no positive setup-only verdict is used.
+
+Fresh positive-range-pipeline attribution identifies mul_lower.running/busy →
+mul_lower.b_work[1] as the worst prelayout path. Cell/pin/net correspondence is
+verified against retained pre-ABC names and freshly timed mapped cells. This
+supports investigating multiplier control fanout; it is not extracted timing.
+See results/rtl/positive_range_attribution/finding.json.
+
+Correction to earlier conversational updates: `make finish metadata-generate`
+is the requested make target, not proof that a flow has reached finalization.
+A Docker client's zero CPU usage does not describe its OpenROAD workload.
+The table entries labelled “deleted” during repair are removed cells, not
+remaining physical violations. Active stage and acceptance must come from
+actual stage logs and the final canonical record respectively.

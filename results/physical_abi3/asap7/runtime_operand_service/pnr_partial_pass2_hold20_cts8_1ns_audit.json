@@ -1,0 +1,98 @@
+{
+  "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns.json",
+  "record_sha256": "0de89ac87c4f0e3a7ac41aef5d47a11d1d38068a4a782347904bca4d7d56bd4a",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+      "sha256": "2aa72c331a7ee62d2876b51e133ae575e80391d808308698ea502769b5bf9ba3",
+      "size_bytes": 12439
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+      "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+      "size_bytes": 5316
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "sha256": "f877b618a11ed5cd8bf79f763419bb8e82349110158e6c8482d0213227b7141c",
+      "size_bytes": 6461
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+      "sha256": "afd0c4982547cce2b6fa7dc0d23d9bf663d96c52228ae5f6ce3ea8319a564f67",
+      "size_bytes": 6517
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+      "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298",
+      "size_bytes": 3336
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "5c487e4c9cdda627b515b196f3e7062b73a47571e471f7ae86986553a232ad6f",
+      "size_bytes": 9181
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+      "sha256": "02d17765059b71c26dd6d1be88b216b802dcb720dae43e1e787c98a1633b6837",
+      "size_bytes": 7291
+    },
+    {
+      "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+      "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+      "size_bytes": 4073
+    },
+    {
+      "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+      "size_bytes": 4672
+    },
+    {
+      "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+      "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+      "size_bytes": 8528
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+      "size_bytes": 7555
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/1_2_yosys.v": "ed923d71cdcedfb39e8dfef192a7a00860637ea1787da1cf6884fc931fc08373",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/6_final.v": "203292fa2d74bd7209cbd85d634aa9d29f241bd01900ff06aef3cf6ecd308e24",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/6_finish.rpt": "bf172f24727fb0e3c4f3f7ac01bc3908b91ef89496682a757da4136338c49314",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/config.mk": "c37dcc62ea85b74fb6b87da62859cdb24cc2d7e392f47b361db919748426673d",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/metadata.json": "1994cdfb6c57b31f304b6caea0476174668c942735096808cfac303242abf0cf",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 2.0,
+        "hold_wns_ns": -0.0010327,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.00623679,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 4694.7,
+  "scope": "Final extracted ASAP7 TT 1 ns; all sources and seven retained artifacts verified. Failing results are not closure."
+}
