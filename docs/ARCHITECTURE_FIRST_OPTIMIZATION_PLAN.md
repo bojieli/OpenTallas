@@ -4,6 +4,17 @@ Date: 2026-09-22. Status: architecture implementation in progress, following the
 requested order before detailed optimization. Supersedes block-by-block timing work as the
 priority order; preserves the full recharacterization and optimization scope.
 
+## System-budget checkpoint: 2026-09-23
+
+The [ROM/HBM top-down assessment](ROM_HBM_PERFORMANCE_GAP.md) now sets the
+implementation priorities. Fresh resource derivation shows that the five-die
+Qwen pipeline cannot meet its older token-latency projection: KV service alone
+exceeds that entire budget. The HBM compute budget needs sufficient weight reuse,
+and the leading-node ROM study leaves auxiliary service capacity unpriced.
+Before selecting further component changes, reconcile these system requirements
+with current-source RTL, delivered bandwidth and containing-engine timing. Existing
+physical runs remain useful evidence, but they cannot complete this architecture gate.
+
 ## Assessment
 
 The project contains useful, optimized components, but does not yet demonstrate

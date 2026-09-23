@@ -3,6 +3,8 @@
 Status snapshot: 2026-09-23. Production work is on `main`. This summary covers
 changes through `6510912a`; the commit containing this document follows it.
 
+For the system-level assessment, start with **[ROM/HBM performance gap](ROM_HBM_PERFORMANCE_GAP.md)**. It compares the analytical ceilings with current delivery/compute budgets and identifies the architecture changes needed before local optimizations can establish a fast accelerator.
+
 ## Where we stand
 
 **Several useful architectural improvements are integrated, but the complete

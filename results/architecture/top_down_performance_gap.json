@@ -1,0 +1,209 @@
+{
+  "attention_fixture_evidence": {
+    "active_cycles": 2388699,
+    "baseline_sources_current": true,
+    "drifted_sources": [],
+    "nested_exponential_wait_fraction": 0.9181843338151856,
+    "scope": "Nine sparse-attention fixtures only; not a whole-model demand distribution."
+  },
+  "clock_hz_assumed": 1000000000,
+  "flash_200k_batch1_auxiliary": {
+    "counts": {
+      "attention_score_elements": 3039744.0,
+      "compressor_pool_elements": 37120.0,
+      "index_score_elements": 67200000.0,
+      "nonlinear_elements": 627456.0,
+      "normalization_elements": 1831424.0,
+      "sinkhorn_iterations": 20.0,
+      "sinkhorn_matrix_elements_per_iteration": 1376.0,
+      "topk_candidates": 1050000.0,
+      "topk_selected": 10752.0
+    },
+    "engine_equivalents_for_10pct_serial_budget": 1105627,
+    "engine_equivalents_no_reuse_no_early_exit": 110563,
+    "modeled_token_latency_us": 79.18101646978437,
+    "optimistic_exp_per_second_per_engine_at_assumed_clock": 347222.22222222225,
+    "pricing_status": "unpriced_break_even_requirements_only_pending_COMP-01",
+    "production_non_early_exit_exp_service_cycles": 2880,
+    "required_rates_per_s": {
+      "attention_score_elements": 38389807753.478035,
+      "compressor_pool_elements": 468799235.6623139,
+      "index_score_elements": 848688271457.6372,
+      "nonlinear_elements": 7924323631.781595,
+      "normalization_elements": 23129584358.125473,
+      "sinkhorn_matrix_element_iterations": 347558054.0255086,
+      "topk_candidates": 13260754241.525581,
+      "topk_selected": 135790123.43322197
+    },
+    "scope": "Sizing stress case: one nontrivial exponential per score, no reuse, ideal scheduling, no wrapper overhead. Not actual engine demand, speedup, area, or achievable clock."
+  },
+  "gate_check": {
+    "gate_count": 19,
+    "passing": 9,
+    "terminal_passing": 1
+  },
+  "historical_reconciliation_not_current": {
+    "calibration_drifted_inputs": [
+      "configs/gates/redesign_gates.json",
+      "configs/hardware/technology.json",
+      "results/roofline/n5_vs_b200/analytical.json"
+    ],
+    "cost_tables_current": {
+      "hbm": false,
+      "rom": false
+    },
+    "hbm_cycle_over_analytical_latency": 1.0147942213971488,
+    "rom_cycle_over_analytical_latency": 28.686380078450945,
+    "scope": "Historical assumed cycle models, not current RTL or silicon measurements; absent links and differing charged work prevent a headline hardware ratio."
+  },
+  "input_sha256": {
+    "configs/architecture/chip_design_v2.json": "83e7d2c753969dea6e79349a177aab580bebab37892261fb5fa603032c9b773d",
+    "configs/hardware/leading_node_market.json": "84269513500d590fb74c68c777419ee2e011b44113a372ce868ab6ce63f3b407",
+    "configs/hardware/technology.json": "bbdca40514297d558cbd00db5b59f322fcd9f660a340c94bb0b0e96e932ba1e8",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "results/derived/qwen3_n5_design_target_calibration.json": "3ab96e9a53dc18c00047dc18d8b528d4c4a42f1b69917abcd8bc186843685a6e",
+    "results/derived/qwen3_n5_design_target_reconciliation.json": "fde0741e310b5c471ea0589909b46eb983db5c42f2180ee4593b72cab0efef62",
+    "results/iso-node/leading_node_market/analytical.json": "c32c593743c38d26215da97d42510532418abe9f829306e0cf5e6388fe9f5df4",
+    "results/rtl/softmax_cache2/attention/sources.json": "04a10dd0059fd4eebe43365bf80a29f02e2e81feb5a31c60258e0d2c5c0fbe04",
+    "results/rtl/softmax_exp_reuse/attention_profile.json": "84b93a32aae86a8a31ee954d62129a1ad96319dbd6b68b094594293001f40199",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+    "src/opentallas/analytical.py": "016b1863bb40f6a77af52aebefd3fe58b7f47b336110d3d0b7a49f86e5480c2a",
+    "src/opentallas/chip_architecture.py": "19f0b04ad910dc038423db5841be5ddb9c5f321a18d419560babc763e94b04d9",
+    "tools/audit_top_down_performance_gap.py": "4bd470b31a5c673ee5e274a7473ce6b51209b41283b0c8b85af379f17876943c",
+    "tools/check_chip_architecture.py": "bbf4a070106ab8fc8050a1f84500d2fa91bac5c75c02bd262d2b4393897520c5",
+    "tools/check_redesign_gates.py": "b59578db5b87b2db05c3bc411658606911d98456e9680b773dbca07a4175ea1b",
+    "tools/run_a3_hc_transcendental_rtl_campaign.py": "921126e7b573256eda0d2825b7f1462a6edc921e912673f94b055dd8a992bd7f",
+    "tools/run_iso_node_studies.py": "4f1531c3da514cd95e148a1d064ab62d5af274f6b5f9288d2881ff5029164523"
+  },
+  "market_comparisons_analytical_only": [
+    {
+      "context_tokens": 200000,
+      "fastest_same_batch_gpu": "NVIDIA-B300-x8",
+      "fastest_same_batch_gpu_per_user_tokens_s": 1650.6850466903252,
+      "model": "DeepSeek-V4-Flash-0731",
+      "same_batch_per_user_speed_ratio": 7.650938487118427,
+      "wafer_per_user_tokens_s": 12629.289753833888,
+      "wafer_stages": 1
+    },
+    {
+      "context_tokens": 1000000,
+      "fastest_same_batch_gpu": "NVIDIA-B300-x16",
+      "fastest_same_batch_gpu_per_user_tokens_s": 642.2911520802196,
+      "model": "DeepSeek-V4-Pro-0813",
+      "same_batch_per_user_speed_ratio": 7.498045971194379,
+      "wafer_per_user_tokens_s": 4815.928585188887,
+      "wafer_stages": 4
+    },
+    {
+      "context_tokens": 8192,
+      "fastest_same_batch_gpu": "NVIDIA-B300-x16",
+      "fastest_same_batch_gpu_per_user_tokens_s": 1791.4823190589923,
+      "model": "Qwen3-8B",
+      "same_batch_per_user_speed_ratio": 4.943835159398662,
+      "wafer_per_user_tokens_s": 8856.793276404898,
+      "wafer_stages": 1
+    },
+    {
+      "context_tokens": 200000,
+      "fastest_same_batch_gpu": "NVIDIA-B300-x8",
+      "fastest_same_batch_gpu_per_user_tokens_s": 1519.5200894902814,
+      "model": "DeepSeek-V4.1-Flash",
+      "same_batch_per_user_speed_ratio": 9.3452439163385,
+      "wafer_per_user_tokens_s": 14200.285872063185,
+      "wafer_stages": 3
+    }
+  ],
+  "market_study_byte_reproduced": true,
+  "proposed_exit_criterion": "On each matched workload, reach at least 70% of an implementation-calibrated feasible ceiling with all costs included; validate timing, correctness, area and activity-based energy separately. This is an engineering proposal, not a measured result or a change to existing release gates.",
+  "qwen_8k_batch1": {
+    "active_weight_bytes": 15136811008,
+    "b200_linear_compute_lower_bound_us": 6.727471559111112,
+    "b200_peak_to_bandwidth_ridge_flops_per_byte": 281.25,
+    "b200_published_raw_bandwidth_bytes_s": 8000000000000.0,
+    "b200_raw_memory_lower_bound_us": 2043.0963199999999,
+    "b200_raw_memory_only_token_rate_ceiling": 489.4531844685619,
+    "current_x5_kv_floor_over_old_total_tpot": 1.2952535642534142,
+    "hbm_design_delivered_bytes_s_assumed": 4500000000000,
+    "hbm_memory_only_token_rate_ceiling": 275.3174162635661,
+    "hbm_shared_memory_lower_bound_us": 3632.1712355555555,
+    "hbm_x5_die_lanes": 41536,
+    "kv_read_bytes": 1207959552,
+    "lanes_to_match_bf16_weight_stream": 2250.0,
+    "linear_operations": 15136811008,
+    "old_x5_analytical_tpot_us": 202.38817111543725,
+    "profiles": [
+      {
+        "dense_linear_compute_lower_bound_us": 60.582139344262295,
+        "dies": 4,
+        "id": "qwen_x4",
+        "ideal_bf16_ops_s_available_to_one_token": 249856000000000,
+        "kv_delivered_bytes_per_cycle": 4500,
+        "kv_only_token_rate_ceiling": 14901.161193847656,
+        "kv_service_lower_bound_us": 67.108864,
+        "kv_source_bytes_per_cycle": 4500,
+        "kv_source_to_delivery_ratio": 1.0,
+        "lanes": 31232,
+        "partition": "tensor",
+        "qualified_tpot_us": null,
+        "tiles": 488
+      },
+      {
+        "dense_linear_compute_lower_bound_us": 182.21315254237288,
+        "dies": 5,
+        "id": "qwen_x5",
+        "ideal_bf16_ops_s_available_to_one_token": 83072000000000,
+        "kv_delivered_bytes_per_cycle": 4608,
+        "kv_only_token_rate_ceiling": 3814.697265625,
+        "kv_service_lower_bound_us": 262.144,
+        "kv_source_bytes_per_cycle": 26112.0,
+        "kv_source_to_delivery_ratio": 5.666666666666667,
+        "lanes": 41536,
+        "partition": "pipeline",
+        "qualified_tpot_us": null,
+        "tiles": 649
+      },
+      {
+        "dense_linear_compute_lower_bound_us": 12.20647563996697,
+        "dies": 8,
+        "id": "qwen_x8",
+        "ideal_bf16_ops_s_available_to_one_token": 1240064000000000,
+        "kv_delivered_bytes_per_cycle": 4608,
+        "kv_only_token_rate_ceiling": 30517.578125,
+        "kv_service_lower_bound_us": 32.768,
+        "kv_source_bytes_per_cycle": 13056.0,
+        "kv_source_to_delivery_ratio": 2.8333333333333335,
+        "lanes": 77504,
+        "partition": "tensor",
+        "qualified_tpot_us": null,
+        "tiles": 1211
+      }
+    ],
+    "required_kv_bandwidth_for_100us_token_bytes_s": 12079595520000.0,
+    "required_linear_compute_for_100us_token_ops_s": 151368110080000.0,
+    "x5_peak_to_bandwidth_ridge_flops_per_byte": 18.460444444444445
+  },
+  "schema": "opentallas.top-down-performance-gap.v1",
+  "scope": "Fresh analytical regeneration and current chip-resource derivation; no measured full-system ROM/HBM efficiency exists.",
+  "terminal_gates": [
+    {
+      "id": "G1",
+      "status": "fail",
+      "why": "8 of 10 requirement(s) unmet: G1a: 2 of 2 workload binding(s) fail. TA-QW-EOS-1: no conforming record for storage class(es) ['rom', 'hbm']: resul; G1b: 2 of 2 workload binding(s) fail. TA-QW-EOS-1: no conforming record for storage class(es) ['rom', 'hbm']: resul; G1c: no conforming record for storage class(es) ['rom', 'hbm']: results/rtl/abi3_g1c_composition.json [rom]: handof; ..."
+    },
+    {
+      "id": "G2",
+      "status": "pass",
+      "why": "results/physical_abi3/asap7/a3_g2_cluster/pnr.json: one routed netlist with microsequencer, datapath array among its sources, 12 placed macro(s), DRC 0, antenna 0"
+    },
+    {
+      "id": "G3",
+      "status": "fail",
+      "why": "6 of 6 rows fail (provisional budget): Qwen3-8B/rom: no correctness-qualified measurement; Qwen3-8B/hbm: no correctness-qualified measurement; DeepSeek-V4-Flash-0731/rom: no correctness-qualified measurement; ..."
+    },
+    {
+      "id": "G4",
+      "status": "fail",
+      "why": "results/derived/qwen3_n5_design_target_calibration.json: calibration.block_cycles_within_band == False -- 32 of 32 control-plane ratios outside [0.9, 1.1]: iverilog case 0 transaction 0.0958 (7724 model over 80637 measured); iverilog case 0 transaction_less_bench 0.0960 (7724 model over 80430 measured); section 11.5 boundary item unmet: unmeasured (rtl3_abi3_boundary_chain: see boundary.why_unmeasured), model chain 39 vs design no asserted figure (section 2.1 row 33 withdrew it), technology.json#latency not re-derived"
+    }
+  ]
+}
