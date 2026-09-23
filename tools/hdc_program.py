@@ -173,6 +173,11 @@ def build_program(lay):
     for L in range(lay.L):
         rmsnorm("X", H, lay.cb[(L, "in")], "H")
         me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
+        # V row straight to the cache: independent of the head norms
+        su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
+           dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
+           d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
+           reads={"QKV"}, writes={f"V{L}"})
         nh = NH + KV
         su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
            r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
@@ -188,16 +193,12 @@ def build_program(lay):
             a_off, c_off, mb = (0, half, I.MB_NEG) if lo else (half, 0, I.MB_POS)
             su(su_nout=NH, a_base=VM["QN"] + a_off, c_base=VM["QN"] + c_off, mb=mb,
                dst=I.DST_VM, d_base=VM["QR"] + a_off, d_so=HD, d_si=1,
-               reads={"QN"}, writes={"QR"}, **rope)
+               reads={"QN"}, writes={"QRlo" if lo else "QRhi"}, **rope)
             kq = VM["QN"] + NH * HD
             su(su_nout=KV, a_base=kq + a_off, c_base=kq + c_off, mb=mb, dst=I.DST_KV,
                d_base=lay.k_elem(L, 0, 0, a_off), d_d=I.DYN_KWRITE,
                d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
-               reads={"QN"}, writes={f"K{L}"}, **rope)
-        su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
-           dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
-           d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
-           reads={"QKV"}, writes={f"V{L}"})
+               reads={"QN"}, writes={f"K{L}lo" if lo else f"K{L}hi"}, **rope)
         jsh = group.bit_length() - 1
         assert 1 << jsh == group and NH <= IL
         heads = {f"S{h}" for h in range(NH)}
@@ -205,7 +206,7 @@ def build_program(lay):
         me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False, me_xcs=0,
            me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
            me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
-           me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QR", f"K{L}"}, writes=heads)
+           me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes=heads)
         heads = {f"S{h}" for h in range(NH)}
         sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                   d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)

@@ -23,6 +23,7 @@ Writes results/rtl/hdc_decode_campaign.json.
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -122,6 +123,18 @@ def run() -> dict:
                                capture_output=True, text=True).stdout
         expect = json.loads((img / "expect.json").read_text())
         prog_len = expect["prog_words"]
+        # scaling point: 8 lane groups
+        img8, obj8 = s / "img8", s / "obj8"
+        env8 = dict(os.environ, HDC_GROUPS="8")
+        subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img8)], check=True,
+                       capture_output=True, env=env8)
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", "-Mdir", str(obj8),
+                        f"-I{ISA_SVH.parent}",
+                        *map(str, HDC), *map(str, PIPES), str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
+                       check=True, capture_output=True)
+        one8 = subprocess.run([str(obj8 / "Vtb_hdc_core"), f"+DIR={img8}", *(img8 / "run.args").read_text().split()],
+                              check=True, capture_output=True, text=True).stdout
     m = SINGLE.search(one)
     token, pos, nxt, exp_tok, cycles, fault, bad_lg, bad_vm, bad_kv = map(int, m.groups())
     u = list(map(int, UTIL.search(one).groups()))
@@ -137,8 +150,15 @@ def run() -> dict:
                  "oracle_generated_tokens": [st["oracle"] for st in steps], "steps": mm[0],
                  "mismatches": mm[2], "total_cycles": mm[3], "generation_steps": steps,
                  "pass": "PASS" in multi and mm[2] == 0}
+    m8 = SINGLE.search(one8)
+    u8 = list(map(int, UTIL.search(one8).groups()))
+    scale8 = {"groups": 8, "next_token": int(m8.group(3)), "cycles": int(m8.group(5)),
+              "logit_mismatches": int(m8.group(7)), "vector_memory_mismatches": int(m8.group(8)),
+              "kv_cache_mismatches": int(m8.group(9)), "me_issue_cycles": u8[0], "su_issue_cycles": u8[1],
+              "both_units_idle_cycles": u8[2],
+              "pass": "PASS" in one8 and int(m8.group(3)) == int(m8.group(4)) and int(m8.group(6)) == 0}
     macs = 4 * (128 * 192 + 128 * 128 + 128 * 768 + 384 * 128) + 128 * 4096
-    status = "pass" if sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and multi_rec["pass"] and lint.returncode == 0 \
+    status = "pass" if sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and scale8["pass"] and multi_rec["pass"] and lint.returncode == 0 \
         else "fail"
     return {
         "schema": "opentallas.hdc-decode-campaign.v1",
@@ -155,6 +175,7 @@ def run() -> dict:
         "multipliers": mul_rec,
         "single_step": single,
         "end_to_end": multi_rec,
+        "scaling_8_groups": scale8,
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)

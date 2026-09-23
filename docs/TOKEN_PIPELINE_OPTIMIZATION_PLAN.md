@@ -229,3 +229,23 @@ Results:
 
 The matrix engine is now compute-bound at 64 multiply-accumulates per cycle,
 and lm_head is the largest single op.
+
+**Iteration 5: region refinement; a negative result; lane scaling.**
+
+- *RoPE regions.* The RoPE halves write disjoint halves of the query and key
+  rows. Tracking them as separate regions removes two barriers per layer, and
+  the V row now goes to the cache right after the QKV op.
+  Cycles per token: 32,084. <!-- figure: 32084 src="results/rtl/hdc_iterations/iter5_rope_regions_g8_scaling.json#single_step.cycles" name="HDC cycles per token, iteration 5" -->
+- *Negative result: prefetching sequencer.* A sequencer that fetches and
+  decodes the next instruction during the current one's wait was built,
+  verified, measured and reverted. It saved no cycles: every wait it could
+  hide is already a pipeline drain longer than the fetch.
+- *Scaling point: 8 lane groups (128 lanes).* The split plan becomes 4/8/4/8/1,
+  and the golden still decodes the oracle's tokens. The token is bit-exact
+  against its own ISA-level model.
+  - cycles per token: **22,418**; <!-- figure: 22418 src="results/rtl/hdc_iterations/iter5_rope_regions_g8_scaling.json#scaling_8_groups.cycles" name="HDC cycles per token, 8 groups" -->
+  - matrix-engine issue cycles: 11,264. <!-- figure: 11264 src="results/rtl/hdc_iterations/iter5_rope_regions_g8_scaling.json#scaling_8_groups.me_issue_cycles" name="HDC matrix-engine issue cycles, 8 groups" -->
+
+  Four groups stay the default: they are the configuration being routed.
+  Beyond eight groups the stream unit and the short-vector latency chains
+  (norms, head norms, softmax) dominate this hidden-size-128 vehicle.

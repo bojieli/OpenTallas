@@ -42,13 +42,14 @@ addresses).  A base may add one of the DYN values the sequencer derives from
 `python3 tools/hdc_isa.py` regenerates rtl/hdc/ot_hdc_isa.svh, included inside the
 core module (Yosys takes no package import in a module header).
 """
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "rtl/hdc/ot_hdc_isa.svh"
 
 W_LANES = 16          # lanes per ME group, and the vector/KV memory word width
-GROUPS = 4            # ME lane groups: W_LANES * GROUPS multiply-accumulates per cycle
+GROUPS = int(os.environ.get("HDC_GROUPS", 4))   # ME lane groups: W_LANES * GROUPS MACs per cycle
 INTERLEAVE = 8        # ME outputs in flight per lane (adder latency 5 + 3)
 T_MAX = 64            # KV positions provisioned
 VM_ELEMS = 4096       # vector memory, FP32 elements

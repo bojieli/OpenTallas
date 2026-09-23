@@ -9,10 +9,12 @@
 // +MULTI: start from an EMPTY KV cache, run every prompt token through the core
 // (the core writes its own KV rows), then generate +NGEN tokens feeding each
 // output back, and compare the generated ids with the torch oracle's.
-module tb_hdc_core (input wire clk);
+module tb_hdc_core #(
+    parameter integer G = 4                  // matrix-engine lane groups (tools/hdc_isa.py GROUPS)
+) (input wire clk);
     localparam integer INSTR_BITS = 1024;
-    localparam integer W = 16, G = 4, AW = 24, NW = 16, PAW = 12;
-    localparam integer WROM_WORDS = 32768, CROM_WORDS = 4096, KV_WORDS = 1024;
+    localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
+    localparam integer WROM_WORDS = 131072, CROM_WORDS = 4096, KV_WORDS = 1024;
     localparam integer VM_ELEMS = 4096, VOCAB = 4096, PROG_WORDS = 4096;
 
     reg [G*W*16-1:0] wrom [0:WROM_WORDS-1];
@@ -64,7 +66,7 @@ module tb_hdc_core (input wire clk);
     integer l, q;
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr];
-        if (wrom_re) wrom_q <= wrom[wrom_addr[14:0]];
+        if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
         if (crom_re) crom_q <= crom[crom_addr[11:0]];
         if (kv_re) kv_q <= kv[kv_raddr[9:0]];
         for (q = 0; q < G; q = q + 1)
