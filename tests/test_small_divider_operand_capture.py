@@ -5,10 +5,12 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@pytest.mark.parametrize('rtl_source', ['rtl/lib/ot_wide_div_small_seq.sv',
+    'results/rtl/small_divider_scratch_reset/candidate.sv'])
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
 @pytest.mark.parametrize('divisor_bits', [6, 9])
 @pytest.mark.parametrize('first_chunk', [1, 3])
-def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk):
+def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk, rtl_source):
     before = tmp_path/'before.sv'
     before.write_text((ROOT/'results/rtl/small_divider_operand_capture/before.sv').read_text().replace(
         'module ot_wide_div_small_seq #(', 'module old_divider #('))
@@ -20,6 +22,28 @@ def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk):
     bench = bench.replace("@(negedge clk); start = 1'b0;",
                           "@(negedge clk); start = 1'b0; dividend=~a; divisor=~d;")
     bench = bench.replace('.BITS_PER_STEP(1)', f'.BITS_PER_STEP({first_chunk})')
+    bench = bench.replace('//: Exact multiples,', r"""
+        // Cancel in-flight payload and exercise start while reset is asserted.
+        for (trial = 0; trial < 4; trial = trial + 1) begin
+            @(negedge clk);
+            reference_dividend = {WIDTH{1'b1}}; reference_divisor = 7;
+            dividend = reference_dividend; divisor = reference_divisor; start = 1;
+            @(negedge clk); start = 0;
+            repeat (trial + 1) @(negedge clk);
+            #1; rst_n = 0; start = 1;
+            #1;
+            if (busy !== 0 || done !== 0 || inexact !== 0)
+                $fatal(1,"reset protocol outputs");
+            for (k = 0; k < DUTS; k = k + 1)
+                if (quotient[k] !== 0) $fatal(1,"reset quotient");
+            repeat (2) @(negedge clk);
+            start = 0; rst_n = 1;
+            repeat (170) begin
+                @(negedge clk);
+                if (busy !== 0 || done !== 0) $fatal(1,"stale completion");
+            end
+        end
+        //: Exact multiples,""")
     reference = r'''
     wire [DUTS-1:0] ref_busy, ref_done, ref_inexact;
     wire [WIDTH-1:0] ref_quotient [0:DUTS-1];
@@ -39,7 +63,7 @@ def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk):
     reference = reference.replace('FIRST_CHUNK', str(first_chunk))
     bench = bench.replace('endmodule', reference+'\nendmodule')
     source = tmp_path/'tb.sv';source.write_text(bench)
-    sources = [str(ROOT/'rtl/lib/ot_wide_div_small_seq.sv'),str(before),str(source)]
+    sources = [str(ROOT/rtl_source),str(before),str(source)]
     top = 'tb_wide_div_small_seq_equiv'
     if simulator == 'iverilog':
         command = ['iverilog','-g2012','-s',top,'-o',str(tmp_path/'sim'),*sources]

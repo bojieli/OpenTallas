@@ -1,0 +1,70 @@
+{
+  "scope": "Isolated candidate removing reset from reinitialized scratch payload; public reset behavior and transaction cycles preserved. Production RTL unchanged pending routed qualification.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/small_divider/idle_advance_step4_synth_sta_1ns.json",
+      "sha256": "c5bee12747a29b930a4b1136cb016ae52d134df09e019a4e60fd945a8d159494",
+      "area_um2": 217.184,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+          "size_bytes": 6639
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.053119883704137706,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 166,
+            "setup_wns_ns": -0.5102950304942704,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/small_divider/scratch_unreset_step4_synth_sta_1ns.json",
+      "sha256": "34bd1bb0f0b915748dcee86e42058ef04e7868e3e2a7c9ae32f16ab866835cd5",
+      "area_um2": 202.226,
+      "sources": [
+        {
+          "path": "results/rtl/small_divider_scratch_reset/candidate.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.04886380208886728,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 166,
+            "setup_wns_ns": -0.41778347615167205,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 6.887247679387065,
+  "physical_pending": "results/physical_abi3/asap7/small_divider/scratch_unreset_step4_cts12_1ns.json",
+  "verification": "16 parameterized tests pass across production/candidate, Icarus/Verilator, 6-/9-bit divisors and two six-chunk sets. Each checks 354 arguments plus four reset interruptions, all public outputs each cycle against historical RTL, independent arithmetic oracle, and restart after reset. Candidate containing softmax passes nine cases and two refusals with unchanged 767158 cycles, 276 evaluations and 121 hits."
+}

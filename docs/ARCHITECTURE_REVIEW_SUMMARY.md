@@ -836,3 +836,23 @@ in `build/physical_softmax_exp_only_tree16_cts12_1ns`, targeting
 combined implementation rather than projecting standalone multiplier timing
 onto the engine. The apply-pipeline state-controller route is also confirmed live;
 neither pending run supplies a final result yet.
+
+## Small-divider scratch-reset candidate reduces control overhead
+
+An isolated candidate removes reset muxing from the dividend/quotient shift bank
+and partial remainder. Every accepted request initializes both before protocol
+state permits completion; public outputs and protocol state retain asynchronous
+reset. No transaction cycles are added. At WIDTH163 / DIVISOR_BITS6 / STEP4,
+matched synthesis reduces mapped area 217.184 → 202.226 µm² (6.89%). Pre-layout
+1 ns slack improves −0.510295 → −0.417783 ns but still fails; a matched route
+is active and production RTL remains unchanged pending qualification.
+
+Sixteen parameterized tests pass across production and candidate, both simulators,
+six-/nine-bit divisors and two six-chunk sets. Each checks 354 arithmetic arguments
+and four reset interruptions, including start during reset, stale-completion
+checks and restart, while comparing all public outputs each cycle to historical
+RTL. The candidate's containing softmax passes nine numerical cases and two
+refusals with unchanged 767,158 cycles, 276 physical evaluations and 121 hits.
+The [comparison and source inventory](../results/rtl/small_divider_scratch_reset/comparison.json)
+retain the candidate, baseline, synthesis paths and verification logs. Softmax
+validation uses the recorded workspace engine with pre-existing divisor tuning.
