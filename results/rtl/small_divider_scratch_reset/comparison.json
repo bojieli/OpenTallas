@@ -1,5 +1,5 @@
 {
-  "scope": "Isolated candidate removing reset from reinitialized scratch payload; public reset behavior and transaction cycles preserved. Production RTL unchanged pending routed qualification.",
+  "scope": "Scratch reset removal selected and integrated; public reset behavior, step widths and transaction cycles preserved.",
   "records": [
     {
       "record": "results/physical_abi3/asap7/small_divider/idle_advance_step4_synth_sta_1ns.json",
@@ -65,6 +65,41 @@
     }
   ],
   "area_reduction_percent": 6.887247679387065,
-  "physical_pending": "results/physical_abi3/asap7/small_divider/scratch_unreset_step4_cts12_1ns.json",
-  "verification": "16 parameterized tests pass across production/candidate, Icarus/Verilator, 6-/9-bit divisors and two six-chunk sets. Each checks 354 arguments plus four reset interruptions, all public outputs each cycle against historical RTL, independent arithmetic oracle, and restart after reset. Candidate containing softmax passes nine cases and two refusals with unchanged 767158 cycles, 276 evaluations and 121 hits."
+  "verification": "16 parameterized tests pass across production/candidate, Icarus/Verilator, 6-/9-bit divisors and two six-chunk sets. Each checks 354 arguments plus four reset interruptions, all public outputs each cycle against historical RTL, independent arithmetic oracle, and restart after reset. Candidate containing softmax passes nine cases and two refusals with unchanged 767158 cycles, 276 evaluations and 121 hits.",
+  "physical_result": {
+    "record": "results/physical_abi3/asap7/small_divider/scratch_unreset_step4_cts12_1ns.json",
+    "status": "pass",
+    "area_um2": 278.303,
+    "previous_area_um2": 295.58,
+    "area_reduction_percent": 5.845118072941336,
+    "acceptance": {
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0466076,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": true,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 0.0,
+          "setup_wns_ns": 0.00501976,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": true
+        }
+      ],
+      "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+      "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+      "reason": "all evaluated stages met",
+      "status": "pass"
+    },
+    "scope": "WIDTH163 DIVISOR_BITS6 STEP4, ASAP7 TT, tested 1 ns; no other configuration or containing-engine timing claim."
+  },
+  "integration": "rtl/lib/ot_wide_div_small_seq.sv is byte-identical to routed candidate; default consumer step widths remain unchanged. Existing softmax candidate validation applies to this exact module body; full integrated arithmetic regression retained separately.",
+  "integrated_validation": "16 dual-simulator parameterized divider tests pass. Full Verilator exp/sigmoid corpus passes 4200 cases and 6637132 checks with reset/output stalls; max latency 3212 cycles. Source hashes verified after completion."
 }

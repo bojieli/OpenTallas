@@ -905,3 +905,23 @@ architecture separates row/column and depth products across clock edges. This
 route provides evidence for that integrated pipeline at the tested block scope;
 it does not justify adding another admission cycle before a current full-G2
 route demonstrates a need.
+
+## Scratch-reset removal selected after final route
+
+The small-divider candidate completes final extracted ASAP7 TT at the tested
+WIDTH163 / DIVISOR_BITS6 / STEP4, 1 ns configuration with +0.00501976 ns setup
+and +0.0466076 ns hold slack. Timing, DRC, antenna, slew, capacitance and fanout
+violations are all zero. Routed cell area falls 295.580 → 278.303 µm² (5.85%).
+The setup margin is narrow and does not qualify other configurations or the
+containing arithmetic engine. All seven retained artifact hashes verify in the
+[scratch-reset route audit](../results/physical_abi3/asap7/small_divider/scratch_unreset_step4_cts12_1ns_audit.json).
+
+The exact candidate is now integrated into `ot_wide_div_small_seq`; consumer
+step widths and transaction cycles remain unchanged. Sixteen parameterized
+Icarus/Verilator tests pass after integration. Full Verilator exp/sigmoid testing
+passes 4,200 cases and 6,637,132 checks, including reset and output stalls,
+with maximum 3,212 cycles. The prior containing softmax candidate test uses this
+identical module body and retains 767,158 cycles. Source inventories and logs
+are retained alongside the [updated selection](../results/rtl/small_divider_scratch_reset/comparison.json).
+The active tree16-containing softmax route predates this small-divider integration
+and must retain that historical source binding when it completes.

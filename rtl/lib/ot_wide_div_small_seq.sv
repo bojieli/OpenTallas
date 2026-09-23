@@ -103,26 +103,28 @@ module ot_wide_div_small_seq #(
     wire [PADDED-1:0] quot_next = (work << BITS_PER_STEP) |
                                  {{(PADDED-BITS_PER_STEP){1'b0}}, step_digit};
 
+    // Scratch payload is initialized at acceptance before running can expose it.
+    // Reset only protocol/public state, avoiding reset muxes across the shift bank.
+    always @(posedge clk) begin
+        work <= quot_next;
+        rem <= next_rem;
+        if (!running && start) begin
+            work <= {{(PADDED-WIDTH){1'b0}}, dividend};
+            rem <= {(DIVISOR_BITS+1){1'b0}};
+        end
+    end
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             running <= 1'b0;
             done <= 1'b0;
             quotient <= {WIDTH{1'b0}};
             inexact <= 1'b0;
-            work <= {PADDED{1'b0}};
-            rem <= {(DIVISOR_BITS+1){1'b0}};
             steps_left <= {COUNT_BITS{1'b0}};
         end else begin
             done <= 1'b0;
-            // Scratch state is reinitialized on every accepted operation.
-            // Let it advance while idle instead of loading running with wide
-            // hold enables; public results still update only on completion.
-            work <= quot_next;
-            rem <= next_rem;
             if (!running) begin
                 if (start) begin
-                    work <= {{(PADDED-WIDTH){1'b0}}, dividend};
-                    rem <= {(DIVISOR_BITS+1){1'b0}};
                     steps_left <= STEPS_CODE[COUNT_BITS-1:0];
                     running <= 1'b1;
                 end
