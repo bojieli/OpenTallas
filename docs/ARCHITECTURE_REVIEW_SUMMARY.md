@@ -648,3 +648,12 @@ cases initially hit a 120-second wall limit; both completed successfully after
 raising it to 600 seconds. No test case or arithmetic scope was removed.
 Source manifests, reports and logs are retained in the
 [wide-divider checkpoint](../results/rtl/wide_divider_shared_shift/checkpoint.json).
+
+The current containing-softmax checkpoint after both divider updates maps to
+12,063.627 µm² and 8,584 sequential cells, versus 12,070.904 µm² and 8,576
+before. Pre-layout setup slack worsens to −10.4575 ns at 1 ns. This is
+essentially unchanged mapped cost and does not demonstrate a softmax clock
+benefit. The wide transform-divider saving is a standalone result; softmax
+fixes the operation to EXP_NONPOS and does not exercise sigmoid service.
+Current-source bindings and reports are retained in the
+[containing checkpoint](../results/rtl/wide_divider_shared_shift/containing_softmax/comparison.json).
