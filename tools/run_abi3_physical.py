@@ -449,7 +449,21 @@ def driver_identity() -> dict[str, Any]:
 def canonical_dump(payload: dict[str, Any], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
-    path.write_text(text + "\n", encoding="utf-8")
+    # Publish only a complete, flushed record. A full disk must not truncate
+    # an existing result or leave an empty destination that blocks a retry.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8",
+                                         dir=path.parent, prefix=f".{path.name}.",
+                                         suffix=".tmp", delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(text + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 # --------------------------------------------------------------------------

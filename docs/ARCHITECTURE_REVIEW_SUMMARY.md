@@ -1062,3 +1062,29 @@ result, then restart with exact exp(1). Each restart holds the output for nine
 cycles while another input is offered, checking result stability and blocked
 admission, then verifies retirement. This supplements the 2,201-case arithmetic
 corpus; no RTL behavior changed in this validation step.
+
+## Recover interrupted divider reporting and protect result publication
+
+Filesystem exhaustion left the STEP10/WIDTH168 route's destination JSON empty;
+its process handle terminated with exit 120. Final netlist, mapped netlist,
+finish report, metadata, SDC, config and DRC report were recovered and hashed
+under `results/rtl/small_divider_step10_recovery`. The empty destination was moved
+to `interrupted_record.empty` so it cannot masquerade as a canonical JSON record.
+The recovered finish report shows −1.67567 ns setup slack at the tested 1 ns
+point, with a remainder-to-remainder critical path. This diagnoses the default
+serial divider chain but is not a complete accepted physical record.
+
+The physical driver's canonical JSON writer now writes and flushes a temporary
+file in the destination directory, fsyncs it, and atomically replaces the target.
+Write, fsync and replacement failures preserve an existing record and remove the
+temporary file; an absent destination remains absent. Seven fault-injection and
+format tests pass. Environment and SDC regression suites also pass after moving
+the interrupted empty record. A broader memory-macro check still reports a
+configuration-hash mismatch for historical `a3_g2_cluster/pnr.json`; config
+emission was not changed by this fix and that older mismatch is not reclassified
+as a pass. Raw recovered artifacts are retained without editing their contents.
+
+The positive-engine attribution rerun also completed. Removing its source
+attributes produces the same multiset of nonempty mapped-netlist lines as the
+original timing run, establishing correspondence for subsequent source-path
+analysis. No RTL optimization or timing improvement is claimed from that rerun.
