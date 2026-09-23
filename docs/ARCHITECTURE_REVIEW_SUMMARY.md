@@ -1148,3 +1148,26 @@ limit and core utilization25. These runs will test whether the pre-layout timing
 benefit survives placement, clock-tree synthesis and extraction. Production RTL
 remains unchanged pending that timing/area comparison. See the
 [cycle measurement](../results/rtl/positive_range_pipeline/latency.json).
+
+## Softmax maximum tree reuses sortable keys across all levels
+
+An isolated candidate computes each binary32 ordering key once at the leaves,
+compares/selects keys throughout the balanced maximum tree, and decodes only the
+winner. It removes repeated sign/zero conversion at each level without adding
+state or cycles. Valid masking and left-child tie selection remain; signed zeros
+canonicalize to +0 at root decode instead of at the existing output boundary.
+Nonfinite admission is unchanged.
+
+Matched current-source synthesis reduces total softmax mapped area
+10,969.284 → 10,476.368 µm² (4.49%). Global pre-layout 1 ns slack regresses
+−9.969061 → −10.142147 ns, so this is not a timing-win claim. Sixteen differential
+tests pass across both simulators and lane counts 1/3/64/65, with 256 random
+maximum patterns and 24 cycle-exact controller transactions each. Real softmax
+passes nine numerical cases/two refusals at unchanged 767,158 cycles, 276
+exponential evaluations and 121 cache hits. Sources and vectors verify.
+
+Matched baseline/candidate 1 ns routes are now active with current tree16 and
+scratch-reset primitives in both. Older softmax routes predate the scratch-reset
+integration and are not substituted for this matched baseline. The candidate
+remains isolated pending routed area/timing selection. See the
+[key-tree comparison](../results/rtl/softmax_key_tree/comparison.json).

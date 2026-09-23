@@ -5,9 +5,10 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@pytest.mark.parametrize('source', ['rtl/abi3/ot_a3_attention_softmax_block.sv', 'results/rtl/softmax_key_tree/candidate.sv'])
 @pytest.mark.parametrize('lanes', [1, 3, 64, 65])
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
-def test_lane_write_equivalence(tmp_path, lanes, simulator):
+def test_lane_write_equivalence(tmp_path, lanes, simulator, source):
     before = tmp_path / 'before.sv'
     before.write_text((ROOT / 'results/rtl/softmax_lane_write/before.sv').read_text().replace(
         'module ot_a3_attention_softmax_block #(', 'module old_softmax #('))
@@ -60,8 +61,24 @@ always @(negedge clk) begin
  checked=checked+1;
 end
 integer t,j;
+reg [31:0] left_max,right_max;
 initial begin
- repeat(3)@(negedge clk);rst_n=1;
+ repeat(3)@(negedge clk);
+ // Exercise the combinational maximum independently of service latency.
+ // Random raw codes include nonfinite values; admission still rejects those.
+ for(t=0;t<256;t=t+1)begin
+  for(j=0;j<L;j=j+1)begin
+   scores[j*32+:32]=$random;valid_lanes[j]=$random;
+   if(t%8==0)scores[j*32+:32]=(j%2)?32'h80000000:0;
+  end
+  #1;
+  left_max=dut.max_scan;right_max=ref_dut.max_scan;
+  if(left_max[30:0]==0)left_max=0;
+  if(right_max[30:0]==0)right_max=0;
+  if(dut.max_seen!==ref_dut.max_seen ||
+    (dut.max_seen && left_max!==right_max))$fatal(1,"maximum key mismatch");
+ end
+ @(negedge clk);rst_n=1;
  for(t=0;t<24;t=t+1)begin
   @(negedge clk);first=t%3==0;running_max=0;fail_service=t%7==5;
   for(j=0;j<L;j=j+1)begin
@@ -89,7 +106,7 @@ endmodule
 '''.replace('localparam L=LANES;', f'localparam L={lanes};'))
     sources = [ROOT/'rtl/ot_fp32_rne_pkg.sv', ROOT/'rtl/abi3/ot_a3_engine_pkg.sv',
                ROOT/'rtl/proto/ot_fp32_add_rne_pipe.sv',
-               ROOT/'rtl/abi3/ot_a3_attention_softmax_block.sv', before, bench]
+               ROOT/source, before, bench]
     if simulator == 'iverilog':
         command = ['iverilog', '-g2012', '-s', 'tb', '-o', str(tmp_path/'sim'), *map(str,sources)]
         run = ['vvp', str(tmp_path/'sim')]
