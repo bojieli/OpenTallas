@@ -411,3 +411,26 @@ they remain useful for the isolated cache comparison, not current closure.
 The historical KV-index baseline also terminated at pin placement (2,189 pins,
 1,976 positions). Its corrected 22%-utilization retry is now active alongside
 the matching prefix-count retry. Neither failure is a timing verdict.
+
+## Matched containing-softmax synthesis cost
+
+The reuse-on/off synthesis and pre-layout STA runs are complete. With reuse
+disabled/enabled, mapped area is 12,291.810 / 12,252.096 µm² (−0.32%) and
+sequential cell count is 8,907 / 8,971 (+64). Mapping changes combinational
+logic as well as storage; this is effectively area-neutral, not evidence that
+adding a cache inherently reduces hardware cost.
+
+Both configurations fail the 1 ns pre-layout target: worst setup slack is
+−8.2461 / −8.8373 ns. The enabled design's worst path is a control-register
+self-loop through two gates; its flop-output net has 498 connected cell
+terminals and the following NAND net 497. The NAND alone reports 7.2056 ns
+delay before placement/buffering. This is an actionable fanout concern, but
+not a routed timing comparison or a tested maximum clock.
+
+These launches predate shared divider shift storage. Their divider source hash
+matches `small_divider_shared_shift/before.sv`; the remaining launch sources
+match the inspected workspace. Source bindings, synthesis reports, constraints
+and critical paths are retained in the
+[softmax physical checkpoint](../results/rtl/softmax_exp_reuse/physical_checkpoint/comparison.json).
+The cache's numerical and service-cycle gains remain demonstrated; current
+containing physical qualification and general exponential throughput remain open.
