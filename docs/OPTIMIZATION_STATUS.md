@@ -1,5 +1,11 @@
 # Accelerator optimization status
 
+**Current comparison priority:** HBM accelerator array is the primary baseline;
+ROM chip array is the primary proposed design; one or more connected ROM wafers
+are secondary. Both ROM options are evaluated for 100 µs/token feasibility.
+See the [three-design comparison](DEEPSEEK_V41_THREE_DESIGN_COMPARISON.md)
+for the authoritative scope, fair comparison rules and expert-fabric analysis.
+
 **Current objective:** test **100 µs/token** for V4.1 on wafer-scale and
 fast-interconnected ROM chip arrays, and derive their physical performance ceilings.
 The [physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) rejects a standalone

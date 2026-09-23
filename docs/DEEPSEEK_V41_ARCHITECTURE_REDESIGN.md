@@ -1,5 +1,11 @@
 # DeepSeek V4.1: first-principles ROM/HBM redesign
 
+**Current comparison priority:** HBM accelerator array is the primary baseline;
+ROM chip array is the primary proposed design; one or more connected ROM wafers
+are secondary. Both ROM options are evaluated for 100 µs/token feasibility.
+See the [three-design comparison](DEEPSEEK_V41_THREE_DESIGN_COMPARISON.md)
+for the authoritative scope, fair comparison rules and expert-fabric analysis.
+
 **Updated objective:** the user subsequently retained **100 µs/token** as an
 explicit feasibility target for wafer-scale systems and fast-interconnected chip arrays. Earlier
 statements below that no target is selected describe the prior analysis stage.

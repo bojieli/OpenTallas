@@ -1,5 +1,11 @@
 # V4.1: wafer versus chip-array feasibility for 100 µs/token
 
+**Current comparison priority:** HBM accelerator array is the primary baseline;
+ROM chip array is the primary proposed design; one or more connected ROM wafers
+are secondary. Both ROM options are evaluated for 100 µs/token feasibility.
+See the [three-design comparison](DEEPSEEK_V41_THREE_DESIGN_COMPARISON.md)
+for the authoritative scope, fair comparison rules and expert-fabric analysis.
+
 The user has now explicitly retained **100 µs per ordinary decode token** as a
 feasibility target. This supersedes the earlier decision not to select a token
 latency target. The previous 40 µs expert allocation remains adjustable. The goal
