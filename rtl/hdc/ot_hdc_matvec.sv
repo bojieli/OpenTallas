@@ -43,7 +43,7 @@ module ot_hdc_matvec #(
     // instruction
     input  wire              go,
     output wire              ready,
-    output wire              idle,
+    output reg               idle,
     input  wire [NW-1:0]     i_nout,
     input  wire [NW-1:0]     i_tiles,     // rounds
     input  wire [NW-1:0]     i_k,         // k per chunk
@@ -406,5 +406,11 @@ module ot_hdc_matvec #(
         end
     end
 
-    assign idle = !active && !e_v && !s1_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov;
+    //: Registered: the OR of every valid bit is wide.  Cleared on the
+    //: accepting edge so a just-issued op never reads as drained.
+    wire idle_c = !active && !e_v && !s1_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) idle <= 1'b1;
+        else idle <= idle_c && !(go && ready);
+    end
 endmodule

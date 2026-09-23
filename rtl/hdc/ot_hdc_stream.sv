@@ -30,7 +30,7 @@ module ot_hdc_stream #(
     input  wire              rst_n,
     input  wire              go,
     output wire              ready,
-    output wire              idle,
+    output reg               idle,
     input  wire [NW-1:0]     i_nout,
     input  wire [NW-1:0]     i_nin,
     input  wire              i_asrc,
@@ -408,7 +408,13 @@ module ot_hdc_stream #(
         end
     end
 
-    assign idle = !active && inflight == 0 && !vm_we && !kv_we && !rd_v && !reducer_busy;
+    //: Registered: the OR of every valid bit is wide.  Cleared on the
+    //: accepting edge so a just-issued op never reads as drained.
+    wire idle_c = !active && inflight == 0 && !vm_we && !kv_we && !rd_v && !reducer_busy;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) idle <= 1'b1;
+        else idle <= idle_c && !(accept);
+    end
     //: A status bit: registered in two levels so the wide OR never meets a port
     //: or a consumer in the same cycle it forms.
     reg [2:0] fault_q;

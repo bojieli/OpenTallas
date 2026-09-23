@@ -8,7 +8,7 @@
     ],
     "generation_steps": [
       {
-        "cycles": 32084,
+        "cycles": 32147,
         "fault": 0,
         "input": 271,
         "oracle": 1073,
@@ -16,7 +16,7 @@
         "position": 15
       },
       {
-        "cycles": 32724,
+        "cycles": 32787,
         "fault": 0,
         "input": 1073,
         "oracle": 382,
@@ -24,7 +24,7 @@
         "position": 16
       },
       {
-        "cycles": 32852,
+        "cycles": 32915,
         "fault": 0,
         "input": 382,
         "oracle": 93,
@@ -41,7 +41,7 @@
     "pass": true,
     "prompt_tokens": 16,
     "steps": 18,
-    "total_cycles": 563560
+    "total_cycles": 564694
   },
   "input_sha256": {
     "rtl/hdc/ot_hdc_core.sv": "904692212d0fa7f140381ef4322fee0969c194b35cbe641e207b22bbb4e78557",
@@ -49,10 +49,10 @@
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
     "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
-    "rtl/hdc/ot_hdc_matvec.sv": "6dd771d6678cf538a7d54fc9298a5ce71af22f5f78c11b3ea47be3ec49c6c02f",
+    "rtl/hdc/ot_hdc_matvec.sv": "26c071254edc24ef9ccb780ba082c8378c6d59d8877ea3fd348fc68cc25a5f2f",
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
-    "rtl/hdc/ot_hdc_stream.sv": "40f878795067a34c9a99e584ee0843890ac4303b7bd5f5c3d94e67230ca2fc7b",
+    "rtl/hdc/ot_hdc_stream.sv": "7f04ae9d14a65f46615f3286d43cd5a670c491d1ce71e09344a88e08b9af96f6",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/test/hdc_core_harness.cpp": "5d659a8d6994d74a2cc6d28a1e97738c74850a3df389df5aaba1d475d0093685",
@@ -82,8 +82,8 @@
     "program_instructions": 113
   },
   "scaling_8_groups": {
-    "both_units_idle_cycles": 4778,
-    "cycles": 22418,
+    "both_units_idle_cycles": 4841,
+    "cycles": 22481,
     "groups": 8,
     "kv_cache_mismatches": 0,
     "logit_mismatches": 0,
@@ -101,8 +101,8 @@
     "vectors": 18010
   },
   "single_step": {
-    "both_units_idle_cycles": 4460,
-    "cycles": 32084,
+    "both_units_idle_cycles": 4523,
+    "cycles": 32147,
     "fault": 0,
     "kv_cache_mismatches": 0,
     "logit_mismatches": 0,
