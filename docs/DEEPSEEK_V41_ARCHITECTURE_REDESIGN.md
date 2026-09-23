@@ -1,5 +1,11 @@
 # DeepSeek V4.1: first-principles ROM/HBM redesign
 
+**Superseding direction:** derive maximum performance from a physically constrained
+machine and its dependency/communication schedule. The 100 µs values below are
+historical sensitivity cases, not fixed design requirements. See the
+[resource-first method](RESOURCE_FIRST_PERFORMANCE_METHOD.md) for current acceptance
+criteria and the single-sequence versus aggregate-throughput distinction.
+
 **Current comparison priority:** HBM accelerator array is the primary baseline;
 ROM chip array is the primary proposed design; one or more connected ROM wafers
 are secondary. Both ROM options are evaluated for 100 µs/token feasibility.

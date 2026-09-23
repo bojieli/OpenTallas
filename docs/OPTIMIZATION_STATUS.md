@@ -1,17 +1,11 @@
 # Accelerator optimization status
 
-**Current comparison priority:** HBM accelerator array is the primary baseline;
-ROM chip array is the primary proposed design; one or more connected ROM wafers
-are secondary. Both ROM options are evaluated for 100 µs/token feasibility.
-See the [three-design comparison](DEEPSEEK_V41_THREE_DESIGN_COMPARISON.md)
-for the authoritative scope, fair comparison rules and expert-fabric analysis.
-
-**Current objective:** test **100 µs/token** for V4.1 on wafer-scale and
-fast-interconnected ROM chip arrays, and derive their physical performance ceilings.
-The [physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) rejects a standalone
-815 mm² fully resident ROM design at current density. A wafer hybrid passes
-capacity-only screening; timing, area allocation and power remain unqualified.
-This supersedes earlier “no latency target selected” statements below.
+**Current method:** derive latency and tokens/s from physically constrained
+architectures; **100 µs/token is a sensitivity marker, not a fixed design target**.
+The HBM accelerator array is the primary baseline, the ROM chip array the primary
+proposal, and one or more ROM wafers secondary. Separate single-sequence speed
+from aggregate concurrent throughput. See the
+[resource-first performance method](RESOURCE_FIRST_PERFORMANCE_METHOD.md).
 
 Status snapshot: 2026-09-23. Production work is on `main`. This summary covers
 architecture feasibility work through the V4.1 expert-group study; older component

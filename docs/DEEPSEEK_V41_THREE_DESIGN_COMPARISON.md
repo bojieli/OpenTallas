@@ -1,5 +1,11 @@
 # V4.1: primary HBM-array versus ROM-array comparison
 
+**Superseding direction:** derive maximum performance from a physically constrained
+machine and its dependency/communication schedule. The 100 µs values below are
+historical sensitivity cases, not fixed design requirements. See the
+[resource-first method](RESOURCE_FIRST_PERFORMANCE_METHOD.md) for current acceptance
+criteria and the single-sequence versus aggregate-throughput distinction.
+
 The user has specified **three designs**, with a 100 µs/token decode feasibility
 target. This supersedes the earlier wafer-first ordering.
 
