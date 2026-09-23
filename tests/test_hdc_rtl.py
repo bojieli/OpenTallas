@@ -18,9 +18,9 @@ needs_checkpoint = pytest.mark.skipif(
 
 
 def test_isa_package_is_generated_from_the_spec(tmp_path, monkeypatch):
-    monkeypatch.setattr(I, "PKG", tmp_path / "pkg.sv")
+    monkeypatch.setattr(I, "PKG", tmp_path / "isa.svh")
     I.emit_package()
-    assert (tmp_path / "pkg.sv").read_text() == (ROOT / "rtl/hdc/ot_hdc_isa_pkg.sv").read_text()
+    assert (tmp_path / "isa.svh").read_text() == (ROOT / "rtl/hdc/ot_hdc_isa.svh").read_text()
 
 
 def test_encode_decode_round_trip():

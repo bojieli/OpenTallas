@@ -14,9 +14,8 @@
 // weight ROM (W x BF16 per word), constant ROM (FP32 pairs), KV SRAM (W x FP32
 // per word, element write) and the vector memory (FP32 elements).
 // ---------------------------------------------------------------------------
-module ot_hdc_core
-    import ot_hdc_isa_pkg::*;
-#(
+module ot_hdc_core #(
+    parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
     parameter integer IL   = 8,
     parameter integer AW   = 24,
@@ -84,6 +83,7 @@ module ot_hdc_core
     output wire [W-1:0]      me_omask,
     output wire [W*32-1:0]   me_odata
 );
+    `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
     localparam integer LT = $clog2(W * IL);
 

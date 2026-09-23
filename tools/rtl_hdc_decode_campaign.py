@@ -35,7 +35,8 @@ import hdc_isa as I  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_decode_campaign.json"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
-HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_isa_pkg", "ot_hdc_delay", "ot_hdc_fpu", "ot_hdc_sfu",
+ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
+HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fpu", "ot_hdc_sfu",
                                           "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"
 TB_CORE = ROOT / "rtl/test/tb_hdc_core.sv"
@@ -76,7 +77,7 @@ def run() -> dict:
         # 1. special functions
         n_vec = sfu_vectors(s / "sfu.txt")
         subprocess.run(["iverilog", "-g2012", "-o", str(s / "sfu.vvp"), str(TB_SFU),
-                        *map(str, HDC[1:4]), *map(str, PIPES)], check=True)
+                        *map(str, HDC[0:3]), *map(str, PIPES)], check=True)
         sfu = subprocess.run(["vvp", "-n", str(s / "sfu.vvp"), f"+VEC={s / 'sfu.txt'}"],
                              check=True, capture_output=True, text=True).stdout
         m = re.search(r"SFU vectors=(\d+) checked=(\d+) errors=(\d+)", sfu)
@@ -84,7 +85,7 @@ def run() -> dict:
                    "pass": "PASS" in sfu and int(m.group(3)) == 0 and int(m.group(2)) == n_vec}
         # 2. lint
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core",
-                               *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
+                               f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
         # 3. core
         img = s / "img"
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img)], check=True,
@@ -92,6 +93,7 @@ def run() -> dict:
         obj = s / "obj"
         subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
                         "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-Mdir", str(obj),
+                        f"-I{ISA_SVH.parent}",
                         *map(str, HDC), *map(str, PIPES), str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
         exe = str(obj / "Vtb_hdc_core")
@@ -135,7 +137,7 @@ def run() -> dict:
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)
-                         for p in (*HDC, *PIPES, TB_SFU, TB_CORE, HARNESS, *TOOLS)},
+                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_CORE, HARNESS, *TOOLS)},
     }
 
 

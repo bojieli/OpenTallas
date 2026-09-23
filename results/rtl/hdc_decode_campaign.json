@@ -44,10 +44,10 @@
     "total_cycles": 1888920
   },
   "input_sha256": {
-    "rtl/hdc/ot_hdc_core.sv": "b21336de2ed351102174e19c6d5b75af66e6dd2454e8d7560484acff1c467d70",
+    "rtl/hdc/ot_hdc_core.sv": "9f3617fd3eda5f7d9071f8aafd973253acc5bbaec5ef42832fb14443eabadc46",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fpu.sv": "9252282c376d86b58586da3ff1c7ba8cacd854c9308aca19b588b101c2dcdd1e",
-    "rtl/hdc/ot_hdc_isa_pkg.sv": "fcdac7c612379b7f38bbd6cbed875c1151cd45ee76bc0ad9ef3d9566a2001773",
+    "rtl/hdc/ot_hdc_isa.svh": "b475d357a0ca8ceaabb34dfab0d0a3bed82c3e9ae868850c9029f4bee6d4cfcd",
     "rtl/hdc/ot_hdc_matvec.sv": "7e942618c88ea159abf55d658dd8a666bbc63dcb66e991a7a5b85c584160acef",
     "rtl/hdc/ot_hdc_reduce.sv": "93ea18961771d69f9cd9623abba4c33a9ff08494aaf83734419544f0f46d1f98",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
@@ -55,12 +55,12 @@
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/test/hdc_core_harness.cpp": "5d659a8d6994d74a2cc6d28a1e97738c74850a3df389df5aaba1d475d0093685",
-    "rtl/test/tb_hdc_core.sv": "7ffb018ba09c292826d38aa6cd6edd96e373f197fb0912f4a08fdcf2b297fac0",
+    "rtl/test/tb_hdc_core.sv": "93ed151cc2b41ca3a3e7209a7b0ac0ab8e637b9e98c69c4c1272ef4757beaf2e",
     "rtl/test/tb_hdc_sfu.sv": "b38a4a13524d1a7746ed00fc8ab44d6ad130c983ca5a0db69ab10e67c57b1965",
     "tools/hdc_golden.py": "459d999accb2f2f7d7f5765c96f6f5c88b0305bb6eae4a79e5ce61f222b2d06c",
-    "tools/hdc_isa.py": "19f5a5f3b174b223ae47be0cd498e21fe8244f9ff99f0613296988ab84812e22",
+    "tools/hdc_isa.py": "e16c01de5042dbaae38b9b3c2378f263a167d0d83ff857d373d09144b2a8fda0",
     "tools/hdc_program.py": "78bb8093d8d2e02355914fb0ecd354a33b56baea49ee4e964b28ab568eb044cd",
-    "tools/rtl_hdc_decode_campaign.py": "45c820e1c00312db481f9976a894dc01bbebe20ba3e326fd0c295d81bee09f30"
+    "tools/rtl_hdc_decode_campaign.py": "734106111cdd5778f9a70d8ef3f8c1c4eec133528f50b7eddbd3741645d3def2"
   },
   "parameters": {
     "interleave": 8,

@@ -10,7 +10,7 @@
 // (the core writes its own KV rows), then generate +NGEN tokens feeding each
 // output back, and compare the generated ids with the torch oracle's.
 module tb_hdc_core (input wire clk);
-    import ot_hdc_isa_pkg::*;
+    localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
     localparam integer WROM_WORDS = 131072, CROM_WORDS = 4096, KV_WORDS = 1024;
     localparam integer VM_ELEMS = 4096, VOCAB = 4096, PROG_WORDS = 4096;
