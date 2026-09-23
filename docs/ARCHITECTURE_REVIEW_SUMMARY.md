@@ -695,3 +695,13 @@ route so a shorter path is not mistaken for higher useful throughput.
 Production consumer defaults are unchanged. Four added tests pass across
 Icarus and Verilator at six chunk sizes including three and both 6-/9-bit
 divisors, preserving quotient/inexact and handshake timing under input changes.
+
+The three-step containing-softmax experiment is complete: all nine numerical
+cases and two refusals pass, but cycles increase **767,158 → 1,356,253
+(76.79%)**, with the same 276 exponential evaluations and 121 cache hits.
+It therefore needs more than 1.768× complete-engine clock improvement to
+reduce this corpus's elapsed accelerator time. Neither step width has current
+containing routed closure. This evidence prevents selecting a shorter
+combinational path while overlooking its service-rate cost. The production
+ten-step default remains unchanged; the three-step block route is active.
+See the [step-width comparison](../results/rtl/small_divider_step3/comparison.json).
