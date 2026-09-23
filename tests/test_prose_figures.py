@@ -114,7 +114,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # docs/ANALYTICAL_REPORT.md (78 annotations). The iso-node headline
     # sections of README.md and docs/OVERVIEW.md went with them. This is the one
     # sanctioned drop; the floor rises again from here.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 701
+    # 707: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md binds its six decode-core
+    # RTL figures to results/rtl/hdc_decode_campaign.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 707
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

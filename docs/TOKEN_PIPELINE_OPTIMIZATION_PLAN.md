@@ -86,3 +86,36 @@ oracle's 16-token prompt it decodes 1073, 382, 93: the torch oracle's three
 tokens. The first token's logit margin is 0.865 against 0.830. Exponential,
 reciprocal and reciprocal square root are within 2.4×10⁻⁷ relative error
 (≈2 ulp). Test: `tests/test_hdc_golden.py`.
+
+The golden now composes every operation from `add` and `mul`, the qualified
+pipes' semantics: IEEE RNE with gradual underflow, and every zero result
+canonical +0. It still decodes 1073.
+
+**P2 (functional; physical pending).** `rtl/hdc/ot_hdc_sfu.sv` holds three
+pipelines built from the qualified FP32 pipes: exponential (depth 92),
+reciprocal (46) and reciprocal square root (61). Each accepts one operand per
+cycle. All 18,010 golden vectors match bit for bit, fed with random bubbles. <!-- figure: 18010 src="results/rtl/hdc_decode_campaign.json#sfu.vectors" name="HDC special-function vectors checked" -->
+
+**P3–P4 (done).** The core has four parts:
+
+- `ot_hdc_matvec`: 16 lanes × 8 interleaved outputs; the sum circulates in the
+  adder pipeline;
+- `ot_hdc_stream`: a 2-D element loop through a fixed
+  multiply/add/special-function/multiply pipeline, plus a segmented reducer;
+- `ot_hdc_core`: the sequencer;
+- a program from `tools/hdc_program.py`, with the format in `tools/hdc_isa.py`:
+  178 instructions. <!-- figure: 178 src="results/rtl/hdc_decode_campaign.json#parameters.program_instructions" name="HDC program length" -->
+
+The program is first run on an ISA-level model, which is bit-exact with the
+golden. In Verilator the RTL decodes token 1073 at position 15.
+
+- Cycles per token: **107,228**. <!-- figure: 107228 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="HDC cycles per token, first iteration" -->
+- Every logit, the whole vector memory and the whole KV cache match bit for bit.
+- From an empty KV cache it consumes the 16-token prompt, writing its own KV
+  rows, and generates 1073, 382, 93: the torch oracle's tokens.
+- Cycles on which the matrix engine issues: 90,112. <!-- figure: 90112 src="results/rtl/hdc_decode_campaign.json#single_step.me_issue_cycles" name="HDC matrix-engine issue cycles" -->
+- Cycles on which the stream unit issues: 11,729. <!-- figure: 11729 src="results/rtl/hdc_decode_campaign.json#single_step.su_issue_cycles" name="HDC stream-unit issue cycles" -->
+- Cycles on which neither issues: 5,387. <!-- figure: 5387 src="results/rtl/hdc_decode_campaign.json#single_step.both_units_idle_cycles" name="HDC cycles with neither unit issuing" -->
+
+Record: `results/rtl/hdc_decode_campaign.json`, from
+`tools/rtl_hdc_decode_campaign.py`.

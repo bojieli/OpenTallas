@@ -72,32 +72,56 @@ def load_weights():
     return out
 
 
-# -- arithmetic primitives (one rounding per op) -------------------------------
+# -- arithmetic primitives -------------------------------------------------------
+# The RTL builds on the qualified pipes ot_fp32_add_rne_pipe / ot_fp32_mul_rne_pipe.
+# They are IEEE binary32 RNE with gradual underflow, except that every ZERO result
+# is canonical +0.  `add` and `mul` are those two operations; everything else is
+# composed of them, and a subtraction is an addition of the sign-flipped operand.
+def z(x):
+    x = np.asarray(x, dtype=F)
+    return np.where(x == 0, F(0), x).astype(F)
+
+
+def add(a, b):
+    return z(np.asarray(a, dtype=F) + np.asarray(b, dtype=F))
+
+
+def mul(a, b):
+    return z(np.asarray(a, dtype=F) * np.asarray(b, dtype=F))
+
+
+def neg(a):
+    return from_bits(bits(a) ^ np.uint32(0x80000000))
+
+
 def matvec(w, x):
-    """y[n] = sum_k w[n,k] * bf16(x)[k], sequential over k per output."""
-    xb = to_bf16(x)
+    """y[n] = sum_k w[n,k] * bf16(x)[k], sequential over k per output, from +0."""
+    return matvec_fp32(w, to_bf16(x))
+
+
+def matvec_fp32(w, x):
     acc = np.zeros(w.shape[0], dtype=F)
     for k in range(w.shape[1]):
-        acc = (acc + (w[:, k] * xb[k]).astype(F)).astype(F)
+        acc = add(acc, mul(w[:, k], x[k]))
     return acc
 
 
 def reduce_sum(v):
-    """P interleaved sequential partials, then a pairwise tree."""
+    """P interleaved sequential partials (each from +0), then a pairwise tree."""
     part = np.zeros(P, dtype=F)
     for i, x in enumerate(np.asarray(v, dtype=F)):
-        part[i % P] = F(part[i % P] + x)
+        part[i % P] = add(part[i % P], x)
     while len(part) > 1:
-        part = np.array([F(part[j] + part[j + 1]) for j in range(0, len(part), 2)], dtype=F)
+        part = np.array([add(part[j], part[j + 1]) for j in range(0, len(part), 2)], dtype=F)
     return part[0]
 
 
 def rsqrt(v):
-    v = F(v)
+    v = np.asarray(v, dtype=F)
     y = from_bits(np.uint32(0x5F3759DF) - (bits(v) >> np.uint32(1)))
-    half = F(v * F(0.5))
+    half = mul(v, F(0.5))
     for _ in range(3):
-        y = F(y * F(F(1.5) - F(half * F(y * y))))
+        y = mul(y, add(F(1.5), neg(mul(half, mul(y, y)))))
     return y
 
 
@@ -105,31 +129,32 @@ def reciprocal(d):
     d = np.asarray(d, dtype=F)
     y = from_bits(np.uint32(0x7EF311C7) - bits(d))
     for _ in range(3):
-        y = (y * (F(2.0) - (d * y).astype(F)).astype(F)).astype(F)
+        y = mul(y, add(F(2.0), neg(mul(d, y))))
     return y
 
 
 def exp(x):
     x = np.clip(np.asarray(x, dtype=F), EXP_MIN, EXP_MAX).astype(F)
-    t = (x * LOG2E).astype(F)
-    n = ((t + MAGIC).astype(F) - MAGIC).astype(F)
-    r = ((x - (n * LN2_HI).astype(F)).astype(F) - (n * LN2_LO).astype(F)).astype(F)
+    t = mul(x, LOG2E)
+    u = add(t, MAGIC)                     # integer n = rint(t) sits in u's low bits
+    n = add(u, neg(MAGIC))
+    r = add(add(x, neg(mul(n, LN2_HI))), neg(mul(n, LN2_LO)))
     p = np.full_like(r, EXP_POLY[0])
     for c in EXP_POLY[1:]:
-        p = ((p * r).astype(F) + c).astype(F)
+        p = add(mul(p, r), c)
     # Scale by 2^n: add n to the biased exponent (n in [-126, 127] after the clamp).
     e = bits(p).astype(np.int64) + (n.astype(np.int64) << 23)
     return from_bits(e.astype(np.uint32))
 
 
 def rmsnorm(x, w, eps):
-    ss = reduce_sum((x * x).astype(F))
-    mean = F(ss * F(1.0 / len(x)))
-    r = rsqrt(F(mean + F(eps)))
-    return ((x * r).astype(F) * w).astype(F)
+    r = rsqrt(add(mul(reduce_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
+    return mul(mul(x, r), w)
 
 
 def rope_tables(position, head_dim, theta):
+    """cos/sin of position * inv_freq.  A table ROM in the hardware (model-specific
+    constants); computed here in float64 and rounded once."""
     half = head_dim // 2
     inv = (1.0 / (theta ** (np.arange(0, head_dim, 2, dtype=np.float64) / head_dim))).astype(F)
     angle = (F(position) * inv).astype(F)
@@ -138,18 +163,16 @@ def rope_tables(position, head_dim, theta):
 
 def rope(v, cos, sin, half):
     a, b = v[:half], v[half:]
-    return np.concatenate([((a * cos).astype(F) - (b * sin).astype(F)).astype(F),
-                           ((b * cos).astype(F) + (a * sin).astype(F)).astype(F)])
+    return np.concatenate([add(mul(a, cos), mul(b, neg(sin))), add(mul(b, cos), mul(a, sin))])
 
 
 def softmax(s):
-    m = np.max(s)
-    e = exp((s - m).astype(F))
-    return (e * reciprocal(reduce_sum(e))).astype(F)
+    e = exp(add(s, neg(np.max(s))))
+    return mul(e, reciprocal(reduce_sum(e)))
 
 
 def silu(g):
-    return (g * reciprocal((F(1.0) + exp((-g).astype(F))).astype(F))).astype(F)
+    return mul(g, reciprocal(add(exp(mul(g, F(-1.0))), F(1.0))))
 
 
 # -- the decode step ------------------------------------------------------------
@@ -181,26 +204,19 @@ class Model:
             k = np.stack([rope(rmsnorm(k[i], kn, self.eps), cos, sin, half) for i in range(self.kv_heads)])
             cache[L].append((k, v))
             attn = np.zeros((self.heads, self.hd), dtype=F)
-            scale = F(1.0 / np.sqrt(self.hd))
+            scale = F(1.0 / np.sqrt(self.hd))  # 0.25: exact
             for hh in range(self.heads):
                 g = hh // group
                 keys = np.stack([kv[0][g] for kv in cache[L]])       # [T, hd]
                 vals = np.stack([kv[1][g] for kv in cache[L]])
-                s = np.zeros(len(keys), dtype=F)
-                for d in range(self.hd):                              # sequential over head dim
-                    s = (s + (keys[:, d] * q[hh, d]).astype(F)).astype(F)
-                s = (s * scale).astype(F)
-                p = softmax(s)
-                o = np.zeros(self.hd, dtype=F)
-                for t in range(len(p)):                               # sequential over positions
-                    o = (o + (vals[t] * p[t]).astype(F)).astype(F)
-                attn[hh] = o
-            x = (x + matvec(self.lw(L, "self_attn.o_proj.weight"), attn.reshape(-1))).astype(F)
+                s = mul(matvec_fp32(keys, q[hh]), scale)             # sequential over head dim
+                attn[hh] = matvec_fp32(vals.T, softmax(s))            # sequential over positions
+            x = add(x, matvec(self.lw(L, "self_attn.o_proj.weight"), attn.reshape(-1)))
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
             gate = matvec(self.lw(L, "mlp.gate_proj.weight"), h)
             up = matvec(self.lw(L, "mlp.up_proj.weight"), h)
-            a = (silu(gate) * up).astype(F)
-            x = (x + matvec(self.lw(L, "mlp.down_proj.weight"), a)).astype(F)
+            a = mul(silu(gate), up)
+            x = add(x, matvec(self.lw(L, "mlp.down_proj.weight"), a))
             if trace is not None:
                 trace[f"layer{L}"] = x.copy()
         xf = rmsnorm(x, self.w["model.norm.weight"], self.eps)

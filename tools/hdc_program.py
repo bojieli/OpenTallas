@@ -1,0 +1,398 @@
+#!/usr/bin/env python3
+"""Program, memory images and ISA-level simulator of the hardwired decode core.
+
+    python3 tools/hdc_program.py --out DIR      # images + expected results for the RTL
+
+For the reduced Qwen3 vehicle this builds
+
+* the weight ROM (bf16, W lanes per word, laid out in the order the matrix-vector
+  engine streams it, plus the embedding table),
+* the constant ROM (norm weights; RoPE cos/sin per position),
+* the KV cache image holding positions 0 .. pos-1 from the golden prefill,
+* the static program (tools/hdc_isa.py) that decodes one token at `pos`,
+
+then runs the program on an ISA-level model whose every operation is the golden
+arithmetic of tools/hdc_golden.py, and checks its logits against
+hdc_golden.Model.decode_token bit for bit.  The RTL simulation is checked against
+the same images and results.
+"""
+import argparse
+import json
+from pathlib import Path
+
+import numpy as np
+
+import hdc_golden as G
+import hdc_isa as I
+
+F = np.float32
+W, IL, TMAX = I.W_LANES, I.INTERLEAVE, I.T_MAX
+
+# -- vector memory map (FP32 elements) ------------------------------------------
+VM = dict(X=0, H=128, QKV=256, QN=448, QR=608, SS=736, RS=752, SSX=768, RX=769,
+          M=784, Z=800, RZ=816, S=1024, ATT=1536, T1=1664, GU=1792, E1=2560,
+          U=2944, ACT=3328)
+S_STRIDE = TMAX        # elements per head in S
+
+
+def f32(x):
+    return int(G.bits(F(x)))
+
+
+class Layout:
+    """Weight ROM, constant ROM and KV placement for one model."""
+
+    def __init__(self, model):
+        self.m = model
+        c = model.cfg
+        self.H, self.L = c["hidden_size"], c["num_hidden_layers"]
+        self.NH, self.KV, self.HD = c["num_attention_heads"], c["num_key_value_heads"], c["head_dim"]
+        self.FF, self.V = c["intermediate_size"], c["vocab_size"]
+        self.half = self.HD // 2
+        self.eps = F(c["rms_norm_eps"])
+        assert self.HD % W == 0 or W % self.HD == 0
+        self.TW = TMAX // W
+        # weight ROM
+        self.words = []            # list of np.uint16[W]
+        self.mat = {}
+        for L in range(self.L):
+            lw = lambda n: model.lw(L, n)
+            qkv = np.concatenate([lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"),
+                                  lw("self_attn.v_proj.weight")])
+            gu = np.concatenate([lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")])
+            for name, w in (("qkv", qkv), ("o", lw("self_attn.o_proj.weight")), ("gu", gu),
+                            ("down", lw("mlp.down_proj.weight"))):
+                self.mat[(L, name)] = self.place_matrix(w)
+        self.mat["lm_head"] = self.place_matrix(model.w["lm_head.weight"])
+        emb = model.w["model.embed_tokens.weight"]
+        self.emb_word = len(self.words)
+        flat = (G.bits(emb.reshape(-1)) >> 16).astype(np.uint16)
+        for i in range(0, len(flat), W):
+            self.words.append(flat[i:i + W])
+        # constant ROM: (lo, hi) pairs
+        self.crom = []
+        self.cb = {}
+        for L in range(self.L):
+            self.cb[(L, "in")] = self.put_const(model.lw(L, "input_layernorm.weight"))
+            qk = np.concatenate([np.tile(model.lw(L, "self_attn.q_norm.weight"), self.NH),
+                                 np.tile(model.lw(L, "self_attn.k_norm.weight"), self.KV)])
+            self.cb[(L, "qk")] = self.put_const(qk)
+            self.cb[(L, "post")] = self.put_const(model.lw(L, "post_attention_layernorm.weight"))
+        self.cb["final"] = self.put_const(model.w["model.norm.weight"])
+        self.cb["rope"] = len(self.crom)
+        for pos in range(TMAX):
+            cos, sin, _ = G.rope_tables(pos, self.HD, model.theta)
+            self.crom.extend(zip(cos, sin))
+        # KV cache (FP32 elements)
+        self.kv_v0 = self.L * self.KV * self.TW * self.HD * W
+        self.kv_elems = 2 * self.kv_v0
+
+    def place_matrix(self, w):
+        n, k = w.shape
+        tiles = -(-n // (W * IL))
+        base = len(self.words)
+        wb = (G.bits(np.asarray(w, dtype=F)) >> 16).astype(np.uint16)
+        pad = np.zeros((tiles * W * IL, k), dtype=np.uint16)
+        pad[:n] = wb
+        blk = pad.reshape(tiles, IL, W, k)               # [t, j, l, k]
+        for t in range(tiles):
+            for kk in range(k):
+                for j in range(IL):
+                    self.words.append(blk[t, j, :, kk].copy())
+        return dict(base=base, n=n, k=k, tiles=tiles)
+
+    def put_const(self, v):
+        base = len(self.crom)
+        self.crom.extend((F(x), F(0)) for x in v)
+        return base
+
+    def k_elem(self, L, g, t, d):
+        return ((L * self.KV + g) * self.TW + t // W) * self.HD * W + d * W + t % W
+
+    def v_elem(self, L, g, t, d):
+        return self.kv_v0 + ((L * self.KV + g) * TMAX + t) * self.HD + d
+
+    def kv_image(self, cache):
+        kv = np.zeros(self.kv_elems, dtype=F)
+        for L in range(self.L):
+            for t, (k, v) in enumerate(cache[L]):
+                for g in range(self.KV):
+                    for d in range(self.HD):
+                        kv[self.k_elem(L, g, t, d)] = k[g][d]
+                        kv[self.v_elem(L, g, t, d)] = v[g][d]
+        return kv
+
+
+# -- program -----------------------------------------------------------------------
+def build_program(lay):
+    prog = []          # (fields, reads, writes)
+
+    def me(mat, x, out, rnd=True, amax=False, oen=True, reads=(), writes=(), **over):
+        f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
+                 me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x,
+                 me_round=int(rnd), me_obase=out // W, me_oen=int(oen), me_amax=int(amax))
+        f.update(over)
+        prog.append((f, set(reads), set(writes)))
+
+    def su(reads=(), writes=(), **f):
+        f = dict(f, unit=I.UNIT_SU)
+        prog.append((f, set(reads), set(writes)))
+
+    def rmsnorm(src, n, wbase, dst):
+        su(su_nout=1, su_nin=n, a_base=VM[src], a_si=1, ma=I.MA_AA, red=I.RED_SUM, r_base=VM["SSX"],
+           reads={src}, writes={"SSX"})
+        su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
+           imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
+           reads={"SSX"}, writes={"RX"})
+        su(su_nout=1, su_nin=n, a_base=VM[src], a_si=1, ma=I.MA_AB, b_base=VM["RX"],
+           c_src=I.SRC_ALT, c_base=wbase, c_si=1, mc=I.MC_C, dst=I.DST_VM, d_base=VM[dst], d_si=1,
+           reads={src, "RX"}, writes={dst})
+
+    H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
+    group = NH // KV
+    su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W, a_d=I.DYN_EMBED, a_si=1,
+       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"})
+    for L in range(lay.L):
+        rmsnorm("X", H, lay.cb[(L, "in")], "H")
+        me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
+        nh = NH + KV
+        su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
+           r_base=VM["SS"], r_so=1, reads={"QKV"}, writes={"SS"})
+        su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
+           ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
+           reads={"SS"}, writes={"RS"})
+        su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
+           b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
+           dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKV", "RS"}, writes={"QN"})
+        rope = dict(b_src=I.SRC_ALT, b_base=lay.cb["rope"], b_d=I.DYN_ROPE, b_si=1, ma=I.MA_AB,
+                    ad=I.AD_Q, a_so=HD, a_si=1, c_so=HD, c_si=1, su_nin=half)
+        for lo in (True, False):
+            a_off, c_off, mb = (0, half, I.MB_NEG) if lo else (half, 0, I.MB_POS)
+            su(su_nout=NH, a_base=VM["QN"] + a_off, c_base=VM["QN"] + c_off, mb=mb,
+               dst=I.DST_VM, d_base=VM["QR"] + a_off, d_so=HD, d_si=1,
+               reads={"QN"}, writes={"QR"}, **rope)
+            kq = VM["QN"] + NH * HD
+            su(su_nout=KV, a_base=kq + a_off, c_base=kq + c_off, mb=mb, dst=I.DST_KV,
+               d_base=lay.k_elem(L, 0, 0, a_off), d_d=I.DYN_KWRITE,
+               d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
+               reads={"QN"}, writes={f"K{L}"}, **rope)
+        su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
+           dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
+           d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
+           reads={"QKV"}, writes={f"V{L}"})
+        for h in range(NH):
+            g = h // group
+            me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, g, 0, 0) // W), VM["QR"] + h * HD,
+               VM["S"] + h * S_STRIDE, rnd=False, me_wsrc=1, me_ts=IL * HD, me_ks=1, me_js=HD,
+               me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QR", f"K{L}"}, writes={f"S{h}"})
+        heads = {f"S{h}" for h in range(NH)}
+        sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
+                  d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
+        su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
+           reads=heads, writes=heads | {"M"}, **sm)
+        su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
+           r_so=1, reads=heads | {"M"}, writes=heads | {"Z"}, **sm)
+        su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
+           d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
+        su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
+        for h in range(NH):
+            g = h // group
+            me(dict(n=HD, tiles=1, k=0, base=lay.v_elem(L, g, 0, 0) // W), VM["S"] + h * S_STRIDE,
+               VM["ATT"] + h * HD, rnd=False, me_wsrc=1, me_ts=IL, me_ks=max(1, HD // W), me_js=1,
+               me_d_k=I.DYN_T, reads={f"S{h}", f"V{L}"}, writes={"ATT"})
+        me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
+        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"})
+        rmsnorm("X", H, lay.cb[(L, "post")], "H")
+        me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={"GU"})
+        FF = lay.FF
+        su(su_nout=1, su_nin=FF, a_base=VM["GU"], a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
+           sfu=I.SFU_EXP, dst=I.DST_VM, d_base=VM["E1"], d_si=1, reads={"GU"}, writes={"E1"})
+        su(su_nout=1, su_nin=FF, a_base=VM["E1"], a_si=1, ad=I.AD_IMM, imm2=f32(1.0),
+           sfu=I.SFU_RECIP, c_base=VM["GU"], c_si=1, mc=I.MC_C, dst=I.DST_VM, d_base=VM["U"],
+           d_si=1, reads={"E1", "GU"}, writes={"U"})
+        su(su_nout=1, su_nin=FF, a_base=VM["U"], a_si=1, ma=I.MA_AB, b_base=VM["GU"] + FF, b_si=1,
+           dst=I.DST_VM, d_base=VM["ACT"], d_si=1, reads={"U", "GU"}, writes={"ACT"})
+        me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={"ACT"}, writes={"T1"})
+        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"})
+    rmsnorm("X", H, lay.cb["final"], "H")
+    me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
+    prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
+    # Barriers: an instruction waits for everything in flight when it touches a
+    # region an in-flight instruction writes, or writes one it reads.
+    out, rd, wr = [], set(), set()
+    for f, reads, writes in prog:
+        assert all(isinstance(r, str) for r in reads | writes), (reads, writes)
+        if (reads & wr) or (writes & (rd | wr)) or f.get("barrier"):
+            f["barrier"] = 1
+            rd, wr = set(), set()
+        rd |= reads
+        wr |= writes
+        out.append(f)
+    return out
+
+
+# -- ISA-level simulator --------------------------------------------------------------
+def dyn_values(lay, token, pos):
+    return [0, token * lay.H, pos * lay.half,
+            (pos // W) * lay.HD * W + pos % W, pos * lay.HD, pos + 1, pos // (W * IL) + 1]
+
+
+class Machine:
+    def __init__(self, lay, kv):
+        self.lay = lay
+        self.vm = np.zeros(I.VM_ELEMS, dtype=F)
+        self.kv = kv.copy()
+        self.wrom = np.stack(lay.words).reshape(-1)                 # bf16 element view
+        self.crom = np.array(lay.crom, dtype=F)                     # [n, 2]
+        self.argmax = None
+        self.logits = []
+
+    def wrom_f32(self, elems):
+        return G.from_bits(self.wrom[elems].astype(np.uint32) << 16)
+
+    def run(self, prog, token, pos):
+        dyn = dyn_values(self.lay, token, pos)
+        for f in prog:
+            f = {name: f.get(name, 0) for name, _ in I.FIELDS}
+            if f["unit"] == I.UNIT_ME:
+                self.me(f, dyn)
+            elif f["unit"] == I.UNIT_SU:
+                self.su(f, dyn)
+        return self.argmax
+
+    def me(self, f, dyn):
+        n = f["me_nout"] + dyn[f["me_d_nout"]]
+        tiles = f["me_tiles"] + dyn[f["me_d_tiles"]]
+        K = f["me_k"] + dyn[f["me_d_k"]]
+        wb = f["me_wbase"] + dyn[f["me_d_wbase"]]
+        xb = f["me_xbase"] + dyn[f["me_d_xbase"]]
+        ob = f["me_obase"] + dyn[f["me_d_obase"]]
+        x = self.vm[xb:xb + K]
+        if f["me_round"]:
+            x = G.to_bf16(x)
+        outs = np.arange(n)
+        t, rem = outs // (W * IL), outs % (W * IL)
+        j, l = rem // W, rem % W
+        acc = np.zeros(n, dtype=F)
+        for k in range(K):
+            word = wb + t * f["me_ts"] + k * f["me_ks"] + j * f["me_js"]
+            if f["me_wsrc"]:
+                w = self.kv[word * W + l]
+            else:
+                w = self.wrom_f32(word * W + l)
+            acc = G.add(acc, G.mul(w, x[k]))
+        assert tiles * W * IL >= n
+        if f["me_oen"]:
+            self.vm[ob * W + outs] = acc
+        if f["me_amax"]:
+            self.logits = acc
+            self.argmax = int(np.argmax(acc))
+
+    def stream(self, f, dyn, s, n_out, n_in):
+        base = f[f"{s}_base"] + dyn[f[f"{s}_d"]]
+        o, i = np.meshgrid(np.arange(n_out), np.arange(n_in), indexing="ij")
+        return (base + o * f[f"{s}_so"] + i * f[f"{s}_si"]).reshape(-1)
+
+    def su(self, f, dyn):
+        n_out = f["su_nout"]
+        n_in = f["su_nin"] + dyn[f["su_d_nin"]]
+        ea = self.stream(f, dyn, "a", n_out, n_in)
+        eb = self.stream(f, dyn, "b", n_out, n_in)
+        ec = self.stream(f, dyn, "c", n_out, n_in)
+        a = self.wrom_f32(ea) if f["a_src"] else self.vm[ea]
+        if f["b_src"]:
+            blo, bhi = self.crom[eb, 0], self.crom[eb, 1]
+        else:
+            blo, bhi = self.vm[eb], np.zeros(len(eb), dtype=F)
+        c = self.crom[ec, 0] if f["c_src"] else self.vm[ec]
+        imm1, imm2 = G.from_bits(np.uint32(f["imm1"])), G.from_bits(np.uint32(f["imm2"]))
+        p = {I.MA_BYP: a, I.MA_AB: lambda: G.mul(a, blo), I.MA_AA: lambda: G.mul(a, a),
+             I.MA_AIMM: lambda: G.mul(a, imm1)}[f["ma"]]
+        p = p() if callable(p) else p
+        q = {I.MB_OFF: None, I.MB_POS: lambda: G.mul(c, bhi), I.MB_NEG: lambda: G.mul(c, G.neg(bhi))}[f["mb"]]
+        q = q() if callable(q) else q
+        r = {I.AD_BYP: lambda: p, I.AD_Q: lambda: G.add(p, q), I.AD_C: lambda: G.add(p, c),
+             I.AD_NEGB: lambda: G.add(p, G.neg(blo)), I.AD_IMM: lambda: G.add(p, imm2)}[f["ad"]]()
+        s = {I.SFU_NONE: lambda: r, I.SFU_EXP: lambda: G.exp(r), I.SFU_RECIP: lambda: G.reciprocal(r),
+             I.SFU_RSQRT: lambda: G.rsqrt(r)}[f["sfu"]]()
+        out = G.mul(s, c) if f["mc"] == I.MC_C else s
+        out = np.asarray(out, dtype=F).reshape(-1)
+        if f["red"]:
+            seg = out.reshape(n_out, n_in)
+            vals = [G.reduce_sum(v) if f["red"] == I.RED_SUM else np.max(v) for v in seg]
+            for o, v in enumerate(vals):
+                self.vm[f["r_base"] + o * f["r_so"]] = v
+        if f["dst"]:
+            ed = self.stream(f, dyn, "d", n_out, n_in)
+            (self.vm if f["dst"] == I.DST_VM else self.kv)[ed] = out
+
+
+# -- images ----------------------------------------------------------------------------
+def hexwords(values, width_bits):
+    digits = width_bits // 4
+    return "".join(f"{int(v):0{digits}x}\n" for v in values)
+
+
+def pack_lanes(lanes, bits_per_lane):
+    word = 0
+    for i, v in enumerate(lanes):
+        word |= int(v) << (bits_per_lane * i)
+    return word
+
+
+def golden_state():
+    model = G.Model()
+    prompt, expected = G.prompt_and_expected()
+    cache = [[] for _ in range(model.layers)]
+    for pos, tok in enumerate(prompt[:-1]):
+        model.decode_token(tok, pos, cache)
+    return model, prompt, expected, cache
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--out", type=Path, help="write RTL images and expectations here")
+    args = ap.parse_args()
+    model, prompt, expected, cache = golden_state()
+    lay = Layout(model)
+    token, pos = prompt[-1], len(prompt) - 1
+    kv = lay.kv_image(cache)
+    prog = build_program(lay)
+    mach = Machine(lay, kv)
+    got = mach.run(prog, token, pos)
+    ref = model.decode_token(token, pos, [list(c) for c in cache])
+    exact = bool(np.array_equal(G.bits(mach.logits), G.bits(ref)))
+    n_bar = sum(1 for f in prog if f.get("barrier"))
+    print(f"program: {len(prog)} instructions, {n_bar} barriers; weight ROM {len(lay.words)} words; "
+          f"constant ROM {len(lay.crom)}; KV {lay.kv_elems} elements")
+    print(f"ISA simulator: token {got} (oracle {expected[0]}), logits bit-exact with golden: {exact}")
+    if args.out:
+        out = args.out
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W))
+        (out / "crom.hex").write_text(hexwords(
+            ((f32(hi) << 32) | f32(lo) for lo, hi in lay.crom), 64))
+        kvw = G.bits(kv).reshape(-1, W)
+        (out / "kv.hex").write_text(hexwords((pack_lanes(w, 32) for w in kvw), 32 * W))
+        words = [I.encode(**{k: v for k, v in f.items()}) for f in prog]
+        (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
+        (out / "expect_logits.hex").write_text(hexwords(G.bits(mach.logits), 32))
+        (out / "expect_vm.hex").write_text(hexwords(G.bits(mach.vm), 32))
+        (out / "expect_kv.hex").write_text(hexwords(G.bits(mach.kv), 32))
+        (out / "prompt.hex").write_text(hexwords(prompt, 16))
+        (out / "generated.hex").write_text(hexwords(expected, 16))
+        (out / "run.args").write_text(f"+TOKEN={token} +POS={pos} +EXPECT={got}\n")
+        (out / "expect.json").write_text(json.dumps({
+            "token": token, "pos": pos, "argmax": got, "oracle": expected[0],
+            "logits": [int(b) for b in G.bits(mach.logits)],
+            "vm": [int(b) for b in G.bits(mach.vm)],
+            "kv_words": len(kvw), "wrom_words": len(lay.words), "crom_words": len(lay.crom),
+            "prog_words": len(words)}))
+        print("wrote", out)
+    return 0 if exact and got == expected[0] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
