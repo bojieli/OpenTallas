@@ -228,3 +228,44 @@ A new four-credit containing transport route targets 1 ns. Its final physical
 cost and timing are pending; earlier credit transport/G2 launches now qualify
 their pre-coalescing sources. The all-target architecture and qualification
 requirements above remain open.
+
+
+## Physical cost and sparse-attention control checkpoint
+
+Matched four-credit transport synthesis shows coalescing changes mapped cell
+area 5,973.586 → 6,036.849 µm² (+1.06%) and adds exactly seven ordinary
+flops. This is an intermediate synthesis cost, not routed area or energy.
+See the [retained checkpoint](../results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/comparison.json).
+
+The broader record audit was refreshed after coalescing, before the subsequent
+KV-index edit. It finds 57 ASAP7 records with passing routed checks, matching
+sources and retained artifacts among 232 routed records. These are records,
+not unique modules or proof of elaborated all-target coverage. Historical
+snapshots, changed sources and missing artifacts prevent many older records
+from qualifying the current design. Its exact scope is in
+[current evidence inventory](../results/physical_abi3/current_evidence_after_coalescing.json).
+
+That audit identified a sparse-attention control path worth simplifying:
+`ot_a3_attention_kv_index` previously gated publication through a population
+count, despite admitting only nonempty prefix masks with trailing padding.
+The retained 4 ns route's worst path crosses popcount arithmetic from an index
+input to the published lane mask. The implementation now encodes the unique
+live-to-padding boundary and checks emptiness with a mask reduction. It
+preserves index order, range-error priority, fail-closed outputs and the
+one-cycle latency/initiation interval. It adds no pipeline stage.
+
+Both Icarus and Verilator pass 2,618 cases each across SLOTS 1/3/8/64/65/128,
+including exhaustive small masks, randomized larger masks, legal prefixes,
+range refusals, consecutive requests, idle stability and reset. Every result
+is checked against independent mask rules and the retained previous RTL.
+Matched 1 ns flow synthesis is essentially area-neutral: 707.611 → 708.661 µm².
+The candidate and retained baseline are both in physical implementation at
+1 ns; no improved routed clock or area is claimed yet. The old KV-index route
+is now historical. Evidence: [KV-index verification](../results/rtl/kv_index_prefix_count/verification.json).
+
+The containing sparse-attention bench also passes all nine transactions
+bit-identically against `sparse_attention_bf16_codes`, including multirow and
+multiblock operation, duplicate indices, bounds, saturation and counters.
+Its source inventory, vectors, compilation and simulation logs are retained
+with the KV-index verification. This is functional integration evidence;
+physical qualification remains pending.
