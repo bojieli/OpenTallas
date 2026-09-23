@@ -3,12 +3,11 @@
 // A slot corresponds to an interleaved column group. All eight cache hits are
 // assembled together; misses share one ordered external read channel. Object
 // layout/permission admission belongs to the parent. This block enforces byte
-// capacity and generation/response ownership. Instantiated in G2 through the weight transport.
+// capacity and generation/response ownership. Not yet instantiated in G2.
 // clear requires external cancellation acknowledgement or complete read drain;
 // global reset must also reset transport. Exactly one response per read is required.
 module ot_a3_bf16_weight_gather #(
  parameter integer SLOTS=3,
- parameter integer READ_CREDITS=1,
  parameter bit RETAIN_LINES=1,
  parameter bit WORD_HANDOFF=1,
  parameter integer SLOT_BITS=SLOTS<2?1:$clog2(SLOTS)
@@ -40,16 +39,7 @@ module ot_a3_bf16_weight_gather #(
  localparam [2:0] IDLE=0,BOUNDS=1,LOOKUP=2,REQUEST=3,WAIT_RESPONSE=4,SEND=5;
  reg [2:0] state;
  reg active;
- reg [31:0] generation,object_id,sequence_id,response_sequence;
- localparam integer RP=READ_CREDITS<2?1:$clog2(READ_CREDITS);
- localparam integer RC=$clog2(READ_CREDITS+1);
- reg [RP-1:0] read_head,read_tail;
- reg [RC-1:0] outstanding;
- reg [2:0] read_lanes[0:READ_CREDITS-1];
- reg [7:0] lane_pending;
- function automatic [RP-1:0] advance_read(input [RP-1:0] p);
-  advance_read=p==RP'(READ_CREDITS-1)?RP'(0):p+1'b1;
- endfunction
+ reg [31:0] generation,object_id,sequence_id;
  reg [63:0] last_element_offset;
  reg [4:0] last_line_bytes;
  reg [7:0] mask;
@@ -66,10 +56,7 @@ module ot_a3_bf16_weight_gather #(
  reg [127:0] assembled;
  integer l,s;
  wire enabled=rst_n && !clear;
- wire read_fire=read_valid && read_ready;
- wire expected_response=(outstanding!=0 || read_fire) && response_tag=={generation,response_sequence};
- wire retire_read=response_valid && expected_response;
- wire [2:0] response_lane=outstanding!=0?read_lanes[read_head]:miss_lane;
+ wire expected_response=(state==WAIT_RESPONSE || (state==REQUEST && read_ready)) && response_tag==read_tag;
  wire unexpected_response=response_valid && !expected_response;
  assign command_ready=enabled && !active && !protocol_error;
  assign coordinate_ready=enabled && active && (state==IDLE || (WORD_HANDOFF && state==SEND && word_ready)) && !protocol_error && !unexpected_response;
@@ -78,8 +65,7 @@ module ot_a3_bf16_weight_gather #(
  assign read_tag={generation,sequence_id};
  assign read_object=object_id;
  assign response_ready=enabled;
- assign drained=state==IDLE && outstanding==0;
- initial if(READ_CREDITS<1 || READ_CREDITS>8)$fatal(1,"invalid gather read credits");
+ assign drained=state==IDLE;
  initial if(SLOTS<1 || SLOTS>16)$fatal(1,"invalid gather slot count");
  always @* begin
   invalid_address=0;miss=0;selected_lane=0;assembled=0;
@@ -90,10 +76,8 @@ module ot_a3_bf16_weight_gather #(
     if(addresses[lane][65:64]!=0 || addresses[lane]>{2'd0,last_element_offset})invalid_address=1;
     if(32'(slot)<SLOTS)begin
      if(!cache_valid[slot][lane] || cache_tag[slot][lane]!=addresses[lane][63:4])begin
-      if(!lane_pending[lane])begin
-       if(!miss)selected_lane=3'(lane);
-       miss=1;
-      end
+      if(!miss)selected_lane=3'(lane);
+      miss=1;
      end else assembled[16*lane+:16]=16'(cache_data[slot][lane] >> {addresses[lane][3:0],3'b0});
     end else invalid_address=1;
    end
@@ -101,28 +85,12 @@ module ot_a3_bf16_weight_gather #(
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   state<=IDLE;active<=0;protocol_error<=0;sequence_id<=0;response_sequence<=0;
-   read_head<=0;read_tail<=0;outstanding<=0;lane_pending<=0;
+   state<=IDLE;active<=0;protocol_error<=0;sequence_id<=0;
    for(s=0;s<SLOTS;s=s+1)cache_valid[s]<=0;
   end else if(clear)begin
-   state<=IDLE;active<=0;protocol_error<=0;sequence_id<=0;response_sequence<=0;
-   read_head<=0;read_tail<=0;outstanding<=0;lane_pending<=0;
+   state<=IDLE;active<=0;protocol_error<=0;sequence_id<=0;
    for(s=0;s<SLOTS;s=s+1)cache_valid[s]<=0;
   end else begin
-   case({read_fire,retire_read})
-    2'b10:outstanding<=outstanding+1'b1;
-    2'b01:outstanding<=outstanding-1'b1;
-    default:begin end
-   endcase
-   if(read_fire)begin
-    sequence_id<=sequence_id+1'b1;
-    read_lanes[read_tail]<=miss_lane;read_tail<=advance_read(read_tail);
-    lane_pending[miss_lane]<=1;
-   end
-   if(retire_read)begin
-    response_sequence<=response_sequence+1'b1;
-    read_head<=advance_read(read_head);lane_pending[response_lane]<=0;
-   end
    // An unrelated response never retires the outstanding expected read.
    if(unexpected_response)protocol_error<=1;
    if(command_valid && command_ready)begin
@@ -143,10 +111,10 @@ module ot_a3_bf16_weight_gather #(
     end
     LOOKUP:begin
      if(protocol_error || unexpected_response)state<=IDLE;
-     else if(miss && outstanding<RC'(READ_CREDITS))state<=REQUEST;
-     else if(!miss && outstanding==0)state<=SEND;
+     else if(miss)state<=REQUEST;
+     else state<=SEND;
     end
-    REQUEST:if(read_ready)state<=LOOKUP;
+    REQUEST:if(read_ready)state<=WAIT_RESPONSE;
     WAIT_RESPONSE:begin end
     SEND:if(word_ready)begin
      state<=IDLE;
@@ -161,13 +129,9 @@ module ot_a3_bf16_weight_gather #(
     default:state<=IDLE;
    endcase
    if(response_valid && expected_response)begin
-    if(response_error || protocol_error)begin
-     protocol_error<=1;
-     // A different read already published under backpressure remains owned
-     // until accepted, even when an earlier response faults.
-     if(state!=REQUEST || read_ready)state<=IDLE;
-    end
-    else cache_valid[slot][response_lane]<=1;
+    sequence_id<=sequence_id+1'b1;
+    if(response_error || protocol_error)begin protocol_error<=1;state<=IDLE;end
+    else begin cache_valid[slot][miss_lane]<=1;state<=LOOKUP;end
    end
   end
  end
@@ -201,7 +165,7 @@ module ot_a3_bf16_weight_gather #(
    end else word_data<=assembled;
   end
   if(response_valid && expected_response && !response_error && !protocol_error)begin
-   cache_data[slot][response_lane]<=response_data;cache_tag[slot][response_lane]<=addresses[response_lane][63:4];
+   cache_data[slot][miss_lane]<=response_data;cache_tag[slot][miss_lane]<=addresses[miss_lane][63:4];
   end
  end
 endmodule

@@ -1097,3 +1097,37 @@ model, not a measured DRAM bandwidth or whole-model inference speedup.
 Evidence: `results/rtl/g2_object_latency_sensitivity.json`. Earlier runner
 and bench versions are retained under `results/rtl/before_object_latency/`;
 previous loaded results continue to qualify those historical sources.
+
+## Bounded concurrent weight line reads
+
+The gather now supports READ_CREDITS=1..8, default one, forwarded through
+weight transport and G2 as RUNTIME_WEIGHT_READ_CREDITS. Request and response
+sequence counters are separate; a bounded FIFO records each accepted read's
+lane, and pending-lane bits prevent duplicate misses. Responses must remain
+ordered and exactly once. A coordinate remains owned until all its reads
+retire; no next-coordinate prefetch or response reordering is claimed.
+
+Errors stop new scheduling and suppress output, while accepted reads drain.
+A request already published under backpressure remains stable even if an
+earlier response faults. A directed test exposed and fixed this case before
+the retained loaded comparison. Clear still requires external cancellation
+acknowledgement or complete drain. The fixture now has a configurable ordered
+external queue, held at four entries in both sides of the comparison.
+
+Matched M6/N53/K344 with two-column residency and response delay twelve:
+median successful-phase cycles fall 109,884 → 80,903.5 (26.37%) from one to
+four read credits. Both pass 2,234 exact outputs and 295 writes/acks, including
+fault/recovery and cancellation ownership checks. First-operation traffic is
+unchanged: 73,564 weight bytes and 8,256 activation fills. Observed peak
+outstanding rises one → four. These are modeled service/drain cycles.
+
+31 gather/runtime tests pass. The directed 64-read test with response delay32
+measures 2,281 / 1,181 / 661 / 461 cycles at credits 1/2/4/8, with fault drain,
+foreign tags, stalled request/word stability and cancellation/restart checks.
+Zero-latency and single-outstanding compatibility cases remain covered.
+Evidence: `results/rtl/g2_gather_read_credits_comparison.json`.
+
+A four-credit containing transport route at 1 ns is active. The prior passing
+transport audit is bound to snapshots under `before_gather_credits/`; changes
+to cluster/transport mean existing integrated launches are now historical.
+Current-source integrated physical qualification and area cost remain open.

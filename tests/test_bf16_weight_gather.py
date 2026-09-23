@@ -9,11 +9,12 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.mark.parametrize('zero_latency', [0, 1])
 @pytest.mark.parametrize('slots', [1, 3])
 @pytest.mark.parametrize('retain', [0, 1])
-def test_gather(tmp_path, slots, zero_latency, retain):
+@pytest.mark.parametrize('credits', [1, 2, 4])
+def test_gather(tmp_path, slots, zero_latency, retain, credits):
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''
 module tb;
-parameter integer SLOTS=3,ZERO=0,RETAIN=1;
+parameter integer SLOTS=3,ZERO=0,RETAIN=1,CREDITS=1;
 localparam SB=SLOTS<2?1:$clog2(SLOTS);
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,coordinate_valid=0,word_ready=0;
@@ -40,7 +41,7 @@ function automatic [7:0] byte_value(input [63:0] addr);byte_value=8'((addr^(addr
 always @*begin
  for(integer n=0;n<16;n=n+1)response_data[8*n+:8]=byte_value(response_offset+64'(n));
 end
-ot_a3_bf16_weight_gather #(.SLOTS(SLOTS),.RETAIN_LINES(RETAIN)) dut(.*);
+ot_a3_bf16_weight_gather #(.SLOTS(SLOTS),.RETAIN_LINES(RETAIN),.READ_CREDITS(CREDITS)) dut(.*);
 reg held_read=0,held_word=0;
 reg [164:0] saved_read;
 reg [159:0] saved_word;
@@ -140,7 +141,7 @@ end
 endmodule
 ''')
     sim=tmp_path/'sim'
-    subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.SLOTS={slots}',f'-Ptb.ZERO={zero_latency}',f'-Ptb.RETAIN={retain}',
+    subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.SLOTS={slots}',f'-Ptb.ZERO={zero_latency}',f'-Ptb.RETAIN={retain}',f'-Ptb.CREDITS={credits}',
                     '-o',str(sim),str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)],check=True,capture_output=True,text=True)
     r=subprocess.run(['vvp',str(sim)],capture_output=True,text=True,timeout=60)
     assert r.returncode==0,r.stdout+r.stderr

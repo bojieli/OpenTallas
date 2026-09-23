@@ -1,5 +1,5 @@
 {
-  "scope": "Current compact-pass containing transport at tested 1 ns",
+  "scope": "Historical single-read compact transport before bounded read credits",
   "sources": [
     {
       "path": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
@@ -44,5 +44,22 @@
     "reason": "all evaluated stages met",
     "status": "pass"
   },
-  "area_um2": 6324.76
+  "area_um2": 6324.76,
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "verified": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "verified": "results/rtl/before_gather_credits/ot_a3_bf16_weight_gather.sv",
+      "sha256": "70119b4ec736f120f6c3ca6d9f6a4c489568c962809c8093191876a0f45052a8"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "verified": "results/rtl/before_gather_credits/ot_a3_bf16_weight_transport.sv",
+      "sha256": "16e29b23557cd4975506a46ca3801af56ee97d589456ce6ef1f3408527c91062"
+    }
+  ]
 }

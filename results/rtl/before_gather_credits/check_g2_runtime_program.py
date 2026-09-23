@@ -27,8 +27,6 @@ parser.add_argument("--no-weight-row-reuse", action="store_true")
 parser.add_argument("--pass-first", action="store_true")
 parser.add_argument("--auto-schedule", action="store_true", help="Choose row/pass order and pass width from residency before elaboration")
 parser.add_argument("--pass-columns",type=int,choices=[1,2,3],default=3)
-parser.add_argument("--weight-read-credits", type=int, choices=[1,2,4,8], default=1)
-parser.add_argument("--weight-object-outstanding", type=int, choices=[1,2,4,8], default=1)
 parser.add_argument("--weight-response-gap", type=int, default=1)
 parser.add_argument("--weight-object-latency", type=int, default=3, help="Response delay cycles in the single-outstanding object-read fixture")
 parser.add_argument("--depth", type=int, default=80)
@@ -80,8 +78,6 @@ record_name = (
 )
 if args.no_weight_row_reuse:
     record_name += "_no_weight_reuse"
-if args.weight_read_credits != 1 or args.weight_object_outstanding != 1:
-    record_name += f"_readcredits{args.weight_read_credits}_objectqueue{args.weight_object_outstanding}"
 if args.weight_object_latency != 3:
     record_name += f"_object_latency{args.weight_object_latency}"
 if args.weight_response_gap != 1:
@@ -326,8 +322,6 @@ cmd = [
     f"-GREGISTER_AUXILIARY_REQUESTS={int(args.registered_auxiliary_requests)}",
     f"-GWEIGHT_RESPONSE_GAP={args.weight_response_gap}",
     f"-GWEIGHT_OBJECT_LATENCY={args.weight_object_latency}",
-    f"-GWEIGHT_READ_CREDITS={args.weight_read_credits}",
-    f"-GWEIGHT_OBJECT_OUTSTANDING={args.weight_object_outstanding}",
     f"-GACTIVATION_MISS_ALIGNED={int(args.activation_miss_aligned)}",
     "--top-module",
     "tb_a3_g2_runtime_program",
@@ -377,9 +371,8 @@ result = {
     "auxiliary_depth": args.auxiliary_depth,
     "registered_auxiliary_requests": args.registered_auxiliary_requests,
     "weight_response_gap": args.weight_response_gap,
-    "weight_read_credits": args.weight_read_credits,
     "weight_object_service": {"response_delay_cycles": args.weight_object_latency,
-                              "outstanding_limit": args.weight_object_outstanding,
+                              "outstanding_limit": 1,
                               "request_ready_pattern": "cycles modulo 5 != 0"},
     "activation_miss_aligned": args.activation_miss_aligned,
     "output_backpressure": args.output_backpressure,

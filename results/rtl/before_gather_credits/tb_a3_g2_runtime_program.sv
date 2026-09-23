@@ -18,8 +18,6 @@ module tb_a3_g2_runtime_program;
  parameter integer WEIGHT_RESPONSE_GAP=1;
  // Delay from accepted object read to eligibility for its response.
  parameter integer WEIGHT_OBJECT_LATENCY=3;
- parameter integer WEIGHT_READ_CREDITS=1;
- parameter integer WEIGHT_OBJECT_OUTSTANDING=1;
  parameter bit ACTIVATION_MISS_ALIGNED=0;
  `include "program_config.svh"
  localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=DEPTH*LOCAL_OUTPUTS;
@@ -238,17 +236,14 @@ module tb_a3_g2_runtime_program;
  wire [63:0] wobj_tag,wobj_offset;
  wire [31:0] wobj_object;
  wire [4:0] wobj_bytes;
- integer wobj_head=0,wobj_tail=0,wobj_count=0,wobj_peak=0;
- reg [63:0] wobj_tags[0:WEIGHT_OBJECT_OUTSTANDING-1],wobj_offsets[0:WEIGHT_OBJECT_OUTSTANDING-1];
- integer wobj_due[0:WEIGHT_OBJECT_OUTSTANDING-1];
- wire wobj_pending=wobj_count!=0;
- wire [63:0] wobj_saved_tag=wobj_tags[wobj_head],wobj_saved_offset=wobj_offsets[wobj_head];
- integer wobj_reads=0,wobj_total_bytes=0;
+ reg wobj_pending=0;
+ reg [63:0] wobj_saved_tag=0,wobj_saved_offset=0;
+ integer wobj_delay=0,wobj_reads=0,wobj_total_bytes=0;
  integer first_wobj_reads=0,first_wobj_bytes=0;
  reg [7:0] weight_bytes[0:WEIGHT_OBJECT_BYTES-1];
  reg [127:0] wobj_data;
- wire wobj_ready=wobj_count<WEIGHT_OBJECT_OUTSTANDING && !runtime_transport_cancel && cycles%5!=0;
- wire wobj_response_valid=wobj_pending && cycles>=wobj_due[wobj_head] && !runtime_transport_cancel;
+ wire wobj_ready=!wobj_pending && !runtime_transport_cancel && cycles%5!=0;
+ wire wobj_response_valid=wobj_pending && wobj_delay==0 && !runtime_transport_cancel;
  always @*begin
   wobj_data=0;
   for(integer b=0;b<16;b=b+1)
@@ -256,23 +251,17 @@ module tb_a3_g2_runtime_program;
     wobj_data[8*b+:8]=weight_bytes[wobj_saved_offset+64'(b)];
  end
  always @(posedge clk)begin
-  if(!rst_n || (runtime_transport_cancel && runtime_transport_ack))begin wobj_count<=0;wobj_head<=0;wobj_tail<=0;end
+  if(!rst_n || (runtime_transport_cancel && runtime_transport_ack))wobj_pending<=0;
   else begin
    if(wobj_valid && wobj_ready)begin
     if(wobj_object!=WEIGHT_OBJECT || wobj_offset[3:0]!=0 || wobj_bytes==0 ||
        wobj_offset+64'(wobj_bytes)>64'(WEIGHT_OBJECT_BYTES))$fatal(1,"weight object read bounds");
-    wobj_offsets[wobj_tail]<=wobj_offset;wobj_due[wobj_tail]<=cycles+WEIGHT_OBJECT_LATENCY+1;
-    wobj_tags[wobj_tail]<=wobj_tag ^ ((phase==3)?64'h100000000:64'd0);
-    wobj_tail<=(wobj_tail+1)%WEIGHT_OBJECT_OUTSTANDING;
+    wobj_pending<=1;wobj_saved_offset<=wobj_offset;wobj_delay<=WEIGHT_OBJECT_LATENCY;
+    wobj_saved_tag<=wobj_tag ^ ((phase==3)?64'h100000000:64'd0);
     wobj_reads<=wobj_reads+1;wobj_total_bytes<=wobj_total_bytes+integer'(wobj_bytes);
    end
-   if(wobj_count>wobj_peak)wobj_peak<=wobj_count;
-   case({wobj_valid && wobj_ready,wobj_response_valid && wobj_response_ready})
-    2'b10:wobj_count<=wobj_count+1;
-    2'b01:wobj_count<=wobj_count-1;
-    default:begin end
-   endcase
-   if(wobj_response_valid && wobj_response_ready)wobj_head<=(wobj_head+1)%WEIGHT_OBJECT_OUTSTANDING;
+   if(wobj_pending && wobj_delay>0)wobj_delay<=wobj_delay-1;
+   if(wobj_response_valid && wobj_response_ready)wobj_pending<=0;
   end
  end
  generate if(WEIGHT_OBJECT_READS)begin : check_read_ownership
@@ -280,7 +269,7 @@ module tb_a3_g2_runtime_program;
       !dut.runtime_operands.descriptor_weight_transport.transport.gather.active)
    $fatal(1,"weight read ownership cleared before cancellation acknowledgement");
  end endgenerate
- ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_PASS_FIRST(PASS_FIRST),.PASS_COLUMNS(PASS_COLUMNS),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_WEIGHT_WORD_HANDOFF(WEIGHT_WORD_HANDOFF),.RUNTIME_WEIGHT_READ_CREDITS(WEIGHT_READ_CREDITS),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
+ ot_a3_g2_cluster #(.RUNTIME_OPERANDS(1),.RUNTIME_PASS_FIRST(PASS_FIRST),.PASS_COLUMNS(PASS_COLUMNS),.RESOLVE_INPUT_OBJECTS(INPUT_LAYOUT),.RUNTIME_WEIGHT_OBJECT_READS(WEIGHT_OBJECT_READS),.RUNTIME_WEIGHT_LINE_REUSE(WEIGHT_LINE_REUSE),.RUNTIME_WEIGHT_WORD_HANDOFF(WEIGHT_WORD_HANDOFF),.RUNTIME_OBJECT_WRITES(OBJECT_WRITES),.WRITE_OUTSTANDING(WRITE_OUTSTANDING),.RUNTIME_WEIGHT_ROW_REUSE(WEIGHT_ROW_REUSE),
  .RUNTIME_AUXILIARY_DEPTH(AUXILIARY_DEPTH),.RUNTIME_REGISTER_AUXILIARY_REQUESTS(REGISTER_AUXILIARY_REQUESTS)) dut(
  .input_layout_valid(input_layout_valid),.input_a_object(input_a_object),.input_b_object(input_b_object),
  .input_a_object_bytes(input_a_object_bytes),.input_b_object_bytes(input_b_object_bytes),
@@ -459,7 +448,6 @@ module tb_a3_g2_runtime_program;
   end
   if(OBJECT_WRITES && (object_writes==0 || object_writes!=object_acks))$fatal(1,"writer unexercised");
   $display("object writes=%0d acknowledgements=%0d",object_writes,object_acks);
-  $display("weight object peak_outstanding=%0d",wobj_peak);
   $display("weight object reads=%0d bytes=%0d first_reads=%0d first_bytes=%0d",wobj_reads,wobj_total_bytes,first_wobj_reads,first_wobj_bytes);
   $display("first operation weight fill_words=%0d",first_weight_fills);
   $display("first operation SRAM fill_words=%0d read_requests=%0d",first_mem_fills,first_mem_requests);

@@ -8,7 +8,6 @@ module ot_a3_bf16_weight_transport #(
  parameter integer INTERLEAVE=3,
  parameter bit RETAIN_LINES=1,
  parameter bit WORD_HANDOFF=1,
- parameter integer READ_CREDITS=1,
  parameter bit PASS_FIRST=0,
  parameter bit COMPACT_PASS_REUSE=0
 )(
@@ -72,7 +71,7 @@ module ot_a3_bf16_weight_transport #(
   .coordinate_valid(cursor_valid),.coordinate_ready(cursor_ready),.generation(),.element_base(element_base),
   .lane_stride(),.lane_mask(lane_mask),.row_index(),.column_base(column_base),.k_index(),.last(cursor_last),.command_error(cursor_error));
  /* verilator lint_on PINCONNECTEMPTY */
- ot_a3_bf16_weight_gather #(.SLOTS(INTERLEAVE),.RETAIN_LINES(RETAIN_LINES),.WORD_HANDOFF(WORD_HANDOFF),.READ_CREDITS(READ_CREDITS)) gather(
+ ot_a3_bf16_weight_gather #(.SLOTS(INTERLEAVE),.RETAIN_LINES(RETAIN_LINES),.WORD_HANDOFF(WORD_HANDOFF)) gather(
   .clk(clk),.rst_n(rst_n),.clear(clear),.command_valid(launch),.command_ready(gather_command_ready),
   .command_generation(command_generation),.command_object(command_object),.command_object_bytes(command_object_bytes),.command_lane_stride(command_column_stride),
   .coordinate_valid(cursor_valid && burst_active && !final_response && !protocol_error),.coordinate_ready(gather_ready),
