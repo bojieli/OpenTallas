@@ -878,3 +878,30 @@ regresses −3.2941 → −3.66799 ns at the 1 ns target. Both candidates are re
 and a matched overlapping-candidate route is running; neither replaces production
 without the routed timing/latency decision. See the
 [overlap comparison](../results/rtl/state_apply_overlap/comparison.json).
+
+## Two-column runtime operand service: setup closed, hold repair pending
+
+The completed partial-pass2 operand-service route binds to all eleven current
+RTL sources, including the pass scheduler. At ASAP7 TT and 1 ns, final extracted
+setup slack is +0.00657485 ns with zero setup violations; routed standard-cell
+area is 4,694.630 µm². DRC, antenna, slew, capacitance and fanout checks are clean.
+One hold violation remains at −0.000369649 ns on
+`weight_response_data[37]` → `prefetch.banks.bank[0].memory`, so the engineering
+verdict remains NOT_MET despite the small miss. This is the operand subsystem
+with retained SRAM and two-column scheduling, not the full G2 cluster.
+
+All source hashes and seven retained artifacts verify in the
+[operand-service audit](../results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_audit.json).
+A source/configuration-matched retry now requests 0.02 ns positive hold repair
+margin, leaving the tested 1 ns period, interface delays, fanout and transition
+constraints unchanged. Its output is
+`runtime_operand_service/pnr_partial_pass2_hold20_cts8_1ns.json`. The repair must
+also preserve setup and physical acceptance; a positive margin request is not
+itself proof of closure.
+
+The setup critical path is the already registered admission extent product,
+`admission.depth_words[6]` → `admission.stream_extent[43]`. The existing admission
+architecture separates row/column and depth products across clock edges. This
+route provides evidence for that integrated pipeline at the tested block scope;
+it does not justify adding another admission cycle before a current full-G2
+route demonstrates a need.
