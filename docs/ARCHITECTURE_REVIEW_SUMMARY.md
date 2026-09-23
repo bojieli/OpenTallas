@@ -657,3 +657,21 @@ benefit. The wide transform-divider saving is a standalone result; softmax
 fixes the operation to EXP_NONPOS and does not exercise sigmoid service.
 Current-source bindings and reports are retained in the
 [containing checkpoint](../results/rtl/wide_divider_shared_shift/containing_softmax/comparison.json).
+
+## Current coalesced four-credit transport closes at 1 ns
+
+The current coalesced transport completed final extracted routing on ASAP7 TT
+at 1 ns with +0.0478301 ns setup and +0.0309717 ns hold slack. All reported
+setup/hold, DRC, antenna, slew, capacitance and fanout violations are zero.
+Routed standard-cell area is 6,461.390 µm² versus 6,411.720 µm² for the
+matched pre-coalescing four-credit baseline: **0.77% more area**. Both pass
+the tested period under identical recorded floorplan/CTS/transition/fanout
+settings and transport parameters. All three source hashes match current RTL,
+and all seven retained artifacts verify.
+
+This qualifies the block clock for the coalescing architecture whose measured
+K2 fixture reduced cycles 704.5 → 570.5 (19.02%) and weight bytes 836 → 212
+(74.64%). The deeper K344 fixture was unchanged, so these benefits remain
+workload-specific. The worst routed setup path is now `cursor.depth[8]` →
+`cursor.remaining_words[27]`. Integrated G2 qualification remains separate.
+See the [coalesced route audit and baseline comparison](../results/physical_abi3/asap7/bf16_weight_transport/coalesced_credits4_route_audit.json).

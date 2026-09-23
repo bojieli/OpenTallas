@@ -1,0 +1,72 @@
+{
+  "scope": "Current coalesced four-credit transport, final extracted ASAP7 TT block route at tested 1 ns; not integrated G2 closure.",
+  "record": "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns.json",
+  "record_sha256": "4dc5ed1195db61f783120b71ed449d565045303accf77cbd26199c61f986e0a6",
+  "source_bindings": [
+    {
+      "path": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+      "size_bytes": 6437
+    },
+    {
+      "path": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "sha256": "0f500dfa3844f89e59de972ef00809e734124754f7c5626838a723eddbcbfac3",
+      "size_bytes": 9661
+    },
+    {
+      "path": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "sha256": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10",
+      "size_bytes": 6382
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/1_2_yosys.v": "165507f61ec07bd5513cc41acc5b7c4b68a3a32259d736b48b63c6b1eb0be3b1",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/6_final.v": "7971d9a34cf0a4e311d1cd7787e83e088aa9e040bcbd01c7eaeca7f774851151",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/6_finish.rpt": "0b89d442874017c414f00bb8ec69ad248df44f28ae0ca0bfea942cdb7014ed77",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/config.mk": "bd6fbb7f13a4976c596d54ef91f4f02a9e4e9cd8c35c3f660048e11962c04cc3",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns_artifacts/metadata.json": "4f732fc0ce7315f6c1166e8a02224b9dcc9b1a2dc09ae3e4e246ffa334a09618"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.030971699999999998,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.0478301,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "routed_cell_area_um2": 6461.39,
+  "critical_path": {
+    "startpoint": "cursor.depth[8]",
+    "endpoint": "cursor.remaining_words[27]",
+    "setup_slack_ns": 0.0478301
+  },
+  "matched_baseline": {
+    "record": "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns.json",
+    "record_sha256": "ffed61128b8d7850ec64adf4b9b6a7d748e502b7f2077d3324f91fd59c912684",
+    "area_um2": 6411.72,
+    "setup_slack_ns": 0.0427878,
+    "hold_slack_ns": 0.0337075,
+    "area_increase_percent": 0.774675126175195,
+    "decision": "Retain coalescing: current implementation meets 1 ns block constraints for 0.77% more routed area, with prior measured traffic/cycle benefits. No complete-model or integrated-frequency claim."
+  }
+}
