@@ -960,3 +960,30 @@ passes 65 cases and 4,555 checks per simulator with verified source hashes.
 The [counter candidate](../results/rtl/state_apply_counter/comparison.json) retains
 endpoint-specific timing scripts/reports and a matched route is active. Production
 state RTL remains unchanged pending a routed timing/latency decision.
+
+## Current-source route audit separates usable evidence from historical coverage
+
+`tools/audit_current_asap7_routes.py` checks current workspace RTL hashes, exact
+recorded parameters, finite tested clock periods, explicit passing extracted
+setup/hold/physical checks, and hashes of seven required retained artifacts.
+It does not use slack-derived Fmax or infer elaborated child coverage from a
+source-level instantiation graph. That distinction matters when sources change
+or generate parameters disable hardware beneath a historically closed top.
+
+The initial audit finds eight eligible configurations among 252 route-bearing
+records: KV prefix count, credit4 coalesced weight transport, pass-first output
+writer, pass-first operand cursor, pipelined Sinkhorn, pass scheduler, shared
+wide divider and the tree multiplier candidate module. All are tested at 1 ns
+except Sinkhorn at 2 ns. This is not a module completion count or whole-chip
+clock claim. The conservative path rule excludes experimental-source records,
+including the small-divider route whose exact candidate was subsequently copied
+into production; that integration's separate identity proof remains valid.
+Historical-source and incomplete-artifact records are also excluded, not erased.
+Full G2 and current softmax closure are not established by this inventory.
+
+The [source-current inventory](../results/physical_abi3/asap7/current_source_route_inventory.json)
+retains per-record exclusion reasons, parameters and hashes. A regression verifies
+that modified source/artifacts, negative or nonfinite slack, physical violations,
+invalid periods, pre-layout-only evidence and experimental source paths cannot
+be admitted. Refresh the inventory after source changes before using it for
+qualification planning; it describes the workspace at generation, not future RTL.
