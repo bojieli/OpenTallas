@@ -80,3 +80,9 @@ machine remains the general HBM-side vehicle.
 ## 4. Iteration log
 
 Entries are appended as measurements land.
+
+**P1 (done).** `tools/hdc_golden.py` specifies the arithmetic. With the
+oracle's 16-token prompt it decodes 1073, 382, 93: the torch oracle's three
+tokens. The first token's logit margin is 0.865 against 0.830. Exponential,
+reciprocal and reciprocal square root are within 2.4×10⁻⁷ relative error
+(≈2 ulp). Test: `tests/test_hdc_golden.py`.
