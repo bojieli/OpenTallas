@@ -259,7 +259,7 @@ module ot_a3_attention_softmax_block #(
     wire        exp_out_valid;
     wire [31:0] exp_result;
     wire [1:0]  exp_error;
-    ot_a3_fp32_transcendental_cr_rne #(.ENABLE_SIGMOID(0)) exponential (
+    ot_a3_fp32_transcendental_cr_rne exponential (
         .clk(clk), .rst_n(rst_n),
         .in_valid(exp_in_valid), .in_ready(exp_in_ready),
         .operation(OP_EXP_NONPOS), .argument_code(exp_argument),

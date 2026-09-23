@@ -726,3 +726,32 @@ The next architecture change is explicit exp-only elaboration specialization
 that removes the unused transform service while preserving the full engine's
 sigmoid default, followed by numerical and containing physical qualification.
 See the [source attribution](../results/rtl/softmax_control_attribution/finding.json).
+
+## Exponential-only softmax specialization removes unused sigmoid service
+
+The certifying engine now has `ENABLE_SIGMOID=1` by default. Softmax explicitly
+sets it to zero, structurally omitting both wide sigmoid-transform dividers
+and refusing any unsupported sigmoid request before fast paths. The final
+squaring transition also excludes sigmoid-transform states in this configuration.
+The full engine retains sigmoid behavior by default.
+
+Matched synthesis with identical current divider implementations reduces
+softmax mapped cell area **12,050.452 → 10,895.162 µm² (9.59%)** and sequential
+cells **8,584 → 7,247 (1,337 fewer)**. Hierarchy output confirms the wide-divider
+module is removed. Both configurations fail the 1 ns pre-layout target:
+slack −10.5775 / −10.1004 ns. This is an architectural area reduction, not
+clock closure; a current specialized-softmax 1 ns route is active.
+
+Ten protocol/equivalence tests pass. Real softmax retains nine passing numerical
+cases, two refusals and exactly 767,158 cycles. All nine complete attention
+transactions pass with identical phase counts and 2,388,699 active cycles.
+Direct specialized-engine testing covers 4,200 requests: unchanged exponential
+vectors and explicit refusals for all 2,100 sigmoid requests, plus reset and
+output stalls. The task-only committed engine with full support enabled passes
+the original 4,200-case corpus and 6,637,132 checks with the same summary.
+
+Pre-existing workspace divisor-width edits were preserved and excluded from
+the engine commit. Matched physical measurements use that workspace variant;
+both the measured engine and task-only committed engine snapshots are retained
+with source inventories. See the [specialization comparison](../results/rtl/softmax_exp_only/comparison.json)
+and [reproduction notes](../results/rtl/softmax_exp_only/reproduce.md).

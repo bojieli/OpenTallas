@@ -13,7 +13,7 @@ def test_lane_write_equivalence(tmp_path, lanes, simulator):
         'module ot_a3_attention_softmax_block #(', 'module old_softmax #('))
     bench = tmp_path / 'tb.sv'
     bench.write_text(r'''
-module ot_a3_fp32_transcendental_cr_rne(
+module ot_a3_fp32_transcendental_cr_rne #(parameter ENABLE_SIGMOID=1)(
 input clk,rst_n,in_valid,operation,out_ready,input [31:0] argument_code,
 output in_ready,output reg out_valid,output reg [31:0] result_code,output reg [1:0] result_error);
 reg [2:0] delay_left;

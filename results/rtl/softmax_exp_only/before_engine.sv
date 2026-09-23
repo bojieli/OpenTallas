@@ -43,7 +43,9 @@
 module ot_a3_fp32_transcendental_cr_rne #(
     parameter integer FRAC_BITS = 160,
     parameter integer SERIES_TERMS = 56,
-    parameter bit ENABLE_SIGMOID = 1
+    // Restoring steps per clock: fewer steps shorten the series-divider path
+    // at the cost of more clocks per term. Arithmetic and rounding are unchanged.
+    parameter integer DIV_BITS_PER_STEP = 10
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -72,6 +74,19 @@ module ot_a3_fp32_transcendental_cr_rne #(
     output reg [FRAC_BITS+2:0] interval_lower_out,
     output reg [FRAC_BITS+2:0] interval_upper_out
 );
+    //: THE SERIES DIVISOR IS AT MOST SERIES_TERMS + 1, WHICH IS 57 AT THE
+    //: DEFAULT.  It was carried in nine bits, and ot_wide_div_small_seq's step
+    //: chain is DIVISOR_BITS+1 wide compare-subtracts in series, so every
+    //: subtract in the chain was ten bits for a value that never exceeds six.
+    //: Routed, that chain -- series_div_upper.work[169] -> inexact -- is the
+    //: binding path of BOTH this block and its exp_pos twin at 306 MHz, with the
+    //: target genuinely binding (repair_timing fought 20 endpoints in it). Six
+    //: bits drops each subtract from ten to seven, values untouched: every
+    //: partial remainder is below the divisor, so the narrower walk holds every
+    //: value the wider one held and the netlist is a strict narrowing of
+    //: constant-zero bits. Zero cycles. Derive the width from SERIES_TERMS
+    //: so larger supported series retain their full divisor as well.
+    localparam integer SERIES_DIVISOR_BITS = $clog2(SERIES_TERMS + 2);
     localparam OP_EXP_NONPOS = 1'b0;
     localparam OP_SIGMOID = 1'b1;
 
@@ -109,7 +124,6 @@ module ot_a3_fp32_transcendental_cr_rne #(
     //: latency of 57 terms and eight squarings. The wide-denominator divide takes
     //: one bit per clock because a 165-bit subtract is already 3.37 ns.
     localparam integer MUL_BITS_PER_STEP = 16;
-    localparam integer DIV_BITS_PER_STEP = 10;
 
     // One is exactly bit FRAC_BITS in every Q0.FRAC_BITS value.
     localparam [FRAC_BITS+2:0] FIXED_ONE =
@@ -289,7 +303,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
         {{(SERIES_DIVIDEND_W-PRODUCT_HIGH_W){1'b0}}, mul_upper_high};
 
     reg [SERIES_DIVIDEND_W-1:0] series_dividend_lower_q, series_dividend_upper_q;
-    reg [8:0]                   series_divisor_q;
+    reg [SERIES_DIVISOR_BITS-1:0] series_divisor_q;
     reg                         series_upper_fraction_q;
 
     reg  series_div_start;
@@ -299,7 +313,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
     wire series_remainder_lower, series_remainder_upper;
 
     ot_wide_div_small_seq #(
-        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(9),
+        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(SERIES_DIVISOR_BITS),
         .BITS_PER_STEP(DIV_BITS_PER_STEP)
     ) series_div_lower (
         .clk(clk), .rst_n(rst_n), .start(series_div_start),
@@ -308,7 +322,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
         .quotient(series_quotient_lower), .inexact(series_remainder_lower)
     );
     ot_wide_div_small_seq #(
-        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(9),
+        .WIDTH(SERIES_DIVIDEND_W), .DIVISOR_BITS(SERIES_DIVISOR_BITS),
         .BITS_PER_STEP(DIV_BITS_PER_STEP)
     ) series_div_upper (
         .clk(clk), .rst_n(rst_n), .start(series_div_start),
@@ -367,7 +381,6 @@ module ot_a3_fp32_transcendental_cr_rne #(
     wire [FRAC_BITS+2:0] transform_quotient_lower, transform_quotient_upper;
     wire transform_remainder_lower, transform_remainder_upper;
 
-    generate if (ENABLE_SIGMOID) begin : sigmoid_service
     ot_wide_div_seq #(
         .NUM_BITS(TRANSFORM_NUM_W), .DEN_BITS(TRANSFORM_DEN_W),
         .QUOT_BITS(FRAC_BITS+3), .BITS_PER_STEP(1)
@@ -389,13 +402,6 @@ module ot_a3_fp32_transcendental_cr_rne #(
         .quotient(transform_quotient_upper), .inexact(transform_remainder_upper)
     );
 
-    end else begin : exponential_only
-        assign transform_lower_busy = 0, transform_upper_busy = 0;
-        assign transform_lower_done = 0, transform_upper_done = 0;
-        assign transform_quotient_lower = 0, transform_quotient_upper = 0;
-        assign transform_remainder_lower = 0, transform_remainder_upper = 0;
-    end endgenerate
-
     wire [31:0] rounded_lower = fixed_to_fp32_rne(interval_lower);
     wire [31:0] rounded_upper = fixed_to_fp32_rne(interval_upper);
     wire argument_nonfinite = argument_code[30:23] == 8'hff;
@@ -409,6 +415,8 @@ module ot_a3_fp32_transcendental_cr_rne #(
         if (SERIES_TERMS <= 0 || ((SERIES_TERMS & 1) != 0) ||
             SERIES_TERMS > 254)
             $error("SERIES_TERMS must be positive and even");
+        if (SERIES_TERMS + 1 >= (1 << SERIES_DIVISOR_BITS))
+            $error("SERIES_TERMS + 1 must fit SERIES_DIVISOR_BITS");
     end
 
     always @(posedge clk or negedge rst_n) begin
@@ -433,7 +441,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
             interval_upper_out <= 0;
             series_dividend_lower_q <= 0;
             series_dividend_upper_q <= 0;
-            series_divisor_q <= 9'd0;
+            series_divisor_q <= {SERIES_DIVISOR_BITS{1'b0}};
             series_upper_fraction_q <= 1'b0;
             next_term_lower <= 0;
             next_term_upper <= 0;
@@ -459,8 +467,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
                         result_code <= 0;
                         result_error <= ERR_NONE;
                         interval_exact <= 1'b0;
-                        if ((!ENABLE_SIGMOID && operation == OP_SIGMOID) ||
-                            argument_nonfinite ||
+                        if (argument_nonfinite ||
                             (operation == OP_EXP_NONPOS &&
                              !argument_code[31] && !argument_zero)) begin
                             result_error <= ERR_ARGUMENT;
@@ -520,7 +527,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
                 S_SER_PROD: begin
                     series_dividend_lower_q <= series_dividend_lower;
                     series_dividend_upper_q <= series_dividend_upper;
-                    series_divisor_q <= next_term_index;
+                    series_divisor_q <= next_term_index[SERIES_DIVISOR_BITS-1:0];
                     series_upper_fraction_q <= mul_upper_low_nonzero;
                     state <= S_SER_DIV;
                 end
@@ -585,7 +592,7 @@ module ot_a3_fp32_transcendental_cr_rne #(
                     interval_lower <= square_lower_q;
                     interval_upper <= square_upper_q;
                     if (square_index == 7) begin
-                        state <= ENABLE_SIGMOID && operation_q == OP_SIGMOID
+                        state <= operation_q == OP_SIGMOID
                             ? S_TR_DIV : S_CERTIFY;
                     end else begin
                         square_index <= square_index + 1'b1;

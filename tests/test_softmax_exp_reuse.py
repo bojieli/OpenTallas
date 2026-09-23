@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
 def test_failed_results_and_reset(tmp_path,simulator):
     bench=tmp_path/'tb.sv'
-    bench.write_text(r'''module ot_a3_fp32_transcendental_cr_rne(
+    bench.write_text(r'''module ot_a3_fp32_transcendental_cr_rne #(parameter ENABLE_SIGMOID=1)(
 input clk,rst_n,in_valid,operation,out_ready,input [31:0] argument_code,
 output in_ready,output reg out_valid,output reg [31:0] result_code,output reg [1:0] result_error);
 assign in_ready=!out_valid;
