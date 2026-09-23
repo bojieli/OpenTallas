@@ -10,6 +10,11 @@ The proposed next architecture is now available for review in **[ROM-first archi
 
 For DeepSeek V4.1 specifically, see the [first-principles architecture redesign](DEEPSEEK_V41_ARCHITECTURE_REDESIGN.md): expert-local ROM, CSA2 ownership, Engram placement, recurrence and fair HBM sizing.
 
+The [V4.1 traffic recalculation](DEEPSEEK_V41_TRAFFIC_RECALCULATION.md) clarifies
+that 112.8 TB/s came from a 40 µs expert-service probe. The model-derived routed
+inventory is 4.512 GB/token; at 1 ms of expert service it requires 4.512 TB/s.
+No 100 µs token requirement has been selected.
+
 ## Latest feasibility finding
 
 The proposed ROM 85/75 µs point fails the first dependency check: unchanged

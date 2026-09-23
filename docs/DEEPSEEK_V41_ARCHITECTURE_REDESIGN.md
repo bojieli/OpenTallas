@@ -6,6 +6,13 @@ repository's pinned DeepSeek-V4.1-Flash model and its declared formats. It does
 not claim to cover an unspecified V4.1 model variant. No new RTL implementation
 or workload simulation is performed by this study.
 
+**Latency-budget clarification:** the 100 µs token and 40 µs routed-expert
+allocations below are sensitivity probes, not requirements. The checked routed
+inventory is 4.512 GB/token; 112.8 TB/s follows only when serviced in 40 µs.
+Start with the [traffic recalculation](DEEPSEEK_V41_TRAFFIC_RECALCULATION.md)
+for the derivation, local-versus-external traffic distinction and latency sweep.
+No final token-latency target has been selected.
+
 ## 1. Recommendation
 
 Evaluate a **hierarchy of ROM expert groups with shared local compute**, coupled
