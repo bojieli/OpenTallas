@@ -1204,3 +1204,30 @@ checks each, 65 cases, 53 programs, 185 issues, 460 views and 11 traps. Evidence
 `results/rtl/abi3_state_payload_campaign.json`. A new 1 ns CTS12 physical run
 is active; earlier state-enabled containing launches are historical after this
 source change. The state-disabled G2 path does not instantiate this block.
+
+## Matched synthesis checkpoint while routing continues
+
+The active matched physical flows have completed synthesis. Retained reports,
+configuration/constraint hashes and launch-source bindings are in
+`results/physical_abi3/asap7/optimization_synthesis_checkpoint/comparison.json`.
+
+| Configuration | Mapped standard-cell area, um² | Reset / ordinary flops |
+|---|---:|---:|
+| State controller, combinational modulo | 3,919.9788 | 3,600 / 0 |
+| State controller, sequential modulo | 3,573.6455 | 3,706 / 0 |
+| State controller, independent payload capture | 3,492.7994 | 2,618 / 1,088 |
+| Current weight transport, one read credit | 6,031.7460 | 128 / 6,561 |
+| Current weight transport, four read credits | 5,973.5864 | 134 / 6,570 |
+
+Sequential modulo reduces mapped area 8.84% despite additional registers;
+independent payload capture reduces it a further 2.26% and confirms exactly
+1,088 flops leave the reset tree without changing total flop count. Four
+credits add fifteen flops versus one credit but map to 0.96% less total cell
+area in this run. Mapping optimization can change combinational area; this
+is not a general claim that larger queues cost less, nor an energy result.
+
+These figures support continuing the candidates through physical implementation,
+but do not establish routed area, clock closure or all-target efficiency. The
+sequential state controller still had a timing miss at its intermediate clock
+tree stage. Final routed paths and acceptance checks remain the next decision
+gate; all existing live jobs continue without restart.
