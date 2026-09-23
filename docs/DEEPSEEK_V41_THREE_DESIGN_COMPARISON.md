@@ -164,3 +164,8 @@ The [ROM macro evidence gate](DEEPSEEK_V41_ROM_MACRO_GATE.md) now separates
 bank-local service from fully pooled service. Existing density and CIM bandwidth
 anchors do not qualify a joint N5 digital-read macro; numerical physical ROM speed
 claims must wait for that gap to be resolved.
+
+The [address-striped ROM candidate](DEEPSEEK_V41_BANKED_ROM_CANDIDATE.md) makes
+pooled service concrete at the logical-bank level and derives its bank depth,
+compute demand, padding and read-power requirements. Physical macro qualification
+is still required before selecting a local rate.

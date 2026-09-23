@@ -1,0 +1,93 @@
+{
+  "capacity_bytes_per_chip": 4595955000,
+  "clock_hz_assumed": 1000000000.0,
+  "delivery_fraction_assumed": 0.65,
+  "input_sha256": {
+    "results/architecture/v41_array_mapping.json": "de094341f02f50fb19ec77f77ff6db84bf440ebd6ef6cbe1ff69a1a6ace0af4e",
+    "tools/audit_v41_banked_rom.py": "acf6b704cbdc68b08f2a07a52ad37ea1d57a61d99b265f49de1a6649c9d33ab5"
+  },
+  "limits": [
+    "Bank count and word/depth describe logical service endpoints, not characterized physical macros. A logical bank may need many subarrays and a routed mux hierarchy.",
+    "Expert-major address regions stripe each expert over every bank. Inactive expert capacity shares row depth rather than receiving separately stranded read ports.",
+    "One full stripe per cycle serves one expert stream. Multiple selected experts time-share those banks; this is pooled serial service, not six independent full-rate reads.",
+    "Expert stripe padding is charged for the selected map; dense/head/draft alignment and remaining object placement are still open. The 2% reserve is not usable payload.",
+    "Compute demand applies to packed routed FP4/scale streams only; dense formats require a separate lane/format ledger.",
+    "Read energy includes whichever ROM/mux/wire/scale delivery costs the physical measurement defines. Arithmetic, leakage, clock, SRAM, fabric and external memory remain additional.",
+    "100W read allocation is only an energy sensitivity; it is not a selected chip or package power cap.",
+    "No N5 density/clock/energy is inferred from the 130nm macro. No physical feasibility or throughput claim."
+  ],
+  "mapping": "For a packed byte address within a padded expert shard, bank=(address//256)%N, row=expert_base_row+address//(256*N), byte_lane=address%256. Distinct expert base rows include layer identity.",
+  "remaining_chip_area_mm2": 315,
+  "rom_area_mm2_assumed": 500,
+  "rows": [
+    {
+      "address_bits": 20,
+      "backbone_plus_expert_padding_bytes": 3761840435,
+      "backbone_plus_expert_padding_fits": true,
+      "capacity_bytes_per_bank": 164141312,
+      "delivered_TB_s": 4.5,
+      "depth_words_per_bank": 641177,
+      "expert_padding_bytes_per_chip": 1597440,
+      "expert_shard_padded_bytes": 4702208,
+      "independent_logical_banks": 28,
+      "read_energy_pJ_per_bit_if_100W_budget": 2.7777777777777777,
+      "read_path_power_W_by_pJ_per_delivered_bit": {
+        "0.1": 3.6,
+        "0.5": 18.0,
+        "1": 36.0,
+        "2": 72.0
+      },
+      "rounded_capacity_bytes": 4595956736,
+      "scalar_MAC_s_to_consume_stream": 8470588235294.117,
+      "scalar_lanes_at_assumed_clock_and_utilization": 13032,
+      "word_bytes": 256
+    },
+    {
+      "address_bits": 18,
+      "backbone_plus_expert_padding_bytes": 3772423475,
+      "backbone_plus_expert_padding_fits": true,
+      "capacity_bytes_per_bank": 42164736,
+      "delivered_TB_s": 18,
+      "depth_words_per_bank": 164706,
+      "expert_padding_bytes_per_chip": 12180480,
+      "expert_shard_padded_bytes": 4715776,
+      "independent_logical_banks": 109,
+      "read_energy_pJ_per_bit_if_100W_budget": 0.6944444444444444,
+      "read_path_power_W_by_pJ_per_delivered_bit": {
+        "0.1": 14.4,
+        "0.5": 72.0,
+        "1": 144,
+        "2": 288
+      },
+      "rounded_capacity_bytes": 4595956224,
+      "scalar_MAC_s_to_consume_stream": 33882352941176.47,
+      "scalar_lanes_at_assumed_clock_and_utilization": 52127,
+      "word_bytes": 256
+    },
+    {
+      "address_bits": 16,
+      "backbone_plus_expert_padding_bytes": 3811960115,
+      "backbone_plus_expert_padding_fits": true,
+      "capacity_bytes_per_bank": 10614272,
+      "delivered_TB_s": 72,
+      "depth_words_per_bank": 41462,
+      "expert_padding_bytes_per_chip": 51717120,
+      "expert_shard_padded_bytes": 4766464,
+      "independent_logical_banks": 433,
+      "read_energy_pJ_per_bit_if_100W_budget": 0.1736111111111111,
+      "read_path_power_W_by_pJ_per_delivered_bit": {
+        "0.1": 57.6,
+        "0.5": 288.0,
+        "1": 576,
+        "2": 1152
+      },
+      "rounded_capacity_bytes": 4595979776,
+      "scalar_MAC_s_to_consume_stream": 135529411764705.88,
+      "scalar_lanes_at_assumed_clock_and_utilization": 208507,
+      "word_bytes": 256
+    }
+  ],
+  "scalar_mac_utilization_assumed": 0.65,
+  "schema": "opentallas.v41-banked-rom.v1",
+  "status": "logical_bank_candidate_joint_physical_contract_unqualified"
+}
