@@ -125,32 +125,14 @@ module ot_a3_state_controller
     reg              hit_found;
     reg [SLOT_W-1:0] free_slot;
     reg              free_found;
-    wire [SLOTS-1:0] slot_match;
-    generate for(genvar n=0;n<SLOTS;n=n+1)begin: match_slot
-        assign slot_match[n]=slot_used[n] && slot_descriptor[n]==op_descriptor_id;
-    end endgenerate
-    reg [31:0] matched_cursor, matched_capacity;
-    reg [7:0] matched_policy;
-    reg matched_open;
-    // Descriptor allocation occurs only on a lookup miss, so used entries
-    // have unique descriptor identities. Select payload with that one-hot
-    // match directly; the encoded index is needed only for table writes.
-    always @* begin
-        matched_cursor=0;matched_capacity=0;matched_policy=0;matched_open=0;
-        for(integer n=0;n<SLOTS;n=n+1)begin
-            matched_cursor=matched_cursor | (slot_cursor[n] & {32{slot_match[n]}});
-            matched_capacity=matched_capacity | (slot_capacity[n] & {32{slot_match[n]}});
-            matched_policy=matched_policy | (slot_policy[n] & {8{slot_match[n]}});
-            matched_open=matched_open | (slot_open[n] & slot_match[n]);
-        end
-    end
     always @* begin
         hit_slot = {SLOT_W{1'b0}};
         hit_found = 1'b0;
         free_slot = {SLOT_W{1'b0}};
         free_found = 1'b0;
         for (s = 0; s < SLOTS; s = s + 1) begin
-            if (!hit_found && slot_match[s[SLOT_W-1:0]]) begin
+            if (!hit_found && slot_used[s[SLOT_W-1:0]] &&
+                (slot_descriptor[s[SLOT_W-1:0]] == op_descriptor_id)) begin
                 hit_slot = s[SLOT_W-1:0];
                 hit_found = 1'b1;
             end
@@ -162,10 +144,10 @@ module ot_a3_state_controller
     end
 
     wire [SLOT_W-1:0] target = hit_found ? hit_slot : free_slot;
-    wire [31:0] target_cursor = hit_found ? matched_cursor : payload_initial_cur;
-    wire [31:0] target_capacity = hit_found ? matched_capacity : payload_capacity;
-    wire        target_open = matched_open;
-    wire [7:0]  target_policy = hit_found ? matched_policy : payload_policy;
+    wire [31:0] target_cursor = hit_found ? slot_cursor[target] : payload_initial_cur;
+    wire [31:0] target_capacity = hit_found ? slot_capacity[target] : payload_capacity;
+    wire        target_open = hit_found ? slot_open[target] : 1'b0;
+    wire [7:0]  target_policy = hit_found ? slot_policy[target] : payload_policy;
     wire        target_unstaged = (target_policy == ot_a3_pkg::A3_COMMIT_POLICY_UNSTAGED);
     wire        target_saturating = (target_policy == ot_a3_pkg::A3_COMMIT_POLICY_SATURATING);
     // The positions the request presented.  A21's zero-count trap is stated on
@@ -179,10 +161,7 @@ module ot_a3_state_controller
       : target_saturating ? ((commit_span < target_capacity) ? commit_span
                                                              : target_capacity)
       : commit_span;
-    // Only non-saturating policies use this bound. Keep the saturating
-    // capacity/min selection out of its add-and-compare path.
-    wire [32:0] commit_end = {1'b0, target_cursor} +
-        {1'b0, (target_unstaged ? 32'd0 : commit_span)};
+    wire [32:0] commit_end = {1'b0, target_cursor} + {1'b0, commit_rows};
 
     wire [SLOT_W-1:0] apply_slot = pending_slot[apply_index];
     wire [31:0] apply_rows = pending_rows[apply_index];

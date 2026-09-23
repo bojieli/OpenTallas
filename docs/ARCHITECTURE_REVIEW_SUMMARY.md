@@ -269,3 +269,30 @@ multiblock operation, duplicate indices, bounds, saturation and counters.
 Its source inventory, vectors, compilation and simulation logs are retained
 with the KV-index verification. This is functional integration evidence;
 physical qualification remains pending.
+
+
+## State admission lookup checkpoint
+
+The historical sequential-modulo state-controller run has reached global
+routing. Its intermediate worst path still misses the 1 ns target by 0.88730 ns,
+from a descriptor-table register through selected fields and commit arithmetic
+to the commit counter's admission enable. This predates the payload-capture
+variant and is not a final routed result.
+
+The next refinement reads cursor, capacity, policy and open state directly
+from the descriptor match mask. Encoded slot indices remain for table writes;
+the read path avoids encoding a hit and then multiplexing the same table.
+Allocation only occurs on a miss, so used descriptor identities are unique.
+The non-saturating capacity check also uses the request span directly (or zero
+for unstaged policy), keeping the saturating clamp out of a bounds check that
+saturating commits bypass. Staged row payload still uses the required clamp.
+No request or apply cycles are added.
+
+Cycle equivalence passes 10,800 multi-slot stimulus cycles per simulator in
+Icarus and Verilator, including public outputs, stored slot fields, pending
+payloads and descriptor uniqueness. The 255-case cursor suite with 34 cancel
+positions and the full control-plane campaign pass both simulators too.
+Evidence: [parallel admission verification](../results/rtl/state_parallel_admission/verification.json).
+A new 1 ns CTS12 physical run is active; synthesis/routed benefit and current
+state-enabled integration remain pending. Earlier state jobs continue against
+their own launch sources.
