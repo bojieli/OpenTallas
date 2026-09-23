@@ -307,3 +307,31 @@ repair now reports paths ending at the byte-written counter, whose apply path
 contains a 32-by-32 row-byte product followed by a 64-bit accumulation. Final
 extracted timing must determine whether and how to pipeline that accounting
 while preserving transaction completion and statistics semantics.
+
+
+## Sparse-attention service attribution
+
+The containing sparse-attention bench now exposes optional `+profile` counters.
+All nine reference-checked transactions pass, and phase totals reconcile with
+2,443,487 active RTL cycles. Softmax exponential wait accounts for 2,248,054
+cycles (92.00%), nested within the denominator phase's 2,269,923 cycles.
+QK uses 52,882 cycles, AV 38,146, epilogue 76,607 and index delivery 5,760.
+These nested counters must not be summed twice. They measure these fixtures,
+not whole-model inference or a physically qualified clock.
+
+The full/multiple-block cases spend about 94.6–96.0% in exponential wait;
+the single-valid case spends only 0.03%, so the bottleneck is shape dependent.
+The architecture priority for substantial sparse-attention latency reduction is
+therefore exact exponential service: evaluate reusable certified results and
+bounded concurrent service with an explicit area budget, ordered lane result
+association, fault semantics and unchanged numerical contracts. Index-path
+simplification remains relevant to clock feasibility, but optimizing index
+cycles alone cannot materially improve this corpus's latency. Replication is
+not yet implemented or assigned an assumed linear speedup.
+
+Evidence and source inventory are retained in
+[attention service profile](../results/rtl/attention_service_profile/summary.json).
+`tools/summarize_attention_service_profile.py` requires all nine successful
+transactions, verifies phase sums and nested wait bounds, and emits the
+reproducible attribution. The testbench retains its numerical, memory-bound,
+counter and saturation assertions.

@@ -114,6 +114,25 @@ module tb_a3_attention_sparse;
         end
     end
 
+    // Optional cycle attribution for architecture studies. Counts only active
+    // operator cycles; sub-engine waits overlap their containing DEN/EPI phase
+    // and must not be summed again into total latency.
+    integer profile_phase[0:11];
+    integer profile_total=0, profile_exp_wait=0;
+    always @(posedge clk) begin
+        if (!rst_n || start) begin
+            profile_total=0;profile_exp_wait=0;
+            for(integer ps=0;ps<12;ps=ps+1)profile_phase[ps]=0;
+        end else if (busy) begin
+            profile_total=profile_total+1;
+            if(dut.state<12)profile_phase[dut.state]=profile_phase[dut.state]+1;
+            if(dut.state==dut.S_DEN &&
+               (dut.online.softmax.state==dut.online.softmax.S_RESC_W ||
+                dut.online.softmax.state==dut.online.softmax.S_EXP_W))
+                profile_exp_wait=profile_exp_wait+1;
+        end
+    end
+
     initial begin
         fh = $fopen("cases.txt", "r");
         if (fh == 0) begin $display("FAIL cannot open cases.txt"); $finish; end
@@ -136,6 +155,12 @@ module tb_a3_attention_sparse;
             watchdog = 0;
             @(negedge clk); start = 1; @(negedge clk); start = 0;
             wait (done); @(negedge clk);
+
+            if ($test$plusargs("profile")) begin
+                $write("PROFILE name=%0s total=%0d softmax_exp_wait=%0d phases=",name,profile_total,profile_exp_wait);
+                for(integer ps=0;ps<12;ps=ps+1)$write("%0d,",profile_phase[ps]);
+                $write("\n");
+            end
 
             if (error_code !== 8'h00) begin
                 $display("FAIL %0s error_code=%0h", name, error_code);
