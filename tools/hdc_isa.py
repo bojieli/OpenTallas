@@ -17,15 +17,19 @@ The core runs a static program of macro-operations.  Two units execute them:
   lanes: every slot is its own vector, e.g. one attention head per slot).
   KV-sourced ops (wsrc 1) use group 0 only (t = r); groups 1.. multiply BF16 by
   BF16 exactly, so they serve only rounded, ROM-weight ops.
-  `chase`: may start once the stream unit's latest instruction has written its
-  first element (element chaining) instead of waiting for a barrier.
+  `chase` (either unit): instead of waiting for a barrier, start once the
+  OTHER unit's latest instruction has made `chase_n` progress -- elements
+  written for the stream unit, result slots (one per slot per round) for the
+  matrix engine.  The program generator derives chase_n from the order in
+  which the producer writes what the consumer reads (element chaining).
 * SU, the stream unit: a 2-D loop (outer o, inner i) over elements.  Each
   element passes a fixed pipeline
 
       P = mA(A, B)        Q = C * (+-B.hi)
       R = P  (+ Q | + C | - B | + imm2 | bypass)
-      S = sfu(R)          (exp | reciprocal | rsqrt | bypass)
-      out = S (* C | bypass)
+      S = sfu(R)          (exp | reciprocal | rsqrt | sigmoid-denominator | bypass)
+      out = (S (* C | bypass)) (* B | bypass)
+  where the sigmoid class computes 1 / (exp(R) + 1).
 
   and may feed a segmented reducer (one segment per outer iteration): SUM in
   P=8 interleaved partials plus a pairwise tree, or MAX; `red_sq` reduces
@@ -63,13 +67,14 @@ SRC_VM, SRC_ALT = 0, 1                 # ALT: A -> weight ROM (bf16), B/C -> con
 MA_BYP, MA_AB, MA_AA, MA_AIMM = range(4)
 MB_OFF, MB_POS, MB_NEG = range(3)
 AD_BYP, AD_Q, AD_C, AD_NEGB, AD_IMM = range(5)
-SFU_NONE, SFU_EXP, SFU_RECIP, SFU_RSQRT = range(4)
+SFU_NONE, SFU_EXP, SFU_RECIP, SFU_RSQRT, SFU_SIGM = range(5)
 MC_BYP, MC_C = range(2)
+MD_BYP, MD_B = range(2)
 DST_NONE, DST_VM, DST_KV = range(3)
 RED_NONE, RED_SUM, RED_MAX = range(3)
 
 FIELDS = [
-    ("unit", 2), ("barrier", 1),
+    ("unit", 2), ("barrier", 1), ("chase", 1), ("chase_n", N),
     # ME
     ("me_nout", N), ("me_tiles", N), ("me_k", N), ("me_wsrc", 1),
     ("me_wbase", A), ("me_ts", A), ("me_ks", A), ("me_js", A),
@@ -77,13 +82,13 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_chase", 1), ("me_split", 2), ("me_xcs", A),
+    ("me_split", 2), ("me_xcs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nin", D),
     ("a_src", 1), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D),
     ("b_src", 1), ("b_base", A), ("b_so", A), ("b_si", A), ("b_d", D),
     ("c_src", 1), ("c_base", A), ("c_so", A), ("c_si", A), ("c_d", D),
-    ("ma", 2), ("mb", 2), ("ad", 3), ("sfu", 2), ("mc", 1),
+    ("ma", 2), ("mb", 2), ("ad", 3), ("sfu", 3), ("mc", 1), ("md", 1),
     ("dst", 2), ("d_base", A), ("d_so", A), ("d_si", A), ("d_d", D),
     ("red", 2), ("r_base", A), ("r_so", A), ("red_sq", 1),
     ("imm1", 32), ("imm2", 32),

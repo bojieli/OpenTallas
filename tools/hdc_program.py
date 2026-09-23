@@ -59,7 +59,11 @@ class Layout:
             lw = lambda n: model.lw(L, n)
             qkv = np.concatenate([lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"),
                                   lw("self_attn.v_proj.weight")])
-            gu = np.concatenate([lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")])
+            # gate and up interleaved by output tile, so each engine round yields
+            # matching gate/up rows and SiLU can run on it while the next computes
+            gate, up = lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")
+            tb = W * IL
+            gu = np.concatenate([m[i:i + tb] for i in range(0, gate.shape[0], tb) for m in (gate, up)])
             for name, w in (("qkv", qkv), ("o", lw("self_attn.o_proj.weight")), ("gu", gu),
                             ("down", lw("mlp.down_proj.weight"))):
                 self.mat[(L, name)] = self.place_matrix(w)
@@ -147,9 +151,9 @@ def build_program(lay):
         f.update(over)
         prog.append((f, set(reads), set(writes)))
 
-    def su(reads=(), writes=(), **f):
-        f = dict(f, unit=I.UNIT_SU)
-        prog.append((f, set(reads), set(writes)))
+    def su(reads=(), writes=(), red_writes=(), **f):
+        f = dict(f, unit=I.UNIT_SU, _red_regions=set(red_writes))
+        prog.append((f, set(reads), set(writes) | set(red_writes)))
 
     # The sum of squares of x is reduced by the op that produced x (red_sq).
     sq = dict(red=I.RED_SUM, red_sq=1, r_base=VM["SSX"])
@@ -165,13 +169,13 @@ def build_program(lay):
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
     su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W * GR, a_d=I.DYN_EMBED, a_si=1,
-       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X", "SSX"}, **sq)
+       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"}, red_writes={"SSX"}, **sq)
     for L in range(lay.L):
         rmsnorm("X", H, lay.cb[(L, "in")], "H")
         me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
         nh = NH + KV
         su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
-           r_base=VM["SS"], r_so=1, reads={"QKV"}, writes={"SS"})
+           r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
         su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
            ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
            reads={"SS"}, writes={"RS"})
@@ -206,9 +210,9 @@ def build_program(lay):
         sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                   d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
         su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
-           reads=heads, writes=heads | {"M"}, **sm)
+           reads=heads, writes=heads, red_writes={"M"}, **sm)
         su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
-           r_so=1, reads=heads | {"M"}, writes=heads | {"Z"}, **sm)
+           r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
         su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
            d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
         su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
@@ -220,49 +224,121 @@ def build_program(lay):
            reads=heads | {f"V{L}"}, writes={"ATT"})
         me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X", "SSX"}, **sq)
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
         rmsnorm("X", H, lay.cb[(L, "post")], "H")
-        me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={"GU"})
+        me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // (W * IL))})
         FF = lay.FF
-        su(su_nout=1, su_nin=FF, a_base=VM["GU"], a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
-           sfu=I.SFU_EXP, dst=I.DST_VM, d_base=VM["E1"], d_si=1, reads={"GU"}, writes={"E1"})
-        su(su_nout=1, su_nin=FF, a_base=VM["E1"], a_si=1, ad=I.AD_IMM, imm2=f32(1.0),
-           sfu=I.SFU_RECIP, c_base=VM["GU"], c_si=1, mc=I.MC_C, dst=I.DST_VM, d_base=VM["U"],
-           d_si=1, reads={"E1", "GU"}, writes={"U"})
-        su(su_nout=1, su_nin=FF, a_base=VM["U"], a_si=1, ma=I.MA_AB, b_base=VM["GU"] + FF, b_si=1,
-           dst=I.DST_VM, d_base=VM["ACT"], d_si=1, reads={"U", "GU"}, writes={"ACT"})
-        me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={"ACT"}, writes={"T1"})
+        tb = W * IL
+        for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
+            g0 = VM["GU"] + 2 * tb * r
+            su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
+               c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
+               d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
+        me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // (W * IL))},
+           writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X", "SSX"}, **sq)
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
     rmsnorm("X", H, lay.cb["final"], "H")
     me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
     prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
-    # A matrix-vector op whose only hazard is reading, in order, what the
-    # immediately preceding stream op writes may instead CHASE it: start once
-    # that op has written its first element.  The engine reads x[k] no sooner
-    # than k*I cycles after starting and the stream op writes x[k] k cycles
-    # after its first write, so a read can never overtake its write.  Only
-    # without a K-split: chunk c reads x[c*kc] on its first step.
+    # ELEMENT CHAINING.  An op whose only hazards are reads of what the OTHER
+    # unit's latest op writes need not wait for a barrier: it may start once
+    # that op has made `chase_n` progress (stream unit: elements written, in
+    # emission order; matrix engine: result slots, in round/slot order).
+    # chase_n is derived from the producer's write order and the consumer's
+    # read order so that no read can overtake its write:
+    #   * engine reading stream output: x element at producer position p is
+    #     read no sooner than 8*k' cycles after start, the stream writes one
+    #     element per cycle, so chase_n >= p - 8*k' + 1 for every read;
+    #   * stream reading engine output: chase_n = the last result slot any of
+    #     its reads needs.
+    # Each unit retires in order, so once the latest op has written anything,
+    # every older op of that unit has written all its main output: reads of
+    # those need only chase_n >= 1.  Reads of reducer outputs or of the same
+    # unit's in-flight writes are never chased.
     out, rd, wr = [], set(), set()
-    prev = None
+    last = {I.UNIT_ME: None, I.UNIT_SU: None}
+    main = {I.UNIT_ME: set(), I.UNIT_SU: set()}      # in-flight main writes per unit
     for f, reads, writes in prog:
         assert all(isinstance(r, str) for r in reads | writes), (reads, writes)
         conflict = (reads & wr) | (writes & (rd | wr))
-        chase = (f["unit"] == I.UNIT_ME and conflict and prev is not None and prev[0]["unit"] == I.UNIT_SU
-                 and not (writes & (rd | wr)) and conflict <= prev[2] and f.get("me_xks") == 1
-                 and not f.get("me_xjs") and not f.get("me_wsrc") and not f.get("me_split"))
-        if chase:
-            f["me_chase"] = 1
+        other = I.UNIT_SU if f["unit"] == I.UNIT_ME else I.UNIT_ME
+        prod = last.get(other)
+        chase_n = None
+        if (conflict and prod is not None and f["unit"] != I.UNIT_END and not (writes & (rd | wr))
+                and conflict <= main[other]):
+            chase_n = chase_threshold(f, prod[0])
+        if chase_n is not None:
+            f["chase"], f["chase_n"] = 1, chase_n
         elif conflict or f.get("barrier"):
             f["barrier"] = 1
             rd, wr = set(), set()
+            main = {I.UNIT_ME: set(), I.UNIT_SU: set()}
         rd |= reads
         wr |= writes
         out.append(f)
-        prev = (f, reads, writes)
+        if f["unit"] in last:
+            red = set(f.get("_red_regions", ()))
+            last[f["unit"]] = (f, reads, writes, red)
+            main[f["unit"]] |= writes - red
+    for f in out:
+        f.pop("_red_regions", None)
     return out
+
+
+def su_write_order(f):
+    """Destination element addresses of a stream op, in emission order."""
+    if f.get("dst", 0) != I.DST_VM:
+        return {}
+    o, i = np.meshgrid(np.arange(f["su_nout"]), np.arange(f["su_nin"]), indexing="ij")
+    addr = (f["d_base"] + o * f.get("d_so", 0) + i * f.get("d_si", 0)).reshape(-1)
+    return {int(a): n for n, a in enumerate(addr)}
+
+
+def me_write_slots(f):
+    """Vector-memory element -> result slot (1-based) of a ROM matrix-vector op."""
+    split = f.get("me_split", 0)
+    per_round = GR >> split
+    slots = {}
+    for r in range(f["me_tiles"]):
+        for j in range(IL):
+            for q in range(per_round):
+                t = r * per_round + q
+                word = f["me_obase"] + t * f["me_ots"] + j * f["me_ojs"]
+                for l in range(W):
+                    if (t * IL + j) * W + l < f["me_nout"]:
+                        slots[word * W + l] = r * IL + j + 1
+    return slots
+
+
+def chase_threshold(f, prod):
+    """chase_n for consumer `f` of producer `prod` (other unit), or None."""
+    if f["unit"] == I.UNIT_ME and prod["unit"] == I.UNIT_SU:
+        if f.get("me_wsrc") or f.get("me_xjs") or f.get("me_d_k") or f.get("me_xks", 1) != 1:
+            return None
+        order = su_write_order(prod)
+        need = 1
+        for c in range(1 << f.get("me_split", 0)):
+            for k in range(f["me_k"]):
+                p = order.get(f["me_xbase"] + c * f.get("me_xcs", 0) + k)
+                if p is not None:
+                    need = max(need, p - 8 * k + 1)
+        return need
+    if f["unit"] == I.UNIT_SU and prod["unit"] == I.UNIT_ME:
+        if prod.get("me_wsrc") or f.get("su_d_nin"):
+            return None
+        slots = me_write_slots(prod)
+        need = 0
+        for s_ in "abc":
+            if f.get(f"{s_}_src", 0) != I.SRC_VM or (s_ == "b" and not (f.get("ma") == I.MA_AB or f.get("md") or f.get("ad") == I.AD_NEGB)):
+                continue
+            o, i = np.meshgrid(np.arange(f["su_nout"]), np.arange(f["su_nin"]), indexing="ij")
+            for a in (f.get(f"{s_}_base", 0) + o * f.get(f"{s_}_so", 0) + i * f.get(f"{s_}_si", 0)).reshape(-1):
+                need = max(need, slots.get(int(a), 0))
+        return need or None
+    return None
 
 
 # -- ISA-level simulator --------------------------------------------------------------
@@ -361,8 +437,11 @@ class Machine:
         r = {I.AD_BYP: lambda: p, I.AD_Q: lambda: G.add(p, q), I.AD_C: lambda: G.add(p, c),
              I.AD_NEGB: lambda: G.add(p, G.neg(blo)), I.AD_IMM: lambda: G.add(p, imm2)}[f["ad"]]()
         s = {I.SFU_NONE: lambda: r, I.SFU_EXP: lambda: G.exp(r), I.SFU_RECIP: lambda: G.reciprocal(r),
-             I.SFU_RSQRT: lambda: G.rsqrt(r)}[f["sfu"]]()
+             I.SFU_RSQRT: lambda: G.rsqrt(r),
+             I.SFU_SIGM: lambda: G.reciprocal(G.add(G.exp(r), F(1.0)))}[f["sfu"]]()
         out = G.mul(s, c) if f["mc"] == I.MC_C else s
+        if f["md"] == I.MD_B:
+            out = G.mul(out, blo)
         out = np.asarray(out, dtype=F).reshape(-1)
         if f["red"]:
             seg = (G.mul(out, out) if f["red_sq"] else out).reshape(n_out, n_in)

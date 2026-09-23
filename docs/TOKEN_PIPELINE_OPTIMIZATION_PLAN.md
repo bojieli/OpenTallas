@@ -202,3 +202,30 @@ Results:
 
 The stream unit and the drains now take about as many cycles as the matrix
 engine. Iteration 4 targets them.
+
+**Iteration 4: fused SiLU·up, progress-threshold chaining.**
+
+- *Fused SiLU·up.* A sigmoid SFU class computes 1/(exp(R)+1), chaining the
+  exponential, one adder and the reciprocal (depth 143). A final multiply
+  stage takes B, so `(g · sigmoid(g)) · up` is one stream op instead of three.
+- *Chaining by progress.* Both units now report the progress of their latest
+  op: elements written, or result slots produced. Any op whose only hazards
+  are reads of the other unit's in-flight main writes waits for a threshold,
+  not a barrier. The program generator derives the threshold from the
+  producer's write order and the consumer's read order, so no read overtakes
+  its write:
+  - a split matrix op starts once its producer has written far enough;
+  - the down projection starts after 33 elements of the last SiLU op;
+  - stream ops that read engine results start when the slots they need exist.
+- *Overlap of SiLU with gate/up.* Gate and up rows are interleaved by output
+  tile, so each engine round yields matching gate/up rows. SiLU runs on round
+  r while the engine computes round r+1.
+
+Results:
+
+- cycles per token: **32,212**; <!-- figure: 32212 src="results/rtl/hdc_iterations/iter4_sigmoid_progress_chaining.json#single_step.cycles" name="HDC cycles per token, iteration 4" -->
+  bit-exact, and 1073, 382, 93 are still generated end to end;
+- stream-unit issue cycles: 7,505. <!-- figure: 7505 src="results/rtl/hdc_iterations/iter4_sigmoid_progress_chaining.json#single_step.su_issue_cycles" name="HDC stream-unit issue cycles, iteration 4" -->
+
+The matrix engine is now compute-bound at 64 multiply-accumulates per cycle,
+and lm_head is the largest single op.

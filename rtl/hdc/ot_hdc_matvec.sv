@@ -87,6 +87,8 @@ module ot_hdc_matvec #(
     output reg  [NW-1:0]     am_idx,
     output reg  [31:0]       am_val,
     output reg               am_any,
+    // result slots the latest accepted instruction has produced
+    output reg  [15:0]       progress,
     output wire              fault
 );
     localparam integer LW = $clog2(W);
@@ -369,6 +371,25 @@ module ot_hdc_matvec #(
             else if (tv[LV] && top_v && (!am_any || top_key > best_key ||
                                          (top_key == best_key && top_idx < am_idx))) begin
                 am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
+            end
+        end
+    end
+
+    // Chaining progress: each issued last-k element becomes one result slot,
+    // in order, so the latest instruction has produced (slots out - slots
+    // issued before its acceptance).
+    reg [15:0] n_last_issued, n_ov, ov_mark;
+    wire [15:0] ov_done = n_ov - ov_mark;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            n_last_issued <= 0; n_ov <= 0; ov_mark <= 0; progress <= 0;
+        end else begin
+            n_last_issued <= n_last_issued + ((active && k_last) ? 16'd1 : 16'd0);
+            n_ov <= n_ov + (ov ? 16'd1 : 16'd0);
+            if (go && ready) begin
+                ov_mark <= n_last_issued; progress <= 0;
+            end else begin
+                progress <= ov_done[15] ? 16'd0 : ov_done;
             end
         end
     end
