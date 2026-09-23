@@ -47,6 +47,11 @@ earlier whole-K recurrence is not a universal V4.1 floor. A conditional parallel
 partial schedule needs 11.84–35.52 µs for expert dependencies alone at 1 GHz,
 before omitted service. Numerical qualification and physical bank service remain
 unresolved. The Qwen sequential-contract rejection is unchanged.
+The finite-resource V4.1 screen now requires at least 326,672 scalar lanes and
+10,209 ordered-add lanes per active six-expert service group for the 1 µs probe
+at 65% utilization. These are necessary average counts; a simple batch schedule
+misses the deadline at that scale. A finite streaming schedule and physical area
+proof remain open.
 Existing component experiments and physical runs are separate historical evidence;
 they do not establish the feasibility of the proposed architecture.
 

@@ -251,6 +251,84 @@ Source hashes and arithmetic are retained in
 reproduced by `python3 tools/audit_v41_numerical_structure.py` with the pinned
 vendor snapshot installed. No workload or RTL simulation is needed for this audit.
 
+### Finite resources: what the parallel-partial schedule costs
+
+The [finite-resource audit](../results/architecture/v41_partial_resources.json)
+now charges gate/up and down separately, taking the maximum of compute, ordered
+partial-add service, ROM service and numerical dependency within each phase,
+then summing the two dependent phases. This assumes whole-producer dependencies;
+it does not credit unproven gate-to-down streaming. MAC here means one product
+and accumulation, or two arithmetic operations.
+
+Six selected experts in one layer require:
+
+| Resource demand | Quantity |
+|---|---:|
+| Scalar MAC updates | 212,336,640 |
+| Native 32-value partials / ordered partial additions | 6,635,520 |
+| Packed weights including scale inventory | 112,803,840 B |
+| FP32 partial producer traffic | 26,542,080 B |
+| Minimum average scalar lanes for 1 µs, 1 GHz, 65% utilization | 326,672 |
+| Minimum average ordered-add lanes under the same assumptions | 10,209 |
+| Minimum average equivalent 256 B/cycle ROM ports | 678 |
+
+These scalar lanes replace the earlier **conditional g4** estimate of 81,668
+for this numerical candidate. They are not interchangeable hardware counts.
+Partial producer traffic is 26.54 TB/s at this deadline; writing and rereading all
+partials would double the partial-memory traffic. A streaming schedule can avoid
+full materialization but must prove its buffers, ordering and backpressure.
+Gate/up full partial materialization is 17,694,720 B; down is 8,847,360 B.
+Those phases can reuse storage; summing traffic does not imply both must remain
+resident simultaneously.
+
+At 524,288 scalar lanes and 16,384 ordered-add lanes, the necessary per-layer
+bounds are:
+
+| ROM ports | Recurrence | Necessary cycles at 1 GHz |
+|---|---:|---:|
+| 678 | 1 cycle | 999.864 |
+| 678 | 3 cycles | 999.864 |
+| 1,024 | 1 cycle | 662.019 |
+| 1,024 | 3 cycles | 888.000 |
+
+The minimum 678-port provision leaves virtually no margin in a 1,000-cycle
+allocation. Provisioning 1,024 ports opens arithmetic margin but does not prove a
+real schedule. The utilization assumptions, bank access, scale service, nonlinear
+latency, dispatch and merge are still unqualified. With only 4,096 ordered-add
+lanes, partial addition alone exceeds the deadline even with 524,288 scalar lanes
+and 1,024 ports.
+
+To expose the gap between service totals and scheduling, the audit also gives a
+simple explicit arithmetic schedule: allocate one scalar partial engine per
+32-value block for a batch of output rows, finish those partials, accumulate them
+in order, then advance to the next batch. Reuse resources between gate/up and down.
+
+| Output rows per batch | Peak scalar partial engines | Layer cycles, L=1 | Layer cycles, L=3 |
+|---|---:|---:|---:|
+| 2,048 | 327,680 | 4,248 | 12,744 |
+| 8,192 | 1,310,720 | 1,184 | 3,552 |
+| 16,384 | 2,621,440 | 592 | 1,776 |
+| All outputs | 4,423,680 | 296 | 888 |
+
+These are arithmetic-only schedules with ideal operands, not full latency upper
+bounds. This conservative batch schedule is inefficient: its failure is not a
+proof that every possible schedule fails. It shows why average lane counts do
+not demonstrate the claimed performance. A practical candidate must overlap
+partial production and ordered consumption with bounded buffers and shared lanes,
+rather than instantiate millions of engines to recover the unlimited-parallelism
+number. At L=3, even the unlimited arithmetic schedule uses 888 cycles before
+omitted service.
+
+**Decision:** retain the 1 µs expert-layer allocation only as a feasibility probe.
+Next derive a finite streaming schedule and its buffer/port assignment. No area
+closure is claimed: the Qwen tile-area seed does not characterize this different
+scalar-partial and ordered-accumulator organization. Characterize its compute,
+SRAM, ROM ports and wiring before selecting group size or die count. These resource
+requirements apply equally to the HBM arithmetic comparator.
+
+Reproduce with `python3 tools/audit_v41_partial_resources.py`. This is static
+arithmetic and schedule construction, with no workload or RTL simulation.
+
 ## 5. KV and index architecture follows ownership
 
 The four KV owners are layers **2, 8, 14 and 20**. Encoder owners use ratio-two
