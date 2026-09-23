@@ -192,24 +192,33 @@ module ot_hdc_matvec #(
     // -- S1 (memories answer) -> S2 (capture) -> S3 (condition) -----------------
     localparam integer TW = 1 + 1 + 1 + 1 + 1 + 2 + AW + AW + 3 * (NW + 1);
     wire [TW-1:0] e_tag = {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_rem};
-    reg  [TW-1:0] s1_tag, s2_tag, s3_tag;
-    reg          s1_v, s2_v, s3_v, s1_first, s2_first, s3_first;
+    reg  [TW-1:0] s1_tag, s1b_tag, s2_tag, s3_tag;
+    reg          s1_v, s1b_v, s2_v, s3_v, s1_first, s1b_first, s2_first, s3_first;
+    reg          s1b_wsrc, s1b_round;
+    //: Memory read data is registered once as it arrives (MEM_PIPE): the
+    //: weight word is 2,048 bits wide and its lanes span the whole engine, so a
+    //: pin-to-lane wire gets a cycle of its own.
+    reg [G*W*16-1:0] mq_wrom;
+    reg [W*32-1:0]   mq_kv;
+    reg [G*32-1:0]   mq_x;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
-        else begin s1_v <= e_v; s2_v <= s1_v; s3_v <= s2_v; end
+        if (!rst_n) begin s1_v <= 0; s1b_v <= 0; s2_v <= 0; s3_v <= 0; end
+        else begin s1_v <= e_v; s1b_v <= s1_v; s2_v <= s1b_v; s3_v <= s2_v; end
     end
     reg [G*W*32-1:0] s2_w, s3_w;
     reg [G*32-1:0]   s2_x, s3_x;
     integer l;
     always @(posedge clk) begin
-        s1_tag <= e_tag; s2_tag <= s1_tag; s3_tag <= s2_tag;
-        s1_first <= e_first; s2_first <= s1_first; s3_first <= s2_first;
-        s1_wsrc <= e_wsrc; s1_round <= e_round; s2_round <= s1_round;
+        s1_tag <= e_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
+        s1_first <= e_first; s1b_first <= s1_first; s2_first <= s1b_first; s3_first <= s2_first;
+        s1_wsrc <= e_wsrc; s1_round <= e_round; s1b_wsrc <= s1_wsrc; s1b_round <= s1_round;
+        s2_round <= s1b_round;
+        mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
         s3_wsrc <= s2_tag[TW-4];
         for (l = 0; l < G * W; l = l + 1)
-            s2_w[32*l +: 32] <= (s1_wsrc && l < W) ? kv_q[32*l +: 32] : {wrom_q[16*l +: 16], 16'h0000};
-        s2_x <= x_q;
+            s2_w[32*l +: 32] <= (s1b_wsrc && l < W) ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
+        s2_x <= mq_x;
         s3_w <= s2_w;
         for (l = 0; l < G; l = l + 1)
             s3_x[32*l +: 32] <= s2_round ? ((s2_x[32*l +: 32] + 32'h7FFF + {31'd0, s2_x[32*l + 16]}) & 32'hFFFF0000)
@@ -408,7 +417,7 @@ module ot_hdc_matvec #(
 
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
-    wire idle_c = !active && !e_v && !s1_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov;
+    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);
