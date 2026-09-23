@@ -2726,7 +2726,7 @@ def main(argv: list[str] | None = None) -> int:
         )
     verdict_line = f"  STATUS: {record['status'].upper()} ({verdict['reason']})"
     if record["status"] != STATUS_PASS:
-        verdict_line += "  <-- did NOT meet timing"
+        verdict_line += "  <-- failed engineering acceptance"
         if args.expected_not_met:
             verdict_line += " (expected for this corner)"
     print(verdict_line)

@@ -571,3 +571,23 @@ be interpreted as the specific failure. The four-credit baseline remains a
 passing recorded configuration. Neither result proves current coalesced
 transport closure. All source and seven artifact bindings are verified in the
 [single-credit audit](../results/physical_abi3/asap7/bf16_weight_transport/credits1_before_coalescing_route_audit.json).
+
+## Current KV prefix-count block closes at 1 ns
+
+The prefix-count KV-index implementation has completed final extracted routing
+on ASAP7 TT at 1 ns, using the corrected 22%-utilization floorplan required by
+its IO-pin count. Setup slack is +0.145303 ns, hold slack +0.0567208 ns, and
+routed standard-cell area 911.483 µm². All reported setup/hold, DRC, antenna,
+slew, capacitance and fanout violations are zero. The worst setup path now
+runs from `cfg_kv_rows[29]` to `error_code[2]`.
+
+Both source hashes match current RTL and all seven retained artifacts verify.
+This establishes block closure for the optimized prefix-count implementation,
+not complete-attention closure. The matched old popcount baseline remains
+active; a comparative routed area/timing claim awaits its final result.
+See the [KV final-route audit](../results/physical_abi3/asap7/a3_attention_kv_index/prefix_count_route_audit.json).
+
+The physical driver's failure message now says "failed engineering acceptance"
+instead of unconditionally saying "did NOT meet timing". This reflects the
+single-credit transport's capacitance-only failure without changing any verdict
+criteria. The existing physical environment/acceptance tests pass.
