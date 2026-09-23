@@ -1,0 +1,77 @@
+{
+  "active_weight_bytes": 13035075008,
+  "cache_scenarios": [
+    {
+      "dense_cache_bytes": 0,
+      "dense_cache_fraction": 0,
+      "expert_only_10x_external_service_speedup": 1.4525157510949136,
+      "expert_share_of_external_bytes": 0.34615478600857774,
+      "external_weight_floor_us_at_4_5TB_s_per_die": {
+        "16": 181.04270844444446,
+        "32": 90.52135422222223,
+        "8": 362.0854168888889,
+        "84": 34.48432541798942
+      },
+      "ideal_dense_cache_sram_mm2": 0.0,
+      "remaining_external_weight_bytes": 13035075008
+    },
+    {
+      "dense_cache_bytes": 4261460704.0,
+      "dense_cache_fraction": 0.5,
+      "expert_only_10x_external_service_speedup": 1.8617053633330314,
+      "expert_share_of_external_bytes": 0.5142867515777224,
+      "external_weight_floor_us_at_4_5TB_s_per_die": {
+        "16": 121.85575422222222,
+        "32": 60.92787711111111,
+        "8": 243.71150844444443,
+        "84": 23.210619851851853
+      },
+      "ideal_dense_cache_sram_mm2": 1101.4372457999484,
+      "remaining_external_weight_bytes": 8773614304.0
+    },
+    {
+      "dense_cache_bytes": 8522921408,
+      "dense_cache_fraction": 1,
+      "expert_only_10x_external_service_speedup": 10.0,
+      "expert_share_of_external_bytes": 1.0,
+      "external_weight_floor_us_at_4_5TB_s_per_die": {
+        "16": 62.6688,
+        "32": 31.3344,
+        "8": 125.3376,
+        "84": 11.936914285714286
+      },
+      "ideal_dense_cache_sram_mm2": 2202.874491599897,
+      "remaining_external_weight_bytes": 4512153600
+    }
+  ],
+  "expert_only_10x_speedup_equal_byte_service": 1.4525157510949136,
+  "expert_only_infinite_speedup_equal_byte_service": 1.5294139631235704,
+  "input_sha256": {
+    "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/architecture/v41_architecture_feasibility.json": "940f428eb1012a58777b7fa25881f095835f0b1aa4139892668531bc974dc694",
+    "tools/audit_v41_speedup_conditions.py": "1f0f84a772ec26f8200199fd59b1d0a01fab1b630198f60bebd4442b737ea7de"
+  },
+  "limits": [
+    "Byte fractions equal time fractions only under equal byte-service rates, no overlap and no other work; these are conditional examples, not measured Amdahl fractions.",
+    "Cache removes external reads on hits, not local reads or arithmetic. Full dense cache uses profile active dense inventory; executable placement/alignment and actual lookup semantics remain to be audited.",
+    "No arbitrary routed expert cache hit is assumed. Caching one token selected experts does not cache every possible route.",
+    "HBM aggregate bandwidth assumes all listed dies can serve the token concurrently; floors exclude read latency, placement and non-weight work.",
+    "Common C is non-overlapped unchanged critical-path time; overlapping memory/compute needs a dependency schedule instead of summing these terms.",
+    "Negative common budget means weight acceleration alone is insufficient even with zero common time.",
+    "SRAM area is an assumed raw-density screen without ports, ECC, alignment, wiring or physical qualification."
+  ],
+  "maximum_common_time_over_hbm_weight_time_for_3x": {
+    "10": 0.35,
+    "100": 0.485,
+    "2": -0.25,
+    "3": 0.0,
+    "4": 0.125,
+    "5": 0.2
+  },
+  "non_routed_weight_bytes": 8522921408,
+  "routed_fraction_of_active_weight_bytes": 0.34615478600857774,
+  "routed_weight_bytes": 4512153600,
+  "schema": "opentallas.v41-speedup-conditions.v1",
+  "status": "conditional_service_analysis_not_achieved_system_speedup"
+}

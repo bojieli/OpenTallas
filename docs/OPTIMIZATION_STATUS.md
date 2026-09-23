@@ -13,7 +13,10 @@ For DeepSeek V4.1 specifically, see the [first-principles architecture redesign]
 The [V4.1 traffic recalculation](DEEPSEEK_V41_TRAFFIC_RECALCULATION.md) clarifies
 that 112.8 TB/s came from a 40 µs expert-service probe. The model-derived routed
 inventory is 4.512 GB/token; at 1 ms of expert service it requires 4.512 TB/s.
-No 100 µs token requirement has been selected.
+No 100 µs token requirement has been selected. The new
+[target-free speedup analysis](DEEPSEEK_V41_SPEEDUP_CONDITIONS.md) shows why
+non-routed weights, HBM caching and common critical-path work must be included
+before claiming a several-fold ROM advantage.
 
 ## Latest feasibility finding
 

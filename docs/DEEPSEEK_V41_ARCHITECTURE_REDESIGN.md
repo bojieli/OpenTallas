@@ -432,6 +432,12 @@ fits bytes only by assuming inactive regions contribute active bandwidth.
 
 ## 9. A fair HBM redesign and the several-fold objective
 
+See the [target-free speedup conditions](DEEPSEEK_V41_SPEEDUP_CONDITIONS.md)
+for the full-weight versus expert-only distinction, persistent-cache sensitivity,
+and the unchanged-work limit on a 3× improvement. Expert bytes are only 34.6%
+of the current active weight inventory; accelerating them alone does not
+establish the system objective.
+
 The HBM candidate uses persistent SRAM for dense/hot weights, bounded expert-tile
 prefetch after routing, many independent HBM channels, and tiled GEMM reuse for
 batches. Quantization scales and tails travel with weights. Keep KV owners and
