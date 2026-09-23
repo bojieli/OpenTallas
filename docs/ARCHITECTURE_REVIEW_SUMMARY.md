@@ -1306,3 +1306,17 @@ commits exercise the high table indices 13–15, including lookup when the table
 is full. Cancellation, refusals, counter boundaries and repeated retirement
 checks also run at both sizes. Source hashes and logs are retained in the
 [coverage record](../results/rtl/state_slot_coverage/comparison.json).
+
+## Two-entry cache benefit survives complete attention execution
+
+Fresh matched baseline/candidate builds each use 21 RTL/testbench sources,
+differing only in softmax. Both pass all nine complete sparse-attention reference
+transactions, with exact outputs, counters, saturation and bounded reads. Source
+and vector hashes verify before/after measurement. Total active cycles fall
+2,388,699 → 2,374,287 (14,412 saved, 0.603%). The full-block case saves 5,764
+cycles and the two-block case saves 8,648; other fixtures are unchanged. Each
+saving equals the reduction in nested exponential wait, so that wait is not
+counted twice. This demonstrates containing-engine service savings, not a clock
+or whole-model speedup; the candidate's prelayout slack regression still prevents
+production selection. Reproduction commands, logs and exact source inventories
+are retained in the [attention comparison](../results/rtl/softmax_cache2/attention/comparison.json).
