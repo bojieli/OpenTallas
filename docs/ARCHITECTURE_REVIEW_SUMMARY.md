@@ -787,3 +787,31 @@ The current shared-storage wide divider meets setup/hold at 1 ns with
 check (19 loads against limit 16). A CTS-cluster-size-8 retry is active; the
 completed cluster-size-12 route is correctly retained as NOT_MET. All five
 route audits are linked by the integration decision.
+
+## Parallel-admission state route and apply pipeline candidate
+
+Current parallel-admission state RTL completed extracted 1 ns routing with
+−0.663333 ns setup slack and 1,319 setup violations, versus −0.911364 ns for
+the historical payload-capture baseline. Routed cell area falls 4,238.700 →
+4,182.110 µm². Hold and all reported physical checks are clean, but timing
+still fails. The new worst path is `apply_index[1]` → `count_bytes_written[63]`,
+through payload selection, multiplication and byte accumulation. Sources and
+all seven retained artifacts verify in the
+[state route audit](../results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_audit.json).
+
+An isolated candidate splits apply into selected-operand capture, registered
+product and retirement. It adds two cycles per applied entry. Both simulators
+pass 90 three-entry transactions across all policies and both ring types,
+comparing committed tables/counters to prior RTL and byte totals to an
+independent arithmetic oracle. Cancellation in each new stage prevents stale
+retirement. Mapped area is 3,438.838 µm²; pre-layout slack remains −3.2941 ns.
+A matched route is active. Production RTL is unchanged until routed benefit
+and containing-controller validation justify the latency tradeoff. See the
+[apply-pipeline candidate](../results/rtl/state_apply_pipeline/comparison.json).
+
+Tree32 also completed: 2,877.580 µm², setup −0.0000481837 ns (one violation),
+hold +0.0500621 ns, and one fanout violation (`place3995/Y`, 17 vs limit 16).
+Despite the very small setup miss, it is NOT_MET. It costs 67.84% more routed
+area than passing tree16, so tree16 remains selected. Its source and seven
+artifact hashes verify in the
+[tree32 audit](../results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_audit.json).

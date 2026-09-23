@@ -1,0 +1,18 @@
+{
+  "scope": "Experimental apply pipeline snapshot, not production integration. Adds two cycles per applied pending entry.",
+  "motivation": {
+    "route": "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns.json",
+    "setup_slack_ns": -0.663333,
+    "critical_path": "apply_index[1] -> count_bytes_written[63]",
+    "routed_area_um2": 4182.11
+  },
+  "design": "Capture selected rows/row_bytes, register product next cycle, then execute existing atomic apply/accumulation. Reset, clear, discard and commit_all invalidate phase; payload flops do not reset.",
+  "verification": "Both simulators pass 90 three-entry transactions spanning all policies, power-of-two and general rings, 32-bit byte widths and independent 64-bit byte oracle. Compare committed tables/counters with old RTL. Cancel each new pre-retirement stage and check no stale commit.",
+  "limitations": "Directed candidate validation is not full microsequencer/transaction regression. Production RTL unchanged. Existing apply cancellation after partial retirement semantics are not broadened by this test.",
+  "candidate_sha256": "6b522c33ff70fcc582e3ca73981b16b8086a9e6f0f5e2dcb2620e54ccee0e184",
+  "baseline_sha256": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+  "mapped_area_um2": 3438.838,
+  "prelayout_setup_slack_ns": -3.2941,
+  "physical_pending": "results/physical_abi3/asap7/state_controller/pnr_apply_pipeline_cts12_1ns.json",
+  "next_action": "Compare final route, then integrate with containing controller tests adapted to completion handshake if timing/latency tradeoff is worthwhile."
+}

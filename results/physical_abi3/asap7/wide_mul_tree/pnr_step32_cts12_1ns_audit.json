@@ -1,0 +1,49 @@
+{
+  "record": "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns.json",
+  "sha256": "30f1dd3abc81ca753b4d2aa1c951eaca408e9cbf17f38ccaa3d8c9cf607a6c53",
+  "scope": "Final extracted source-bound block at tested 1 ns ASAP7 TT; not integrated closure.",
+  "sources": [
+    {
+      "path": "rtl/lib/ot_wide_mul_tree_seq.sv",
+      "sha256": "95b494676f51cd77510884f182d5f0427c15c4c5693f3b743aecd6c2b8d16ec5",
+      "size_bytes": 9057
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/1_2_yosys.v": "2b78a1524f18b72bf3245d89db0fbc729f124e38eef36ba8cc7b7ad3fab5e4c9",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/6_final.v": "1a23cd6cf7765f5b0c96e7c9c7be33f6e7c550cfde73d0c3bc13ee89eedfd07c",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/6_finish.rpt": "073f1553add834c4df5666843d54c64b1eccec66255155f151fed72c04891bfb",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/config.mk": "5e998d7f68ec5be9ad19f8f8a0f6b120afb1995f03e21f945d2967c88aee4e4e",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns_artifacts/metadata.json": "b18c5cdcc9069be36d4eab14dc08c250f76cf59e00b0a41159437e7172cff968"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.050062100000000005,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 1.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 1.0,
+        "setup_wns_ns": -4.8183700000000004e-05,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 2877.58,
+  "decision": "Retain tree16 default. Tree32 fails one setup path and one fanout check and costs 67.84% more area; consumer cycle benefit alone insufficient."
+}

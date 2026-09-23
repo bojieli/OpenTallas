@@ -1,0 +1,56 @@
+Warning 503: sta.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _46337_ (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+ 200.0000  200.0000 ^ input external delay
+   0.0000  200.0000 ^ rst_n (in)
+   0.0000  200.0000 ^ _46337_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+           200.0000   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000   clock reconvergence pessimism
+             0.0000 ^ _46337_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  26.6676   26.6676   library removal time
+            26.6676   data required time
+-------------------------------------------------------------
+            26.6676   data required time
+          -200.0000   data arrival time
+-------------------------------------------------------------
+           173.3324   slack (MET)
+
+
+Startpoint: _45974_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: _45974_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000 ^ _45974_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  53.1511   53.1511 ^ _45974_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  10.1069   63.2580 v _34904_/Y (OAI21x1_ASAP7_75t_R)
+   0.0000   63.2580 v _45974_/D (DFFASRHQNx1_ASAP7_75t_R)
+            63.2580   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000   clock reconvergence pessimism
+             0.0000 ^ _45974_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   9.4954    9.4954   library hold time
+             9.4954   data required time
+-------------------------------------------------------------
+             9.4954   data required time
+           -63.2580   data arrival time
+-------------------------------------------------------------
+            53.7627   slack (MET)
+
+
