@@ -48,6 +48,7 @@ def main():
          'packed_expert_bytes':expert_bytes,'active_routed_bytes_per_layer':expert_bytes*selected,
          'active_routed_bytes_per_token':active_expert_bytes,'routed_expert_operations_per_token':expert_ops,
          'expert_only_recurrence_us_at_1ghz_by_products_per_update':recurrence,
+         'recurrence_correction':'Pinned vendor uses independent 32-value expert partials; whole-K values are not universal V4.1 bounds. See v41_numerical_structure.json.',
          'recurrence_scope':'Conditional native g-product sequential recurrence, one dependent group update per clock, all six experts parallel; g2/g4 are not universally bit-equivalent to scalar arithmetic.',
          'expert_40us_budget':{'per_layer_us':1,'active_bytes_s_per_active_layer_group':expert_bytes*selected/1e-6,
                               'ops_s_per_active_layer_group':expert_ops/layers/1e-6,

@@ -215,7 +215,7 @@
     "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json": "bbd35085b12043af17fbabe0cd2685ebc002cf9b0fc17f5bcadf20da951e006c",
     "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
     "results/iso-node/leading_node_market/analytical.json": "c32c593743c38d26215da97d42510532418abe9f829306e0cf5e6388fe9f5df4",
-    "tools/audit_v41_architecture_feasibility.py": "63d59079d83fb05b17a008662358c74fb7a0b12cb9b5af5006426c76b0b3b577"
+    "tools/audit_v41_architecture_feasibility.py": "6095973b8d7b432ed9a614471fba9d4250bc19153427109d3762d8fd602fef12"
   },
   "kv_capacity_200k_shared_main_index_bytes": 178000000.0,
   "kv_capacity_shared_main_and_index_bytes_per_context_position": 890.0,
@@ -227,6 +227,7 @@
   ],
   "model": "DeepSeek-V4.1-Flash",
   "packed_expert_bytes": 18800640,
+  "recurrence_correction": "Pinned vendor uses independent 32-value expert partials; whole-K values are not universal V4.1 bounds. See v41_numerical_structure.json.",
   "recurrence_scope": "Conditional native g-product sequential recurrence, one dependent group update per clock, all six experts parallel; g2/g4 are not universally bit-equivalent to scalar arithmetic.",
   "routed_expert_operations_per_token": 16986931200,
   "schema": "opentallas.v41-first-principles.v1",

@@ -21,8 +21,8 @@ matrix execution remains the primary ROM validation in the hybrid variant.
 
 Do not fix a die/wafer count or promise a 100 µs token before proving active-layer
 bank service, numerical recurrence and communication. **100 µs is a design probe,
-not an accepted target.** At current assumptions the expert recurrence alone
-can consume most or all of that interval.
+not an accepted target.** The pinned reference uses independent 32-value expert partials; this provides
+a parallelization opportunity, but numerical and physical qualification is open.
 
 ## 2. Model inventory that drives the design
 
@@ -151,10 +151,15 @@ study candidates, without selecting either. Reject a single-expert-width shared
 engine as a guarantee of the 1 µs budget for arbitrary routes. Require a bank map,
 local reduction/compute allocation, and bounded dispatch/return service for six
 selected experts before accepting either group size. This is a necessary byte
-service check; the recurrence rejection below still applies even if it passes.
+service check; the numerical qualification below still applies even if it passes.
 Reproduce with `python3 tools/audit_v41_expert_groups.py`.
 
-## 4. Numerical recurrence is a feasibility gate here too
+## 4. Numerical structure: correction from the pinned reference
+
+**Correction:** the whole-K bounds below describe a conditional lane mapping,
+not a universal V4.1 dependency floor. Inspection of the pinned vendor kernel
+shows independent 32-value expert partials. The architecture must follow that
+structure before deciding whether recurrence rejects a target.
 
 The selected experts can run in parallel, and their gate/up projections can run
 in parallel. The down projection still depends on their nonlinear result. An
@@ -176,9 +181,10 @@ normalization, memory, communication and merge. Pipeline recurrence longer than
 one cycle increases this bound. Native g4 support and the official numerical
 contract must be checked; g4 is not automatically scalar bit equivalence.
 
-Thus even g4 does not fit a 40 µs expert allocation inside a speculative 100 µs
-token. More output lanes alone do not fix the dependency. Evaluate independent
-K blocks and local reduction as a **separate qualified numerical design**. The
+Thus this whole-K g4 mapping does not fit a 40 µs expert allocation inside a
+speculative 100 µs token. More output lanes alone do not fix that mapping.
+The pinned reference already supplies independent K blocks; exploit them while
+qualifying the local reduction and scale behavior. The
 Qwen counterexample demonstrates why arbitrary reassociation cannot be declared
 exact. Derive the V4.1 reference's actual scale, accumulation and rounding rules
 before accepting any blocked alternative; matching a modified simulator is not
@@ -190,6 +196,60 @@ At four products/update, 1 GHz and 65% utilization, it requires **81,668 physica
 lanes in the active layer's compute group**. Each selected expert needs 18.8 TB/s
 of local weight service. These are demanding local requirements; dividing by the
 entire installed wafer count would conceal the bottleneck.
+
+### What the pinned sources actually establish
+
+At revision `dba1be0a40aa45a94ad051997016db3960a90277`, vendor
+`inference/kernel.py:506–554` sets routed `block_K = 32`, clears `C_local` between
+blocks, performs `T.gemm` on each block, applies activation and weight scales,
+and accumulates the scaled partials into `C_local_accum` in K order. Activation
+scales can cover multiple weight blocks. Independent partial computation is
+structurally available; arbitrary reassociation of the final partial sum is not
+thereby authorized. The tensor-core internal association and compiler fusion of
+scale/add expressions are not specified by this Python source alone.
+
+There are several distinct numerical paths in this repository:
+
+| Source | Arithmetic structure | What it establishes |
+|---|---|---|
+| Pinned vendor FP4 kernel | 32-value tensor-core partial, then scaled ordered accumulation | External algorithm structure; native FP4 path is not yet qualified by our oracle |
+| `runtime/reference/swiglu.py`, `_execute_mxfp4_linear` | Scalar ordered FP32 products inside 32-value scaled blocks, ordered addition of block partials | A deterministic repository reference; not proof of vendor bit equivalence |
+| `runtime/reference/matrix.py` dense FP8 | 128-value scalar partials, balanced final sum | A different dense reference association; do not apply it indiscriminately to experts |
+| `ot_a3_lane_pipelined.sv` | g1/g2/g4 updates inside its configured contraction | g4 exists for E2M1 × E4M3; its existence does not establish end-to-end numerical agreement |
+| `runtime/reference/deepseek_v41_oracle.py` | Vendor-documented FP8 expert recast | Current external comparison path; explicitly not a verified native FP4 verdict |
+
+For a **candidate** that computes all independent scalar 32-product partials in
+parallel and then adds them in order, an optimistic dependency-only schedule is:
+
+`projection cycles = 32 × product_recurrence + (K / 32) × partial_add_recurrence`.
+
+Gate/up have 160 partials per output; down has 72. With both recurrence latencies
+set to L, six experts in parallel, gate/up parallel, and down dependent, forty
+layers require `40 × [(32 + 160) + (32 + 72)] × L` cycles:
+
+| Recurrence latency L | Expert-only schedule at 1 GHz |
+|---|---:|
+| 1 cycle | 11.84 µs |
+| 2 cycles | 23.68 µs |
+| 3 cycles | 35.52 µs |
+
+This is a conditional dependency screen with unlimited independent partial
+engines, not a performance forecast or a universal vendor lower bound. It omits
+scale/quantization service, nonlinear activation, finite compute and partial
+storage, communication and other operators. At L=3 it leaves only 4.48 µs in the
+40 µs expert allocation for all omitted expert service, so the margin is narrow.
+The physical design must price the engines and buffering needed to realize it.
+
+**Updated decision:** pursue parallel native-size partials with an ordered final
+accumulator as the next feasibility candidate. Do not introduce a free balanced
+expert reduction or claim scalar/g4/tensor-core equivalence. A 40 µs allocation
+is no longer rejected solely by the whole-K calculation, but remains unproven.
+The same numerical architecture is available to the HBM comparator.
+
+Source hashes and arithmetic are retained in
+[v41_numerical_structure.json](../results/architecture/v41_numerical_structure.json),
+reproduced by `python3 tools/audit_v41_numerical_structure.py` with the pinned
+vendor snapshot installed. No workload or RTL simulation is needed for this audit.
 
 ## 5. KV and index architecture follows ownership
 

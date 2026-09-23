@@ -1,0 +1,31 @@
+{
+  "candidate_expert_only_us_at_1ghz": {
+    "1": 11.84,
+    "2": 23.68,
+    "3": 35.52
+  },
+  "candidate_scope": "Parallel independent 32-product scalar ordered partials, then K-ordered FP32 partial accumulation; six experts and gate/up parallel, down dependent. Excludes scales, quantization, activation, transport and resource limits. Not vendor bit-equivalence or measured latency.",
+  "correction": "Whole-K g4 74.24us is conditional on a different recurrence and cannot reject the pinned block-structured vendor kernel.",
+  "input_sha256": {
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "58e710313e4d591ca2c7840dbcd0d6b70debb971023377e4ad848627375c7b8f",
+    "runtime/reference/deepseek_v41_oracle.py": "055e3d1993aea8ab615a729e29f43119966fda03e401aa9a85efea4c48718c7b",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/matrix.py": "1dc5ad83ca90bc130d4c2bca917f186f973e8abc4bdc84c5a6c5701cd4d42d4a",
+    "runtime/reference/swiglu.py": "8a2b6821f42a438da1b34ab78e76d317d00fc2fd2bbb16deed315d77e09246d4",
+    "tools/audit_v41_numerical_structure.py": "0c7f2ddccd741bf8f29c1b59058bafcb8c8dc9046d86f57b701e63b8bad6e456"
+  },
+  "partial_counts_per_output": [
+    160,
+    72
+  ],
+  "projection_k": [
+    5120,
+    2304
+  ],
+  "routed_block_k": 32,
+  "schema": "opentallas.v41-numerical-structure.v1",
+  "source_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "status": "conditional_block_architecture_requires_numerical_and_physical_qualification",
+  "vendor_kernel_sha256": "1236c3507019ed176f5dba5e04bcea58867cf654818c6cf138ed4845398c2455"
+}

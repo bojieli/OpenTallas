@@ -42,7 +42,11 @@ Pooling reduces replicated service hardware but increases local ROM span and wir
 cost. This is a necessary requirement, not a demonstrated implementation rate.
 
 No new RTL implementation or workload simulation was launched for these studies.
-The numerical recurrence and physical bank-service gates remain unresolved.
+Pinned V4.1 source inspection shows independent 32-value expert partials: the
+earlier whole-K recurrence is not a universal V4.1 floor. A conditional parallel
+partial schedule needs 11.84–35.52 µs for expert dependencies alone at 1 GHz,
+before omitted service. Numerical qualification and physical bank service remain
+unresolved. The Qwen sequential-contract rejection is unchanged.
 Existing component experiments and physical runs are separate historical evidence;
 they do not establish the feasibility of the proposed architecture.
 
