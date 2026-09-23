@@ -1,0 +1,535 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-23T06:29:38.201798+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_a3_g2_cluster",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "parameters": {
+      "ACC_SLOTS": 8,
+      "ADDER_STAGES": 3,
+      "LANES": 8,
+      "PASS_COLUMNS": 2,
+      "RESOLVE_INPUT_OBJECTS": 1,
+      "RUNTIME_AUXILIARY_DEPTH": 3,
+      "RUNTIME_OBJECT_WRITES": 1,
+      "RUNTIME_OPERANDS": 1,
+      "RUNTIME_PASS_FIRST": 1,
+      "RUNTIME_WEIGHT_OBJECT_READS": 1,
+      "RUNTIME_WEIGHT_ROW_REUSE": 1,
+      "WRITE_OUTSTANDING": 4
+    },
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "size_bytes": 30130
+      },
+      {
+        "path": "rtl/abi3/ot_a3_pkg.sv",
+        "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "size_bytes": 19703
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+        "sha256": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+        "size_bytes": 31338
+      },
+      {
+        "path": "rtl/abi3/ot_a3_format_pkg.sv",
+        "sha256": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+        "size_bytes": 7343
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+        "sha256": "58e710313e4d591ca2c7840dbcd0d6b70debb971023377e4ad848627375c7b8f",
+        "size_bytes": 68047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8.sv",
+        "sha256": "dce16fd3450e3699e6f0cfd1e9c00dea0538c995019447187b51f1ffec99045f",
+        "size_bytes": 23200
+      },
+      {
+        "path": "rtl/abi3/ot_a3_program_header.sv",
+        "sha256": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+        "size_bytes": 9455
+      },
+      {
+        "path": "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "sha256": "7cabe54def8fa53d0a7c85c716487e7848dfe1bb2fa703e2f56928daf9386a15",
+        "size_bytes": 11286
+      },
+      {
+        "path": "rtl/abi3/ot_a3_loop_stack.sv",
+        "sha256": "cbe7590d32f08145d3039343713f6868b818594d1bbff91f5e48e89d5d90bbc5",
+        "size_bytes": 18870
+      },
+      {
+        "path": "rtl/abi3/ot_a3_symbol_file.sv",
+        "sha256": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+        "size_bytes": 2821
+      },
+      {
+        "path": "rtl/abi3/ot_a3_shared_divider.sv",
+        "sha256": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1",
+        "size_bytes": 9593
+      },
+      {
+        "path": "rtl/abi3/ot_a3_view_resolver.sv",
+        "sha256": "1ed236afcbbfba09d59e7d0437cd48a4ecf73b91ae42f3175268a75f0d265ba8",
+        "size_bytes": 50123
+      },
+      {
+        "path": "rtl/abi3/ot_a3_resolver_bank.sv",
+        "sha256": "0473c9723a9ea4819b336d07b369d921e4c00dd52ef8614cc844754dcc0bd6f4",
+        "size_bytes": 20192
+      },
+      {
+        "path": "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "sha256": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
+        "size_bytes": 13924
+      },
+      {
+        "path": "rtl/abi3/ot_a3_state_controller.sv",
+        "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
+        "size_bytes": 17595
+      },
+      {
+        "path": "rtl/abi3/ot_a3_issue_record_store.sv",
+        "sha256": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
+        "size_bytes": 10619
+      },
+      {
+        "path": "rtl/abi3/ot_a3_dependence_table.sv",
+        "sha256": "7e6a7e28e4d4042f2aa5919317b8e8cecd8024f9de796b40fd22d2d59b5fa7ad",
+        "size_bytes": 15094
+      },
+      {
+        "path": "rtl/abi3/ot_a3_microsequencer.sv",
+        "sha256": "7edfe75fd809a63d867b8969b99409cbe8b3b8681e4f9079dbd568705b3cbe6f",
+        "size_bytes": 102538
+      },
+      {
+        "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+        "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+        "size_bytes": 8528
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_program_store.sv",
+        "sha256": "34324981faa0f7ddb94649ddbdfc30c901edefa0cffd2ee210532cef1e173a78",
+        "size_bytes": 6049
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_descriptor_store.sv",
+        "sha256": "527f308b63160d139f8f8e6ba242a6de232bd9f7e8399dd7d13b4b0be5c205f4",
+        "size_bytes": 11605
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_issue_record_ram.sv",
+        "sha256": "7ed2ce5fd92488eac16df022ab8e7c3ee430ba5e700f307404e745f62e698f80",
+        "size_bytes": 3965
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_array_staging.sv",
+        "sha256": "8a525191c355af62966958ed2e663108c99e0be78b4487b2040141b8c129b16f",
+        "size_bytes": 7569
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_array_issue_adapter.sv",
+        "sha256": "01f091bbe4aefe8497b3021c3c2a6ed19274e34f5c9b009a02c9f11199d9a814",
+        "size_bytes": 27115
+      },
+      {
+        "path": "rtl/abi3/ot_a3_g2_cluster.sv",
+        "sha256": "3317e20863fa8027463bfdf2ff1872220dce56b84d898ebfa64dd1abb1d5bb20",
+        "size_bytes": 53099
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+        "sha256": "2aa72c331a7ee62d2876b51e133ae575e80391d808308698ea502769b5bf9ba3",
+        "size_bytes": 12439
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+        "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+        "size_bytes": 5316
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+        "sha256": "f877b618a11ed5cd8bf79f763419bb8e82349110158e6c8482d0213227b7141c",
+        "size_bytes": 6461
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "sha256": "afd0c4982547cce2b6fa7dc0d23d9bf663d96c52228ae5f6ce3ea8319a564f67",
+        "size_bytes": 6517
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298",
+        "size_bytes": 3336
+      },
+      {
+        "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+        "sha256": "0c9b2243cf186636003b4ede868ebdf76cfe5bb9fa1db1f3a76e1bac4f3acf3b",
+        "size_bytes": 8521
+      },
+      {
+        "path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "sha256": "a571d2b16ee20cb94733a17fc6778ce8157ceffdcdafe9b5a954978e556a906a",
+        "size_bytes": 7227
+      },
+      {
+        "path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+        "size_bytes": 4073
+      },
+      {
+        "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+        "size_bytes": 4672
+      },
+      {
+        "path": "rtl/abi3/ot_a3_output_object_writer.sv",
+        "sha256": "6a768dab302f793c2ad17f1b9167e3c37f69492e15d15d68b87be830496f9c7b",
+        "size_bytes": 8605
+      },
+      {
+        "path": "rtl/abi3/ot_a3_reserved_output_queue.sv",
+        "sha256": "8669f36ce9e0a34e64bd77d3b0b37d16208ad01432c3e45ea9151c74e3417ad0",
+        "size_bytes": 2738
+      },
+      {
+        "path": "rtl/abi3/ot_a3_runtime_operation_lifetime.sv",
+        "sha256": "e539ece12cf73133845cc26526db03932ed35554305f328d074564a98b978775",
+        "size_bytes": 2959
+      },
+      {
+        "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+        "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+        "size_bytes": 7555
+      },
+      {
+        "path": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+        "sha256": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+        "size_bytes": 6437
+      },
+      {
+        "path": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+        "sha256": "70119b4ec736f120f6c3ca6d9f6a4c489568c962809c8093191876a0f45052a8",
+        "size_bytes": 7105
+      },
+      {
+        "path": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+        "sha256": "16e29b23557cd4975506a46ca3801af56ee97d589456ce6ef1f3408527c91062",
+        "size_bytes": 6319
+      }
+    ],
+    "top": "ot_a3_g2_cluster"
+  },
+  "error": "TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/home/ubuntu/OpenTallas:/src:ro', '-v', '/home/ubuntu/OpenTallas/build/physical_g2_pass_columns2_1ns/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', \"trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish metadata-generate\"]' timed out after 21600 seconds",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-22T23:24:35.265663+00:00",
+  "git": {
+    "commit": "b721dbfcce3f0279fa2125e79f0e3ac25170b7ea",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_abi3/asap7/a3_g2_runtime_writer/pnr_cts8_1ns.json",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
+      "results/physical_abi3/asap7/a3_vector_index_score/physical_artifacts/",
+      "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
+      "results/physical_abi3/asap7/lq8_array/",
+      "results/physical_abi3/asap7/recovered_session_experiments.json",
+      "results/physical_abi3/asap7/weight_pass_scheduler/pnr_split_tile_address_cts12_1ns.json",
+      "results/physical_abi3/asap7/weight_pass_scheduler/pnr_split_tile_address_cts12_1ns_artifacts/",
+      "results/physical_abi3/asap7/wide_mul_chain/",
+      "results/physical_abi3/asap7/wide_mul_tree/",
+      "results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2.json",
+      "results/rtl/before_adapter_view_payload/",
+      "results/rtl/before_descriptor_capture/",
+      "results/rtl/before_independent_pass_width/",
+      "results/rtl/before_input_resolution/",
+      "results/rtl/before_layout_admission_pipeline/",
+      "results/rtl/g2_independent_pass_width_comparison.json"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M compiler/backends/rom/common/program.py",
+      " M results/abi3/nine_cell_token_matrix.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_block_max/physical.json",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/rtl/a3_g2_runtime_byte_transport_depth342_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      " M results/rtl/a3_v41_block_max_campaign.json",
+      " M results/rtl/a3_v41_candidate_mask_campaign.json",
+      " M results/rtl/g2_pass_first_oversized_comparison.json",
+      " M rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      " M rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      " M rtl/abi3/ot_a3_g2_cluster.sv",
+      " M rtl/abi3/ot_a3_lane_pipelined.sv",
+      " M rtl/abi3/ot_a3_lq8.sv",
+      " M rtl/abi3/ot_a3_wafer_multicast_adapter.sv"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_a3_g2_cluster",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8.sv",
+      "--source",
+      "rtl/abi3/ot_a3_program_header.sv",
+      "--source",
+      "rtl/abi3/ot_a3_instruction_decoder.sv",
+      "--source",
+      "rtl/abi3/ot_a3_loop_stack.sv",
+      "--source",
+      "rtl/abi3/ot_a3_symbol_file.sv",
+      "--source",
+      "rtl/abi3/ot_a3_shared_divider.sv",
+      "--source",
+      "rtl/abi3/ot_a3_view_resolver.sv",
+      "--source",
+      "rtl/abi3/ot_a3_resolver_bank.sv",
+      "--source",
+      "rtl/abi3/ot_a3_event_scoreboard.sv",
+      "--source",
+      "rtl/abi3/ot_a3_state_controller.sv",
+      "--source",
+      "rtl/abi3/ot_a3_issue_record_store.sv",
+      "--source",
+      "rtl/abi3/ot_a3_dependence_table.sv",
+      "--source",
+      "rtl/abi3/ot_a3_microsequencer.sv",
+      "--source",
+      "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_program_store.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_descriptor_store.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_issue_record_ram.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_array_staging.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_array_issue_adapter.sv",
+      "--source",
+      "rtl/abi3/ot_a3_g2_cluster.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8_operand_join.sv",
+      "--source",
+      "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "--source",
+      "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+      "--source",
+      "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+      "--source",
+      "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "--source",
+      "rtl/abi3/ot_a3_output_object_writer.sv",
+      "--source",
+      "rtl/abi3/ot_a3_reserved_output_queue.sv",
+      "--source",
+      "rtl/abi3/ot_a3_runtime_operation_lifetime.sv",
+      "--param",
+      "RUNTIME_OPERANDS=1",
+      "--param",
+      "RUNTIME_OBJECT_WRITES=1",
+      "--param",
+      "WRITE_OUTSTANDING=4",
+      "--param",
+      "RUNTIME_AUXILIARY_DEPTH=3",
+      "--param",
+      "RUNTIME_WEIGHT_ROW_REUSE=1",
+      "--param",
+      "ADDER_STAGES=3",
+      "--param",
+      "ACC_SLOTS=8",
+      "--param",
+      "LANES=8",
+      "--clock-period-ns",
+      "1",
+      "--stages",
+      "pnr",
+      "--core-utilization",
+      "25",
+      "--cts-cluster-size",
+      "8",
+      "--max-fanout",
+      "16",
+      "--max-transition-ns",
+      "--memory-macro",
+      "fakeram_256x128",
+      "--memory-macro",
+      "fakeram_2048x128",
+      "--memory-macro",
+      "fakeram_512x128",
+      "--output",
+      "results/physical_abi3/asap7/a3_g2_runtime_writer/pnr_pass_columns2_cts8_1ns.json",
+      "--keep-workdir",
+      "build/physical_g2_pass_columns2_1ns",
+      "--source",
+      "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "--source",
+      "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "--source",
+      "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "--source",
+      "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "--param",
+      "RESOLVE_INPUT_OBJECTS=1",
+      "--param",
+      "RUNTIME_WEIGHT_OBJECT_READS=1",
+      "--param",
+      "RUNTIME_PASS_FIRST=1",
+      "--param",
+      "PASS_COLUMNS=2"
+    ],
+    "driver": {
+      "commit": "b721dbfcce3f0279fa2125e79f0e3ac25170b7ea",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "385af23c99303de7d4bf94a632ff254a65b7fc25693786317607fb5cea6b325c",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

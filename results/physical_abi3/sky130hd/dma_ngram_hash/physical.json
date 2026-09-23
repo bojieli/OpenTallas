@@ -2,16 +2,27 @@
   "acceptance": {
     "checks": [
       {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.3095858934614412,
+        "met": true,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": true,
+        "setup_violating_paths": 0,
+        "setup_wns_ns": 3.4917909552126027,
+        "stage": "static_timing"
+      },
+      {
         "antenna_violating_nets": 0.0,
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.257074,
+        "hold_wns_ns": 0.244213,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 2.18188,
+        "setup_wns_ns": 7.35394,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -22,7 +33,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-13T16:48:31.836767+00:00",
+  "completed_at": "2026-09-14T10:36:34.825903+00:00",
   "corner": {
     "liberty": [
       {
@@ -41,27 +52,28 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 1098780.0,
+    "area_um2": 1081770.0,
     "block": "ot_a3_dma_ngram_hash",
-    "cells": 104283,
+    "cells": 102958,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
-    "clock_period_ns": 8.0,
+    "clock_period_ns": 14.0,
     "clock_port": "clk",
-    "closed": true,
+    "closed": false,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "closed_reason": "signal-integrity violations in the routed netlist: max_fanout_violations 3",
     "core_area_um2": 2701720.0,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 171877000.0,
-    "hold_wns_ns": 0.257074,
+    "fmax_hz": 150465000.0,
+    "hold_wns_ns": 0.244213,
     "parameters": {},
-    "setup_wns_ns": 2.18188,
-    "signal_integrity_clean": true,
+    "setup_wns_ns": 7.35394,
+    "signal_integrity_clean": false,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
-      "max_fanout_violations": 0,
+      "max_fanout_violations": 3,
       "max_slew_violations": 0
     },
     "sources": [
@@ -72,100 +84,37 @@
       }
     ],
     "top": "ot_a3_dma_ngram_hash",
-    "utilization_fraction": 0.406696
+    "utilization_fraction": 0.4004
   },
-  "elapsed_seconds": 1120.825,
+  "elapsed_seconds": 5603.271,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-13T16:29:51.012161+00:00",
+  "generated_at": "2026-09-14T09:03:11.555023+00:00",
   "git": {
-    "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+    "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
-    "untracked_results": [
-      "results/abi3/deepseek-v4.1-flash.measured-widths.proposed.json",
-      "results/abi3/deepseek_v41_hbm_comparator_capability.json",
-      "results/abi3/deepseek_v41_hbm_comparator_descriptor_multiset.json",
-      "results/abi3/deepseek_v41_hbm_comparator_plan.json",
-      "results/abi3/deepseek_v41_measured_kv_widths.json",
-      "results/abi3/deepseek_v41_reduced_checkpoint.lock.json",
-      "results/abi3/deepseek_v41_reduced_model.json",
-      "results/abi3/deepseek_v41_reference_oracle_probe.json",
-      "results/abi3/deepseek_v41_workload_pins.json",
-      "results/derived/deepseek_v41_cycle_cells.json",
-      "results/physical_abi3/asap7/dma_ngram_hash/",
-      "results/physical_abi3/asap7/route_block_max/",
-      "results/physical_abi3/asap7/route_candidate_mask/",
-      "results/physical_abi3/asap7/vector_engram_gate/",
-      "results/physical_abi3/asap7/vector_fp4kv_dequant/",
-      "results/physical_abi3/sky130hd/dma_ngram_hash/",
-      "results/physical_abi3/sky130hd/route_block_max/",
-      "results/physical_abi3/sky130hd/route_candidate_mask/",
-      "results/physical_abi3/sky130hd/vector_engram_gate/",
-      "results/physical_abi3/sky130hd/vector_fp4kv_dequant/",
-      "results/roofline/candidates/deepseek-v41-flash-engram-hbm/",
-      "results/rtl/a3_v41_block_max_campaign.json",
-      "results/rtl/a3_v41_candidate_mask_campaign.json",
-      "results/rtl/a3_v41_engram_gate_campaign.json",
-      "results/rtl/a3_v41_fp4kv_dequant_campaign.json",
-      "results/rtl/a3_v41_ngram_hash_campaign.json",
-      "results/rtl/a3_v41_ngram_hash_vendor_oracle.json"
-    ],
+    "untracked_results": [],
     "worktree_dirty": true,
     "worktree_status": [
-      " M Makefile",
-      " M compiler/backends/hbm_sram/capability.py",
-      " M compiler/backends/hbm_sram/plan.py",
-      " M compiler/backends/rom/common/check.py",
-      " M compiler/backends/rom/common/program.py",
-      " M compiler/frontend/deepseek_v4.py",
-      " M compiler/frontend/deepseek_v4_releases.py",
-      " M compiler/frontends/v3/deepseek_v4.py",
-      " M compiler/ir/v3/lowering.py",
-      " M configs/abi3/shipped_deployments.json",
-      " M configs/gates/redesign_gates.json",
-      " M configs/hardware/technology.json",
-      " M docs/CONTRIBUTOR_TASKS.md",
-      " M docs/EVIDENCE_LEDGER.md",
-      " M docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md",
-      " M docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md",
-      " M docs/UNIFIED_EXECUTION_CHECKLIST.md",
-      " M results/abi3/prose_figure_coverage.json",
-      " M results/iso-node/leading_node_market/REPORT.md",
-      " M results/iso-node/leading_node_market/analytical.json",
-      " M results/iso-node/leading_node_market/sweep.csv",
-      " M results/iso-node/n7_architecture_attribution/REPORT.md",
-      " M results/iso-node/n7_architecture_attribution/analytical.json",
-      " M results/iso-node/n7_architecture_attribution/sweep.csv",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-1m/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-32k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-8k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-200k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-32k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-8k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-1m/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-32k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-8k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-200k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-32k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-8k/REPORT.md",
-      " M results/roofline/n5_vs_b200/REPORT.md",
-      " M results/roofline/n5_vs_b200/analytical.json",
-      " M results/roofline/n6_vs_a100/REPORT.md",
-      " M results/roofline/n6_vs_a100/analytical.json",
-      " M results/roofline/quantised_variant/n5_vs_b200/analytical.json",
-      " M results/roofline/quantised_variant/n6_vs_a100/analytical.json"
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      "?? schemas/abi3/comparison_contract_v2.schema.json"
     ]
   },
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/phy10/p3/a4_ngram_sky130hd_artifacts",
+    "artifact_dir": "results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -179,33 +128,33 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "a400ca345bcfdca2745c65414b3bb40e13adc6467f726e7ce8849185ec67af15",
-        "size_bytes": 104480468
+        "sha256": "1744cceaca82393ebf4898c92c26502ad7655ceb83bf205a7ebdbf6eab4c5314",
+        "size_bytes": 104062477
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "7786af86c36acb7659574e0b7ebe5fe78fd1ac21a46d57f5a461d4959ff09730",
-        "size_bytes": 102730830
+        "sha256": "dcc90481b9a5c7f4eabc7996357f57594c464d791bbf5c02398bb022d3b5d9a9",
+        "size_bytes": 102386180
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "faf4404fbd204ba45caef3e3aac995a28f1f1bfccec4e9eb124ccb4f0b364118",
-        "size_bytes": 201549845
+        "sha256": "5c5d509eb2c5c0088b171ff2717025b1826b4822fd25d25019cf65584317fbba",
+        "size_bytes": 200696151
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "f952408882b8c44b914c775be1c88387961f94031cdd4a7bf68e1052934f24f5",
-        "size_bytes": 82812715
+        "sha256": "a1abca6ae7fe112aca81e39003dcc1f527712d7e75828d3742efb27a2dcc4010",
+        "size_bytes": 82442763
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "a5eabad5a3d195be178bd51ca77f9caf569254ab3f409b50626c1a36ba85ada8",
-        "size_bytes": 13180899
+        "sha256": "ad3bbb1b567e3969485bf4e98615c664c71da3b5f5a3b0bf21e659c33d23a029",
+        "size_bytes": 13126787
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "8b4fd45b13b58c3c0815a03a71b3ffce42b0e7574279b58e1875c9c7b922f973",
-        "size_bytes": 31608
+        "sha256": "dadd3d2e2e8f5e0c1dd57551b23eae4eb2d25318001d3a2f1153d92e833b4e18",
+        "size_bytes": 34984
       },
       "config.mk": {
         "retained": true,
@@ -214,16 +163,16 @@
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "cb95aaa0c7f79f7bea2d635cc9e4035b7c7e0b4c0c3c74af908dc07a4cb22c48",
-        "size_bytes": 378
+        "sha256": "4fa43e0d0891a774cbe9379bf7291531876463126bff2753c98a4aad4805a9e0",
+        "size_bytes": 338
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "8e0251883a4cf0930ff4372d180c612f57daa82fdb614b69a854492fd7c974a5",
-        "size_bytes": 25005
+        "sha256": "4fd42da3a706a5c2bc6512ba7f06f984a83f5d670bf6928bad22c38235b43b30",
+        "size_bytes": 24693
       }
     },
-    "clock_period_ns": 8.0,
+    "clock_period_ns": 14.0,
     "core_utilization_percent": 35,
     "design_nickname": "opentallas_ot_a3_dma_ngram_hash_sky130hd",
     "metrics": {
@@ -244,36 +193,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 171877000.0,
+      "fmax_hz": 150465000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.257074,
-      "instance_count": 355169,
+      "hold_wns_ns": 0.244213,
+      "instance_count": 354760,
       "library_time_unit_ns": 1.0,
       "macro_area_um2": 0,
       "macro_count": 0,
       "max_cap_violations": 0,
-      "max_fanout_violations": 0,
+      "max_fanout_violations": 3,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.360312,
+      "power_total_w": 0.206266,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 0.257074,
+        "hold_wns_ns": 0.244213,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 2.18188
+        "setup_wns_ns": 7.35394
       },
-      "routed_nets": 80678,
-      "routed_wirelength_um": 3050482,
-      "sequential_area_um2": 506874,
+      "routed_nets": 79348,
+      "routed_wirelength_um": 3063377,
+      "sequential_area_um2": 506125,
       "sequential_cell_count": 20494,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 2.18188,
-      "standard_cell_area_um2": 1098780.0,
-      "standard_cell_count": 104283,
-      "utilization_fraction": 0.406696,
-      "vias": 527414
+      "setup_wns_ns": 7.35394,
+      "standard_cell_area_um2": 1081770.0,
+      "standard_cell_count": 102958,
+      "utilization_fraction": 0.4004,
+      "vias": 523692
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "19aa6a77cc513eed7d7f9c3d6a6b7f46912a940e78e1c86875f3600fae923cd7",
@@ -291,32 +240,11 @@
       "lib/sky130_dummy_io.lib": "6b7589ec90fb90deffe4a79eb24e1f9bf127cf2238887101ee15e3dda25c6be2",
       "lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
     },
-    "sdc_clock_period_library_units": 8.0,
+    "sdc_clock_period_library_units": 14.0,
     "signal_integrity_constraints": {
       "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
-      "library_declares_fanout_limit": false,
-      "library_default_max_fanout": [
-        {
-          "default_max_fanout": null,
-          "liberty": "sky130_fd_sc_hd__tt_025C_1v80.lib",
-          "pin_max_fanout_count": 0
-        }
-      ],
-      "library_default_max_transition": [
-        {
-          "default_max_transition": 1.5,
-          "liberty": "sky130_fd_sc_hd__tt_025C_1v80.lib",
-          "pin_max_transition_count": 1764
-        }
-      ],
-      "max_fanout": 32,
-      "max_fanout_source": "driver default: the set_max_fanout every earlier record's SDC carried",
-      "max_transition_library_units": 0.75,
-      "max_transition_ns": 0.75,
-      "max_transition_source": "command line",
       "sdc_lines": [
-        "set_max_fanout 32 [current_design]",
-        "set_max_transition 0.75 [current_design]"
+        "set_max_fanout 32 [current_design]"
       ],
       "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit",
       "slew_margin_percent": 40.0
@@ -348,25 +276,19 @@
       "--source",
       "rtl/abi3/ot_a3_dma_ngram_hash.sv",
       "--clock-period-ns",
-      "8.00",
+      "14.0",
       "--stages",
-      "synth,pnr",
+      "synth,sta,pnr",
       "--purpose",
       "signoff_target",
-      "--max-transition-ns",
-      "--max-fanout",
       "--slew-margin-percent",
       "40",
-      "--keep-workdir",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/phy10/work/a4_ngram_sky130hd",
-      "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/phy10/p3/a4_ngram_sky130hd.json",
       "--force",
-      "--max-transition-ns",
-      "0.75"
+      "--output",
+      "results/physical_abi3/sky130hd/dma_ngram_hash/physical.json"
     ],
     "driver": {
-      "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+      "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
@@ -381,15 +303,36 @@
   "schema_version": 1,
   "stages_completed": [
     "synth",
+    "sta",
     "pnr"
   ],
   "stages_requested": [
     "synth",
+    "sta",
     "pnr"
   ],
+  "static_timing": {
+    "clock_period_ns": 14.0,
+    "critical_path_ns": 10.508209044787398,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 95163694.94914554,
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.3095858934614412,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.3095858934614412,
+      "setup_tns": 0.0,
+      "setup_wns": 3.4917909552126027
+    },
+    "sdc_clock_period_library_units": 14.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 3.4917909552126027,
+    "timing_met": true
+  },
   "status": "pass",
   "synthesis": {
-    "abc_delay_target_ps": 8000.0,
+    "abc_delay_target_ps": 14000.0,
     "cell_area_um2": 994749.946,
     "cell_count": 102674,
     "cell_types_used": 71,
@@ -407,12 +350,17 @@
     "sequential_cell_count": 20494,
     "unmapped_cell_types": []
   },
-  "target_clock_period_ns": 8.0,
+  "target_clock_period_ns": 14.0,
   "target_semantics": "the target clock period is the intended operating point",
   "tools": {
     "abc": {
       "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
       "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
     },
     "yosys": {
       "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",

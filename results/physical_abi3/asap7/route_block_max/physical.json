@@ -9,7 +9,7 @@
         "scope": "pre-layout, ideal clock",
         "setup_met": false,
         "setup_violating_paths": 197,
-        "setup_wns_ns": -0.4912217319219045,
+        "setup_wns_ns": -0.3712217215135636,
         "stage": "static_timing"
       },
       {
@@ -17,12 +17,12 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.0485335,
+        "hold_wns_ns": 0.0449881,
         "met": true,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.281254,
+        "setup_wns_ns": 0.416435,
         "stage": "place_and_route",
         "timing_met": true
       }
@@ -33,7 +33,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-13T17:05:21.110993+00:00",
+  "completed_at": "2026-09-14T09:10:02.874894+00:00",
   "corner": {
     "liberty": [
       {
@@ -72,11 +72,11 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 678.16,
+    "area_um2": 681.498,
     "block": "ot_a3_route_block_max",
-    "cells": 5454,
+    "cells": 5471,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
-    "clock_period_ns": 0.85,
+    "clock_period_ns": 1.0,
     "clock_port": "clk",
     "closed": false,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
@@ -85,10 +85,10 @@
     "drc": 0,
     "false_path_from_ports": [],
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1758250000.0,
-    "hold_wns_ns": 0.0485335,
+    "fmax_hz": 1713600000.0,
+    "hold_wns_ns": 0.0449881,
     "parameters": {},
-    "setup_wns_ns": 0.281254,
+    "setup_wns_ns": 0.416435,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -108,96 +108,33 @@
       }
     ],
     "top": "ot_a3_route_block_max",
-    "utilization_fraction": 0.384723
+    "utilization_fraction": 0.386617
   },
-  "elapsed_seconds": 668.947,
+  "elapsed_seconds": 406.672,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-13T16:54:12.164080+00:00",
+  "generated_at": "2026-09-14T09:03:16.203177+00:00",
   "git": {
-    "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+    "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
-    "untracked_results": [
-      "results/abi3/deepseek-v4.1-flash.measured-widths.proposed.json",
-      "results/abi3/deepseek_v41_hbm_comparator_capability.json",
-      "results/abi3/deepseek_v41_hbm_comparator_descriptor_multiset.json",
-      "results/abi3/deepseek_v41_hbm_comparator_plan.json",
-      "results/abi3/deepseek_v41_measured_kv_widths.json",
-      "results/abi3/deepseek_v41_reduced_checkpoint.lock.json",
-      "results/abi3/deepseek_v41_reduced_model.json",
-      "results/abi3/deepseek_v41_reduced_seed_search/",
-      "results/abi3/deepseek_v41_reference_oracle_probe.json",
-      "results/abi3/deepseek_v41_workload_pins.json",
-      "results/derived/deepseek_v41_cycle_cells.json",
-      "results/physical_abi3/asap7/dma_ngram_hash/",
-      "results/physical_abi3/asap7/route_block_max/",
-      "results/physical_abi3/asap7/route_candidate_mask/",
-      "results/physical_abi3/asap7/vector_engram_gate/",
-      "results/physical_abi3/asap7/vector_fp4kv_dequant/",
-      "results/physical_abi3/sky130hd/dma_ngram_hash/",
-      "results/physical_abi3/sky130hd/route_block_max/",
-      "results/physical_abi3/sky130hd/route_candidate_mask/",
-      "results/physical_abi3/sky130hd/vector_engram_gate/",
-      "results/physical_abi3/sky130hd/vector_fp4kv_dequant/",
-      "results/roofline/candidates/deepseek-v41-flash-engram-hbm/",
-      "results/rtl/a3_v41_block_max_campaign.json",
-      "results/rtl/a3_v41_candidate_mask_campaign.json",
-      "results/rtl/a3_v41_engram_gate_campaign.json",
-      "results/rtl/a3_v41_fp4kv_dequant_campaign.json",
-      "results/rtl/a3_v41_ngram_hash_vendor_oracle.json"
-    ],
+    "untracked_results": [],
     "worktree_dirty": true,
     "worktree_status": [
-      " M Makefile",
-      " M compiler/backends/hbm_sram/capability.py",
-      " M compiler/backends/hbm_sram/plan.py",
-      " M compiler/backends/rom/common/check.py",
-      " M compiler/backends/rom/common/program.py",
-      " M compiler/frontend/deepseek_v4.py",
-      " M compiler/frontend/deepseek_v4_releases.py",
-      " M compiler/frontends/v3/deepseek_v4.py",
-      " M compiler/ir/v3/lowering.py",
-      " M configs/abi3/shipped_deployments.json",
-      " M configs/gates/redesign_gates.json",
-      " M configs/hardware/technology.json",
-      " M docs/CONTRIBUTOR_TASKS.md",
-      " M docs/EVIDENCE_LEDGER.md",
-      " M docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md",
-      " M docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md",
-      " M docs/UNIFIED_EXECUTION_CHECKLIST.md",
-      " M results/abi3/prose_figure_coverage.json",
-      " M results/iso-node/leading_node_market/REPORT.md",
-      " M results/iso-node/leading_node_market/analytical.json",
-      " M results/iso-node/leading_node_market/sweep.csv",
-      " M results/iso-node/n7_architecture_attribution/REPORT.md",
-      " M results/iso-node/n7_architecture_attribution/analytical.json",
-      " M results/iso-node/n7_architecture_attribution/sweep.csv",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash-engram-host/n6_vs_a100/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
-      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/REPORT.md",
-      " M results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-1m/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-32k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/flash-8k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-200k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-32k/REPORT.md",
-      " M results/roofline/context_ladder/n5_vs_b200/pro-8k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-1m/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-32k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/flash-8k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-200k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-32k/REPORT.md",
-      " M results/roofline/context_ladder/n6_vs_a100/pro-8k/REPORT.md",
-      " M results/roofline/n5_vs_b200/REPORT.md",
-      " M results/roofline/n5_vs_b200/analytical.json",
-      " M results/roofline/n6_vs_a100/REPORT.md",
-      " M results/roofline/n6_vs_a100/analytical.json",
-      " M results/roofline/quantised_variant/n5_vs_b200/analytical.json",
-      " M results/roofline/quantised_variant/n6_vs_a100/analytical.json"
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      "?? schemas/abi3/comparison_contract_v2.schema.json"
     ]
   },
   "place_and_route": {
@@ -215,51 +152,51 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "fe5e6e4b2e0fb5aac8f40b6344e4057f0377fa867bbd579c541314d89bed4a34",
-        "size_bytes": 5136060
+        "sha256": "e29f6226349b79720b344274536396f16e1e13e65a84add5b6049528d942a2c7",
+        "size_bytes": 5130066
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "7c707f6afc1019895be009f735016464df6dc46dd9168978c321e55bc346fca3",
-        "size_bytes": 6110502
+        "sha256": "140a3d1b7ce96da53229d6e75b25889fa4fbeb1d6e4422e2a8ca7245fc0b074a",
+        "size_bytes": 6109330
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "629f168a2f01dd75b1bbff9ce4421663b186f61f68faf584b3a717292ec98760",
-        "size_bytes": 10123906
+        "sha256": "8eb1e477da34f47d96fc2d8af41ba0e89e1b2239a48463a4a3df35545fa3e257",
+        "size_bytes": 10111647
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "ac716ef3d43e4cba25153841dfe0244dd10cec3357c097b05f2282dbf3626d2e",
-        "size_bytes": 5052886
+        "sha256": "37ee96fa8e0ad4a6d4028313a198c8386fd3ceb648da82fc19c9afc24c4d0a7f",
+        "size_bytes": 5071032
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "a702b2326bc54bc1ed924d21fba66a00fcd260e0dc1027c50993423dca0f4a34",
-        "size_bytes": 533654
+        "sha256": "bedcf79d9bda2e69c4d6f97786d861f50597915f03980090aa1542f7eb1e0a96",
+        "size_bytes": 534837
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "d4576e6d4b0a8338a760e3e9f5e2e7a3209fa7ad0643c4f81f763f49732f61bc",
-        "size_bytes": 25534
+        "sha256": "85f8799a0f57ec546c3f74f8d224c16f9c424576191d6fb8108abf48ae999343",
+        "size_bytes": 25535
       },
       "config.mk": {
         "retained": true,
-        "sha256": "151963c4d9461c5b523d1be4396722f415567252a5401c2b14130e0c1c509f82",
+        "sha256": "f9d8e4e098ca7cba432f65d4d6f0f1ecc4867ccacbebbeadbaaafd88ec3b5c72",
         "size_bytes": 750
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "c4d1a3c7e1de41ed928f94fa28e60ca4b6a2dec229ba5ded61b76ab34b023c77",
-        "size_bytes": 339
+        "sha256": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "size_bytes": 340
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "1bcbbf20b9593a27d745ddaf25211ec85bc86fd0158af540f95c1e68c984822c",
-        "size_bytes": 23845
+        "sha256": "d9751a688acaa1287e1d1e853f3a4c9ae98b2c13a847e46ce8fc53b67546d4cc",
+        "size_bytes": 23854
       }
     },
-    "clock_period_ns": 0.85,
+    "clock_period_ns": 1.0,
     "core_utilization_percent": 35,
     "design_nickname": "opentallas_ot_a3_route_block_max_asap7",
     "metrics": {
@@ -280,11 +217,11 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 1758250000.0,
+      "fmax_hz": 1713600000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.0485335,
-      "instance_count": 14172,
+      "hold_wns_ns": 0.0449881,
+      "instance_count": 14124,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -292,24 +229,24 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.00350394,
+      "power_total_w": 0.00303232,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 48.5335,
+        "hold_wns_ns": 44.9881,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 281.254
+        "setup_wns_ns": 416.435
       },
-      "routed_nets": 5549,
-      "routed_wirelength_um": 15980,
+      "routed_nets": 5561,
+      "routed_wirelength_um": 15970,
       "sequential_area_um2": 255.733,
       "sequential_cell_count": 877,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.281254,
-      "standard_cell_area_um2": 678.16,
-      "standard_cell_count": 5454,
-      "utilization_fraction": 0.384723,
-      "vias": 42111
+      "setup_wns_ns": 0.416435,
+      "standard_cell_area_um2": 681.498,
+      "standard_cell_count": 5471,
+      "utilization_fraction": 0.386617,
+      "vias": 42125
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "b3e941335658cbc8092cf185a723d44fbf5f01f7604df572930f2bd861cbad2e",
@@ -463,14 +400,14 @@
       "lib/NLDM/fakeregfile_32x46.lib": "532e8f4e2494e950db6dd3c3358d346c4403ff51b56a8c4bc18690158f24637a",
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
-    "sdc_clock_period_library_units": 850.0,
+    "sdc_clock_period_library_units": 1000.0,
     "signal_integrity_constraints": {
       "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
       "sdc_lines": [
         "set_max_fanout 32 [current_design]"
       ],
       "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit",
-      "slew_margin_percent": 30.0
+      "slew_margin_percent": 40.0
     },
     "toolchain": {
       "binary_sha256": {
@@ -501,19 +438,19 @@
       "--source",
       "rtl/abi3/ot_a3_route_block_max.sv",
       "--clock-period-ns",
-      "0.85",
+      "1.0",
       "--stages",
       "synth,sta,pnr",
       "--purpose",
       "signoff_target",
       "--slew-margin-percent",
-      "30",
+      "40",
       "--force",
       "--output",
       "results/physical_abi3/asap7/route_block_max/physical.json"
     ],
     "driver": {
-      "commit": "673f3017afffcd082bfdc8688c27d27849df9f1d",
+      "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
@@ -537,27 +474,27 @@
     "pnr"
   ],
   "static_timing": {
-    "clock_period_ns": 0.85,
-    "critical_path_ns": 1.3412217319219044,
+    "clock_period_ns": 1.0,
+    "critical_path_ns": 1.3712217215135636,
     "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
-    "fmax_hz": 745588873.3379301,
+    "fmax_hz": 729276662.0530146,
     "hold_violating_paths": 0,
     "hold_wns_ns": 0.04886380208886728,
     "library_time_unit_ns": 0.001,
     "raw_library_units": {
       "hold_wns": 48.86380208886728,
-      "setup_tns": -86775.26643054189,
-      "setup_wns": -491.2217319219045
+      "setup_tns": -63135.27503823981,
+      "setup_wns": -371.2217215135636
     },
-    "sdc_clock_period_library_units": 850.0,
-    "setup_tns_ns": -86.77526643054189,
+    "sdc_clock_period_library_units": 1000.0,
+    "setup_tns_ns": -63.13527503823981,
     "setup_violating_paths": 197,
-    "setup_wns_ns": -0.4912217319219045,
+    "setup_wns_ns": -0.3712217215135636,
     "timing_met": false
   },
   "status": "not_met",
   "synthesis": {
-    "abc_delay_target_ps": 850.0,
+    "abc_delay_target_ps": 1000.0,
     "cell_area_um2": 574.715,
     "cell_count": 4155,
     "cell_types_used": 33,
@@ -575,7 +512,7 @@
     "sequential_cell_count": 877,
     "unmapped_cell_types": []
   },
-  "target_clock_period_ns": 0.85,
+  "target_clock_period_ns": 1.0,
   "target_semantics": "the target clock period is the intended operating point",
   "tools": {
     "abc": {

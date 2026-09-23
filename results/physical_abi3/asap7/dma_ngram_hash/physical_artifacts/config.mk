@@ -19,4 +19,4 @@ export SKIP_REPORT_METRICS = 0
 export REPORT_CLOCK_SKEW = 1
 export CORNER = TC
 export ASAP7_USE_VT = RVT
-export SLEW_MARGIN = 40
+export SLEW_MARGIN = 30

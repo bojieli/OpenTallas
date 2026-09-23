@@ -48,3 +48,21 @@ testdata/rtl/a3_operator_admission_hbm/weights.hex
 # i.e. zero routing DRC), so those stay tracked and only the netlists are ignored.
 results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/1_2_yosys.v
 results/physical_abi3/asap7/a3_microsequencer/pnr_artifacts/6_final.v
+# Large netlists from the 2026-09-22/23 ASAP7 optimization runs, by the same rule as
+# above: reports, config.mk and constraint.sdc are tracked; netlists over 5 MB are not.
+results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_cts12_1ns_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_cts12_1ns_artifacts/6_final.v
+results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_tree16_cts12_1ns_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_tree16_cts12_1ns_artifacts/6_final.v
+results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_baseline_cts12_1ns_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_baseline_cts12_1ns_artifacts/6_final.v
+results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/current_cts12_1ns_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/current_cts12_1ns_artifacts/6_final.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0_artifacts/6_final.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4_artifacts/6_final.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/6_final.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/1_2_yosys.v
+results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/6_final.v
