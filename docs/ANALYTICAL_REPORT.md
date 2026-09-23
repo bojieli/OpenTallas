@@ -215,6 +215,26 @@ arithmetic in the pipeline are stated stand-ins. None of them establishes
 macro area, timing closure, PHY latency or energy, and they are not yet part of
 the ABI 3.0 token path.
 
+### A per-token decode core in RTL
+
+Section 6 attributes most of the ROM machine's gain to specialisation. The
+hardwired decode core (`rtl/hdc/`, plan and iteration log in
+[TOKEN_PIPELINE_OPTIMIZATION_PLAN.md](TOKEN_PIPELINE_OPTIMIZATION_PLAN.md)) is
+that specialisation, taken to one token of the reduced Qwen3 vehicle.
+
+- A static program drives two fully pipelined units: a 64-lane matrix engine
+  and a stream unit with exp, reciprocal, rsqrt and sigmoid pipelines.
+  Element-level chaining replaces most barriers.
+- In Verilator it decodes a token in 32,147 cycles, <!-- figure: 32147 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="HDC cycles per token" -->
+  with every logit, the vector memory and the KV cache bit-exact against a
+  golden model.
+- From an empty KV cache it consumes the 16-token prompt and generates the
+  torch oracle's three tokens.
+- On ASAP7 the stream unit routes at 1,111 MHz. <!-- figure: 1111 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC stream unit routed fmax MHz" -->
+
+The same vehicle takes 7.9 M cycles on the general ABI 3.0 token path, whose
+slowest blocks route at 58–75 MHz.
+
 ## 10. Reproduce
 
 ```
@@ -222,5 +242,6 @@ python3 tools/run_roofline_studies.py --force   # ~26 min, writes results/roofli
 python3 tools/rtl_rom_striped_bank_campaign.py  # section 9, seconds each
 python3 tools/rtl_rom_pkg_link_campaign.py
 python3 tools/rtl_rom_layer_pipeline_campaign.py
+python3 tools/rtl_hdc_decode_campaign.py       # decode core, ~3 min
 python3 tools/check_prose_figures.py            # every annotated figure above
 ```

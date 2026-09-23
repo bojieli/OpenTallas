@@ -117,7 +117,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 727: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md binds its decode-core RTL
     # figures (26) to the per-iteration records in results/rtl/hdc_iterations/
     # and the routed records in results/physical_abi3/asap7/hdc/.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 727
+    # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 729
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
