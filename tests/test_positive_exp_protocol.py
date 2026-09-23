@@ -38,13 +38,15 @@ task check_result;begin
 end endtask
 initial begin
  repeat(3)@(negedge clk);rst_n=1;
- for(phase=0;phase<4;phase=phase+1)begin
+ for(phase=0;phase<6;phase=phase+1)begin
   issue();
   case(phase)
    0: wait(dut.reduce_mul_busy);
    1: wait(dut.mul_lower_busy);
    2: wait(dut.div_lower_busy);
    3: wait(out_valid);
+   4: wait(dut.state == RANGE_PRODUCT);
+   5: wait(dut.state == RANGE_DIFF);
   endcase
   @(negedge clk);#0.25;rst_n=0;#0.25;
   if(out_valid || result_code!==0 || result_error!==0)$fatal(1,"reset publication");
@@ -54,12 +56,12 @@ initial begin
   end
   issue();check_result();
  end
- $display("PASS positive exp protocol reset_stages=4 stalled_restarts=%0d",checks);
+ $display("PASS positive exp protocol reset_stages=6 stalled_restarts=%0d",checks);
  $finish;
 end
 initial begin #200000;$fatal(1,"timeout");end
 endmodule
-''')
+'''.replace('RANGE_PRODUCT', '11' if 'candidate' in source else '2').replace('RANGE_DIFF', '12' if 'candidate' in source else '3'))
     sources = [ROOT/'rtl/lib/ot_wide_mul_seq.sv', ROOT/'rtl/lib/ot_wide_div_small_seq.sv',
                ROOT/source, bench]
     if simulator == 'iverilog':
@@ -74,4 +76,4 @@ endmodule
     assert result.returncode == 0,result.stdout+result.stderr
     result = subprocess.run(run,capture_output=True,text=True,timeout=180)
     assert result.returncode == 0,result.stdout+result.stderr
-    assert 'PASS positive exp protocol reset_stages=4 stalled_restarts=4' in result.stdout
+    assert 'PASS positive exp protocol reset_stages=6 stalled_restarts=6' in result.stdout

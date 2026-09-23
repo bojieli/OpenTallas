@@ -36,7 +36,7 @@ for timing in re.findall(r'(?:Startpoint|Endpoint): (_\d+_)', report)[1:]:
  signals={n:[i for i,b in enumerate(v['bits']) if b in bits] for n,v in before['netnames'].items() if not n.startswith('$') and set(v['bits'])&bits}
  assert signals
  results.append(dict(timing_cell=timing,synthesis_cell=name,signals=signals))
-files=[BUILD/'mapped.json',BUILD/'before_abc.json',BUILD/'mapped.raw.v',ROOT/'build/positive_divisor6_current_primitives/mapped.raw.v']
+files=[BUILD/'mapped.json',BUILD/'before_abc.json',BUILD/'mapped.raw.v',BUILD/'setup_path.rpt',BUILD/'sta.tcl',BUILD/'constraint.sdc',ROOT/'build/positive_divisor6_current_primitives/mapped.raw.v']
 out=dict(scope='Fresh STA on attributed netlist; prelayout only, not original cell-name reuse or routed timing.',mapped_connectivity_verified=True,endpoints=results,input_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
 (ROOT/'results/rtl/positive_control_attribution/finding.json').write_text(json.dumps(out,indent=2)+'\n')
 print(results)

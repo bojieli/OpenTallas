@@ -1,0 +1,21 @@
+{
+  "baseline": {
+    "active_cycles": 5958111,
+    "fixup_attempts": 2201
+  },
+  "pipeline": {
+    "active_cycles": 5962513,
+    "fixup_attempts": 2201
+  },
+  "source_sha256": {
+    "rtl/lib/ot_wide_mul_seq.sv": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+    "rtl/lib/ot_wide_div_small_seq.sv": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+    "results/rtl/positive_range_pipeline/candidate.sv": "b460adeb02cb337e28654349bc263f60962107472358d2c7abd252325d2a6c8c",
+    "rtl/test/tb_a3_exp_pos.sv": "2066140645065fa6626fa78c054c70e5118906647ddafe74eec3fd0e8e1113e3",
+    "build/series_divisor_positive_vectors/cases.txt": "3fbcaa7303922456969fd1ee330d32533189cb8c0445704049585c62f76e91e8",
+    "results/rtl/positive_range_pipeline/run_latency.py": "c1078523b37da6d3f6a9177ab6e763f244a6e55c33e2ac28a01a0d68d6bb5d20"
+  },
+  "cycle_increase_percent": 0.07388247718109753,
+  "scope": "Active cycles for 2201 numerical cases and four refusal/overflow requests; same fixed corpus, not model throughput or whole-engine clock."
+}

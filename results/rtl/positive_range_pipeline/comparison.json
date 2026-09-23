@@ -8,5 +8,18 @@
   "area_increase_percent": 3.1762395890975403,
   "baseline_prelayout_slack_ns": -7.497389405956954,
   "candidate_prelayout_slack_ns": -4.259837832844647,
-  "decision": "Material prelayout timing improvement with 3.18% area increase, still fails 1 ns. Await routed/containing latency qualification before integration."
+  "decision": "Material prelayout timing improvement with 3.18% area increase, still fails 1 ns. Await routed/containing latency qualification before integration.",
+  "physical_pending": [
+    "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/current_cts12_1ns.json",
+    "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/range_pipeline_cts12_1ns.json"
+  ],
+  "physical_configuration": "Matched current baseline/candidate, ASAP7 TT 1 ns, CTS cluster12, fanout16, library max transition, core utilization25; all primitive sources identical.",
+  "new_stage_validation": "Both simulators pass baseline/candidate protocol tests at six reset positions, including the new range product/difference states. Checks include stale-result wait, restart and output stalls.",
+  "measured_latency": {
+    "baseline_active_cycles": 5958111,
+    "candidate_active_cycles": 5962513,
+    "fixup_attempts": 2201,
+    "cycle_increase_percent": 0.07388247718109753,
+    "scope": "Active cycles for 2201 numerical cases and four refusal/overflow requests; same fixed corpus, not model throughput or whole-engine clock."
+  }
 }

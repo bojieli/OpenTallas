@@ -1130,3 +1130,21 @@ extracted ASAP7 TT at 1 ns: setup +0.0141327 ns, hold +0.0591554 ns, area
 verify in its [audit](../results/physical_abi3/asap7/small_divider/unreset_step4_width168_cts12_1ns_audit.json).
 The measured 49.22% softmax cycle penalty still requires complete-engine clock
 qualification before changing consumer defaults.
+
+## Positive range pipeline has measured low cycle overhead
+
+Matched baseline/candidate simulations count 5,958,111 → 5,962,513 active cycles
+for 2,201 numerical arguments and four refusal/overflow requests: +4,402 cycles,
+exactly two per each of 2,201 fixup attempts, or +0.07388%. Both runs retain exact
+results. The reproducible latency harness asserts both equal fixup counts and
+that cycle relation; source/vector hashes verify after completion. This is a
+fixed operator corpus, not model throughput or a measured engine clock.
+
+Both simulators also pass expanded reset/stall tests at six positions, including
+the candidate's two new range stages, with no stale result after reset and exact
+restart results under backpressure. Matched current-baseline and candidate
+ASAP7 TT routes are now live at 1 ns, CTS cluster12, fanout16, library transition
+limit and core utilization25. These runs will test whether the pre-layout timing
+benefit survives placement, clock-tree synthesis and extraction. Production RTL
+remains unchanged pending that timing/area comparison. See the
+[cycle measurement](../results/rtl/positive_range_pipeline/latency.json).
