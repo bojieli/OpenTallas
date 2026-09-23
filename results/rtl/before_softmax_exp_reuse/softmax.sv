@@ -53,13 +53,11 @@
 // interval and refusing when the interval is too wide, and it accepts one
 // argument at a time. A block therefore costs LANES + 1 sequential exponentials,
 // and that is the honest cost of a correctly-rounded softmax rather than an
-// approximated one. Exact last-result reuse avoids repeated service for
-// identical lane offsets; it does not approximate or reorder evaluations.
+// approximated one. EXPS is the knob for a caller that needs the throughput.
 // ---------------------------------------------------------------------------
 module ot_a3_attention_softmax_block #(
     //: The frozen sparse-attention source block is 64.
-    parameter integer LANES = 64,
-    parameter bit EXP_REUSE = 1
+    parameter integer LANES = 64
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -237,20 +235,6 @@ module ot_a3_attention_softmax_block #(
         .y(sub_y), .err(sub_err), .valid_out(sub_valid_out)
     );
 
-    // One exact last-result entry. The operation and arithmetic configuration
-    // are immutable; a bit-identical argument can reuse a certified result
-    // across lanes/blocks. Errors never install entries. Only validity resets.
-    reg exp_cache_valid;
-    reg [31:0] exp_cache_argument, exp_cache_result;
-    wire exp_cache_hit = EXP_REUSE && exp_cache_valid && offset_q == exp_cache_argument;
-    always @(posedge clk) begin
-        if (exp_out_valid && exp_error == 0 &&
-            (state == S_RESC_W || state == S_EXP_W)) begin
-            exp_cache_argument <= exp_argument;
-            exp_cache_result <= exp_result;
-        end
-    end
-
     // -- one certifying exponential, shared by all of them -------------------
     reg         exp_in_valid;
     reg  [31:0] exp_argument;
@@ -268,7 +252,6 @@ module ot_a3_attention_softmax_block #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            exp_cache_valid <= 0;
             state <= S_IDLE;
             lane <= 32'd0; offset_q <= 32'd0; block_max <= 32'd0;
             any_valid <= 1'b0;
@@ -283,8 +266,6 @@ module ot_a3_attention_softmax_block #(
             sub_valid_in <= 1'b0;
             exp_in_valid <= 1'b0;
             done <= 1'b0;
-            if (exp_out_valid && exp_error == 0 &&
-                (state == S_RESC_W || state == S_EXP_W)) exp_cache_valid <= 1;
 
             case (state)
                 S_IDLE: begin
@@ -383,13 +364,7 @@ module ot_a3_attention_softmax_block #(
                 end
 
                 S_OFF_W: begin
-                    if (exp_cache_hit) begin
-                        probabilities[lane*32 +: 32] <= exp_cache_result;
-                        lane <= lane + 32'd1;
-                        // exp_count counts logical evaluations, including hits.
-                        exp_count <= exp_count + 32'd1;
-                        state <= S_OFF_S;
-                    end else if (exp_in_ready) begin
+                    if (exp_in_ready) begin
                         exp_in_valid <= 1'b1;
                         exp_argument <= offset_q;
                         state <= S_EXP_W;

@@ -355,3 +355,30 @@ source binding is recorded in the
 [final route audit](../results/physical_abi3/asap7/state_controller/sequential_modulo_route_audit.json).
 The later candidates remain in physical implementation. The report's derived
 Fmax is not treated as a tested operating frequency or as closure.
+
+
+## Exact softmax exponential reuse
+
+The softmax block now retains one successful certified exponential argument
+and result (64 payload bits plus validity). Bit-identical lane offsets reuse
+that value across lanes and block starts. Errors never install entries; reset
+invalidates them. Arithmetic configuration and operation are immutable, so
+reuse preserves the exact numerical contract. Logical `exp_count` includes
+hits, while the testbench separately counts physical service requests.
+`EXP_REUSE=0` removes the cache for matched comparisons.
+
+The nine-case softmax corpus and two refusals pass with reuse enabled and
+disabled. Physical exponential evaluations fall 397 → 276 and campaign cycles
+1,115,880 → 767,158 (31.25% less). Complete sparse attention still passes all
+nine reference-checked transactions: aggregate active cycles improve 2.24%,
+with the duplicate-index fixture improving 49,181 → 20,341 (58.64%). Several
+full/multiblock fixtures are unchanged. The cache therefore helps repeated
+arguments, but does not resolve general exponential throughput demand.
+Only the softmax RTL differs between the recorded attention source manifests.
+
+Both Icarus and Verilator also pass directed cache tests for repeated failed
+service, successful-result reuse and reset. These protocol tests use a
+fault-controllable service; numerical tests use the actual certifying RTL.
+Matched containing-softmax synthesis/STA jobs at 1 ns are active for reuse
+on/off. No physical area, routed timing or energy benefit is claimed.
+Evidence: [reuse comparison](../results/rtl/softmax_exp_reuse/comparison.json).

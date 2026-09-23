@@ -11,6 +11,7 @@
 // admits finite x <= 0 only. A case set that broke that would fail closed here
 // and the failure would look like arithmetic.
 module tb_a3_softmax_block;
+    parameter bit REUSE = 1;
     localparam integer LANES = 64;
 
     reg clk = 0, rst_n = 0, start = 0, cfg_first = 0;
@@ -32,7 +33,7 @@ module tb_a3_softmax_block;
     reg [31:0] run_exp, upd_exp, res_exp;
     reg [LANES-1:0] mask;
 
-    ot_a3_attention_softmax_block #(.LANES(LANES)) dut (
+    ot_a3_attention_softmax_block #(.LANES(LANES), .EXP_REUSE(REUSE)) dut (
         .clk(clk), .rst_n(rst_n), .start(start),
         .cfg_first(cfg_first), .cfg_running_max(cfg_running_max),
         .lane_valid(lane_valid), .scores(scores),
@@ -42,6 +43,12 @@ module tb_a3_softmax_block;
         .error_code(error_code), .exp_count(exp_count)
     );
 
+    integer cycle_count=0, physical_evals=0, cache_hits=0;
+    always @(posedge clk) if(rst_n)begin
+        cycle_count<=cycle_count+1;
+        if(dut.exp_in_valid && dut.exp_in_ready)physical_evals<=physical_evals+1;
+        if(dut.state==dut.S_OFF_W && dut.exp_cache_hit)cache_hits<=cache_hits+1;
+    end
     always #1 clk = ~clk;
 
     task go; begin
@@ -121,6 +128,7 @@ module tb_a3_softmax_block;
             errors = errors + 1;
         end
 
+        $display("PROFILE reuse=%0d cycles=%0d physical_evals=%0d hits=%0d",REUSE,cycle_count,physical_evals,cache_hits);
         if (errors == 0)
             $display("PASS a3_softmax_block: %0d cases match exp_cr32 on max, rescale and every probability, and 2 refusals fail closed", ncases);
         else

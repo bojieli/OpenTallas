@@ -1,0 +1,90 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "One exact last-successful-result entry for softmax lane offsets. Logical exp_count preserved; no numerical relaxation, lane reordering or extra exponential instances.",
+  "storage_bits": 65,
+  "attention_rows": [
+    {
+      "name": "one_block",
+      "before_cycles": 37206,
+      "after_cycles": 31438,
+      "reduction_percent": 15.502875880234368
+    },
+    {
+      "name": "full_block",
+      "before_cycles": 375558,
+      "after_cycles": 375558,
+      "reduction_percent": 0.0
+    },
+    {
+      "name": "two_blocks",
+      "before_cycles": 417319,
+      "after_cycles": 417319,
+      "reduction_percent": 0.0
+    },
+    {
+      "name": "three_blocks",
+      "before_cycles": 393123,
+      "after_cycles": 393123,
+      "reduction_percent": 0.0
+    },
+    {
+      "name": "multi_row",
+      "before_cycles": 127060,
+      "after_cycles": 112648,
+      "reduction_percent": 11.342672753030069
+    },
+    {
+      "name": "multi_row_blocks",
+      "before_cycles": 837867,
+      "after_cycles": 832103,
+      "reduction_percent": 0.6879373456646465
+    },
+    {
+      "name": "wide_head",
+      "before_cycles": 191750,
+      "after_cycles": 191750,
+      "reduction_percent": 0.0
+    },
+    {
+      "name": "duplicates",
+      "before_cycles": 49181,
+      "after_cycles": 20341,
+      "reduction_percent": 58.64053191273053
+    },
+    {
+      "name": "single_valid",
+      "before_cycles": 14423,
+      "after_cycles": 14419,
+      "reduction_percent": 0.027733481245229008
+    }
+  ],
+  "attention_aggregate_cycle_reduction_percent": 2.2422055038557653,
+  "softmax_corpus": {
+    "reference": "exp_cr32",
+    "cases": 9,
+    "refusals": 2,
+    "before_cycles": 1115880,
+    "after_cycles": 767158,
+    "before_physical_evaluations": 397,
+    "after_physical_evaluations": 276,
+    "cache_hits": 121
+  },
+  "fault_tests": {
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ],
+    "passed": 2,
+    "service": "Fault-controllable stub only for cache protocol; numerical evidence uses real certifier in separate corpora.",
+    "coverage": [
+      "two failed evaluations cannot install result",
+      "successful result reused across starts",
+      "reset revokes cached result"
+    ]
+  },
+  "matched_attention_changed_source": [
+    "rtl/abi3/ot_a3_attention_softmax_block.sv"
+  ],
+  "source_manifest_sha256": "6a05d760238954dd49698133c60f1fdfaa85e5940a56ad20206cc39d43fa6692",
+  "physical": "matched containing softmax synth/STA at 1 ns running with EXP_REUSE 0/1; no routed cost or timing claim"
+}
