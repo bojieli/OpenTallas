@@ -4,7 +4,7 @@ import subprocess
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission','state_remaining_capacity','state_slot_payload_reset'])
+@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission','state_remaining_capacity','state_slot_payload_reset','state_capacity_shared'])
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
 def test_apply_pipeline(tmp_path,simulator,variant):
     old=tmp_path/'old.sv';old.write_text((ROOT/'results/rtl/state_apply_pipeline/before.sv').read_text().replace('module ot_a3_state_controller','module old_state'))

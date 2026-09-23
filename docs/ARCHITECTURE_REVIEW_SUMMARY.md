@@ -1250,3 +1250,19 @@ Both differential simulations pass, including cancellation, refused allocation,
 repeated commits and post-retirement admission. The containing microsequencer
 also passes 65 cases and 4,555 checks per simulator with source hashes verified.
 See the [experiment](../results/rtl/state_slot_payload_reset/comparison.json).
+
+## Reuse stable capacity within the apply pipeline
+
+A retained-capacity refinement removes the duplicated 32-bit capacity capture
+register and reads the selected slot during phase1. Apply excludes admission and
+keeps the slot stable until retirement; cancellation invalidates the pipeline.
+Both differential simulators and the full 65-case microsequencer campaign pass,
+with 4,555 containing checks per simulator and verified source hashes.
+
+Mapped area falls slightly, 3,729.170 → 3,721.310 µm². The commit-counter endpoint
+improves −0.732954 → −0.702425 ns, while whole-block pre-layout slack regresses
+−3.512653 → −3.629617 ns. This remains an isolated refinement; the small area
+benefit is insufficient to replace the retained-capacity physical run or justify
+another route before existing results arrive. The overlap run is in detailed
+routing, and the counter run remains in global-route timing repair.
+See the [comparison](../results/rtl/state_capacity_shared/comparison.json).

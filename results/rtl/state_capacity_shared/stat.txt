@@ -1,0 +1,56 @@
+
+10. Printing statistics.
+
+=== ot_a3_state_controller ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    26449        - wires
+    26449        - wire bits
+      932        - public wires
+      932        - public wire bits
+      932        - ports
+      932        - port bits
+    25812 3.72E+03 cells
+      618   54.063   AND2x2_ASAP7_75t_R
+      432   37.791   AND3x1_ASAP7_75t_R
+      186   18.983   AND4x1_ASAP7_75t_R
+       41    4.782   AND5x1_ASAP7_75t_R
+        8    1.866   AO211x2_ASAP7_75t_R
+     5030  440.024   AO21x1_ASAP7_75t_R
+       70   10.206   AO221x1_ASAP7_75t_R
+        4      0.7   AO222x2_ASAP7_75t_R
+       90    11.81   AO22x1_ASAP7_75t_R
+        7    1.633   AO31x2_ASAP7_75t_R
+      266   31.026   AO32x1_ASAP7_75t_R
+        6    0.875   AO33x2_ASAP7_75t_R
+        5    0.875   AOI211x1_ASAP7_75t_R
+      116    13.53   AOI21x1_ASAP7_75t_R
+       19     2.77   AOI22x1_ASAP7_75t_R
+     2621  993.569   DFFASRHQNx1_ASAP7_75t_R
+     1809  527.504   DFFHQNx1_ASAP7_75t_R
+     1184   51.788   INVx1_ASAP7_75t_R
+      984   129.12   MAJx2_ASAP7_75t_R
+      513   44.877   NAND2x1_ASAP7_75t_R
+       34    5.453   NAND3x1_ASAP7_75t_R
+     4614  403.633   NOR2x1_ASAP7_75t_R
+       29    4.651   NOR3x1_ASAP7_75t_R
+      359   41.874   OA211x2_ASAP7_75t_R
+      688   70.217   OA21x2_ASAP7_75t_R
+      620  108.475   OA222x2_ASAP7_75t_R
+      420   61.236   OA22x2_ASAP7_75t_R
+        6    1.312   OA31x2_ASAP7_75t_R
+        1    0.146   OA33x2_ASAP7_75t_R
+      250    29.16   OAI21x1_ASAP7_75t_R
+      141   20.558   OAI22x1_ASAP7_75t_R
+     1254    109.7   OR2x2_ASAP7_75t_R
+      341   29.831   OR3x1_ASAP7_75t_R
+      295   30.108   OR4x1_ASAP7_75t_R
+      321   37.441   OR5x1_ASAP7_75t_R
+     1871  300.071   XNOR2x2_ASAP7_75t_R
+      559   89.652   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_state_controller': 3721.311720
+     of which used for sequential elements: 1521.073080 (40.87%)
+
