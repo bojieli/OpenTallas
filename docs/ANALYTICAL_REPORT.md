@@ -196,7 +196,11 @@ campaign record under `results/rtl/`:
    full bank rate, with no bank conflicts, in any selection.
 2. **Package links** (`ot_rom_pkg_link`, `rom_pkg_link_campaign.json`).
    Cut-through with credits and 5 cycles of digital framing; the PHY is a
-   delay-line stand-in.
+   delay-line stand-in. On ASAP7 it routes at 1,339 MHz <!-- figure: 1339 src="results/physical_abi3/asap7/rom_pkg_link/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="link routed Fmax MHz" -->
+   (64-byte flits, 16 credits). Setup timing is met at 1 GHz. The one open item
+   is 58 max-slew violations from the flop-built receive buffer, which belongs
+   in an SRAM macro. Routing first found the buffer's read mux as the critical
+   path at 919 MHz; the registered output that fixed it costs one cycle.
 3. **Layer-per-package pipeline** (`ot_rom_layer_stage`,
    `rom_layer_pipeline_campaign.json`). Four packages joined by links carry
    eight users' tokens, and every final hidden state matches a reference model.

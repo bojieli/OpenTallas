@@ -109,12 +109,12 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # match).  This total only ever moves UP -- a drop is the regression the
     # floor exists to catch, and the per-document equality above catches it
     # first.
-    # 700, down from 936, and deliberately: on 2026-09-23 the legacy analytical
+    # 701, down from 936, and deliberately: on 2026-09-23 the legacy analytical
     # reports were deleted at the user's direction and replaced by
-    # docs/ANALYTICAL_REPORT.md (77 annotations). The iso-node headline
+    # docs/ANALYTICAL_REPORT.md (78 annotations). The iso-node headline
     # sections of README.md and docs/OVERVIEW.md went with them. This is the one
     # sanctioned drop; the floor rises again from here.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 700
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 701
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
