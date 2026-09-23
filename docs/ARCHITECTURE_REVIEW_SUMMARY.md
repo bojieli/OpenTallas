@@ -941,3 +941,22 @@ divisors and integrated/retained candidate sources at WIDTH168. Each exercises
 historical RTL, and tests reset interruption/restart. The new geometry supplements
 the existing WIDTH163 tests. Consumer step widths remain unchanged. See the
 [default-geometry comparison](../results/rtl/small_divider_scratch_reset/default_step10/comparison.json).
+
+## Target late admission into the state commit counter
+
+The first apply pipeline's intermediate CTS report moves the worst path to
+slot-descriptor matching through admission into `count_commits[8]`; final routing
+remains pending. A new isolated candidate, based on overlapping apply, expresses
+increment bits as old counter bits XOR parallel lower-bit carry predicates.
+This adds no state or transaction latency. At the commit-counter endpoints,
+matched pre-layout slack improves −1.579195 → −1.484960 ns. Global pre-layout
+slack improves −3.667991 → −3.602740 ns; mapped area grows 3,384.849 →
+3,394.953 µm² (0.30%). All still fail the 1 ns target.
+
+Six directed tests pass for the three apply candidates in both simulators,
+including every commit-counter carry depth and 32-bit wraparound, 90 transactions
+and seven cancellations per test. The new candidate's full microsequencer campaign
+passes 65 cases and 4,555 checks per simulator with verified source hashes.
+The [counter candidate](../results/rtl/state_apply_counter/comparison.json) retains
+endpoint-specific timing scripts/reports and a matched route is active. Production
+state RTL remains unchanged pending a routed timing/latency decision.

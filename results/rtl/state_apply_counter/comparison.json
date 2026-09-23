@@ -1,0 +1,38 @@
+{
+  "scope": "Isolated parallel commit-counter increment on overlapping apply candidate; production unchanged.",
+  "candidate_sha256": "9c45bbe2cc6b50c773b7b9139fe7bec0ead276b0cf37694215032c560f14ae40",
+  "baseline": "results/rtl/state_apply_overlap/candidate.sv",
+  "baseline_sha256": "46daa3f8d9bb1c47dc4bf7e2e05bfd14b7840b2415afd09c6a21b8816d5a6903",
+  "record": "results/physical_abi3/asap7/state_controller/apply_counter_synth_sta_1ns.json",
+  "record_sha256": "7d63f007a08c307596bc9666d7a90a7a695226ffd4c135cb470b2dc7525b4f58",
+  "area_um2": 3394.953,
+  "baseline_area_um2": 3384.849,
+  "prelayout_acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.053580723405713224,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 3639,
+        "setup_wns_ns": -3.602739898596739,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "counter_endpoint_slack_ns": {
+    "before": -1.5791949,
+    "after": -1.4849601
+  },
+  "counter_report_units": "ASAP7 library ps; endpoint-specific reports divide by 1000 for ns.",
+  "verification": "Six tests pass: all three state candidates in both simulators, 90 transactions each, seven cancellations, same-cycle commit counter checks at every carry depth and 32-bit wraparound. Full 65-case microsequencer campaign passes 4555 checks in each simulator.",
+  "latency": "Unchanged from overlap candidate.",
+  "decision": "Await route; endpoint and global prelayout improvements are insufficient for acceptance.",
+  "physical_pending": "results/physical_abi3/asap7/state_controller/pnr_apply_counter_cts12_1ns.json"
+}

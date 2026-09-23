@@ -4,7 +4,7 @@ import subprocess
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap'])
+@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter'])
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
 def test_apply_pipeline(tmp_path,simulator,variant):
     old=tmp_path/'old.sv';old.write_text((ROOT/'results/rtl/state_apply_pipeline/before.sv').read_text().replace('module ot_a3_state_controller','module old_state'))
@@ -25,12 +25,17 @@ task command(input [7:0] op);begin
  sub=op;valid=1;@(negedge clk);valid=0;
  if(dut.op_done!==ref_dut.op_done || dut.op_ok!==ref_dut.op_ok || dut.op_trap_class!==ref_dut.op_trap_class)$fatal(1,"admission");
  if(!dut.op_ok)$fatal(1,"unexpected refusal");
+ if(dut.count_commits!==ref_dut.count_commits)$fatal(1,"commit counter carry");
  @(negedge clk);
 end endtask
 initial begin
  repeat(3)@(negedge clk);rst_n=1;
  for(t=0;t<90;t=t+1)begin
   clear=1;@(negedge clk);clear=0;expected_bytes=0;
+  // Seed boundaries so three real admissions exercise every carry depth,
+  // including wraparound, without billions of setup transactions.
+  dut.count_commits=(t==89)?32'hffffffff:((32'd1<<(t%32))-1);
+  ref_dut.count_commits=dut.count_commits;
   for(i=0;i<3;i=i+1)begin
    id=i+1;policy=t%3;cap=(t%2)?127:128;span=(t*17+i*13)%200+1;
    if(policy==0)cap=1000;
@@ -73,7 +78,7 @@ initial begin
 end
 initial begin #1000000;$fatal(1,"global timeout");end
 endmodule
-'''.replace('PORTS',ports).replace('COMPARE',compare).replace('OVERLAP', '1' if variant=='state_apply_overlap' else '0'))
+'''.replace('PORTS',ports).replace('COMPARE',compare).replace('OVERLAP', '1' if variant!='state_apply_pipeline' else '0'))
     sources=[str(ROOT/'rtl/abi3/ot_a3_pkg.sv'),str(ROOT/f'results/rtl/{variant}/candidate.sv'),str(old),str(bench)]
     if simulator=='iverilog':
         cmd=['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),*sources];run=['vvp',str(tmp_path/'sim')]
