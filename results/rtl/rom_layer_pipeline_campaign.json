@@ -1,15 +1,15 @@
 {
   "claim_boundary": "functional RTL of a four-package layer pipeline: striped-bank reads, accumulate-on-arrival, cut-through package links. Router and arithmetic are stated stand-ins; no macro, PHY, area, timing closure or energy.",
-  "expected_first_token_latency_cycles": 544,
-  "first_token_latency_cycles": 545,
+  "expected_first_token_latency_cycles": 549,
+  "first_token_latency_cycles": 550,
   "input_sha256": {
     "rtl/rom/ot_rom_layer_stage.sv": "475f67bb0e8a004e55346bdd41113174f5710ea7b0750670fb8a1d6167ff3bb0",
-    "rtl/rom/ot_rom_pkg_link.sv": "ae1361d4f627de81f2b54fa46d3e9faf6545aa6f226a781f3e32235ba7f6967f",
+    "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
     "rtl/rom/ot_rom_striped_expert_reader.sv": "2d9198e7eb78d3f755763b0057868a81fa51ae3b58b9cda93b686267c5ec6513",
     "rtl/test/tb_rom_layer_pipeline.sv": "ec86302ca6f65aa03b6531270aec5d6fd25f08f2c2969c70aef2f02c69835c7e",
-    "tools/rtl_rom_layer_pipeline_campaign.py": "ba3b11c4b80d2baa5bd4f0519fbcbe426b35e1c41710d5fa73bfccab97e345bb"
+    "tools/rtl_rom_layer_pipeline_campaign.py": "5ec47efe0318547734ef783da231cdf699a67bafc8e19f232c2c5ac5a1a1078c"
   },
-  "link_latency_cycles": 64,
+  "link_latency_cycles": 65,
   "parameters": {
     "banks": 8,
     "channel_cycles": 60,
@@ -27,55 +27,55 @@
   ],
   "tokens": [
     {
-      "arrival": 548,
+      "arrival": 553,
       "interval": 0,
-      "latency": 545,
+      "latency": 550,
       "tag": 0
     },
     {
-      "arrival": 604,
+      "arrival": 609,
       "interval": 56,
-      "latency": 600,
+      "latency": 605,
       "tag": 1
     },
     {
-      "arrival": 660,
+      "arrival": 665,
       "interval": 56,
-      "latency": 655,
+      "latency": 660,
       "tag": 2
     },
     {
-      "arrival": 716,
+      "arrival": 721,
       "interval": 56,
-      "latency": 710,
+      "latency": 715,
       "tag": 3
     },
     {
-      "arrival": 772,
+      "arrival": 777,
       "interval": 56,
-      "latency": 765,
+      "latency": 770,
       "tag": 4
     },
     {
-      "arrival": 828,
+      "arrival": 833,
       "interval": 56,
-      "latency": 820,
+      "latency": 825,
       "tag": 5
     },
     {
-      "arrival": 884,
+      "arrival": 889,
       "interval": 56,
-      "latency": 875,
+      "latency": 880,
       "tag": 6
     },
     {
-      "arrival": 940,
+      "arrival": 945,
       "interval": 56,
-      "latency": 930,
+      "latency": 935,
       "tag": 7
     }
   ],
-  "users_in_flight": 9.71,
+  "users_in_flight": 9.8,
   "verilator_lint": {
     "flags": [
       "-Wall",

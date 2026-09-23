@@ -31,7 +31,7 @@ OUT = ROOT / "results/rtl/rom_layer_pipeline_campaign.json"
 STAGES, TOKENS, BANKS, EXPERT_WORDS, SELECT, SENSE, CHANNEL = 4, 8, 8, 64, 6, 2, 60
 READ = SELECT * EXPERT_WORDS // BANKS + SENSE + 2           # striped reader, as in its campaign
 STAGE_SERVICE = READ + 4                                    # accept, start, done and send handshakes
-LINK = 2 + CHANNEL + 2
+LINK = 2 + CHANNEL + 2 + 1   # TX, channel, RX, registered output
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ")
 TOKEN = re.compile(r"TOKEN tag=(\d+) latency=(\d+) arrival=(\d+) interval=(\d+)")
 

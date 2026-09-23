@@ -173,8 +173,8 @@ Two things limit the ratio:
 - All ROM link latencies are hardware-floor estimates. The digital part of a
   package hop is now simulated in RTL (`rtl/rom/ot_rom_pkg_link.sv`,
   `python3 tools/rtl_rom_pkg_link_campaign.py`): cut-through forwarding with
-  credits costs 4 cycles of framing, <!-- figure: 4 src="results/rtl/rom_pkg_link_campaign.json#digital_endpoint_cycles" name="link digital endpoint cycles" -->
-  and one user's hidden state arrives 69 ns after it is sent with a 60-cycle PHY, <!-- figure: 69 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
+  credits costs 5 cycles of framing, <!-- figure: 5 src="results/rtl/rom_pkg_link_campaign.json#digital_endpoint_cycles" name="link digital endpoint cycles" -->
+  and one user's hidden state arrives 70 ns after it is sent with a 60-cycle PHY, <!-- figure: 70 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
   with no loss under random back-pressure. So the ~100 ns per hop assumed above
   leaves about 95 ns for SerDes, FEC and flight, which remains unmeasured.
 - The ROM power model reads HC1 low.
@@ -195,12 +195,12 @@ campaign record under `results/rtl/`:
    `rom_striped_bank_campaign.json`). A token's selected experts are read at the
    full bank rate, with no bank conflicts, in any selection.
 2. **Package links** (`ot_rom_pkg_link`, `rom_pkg_link_campaign.json`).
-   Cut-through with credits and 4 cycles of digital framing; the PHY is a
+   Cut-through with credits and 5 cycles of digital framing; the PHY is a
    delay-line stand-in.
 3. **Layer-per-package pipeline** (`ot_rom_layer_stage`,
    `rom_layer_pipeline_campaign.json`). Four packages joined by links carry
    eight users' tokens, and every final hidden state matches a reference model.
-   - The first token takes 545 cycles, <!-- figure: 545 src="results/rtl/rom_layer_pipeline_campaign.json#first_token_latency_cycles" name="pipeline first-token latency" -->
+   - The first token takes 550 cycles, <!-- figure: 550 src="results/rtl/rom_layer_pipeline_campaign.json#first_token_latency_cycles" name="pipeline first-token latency" -->
      which is four stage services plus five hops, as the framework's latency
      law says.
    - Later tokens leave every 56 cycles, one stage's service. <!-- figure: 56 src="results/rtl/rom_layer_pipeline_campaign.json#stage_service_cycles" name="pipeline stage service" -->

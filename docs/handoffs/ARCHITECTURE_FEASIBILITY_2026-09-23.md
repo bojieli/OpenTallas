@@ -45,15 +45,21 @@ The user's standing goal is to redesign, re-implement and simulate both
 machines to best practice. The analytical phase is done; next is
 implementation and simulation.
 
-1. **The three specialisation mechanisms the report credits** are not in RTL:
-   - striped expert banks (bank address map, conflict-free stream schedule);
-   - package-level die-to-die and package-to-package links with bounded
-     latency;
-   - the layer-per-package pipeline.
+1. **The three specialisation mechanisms now have functional RTL.** Each has a
+   scoreboarded simulation and a campaign record (report §9):
+   - `ot_rom_striped_expert_reader`: six experts in 52 cycles, whatever the
+     selection;
+   - `ot_rom_pkg_link`: cut-through, 5 cycles of digital framing including a
+     registered output;
+   - `ot_rom_layer_stage`: a four-package pipeline whose timing matches the
+     framework's latency law, with about ten users in flight.
 
-   Build and simulate them in the existing ROM service RTL
-   ([ROM service RTL](../ROM_SERVICE_RTL.md)) and the V4.1 plan
-   ([V4.1 ROM implementation plan](../DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md)).
+   Next:
+   - get physical evidence for them (ASAP7 synthesis and place-and-route; the
+     link endpoint's pre-layout STA is fan-out-limited, so read it after PnR);
+   - put the striped-bank map into the ROM compiler placement;
+   - wire the layer stage into the ABI 3.0 token path. Coordinate with the
+     concurrent session that owns `compiler/backends/rom`.
 2. **Keep the HBM baseline at best practice** in any simulated comparison:
    expert parallelism, NVL72-class domains, native FP4/FP8.
 3. **Open analytical limits** (report §8):

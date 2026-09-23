@@ -6,7 +6,7 @@ serialisation at 1.8 TB/s (links.rom_board_serdes).  This campaign runs
 rtl/rom/ot_rom_pkg_link.sv under Icarus, lints it under Verilator, and checks
 that a message of F flits arrives with
 
-    first-flit latency = TX_STAGES + CHANNEL_CYCLES + RX_STAGES
+    first-flit latency = TX_STAGES + CHANNEL_CYCLES + RX_STAGES + 1
     last-flit latency  = first-flit latency + F - 1
 
 with a free-running receiver, and without loss or reordering under random
@@ -27,7 +27,8 @@ TB = ROOT / "rtl/test/tb_rom_pkg_link.sv"
 OUT = ROOT / "results/rtl/rom_pkg_link_campaign.json"
 # Must match the testbench parameters.
 FLIT_BYTES, TX, CH, RX, CREDITS = 1800, 2, 60, 2, 128
-FIRST = TX + CH + RX
+OUT_STAGE = 1   # registered output, added after ASAP7 routing found the read mux critical
+FIRST = TX + CH + RX + OUT_STAGE
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH")
 CASE = re.compile(r"CASE label=(\S+) flits=(\d+) first_latency=(\d+) last_latency=(\d+) "
                   r"stalls=(\d+) errors=(\d+)")
@@ -67,7 +68,7 @@ def run() -> dict:
                           "CHANNEL_CYCLES is a delay-line stand-in for SerDes, FEC and flight; no PHY.",
         "parameters": {"flit_bytes": FLIT_BYTES, "tx_stages": TX, "channel_cycles": CH, "rx_stages": RX,
                        "credits": CREDITS, "clock_hz": 1e9},
-        "digital_endpoint_cycles": TX + RX,
+        "digital_endpoint_cycles": TX + RX + OUT_STAGE,
         "one_user_hidden_state_latency_ns": one_user["last_flit_latency_cycles"],
         "cases": cases,
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
