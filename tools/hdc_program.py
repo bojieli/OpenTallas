@@ -129,8 +129,9 @@ def build_program(lay):
 
     def me(mat, x, out, rnd=True, amax=False, oen=True, reads=(), writes=(), **over):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
-                 me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x,
-                 me_round=int(rnd), me_obase=out // W, me_oen=int(oen), me_amax=int(amax))
+                 me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x, me_xks=1,
+                 me_round=int(rnd), me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=int(oen),
+                 me_amax=int(amax))
         f.update(over)
         prog.append((f, set(reads), set(writes)))
 
@@ -138,9 +139,10 @@ def build_program(lay):
         f = dict(f, unit=I.UNIT_SU)
         prog.append((f, set(reads), set(writes)))
 
+    # The sum of squares of x is reduced by the op that produced x (red_sq).
+    sq = dict(red=I.RED_SUM, red_sq=1, r_base=VM["SSX"])
+
     def rmsnorm(src, n, wbase, dst):
-        su(su_nout=1, su_nin=n, a_base=VM[src], a_si=1, ma=I.MA_AA, red=I.RED_SUM, r_base=VM["SSX"],
-           reads={src}, writes={"SSX"})
         su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
            imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
            reads={"SSX"}, writes={"RX"})
@@ -151,7 +153,7 @@ def build_program(lay):
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
     su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W, a_d=I.DYN_EMBED, a_si=1,
-       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"})
+       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X", "SSX"}, **sq)
     for L in range(lay.L):
         rmsnorm("X", H, lay.cb[(L, "in")], "H")
         me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
@@ -180,11 +182,14 @@ def build_program(lay):
            dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
            d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
            reads={"QKV"}, writes={f"V{L}"})
-        for h in range(NH):
-            g = h // group
-            me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, g, 0, 0) // W), VM["QR"] + h * HD,
-               VM["S"] + h * S_STRIDE, rnd=False, me_wsrc=1, me_ts=IL * HD, me_ks=1, me_js=HD,
-               me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QR", f"K{L}"}, writes={f"S{h}"})
+        jsh = group.bit_length() - 1
+        assert 1 << jsh == group and NH <= IL
+        heads = {f"S{h}" for h in range(NH)}
+        # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
+        me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False,
+           me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
+           me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
+           me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QR", f"K{L}"}, writes=heads)
         heads = {f"S{h}" for h in range(NH)}
         sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                   d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
@@ -195,14 +200,15 @@ def build_program(lay):
         su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
            d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
         su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
-        for h in range(NH):
-            g = h // group
-            me(dict(n=HD, tiles=1, k=0, base=lay.v_elem(L, g, 0, 0) // W), VM["S"] + h * S_STRIDE,
-               VM["ATT"] + h * HD, rnd=False, me_wsrc=1, me_ts=IL, me_ks=max(1, HD // W), me_js=1,
-               me_d_k=I.DYN_T, reads={f"S{h}", f"V{L}"}, writes={"ATT"})
+        # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
+        me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, 0, 0, 0) // W), VM["S"], VM["ATT"],
+           rnd=False, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
+           me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
+           me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
+           reads=heads | {f"V{L}"}, writes={"ATT"})
         me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"})
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X", "SSX"}, **sq)
         rmsnorm("X", H, lay.cb[(L, "post")], "H")
         me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={"GU"})
         FF = lay.FF
@@ -215,28 +221,41 @@ def build_program(lay):
            dst=I.DST_VM, d_base=VM["ACT"], d_si=1, reads={"U", "GU"}, writes={"ACT"})
         me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={"ACT"}, writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"})
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X", "SSX"}, **sq)
     rmsnorm("X", H, lay.cb["final"], "H")
     me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
     prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
+    # A matrix-vector op whose only hazard is reading, in order, what the
+    # immediately preceding stream op writes may instead CHASE it: start once
+    # that op has written its first element.  The engine reads x[k] no sooner
+    # than k*I cycles after starting and the stream op writes x[k] k cycles
+    # after its first write, so a read can never overtake its write.
     out, rd, wr = [], set(), set()
+    prev = None
     for f, reads, writes in prog:
         assert all(isinstance(r, str) for r in reads | writes), (reads, writes)
-        if (reads & wr) or (writes & (rd | wr)) or f.get("barrier"):
+        conflict = (reads & wr) | (writes & (rd | wr))
+        chase = (f["unit"] == I.UNIT_ME and conflict and prev is not None and prev[0]["unit"] == I.UNIT_SU
+                 and not (writes & (rd | wr)) and conflict <= prev[2] and f.get("me_xks") == 1
+                 and not f.get("me_xjs") and not f.get("me_wsrc"))
+        if chase:
+            f["me_chase"] = 1
+        elif conflict or f.get("barrier"):
             f["barrier"] = 1
             rd, wr = set(), set()
         rd |= reads
         wr |= writes
         out.append(f)
+        prev = (f, reads, writes)
     return out
 
 
 # -- ISA-level simulator --------------------------------------------------------------
 def dyn_values(lay, token, pos):
     return [0, token * lay.H, pos * lay.half,
-            (pos // W) * lay.HD * W + pos % W, pos * lay.HD, pos + 1, pos // (W * IL) + 1]
+            (pos // W) * lay.HD * W + pos % W, pos * lay.HD, pos + 1, pos // W + 1]
 
 
 class Machine:
@@ -269,26 +288,25 @@ class Machine:
         wb = f["me_wbase"] + dyn[f["me_d_wbase"]]
         xb = f["me_xbase"] + dyn[f["me_d_xbase"]]
         ob = f["me_obase"] + dyn[f["me_d_obase"]]
-        x = self.vm[xb:xb + K]
-        if f["me_round"]:
-            x = G.to_bf16(x)
-        outs = np.arange(n)
-        t, rem = outs // (W * IL), outs % (W * IL)
-        j, l = rem // W, rem % W
-        acc = np.zeros(n, dtype=F)
+        t, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(IL), np.arange(W),
+                                                      indexing="ij"))
+        nidx = (t * IL + j) * W + l
+        keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
+        t, j, l, nidx = t[keep], j[keep], l[keep], nidx[keep]
+        acc = np.zeros(len(t), dtype=F)
         for k in range(K):
-            word = wb + t * f["me_ts"] + k * f["me_ks"] + j * f["me_js"]
-            if f["me_wsrc"]:
-                w = self.kv[word * W + l]
-            else:
-                w = self.wrom_f32(word * W + l)
-            acc = G.add(acc, G.mul(w, x[k]))
-        assert tiles * W * IL >= n
+            word = wb + t * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
+            w = self.kv[word * W + l] if f["me_wsrc"] else self.wrom_f32(word * W + l)
+            x = self.vm[xb + k * f["me_xks"] + j * f["me_xjs"]]
+            if f["me_round"]:
+                x = G.to_bf16(x)
+            acc = G.add(acc, G.mul(w, x))
         if f["me_oen"]:
-            self.vm[ob * W + outs] = acc
+            self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
-            self.logits = acc
-            self.argmax = int(np.argmax(acc))
+            order = np.argsort(nidx)
+            self.logits = acc[order]
+            self.argmax = int(nidx[order][np.argmax(acc[order])])
 
     def stream(self, f, dyn, s, n_out, n_in):
         base = f[f"{s}_base"] + dyn[f[f"{s}_d"]]
@@ -320,7 +338,7 @@ class Machine:
         out = G.mul(s, c) if f["mc"] == I.MC_C else s
         out = np.asarray(out, dtype=F).reshape(-1)
         if f["red"]:
-            seg = out.reshape(n_out, n_in)
+            seg = (G.mul(out, out) if f["red_sq"] else out).reshape(n_out, n_in)
             vals = [G.reduce_sum(v) if f["red"] == I.RED_SUM else np.max(v) for v in seg]
             for o, v in enumerate(vals):
                 self.vm[f["r_base"] + o * f["r_so"]] = v

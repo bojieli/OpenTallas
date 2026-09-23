@@ -10,29 +10,48 @@
 // ((p0+p1)+(p2+p3))+((p4+p5)+(p6+p7)) of three pipelined adder levels.
 // MAX: a running maximum, delayed to the same depth so results leave in order.
 //
-// Results leave DEPTH = 23 cycles after the segment's last element enters.
+// `sq` squares each element first (one multiplier stage, taken by every
+// element so the depth stays fixed).  Results leave DEPTH = 29 cycles after
+// the segment's last element enters.
 // ---------------------------------------------------------------------------
 module ot_hdc_reduce #(
     parameter integer AW = 24
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire          v,
-    input  wire [1:0]    mode,       // 1 SUM, 2 MAX
-    input  wire [31:0]   x,
-    input  wire          ifirst,     // i == 0
-    input  wire          first8,     // i < 8: first element of its partial
-    input  wire          final_,     // i + 8 >= n: last element of its partial
-    input  wire          last,       // i == n - 1
-    input  wire [2:0]    p,          // i mod 8
-    input  wire [AW-1:0] raddr,
+    input  wire          v_in,
+    input  wire [1:0]    mode_in,    // 1 SUM, 2 MAX
+    input  wire          sq,         // reduce x*x
+    input  wire [31:0]   x_in,
+    input  wire          ifirst_in,  // i == 0
+    input  wire          first8_in,  // i < 8: first element of its partial
+    input  wire          final_in,   // i + 8 >= n: last element of its partial
+    input  wire          last_in,    // i == n - 1
+    input  wire [2:0]    p_in,       // i mod 8
+    input  wire [AW-1:0] raddr_in,
     output reg           o_we,
     output reg  [AW-1:0] o_addr,
     output reg  [31:0]   o_data,
     output wire          busy,
     output wire          fault
 );
-    localparam integer DEPTH = 23;
+    localparam integer DEPTH = 23;       // after the squaring stage
+    // -- squaring stage: 5 cycles for every element ----------------------------
+    localparam integer QT = 2 + 1 + 1 + 1 + 1 + 3 + AW + 32 + 1;
+    wire [31:0] xsq, x_d;
+    wire f_sq;
+    wire [5:0] qv;
+    ot_hdc_fmul u_sq (clk, rst_n, v_in && sq, x_in, x_in, xsq, f_sq);
+    ot_hdc_vline #(.D(5)) u_qv (.clk(clk), .rst_n(rst_n), .v(v_in), .vd(qv));
+    wire [1:0]    mode;
+    wire          ifirst, first8, final_, last, sq_d;
+    wire [2:0]    p;
+    wire [AW-1:0] raddr;
+    ot_hdc_delay #(.W(QT), .D(5)) u_qt (.clk(clk), .rst_n(rst_n),
+        .d({mode_in, ifirst_in, first8_in, final_in, last_in, p_in, raddr_in, x_in, sq}),
+        .q({mode, ifirst, first8, final_, last, p, raddr, x_d, sq_d}));
+    wire        v = qv[5];
+    wire [31:0] x = sq_d ? xsq : x_d;
     wire vs = v && (mode == 2'd1);
     wire vm = v && (mode == 2'd2);
 
@@ -135,6 +154,6 @@ module ot_hdc_reduce #(
         o_data <= tv[15] ? l3 : mx_q;
         o_addr <= tv[15] ? t_addr : mx_aq;
     end
-    assign busy = op_v || (|pv) || l0_v || (|tv) || mx_v || (|mv) || o_we;
-    assign fault = f_acc || (|tf);
+    assign busy = (|qv) || op_v || (|pv) || l0_v || (|tv) || mx_v || (|mv) || o_we;
+    assign fault = f_sq || f_acc || (|tf);
 endmodule

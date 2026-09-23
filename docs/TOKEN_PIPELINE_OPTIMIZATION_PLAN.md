@@ -94,7 +94,7 @@ canonical +0. It still decodes 1073.
 **P2 (functional; physical pending).** `rtl/hdc/ot_hdc_sfu.sv` holds three
 pipelines built from the qualified FP32 pipes: exponential (depth 92),
 reciprocal (46) and reciprocal square root (61). Each accepts one operand per
-cycle. All 18,010 golden vectors match bit for bit, fed with random bubbles. <!-- figure: 18010 src="results/rtl/hdc_decode_campaign.json#sfu.vectors" name="HDC special-function vectors checked" -->
+cycle. All 18,010 golden vectors match bit for bit, fed with random bubbles. <!-- figure: 18010 src="results/rtl/hdc_iterations/iter1_baseline.json#sfu.vectors" name="HDC special-function vectors checked" -->
 
 **P3–P4 (done).** The core has four parts:
 
@@ -104,18 +104,51 @@ cycle. All 18,010 golden vectors match bit for bit, fed with random bubbles. <!-
   multiply/add/special-function/multiply pipeline, plus a segmented reducer;
 - `ot_hdc_core`: the sequencer;
 - a program from `tools/hdc_program.py`, with the format in `tools/hdc_isa.py`:
-  178 instructions. <!-- figure: 178 src="results/rtl/hdc_decode_campaign.json#parameters.program_instructions" name="HDC program length" -->
+  178 instructions. <!-- figure: 178 src="results/rtl/hdc_iterations/iter1_baseline.json#parameters.program_instructions" name="HDC program length" -->
 
 The program is first run on an ISA-level model, which is bit-exact with the
 golden. In Verilator the RTL decodes token 1073 at position 15.
 
-- Cycles per token: **107,228**. <!-- figure: 107228 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="HDC cycles per token, first iteration" -->
+- Cycles per token: **107,228**. <!-- figure: 107228 src="results/rtl/hdc_iterations/iter1_baseline.json#single_step.cycles" name="HDC cycles per token, first iteration" -->
 - Every logit, the whole vector memory and the whole KV cache match bit for bit.
 - From an empty KV cache it consumes the 16-token prompt, writing its own KV
   rows, and generates 1073, 382, 93: the torch oracle's tokens.
-- Cycles on which the matrix engine issues: 90,112. <!-- figure: 90112 src="results/rtl/hdc_decode_campaign.json#single_step.me_issue_cycles" name="HDC matrix-engine issue cycles" -->
-- Cycles on which the stream unit issues: 11,729. <!-- figure: 11729 src="results/rtl/hdc_decode_campaign.json#single_step.su_issue_cycles" name="HDC stream-unit issue cycles" -->
-- Cycles on which neither issues: 5,387. <!-- figure: 5387 src="results/rtl/hdc_decode_campaign.json#single_step.both_units_idle_cycles" name="HDC cycles with neither unit issuing" -->
+- Cycles on which the matrix engine issues: 90,112. <!-- figure: 90112 src="results/rtl/hdc_iterations/iter1_baseline.json#single_step.me_issue_cycles" name="HDC matrix-engine issue cycles" -->
+- Cycles on which the stream unit issues: 11,729. <!-- figure: 11729 src="results/rtl/hdc_iterations/iter1_baseline.json#single_step.su_issue_cycles" name="HDC stream-unit issue cycles" -->
+- Cycles on which neither issues: 5,387. <!-- figure: 5387 src="results/rtl/hdc_iterations/iter1_baseline.json#single_step.both_units_idle_cycles" name="HDC cycles with neither unit issuing" -->
 
 Record: `results/rtl/hdc_decode_campaign.json`, from
 `tools/rtl_hdc_decode_campaign.py`.
+
+Each iteration's campaign record is kept in `results/rtl/hdc_iterations/`.
+`results/rtl/hdc_decode_campaign.json` is the current one.
+
+**Iteration 2: attention batching, fused sums of squares, chaining.** None of
+these changes alters the arithmetic.
+
+- *Attention.* The matrix engine now takes an x element per slot
+  (`xbase + k*xks + j*xjs`), a slot-shifted weight stride (`(j >> jsh)*js`),
+  output strides and a lane-mask mode. All eight heads of a layer are one
+  scores op and one weighted-sum op: each slot is a head, and it shares the KV
+  words of its group. That replaces 16 ops of 128+ cycles each.
+- *Norms.* The op that produces x (embedding, residual add) also reduces
+  x·x through a squaring stage in front of the reducer. The separate
+  sum-of-squares pass of every hidden-size norm is gone.
+- *Chaining.* A matrix-vector op whose only hazard is the preceding stream
+  op's output starts when that op writes its first element, not when it
+  drains. It reads x[k] no sooner than k·8 cycles after starting, so it cannot
+  overtake the writer.
+
+Results:
+
+- program: 113 instructions, 13 of them chained; <!-- figure: 113 src="results/rtl/hdc_iterations/iter2_attention_batch_chaining.json#parameters.program_instructions" name="HDC program length, iteration 2" -->
+- cycles per token: **95,590**; <!-- figure: 95590 src="results/rtl/hdc_iterations/iter2_attention_batch_chaining.json#single_step.cycles" name="HDC cycles per token, iteration 2" -->
+  every logit, the vector memory and the KV cache are still bit-exact;
+- matrix-engine issue cycles: 82,944; <!-- figure: 82944 src="results/rtl/hdc_iterations/iter2_attention_batch_chaining.json#single_step.me_issue_cycles" name="HDC matrix-engine issue cycles, iteration 2" -->
+  the weight matrices account for about 82K of them.
+
+The limiter is now the 16-lane matrix engine, and only more lanes move it. At
+hidden size 128, a lane count above 16 needs outputs × 8 interleave ≥ lanes × 8,
+which the 128-row matrices cannot supply. Iteration 3 therefore splits K for
+narrow matrices: a deterministic change to the accumulation order, specified in
+the golden.

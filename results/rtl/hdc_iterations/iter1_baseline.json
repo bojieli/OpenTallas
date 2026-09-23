@@ -8,7 +8,7 @@
     ],
     "generation_steps": [
       {
-        "cycles": 95590,
+        "cycles": 107228,
         "fault": 0,
         "input": 271,
         "oracle": 1073,
@@ -16,7 +16,7 @@
         "position": 15
       },
       {
-        "cycles": 96230,
+        "cycles": 107580,
         "fault": 0,
         "input": 1073,
         "oracle": 382,
@@ -24,7 +24,7 @@
         "position": 16
       },
       {
-        "cycles": 96358,
+        "cycles": 107932,
         "fault": 0,
         "input": 382,
         "oracle": 93,
@@ -41,32 +41,32 @@
     "pass": true,
     "prompt_tokens": 16,
     "steps": 18,
-    "total_cycles": 1706668
+    "total_cycles": 1888920
   },
   "input_sha256": {
-    "rtl/hdc/ot_hdc_core.sv": "0a5869a50e911d6c1d371aa003a0dc7de3e36169cd22788714554f6cd524d0cc",
+    "rtl/hdc/ot_hdc_core.sv": "9f3617fd3eda5f7d9071f8aafd973253acc5bbaec5ef42832fb14443eabadc46",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fpu.sv": "9252282c376d86b58586da3ff1c7ba8cacd854c9308aca19b588b101c2dcdd1e",
-    "rtl/hdc/ot_hdc_isa.svh": "d37fe2ccb8800585722e841f87fbb7c3d9f80795c46ac028a71610f2ecdd3f50",
-    "rtl/hdc/ot_hdc_matvec.sv": "64c9dd108e97c34047f38c098a5ee2ce268d1f4de8b0353941ce445f6ebbd44f",
-    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_isa.svh": "b475d357a0ca8ceaabb34dfab0d0a3bed82c3e9ae868850c9029f4bee6d4cfcd",
+    "rtl/hdc/ot_hdc_matvec.sv": "7e942618c88ea159abf55d658dd8a666bbc63dcb66e991a7a5b85c584160acef",
+    "rtl/hdc/ot_hdc_reduce.sv": "93ea18961771d69f9cd9623abba4c33a9ff08494aaf83734419544f0f46d1f98",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
-    "rtl/hdc/ot_hdc_stream.sv": "753f1a86220bbc1b0a8ef3c5f4acb4c398c504b043102cdb73f26cdb84c33b1d",
+    "rtl/hdc/ot_hdc_stream.sv": "15ad6c5ea2d52d4e7e86c83c5d143f1d55a879b18bb412047ae9ef0f32bf3902",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/test/hdc_core_harness.cpp": "5d659a8d6994d74a2cc6d28a1e97738c74850a3df389df5aaba1d475d0093685",
     "rtl/test/tb_hdc_core.sv": "93ed151cc2b41ca3a3e7209a7b0ac0ab8e637b9e98c69c4c1272ef4757beaf2e",
     "rtl/test/tb_hdc_sfu.sv": "b38a4a13524d1a7746ed00fc8ab44d6ad130c983ca5a0db69ab10e67c57b1965",
     "tools/hdc_golden.py": "459d999accb2f2f7d7f5765c96f6f5c88b0305bb6eae4a79e5ce61f222b2d06c",
-    "tools/hdc_isa.py": "aaae7826f2b3c99530832b8a7c790f96e0a070627666dc48da7a4c5f77ce640a",
-    "tools/hdc_program.py": "10db16698e22fd8f1ae575fcfbc8dcb752c062df7004602fb16765cb6f532a62",
+    "tools/hdc_isa.py": "e16c01de5042dbaae38b9b3c2378f263a167d0d83ff857d373d09144b2a8fda0",
+    "tools/hdc_program.py": "78bb8093d8d2e02355914fb0ecd354a33b56baea49ee4e964b28ab568eb044cd",
     "tools/rtl_hdc_decode_campaign.py": "734106111cdd5778f9a70d8ef3f8c1c4eec133528f50b7eddbd3741645d3def2"
   },
   "parameters": {
     "interleave": 8,
     "kv_positions": 64,
     "lanes": 16,
-    "program_instructions": 113
+    "program_instructions": 178
   },
   "schema": "opentallas.hdc-decode-campaign.v1",
   "sfu": {
@@ -76,17 +76,17 @@
     "vectors": 18010
   },
   "single_step": {
-    "both_units_idle_cycles": 4432,
-    "cycles": 95590,
+    "both_units_idle_cycles": 5387,
+    "cycles": 107228,
     "fault": 0,
     "kv_cache_mismatches": 0,
     "logit_mismatches": 0,
-    "me_issue_cycles": 82944,
+    "me_issue_cycles": 90112,
     "next_token": 1073,
     "oracle_next_token": 1073,
     "pass": true,
     "position": 15,
-    "su_issue_cycles": 10577,
+    "su_issue_cycles": 11729,
     "token": 271,
     "vector_memory_mismatches": 0
   },

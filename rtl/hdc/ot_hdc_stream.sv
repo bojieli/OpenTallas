@@ -44,6 +44,7 @@ module ot_hdc_stream #(
     input  wire [1:0]        i_dst,
     input  wire [AW-1:0]     i_dbase, i_dso, i_dsi,
     input  wire [1:0]        i_red,
+    input  wire              i_redsq,
     input  wire [AW-1:0]     i_rbase, i_rso,
     input  wire [31:0]       i_imm1, i_imm2,
     // reads
@@ -72,6 +73,8 @@ module ot_hdc_stream #(
     output wire              red_we,
     output wire [AW-1:0]     red_addr,
     output wire [31:0]       red_data,
+    // the latest accepted instruction has written its first element
+    output reg               first_written,
     output wire              fault
 );
     localparam integer LW = $clog2(W);
@@ -92,7 +95,7 @@ module ot_hdc_stream #(
     reg [NW:0]       fin_th;                      // nin - 8 (signed)
     reg [AW-1:0]     rowa, rowb, rowc, rowd, cura, curb, curc, curd, rrow;
     reg [AW-1:0]     aso, asi, bso, bsi, cso, csi, dso, dsi, rso;
-    reg              asrc, bsrc, csrc, mc;
+    reg              asrc, bsrc, csrc, mc, redsq;
     reg [1:0]        ma, mb, dst, red;
     reg [2:0]        ad;
     reg [31:0]       imm1, imm2;
@@ -125,7 +128,7 @@ module ot_hdc_stream #(
             aso <= i_aso; asi <= i_asi; bso <= i_bso; bsi <= i_bsi; cso <= i_cso; csi <= i_csi;
             dso <= i_dso; dsi <= i_dsi; rso <= i_rso;
             asrc <= i_asrc; bsrc <= i_bsrc; csrc <= i_csrc; mc <= i_mc;
-            ma <= i_ma; mb <= i_mb; ad <= i_ad; dst <= i_dst; red <= i_red;
+            ma <= i_ma; mb <= i_mb; ad <= i_ad; dst <= i_dst; red <= i_red; redsq <= i_redsq;
             imm1 <= i_imm1; imm2 <= i_imm2;
         end else if (active) begin
             if (!i_last_r) begin
@@ -144,7 +147,7 @@ module ot_hdc_stream #(
     // -- address cycle (c') -----------------------------------------------------
     // Tag fields of one element.
     reg          e_v;
-    reg          e_asrc, e_bsrc, e_csrc, e_mc;
+    reg          e_asrc, e_bsrc, e_csrc, e_mc, e_redsq;
     reg [1:0]    e_ma, e_mb, e_dst, e_red;
     reg [2:0]    e_ad;
     reg [31:0]   e_imm1, e_imm2;
@@ -165,7 +168,7 @@ module ot_hdc_stream #(
     always @(posedge clk) begin
         va_addr <= cura; wrom_addr <= cura >> LW; e_lane <= cura[LW-1:0];
         vb_addr <= curb; vc_addr <= curc; crom_addr <= bsrc ? curb : curc;
-        e_asrc <= asrc; e_bsrc <= bsrc; e_csrc <= csrc; e_mc <= mc;
+        e_asrc <= asrc; e_bsrc <= bsrc; e_csrc <= csrc; e_mc <= mc; e_redsq <= redsq;
         e_ma <= ma; e_mb <= mb; e_ad <= ad; e_dst <= dst; e_red <= red;
         e_imm1 <= imm1; e_imm2 <= imm2;
         e_ifirst <= (i == 0); e_first8 <= (i < 8);
@@ -174,8 +177,8 @@ module ot_hdc_stream #(
     end
 
     // -- S1 (memories answer) -> S2 (capture) -> S3 (operand select) -----------
-    localparam integer FT = 1+1+1+1 + 2+2+2+2 + 3 + 32+32 + LW + 1+1+1+1 + 3 + AW + AW;
-    wire [FT-1:0] e_tag = {e_asrc, e_bsrc, e_csrc, e_mc, e_ma, e_mb, e_dst, e_red, e_ad, e_imm1, e_imm2,
+    localparam integer FT = 1+1+1+1+1 + 2+2+2+2 + 3 + 32+32 + LW + 1+1+1+1 + 3 + AW + AW;
+    wire [FT-1:0] e_tag = {e_asrc, e_bsrc, e_csrc, e_mc, e_redsq, e_ma, e_mb, e_dst, e_red, e_ad, e_imm1, e_imm2,
                            e_lane, e_ifirst, e_first8, e_final, e_last, e_p, e_daddr, e_raddr};
     reg [FT-1:0] s1_tag;
     reg          s1_v, s2_v, s3_v;
@@ -183,7 +186,7 @@ module ot_hdc_stream #(
         if (!rst_n) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
         else begin s1_v <= e_v; s2_v <= s1_v; s3_v <= s2_v; end
     end
-    wire          t_asrc, t_bsrc, t_csrc, t_mc;
+    wire          t_asrc, t_bsrc, t_csrc, t_mc, t_redsq;
     wire [1:0]    t_ma, t_mb, t_dst, t_red;
     wire [2:0]    t_ad;
     wire [31:0]   t_imm1, t_imm2;
@@ -192,13 +195,13 @@ module ot_hdc_stream #(
     wire [2:0]    t_p;
     wire [AW-1:0] t_daddr, t_raddr;
     always @(posedge clk) s1_tag <= e_tag;
-    assign {t_asrc, t_bsrc, t_csrc, t_mc, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
+    assign {t_asrc, t_bsrc, t_csrc, t_mc, t_redsq, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
             t_lane, t_ifirst, t_first8, t_final, t_last, t_p, t_daddr, t_raddr} = s1_tag;
     reg [31:0] s2_a, s2_blo, s2_bhi, s2_c, s2_imm1, s2_imm2;
     reg [1:0]  s2_ma, s2_mb;
     reg [2:0]  s2_ad;
     // tail tag: travels S2 -> write
-    localparam integer TT = 1 + 2 + AW + 2 + AW + 1+1+1+1 + 3;
+    localparam integer TT = 1 + 2 + AW + 2 + 1 + AW + 1+1+1+1 + 3;
     reg [TT-1:0] s2_tail;
     always @(posedge clk) begin
         s2_a <= t_asrc ? {wrom_q[16*t_lane +: 16], 16'h0000} : va_q;
@@ -207,7 +210,7 @@ module ot_hdc_stream #(
         s2_c <= (t_csrc && !t_bsrc) ? crom_q[31:0] : vc_q;
         s2_imm1 <= t_imm1; s2_imm2 <= t_imm2;
         s2_ma <= t_ma; s2_mb <= t_mb; s2_ad <= t_ad;
-        s2_tail <= {t_mc, t_dst, t_daddr, t_red, t_raddr, t_ifirst, t_first8, t_final, t_last, t_p};
+        s2_tail <= {t_mc, t_dst, t_daddr, t_red, t_redsq, t_raddr, t_ifirst, t_first8, t_final, t_last, t_p};
     end
     reg [31:0] ma_x, ma_y, mb_x, mb_y, s3_a, s3_blo, s3_c, s3_imm2;
     reg [1:0]  s3_ma, s3_mb;
@@ -310,10 +313,11 @@ module ot_hdc_stream #(
     ot_hdc_delay #(.W(32 + TT), .D(5)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_tail}), .q({byp5, o_tail}));
     wire          o_mc;
     wire [1:0]    o_dst, o_red;
+    wire          o_redsq;
     wire [AW-1:0] o_daddr, o_raddr;
     wire          o_ifirst, o_first8, o_final, o_last;
     wire [2:0]    o_p;
-    assign {o_mc, o_dst, o_daddr, o_red, o_raddr, o_ifirst, o_first8, o_final, o_last, o_p} = o_tail;
+    assign {o_mc, o_dst, o_daddr, o_red, o_redsq, o_raddr, o_ifirst, o_first8, o_final, o_last, o_p} = o_tail;
     wire [31:0] out = o_mc ? mc_out : byp5;
     wire        ov = vmc[5];
     assign retire = ov;
@@ -331,7 +335,7 @@ module ot_hdc_stream #(
     end
 
     // -- reducer ------------------------------------------------------------------
-    reg          rd_v;
+    reg          rd_v, rd_sq;
     reg [1:0]    rd_mode;
     reg [31:0]   rd_x;
     reg          rd_ifirst, rd_first8, rd_final, rd_last;
@@ -342,14 +346,32 @@ module ot_hdc_stream #(
         else rd_v <= ov && o_red != 2'd0;
     end
     always @(posedge clk) begin
-        rd_mode <= o_red; rd_x <= out; rd_ifirst <= o_ifirst; rd_first8 <= o_first8;
+        rd_mode <= o_red; rd_sq <= o_redsq; rd_x <= out; rd_ifirst <= o_ifirst; rd_first8 <= o_first8;
         rd_final <= o_final; rd_last <= o_last; rd_p <= o_p; rd_addr <= o_raddr;
     end
     wire f_red;
-    ot_hdc_reduce #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v(rd_v), .mode(rd_mode), .x(rd_x),
-        .ifirst(rd_ifirst), .first8(rd_first8), .final_(rd_final), .last(rd_last), .p(rd_p),
-        .raddr(rd_addr), .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy),
+    ot_hdc_reduce #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
+        .sq(rd_sq), .x_in(rd_x), .ifirst_in(rd_ifirst), .first8_in(rd_first8), .final_in(rd_final),
+        .last_in(rd_last), .p_in(rd_p), .raddr_in(rd_addr), .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy),
         .fault(f_red));
+
+    // Element chaining: count emitted and retired elements; the latest
+    // instruction has written its first element once the retired count passes
+    // the emitted count at its acceptance (retire -> write register, +1).
+    reg [15:0] n_emit, n_retire, first_mark;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            n_emit <= 0; n_retire <= 0; first_mark <= 0; first_written <= 1'b0;
+        end else begin
+            n_emit <= n_emit + (emit ? 16'd1 : 16'd0);
+            n_retire <= n_retire + (retire ? 16'd1 : 16'd0);
+            if (accept) begin
+                first_mark <= n_emit; first_written <= 1'b0;
+            end else if (!first_written && $signed(n_retire - first_mark) > 0) begin
+                first_written <= 1'b1;
+            end
+        end
+    end
 
     assign idle = !active && inflight == 0 && !vm_we && !kv_we && !rd_v && !reducer_busy;
     assign fault = fa | fb_ | fad | f_exp | f_rcp | f_rsq | fmc | f_red;

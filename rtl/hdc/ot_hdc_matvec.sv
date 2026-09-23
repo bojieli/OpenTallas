@@ -10,11 +10,14 @@
 // no stall: the issue loop never waits, because weights come from a ROM (or
 // the KV SRAM) at a fixed latency.
 //
-// Element order: tile t, then k, then slot j.  Output n = (t*IL + j)*W + l is
-// lane l's slot j of tile t; its weight is lane l of word
-// base + t*ts + k*ks + j*js.  x[k] is read once per k, BF16-rounded (RNE) when
-// `round` is set.  Results are written one W-wide word per slot on the last k.
-// An optional argmax (lowest index on ties) watches the result stream.
+// Element order: tile t, then k, then slot j.  Lane l of slot j in tile t
+// multiplies lane l of weight word  wbase + t*ts + k*ks + (j >> jsh)*js  by the
+// broadcast x element  xbase + k*xks + j*xjs  (BF16-rounded, RNE, when `round`)
+// and, after the last k, writes lane l of word  obase + t*ots + j*ojs.
+// A lane is valid when (t*IL + j)*W + l < nout (mmode 0: one vector over rows,
+// row n = (t*IL + j)*W + l) or t*W + l < nout (mmode 1: every slot its own
+// vector -- one attention head per slot, sharing the KV words of its group).
+// An optional argmax (lowest row on ties) watches the mmode-0 result stream.
 //
 // Timing from an issue cycle c: memories return at c+1 (synchronous read),
 // operands are captured at c+2 and conditioned at c+3, the product leaves the
@@ -42,8 +45,14 @@ module ot_hdc_matvec #(
     input  wire [AW-1:0]     i_ks,
     input  wire [AW-1:0]     i_js,
     input  wire [AW-1:0]     i_xbase,
+    input  wire [AW-1:0]     i_xks,
+    input  wire [AW-1:0]     i_xjs,
+    input  wire [2:0]        i_jsh,
     input  wire              i_round,
     input  wire [AW-1:0]     i_obase,
+    input  wire [AW-1:0]     i_ots,
+    input  wire [AW-1:0]     i_ojs,
+    input  wire              i_mmode,
     input  wire              i_oen,
     input  wire              i_amax,
     // weight ROM
@@ -77,12 +86,15 @@ module ot_hdc_matvec #(
     // -- issue loop -----------------------------------------------------------
     reg              active;
     reg [NW-1:0]     nout_r, tiles_r, k_r;
-    reg              wsrc_r, round_r, oen_r, amax_r;
-    reg [AW-1:0]     ts_r, ks_r, js_r;
+    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
+    reg [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, ots_r, ojs_r;
+    reg [2:0]        jsh_r;
     reg [NW-1:0]     t, k;
     reg [$clog2(IL)-1:0] j;
-    reg [AW-1:0]     cur, base_k, base_t, xk, oa, ot;
+    reg [AW-1:0]     cur, base_k, base_t, xk, xc, oa, ot;
+    reg [NW:0]       lb;                   // t*W: first lane index of the tile (mmode 1)
     reg [NW:0]       nb, nb_t;             // first output index of the current slot / tile
+    reg [AW-1:0]     xk_base;              // xbase, kept for the next tile
     reg              t_last, k_last;
     wire             j_last = (j == IL - 1);
 
@@ -98,33 +110,38 @@ module ot_hdc_matvec #(
                 active <= 1'b1;
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
-                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js;
+                mmode_r <= i_mmode;
+                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                xks_r <= i_xks; xjs_r <= i_xjs; ots_r <= i_ots; ojs_r <= i_ojs;
                 t <= 0; k <= 0; j <= 0;
                 t_last <= (i_tiles == 1); k_last <= (i_k == 1);
                 cur <= i_wbase; base_k <= i_wbase; base_t <= i_wbase;
-                xk <= i_xbase; oa <= i_obase; ot <= i_obase;
-                nb <= 0; nb_t <= 0;
+                xk <= i_xbase; xc <= i_xbase; xk_base <= i_xbase; oa <= i_obase; ot <= i_obase;
+                nb <= 0; nb_t <= 0; lb <= 0;
             end
         end else begin
             // this cycle's element: (t, k, j) at `cur`
             wrom_re <= !wsrc_r; kv_re <= wsrc_r;
             wrom_addr <= cur; kv_addr <= cur;
-            x_re <= (j == 0); x_addr <= xk;
+            x_re <= 1'b1; x_addr <= xc;
             if (!j_last) begin
-                j <= j + 1'b1; cur <= cur + js_r; oa <= oa + 1'b1; nb <= nb + W;
+                j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
+                //: the weight word advances once per 2^jsh slots
+                if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur + js_r;
             end else begin
                 j <= 0; nb <= nb_t; oa <= ot;
                 if (!k_last) begin
                     k <= k + 1'b1; k_last <= (k + 2 == k_r);
-                    base_k <= base_k + ks_r; cur <= base_k + ks_r; xk <= xk + 1'b1;
+                    base_k <= base_k + ks_r; cur <= base_k + ks_r;
+                    xk <= xk + xks_r; xc <= xk + xks_r;
                 end else begin
                     k <= 0; k_last <= (k_r == 1);
-                    xk <= xk - (k_r - 1'b1);
+                    xk <= xk_base; xc <= xk_base;
                     if (!t_last) begin
                         t <= t + 1'b1; t_last <= (t + 2 == tiles_r);
                         base_t <= base_t + ts_r; base_k <= base_t + ts_r; cur <= base_t + ts_r;
-                        ot <= ot + IL; oa <= ot + IL;
-                        nb_t <= nb_t + W * IL; nb <= nb_t + W * IL;
+                        ot <= ot + ots_r; oa <= ot + ots_r;
+                        nb_t <= nb_t + W * IL; nb <= nb_t + W * IL; lb <= lb + W;
                     end else begin
                         active <= 1'b0;
                     end
@@ -145,7 +162,7 @@ module ot_hdc_matvec #(
     always @(posedge clk) begin
         e_first <= (k == 0); e_last <= k_last;
         e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r;
-        e_oa <= oa; e_nb <= nb; e_rem <= {1'b0, nout_r} - nb;
+        e_oa <= oa; e_nb <= nb; e_rem <= {1'b0, nout_r} - (mmode_r ? lb : nb);
     end
 
     // -- operand capture (c+2) and conditioning (c+3) ------------------------
@@ -184,7 +201,7 @@ module ot_hdc_matvec #(
             s2_w[32*l +: 32] <= s1_wsrc ? kv_q[32*l +: 32] : {wrom_q[16*l +: 16], 16'h0000};
         s2_x <= x_q;
     end
-    // Stage 3 (c+3): BF16-round x once per k and hold it for the IL slots.
+    // Stage 3 (c+3): BF16-round x (every element carries its own x).
     reg          s3_v, s3_first;
     reg [31:0]   x_hold;
     reg [W*32-1:0] s3_w;
@@ -196,7 +213,7 @@ module ot_hdc_matvec #(
     always @(posedge clk) begin
         s3_first <= s2_first;
         s3_w <= s2_w;
-        if (s2_xnew) x_hold <= s2_round ? x_bf16 : s2_x;
+        x_hold <= s2_round ? x_bf16 : s2_x;
     end
     // The rest of the tag rides a delay line from c+3 to the adder output (c+13).
     localparam integer TW = 1 + 1 + 1 + AW + (NW + 1) + W;
@@ -295,7 +312,7 @@ module ot_hdc_matvec #(
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
             if (go && ready && i_amax) am_any <= 1'b0;
-            else if (tv[LV] && top_v && (!am_any || top_key > best_key)) begin
+            else if (tv[LV] && top_v && (!am_any || top_key > best_key)) begin  // mmode 0 rows
                 am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
             end
         end

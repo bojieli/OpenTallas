@@ -6,9 +6,14 @@ The core runs a static program of macro-operations.  Two units execute them:
 * ME, the matrix-vector engine: W lanes x I interleaved outputs, each lane a
   pipelined FP32 multiply feeding a pipelined FP32 add whose result circulates
   back after exactly I cycles, so every output accumulates its K products in
-  order at one MAC per lane per cycle.  Output n of tile t sits in lane n mod W
-  of slot j = (n div W) mod I; the weight word for (t, k, j) is at
-  base + t*ts + k*ks + j*js.
+  order at one MAC per lane per cycle.  Element (tile t, k, slot j) of lane l:
+      weight  lane l of word  wbase + t*ts + k*ks + (j >> jsh)*js
+      x       element         xbase + k*xks + j*xjs
+      result  lane l of word  obase + t*ots + j*ojs   (after the last k)
+  valid when (t*I + j)*W + l < nout (mmode 0, rows) or t*W + l < nout (mmode 1,
+  lanes: every slot is its own vector, e.g. one attention head per slot).
+  `chase`: may start once the stream unit's latest instruction has written its
+  first element (element chaining) instead of waiting for a barrier.
 * SU, the stream unit: a 2-D loop (outer o, inner i) over elements.  Each
   element passes a fixed pipeline
 
@@ -18,7 +23,8 @@ The core runs a static program of macro-operations.  Two units execute them:
       out = S (* C | bypass)
 
   and may feed a segmented reducer (one segment per outer iteration): SUM in
-  P=8 interleaved partials plus a pairwise tree, or MAX.
+  P=8 interleaved partials plus a pairwise tree, or MAX; `red_sq` reduces
+  out*out instead of out (a sum of squares fused into the producing op).
 
 Address fields are element addresses (ME weight/output bases are word
 addresses).  A base may add one of the DYN values the sequencer derives from
@@ -45,6 +51,7 @@ D = 3    # DYN select width
 UNIT_END, UNIT_ME, UNIT_SU = 0, 1, 2
 # DYN values (sequencer): 0 is zero.
 DYN_NONE, DYN_EMBED, DYN_ROPE, DYN_KWRITE, DYN_VWRITE, DYN_T, DYN_TTILES = range(7)
+# DYN_TTILES = pos // W + 1: lane tiles covering the context (mmode 1).
 # SU source / mode encodings
 SRC_VM, SRC_ALT = 0, 1                 # ALT: A -> weight ROM (bf16), B/C -> constant ROM
 MA_BYP, MA_AB, MA_AA, MA_AIMM = range(4)
@@ -63,6 +70,8 @@ FIELDS = [
     ("me_xbase", A), ("me_round", 1), ("me_obase", A), ("me_oen", 1), ("me_amax", 1),
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
+    ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
+    ("me_chase", 1),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nin", D),
     ("a_src", 1), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D),
@@ -70,7 +79,7 @@ FIELDS = [
     ("c_src", 1), ("c_base", A), ("c_so", A), ("c_si", A), ("c_d", D),
     ("ma", 2), ("mb", 2), ("ad", 3), ("sfu", 2), ("mc", 1),
     ("dst", 2), ("d_base", A), ("d_so", A), ("d_si", A), ("d_d", D),
-    ("red", 2), ("r_base", A), ("r_so", A),
+    ("red", 2), ("r_base", A), ("r_so", A), ("red_sq", 1),
     ("imm1", 32), ("imm2", 32),
 ]
 

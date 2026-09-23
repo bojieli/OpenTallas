@@ -108,18 +108,24 @@ module ot_hdc_core #(
     reg [1:0]    d_unit;
     reg          d_barrier;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax;
-    reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase;
+    reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
+    reg [2:0]    me_jsh;
     reg [NW-1:0] su_nout, su_nin;
     reg          a_src, b_src, c_src, mc;
     reg [AW-1:0] a_base, a_so, a_si, b_base, b_so, b_si, c_base, c_so, c_si;
     reg [AW-1:0] d_base, d_so, d_si, r_base, r_so;
     reg [1:0]    ma, mb, sfu, dst, red;
+    reg          redsq;
     reg [2:0]    ad;
     reg [31:0]   imm1, imm2;
 
+    wire su_first_written;
     wire unit_ready = (d_unit == 2'd1) ? me_ready : su_ready;
     wire drained = me_idle && su_idle && !me_go && !su_go;
+    //: A chasing matrix-vector op waits only for the latest stream op's first
+    //: write; su_go is excluded because first_written is stale on that cycle.
+    wire chased = su_first_written && !su_go;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -143,7 +149,7 @@ module ot_hdc_core #(
                         if (drained) begin
                             done <= 1'b1; next_token <= am_idx; st <= S_IDLE;
                         end
-                    end else if ((!d_barrier || drained) && unit_ready) begin
+                    end else if ((d_barrier ? drained : (!d_chase || chased)) && unit_ready) begin
                         me_go <= (d_unit == 2'd1); su_go <= (d_unit == 2'd2);
                         st <= S_GO;
                     end
@@ -162,7 +168,7 @@ module ot_hdc_core #(
         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
         dyn[4] <= pos_r * HD;
         dyn[5] <= pos_r + 1;
-        dyn[6] <= (pos_r >> LT) + 1;
+        dyn[6] <= (pos_r >> LW) + 1;
         dyn[7] <= 0;
     end
 
@@ -177,6 +183,8 @@ module ot_hdc_core #(
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
         me_obase <= `F(ME_OBASE) + dyn[`F(ME_D_OBASE)];
+        me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
+        me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE); d_chase <= `F(ME_CHASE);
         su_nout <= `F(SU_NOUT);
         su_nin <= `F(SU_NIN) + dyn[`F(SU_D_NIN)];
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + dyn[`F(A_D)]; a_so <= `F(A_SO); a_si <= `F(A_SI);
@@ -184,7 +192,7 @@ module ot_hdc_core #(
         c_src <= `F(C_SRC); c_base <= `F(C_BASE) + dyn[`F(C_D)]; c_so <= `F(C_SO); c_si <= `F(C_SI);
         ma <= `F(MA); mb <= `F(MB); ad <= `F(AD); sfu <= `F(SFU); mc <= `F(MC);
         dst <= `F(DST); d_base <= `F(D_BASE) + dyn[`F(D_D)]; d_so <= `F(D_SO); d_si <= `F(D_SI);
-        red <= `F(RED); r_base <= `F(R_BASE); r_so <= `F(R_SO);
+        red <= `F(RED); redsq <= `F(RED_SQ); r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2);
     end
     `undef F
@@ -195,8 +203,9 @@ module ot_hdc_core #(
     ot_hdc_matvec #(.W(W), .IL(IL), .AW(AW), .NW(NW)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
-        .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_round(me_round),
-        .i_obase(me_obase), .i_oen(me_oen), .i_amax(me_amax),
+        .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
+        .i_jsh(me_jsh), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
+        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
@@ -214,7 +223,7 @@ module ot_hdc_core #(
         .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
         .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc),
         .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
-        .i_red(red), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
+        .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
         .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
         .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
         .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
@@ -223,7 +232,7 @@ module ot_hdc_core #(
         .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
-        .fault(su_fault));
+        .first_written(su_first_written), .fault(su_fault));
 
     // The embedding read is the only stream use of the weight ROM; a barrier
     // keeps it apart from matrix-vector reads.
