@@ -755,3 +755,35 @@ the engine commit. Matched physical measurements use that workspace variant;
 both the measured engine and task-only committed engine snapshots are retained
 with source inventories. See the [specialization comparison](../results/rtl/softmax_exp_only/comparison.json)
 and [reproduction notes](../results/rtl/softmax_exp_only/reproduce.md).
+
+## Balanced multiplier selected after matched final routes
+
+Current matched chain16/tree16 final extracted routes establish the tree's
+benefit at the tested 1 ns ASAP7 TT point. Chain16 has −0.312287 ns setup
+slack and 323 setup violations; tree16 has +0.117856 ns and zero. Both have
+clean hold and physical checks. Routed cell area falls 1,745.660 → 1,714.480
+µm² (1.79%). All source bindings and seven retained artifacts per route verify.
+
+The balanced compressor reduction is now integrated into `ot_wide_mul_seq`,
+retaining its public interface, sixteen-bit consumer chunk defaults and
+transaction cycles. Its arithmetic body matches the qualified tree candidate
+exactly after removing comments/whitespace. The differential candidate test now
+uses the retained historical chain, avoiding accidental self-comparison.
+The integrated Icarus exact-product test passes 169 products at four chunks;
+full exp/sigmoid passes 4,200 cases and 6,637,132 checks; real softmax passes
+nine cases plus two refusals at the unchanged 767,158 cycles. This is a
+standalone timing improvement with containing functional validation; integrated
+engine physical closure remains open. Tree32 is still routing and is not selected.
+See the [integration decision](../results/rtl/wide_mul_tree_integration/route_decision.json).
+
+The other completed arithmetic routes refine the remaining work. Captured
+divisor step3 passes 1 ns with +0.0411121 ns setup, +0.0515423 ns hold and
+313.834 µm² area, but applies to the pre-idle-enable source and retains the
+measured consumer latency penalty. Current idle-advance step4 has 295.580 µm²
+area (8.34% below the captured step4 route), but setup remains −0.0891867 ns
+with nine violations. Neither justifies changing the consumer default yet.
+The current shared-storage wide divider meets setup/hold at 1 ns with
++0.0484149 / +0.0412938 ns and 827.809 µm² area, but fails one clock-tree fanout
+check (19 loads against limit 16). A CTS-cluster-size-8 retry is active; the
+completed cluster-size-12 route is correctly retained as NOT_MET. All five
+route audits are linked by the integration decision.

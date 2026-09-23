@@ -55,7 +55,7 @@ def test_balanced_multiplier_exact_product(tmp_path, largest_chunk, wa, wb, low,
     source.write_text(bench)
     sim = tmp_path / "sim.vvp"
     sources = [str(ROOT / "rtl/lib/ot_wide_mul_tree_seq.sv"),
-               str(ROOT / "rtl/lib/ot_wide_mul_seq.sv"), str(source)]
+               str(ROOT / "results/rtl/wide_mul_tree_integration/before.sv"), str(source)]
     if simulator == "iverilog":
         command = [executable, "-g2012", "-s", "tb_wide_mul_seq_equiv",
                    "-o", str(sim), *sources]

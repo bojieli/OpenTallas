@@ -1,0 +1,8 @@
+{
+  "integrated_source": "rtl/lib/ot_wide_mul_seq.sv",
+  "integrated_sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+  "qualified_candidate": "rtl/lib/ot_wide_mul_tree_seq.sv",
+  "qualified_sha256": "95b494676f51cd77510884f182d5f0427c15c4c5693f3b743aecd6c2b8d16ec5",
+  "comparison": "Exact equality of RTL from localparam TOTAL through endmodule after removing line comments and whitespace; module parameters and ports separately retained from old public implementation.",
+  "scope": "Structural source-body identity links prior candidate unit corpus and routed tree16 result to integrated arithmetic; not a containing physical closure claim."
+}

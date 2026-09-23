@@ -12,14 +12,14 @@
 // (results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/pnr_4p0ns_not_met.json)
 //
 // THE ACCUMULATOR NEVER CARRIES. A cycle adds BITS_PER_STEP partial products to
-// a redundant pair ``(s, c)`` standing for ``s + 2*c``. Independent rows are
-// reduced by a balanced 3:2 compressor tree without carry propagation. The ONLY
+// a redundant pair ``(s, c)`` standing for ``s + 2*c``; each addition is one
+// carry-save level -- an XOR3 and a MAJ3 per bit, no propagation. The ONLY
 // carry-propagate adder in the design is BITS_PER_STEP+1 bits wide, and it is
 // there to emit the low BITS_PER_STEP product bits, which are final: their
 // carries have already been absorbed, and the carry OUT of them is folded back
 // into the shifted accumulator as a third CSA input. So the critical path is
-// logarithmic compressor depth plus a small adder and one feedback compressor.
-// The cycle count remains ceil((WA+WB)/BITS_PER_STEP).
+// BITS_PER_STEP+1 carry-save levels plus a small adder, and the cycle count is
+// (WA+WB)/BITS_PER_STEP.
 //
 // PRODUCT BITS LEAVE FROM THE BOTTOM, WHICH IS WHAT THE CALLERS WANT. Both
 // consumers need the top of the product exactly and the bottom only as "was
@@ -102,58 +102,28 @@ module ot_wide_mul_seq #(
     wire [BITS_PER_STEP-1:0] chunk = b_work[BITS_PER_STEP-1:0];
     wire [ACC-1:0]           a_ext = {{(ACC-WA){1'b0}}, a};
 
-    // Reduce the independent partial products and the redundant accumulator
-    // together. Each level compresses groups of three to two, so depth grows
-    // logarithmically instead of one dependent compressor per multiplier bit.
-    function automatic integer row_count(input integer level);
-        integer n, k;
-        begin
-            n = BITS_PER_STEP + 2;
-            for (k = 0; k < level; k = k + 1)
-                n = (n / 3) * 2 + n % 3;
-            row_count = n;
-        end
-    endfunction
-    function automatic integer tree_depth(input integer n_in);
-        integer n;
-        begin
-            n = n_in;
-            tree_depth = 0;
-            while (n > 2) begin
-                n = (n / 3) * 2 + n % 3;
-                tree_depth = tree_depth + 1;
-            end
-        end
-    endfunction
-    localparam integer LEVELS = tree_depth(BITS_PER_STEP + 2);
-    localparam integer ROWS = BITS_PER_STEP + 2;
-    wire [ACC-1:0] rows [0:(LEVELS+1)*ROWS-1];
-    assign rows[(0)*ROWS+(0)] = acc_s;
-    assign rows[(0)*ROWS+(1)] = acc_c << 1;
-    genvar g, level, group, tail;
+    //: One carry-save level per partial product. The pair (x, y) enters as
+    //: ``s`` and ``c<<1`` so that the running value is exactly ``s + 2*c``
+    //: before and after.
+    wire [ACC-1:0] cs_s [0:BITS_PER_STEP];
+    wire [ACC-1:0] cs_c [0:BITS_PER_STEP];
+    assign cs_s[0] = acc_s;
+    assign cs_c[0] = acc_c;
+    genvar g;
     generate
         for (g = 0; g < BITS_PER_STEP; g = g + 1) begin : partial_product
-            assign rows[(0)*ROWS+(g+2)] = chunk[g] ? (a_ext << g) : {ACC{1'b0}};
-        end
-        for (level = 0; level < LEVELS; level = level + 1) begin : compress_level
-            for (group = 0; group < row_count(level)/3; group = group + 1) begin : triple
-                wire [ACC-1:0] x = rows[(level)*ROWS+(3*group)];
-                wire [ACC-1:0] y = rows[(level)*ROWS+(3*group+1)];
-                wire [ACC-1:0] z = rows[(level)*ROWS+(3*group+2)];
-                assign rows[(level+1)*ROWS+(2*group)] = x ^ y ^ z;
-                assign rows[(level+1)*ROWS+(2*group+1)] =
-                    ((x & y) | (x & z) | (y & z)) << 1;
-            end
-            for (tail = 0; tail < row_count(level)%3; tail = tail + 1) begin : remainder
-                assign rows[(level+1)*ROWS+(2*(row_count(level)/3)+tail)] =
-                    rows[(level)*ROWS+(3*(row_count(level)/3)+tail)];
-            end
+            wire [ACC-1:0] x = cs_s[g];
+            wire [ACC-1:0] y = {cs_c[g][ACC-2:0], 1'b0};
+            wire [ACC-1:0] z = chunk[g] ? (a_ext << g) : {ACC{1'b0}};
+            assign cs_s[g+1] = x ^ y ^ z;
+            assign cs_c[g+1] = (x & y) | (x & z) | (y & z);
         end
     endgenerate
-    // The final level always compresses three rows to a sum and shifted carry.
-    // Restore the existing s + 2*c representation for emission and feedback.
-    wire [ACC-1:0] fin_s = rows[(LEVELS)*ROWS+(0)];
-    wire [ACC-1:0] fin_c = rows[(LEVELS)*ROWS+(1)] >> 1;
+
+    //: The only carry-propagate adder here. The low BITS_PER_STEP bits of
+    //: ``s + 2*c`` are final product bits; bit BITS_PER_STEP is their carry out.
+    wire [ACC-1:0] fin_s = cs_s[BITS_PER_STEP];
+    wire [ACC-1:0] fin_c = cs_c[BITS_PER_STEP];
     wire [BITS_PER_STEP:0] emit_sum =
         {1'b0, fin_s[BITS_PER_STEP-1:0]} +
         {1'b0, fin_c[BITS_PER_STEP-2:0], 1'b0};
