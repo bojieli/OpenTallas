@@ -1023,3 +1023,24 @@ The first apply pipeline route is still live in global-route timing repair; its
 intermediate worst path remains in the commit counter. The overlap and counter
 candidates and operand-service hold retry remain in physical implementation.
 None of those intermediate stages is a final timing-acceptance result.
+
+## Prior-session series-divider tuning is now committed
+
+The two exponential engines' previously uncommitted divisor-width and step-size
+changes are now integrated into main. Default 56-term series use six divisor
+bits instead of nine, with width derived as `$clog2(SERIES_TERMS + 2)` so larger
+supported series retain enough bits. Both engines expose `DIV_BITS_PER_STEP`
+with the existing default 10. This closes the gap between recent measured
+workspace implementations and the committed source without changing their
+current arithmetic or cycle behavior. Unrelated workspace edits remain separate.
+
+Eight differential tests pass for both engines at 56, 64 and 254 terms with
+step10, and 56 terms with step4; they compare results, certification and handshake
+timing with nine-bit references. The positive-exponential Verilator corpus
+passes 2,201 exact arguments and four refusal/overflow checks. RTL and vector
+hashes also verify that the prior full 4,200-case exp/sigmoid run with 6,637,132
+checks, reset and output stalls used exactly these current sources. The positive
+corpus does not add reset/backpressure coverage of that engine. No new physical
+clock claim follows from committing these changes; engine routes remain pending.
+Before snapshots, exact source inventories, vectors and logs are retained in the
+[series tuning integration](../results/rtl/series_divisor_integration/integration.json).

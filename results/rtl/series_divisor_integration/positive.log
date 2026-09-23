@@ -1,0 +1,5 @@
+PASS a3_exp_pos: 2201 arguments bit-identical to exp_cr32, and 4 refusals fail closed
+- rtl/test/tb_a3_exp_pos.sv:102: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12ms; walltime 85.844 s; speed 138.864 us/s
+- Verilator: cpu 85.814 s on 1 threads; allocated 6 MB

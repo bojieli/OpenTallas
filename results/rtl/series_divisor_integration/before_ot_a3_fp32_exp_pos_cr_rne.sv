@@ -79,9 +79,7 @@ module ot_a3_fp32_exp_pos_cr_rne #(
     parameter integer SERIES_TERMS = 56,
     //: Integer bits the reduction needs: the argument is bounded below 150, and
     //: n*ln2 tracks it, so eight covers both with room.
-    parameter integer INT_BITS = 9,
-    // Fewer restoring steps shorten the series-divider path, adding cycles.
-    parameter integer DIV_BITS_PER_STEP = 10
+    parameter integer INT_BITS = 9
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -93,19 +91,6 @@ module ot_a3_fp32_exp_pos_cr_rne #(
     output reg  [31:0] result_code,
     output reg  [1:0]  result_error
 );
-    //: THE SERIES DIVISOR IS AT MOST SERIES_TERMS + 1, WHICH IS 57 AT THE
-    //: DEFAULT.  It was carried in nine bits, and ot_wide_div_small_seq's step
-    //: chain is DIVISOR_BITS+1 wide compare-subtracts in series, so every
-    //: subtract in the chain was ten bits for a value that never exceeds six.
-    //: Routed, that chain -- series_div_upper.work[169] -> inexact -- is the
-    //: binding path of BOTH this block and its exp_pos twin at 306 MHz, with the
-    //: target genuinely binding (repair_timing fought 20 endpoints in it). Six
-    //: bits drops each subtract from ten to seven, values untouched: every
-    //: partial remainder is below the divisor, so the narrower walk holds every
-    //: value the wider one held and the netlist is a strict narrowing of
-    //: constant-zero bits. Zero cycles. Derive the width from SERIES_TERMS
-    //: so larger supported series retain their full divisor as well.
-    localparam integer SERIES_DIVISOR_BITS = $clog2(SERIES_TERMS + 2);
     localparam [1:0] ERR_NONE = 2'd0;
     localparam [1:0] ERR_ARGUMENT = 2'd1;
     localparam [1:0] ERR_UNCERTIFIED = 2'd2;
@@ -158,6 +143,7 @@ module ot_a3_fp32_exp_pos_cr_rne #(
     //: measures 279.6 MHz, and that is what the enclosure's rounding costs: no
     //: amount of sequencing the products and divides lifts it, because it is what
     //: the arithmetic IS rather than how it is scheduled.
+    localparam integer DIV_BITS_PER_STEP = 10;
     localparam integer MUL_BITS_PER_STEP = 16;
 
     integer i;
@@ -296,14 +282,14 @@ module ot_a3_fp32_exp_pos_cr_rne #(
     //: away from the divide because a 163-bit increment and one divider step in
     //: the same cycle is 6 ns where each alone is under 3.5.
     reg [FRAC_BITS+2:0] prod_lower_q, prod_upper_q;
-    reg [SERIES_DIVISOR_BITS-1:0] divisor_q;
+    reg [8:0]           divisor_q;
 
     wire div_lower_busy, div_upper_busy, div_lower_done, div_upper_done;
     wire [FRAC_BITS+2:0] div_lower_quotient, div_upper_quotient;
     wire div_lower_inexact, div_upper_inexact;
 
     ot_wide_div_small_seq #(
-        .WIDTH(TERM_W), .DIVISOR_BITS(SERIES_DIVISOR_BITS), .BITS_PER_STEP(DIV_BITS_PER_STEP)
+        .WIDTH(TERM_W), .DIVISOR_BITS(9), .BITS_PER_STEP(DIV_BITS_PER_STEP)
     ) div_lower (
         .clk(clk), .rst_n(rst_n), .start(div_start),
         .dividend(prod_lower_q), .divisor(divisor_q),
@@ -311,7 +297,7 @@ module ot_a3_fp32_exp_pos_cr_rne #(
         .quotient(div_lower_quotient), .inexact(div_lower_inexact)
     );
     ot_wide_div_small_seq #(
-        .WIDTH(TERM_W), .DIVISOR_BITS(SERIES_DIVISOR_BITS), .BITS_PER_STEP(DIV_BITS_PER_STEP)
+        .WIDTH(TERM_W), .DIVISOR_BITS(9), .BITS_PER_STEP(DIV_BITS_PER_STEP)
     ) div_upper (
         .clk(clk), .rst_n(rst_n), .start(div_start),
         .dividend(prod_upper_q), .divisor(divisor_q),
@@ -387,7 +373,7 @@ module ot_a3_fp32_exp_pos_cr_rne #(
             prod_upper_q <= {(FRAC_BITS+3){1'b0}};
             next_term_lower <= {(FRAC_BITS+3){1'b0}};
             next_term_upper <= {(FRAC_BITS+3){1'b0}};
-            divisor_q <= {SERIES_DIVISOR_BITS{1'b0}};
+            divisor_q <= 9'd0;
             n_estimate <= 9'd0;
             mul_start <= 1'b0;
             div_start <= 1'b0;
@@ -486,7 +472,7 @@ module ot_a3_fp32_exp_pos_cr_rne #(
                     prod_lower_q <= mul_lower_high[FRAC_BITS+2:0];
                     prod_upper_q <= mul_upper_high[FRAC_BITS+2:0] +
                                     {{(FRAC_BITS+2){1'b0}}, mul_upper_low_nonzero};
-                    divisor_q <= next_index[SERIES_DIVISOR_BITS-1:0];
+                    divisor_q <= next_index;
                     state <= S_TERM_DIV;
                 end
 
