@@ -1,0 +1,90 @@
+{
+  "claim_boundary": "functional RTL of a four-package layer pipeline: striped-bank reads, accumulate-on-arrival, cut-through package links. Router and arithmetic are stated stand-ins; no macro, PHY, area, timing closure or energy.",
+  "expected_first_token_latency_cycles": 544,
+  "first_token_latency_cycles": 545,
+  "input_sha256": {
+    "rtl/rom/ot_rom_layer_stage.sv": "475f67bb0e8a004e55346bdd41113174f5710ea7b0750670fb8a1d6167ff3bb0",
+    "rtl/rom/ot_rom_pkg_link.sv": "ae1361d4f627de81f2b54fa46d3e9faf6545aa6f226a781f3e32235ba7f6967f",
+    "rtl/rom/ot_rom_striped_expert_reader.sv": "2d9198e7eb78d3f755763b0057868a81fa51ae3b58b9cda93b686267c5ec6513",
+    "rtl/test/tb_rom_layer_pipeline.sv": "ec86302ca6f65aa03b6531270aec5d6fd25f08f2c2969c70aef2f02c69835c7e",
+    "tools/rtl_rom_layer_pipeline_campaign.py": "ba3b11c4b80d2baa5bd4f0519fbcbe426b35e1c41710d5fa73bfccab97e345bb"
+  },
+  "link_latency_cycles": 64,
+  "parameters": {
+    "banks": 8,
+    "channel_cycles": 60,
+    "clock_hz": 1000000000.0,
+    "expert_words": 64,
+    "selected_experts": 6,
+    "stages": 4,
+    "tokens": 8
+  },
+  "schema": "opentallas.rom-layer-pipeline-campaign.v1",
+  "stage_service_cycles": 56,
+  "status": "pass",
+  "steady_arrival_interval_cycles": [
+    56
+  ],
+  "tokens": [
+    {
+      "arrival": 548,
+      "interval": 0,
+      "latency": 545,
+      "tag": 0
+    },
+    {
+      "arrival": 604,
+      "interval": 56,
+      "latency": 600,
+      "tag": 1
+    },
+    {
+      "arrival": 660,
+      "interval": 56,
+      "latency": 655,
+      "tag": 2
+    },
+    {
+      "arrival": 716,
+      "interval": 56,
+      "latency": 710,
+      "tag": 3
+    },
+    {
+      "arrival": 772,
+      "interval": 56,
+      "latency": 765,
+      "tag": 4
+    },
+    {
+      "arrival": 828,
+      "interval": 56,
+      "latency": 820,
+      "tag": 5
+    },
+    {
+      "arrival": 884,
+      "interval": 56,
+      "latency": 875,
+      "tag": 6
+    },
+    {
+      "arrival": 940,
+      "interval": 56,
+      "latency": 930,
+      "tag": 7
+    }
+  ],
+  "users_in_flight": 9.71,
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ"
+    ],
+    "messages": [],
+    "returncode": 0
+  }
+}

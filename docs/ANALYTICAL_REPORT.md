@@ -185,9 +185,38 @@ Two things limit the ratio:
 - Before any claim: test ROM bank striping, link latency and power in RTL and
   physical design (the next phase).
 
-## 9. Reproduce
+## 9. Implementation status: the three mechanisms in RTL
+
+The report credits the ROM machine with three specialisations. Each now has a
+functional RTL model, a scoreboarded Icarus simulation, a Verilator lint and a
+campaign record under `results/rtl/`:
+
+1. **Striped expert banks** (`ot_rom_striped_expert_reader`,
+   `rom_striped_bank_campaign.json`). A token's selected experts are read at the
+   full bank rate, with no bank conflicts, in any selection.
+2. **Package links** (`ot_rom_pkg_link`, `rom_pkg_link_campaign.json`).
+   Cut-through with credits and 4 cycles of digital framing; the PHY is a
+   delay-line stand-in.
+3. **Layer-per-package pipeline** (`ot_rom_layer_stage`,
+   `rom_layer_pipeline_campaign.json`). Four packages joined by links carry
+   eight users' tokens, and every final hidden state matches a reference model.
+   - The first token takes 545 cycles, <!-- figure: 545 src="results/rtl/rom_layer_pipeline_campaign.json#first_token_latency_cycles" name="pipeline first-token latency" -->
+     which is four stage services plus five hops, as the framework's latency
+     law says.
+   - Later tokens leave every 56 cycles, one stage's service. <!-- figure: 56 src="results/rtl/rom_layer_pipeline_campaign.json#stage_service_cycles" name="pipeline stage service" -->
+   - About ten users are in flight with no per-user slowdown.
+
+These are functional and cycle-structure models only. The router and the
+arithmetic in the pipeline are stated stand-ins. None of them establishes
+macro area, timing closure, PHY latency or energy, and they are not yet part of
+the ABI 3.0 token path.
+
+## 10. Reproduce
 
 ```
 python3 tools/run_roofline_studies.py --force   # ~26 min, writes results/roofline/
+python3 tools/rtl_rom_striped_bank_campaign.py  # section 9, seconds each
+python3 tools/rtl_rom_pkg_link_campaign.py
+python3 tools/rtl_rom_layer_pipeline_campaign.py
 python3 tools/check_prose_figures.py            # every annotated figure above
 ```
