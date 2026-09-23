@@ -249,3 +249,16 @@ and lm_head is the largest single op.
   Four groups stay the default: they are the configuration being routed.
   Beyond eight groups the stream unit and the short-vector latency chains
   (norms, head norms, softmax) dominate this hidden-size-128 vehicle.
+
+**P5: stream unit on ASAP7.** Routed alone at a 1 ns target, the stream unit
+(iteration 4) met every register-to-register path; the worst had +32.85 ps of
+slack. The only violation was its combinational fault OR into an output port.
+Fault is a sticky status bit, so both units now register it in two levels.
+Re-routed at a 0.85 ns target:
+
+- routed Fmax: **1,111 MHz**; <!-- figure: 1111 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC stream unit routed fmax" -->
+- cell area: 35,300 µm². <!-- figure: 35300 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#synthesis.cell_area_um2" name="HDC stream unit cell area" -->
+
+It routed with no DRC or design-rule violations. The critical path is stage 3
+of the rebalanced multiplier (the partial-product sum and select), so the two
+product stages are now close to balanced.
