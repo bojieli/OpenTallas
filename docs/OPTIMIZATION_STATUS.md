@@ -1,7 +1,7 @@
 # Accelerator optimization status
 
 **Current objective:** test **100 µs/token** for V4.1 on wafer-scale and
-reticle-scale ROM systems, and derive their physical performance ceilings.
+fast-interconnected ROM chip arrays, and derive their physical performance ceilings.
 The [physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) rejects a standalone
 815 mm² fully resident ROM design at current density. A wafer hybrid passes
 capacity-only screening; timing, area allocation and power remain unqualified.

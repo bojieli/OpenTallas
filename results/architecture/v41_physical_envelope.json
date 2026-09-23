@@ -1,4 +1,30 @@
 {
+  "array_area_screens": [
+    {
+      "all_rom_fraction_of_total_area": 1.233659750802608,
+      "area_per_chip_for_exact_equal_area_mm2": 803.5714285714286,
+      "array_chip_count": 56,
+      "array_total_area_mm2": 45000,
+      "hybrid_rom_fraction_of_total_area": 0.7434750064640175,
+      "wafer_reference_area_mm2": 45000
+    },
+    {
+      "all_rom_fraction_of_total_area": 0.925244813101956,
+      "area_per_chip_for_exact_equal_area_mm2": 810.8108108108108,
+      "array_chip_count": 74,
+      "array_total_area_mm2": 60000,
+      "hybrid_rom_fraction_of_total_area": 0.5576062548480131,
+      "wafer_reference_area_mm2": 60000
+    },
+    {
+      "all_rom_fraction_of_total_area": 0.7853721897350034,
+      "area_per_chip_for_exact_equal_area_mm2": 812.4808586870155,
+      "array_chip_count": 87,
+      "array_total_area_mm2": 70685.83470577035,
+      "hybrid_rom_fraction_of_total_area": 0.4733108893761089,
+      "wafer_reference_area_mm2": 70685.83470577035
+    }
+  ],
   "assumed_rom_bytes_per_mm2": 9379500,
   "capacity_screens": {
     "reticle_815mm2": {
@@ -66,12 +92,13 @@
       }
     }
   },
+  "comparison_scope": "Integrated wafer versus discrete-chip array with fast package fabric, at equal total die area and separately capacity-matched scale.",
   "input_sha256": {
     "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
     "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json": "bbd35085b12043af17fbabe0cd2685ebc002cf9b0fc17f5bcadf20da951e006c",
     "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
     "results/architecture/v41_architecture_feasibility.json": "940f428eb1012a58777b7fa25881f095835f0b1aa4139892668531bc974dc694",
-    "tools/audit_v41_physical_envelope.py": "bc29469750800ce16ce2cc224cd5bc78a73dd7ceea6e3bece8d8738c78e851e6"
+    "tools/audit_v41_physical_envelope.py": "e292f9ae7e8787fbc03db52ed376a381ff4725689423defedf777f6ed60866ca"
   },
   "limits": [
     "ROM density is a planning assumption, not a characterized wide-port macro. Capacity rejects configurations but cannot certify speed.",

@@ -1,12 +1,14 @@
-# V4.1: wafer and reticle feasibility for 100 µs/token
+# V4.1: wafer versus chip-array feasibility for 100 µs/token
 
 The user has now explicitly retained **100 µs per ordinary decode token** as a
 feasibility target. This supersedes the earlier decision not to select a token
 latency target. The previous 40 µs expert allocation remains adjustable. The goal
-is to derive physical performance ceilings for wafer-scale and reticle-scale
-ROM systems and move the architecture toward those limits, before implementation
-or workload simulation. “Reticle-scale” is the working interpretation of the
-user's “re-scale”; confirmation is pending.
+is to derive physical performance ceilings for an **integrated wafer-scale ROM
+system versus an array of separate ROM chips with fast interconnect**, before
+implementation or workload simulation. The user explicitly clarified “array,”
+with NVLink/NVL72-style connectivity as examples, not a single-reticle system.
+Compare equal total die area first, and separately the scale each needs to
+implement the system. No particular vendor link rate or topology is assumed.
 
 ## First boundary: can the model reside in the device?
 
@@ -41,11 +43,37 @@ all-ROM inventory, before compute and other overhead. Earlier 400 mm²-ROM-per-d
 screens needed 84 and 139 respectively because they reserve area for other uses.
 These results are consistent, not competing die-count estimates.
 
-The reticle track should consequently compare a **multi-reticle ROM system**
-against the wafer design, plus a separately labeled single-reticle HBM-backed
-hybrid. A single reticle's compute ceiling can still be characterized, but its
-external memory/link service must be charged; it is not a fully resident ROM
-accelerator for this model.
+The single-reticle rejection is only a per-chip capacity observation; **it does
+not reject the chip-array architecture**. The array distributes the weights and
+compute across enough chips. At equal total silicon area and the same ROM density,
+the raw capacity budget is identical before integration-specific overhead:
+
+| Reference total area | Example chip count | Area per chip for exact area matching |
+|---|---:|---:|
+| 45,000 mm² | 56 | 803.6 mm² |
+| 60,000 mm² | 74 | 810.8 mm² |
+| 70,685.8 mm² gross-disk bound | 87 | 812.5 mm² |
+
+These are area partitions, not selected packages or a claim that a gross disk is
+usable. The array must fit its PHYs, controllers, SRAM and compute within that
+same area. The wafer must charge stitching, repair, routing and other integration
+overhead. Compare equal system power as a second constraint; packaging, switches
+and interconnect power cannot be omitted because they are outside compute dies.
+
+**Placement determines the fabric requirement.** Keep each selected expert's
+weights local to its compute where feasible, multicast input activations, and
+return outputs for the required merge. The 112.8 TB/s expert-probe rate is local
+ROM read service, not a required NVLink-like external rate. If experts or dense
+operators are tensor-sharded across chips, charge their partial reductions and
+synchronization separately. KV-owner placement and cross-layer transfers also
+need explicit accounting. Fast fabric is not zero-latency fabric.
+
+The next comparison must sweep endpoint rate, hop/switch latency, bisection,
+concentrated routes, and link energy. NVL72 is an example of a connected system,
+not a specification that can be copied as one bandwidth number. Distinguish
+per-direction payload bandwidth from bidirectional or system-wide totals. Wafer
+links need the same delivery and critical-path treatment. Neither integration
+approach receives free global bandwidth or perfect utilization.
 
 ## Necessary service for 100 µs/token
 
@@ -96,12 +124,13 @@ physical tokens/s ceiling still requires evidence for:
 For each physical resource r, a necessary service bound is `work_r / rate_r`.
 Combine those bounds with numerical dependencies and serial communication, using
 an explicit schedule for overlap. The reciprocal of a proven lower latency bound
-is a conditional throughput ceiling, not achieved performance. Reticle and wafer
+is a conditional throughput ceiling, not achieved performance. Array and wafer
 comparisons must each name capacity, area, power, deployment tier and concurrency.
 
-**Current design direction:** prioritize the wafer hybrid with expert-local ROM,
-non-routed matrix locality and owner-local KV/index. Retain all-ROM wafer and
-multi-reticle ROM as explicit alternatives. Do not declare 100 µs feasible yet:
+**Current design direction:** evaluate both wafer and chip-array hybrids with
+expert-local ROM, non-routed matrix locality and owner-local KV/index. Retain
+all-ROM variants for both. Do not choose an integration winner before measuring
+the area/power cost and critical-path effect of their respective interconnects. Do not declare 100 µs feasible yet:
 capacity is only the first gate and the required physical macro evidence is open.
 The Qwen ROM/HBM redesign remains in scope; this document addresses the separate
 V4.1 deployment rather than extrapolating its results to Qwen.

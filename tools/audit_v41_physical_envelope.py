@@ -33,7 +33,18 @@ def main():
     routed = m['routed_weight_bytes']*m['experts_per_token']//m['num_experts']
     out = {'schema':'opentallas.v41-physical-envelope.v1',
            'status':'100us_target_restored_capacity_screen_only_physical_performance_unqualified',
-           'target_token_us':100, 'assumed_rom_bytes_per_mm2':density,
+           'target_token_us':100,
+           'comparison_scope':'Integrated wafer versus discrete-chip array with fast package fabric, at equal total die area and separately capacity-matched scale.',
+           'array_area_screens':[
+               {'wafer_reference_area_mm2':area,
+                'array_chip_count':n,
+                'area_per_chip_for_exact_equal_area_mm2':area/n,
+                'array_total_area_mm2':area,
+                'hybrid_rom_fraction_of_total_area':screens[name]['engram_elsewhere']['rom_area_required_mm2']/area,
+                'all_rom_fraction_of_total_area':screens[name]['all_rom']['rom_area_required_mm2']/area}
+               for name,area in areas.items() if name != 'reticle_815mm2'
+               for n in [math.ceil(area/815)]],
+           'assumed_rom_bytes_per_mm2':density,
            'rom_reserve_fraction':.02, 'capacity_screens':screens,
            'necessary_service_using_entire_100us':{
                'all_active_weight_TB_s':active/1e8,

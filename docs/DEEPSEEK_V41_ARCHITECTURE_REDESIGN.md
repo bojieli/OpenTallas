@@ -1,7 +1,7 @@
 # DeepSeek V4.1: first-principles ROM/HBM redesign
 
 **Updated objective:** the user subsequently retained **100 µs/token** as an
-explicit feasibility target for wafer-scale and reticle-scale designs. Earlier
+explicit feasibility target for wafer-scale systems and fast-interconnected chip arrays. Earlier
 statements below that no target is selected describe the prior analysis stage.
 The 40 µs expert sub-budget remains adjustable. See the
 [physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) for current scope.
