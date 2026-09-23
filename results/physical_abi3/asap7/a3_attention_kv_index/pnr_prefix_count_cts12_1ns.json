@@ -1,0 +1,208 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-23T00:56:12.189296+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_a3_attention_kv_index",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
+        "sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d",
+        "size_bytes": 6363
+      }
+    ],
+    "top": "ot_a3_attention_kv_index"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n|  1.229864e+04 |   +1.55% |  4.69e-06 |      \n      360 |   0.3210 |  1.247137e+04 |   +1.40% |  7.05e-06 |      \n      370 |   0.2934 |  1.265933e+04 |   +1.51% |  1.04e-05 |      \n      380 |   0.2664 |  1.281691e+04 |   +1.24% |  1.53e-05 |      \n      390 |   0.2431 |  1.298808e+04 |   +1.34% |  2.25e-05 |      \n      400 |   0.2186 |  1.317324e+04 |   +1.43% |  3.32e-05 |      \n      410 |   0.1936 |  1.337164e+04 |   +1.51% |  4.89e-05 |      \n      420 |   0.1700 |  1.357722e+04 |   +1.54% |  7.20e-05 |      \n      430 |   0.1441 |  1.378351e+04 |   +1.52% |  1.06e-04 |      \n      440 |   0.1192 |  1.399318e+04 |   +1.52% |  1.56e-04 |      \n      449 |   0.0994 |  1.415680e+04 |          |  2.30e-04 |      \n---------------------------------------------------------------\n[INFO GPL-1001] Global placement finished at iteration 449\n[INFO GPL-1002] Placed Cell Area              747.7646\n[INFO GPL-1003] Available Free Area          2001.5424\n[INFO GPL-1004] Minimum Feasible Density        0.3800 (cell_area / free_area)\n[INFO GPL-1006]   Suggested Target Densities:\n[INFO GPL-1007]     - For 90% usage of free space: 0.4151\n[INFO GPL-1008]     - For 80% usage of free space: 0.4670\n[INFO GPL-1009]     - For 50% usage of free space: 0.7472\n[INFO GPL-1014] Final placement area: 747.76 (+0.00%)\nTook 1064 seconds: global_placement -skip_io -density 0.420999995470047 -pad_left 0 -pad_right 0\nDesign area 725 um^2 36% utilization.\nwrite_db /work/results/asap7/opentallas_ot_a3_attention_kv_index_asap7/base/3_1_place_gp_skip_io.odb\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n3_1_place_gp_skip_io      .odb         1071            222 647db31f8145c072f757\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement\nRunning io_placement.tcl, stage 3_2_place_iop\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_db /work/results/asap7/opentallas_ot_a3_attention_kv_index_asap7/base/3_1_place_gp_skip_io.odb\nread_sdc /work/results/asap7/opentallas_ot_a3_attention_kv_index_asap7/base/2_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nplace_pins -hor_layers M4 -ver_layers M5\nFound 0 macro blocks.\nUsing 2 tracks default min distance between IO pins.\n[ERROR PPL-0024] Number of IO pins (2189) exceeds maximum number of available positions (1980). Increase the die perimeter from 195.99um to 210.14um.\nError: io_placement.tcl, 21 PPL-0024\n\nElapsed time: 0:01.65[h:]min:sec. CPU time: user 1.31 sys 0.09 (84%). Peak memory: 223688KB.\nElapsed time: 0:03.67[h:]min:sec. CPU time: user 2.88 sys 0.14 (82%). Peak memory: 252916KB.\nElapsed time: 0:02.03[h:]min:sec. CPU time: user 1.63 sys 0.10 (85%). Peak memory: 215244KB.\nElapsed time: 0:01.97[h:]min:sec. CPU time: user 1.60 sys 0.11 (87%). Peak memory: 210932KB.\nElapsed time: 0:01.64[h:]min:sec. CPU time: user 1.31 sys 0.09 (85%). Peak memory: 219884KB.\nElapsed time: 17:51.84[h:]min:sec. CPU time: user 1427.66 sys 1.49 (133%). Peak memory: 227604KB.\nElapsed time: 0:01.57[h:]min:sec. CPU time: user 1.29 sys 0.07 (86%). Peak memory: 218096KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_a3_attention_kv_index_asap7/base/3_2_place_iop.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-23T00:37:38.366300+00:00",
+  "git": {
+    "commit": "fe1935a714c0224d988e9d35d57ead46bdc779a8",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_abi3/asap7/a3_g2_runtime_writer/pnr_cts8_1ns.json",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
+      "results/physical_abi3/asap7/a3_vector_index_score/physical_artifacts/",
+      "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
+      "results/physical_abi3/asap7/lq8_array/",
+      "results/physical_abi3/asap7/recovered_session_experiments.json",
+      "results/physical_abi3/asap7/wide_mul_chain/",
+      "results/physical_abi3/asap7/wide_mul_tree/",
+      "results/physical_abi3/current_evidence_after_coalescing.json",
+      "results/rtl/before_adapter_view_payload/",
+      "results/rtl/before_descriptor_capture/",
+      "results/rtl/before_input_resolution/",
+      "results/rtl/before_layout_admission_pipeline/",
+      "results/rtl/kv_index_prefix_count/"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M compiler/backends/rom/common/program.py",
+      " M results/abi3/nine_cell_token_matrix.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_block_max/physical.json",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/rtl/a3_v41_block_max_campaign.json",
+      " M results/rtl/a3_v41_candidate_mask_campaign.json",
+      " M rtl/abi3/ot_a3_attention_kv_index.sv",
+      " M rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      " M rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      " M rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+      " M tools/abi3_g1_models.py",
+      " M tools/run_accelerator_tokens.py",
+      "?? configs/hardware/abi3_capability/rom_deepseek_v41_reduced_array_12_comparator.json",
+      "?? configs/hardware/abi3_capability/rom_deepseek_v41_wafer_reduced_comparator.json"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_a3_attention_kv_index",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "--clock-period-ns",
+      "1",
+      "--stages",
+      "pnr",
+      "--cts-cluster-size",
+      "12",
+      "--max-fanout",
+      "16",
+      "--max-transition-ns",
+      "library",
+      "--output",
+      "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_cts12_1ns.json",
+      "--keep-workdir",
+      "build/physical_kv_index_prefix_count_1ns"
+    ],
+    "driver": {
+      "commit": "fe1935a714c0224d988e9d35d57ead46bdc779a8",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "385af23c99303de7d4bf94a632ff254a65b7fc25693786317607fb5cea6b325c",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
