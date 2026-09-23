@@ -1,213 +1,197 @@
 # Accelerator architecture review and optimization priorities
 
-Report date: 2026-09-22. Reviewed implementation: `142416c0`.
-Measured comparisons below refer to their recorded source versions, not one
-universal baseline. This report supersedes the opening status statements in the
-[detailed experiment history](REFINED_ARCHITECTURE_AND_OPTIMIZATION_REPORT.md).
+Report date: 2026-09-23. Implementation checkpoint: `93b7a08e` on
+`token-path-end-to-end`. This report consolidates the implemented refinements,
+measured comparisons and remaining architecture-first work. Each measurement
+qualifies its recorded source/configuration; there is no single universal
+“previous version.” The [detailed report](REFINED_ARCHITECTURE_AND_OPTIMIZATION_REPORT.md)
+retains experiment history; this document supersedes its older status summaries.
 
 ## Assessment
 
-**The architecture has improved substantially, but the project is not yet
-qualified as a well-optimized accelerator across all targets.** The strongest
-verified improvement comes from changing weight reuse and execution order.
-Component tuning alone would not remove the earlier SRAM-capacity cliff.
+**Significant architectural performance problems have been addressed, but the
+project is not yet demonstrated to be a well-optimized accelerator across all
+targets.** The largest measured gains come from reducing repeated weight
+movement and choosing an execution order that fits local memory. These gains
+support prioritizing architecture before individual module pipelines.
 
-The implemented G2/LQ8 runtime now supports pass-first execution end to end,
-including weight fetch, SRAM replay, operand issue, arithmetic and output writes.
-Pass width is independent of arithmetic pipeline depth. These are optional
-configurations; their evidence does not qualify every default or deployment.
-Runtime schedule adaptation, general activation-object transport, broader format
-coverage and current-source integrated physical closure remain open.
+The strongest evidence covers optional G2/LQ8 runtime execution. Dense/MoE,
+attention/KV, vector/reduction and distributed execution still require deployment
+mapping, service-rate budgets and integrated qualification. Physical jobs for
+current transport, runtime operands, state control and G2 remain in progress;
+no final acceptance records were available for those configurations at this
+review. A 1 ns target is not yet an achieved whole-accelerator clock.
 
 ## Refined architecture implemented today
 
 ```mermaid
 flowchart LR
-    A[Descriptor admission and captured bounds] --> B[Weight layout cursor and compact BF16 gather]
-    A --> S[Row-first or pass-first scheduler]
-    B --> C[Two tagged weight SRAM banks]
+    A[Checked descriptor admission and captured geometry] --> S[Capacity-selected row-first or pass-first schedule]
+    A --> B[Layout cursor and BF16 gather with bounded ordered read credits]
+    B --> C[Two tagged 512x128 weight SRAM banks]
     S --> C
-    A --> D[Future operand cursor and three auxiliary windows]
+    A --> D[Future operand cursor and three auxiliary SRAM windows]
     C --> E[Complete operand join and issue credits]
     D --> E
     E --> F[Eight-lane LQ8 arithmetic]
     F --> G[Reserved output queue and tail masking]
-    G --> H[Strided bounded writer with four credits]
-    H --> I[Ordered acknowledgements and operation drain]
+    G --> H[Bounded strided writer with four write credits]
+    H --> I[Final acknowledgement and operation drain]
 ```
 
-| Architectural decision | Earlier behavior | Implemented refinement and purpose |
+The schedule selection shown above happens before elaboration in the loaded
+runner. It is not a runtime-adaptive hardware controller. Generation ownership,
+cancellation and fault drain apply across the transport and execution path.
+
+| Decision | Earlier behavior | Implemented refinement |
 |---|---|---|
-| Reuse unit | Whole weight row must fit 1,024 packed words to replay | A whole-K column pass can replay across output rows; oversized passes stream and the tail is evaluated separately |
-| Execution order | Finish a row before advancing to another row | Optional pass-first order finishes a column pass across rows before advancing; preserves each output's sequential FP32 RNE association |
-| Pass width | Coupled to adder pipeline depth | Independent `PASS_COLUMNS` and `ADDER_STAGES`; residency can change without changing arithmetic latency |
-| External weight fetch | Repeated row fetch when the full weight row exceeds capacity | Compact fetch visits each reusable pass once; logical issue addresses remain continuous across replay |
-| Local storage | Two 512x128 weight banks | Reuses these banks without adding SRAM or spilling partial accumulators for resident whole-K passes |
-| Operand delivery | Execution depends on weight and auxiliary availability | Future cursor, three auxiliary windows and complete-operand issue credits overlap preparation and execution |
-| Result publication | Row-first output order | Writer validates pass/row publication order while deriving the correct strided physical output address |
-| Ownership and completion | Work can remain in transport after arithmetic ends | Generation ownership, cancellation and reserved drain persist through pending reads, queued writes and final acknowledgements |
+| Reuse and loop order | Replay requires a whole weight row to fit 1,024 packed words; larger rows repeat fetches | Optional pass-first execution reuses a whole-K column pass across output rows; oversized passes stream and tails are considered separately |
+| Pass width | Coupled to adder pipeline depth | Independent `PASS_COLUMNS` and `ADDER_STAGES`; residency can improve without changing arithmetic latency |
+| Storage and numerical association | Capacity cliff at the full row | Reuses the same two weight banks; resident whole-K passes add no SRAM or accumulator spill and preserve sequential FP32 RNE association |
+| Schedule policy | Manual selection | Configuration-time heuristic chooses the widest supported resident pass up to three columns; retains row-first for one row, resident whole rows, or depth beyond one-column residency |
+| Weight read overlap | One outstanding line read | Optional 1–8 ordered read credits within a coordinate; default remains one; no out-of-order response support or next-coordinate prefetch |
+| Auxiliary delivery | Repeated preparation and activation fills | Future-address cursor, rolling activation reuse and three auxiliary windows overlap preparation with execution |
+| Partial-row replay | A short final row can reject a valid prefix or strand a retained bank | Bounded-prefix acquisition and next-row-aware bank release; no added state, storage or cycles |
+| Publication and completion | Row-first publication and handoff bubbles | Pass-aware strided addressing, reserved output capacity, four ordered write credits and ownership through final acknowledgements |
+| Optional state control | Combinational 33-bit modulo and admission-dependent payload writes | Sequential modulo with power-of-two bypass; independent free-entry capture and validity count; removes reset from 1,088 payload bits |
 
-The pass scheduler has a registered elastic tile handoff and retains command
-ownership until the final staged tile is accepted. The writer retains four
-ordered write credits and descriptor-owned capacity checks. Tail masking and
-fault priority remain part of the composed path.
+BF16 weight-object reads currently cover group one and strided views. General
+activation-object transport and broader input-format coverage remain open.
+Lane pass widths 1–7 are supported subject to accumulator capacity; the loaded
+runner exposes 1/2/3. Optional features do not automatically qualify every
+legacy default or production deployment.
 
-Input-object evidence currently covers BF16 weights with group one, including
-strided views. It does not establish general strided activation transport or
-all input formats. Lane pass widths 1–7 are supported subject to accumulator
-capacity; loaded runner configurations currently expose widths 1, 2 and 3.
+## Measured changes compared with earlier versions
 
-## What improved compared with earlier versions
+M/N/K denote output rows, output columns and reduction depth. Comparisons are
+matched within each experiment, and percentages must not be added together.
+Campaign cycles include faults, aborts, recovery and drain. Successful-phase
+cycles cover operation kick through completion under the modeled external
+service. Neither is whole-model inference latency. Traffic figures below are
+first-operation counters.
 
-M/N/K denote output rows, output columns and reduction depth. Each comparison is
-matched within its own experiment. Percentages are not additive. Weight bytes
-and activation fills below are first-operation counters. Campaign cycles include
-faults, aborts, recovery and drain; successful-phase cycles measure operation
-kick through completion under the modeled memory/stall service. Neither is
-whole-model inference latency.
-
-| Matched experiment | Earlier result | Refined result | Interpretation |
+| Matched experiment | Earlier result | Refined result | Demonstrated change |
 |---|---:|---:|---|
-| M6/N53/K160, row-first → pass-first, campaign cycles | 708,336 | 203,111 | 71.33% fewer campaign cycles |
-| Same experiment, weight bytes / fills | 207,336 / 6,720 | 34,556 / 1,120 | 83.33% lower weight traffic; activation fills rise 2,496 → 2,880 |
-| M6/N53/K342, three-column → two-column passes with the same three-stage adder, median successful-phase cycles | 200,641.5 | 67,785.5 | 66.22% fewer cycles through better SRAM residency |
-| Same experiment, weight bytes / fills | 404,340 / 12,654 | 73,140 / 2,394 | Activation fills rise 6,156 → 8,208; this cost is included in the measured phase latency |
-| M6/N53/K80, row-first → pass-first, campaign cycles | 105,552 | 99,777 | Small benefit when weights already fit; weight bytes stay 17,596 and activation fills double 720 → 1,440 |
-| Earlier rolling activation-window experiment, M6/N56/K80 | 1,440 fills; 35,175 campaign cycles | 720 fills; 30,723 cycles | 50% fewer activation fills and 12.66% fewer campaign cycles |
+| M6/N53/K160, row-first → pass-first3, campaign cycles | 708,336 | 203,111 | 71.33% fewer cycles; weight bytes 207,336 → 34,556 |
+| K342, pass3 → pass2 with the same three-stage adder, median successful-phase cycles | 200,641.5 | 67,785.5 | 66.22% fewer cycles; weight bytes 404,340 → 73,140 |
+| K513, pass2 → pass1, median successful-phase cycles | 300,448.5 | 143,226.5 | 52.33% fewer cycles; weight bytes 604,752 → 109,392 |
+| K343, manual pass3 → automatic pass2, median successful-phase cycles | 201,466.5 | 68,181.5 | 66.16% fewer cycles; validates the capacity heuristic at another boundary |
+| K344, one → four read credits, same external queue4 and response delay12, median successful-phase cycles | 109,884 | 80,903.5 | 26.37% fewer cycles; same 73,564 weight bytes and 8,256 activation fills |
+| Earlier M6/N56/K80 rolling activation-window experiment, campaign cycles | 35,175 | 30,723 | 12.66% fewer cycles; activation fills 1,440 → 720 |
 | Writer handoff, eight continuous beats with same-edge acknowledgements | 24 cycles | 17 cycles | Removes handoff bubbles at credit depths 2/4/8 |
-| Sinkhorn handoffs with pipelined divider, 36-matrix corpus | 1,129,736 cycles | 1,105,554 cycles | 2.14% fewer cycles; divider pipeline also improves timing at a one-cycle division cost |
 
-The residency mechanism explains the largest gain. At K342, a three-column
-pass needs 1,026 packed words, just beyond the 1,024-word capacity; a two-column
-pass needs 684 and can replay. No faster adder or larger SRAM is needed for this
-change. Conversely, the K80 result shows why pass-first should not be assumed
-optimal for all workloads. Its first-success cumulative counter changes only
-13,734 → 13,600; the campaign percentage also reflects fault/recovery work.
+At K342, three columns require 1,026 packed words, just beyond the 1,024-word
+capacity. Two columns require 684 and can replay. Changing this architectural
+choice avoids repeated external traffic without needing a faster adder.
+There is a real tradeoff: activation fills rise 6,156 → 8,208. At K513,
+one-column passes raise activation fills 12,312 → 21,546. These costs are
+included in the measured operation latency.
 
-A subsequent current-source K513 comparison confirms one-column residency:
-median successful-phase cycles fall 300,448.5 → 143,226.5 (52.33%) versus
-two-column passes, with the same three-stage adder. Weight bytes fall
-604,752 → 109,392 while activation fills rise 75%. Both full campaigns pass
-after correcting the testbench final-output hold for pass width one. See the
-[single-column comparison](../results/rtl/g2_single_column_residency_comparison.json).
+More concurrency is not universally useful. At K160 with a single-request
+external service, increasing credits from one to eight reduces median cycles
+only 27,645.5 → 27,587 (0.21%); observed concurrency remains one. This supports
+keeping the default at one until workload benefit and physical costs justify
+more. The earlier resident K80 comparison also shows that pass-first can
+increase activation traffic while providing little successful-operation benefit.
 
-The loaded comparisons each check 2,234 exact outputs and 295 writes and
-acknowledgements, with reference arithmetic, stalls, abort/restart, generation,
-bounds and late-fault checks. The earlier table measurements predate the latest scheduler
-extent-selection change; the K513 comparison verifies current sources. Each
-remains evidence for its exact recorded sources.
+The loaded comparisons check 2,234 exact outputs and 295 writes/acknowledgements
+per full campaign, including stalls, bounds, abort/restart and fault recovery.
+Credit ownership tests pass Icarus and Verilator at 1/2/4/8 credits, including
+errors overlapping held and newly accepted requests. Partial replay has 172
+passing tests, including 72 partial-row cases. These are retained verification
+results; this report refresh does not rerun RTL regressions.
 
-Evidence:
-[row/pass comparison](../results/rtl/g2_pass_first_comparison.json),
-[independent pass width](../results/rtl/g2_independent_pass_width_comparison.json),
-[resident workload](../results/rtl/g2_pass_first_resident_shape_comparison.json),
-[oversized-pass fallback](../results/rtl/g2_pass_first_oversized_comparison.json).
+Evidence: [pass-width comparison](../results/rtl/g2_single_column_residency_comparison.json),
+[capacity policy](../results/rtl/g2_capacity_policy_comparison.json),
+[read credits](../results/rtl/g2_gather_read_credits_comparison.json),
+[service boundaries](../results/rtl/g2_gather_credit_service_boundaries.json),
+[ownership checks](../results/rtl/gather_credit_ownership_cross_simulator.json),
+[partial replay](../results/rtl/partial_replay_extent_gap/fixed.json).
 
-## Component optimization and physical status
+## High-clock-rate implementation: evidence and limits
 
-These are extracted-route ASAP7 TT predictive-PDK results for specific blocks
-and configurations. A 1 ns passing route establishes that tested block target;
-it does not establish a 1 GHz complete accelerator or measured silicon speed.
-Areas are standard-cell area and exclude SRAM unless separately stated.
+The ASAP7 compute/local-control engineering target remains 1 ns (1 GHz).
+Higher targets should follow demonstrated system benefit. Supporting engines
+need an explicit service budget and implemented clock boundary if they run
+slower; a paper clock-domain split does not solve the integration problem.
 
-| Block / configuration | Tested period | Cell area, µm² | Setup / hold slack, ns | Status |
-|---|---:|---:|---:|---|
-| Compact pass weight transport | 1 ns | 6,324.760 | +0.072825 / +0.032072 | Pass; source and retained-artifact audit recorded |
-| Pass-first output writer | 1 ns | 1,682.200 | +0.026359 / +0.050804 | Pass; 12.81% more area than recorded row-first writer |
-| Earlier runtime operand service | 1 ns | 3,807.230, plus 5,586 SRAM | +0.009551 / +0.021035 | Pass for its recorded configuration; does not qualify current pass-first integration |
-| Sinkhorn with pipelined divider | 2 ns | 3,099.550 | +0.092189 / +0.027670 | Pass for recorded configuration |
-| Pass scheduler after split tile increment | 1 ns | 1,429.280 | −0.056566 / +0.051760 | Historical setup failure |
-| Pass scheduler with parallel extent selection | 1 ns | 1,380.650 | +0.029694 / +0.051666 | Historical pass before partial-row fix; seven retained artifacts verified |
-| Pass scheduler with partial-row ownership fix | 1 ns | 1,393.780 | +0.033745 / +0.051384 | Current-source pass; seven retained artifacts verified |
-
-The scheduler's split tile increment improves setup by 49.26 ps against the
-preceding elastic-handoff version, at 0.33% more cell area and no added cycles.
-Parallel extent selection replaces serial minima with parallel comparisons
-and masked selection. It passes 93 scheduler/bank/runtime tests and 3,664
-independent extent cases. Its completed route improves setup by another
-86.26 ps and reduces cell area by 3.40% without added cycles. All reported
-timing and physical checks pass at the tested 1 ns period.
-
-Existing integrated two- and three-column G2 physical jobs also remain active.
-Their launch sources predate subsequent scheduler changes; they can establish
-historical integration evidence, not current-source closure. No all-target
-closure or activity-qualified energy improvement is claimed.
-
-Evidence: [transport audit](../results/physical_abi3/asap7/bf16_weight_transport/compact_pass_route_audit.json),
-[writer audit](../results/physical_abi3/asap7/output_writer_handoff/pass_first_route_audit.json),
-[scheduler route audit](../results/physical_abi3/asap7/weight_pass_scheduler/parallel_extent_route_audit.json),
-[extent verification](../results/rtl/weight_parallel_extent.json).
-
-## Architectural gaps and optimization targets
-
-1. **Finish schedule policy and qualify the repaired replay contract.** The
-   generic 92-word command over a stored 31-word row now passes. Prefetch accepts
-   a bounded prefix; the scheduler retains each bank only if its corresponding
-   start in the next row is needed. A second bank omitted by the final partial
-   row releases during the preceding row. The 172 passing tests include 72
-   partial-row cases and final bank-release checks; its scheduler physical
-   route passes at 1 ns. Prefetch and integrated qualification remain open. Select row-first/pass-first and pass width from capacity and measured
-   service cost. The loaded runner now offers a configuration-time capacity
-   heuristic; runtime adaptation and production compiler integration remain open. For workloads exceeding even a
-   one-column whole-K pass, evaluate depth tiling with an explicit accumulator
-   budget.
-2. **Complete actual input transport.** Extend descriptor-driven activation and
-   weight paths across required formats, bases, strides, capacities and physical
-   bindings. Validate through real dispatch with delayed memory responses.
-3. **Balance every target before tuning its modules.** Establish bandwidth,
-   storage, queue occupancy, starvation and engine service-rate budgets using
-   representative workloads. The table below defines the remaining scope.
-4. **Optimize components on measured containing-block paths.** Start with the
-   scheduler replay/extent/address path. Pipeline long arithmetic, address and
-   control paths where clock improvement outweighs added latency and storage.
-   Verify recurrence spacing, stall propagation, reset, faults and ownership.
-5. **Qualify each complete configuration.** After the architecture stabilizes,
-   rerun current-source loaded workloads and integrated physical implementation.
-   Require setup/hold, slew, capacitance, fanout, DRC and antenna closure with
-   SRAM and clock-tree costs. Compare traffic, throughput, latency, area and
-   activity-based energy; clock period alone is not the objective.
-
-| Target | Architectural optimization target | Required measurement |
+| Block / configuration | Evidence | Qualification limit |
 |---|---|---|
-| Dense decode | Weight bandwidth, bounded prefetch and lane utilization | Bytes per useful output, starvation and latency under memory stalls |
-| Dense prefill | Multirow pass/tile reuse and accumulator capacity | Residency boundaries, activation/weight tradeoff and sustained throughput |
-| MoE | Expert grouping, dispatch/gather capacity and weight locality | Expert skew, queue occupancy, backpressure and token latency |
-| Attention / KV | Cache layout, banking, append/read traffic and reductions | Context-length scaling, bank conflicts and sustained service rates |
-| Vector / reduction | Supporting-engine throughput matched to tensor production | Producer/consumer rates including pipeline and transaction latency |
-| Distributed execution | Transfer credits and ownership through congestion/drain | Congestion, delayed responses, cancellation and final-write completion |
-| Every technology / deployment | Realizable memory and clock organization | Separate configuration coverage, clock/area budgets and integrated closure |
+| Partial-replay pass scheduler | Final extracted route at 1 ns; area 1,393.780 µm²; setup +0.033745 ns, hold +0.051384 ns; zero reported timing/physical violations | Scheduler source hashes rechecked against this workspace; does not qualify prefetch or G2 |
+| Pass-first output writer | Recorded route at 1 ns; area 1,682.200 µm²; setup +0.026359 ns, hold +0.050804 ns | Block/configuration evidence |
+| Sinkhorn with pipelined divider | Recorded route at 2 ns; area 3,099.550 µm²; setup +0.092189 ns, hold +0.027670 ns | Separate engine configuration; not 1 GHz integration |
+| Current weight transport, one/four credits | Synthesis available; final route pending | Older passing compact-transport route predates credits and is historical |
+| Current runtime operand service and integrated G2 | Physical jobs in progress | No current integrated timing closure claim; state-disabled and state-enabled builds need separate qualification |
+| Current state controller | Synthesis and functional checks available; final route pending | Earlier sequential variant still missed timing at intermediate CTS |
 
-These targets align the design with modern accelerator practice: local data
-reuse, overlapped transport, bounded credits and balanced engines. The remaining
-work is to demonstrate that balance and physical feasibility across all targets.
+Areas above are standard-cell area, excluding SRAM unless separately accounted.
+Positive slack is margin at the tested period, not a measured higher Fmax.
 
-The [original partial-row failure](../results/rtl/partial_replay_extent_gap/result.json)
-is retained alongside [the fix evidence](../results/rtl/partial_replay_extent_gap/fixed.json). Detailed implementation checkpoints and
-source snapshots are in the [input transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md).
+The [matched synthesis checkpoint](../results/physical_abi3/asap7/optimization_synthesis_checkpoint/comparison.json)
+shows state-controller mapped area 3,919.979 → 3,573.645 → 3,492.799 µm²
+for combinational modulo, sequential modulo, then independent payload capture.
+These are 8.84% and a further 2.26% reductions. General ring modulo now takes
+35 apply cycles instead of one; power-of-two/non-ring paths retain one cycle.
+The four inspected frozen deployment bundles contain no STATE descriptors,
+so this is not evidence of a speedup for those deployments.
 
-The partial-row repair changes scheduler and prefetch RTL after the recorded
-K513 loaded comparisons and scheduler route. Those results now qualify their
-retained historical sources. A current-source loaded K514 campaign passes
-2,234 exact outputs and 295 write acknowledgements. The repaired scheduler
-passes its 1 ns block route; integrated physical requalification is underway. The standalone transport and writer sources are unchanged.
+Four-credit transport maps to 5,973.586 µm² versus 6,031.746 µm² for one
+credit, despite adding fifteen flops. The 0.96% mapped-area reduction is a
+synthesis outcome, not proof that larger queues inherently cost less. Neither
+these figures nor removed resets establish routed area or energy savings.
 
-A configuration-time capacity policy is now available through the loaded
-runner's `--auto-schedule`. At K343 it selects two-column residency and reduces
-median successful-phase cycles 201,466.5 → 68,181.5 against manual three-column
-passes, with matching sources and full fault/recovery checks. It selects
-row-first for a resident K80 workload. See the
-[policy comparison](../results/rtl/g2_capacity_policy_comparison.json). This is
-a capacity heuristic, not an automatic runtime controller or a global optimum.
+Evidence: [scheduler route audit](../results/physical_abi3/asap7/weight_pass_scheduler/partial_replay_route_audit.json),
+[writer route audit](../results/physical_abi3/asap7/output_writer_handoff/pass_first_route_audit.json),
+[state verification](../results/rtl/state_payload_capture/verification.json),
+[control campaign](../results/rtl/abi3_state_payload_campaign.json).
 
-The weight gather now has an optional bounded ordered read-credit window,
-forwarded through transport and G2. At M6/N53/K344 with identical four-entry
-external queues and twelve-cycle response delay, four credits reduce median
-successful-operation cycles 109,884 → 80,903.5 (26.37%) with unchanged
-73,564 weight bytes and 8,256 activation fills. Both full campaigns pass
-2,234 outputs and 295 writes/acks. The
-[loaded comparison](../results/rtl/g2_gather_read_credits_comparison.json) and
-[cross-simulator ownership checks](../results/rtl/gather_credit_ownership_cross_simulator.json)
-cover ordered drain, cancellation and errors overlapping held/newly accepted
-reads. Default credit count remains one; out-of-order responses are unsupported.
-The older passing compact-transport route is now historical. Current four-credit
-transport and G2 physical runs are active; area and integrated timing remain open.
+## Architecture-first optimization targets and execution order
+
+1. **Close the current integrated evidence gap.** Finish existing physical jobs,
+   inspect final extracted critical paths, and bind results to source hashes,
+   parameters, actual elaborated hierarchy and memory macros. Qualify G2 with
+   state disabled/enabled and relevant read-credit counts separately. Historical
+   jobs remain useful comparisons, but cannot certify later RTL.
+2. **Finish memory organization and scheduling decisions.** Move the runner's
+   capacity heuristic into production compiler/runtime selection with measured
+   activation, weight and service costs. Evaluate depth tiling when even one
+   whole-K column exceeds local capacity, including accumulator storage and
+   numerical association. Investigate redundant reads when gather lanes alias
+   the same 16-byte line; coalescing is a candidate, not implemented progress.
+3. **Complete descriptor-driven input delivery.** Extend real activation and
+   weight transport across required formats, strides and capacity bounds. Size
+   queues from sustainable memory service and measured occupancy/starvation.
+   Evaluate next-coordinate prefetch only with an explicit ownership/storage
+   budget and measured end-to-end benefit.
+4. **Balance the remaining accelerator targets.** Use actual deployed operator
+   traces and finite resource budgets as listed below. Choose reuse, banking,
+   engine replication and clock organization before tuning individual modules.
+5. **Optimize every selected component in its containing configuration.** Use
+   measured critical paths to choose pipelining, arithmetic restructuring,
+   control fanout reduction and storage mapping. Check initiation interval,
+   recurrence spacing, latency, backpressure and area together; extra stages
+   alone do not establish higher useful throughput.
+6. **Validate complete workloads and technologies.** Refresh compiled programs
+   and cycle calibration; require exact numerical behavior, final-write drain,
+   setup/hold and physical checks. Report latency, throughput, traffic, useful
+   utilization, complete area and activity-based energy for each deployment.
+
+| Target | Architectural decision to resolve | Required acceptance evidence |
+|---|---|---|
+| Dense decode | Weight delivery, local reuse and bounded prefetch | Bytes per useful output, starvation and latency under actual memory stalls |
+| Dense prefill | Multirow pass/depth tiling and accumulator capacity | Residency boundaries, activation/weight tradeoff and sustained throughput |
+| MoE | Expert grouping, dispatch/gather capacity and locality | Expert skew, queue occupancy, backpressure and token latency |
+| Attention / KV | Cache layout/banking, append/read overlap and reduction capacity | Context-length scaling, bank conflicts and sustained service rates |
+| Vector / reduction | Service capacity matched to tensor production | Producer/consumer rates, recurrence and complete transaction latency |
+| Distributed execution | Injection/receive bandwidth, collective schedules and ownership | Congestion, finite credits, cancellation and final destination completion |
+| Every technology / deployment | Implementable memories, clock domains and selected configurations | Separate hierarchy coverage, total area and current-source integrated closure |
+
+This organization follows modern accelerator principles: maximize useful local
+reuse, overlap bounded transport with execution, keep repeated scheduling near
+engines, and balance compute against memory and supporting services. The
+remaining acceptance requirement is to demonstrate those properties across the
+supported deployments. The broader optimization task remains unfinished.
+
+The [architecture-first plan](ARCHITECTURE_FIRST_OPTIMIZATION_PLAN.md) defines
+full-scope acceptance, and the [transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md)
+retains detailed implementation checkpoints and source snapshots.
