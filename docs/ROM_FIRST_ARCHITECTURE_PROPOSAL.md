@@ -37,6 +37,11 @@ Evidence: [dependency calculation](../results/architecture/redesign_recurrence_f
 reproduced by `python3 tools/audit_redesign_recurrence_feasibility.py`. All following
 85/75 µs budgets remain historical proposal targets, not accepted feasible points.
 
+Further [blocked-accumulation feasibility analysis](ROM_REDESIGN_FEASIBILITY.md)
+finds that block128 also exceeds the linear budget at the configured utilization
+cap, and supplies a concrete counterexample to sequential bit equivalence.
+No numerical or implementation alternative has been accepted yet.
+
 ## 1. Decision and performance contract
 
 Build a **distributed digital accelerator with bank-local ROM, local mutable KV,
