@@ -1088,3 +1088,20 @@ The positive-engine attribution rerun also completed. Removing its source
 attributes produces the same multiset of nonempty mapped-netlist lines as the
 original timing run, establishing correspondence for subsequent source-path
 analysis. No RTL optimization or timing improvement is claimed from that rerun.
+
+## First apply-pipeline final route improves but does not close timing
+
+The serial apply pipeline completes final extracted ASAP7 TT at 1 ns with
+setup slack −0.369756 ns and 1,349 setup violations. Production parallel admission
+measured −0.663333 ns. Hold slack is +0.0541532 ns and DRC, antenna, slew,
+capacitance and fanout violations are zero. Routed cell area rises
+4,182.110 → 4,231.470 µm² (1.18%). Sources and seven retained artifacts verify
+in the [final audit](../results/physical_abi3/asap7/state_controller/pnr_apply_pipeline_cts12_1ns_audit.json).
+
+The final worst path is `op_descriptor_id[7]` → `count_commits[8]`, confirming
+that byte-accounting pipelining moved the limit into admission/counter logic.
+The serial candidate is not selected for production: it still fails setup,
+costs area and adds two cycles per applied entry. Pending overlap and parallel
+counter routes target latency and this remaining logic respectively. The
+[selection record](../results/rtl/state_apply_pipeline/comparison.json) now carries
+the final result instead of a pending-route claim.
