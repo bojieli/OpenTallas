@@ -450,3 +450,37 @@ All three launch sources are bound to retained matching RTL, including
 were hash-verified. The matched single-credit and coalesced four-credit routes
 remain live; their final results are needed to assess incremental routed cost.
 See the [baseline route audit](../results/physical_abi3/asap7/bf16_weight_transport/credits4_before_coalescing_route_audit.json).
+
+## Balanced multiplier and wider-chunk softmax experiment
+
+The recovered `ot_wide_mul_tree_seq` candidate reduces independent partial
+products and the redundant accumulator with a balanced 3:2 compressor tree.
+At the default sixteen multiplier bits per step, reduction depth is six
+compressor levels rather than sixteen serial levels. The transaction and bit
+emission interfaces retain the existing multiplier's cycle count.
+
+The candidate now has cycle-by-cycle chain-reference checks in addition to the
+independent full-width product oracle. Six configurations pass in each of
+Icarus and Verilator 5.050: three operand/split widths, with chunk sets
+2/4/8/16 and 2/4/8/32. This is 4,072 product comparisons per simulator,
+including repeated smaller-chunk checks. Both busy/done timing and completed
+results agree with the existing chain multiplier.
+
+An isolated containing-softmax experiment uses the tree with 32-bit chunks,
+reducing multiplier transaction steps from 21 to 11 for the 163×161-bit
+product. The nine numerical-reference cases and two refusals still pass.
+With exponential reuse enabled in both runs, cycles fall **767,158 → 594,908
+(22.45%)**, while physical exponential evaluations remain 276 and cache hits
+121. The shared small-divider implementation is unchanged. Retained Verilator
+source-content hashes agree for the other parsed dependencies; candidate
+consumer snapshots preserve the existing workspace changes and alter only the
+multiplier chunk parameter. This is a simulation-cycle benefit, not measured
+wall-clock accelerator throughput or whole-attention qualification.
+
+The old tree route uses a different source hash and is not accepted as closure
+of this candidate. Fresh matched 1 ns routes are active for chain16, tree16
+and tree32, with CTS cluster size 12 and the same fanout/transition constraints.
+Production consumers retain their current implementation pending the routed
+area/timing tradeoff and containing-engine qualification. The experiment,
+source snapshots and logs are retained in the
+[multiplier comparison](../results/rtl/wide_mul_tree_qualification/comparison.json).
