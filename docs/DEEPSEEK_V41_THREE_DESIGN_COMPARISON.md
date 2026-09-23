@@ -133,3 +133,8 @@ arithmetic, not a link benchmark or workload simulation. Other supporting studie
 The [non-routed tensor audit](DEEPSEEK_V41_DENSE_PLACEMENT.md) reconciles the
 8.523 GB inventory and identifies attention, shared experts and the output head
 as the main non-routed placement targets. Runtime-role qualification remains open.
+
+The [attention placement study](DEEPSEEK_V41_ATTENTION_PLACEMENT.md) now compares
+group-local K-sharded output projection against feature gathering and output-row
+sharding. It also separates packed `wo_a` storage from the vendor's BF16 execution
+materialization, so memory comparisons can use matching deployment formats.
