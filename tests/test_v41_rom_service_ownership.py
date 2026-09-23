@@ -13,7 +13,7 @@ def test_cold_banks_do_not_supply_selected_shards():
 def test_selection_does_not_shorten_uniform_bank_sweep():
     a,b=ownership(20,39,4,72,1),ownership(20,39,4,72,6)
     assert a['uniform_fixed_bank_expert_read_us']==b['uniform_fixed_bank_expert_read_us']
-    assert b['fully_pooled_expert_read_us']==6*a['fully_pooled_expert_read_us']
+    assert b['fully_pooled_expert_read_us']==pytest.approx(6*a['fully_pooled_expert_read_us'])
     assert b['fixed_bank_active_TB_s']==pytest.approx(6*a['fixed_bank_active_TB_s'])
 
 
