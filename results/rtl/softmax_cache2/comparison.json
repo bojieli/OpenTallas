@@ -1,0 +1,22 @@
+{
+  "scope": "Two exact last-successful exponential results, newest first; FIFO insertion on successful evaluation only, no hit promotion. Isolated softmax candidate.",
+  "baseline_record": "results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_baseline_synth_sta_1ns.json",
+  "baseline_record_sha256": "8ba0ecd3f813a0a8a4c3379a07b87451caf7bf0ebccf6b7db3bb8af97b14020f",
+  "record": "results/physical_abi3/asap7/a3_attention_softmax_block/cache2_synth_sta_1ns.json",
+  "record_sha256": "6981db786bc4e9be4775eb8b81f32673ef68b9fd2914f09ef021706aa357af74",
+  "baseline_area_um2": 10969.284,
+  "area_um2": 11008.39,
+  "area_increase_percent": 0.35650458133822394,
+  "baseline_slack_ns": -9.969061171987859,
+  "slack_ns": -10.244718891962723,
+  "baseline_cycles": 767158,
+  "candidate_cycles": 761390,
+  "cycle_reduction_percent": 0.7518659780644921,
+  "baseline_evaluations": 276,
+  "candidate_evaluations": 272,
+  "baseline_hits": 121,
+  "candidate_hits": 125,
+  "baseline_numerical_evidence": "results/rtl/small_divider_step4_current/step10.log",
+  "verification": "Eight tests pass across production/candidate, one/two lanes and Icarus/Verilator. Distinct cached results, repeated service errors, reset invalidation, replacement and alternating hit/miss behavior checked. Real engine passes nine numerical cases and two refusals. All baseline/current source and vector hashes verified.",
+  "decision": "Retain isolated candidate: modest cycle benefit and area cost, prelayout slack regression; no production integration or clock claim. Existing matched softmax routes remain active."
+}

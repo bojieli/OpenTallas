@@ -1,0 +1,65 @@
+Warning 503: sta.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _170356_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+ 200.0000  200.0000 ^ input external delay
+   0.0000  200.0000 ^ rst_n (in)
+   0.0000  200.0000 ^ _170356_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+           200.0000   data arrival time
+
+1000.0000 1000.0000   clock core_clk (rise edge)
+   0.0000 1000.0000   clock network delay (ideal)
+   0.0000 1000.0000   clock reconvergence pessimism
+          1000.0000 ^ _170356_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   8.4266 1008.4266   library recovery time
+          1008.4266   data required time
+-------------------------------------------------------------
+          1008.4266   data required time
+          -200.0000   data arrival time
+-------------------------------------------------------------
+           808.4266   slack (MET)
+
+
+Startpoint: _169949_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: _169329_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+   0.0000    0.0000 ^ _169949_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 159.3943  159.3943 ^ _169949_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  51.9355  211.3298 ^ _090482_/Y (OR3x1_ASAP7_75t_R)
+  38.3409  249.6707 ^ _090484_/Y (OR3x1_ASAP7_75t_R)
+  29.3366  279.0073 ^ _090486_/Y (OR3x1_ASAP7_75t_R)
+  25.6057  304.6130 ^ _090487_/Y (OA22x2_ASAP7_75t_R)
+  40.1590  344.7720 ^ _090492_/Y (AND3x1_ASAP7_75t_R)
+  21.6977  366.4697 v _122468_/Y (NOR2x1_ASAP7_75t_R)
+2285.9387 2652.4084 ^ _122470_/Y (NOR3x1_ASAP7_75t_R)
+8275.9863 10928.3945 v _123674_/Y (NAND2x1_ASAP7_75t_R)
+ 243.9728 11172.3672 v _124896_/Y (AO221x1_ASAP7_75t_R)
+  14.8646 11187.2314 ^ _124897_/Y (OAI21x1_ASAP7_75t_R)
+   0.0000 11187.2314 ^ _169329_/D (DFFASRHQNx1_ASAP7_75t_R)
+          11187.2314   data arrival time
+
+1000.0000 1000.0000   clock core_clk (rise edge)
+   0.0000 1000.0000   clock network delay (ideal)
+   0.0000 1000.0000   clock reconvergence pessimism
+          1000.0000 ^ _169329_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -57.4874  942.5126   library setup time
+           942.5126   data required time
+-------------------------------------------------------------
+           942.5126   data required time
+          -11187.2314   data arrival time
+-------------------------------------------------------------
+          -10244.7188   slack (VIOLATED)
+
+

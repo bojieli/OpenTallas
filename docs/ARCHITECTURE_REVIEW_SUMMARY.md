@@ -1266,3 +1266,19 @@ benefit is insufficient to replace the retained-capacity physical run or justify
 another route before existing results arrive. The overlap run is in detailed
 routing, and the counter run remains in global-route timing repair.
 See the [comparison](../results/rtl/state_capacity_shared/comparison.json).
+
+## Two-entry exact reuse reduces additional softmax service work
+
+An isolated two-entry cache retains the last two successful exponential results,
+selecting only bit-identical arguments. Errors never populate either slot;
+reset invalidates both. Hits do not change insertion order. Real softmax remains
+exact across nine numerical cases/two refusals, with 767,158 → 761,390 cycles
+(0.75% reduction), 276 → 272 evaluations and 121 → 125 hits. This is the same
+source/vector corpus used for current step10 measurements, with hashes verified.
+
+Mapped area grows 10,969.284 → 11,008.390 µm² (0.36%). Whole-block pre-layout
+slack worsens −9.969061 → −10.244719 ns, so production is unchanged and no clock
+improvement is claimed. Eight protocol tests pass in both simulators across
+one/two lanes and production/candidate, including distinct cached result values,
+reset, repeated faults and replacement behavior. See the
+[comparison](../results/rtl/softmax_cache2/comparison.json).
