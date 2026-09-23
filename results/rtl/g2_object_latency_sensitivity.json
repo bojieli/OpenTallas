@@ -1,0 +1,49 @@
+{
+  "status": "pass",
+  "scope": "Matched M6/N53/K344 with single-outstanding real object-read fixture; response delay is explicit, not DRAM bandwidth or hardware frequency",
+  "current_sources_verified": true,
+  "source_manifests_match": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_object_latency12_depth344_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "cb70572037ef80debca86d0a2d9c1d5dd780ec723efa755c605bd96c4200d432",
+      "response_delay_cycles": 12,
+      "pass_columns": 3,
+      "automatic_schedule": false,
+      "median_successful_phase_cycles": 434075.5,
+      "weight_bytes": 406684,
+      "weight_fills": 12728,
+      "activation_fills": 6192,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_object_latency12_depth344_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2_auto_schedule.json",
+      "sha256": "81056bed84f0ad6b715160f64025ce6f3fa72367bcd189c670b97e7d0c6ee29f",
+      "response_delay_cycles": 12,
+      "pass_columns": 2,
+      "automatic_schedule": true,
+      "median_successful_phase_cycles": 109884.0,
+      "weight_bytes": 73564,
+      "weight_fills": 2408,
+      "activation_fills": 8256,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_object_latency0_depth344_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2_auto_schedule.json",
+      "sha256": "16455eac9d5780262698b6609e0a80e71709b079c5af8185a08d757171a46887",
+      "response_delay_cycles": 0,
+      "pass_columns": 2,
+      "automatic_schedule": true,
+      "median_successful_phase_cycles": 56626.5,
+      "weight_bytes": 73564,
+      "weight_fills": 2408,
+      "activation_fills": 8256,
+      "outputs": 2234,
+      "writes": 295
+    }
+  ],
+  "slow_service_residency_cycle_reduction_percent": 74.6855097788288,
+  "resident_delay_cycle_increase_percent": 94.05048872877539
+}

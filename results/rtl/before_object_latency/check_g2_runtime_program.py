@@ -28,7 +28,6 @@ parser.add_argument("--pass-first", action="store_true")
 parser.add_argument("--auto-schedule", action="store_true", help="Choose row/pass order and pass width from residency before elaboration")
 parser.add_argument("--pass-columns",type=int,choices=[1,2,3],default=3)
 parser.add_argument("--weight-response-gap", type=int, default=1)
-parser.add_argument("--weight-object-latency", type=int, default=3, help="Response delay cycles in the single-outstanding object-read fixture")
 parser.add_argument("--depth", type=int, default=80)
 parser.add_argument("--cols", type=int, default=None)
 parser.add_argument("--activation-miss-aligned", action="store_true")
@@ -38,8 +37,6 @@ args = parser.parse_args()
 if args.depth < 2 or args.depth > 65535:
     parser.error("depth must be in 2..65535")
 depth = args.depth
-if args.weight_object_latency < 0 or args.weight_object_latency > 64:
-    parser.error("weight object latency must be in 0..64")
 if args.weight_response_gap < 1:
     parser.error("weight response gap must be positive")
 rows = 6 if args.output_backpressure else 1
@@ -78,8 +75,6 @@ record_name = (
 )
 if args.no_weight_row_reuse:
     record_name += "_no_weight_reuse"
-if args.weight_object_latency != 3:
-    record_name += f"_object_latency{args.weight_object_latency}"
 if args.weight_response_gap != 1:
     record_name += f"_weight_gap{args.weight_response_gap}"
 if depth != 80:
@@ -321,7 +316,6 @@ cmd = [
     f"-GAUXILIARY_DEPTH={args.auxiliary_depth}",
     f"-GREGISTER_AUXILIARY_REQUESTS={int(args.registered_auxiliary_requests)}",
     f"-GWEIGHT_RESPONSE_GAP={args.weight_response_gap}",
-    f"-GWEIGHT_OBJECT_LATENCY={args.weight_object_latency}",
     f"-GACTIVATION_MISS_ALIGNED={int(args.activation_miss_aligned)}",
     "--top-module",
     "tb_a3_g2_runtime_program",
@@ -371,9 +365,6 @@ result = {
     "auxiliary_depth": args.auxiliary_depth,
     "registered_auxiliary_requests": args.registered_auxiliary_requests,
     "weight_response_gap": args.weight_response_gap,
-    "weight_object_service": {"response_delay_cycles": args.weight_object_latency,
-                              "outstanding_limit": 1,
-                              "request_ready_pattern": "cycles modulo 5 != 0"},
     "activation_miss_aligned": args.activation_miss_aligned,
     "output_backpressure": args.output_backpressure,
     "auxiliary_sram_windows": args.auxiliary_windows,

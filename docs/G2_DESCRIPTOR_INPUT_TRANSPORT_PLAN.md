@@ -1068,3 +1068,32 @@ The current two-column runtime operand service, including the repaired prefix
 prefetch and actual weight SRAM macros, is also under 1 ns physical
 characterization through `configs/hardware/runtime_partial_pass2_physical.json`.
 This containing boundary is needed in addition to the closed scheduler alone.
+
+## Actual weight-object service sensitivity (2026-09-23)
+
+The loaded runner now exposes `--weight-object-latency` (default three delay
+cycles), wired to the actual byte-object responder. `--weight-response-gap`
+continues to control the legacy packed-word fixture; it did not affect real
+object response timing. Records explicitly name delay, the single-outstanding
+limit and the periodic request-ready pattern. The watchdog scales for slower
+object service while retaining its original bound at the default.
+
+Matched current-source M6/N53/K344 results:
+
+| Configuration | Median successful-phase cycles | Weight bytes | Activation fills |
+|---|---:|---:|---:|
+| Three-column streaming, delay 12 | 434,075.5 | 406,684 | 6,192 |
+| Automatic two-column residency, delay 12 | 109,884 | 73,564 | 8,256 |
+| Automatic two-column residency, delay 0 | 56,626.5 | 73,564 | 8,256 |
+
+All three campaigns pass 2,234 exact outputs and 295 writes/acknowledgements
+with the full faults, abort/restart, bounds, sentinel and drain checks. The
+slow-service matched schedule comparison improves successful-phase cycles
+74.69%. Residency still incurs approximately 94.05% more cycles at delay 12
+than delay zero, despite identical first-operation traffic: the architecture
+remains sensitive to service latency. This is an explicit behavioral memory
+model, not a measured DRAM bandwidth or whole-model inference speedup.
+
+Evidence: `results/rtl/g2_object_latency_sensitivity.json`. Earlier runner
+and bench versions are retained under `results/rtl/before_object_latency/`;
+previous loaded results continue to qualify those historical sources.

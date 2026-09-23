@@ -16,8 +16,6 @@ module tb_a3_g2_runtime_program;
  parameter integer AUXILIARY_DEPTH=3;
  parameter bit REGISTER_AUXILIARY_REQUESTS=0;
  parameter integer WEIGHT_RESPONSE_GAP=1;
- // Delay from accepted object read to eligibility for its response.
- parameter integer WEIGHT_OBJECT_LATENCY=3;
  parameter bit ACTIVATION_MISS_ALIGNED=0;
  `include "program_config.svh"
  localparam LOCAL_OUTPUTS=ROWS*COLS/8, WEIGHT_WORDS=DEPTH*LOCAL_OUTPUTS;
@@ -256,7 +254,7 @@ module tb_a3_g2_runtime_program;
    if(wobj_valid && wobj_ready)begin
     if(wobj_object!=WEIGHT_OBJECT || wobj_offset[3:0]!=0 || wobj_bytes==0 ||
        wobj_offset+64'(wobj_bytes)>64'(WEIGHT_OBJECT_BYTES))$fatal(1,"weight object read bounds");
-    wobj_pending<=1;wobj_saved_offset<=wobj_offset;wobj_delay<=WEIGHT_OBJECT_LATENCY;
+    wobj_pending<=1;wobj_saved_offset<=wobj_offset;wobj_delay<=3;
     wobj_saved_tag<=wobj_tag ^ ((phase==3)?64'h100000000:64'd0);
     wobj_reads<=wobj_reads+1;wobj_total_bytes<=wobj_total_bytes+integer'(wobj_bytes);
    end
@@ -459,9 +457,5 @@ module tb_a3_g2_runtime_program;
  // Bound deep streamed campaigns by work while retaining the small-case limit.
  localparam time WATCHDOG_NS=WEIGHT_OBJECT_READS?
      ((64'(WEIGHT_WORDS)*3000>10000000)?64'(WEIGHT_WORDS)*3000:64'd10000000):64'd2000000;
- // Preserve the default limit, but budget for deliberately slower object
- // service so a latency sweep does not turn legitimate work into a timeout.
- localparam time OBJECT_DELAY_SCALE = WEIGHT_OBJECT_LATENCY > 3
-     ? (64'(WEIGHT_OBJECT_LATENCY)+10)/11 : 1;
- initial begin #(WATCHDOG_NS*OBJECT_DELAY_SCALE);$fatal(1,"timeout");end
+ initial begin #(WATCHDOG_NS);$fatal(1,"timeout");end
 endmodule
