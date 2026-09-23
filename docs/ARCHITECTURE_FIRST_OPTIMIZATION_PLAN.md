@@ -15,6 +15,16 @@ Before selecting further component changes, reconcile these system requirements
 with current-source RTL, delivered bandwidth and containing-engine timing. Existing
 physical runs remain useful evidence, but they cannot complete this architecture gate.
 
+## Proposed implementation direction for review
+
+[ROM-first architecture proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md) specifies
+bank-local compute, local KV attention, certified pipelined numerical services,
+hierarchical control and dedicated collectives, plus a reuse-oriented HBM variant.
+Its eight-die Qwen configuration and 85/75 µs budgets are unqualified engineering
+targets. The executable review model explicitly tests HBM persistent weight cache
+and identifies where a threefold advantage remains unproven. This proposal does
+not switch production defaults or relax numerical/release contracts.
+
 ## Assessment
 
 The project contains useful, optimized components, but does not yet demonstrate
