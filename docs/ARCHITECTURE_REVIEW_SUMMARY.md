@@ -1212,3 +1212,25 @@ Each checks 90 transactions, 21 cancellations, counter carry/wrap boundaries,
 and 120 added admission comparisons covering unbound/zero spans, closed/missing
 resources, capacity violations, 33-bit overflow and policy-specific bypasses.
 See the [experiment and selection record](../results/rtl/state_slot_admission/comparison.json).
+
+## Retained capacity removes admission arithmetic without parallel adders
+
+The next isolated controller candidate retains each non-saturating slot's
+33-bit capacity-minus-cursor value. Admission selects this metadata and performs
+a comparison; subtraction moves to allocation and the existing apply pipeline.
+Cursor and metadata retire atomically, including 32-bit cursor wrap. Slot validity
+protects unreset payload; saturating policy bypasses the metadata. No transaction
+cycles are added relative to the overlap/counter candidate.
+
+Commit-counter endpoint slack improves −1.484960 → −0.732954 ns. Whole-block
+pre-layout slack remains failing at −3.5127 ns, versus −3.6027 ns before. Mapped
+area rises 3,394.953 → 3,729.170 µm² (9.84%), below the parallel-slot candidate's
+3,795.698 µm². A matched 1 ns CTS12 route is active to test the endpoint benefit
+with placement, clock distribution and extracted parasitics; production remains
+unchanged pending that comparison.
+
+All ten differential tests pass across five candidates and both simulators.
+Eighteen repeated-commit scenarios per test now probe admission after retirement,
+including cursor wrap and capacity overflow. The full microsequencer campaign
+also passes 65 cases and 4,555 checks in each simulator with source hashes verified.
+See the [comparison](../results/rtl/state_remaining_capacity/comparison.json).

@@ -4,7 +4,7 @@ import subprocess
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission'])
+@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission','state_remaining_capacity'])
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
 def test_apply_pipeline(tmp_path,simulator,variant):
     old=tmp_path/'old.sv';old.write_text((ROOT/'results/rtl/state_apply_pipeline/before.sv').read_text().replace('module ot_a3_state_controller','module old_state'))
@@ -96,6 +96,26 @@ initial begin
      dut.count_bytes_written!=64'h2fffffffd)$fatal(1,"restart payload");
   cancellations=cancellations+1;
  end
+ end
+ // Repeated admissions use the committed cursor, then retirement updates it.
+ // Probe fresh admission after two writes, including 32-bit cursor wrap.
+ for(t=0;t<18;t=t+1)begin
+  clear=1;@(negedge clk);clear=0;id=1;rows_bound=1;
+  policy=t%3;cap=(t%2)?32'hffffffff:10;rows=(t%2)?2:4;
+  payload=0;payload[8+:8]=policy;payload[128+:32]=4;
+  payload[192+:32]=cap;payload[256+:32]=(t%2)?32'hfffffffc:4;
+  command(1);command(2);command(2);
+  commit_all=1;@(negedge clk);commit_all=0;waits=0;
+  while(dut.apply_busy || ref_dut.apply_busy)begin
+   @(negedge clk);waits=waits+1;if(waits>200)$fatal(1,"repeat timeout");
+  end
+  COMPARE
+  if(dut.slot_cursor[0]!==ref_dut.slot_cursor[0])$fatal(1,"repeat cursor");
+  command(1);sub=2;valid=1;@(negedge clk);valid=0;
+  if(dut.op_done!==ref_dut.op_done || dut.op_ok!==ref_dut.op_ok ||
+     dut.op_trap_class!==ref_dut.op_trap_class || dut.count_commits!==ref_dut.count_commits)
+   $fatal(1,"post-retirement admission %0d",t);
+  @(negedge clk);
  end
  // Admission refusals: zero/unbound spans, initial cursor beyond capacity,
  // 33-bit overflow, saturating bypass, unstaged policy, and closed/missing slots.
