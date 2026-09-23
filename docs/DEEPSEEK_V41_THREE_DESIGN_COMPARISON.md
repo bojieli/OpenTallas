@@ -154,3 +154,8 @@ The [expert striping tradeoff](DEEPSEEK_V41_EXPERT_STRIPING.md) now prices the
 read-time benefit against growing dispatch and partial-return traffic. The best
 shard count depends on local service and fabric, and is not monotonically improved
 by using more chips. Numerical qualification and physical rate evidence remain open.
+
+The [stage/island mapping audit](DEEPSEEK_V41_ARRAY_MAPPING.md) checks whether
+selected expert shard sets can actually be disjoint within the finite array.
+The previous best-case striping point requires enough layer sharing; it cannot
+be combined freely with the layer-dedicated capacity layout.
