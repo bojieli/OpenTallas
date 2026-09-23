@@ -1,0 +1,41 @@
+{
+  "scope": "Isolated overlapping apply candidate; production state controller unchanged.",
+  "design": "Run the 33-step ring remainder concurrently with operand capture and byte multiplication. Retire only when phase 2 and remainder ready. Cancellation priority unchanged.",
+  "baseline": "results/rtl/state_apply_pipeline/candidate.sv",
+  "baseline_sha256": "6b522c33ff70fcc582e3ca73981b16b8086a9e6f0f5e2dcb2620e54ccee0e184",
+  "candidate_sha256": "46daa3f8d9bb1c47dc4bf7e2e05bfd14b7840b2415afd09c6a21b8816d5a6903",
+  "verification": "Both simulators: 90 three-entry transactions, seven cancellations before first retirement; exact tables/counters/64-bit byte oracle; measured latency compared with production. Full 65-case microsequencer campaign passes 4555 checks per simulator.",
+  "latency_cycles_per_entry": {
+    "production_general_ring": 35,
+    "serial_pipeline_general_ring": 37,
+    "overlap_general_ring": 35,
+    "production_other": 1,
+    "pipeline_other": 3
+  },
+  "mapped_area_um2": 3384.849,
+  "previous_candidate_mapped_area_um2": 3438.838,
+  "area_reduction_percent": 1.5699779983820106,
+  "prelayout_acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.053762671612941564,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 3169,
+        "setup_wns_ns": -3.667990592594552,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "record": "results/physical_abi3/asap7/state_controller/apply_overlap_synth_sta_1ns.json",
+  "record_sha256": "c18b7604c87f2a93ffec6b376a68093fcf2e64e5a4a0935cfe910fa212632c22",
+  "physical_pending": "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns.json",
+  "decision": "Await matched routes; prelayout slack regresses versus serial pipeline, so latency and area gains alone do not select the implementation."
+}

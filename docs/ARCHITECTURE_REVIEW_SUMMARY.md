@@ -856,3 +856,25 @@ refusals with unchanged 767,158 cycles, 276 physical evaluations and 121 hits.
 The [comparison and source inventory](../results/rtl/small_divider_scratch_reset/comparison.json)
 retain the candidate, baseline, synthesis paths and verification logs. Softmax
 validation uses the recorded workspace engine with pre-existing divisor tuning.
+
+## Overlap independent state-apply calculations
+
+A second isolated apply candidate starts ring remainder and byte accounting
+together. Retirement waits for both. The general-ring case returns to the
+production controller's 35 cycles per entry, versus 37 for the first pipeline
+candidate; non-ring and power-of-two cases remain three cycles versus production's
+one. This removes unnecessary serialization while preserving the registered
+selection/product/accumulation boundaries.
+
+Both candidates now pass explicit latency assertions across 90 three-entry
+transactions in each simulator, plus seven cancellation points covering capture,
+product and early/middle/final remainder steps before first retirement. Exact
+committed tables/counters and the independent 64-bit byte oracle agree. The
+new candidate also passes the full 65-case microsequencer campaign with 4,555
+checks per simulator; all recorded source hashes verify.
+
+Mapped area falls 3,438.838 → 3,384.849 µm² (1.57%), but pre-layout setup slack
+regresses −3.2941 → −3.66799 ns at the 1 ns target. Both candidates are retained
+and a matched overlapping-candidate route is running; neither replaces production
+without the routed timing/latency decision. See the
+[overlap comparison](../results/rtl/state_apply_overlap/comparison.json).
