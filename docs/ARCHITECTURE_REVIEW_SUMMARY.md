@@ -1282,3 +1282,27 @@ improvement is claimed. Eight protocol tests pass in both simulators across
 one/two lanes and production/candidate, including distinct cached result values,
 reset, repeated faults and replacement behavior. See the
 [comparison](../results/rtl/softmax_cache2/comparison.json).
+
+## Overlapping apply route completes without qualifying for integration
+
+The final extracted overlap candidate measures 4,239.830 µm², setup −0.494196 ns
+with 1,349 violations, and hold +0.0522283 ns at ASAP7 TT 1 ns. DRC, antenna,
+slew and capacitance checks are clean, but two nets exceed fanout16 (21 and17).
+The critical path is op_descriptor_id[23] → count_commits[15]. Current candidate
+source and all seven retained artifacts verify in the
+[final audit](../results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_audit.json).
+
+This is not selected: it costs more routed area than production (4,182.110 µm²)
+and the serial apply candidate (4,231.470 µm²), and still fails setup and fanout.
+It preserves the 35-cycle general-ring application schedule versus the serial
+candidate's 37 cycles, but other policies still cost three cycles versus one in
+production. The pending retained-capacity route targets the admission path that
+remains critical here. No physical failure has been reclassified as a pass.
+
+Detailed differential coverage now includes SLOTS16, matching the routed default,
+alongside SLOTS3. All 28 tests pass: seven candidates in both simulators and both
+sizes. Sixteen-slot transactions preallocate thirteen entries so the three real
+commits exercise the high table indices 13–15, including lookup when the table
+is full. Cancellation, refusals, counter boundaries and repeated retirement
+checks also run at both sizes. Source hashes and logs are retained in the
+[coverage record](../results/rtl/state_slot_coverage/comparison.json).

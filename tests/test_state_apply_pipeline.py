@@ -4,9 +4,10 @@ import subprocess
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
+@pytest.mark.parametrize('slots',[3,16])
 @pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission','state_remaining_capacity','state_slot_payload_reset','state_capacity_shared'])
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
-def test_apply_pipeline(tmp_path,simulator,variant):
+def test_apply_pipeline(tmp_path,simulator,variant,slots):
     old=tmp_path/'old.sv';old.write_text((ROOT/'results/rtl/state_apply_pipeline/before.sv').read_text().replace('module ot_a3_state_controller','module old_state'))
     ports=".clk(clk),.rst_n(rst_n),.clear(clear),.op_valid(valid),.op_sub(sub),.op_descriptor_id(id),.op_rows(rows),.op_rows_bound(rows_bound),.op_payload(payload),.commit_all(commit_all),.discard_all(discard_all),.session_state_count(32'd3)"
     fields=['count_prepares','count_commits','count_discards','count_reads','count_commits_applied','count_rows_committed','count_bytes_written','pending_count','slot_open','slot_used','apply_overflow']
@@ -16,8 +17,8 @@ module tb;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,valid=0,commit_all=0,discard_all=0,rows_bound=1;
 reg [7:0] sub=0;reg [31:0] id=0,rows=0;reg [511:0] payload=0;
-ot_a3_state_controller #(.SLOTS(3)) dut(PORTS);
-old_state #(.SLOTS(3)) ref_dut(PORTS);
+ot_a3_state_controller #(.SLOTS(SLOT_COUNT)) dut(PORTS);
+old_state #(.SLOTS(SLOT_COUNT)) ref_dut(PORTS);
 integer t,i,mode,waits,dut_cycles,ref_cycles,transactions=0,cancellations=0;
 reg [63:0] expected_bytes;
 reg [31:0] rb,span,cap,policy;
@@ -32,6 +33,10 @@ initial begin
  repeat(3)@(negedge clk);rst_n=1;
  for(t=0;t<90;t=t+1)begin
   clear=1;@(negedge clk);clear=0;expected_bytes=0;
+  // Fill low slots so the three real entries exercise the high table indices.
+  for(i=0;i<SLOT_COUNT-3;i=i+1)begin
+   id=100+i;payload=0;command(0);
+  end
   // Seed boundaries so three real admissions exercise every carry depth,
   // including wraparound, without billions of setup transactions.
   dut.count_commits=(t==89)?32'hffffffff:((32'd1<<(t%32))-1);
@@ -56,7 +61,7 @@ initial begin
   COMPARE
   if(dut.count_bytes_written!==expected_bytes)$fatal(1,"independent byte total");
   for(i=0;i<3;i=i+1)begin
-   if(dut.slot_cursor[i]!==ref_dut.slot_cursor[i] || dut.slot_generation[i]!==ref_dut.slot_generation[i])$fatal(1,"committed state");
+   if(dut.slot_cursor[SLOT_COUNT-3+i]!==ref_dut.slot_cursor[SLOT_COUNT-3+i] || dut.slot_generation[SLOT_COUNT-3+i]!==ref_dut.slot_generation[SLOT_COUNT-3+i])$fatal(1,"committed state");
   end
   transactions=transactions+1;
  end
@@ -141,7 +146,7 @@ initial begin
 end
 initial begin #1000000;$fatal(1,"global timeout");end
 endmodule
-'''.replace('PORTS',ports).replace('COMPARE',compare).replace('OVERLAP', '1' if variant!='state_apply_pipeline' else '0'))
+'''.replace('SLOT_COUNT',str(slots)).replace('PORTS',ports).replace('COMPARE',compare).replace('OVERLAP', '1' if variant!='state_apply_pipeline' else '0'))
     sources=[str(ROOT/'rtl/abi3/ot_a3_pkg.sv'),str(ROOT/f'results/rtl/{variant}/candidate.sv'),str(old),str(bench)]
     if simulator=='iverilog':
         cmd=['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),*sources];run=['vvp',str(tmp_path/'sim')]

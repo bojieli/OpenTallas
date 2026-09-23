@@ -36,6 +36,63 @@
   },
   "record": "results/physical_abi3/asap7/state_controller/apply_overlap_synth_sta_1ns.json",
   "record_sha256": "c18b7604c87f2a93ffec6b376a68093fcf2e64e5a4a0935cfe910fa212632c22",
-  "physical_pending": "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns.json",
-  "decision": "Await matched routes; prelayout slack regresses versus serial pipeline, so latency and area gains alone do not select the implementation."
+  "decision": "Not selected: setup and fanout fail; routed area exceeds production and serial candidate.",
+  "physical_final": {
+    "record": "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns.json",
+    "record_sha256": "d2138892d4602b86b13c89457222593c92ae958af2a71e29b467c9ad3092b04a",
+    "sources": [
+      {
+        "path": "rtl/abi3/ot_a3_pkg.sv",
+        "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "size_bytes": 19703
+      },
+      {
+        "path": "results/rtl/state_apply_overlap/candidate.sv",
+        "sha256": "46daa3f8d9bb1c47dc4bf7e2e05bfd14b7840b2415afd09c6a21b8816d5a6903",
+        "size_bytes": 21487
+      }
+    ],
+    "artifacts": {
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/1_2_yosys.v": "9e5afd2b67b27a6245077099f4f29a89797474e09c43507f972d4f6d204a2d18",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/6_final.v": "6f109db4ec363cb5896ea08f5e6b5a66f05cd552b255c9aa61d255ed2e6ec357",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/6_finish.rpt": "aeb005311402b828a021fc362be476e997e74fecc940a72c6ca7fb55c93d2808",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/config.mk": "c63b7deef604966288219d247a14bef1b26ff3225f08f35db22a538b75f68ed9",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/metadata.json": "b05fa232b630f55d640f9ab2721e7104b106dbb7980296c49125ae4dfbf53660",
+      "results/physical_abi3/asap7/state_controller/pnr_apply_overlap_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "acceptance": {
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0522283,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 2.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": false,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 1349.0,
+          "setup_wns_ns": -0.494196,
+          "signal_integrity_clean": false,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ],
+      "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+      "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+      "reason": "did not meet in: place_and_route",
+      "status": "not_met"
+    },
+    "area_um2": 4239.83,
+    "critical_setup_path": {
+      "start": "op_descriptor_id[23]",
+      "end": "count_commits[15]"
+    },
+    "scope": "Final extracted ASAP7 TT 1 ns, default SLOTS16 isolated overlap candidate. Sources and seven artifacts verified.",
+    "decision": "Not selected: setup and fanout fail; routed area exceeds production and serial candidate."
+  }
 }
