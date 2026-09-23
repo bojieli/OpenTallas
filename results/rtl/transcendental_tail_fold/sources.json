@@ -1,0 +1,20 @@
+{
+  "baseline": {
+    "rtl/lib/ot_wide_mul_seq.sv": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+    "rtl/lib/ot_wide_div_small_seq.sv": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+    "rtl/lib/ot_wide_div_seq.sv": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+    "build/transcendental_tail_fold/tb.sv": "cf1ecb25f8741dadf8c9e1a4e3a2eade06644aed6a15a0769723af12920fcc8e",
+    "testdata/rtl/a3_hc_transcendental/cases.hex": "201c790f7e503840d4e78ba7a302a28de11e5cd340c6fc86914301eb64d110be",
+    "testdata/rtl/a3_hc_transcendental/index.json": "fb76c2157c3732e74ad3b4ce2b3795286e00502853604164355773e66700f1e4"
+  },
+  "candidate": {
+    "rtl/lib/ot_wide_mul_seq.sv": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+    "rtl/lib/ot_wide_div_small_seq.sv": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+    "rtl/lib/ot_wide_div_seq.sv": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+    "results/rtl/transcendental_tail_fold/candidate.sv": "0d97cfcd618af7adf8c92f5a50e0b292718a51756c69b4dadc038b6ef59cf8de",
+    "build/transcendental_tail_fold/tb.sv": "cf1ecb25f8741dadf8c9e1a4e3a2eade06644aed6a15a0769723af12920fcc8e",
+    "testdata/rtl/a3_hc_transcendental/cases.hex": "201c790f7e503840d4e78ba7a302a28de11e5cd340c6fc86914301eb64d110be",
+    "testdata/rtl/a3_hc_transcendental/index.json": "fb76c2157c3732e74ad3b4ce2b3795286e00502853604164355773e66700f1e4"
+  }
+}
