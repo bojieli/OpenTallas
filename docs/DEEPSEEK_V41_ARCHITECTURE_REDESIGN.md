@@ -105,6 +105,55 @@ synthetic. Evaluate adversarial concentration in addition to uniform routing.
 A pipeline can increase aggregate throughput without shortening a user's traversal.
 Do not divide token latency by the number of occupied pipeline stages.
 
+### Expert concentration changes the group choice
+
+The executable [expert-group screen](../results/architecture/v41_expert_groups.json)
+now tests arbitrary distinct six-expert routes and concentrated concurrent users.
+For a **1 µs expert-layer allocation**, assume equivalent independent 256 B/cycle
+ports, 1 GHz and 65% delivered bandwidth. These are illustrative requirements,
+not characterized ROM macros. One packed expert needs 113 such ports. For a group
+containing S experts, the worst single-user demand is `min(S, 6)` expert jobs;
+across U unbatched users it is `U × min(S, 6)`.
+
+| Experts/group | Groups/layer | ROM/group | Ports/group for worst route | Installed ports/layer |
+|---|---:|---:|---:|---:|
+| 1 | 384 | 18.80 MB | 113 | 43,392 |
+| 6 | 64 | 112.80 MB | 678 | 43,392 |
+| 16 | 24 | 300.81 MB | 678 | 16,272 |
+| 64 | 6 | 1.203 GB | 678 | 4,068 |
+| 384 | 1 | 7.219 GB | 678 | 678 |
+
+Each group is independently provisioned for its own possible worst route; the
+last column does **not** imply all groups are simultaneously hot. At 40 fully
+separate layer placements, the 16-expert case installs 650,880 equivalent ports,
+and the 64-expert case 162,720. Sharing them across layers requires a different
+weight placement/interconnect and cannot be credited for free.
+
+Pooling beyond six experts reduces provisioned service replication, but enlarges
+the ROM region that must deliver to shared compute. At the assumed density and
+2% reserve, 64 experts alone occupy about 131 mm² of ROM; a full layer about
+785 mm², leaving almost no room on an 815 mm² die for its compute and wiring.
+A full-layer group is therefore a bandwidth-pooling extreme, not a recommended
+single-die implementation. Independent narrow banks per expert would also lose
+the pooling benefit: all selected experts must access enough of the shared ports
+through a demonstrated conflict-free layout. Packed profile bytes already include
+the declared storage inventory; BF16-expanded storage would require a new budget.
+
+A group sized for only one expert per microsecond can take six service intervals
+when all selected experts land there. A queue preserves work but does not recover
+the one-microsecond deadline. Four simultaneous unbatched users can demand 24
+expert jobs in that group, or 451.215 TB/s. Batching the same expert can reuse
+weights, but still needs separate compute and response-latency accounting.
+Router traces are currently synthetic; uniform routing is not an acceptance case.
+
+**Refined design decision:** carry 16- and 64-expert pooled groups as physical
+study candidates, without selecting either. Reject a single-expert-width shared
+engine as a guarantee of the 1 µs budget for arbitrary routes. Require a bank map,
+local reduction/compute allocation, and bounded dispatch/return service for six
+selected experts before accepting either group size. This is a necessary byte
+service check; the recurrence rejection below still applies even if it passes.
+Reproduce with `python3 tools/audit_v41_expert_groups.py`.
+
 ## 4. Numerical recurrence is a feasibility gate here too
 
 The selected experts can run in parallel, and their gate/up projections can run

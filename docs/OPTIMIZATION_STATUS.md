@@ -1,7 +1,8 @@
 # Accelerator optimization status
 
 Status snapshot: 2026-09-23. Production work is on `main`. This summary covers
-changes through `6510912a`; the commit containing this document follows it.
+architecture feasibility work through the V4.1 expert-group study; older component
+results below retain their original evidence scope.
 
 For the system-level assessment, start with **[ROM/HBM performance gap](ROM_HBM_PERFORMANCE_GAP.md)**. It compares the analytical ceilings with current delivery/compute budgets and identifies the architecture changes needed before local optimizations can establish a fast accelerator.
 
@@ -33,17 +34,17 @@ The number of experiments is not a measure of completed optimization.
 
 ## What I am doing right now
 
-The latest technical work is testing a multiplier control-path improvement inside
-an experimental positive-exponential pipeline. It reduces the containing engine's
-mapped area by **1.35%** and improves pre-layout setup slack from **−4.260 to
-−3.357 ns**, with unchanged numerical results and transaction cycles. Negative
-slack means it still misses the requested 1 ns period. **This candidate is not
-integrated into production RTL.**
+Current work is the first-principles ROM/HBM architecture review, including a
+separate [DeepSeek V4.1 redesign](DEEPSEEK_V41_ARCHITECTURE_REDESIGN.md).
+The new expert-group screen quantifies concentrated routing: a group containing
+at least six experts needs 112.8 TB/s to serve six selected experts in 1 µs.
+Pooling reduces replicated service hardware but increases local ROM span and wire
+cost. This is a necessary requirement, not a demonstrated implementation rate.
 
-Existing physical runs are evaluating matched multiplier, positive-exponential
-and softmax designs, plus state admission and integrated G2 configurations.
-Their results must be audited before selecting an implementation. This reporting
-checkpoint consolidates the evidence; it introduces no new hardware change.
+No new RTL implementation or workload simulation was launched for these studies.
+The numerical recurrence and physical bank-service gates remain unresolved.
+Existing component experiments and physical runs are separate historical evidence;
+they do not establish the feasibility of the proposed architecture.
 
 ## Architecture direction and actual completion
 
