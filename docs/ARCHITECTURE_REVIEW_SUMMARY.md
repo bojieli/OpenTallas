@@ -987,3 +987,21 @@ that modified source/artifacts, negative or nonfinite slack, physical violations
 invalid periods, pre-layout-only evidence and experimental source paths cannot
 be admitted. Refresh the inventory after source changes before using it for
 qualification planning; it describes the workspace at generation, not future RTL.
+
+## Current step4 softmax tradeoff measured before changing defaults
+
+A matched current-workspace softmax comparison uses the integrated tree16
+multiplier and scratch-reset divider in both runs. The only changed configuration
+is the exponential service's small-divider step width, 10 → 4. Both pass nine
+numerical cases and two refusals with identical 276 exponential evaluations and
+121 cache hits. Cycles increase 767,158 → 1,144,783 (49.22%). The complete engine
+therefore needs more than 1.492× clock improvement to reduce elapsed time for
+this corpus. This is less overhead than the historical step3 experiment, but
+still cannot be justified from a standalone divider timing pass.
+
+Matched WIDTH168 / DIVISOR_BITS6 STEP4 and STEP10 routes are active; the earlier
+passing STEP4 route used WIDTH163. Production step defaults remain unchanged.
+The [current step comparison](../results/rtl/small_divider_step4_current/comparison.json)
+retains both numerical logs, exact source/vector hashes and the isolated softmax
+configuration. Current softmax source hashes include the pre-existing workspace
+engine tuning. This comparison is operator-corpus evidence, not model throughput.
