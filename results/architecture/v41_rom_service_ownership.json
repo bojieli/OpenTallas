@@ -1,0 +1,134 @@
+{
+  "input_sha256": {
+    "configs/hardware/technology_inputs.json": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+    "physical/ihp_sg13g2_rom_macro/macro_contract.json": "c650a55691ba267a283ea15569c899af95a310dbe66f57aee35a9c9ea03d97a7",
+    "results/architecture/v41_array_mapping.json": "de094341f02f50fb19ec77f77ff6db84bf440ebd6ef6cbe1ff69a1a6ace0af4e",
+    "tools/audit_v41_rom_service_ownership.py": "833c4900c9d1a567cc7b5ac45461ac7037d79f64c1fc70e6ae0388eb4130cdf0"
+  },
+  "limits": [
+    "72TB/s is an intentionally identical hypothetical region rate for both organizations; it is not a measured ROM property.",
+    "Region bandwidth is reserved for routed weights only. Dense reads, compute, fabric and control are excluded.",
+    "Fixed-bank model allocates bandwidth equally to every resident expert shard across layers. It is one organization, not a universal ROM bound.",
+    "Pooled model assumes the entire regional service can be directed to selected shards with conflict-free banks and sufficient mux/wiring/ports. This requires a physical proof.",
+    "Read times sum forty dependent layers. Uniform fixed-bank service makes selected shards concurrent but leaves other bank service unavailable.",
+    "Neither changing labels nor selecting fewer experts turns in-array CIM operations into an external read port. Native arithmetic must be qualified separately."
+  ],
+  "physical_evidence_findings": [
+    "technology_inputs.json ROM density anchor is fabricated 28nm ROM-CIM; bandwidth anchor is a different simulated 28nm ROM-CIM design.",
+    "Bandwidth anchor is derived from in-array MAC operations, not measured encoded bytes delivered to separate general-purpose arithmetic.",
+    "The 130nm routed IHP macro evidence includes area/periphery costs but its contract explicitly prohibits extrapolation to N5/N4 area or timing.",
+    "No evidence inspected establishes the assumed N5 density together with a fully pooled 72TB/s expert region and the required arithmetic contract."
+  ],
+  "rows": [
+    {
+      "experts_per_island": 384,
+      "fixed_bank_active_TB_s": 0.5625,
+      "fully_pooled_expert_read_us": 15.6672,
+      "layers_per_stage": 2,
+      "pooling_advantage_factor": 128.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 768,
+      "routed_bytes_per_chip": 3609722880.0,
+      "selected_shards_per_active_layer": 6,
+      "uniform_fixed_bank_expert_read_us": 2005.4016
+    },
+    {
+      "experts_per_island": 192,
+      "fixed_bank_active_TB_s": 0.28125,
+      "fully_pooled_expert_read_us": 7.8336,
+      "layers_per_stage": 4,
+      "pooling_advantage_factor": 256.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 768,
+      "routed_bytes_per_chip": 3609722880.0,
+      "selected_shards_per_active_layer": 3,
+      "uniform_fixed_bank_expert_read_us": 2005.4016
+    },
+    {
+      "experts_per_island": 192,
+      "fixed_bank_active_TB_s": 0.5625,
+      "fully_pooled_expert_read_us": 15.6672,
+      "layers_per_stage": 4,
+      "pooling_advantage_factor": 128.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 768,
+      "routed_bytes_per_chip": 3609722880.0,
+      "selected_shards_per_active_layer": 6,
+      "uniform_fixed_bank_expert_read_us": 2005.4016
+    },
+    {
+      "experts_per_island": 96,
+      "fixed_bank_active_TB_s": 0.1875,
+      "fully_pooled_expert_read_us": 5.2224,
+      "layers_per_stage": 8,
+      "pooling_advantage_factor": 384.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 768,
+      "routed_bytes_per_chip": 3609722880.0,
+      "selected_shards_per_active_layer": 2,
+      "uniform_fixed_bank_expert_read_us": 2005.4016
+    },
+    {
+      "experts_per_island": 96,
+      "fixed_bank_active_TB_s": 0.5625,
+      "fully_pooled_expert_read_us": 15.6672,
+      "layers_per_stage": 8,
+      "pooling_advantage_factor": 128.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 768,
+      "routed_bytes_per_chip": 3609722880.0,
+      "selected_shards_per_active_layer": 6,
+      "uniform_fixed_bank_expert_read_us": 2005.4016
+    },
+    {
+      "experts_per_island": 39,
+      "fixed_bank_active_TB_s": 0.09230769230769231,
+      "fully_pooled_expert_read_us": 2.6112,
+      "layers_per_stage": 20,
+      "pooling_advantage_factor": 780.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 780,
+      "routed_bytes_per_chip": 3666124800.0,
+      "selected_shards_per_active_layer": 1,
+      "uniform_fixed_bank_expert_read_us": 2036.736
+    },
+    {
+      "experts_per_island": 39,
+      "fixed_bank_active_TB_s": 0.5538461538461539,
+      "fully_pooled_expert_read_us": 15.6672,
+      "layers_per_stage": 20,
+      "pooling_advantage_factor": 130.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 780,
+      "routed_bytes_per_chip": 3666124800.0,
+      "selected_shards_per_active_layer": 6,
+      "uniform_fixed_bank_expert_read_us": 2036.736
+    },
+    {
+      "experts_per_island": 20,
+      "fixed_bank_active_TB_s": 0.09,
+      "fully_pooled_expert_read_us": 2.6112,
+      "layers_per_stage": 40,
+      "pooling_advantage_factor": 800.0,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 800,
+      "routed_bytes_per_chip": 3760128000.0,
+      "selected_shards_per_active_layer": 1,
+      "uniform_fixed_bank_expert_read_us": 2088.96
+    },
+    {
+      "experts_per_island": 20,
+      "fixed_bank_active_TB_s": 0.54,
+      "fully_pooled_expert_read_us": 15.6672,
+      "layers_per_stage": 40,
+      "pooling_advantage_factor": 133.33333333333334,
+      "region_aggregate_TB_s_assumed": 72,
+      "resident_expert_shards_per_chip": 800,
+      "routed_bytes_per_chip": 3760128000.0,
+      "selected_shards_per_active_layer": 6,
+      "uniform_fixed_bank_expert_read_us": 2088.96
+    }
+  ],
+  "schema": "opentallas.v41-rom-service-ownership.v1",
+  "status": "bank_ownership_sensitivity_joint_macro_feasibility_unqualified"
+}

@@ -159,3 +159,8 @@ The [stage/island mapping audit](DEEPSEEK_V41_ARRAY_MAPPING.md) checks whether
 selected expert shard sets can actually be disjoint within the finite array.
 The previous best-case striping point requires enough layer sharing; it cannot
 be combined freely with the layer-dedicated capacity layout.
+
+The [ROM macro evidence gate](DEEPSEEK_V41_ROM_MACRO_GATE.md) now separates
+bank-local service from fully pooled service. Existing density and CIM bandwidth
+anchors do not qualify a joint N5 digital-read macro; numerical physical ROM speed
+claims must wait for that gap to be resolved.
