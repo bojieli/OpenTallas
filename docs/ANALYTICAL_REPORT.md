@@ -170,7 +170,13 @@ Two things limit the ratio:
   and dedicated banks take up to 7.46× as long on a concentrated route. <!-- figure: 7.46 src="results/rtl/rom_striped_bank_campaign.json#worst_dedicated_over_striped" name="dedicated over striped worst" -->
   That is functional evidence for the schedule, not for macro area, timing or
   energy.
-- All ROM link latencies are hardware-floor estimates.
+- All ROM link latencies are hardware-floor estimates. The digital part of a
+  package hop is now simulated in RTL (`rtl/rom/ot_rom_pkg_link.sv`,
+  `python3 tools/rtl_rom_pkg_link_campaign.py`): cut-through forwarding with
+  credits costs 4 cycles of framing, <!-- figure: 4 src="results/rtl/rom_pkg_link_campaign.json#digital_endpoint_cycles" name="link digital endpoint cycles" -->
+  and one user's hidden state arrives 69 ns after it is sent with a 60-cycle PHY, <!-- figure: 69 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
+  with no loss under random back-pressure. So the ~100 ns per hop assumed above
+  leaves about 95 ns for SerDes, FEC and flight, which remains unmeasured.
 - The ROM power model reads HC1 low.
 - Hot-expert skew is uniform-random plus a derate for ROM; the GPU is assumed to
   replicate hot experts.

@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "credit_stalls": 0,
+      "expected_last_flit_latency_cycles": 64,
+      "first_flit_latency_cycles": 64,
+      "flits": 1,
+      "label": "one_flit",
+      "last_flit_latency_cycles": 64,
+      "message_bytes": 1800,
+      "pass": true,
+      "scoreboard_errors": 0
+    },
+    {
+      "credit_stalls": 0,
+      "expected_last_flit_latency_cycles": 69,
+      "first_flit_latency_cycles": 64,
+      "flits": 6,
+      "label": "one_user",
+      "last_flit_latency_cycles": 69,
+      "message_bytes": 10800,
+      "pass": true,
+      "scoreboard_errors": 0
+    },
+    {
+      "credit_stalls": 0,
+      "expected_last_flit_latency_cycles": 427,
+      "first_flit_latency_cycles": 64,
+      "flits": 364,
+      "label": "sixty_four_users",
+      "last_flit_latency_cycles": 427,
+      "message_bytes": 655200,
+      "pass": true,
+      "scoreboard_errors": 0
+    },
+    {
+      "credit_stalls": 31,
+      "expected_last_flit_latency_cycles": null,
+      "first_flit_latency_cycles": 65,
+      "flits": 364,
+      "label": "backpressure",
+      "last_flit_latency_cycles": 558,
+      "message_bytes": 655200,
+      "pass": true,
+      "scoreboard_errors": 0
+    }
+  ],
+  "claim_boundary": "functional RTL of the digital link endpoint: framing, credits, cut-through. CHANNEL_CYCLES is a delay-line stand-in for SerDes, FEC and flight; no PHY.",
+  "digital_endpoint_cycles": 4,
+  "input_sha256": {
+    "rtl/rom/ot_rom_pkg_link.sv": "ae1361d4f627de81f2b54fa46d3e9faf6545aa6f226a781f3e32235ba7f6967f",
+    "rtl/test/tb_rom_pkg_link.sv": "d082b919dffa6e11eecfe415a9cf02fbec8ac232a86fe812a70c6959d308b3bb",
+    "tools/rtl_rom_pkg_link_campaign.py": "4af50479d618f221d5c6a5f121d884e55cda15ec35d57a703ee6f03e25b3d2c8"
+  },
+  "one_user_hidden_state_latency_ns": 69,
+  "parameters": {
+    "channel_cycles": 60,
+    "clock_hz": 1000000000.0,
+    "credits": 128,
+    "flit_bytes": 1800,
+    "rx_stages": 2,
+    "tx_stages": 2
+  },
+  "schema": "opentallas.rom-pkg-link-campaign.v1",
+  "status": "pass",
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH"
+    ],
+    "messages": [],
+    "returncode": 0
+  }
+}
