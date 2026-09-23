@@ -129,3 +129,7 @@ arithmetic, not a link benchmark or workload simulation. Other supporting studie
 [physical capacity](DEEPSEEK_V41_PHYSICAL_LIMITS.md),
 [traffic inventory](DEEPSEEK_V41_TRAFFIC_RECALCULATION.md), and
 [cache/common-work speedup limits](DEEPSEEK_V41_SPEEDUP_CONDITIONS.md).
+
+The [non-routed tensor audit](DEEPSEEK_V41_DENSE_PLACEMENT.md) reconciles the
+8.523 GB inventory and identifies attention, shared experts and the output head
+as the main non-routed placement targets. Runtime-role qualification remains open.
