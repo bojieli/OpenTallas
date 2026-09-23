@@ -156,8 +156,8 @@ Evidence: [scheduler route audit](../results/physical_abi3/asap7/weight_pass_sch
    capacity heuristic into production compiler/runtime selection with measured
    activation, weight and service costs. Evaluate depth tiling when even one
    whole-K column exceeds local capacity, including accumulator storage and
-   numerical association. Investigate redundant reads when gather lanes alias
-   the same 16-byte line; coalescing is a candidate, not implemented progress.
+   numerical association. Same-line gather coalescing now has matched functional evidence (checkpoint
+   below); finish its containing transport and G2 physical qualification.
 3. **Complete descriptor-driven input delivery.** Extend real activation and
    weight transport across required formats, strides and capacity bounds. Size
    queues from sustainable memory service and measured occupancy/starvation.
@@ -195,3 +195,36 @@ supported deployments. The broader optimization task remains unfinished.
 The [architecture-first plan](ARCHITECTURE_FIRST_OPTIMIZATION_PLAN.md) defines
 full-scope acceptance, and the [transport plan](G2_DESCRIPTOR_INPUT_TRANSPORT_PLAN.md)
 retains detailed implementation checkpoints and source snapshots.
+
+
+## Same-line gather coalescing checkpoint (2026-09-23)
+
+The gather now issues one read for active lanes sharing a 16-byte line and
+fills their existing per-lane caches together. Seven registered adjacent-line
+boundaries encode alias groups for unsigned monotonic lane addresses, including
+sparse masks. This adds seven payload bits, no SRAM and no pipeline cycle.
+The ordered read queue retains one lane identity per accepted line; pending
+ownership covers all member lanes until the response retires.
+
+Matched M6/N53/K2 loaded campaigns with four read credits, external queue four
+and twelve-cycle response delay reduce median successful-phase cycles
+704.5 → 570.5 (19.02%). First-operation reads fall 53 → 14 and weight bytes
+836 → 212 (74.64% less). Both campaigns check 2,234 exact outputs and 295
+writes/acknowledgements. This is a shallow supported contraction, not evidence
+of the same gain on larger reduction depths.
+
+Directed zero-stride and stride-two workloads reduce 64 reads to 8 and 16;
+at four credits and delay32, cycles fall 661 → 329 and 346 respectively.
+Distinct-line traffic retains its prior cycle counts. Tests cover small-stride
+alignments, sparse/empty masks, retained replay, truncated final lines,
+zero-latency responses, concurrent faults and cancellation. A pre-existing
+shallow-workload abort-test issue was reproduced with the retained old gather:
+waiting for operand issue before waiting for a pending memory read could allow
+output before abort. The fixture now aborts at the first pending object read.
+The original bench and both failures are retained.
+
+Evidence: [coalescing comparison](../results/rtl/gather_coalescing/comparison.json).
+A new four-credit containing transport route targets 1 ns. Its final physical
+cost and timing are pending; earlier credit transport/G2 launches now qualify
+their pre-coalescing sources. The all-target architecture and qualification
+requirements above remain open.

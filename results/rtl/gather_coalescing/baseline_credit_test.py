@@ -4,7 +4,7 @@ import re
 import shutil
 import subprocess
 import pytest
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[3]
 
 @pytest.mark.skipif(shutil.which('iverilog') is None,reason='iverilog unavailable')
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
@@ -13,7 +13,7 @@ def test_overlapped_reads_and_fault_drain(tmp_path, simulator, stride):
     bench=tmp_path/'tb.sv'
     bench.write_text(r'''module tb;
 parameter integer CREDITS=1,STRIDE=8;
-localparam LINES=(7*STRIDE)/8+1;
+localparam LINES=8;
 localparam WINDOW=CREDITS<LINES?CREDITS:LINES;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,clear=0,command_valid=0,coordinate_valid=0,word_ready=0;
@@ -118,7 +118,7 @@ endmodule
     cycles=[]
     for credits in [1,2,4,8]:
         exe=tmp_path/f'sim{credits}'
-        sources=[str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)]
+        sources=[str(ROOT/'results/rtl/before_gather_coalescing/gather.sv'),str(bench)]
         if simulator == 'iverilog':
             compile_cmd=['iverilog','-g2012','-s','tb',f'-Ptb.CREDITS={credits}',f'-Ptb.STRIDE={stride}','-o',str(exe),*sources]
             run_cmd=['vvp',str(exe)]

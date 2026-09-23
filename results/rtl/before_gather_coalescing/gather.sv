@@ -47,20 +47,6 @@ module ot_a3_bf16_weight_gather #(
  reg [RC-1:0] outstanding;
  reg [2:0] read_lanes[0:READ_CREDITS-1];
  reg [7:0] lane_pending;
- // Lane addresses are monotonic (unsigned stride). Adjacent line boundaries
- // therefore describe every alias group, including gaps in the active mask.
- // Capture seven boundaries once instead of comparing all lane pairs on the
- // request/response path. All members share one accepted read and its owner.
- reg [6:0] line_breaks;
- wire [7:0] lane_group[0:7];
- generate for(genvar a=0;a<8;a=a+1)begin: alias_leader
-  for(genvar b=0;b<8;b=b+1)begin: alias_member
-   localparam integer LO=a<b?a:b;
-   localparam integer HI=a>b?a:b;
-   localparam [6:0] BETWEEN=7'(((1<<HI)-1)^((1<<LO)-1));
-   assign lane_group[a][b]=mask[b] && ((line_breaks & BETWEEN)==0);
-  end
- end endgenerate
  function automatic [RP-1:0] advance_read(input [RP-1:0] p);
   advance_read=p==RP'(READ_CREDITS-1)?RP'(0):p+1'b1;
  endfunction
@@ -131,14 +117,12 @@ module ot_a3_bf16_weight_gather #(
    if(read_fire)begin
     sequence_id<=sequence_id+1'b1;
     read_lanes[read_tail]<=miss_lane;read_tail<=advance_read(read_tail);
+    lane_pending[miss_lane]<=1;
    end
    if(retire_read)begin
     response_sequence<=response_sequence+1'b1;
-    read_head<=advance_read(read_head);
+    read_head<=advance_read(read_head);lane_pending[response_lane]<=0;
    end
-   if(read_fire || retire_read)
-    lane_pending <= (lane_pending | (read_fire?lane_group[miss_lane]:8'd0))
-                    & ~(retire_read?lane_group[response_lane]:8'd0);
    // An unrelated response never retires the outstanding expected read.
    if(unexpected_response)protocol_error<=1;
    if(command_valid && command_ready)begin
@@ -183,8 +167,7 @@ module ot_a3_bf16_weight_gather #(
      // until accepted, even when an earlier response faults.
      if(state!=REQUEST || read_ready)state<=IDLE;
     end
-    else for(integer lane=0;lane<8;lane=lane+1)
-     if(lane_group[response_lane][lane])cache_valid[slot][lane]<=1;
+    else cache_valid[slot][response_lane]<=1;
    end
   end
  end
@@ -209,7 +192,6 @@ module ot_a3_bf16_weight_gather #(
   // final-line membership before cache miss selection; only a single bit
   // per lane is selected on the read-byte-count path.
   if(state==BOUNDS)begin
-   for(l=0;l<7;l=l+1)line_breaks[l]<=addresses[l][65:4]!=addresses[l+1][65:4];
    for(l=0;l<8;l=l+1)lane_final_line[l]<=addresses[l][63:4]==last_element_offset[63:4];
   end
   if(state==LOOKUP && !protocol_error)begin
@@ -219,9 +201,7 @@ module ot_a3_bf16_weight_gather #(
    end else word_data<=assembled;
   end
   if(response_valid && expected_response && !response_error && !protocol_error)begin
-   for(l=0;l<8;l=l+1)if(lane_group[response_lane][l])begin
-    cache_data[slot][l]<=response_data;cache_tag[slot][l]<=addresses[l][63:4];
-   end
+   cache_data[slot][response_lane]<=response_data;cache_tag[slot][response_lane]<=addresses[response_lane][63:4];
   end
  end
 endmodule

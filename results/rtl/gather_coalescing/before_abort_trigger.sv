@@ -411,11 +411,7 @@ module tb_a3_g2_runtime_program;
   // Lane-distinct BF16 results must match the functional Device.
   if(seen!=expected_seen || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"missing first outputs");
   if(fills<DEPTH)$fatal(1,"multi-tile refill not exercised");
-  // Abort at the first accepted weight read. Waiting for operand issue first
-  // can miss that read and let shallow contractions publish before abort.
-  phase=2;launch();
-  if(WEIGHT_OBJECT_READS)wait(wobj_pending);else wait(dut.operand_issue);
-  @(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
+  phase=2;launch();wait(dut.operand_issue);if(WEIGHT_OBJECT_READS)wait(wobj_pending);@(negedge clk);runtime_abort=1;tick();runtime_abort=0;drain(8'hff);
   if(seen!=0 || outputs!=ROWS*LOGICAL_COLS)$fatal(1,"aborted operation wrote output");
   phase=1;launch();
   if(STRESS_OUTPUT)begin

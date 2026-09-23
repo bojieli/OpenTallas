@@ -1231,3 +1231,25 @@ but do not establish routed area, clock closure or all-target efficiency. The
 sequential state controller still had a timing miss at its intermediate clock
 tree stage. Final routed paths and acceptance checks remain the next decision
 gate; all existing live jobs continue without restart.
+
+
+## Same-line coalescing and shallow loaded qualification
+
+The gather now records seven adjacent line boundaries in BOUNDS and uses them
+to group active lanes sharing a line. One ordered read owns the whole group;
+retirement fills the existing member caches. Simultaneous accept/retire updates
+merge ownership masks, preserving zero-latency response and fault-drain rules.
+No new SRAM or request cycle is added. Final physical cost is pending in
+`pnr_coalesced_credits4_slew10_cts12_1ns.json` under the transport result directory.
+Older live physical jobs continue against their launch sources.
+
+`results/rtl/gather_coalescing/comparison.json` retains directed traffic/latency
+comparisons and matched M6/N53/K2 loaded evidence: 704.5 → 570.5 median
+successful-phase cycles, 53 → 14 first-operation reads, 836 → 212 bytes.
+Both full campaigns pass 2,234 outputs and 295 writes/acknowledgements. The
+baseline uses the retained pre-coalescing gather explicitly, with its source
+binding corrected to the actual compiled file; a reproduction runner is retained.
+Both versions reproduced the original shallow abort-fixture failure before the
+fixture was changed to abort at the first pending object read. Original failure
+logs and bench are retained. This is not a numerical or completion-contract
+relaxation: successful output and fault/drain assertions remain intact.
