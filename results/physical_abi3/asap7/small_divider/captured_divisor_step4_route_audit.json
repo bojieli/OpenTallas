@@ -1,0 +1,59 @@
+{
+  "scope": "Current captured-divisor small divider, WIDTH=163 DIVISOR_BITS=6 STEP=4; final extracted ASAP7 TT 1 ns, fails timing.",
+  "record": "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns.json",
+  "record_sha256": "d95c23c79ccfd46cac42df9685226417b54bd209ec916a857c343130ef285e46",
+  "sources": [
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+      "size_bytes": 6417
+    }
+  ],
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0545568,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 9.0,
+        "setup_wns_ns": -0.0896121,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "routed_cell_area_um2": 322.48,
+  "verified_artifacts": {
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/1_2_yosys.v": "b4dc21c8647cd36f7ccab1031ca99691ae90d2e47cf1745e6a99fd54d1804326",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/6_final.v": "2c0c5983e1395e57c8b0e8637b409c640c8f5a40a66778e34e61418219325128",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/6_finish.rpt": "db46a51f9a8b9dc0b38a18bc0c463247262a19d51bf008344bd25ae37b68c75c",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/config.mk": "b064d26374a504626937a9112102900d4d0dc29e980e6c5d704b22508e2fb4fe",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/small_divider/captured_divisor_step4_cts12_1ns_artifacts/metadata.json": "f76fc9e0dab4067df84d900c9416560640fe0955063dc9dd293cb43819b529f7"
+  },
+  "critical_path": {
+    "startpoint": "rem[2]",
+    "endpoint": "rem[0]"
+  },
+  "comparison": {
+    "before_setup_slack_ns": -0.105676,
+    "after_setup_slack_ns": -0.0896121,
+    "before_area_um2": 323.399,
+    "after_area_um2": 322.48,
+    "decision": "Operand capture improves input ownership and slightly improves timing but does not close four steps. Retain capture, evaluate three steps at same target; no consumer default changed."
+  }
+}

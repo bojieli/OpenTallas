@@ -675,3 +675,23 @@ K2 fixture reduced cycles 704.5 → 570.5 (19.02%) and weight bytes 836 → 212
 workload-specific. The worst routed setup path is now `cursor.depth[8]` →
 `cursor.remaining_words[27]`. Integrated G2 qualification remains separate.
 See the [coalesced route audit and baseline comparison](../results/physical_abi3/asap7/bf16_weight_transport/coalesced_credits4_route_audit.json).
+
+## Captured-divisor four-step route and next step-width experiment
+
+Capturing the small divisor at acceptance improves final extracted four-step
+setup slack from −0.105676 to −0.0896121 ns at 1 ns, but nine setup violations
+remain. Hold slack is +0.0545568 ns; DRC, antenna, slew, capacitance and fanout
+checks are clean. Routed cell area is 322.480 µm² versus 323.399 µm² before.
+The worst path now runs `rem[2]` → `rem[0]`, moving the bottleneck from an
+external operand path into arithmetic feedback. All current source and seven
+artifact hashes verify in the [route audit](../results/physical_abi3/asap7/small_divider/captured_divisor_step4_route_audit.json).
+
+The captured-operand implementation is retained, but four steps cannot be
+called 1 ns closed. A matched three-step route is now active. At WIDTH=163,
+three steps require 55 iterations versus 41 for four; at the negative-exp
+consumer's 168-bit dividend, three requires 56 versus 17 for its current
+ten-step default. Complete softmax latency is being measured alongside the
+route so a shorter path is not mistaken for higher useful throughput.
+Production consumer defaults are unchanged. Four added tests pass across
+Icarus and Verilator at six chunk sizes including three and both 6-/9-bit
+divisors, preserving quotient/inexact and handshake timing under input changes.

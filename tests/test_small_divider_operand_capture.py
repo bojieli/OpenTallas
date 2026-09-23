@@ -7,7 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
 @pytest.mark.parametrize('divisor_bits', [6, 9])
-def test_operand_capture(tmp_path, simulator, divisor_bits):
+@pytest.mark.parametrize('first_chunk', [1, 3])
+def test_operand_capture(tmp_path, simulator, divisor_bits, first_chunk):
     before = tmp_path/'before.sv'
     before.write_text((ROOT/'results/rtl/small_divider_operand_capture/before.sv').read_text().replace(
         'module ot_wide_div_small_seq #(', 'module old_divider #('))
@@ -18,11 +19,12 @@ def test_operand_capture(tmp_path, simulator, divisor_bits):
                           "reference_dividend=a; reference_divisor=d; dividend = a; divisor = d; start = 1'b1;")
     bench = bench.replace("@(negedge clk); start = 1'b0;",
                           "@(negedge clk); start = 1'b0; dividend=~a; divisor=~d;")
+    bench = bench.replace('.BITS_PER_STEP(1)', f'.BITS_PER_STEP({first_chunk})')
     reference = r'''
     wire [DUTS-1:0] ref_busy, ref_done;
     genvar r;
     generate for(r=0;r<DUTS;r=r+1)begin : old_units
-        old_divider #(.WIDTH(WIDTH),.DIVISOR_BITS(DBITS),.BITS_PER_STEP(1<<r)) ref_dut(
+        old_divider #(.WIDTH(WIDTH),.DIVISOR_BITS(DBITS),.BITS_PER_STEP(r==0 ? FIRST_CHUNK : (1<<r))) ref_dut(
             .clk(clk),.rst_n(rst_n),.start(start),.dividend(reference_dividend),
             .divisor(reference_divisor),.busy(ref_busy[r]),.done(ref_done[r]),
             .quotient(),.inexact());
@@ -32,6 +34,7 @@ def test_operand_capture(tmp_path, simulator, divisor_bits):
     end endgenerate
     initial begin #10000000; $fatal(1,"timeout");end
 '''
+    reference = reference.replace('FIRST_CHUNK', str(first_chunk))
     bench = bench.replace('endmodule', reference+'\nendmodule')
     source = tmp_path/'tb.sv';source.write_text(bench)
     sources = [str(ROOT/'rtl/lib/ot_wide_div_small_seq.sv'),str(before),str(source)]
