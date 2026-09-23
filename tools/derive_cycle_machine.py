@@ -164,6 +164,26 @@ CLOCK_FRONT_END_CYCLES = 3
 CHANNELS_PER_STACK = 8
 
 
+
+def _load_study_artifact(path):
+    """A roofline study as one dict: ``analytical.json`` plus its ``points.json``
+    shard and the de-duplicated design provenance (see
+    ``opentallas.roofline.load_study_artifact``, which this mirrors so the tool
+    stays standard-library only)."""
+
+    path = Path(path)
+    body = json.loads(path.read_text())
+    shard = body.pop("points_file", None)
+    if shard:
+        body["points"] = json.loads((path.parent / shard).read_text())
+    table = body.pop("provenance_table", None)
+    if table:
+        for design in body.get("designs", ()):
+            reference = design.get("provenance")
+            if isinstance(reference, str) and reference in table:
+                design["provenance"] = table[reference]
+    return body
+
 def derived_clock_hz(anchor: "Anchor") -> float:
     """The one clock this generator derives, in Hz.
 
@@ -861,7 +881,7 @@ def load_anchor(
     batch_size: int,
     context_tokens: int,
 ) -> Anchor:
-    body = json.loads(analytical_path.read_text())
+    body = _load_study_artifact(analytical_path)
     points = body["points"]
     rom = _select_point(points, rom_design, batch_size, context_tokens)
     hbm = _select_point(points, hbm_design, batch_size, context_tokens)
@@ -6988,7 +7008,7 @@ _ANALYTICAL_CACHE: dict[str, dict[str, Any]] = {}
 def analytical_body(path: str) -> dict[str, Any]:
     """One candidate study, read once.  The V4.1 artifacts are 80-90 MB each."""
     if path not in _ANALYTICAL_CACHE:
-        _ANALYTICAL_CACHE[path] = json.loads((REPO / path).read_text())
+        _ANALYTICAL_CACHE[path] = _load_study_artifact(REPO / path)
     return _ANALYTICAL_CACHE[path]
 
 
@@ -8287,7 +8307,7 @@ def _run_v41_cells(args: Any, config_dir: Path, artifact_dir: Path) -> int:
 
 def _run_matrix(args: Any, analytical: Path, technology: Path,
                 config_dir: Path, artifact_dir: Path) -> int:
-    body = json.loads(analytical.read_text())
+    body = _load_study_artifact(analytical)
     cells = matrix_cells(body)
     emitted: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []

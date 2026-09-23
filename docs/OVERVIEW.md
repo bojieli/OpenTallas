@@ -222,112 +222,26 @@ graph. Static schedules also make ordering and containment easier to reason abou
 although real timing, congestion, repair paths, clocking, and power delivery still
 require target physical design.
 
-## Where “8,050 tokens/s” comes from
+## What the current analysis says
 
-> **CORRECTION, 2026-08-30.** This section previously derived **9,399 tokens/s**
-> and was pointed at from `README.md` as *"the exact 9,399-tokens/s derivation"*.
-> The derivation's *form* was and is correct; one of its five inputs was stale.
-> The HBM KV service term was 13.106 µs and is **41.979 µs** — 3.20× larger,
-> from the same KV-constant correction that moved the traffic ratio above — so
-> the interval is 124.222 µs and the rate is **8,050.1 tokens/s**. The <!-- figure: 124.222 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].per_user_token_latency_s" scale="1e6" tol="0.001" name="N7 central per-token interval, us" why="the document re-derives this from the rounded component times it prints just above -- (41.979 + 69.821) / 0.90 = 124.222 -- where the artifact carries 124.2215. The tolerance is the rounding of the displayed inputs, not slack." -->
-> comparison figures below moved with it. A step-by-step derivation is worse
-> than a bare number when it goes stale, because a reader can check the
-> arithmetic and it will be self-consistent while being wrong; that is what
-> happened here.
+The [analytical report](ANALYTICAL_REPORT.md) compares a redesigned
+model-specific ROM machine with a general-purpose HBM machine, B200 or A100 on
+NVLink, at equal silicon. Three results matter:
 
-The often surprising number is an output of a deterministic analytical envelope,
-not a benchmark. Consider the N7 central scenario for DeepSeek V4 Flash at 200K
-context and batch one. The checked point is
-[`results/iso-node/n7_architecture_attribution/analytical.json`](../results/iso-node/n7_architecture_attribution/analytical.json)
-→ the `points` record with `architecture = "ROM-wafer-N7-HBM2e-central"`,
-`model = "DeepSeek-V4-Flash-0731"`, `context_tokens = 200000`, `batch_size = 1`.
-Its `component_times_s` block contains:
+- **One user, large MoE model.** The ROM array is 2.3–5× faster per user at N5
+  against B200. Most of that comes from specialisation: chip links built without
+  a software stack, experts striped across ROM banks, and one layer per package.
+  With the GPU's own NVLink, a ROM array roughly ties.
+- **Many users, large MoE model.** With tens to about a thousand concurrent
+  users, the gap widens to 2.8–8.5×. Every extra GPU user adds expert-weight
+  reads; a ROM weight never moves.
+- **Each side at its best.** Throughput differs by about 3×, and energy per
+  token by 3–5× (13× on Qwen3-8B). At thousands of users both machines run out
+  of arithmetic, and dense-KV models narrow the gap.
 
-| Component | `component_times_s` key | Service time | Meaning |
-|---|---|---:|---|
-| ROM weight service | `rom_full_array_read_C4` | 7.828 µs | Time implied by active weight bytes and the configured central ROM service envelope | <!-- figure: 7.828 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.rom_full_array_read_C4" scale="1e6" name="ROM weight service, us" -->
-| HBM KV service | `kv_beachfront_C8` | **41.979 µs** (was ~~13.106~~) | Time implied by mutable KV traffic and the configured HBM beachfront | <!-- figure: 41.979 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.kv_beachfront_C8" scale="1e6" name="HBM KV service, us" -->
-| Compute service | `compute_C5` | 25.932 µs | Time implied by exact format-specific operation counts and configured arithmetic roofs | <!-- figure: 25.932 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.compute_C5" scale="1e6" name="compute service, us" -->
-| Layer collectives | `collective_floor_C6` | 69.821 µs | Serialized topology/payload-derived reduction service | <!-- figure: 69.821 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.collective_floor_C6" scale="1e6" name="layer collective floor, us" -->
-| Pipeline efficiency | `configs/hardware/n7_architecture_attribution.json` → `pipeline_efficiency` | 0.90 | Explicit deterministic scenario input | <!-- figure: 0.90 src="configs/hardware/n7_architecture_attribution.json#wafer_architectures[name=ROM-wafer-N7-HBM2e-central].pipeline_efficiency" name="N7 central pipeline efficiency" -->
-
-Weight, KV, and compute service are modeled as independent and overlap where
-legal. The layer collective is then serialized. Therefore:
-
-```text
-interval
-  = (max(7.828, 41.979, 25.932) + 69.821) / 0.90
-  = 124.222 µs per generated token          # point.per_user_token_latency_s
-
-per-user throughput
-  = 1 / 124.222 µs
-  = 8,050.1 tokens/s                          # point.per_user_tokens_s
-```
-
-Regenerate with `make iso-node`
-(`python3 tools/build_iso_node_studies.py --write && python3 tools/run_iso_node_studies.py`).
-The rate is also tabulated at
-[`results/iso-node/n7_architecture_attribution/REPORT.md`](../results/iso-node/n7_architecture_attribution/REPORT.md)
-→ "Central-envelope 200K results", row `DeepSeek-V4-Flash-0731 | 1`, column
-`ROM user tok/s`.
-
-The large rate comes from **spatial parallelism across sharded ROM banks and
-compute tiles**, not from one ROM cell somehow reading an entire model at once.
-The analytical model divides exact bytes and operations by declared aggregate
-service roofs, applies topology-derived communication service, and then takes the
-bottleneck. Every aggregate roof still needs physical implementation evidence.
-
-The binding term is still the collective floor — the point's
-`binding_constraint` field reads `collective_floor_C6` — and not the ROM read.
-That distinction is important: removing HBM weight traffic exposes other
-bottlenecks rather than making them disappear. **But the identity of the `max()`
-term inside the derivation has changed**, and the previous version of this
-section did not notice: it used to be compute at 25.932 µs and it is now KV
-beachfront at 41.979 µs. The explanation and its own arithmetic had drifted
-apart.
-
-At this point, the N7 central envelope gives **8,050.1** per-user tokens/s versus <!-- figure: 8,050.1 src="results/iso-node/n7_architecture_attribution/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 central ROM user tok/s" -->
-**614.4** tokens/s for the fastest feasible same-batch candidate in the allowed <!-- figure: 614.4 src="results/iso-node/n7_architecture_attribution/REPORT.md#GPU user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch A100 user tok/s" -->
-A100 set (`NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x16`), a same-batch ratio
-of **13.10×**. The N4-class central envelope gives **12,629.3** tokens/s versus <!-- figure: 13.10 src="results/iso-node/n7_architecture_attribution/REPORT.md#Same-B ratio" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch ratio" --> <!-- figure: 12,629.3 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 central ROM user tok/s" -->
-**1,650.7** tokens/s for its B300 candidate (`NVIDIA-B300-x8`), a ratio of <!-- figure: 1,650.7 src="results/iso-node/leading_node_market/REPORT.md#GPU user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 same-batch B300 user tok/s" -->
-**7.65×** <!-- figure: 7.65 src="results/iso-node/leading_node_market/REPORT.md#Same-B ratio" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 same-batch ratio" -->
-([`results/iso-node/leading_node_market/REPORT.md`](../results/iso-node/leading_node_market/REPORT.md)
-→ "Central-envelope 200K results", same row and columns). Those comparison
-values answer a precisely declared analytical question; they are not lab
-measurements of either proposed or vendor hardware.
-
-> **RETRACTED: 9,399 / 618 / 15.2× and 14,436 / 1,666 / 8.67×.** The N4 ratio
-> never appeared as a token anywhere — it was stated decomposed, as
-> `14,436 / 1,666`, which is why a grep for `8.67` found nothing and it survived
-> the correction that killed it.
-
-![Central analytical throughput at 200K context](assets/throughput-at-200k.svg)
-
-### Why the central number must not stand alone
-
-The target ROM array, compute implementation, NoC, package, and cooling system do
-not exist yet. The studies therefore preserve conservative, central, and
-aggressive deterministic scenarios. Bands are the `REPORT.md` uncertainty tables
-of each study:
-
-| Flash, 200K, B1 | Central envelope | Deterministic low–high | Same-batch GPU point | previously published |
-|---|---:|---:|---:|---|
-| N7/HBM2e-era study | **8,050.1 tok/s** | **1,287.0–23,767.7 tok/s** | **614.4 tok/s** | ~~9,399 / 1,299–35,829 / 618~~ | <!-- figure: 1,287.0 src="results/iso-node/n7_architecture_attribution/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_low" name="N7 band low" --> <!-- figure: 23,767.7 src="results/iso-node/n7_architecture_attribution/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_high" name="N7 band high" -->
-| N4-class/HBM3e study | **12,629.3 tok/s** | **1,637.9–42,373.7 tok/s** | **1,650.7 tok/s** | ~~14,436 / 1,666–56,884 / 1,666~~ | <!-- figure: 1,637.9 src="results/iso-node/leading_node_market/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_low" name="N4 band low" --> <!-- figure: 42,373.7 src="results/iso-node/leading_node_market/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_high" name="N4 band high" -->
-
-The low–high span is not a confidence interval: the project has no statistical
-distribution for future silicon. It is the range across three explicit hardware
-assumption sets — for the N7 study, `ROM-wafer-N7-HBM2e-{conservative,central,aggressive}`,
-whose per-user rates are 1,287.0 / 8,050.1 / 23,767.7 in the same `analytical.json`.
-The central value should be read as a reproducible scenario, not as the most
-likely production result.
-
-> **This figure is stale.** `docs/assets/uncertainty-at-200k.svg` plots the
-> retracted bands and was last rendered 2026-08-28. Regenerate with
-> `python3 tools/render_public_assets.py`.
-
-![Deterministic throughput envelopes](assets/uncertainty-at-200k.svg)
+A small dense model such as Qwen3-8B is the extreme case. It fits on a few ROM
+dies, so a single user runs about 19× faster than on B200, in line with the
+Taalas HC1 part the model is checked against.
 
 ## What has actually been simulated or implemented
 
@@ -446,15 +360,15 @@ python3 -m pip install -e .
 python3 tools/profile_hf.py --all
 
 make model-traffic     # results/model-traffic/  -- the traffic table above
-make iso-node          # results/iso-node/       -- the 8,050 tok/s derivation
+python3 tools/run_roofline_studies.py --force  # results/roofline/ -- every figure in the analytical report
 make roofline          # results/roofline/       -- the area-constrained pair
 
 PYTHONPATH=src pytest -q tests/test_iso_node_studies.py tests/test_roofline.py
 ```
 
-`make iso-node` expands to
-`python3 tools/build_iso_node_studies.py --write && python3 tools/run_iso_node_studies.py`;
-`make roofline` expands to `python3 tools/run_roofline_studies.py --force`.
+`make roofline` expands to `python3 tools/run_roofline_studies.py --force`. The
+older iso-node study (`make iso-node`) now writes only the data that
+implementation tools consume; its prose reports were retired.
 
 **Every figure in this document is cited to one of those artifacts, by file and
 by field or table-column name.** That is a rule now, not a habit:
@@ -488,9 +402,8 @@ For a non-specialist:
 2. the visual [`asset provenance contract`](assets/README.md);
 3. the hardware-independent
    [`weight/KV traffic report`](../results/model-traffic/REPORT.md);
-4. the N7 [`architecture-attribution report`](../results/iso-node/n7_architecture_attribution/REPORT.md)
-   or N4-class [`market study`](../results/iso-node/leading_node_market/REPORT.md); and
-5. the area-constrained roofline pair,
+4. the [analytical report](ANALYTICAL_REPORT.md); and
+5. the area-constrained roofline pair behind it,
    [`n6_vs_a100`](../results/roofline/n6_vs_a100/REPORT.md) and
    [`n5_vs_b200`](../results/roofline/n5_vs_b200/REPORT.md), each of which opens
    with a numbered "What the model says" list including its own retractions.

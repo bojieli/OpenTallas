@@ -99,7 +99,7 @@ had written the capability files that `engines.tensor.lanes x work_per_lane_cycl
 gives 1.02 TFLOP/s for the 512-lane ROM chip and 0.51 TFLOP/s for the 256-lane HBM chip,
 and that these are 267x and 609x short of the HC1 and A100 anchors the study exists to
 compare against. Ninety minutes earlier, commit `300c666` had added
-`docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` section 4, which states the method:
+`docs/ANALYTICAL_REPORT.md` section 4, which states the method:
 
 > 1. **Fix the silicon area first.** It is the binding constraint...
 > 2. **Derive capacity, bandwidth and compute roof from area and published densities.**
@@ -281,7 +281,7 @@ than as artifacts with digests. See
 ## 5. What the comparison inherited
 
 On the Qwen pair the ROM chip is advertised with 512 tensor lanes and the HBM chip with
-256. `docs/COMPARISON_FAIRNESS_AUDIT.md` contains 24 audited items; item A10 concerns a
+256. `docs/ANALYTICAL_REPORT.md` contains 24 audited items; item A10 concerns a
 "512- vs 8,192-token program block", which is program block size and a different quantity.
 **The 2x tensor-width asymmetry between the two chips under comparison is audited
 nowhere.**

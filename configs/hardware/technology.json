@@ -151,7 +151,7 @@
     },
     "operand_delivery_j_per_byte": {
       "grade": "assumed",
-      "note": "0.23 pJ/byte to get one byte from the array that holds it to the arithmetic that consumes it, at a 7 nm-class node. This is the term docs/TECHNICAL_DIRECTION_RECOMMENDATION.md 0.11 named as missing: a Horowitz-class MAC energy is the ALU, not the cost of delivering its operands, and rom_read_j_per_byte's stated boundary stops at the macro output latch. VERIFIER-CORRECTED, 1.5x DOWN from the submitted 3.43e-13 -- the submitted wire constant used alpha x C x V^2 with alpha = 0.5 transitions/bit, which double-counts the transition: supply energy for one full 0->1->0 cycle is C*V^2, so energy per transition is (1/2)C*V^2 and the correct coefficient for random data is 0.25, not 0.5. The corrected form is anchored, not chosen: 0.25 x 0.2 pF/mm x (0.75 V)^2 x 1.6 repeater overhead = 0.045 pJ/bit/mm, and the same formula run at 45 nm/1.0 V returns 0.080 pJ/bit/mm against Dally's published 45 nm figure of 6 pJ to move 64 bits 1 mm = 0.094 pJ/bit/mm, an 18% agreement the submitted form missed by 1.7x. Point = one register-file/operand-collector access at N7 (0.091 pJ/B, Horowitz 45 nm scaled by 5.49x) + 0.40 pJ/B/mm over a 0.35 mm tile pitch. BOUNDARY, and the writer must not lose it: this scalar is the TILE-LOCAL FLOOR. The long-path ladder -- HBM to L2 to register file on an A100 is 8.3-10.0 pJ/B over 10-14.4 mm -- is NOT represented. Applied uniformly to weight and KV bytes it charges the ROM side ~1.6x on its dominant term and the GPU side ~1.01x on its dominant term, so the single number penalises the ROM side; that is the safe direction and it is why a scalar is shippable. THE 5.49x 45nm->N7 NODE FACTOR IS NOW UNSOURCED AND THE VALUE IS UNCHANGED ONLY BECAUSE NOTHING BETTER EXISTS. It was derived as \"the geometric mean of ratios implied by this file's own mac_energy_j_per_op entries\"; that ladder has since been re-anchored on a measured SC'25 A100 table and the ratios it implies are different, so the sentence that produced 5.49 is FALSE as written and must not be repeated. The honest interval for that factor is 2.1x-5.5x, which puts this entry at 2.3e-13 (kept, the low end) to 3.8e-13. It is left at the low end rather than raised because the term is applied uniformly to weight and KV bytes and therefore charges the ROM side about 1.6x on its dominant term against about 1.01x on the GPU's -- raising it would be a further charge against the ROM side that no source supports, and lowering the reported band is not on offer either. SRAM energy scales worse than logic, so if anything this understates the storage-level terms.",
+      "note": "0.23 pJ/byte to get one byte from the array that holds it to the arithmetic that consumes it, at a 7 nm-class node. This is the term docs/ANALYTICAL_REPORT.md 0.11 named as missing: a Horowitz-class MAC energy is the ALU, not the cost of delivering its operands, and rom_read_j_per_byte's stated boundary stops at the macro output latch. VERIFIER-CORRECTED, 1.5x DOWN from the submitted 3.43e-13 -- the submitted wire constant used alpha x C x V^2 with alpha = 0.5 transitions/bit, which double-counts the transition: supply energy for one full 0->1->0 cycle is C*V^2, so energy per transition is (1/2)C*V^2 and the correct coefficient for random data is 0.25, not 0.5. The corrected form is anchored, not chosen: 0.25 x 0.2 pF/mm x (0.75 V)^2 x 1.6 repeater overhead = 0.045 pJ/bit/mm, and the same formula run at 45 nm/1.0 V returns 0.080 pJ/bit/mm against Dally's published 45 nm figure of 6 pJ to move 64 bits 1 mm = 0.094 pJ/bit/mm, an 18% agreement the submitted form missed by 1.7x. Point = one register-file/operand-collector access at N7 (0.091 pJ/B, Horowitz 45 nm scaled by 5.49x) + 0.40 pJ/B/mm over a 0.35 mm tile pitch. BOUNDARY, and the writer must not lose it: this scalar is the TILE-LOCAL FLOOR. The long-path ladder -- HBM to L2 to register file on an A100 is 8.3-10.0 pJ/B over 10-14.4 mm -- is NOT represented. Applied uniformly to weight and KV bytes it charges the ROM side ~1.6x on its dominant term and the GPU side ~1.01x on its dominant term, so the single number penalises the ROM side; that is the safe direction and it is why a scalar is shippable. THE 5.49x 45nm->N7 NODE FACTOR IS NOW UNSOURCED AND THE VALUE IS UNCHANGED ONLY BECAUSE NOTHING BETTER EXISTS. It was derived as \"the geometric mean of ratios implied by this file's own mac_energy_j_per_op entries\"; that ladder has since been re-anchored on a measured SC'25 A100 table and the ratios it implies are different, so the sentence that produced 5.49 is FALSE as written and must not be repeated. The honest interval for that factor is 2.1x-5.5x, which puts this entry at 2.3e-13 (kept, the low end) to 3.8e-13. It is left at the low end rather than raised because the term is applied uniformly to weight and KV bytes and therefore charges the ROM side about 1.6x on its dominant term against about 1.01x on the GPU's -- raising it would be a further charge against the ROM side that no source supports, and lowering the reported band is not on offer either. SRAM energy scales worse than logic, so if anything this understates the storage-level terms.",
       "range_high": 8e-13,
       "range_low": 1.5e-13,
       "source": "Horowitz, Computing's Energy Problem, ISSCC 2014 (register-file and cache access energies at 45 nm) ; Dally, published 45 nm wire energy, 64 bits x 1 mm = 6 pJ ; repeatered global wire C ~= 0.2 pF/mm at a leading node. NOT sourced to Sze et al. arXiv:1703.09039: that paper's Fig. 22 is NORMALISED ONLY (ALU 1x, RF 1x, NoC 2x, buffer 6x, DRAM 200x) and contains no pJ figure, so it cannot support any absolute constant and the earlier citation of it was a misreading.",
@@ -419,7 +419,7 @@
         "note": "InfiniBand/Ethernet class scale-out hop. Not measured.",
         "range_high": 1e-05,
         "range_low": 2e-06,
-        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "source": "docs/ANALYTICAL_REPORT.md",
         "value": 5e-06
       },
       "switch_radix": {
@@ -697,7 +697,7 @@
       "fabric": {
         "grade": "assumed",
         "note": "A chiplet complex on one substrate is treated as a single all-to-all domain.",
-        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "source": "docs/ANALYTICAL_REPORT.md",
         "value": "switched"
       },
       "hop_latency_s": {
@@ -705,7 +705,7 @@
         "note": "300 ns per organic/silicon-interposer chiplet hop. Not measured.",
         "range_high": 1e-06,
         "range_low": 1e-07,
-        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "source": "docs/ANALYTICAL_REPORT.md",
         "value": 3e-07
       }
     },
@@ -751,6 +751,90 @@
         "range_low": 7.5e-08,
         "source": "Cerebras (Sean Lie), Wafer-Scale AI: GPU Impossible Performance, Hot Chips 36, 2024, doi:10.1109/HCS61935.2024.10664673 (46,225 mm2, 900,000 AI cores, 84 die, \"10.7k Cores\" per die, 214 Pbit/s, 5nm TSMC; no core pitch and no clock) ; Cerebras, The Cerebras Wafer-Scale Architecture for Deep Learning (WSE-3 white paper), 2024 (core \"approximately 38,000 um2 of silicon area in the TSMC 5 nm process\", 48 kB SRAM, 110,000 standard cells, 8-wide FP16 SIMD, \"single clock cycle latency between nodes\", scribe crossing \"less than a millimeter\") ; Cerebras, How Cerebras Solved the Wafer-Scale Yield Challenge, 2025 (970,000 physical cores, ~900,000 active, 0.05 mm2 per core) ; Cerebras (Sean Lie), Cerebras Architecture Deep Dive, Hot Chips 34, 2022 (the N7 calibration: 17x30 mm die, 66 x 154 cores, 228x170 um core, 1.1 GHz, \"Single cycle latency between cores\") ; Rocki et al., Fast Stencil-Code Computation on a Wafer-Scale Processor, SC20, arXiv:2010.03660 ; Luczynski et al., Near-Optimal Wafer-Scale Reduce, HPDC 2024, doi:10.1145/3625549.3658693 ; Santos et al., Breaking the Molecular Dynamics Timescale Barrier Using a Wafer-Scale System, SC24, doi:10.1109/SC41406.2024.00014",
         "value": 1.25e-07
+      }
+    },
+    "rom_package_ucie": {
+      "bytes_s": {
+        "grade": "derived",
+        "value": 4000000000000.0,
+        "note": "Payload per direction per die: a demonstrated UCIe advanced-package link reaches 5.27 Tb/s/mm (0.66 TB/s/mm) at 0.29 pJ/b on a CoWoS interposer; about 6 mm of each die edge given to one neighbour gives ~4 TB/s. A hardware link with no software stack.",
+        "source": "UCIe advanced-package link, 0.29 pJ/b 5.27 Tb/s/mm on 2.5-D CoWoS (reported via https://eureka.patsnap.com/report-ucie-vs-bow-reach-latency-and-energy-per-bit); UCIe overview https://semiengineering.com/what-is-ucie/"
+      },
+      "domain_size": {
+        "grade": "assumed",
+        "value": 4.0,
+        "note": "Four reticle-class ROM dies per interposer package, ~3,260 mm2 of silicon: within the multi-reticle CoWoS-L interposer class, not a measured product.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "fabric": {
+        "grade": "assumed",
+        "value": "switched",
+        "note": "Every die in a four-die package has a direct link to every other: one traversal between any pair.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "hop_latency_s": {
+        "grade": "derived",
+        "value": 1e-08,
+        "range_low": 3e-09,
+        "range_high": 3e-08,
+        "note": "Hardware floor, no software: UCIe PHY plus die-to-die adapter under 2 ns, on-die routing from the compute tile to the die edge ~1.5 ns (15 mm of repeated wire at ~0.1 ns/mm), and flit synchronisation and buffering of about five 1 GHz cycles. Stated 10 ns; the range spans a lean PHY-only path to a buffered one.",
+        "source": "UCIe latency 'sub-nanosecond to 2 ns' (https://semiengineering.com/what-is-ucie/ ; https://awavesemi.com/the-ucie-chiplet-interconnect-standard/); decomposition in docs/ANALYTICAL_REPORT.md"
+      }
+    },
+    "rom_board_serdes": {
+      "bytes_s": {
+        "grade": "derived",
+        "value": 1800000000000.0,
+        "note": "Payload per direction per package: 128 lanes of 112 Gb/s PAM4 SerDes is 14.3 Tb/s, 1.8 TB/s. Point-to-point between neighbouring packages; no switch.",
+        "source": "112G PAM4 SerDes class (https://www.cadence.com/en_US/home/tools/silicon-solutions/design-ip/scale-up-scale-out-serdes/112g-vsr-pam4-serdes-phy.html)"
+      },
+      "domain_size": {
+        "grade": "derived",
+        "value": 1.0,
+        "note": "A package-to-package link carries no intra-domain traffic.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "fabric": {
+        "grade": "assumed",
+        "value": "mesh",
+        "note": "Packages form a 2-D board mesh of direct neighbour links. A pipeline boundary is one traversal; a collective across packages pays the mesh diameter.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "value": 1e-07,
+        "range_low": 4e-08,
+        "range_high": 2.5e-07,
+        "note": "Hardware floor, no software: SerDes transmit and receive with CDR and equalisation ~20-40 ns, a light FEC ~20-50 ns, ~0.3 m of flight at ~6.7 ns/m ~2 ns, and a router/flit stage ~10 ns. No published end-to-end figure was found, so the value is assumed and swept over its range.",
+        "source": "component decomposition in docs/ANALYTICAL_REPORT.md; OIF CEI-112G (https://www.oiforum.com/wp-content/uploads/00311c-OIF-112G-OFC-slides_ofc20_presentation.pdf)"
+      }
+    },
+    "rom_wafer_serdes": {
+      "bytes_s": {
+        "grade": "derived",
+        "value": 6000000000000.0,
+        "note": "Payload per direction per wafer: a quarter of the 860 mm wafer perimeter carrying ~430 lanes of 112 Gb/s SerDes is ~48 Tb/s, 6 TB/s. Replaces the 150 GB/s Ethernet ports of a commercial wafer cluster, which a purpose-built ROM machine need not use.",
+        "source": "wafer perimeter from configs/hardware/technology_inputs.json; lane rate from the 112G PAM4 SerDes class"
+      },
+      "domain_size": {
+        "grade": "derived",
+        "value": 1.0,
+        "note": "Point-to-point between neighbouring wafers.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "fabric": {
+        "grade": "assumed",
+        "value": "mesh",
+        "note": "Wafers connect to neighbours directly, with no switch.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "value": 1e-07,
+        "range_low": 4e-08,
+        "range_high": 2.5e-07,
+        "note": "Same hardware floor as rom_board_serdes: SerDes, light FEC, short flight, router; no software.",
+        "source": "component decomposition in docs/ANALYTICAL_REPORT.md"
       }
     }
   },
@@ -1125,7 +1209,7 @@
       "published_tokens_s_per_user": {
         "grade": "published",
         "note": "16,960 tokens/s per user on Llama 3.1 8B at 1k input / 1k output. THE FOUR DIGITS ARE ONLY ON THE CHART IMAGE: the data label on taalas.com/h-content/uploads/2026/02/graph.png reads 16960 (H200 230, B200 353, Groq 594, Sambanova 932, Cerebras 1981, Taalas HC1 16960); the product page's prose says only \"17k\", which a reader cannot check to four figures. Every figure is self-run by Taalas -- there is no MLPerf and no third-party measurement -- but the batch size IS published and is 1 per chip; see `batch_size`, whose previous \"stated nowhere\" was wrong. RESIDUAL RECORDED RATHER THAN HIDDEN: a sibling slide states 0.0625 ms per token, which is 16,000 tok/s, 6% below this figure.",
-        "source": "https://taalas.com/h-content/uploads/2026/02/graph.png (chart data label) ; prose secondary https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344 \"16,960 tokens a second\" ; docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
+        "source": "https://taalas.com/h-content/uploads/2026/02/graph.png (chart data label) ; prose secondary https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344 \"16,960 tokens a second\" ; docs/ANALYTICAL_REPORT.md",
         "value": 16960.0
       },
       "transistors": {
@@ -1263,6 +1347,18 @@
       "value": "sram_hd_bitcell_area_ratio",
       "cell_area_coupling": "none",
       "cim_cell_area_coupling": "proportional"
+    },
+    "cim_bits_per_cell": {
+      "grade": "published",
+      "value": 4.0,
+      "note": "Weight bits one compute-in-ROM select cell accounts for; used by CimCellAccounting for every compute-in-ROM design. Replaces the per-bit rule, which charged one cim_cell_area_multiplier-sized cell per stored BIT and made the HC1 reconstruction capacity-infeasible even though this repository's own mechanism reconstruction (docs/ANALYTICAL_REPORT.md) has one select transistor per <=4-bit weight. PUBLISHED STATEMENT, UNPUBLISHED MECHANISM: taken from the same vendor the HC1 gate validates against, so that gate is not independent on capacity. Each weight element takes ceil(bits/4) cells; block scales are stored at full cell width.",
+      "source": "Ljubisa Bajic, quoted in https://www.nextplatform.com/compute/2026/02/19/taalas-etches-ai-models-onto-transistors-to-rocket-boost-inference/4092140 (\"we can store four bits away and do the multiply related to it -- everything -- with a single transistor\"); reconstruction https://yongwei.site/en/taalas-hc1-arch/ ; docs/ANALYTICAL_REPORT.md finding 4"
+    },
+    "expert_bank_pooling": {
+      "grade": "assumed",
+      "value": "striped",
+      "note": "How a ROM-as-storage die serves the experts a token selects. 'striped': every expert is striped across all of the die's read banks at different row ranges, so the selected experts are read at the whole die's rate and an engaged byte costs engaged_bytes / read_bandwidth. 'dedicated': each resident shard owns its banks, so reading the engaged experts takes the whole array's sweep time. Striping moves the cost into deep banks, row decoding and muxing (docs/ANALYTICAL_REPORT.md); no macro qualifies it at N5. Compute-in-ROM policies keep the dedicated rule because their arithmetic is bound to the cell.",
+      "source": "docs/ANALYTICAL_REPORT.md"
     }
   },
   "schema_version": 1,

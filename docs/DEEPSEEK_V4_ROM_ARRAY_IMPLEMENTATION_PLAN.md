@@ -48,7 +48,7 @@ Two comparisons then become controlled:
   to DeepSeek at the same scale on both sides.
 - **ROM-wafer versus ROM-array-32** holds the model, the ROM tile, and the
   weight tier fixed. Only the packaging and fabric differ. This is the
-  question `WAFER_VERSUS_ARRAY_LATENCY.md` answers analytically and that no
+  question `ANALYTICAL_REPORT.md` answers analytically and that no
   executed artifact answers today.
 - **ROM-array-Pro versus HBM-cluster-Pro** repeats the first comparison at
   the scale where the array is the only ROM topology with a packaging path.
@@ -92,7 +92,7 @@ same roofline gives the wafer 1.8x to 3.8x the per-user rate of the array at
 equal area, and at batch 64 the array's rate falls to 2.65 ms/token against the
 wafer's 0.70 ms. The plan's product is a *reported crossover from executed
 artifacts*, which is what the retracted section of
-`WAFER_VERSUS_ARRAY_LATENCY.md` said the answer should be.
+`ANALYTICAL_REPORT.md` said the answer should be.
 
 ## 2. Inventory: what exists, what is reused, what is new
 
@@ -223,7 +223,7 @@ unrecoverable link or node failure, and one coordinated run namespace.
 The governing comparison rule of this repository is iso-area: a ROM design and
 its comparator are read at the same silicon area, and the comparator's device
 count is *derived* from that area rather than chosen
-(`ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` section 2;
+(`ANALYTICAL_REPORT.md` section 2;
 `tools/run_roofline_studies.py` `_iso_area_gpu_counts`). The roofline applies
 it to every recommendation: "iso-area, at the area the rule chose", with the
 area ratio matched within 2% or a granularity correction stated. This plan
@@ -276,7 +276,7 @@ Consequences for the targets above:
   reported beside the iso-area row.
 - **Wafer versus array.** One wafer is 46,225 mm² of silicon; its iso-area
   array comparator is about 57 reticle-class dies, which is how
-  `WAFER_VERSUS_ARRAY_LATENCY.md` already reads the crossover.
+  `ANALYTICAL_REPORT.md` already reads the crossover.
 
 ## 4. The evaluation stack: five layers, each with its own gate
 
@@ -856,7 +856,7 @@ the descriptor-multiset test.
    fair, but the *ROM* thesis is that weight reads are cheap, and the array
    converts part of that saving back into fabric traffic that the wafer's
    mesh was supposed to absorb. The retraction in
-   `WAFER_VERSUS_ARRAY_LATENCY.md` says the wafer mesh does not absorb it
+   `ANALYTICAL_REPORT.md` says the wafer mesh does not absorb it
    either (138–235 µs for an on-wafer all-reduce). The real lever is a
    placement that keeps dispatch local, and that is compiler work this plan
    leaves to a later optimization package, not to the controlled variant.

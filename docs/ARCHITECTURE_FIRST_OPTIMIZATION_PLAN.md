@@ -6,7 +6,7 @@ priority order; preserves the full recharacterization and optimization scope.
 
 ## System-budget checkpoint: 2026-09-23
 
-The [ROM/HBM top-down assessment](ROM_HBM_PERFORMANCE_GAP.md) now sets the
+The [ROM/HBM top-down assessment](ANALYTICAL_REPORT.md) now sets the
 implementation priorities. Fresh resource derivation shows that the five-die
 Qwen pipeline cannot meet its older token-latency projection: KV service alone
 exceeds that entire budget. The HBM compute budget needs sufficient weight reuse,
@@ -17,7 +17,7 @@ physical runs remain useful evidence, but they cannot complete this architecture
 
 ## Proposed implementation direction for review
 
-[ROM-first architecture proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md) specifies
+[ROM-first architecture proposal](ANALYTICAL_REPORT.md) specifies
 bank-local compute, local KV attention, certified pipelined numerical services,
 hierarchical control and dedicated collectives, plus a reuse-oriented HBM variant.
 Its eight-die Qwen configuration and 85/75 µs budgets are unqualified engineering

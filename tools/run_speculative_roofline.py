@@ -102,6 +102,7 @@ TOPOLOGY_FIELDS = (
     "intra_link",
     "intra_domain_size",
     "tensor_group_size",
+    "moe_fanout",
 )
 
 RECONSTRUCTION_TOLERANCE = 1e-9
@@ -111,6 +112,26 @@ RECONSTRUCTION_TOLERANCE = 1e-9
 # small helpers
 # --------------------------------------------------------------------------
 
+
+
+def _load_study_artifact(path):
+    """A roofline study as one dict: ``analytical.json`` plus its ``points.json``
+    shard and the de-duplicated design provenance (see
+    ``opentallas.roofline.load_study_artifact``, which this mirrors so the tool
+    stays standard-library only)."""
+
+    path = Path(path)
+    body = json.loads(path.read_text())
+    shard = body.pop("points_file", None)
+    if shard:
+        body["points"] = json.loads((path.parent / shard).read_text())
+    table = body.pop("provenance_table", None)
+    if table:
+        for design in body.get("designs", ()):
+            reference = design.get("provenance")
+            if isinstance(reference, str) and reference in table:
+                design["provenance"] = table[reference]
+    return body
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -762,7 +783,7 @@ def process_study(
     gamma_ladder: list[int],
     verify_shas: bool,
 ) -> dict:
-    body = json.loads(source.read_text())
+    body = _load_study_artifact(source)
     inputs = body["inputs"]
     problems: list[str] = []
 

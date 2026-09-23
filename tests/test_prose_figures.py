@@ -104,12 +104,17 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # enter this map at 2 annotations each, and added two area figures to
     # docs/EVIDENCE_LEDGER.md section 10 (42 -> 44).  Before that
     # docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md was added with 14
-    # annotations, after DEEPSEEK_V41_FLASH_FEASIBILITY.md's 69 (and before that
+    # annotations, after ANALYTICAL_REPORT.md's 69 (and before that
     # docs/CHIP_ARCHITECTURE_DESIGN.md gained ten and its floor was raised to
     # match).  This total only ever moves UP -- a drop is the regression the
     # floor exists to catch, and the per-document equality above catches it
     # first.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 936
+    # 696, down from 936, and deliberately: on 2026-09-23 the legacy analytical
+    # reports were deleted at the user's direction and replaced by
+    # docs/ANALYTICAL_REPORT.md (73 annotations). The iso-node headline
+    # sections of README.md and docs/OVERVIEW.md went with them. This is the one
+    # sanctioned drop; the floor rises again from here.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 696
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -296,14 +301,14 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # The value is read from a live generated report, so it moves when
     # `make roofline` reruns and this literal has to move with it -- which is
     # the same discipline the checker imposes on prose. It was 9.50 before the
-    # per-model design rule, 8.98 after it, and 5.76 after the scale-out link
-    # evidence was corrected.
+    # per-model design rule, 8.98 after it, 5.76 after the scale-out link
+    # evidence was corrected, and 6.16 after the 2026-09-23 framework revision.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 5.76 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 6.16 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 5.76x.\n")
+        "The ratio is 6.16x.\n")
     code, out = _run(document)
     assert code == 0, out
 
@@ -317,11 +322,11 @@ def test_removing_the_annotations_from_a_priority_document_fails(tmp_path, capsy
     """Provenance is what separated the caught errors from the live ones, so
     losing it on a priority document is itself the regression."""
 
-    monkeypatch.setattr(CPF, "REQUIRED_COVERAGE", {"docs/OVERVIEW.md": 18})
-    assert CPF.main(["docs/OVERVIEW.md"]) == 0
+    monkeypatch.setattr(CPF, "REQUIRED_COVERAGE", {"docs/ANALYTICAL_REPORT.md": 60})
+    assert CPF.main(["docs/ANALYTICAL_REPORT.md"]) == 0
 
-    monkeypatch.setattr(CPF, "REQUIRED_COVERAGE", {"docs/OVERVIEW.md": 500})
-    assert CPF.main(["docs/OVERVIEW.md"]) == 2
+    monkeypatch.setattr(CPF, "REQUIRED_COVERAGE", {"docs/ANALYTICAL_REPORT.md": 500})
+    assert CPF.main(["docs/ANALYTICAL_REPORT.md"]) == 2
     assert "coverage floor" in capsys.readouterr().out
 
 

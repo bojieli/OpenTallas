@@ -97,7 +97,16 @@ def _git_commit() -> str:
 
 def _load(path: Path) -> Any:
     with path.open() as handle:
-        return json.load(handle)
+        body = json.load(handle)
+    # Roofline studies are sharded: points in a sibling file, design provenance
+    # in a table (see opentallas.roofline.load_study_artifact).
+    if isinstance(body, dict) and body.get("points_file"):
+        body["points"] = json.loads((path.parent / body.pop("points_file")).read_text())
+        table = body.pop("provenance_table", {})
+        for design in body.get("designs", ()):
+            if isinstance(design.get("provenance"), str) and design["provenance"] in table:
+                design["provenance"] = table[design["provenance"]]
+    return body
 
 
 def _find_key(node: Any, wanted: str) -> Any:

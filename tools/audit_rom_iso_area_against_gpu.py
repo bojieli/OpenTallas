@@ -52,6 +52,26 @@ SHIPPED_GEOMETRIES = (
 )
 
 
+
+def _load_study_artifact(path):
+    """A roofline study as one dict: ``analytical.json`` plus its ``points.json``
+    shard and the de-duplicated design provenance (see
+    ``opentallas.roofline.load_study_artifact``, which this mirrors so the tool
+    stays standard-library only)."""
+
+    path = Path(path)
+    body = json.loads(path.read_text())
+    shard = body.pop("points_file", None)
+    if shard:
+        body["points"] = json.loads((path.parent / shard).read_text())
+    table = body.pop("provenance_table", None)
+    if table:
+        for design in body.get("designs", ()):
+            reference = design.get("provenance")
+            if isinstance(reference, str) and reference in table:
+                design["provenance"] = table[reference]
+    return body
+
 def _git(*args: str) -> str:
     return subprocess.run(
         ("git", *args), cwd=ROOT, capture_output=True, text=True, check=False
@@ -67,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     arguments = parser.parse_args(argv)
 
-    body = json.loads(ANALYTICAL.read_text())
+    body = _load_study_artifact(ANALYTICAL)
     usable = [
         entry
         for entry in body["comparisons"]

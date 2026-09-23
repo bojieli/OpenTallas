@@ -13,7 +13,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER = ROOT / "tools" / "run_iso_node_studies.py"
 CHECKED_IN = ROOT / "results" / "iso-node"
-ARTIFACTS = ("REPORT.md", "analytical.json", "sweep.csv")
+ARTIFACTS = ("analytical.json", "sweep.csv")
 
 
 def _load_runner() -> ModuleType:
@@ -70,9 +70,7 @@ def test_iso_node_json_csv_and_markdown_are_mutually_consistent(
         )
         assert len(csv_rows) == len(decoded["points"])
         assert tuple(csv_rows[0]) == runner.CSV_FIELDS
-        assert (destination / "REPORT.md").read_text() == (
-            runner.render_report(decoded).rstrip() + "\n"
-        )
+        assert not (destination / "REPORT.md").exists()
 
 
 def test_achieved_rate_report_rows_match_each_exact_comparison_tuple(

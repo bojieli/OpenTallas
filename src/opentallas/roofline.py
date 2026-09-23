@@ -217,7 +217,7 @@ disagree about whether a session fits."""
 WEIGHT_TRAFFIC_POLICIES = ("decode_streamed", "full_checkpoint")
 WEIGHT_STORES = ("rom", "hbm", "sram")
 KV_STORES = ("sram", "hbm")
-PARALLELISMS = ("none", "pipeline", "tensor", "hybrid")
+PARALLELISMS = ("none", "pipeline", "tensor", "hybrid", "expert")
 LINK_FABRICS = ("switched", "mesh")
 MESH_ALLREDUCE_DIAMETER_FACTOR = 1.1
 """An all-reduce on a 2-D mesh costs about 1.1 times the mesh diameter.
@@ -252,9 +252,51 @@ WEIGHT_AMORTIZATIONS = ("batched", "per_stream", "per_region")
 COMPUTE_IN_ROM_POLICIES = ("per_stream", "per_region")
 
 
-# --------------------------------------------------------------------------
-# graded values
-# --------------------------------------------------------------------------
+@dataclass(frozen=True)
+class CimCellAccounting:
+    """Compute-in-ROM capacity rule: select cells per weight, not per bit.
+
+    The reconstructed HC1 mechanism encodes a whole <=4-bit weight in which
+    pre-computed product line one select transistor taps, so one cell accounts
+    for up to ``bits_per_cell_width`` bits (``rom.cim_bits_per_cell``).  Each
+    weight element takes ``ceil(element_bits / width)`` cells of its own -- a
+    select cell cannot be shared between two weights -- and block-scale bytes
+    are stored at full cell width.  ``hc1_mixture`` reads a non-integer width
+    as HC1's published 3-bit/6-bit blend instead of an element plus scales.
+    The legacy per-bit rule is ``cim_cells=None``.
+    """
+
+    element_bits: float
+    bits_per_cell_width: Graded
+    scale_bits: float = 0.0
+    hc1_mixture: bool = False
+
+    @property
+    def bits_per_weight(self) -> float:
+        return self.element_bits + self.scale_bits
+
+    def cells_per_weight(self) -> float:
+        width = self.bits_per_cell_width.value
+        bits = self.element_bits
+        if bits <= 0 or width <= 0 or self.scale_bits < 0:
+            raise ValidationError("element bits and cell width must be positive")
+        if self.hc1_mixture:
+            if not 3.0 <= bits <= 6.0:
+                raise ValidationError("the HC1 mixture spans 3 to 6 bits")
+            six = (bits - 3.0) / 3.0
+            cells = (1 - six) * math.ceil(3.0 / width) + six * math.ceil(6.0 / width)
+        else:
+            cells = float(math.ceil(bits / width))
+        return cells + self.scale_bits / width
+
+    def bits_per_cell(self) -> Graded:
+        cells = self.cells_per_weight()
+        return derived(
+            self.bits_per_weight / cells,
+            (self.bits_per_cell_width,),
+            "bits_per_weight / cells_per_weight",
+            f"{self.bits_per_weight} stored bits per weight in {cells:.4f} select cells",
+        )
 
 
 @dataclass(frozen=True)
@@ -290,6 +332,30 @@ class Graded:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def load_study_artifact(path: "str | Path") -> dict[str, Any]:
+    """Read a roofline study artifact, reassembling its shards.
+
+    Studies are written as ``analytical.json`` plus a sibling ``points.json``
+    (named by ``points_file``), and each design's graded provenance is stored
+    once in ``provenance_table`` and referenced by key.  Both exist only to keep
+    every committed file under the 100 MB a Git host accepts.  This returns the
+    single dictionary the study computed, so a consumer never sees the split.
+    """
+
+    path = Path(path)
+    body = json.loads(path.read_text())
+    shard = body.pop("points_file", None)
+    if shard:
+        body["points"] = json.loads((path.parent / shard).read_text())
+    table = body.pop("provenance_table", None)
+    if table:
+        for design in body.get("designs", ()):
+            reference = design.get("provenance")
+            if isinstance(reference, str) and reference in table:
+                design["provenance"] = table[reference]
+    return body
 
 
 def _weakest_grade(grades: Iterable[str]) -> str:
@@ -546,23 +612,45 @@ class Technology:
             "bits and nothing else, so it is the reference for the multiplier",
         )
 
-    def rom_bits_per_mm2_for(self, node: str, weight_amortization: str) -> Graded:
-        """Capacity density of the array this policy actually builds."""
+    def rom_bits_per_mm2_for(
+        self,
+        node: str,
+        weight_amortization: str,
+        cim_cells: "CimCellAccounting | None" = None,
+    ) -> Graded:
+        """Capacity density of the array this policy actually builds.
+
+        ``cim_cells`` selects per-weight cell accounting for compute-in-ROM
+        policies; ``None`` keeps the per-bit rule every study uses.
+        """
 
         base = self.rom_bits_per_mm2(node)
         multiplier = self.rom_cell_area_multiplier(weight_amortization)
         if multiplier.value == 1.0:
             return base
-        return derived(
+        per_bit = derived(
             base.value / multiplier.value,
             (base, multiplier),
             "storage_rom_bits_per_mm2 / cim_cell_area_multiplier",
             f"{node} compute-in-ROM array capacity density: a larger cell holds "
             "proportionally fewer bits in the same silicon",
         )
+        if cim_cells is None:
+            return per_bit
+        factor = cim_cells.bits_per_cell()
+        return derived(
+            per_bit.value * factor.value,
+            (per_bit, factor),
+            "cim_cells_per_mm2 * stored_bits_per_cell",
+            f"{node} compute-in-ROM capacity density with one select cell per "
+            "<=4-bit weight nibble",
+        )
 
     def rom_read_bytes_s_per_mm2_for(
-        self, node: str, weight_amortization: str
+        self,
+        node: str,
+        weight_amortization: str,
+        cim_cells: "CimCellAccounting | None" = None,
     ) -> Graded:
         """Read-bandwidth density of the array this policy actually builds.
 
@@ -580,12 +668,23 @@ class Technology:
         multiplier = self.rom_cell_area_multiplier(weight_amortization)
         if multiplier.value == 1.0:
             return base
-        return derived(
+        per_bit = derived(
             base.value / multiplier.value,
             (base, multiplier),
             "storage_rom_read_bytes_s_per_mm2 / cim_cell_area_multiplier",
             f"{node} compute-in-ROM array read-bandwidth density: a larger cell "
             "means fewer cells per mm2 and no extra bitlines or sense amps",
+        )
+        if cim_cells is None:
+            return per_bit
+        # Same cells, same access rate per cell: each select now yields a whole
+        # weight nibble, so bytes/s scale with capacity and the sweep is unchanged.
+        factor = cim_cells.bits_per_cell()
+        return derived(
+            per_bit.value * factor.value,
+            (per_bit, factor),
+            "cim_cell_read_rate_per_mm2 * stored_bits_per_cell",
+            f"{node} compute-in-ROM read density with one select cell per weight nibble",
         )
 
     def rom_read_bytes_s_per_mm2(self, node: str) -> Graded:
@@ -795,14 +894,14 @@ class Technology:
 
         hop_latency, link_bytes_s = self.link(event.link)
         if event.kind == "point_to_point":
-            payload = activation_bytes
+            payload = activation_bytes * event.payload_scale
             latency = hop_latency.value
             depth = 1.0
         else:
             span = max(2, int(event.span))
             depth = self.collective_traversals(event.link, span)
             latency = depth * hop_latency.value
-            payload = activation_bytes * 3.0 * (span - 1) / span
+            payload = activation_bytes * event.payload_scale * 3.0 * (span - 1) / span
         transfer = payload / max(link_bytes_s.value, 1e-30)
         detail = {
             "link": event.link,
@@ -1624,6 +1723,7 @@ def balanced_area_split(
     hbm_generation: str = "hbm3e",
     weight_amortization: str = "batched",
     spare_area_policy: str = "sram",
+    cim_cells: "CimCellAccounting | None" = None,
 ) -> AreaSplit:
     """Solve the split from the workload rather than guessing fractions.
 
@@ -1708,7 +1808,9 @@ def balanced_area_split(
         # credited with the storage cell's bandwidth per mm2 -- a free 1.6x on
         # the sweep.  Both densities now carry it and it cancels.
         density = (
-            technology.rom_bits_per_mm2_for(node, weight_amortization).value
+            technology.rom_bits_per_mm2_for(
+                node, weight_amortization, cim_cells
+            ).value
             / BITS_PER_BYTE
         )
         rom_mm2 = stored_weight_bytes / density
@@ -1759,7 +1861,9 @@ def balanced_area_split(
         # array everything else.  Both sides of the ratio are graded densities,
         # so the split is derived rather than chosen.
         read_density = (
-            technology.rom_read_bytes_s_per_mm2_for(node, weight_amortization).value
+            technology.rom_read_bytes_s_per_mm2_for(
+                node, weight_amortization, cim_cells
+            ).value
             * technology.efficiency("rom_read_bandwidth").value
         )
         mac_density = (
@@ -1865,6 +1969,10 @@ class LinkEvent:
     kind: str
     span: int
     description: str
+    #: Fraction of the batch activation this event moves per partition.  1.0
+    #: for every tensor/pipeline event; an expert-parallel dispatch moves only
+    #: each token's copies to its selected experts, spread over the partitions.
+    payload_scale: float = 1.0
 
     def __post_init__(self) -> None:
         if self.kind not in ("all_reduce", "point_to_point"):
@@ -1905,6 +2013,9 @@ class Topology:
     intra_link: str = ""
     intra_domain_size: int = 1
     tensor_group_size: int = 1
+    #: Experts per token for ``expert`` parallelism: how many devices one
+    #: token's hidden state is dispatched to and combined back from.
+    moe_fanout: int = 0
 
     def __post_init__(self) -> None:
         if self.device_count < 1:
@@ -1919,6 +2030,8 @@ class Topology:
             raise ValidationError("intra_domain_size must be at least 1")
         if self.tensor_group_size < 1:
             raise ValidationError("tensor_group_size must be at least 1")
+        if self.parallelism == "expert" and self.moe_fanout < 1:
+            raise ValidationError("expert parallelism needs moe_fanout >= 1")
 
     @property
     def partitions(self) -> int:
@@ -1951,7 +2064,7 @@ class Topology:
         partitions = self.partitions
         if self.parallelism == "tensor":
             return partitions
-        if self.parallelism == "hybrid":
+        if self.parallelism in ("hybrid", "expert"):
             return max(1, min(self.tensor_group_size, partitions))
         return 1
 
@@ -1963,10 +2076,23 @@ class Topology:
         knows how many layers the model has.
         """
 
+        if self.parallelism == "expert":
+            # Data-parallel attention groups share one expert pool: every group
+            # is on the critical path of its own users at the same time, so a
+            # token visits no second stage.
+            return 1
         group = self.tensor_group
         if group <= 0:
             return self.partitions
         return max(1, math.ceil(self.partitions / group))
+
+    @property
+    def attention_groups(self) -> int:
+        """Data-parallel attention replicas under ``expert`` parallelism."""
+
+        if self.parallelism != "expert":
+            return 1
+        return max(1, self.partitions // max(1, self.tensor_group))
 
     @property
     def token_slots(self) -> int:
@@ -2071,6 +2197,40 @@ class Topology:
                     )
                 )
 
+        if self.parallelism == "expert":
+            # Each attention group is tensor-parallel inside one domain and
+            # carries only its own users, so its collectives move 1/groups of
+            # the batch activation.  The MoE layer then dispatches each token's
+            # hidden state to its selected experts and combines the results
+            # back: two all-to-all steps per layer, crossing the scale-out
+            # fabric when the expert pool is wider than one domain.  Per
+            # partition that is k copies of its share of the batch.
+            groups = self.attention_groups
+            events = [
+                event if event.link != inner else LinkEvent(
+                    count=event.count, link=event.link, kind=event.kind,
+                    span=event.span, description=event.description,
+                    payload_scale=1.0 / groups,
+                )
+                for event in events
+                if event.link == inner
+            ]
+            pool_link = self.link if partitions > domain else inner
+            events.append(
+                LinkEvent(
+                    count=2.0 * num_layers,
+                    link=pool_link,
+                    kind="point_to_point",
+                    span=2,
+                    description=(
+                        f"expert dispatch and combine per layer over {pool_link}, "
+                        f"{self.moe_fanout} copies per token"
+                    ),
+                    payload_scale=self.moe_fanout / partitions,
+                )
+            )
+            return tuple(events)
+
         if stages > 1:
             stages_per_domain = max(1, domain // group)
             domains = math.ceil(stages / stages_per_domain)
@@ -2163,6 +2323,9 @@ class DeviceBudget:
     provenance: Mapping[str, Graded]
     reasons: tuple[str, ...] = ()
     published_reference: str = ""
+    #: ROM-as-storage only: 'striped' reads the engaged experts at the whole
+    #: array's rate; 'dedicated' makes them take the full-array sweep.
+    rom_bank_pooling: str = "dedicated"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -2173,6 +2336,7 @@ class DeviceBudget:
             "weight_store": self.weight_store,
             "kv_store": self.kv_store,
             "weight_amortization": self.weight_amortization,
+            "rom_bank_pooling": self.rom_bank_pooling,
             "silicon_area_mm2_per_device": self.silicon_area_mm2_per_device,
             "silicon_area_mm2_total": self.silicon_area_mm2_total,
             "weight_capacity_bytes": self.weight_capacity_bytes,
@@ -2216,6 +2380,8 @@ def rom_device_budget(
     weight_amortization: str = "batched",
     spare_area_policy: str = "sram",
     split: AreaSplit | None = None,
+    cim_cells: "CimCellAccounting | None" = None,
+    bank_pooling: str | None = None,
 ) -> DeviceBudget:
     """Derive a mask-ROM design's resources from its area.
 
@@ -2242,11 +2408,14 @@ def rom_device_budget(
             hbm_generation=hbm_generation,
             weight_amortization=weight_amortization,
             spare_area_policy=spare_area_policy,
+            cim_cells=cim_cells,
         )
 
-    rom_capacity_density = technology.rom_bits_per_mm2_for(node, weight_amortization)
+    rom_capacity_density = technology.rom_bits_per_mm2_for(
+        node, weight_amortization, cim_cells
+    )
     rom_bandwidth_density = technology.rom_read_bytes_s_per_mm2_for(
-        node, weight_amortization
+        node, weight_amortization, cim_cells
     )
     sram_capacity_density = technology.sram_bits_per_mm2(node)
     sram_bandwidth_density = technology.sram_read_bytes_s_per_mm2(node)
@@ -2377,6 +2546,14 @@ def rom_device_budget(
         native_formats=_canonical_formats(technology),
         emulated_formats={},
         provenance=provenance,
+        rom_bank_pooling=(
+            "dedicated"
+            if weight_amortization in COMPUTE_IN_ROM_POLICIES
+            else (
+                bank_pooling
+                or str(technology.raw["rom"]["expert_bank_pooling"]["value"])
+            )
+        ),
         reasons=tuple(reasons),
     )
 
@@ -2756,6 +2933,11 @@ def _service_terms(
             if stored_weight_bytes > 0
             else 1.0
         )
+        if budget.rom_bank_pooling == "striped":
+            # Striped banks: every expert spans every read bank, so the bytes
+            # a step engages are read at the whole array's rate instead of
+            # taking the full sweep a dedicated-bank layout implies.
+            engaged_fraction = 1.0
         effective_weight_bw = budget.weight_read_bytes_s * engaged_fraction
         weight_time = (
             engaged_weight_bytes / effective_weight_bw
@@ -2865,9 +3047,26 @@ def _service_terms(
         engaged_devices = effective_engaged_devices(
             devices, traffic.distinct_experts_per_layer
         )
-        weight_time = dense_bytes / max(budget.weight_read_bytes_s, 1e-30)
-        if routed_bytes > 0:
-            weight_time += routed_bytes / max(engaged_devices * per_device_bw, 1e-30)
+        parallelism = budget.topology.parallelism
+        if parallelism == "expert":
+            # Expert parallelism: whole experts live on single devices, so only
+            # the busiest engaged device's bandwidth serves the routed fetch.
+            # Attention is replicated per data-parallel group and every group
+            # reads its own copy with its own devices.
+            groups = budget.topology.attention_groups
+            weight_time = dense_bytes * groups / max(budget.weight_read_bytes_s, 1e-30)
+            if routed_bytes > 0:
+                weight_time += routed_bytes / max(engaged_devices * per_device_bw, 1e-30)
+        else:
+            # Tensor, hybrid and pipeline layouts stripe every matrix -- routed
+            # experts included -- across the devices that own its layer, which
+            # is what their all-reduces already assume.  Charging these layouts
+            # an expert-parallel fetch while pricing tensor-parallel links, as
+            # this branch used to, gave the GPU both costs and neither benefit.
+            engaged_devices = float(devices)
+            weight_time = (dense_bytes + routed_bytes) / max(
+                budget.weight_read_bytes_s, 1e-30
+            )
         effective_weight_bw = (
             engaged_weight_bytes / weight_time if weight_time > 0 else math.inf
         )
@@ -3045,6 +3244,98 @@ def _service_terms(
     )
 
 
+#: Prompt tokens processed together in one prefill pass.  A chunk shares one
+#: weight read on an amortising machine; compute-in-ROM pays one sweep per token
+#: whatever the chunk.
+PREFILL_CHUNK_TOKENS = 8192
+#: Output length of the request used to fold time-to-first-token into a
+#: per-request token rate.
+REQUEST_OUTPUT_TOKENS = 1024
+
+
+def _prefill(
+    budget: DeviceBudget,
+    model: ModelProfile,
+    technology: Technology,
+    *,
+    prompt_tokens: int,
+    stored_weight_bytes: float,
+    representation_scale: float,
+    weight_traffic_policy: str,
+    execution_format: str | None,
+    measured_expert_coverage: float | None,
+    fixed_latency: float,
+    slots: float,
+    decode_step_s: float,
+) -> dict[str, Any]:
+    """Time to first token for one prompt, from the same service terms as decode.
+
+    The prompt is cut into chunks of ``PREFILL_CHUNK_TOKENS``.  Each chunk is a
+    batch of tokens from one sequence: it shares one weight pass where the
+    machine amortises, engages the union of its tokens' experts, does every
+    token's arithmetic, and reads the KV of its prefix -- priced at the mean
+    prefix length.  Chunks pipeline through the machine's slots, so the passes
+    take ``(chunks + slots - 1)`` slot-times; collectives are paid per chunk
+    and are not overlapped with compute, the same no-overlap rule decode uses.
+    The final token then pays the per-layer serial floor once.
+
+    Prefill is compute-heavy, so this is where a machine that spent its area on
+    weights rather than arithmetic pays for it.  It is an estimate: no
+    chunk-size search, no overlap of prefill with other users' decode.
+    """
+
+    chunk = float(min(prompt_tokens, PREFILL_CHUNK_TOKENS))
+    chunks = math.ceil(prompt_tokens / chunk)
+    context = max(1, prompt_tokens // 2)
+    kv = kv_traffic(model, context)
+    kv_inflation, _detail, _prov = kv_access_granularity(
+        technology, model, context_tokens=context, store=budget.kv_store
+    )
+    terms = _service_terms(
+        budget,
+        model,
+        technology,
+        context_tokens=context,
+        effective_batch=chunk,
+        stored_weight_bytes=stored_weight_bytes,
+        representation_scale=representation_scale,
+        weight_traffic_policy=weight_traffic_policy,
+        execution_format=execution_format,
+        measured_expert_coverage=measured_expert_coverage,
+        kv=kv,
+        kv_inflation=kv_inflation,
+    )
+    passes_s = (chunks + slots - 1.0) * terms.service_time_s
+    links_s = chunks * terms.link_time_s
+    ttft = passes_s + links_s + fixed_latency
+    request_s = ttft + REQUEST_OUTPUT_TOKENS * decode_step_s
+    service = {
+        "weight_read": terms.weight_time_s,
+        "kv_read": terms.kv_time_s,
+        "compute": terms.compute_time_s,
+    }
+    return {
+        "prompt_tokens": prompt_tokens,
+        "chunk_tokens": chunk,
+        "chunks": chunks,
+        "time_to_first_token_s": ttft,
+        "prefill_tokens_s": prompt_tokens / ttft if ttft > 0 else math.inf,
+        "pass_time_s": passes_s,
+        "link_time_s": links_s,
+        "binding_per_chunk": max(service, key=service.get),
+        "chunk_service_terms_s": service,
+        "request_output_tokens": REQUEST_OUTPUT_TOKENS,
+        "request_time_s": request_s,
+        "request_output_tokens_s": REQUEST_OUTPUT_TOKENS / request_s,
+        "rule": (
+            "chunks share one weight pass per slot where the machine amortises; "
+            "passes pipeline across slots; collectives are paid per chunk; KV "
+            "at the mean prefix; one request = TTFT plus "
+            f"{REQUEST_OUTPUT_TOKENS} decode steps at batch 1"
+        ),
+    }
+
+
 def evaluate(
     budget: DeviceBudget,
     model: ModelProfile,
@@ -3056,8 +3347,12 @@ def evaluate(
     weight_traffic_policy: str = "decode_streamed",
     execution_format: str | None = None,
     measured_expert_coverage: float | None = None,
+    prompt_tokens: int | None = None,
 ) -> RooflineStep:
     """Evaluate one decode step against an area-derived resource budget.
+
+    With ``prompt_tokens`` the step also carries ``metrics["prefill"]``: the
+    time to first token for one prompt of that length on this machine.
 
     Two rates come out of this and they are **not** the same number divided by
     the batch:
@@ -3124,7 +3419,13 @@ def evaluate(
     # of this.  A design whose two stores are the same store pays it once, on both
     # sides of the same comparison.
     resident_kv_store_bytes = hbm_resident_weight_bytes(model)
-    weight_store_demand = stored_weight_bytes + (
+    # Data-parallel attention groups each hold a copy of the dense weights.
+    replicas = budget.topology.attention_groups
+    replicated_dense_bytes = (
+        (replicas - 1) * model.dense_weight_bytes * representation_scale
+    )
+    stored_weight_bytes_with_replicas = stored_weight_bytes + replicated_dense_bytes
+    weight_store_demand = stored_weight_bytes_with_replicas + (
         resident_kv_store_bytes if budget.shared_memory_path else 0.0
     )
     if weight_store_demand > budget.weight_capacity_bytes + CAPACITY_TOLERANCE_BYTES:
@@ -3134,7 +3435,9 @@ def evaluate(
         )
     if budget.shared_memory_path:
         remaining = (
-            budget.kv_capacity_bytes - stored_weight_bytes - resident_kv_store_bytes
+            budget.kv_capacity_bytes
+            - stored_weight_bytes_with_replicas
+            - resident_kv_store_bytes
         )
     else:
         remaining = budget.kv_capacity_bytes - resident_kv_store_bytes
@@ -3291,17 +3594,26 @@ def evaluate(
         step_time = raw_step_time
         power = static_power_w + dynamic_energy_j / max(step_time, 1e-30)
         energy_j = power * step_time
-        energy_per_token = energy_j / max(fill_users, 1e-30)
+        energy_per_token_at_fill = energy_j / max(fill_users, 1e-30)
     else:
         thermal_floor_s = dynamic_energy_j / cooling_headroom_w
         thermal_scale = max(1.0, thermal_floor_s / max(raw_step_time, 1e-30))
         step_time = raw_step_time * thermal_scale
         power = static_power_w + dynamic_energy_j / max(step_time, 1e-30)
-        # Energy per token now includes the static share amortised over the
-        # tokens the step actually produces, which is the only definition that
-        # is comparable across two machines with different fixed costs.
         energy_j = power * step_time
-        energy_per_token = energy_j / max(fill_users, 1e-30)
+        energy_per_token_at_fill = energy_j / max(fill_users, 1e-30)
+
+    # **Energy per token at the load this point states.**  ``fill_users`` can
+    # exceed ``batch_size`` -- a pipeline is counted with every slot busy -- so
+    # dividing by it credited a "batch 1" point with the dynamic efficiency of
+    # dozens or hundreds of users.  The published figure is now what the
+    # machine spends per token actually delivered to ``batch_size`` users: all
+    # of its static power over the step plus those users' dynamic energy.  The
+    # every-slot-busy figure is kept beside it under its own name.
+    delivered_users = float(batch_size)
+    energy_per_token = (
+        static_power_w * step_time + dynamic_energy_per_token * delivered_users
+    ) / max(delivered_users, 1e-30)
 
     fused_compute = (
         budget.weight_store == "rom"
@@ -3345,6 +3657,23 @@ def evaluate(
             1.0 / (throughput_view_step_time * thermal_scale)
             if throughput_view_step_time > 0
             else math.inf
+        )
+
+    prefill = None
+    if prompt_tokens:
+        prefill = _prefill(
+            budget,
+            model,
+            technology,
+            prompt_tokens=int(prompt_tokens),
+            stored_weight_bytes=stored_weight_bytes,
+            representation_scale=representation_scale,
+            weight_traffic_policy=weight_traffic_policy,
+            execution_format=execution_format,
+            measured_expert_coverage=measured_expert_coverage,
+            fixed_latency=fixed_latency,
+            slots=slots,
+            decode_step_s=step_time,
         )
 
     hops, hop_semantics = budget.topology.hop_events(model.num_layers)
@@ -3464,6 +3793,13 @@ def evaluate(
         "raw_step_time_before_thermal_s": raw_step_time,
         "energy_j_per_step": energy_j,
         "energy_j_per_token": energy_per_token,
+        "energy_j_per_token_at_pipeline_fill": energy_per_token_at_fill,
+        **({"prefill": prefill} if prefill is not None else {}),
+        "energy_rule": (
+            "energy_j_per_token is static power over the step plus dynamic "
+            "energy, divided by the batch_size users actually served; "
+            "energy_j_per_token_at_pipeline_fill assumes every slot busy"
+        ),
         "dynamic_energy_j_per_step": dynamic_energy_j,
         "dynamic_energy_j_per_token": dynamic_energy_per_token,
         "dynamic_energy_breakdown_j": terms.detail["dynamic_energy_breakdown_j"],
@@ -3669,8 +4005,15 @@ def taalas_hc1_anchor(
     tolerance: float = 2.0,
     context_tokens: int | None = None,
     weight_bits_per_parameter: float | None = None,
+    cim_cell_width: Graded | None = None,
+    per_bit_cim: bool = False,
 ) -> AnchorCheck:
     """Reproduce the shipping Taalas HC1: 8B on 815 mm2 at N6, ~17,000 tok/s/user.
+
+    Capacity uses per-weight compute-in-ROM cells (``CimCellAccounting``) with
+    the width in ``rom.cim_bits_per_cell``; ``per_bit_cim`` restores the legacy
+    per-bit rule.  The width comes from the same vendor this gate validates
+    against, so the gate is not independent on capacity.
 
     A methodology that predicts 2,000 or 200,000 for a part that exists is
     wrong however internally consistent it is.  This is a gate, not a datapoint
@@ -3709,6 +4052,15 @@ def taalas_hc1_anchor(
         # It is still graded in the config, and still an assumption -- Taalas
         # publishes no microarchitecture, and the whole floorplan now turns on it.
         weight_amortization=str(spec["weight_amortization"]["value"]),
+        cim_cells=(
+            None
+            if per_bit_cim
+            else CimCellAccounting(
+                weight_bits_per_parameter,
+                cim_cell_width or technology.graded("rom", "cim_bits_per_cell"),
+                hc1_mixture=not float(weight_bits_per_parameter).is_integer(),
+            )
+        ),
     )
     step = evaluate(
         budget,
@@ -3909,7 +4261,7 @@ def a100_power_anchor(
     published HBM bandwidth moving and the published dense tensor roof issuing,
     at the same time, for one second**, on top of the traffic-independent
     power.  That is the same check
-    ``docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`` 0.11 used to show the old
+    ``docs/ANALYTICAL_REPORT.md`` 0.11 used to show the old
     power model's shortfall was structural rather than an activity factor: it
     produced 85.3 W against 400 W then, and an activity-factor error would have
     closed at peak.

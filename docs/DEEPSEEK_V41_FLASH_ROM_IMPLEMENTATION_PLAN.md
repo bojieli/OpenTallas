@@ -1,5 +1,12 @@
 # DeepSeek-V4.1-Flash ROM machine: implementation and evaluation plan
 
+> **Revised 2026-09-23 — read [the revision results](ANALYTICAL_REPORT.md) first.**
+> The roofline framework was corrected and extended (per-metric comparison designs,
+> energy at delivered users, consistent GPU expert reads, per-weight compute-in-ROM
+> cells, prefill, batches to 4,096, expert-parallel GPUs). Annotated figures below
+> were rebound to the regenerated artifacts; unannotated roofline figures and any
+> interpretation written before the revision are superseded where they conflict.
+
 **Plan ID:** TA-DS41-3.0
 
 **Status:** proposed delivery plan, not implemented evidence
@@ -27,7 +34,7 @@ that it does not restate, and is gated by the board of
 retire, weaken or replace any of them. Nothing here promotes planned behavior
 into implemented evidence.
 
-**Analytical basis:** [`DEEPSEEK_V41_FLASH_FEASIBILITY.md`](DEEPSEEK_V41_FLASH_FEASIBILITY.md),
+**Analytical basis:** [`ANALYTICAL_REPORT.md`](ANALYTICAL_REPORT.md),
 whose every figure is bound to `results/iso-node/`, `results/model-traffic/`
 and `results/roofline/candidates/`. No number below is a TPOT. Master plan
 section 11.1 governs.
@@ -45,12 +52,13 @@ for DeepSeek-V4-Flash, and streams 13.035 GB <!-- figure: 13.035 src="results/mo
 of weights per step. Three consequences the analytical layer has already
 priced, and this plan has to deliver or refute:
 
-1. **The wafer stays on the collective floor to batch 32.** On the central
-   N4-class envelope the per-user rate is 14,200.3 <!-- figure: 14,200.3 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4.1-Flash;B/stage=1" name="V4.1 central rate" -->
-   tok/s at batch 1 and 8,661.7 <!-- figure: 8,661.7 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4.1-Flash;B/stage=8" name="V4.1 central rate B8" -->
-   at batch 8, where V4-Flash falls from 12,629.3 <!-- figure: 12,629.3 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="V4-Flash central rate" -->
-   to 4,698.7 <!-- figure: 4,698.7 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=8" name="V4-Flash central rate B8" -->
-   because its HBM edge saturates. The binding constraint is the thing this
+1. **The packaged array holds its per-user rate as users are added.** With
+   hardware-limited links, striped expert banks and one layer per package, the
+   N5 array serves 15,556 <!-- figure: 15,556 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188,batch_size=1].rom_per_user_tokens_s" name="V4.1 array rate B1" -->
+   tok/s per user at batch 1 and 12,208 <!-- figure: 12,208 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188,batch_size=64].rom_per_user_tokens_s" name="V4.1 array rate B64" -->
+   at batch 64. V4-Flash goes from 18,119 <!-- figure: 18,119 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x59,batch_size=1].rom_per_user_tokens_s" name="V4-Flash array rate B1" -->
+   to 8,204 <!-- figure: 8,204 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x84,batch_size=64].rom_per_user_tokens_s" name="V4-Flash array rate B64" -->,
+   because its KV reads are larger. Striping and the link latency are what this
    plan's cycle model and RTL must confirm (gate C3, section 4.4).
 2. **The machine is a capacity problem, not a bandwidth one.** The checkpoint
    is 510.3 GB <!-- figure: 510.3 src="data/inventory/deepseek-v4.1-flash.json#checkpoint_bytes" scale="1e-9" name="V4.1 checkpoint GB" -->,
@@ -58,11 +66,12 @@ priced, and this plan has to deliver or refute:
    is Engram lookup tables read 24 rows per module per token. Where those
    tables live decides whether the primary target is two wafers or three, and
    whether an array is 51 reticles or 84. Section 3 decides it.
-3. **The array is the losing class for this model, and the reason is device
-   count.** At N5 iso-area the 84-reticle array is 1.23× <!-- figure: 1.23 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].class_comparison[topology_kind=array].best_by_throughput_density.per_user_speed_ratio" name="V4.1 N5 array ratio" -->
-   its GPU comparator and the two-wafer design is 3.00× <!-- figure: 3.00 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.per_user_speed_ratio" name="V4.1 N5 iso-area ratio" -->,
-   because both the array and the GPU pay about 560 µs of collectives per
-   token on the same NVLink and InfiniBand fabric. The array target exists
+3. **The packaged array is now the winning class for this model.** At N5 the
+   best array is 3.87× <!-- figure: 3.87 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188,batch_size=1].per_user_speed_ratio" name="V4.1 N5 array ratio B1" -->
+   B200 on NVL72 per user at batch 1 and 8.52× <!-- figure: 8.52 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188,batch_size=64].per_user_speed_ratio" name="V4.1 N5 array ratio B64" -->
+   at batch 64 ([analytical report](ANALYTICAL_REPORT.md)). With GPU-class
+   NVLink and InfiniBand it would only tie: both would pay hundreds of µs of
+   collectives per token. The array target exists
    here to make that a measured statement rather than a modelled one.
 
 **What this plan does not claim.** No V4.1 token has been produced by any

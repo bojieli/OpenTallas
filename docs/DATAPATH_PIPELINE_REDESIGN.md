@@ -487,7 +487,7 @@ which costs 78 cycles against the ROM path's 46, a factor of 1.7.
 
 That is a narrower claim than "ROM is faster", and it is the one the measurement
 supports. It also agrees with what this repository's own
-`COMPARISON_FAIRNESS_AUDIT.md` says about single-session versus multi-session
+`ANALYTICAL_REPORT.md` says about single-session versus multi-session
 comparisons, and with the README's batch-1 framing being the regime where the
 advantage lives.
 

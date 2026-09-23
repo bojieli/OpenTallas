@@ -7,23 +7,23 @@ architectures; **100 µs/token is a sensitivity marker, not a fixed design targe
 The HBM accelerator array is the primary baseline, the ROM chip array the primary
 proposal, and one or more ROM wafers secondary. Separate single-sequence speed
 from aggregate concurrent throughput. See the
-[resource-first performance method](RESOURCE_FIRST_PERFORMANCE_METHOD.md).
+[resource-first performance method](ANALYTICAL_REPORT.md).
 
 Status snapshot: 2026-09-23. Production work is on `main`. This summary covers
 architecture feasibility work through the V4.1 expert-group study; older component
 results below retain their original evidence scope.
 
-For the system-level assessment, start with **[ROM/HBM performance gap](ROM_HBM_PERFORMANCE_GAP.md)**. It compares the analytical ceilings with current delivery/compute budgets and identifies the architecture changes needed before local optimizations can establish a fast accelerator.
+For the system-level assessment, start with **[ROM/HBM performance gap](ANALYTICAL_REPORT.md)**. It compares the analytical ceilings with current delivery/compute budgets and identifies the architecture changes needed before local optimizations can establish a fast accelerator.
 
-The proposed next architecture is now available for review in **[ROM-first architecture proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md)**, with executable resource budgets and cache-aware HBM comparisons. It remains a proposal; production defaults are unchanged.
+The proposed next architecture is now available for review in **[ROM-first architecture proposal](ANALYTICAL_REPORT.md)**, with executable resource budgets and cache-aware HBM comparisons. It remains a proposal; production defaults are unchanged.
 
-For DeepSeek V4.1 specifically, see the [first-principles architecture redesign](DEEPSEEK_V41_ARCHITECTURE_REDESIGN.md): expert-local ROM, CSA2 ownership, Engram placement, recurrence and fair HBM sizing.
+For DeepSeek V4.1 specifically, see the [first-principles architecture redesign](ANALYTICAL_REPORT.md): expert-local ROM, CSA2 ownership, Engram placement, recurrence and fair HBM sizing.
 
-The [V4.1 traffic recalculation](DEEPSEEK_V41_TRAFFIC_RECALCULATION.md) clarifies
+The [V4.1 traffic recalculation](ANALYTICAL_REPORT.md) clarifies
 that 112.8 TB/s came from a 40 µs expert-service probe. The model-derived routed
 inventory is 4.512 GB/token; at 1 ms of expert service it requires 4.512 TB/s.
 No 100 µs token requirement has been selected. The new
-[target-free speedup analysis](DEEPSEEK_V41_SPEEDUP_CONDITIONS.md) shows why
+[target-free speedup analysis](ANALYTICAL_REPORT.md) shows why
 non-routed weights, HBM caching and common critical-path work must be included
 before claiming a several-fold ROM advantage.
 
@@ -34,7 +34,7 @@ sequential whole-K accumulation has an optimistic 888.832 µs linear-only floor
 at 1 GHz. The area/service checks did not capture insufficient independent work
 at batch one. Architecture implementation is deferred while the numerical and
 scheduling alternatives are evaluated. See the correction at the top of the
-[redesign proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md).
+[redesign proposal](ANALYTICAL_REPORT.md).
 
 ## Where we stand
 
@@ -52,7 +52,7 @@ The number of experiments is not a measure of completed optimization.
 ## What I am doing right now
 
 Current work is the first-principles ROM/HBM architecture review, including a
-separate [DeepSeek V4.1 redesign](DEEPSEEK_V41_ARCHITECTURE_REDESIGN.md).
+separate [DeepSeek V4.1 redesign](ANALYTICAL_REPORT.md).
 The new expert-group screen quantifies concentrated routing: a group containing
 at least six experts needs 112.8 TB/s to serve six selected experts in 1 µs.
 Pooling reduces replicated service hardware but increases local ROM span and wire

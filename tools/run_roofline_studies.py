@@ -24,6 +24,7 @@ from dataclasses import dataclass, replace
 import hashlib
 import io
 import json
+from collections.abc import Mapping
 import math
 from pathlib import Path
 import sys
@@ -33,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from opentallas.roofline import (  # noqa: E402
+    CimCellAccounting,
     BITS_PER_BYTE,
     DeviceBudget,
     RooflineStep,
@@ -101,8 +103,8 @@ MEASURED_ROM_CELL_RATIOS = (
     ),
 )
 OUTPUT_ROOT = ROOT / "results" / "roofline"
-ARTIFACTS = ("analytical.json", "sweep.csv", "REPORT.md")
-VARIANT_ARTIFACTS = ("analytical.json", "REPORT.md")
+ARTIFACTS = ("analytical.json", "points.json", "sweep.csv", "REPORT.md")
+VARIANT_ARTIFACTS = ("analytical.json", "points.json", "REPORT.md")
 """No ``sweep.csv`` for the variant, and that is a decision rather than an
 omission: there is no row on that page anyone should be pulling into a
 spreadsheet."""
@@ -233,8 +235,13 @@ def context_rung_label(model_name: str, context: int) -> str:
     return f"{family}-{span}"
 
 
-BATCHES = (1, 2, 4, 8, 16, 32, 64, 256)
-"""Doubling from 1 to 64, then 256.
+BATCHES = (1, 2, 4, 8, 16, 32, 64, 256, 1024, 4096)
+"""Doubling from 1 to 64, then 256, 1024 and 4096.
+
+The ladder used to stop at 256, where a GPU's aggregate throughput is still
+rising: the framework review (docs/ANALYTICAL_REPORT.md,
+finding 6) found aggregate ratios being read before the amortising machine
+saturated.  1024 and 4096 let each side reach its own peak or its KV capacity.
 
 The coarse grid this replaced -- 1, 8, 32, 64, 256 -- could report the endpoints
 of the batching argument but not the shape between them, and the shape is where
@@ -279,7 +286,9 @@ STUDIES: dict[str, dict[str, Any]] = {
         "intra_link": "nvlink3",
         "inter_link": "infiniband_hdr",
         "rom_intra_link": "on_wafer",
-        "rom_inter_link": "inter_wafer",
+        "rom_inter_link": "rom_wafer_serdes",
+        "rom_array_intra_link": "rom_package_ucie",
+        "rom_array_inter_link": "rom_board_serdes",
         "contract": (
             "Reticle-class mask-ROM silicon at TSMC N6 against NVIDIA A100 80GB at "
             "N7, compared at equal silicon area with the area stated on both sides. "
@@ -294,8 +303,11 @@ STUDIES: dict[str, dict[str, Any]] = {
         "intra_link": "nvlink5",
         "inter_link": "infiniband_ndr",
         "rom_intra_link": "on_wafer_n5",
-        "rom_inter_link": "inter_wafer",
+        "rom_inter_link": "rom_wafer_serdes",
+        "rom_array_intra_link": "rom_package_ucie",
+        "rom_array_inter_link": "rom_board_serdes",
         "gpu_domain_sensitivity": "nvlink5_nvl72",
+        "gpu_best_intra_link": "nvlink5_nvl72",
         "contract": (
             "Mask-ROM silicon at TSMC N5 against NVIDIA B200 at 4NP, compared at "
             "equal silicon area. Blackwell is a two-die package, so B200 is counted "
@@ -428,7 +440,23 @@ QUANTISED_VARIANT: dict[str, Any] = {
 # come apart -- the third policy was added to the model and silently not
 # studied here.
 from opentallas.roofline import WEIGHT_AMORTIZATIONS  # noqa: E402
-"""The unresolved architectural fork from docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md.
+
+
+def _cim_cells(technology: Technology, bits: float | None) -> CimCellAccounting:
+    """Select-cell accounting for a compute-in-ROM design of this representation.
+
+    Native checkpoints here store FP4, FP8, BF16 and FP32 elements, all whole
+    multiples of a 4-bit cell, so they pack at exactly the cell width.  A
+    uniform re-quantisation stores ``floor(bits)``-bit elements plus the
+    fractional remainder as block scales (MXFP4: 4 + 0.25).
+    """
+
+    width = technology.graded("rom", "cim_bits_per_cell")
+    if bits is None:
+        return CimCellAccounting(width.value, width)
+    element = float(math.floor(bits))
+    return CimCellAccounting(element, width, scale_bits=bits - element)
+"""The unresolved architectural fork from docs/ANALYTICAL_REPORT.md.
 ``batched`` is ROM-as-storage feeding a separate MAC array, where one sweep
 serves the whole batch. ``per_stream`` is compute-in-ROM, where a cell both
 stores and multiplies, so each concurrent stream needs its own pass and
@@ -723,9 +751,14 @@ class FabricPlan:
     inter_link: str
     intra_domain_size: int
     label: str
+    moe_fanout: int = 0
 
     def topology(self, devices: int, regions: int) -> Topology:
-        group = self.intra_domain_size if self.parallelism == "hybrid" else 1
+        group = (
+            self.intra_domain_size
+            if self.parallelism in ("hybrid", "expert")
+            else 1
+        )
         return Topology(
             kind=self.kind,
             device_count=devices,
@@ -735,6 +768,7 @@ class FabricPlan:
             intra_link=self.intra_link,
             intra_domain_size=self.intra_domain_size,
             tensor_group_size=group,
+            moe_fanout=self.moe_fanout,
         )
 
 
@@ -762,6 +796,31 @@ def _fabric_plans(
     array_domain = max(1, int(technology.link_domain_size(intra).value))
     regions_per_wafer = max(1, math.ceil(wafer_area / reticle_area))
     plans: list[tuple[FabricPlan, float]] = []
+    # **Hardware-limited ROM arrays** (the redesign): dies share an interposer
+    # package over UCIe-class links and packages connect over direct SerDes,
+    # with latencies built from PHY, flight and router terms and no software
+    # stack.  A hybrid plan puts one layer's tensor group inside one package
+    # and pipelines layers across packages -- a ROM stage reads its own weights
+    # locally, so pipelining costs it no bandwidth.  These plans are ROM-only;
+    # the GPU keeps the published fabric it ships with.
+    hw_intra = config.get("rom_array_intra_link")
+    hw_inter = config.get("rom_array_inter_link")
+    if hw_intra and hw_inter:
+        hw_domain = max(1, int(technology.link_domain_size(str(hw_intra)).value))
+        for parallelism in ("pipeline", "tensor", "hybrid"):
+            plans.append(
+                (
+                    FabricPlan(
+                        kind="array",
+                        parallelism=parallelism,
+                        intra_link=str(hw_intra),
+                        inter_link=str(hw_inter),
+                        intra_domain_size=hw_domain,
+                        label=f"array-hw-{parallelism}",
+                    ),
+                    reticle_area,
+                )
+            )
     for parallelism in ("pipeline", "tensor", "hybrid"):
         plans.append(
             (
@@ -808,6 +867,7 @@ def _build_rom_budget(
     hbm_generation: str,
     weight_amortization: str = "batched",
     spare_area_policy: str = "sram",
+    weight_bits: float | None = None,
 ) -> DeviceBudget:
     stacks = 0
     if kv_store == "hbm":
@@ -834,6 +894,7 @@ def _build_rom_budget(
         hbm_generation=hbm_generation,
         weight_amortization=weight_amortization,
         spare_area_policy=spare_area_policy,
+        cim_cells=_cim_cells(technology, weight_bits),
     )
 
 
@@ -852,6 +913,7 @@ def _minimum_devices(
     reticle_area: float | None,
     weight_amortization: str = "batched",
     spare_area_policy: str = "sram",
+    weight_bits: float | None = None,
 ) -> int:
     """Fewest devices that can physically hold the design.
 
@@ -892,6 +954,7 @@ def _minimum_devices(
             hbm_generation=hbm_generation,
             weight_amortization=weight_amortization,
             spare_area_policy=spare_area_policy,
+            weight_bits=weight_bits,
         )
         if budget.reasons or budget.split.compute_mm2 <= 0:
             continue
@@ -959,6 +1022,7 @@ def _size_array(
         reticle_area=reticle_area,
         weight_amortization=weight_amortization,
         spare_area_policy=spare_area_policy,
+        weight_bits=weight_bits,
     )
     if minimum > ARRAY_SWEEP_CAP:
         return minimum, []
@@ -983,6 +1047,7 @@ def _size_array(
             hbm_generation=hbm_generation,
             weight_amortization=weight_amortization,
             spare_area_policy=spare_area_policy,
+            weight_bits=weight_bits,
         )
         step = evaluate(
             budget,
@@ -1028,6 +1093,87 @@ def _size_array(
 # --------------------------------------------------------------------------
 # study
 # --------------------------------------------------------------------------
+
+
+def _best_ttft(rom: list[dict[str, Any]], gpu: list[dict[str, Any]]) -> dict[str, Any]:
+    """Each side's fastest prefill layout at one area (prefill is priced at batch 1)."""
+
+    r = [p for p in rom if p.get("time_to_first_token_s")]
+    g = [p for p in gpu if p.get("time_to_first_token_s")]
+    if not r or not g:
+        return {}
+    rb = min(r, key=lambda p: p["time_to_first_token_s"])
+    gb = min(g, key=lambda p: p["time_to_first_token_s"])
+    return {
+        "rom_best_ttft_design": rb["design"],
+        "rom_best_time_to_first_token_s": rb["time_to_first_token_s"],
+        "gpu_best_ttft_design": gb["design"],
+        "gpu_best_time_to_first_token_s": gb["time_to_first_token_s"],
+        "time_to_first_token_ratio": rb["time_to_first_token_s"] / gb["time_to_first_token_s"],
+    }
+
+
+def _capacity_comparison(points: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Each side's best achievable throughput and energy at the same silicon.
+
+    Framework review finding 1: a throughput ratio is only meaningful between
+    two machines each run at their own best operating point.  For every model,
+    context and ROM silicon area this takes the best feasible aggregate rate and
+    the lowest energy per delivered token over **every** design and batch on
+    each side at that area (within 6%), and states the users each needed.
+    """
+
+    rows: list[dict[str, Any]] = []
+    feasible = [p for p in points if p["feasible"]]
+    keys = sorted({(p["model"], p["context_tokens"]) for p in feasible})
+    for model_name, context in keys:
+        here = [p for p in feasible if p["model"] == model_name and p["context_tokens"] == context]
+        rom = [p for p in here if p["family"] == "rom"]
+        gpu = [p for p in here if p["family"] == "gpu"]
+        for area in sorted({round(p["silicon_area_mm2"], -2) for p in rom}):
+            r = [p for p in rom if abs(p["silicon_area_mm2"] - area) <= 0.06 * area]
+            g = [p for p in gpu if abs(p["silicon_area_mm2"] - area) <= 0.06 * area]
+            if not r or not g:
+                continue
+            ra = max(r, key=lambda p: p["aggregate_tokens_s"])
+            ga = max(g, key=lambda p: p["aggregate_tokens_s"])
+            energetic = [p for p in r if p["energy_j_per_token"]]
+            genergetic = [p for p in g if p["energy_j_per_token"]]
+            re_ = min(energetic, key=lambda p: p["energy_j_per_token"]) if energetic else None
+            ge = min(genergetic, key=lambda p: p["energy_j_per_token"]) if genergetic else None
+            rows.append(
+                {
+                    "model": model_name,
+                    "context_tokens": context,
+                    "silicon_area_mm2": area,
+                    "rom_best_aggregate_design": ra["design"],
+                    "rom_best_aggregate_batch": ra["batch_size"],
+                    "rom_best_aggregate_users": ra["pipeline_fill_users"],
+                    "rom_best_aggregate_tokens_s": ra["aggregate_tokens_s"],
+                    "gpu_best_aggregate_design": ga["design"],
+                    "gpu_best_aggregate_batch": ga["batch_size"],
+                    "gpu_best_aggregate_users": ga["pipeline_fill_users"],
+                    "gpu_best_aggregate_tokens_s": ga["aggregate_tokens_s"],
+                    "aggregate_ratio": (
+                        ra["aggregate_tokens_s"] / ga["aggregate_tokens_s"]
+                        if ga["aggregate_tokens_s"]
+                        else None
+                    ),
+                    "rom_best_energy_design": re_["design"] if re_ else None,
+                    "rom_best_energy_batch": re_["batch_size"] if re_ else None,
+                    "rom_best_energy_j_per_token": re_["energy_j_per_token"] if re_ else None,
+                    "gpu_best_energy_design": ge["design"] if ge else None,
+                    "gpu_best_energy_batch": ge["batch_size"] if ge else None,
+                    "gpu_best_energy_j_per_token": ge["energy_j_per_token"] if ge else None,
+                    "tokens_per_joule_ratio": (
+                        ge["energy_j_per_token"] / re_["energy_j_per_token"]
+                        if re_ and ge
+                        else None
+                    ),
+                    **_best_ttft(r, g),
+                }
+            )
+    return rows
 
 
 def _step_row(
@@ -1134,6 +1280,23 @@ def _step_row(
         "cooling_headroom_w": metrics["cooling_headroom_w"],
         "cooling_infeasible": metrics["cooling_infeasible"],
         "energy_j_per_token": _finite(metrics["energy_j_per_token"]),
+        "energy_j_per_token_at_pipeline_fill": _finite(
+            metrics["energy_j_per_token_at_pipeline_fill"]
+        ),
+        **(
+            {
+                "time_to_first_token_s": _finite(
+                    metrics["prefill"]["time_to_first_token_s"]
+                ),
+                "prefill_tokens_s": _finite(metrics["prefill"]["prefill_tokens_s"]),
+                "prefill_binding_per_chunk": metrics["prefill"]["binding_per_chunk"],
+                "request_output_tokens_s": _finite(
+                    metrics["prefill"]["request_output_tokens_s"]
+                ),
+            }
+            if "prefill" in metrics and step.feasible
+            else {}
+        ),
         "dynamic_energy_j_per_token": metrics["dynamic_energy_j_per_token"],
         "stored_weight_bytes": metrics["stored_weight_bytes"],
         "engaged_weight_bytes": metrics["engaged_weight_bytes"],
@@ -1308,6 +1471,11 @@ def _floorplan_comparison(
             resident_kv_bytes=resident,
             kv_store="sram",
             weight_amortization=policy,
+            cim_cells=CimCellAccounting(
+                weight_bits.value,
+                technology.graded("rom", "cim_bits_per_cell"),
+                hc1_mixture=not float(weight_bits.value).is_integer(),
+            ),
         )
         # The fp8 roof, because the question is whether an 8-bit-weight MAC
         # array can be fed at one weight byte per multiply-accumulate, and the
@@ -1392,6 +1560,7 @@ def _emit_rom_design(
         hbm_generation=hbm_generation,
         weight_amortization=amortization,
         spare_area_policy=spare_area_policy,
+        weight_bits=bits,
     )
     designs.append(
         {
@@ -1447,6 +1616,7 @@ def _emit_rom_design(
             technology=technology,
             weight_bits_per_parameter=bits,
             execution_format=execution,
+            prompt_tokens=context if batch == 1 else None,
         )
         points.append(
             _step_row(
@@ -2538,8 +2708,33 @@ def _simulate_study(
         technology, config, wafer_area=wafer_area, reticle_area=reticle_area
     )
     gpu_plans = tuple(
-        plan for plan, _area in fabric_plans if plan.kind == "array"
+        plan
+        for plan, _area in fabric_plans
+        if plan.kind == "array" and not plan.label.startswith("array-hw-")
     )
+    # **The HBM side at its best shipping fabric.**  A general-purpose HBM
+    # accelerator keeps NVLink: the largest shipping domain (GB200 NVL72, where
+    # the study's part generation has one) is added to the 8-GPU baseboard.
+    # Specialised hardware links are a property of the model-specific ROM
+    # machine and are not given to the general-purpose baseline.
+    extra_gpu_fabrics = []
+    if config.get("gpu_best_intra_link"):
+        extra_gpu_fabrics.append(
+            ("nvl72", str(config["gpu_best_intra_link"]), str(config["inter_link"]))
+        )
+    for tag, intra_name, inter_name in extra_gpu_fabrics:
+        domain = max(1, int(technology.link_domain_size(intra_name).value))
+        gpu_plans = gpu_plans + tuple(
+            FabricPlan(
+                kind="array",
+                parallelism=parallelism,
+                intra_link=intra_name,
+                inter_link=inter_name,
+                intra_domain_size=domain,
+                label=f"array-{tag}-{parallelism}",
+            )
+            for parallelism in ("tensor", "hybrid")
+        )
     domain_sensitivity_link = config.get("gpu_domain_sensitivity")
     domain_sensitivity: list[dict[str, Any]] = []
 
@@ -2853,6 +3048,34 @@ def _simulate_study(
                     )
                 else:
                     plans_here = gpu_plans
+                    if (model.num_experts or 1) > 1 and gpu_plans:
+                        # **Expert parallelism, the layout DeepSeek actually
+                        # serves on GPUs** (framework review finding 7): attention
+                        # tensor-parallel inside one NVLink domain and replicated
+                        # per domain, experts sharded over every device and
+                        # reached by dispatch/combine.  Offered to the GPU only:
+                        # replicating or concentrating dense weights in mask ROM
+                        # needs a non-uniform floorplan this model does not
+                        # build, so the ROM side keeps its three layouts and the
+                        # asymmetry favours the GPU.
+                        fabrics = {}
+                        for plan in gpu_plans:
+                            fabrics.setdefault(
+                                (plan.intra_link, plan.inter_link),
+                                (plan.label.rsplit("-", 1)[0], plan.intra_domain_size),
+                            )
+                        plans_here = gpu_plans + tuple(
+                            FabricPlan(
+                                kind="array",
+                                parallelism="expert",
+                                intra_link=intra_name,
+                                inter_link=inter_name,
+                                intra_domain_size=domain,
+                                label=f"{prefix}-expert",
+                                moe_fanout=int(model.experts_per_token or 1),
+                            )
+                            for (intra_name, inter_name), (prefix, domain) in fabrics.items()
+                        )
                 for plan in plans_here:
                     topology = plan.topology(count, 1)
                     if plan.parallelism == "hybrid" and (
@@ -2861,7 +3084,9 @@ def _simulate_study(
                     ):
                         continue
                     suffix = (
-                        "" if count == 1 else f"-{plan.parallelism}"
+                        ""
+                        if count == 1
+                        else f"-{plan.label.removeprefix('array-')}"
                     )
                     design_id = f"{_model_tag(model)}/{part}-x{count}{suffix}"
                     budget = gpu_device_budget(
@@ -2921,6 +3146,7 @@ def _simulate_study(
                             technology=model_technology,
                             weight_bits_per_parameter=gpu_bits,
                             execution_format=gpu_execution,
+                            prompt_tokens=context if batch == 1 else None,
                         )
                         points.append(
                             _step_row(
@@ -3035,6 +3261,30 @@ def _simulate_study(
             if feasible_at_area
             else at_area[0]
         )
+        # **Each metric is compared against the GPU design that is best at
+        # THAT metric** (framework review finding 1).  Dividing a ROM pipeline's
+        # every-slot-busy aggregate by the GPU layout chosen for single-user
+        # speed compared hundreds of users with one.
+        iso_aggregate = (
+            max(feasible_at_area, key=lambda gpu: gpu["aggregate_tokens_s"])
+            if feasible_at_area
+            else iso
+        )
+        # Prefill is only priced at batch 1; each side's fastest prefill layout.
+        prefilled = [gpu for gpu in feasible_at_area if gpu.get("time_to_first_token_s")]
+        iso_ttft = (
+            min(prefilled, key=lambda gpu: gpu["time_to_first_token_s"])
+            if prefilled
+            else None
+        )
+        iso_energy = (
+            min(
+                feasible_at_area,
+                key=lambda gpu: gpu["energy_j_per_token"] or math.inf,
+            )
+            if feasible_at_area
+            else iso
+        )
         pipeline_only = next(
             (gpu for gpu in at_area if gpu["parallelism"] in ("pipeline", "none")),
             iso,
@@ -3105,20 +3355,32 @@ def _simulate_study(
                     "power_density_w_per_mm2"
                 ],
                 "iso_area_gpu_thermal_scale": iso["thermal_scale"],
+                "iso_area_gpu_energy_design": iso_energy["design"],
+                "iso_area_gpu_best_energy_j_per_token": iso_energy["energy_j_per_token"],
                 "energy_per_token_ratio": (
-                    row["energy_j_per_token"] / iso["energy_j_per_token"]
+                    row["energy_j_per_token"] / iso_energy["energy_j_per_token"]
                     if row["feasible"]
-                    and iso["feasible"]
+                    and iso_energy["feasible"]
                     and row["energy_j_per_token"]
-                    and iso["energy_j_per_token"]
+                    and iso_energy["energy_j_per_token"]
                     else None
                 ),
                 "tokens_per_joule_advantage_x": (
-                    iso["energy_j_per_token"] / row["energy_j_per_token"]
+                    iso_energy["energy_j_per_token"] / row["energy_j_per_token"]
                     if row["feasible"]
-                    and iso["feasible"]
+                    and iso_energy["feasible"]
                     and row["energy_j_per_token"]
-                    and iso["energy_j_per_token"]
+                    and iso_energy["energy_j_per_token"]
+                    else None
+                ),
+                "rom_time_to_first_token_s": row.get("time_to_first_token_s"),
+                "iso_area_gpu_ttft_design": iso_ttft["design"] if iso_ttft else None,
+                "iso_area_gpu_time_to_first_token_s": (
+                    iso_ttft.get("time_to_first_token_s") if iso_ttft else None
+                ),
+                "time_to_first_token_ratio": (
+                    row["time_to_first_token_s"] / iso_ttft["time_to_first_token_s"]
+                    if row.get("time_to_first_token_s") and iso_ttft
                     else None
                 ),
                 "iso_area_gpu_parallelism": iso["parallelism"],
@@ -3175,9 +3437,15 @@ def _simulate_study(
                     if row["feasible"] and iso["feasible"] and iso["per_user_tokens_s"] > 0
                     else None
                 ),
+                "iso_area_gpu_aggregate_design": iso_aggregate["design"],
+                "iso_area_gpu_best_aggregate_tokens_s": iso_aggregate["aggregate_tokens_s"],
+                "iso_area_gpu_best_aggregate_users": iso_aggregate["pipeline_fill_users"],
+                "rom_aggregate_users": row["pipeline_fill_users"],
                 "aggregate_speed_ratio": (
-                    row["aggregate_tokens_s"] / iso["aggregate_tokens_s"]
-                    if row["feasible"] and iso["feasible"] and iso["aggregate_tokens_s"] > 0
+                    row["aggregate_tokens_s"] / iso_aggregate["aggregate_tokens_s"]
+                    if row["feasible"]
+                    and iso_aggregate["feasible"]
+                    and iso_aggregate["aggregate_tokens_s"] > 0
                     else None
                 ),
                 "fastest_feasible_gpu_design": (
@@ -3501,6 +3769,7 @@ def _simulate_study(
         "designs": designs,
         "points": points,
         "comparisons": comparisons,
+        "capacity_comparison": _capacity_comparison(points),
         "nvlink_domain_sensitivity": domain_sensitivity,
         "link_latency_sensitivity": (
             _link_latency_sensitivity(study_id, technology)
@@ -6733,7 +7002,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "",
             "## The batch-amortisation fork, reported rather than resolved",
             "",
-            "`docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` names an open",
+            "`docs/ANALYTICAL_REPORT.md` names an open",
             "high-batch question the anchor cannot settle. If a ROM cell both stores its bits",
             "and performs the multiply for them -- compute-in-ROM, as Taalas",
             "describes HC1 -- then a second concurrent stream needs a second pass",
@@ -6752,7 +7021,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "variant.",
             "",
             "The third column set is the per-region machine, which is the whole",
-            "subject of `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`: its sweep depth",
+            "subject of `docs/ANALYTICAL_REPORT.md`: its sweep depth",
             "is the load of the **busiest** expert region, computed from the routing",
             "distribution rather than from the mean engaged region.",
             "",
@@ -7778,6 +8047,47 @@ def render_variant_report(
     return "\n".join(lines)
 
 
+
+def _study_files(destination: Path, result: dict[str, Any]) -> list[tuple[Path, str]]:
+    """Serialise one study as ``analytical.json`` plus a ``points.json`` shard.
+
+    A study that fits under a Git host's 100 MB file limit today will not after
+    the next sweep widens, so the per-point records -- the bulk -- go to their
+    own compact file, and each design's graded provenance (a few hundred
+    distinct blobs repeated over ~1,600 designs) is stored once.  Read the pair
+    back with ``opentallas.roofline.load_study_artifact``.
+    """
+
+    summary = {key: value for key, value in result.items() if key != "points"}
+    table: dict[str, Any] = {}
+    designs = []
+    for design in result.get("designs", ()):
+        if isinstance(design.get("provenance"), Mapping):
+            blob = json.dumps(design["provenance"], sort_keys=True, allow_nan=False)
+            key = hashlib.sha256(blob.encode()).hexdigest()[:16]
+            table[key] = design["provenance"]
+            design = {**design, "provenance": key}
+        designs.append(design)
+    summary["designs"] = designs
+    summary["provenance_table"] = table
+    summary["points_file"] = "points.json"
+    return [
+        (
+            destination / "analytical.json",
+            json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        ),
+        (
+            destination / "points.json",
+            json.dumps(
+                result.get("points", []),
+                sort_keys=True,
+                allow_nan=False,
+                separators=(",", ":"),
+            )
+            + "\n",
+        ),
+    ]
+
 def run_all(
     output_root: Path = OUTPUT_ROOT, *, force: bool = False
 ) -> dict[str, dict[str, Any]]:
@@ -7791,12 +8101,7 @@ def run_all(
         result["validation_gates"] = anchors
         results[study_id] = result
         destination = output_root / study_id
-        planned.append(
-            (
-                destination / "analytical.json",
-                json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n",
-            )
-        )
+        planned.extend(_study_files(destination, result))
         planned.append((destination / "sweep.csv", render_csv(result)))
         planned.append(
             (
@@ -7844,13 +8149,7 @@ def run_all(
         # written, and it is found by path.
         variants[variant["study_id"]] = variant
         destination = variant_output_root(output_root) / study_id
-        planned.append(
-            (
-                destination / "analytical.json",
-                json.dumps(variant, indent=2, sort_keys=True, allow_nan=False)
-                + "\n",
-            )
-        )
+        planned.extend(_study_files(destination, variant))
         planned.append(
             (
                 destination / "REPORT.md",
@@ -7891,13 +8190,7 @@ def run_all(
                 }
                 rung["validation_gates"] = anchors
                 destination = context_ladder_output_root(output_root) / study_id / label
-                planned.append(
-                    (
-                        destination / "analytical.json",
-                        json.dumps(rung, indent=2, sort_keys=True, allow_nan=False)
-                        + "\n",
-                    )
-                )
+                planned.extend(_study_files(destination, rung))
                 planned.append(
                     (
                         destination / "REPORT.md",
@@ -7932,13 +8225,7 @@ def run_all(
             }
             candidate["validation_gates"] = anchors
             destination = candidates_output_root(output_root) / slug / study_id
-            planned.append(
-                (
-                    destination / "analytical.json",
-                    json.dumps(candidate, indent=2, sort_keys=True, allow_nan=False)
-                    + "\n",
-                )
-            )
+            planned.extend(_study_files(destination, candidate))
             planned.append(
                 (
                     destination / "REPORT.md",

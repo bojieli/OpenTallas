@@ -1,5 +1,12 @@
 # OpenTallas Chip Architecture Design
 
+> **Revised 2026-09-23 — read [the revision results](ANALYTICAL_REPORT.md) first.**
+> The roofline framework was corrected and extended (per-metric comparison designs,
+> energy at delivered users, consistent GPU expert reads, per-weight compute-in-ROM
+> cells, prefill, batches to 4,096, expert-parallel GPUs). Annotated figures below
+> were rebound to the regenerated artifacts; unannotated roofline figures and any
+> interpretation written before the revision are superseded where they conflict.
+
 *ROM-weight and HBM-weight accelerators for Qwen3-8B, DeepSeek-V4-Flash and DeepSeek-V4-Pro on one control plane, one engine set, one memory system and one network, drivable by ABI 3.0 with named amendments.*
 
 Status: revised implementation proposal. The checked resource contract in [CHIP_RESOURCE_BUDGETS.md](CHIP_RESOURCE_BUDGETS.md) and `configs/architecture/chip_design_v2.json` supersedes the original sizing and performance claims. [CHIP_ARCHITECTURE_REVIEW_HANDOFF.md](CHIP_ARCHITECTURE_REVIEW_HANDOFF.md) records fixes and worker acceptance tasks. An amendment listed here is not automatically an implemented capability. Appendix A/B are historical review records.
@@ -541,7 +548,7 @@ TENSOR 4, VECTOR 13, ATTENTION 3, ROUTE 8, REDUCTION 5, SELECTION 3 = 36 registe
 
 ## 5. The ROM designs and their network
 
-Three decisions the repository has taken are inherited: the machine is batched (mask ROM feeding a digital array, `docs/COMPUTE_IN_ROM_MECHANISM.md` §5); weights go to ROM and KV goes where its own arithmetic says (`docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md` §2–§4: W:KV read ratio 12.5 Qwen, 35.3 Flash, 18–84 Pro); the network binds every tensor-parallel design.
+Three decisions the repository has taken are inherited: the machine is batched (mask ROM feeding a digital array, `docs/ANALYTICAL_REPORT.md` §5); weights go to ROM and KV goes where its own arithmetic says (`docs/ANALYTICAL_REPORT.md` §2–§4: W:KV read ratio 12.5 Qwen, 35.3 Flash, 18–84 Pro); the network binds every tensor-parallel design.
 
 ### 5.1 The ROM bank and the read path (common to every ROM design)
 
@@ -1033,7 +1040,7 @@ What survives: the **806,879,232 uncovered MACs** figure, which is a cost and no
 | Megatron-LM column/row sharding pairing | pairs each column-sharded projection with a row-sharded successor so its all-gather disappears | §7.3 | reduces the compiled 7 collectives per layer to the analytical 2 on both stores |
 | Memory BIST with a cryptographic digest | hash the fabricated array through the sense path against deployment-bound member digests | §9.1 | the silicon half of the inverse-reconstruction proof |
 | RISC-V RV32IMC management processor | as mandated by ADR-003 §4 | §2.7 | — |
-| Compute-in-memory literature (`docs/COMPUTE_IN_ROM_MECHANISM.md`) | analog CIM and per-stream compute-in-ROM rejected; batched ROM + MAC machine adopted | §4.1 | bit-exact binary32 RNE contracts |
+| Compute-in-memory literature (`docs/ANALYTICAL_REPORT.md`) | analog CIM and per-stream compute-in-ROM rejected; batched ROM + MAC machine adopted | §4.1 | bit-exact binary32 RNE contracts |
 | Existing repository RTL | every seed named in §10.4 | §11.4 | — |
 
 ---

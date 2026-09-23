@@ -217,7 +217,7 @@ primary compatibility case because it does not assume free just-in-time unpackin
 This section did not exist until 2026-08-30. An audit found that `docs/SOURCES.md`
 contained **zero occurrences of "Taalas" or "HC1"** while a Taalas figure was
 serving as the validation gate for the entire analytical model, and while
-`docs/COMPUTE_IN_ROM_MECHANISM.md`, `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`
+`docs/ANALYTICAL_REPORT.md`, `docs/ANALYTICAL_REPORT.md`
 and `configs/hardware/technology.json` all quoted it. A value used as a gate must
 be in this register before it is used.
 

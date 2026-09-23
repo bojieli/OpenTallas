@@ -18,10 +18,10 @@ document roles rather than by moving active working documents.
 | I want to… | Read first | Then continue with… |
 |---|---|---|
 | Understand why 10,000+ tokens/s matters | [Why instantaneous inference matters](VISION.md) | [OpenTallas in plain English](OVERVIEW.md) and the [root performance guide](../README.md#performance-comparison) |
-| Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) and [first-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) |
+| Understand the architecture | [OpenTallas in plain English](OVERVIEW.md) | [analytical report](ANALYTICAL_REPORT.md) |
 | Audit the performance claim | [Root README performance guide](../README.md#performance-comparison) | [Methodology](METHODOLOGY.md), [assumptions](ASSUMPTIONS.md), and the [iso-node](../results/iso-node/) / [area-constrained](../results/roofline/) reports |
-| Evaluate ROM for video/world models | [Recent-model landscape audit](../results/world-model-landscape/REPORT.md) | [Oasis causal-state and H3 study](../results/world-model/REPORT.md), [compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md), and the [source register](SOURCES.md) |
-| Evaluate a newly released model (DeepSeek-V4.1-Flash) | [DeepSeek-V4.1-Flash feasibility study](DEEPSEEK_V41_FLASH_FEASIBILITY.md) — candidate profile from the official checkpoint headers, wafer and array results | [Methodology](METHODOLOGY.md) and the [iso-node](../results/iso-node/) / [candidate roofline](../results/roofline/candidates/) reports |
+| Evaluate ROM for video/world models | [Recent-model landscape audit](../results/world-model-landscape/REPORT.md) | [Oasis causal-state and H3 study](../results/world-model/REPORT.md), [compute-in-ROM mechanism](ANALYTICAL_REPORT.md), and the [source register](SOURCES.md) |
+| Evaluate a newly released model (DeepSeek-V4.1-Flash) | [analytical report](ANALYTICAL_REPORT.md) — candidate profile from the official checkpoint headers, wafer and array results | [Methodology](METHODOLOGY.md) and the [iso-node](../results/iso-node/) / [candidate roofline](../results/roofline/candidates/) reports |
 | **Find something to work on** | [Contributor tasks](CONTRIBUTOR_TASKS.md) — 32 scoped tasks, each naming the document that specifies it | [How to contribute](../CONTRIBUTING.md#areas) |
 | **What works today, in prose** | [STATUS.md](../STATUS.md) — every gate, its blocker, and the contributor task attached | [How to contribute](../CONTRIBUTING.md#areas) |
 | **See what works today** | `PYTHONPATH=. python3 tools/check_redesign_gates.py` — prints all 19 gate rungs in 0.47 s and exits 1 while any terminal gate fails | [Generated status](PROGRAM_STATUS.md), then [four-target progress report](FOUR_TARGET_PROGRESS_REPORT.md) for the narrative |
@@ -30,7 +30,7 @@ document roles rather than by moving active working documents.
 | Work on the compiler/runtime | [Compiler guide](../compiler/README.md) | [Execution plan](TENSOR_ACCELERATOR_EXECUTION_PLAN.md) and [independent numeric reference](../runtime/reference/README.md) |
 | Review RTL | [RTL inventory](../rtl/README.md) | [Engine datapaths](ABI3_ENGINE_DATAPATH_RTL.md), [ROM service](ROM_SERVICE_RTL.md), and [RTL reports](../results/rtl/) |
 | Review physical or circuit evidence | [ROM physical methodology](ROM_PHYSICAL_METHODOLOGY.md) | [Open-PDK selection](OPEN_PDK_SELECTION.md), [SPICE guide](../spice/README.md), and [physical views](ABI3_PHYSICAL_VIEWS.md) |
-| Audit a number or source | [Methodology](METHODOLOGY.md) | [Source register](SOURCES.md), [evidence ledger](EVIDENCE_LEDGER.md), and [fairness audit](COMPARISON_FAIRNESS_AUDIT.md) |
+| Audit a number or source | [Methodology](METHODOLOGY.md) | [Source register](SOURCES.md), [evidence ledger](EVIDENCE_LEDGER.md), and [analytical report](ANALYTICAL_REPORT.md) |
 
 ## Reading by audience
 
@@ -39,7 +39,7 @@ it you need.
 
 | If you are… | Read | Skip |
 |---|---|---|
-| **evaluating the project** | [STATUS.md](../STATUS.md), [REPRODUCIBILITY.md](REPRODUCIBILITY.md), [OVERVIEW.md](OVERVIEW.md), [COMPARISON_FAIRNESS_AUDIT.md](COMPARISON_FAIRNESS_AUDIT.md) | everything else |
+| **evaluating the project** | [STATUS.md](../STATUS.md), [REPRODUCIBILITY.md](REPRODUCIBILITY.md), [OVERVIEW.md](OVERVIEW.md), [ANALYTICAL_REPORT.md](ANALYTICAL_REPORT.md) | everything else |
 | **about to contribute** | [CONTRIBUTOR_TASKS.md](CONTRIBUTOR_TASKS.md), then the one document your task names | the other 60 |
 | **auditing a specific number** | [METHODOLOGY.md](METHODOLOGY.md), [ASSUMPTIONS.md](ASSUMPTIONS.md), [SOURCES.md](SOURCES.md), then the figure annotation's own `src=` attribute in the prose | the plans |
 | **implementing against the ABI** | [../spec/README.md](../spec/README.md), [TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md](TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md), [..._OPERATOR_CONVENTIONS.md](TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md) | the evidence logs |
@@ -99,20 +99,11 @@ owns the question:
   multi-domain source review.
 - [Evidence ledger](EVIDENCE_LEDGER.md) — load-bearing figures, producers, grades,
   and known blind spots.
-- [Comparison fairness audit](COMPARISON_FAIRNESS_AUDIT.md) — artifacts,
-  legitimate asymmetries, refuted concerns, and missing measurements.
-- [First-principles memory design](FIRST_PRINCIPLES_MEMORY_DESIGN.md) — what
-  weight/KV traffic and capacity imply for the hierarchy.
-- [Compute-in-ROM mechanism](COMPUTE_IN_ROM_MECHANISM.md) — what the ROM cell
-  operation means and does not mean.
-- [Per-region compute-in-ROM design](PER_REGION_COMPUTE_IN_ROM_DESIGN.md) — the
-  sparse-region alternative and its trade-offs.
-- [Iso-area comparison and Taalas anchor](ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md)
-  — area-normalized comparison and validation anchor.
-- [Wafer versus array latency](WAFER_VERSUS_ARRAY_LATENCY.md) — topology choice
-  through latency and communication budgets.
-- [Technical direction recommendation](TECHNICAL_DIRECTION_RECOMMENDATION.md) —
-  decision synthesis, corrections, and falsification conditions.
+- [Analytical report](ANALYTICAL_REPORT.md) — the single ROM-versus-HBM
+  performance analysis: redesigned ROM machine, best-practice HBM machine,
+  per-user, throughput, energy and prefill results, attribution and open limits.
+  It replaced the earlier fairness, memory-design, compute-in-ROM, per-region,
+  iso-area, wafer-versus-array and technical-direction reports on 2026-09-23.
 
 ## Program orientation and status
 

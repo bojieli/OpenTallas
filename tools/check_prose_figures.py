@@ -114,7 +114,7 @@ shape, and the shape decides what would fix them.
 (a) Genuinely computed by nothing. These are the real blind spot:
 
   * `84.7%` / `87.0%`  index share of the KV read
-    (`docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`). The arithmetic is right --
+    (a legacy analytical report, deleted 2026-09-23). The arithmetic is right --
     21 x 50,000 x 256 B of 317,435,904 B -- and it is in no artifact. A grep for
     `84.7%` across `results/`, `configs/`, `src/` and `tools/` returns nothing.
   * `290.4 ns` per compressed-sparse layer -- CORRECTION to the audit: this one
@@ -150,12 +150,11 @@ shape, and the shape decides what would fix them.
   * `15.137 GB` Qwen weight read per token, and the W:KV ratios that descend
     from it at 1,024 and 32,768 tokens. `results/model-traffic/sweep.csv` has
     no Qwen row and the roofline model summaries carry only the 8,192 rung, so
-    two of the three Qwen rows of `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md` §2
+    two of the three Qwen rows of a legacy report's §2 (deleted 2026-09-23)
     have no artifact at all -- they are the output of the shell command in that
     document's header, which writes nothing down.
-  * Whole documents: `docs/COMPUTE_IN_ROM_MECHANISM.md` (16 figures, including
-    `66.8x` per-user and `~7,771 tok/s at 40% MFU`, an assumption in no config)
-    and `docs/METHODOLOGY.md` (9). The SHA-256 digests across the 16
+  * Whole documents: `docs/METHODOLOGY.md` (9). A legacy report with 16
+    such figures was deleted on 2026-09-23. The SHA-256 digests across the 16
     `docs/DEEPSEEK_V4_*_EVIDENCE.md` files name no reproduction command.
 
 (b) Config inputs echoed back by the generator that consumed them. These
@@ -245,29 +244,24 @@ REPO = Path(__file__).resolve().parents[1]
 #: this map. Otherwise a whole evidence section can quietly lose its annotations
 #: while the aggregate checker remains green.
 REQUIRED_COVERAGE: dict[str, int] = {
-    "README.md": 54,
+    "README.md": 8,
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 67,
-    "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/ABI3_PROGRAM_REPORT.md": 17,
+    "docs/ANALYTICAL_REPORT.md": 73,
+    "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
-    "docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md": 9,
-    "docs/DEEPSEEK_V41_FLASH_FEASIBILITY.md": 69,
     "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md": 14,
+    "docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md": 9,
     "docs/EVIDENCE_LEDGER.md": 44,
-    "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 25,
     "docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md": 2,
-    "docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md": 34,
-    "docs/OVERVIEW.md": 22,
-    "docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md": 2,
+    "docs/OVERVIEW.md": 6,
     "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,
     "docs/ROM_PHYSICAL_METHODOLOGY.md": 64,
     "docs/ROM_SERVICE_RTL.md": 40,
     "docs/SOURCES.md": 6,
-    "docs/TECHNICAL_DIRECTION_RECOMMENDATION.md": 54,
     "docs/TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md": 2,
     "docs/UNIFIED_EXECUTION_CHECKLIST.md": 245,
     "docs/VISION.md": 1,
-    "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 67,
 }
 
 ANNOTATION = re.compile(r"<!--\s*figure:\s*(?P<body>.*?)-->", re.S)

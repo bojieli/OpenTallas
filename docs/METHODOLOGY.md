@@ -25,7 +25,7 @@ A conforming document states, for every figure that carries a claim, either
 - a runnable command that reproduces it, with the module path if it is a
   library call.
 
-Naming a module is not naming a command.  `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md`
+Naming a module is not naming a command.  `docs/ANALYTICAL_REPORT.md`
 claimed its figures came "through `opentallas.workload`" for the whole life of
 its errors; `src/opentallas/workload.py` has no `main`, no CLI and no argparse,
 and no artifact emitted its table.

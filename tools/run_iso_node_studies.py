@@ -1549,9 +1549,10 @@ def run_all(output_root: Path = OUTPUT_ROOT) -> dict[str, dict[str, Any]]:
         (destination / "sweep.csv").write_text(
             render_csv(result), encoding="utf-8", newline=""
         )
-        (destination / "REPORT.md").write_text(
-            render_report(result).rstrip() + "\n", encoding="utf-8"
-        )
+        # No REPORT.md: the prose report this study used to render was retired
+        # on 2026-09-23 as a legacy analytical report (docs/ANALYTICAL_REPORT.md
+        # supersedes it).  The JSON and CSV stay because implementation tools
+        # read them as inputs.
     return results
 
 
@@ -1561,7 +1562,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     run_all(args.output)
     for study_id in STUDIES:
-        print((args.output / study_id / "REPORT.md").resolve())
+        print((args.output / study_id / "analytical.json").resolve())
     return 0
 
 

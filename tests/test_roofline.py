@@ -42,6 +42,7 @@ from opentallas.roofline import (
     device_static_power,
     rom_device_budget,
     taalas_hc1_anchor,
+    load_study_artifact,
     taalas_hc1_power_anchor,
 )
 from opentallas.schema import ModelProfile, ValidationError
@@ -56,7 +57,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TECHNOLOGY_PATH = ROOT / "configs" / "hardware" / "technology.json"
 RUNNER = ROOT / "tools" / "run_roofline_studies.py"
 CHECKED_IN = ROOT / "results" / "roofline"
-ARTIFACTS = ("analytical.json", "sweep.csv", "REPORT.md")
+ARTIFACTS = ("analytical.json", "points.json", "sweep.csv", "REPORT.md")
 
 
 @pytest.fixture(scope="module")
@@ -132,7 +133,7 @@ def test_gate_taalas_hc1_shipping_part_exposes_the_capacity_failure(
     the gate passes would turn this validation check into a fit.
     """
 
-    check = taalas_hc1_anchor(technology, llama)
+    check = taalas_hc1_anchor(technology, llama, per_bit_cim=True)
     requirements = check.detail["back_derived_requirements"]
     assert not check.passed
     assert check.modelled_value == 0.0
@@ -153,6 +154,28 @@ def test_gate_taalas_hc1_shipping_part_exposes_the_capacity_failure(
     # compute density for it asks what a separate compute unit would have to
     # deliver. It is reported because it is the right question for the
     # storage-plus-MAC reading, not because it validates compute-in-ROM.
+
+
+def test_gate_taalas_hc1_passes_with_one_select_cell_per_weight(
+    technology, llama
+) -> None:
+    """Per-weight select cells, the repository's own mechanism, fit the part.
+
+    The per-bit rule above charged a 1.6x cell per stored bit.  The mechanism
+    reconstruction has one select transistor per <=4-bit weight, and with that
+    rule (``rom.cim_bits_per_cell``, the default) the HC1 floorplan holds its
+    weights and lands inside the gate's 2x tolerance, bound by the array sweep.
+    The cell width comes from the vendor the gate checks, so this pass is not
+    independent on capacity.
+    """
+
+    check = taalas_hc1_anchor(technology, llama)
+    assert check.passed
+    assert 1.0 < check.ratio < 2.0
+    assert check.detail["binding_constraint"] == "weight_read"
+    band = check.detail["layer_fixed_latency_band"]
+    # The published rate lies inside the latency band, not at a fitted point.
+    assert band["high"]["ratio_to_published"] < 1.0 < band["low"]["ratio_to_published"]
 
 
 def test_gate_taalas_hc1_rom_read_density_remains_near_the_shipping_part(
@@ -220,9 +243,8 @@ def test_the_throughput_gates_report_nonthermal_outcomes(
     """
 
     hc1 = taalas_hc1_anchor(technology, llama)
-    assert hc1.modelled_value == 0.0
-    assert hc1.ratio == 0.0
-    assert hc1.detail["binding_constraint"] == "capacity_or_format"
+    assert hc1.modelled_value > 0.0
+    assert hc1.detail["binding_constraint"] == "weight_read"
     assert hc1.detail["step"]["thermal_scale"] == 1.0
 
     a100 = a100_weight_bound_anchor(technology, llama)
@@ -1440,8 +1462,8 @@ def test_on_package_is_charged_by_no_design_in_either_study() -> None:
     """
 
     for study_id in ("n6_vs_a100", "n5_vs_b200"):
-        body = json.loads(
-            (ROOT / "results" / "roofline" / study_id / "analytical.json").read_text()
+        body = load_study_artifact(
+            ROOT / "results" / "roofline" / study_id / "analytical.json"
         )
         charged = {
             (point.get("link"), point.get("intra_link"))
@@ -2589,11 +2611,14 @@ def test_the_per_layer_cost_is_a_band_and_the_gate_is_not_fitted(
     assert low < stated < high
 
     band = taalas_hc1_anchor(technology, llama).detail["layer_fixed_latency_band"]
+    rates = [band[bound]["modelled_tokens_s"] for bound in ("high", "stated", "low")]
+    assert 0.0 < rates[0] < rates[1] < rates[2]
     for bound in ("low", "stated", "high"):
-        assert band[bound]["modelled_tokens_s"] == 0.0
-        assert band[bound]["ratio_to_published"] == 0.0
-        assert band[bound]["binding_constraint"] == "capacity_or_format"
-    assert band["per_layer_cost_that_would_close_the_gap_s"] < 0.0
+        assert band[bound]["binding_constraint"] == "weight_read"
+    # The array sweep leaves room for a positive per-layer cost below the gap.
+    assert band["per_layer_cost_that_would_close_the_gap_s"] > 0.0
+    legacy = taalas_hc1_anchor(technology, llama, per_bit_cim=True)
+    assert legacy.detail["layer_fixed_latency_band"]["stated"]["modelled_tokens_s"] == 0.0
 
 
 def test_each_amortisation_policy_is_sized_on_its_own_floorplan(technology) -> None:
@@ -3185,7 +3210,7 @@ def test_every_study_audit_passes(generated) -> None:
 def test_the_band_is_reported_per_side_and_not_only_jointly(generated) -> None:
     """The joint band alone was an artefact, and it hid its own width.
 
-    ``docs/COMPARISON_FAIRNESS_AUDIT.md`` A1: the one-sided ROM band was
+    ``docs/ANALYTICAL_REPORT.md`` A1: the one-sided ROM band was
     13.48x-3.26x while the *published* joint band was 11.82x-4.46x, so the
     interval a reader was given was narrower than the interval one side's own
     constants produced.  Three scopes are emitted now, and this asserts all
@@ -3554,7 +3579,7 @@ def test_json_csv_and_report_are_mutually_consistent(generated) -> None:
     import csv as csv_module
 
     for study_id, result in results.items():
-        payload = json.loads((first / study_id / "analytical.json").read_text())
+        payload = load_study_artifact(first / study_id / "analytical.json")
         assert payload["study_id"] == study_id
         rows = list(
             csv_module.DictReader(

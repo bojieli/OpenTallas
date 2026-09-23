@@ -1018,7 +1018,7 @@ def _report(result: dict[str, Any]) -> str:
             "- [Study config](../../configs/studies/world_model_landscape_rom.json)",
             "- [Existing Oasis/H3 study](../world-model/REPORT.md)",
             "- [Leading-node hardware envelope](../../configs/hardware/leading_node_market.json)",
-            "- [Compute-in-ROM semantics](../../docs/COMPUTE_IN_ROM_MECHANISM.md)",
+            "- [Compute-in-ROM semantics](../../docs/ANALYTICAL_REPORT.md)",
             "- [World Labs Atlas](https://www.worldlabs.ai/blog/atlas)",
             "- [World Labs RTFM](https://www.worldlabs.ai/blog/rtfm)",
             "- [EVOKE pinned source](https://github.com/AlayaLab/Evoke/tree/4d588f8711793982bfb6db07f70c0dc6e3dc9066)",
