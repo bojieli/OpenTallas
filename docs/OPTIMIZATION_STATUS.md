@@ -26,7 +26,10 @@ The number of experiments is not a measure of completed optimization.
    positive exponential and softmax. Their processes were verified live when
    this document was written. These runs are not being restarted.
 3. Turning completed results into implementation decisions. The latest finished
-   overlap-controller route was rejected because setup and fanout still fail.
+   overlap-controller route was rejected because setup and fanout still fail. The
+   retained-capacity state route, current step-four softmax route, softmax key-tree
+   pair and positive-range pair remain live physical jobs; their output records
+   do not yet exist.
 
 No new production optimization is being claimed from that ongoing work.
 
