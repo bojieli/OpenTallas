@@ -94,9 +94,32 @@ def neg(a):
     return from_bits(bits(a) ^ np.uint32(0x80000000))
 
 
-def matvec(w, x):
-    """y[n] = sum_k w[n,k] * bf16(x)[k], sequential over k per output, from +0."""
-    return matvec_fp32(w, to_bf16(x))
+def matvec(w, x, split=1):
+    """y[n] = sum_k w[n,k] * bf16(x)[k].  K is cut into `split` contiguous chunks;
+    each chunk is summed sequentially from +0 and the chunk sums are added by a
+    pairwise tree ((c0+c1)+(c2+c3)).  split=1 is the plain sequential sum."""
+    xb = to_bf16(x)
+    kc = w.shape[1] // split
+    assert kc * split == w.shape[1]
+    parts = [matvec_fp32(w[:, c * kc:(c + 1) * kc], xb[c * kc:(c + 1) * kc]) for c in range(split)]
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return parts[0]
+
+
+def split_for(n, k, groups, lanes=16, interleave=8):
+    """The K-split the decode core uses for an n x k matrix: fewest engine cycles
+    (rounds * k/S * interleave), the smaller split on a tie."""
+    tiles = -(-n // (lanes * interleave))
+    best = None
+    s = 1
+    while s <= groups:
+        if k % s == 0:
+            cycles = -(-tiles * s // groups) * (k // s) * interleave
+            if best is None or cycles < best[0]:
+                best = (cycles, s)
+        s *= 2
+    return best[1]
 
 
 def matvec_fp32(w, x):
@@ -177,7 +200,10 @@ def silu(g):
 
 # -- the decode step ------------------------------------------------------------
 class Model:
-    def __init__(self):
+    def __init__(self, groups=1):
+        """`groups`: matrix-engine lane groups of the decode core; it fixes each
+        matrix's K-split (split_for) and therefore the accumulation order."""
+        self.groups = groups
         self.cfg = json.loads(CONFIG.read_text())
         self.w = load_weights()
         c = self.cfg
@@ -188,6 +214,16 @@ class Model:
     def lw(self, layer, name):
         return self.w[f"model.layers.{layer}.{name}"]
 
+    def split(self, *mats):
+        """K-split of the fused matrix formed by stacking `mats` row-wise."""
+        n = sum(m.shape[0] for m in mats)
+        return split_for(n, mats[0].shape[1], self.groups)
+
+    def mv(self, x, *mats):
+        """Rows of the fused matrix, returned per member."""
+        s = self.split(*mats)
+        return [matvec(m, x, s) for m in mats]
+
     def decode_token(self, token, position, cache, trace=None):
         """One decode step.  `cache[layer]` is a list of (k, v) per earlier position
         (each [kv_heads, hd] float32); the step appends its own row."""
@@ -196,9 +232,9 @@ class Model:
         group = self.heads // self.kv_heads
         for L in range(self.layers):
             h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
-            q = matvec(self.lw(L, "self_attn.q_proj.weight"), h).reshape(self.heads, self.hd)
-            k = matvec(self.lw(L, "self_attn.k_proj.weight"), h).reshape(self.kv_heads, self.hd)
-            v = matvec(self.lw(L, "self_attn.v_proj.weight"), h).reshape(self.kv_heads, self.hd)
+            q, k, v = self.mv(h, self.lw(L, "self_attn.q_proj.weight"), self.lw(L, "self_attn.k_proj.weight"),
+                              self.lw(L, "self_attn.v_proj.weight"))
+            q, k, v = q.reshape(self.heads, self.hd), k.reshape(self.kv_heads, self.hd), v.reshape(self.kv_heads, self.hd)
             qn, kn = self.lw(L, "self_attn.q_norm.weight"), self.lw(L, "self_attn.k_norm.weight")
             q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(self.heads)])
             k = np.stack([rope(rmsnorm(k[i], kn, self.eps), cos, sin, half) for i in range(self.kv_heads)])
@@ -211,16 +247,15 @@ class Model:
                 vals = np.stack([kv[1][g] for kv in cache[L]])
                 s = mul(matvec_fp32(keys, q[hh]), scale)             # sequential over head dim
                 attn[hh] = matvec_fp32(vals.T, softmax(s))            # sequential over positions
-            x = add(x, matvec(self.lw(L, "self_attn.o_proj.weight"), attn.reshape(-1)))
+            x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
-            gate = matvec(self.lw(L, "mlp.gate_proj.weight"), h)
-            up = matvec(self.lw(L, "mlp.up_proj.weight"), h)
+            gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))
             a = mul(silu(gate), up)
-            x = add(x, matvec(self.lw(L, "mlp.down_proj.weight"), a))
+            x = add(x, self.mv(a, self.lw(L, "mlp.down_proj.weight"))[0])
             if trace is not None:
                 trace[f"layer{L}"] = x.copy()
         xf = rmsnorm(x, self.w["model.norm.weight"], self.eps)
-        logits = matvec(self.w["lm_head.weight"], xf)
+        logits = self.mv(xf, self.w["lm_head.weight"])[0]
         if trace is not None:
             trace["final_norm"] = xf
             trace["logits"] = logits
@@ -234,7 +269,8 @@ def prompt_and_expected():
 
 
 def main():
-    model = Model()
+    import hdc_isa
+    model = Model(hdc_isa.GROUPS)
     prompt, expected = prompt_and_expected()
     cache = [[] for _ in range(model.layers)]
     for pos, tok in enumerate(prompt[:-1]):

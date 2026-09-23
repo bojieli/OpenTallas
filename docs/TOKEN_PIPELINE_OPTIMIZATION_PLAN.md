@@ -91,10 +91,17 @@ The golden now composes every operation from `add` and `mul`, the qualified
 pipes' semantics: IEEE RNE with gradual underflow, and every zero result
 canonical +0. It still decodes 1073.
 
-**P2 (functional; physical pending).** `rtl/hdc/ot_hdc_sfu.sv` holds three
-pipelines built from the qualified FP32 pipes: exponential (depth 92),
-reciprocal (46) and reciprocal square root (61). Each accepts one operand per
-cycle. All 18,010 golden vectors match bit for bit, fed with random bubbles. <!-- figure: 18010 src="results/rtl/hdc_iterations/iter1_baseline.json#sfu.vectors" name="HDC special-function vectors checked" -->
+**P2.** `rtl/hdc/ot_hdc_sfu.sv` holds three pipelines built from the
+qualified FP32 pipes: exponential (depth 92), reciprocal (46) and reciprocal
+square root (61). Each accepts one operand per cycle. Golden vectors checked: 18,010. <!-- figure: 18010 src="results/rtl/hdc_iterations/iter1_baseline.json#sfu.vectors" name="HDC special-function vectors checked" -->
+All match bit for bit, fed with random bubbles.
+
+Routed alone at a 1 ns target, the SFU units land just under 1 GHz. The path
+is always the multiplier's single-stage full significand product, which iteration 3
+rebalances.
+
+- reciprocal: 988 MHz; <!-- figure: 988 src="results/physical_abi3/asap7/hdc/ot_hdc_recip/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC reciprocal routed fmax" -->
+- rsqrt: 949 MHz. <!-- figure: 949 src="results/physical_abi3/asap7/hdc/ot_hdc_rsqrt/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC rsqrt routed fmax" -->
 
 **P3–P4 (done).** The core has four parts:
 
@@ -152,3 +159,46 @@ hidden size 128, a lane count above 16 needs outputs × 8 interleave ≥ lanes �
 which the 128-row matrices cannot supply. Iteration 3 therefore splits K for
 narrow matrices: a deterministic change to the accumulation order, specified in
 the golden.
+
+**Iteration 3: four lane groups, K-split, exact BF16 lanes, rebalanced
+multiplier.**
+
+*Lane groups.* The matrix engine now has four groups of 16 lanes, 64
+multiply-accumulates per cycle. A matrix with few rows cannot fill every
+output slot, so its K range is cut into S contiguous chunks. Each chunk is
+summed in order in its own group, and a pipelined pairwise tree adds the chunk
+sums. The split is chosen per matrix for the fewest cycles (`split_for`):
+S = 2 for QKV and gate/up, 4 for o_proj and down, 1 for lm_head.
+
+*Numerics.* The split changes the accumulation order. The golden specifies it
+(`matvec(w, x, split)`), and the golden still decodes the oracle's tokens.
+
+*Multipliers.*
+
+- Group 0 keeps full binary32 multipliers and alone serves the FP32 attention
+  ops.
+- Groups 1–3 use `ot_hdc_bmul`, an exact BF16 × BF16 multiplier. It equals the
+  qualified pipe wherever it does not refuse; it refuses (fails closed) only
+  where a product would need rounding or is nonfinite.
+- The FP32 multiplier is a stage-rebalanced copy of the qualified pipe. Three
+  byte-wide partial products and both exponent decisions sit in stage 2; the
+  sum and a two-way select sit in stage 3. Edge-biased vectors on which it is
+  cycle-equivalent: 20,000,000. <!-- figure: 20000000 src="results/rtl/hdc_iterations/iter3_groups_ksplit.json#multipliers.vectors" name="multiplier equivalence vectors" -->
+  Routed alone on ASAP7 at a 0.7 ns target:
+  - rebalanced FP32 multiplier: 1,275 MHz; <!-- figure: 1275 src="results/physical_abi3/asap7/hdc/ot_hdc_fp32_mul_pipe/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="rebalanced FP32 multiplier routed fmax" -->
+  - qualified FP32 multiplier: 1,052 MHz; <!-- figure: 1052 src="results/physical_abi3/asap7/hdc/ot_fp32_mul_rne_pipe/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="qualified FP32 multiplier routed fmax" -->
+  - FP32 adder: 1,447 MHz. <!-- figure: 1447 src="results/physical_abi3/asap7/hdc/ot_fp32_add_rne_pipe/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="FP32 adder routed fmax" -->
+
+*Chaining.* A split matrix does not chase its producer, because chunk c reads
+x[c·kc] on its first step.
+
+Results:
+
+- cycles per token: **36,950**; <!-- figure: 36950 src="results/rtl/hdc_iterations/iter3_groups_ksplit.json#single_step.cycles" name="HDC cycles per token, iteration 3" -->
+  bit-exact, and 1073, 382, 93 are still generated end to end;
+- matrix-engine issue cycles: 21,504; <!-- figure: 21504 src="results/rtl/hdc_iterations/iter3_groups_ksplit.json#single_step.me_issue_cycles" name="HDC matrix-engine issue cycles, iteration 3" -->
+- stream-unit issue cycles: 10,577; <!-- figure: 10577 src="results/rtl/hdc_iterations/iter3_groups_ksplit.json#single_step.su_issue_cycles" name="HDC stream-unit issue cycles, iteration 3" -->
+- cycles with neither unit issuing: 4,972. <!-- figure: 4972 src="results/rtl/hdc_iterations/iter3_groups_ksplit.json#single_step.both_units_idle_cycles" name="HDC idle cycles, iteration 3" -->
+
+The stream unit and the drains now take about as many cycles as the matrix
+engine. Iteration 4 targets them.

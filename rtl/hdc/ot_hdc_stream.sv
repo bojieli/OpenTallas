@@ -20,6 +20,7 @@
 // ---------------------------------------------------------------------------
 module ot_hdc_stream #(
     parameter integer W  = 16,
+    parameter integer WR = 64,        // bf16 lanes per weight-ROM word
     parameter integer AW = 24,
     parameter integer NW = 16
 ) (
@@ -59,7 +60,7 @@ module ot_hdc_stream #(
     input  wire [31:0]       vc_q,
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
-    input  wire [W*16-1:0]   wrom_q,
+    input  wire [WR*16-1:0]  wrom_q,
     output reg               crom_re,
     output reg  [AW-1:0]     crom_addr,
     input  wire [63:0]       crom_q,
@@ -77,7 +78,7 @@ module ot_hdc_stream #(
     output reg               first_written,
     output wire              fault
 );
-    localparam integer LW = $clog2(W);
+    localparam integer LW = $clog2(WR);   // weight-ROM element -> word, lane
     localparam [1:0] MA_BYP = 0, MA_AB = 1, MA_AA = 2, MA_AIMM = 3;
     localparam [1:0] MB_OFF = 0, MB_POS = 1, MB_NEG = 2;
     localparam [2:0] AD_BYP = 0, AD_Q = 1, AD_C = 2, AD_NEGB = 3, AD_IMM = 4;

@@ -26,7 +26,7 @@ import hdc_golden as G
 import hdc_isa as I
 
 F = np.float32
-W, IL, TMAX = I.W_LANES, I.INTERLEAVE, I.T_MAX
+W, IL, TMAX, GR = I.W_LANES, I.INTERLEAVE, I.T_MAX, I.GROUPS
 
 # -- vector memory map (FP32 elements) ------------------------------------------
 VM = dict(X=0, H=128, QKV=256, QN=448, QR=608, SS=736, RS=752, SSX=768, RX=769,
@@ -53,7 +53,7 @@ class Layout:
         assert self.HD % W == 0 or W % self.HD == 0
         self.TW = TMAX // W
         # weight ROM
-        self.words = []            # list of np.uint16[W]
+        self.words = []            # list of np.uint16[W * GR]
         self.mat = {}
         for L in range(self.L):
             lw = lambda n: model.lw(L, n)
@@ -67,8 +67,8 @@ class Layout:
         emb = model.w["model.embed_tokens.weight"]
         self.emb_word = len(self.words)
         flat = (G.bits(emb.reshape(-1)) >> 16).astype(np.uint16)
-        for i in range(0, len(flat), W):
-            self.words.append(flat[i:i + W])
+        for i in range(0, len(flat), W * GR):
+            self.words.append(flat[i:i + W * GR])
         # constant ROM: (lo, hi) pairs
         self.crom = []
         self.cb = {}
@@ -88,18 +88,29 @@ class Layout:
         self.kv_elems = 2 * self.kv_v0
 
     def place_matrix(self, w):
+        """Words in engine order (round, k, slot); lane g*W+l of a word holds
+        row (t*IL + j)*W + l, column c*kc + k, for group g = q*S + c and tile
+        t = round*(GR/S) + q (zero past the last row)."""
         n, k = w.shape
+        split = G.split_for(n, k, GR, W, IL)
+        kc = k // split
         tiles = -(-n // (W * IL))
+        per_round = GR // split
+        rounds = -(-tiles // per_round)
         base = len(self.words)
         wb = (G.bits(np.asarray(w, dtype=F)) >> 16).astype(np.uint16)
-        pad = np.zeros((tiles * W * IL, k), dtype=np.uint16)
+        pad = np.zeros((rounds * per_round * W * IL, k), dtype=np.uint16)
         pad[:n] = wb
-        blk = pad.reshape(tiles, IL, W, k)               # [t, j, l, k]
-        for t in range(tiles):
-            for kk in range(k):
+        blk = pad.reshape(rounds, per_round, IL, W, split, kc)      # [r, q, j, l, c, k']
+        for r in range(rounds):
+            for kk in range(kc):
                 for j in range(IL):
-                    self.words.append(blk[t, j, :, kk].copy())
-        return dict(base=base, n=n, k=k, tiles=tiles)
+                    word = np.empty(W * GR, dtype=np.uint16)
+                    for g in range(GR):
+                        q, c = divmod(g, split)
+                        word[g * W:(g + 1) * W] = blk[r, q, j, :, c, kk]
+                    self.words.append(word)
+        return dict(base=base, n=n, k=kc, tiles=rounds, split=split)
 
     def put_const(self, v):
         base = len(self.crom)
@@ -131,7 +142,8 @@ def build_program(lay):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
                  me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x, me_xks=1,
                  me_round=int(rnd), me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=int(oen),
-                 me_amax=int(amax))
+                 me_amax=int(amax), me_split=mat.get("split", 1).bit_length() - 1,
+                 me_xcs=mat["k"])
         f.update(over)
         prog.append((f, set(reads), set(writes)))
 
@@ -152,7 +164,7 @@ def build_program(lay):
 
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
-    su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W, a_d=I.DYN_EMBED, a_si=1,
+    su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W * GR, a_d=I.DYN_EMBED, a_si=1,
        dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X", "SSX"}, **sq)
     for L in range(lay.L):
         rmsnorm("X", H, lay.cb[(L, "in")], "H")
@@ -186,7 +198,7 @@ def build_program(lay):
         assert 1 << jsh == group and NH <= IL
         heads = {f"S{h}" for h in range(NH)}
         # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
-        me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False,
+        me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False, me_xcs=0,
            me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
            me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
            me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QR", f"K{L}"}, writes=heads)
@@ -202,7 +214,7 @@ def build_program(lay):
         su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
         # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
         me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, 0, 0, 0) // W), VM["S"], VM["ATT"],
-           rnd=False, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
+           rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
            me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
            me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
            reads=heads | {f"V{L}"}, writes={"ATT"})
@@ -231,7 +243,8 @@ def build_program(lay):
     # immediately preceding stream op writes may instead CHASE it: start once
     # that op has written its first element.  The engine reads x[k] no sooner
     # than k*I cycles after starting and the stream op writes x[k] k cycles
-    # after its first write, so a read can never overtake its write.
+    # after its first write, so a read can never overtake its write.  Only
+    # without a K-split: chunk c reads x[c*kc] on its first step.
     out, rd, wr = [], set(), set()
     prev = None
     for f, reads, writes in prog:
@@ -239,7 +252,7 @@ def build_program(lay):
         conflict = (reads & wr) | (writes & (rd | wr))
         chase = (f["unit"] == I.UNIT_ME and conflict and prev is not None and prev[0]["unit"] == I.UNIT_SU
                  and not (writes & (rd | wr)) and conflict <= prev[2] and f.get("me_xks") == 1
-                 and not f.get("me_xjs") and not f.get("me_wsrc"))
+                 and not f.get("me_xjs") and not f.get("me_wsrc") and not f.get("me_split"))
         if chase:
             f["me_chase"] = 1
         elif conflict or f.get("barrier"):
@@ -263,7 +276,7 @@ class Machine:
         self.lay = lay
         self.vm = np.zeros(I.VM_ELEMS, dtype=F)
         self.kv = kv.copy()
-        self.wrom = np.stack(lay.words).reshape(-1)                 # bf16 element view
+        self.wrom = np.stack(lay.words).reshape(-1)                 # bf16 element view (W*GR per word)
         self.crom = np.array(lay.crom, dtype=F)                     # [n, 2]
         self.argmax = None
         self.logits = []
@@ -288,19 +301,33 @@ class Machine:
         wb = f["me_wbase"] + dyn[f["me_d_wbase"]]
         xb = f["me_xbase"] + dyn[f["me_d_xbase"]]
         ob = f["me_obase"] + dyn[f["me_d_obase"]]
-        t, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(IL), np.arange(W),
-                                                      indexing="ij"))
+        split = 0 if f["me_wsrc"] else f["me_split"]
+        S = 1 << split
+        per_round = 1 if f["me_wsrc"] else GR // S
+        r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
+                                                         np.arange(W), indexing="ij"))
+        t = r * per_round + q
         nidx = (t * IL + j) * W + l
         keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
-        t, j, l, nidx = t[keep], j[keep], l[keep], nidx[keep]
-        acc = np.zeros(len(t), dtype=F)
-        for k in range(K):
-            word = wb + t * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
-            w = self.kv[word * W + l] if f["me_wsrc"] else self.wrom_f32(word * W + l)
-            x = self.vm[xb + k * f["me_xks"] + j * f["me_xjs"]]
-            if f["me_round"]:
-                x = G.to_bf16(x)
-            acc = G.add(acc, G.mul(w, x))
+        r, q, t, j, l, nidx = r[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
+        parts = []
+        for c in range(S):
+            g = q * S + c
+            acc = np.zeros(len(t), dtype=F)
+            for k in range(K):
+                word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
+                if f["me_wsrc"]:
+                    w = self.kv[word * W + l]
+                else:
+                    w = self.wrom_f32(word * (W * GR) + g * W + l)
+                x = self.vm[xb + c * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
+                if f["me_round"]:
+                    x = G.to_bf16(x)
+                acc = G.add(acc, G.mul(w, x))
+            parts.append(acc)
+        while len(parts) > 1:
+            parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+        acc = parts[0]
         if f["me_oen"]:
             self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
@@ -361,7 +388,7 @@ def pack_lanes(lanes, bits_per_lane):
 
 
 def golden_state():
-    model = G.Model()
+    model = G.Model(GR)
     prompt, expected = G.prompt_and_expected()
     cache = [[] for _ in range(model.layers)]
     for pos, tok in enumerate(prompt[:-1]):
@@ -372,16 +399,19 @@ def golden_state():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, help="write RTL images and expectations here")
+    ap.add_argument("--stop", type=int, help="debug: end the program after this many instructions")
     args = ap.parse_args()
     model, prompt, expected, cache = golden_state()
     lay = Layout(model)
     token, pos = prompt[-1], len(prompt) - 1
     kv = lay.kv_image(cache)
     prog = build_program(lay)
+    if args.stop is not None:
+        prog = prog[:args.stop] + [dict(unit=I.UNIT_END, barrier=1)]
     mach = Machine(lay, kv)
     got = mach.run(prog, token, pos)
     ref = model.decode_token(token, pos, [list(c) for c in cache])
-    exact = bool(np.array_equal(G.bits(mach.logits), G.bits(ref)))
+    exact = bool(np.array_equal(G.bits(mach.logits), G.bits(ref))) if len(mach.logits) else False
     n_bar = sum(1 for f in prog if f.get("barrier"))
     print(f"program: {len(prog)} instructions, {n_bar} barriers; weight ROM {len(lay.words)} words; "
           f"constant ROM {len(lay.crom)}; KV {lay.kv_elems} elements")
@@ -389,7 +419,7 @@ def main():
     if args.out:
         out = args.out
         out.mkdir(parents=True, exist_ok=True)
-        (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W))
+        (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W * GR))
         (out / "crom.hex").write_text(hexwords(
             ((f32(hi) << 32) | f32(lo) for lo, hi in lay.crom), 64))
         kvw = G.bits(kv).reshape(-1, W)

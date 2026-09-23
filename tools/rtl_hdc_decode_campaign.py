@@ -5,6 +5,9 @@ Runs, from the repository root:
 
 1. the special-function pipelines (exp, reciprocal, rsqrt) under Icarus on
    18,010 golden vectors with random bubbles, bit for bit;
+   the core's multipliers under Verilator: the stage-rebalanced FP32 multiplier
+   cycle-equivalent to the qualified pipe, and the exact BF16 multiplier equal
+   to it wherever it does not refuse, on 20 million edge-biased operand pairs;
 2. a Verilator lint of the core;
 3. the core under Verilator on the reduced Qwen3 vehicle:
    * one decode step at position 15 on the golden-prefilled KV cache, checked
@@ -36,9 +39,12 @@ import hdc_isa as I  # noqa: E402
 OUT = ROOT / "results/rtl/hdc_decode_campaign.json"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
-HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fpu", "ot_hdc_sfu",
+HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                           "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"
+TB_MUL = ROOT / "rtl/test/tb_hdc_mul_equiv.sv"
+HARNESS_MUL = ROOT / "rtl/test/hdc_mul_equiv_harness.cpp"
+MUL_VECTORS = 20_000_000
 TB_CORE = ROOT / "rtl/test/tb_hdc_core.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_harness.cpp"
 TOOLS = [ROOT / "tools/hdc_golden.py", ROOT / "tools/hdc_isa.py", ROOT / "tools/hdc_program.py", Path(__file__)]
@@ -77,12 +83,25 @@ def run() -> dict:
         # 1. special functions
         n_vec = sfu_vectors(s / "sfu.txt")
         subprocess.run(["iverilog", "-g2012", "-o", str(s / "sfu.vvp"), str(TB_SFU),
-                        *map(str, HDC[0:3]), *map(str, PIPES)], check=True)
+                        *map(str, HDC[0:4]), *map(str, PIPES)], check=True)
         sfu = subprocess.run(["vvp", "-n", str(s / "sfu.vvp"), f"+VEC={s / 'sfu.txt'}"],
                              check=True, capture_output=True, text=True).stdout
         m = re.search(r"SFU vectors=(\d+) checked=(\d+) errors=(\d+)", sfu)
         sfu_rec = {"vectors": n_vec, "checked": int(m.group(2)), "errors": int(m.group(3)),
                    "pass": "PASS" in sfu and int(m.group(3)) == 0 and int(m.group(2)) == n_vec}
+        # 1b. multipliers
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+                        "-Wno-UNUSED", "--top-module", "tb_hdc_mul_equiv", "-Mdir", str(s / "objm"),
+                        str(HDC[1]), str(HDC[2]), *map(str, PIPES), str(TB_MUL), str(HARNESS_MUL),
+                        "-CFLAGS", "-O1"], check=True, capture_output=True)
+        mul = subprocess.run([str(s / "objm" / "Vtb_hdc_mul_equiv"), f"+N={MUL_VECTORS}"], check=True,
+                             capture_output=True, text=True).stdout
+        m1 = re.search(r"MULEQ checked=(\d+) mismatches=(\d+)", mul)
+        m2 = re.search(r"BMULEQ checked=(\d+) faulted=(\d+) mismatches=(\d+)", mul)
+        mul_rec = {"vectors": MUL_VECTORS, "fp32_rebalanced_checked": int(m1.group(1)),
+                   "fp32_rebalanced_mismatches": int(m1.group(2)), "bf16_exact_checked": int(m2.group(1)),
+                   "bf16_refused": int(m2.group(2)), "bf16_mismatches": int(m2.group(3)),
+                   "pass": "PASS" in mul}
         # 2. lint
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core",
                                f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
@@ -119,7 +138,7 @@ def run() -> dict:
                  "mismatches": mm[2], "total_cycles": mm[3], "generation_steps": steps,
                  "pass": "PASS" in multi and mm[2] == 0}
     macs = 4 * (128 * 192 + 128 * 128 + 128 * 768 + 384 * 128) + 128 * 4096
-    status = "pass" if sfu_rec["pass"] and single["pass"] and multi_rec["pass"] and lint.returncode == 0 \
+    status = "pass" if sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and multi_rec["pass"] and lint.returncode == 0 \
         else "fail"
     return {
         "schema": "opentallas.hdc-decode-campaign.v1",
@@ -128,16 +147,18 @@ def run() -> dict:
                           "boundary) with behavioural synchronous-read memories; clock rate is not "
                           "claimed here -- see the ASAP7 physical records.",
         "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096)",
-        "parameters": {"lanes": I.W_LANES, "interleave": I.INTERLEAVE, "kv_positions": I.T_MAX,
+        "parameters": {"lanes_per_group": I.W_LANES, "groups": I.GROUPS, "interleave": I.INTERLEAVE,
+                       "kv_positions": I.T_MAX,
                        "program_instructions": prog_len},
         "weight_macs_per_token": macs,
         "sfu": sfu_rec,
+        "multipliers": mul_rec,
         "single_step": single,
         "end_to_end": multi_rec,
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)
-                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_CORE, HARNESS, *TOOLS)},
+                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_MUL, HARNESS_MUL, TB_CORE, HARNESS, *TOOLS)},
     }
 
 

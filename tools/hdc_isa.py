@@ -3,15 +3,20 @@
 
 The core runs a static program of macro-operations.  Two units execute them:
 
-* ME, the matrix-vector engine: W lanes x I interleaved outputs, each lane a
-  pipelined FP32 multiply feeding a pipelined FP32 add whose result circulates
-  back after exactly I cycles, so every output accumulates its K products in
-  order at one MAC per lane per cycle.  Element (tile t, k, slot j) of lane l:
-      weight  lane l of word  wbase + t*ts + k*ks + (j >> jsh)*js
-      x       element         xbase + k*xks + j*xjs
-      result  lane l of word  obase + t*ots + j*ojs   (after the last k)
+* ME, the matrix-vector engine: G groups of W lanes, I interleaved outputs per
+  lane.  Each lane is a pipelined multiply feeding a pipelined FP32 add whose
+  result circulates back after exactly I cycles, so every output accumulates
+  its products in order at one MAC per lane per cycle.  With split S = 2^split
+  the K range is cut into S contiguous chunks of kc = me_k; group g = q*S + c
+  takes chunk c of tile t = r*(G/S) + q, and a pairwise tree adds the S chunk
+  sums ((c0+c1)+(c2+c3)).  Element (round r, k, slot j), lane l of group g:
+      weight  lane g*W+l of word  wbase + r*ts + k*ks + (j >> jsh)*js
+      x       element             xbase + c*xcs + k*xks + j*xjs
+      result  lane l of word      obase + t*ots + j*ojs   (after the last k)
   valid when (t*I + j)*W + l < nout (mmode 0, rows) or t*W + l < nout (mmode 1,
   lanes: every slot is its own vector, e.g. one attention head per slot).
+  KV-sourced ops (wsrc 1) use group 0 only (t = r); groups 1.. multiply BF16 by
+  BF16 exactly, so they serve only rounded, ROM-weight ops.
   `chase`: may start once the stream unit's latest instruction has written its
   first element (element chaining) instead of waiting for a barrier.
 * SU, the stream unit: a 2-D loop (outer o, inner i) over elements.  Each
@@ -38,7 +43,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "rtl/hdc/ot_hdc_isa.svh"
 
-W_LANES = 16          # ME lanes and memory word width in elements
+W_LANES = 16          # lanes per ME group, and the vector/KV memory word width
+GROUPS = 4            # ME lane groups: W_LANES * GROUPS multiply-accumulates per cycle
 INTERLEAVE = 8        # ME outputs in flight per lane (adder latency 5 + 3)
 T_MAX = 64            # KV positions provisioned
 VM_ELEMS = 4096       # vector memory, FP32 elements
@@ -71,7 +77,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_chase", 1),
+    ("me_chase", 1), ("me_split", 2), ("me_xcs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nin", D),
     ("a_src", 1), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D),

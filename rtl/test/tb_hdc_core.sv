@@ -11,11 +11,11 @@
 // output back, and compare the generated ids with the torch oracle's.
 module tb_hdc_core (input wire clk);
     localparam integer INSTR_BITS = 1024;
-    localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
-    localparam integer WROM_WORDS = 131072, CROM_WORDS = 4096, KV_WORDS = 1024;
+    localparam integer W = 16, G = 4, AW = 24, NW = 16, PAW = 12;
+    localparam integer WROM_WORDS = 32768, CROM_WORDS = 4096, KV_WORDS = 1024;
     localparam integer VM_ELEMS = 4096, VOCAB = 4096, PROG_WORDS = 4096;
 
-    reg [W*16-1:0]  wrom [0:WROM_WORDS-1];
+    reg [G*W*16-1:0] wrom [0:WROM_WORDS-1];
     reg [63:0]      crom [0:CROM_WORDS-1];
     reg [W*32-1:0]  kv   [0:KV_WORDS-1];
     reg [INSTR_BITS-1:0] prog [0:PROG_WORDS-1];
@@ -32,16 +32,18 @@ module tb_hdc_core (input wire clk);
     wire [31:0] cycles;
 
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
-    wire wrom_re; wire [AW-1:0] wrom_addr; reg [W*16-1:0] wrom_q;
+    wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
     wire crom_re; wire [AW-1:0] crom_addr; reg [63:0] crom_q;
     wire kv_re, kv_we; wire [AW-1:0] kv_raddr, kv_waddr; reg [W*32-1:0] kv_q; wire [31:0] kv_wdata;
-    wire vx_re, va_re, vb_re, vc_re; wire [AW-1:0] vx_addr, va_addr, vb_addr, vc_addr;
-    reg [31:0] vx_q, va_q, vb_q, vc_q;
-    wire vw_me_we, vw_su_we, vw_rd_we; wire [AW-1:0] vw_me_addr, vw_su_addr, vw_rd_addr;
-    wire [W-1:0] vw_me_mask; wire [W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
-    wire me_ov; wire [AW-1:0] me_oaddr; wire [W-1:0] me_omask; wire [W*32-1:0] me_odata;
+    wire va_re, vb_re, vc_re; wire [AW-1:0] va_addr, vb_addr, vc_addr;
+    wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
+    reg [31:0] va_q, vb_q, vc_q;
+    wire vw_su_we, vw_rd_we; wire [AW-1:0] vw_su_addr, vw_rd_addr;
+    wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
+    wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
+    wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
 
-    ot_hdc_core #(.W(W), .AW(AW), .NW(NW), .PAW(PAW)) dut (
+    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
@@ -59,26 +61,29 @@ module tb_hdc_core (input wire clk);
         .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata));
 
     // synchronous-read memories
-    integer l;
+    integer l, q;
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr];
-        if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
+        if (wrom_re) wrom_q <= wrom[wrom_addr[14:0]];
         if (crom_re) crom_q <= crom[crom_addr[11:0]];
         if (kv_re) kv_q <= kv[kv_raddr[9:0]];
-        if (vx_re) vx_q <= vm[vx_addr[11:0]];
+        for (q = 0; q < G; q = q + 1)
+            if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: 12]];
         if (va_re) va_q <= vm[va_addr[11:0]];
         if (vb_re) vb_q <= vm[vb_addr[11:0]];
         if (vc_re) vc_q <= vm[vc_addr[11:0]];
         if (kv_we) kv[kv_waddr[13:4]][32*kv_waddr[3:0] +: 32] <= kv_wdata;
-        if (vw_me_we)
-            for (l = 0; l < W; l = l + 1)
-                if (vw_me_mask[l]) vm[{vw_me_addr[7:0], 4'b0} + l] <= vw_me_data[32*l +: 32];
+        for (q = 0; q < G; q = q + 1)
+            if (vw_me_we[q])
+                for (l = 0; l < W; l = l + 1)
+                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
         if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
         // the result words of the one unwritten matrix-vector op are the logits
-        if (me_ov && !vw_me_we)
-            for (l = 0; l < W; l = l + 1)
-                if (me_omask[l]) lg[{me_oaddr[7:0], 4'b0} + l] <= me_odata[32*l +: 32];
+        if (me_ov && vw_me_we == 0)
+            for (q = 0; q < G; q = q + 1)
+                for (l = 0; l < W; l = l + 1)
+                    if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
     end
 
     reg [8*512-1:0] dir;
@@ -163,6 +168,7 @@ module tb_hdc_core (input wire clk);
             end
             $display("HDC token=%0d pos=%0d next_token=%0d expect=%0d cycles=%0d fault=%0d logit_mismatch=%0d vm_mismatch=%0d kv_mismatch=%0d",
                      token, pos, next_token, expect_tok, cycles, fault, bad_lg, bad_vm, bad_kv);
+            $display("AMAX idx=%0d val=%h", dut.u_me.am_idx, dut.u_me.am_val);
             $display("UTIL me_issue_cycles=%0d su_issue_cycles=%0d both_idle_cycles=%0d", me_busy, su_busy, both_idle);
             if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
                 $display("PASS");
