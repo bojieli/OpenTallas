@@ -1171,3 +1171,25 @@ scratch-reset primitives in both. Older softmax routes predate the scratch-reset
 integration and are not substituted for this matched baseline. The candidate
 remains isolated pending routed area/timing selection. See the
 [key-tree comparison](../results/rtl/softmax_key_tree/comparison.json).
+
+## Default small-divider final route recovered and audited
+
+The atomic-writer rerun completed with a valid canonical record for WIDTH168,
+DIVISOR_BITS6, STEP10. Current RTL and all seven retained artifact hashes verify.
+Final extracted ASAP7 TT at 1 ns reports setup −1.675670 ns with 19 violations,
+hold +0.055285 ns, and zero DRC, antenna, slew, capacitance and fanout violations.
+Routed cell area is 338.402 µm². The critical setup path is rem[2] → rem[4],
+confirming the ten-stage restoring recurrence remains a timing bottleneck.
+This supersedes the earlier interrupted-record diagnostic, not the raw retained
+failure evidence. See the [final audit](../results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_audit.json).
+
+The width168 step4 route passes 1 ns at 278.070 µm², but its complete softmax
+cycle count is 1,144,783 versus 767,158 for step10. Consumer selection therefore
+still requires more than 1.49224× complete-engine clock improvement. A current
+step4 complete-softmax route has now been launched with the same 1 ns, CTS12,
+fanout16, library transition and 25% utilization settings as the live current
+step10 key-tree-baseline route. Its source differs only in DIV_BITS_PER_STEP(4).
+Neither projected Fmax nor the standalone divider pass establishes that gain.
+Production defaults remain unchanged until the containing-engine tradeoff is
+measured; the other state, positive-exponential and softmax routes were confirmed
+live and were not restarted.
