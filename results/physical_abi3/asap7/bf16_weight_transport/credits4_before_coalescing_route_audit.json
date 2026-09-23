@@ -1,0 +1,61 @@
+{
+  "scope": "Final extracted baseline before gather coalescing, PASS_FIRST=1 COMPACT_PASS_REUSE=1 READ_CREDITS=4; tested 1 ns ASAP7 TT. Not current coalesced-source or integrated closure.",
+  "record": "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns.json",
+  "record_sha256": "ffed61128b8d7850ec64adf4b9b6a7d748e502b7f2077d3324f91fd59c912684",
+  "source_bindings": [
+    {
+      "launch_path": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "retained_matching_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+      "matches_current_source": true
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "retained_matching_source": "results/rtl/before_gather_coalescing/gather.sv",
+      "sha256": "cbe79cc217d9c52055195bf92f3f793cc9b5ba3885e82044e6b80ba1bd168cdb",
+      "matches_current_source": false
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "retained_matching_source": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "sha256": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10",
+      "matches_current_source": true
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/1_2_yosys.v": "5c90fe8d548f409b370dd19bfc883406cdf3229991598ad98fd3f270de4882d4",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/6_final.v": "eb3700a7bb03df4f668cfc6bc7aef3fabfb54fc9a007c85955288c12fe730d65",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/6_finish.rpt": "8417628928d14cfa34d8ad687dc8b50c1c19ec0a637500980b3b4e2525b505a2",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/config.mk": "bd6fbb7f13a4976c596d54ef91f4f02a9e4e9cd8c35c3f660048e11962c04cc3",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns_artifacts/metadata.json": "444e84907e9af4d8bf7b50e83029a748ad344c4d1c282c4698ac9b5ac61382ee"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0337075,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.0427878,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "routed_cell_area_um2": 6411.72
+}

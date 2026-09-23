@@ -434,3 +434,19 @@ and critical paths are retained in the
 [softmax physical checkpoint](../results/rtl/softmax_exp_reuse/physical_checkpoint/comparison.json).
 The cache's numerical and service-cycle gains remain demonstrated; current
 containing physical qualification and general exponential throughput remain open.
+
+## Four-credit transport baseline closes at 1 ns
+
+The pre-coalescing transport with `PASS_FIRST=1`, `COMPACT_PASS_REUSE=1`
+and `READ_CREDITS=4` has completed final extracted routing at the tested 1 ns
+period on ASAP7 TT. Setup slack is +0.0427878 ns and hold slack +0.0337075 ns,
+with zero setup/hold, DRC, antenna, slew, capacitance and fanout violations.
+Routed standard-cell area is 6,411.720 µm². This establishes a viable block
+clock for the concurrent ordered-read architecture under the recorded boundary
+constraints; it is not an integrated G2 or current coalesced-source result.
+
+All three launch sources are bound to retained matching RTL, including
+`before_gather_coalescing/gather.sv`, and all seven retained physical artifacts
+were hash-verified. The matched single-credit and coalesced four-credit routes
+remain live; their final results are needed to assess incremental routed cost.
+See the [baseline route audit](../results/physical_abi3/asap7/bf16_weight_transport/credits4_before_coalescing_route_audit.json).
