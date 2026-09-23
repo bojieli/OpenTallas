@@ -220,14 +220,19 @@ module ot_a3_wafer_multicast_adapter #(
     wire [1023:0] counter_crc_image = {
         counter_record[1023:416], 32'd0, counter_record[383:0]
     };
-    wire [31:0] topology_crc = ot_crc_pkg::crc32c(
-        2048, {{2048{1'b0}}, topology_crc_image});
-    wire [31:0] local_crc = ot_crc_pkg::crc32c(
-        1024, {{3072{1'b0}}, local_crc_image});
-    wire [31:0] remote_crc = ot_crc_pkg::crc32c(
-        1024, {{3072{1'b0}}, remote_crc_image});
-    wire [31:0] counter_crc = ot_crc_pkg::crc32c(
-        1024, {{3072{1'b0}}, counter_crc_image});
+    //: FOUR CRCs IN A TREE, not four chains.  ot_crc_pkg::crc32c states the
+    //: reflected Castagnoli algorithm one bit at a time, so these four calls unroll
+    //: into 2,048 + 1,024 + 1,024 + 1,024 = 5,120 sequential steps in one module.
+    //: That is why this block has never been routed: its yosys step ran three hours
+    //: in EXTRACT_FA at 101% CPU and 37.8 GB without writing a line of log, and was
+    //: killed rather than finished.  ot_crc32c_tree_pkg computes the same function
+    //: as 32 balanced XOR reductions per CRC -- eleven levels for 2,048 bits, ten
+    //: for 1,024 -- and rtl/test/tb_crc32c_tree_equiv.sv proves the two forms equal
+    //: over 512 comparisons at exactly these widths.
+    wire [31:0] topology_crc = ot_crc32c_tree_pkg::crc32c_2048(topology_crc_image);
+    wire [31:0] local_crc    = ot_crc32c_tree_pkg::crc32c_1024(local_crc_image);
+    wire [31:0] remote_crc   = ot_crc32c_tree_pkg::crc32c_1024(remote_crc_image);
+    wire [31:0] counter_crc  = ot_crc32c_tree_pkg::crc32c_1024(counter_crc_image);
 
     wire topology_record_valid =
         (topology_record[31:0] == 32'h4433_4154) &&

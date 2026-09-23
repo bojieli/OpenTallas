@@ -111,13 +111,13 @@ MODELS: dict[str, LadderModel] = {
         reduced_workload_dir="build/workloads/deepseek-v4.1-flash-reduced-v1",
         reduced_oracle="results/abi3/deepseek_v41_reduced_reference_oracle.json",
         reduced_producer="tools/build_deepseek_v41_reduced_model.py",
-        #: NOT WRITTEN YET. Named so the refusal points at the right gap instead
-        #: of at the fixture builder, which cannot produce an oracle over its own
-        #: in-memory weights.
-        reduced_oracle_producer=(
-            "tools/run_deepseek_v41_reduced_reference_oracle.py (not written; "
-            "follow tools/run_qwen3_reduced_reference_oracle.py)"
-        ),
+        #: WRITTEN 2026-09-14 (WP-L). It is a different tool from the fixture
+        #: builder because the builder generated its weights in memory and then
+        #: wrote them, so its token ids are a statement about a process; this one
+        #: reads the shard back and runs the release's own inference/model.py over
+        #: whatever is in it. Both produced
+        #: [2794, 2794, 2794, 2794, 3929 x 9, 1] and it refuses if they disagree.
+        reduced_oracle_producer="tools/run_deepseek_v41_reduced_reference_oracle.py",
     ),
 }
 

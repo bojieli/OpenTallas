@@ -209,6 +209,34 @@ BACKEND_FUNCTIONAL_SOURCE_PATHS = {
 }
 
 
+#: Backends whose lowering is node-sharded take the array geometry as
+#: keyword arguments and default to the SHIPPED build (64 nodes for V4.1).
+#: A capability that admits a different array -- the 12-node reduced
+#: comparator, whose fabric declares 3 domains of 4 -- must say so here, or
+#: the lowerer builds 64 nodes and admission refuses it.  The geometry is
+#: read from the capability's own fabric declaration, never typed in.
+GEOMETRY_BACKENDS = ("rom_deepseek_v41_array",)
+
+
+def _lowering_geometry(args: argparse.Namespace) -> dict[str, int]:
+    if args.backend not in GEOMETRY_BACKENDS:
+        return {}
+    body = json.loads(args.capability.read_text())
+    cluster = (body.get("fabric") or {}).get("cluster") or {}
+    if not {"domains", "domain_size"} <= set(cluster):
+        return {}
+    domains, domain_size = int(cluster["domains"]), int(cluster["domain_size"])
+    geometry = {"node_count": domains * domain_size, "domain_size": domain_size}
+    #: The ROM row the placer aligns regions to.  At the shipped 4,096 bytes a
+    #: reduced fixture's sub-row regions carry pad bytes and the array lowering
+    #: refuses them (a node-sharded region must be whole owner strides); 256
+    #: is what the 12-node reduced cell was first executed at (ff9006f7).
+    #: Unset by default so the shipped build is untouched.
+    if args.alignment_bytes:
+        geometry["alignment_bytes"] = int(args.alignment_bytes)
+    return geometry
+
+
 def _resolve(spec: str):
     module_name, _, attribute = spec.partition(":")
     return getattr(importlib.import_module(module_name), attribute)
@@ -681,6 +709,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kernel-ir", type=Path, required=True)
     parser.add_argument("--backend", choices=sorted(BACKENDS), required=True)
+    parser.add_argument(
+        "--alignment-bytes",
+        type=int,
+        default=0,
+        help="ROM row alignment for node-sharded backends (0 = the backend's "
+        "default); the reduced 12-node V4.1 array needs 256",
+    )
     parser.add_argument("--capability", type=Path, required=True)
     parser.add_argument("--workload", type=Path, required=True)
     parser.add_argument(
@@ -834,7 +869,7 @@ def main() -> int:
     graph = KernelGraph.read(args.kernel_ir)
     lower = _resolve(BACKENDS[args.backend])
     started = time.perf_counter()
-    deployment = lower(graph, capability)
+    deployment = lower(graph, capability, **_lowering_geometry(args))
     lowering_seconds = time.perf_counter() - started
     print(
         f"lowered in {lowering_seconds:.1f}s: {len(deployment.table)} descriptors",

@@ -3011,6 +3011,31 @@ class RomLowering:
                     owner[name] = state_id
                     order.setdefault(state_id, []).append((name, direction))
         self._state_owner = owner
+        #: A re-presentation -- ``state_reads`` and no ``state_writes``, with
+        #: a result declared ``role: state`` -- names the written plane it
+        #: re-presents as its INPUT.  That is the pairing, and it is the one
+        #: the column cursor below cannot see: two layers re-presenting the
+        #: same plane are two readers of ONE column, not two columns.
+        #: DeepSeek V4.1 publishes its index selection at layer 2 and reuses
+        #: it at layers 3 and 4 (``selection_lifetime:
+        #: until_the_next_index_source``); counted as its own plane, layer
+        #: 4's reuse landed at column 16 of a 16-wide row, which nothing
+        #: writes, and the read-planes check refused the whole deployment.
+        alias: dict[str, str] = {}
+        for kernel in self.graph.kernels:
+            if kernel.state_writes or not kernel.state_reads:
+                continue
+            for index, name in enumerate(kernel.outputs):
+                if name not in owner or name in alias:
+                    continue
+                same_position = (
+                    [kernel.inputs[index]] if index < len(kernel.inputs) else []
+                )
+                for source in same_position + list(kernel.inputs):
+                    if source in owner and owner[source] == owner[name]:
+                        alias[name] = source
+                        break
+        self._state_plane_alias = alias
         return order
 
     def _direct_state_storage(self, state_class: str, size_bytes: int,
@@ -3131,6 +3156,8 @@ class RomLowering:
         for state_id, names in views.items():
             per_direction = {"in": 0, "out": 0}
             for name, direction in names:
+                if name in self._state_plane_alias:
+                    continue  # re-presents a plane already counted
                 per_direction[direction] += self._plane_width(name)
             plane_rows[state_id] = max(per_direction.values(), default=0)
         groups: dict[tuple[Any, ...], list[StateResource]] = {}
@@ -3282,8 +3309,20 @@ class RomLowering:
             row_elements = self._state_group_shape[group_key][2]
             cursor = {"in": 0, "out": 0}
             spans: dict[str, list[tuple[int, int, str]]] = {"in": [], "out": []}
+            placed: dict[str, int] = {}
             for name, direction in names:
                 width = self._plane_width(name)
+                source = self._state_plane_alias.get(name)
+                while source in self._state_plane_alias:
+                    source = self._state_plane_alias[source]
+                if source is not None and source in placed:
+                    # The plane this re-presents is already placed: same
+                    # column, no cursor advance (see _state_tensors).
+                    columns.setdefault(self._state_struct_key(name), placed[source])
+                    spans[direction].append((placed[source], width, name))
+                    placed[name] = placed[source]
+                    continue
+                placed[name] = cursor[direction]
                 if cursor[direction] + width > row_elements:
                     raise RomLoweringError(
                         f"state planes of {state_id!r} need "
