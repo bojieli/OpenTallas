@@ -1234,3 +1234,19 @@ Eighteen repeated-commit scenarios per test now probe admission after retirement
 including cursor wrap and capacity overflow. The full microsequencer campaign
 also passes 65 cases and 4,555 checks in each simulator with source hashes verified.
 See the [comparison](../results/rtl/state_remaining_capacity/comparison.json).
+
+## Private slot payload reset experiment reduces area but worsens mapped timing
+
+The retained-capacity candidate's slot payload has been separated from resettable
+validity and protocol state in an isolated experiment. Allocation initializes
+all private fields before slot_used exposes them; retirement preserves the same
+modulo/phase priorities and updates cursor and retained capacity together.
+Mapped area falls 3,729.170 → 3,557.796 µm² (4.60%), but whole-block pre-layout
+slack regresses −3.512653 → −4.1616 ns at 1 ns. This is an area tradeoff, not a
+clock improvement, and production is unchanged. No extra physical job is launched
+while the existing retained-capacity route remains active.
+
+Both differential simulations pass, including cancellation, refused allocation,
+repeated commits and post-retirement admission. The containing microsequencer
+also passes 65 cases and 4,555 checks per simulator with source hashes verified.
+See the [experiment](../results/rtl/state_slot_payload_reset/comparison.json).
