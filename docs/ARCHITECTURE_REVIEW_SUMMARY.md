@@ -335,3 +335,23 @@ Evidence and source inventory are retained in
 transactions, verifies phase sums and nested wait bounds, and emits the
 reproducible attribution. The testbench retains its numerical, memory-bound,
 counter and saturation assertions.
+
+
+## Final historical state-controller route
+
+The sequential-modulo state-controller run has finished at the tested 1 ns
+period. Final extracted setup slack is **−0.843259 ns**, with 1,895 setup
+violations; hold slack is +0.0560803 ns. Reported DRC, antenna, slew,
+capacitance and fanout violations are zero. Routed standard-cell area is
+4,409.300 µm². The design is physically clean but **does not meet timing**.
+Its worst path starts at `op_descriptor_id[2]` and ends at `count_commits[26]`,
+confirming that descriptor admission remains a timing bottleneck after replacing
+combinational modulo.
+
+The route predates independent payload capture and parallel admission. Its
+controller hash matches the retained `state_payload_capture/before.sv`, not
+current RTL. All seven retained artifacts were hash-verified and the historical
+source binding is recorded in the
+[final route audit](../results/physical_abi3/asap7/state_controller/sequential_modulo_route_audit.json).
+The later candidates remain in physical implementation. The report's derived
+Fmax is not treated as a tested operating frequency or as closure.
