@@ -1386,3 +1386,20 @@ corpus was not rerun in Icarus for this experiment; that simulator's evidence is
 standalone and protocol scope. The standalone physical route remains active;
 production RTL is unchanged. See
 [consumer validation](../results/rtl/mul_operand_shift/consumer_validation.json).
+
+## Multiplier control improvement carries through the positive range engine
+
+Matched complete-engine synthesis with identical SDC and verified sources shows
+8,399.686 → 8,286.368 µm² mapped area (1.35% reduction) and prelayout setup
+−4.259838 → −3.357416 ns at 1 ns when the operand-shift multiplier replaces
+production. The prior matched full-corpus comparison proves unchanged exact
+outputs and 5,962,513 active cycles. This improves the containing engine, but
+both versions still fail timing. No routed or power benefit is claimed.
+
+A matched standalone multiplier baseline route is now active with the same
+module name, explicit WA163/WB161/LOW160/CHUNK16, CTS12 and 1 ns constraints as
+the candidate. The historical passing tree-module route has an identical module
+body after renaming, but is supplementary rather than substituted for this exact
+elaboration comparison. See the
+[complete-engine comparison](../results/rtl/mul_operand_shift/positive_engine/comparison.json)
+and [physical pair](../results/rtl/mul_operand_shift/physical_pair.json).

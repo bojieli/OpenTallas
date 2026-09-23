@@ -141,3 +141,9 @@ Multiplier candidate verification update: the full nonpositive exponential/sigmo
 corpus now passes in Verilator (4,200 cases, 6,637,132 checks), and all eight
 positive-engine reset/backpressure tests pass in both simulators. This qualifies
 both consumers functionally; production integration still awaits physical results.
+
+Containing-engine measurement: replacing the multiplier in the positive range
+pipeline reduces mapped engine area 1.35% and improves prelayout setup slack
+−4.260 → −3.357 ns, with identical constraints and unchanged measured cycles.
+It still fails 1 ns. A matched standalone multiplier baseline/candidate route pair
+is active; no production integration has been made.
