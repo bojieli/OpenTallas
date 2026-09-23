@@ -136,3 +136,8 @@ identified its running-control path. Mapped area falls 1.39%; prelayout slack
 improves but still fails. Twelve product/protocol tests and the complete positive
 range-pipeline corpus pass with unchanged cycles. Standalone physical qualification
 is active; production remains unchanged.
+
+Multiplier candidate verification update: the full nonpositive exponential/sigmoid
+corpus now passes in Verilator (4,200 cases, 6,637,132 checks), and all eight
+positive-engine reset/backpressure tests pass in both simulators. This qualifies
+both consumers functionally; production integration still awaits physical results.

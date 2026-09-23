@@ -1,0 +1,18 @@
+{
+  "scope": "Candidate multiplier in production nonpositive exponential/sigmoid: full numerical corpus in pinned Verilator. Positive engine protocol tests in Icarus/Verilator with production/range-pipeline engines and production/candidate multiplier.",
+  "summary": {
+    "cases": 4200,
+    "exp": 2100,
+    "sigmoid": 2100,
+    "accepted": 4155,
+    "refused": 45,
+    "stalls": 1534,
+    "max_cycles": 3212,
+    "reset_cycles": 23
+  },
+  "checks": 6637132,
+  "positive_protocol_tests": 8,
+  "status": "pass",
+  "sources_verified": true,
+  "limitations": "No full Icarus 4200-case run in this experiment; standalone multiplier and positive protocol tests cover both simulators. Physical qualification pending."
+}

@@ -5,9 +5,10 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@pytest.mark.parametrize('multiplier', ['rtl/lib/ot_wide_mul_seq.sv', 'results/rtl/mul_operand_shift/candidate.sv'])
 @pytest.mark.parametrize('source', ['rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv', 'results/rtl/positive_range_pipeline/candidate.sv'])
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
-def test_reset_restart_and_output_stalls(tmp_path, simulator, source):
+def test_reset_restart_and_output_stalls(tmp_path, simulator, source, multiplier):
     bench = tmp_path/'tb.sv'
     bench.write_text(r'''
 module tb;
@@ -62,7 +63,7 @@ end
 initial begin #200000;$fatal(1,"timeout");end
 endmodule
 '''.replace('RANGE_PRODUCT', '11' if 'candidate' in source else '2').replace('RANGE_DIFF', '12' if 'candidate' in source else '3'))
-    sources = [ROOT/'rtl/lib/ot_wide_mul_seq.sv', ROOT/'rtl/lib/ot_wide_div_small_seq.sv',
+    sources = [ROOT/multiplier, ROOT/'rtl/lib/ot_wide_div_small_seq.sv',
                ROOT/source, bench]
     if simulator == 'iverilog':
         cmd = ['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),*map(str,sources)]

@@ -1370,3 +1370,19 @@ that idle scratch does not leak through public outputs. The containing positive
 range pipeline passes 2,201 numerical arguments plus four refusals/overflows in
 both matched runs at exactly 5,962,513 active cycles. Source hashes verify.
 See the [candidate comparison](../results/rtl/mul_operand_shift/comparison.json).
+
+## Operand-shift multiplier passes both certifying consumers
+
+The isolated multiplier candidate now passes the full production nonpositive
+exponential/sigmoid corpus in pinned Verilator: 4,200 cases, 6,637,132 checks,
+and the existing expected latency/stall/reset summary. Eight positive-engine
+protocol tests also pass across production/range-pipeline engines, both multiplier
+versions and both simulators. They reset during six internal stages, wait for
+stale outputs, restart, and stall a valid result while another input is offered.
+
+This complements the prior positive engine numerical/cycle comparison and twelve
+standalone product/reset tests. Source/vector hashes verify. The full 4,200-case
+corpus was not rerun in Icarus for this experiment; that simulator's evidence is
+standalone and protocol scope. The standalone physical route remains active;
+production RTL is unchanged. See
+[consumer validation](../results/rtl/mul_operand_shift/consumer_validation.json).
