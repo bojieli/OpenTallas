@@ -4,17 +4,17 @@ import subprocess
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter'])
+@pytest.mark.parametrize('variant',['state_apply_pipeline','state_apply_overlap','state_apply_counter','state_slot_admission'])
 @pytest.mark.parametrize('simulator',['iverilog','verilator'])
 def test_apply_pipeline(tmp_path,simulator,variant):
     old=tmp_path/'old.sv';old.write_text((ROOT/'results/rtl/state_apply_pipeline/before.sv').read_text().replace('module ot_a3_state_controller','module old_state'))
-    ports=".clk(clk),.rst_n(rst_n),.clear(clear),.op_valid(valid),.op_sub(sub),.op_descriptor_id(id),.op_rows(rows),.op_rows_bound(1'b1),.op_payload(payload),.commit_all(commit_all),.discard_all(discard_all),.session_state_count(32'd3)"
+    ports=".clk(clk),.rst_n(rst_n),.clear(clear),.op_valid(valid),.op_sub(sub),.op_descriptor_id(id),.op_rows(rows),.op_rows_bound(rows_bound),.op_payload(payload),.commit_all(commit_all),.discard_all(discard_all),.session_state_count(32'd3)"
     fields=['count_prepares','count_commits','count_discards','count_reads','count_commits_applied','count_rows_committed','count_bytes_written','pending_count','slot_open','slot_used','apply_overflow']
     compare='\n'.join(f'if(dut.{f}!==ref_dut.{f})$fatal(1,"{f} mismatch round %0d",t);' for f in fields)
     bench=tmp_path/'tb.sv';bench.write_text(r'''
 module tb;
 reg clk=0;always #5 clk=~clk;
-reg rst_n=0,clear=0,valid=0,commit_all=0,discard_all=0;
+reg rst_n=0,clear=0,valid=0,commit_all=0,discard_all=0,rows_bound=1;
 reg [7:0] sub=0;reg [31:0] id=0,rows=0;reg [511:0] payload=0;
 ot_a3_state_controller #(.SLOTS(3)) dut(PORTS);
 old_state #(.SLOTS(3)) ref_dut(PORTS);
@@ -96,6 +96,26 @@ initial begin
      dut.count_bytes_written!=64'h2fffffffd)$fatal(1,"restart payload");
   cancellations=cancellations+1;
  end
+ end
+ // Admission refusals: zero/unbound spans, initial cursor beyond capacity,
+ // 33-bit overflow, saturating bypass, unstaged policy, and closed/missing slots.
+ for(t=0;t<120;t=t+1)begin
+  clear=1;@(negedge clk);clear=0;id=1;rows_bound=1;
+  policy=t%3;cap=(t%4==0)?32'hffffffff:127;
+  payload=0;payload[8+:8]=policy;payload[128+:32]=4;
+  payload[192+:32]=cap;
+  payload[256+:32]=(t%5==0)?32'hffffffff:((t%5==1)?128:126);
+  command(1);
+  rows=(t%4==0)?32'hffffffff:((t%4==1)?0:2);
+  rows_bound=(t%7!=0);
+  if(t%11==0)command(3); // DISCARD closes the selected resource.
+  if(t%13==0)id=99; // Missing descriptor must refuse COMMIT.
+  sub=2;valid=1;@(negedge clk);valid=0;
+  if(dut.op_done!==ref_dut.op_done || dut.op_ok!==ref_dut.op_ok ||
+     dut.op_trap_class!==ref_dut.op_trap_class)$fatal(1,"refusal mismatch %0d",t);
+  if(dut.count_commits!==ref_dut.count_commits || dut.pending_count!==ref_dut.pending_count)
+   $fatal(1,"refused commit side effect %0d",t);
+  @(negedge clk);
  end
  $display("PASS apply pipeline transactions=%0d cancellations=%0d",transactions,cancellations);$finish;
 end

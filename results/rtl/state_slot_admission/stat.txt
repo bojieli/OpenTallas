@@ -1,0 +1,58 @@
+
+10. Printing statistics.
+
+=== ot_a3_state_controller ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    27713        - wires
+    27713        - wire bits
+      932        - public wires
+      932        - public wire bits
+      932        - ports
+      932        - port bits
+    27076  3.8E+03 cells
+      817   71.471   AND2x2_ASAP7_75t_R
+      383   33.505   AND3x1_ASAP7_75t_R
+      209   21.331   AND4x1_ASAP7_75t_R
+       70    8.165   AND5x1_ASAP7_75t_R
+       21    4.899   AO211x2_ASAP7_75t_R
+     4494  393.135   AO21x1_ASAP7_75t_R
+      130   18.954   AO221x1_ASAP7_75t_R
+       24    4.199   AO222x2_ASAP7_75t_R
+      258   33.855   AO22x1_ASAP7_75t_R
+       25    5.832   AO31x2_ASAP7_75t_R
+      241    28.11   AO32x1_ASAP7_75t_R
+        9    1.312   AO33x2_ASAP7_75t_R
+       25    4.374   AOI211x1_ASAP7_75t_R
+      203   23.678   AOI21x1_ASAP7_75t_R
+        8    1.633   AOI221x1_ASAP7_75t_R
+       66    9.623   AOI22x1_ASAP7_75t_R
+     2621  993.569   DFFASRHQNx1_ASAP7_75t_R
+     1216  354.586   DFFHQNx1_ASAP7_75t_R
+     1453   63.554   INVx1_ASAP7_75t_R
+     1191  156.283   MAJx2_ASAP7_75t_R
+      618   54.063   NAND2x1_ASAP7_75t_R
+       50    8.019   NAND3x1_ASAP7_75t_R
+     4355  380.975   NOR2x1_ASAP7_75t_R
+       28    4.491   NOR3x1_ASAP7_75t_R
+      380   44.323   OA211x2_ASAP7_75t_R
+      873   89.098   OA21x2_ASAP7_75t_R
+        4    0.933   OA221x2_ASAP7_75t_R
+      524   91.679   OA222x2_ASAP7_75t_R
+      338    49.28   OA22x2_ASAP7_75t_R
+       19    4.155   OA31x2_ASAP7_75t_R
+      151   22.016   OA33x2_ASAP7_75t_R
+      344   40.124   OAI21x1_ASAP7_75t_R
+      179   26.098   OAI22x1_ASAP7_75t_R
+     1363  119.235   OR2x2_ASAP7_75t_R
+      583   51.001   OR3x1_ASAP7_75t_R
+      281   28.679   OR4x1_ASAP7_75t_R
+      352   41.057   OR5x1_ASAP7_75t_R
+     2377  381.223   XNOR2x2_ASAP7_75t_R
+      793  127.181   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_state_controller': 3795.698880
+     of which used for sequential elements: 1348.154280 (35.52%)
+

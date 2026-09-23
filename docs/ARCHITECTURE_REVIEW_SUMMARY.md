@@ -1193,3 +1193,22 @@ Neither projected Fmax nor the standalone divider pass establishes that gain.
 Production defaults remain unchanged until the containing-engine tradeoff is
 measured; the other state, positive-exponential and softmax routes were confirmed
 live and were not restarted.
+
+## Parallel slot-bound evaluation exposes an area tradeoff
+
+An isolated state-controller candidate evaluates each slot's capacity and
+zero-span refusal beside descriptor lookup, selecting refusal bits afterward.
+This removes lookup from the 33-bit add-and-compare dependency without changing
+admission latency or the overlap candidate's apply schedule. Against the counter
+candidate, commit-counter endpoint slack improves −1.484960 → −1.113184 ns;
+global pre-layout slack improves −3.602740 → −3.364736 ns at the tested 1 ns.
+Mapped area grows 3,394.953 → 3,795.698 µm² (11.8%). It is not selected and no
+route is launched: timing still fails and duplicated arithmetic costs too much
+for this evidence alone. Sharing or retained per-slot bounds metadata is the
+next architectural option to evaluate.
+
+All eight differential tests pass across four candidates and both simulators.
+Each checks 90 transactions, 21 cancellations, counter carry/wrap boundaries,
+and 120 added admission comparisons covering unbound/zero spans, closed/missing
+resources, capacity violations, 33-bit overflow and policy-specific bypasses.
+See the [experiment and selection record](../results/rtl/state_slot_admission/comparison.json).
