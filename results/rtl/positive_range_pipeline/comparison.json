@@ -1,0 +1,12 @@
+{
+  "scope": "Isolated positive exponential range pipeline, production unchanged.",
+  "change": "Register n*ln2, then register x-product and negative flag, then evaluate correction/initialize series. Correction loops recapture both stages.",
+  "latency": "Adds two cycles per range-fixup attempt; Taylor term schedule unchanged.",
+  "validation": "2201 numerical cases and four refusal/overflow checks pass in Verilator; production/candidate protocol tests pass in both simulators. First candidate Verilator compile failed ENOSPC, retry passed after verified completed-build cleanup.",
+  "baseline_area_um2": 8141.105,
+  "candidate_area_um2": 8399.686,
+  "area_increase_percent": 3.1762395890975403,
+  "baseline_prelayout_slack_ns": -7.497389405956954,
+  "candidate_prelayout_slack_ns": -4.259837832844647,
+  "decision": "Material prelayout timing improvement with 3.18% area increase, still fails 1 ns. Await routed/containing latency qualification before integration."
+}

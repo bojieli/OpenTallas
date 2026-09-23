@@ -5,8 +5,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@pytest.mark.parametrize('source', ['rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv', 'results/rtl/positive_range_pipeline/candidate.sv'])
 @pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
-def test_reset_restart_and_output_stalls(tmp_path, simulator):
+def test_reset_restart_and_output_stalls(tmp_path, simulator, source):
     bench = tmp_path/'tb.sv'
     bench.write_text(r'''
 module tb;
@@ -60,7 +61,7 @@ initial begin #200000;$fatal(1,"timeout");end
 endmodule
 ''')
     sources = [ROOT/'rtl/lib/ot_wide_mul_seq.sv', ROOT/'rtl/lib/ot_wide_div_small_seq.sv',
-               ROOT/'rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv', bench]
+               ROOT/source, bench]
     if simulator == 'iverilog':
         cmd = ['iverilog','-g2012','-s','tb','-o',str(tmp_path/'sim'),*map(str,sources)]
         run = ['vvp',str(tmp_path/'sim')]

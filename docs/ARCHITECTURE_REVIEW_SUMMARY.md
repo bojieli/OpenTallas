@@ -1105,3 +1105,28 @@ costs area and adds two cycles per applied entry. Pending overlap and parallel
 counter routes target latency and this remaining logic respectively. The
 [selection record](../results/rtl/state_apply_pipeline/comparison.json) now carries
 the final result instead of a pending-route claim.
+
+## Positive exponential range reduction pipeline candidate
+
+A fresh attributed-netlist STA run identifies `n_power[0]` through range
+reduction and initialization into `sum_lower[159]`. Capturing pre-ABC names
+changed alias selection, so the attribution uses freshly timed cells rather than
+assuming original cell names remained valid. All mapped cell types/pins and
+net-bit mappings are checked by the retained attribution script.
+
+An isolated candidate registers `n*ln2`, then registers the difference and
+negative flag before correction/series initialization. It adds two cycles per
+fixup attempt and leaves the Taylor term schedule unchanged. Matched pre-layout
+slack improves −7.497389 → −4.259838 ns at 1 ns; mapped area grows
+8,141.105 → 8,399.686 µm² (3.18%). It still fails timing and is not integrated.
+Verilator passes all 2,201 exact arguments and four refusal/overflow checks;
+production and candidate protocol tests pass in both simulators. A candidate
+compile initially failed from disk exhaustion and passed after verified completed
+build cleanup. See the [range pipeline comparison](../results/rtl/positive_range_pipeline/comparison.json).
+
+The current WIDTH168 / DIVISOR_BITS6 / STEP4 divider route now passes final
+extracted ASAP7 TT at 1 ns: setup +0.0141327 ns, hold +0.0591554 ns, area
+278.070 µm², and zero timing/physical violations. All source/artifact hashes
+verify in its [audit](../results/physical_abi3/asap7/small_divider/unreset_step4_width168_cts12_1ns_audit.json).
+The measured 49.22% softmax cycle penalty still requires complete-engine clock
+qualification before changing consumer defaults.

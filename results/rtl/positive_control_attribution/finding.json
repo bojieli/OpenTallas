@@ -1,0 +1,42 @@
+{
+  "scope": "Fresh STA on attributed netlist; prelayout only, not original cell-name reuse or routed timing.",
+  "mapped_connectivity_verified": true,
+  "endpoints": [
+    {
+      "timing_cell": "_120801_",
+      "synthesis_cell": "$auto$ff.cc:337:slice$71528",
+      "signals": {
+        "n_ln2_fixed": [
+          1
+        ],
+        "n_power": [
+          0
+        ],
+        "n_times_ln2": [
+          1
+        ],
+        "reduced_next": [
+          1
+        ],
+        "x_minus_nln2": [
+          1
+        ]
+      }
+    },
+    {
+      "timing_cell": "_121993_",
+      "synthesis_cell": "$auto$ff.cc:337:slice$72790",
+      "signals": {
+        "sum_lower": [
+          159
+        ]
+      }
+    }
+  ],
+  "input_sha256": {
+    "build/positive_divisor6_attribution/mapped.json": "eb1e1fe3ba38759590b704afdb90b2c14d15d2aeee748341bad6f174b4559e6e",
+    "build/positive_divisor6_attribution/before_abc.json": "6e532470b4e77b86ea5c3ecc0ef24e3d5191e05ab9680baed84436a9379e6eb8",
+    "build/positive_divisor6_attribution/mapped.raw.v": "281b0c48f6a67800fd9094770e2fbecc3924df96c121713ea34e81dbaf30d1b4",
+    "build/positive_divisor6_current_primitives/mapped.raw.v": "c41724b2272d092d6821cdf215f230d02a26040999be3d222902e16ff68b9ad3"
+  }
+}
