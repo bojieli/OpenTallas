@@ -189,20 +189,6 @@ module ot_a3_state_controller
     wire [31:0] apply_wrapped = apply_capacity == 0 ? apply_end[31:0]
         : capacity_pow2 ? (apply_sum[31:0] & capacity_mask) : modulo_rem;
 
-    // Payload is not architectural until pending_count advances. Capture the
-    // free entry without fanning admission's complete verdict into every bit.
-    // A rejected commit cannot expose it; the next attempt overwrites it.
-    // The capacity guard protects existing entries when the queue is full.
-    always @(posedge clk) begin
-        if (rst_n && !clear && !discard_all && !commit_all && !apply_busy &&
-            op_valid && op_sub == ot_a3_pkg::A3_STATE_COMMIT &&
-            pending_count < SLOTS[SLOT_W:0]) begin
-            pending_slot[pending_count[SLOT_W-1:0]] <= target;
-            pending_rows[pending_count[SLOT_W-1:0]] <= commit_rows;
-            pending_span[pending_count[SLOT_W-1:0]] <= commit_span;
-        end
-    end
-
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -213,6 +199,9 @@ module ot_a3_state_controller
                 slot_row_bytes[i] <= 32'd0;
                 slot_generation[i] <= 32'd0;
                 slot_policy[i] <= ot_a3_pkg::A3_COMMIT_POLICY_REQUEST_SPAN;
+                pending_slot[i] <= {SLOT_W{1'b0}};
+                pending_rows[i] <= 32'd0;
+                pending_span[i] <= 32'd0;
             end
             slot_used <= {SLOTS{1'b0}};
             slot_open <= {SLOTS{1'b0}};
@@ -359,6 +348,9 @@ module ot_a3_state_controller
                                 op_ok <= 1'b0;
                                 op_trap_class <= ot_a3_pkg::A3_TRAP_CAPABILITY;
                             end else begin
+                                pending_slot[pending_count[SLOT_W-1:0]] <= target;
+                                pending_rows[pending_count[SLOT_W-1:0]] <= commit_rows;
+                                pending_span[pending_count[SLOT_W-1:0]] <= commit_span;
                                 pending_count <= pending_count + 1'b1;
                                 count_commits <= count_commits + 32'd1;
                             end

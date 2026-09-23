@@ -89,6 +89,19 @@ CALLS
  reset_tx();stage(513,512,1000);commit_all=1;tick();commit_all=0;
  repeat(12)tick();reset_tx();repeat(40)tick();
  if(apply_busy || count_commits_applied!=0 || dut.slot_used!=0)$fatal(1,"clear leaked update");
+ // Rejected payload may be captured, but cannot become a pending entry.
+ reset_tx();stage(7,6,5);op_rows=0;op_valid=1;op_sub=ot_a3_pkg::A3_STATE_COMMIT;
+ tick();op_valid=0;
+ if(op_ok || dut.pending_count!=1 || count_commits!=1)$fatal(1,"rejected entry published");
+ op_rows=2;op(ot_a3_pkg::A3_STATE_COMMIT);commit_all=1;tick();commit_all=0;
+ wait(apply_done);@(negedge clk);
+ if(dut.slot_cursor[0]!=6 || count_rows_committed!=7 || count_commits_applied!=2)$fatal(1,"rejected entry not overwritten");
+ // A full queue must not overwrite its oldest valid entry on refusal.
+ reset_tx();stage(7,6,1);repeat(15)op(ot_a3_pkg::A3_STATE_COMMIT);
+ op_rows=5;op_valid=1;op_sub=ot_a3_pkg::A3_STATE_COMMIT;tick();op_valid=0;
+ if(op_ok || dut.pending_count!=16)$fatal(1,"full queue accepted commit");
+ commit_all=1;tick();commit_all=0;wait(apply_done);@(negedge clk);
+ if(dut.slot_cursor[0]!=1 || count_rows_committed!=16 || count_commits_applied!=16)$fatal(1,"full queue payload corrupted");
  // Multiple staged commits to the same resource consume the updated cursor.
  reset_tx();stage(7,6,5);op(ot_a3_pkg::A3_STATE_COMMIT);commit_all=1;tick();commit_all=0;
  wait(apply_done);@(negedge clk);

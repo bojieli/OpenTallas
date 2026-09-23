@@ -1177,3 +1177,30 @@ benefit under the actual service and an acceptable physical cost. A matched
 one-credit containing transport route is now active alongside the four-credit
 route, using the same current sources, CTS12, 1 ns target and slew margin.
 Area comparisons remain pending. Existing live jobs were not restarted.
+
+## State commit payload capture off admission verdict
+
+The sequential-modulo route's intermediate CTS repair repeatedly ends at
+pending-row payload registers (evidence retained under
+`results/rtl/state_payload_capture/intermediate_path_evidence.json`). The
+controller previously gated all pending payload writes by the complete lookup,
+prepare, span and capacity verdict. It now captures only the next free entry
+on a commit attempt, while advancing `pending_count` only on accepted admission.
+Rejected payload is unreachable and overwritten by a later attempt. A separate
+queue-capacity guard prevents a rejected full-queue write from wrapping onto a
+valid entry. Clear, discard, apply and commit-all retain priority.
+
+This adds no cycles or payload storage. Pending entries are protected by count,
+so their reset tree is removed: 1,088 payload bits at the default sixteen slots.
+No area/timing benefit is claimed until the new route finishes. The preceding
+sequential-modulo source is retained as `state_payload_capture/before.sv`.
+
+Both Icarus and Verilator pass 255 arithmetic cases, 34 cancellation positions,
+clear/restart, policy checks, repeated same-slot commits, a rejected-payload
+overwrite case and full sixteen-entry refusal followed by correct application.
+The full ABI control-plane campaign also passes both simulators with 4,555
+checks each, 65 cases, 53 programs, 185 issues, 460 views and 11 traps. Evidence:
+`results/rtl/state_payload_capture/verification.json` and
+`results/rtl/abi3_state_payload_campaign.json`. A new 1 ns CTS12 physical run
+is active; earlier state-enabled containing launches are historical after this
+source change. The state-disabled G2 path does not instantiate this block.
