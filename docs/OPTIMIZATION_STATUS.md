@@ -7,6 +7,8 @@ For the system-level assessment, start with **[ROM/HBM performance gap](ROM_HBM_
 
 The proposed next architecture is now available for review in **[ROM-first architecture proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md)**, with executable resource budgets and cache-aware HBM comparisons. It remains a proposal; production defaults are unchanged.
 
+For DeepSeek V4.1 specifically, see the [first-principles architecture redesign](DEEPSEEK_V41_ARCHITECTURE_REDESIGN.md): expert-local ROM, CSA2 ownership, Engram placement, recurrence and fair HBM sizing.
+
 ## Latest feasibility finding
 
 The proposed ROM 85/75 µs point fails the first dependency check: unchanged

@@ -1,0 +1,310 @@
+# DeepSeek V4.1: first-principles ROM/HBM redesign
+
+Date: 2026-09-23. Status: **architecture candidate; feasibility unresolved**.
+This is a separate design study, not a scaled Qwen machine. The scope is the
+repository's pinned DeepSeek-V4.1-Flash model and its declared formats. It does
+not claim to cover an unspecified V4.1 model variant. No new RTL implementation
+or workload simulation is performed by this study.
+
+## 1. Recommendation
+
+Evaluate a **hierarchy of ROM expert groups with shared local compute**, coupled
+to **owner-local CSA2 KV/index services**, and keep **Engram in a separately
+accounted memory tier**. Use dense operator clusters between expert dispatch and
+merge, and implement the same compute/numerical contracts in a strong HBM design.
+
+The primary engineering candidate places ordinary immutable matrices in ROM and
+Engram in HBM. Retain an all-ROM variant to validate full immutable placement and
+its latency/energy tradeoff. Both are important: moving Engram out of ROM saves
+capacity, but does not prove a several-fold performance advantage. Immutable
+matrix execution remains the primary ROM validation in the hybrid variant.
+
+Do not fix a die/wafer count or promise a 100 µs token before proving active-layer
+bank service, numerical recurrence and communication. **100 µs is a design probe,
+not an accepted target.** At current assumptions the expert recurrence alone
+can consume most or all of that interval.
+
+## 2. Model inventory that drives the design
+
+The pinned inference configuration and model profile agree on:
+
+| Property | Value |
+|---|---:|
+| Layers | 40: 20 encoder, 20 decoder |
+| Hidden width | 5,120 |
+| Routed experts per layer / selected | 384 / 6 |
+| Shared experts per layer | 1 |
+| Expert intermediate width | 2,304 |
+| Attention heads / dimension | 64 / 512 |
+| Q low-rank width / O low-rank width | 1,280 / 1,024, with 8 O groups |
+| Index heads / head dimension | 32 / 128 |
+| Selected compressed entries | 512 |
+| Sliding window | 128 tokens per layer |
+| Reindex candidate bound | 2,048 blocks × 8 = 16,384 entries |
+| Full checkpoint storage | 510.286 GB |
+| Engram storage | 202.758 GB, 39.73% of checkpoint |
+| Checkpoint with Engram elsewhere | 307.528 GB |
+| Active ordinary decode weight bytes | 13.035 GB/token |
+| Active routed expert weight bytes | 4.512 GB/token |
+| Engram lookups | 48 rows × 264 B = 12,672 B/token |
+
+Storage is packed checkpoint accounting, including retained draft/resident-only
+objects; it is not active arithmetic demand. The metadata's aggregate parameter
+counts do not replace byte inventory. Ordinary decode excludes speculative draft
+work; if draft weights remain resident their capacity is still charged. Removing
+them requires a new explicit deployment inventory.
+
+A layer's expert bank holds 7.219 GB, but the selected six read only 112.804 MB.
+Only **1.5625% of expert IDs are active for one token at a layer**. Installed
+capacity and installed bank bandwidth therefore cannot be multiplied into a
+single-token service rate without an access/placement proof.
+
+## 3. Architecture and placement
+
+```mermaid
+flowchart LR
+    Dense[Dense and shared operators] --> Route[Exact routing and top-k]
+    Route --> Dispatch[Activation multicast with bounded credits]
+    Dispatch --> G[Selected ROM expert groups]
+    G --> Merge[Ordered weighted merge]
+    Merge --> Dense
+    Dense <--> KV[Four owner-local KV and index stores]
+    KV --> Candidate[Candidate selection / bounded decoder reindex]
+    Candidate --> Attn[Selected KV attention and local numerical services]
+    Attn --> Dense
+    Dense <--> E[Engram row service: HBM or explicit all-ROM placement]
+```
+
+**Expert groups.** Store multiple experts in a group's ROM and share its arithmetic
+among active experts. Stripe each selected expert's K/output tiles over enough
+independent local banks; a single expert must not be confined behind one narrow
+port. Conversely, do not provide a full high-throughput compute engine for every
+cold expert by default. Choose experts per group from worst-case simultaneous
+selection and physical distance, then price collisions and queueing.
+
+Map shared/dense operators near their consuming layer groups. Dense matrices are
+read every token, so locality and persistent caching matter on both ROM and HBM.
+Use explicit output and K-block placement, format/scale ownership, and deterministic
+partial-reduction trees. A group may share compute across several layers, but the
+activation route and the active layer's bank supply must be charged. A layer-local
+organization leaves other layers' compute idle for a single user; a shared-compute
+organization spends more on weight transport. Sweep that tradeoff rather than
+crediting both perfect locality and global compute utilization.
+
+**Traffic separation.** Keep weights local; multicast input activations only to
+selected experts and broadcast shared operands along bounded trees. Return tagged
+expert outputs, multiply by exact routing weights and merge in the required slot
+order. Credit allocation must guarantee that faults, returns and acknowledgement
+traffic can drain. Use separate control and data resources or proven arbitration.
+No global collective over all capacity dies is necessary for every expert output.
+
+**Single-token latency versus concurrency.** Multiple users can activate different
+experts and make better use of capacity, but hot experts determine queue depth.
+Use actual router traces when available; the current model labels router evidence
+synthetic. Evaluate adversarial concentration in addition to uniform routing.
+A pipeline can increase aggregate throughput without shortening a user's traversal.
+Do not divide token latency by the number of occupied pipeline stages.
+
+## 4. Numerical recurrence is a feasibility gate here too
+
+The selected experts can run in parallel, and their gate/up projections can run
+in parallel. The down projection still depends on their nonlinear result. An
+optimistic expert-only bound for a sequential grouped recurrence is:
+
+`40 × (ceil(5120/g) + ceil(2304/g)) / clock`,
+
+where g is the number of products per dependent rounded update. At 1 GHz and
+one dependent update per cycle:
+
+| g | Expert-only dependency floor |
+|---|---:|
+| 1 | 296.96 µs |
+| 2 | 148.48 µs |
+| 4 | 74.24 µs |
+
+These omit shared experts, dense attention projections, routing, SiLU/clamping,
+normalization, memory, communication and merge. Pipeline recurrence longer than
+one cycle increases this bound. Native g4 support and the official numerical
+contract must be checked; g4 is not automatically scalar bit equivalence.
+
+Thus even g4 does not fit a 40 µs expert allocation inside a speculative 100 µs
+token. More output lanes alone do not fix the dependency. Evaluate independent
+K blocks and local reduction as a **separate qualified numerical design**. The
+Qwen counterexample demonstrates why arbitrary reassociation cannot be declared
+exact. Derive the V4.1 reference's actual scale, accumulation and rounding rules
+before accepting any blocked alternative; matching a modified simulator is not
+independent qualification.
+
+For a 40 µs total expert allocation, each dependent layer gets 1 µs. That requires
+**112.8 TB/s of active-layer expert delivery** and **424.7 TOp/s of arithmetic**.
+At four products/update, 1 GHz and 65% utilization, it requires **81,668 physical
+lanes in the active layer's compute group**. Each selected expert needs 18.8 TB/s
+of local weight service. These are demanding local requirements; dividing by the
+entire installed wafer count would conceal the bottleneck.
+
+## 5. KV and index architecture follows ownership
+
+The four KV owners are layers **2, 8, 14 and 20**. Encoder owners use ratio-two
+compression; the decoder's layer-20 owner supplies global KV at ratio one. There
+are eight index-producing/reindex layers: **2, 8, 14, 20, 24, 28, 32 and 36**.
+The four later decoder reindex stages are capped at 16,384 candidates.
+
+Place each compressed KV/index object with its owner service. Reuse layers hold
+references, not independently updated copies. Cache selected rows/candidates near
+consumers, with explicit generation identity and immutable publication order.
+Layer 20 also creates the candidate block set. Do not perform a full-context
+index scan in every decoder layer or count reused KV as forty independent caches.
+Keep each layer's sliding window local and separate from the shared compressed
+store. Preserve candidate tie rules, duplicate handling and bounded reads.
+
+The profile prices 890 bytes of shared main/index capacity per context position:
+about **178 MB at 200K**, **890 MB at 1M**, before windows, allocator/ECC/metadata,
+recurrent compressor state and replication. This is much smaller than immutable
+weights but can be a concentrated bandwidth hotspot. Capacity efficiency does
+not imply free multi-consumer delivery.
+
+| Decode context | KV reads/token, all-ROM Engram scenario | Index-score items/token | Required index-item rate for 100 µs |
+|---|---:|---:|---:|
+| 8,192 | 11.928 MB | 1.704 million | 17.04 Gitems/s |
+| 200,000 | 46.763 MB | 18.097 million | 180.97 Gitems/s |
+| 1,000,000 | 182.763 MB | 82.097 million | 820.97 Gitems/s |
+
+The HBM-Engram scenario adds 12,672 bytes to the charged mutable-memory path.
+These are analytical inventory values, not a complete measured bus ledger.
+An index item is not one MAC: expand dot products, head aggregation and selection
+before sizing lanes. Preserve reference formats during key/query conversion.
+
+## 6. Numerical, selection and hyper-connection services
+
+At the 200K inventory point, the 100 µs design probe requires approximately:
+
+- 15.73 Gattention-score items/s for 1,572,864 score elements/token;
+- 6.60 Gnonlinear items/s;
+- 5.71 Gnormalization items/s;
+- 5.91 Gtop-k candidates/s;
+- 256 M Sinkhorn element-iterations/s (1,280 elements × 20 iterations/token).
+
+These different operations must not be summed or treated as equivalent scalar
+instructions. Derive real dependency paths for sqrt-softplus routing, SiLU and
+clamping, FP32 softmax, normalization and the four-way hyper-connection/Sinkhorn
+work. Twenty dependent Sinkhorn iterations cannot be parallelized by multiplying
+an element count by a global lane rate.
+
+Use certified pipelined numerical services with exact fallback only if their
+reference semantics, endpoint interfaces, ambiguity rate and worst-case queueing
+are proven. Reuse deterministic intermediates where their lifetime and value are
+identical. Share hardware only when the demand schedule leaves adequate capacity.
+The existing serial function engines remain correctness anchors, not presumed
+high-throughput implementations. Explicitly price head-of-line blocking and the
+slowest fallback on the layer critical path.
+
+## 7. Engram should have its own placement decision
+
+Engram is 39.73% of the checkpoint but only 12.7 KB of nominal lookups per token.
+Placing it all in high-bandwidth ROM compute regions is unlikely to be the best
+capacity/performance allocation. The primary candidate uses HBM for Engram,
+with a cache and banked gather engine at layers 1 and 14. Hash, gather, dequantize,
+projection/gating and completion must all be charged. Low bytes do not imply low
+latency: 48 random rows have transaction granularity, row conflict, network and
+response-tail costs. Coalesce only where exact row identity permits it.
+
+Retain an all-ROM row-addressed Engram option. It needs ROM capacity/repair and
+random-row latency qualification but not expert-GEMM compute behind every row.
+A host-resident alternative is a separately labeled system with measured host-link
+service and matching comparator placement; it is not a free storage tier.
+
+## 8. Capacity screen and why die count is not selected yet
+
+Using existing assumed N5 ROM density, a 2% capacity reserve and 815 mm² planning
+dies gives these **capacity-only lower counts**:
+
+| ROM allocation per die | All-ROM checkpoint | Engram in HBM |
+|---|---:|---:|
+| 300 mm² | 186 dies | 112 dies |
+| 400 mm² | 139 dies | 84 dies |
+| 500 mm² | 112 dies | 67 dies |
+
+These omit image/alignment reserves, replicas and exact bank allocation and do
+not establish that the remaining area fits compute, SRAM, reduction, PHYs, control
+or wiring. They should not be used as a finished chip count. At 400 mm²/die,
+84 dies are about 68,460 mm² of logic silicon; 139 are about 113,285 mm². Packaging,
+wafer defects/repair and inter-region boundaries materially affect the result.
+
+The immediate search variables are ROM area fraction, experts per service group,
+active banks per expert, compute reuse across layers, dense-operator replication,
+KV-owner locality, Engram tier and group-to-group link topology. Enforce capacity,
+active service and numerical dependencies together. Discard any candidate that
+fits bytes only by assuming inactive regions contribute active bandwidth.
+
+## 9. A fair HBM redesign and the several-fold objective
+
+The HBM candidate uses persistent SRAM for dense/hot weights, bounded expert-tile
+prefetch after routing, many independent HBM channels, and tiled GEMM reuse for
+batches. Quantization scales and tails travel with weights. Keep KV owners and
+Engram row engines just as optimized as in the ROM variant. Trace expert popularity
+before selecting cache capacity; arbitrary future experts are not known before
+the route result, and speculation consumes real bandwidth.
+
+The active 13.035 GB/token gives the following ideal *uncached weight* bounds at
+4.5 TB/s per hypothetical HBM die:
+
+| HBM dies | Weight service floor | ROM target sufficient for 3× against that bound |
+|---|---:|---:|
+| 8 | 362.1 µs | ≤120.7 µs |
+| 16 | 181.0 µs | ≤60.3 µs |
+| 32 | 90.5 µs | ≤30.2 µs |
+| 80 | 36.2 µs | ≤12.1 µs |
+| 96 | 30.2 µs | ≤10.1 µs |
+
+These are **not achieved HBM times or necessary ROM targets**. Real HBM execution
+can be slower because of compute, communication and dependencies; cache can
+reduce external weight bytes and invalidate this uncached bound. They illustrate
+why comparing an 84–139-die ROM design only against eight HBM dies is not an
+iso-area validation. Equal-area HBM may afford many more ports or more SRAM;
+equal-power may permit fewer active resources. Evaluate both boundaries honestly.
+
+A 3× advantage remains a requirement to test, **not a demonstrated feasibility
+result**. ROM's plausible advantage is lower local weight latency/energy and
+better use of storage area, especially with expert-local execution. The common
+numerical dependency floor must be addressed on both systems; otherwise it can
+hide much of the memory advantage. Do not assume all HBM bandwidth is concurrently
+usable either—prove its placement and critical path under the same rules.
+
+## 10. Prefill, speculation and additional scope
+
+V4.1 prefill is not forty layers of ordinary decode applied to every prompt token.
+Under CED, the twenty encoder layers plus decoder KV projection process the
+prompt; the decoder performs bounded replay of the last 128 tokens. Build that
+separate dependency/work graph and use matrix reuse. Keep encoder throughput,
+first-token latency and steady decode latency separate.
+
+Speculative/DSpark work needs draft execution, acceptance distribution, verification
+and rollback accounting. Resident draft bytes already appear in the inventory;
+no speculative tokens/s credit is taken here. The official inference configuration
+also contains vision modules; those require a separate payload/work inventory and
+service budget if they are part of the admitted deployment. This text does not
+silently declare them implemented by the text-decode design.
+
+## 11. Feasibility-first implementation gates
+
+1. Freeze the deployment inventory and per-operator numerical contracts against
+   pinned reference sources, including shared/reused objects and scale formats.
+2. Derive complete per-layer dense, expert, attention, index, hyper-connection,
+   Engram and selection work/traffic/dependencies; audit overlapping categories.
+3. Enumerate local bank/compute/reduction placements. Prove active-region service,
+   capacity, queue space and critical-path bounds, including skewed expert routes.
+4. Evaluate the all-ROM and HBM-Engram variants against optimized HBM at equal
+   area and equal power, with warm-cache and batch/context sensitivity.
+5. Check macro density/ports/PVT/energy, local wire cost and physical collective
+   latency. No transfer of ASAP7 clocks or sky130 density into N5 signoff.
+6. Only for a surviving configuration, implement a complete selected-expert path
+   and a KV-owner/reuse/reindex path, then qualify numerical services and integrate.
+   Do not start this step while feasibility gates remain unresolved.
+
+The first calculation is committed in
+[v41_architecture_feasibility.json](../results/architecture/v41_architecture_feasibility.json),
+reproduced with `python3 tools/audit_v41_architecture_feasibility.py`. It verifies
+key official/profile geometry, separates resident and active bytes, derives expert
+recurrence and local service requirements, and reports capacity/HBM sensitivities.
+It is an auditable start to the full redesign; it does not certify a feasible die
+configuration, numerical amendment, final latency or energy advantage.

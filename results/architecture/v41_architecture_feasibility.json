@@ -1,0 +1,243 @@
+{
+  "active_routed_bytes_per_layer": 112803840,
+  "active_routed_bytes_per_token": 4512153600,
+  "capacity_screens": [
+    {
+      "checkpoint_bytes": 510286023000,
+      "minimum_dies_capacity_only": 186,
+      "placement": "all_rom",
+      "rom_area_per_die_mm2": 300,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    },
+    {
+      "checkpoint_bytes": 510286023000,
+      "minimum_dies_capacity_only": 139,
+      "placement": "all_rom",
+      "rom_area_per_die_mm2": 400,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    },
+    {
+      "checkpoint_bytes": 510286023000,
+      "minimum_dies_capacity_only": 112,
+      "placement": "all_rom",
+      "rom_area_per_die_mm2": 500,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    },
+    {
+      "checkpoint_bytes": 307527990600,
+      "minimum_dies_capacity_only": 112,
+      "placement": "engram_in_hbm",
+      "rom_area_per_die_mm2": 300,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    },
+    {
+      "checkpoint_bytes": 307527990600,
+      "minimum_dies_capacity_only": 84,
+      "placement": "engram_in_hbm",
+      "rom_area_per_die_mm2": 400,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    },
+    {
+      "checkpoint_bytes": 307527990600,
+      "minimum_dies_capacity_only": 67,
+      "placement": "engram_in_hbm",
+      "rom_area_per_die_mm2": 500,
+      "scope": "Excludes per-die image reserves, alignment, replication, repair beyond 2%, compute/PHY/other area and bank mapping."
+    }
+  ],
+  "contexts": [
+    {
+      "auxiliary_items": {
+        "attention_score_elements": 1572864.0,
+        "candidate_block_scores": 1025.0,
+        "compressor_pool_elements": 1536.0,
+        "engram_lookup_bytes": 12672.0,
+        "engram_lookup_rows": 48.0,
+        "index_score_elements": 1704096.0,
+        "nonlinear_elements": 660488.0,
+        "normalization_elements": 570688.0,
+        "sinkhorn_iterations": 20.0,
+        "sinkhorn_matrix_elements_per_iteration": 1280.0,
+        "topk_candidates": 54278.0,
+        "topk_selected": 5121.0
+      },
+      "context": 8192,
+      "kv_read_bytes": 11927552.0,
+      "required_auxiliary_rates_for_100us": {
+        "attention_score_elements": 15728640000.0,
+        "candidate_block_scores": 10250000.0,
+        "compressor_pool_elements": 15360000.0,
+        "engram_lookup_bytes": 126720000.0,
+        "engram_lookup_rows": 480000.0,
+        "index_score_elements": 17040960000.0,
+        "nonlinear_elements": 6604880000.0,
+        "normalization_elements": 5706880000.0,
+        "topk_candidates": 542780000.0,
+        "topk_selected": 51210000.0
+      },
+      "sinkhorn_element_iterations_per_token": 25600.0,
+      "tensor_operations": 35917242368.0,
+      "weight_bytes": 13035075008.0
+    },
+    {
+      "auxiliary_items": {
+        "attention_score_elements": 1572864.0,
+        "candidate_block_scores": 25001.0,
+        "compressor_pool_elements": 1536.0,
+        "engram_lookup_bytes": 12672.0,
+        "engram_lookup_rows": 48.0,
+        "index_score_elements": 18097184.0,
+        "nonlinear_elements": 660488.0,
+        "normalization_elements": 570688.0,
+        "sinkhorn_iterations": 20.0,
+        "sinkhorn_matrix_elements_per_iteration": 1280.0,
+        "topk_candidates": 590538.0,
+        "topk_selected": 6144.0
+      },
+      "context": 200000,
+      "kv_read_bytes": 46763136.0,
+      "required_auxiliary_rates_for_100us": {
+        "attention_score_elements": 15728640000.0,
+        "candidate_block_scores": 250010000.0,
+        "compressor_pool_elements": 15360000.0,
+        "engram_lookup_bytes": 126720000.0,
+        "engram_lookup_rows": 480000.0,
+        "index_score_elements": 180971840000.0,
+        "nonlinear_elements": 6604880000.0,
+        "normalization_elements": 5706880000.0,
+        "topk_candidates": 5905380000.0,
+        "topk_selected": 61440000.0
+      },
+      "sinkhorn_element_iterations_per_token": 25600.0,
+      "tensor_operations": 40113872896.0,
+      "weight_bytes": 13035075008.0
+    },
+    {
+      "auxiliary_items": {
+        "attention_score_elements": 1572864.0,
+        "candidate_block_scores": 125001.0,
+        "compressor_pool_elements": 1536.0,
+        "engram_lookup_bytes": 12672.0,
+        "engram_lookup_rows": 48.0,
+        "index_score_elements": 82097184.0,
+        "nonlinear_elements": 660488.0,
+        "normalization_elements": 570688.0,
+        "sinkhorn_iterations": 20.0,
+        "sinkhorn_matrix_elements_per_iteration": 1280.0,
+        "topk_candidates": 2690538.0,
+        "topk_selected": 6144.0
+      },
+      "context": 1000000,
+      "kv_read_bytes": 182763136.0,
+      "required_auxiliary_rates_for_100us": {
+        "attention_score_elements": 15728640000.0,
+        "candidate_block_scores": 1250010000.0,
+        "compressor_pool_elements": 15360000.0,
+        "engram_lookup_bytes": 126720000.0,
+        "engram_lookup_rows": 480000.0,
+        "index_score_elements": 820971840000.0,
+        "nonlinear_elements": 6604880000.0,
+        "normalization_elements": 5706880000.0,
+        "topk_candidates": 26905380000.0,
+        "topk_selected": 61440000.0
+      },
+      "sinkhorn_element_iterations_per_token": 25600.0,
+      "tensor_operations": 56497872896.0,
+      "weight_bytes": 13035075008.0
+    }
+  ],
+  "engram_bytes": 202758032400,
+  "engram_fraction_of_checkpoint": 0.3973419283718065,
+  "engram_lookup_bytes_per_token": 12672.0,
+  "expert_40us_budget": {
+    "active_bytes_s_per_active_layer_group": 112803840000000.0,
+    "bytes_s_per_selected_expert": 18800640000000.0,
+    "ops_s_per_active_layer_group": 424673280000000.0,
+    "per_layer_us": 1,
+    "physical_group4_lanes_at_65pct_1ghz": 81668
+  },
+  "expert_only_recurrence_us_at_1ghz_by_products_per_update": {
+    "1": 296.96,
+    "2": 148.48,
+    "4": 74.24
+  },
+  "experts": 384,
+  "hbm_screens": [
+    {
+      "assumed_total_hbm_TB_s": 36.0,
+      "dies": 8,
+      "rom_us_for_3x_weight_floor_no_cache": 120.69513896296297,
+      "scope": "Optimistic HBM lower bound, not achieved latency; assumes all dies service this token concurrently, no weight cache, independent capacity/compute/network proof required.",
+      "weight_floor_us_no_cache": 362.0854168888889
+    },
+    {
+      "assumed_total_hbm_TB_s": 72.0,
+      "dies": 16,
+      "rom_us_for_3x_weight_floor_no_cache": 60.347569481481486,
+      "scope": "Optimistic HBM lower bound, not achieved latency; assumes all dies service this token concurrently, no weight cache, independent capacity/compute/network proof required.",
+      "weight_floor_us_no_cache": 181.04270844444446
+    },
+    {
+      "assumed_total_hbm_TB_s": 144.0,
+      "dies": 32,
+      "rom_us_for_3x_weight_floor_no_cache": 30.173784740740743,
+      "scope": "Optimistic HBM lower bound, not achieved latency; assumes all dies service this token concurrently, no weight cache, independent capacity/compute/network proof required.",
+      "weight_floor_us_no_cache": 90.52135422222223
+    },
+    {
+      "assumed_total_hbm_TB_s": 360.0,
+      "dies": 80,
+      "rom_us_for_3x_weight_floor_no_cache": 12.069513896296298,
+      "scope": "Optimistic HBM lower bound, not achieved latency; assumes all dies service this token concurrently, no weight cache, independent capacity/compute/network proof required.",
+      "weight_floor_us_no_cache": 36.20854168888889
+    },
+    {
+      "assumed_total_hbm_TB_s": 432.0,
+      "dies": 96,
+      "rom_us_for_3x_weight_floor_no_cache": 10.05792824691358,
+      "scope": "Optimistic HBM lower bound, not achieved latency; assumes all dies service this token concurrently, no weight cache, independent capacity/compute/network proof required.",
+      "weight_floor_us_no_cache": 30.17378474074074
+    }
+  ],
+  "index_owners": [
+    2,
+    8,
+    14,
+    20,
+    24,
+    28,
+    32,
+    36
+  ],
+  "input_sha256": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
+    "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json": "bbd35085b12043af17fbabe0cd2685ebc002cf9b0fc17f5bcadf20da951e006c",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/iso-node/leading_node_market/analytical.json": "c32c593743c38d26215da97d42510532418abe9f829306e0cf5e6388fe9f5df4",
+    "tools/audit_v41_architecture_feasibility.py": "63d59079d83fb05b17a008662358c74fb7a0b12cb9b5af5006426c76b0b3b577"
+  },
+  "kv_capacity_200k_shared_main_index_bytes": 178000000.0,
+  "kv_capacity_shared_main_and_index_bytes_per_context_position": 890.0,
+  "kv_owners": [
+    2,
+    8,
+    14,
+    20
+  ],
+  "model": "DeepSeek-V4.1-Flash",
+  "packed_expert_bytes": 18800640,
+  "recurrence_scope": "Conditional native g-product sequential recurrence, one dependent group update per clock, all six experts parallel; g2/g4 are not universally bit-equivalent to scalar arithmetic.",
+  "routed_expert_operations_per_token": 16986931200,
+  "schema": "opentallas.v41-first-principles.v1",
+  "scope_limits": [
+    "Market work inventory is analytical and not an operator-complete service ledger.",
+    "Capacity does not establish active-bank throughput.",
+    "No 3x speedup, numerical qualification, area closure or power claim.",
+    "Decode calculation excludes speculative and vision work; prefill requires its CED-specific dependency graph."
+  ],
+  "selected_expert_fraction": 0.015625,
+  "selected_experts_per_layer": 6,
+  "source_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "status": "feasibility_incomplete_no_implementation_selected"
+}
