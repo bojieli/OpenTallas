@@ -79,7 +79,7 @@ module ot_hdc_stream #(
     output wire [31:0]       red_data,
     // elements the latest accepted instruction has written
     output reg  [15:0]       progress,
-    output wire              fault
+    output reg               fault
 );
     localparam integer LW = $clog2(WR);   // weight-ROM element -> word, lane
     localparam [1:0] MA_BYP = 0, MA_AB = 1, MA_AA = 2, MA_AIMM = 3;
@@ -409,5 +409,14 @@ module ot_hdc_stream #(
     end
 
     assign idle = !active && inflight == 0 && !vm_we && !kv_we && !rd_v && !reducer_busy;
-    assign fault = fa | fb_ | fad | f_exp | f_e1 | f_rcp | f_rsq | fmc | fmd | f_red;
+    //: A status bit: registered in two levels so the wide OR never meets a port
+    //: or a consumer in the same cycle it forms.
+    reg [2:0] fault_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin fault_q <= 0; fault <= 1'b0; end
+        else begin
+            fault_q <= {fa | fb_ | fad, f_exp | f_e1 | f_rcp | f_rsq, fmc | fmd | f_red};
+            fault <= |fault_q;
+        end
+    end
 endmodule

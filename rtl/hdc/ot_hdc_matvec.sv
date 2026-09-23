@@ -89,7 +89,7 @@ module ot_hdc_matvec #(
     output reg               am_any,
     // result slots the latest accepted instruction has produced
     output reg  [15:0]       progress,
-    output wire              fault
+    output reg               fault
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
@@ -283,7 +283,17 @@ module ot_hdc_matvec #(
         end
     endgenerate
     wire [G*W*32-1:0] res = lvl[LG];
-    assign fault = (|lfault) | (|tfault);
+    //: A status bit: registered in two levels (see ot_hdc_stream).
+    reg [G:0] fault_q;
+    integer fg;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin fault_q <= 0; fault <= 1'b0; end
+        else begin
+            for (fg = 0; fg < G; fg = fg + 1) fault_q[fg] <= |lfault[fg*W +: W];
+            fault_q[G] <= |tfault;
+            fault <= |fault_q;
+        end
+    end
 
     // -- results -------------------------------------------------------------------
     wire          r_v = vline[10 + OD];
