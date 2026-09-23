@@ -1131,3 +1131,22 @@ A four-credit containing transport route at 1 ns is active. The prior passing
 transport audit is bound to snapshots under `before_gather_credits/`; changes
 to cluster/transport mean existing integrated launches are now historical.
 Current-source integrated physical qualification and area cost remain open.
+
+## Concurrent-read ownership boundary and integrated launch
+
+The credit-window directed test now passes both Icarus and pinned Verilator
+at credits 1/2/4/8 with identical 2,281/1,181/661/461 workload cycles. Added
+coverage forces an earlier error response to retire on the same edge that a
+different held read is accepted. The newly accepted read remains owned until
+its own response drains; no output is published. Credits 2/4/8 exercise this
+case, in addition to the existing held-request error, foreign-tag, full-window
+drain and cancellation/restart tests. No RTL change was required by the added
+case. Evidence: `results/rtl/gather_credit_ownership_cross_simulator.json`.
+
+`configs/hardware/g2_readcredits4_physical.json` launches a current-source
+four-credit, two-column G2 route at 1 ns with STATE_COMPAT=0. Prior G2 runs
+remain historical because they predate the gather changes. The containing
+four-credit weight transport route remains active. The state-controller route
+has reached clock-tree repair and still reports an intermediate timing miss;
+no state-controller 1 ns closure is claimed. Final routed evidence is needed
+before selecting its next control-path optimization.

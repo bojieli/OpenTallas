@@ -7,7 +7,8 @@ import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
 @pytest.mark.skipif(shutil.which('iverilog') is None,reason='iverilog unavailable')
-def test_overlapped_reads_and_fault_drain(tmp_path):
+@pytest.mark.parametrize('simulator', ['iverilog', 'verilator'])
+def test_overlapped_reads_and_fault_drain(tmp_path, simulator):
     bench=tmp_path/'tb.sv'
     bench.write_text(r'''module tb;
 parameter integer CREDITS=1;
@@ -22,9 +23,9 @@ wire [127:0] word_data;wire [31:0] word_index,read_object;
 wire [63:0] read_tag,read_offset;wire [4:0] read_bytes;
 reg [63:0] tags[0:7],offsets[0:7];integer due[0:7];
 integer head=0,tail=0,count=0,ticks=0,peak=0,reads=0;
-reg fail_response=0,foreign_response=0,block_read=0;
-wire read_ready=!block_read && count<8 && ticks%5!=0;
-wire response_valid=foreign_response || (count!=0 && ticks>=due[head]);
+reg fail_response=0,foreign_response=0,block_read=0,hold_response=0,force_ready=0;
+wire read_ready=!block_read && count<8 && (force_ready || ticks%5!=0);
+wire response_valid=foreign_response || (!hold_response && count!=0 && ticks>=due[head]);
 wire [63:0] response_tag=foreign_response?64'hbad:tags[head];
 wire response_error=fail_response;reg [127:0] response_data;
 wire push=read_valid && read_ready;
@@ -52,7 +53,7 @@ always @(posedge clk)begin
 end
 task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
 task begin_command;begin
- clear=1;block_read=0;coordinate_valid=0;word_ready=0;fail_response=0;foreign_response=0;tick();clear=0;
+ clear=1;block_read=0;hold_response=0;force_ready=0;coordinate_valid=0;word_ready=0;fail_response=0;foreign_response=0;tick();clear=0;
  command_generation=command_generation+1;command_valid=1;tick();command_valid=0;
 end endtask
 task submit(input integer idx);begin
@@ -92,6 +93,16 @@ initial begin
   block_read=0;wait(drained);@(negedge clk);
   if(word_valid || count!=0)$fatal(1,"held fault drain");
  end
+ // Retire a faulted old read and accept a new held read on the same edge.
+ if(CREDITS>1)begin
+  begin_command();hold_response=1;submit(0);wait(count==1);@(negedge clk);block_read=1;
+  wait(read_valid);repeat(40)tick();before_reads=reads;
+  block_read=0;force_ready=1;hold_response=0;fail_response=1;
+  #1;if(!push || !pop)$fatal(1,"simultaneous boundary not exercised");
+  tick();force_ready=0;fail_response=0;
+  if(!protocol_error || drained || count!=1 || reads!=before_reads+1)$fatal(1,"simultaneous fault ownership");
+  wait(drained);@(negedge clk);if(word_valid || count!=0)$fatal(1,"simultaneous fault drain");
+ end
  // Paired external cancellation revokes all queued reads before restart.
  begin_command();submit(0);wait(count==CREDITS);@(negedge clk);
  begin_command();submit(0);wait(word_valid);@(negedge clk);
@@ -104,9 +115,20 @@ endmodule
     cycles=[]
     for credits in [1,2,4,8]:
         exe=tmp_path/f'sim{credits}'
-        r=subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.CREDITS={credits}','-o',str(exe),str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)],capture_output=True,text=True)
+        sources=[str(ROOT/'rtl/abi3/ot_a3_bf16_weight_gather.sv'),str(bench)]
+        if simulator == 'iverilog':
+            compile_cmd=['iverilog','-g2012','-s','tb',f'-Ptb.CREDITS={credits}','-o',str(exe),*sources]
+            run_cmd=['vvp',str(exe)]
+        else:
+            verilator=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+            if not verilator.exists():
+                pytest.skip('pinned Verilator unavailable')
+            obj=tmp_path/f'obj{credits}'
+            compile_cmd=[str(verilator),'--binary','--timing','-j','4','-Wno-fatal','--top-module','tb',f'-GCREDITS={credits}','--Mdir',str(obj),*sources]
+            run_cmd=[str(obj/'Vtb')]
+        r=subprocess.run(compile_cmd,capture_output=True,text=True,timeout=120)
         assert r.returncode==0,r.stderr
-        r=subprocess.run(['vvp',str(exe)],capture_output=True,text=True,timeout=30)
+        r=subprocess.run(run_cmd,capture_output=True,text=True,timeout=30)
         assert r.returncode==0,r.stdout+r.stderr
         cycles.append(int(re.search(r'cycles=(\d+)',r.stdout).group(1)))
     assert cycles[3]<cycles[2]<cycles[1]<cycles[0],cycles

@@ -198,3 +198,16 @@ passes, with matching sources and full fault/recovery checks. It selects
 row-first for a resident K80 workload. See the
 [policy comparison](../results/rtl/g2_capacity_policy_comparison.json). This is
 a capacity heuristic, not an automatic runtime controller or a global optimum.
+
+The weight gather now has an optional bounded ordered read-credit window,
+forwarded through transport and G2. At M6/N53/K344 with identical four-entry
+external queues and twelve-cycle response delay, four credits reduce median
+successful-operation cycles 109,884 → 80,903.5 (26.37%) with unchanged
+73,564 weight bytes and 8,256 activation fills. Both full campaigns pass
+2,234 outputs and 295 writes/acks. The
+[loaded comparison](../results/rtl/g2_gather_read_credits_comparison.json) and
+[cross-simulator ownership checks](../results/rtl/gather_credit_ownership_cross_simulator.json)
+cover ordered drain, cancellation and errors overlapping held/newly accepted
+reads. Default credit count remains one; out-of-order responses are unsupported.
+The older passing compact-transport route is now historical. Current four-credit
+transport and G2 physical runs are active; area and integrated timing remain open.
