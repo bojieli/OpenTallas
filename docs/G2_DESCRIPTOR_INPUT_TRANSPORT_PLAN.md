@@ -1150,3 +1150,30 @@ four-credit weight transport route remains active. The state-controller route
 has reached clock-tree repair and still reports an intermediate timing miss;
 no state-controller 1 ns closure is claimed. Final routed evidence is needed
 before selecting its next control-path optimization.
+
+## Read-credit service boundaries and default configuration
+
+Four current-source loaded campaigns pass 2,234 exact outputs and 295 writes
+and acknowledgements each, with the full fault/recovery checks. The K160
+three-column comparison uses the same single-request external service and
+three-cycle response delay: median successful-phase cycles are 27,645.5 at
+one gather credit and 27,587 at eight credits, just 0.21% less. Both observe
+only one outstanding read and identical first-operation traffic. The default
+one-credit campaign also reproduces the recorded K160 pass-first campaign's
+203,111 total cycles. This is a compatibility observation, not source identity
+with that older run.
+
+K513 one-column passes with eight gather credits and an eight-entry external
+queue pass at both delay zero and delay32. Observed peak outstanding reads
+are one and eight respectively; median successful-phase cycles are 121,629
+and 225,672. Weight bytes remain 109,392 and activation fills 21,546 in both.
+The high-delay case qualifies full-window cancellation/restart and wrong-tag
+fault recovery through G2. The low-delay case shows that configured capacity
+is not the same as realized concurrency. Evidence:
+`results/rtl/g2_gather_credit_service_boundaries.json`.
+
+The default remains one read credit. More credits require a latency/throughput
+benefit under the actual service and an acceptable physical cost. A matched
+one-credit containing transport route is now active alongside the four-credit
+route, using the same current sources, CTS12, 1 ns target and slew margin.
+Area comparisons remain pending. Existing live jobs were not restarted.
