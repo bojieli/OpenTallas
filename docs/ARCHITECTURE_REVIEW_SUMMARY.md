@@ -1,5 +1,7 @@
 # Accelerator architecture review and optimization priorities
 
+For the concise current overview, read [Optimization status](OPTIMIZATION_STATUS.md).
+
 Report date: 2026-09-23. Implementation checkpoint: `93b7a08e` on
 `token-path-end-to-end`. This report consolidates the implemented refinements,
 measured comparisons and remaining architecture-first work. Each measurement
