@@ -1,5 +1,11 @@
 # DeepSeek V4.1: first-principles ROM/HBM redesign
 
+**Updated objective:** the user subsequently retained **100 µs/token** as an
+explicit feasibility target for wafer-scale and reticle-scale designs. Earlier
+statements below that no target is selected describe the prior analysis stage.
+The 40 µs expert sub-budget remains adjustable. See the
+[physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) for current scope.
+
 Date: 2026-09-23. Status: **architecture candidate; feasibility unresolved**.
 This is a separate design study, not a scaled Qwen machine. The scope is the
 repository's pinned DeepSeek-V4.1-Flash model and its declared formats. It does

@@ -1,5 +1,12 @@
 # Accelerator optimization status
 
+**Current objective:** test **100 µs/token** for V4.1 on wafer-scale and
+reticle-scale ROM systems, and derive their physical performance ceilings.
+The [physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) rejects a standalone
+815 mm² fully resident ROM design at current density. A wafer hybrid passes
+capacity-only screening; timing, area allocation and power remain unqualified.
+This supersedes earlier “no latency target selected” statements below.
+
 Status snapshot: 2026-09-23. Production work is on `main`. This summary covers
 architecture feasibility work through the V4.1 expert-group study; older component
 results below retain their original evidence scope.

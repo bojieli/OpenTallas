@@ -1,5 +1,11 @@
 # V4.1: conditions for a several-fold ROM advantage
 
+**Updated objective:** the user subsequently retained **100 µs/token** as an
+explicit feasibility target for wafer-scale and reticle-scale designs. Earlier
+statements below that no target is selected describe the prior analysis stage.
+The 40 µs expert sub-budget remains adjustable. See the
+[physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) for current scope.
+
 No absolute token deadline is assumed in this analysis. The question is which
 parts of the workload ROM must accelerate, and how much unchanged critical-path
 work a 3× end-to-end improvement can tolerate. Results are conditional service

@@ -1,5 +1,11 @@
 # V4.1 traffic recalculation: bytes first, latency second
 
+**Updated objective:** the user subsequently retained **100 µs/token** as an
+explicit feasibility target for wafer-scale and reticle-scale designs. Earlier
+statements below that no target is selected describe the prior analysis stage.
+The 40 µs expert sub-budget remains adjustable. See the
+[physical limits study](DEEPSEEK_V41_PHYSICAL_LIMITS.md) for current scope.
+
 The **112.8 TB/s** figure is conditional on an aggressive allocation: 40 µs for
 routed experts within a hypothetical 100 µs token. Neither number is a user
 requirement or an intrinsic property of V4.1. No token-latency target is selected.

@@ -1,0 +1,99 @@
+{
+  "assumed_rom_bytes_per_mm2": 9379500,
+  "capacity_screens": {
+    "reticle_815mm2": {
+      "all_rom": {
+        "area_left_before_compute_sram_fabric_mm2": -54699.68878611736,
+        "available_area_mm2": 815,
+        "capacity_fits_with_all_area_available": false,
+        "minimum_devices_if_entire_area_were_rom": 69,
+        "rom_area_required_mm2": 55514.68878611736
+      },
+      "engram_elsewhere": {
+        "area_left_before_compute_sram_fabric_mm2": -32641.375290880787,
+        "available_area_mm2": 815,
+        "capacity_fits_with_all_area_available": false,
+        "minimum_devices_if_entire_area_were_rom": 42,
+        "rom_area_required_mm2": 33456.37529088079
+      }
+    },
+    "wafer_300mm_gross_disk_upper_bound": {
+      "all_rom": {
+        "area_left_before_compute_sram_fabric_mm2": 15171.14591965299,
+        "available_area_mm2": 70685.83470577035,
+        "capacity_fits_with_all_area_available": true,
+        "minimum_devices_if_entire_area_were_rom": 1,
+        "rom_area_required_mm2": 55514.68878611736
+      },
+      "engram_elsewhere": {
+        "area_left_before_compute_sram_fabric_mm2": 37229.45941488956,
+        "available_area_mm2": 70685.83470577035,
+        "capacity_fits_with_all_area_available": true,
+        "minimum_devices_if_entire_area_were_rom": 1,
+        "rom_area_required_mm2": 33456.37529088079
+      }
+    },
+    "wafer_300mm_max_inscribed_square": {
+      "all_rom": {
+        "area_left_before_compute_sram_fabric_mm2": -10514.68878611736,
+        "available_area_mm2": 45000,
+        "capacity_fits_with_all_area_available": false,
+        "minimum_devices_if_entire_area_were_rom": 2,
+        "rom_area_required_mm2": 55514.68878611736
+      },
+      "engram_elsewhere": {
+        "area_left_before_compute_sram_fabric_mm2": 11543.624709119213,
+        "available_area_mm2": 45000,
+        "capacity_fits_with_all_area_available": true,
+        "minimum_devices_if_entire_area_were_rom": 1,
+        "rom_area_required_mm2": 33456.37529088079
+      }
+    },
+    "wafer_60000mm2_hypothetical_usable": {
+      "all_rom": {
+        "area_left_before_compute_sram_fabric_mm2": 4485.31121388264,
+        "available_area_mm2": 60000,
+        "capacity_fits_with_all_area_available": true,
+        "minimum_devices_if_entire_area_were_rom": 1,
+        "rom_area_required_mm2": 55514.68878611736
+      },
+      "engram_elsewhere": {
+        "area_left_before_compute_sram_fabric_mm2": 26543.624709119213,
+        "available_area_mm2": 60000,
+        "capacity_fits_with_all_area_available": true,
+        "minimum_devices_if_entire_area_were_rom": 1,
+        "rom_area_required_mm2": 33456.37529088079
+      }
+    }
+  },
+  "input_sha256": {
+    "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
+    "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json": "bbd35085b12043af17fbabe0cd2685ebc002cf9b0fc17f5bcadf20da951e006c",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/architecture/v41_architecture_feasibility.json": "940f428eb1012a58777b7fa25881f095835f0b1aa4139892668531bc974dc694",
+    "tools/audit_v41_physical_envelope.py": "bc29469750800ce16ce2cc224cd5bc78a73dd7ceea6e3bece8d8738c78e851e6"
+  },
+  "limits": [
+    "ROM density is a planning assumption, not a characterized wide-port macro. Capacity rejects configurations but cannot certify speed.",
+    "815mm2 is the repository planning die area. Reticle field dimensions and process edge exclusions need qualification.",
+    "45000mm2 is the largest square inside an ideal 300mm disk, without exclusion margin; 60000mm2 usable area is a hypothetical irregular wafer layout, not an available implementation.",
+    "Gross disk area cannot all become functional circuitry. Streets, edges, repair, yield and fabric topology reduce usable area.",
+    "External Engram capacity and service remain charged separately in hybrid placement.",
+    "100us rates use the full token interval for each category; they are necessary average service demands, not additive allocations or sufficient performance.",
+    "HBM endpoint counts assume independent delivered service to the active token, not capacity-only inactive endpoints.",
+    "No justified numeric physical tokens/s ceiling exists without macro read timing, compute area, topology/latency and power/cooling constraints."
+  ],
+  "necessary_service_using_entire_100us": {
+    "all_active_weight_TB_s": 130.35075008,
+    "hbm_4_5TB_s_endpoints_dense_fully_cached": 11,
+    "hbm_4_5TB_s_endpoints_uncached_weights": 29,
+    "kv_read_TB_s_at_1m": 1.82763136,
+    "kv_read_TB_s_at_200k": 0.46763136,
+    "routed_weight_TB_s": 45.121536,
+    "tensor_TOP_s_at_200k": 401.13872896
+  },
+  "rom_reserve_fraction": 0.02,
+  "schema": "opentallas.v41-physical-envelope.v1",
+  "status": "100us_target_restored_capacity_screen_only_physical_performance_unqualified",
+  "target_token_us": 100
+}
