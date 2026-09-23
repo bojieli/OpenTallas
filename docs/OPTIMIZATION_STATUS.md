@@ -7,6 +7,15 @@ For the system-level assessment, start with **[ROM/HBM performance gap](ROM_HBM_
 
 The proposed next architecture is now available for review in **[ROM-first architecture proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md)**, with executable resource budgets and cache-aware HBM comparisons. It remains a proposal; production defaults are unchanged.
 
+## Latest feasibility finding
+
+The proposed ROM 85/75 µs point fails the first dependency check: unchanged
+sequential whole-K accumulation has an optimistic 888.832 µs linear-only floor
+at 1 GHz. The area/service checks did not capture insufficient independent work
+at batch one. Architecture implementation is deferred while the numerical and
+scheduling alternatives are evaluated. See the correction at the top of the
+[redesign proposal](ROM_FIRST_ARCHITECTURE_PROPOSAL.md).
+
 ## Where we stand
 
 **Several useful architectural improvements are integrated, but the complete

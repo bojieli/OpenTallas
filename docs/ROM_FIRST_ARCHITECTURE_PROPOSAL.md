@@ -5,6 +5,38 @@ performance-qualified design**. This proposal follows the
 [top-down gap analysis](ROM_HBM_PERFORMANCE_GAP.md). It does not replace the
 production configuration or authorize a new numerical contract.
 
+## Feasibility correction: sequential recurrence rejects the latency target
+
+**The first feasibility audit rejects the 85/75 µs performance point under the
+unchanged whole-K sequential RNE contract.** The resource inequalities below
+were necessary but incomplete: the assumed 65% lane utilization did not account
+for per-output dependency chains at batch one.
+
+Even with one dependent accumulation per cycle, unlimited parallel output columns
+and zero attention, memory, control or communication delay, Qwen's linear chain
+requires **888,832 cycles = 888.832 µs at 1 GHz**. This is 27.776× the allocated
+32 µs linear phase. QKV has only 6,144 independent outputs and down projection
+4,096, against 393,216 installed system lanes. More lanes do not shorten a
+sequentially rounded dot product. Interleaving independent outputs hides pipeline
+latency but does not remove this recurrence.
+
+This bound assumes complete producer dependencies, as the proposal specifies.
+Exotic exact multi-update-per-clock logic or a different streaming dependency
+contract would require its own proof and area/timing model. It is not a bound
+against all conceivable accelerators or vendor arithmetic.
+
+The locality organization remains worth investigating, but **do not implement the
+performance configuration yet**. Next compare the existing 128-element blocked
+association, exact sequential alternatives and their numerical requirements.
+The blocked tree is not bit-equivalent to sequential accumulation; the repository
+already requires independent numerical qualification before acceptance. No
+contract change is made here. In parallel, continue macro, collective and HBM
+feasibility checks, which remain necessary even if recurrence is resolved.
+
+Evidence: [dependency calculation](../results/architecture/redesign_recurrence_feasibility.json),
+reproduced by `python3 tools/audit_redesign_recurrence_feasibility.py`. All following
+85/75 µs budgets remain historical proposal targets, not accepted feasible points.
+
 ## 1. Decision and performance contract
 
 Build a **distributed digital accelerator with bank-local ROM, local mutable KV,

@@ -1,4 +1,6 @@
 {
+  "architecture_feasible": false,
+  "feasibility_reason": "Reject the current 85/75us performance point under unchanged sequential whole-K arithmetic. Keep locality architecture as a candidate; resolve the numerical and dependency contract before implementation.",
   "independent_hbm_all_sram_capacity_screen": {
     "active_weight_sram_mm2_per_die": 489.0414515378651,
     "checkpoint_sram_mm2_per_die": 529.254029464978,
@@ -7,8 +9,10 @@
   "input_sha256": {
     "configs/architecture/rom_hbm_review_v3.json": "0f6388b21560827ae1e91fca9fd09c8fe989fbfa304c62ac01f3077e0ade3f41",
     "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "58e710313e4d591ca2c7840dbcd0d6b70debb971023377e4ad848627375c7b8f",
     "src/opentallas/chip_architecture.py": "19f0b04ad910dc038423db5841be5ddb9c5f321a18d419560babc763e94b04d9",
-    "tools/evaluate_rom_hbm_redesign.py": "349221bf3e63ec84ec5dbdc82a1ea3fcc3c874fec5229be08155d4f75aef64b4"
+    "tools/audit_redesign_recurrence_feasibility.py": "715e60ac1cbe0a95b82bcce74d5a3f194333c96b38cf5b695ae18f3580384286",
+    "tools/evaluate_rom_hbm_redesign.py": "524f8f29f2e808b3f34cbac9e0d1e0e934ccbb4464ef3111041ed246040b9f86"
   },
   "performance_sensitivities": {
     "clock_750mhz": {
@@ -168,6 +172,71 @@
     "system_weight_bytes_s_target": 262144000000000.0,
     "tiles_per_die": 512,
     "unallocated_rom_area_mm2_per_die": 114.76508712557052
+  },
+  "recurrence_feasibility": {
+    "blocked_128_association": "Separate numerical design; available independent K-block work does not prove equivalence to whole-K sequential RNE. No performance accepted pending numerical qualification and exact resource schedule.",
+    "decision": "Reject the current 85/75us performance point under unchanged sequential whole-K arithmetic. Keep locality architecture as a candidate; resolve the numerical and dependency contract before implementation.",
+    "installed_system_lanes": 393216,
+    "intermediate_size": 12288,
+    "linear_budget_us": 32,
+    "linear_dependency_floor_us_by_recurrence_cycles": {
+      "1": 888.832,
+      "2": 1777.664,
+      "3": 2666.496
+    },
+    "one_cycle_floor_over_85us_target": 10.456847058823529,
+    "one_cycle_floor_over_linear_budget": 27.776,
+    "operators": [
+      {
+        "K": 4096,
+        "N": 6144,
+        "ideal_one_cycle_recurrence_floor_cycles": 147456,
+        "independent_output_chains_batch1": 6144,
+        "max_fraction_of_installed_lanes_with_no_K_split": 0.015625,
+        "occurrences": 36,
+        "operator": "qkv"
+      },
+      {
+        "K": 4096,
+        "N": 4096,
+        "ideal_one_cycle_recurrence_floor_cycles": 147456,
+        "independent_output_chains_batch1": 4096,
+        "max_fraction_of_installed_lanes_with_no_K_split": 0.010416666666666666,
+        "occurrences": 36,
+        "operator": "attention_output"
+      },
+      {
+        "K": 4096,
+        "N": 24576,
+        "ideal_one_cycle_recurrence_floor_cycles": 147456,
+        "independent_output_chains_batch1": 24576,
+        "max_fraction_of_installed_lanes_with_no_K_split": 0.0625,
+        "occurrences": 36,
+        "operator": "gate_up"
+      },
+      {
+        "K": 12288,
+        "N": 4096,
+        "ideal_one_cycle_recurrence_floor_cycles": 442368,
+        "independent_output_chains_batch1": 4096,
+        "max_fraction_of_installed_lanes_with_no_K_split": 0.010416666666666666,
+        "occurrences": 36,
+        "operator": "down"
+      },
+      {
+        "K": 4096,
+        "N": 151936,
+        "ideal_one_cycle_recurrence_floor_cycles": 4096,
+        "independent_output_chains_batch1": 151936,
+        "max_fraction_of_installed_lanes_with_no_K_split": 0.3863932291666667,
+        "occurrences": 1,
+        "operator": "vocabulary_head"
+      }
+    ],
+    "required_clock_hz_at_one_update_per_cycle_for_linear_budget": 27776000000.0,
+    "scope": "Single-token whole-K sequential RNE accumulation with at most one dependent update per clock. Outputs are fully parallel, QKV and gate/up fused; attention/nonlinear/memory/control/collective delay omitted. These omissions make this an optimistic lower bound, not predicted TPOT.",
+    "sequential_contract_meets_linear_budget": false,
+    "vocabulary_size": 151936
   },
   "sensitivities": {
     "clock_750mhz": {

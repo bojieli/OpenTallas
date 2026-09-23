@@ -11,6 +11,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
 from opentallas.chip_architecture import qwen_units, align_up
+# Analytical dependency audit is a prerequisite to performance acceptance.
+sys.path.insert(0, str(ROOT))
+from tools.audit_redesign_recurrence_feasibility import audit as recurrence_audit
 
 
 def evaluate(c, m):
@@ -102,6 +105,9 @@ def main():
     stretch=deepcopy(c)
     stretch.update(c['rom_performance_variant'])
     report['performance_variant']=evaluate(stretch,m)
+    report['recurrence_feasibility'] = recurrence_audit(stretch,m)
+    report['architecture_feasible'] = False
+    report['feasibility_reason'] = report['recurrence_feasibility']['decision']
     report['performance_variant_scope']='Primary performance proposal, stronger than the 150us bring-up architecture; all rates and area caps require implementation proof.'
     for label,changes in {
         'rom_density_half':{'rom_bytes_per_mm2_assumed':c['rom_bytes_per_mm2_assumed']/2},
@@ -136,7 +142,7 @@ def main():
         'checkpoint_sram_mm2_per_die':m['checkpoint_bytes']/c['dies']/c['sram_bytes_per_mm2_assumed'],
         'scope':'Capacity-only ideal lower bound, no alignment/ECC/metadata/spares. An independently optimized HBM/SRAM design can trade compute for weight residency; the streamed-HBM bound is not a universal comparator.'}
     report['input_sha256']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in
-                           [config,ROOT/c['model'],Path(__file__).resolve(),ROOT/'src/opentallas/chip_architecture.py']}
+                           [config,ROOT/c['model'],Path(__file__).resolve(),ROOT/'src/opentallas/chip_architecture.py',ROOT/'tools/audit_redesign_recurrence_feasibility.py',ROOT/'rtl/abi3/ot_a3_lane_pipelined.sv']}
     out=ROOT/args.output;out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps(report,indent=2,sort_keys=True)+'\n')
     print(json.dumps(report,indent=2))
