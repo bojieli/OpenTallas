@@ -875,6 +875,8 @@ def sdc_lines(
         f"set_load {load_lib:g} [all_outputs]",
         *signal_integrity_sdc_lines(constraints),
         *(f"set_false_path -from [get_ports {port}]" for port in block["false_path_from_ports"]),
+        *(["set_false_path -from $non_clock_inputs", "set_false_path -to [all_outputs]"]
+          if block.get("false_path_io") else []),
     ]
     return lines
 
@@ -2188,6 +2190,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--clock-port", default="clk")
     parser.add_argument("--false-path-from", action="append", default=None)
     parser.add_argument(
+        "--false-path-io",
+        action="store_true",
+        help="false-path every non-clock input and every output, so closure is the block's internal "
+             "register-to-register timing; for blocks whose ports are registered on the block side and "
+             "face registered neighbours or memory macros. Recorded under design.false_path_io",
+    )
+    parser.add_argument(
         "--io-delay-fraction",
         type=float,
         default=None,
@@ -2464,6 +2473,8 @@ def main(argv: list[str] | None = None) -> int:
         block["false_path_from_ports"] = args.false_path_from
     if args.io_delay_fraction is not None:
         block["io_delay_fraction"] = args.io_delay_fraction
+    if args.false_path_io:
+        block["false_path_io"] = True
 
     corner_name = args.corner or view["default_corner"]
     if corner_name not in view["corners"]:
@@ -2556,6 +2567,7 @@ def main(argv: list[str] | None = None) -> int:
             "clock_port": block["clock_port"],
             "false_path_from_ports": block["false_path_from_ports"],
             "io_delay_fraction": block.get("io_delay_fraction", 0.2),
+            "false_path_io": bool(block.get("false_path_io", False)),
             "sources": [
                 {
                     "path": source,
