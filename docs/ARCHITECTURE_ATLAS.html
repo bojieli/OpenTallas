@@ -115,6 +115,7 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <a class="l2" href="#s6-5">6.5 V4.1 logical datapath</a>
   <a class="l2" href="#s6-6">6.6 V4.1 array: physical layout</a>
   <a class="l2" href="#s6-7">6.7 V4.1 wafer: datapath &amp; layout</a>
+  <a class="l2" href="#s6-8">6.8 Topology selection &amp; critical path</a>
   <a href="#s7">7 DeepSeek-V4.1 package</a>
   <a href="#s8">8 HBM comparator</a>
   <a href="#s9">9 System performance</a>
@@ -496,42 +497,79 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </figure>
 
   <h3 id="s6-6">6.6 DeepSeek-V4.1 ROM array: physical layout and network</h3>
-  <p>The analytical model's best per-user design for V4.1 at N5 (<code>ROM-N5-native-HBMKV-array-hw-hybrid-x188</code>): 188 reticle-sized dies of 815 mm², four per package joined by UCIe-class die-to-die links (≈10 ns), 47 packages in a pipeline joined by board SerDes (≈100 ns, no software on the path). Each die holds its share of a layer's weights in striped ROM banks and streams KV from five HBM3E stacks.</p>
+  <p><b>Selected configuration</b> (the study is in §6.8): 188 reticle-sized dies of 815 mm² in 47 packages of four. <b>Each package is one tensor group</b>: its four dies split every weight matrix they hold, including a quarter of every expert, and combine their partial results with <b>one-shot collectives over UCIe</b>. In a one-shot collective every die sends its partial to the other three and sums locally in a fixed order, so each die holds the identical, bit-exact result after a single ≈10 ns link crossing. The packages are joined by board SerDes in a <b>ring</b>: a 40-stage layer pipeline, one layer per package, whose closing link returns the token to stage 0. Each die streams its KV cache from five HBM3E stacks. The Engram tables, embedding and lm_head take the remaining ROM capacity; their exact placement is not yet fixed.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 6-2. V4.1 ROM array (N5, analytical model)</caption>
+    <caption>Table 6-2. V4.1 ROM array, selected configuration (N5, 200K context)</caption>
     <thead><tr><th>Item</th><th class="r">Value</th><th>Note</th></tr></thead>
     <tbody>
-      <tr><td>Dies × area</td><td class="r m">188 × 815 mm²</td><td>153,220 mm² total</td></tr>
-      <tr><td>Packages / pipeline stages</td><td class="r m">47</td><td>tensor group of 4 dies per package</td></tr>
-      <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits/parameter, FP8 execution</td></tr>
-      <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>long-context KV; ROM holds no per-user state</td></tr>
-      <tr><td>Per-user speed, batch 1 / 64</td><td class="r m">15,556 / 12,208 tok/s</td><td>3.87× / 8.52× the best B200 (NVL72, 96 GPUs)</td></tr>
-      <tr><td>Power</td><td class="r m">≈27.4 kW</td><td>at batch 1–64</td></tr>
+      <tr><td>Dies × area</td><td class="r m">188 × 815 mm²</td><td>153,220 mm² in total</td></tr>
+      <tr><td>Package / tensor group</td><td class="r m">4 dies on UCIe</td><td>one-shot all-reduce and all-gather, fixed summation order</td></tr>
+      <tr><td>Board fabric / pipeline</td><td class="r m">ring · 40 stages</td><td>one layer per package; the 4-copy residual is 41 KB per hop</td></tr>
+      <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits per parameter, FP8 execution</td></tr>
+      <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>ROM holds no per-user state</td></tr>
+      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">4,139 / 4,034 tok/s</td><td>bottom-up, measured RTL depths (§6.8); the analytical model's 15,556 / 12,208 omits most serial latency</td></tr>
+      <tr><td>Aggregate at 4,096 users</td><td class="r m">≈504 K tok/s</td><td>bound by stage occupancy; 3.6 MB per hop at this load</td></tr>
     </tbody>
   </table></div>
   <figure class="fig">
-    <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 620" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
-    <figcaption><b>Figure 6-7.</b> Top: the 47-package array on boards, a pipeline of board SerDes links with token feedback; the stage-to-layer mapping is illustrative (about one layer per package plus Engram-table and lm_head stages). Bottom left: one package — four 815 mm² dies on UCIe, each with HBM3E for KV. Bottom right: die floorplan by area share. Expert-parallel dispatch and combine for a layer stay <b>inside</b> its package (UCIe); only the four-copy residual stream and the forwarded compressed-KV rows cross board links.</figcaption>
+    <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 720" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
+    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1, which is dominated by the hyper-connection Sinkhorn chain rather than by the network.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 6-3. Traffic classes in the V4.1 array</caption>
-    <thead><tr><th>Traffic</th><th>Path</th><th>Per token</th><th>Unit / RTL</th></tr></thead>
+    <caption>Table 6-3. Communication per V4.1 layer in the selected array (batch 1)</caption>
+    <thead><tr><th>Event</th><th>Path</th><th class="r">Payload</th><th class="r">Latency</th><th>Unit / RTL</th></tr></thead>
     <tbody>
-      <tr><td>Residual stream + pending mix</td><td>package → next package (board SerDes)</td><td>4 × hidden values + 4-value mix per layer boundary</td><td>link + package controller <span class="status s-part">in design</span></td></tr>
-      <tr><td>MoE dispatch / combine</td><td>die ↔ die inside the package (UCIe)</td><td>6 routed + 1 shared expert per token, activations quantised FP8</td><td>dispatch/combine engines <span class="status s-part">in design</span></td></tr>
-      <tr><td>Compressed-KV multicast</td><td>KV-source package → consumer packages</td><td>one compressed row + index selection (layer 20: + candidate mask)</td><td>fabric router multicast <span class="status s-part">in design</span></td></tr>
-      <tr><td>Engram rows</td><td>Engram-table package → layers 1 and 14</td><td>24 rows per module</td><td>Engram hash <span class="status s-done">1.52 GHz</span></td></tr>
-      <tr><td>KV cache</td><td>die ↔ its HBM3E stacks</td><td>grows with context; sparse selection reads top-k rows</td><td>KV streaming engine <span class="status s-part">in design</span></td></tr>
-      <tr><td>Token</td><td>last package → package 0</td><td>token id (+ running argmax across vocabulary packages)</td><td>link <span class="status s-done">RTL</span></td></tr>
+      <tr><td>q_a | kv | index-weight rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">3.6 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Shared compressed-KV rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">67.6 KB</td><td class="r m">10 ns + 4 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Attention output, all-reduce (FP32 partials)</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Router scores, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">1.5 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>MoE combine (routed + shared), all-reduce</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>MoE combine <span class="status s-part">in design</span></td></tr>
+      <tr><td>Index top-k merge (8 index-source layers)</td><td>4 dies, UCIe, one-shot</td><td class="r m">16 KB</td><td class="r m">10 ns</td><td>select + merge <span class="status s-part">in design</span></td></tr>
+      <tr><td>Stage hop: 4-copy residual + pre mix + forwarded rows</td><td>package → next, board SerDes</td><td class="r m">41 KB</td><td class="r m">110 ns + 101 ns</td><td>link + package controller <span class="status s-part">in design</span></td></tr>
+      <tr><td>Engram keys + values (layers 1, 14)</td><td>board, prefetched from token ids</td><td class="r m">51 KB</td><td class="r m">off the critical path</td><td>Engram hash <span class="status s-done">RTL</span></td></tr>
+      <tr><td>KV cache</td><td>die ↔ its HBM3E stacks</td><td class="r m">grows with context</td><td class="r m">—</td><td>KV streaming engine <span class="status s-part">in design</span></td></tr>
     </tbody>
   </table></div>
 
   <h3 id="s6-7">6.7 DeepSeek-V4.1 ROM wafer: datapath and layout</h3>
-  <p>The analytical model's best aggregate-throughput design (<code>ROM-N5-native-HBMKV-wafer-hybrid-x12</code>): twelve wafers of 46,225 mm² each, every wafer a 57-region tensor group on an on-wafer mesh, with 43 HBM3E stacks at the edge for KV; wafers form a 12-stage pipeline over wafer-to-wafer SerDes. At 4,096 users it delivers ≈4.95 M tokens/s, 3.18× the best B200 configuration at equal silicon.</p>
+  <p><b>Selected configuration</b>: twelve wafers of 46,225 mm², each holding 57 reticle fields. The earlier analytical design made the whole wafer one tensor group, and at 125 ns per field crossing its six collectives per layer then cost ≈336 µs per token, two-thirds of the token time. The selected design splits each wafer into <b>three square groups of 19 fields</b>. Each group is a tensor group that reduces with one-shot collectives over its own compact region, and the 36 groups form an on-wafer and wafer-to-wafer pipeline. Each wafer has 43 HBM3E stacks at its edge for KV. The wafer's strength remains aggregate throughput, ≈1.0 M tok/s at 4,096 users. Per user it is still behind the array, because a field crossing costs 125 ns against 10 ns for UCIe.</p>
   <figure class="fig">
-    <div class="svgbox"><svg id="v41wafer" viewBox="0 0 1000 600" role="img" aria-label="DeepSeek-V4.1 wafer datapath"></svg></div>
-    <figcaption><b>Figure 6-8.</b> Left: the twelve-wafer pipeline; each wafer holds a band of about three to four layers. Right: inside one wafer — regions for attention halves, expert regions grouped by expert id, the Engram tables and the KV-source regions, all on a 2-D mesh with ≈10 ns hops; HBM3E around the edge. The token's datapath (copper arrows) enters from the previous wafer, crosses its layers region by region — expert dispatch fans out over the mesh and combines back — and leaves over the wafer SerDes.</figcaption>
+    <div class="svgbox"><svg id="v41wafer" viewBox="0 0 1000 640" role="img" aria-label="DeepSeek-V4.1 wafer datapath"></svg></div>
+    <figcaption><b>Figure 6-8.</b> <b>A</b>: the twelve-wafer pipeline. <b>B</b>: one wafer as three 19-field tensor groups. Every field in a group holds 1/19 of every weight of that group's layer, including a slice of every expert, and reductions stay inside the group. The token passes group to group across the wafer, then to the next wafer; HBM3E stacks surround the edge. <b>C</b>: one token's critical path at batch 1 for the whole-wafer group and the 19-field group, set against the array.</figcaption>
   </figure>
+
+  <h3 id="s6-8">6.8 Communication topology selection and the decode critical path</h3>
+  <p>The analytical model prices a layer's serial work as four dependent passes (≈250 ns) plus two all-reduces. The bottom-up model <code>tools/decode_critical_path.py</code> replaces that with each layer's operator dependency graph. Every node is priced with our routed ASAP7 unit depths at 1.034 GHz, from the matrix engine, the stream-unit functions, the V4.1 select, the softplus/sqrt and the divider. Every collective the weight split needs is priced for latency, algorithm and payload bytes, and the control path is priced per instruction. Against the published Taalas HC1 (Llama-3.1-8B) it lands <b>1.67× slower</b> (98 µs against 59 µs per token), so its absolute numbers are pessimistic. The analytical model is 1.45× optimistic on the same anchor, so the truth lies between the two.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-4. Per-user decode rate, analytical model against the critical path (tok/s, batch 1)</caption>
+    <thead><tr><th>Target</th><th class="r">Analytical</th><th class="r">Critical path</th><th>What binds on the critical path</th></tr></thead>
+    <tbody>
+      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,161</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
+      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,728</td><td>compute chain</td></tr>
+      <tr><td>V4.1 array: 4-die group, ring (selected)</td><td class="r m">15,556</td><td class="r m">4,139</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
+      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,997</td><td>collective latency, 336 µs</td></tr>
+      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,779</td><td>collectives 169 µs + chain 131 µs</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>The sweep.</b> 2,038 configurations at fixed silicon. The array was swept over 2, 4 or 8 dies per package; board fabrics chain, ring, mesh, torus, fully connected groups of 2, 4 or 8 packages, or one switch; tensor groups of 1–32 dies; and six reduction algorithms. The wafer was swept over groups of 4–57 fields in square and rectangular shapes. Both were run with experts either striped across the group or placed one per device. The results:</p>
+  <ul>
+    <li><b>The array is insensitive to its network.</b> The best configuration (8-die packages, 8-die group, ring) reaches 4,262 tok/s per user, only 3% above the selected 4-die ring. That group gives up a quarter of the aggregate at 4,096 users (379 K against 504 K tok/s) and needs a 6,520 mm² interposer. A single switch tier costs 3–6%.</li>
+    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,997 tok/s with one 57-field group to 2,779 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
+    <li><b>One-shot wins</b> almost everywhere at decode payloads (1.5–68 KB). Every static algorithm keeps a fixed summation order, so results stay reproducible.</li>
+    <li><b>Placing each expert on its own device is 11% slower</b> than striping at batch 64. It also needs arrivals buffered and summed in expert-id order to stay bit-exact.</li>
+  </ul>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-5. Selected topologies and sensitivities</caption>
+    <thead><tr><th>Target</th><th>Physical</th><th>Logical</th><th class="r">Batch 1 / 64 per user</th><th class="r">Aggregate, 4,096 users</th></tr></thead>
+    <tbody>
+      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">4,139 / 4,034</td><td class="r m">504 K</td></tr>
+      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">4,262 / 3,905</td><td class="r m">379 K</td></tr>
+      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,779 / 2,430</td><td class="r m">1.00 M</td></tr>
+      <tr><td>Wafer + dedicated reduction network (sensitivity)</td><td>express tree, 10 ns per level</td><td>tree</td><td class="r m">3,929 at batch 1</td><td class="r m">—</td></tr>
+      <tr><td>V4.1 array with a 12-cycle divider (hypothetical)</td><td>as selected</td><td>as selected</td><td class="r m">4,995 at batch 1</td><td class="r m">—</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>What this changes in the design.</b> The per-user bound for V4.1 is not bandwidth, links or control. It is the hyper-connection Sinkhorn: 39 dependent normalisation steps of 4×4 per sublayer, 80 per token. Each step is a sequential four-term FP32 sum, an eps add and an IEEE divide, ≈51 cycles or ≈2.1 µs per sublayer at our unit depths, which caps the rate near 6,000 tok/s whatever the silicon. A latency-optimised Sinkhorn unit, bit-exact to the golden, is therefore the next RTL priority. After it come the index top-k merge (≈3.8 µs on each of the eight index-source layers) and the stream-unit functions on the norm and softmax chains (sigmoid 172, exp 121, rsqrt 90 cycles). The analytical model is being corrected to use this critical path and collective census for every target, including the GPU side, and the tables above will be regenerated from it.</p>
 </section>
 
 <!-- 7 -->
@@ -929,7 +967,7 @@ function drawV41Logical(){
   // one layer
   el("text",{x:10,y:252,"font-size":12.5,"font-weight":600,fill:css("--ink")},svg,"Inside one layer (in one package / on one wafer band)");
   const att=[["HC pre-mix","Sinkhorn 4×4","SU"],["RMSNorm","","SU"],["q / kv low-rank","FP8 block linear","block-dot lanes"],["indexer","idx keys · ReLU · Σ heads","ME + SU"],["top-512 select","position order","SELECT"],["sparse attention","window + top-512 · sink","ME + SU (exp)"],["o low-rank + HC post","FP8 · 4-copy residual","block-dot + SU"]];
-  const moe=[["HC pre-mix","","SU"],["RMSNorm","","SU"],["router gate","FP32 · √softplus + bias","ME + softplus"],["top-6 select","ties → lower id","SELECT"],["dispatch","6 routed of 384 + shared","collectives"],["experts","FP4 SwiGLU (clamped)","block-dot lanes"],["combine + HC post","fixed order · weights ×1.5","collectives + SU"]];
+  const moe=[["HC pre-mix","","SU"],["RMSNorm","","SU"],["router gate","FP32 · √softplus + bias","ME + softplus"],["top-6 select","ties → lower id","SELECT"],["broadcast x","to every die of the group","UCIe one-shot"],["experts","¼ of the 6 routed + shared","block-dot lanes"],["combine + HC post","fixed-order reduction","collectives + SU"]];
   function row(items,y,label,fill){
     el("text",{x:10,y:y-8,"font-size":11.5,"font-weight":600,fill:M},svg,label);
     const w=132,g=(1000-20-items.length*w)/(items.length-1);
@@ -942,83 +980,109 @@ function drawV41Logical(){
   el("text",{x:10,y:538,"font-size":10.5,fill:M},svg,"Engram layers (1, 14) add a hash → table-row gather → gated add into the stream before attention.");
 }
 
+function txt(svg,x,y,t,o){o=o||{};return el("text",Object.assign({x:x,y:y,"font-size":o.fs||10.5,fill:o.fill||css("--muted"),"text-anchor":o.anchor||"start","font-weight":o.fw||400},o.cls?{class:o.cls}:{}),svg,t);}
+function head(svg,x,y,t){txt(svg,x,y,t,{fs:12.5,fw:600,fill:css("--ink")});}
+function budgetBar(svg,x,y,w,scale,label,segs){
+  txt(svg,x,y-6,label,{fs:11,fw:600,fill:css("--ink")});
+  let xx=x; segs.forEach(([v,f,st,t])=>{const ww=v*scale; el("rect",{x:xx,y:y,width:ww,height:22,fill:f,stroke:st},svg);
+    if(ww>70) txt(svg,xx+ww/2,y+15,t,{anchor:"middle",fill:css("--ink"),fs:10}); xx+=ww;});
+  return xx;}
+
 function drawV41Array(){
   const svg=document.getElementById("v41array"); svg.innerHTML="";
-  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink");
-  el("text",{x:10,y:18,"font-size":12.5,"font-weight":600,fill:I},svg,"47 packages · 4 boards · board SerDes pipeline (≈100 ns per hop)");
-  const role=i=> i===0?["emb",Bs,B]: i===1?["L0",P,R]: i===2?["Eng 1",Bs,B]: i<=3?["L"+(i-2),P,R]: i<=9?["L"+(i-2),Rs,R]: i<=15?["L"+(i-2),P,R]: i===16?["Eng 14",Bs,B]: i<=22?["L"+(i-3),Rs,R]: i<=42?["L"+(i-3),P,R]:["V"+(i-43),Bs,B];
-  const cols=12,pw=66,ph=34,gx=(1000-20-cols*pw)/(cols-1),gy=18,y0=34;
+  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink"),G=css("--grid");
+  // A: the pipeline
+  head(svg,10,18,"A · 47 packages in a ring pipeline — one token visits them in order");
+  const cols=12,pw=66,ph=32,gx=(1000-20-cols*pw)/(cols-1),gy=16,y0=32;
   const pos=i=>{const r=Math.floor(i/cols),c=r%2===0?i%cols:cols-1-i%cols;return [10+c*(pw+gx),y0+r*(ph+gy)];};
-  for(let i=0;i<47;i++){const [x,y]=pos(i),rl=role(i);
-    el("rect",{x:x,y:y,width:pw,height:ph,rx:3,fill:rl[1],stroke:rl[2],"stroke-width":(i===4||i===10||i===17||i===23)?2.4:1},svg);
-    el("text",{x:x+pw/2,y:y+14,"text-anchor":"middle","font-size":10,fill:M,class:"t-mono"},svg,"pkg "+i);
-    el("text",{x:x+pw/2,y:y+27,"text-anchor":"middle","font-size":10.5,"font-weight":600,fill:I},svg,rl[0]);
+  const users={3:"A",9:"B",16:"C",22:"D",29:"E",35:"F",42:"G"};
+  for(let i=0;i<47;i++){const [x,y]=pos(i);
+    el("rect",{x:x,y:y,width:pw,height:ph,rx:3,fill:Rs,stroke:R},svg);
+    txt(svg,x+pw/2,y+13,"pkg "+i,{anchor:"middle",cls:"t-mono",fs:10});
+    txt(svg,x+pw/2,y+26,"1/47 of weights",{anchor:"middle",fs:8.5});
+    if(users[i]){el("circle",{cx:x+pw-4,cy:y+3,r:8,fill:R},svg); txt(svg,x+pw-4,y+6.5,users[i],{anchor:"middle",fill:"#fff",fs:9.5,fw:600});}
     if(i<46){const [x2,y2]=pos(i+1); if(y2===y) arrow(svg,x2>x?x+pw:x,y+ph/2,x2>x?x2-1:x2+pw+1,y+ph/2,R); else arrow(svg,x+pw/2,y+ph,x+pw/2,y2-1,R);}}
-  for(let r=0;r<4;r++){el("text",{x:998,y:y0+r*(ph+gy)+22,"text-anchor":"end","font-size":9.5,fill:M},svg,"");}
-  el("text",{x:10,y:y0+4*(ph+gy)+8,"font-size":10.5,fill:M},svg,"bold outline: KV-source layers 2, 8, 14, 20 (multicast their compressed row to the rest of the group) · Eng: Engram-table packages · V0–V3: lm_head vocabulary quarters · L = layer (illustrative mapping)");
-  // package detail
-  const py=280; el("text",{x:10,y:py-10,"font-size":12.5,"font-weight":600,fill:I},svg,"One package: 4 dies on UCIe (≈10 ns)");
-  el("rect",{x:10,y:py,width:470,height:320,rx:6,fill:css("--grid"),stroke:css("--rule")},svg);
-  const dies=[[60,py+40],[270,py+40],[60,py+180],[270,py+180]];
-  dies.forEach(([x,y],k)=>{el("rect",{x:x,y:y,width:150,height:100,rx:3,fill:Rs,stroke:R,"stroke-width":1.3},svg);
-    el("text",{x:x+75,y:y+22,"text-anchor":"middle","font-size":11.5,"font-weight":600,fill:I},svg,"die "+k+" · 815 mm²");
-    el("text",{x:x+75,y:y+40,"text-anchor":"middle","font-size":10.5,fill:M},svg,"¼ of the layer's weights");
-    el("text",{x:x+75,y:y+56,"text-anchor":"middle","font-size":10.5,fill:M},svg,"experts striped over banks");
-    el("text",{x:x+75,y:y+72,"text-anchor":"middle","font-size":10.5,fill:M},svg,"decode core + V4.1 units");
-    const hx=(k%2===0)?x-38:x+156; for(let h=0;h<5;h++) el("rect",{x:hx,y:y+4+h*19,width:32,height:15,rx:2,fill:Bs,stroke:B},svg);
-  });
-  el("text",{x:22,y:py+310,"font-size":10,fill:B},svg,"HBM3E ×5 per die (KV cache)");
-  [[210,py+90,270,py+90],[210,py+230,270,py+230],[135,py+140,135,py+180],[345,py+140,345,py+180]].forEach(([a,b,c,d])=>el("line",{x1:a,y1:b,x2:c,y2:d,stroke:R,"stroke-width":3},svg));
-  el("line",{x1:210,y1:py+140,x2:270,y2:py+180,stroke:R,"stroke-width":2,"stroke-dasharray":"3 3"},svg);
-  el("text",{x:240,y:py+168,"text-anchor":"middle","font-size":10,fill:R},svg,"UCIe");
-  el("text",{x:245,y:py+296,"text-anchor":"middle","font-size":10.5,fill:M},svg,"MoE dispatch/combine stays on UCIe · residual in/out over board SerDes");
-  arrow(svg,-2,py+160,8,py+160,R); arrow(svg,480,py+160,498,py+160,R);
-  // die floorplan
-  const fx=530,fy=py,fw=450,fh=320; el("text",{x:fx,y:fy-10,"font-size":12.5,"font-weight":600,fill:I},svg,"Die floorplan by area (815 mm², N5)");
-  const parts=[["ROM (weights, striped banks)",289.4,Rs,R],["compute (decode cores, V4.1 units)",328.9,P,R],["HBM PHY",50,Bs,B],["die/board links",65.2,css("--grid"),M],["overhead",81.5,css("--grid"),M]];
-  let yy=fy; parts.forEach(([n,a,f,st])=>{const h=a/815*fh; el("rect",{x:fx,y:yy,width:fw,height:h,fill:f,stroke:st},svg);
-    el("text",{x:fx+10,y:yy+h/2+4,"font-size":11,fill:I},svg,n); el("text",{x:fx+fw-10,y:yy+h/2+4,"text-anchor":"end","font-size":11,fill:I,class:"t-mono"},svg,a.toFixed(0)+" mm²"); yy+=h;});
+  const [lx,ly]=pos(46),[fx,fy]=pos(0);
+  el("path",{d:`M${lx},${ly+ph/2} C ${lx-40},${ly+ph/2} -40,${fy+ph/2} ${fx-1},${fy+ph/2}`,fill:"none",stroke:M,"stroke-dasharray":"5 4","stroke-width":1.2,"marker-end":"url(#ar)"},svg);
+  txt(svg,10,y0+4*(ph+gy)+6,"Each package holds 1/47 of the weights (≈0.85 of a layer). A token crosses at most 39 package boundaries (40 layers), so it crosses 39 board hops; the ring's closing link returns the token.",{fs:10});
+  txt(svg,10,y0+4*(ph+gy)+21,"Lettered dots: with ≥47 users every package works on a different user's token at the same time. At batch 1 only one package is busy. Where each layer sits is not fixed by the model.",{fs:10});
+  // B: one MoE layer inside a package
+  const by=268; head(svg,10,by,"B · One MoE layer inside a package — the same traffic for every token");
+  const dw=180,dh=150,dx0=20,dg=20,dy=by+62;
+  el("rect",{x:dx0+120,y:by+12,width:520,height:24,rx:3,fill:P,stroke:R},svg);
+  txt(svg,dx0+380,by+28,"① x (5,120 values) is sent to all 4 dies — always",{anchor:"middle",fill:I,fw:600,fs:10.5});
+  const sel=[17,90,141,230,301,366];
+  for(let d=0;d<4;d++){const x=dx0+d*(dw+dg);
+    arrow(svg,dx0+380,by+36,x+dw/2,dy-2,R);
+    el("rect",{x:x,y:dy,width:dw,height:dh,rx:4,fill:Rs,stroke:R,"stroke-width":1.3},svg);
+    txt(svg,x+dw/2,dy+15,"die "+d+" · ¼ of every expert",{anchor:"middle",fill:I,fw:600,fs:10.5});
+    const cw=6.5,ch=5.5; for(let e=0;e<384;e++){const cx=x+12+(e%24)*cw,cy=dy+24+Math.floor(e/24)*ch;
+      el("rect",{x:cx,y:cy,width:cw-1,height:ch-1,fill:sel.includes(e)?R:P,stroke:"none"},svg);}
+    el("rect",{x:x+12,y:dy+24+16*ch+4,width:24*cw-1,height:8,fill:R,opacity:0.55},svg);
+    txt(svg,x+dw/2,dy+24+16*ch+24,"② read ¼ of the 6 chosen + shared",{anchor:"middle",fs:9.5,fill:I});
+    txt(svg,x+dw/2,dy+24+16*ch+36,"→ partial sums",{anchor:"middle",fs:9.5});
+    arrow(svg,x+dw/2,dy+dh,x+dw/2,dy+dh+16,R);}
+  const ry=dy+dh+18;
+  el("rect",{x:dx0,y:ry,width:4*dw+3*dg,height:24,rx:3,fill:R},svg);
+  txt(svg,dx0+(4*dw+3*dg)/2,ry+16,"③ one-shot fixed-order reduction of the partial sums over UCIe (≈25 ns) → next package",{anchor:"middle",fill:"#fff",fw:600,fs:10.5});
+  const nx=830; el("rect",{x:nx,y:dy,width:160,height:dh+42,rx:4,fill:G,stroke:css("--rule")},svg);
+  [["Grid: 384 experts;",I],["copper = the 6 the router",I],["chose for this token.",I],["",M],["Depends on the token:",R],["only which ROM rows",M],["each die reads.",M],["",M],["Does not:",R],["size, destination and",M],["order of every transfer.",M],["No routing tables, no",M],["hot experts, no overflow.",M]].forEach(([t,c],i)=>txt(svg,nx+10,dy+18+i*13.5,t,{fill:c,fs:10,fw:c===R?600:400}));
+  // C: floorplan and time budget
+  const cy0=ry+62; head(svg,10,cy0,"C · Die floorplan (815 mm²) and one token's time at batch 1 (200K context)");
+  const parts=[["ROM",289.4,Rs,R],["compute",328.9,P,R],["PHY",50,Bs,B],["links",65.2,G,M],["overhead",81.5,G,M]];
+  let xx=10; const fw=440/815; parts.forEach(([n,a,f,st])=>{const w=a*fw; el("rect",{x:xx,y:cy0+26,width:w,height:22,fill:f,stroke:st},svg);
+    txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
+  const sc=460/241.6;
+  budgetBar(svg,520,cy0+26,460,sc,"",[[223.7,Rs,R,"compute chain 223.7 µs (Sinkhorn-bound)"],[4.9+2.1,P,M,""],[7.0,R,R,""],[3.3,G,M,""],[0.6,B,B,""]]);
+  txt(svg,520,cy0+62,"241.6 µs per token → 4,139 tokens/s per user (critical path)",{fs:10,fill:I});
+  txt(svg,520,cy0+76,"sweep + KV 7.0 · stage hops 7.0 · control 3.3 · collectives 0.6 µs",{fs:10,fill:R});
 }
 
 function drawV41Wafer(){
   const svg=document.getElementById("v41wafer"); svg.innerHTML="";
   const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink"),G=css("--grid");
-  el("text",{x:10,y:18,"font-size":12.5,"font-weight":600,fill:I},svg,"12-wafer pipeline (wafer SerDes)");
-  const wp=i=>{const r=Math.floor(i/3),c=r%2===0?i%3:2-i%3;return [60+c*95,70+r*125];};
-  for(let i=0;i<12;i++){const [cx,cy]=wp(i); el("circle",{cx:cx,cy:cy,r:40,fill:i===4?Rs:G,stroke:R,"stroke-width":i===4?2.2:1},svg);
-    el("text",{x:cx,y:cy-3,"text-anchor":"middle","font-size":11,"font-weight":600,fill:I},svg,"wafer "+i);
-    el("text",{x:cx,y:cy+12,"text-anchor":"middle","font-size":9.5,fill:M},svg,i===11?"+ lm_head":"≈3–4 layers");
-    if(i<11){const [x2,y2]=wp(i+1); if(y2===cy) arrow(svg,x2>cx?cx+40:cx-40,cy,x2>cx?x2-41:x2+41,cy,R); else arrow(svg,cx,cy+40,cx,y2-41,R);}}
-  el("text",{x:10,y:590,"font-size":10.5,fill:M},svg,"highlighted: the wafer drawn on the right");
-  // detailed wafer
-  const cx=660,cy=285,rad=250;
+  head(svg,10,18,"A · 12 wafers in a pipeline");
+  const wp=i=>{const r=Math.floor(i/3),c=r%2===0?i%3:2-i%3;return [50+c*88,62+r*98];};
+  for(let i=0;i<12;i++){const [cx,cy]=wp(i); el("circle",{cx:cx,cy:cy,r:34,fill:i===4?Rs:G,stroke:R,"stroke-width":i===4?2.2:1},svg);
+    txt(svg,cx,cy-2,"wafer "+i,{anchor:"middle",fs:10.5,fw:600,fill:I}); txt(svg,cx,cy+12,"≈3.3 layers",{anchor:"middle",fs:9});
+    if(i<11){const [x2,y2]=wp(i+1); if(y2===cy) arrow(svg,x2>cx?cx+34:cx-34,cy,x2>cx?x2-35:x2+35,cy,R); else arrow(svg,cx,cy+34,cx,y2-35,R);}}
+  txt(svg,10,452,"11 wafer-to-wafer hops: 1.12 µs per token",{fs:10.5,fill:I});
+  txt(svg,10,467,"highlighted: the wafer drawn on the right",{fs:10});
+  // B: one wafer
+  head(svg,320,18,"B · One wafer: three 19-field tensor groups (G0–G2) in a pipeline");
+  const cx=640,cy=250,rad=205;
   el("circle",{cx:cx,cy:cy,r:rad,fill:G,stroke:css("--rule")},svg);
-  // HBM around the edge
-  for(let k=0;k<43;k++){const a=k/43*2*Math.PI; const x=cx+(rad+12)*Math.cos(a)-7,y=cy+(rad+12)*Math.sin(a)-5; el("rect",{x:x,y:y,width:14,height:10,rx:1.5,fill:Bs,stroke:B},svg);}
-  const n=11,cs=40,gp=4,x0=cx-(n*(cs+gp))/2,y0=cy-(n*(cs+gp))/2;
-  const kind=(r,c)=>{ if(c<=1) return "att"; if(c===2&&r%3===0) return "src"; if(r>=4&&r<=6&&c>=9) return "eng"; return c<=3?"att":"exp";};
-  const colr={att:[P,R],src:[R,R],exp:[Rs,R],eng:[Bs,B]};
-  const cells=[];
-  for(let r=0;r<n;r++)for(let c=0;c<n;c++){const x=x0+c*(cs+gp),y=y0+r*(cs+gp); if(Math.hypot(x+cs/2-cx,y+cs/2-cy)>rad-24) continue;
-    const k=kind(r,c); el("rect",{x:x,y:y,width:cs,height:cs,rx:3,fill:colr[k][0],stroke:colr[k][1],"stroke-width":0.8},svg); cells.push([r,c,x,y,k]);}
-  // mesh lines
-  for(let r=0;r<n;r++) el("line",{x1:x0,x2:x0+n*(cs+gp),y1:y0+r*(cs+gp)+cs/2,y2:y0+r*(cs+gp)+cs/2,stroke:R,"stroke-width":0.5,opacity:0.35},svg);
-  for(let c=0;c<n;c++) el("line",{y1:y0,y2:y0+n*(cs+gp),x1:x0+c*(cs+gp)+cs/2,x2:x0+c*(cs+gp)+cs/2,stroke:R,"stroke-width":0.5,opacity:0.35},svg);
-  // datapath
-  const ctr=(r,c)=>[x0+c*(cs+gp)+cs/2,y0+r*(cs+gp)+cs/2];
-  const [ax,ay]=ctr(5,1),[sx,sy]=ctr(3,2);
-  arrow(svg,cx-rad-30,ay,ax-cs/2-1,ay,R); el("text",{x:cx-rad-30,y:ay-8,"font-size":10.5,fill:I},svg,"from wafer k−1");
-  arrow(svg,ax+cs/2,ay,ax+cs+gp+cs/2-2,ay,R);
-  const [dx,dy]=ctr(5,3); [[2,5],[3,7],[5,6],[7,5],[8,7],[6,8]].forEach(([r,c])=>{const [ex,ey]=ctr(r,c); arrow(svg,dx,dy,ex,ey,R);});
-  const [cbx,cby]=ctr(5,4);
-  el("text",{x:dx-70,y:dy+60,"font-size":10.5,"font-weight":600,fill:I,stroke:css("--panel"),"stroke-width":3,"paint-order":"stroke"},svg,"dispatch → 6 experts + shared");
-  const [ox,oy]=ctr(8,9); arrow(svg,ox+cs/2,oy,cx+rad+34,oy,R); el("text",{x:cx+rad-40,y:oy+26,"font-size":10.5,fill:I},svg,"to wafer k+1");
-  el("path",{d:`M${sx},${sy} C ${sx+60},${sy-60} ${sx+200},${sy-80} ${ctr(2,8)[0]},${ctr(2,8)[1]}`,fill:"none",stroke:R,"stroke-width":1.3,"stroke-dasharray":"4 3","marker-end":"url(#arR)"},svg);
-  el("text",{x:sx+70,y:sy-72,"font-size":10,fill:I},svg,"compressed-KV multicast");
-  // legend
-  const lg=[["attention half-layer regions",P,R],["KV-source regions",R,R],["expert regions (by expert id)",Rs,R],["Engram table regions",Bs,B],["HBM3E stacks (43, KV)",Bs,B]];
-  lg.forEach(([t,f,st],i)=>{el("rect",{x:330,y:540+i*0,width:0,height:0},svg);});
-  lg.forEach(([t,f,st],i)=>{const lx=360+(i%3)*210,ly=i<3?566:584; el("rect",{x:lx,y:ly-9,width:11,height:11,fill:f,stroke:st},svg); el("text",{x:lx+16,y:ly,"font-size":10.5,fill:I},svg,t);});
+  for(let k=0;k<43;k++){const a=k/43*2*Math.PI; el("rect",{x:cx+(rad+11)*Math.cos(a)-7,y:cy+(rad+11)*Math.sin(a)-5,width:14,height:10,rx:1.5,fill:Bs,stroke:B},svg);}
+  const rows=[5,7,8,8,8,8,7,6],fw=40,fh=36,g=6,fields=[];
+  rows.forEach((n,r)=>{const y=cy-(rows.length*(fh+g))/2+r*(fh+g); const x0=cx-(n*(fw+g)-g)/2;
+    for(let c=0;c<n;c++){fields.push([x0+c*(fw+g),y]);}});
+  const ang=f=>Math.atan2(f[1]+fh/2-cy,f[0]+fw/2-cx);
+  const order=fields.map((f,i)=>i).sort((i,j)=>ang(fields[i])-ang(fields[j]));
+  const grp=new Array(fields.length); order.forEach((fi,k)=>grp[fi]=Math.floor(k/19));
+  const gfill=[Rs,Bs,css("--panel")], gstroke=[R,B,I];
+  const hubs=[0,1,2].map(q=>{const mem=fields.map((f,i)=>i).filter(i=>grp[i]===q);
+    const mx=mem.reduce((a,i)=>a+fields[i][0],0)/mem.length, my=mem.reduce((a,i)=>a+fields[i][1],0)/mem.length;
+    return mem.reduce((best,i)=>Math.hypot(fields[i][0]-mx,fields[i][1]-my)<Math.hypot(fields[best][0]-mx,fields[best][1]-my)?i:best,mem[0]);});
+  fields.forEach(([x,y],i)=>{const h=fields[hubs[grp[i]]]; el("line",{x1:x+fw/2,y1:y+fh/2,x2:h[0]+fw/2,y2:h[1]+fh/2,stroke:gstroke[grp[i]],"stroke-width":0.9,opacity:0.5},svg);});
+  fields.forEach(([x,y],i)=>{el("rect",{x:x,y:y,width:fw,height:fh,rx:3,fill:gfill[grp[i]],stroke:gstroke[grp[i]],"stroke-width":0.9},svg);
+    for(let e=0;e<12;e++) el("rect",{x:x+5+(e%6)*5,y:y+6+Math.floor(e/6)*5,width:4,height:4,fill:(e===2||e===9)?R:G},svg);
+    txt(svg,x+fw/2,y+fh-6,"G"+grp[i],{anchor:"middle",fs:8,cls:"t-mono"});});
+  hubs.forEach(hi=>el("rect",{x:fields[hi][0]-2,y:fields[hi][1]-2,width:fw+4,height:fh+4,rx:4,fill:"none",stroke:I,"stroke-width":1.6},svg));
+  const gc=q=>fields[hubs[q]];
+  arrow(svg,cx-rad-45,cy-120,gc(0)[0]-2,gc(0)[1]+fh/2,R); txt(svg,cx-rad-45,cy-128,"from wafer k−1",{fs:10.5,fill:I});
+  [[0,1],[1,2]].forEach(([u,v])=>{const a=gc(u),b=gc(v); el("path",{d:`M${a[0]+fw/2},${a[1]+fh/2} Q ${cx},${cy} ${b[0]+fw/2},${b[1]+fh/2}`,fill:"none",stroke:I,"stroke-width":2,"stroke-dasharray":"6 3","marker-end":"url(#ar)"},svg);});
+  const last=gc(2); arrow(svg,last[0]+fw+2,last[1]+fh/2,cx+rad+45,cy+120,R); txt(svg,cx+rad-20,cy+140,"to wafer k+1",{fs:10.5,fill:I});
+  const nx=872; el("rect",{x:nx,y:40,width:122,height:250,rx:4,fill:P,stroke:css("--rule")},svg);
+  [["Each group (G0–G2) is",I],["one tensor group: every",I],["field holds 1/19 of",I],["every weight of its",I],["layer, incl. a slice of",I],["every expert.",I],["",M],["Reductions stay inside",M],["the group (thin lines to",M],["the outlined field);",M],["dashed: group-to-group",M],["pipeline hop.",M],["",M],["",M],["",M],["HBM3E ×43 at the edge",B],["holds the KV cache.",B]].forEach(([t,c],i)=>txt(svg,nx+8,58+i*13.5,t,{fs:10,fill:c}));
+  // C: time budget comparison
+  const y=490; head(svg,10,y,"C · One token's critical path at batch 1 (200K context), same scale");
+  const sc=(1000-20-170)/500.8;
+  const rowsC=[["array, 4-die groups",[[223.7,Rs,R,"compute chain 223.7"],[7.0,P,M,""],[7.0,R,R,""],[3.9,G,M,""]],"241.6 µs · 4,139 tok/s"],
+    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"500.8 µs · 1,997 tok/s"],
+    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"359.9 µs · 2,779 tok/s"]];
+  rowsC.forEach(([lab,segs,tot],i)=>{const yy=y+24+i*36; txt(svg,10,yy+15,lab,{fs:10.5,fw:600,fill:I});
+    const end=budgetBar(svg,170,yy,0,sc,"",segs); txt(svg,990,yy-3,tot,{fs:10,fill:R,anchor:"end"});});
+  txt(svg,10,y+140,"copper: compute chain (Sinkhorn-bound) · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
 }
 
 function drawAll(){
