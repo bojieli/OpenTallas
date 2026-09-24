@@ -179,9 +179,10 @@ def xr_product(X, R):
     return acc
 
 
-def div(x, t):
+def div(x, t, bias=None, thresholds=2):
     """Correctly rounded x / t (x >= 0, t > 0, finite) on bit patterns.  Returns (bits, overflow).
-    Mirrors ot_hdc_sk_div with SUBN = 1."""
+    Mirrors ot_hdc_sk_quot with SUBN = 1.  `bias` / `thresholds` build the DEFECTIVE variants the
+    directed search below hunts for (a seed without its bias, a check without the second remainder)."""
     ex, mx = unpack(x)
     et, mt = unpack(t)
     xz = mx == 0
@@ -190,16 +191,18 @@ def div(x, t):
     lt = (X < T).astype(np.int64)
     Xp = X << lt
     E = EX - ET - lt
-    R = seed(T)
+    R = seed(T) if bias is None else (seed_sum(T) - bias) >> (FS - FR)
     Mp = xr_product(X, R) >> (FR - lt)                          # floor(X' R 2^23), truncated product
     s = np.clip(-126 - E, 0, 25)
     Ms = Mp >> s
     one = np.int64(1)
     r1 = (Xp << (24 - np.minimum(s, 24))) - (2 * Ms + 1) * T
     r2 = r1 - 2 * T
-    assert np.all((r1 >= -T) & (r1 < 3 * T)), "M' outside {M-1, M}"   # so r1, r2 fit 27-bit two's complement
-    inc = ((r1 > 0) | ((r1 == 0) & (Ms & 1 == 1))).astype(np.int64) + \
-          ((r2 > 0) | ((r2 == 0) & (Ms & 1 == 0))).astype(np.int64)
+    if bias is None:                                            # so r1, r2 fit 27-bit two's complement
+        assert np.all((r1 >= -T) & (r1 < 3 * T)), "M' outside {M-1, M}"
+    inc = ((r1 > 0) | ((r1 == 0) & (Ms & 1 == 1))).astype(np.int64)
+    if thresholds == 2:
+        inc = inc + ((r2 > 0) | ((r2 == 0) & (Ms & 1 == 0))).astype(np.int64)
     M = Ms + inc
     ovm = (s == 0) & (M >> 24 == 1)
     M = np.where(ovm, one << 23, M)
@@ -208,6 +211,49 @@ def div(x, t):
     zero = xz | (s >= 25)
     out = np.where(zero, 0, (field << 23) | (M & 0x7FFFFF))
     return out, (~zero) & (field >= 255)
+
+
+def directed_quotients(rng, n):
+    """Operand pairs (x, t in [1, 2), bit patterns) at the two corners of the divide's proof, found by
+    search with the integer model -- a random operand almost never lands on them:
+    * seed_overshoot: T where the seed WITHOUT its bias would exceed 1/T, and X' with q' just below an
+      integer, so an unbiased seed would give M' = M + 1 (and a wrong quotient);
+    * second_threshold: M' = M - 1 (the seed's undershoot pushed the product below an integer) while
+      the quotient's fraction is above 1/2, so only the second remainder (M' + 3/2) rounds it right.
+    Returns ({class: (x_bits, t_bits) that separate the defective variant}, {class: all pairs tried},
+    {class: pairs tried}); the tried pairs are themselves near-boundary quotients worth simulating."""
+    t_all = np.arange(1 << 23, 1 << 24, dtype=np.int64)
+    raw = seed_sum(t_all) >> (FS - FR)
+    one = np.int64(1) << (FR + 23)
+    over = t_all[raw * t_all > one]                               # the bias is what keeps these one-sided
+    under = one / t_all - seed(t_all)                             # undershoot in units of 2^-FR
+    deep = t_all[np.argsort(-under)[:1 << 16]]                    # the seed's worst undershoots
+    out, cand, tried = {}, {}, {}
+
+    def pairs(T, Xp):
+        lt = Xp >= (1 << 24)
+        ok = (~lt | (Xp % 2 == 0)) & (Xp >= T) & (Xp < 2 * T)
+        T, Xp, lt = T[ok], Xp[ok], lt[ok]
+        X = np.where(lt, Xp >> 1, Xp)
+        return (127 << 23) | (X - (1 << 23)), (127 << 23) | (T - (1 << 23))
+
+    # q' just below an integer K: X' = ceil(K T / 2^23) - 1
+    T = rng.choice(over, n)
+    K = rng.integers(1 << 23, 1 << 24, n)
+    x, t = pairs(T, ((K * T + (1 << 23) - 1) >> 23) - 1)
+    bad = div(x, t, bias=0)[0] != div(x, t)[0]
+    out["seed_overshoot"], tried["seed_overshoot"] = (x[bad], t[bad]), int(len(x))
+    cand["seed_overshoot"] = (x, t)
+    # q' just above K + 1/2 with X' near 4 (X near 2, X < T): the largest undershoot in M' units
+    T = rng.choice(deep[deep > (15 << 20)], n)
+    K = rng.integers(1 << 23, 1 << 24, n)
+    Xp = ((2 * K + 1) * T + (1 << 24) - 1) >> 24
+    Xp = Xp + rng.integers(0, 4, n)
+    x, t = pairs(T, Xp + (Xp & 1))
+    bad = div(x, t, thresholds=1)[0] != div(x, t)[0]
+    out["second_threshold"], tried["second_threshold"] = (x[bad], t[bad]), int(len(x))
+    cand["second_threshold"] = (x, t)
+    return out, cand, tried
 
 
 def check_model(n, seed_=1):

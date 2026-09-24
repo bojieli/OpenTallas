@@ -18,14 +18,21 @@ Every expected output comes from tools/hdc_golden_v41.py:
   near-overflow rows, and fail-closed cases: NaN, +/-Inf, negative, zero row,
   overflowing row);
 * ARITHMETIC alone (tb_hdc_sk_arith, one operation per clock): millions of
-  positive adds, general divides (subnormal operands and results, exact
-  ties) and steady-step divides, against hdc_golden add / div.
+  positive adds (also in the chained form, the running sum's exponent
+  arriving as a late increment), general divides (subnormal operands and
+  results, exact ties) and steady-step divides, against hdc_golden add / div,
+  plus DIRECTED divides at the two corners of the multiply-and-check proof
+  (quotients just below an integer where an unbiased seed would overshoot,
+  just above a midpoint where the seed undershoots most), found by searching
+  with the integer model of tools/gen_hdc_sinkhorn_recip_rom.py.
 
 The whole unit runs under Verilator 4.038 in parallel shards (back to back
 and with idle gaps / early presentation), a slice under Icarus; the output
 latency must equal 2 ITERS + 1 clock edges on every case.  A mutation check
 applies single deliberate defects to copies of the RTL and requires the
-checkers to reject every one.  tools/gen_hdc_sinkhorn_recip_rom.py --check
+checkers to reject every one, except mutants recorded as EQUIVALENT with the
+reason (a margin of the design that the data cannot reach, or a true
+equivalence), which are run and reported but not counted.  tools/gen_hdc_sinkhorn_recip_rom.py --check
 (the seed's exhaustive one-sided bound and the integer model) runs too.
 Writes results/rtl/hdc_v41_sinkhorn_campaign.json with the sha256 of every input.
 """
@@ -310,6 +317,27 @@ def edge_arith_lines():
     return lines
 
 
+def directed_arith_lines(rng, n, keep):
+    """Divides at the corners of the multiply-and-check proof (GEN.directed_quotients): every pair that
+    separates a defective variant, plus `keep` near-boundary pairs per class, as op 1 and op 2 lines."""
+    hits, cand, tried = GEN.directed_quotients(rng, n)
+    lines = []
+    sim = {}
+    for cls in cand:
+        x = np.concatenate([hits[cls][0], cand[cls][0][:keep]])
+        t = np.concatenate([hits[cls][1], cand[cls][1][:keep]])
+        with np.errstate(all="ignore"):
+            q = b32(G.div(f32(x), f32(t)))
+        for op in (1, 2):
+            lines += [f"{op} {a:x} {b:x} {c:x} 0\n" for a, b, c in zip(x, t, q)]
+        sim[cls] = int(len(x))
+    rec = {"classes": {c: {"pairs_tried": tried[c], "pairs_separating_the_defective_variant": int(len(hits[c][0])),
+                           "pairs_simulated": sim[c]} for c in cand},
+           "note": "seed_overshoot: q' just below an integer over significands where an unbiased seed exceeds 1/T; "
+                   "second_threshold: q' just above a midpoint over the seed's deepest undershoots with X' near 4"}
+    return lines, rec
+
+
 # -- simulation ----------------------------------------------------------------------------------------
 def write_unit_vectors(path: Path, e_bits, iters=ITERS):
     e_bits = np.asarray(e_bits, np.int64).reshape(len(e_bits), 16)
@@ -400,11 +428,19 @@ MUTATIONS = (
      "before": "assign ovf = up & (eg1[7:0] == 8'hFF);", "after": "assign ovf = 1'b0;"},
     {"id": "seed_bias_removed", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
      "description": "drop the one-unit bias: the seed may exceed 1/T and M' may be M + 1",
-     "before": "assign rows[30*W +: W] = 48'd14 - 48'd262144;", "after": "assign rows[30*W +: W] = 48'd14;"},
+     "before": "assign rows[30*W +: W] = 48'd14 - 48'd262144;", "after": "assign rows[30*W +: W] = 48'd14;",
+     "equivalent": "a margin, not load-bearing here: without the bias the seed exceeds 1/T by under one unit of 2^-28 on some significands, but the truncated X*R product (columns below 2^20 dropped) lowers M' by more than that overshoot lifts it; the directed search (seed_overshoot) found no operand pair where the unbiased seed changes a quotient"},
+    {"id": "seed_c2_term_dropped", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "description": "the seed loses its quadratic term: R overshoots 1/T by up to 2^-20",
+     "before": "ot_hdc_sk_sq_rom u_sq (.dmh(dm[12:4]), .sq(sq));", "after": "assign sq = 14'd0;"},
     {"id": "quot_single_threshold", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
      "description": "ignore the second remainder: never M' + 2",
      "before": "wire [24:0] mf = inc2 ? mplus2 : (inc1 ? mplus1 : {1'b0, ms});",
-     "after": "wire [24:0] mf = inc1 ? mplus1 : {1'b0, ms};"},
+     "after": "wire [24:0] mf = inc1 ? mplus1 : {1'b0, ms};",
+     "equivalent": "a margin, not load-bearing here: M' + 2 needs the seed's undershoot to push M' a unit low while the quotient's fraction exceeds 1/2, i.e. an undershoot above 1/2 unit of M'; the exhaustive seed bound (max 2.72 x 2^-28) plus the truncation allow at most 0.53, and the directed search (second_threshold) found no pair that reaches it -- the second remainder is kept so the proof needs only the 2^-26 window"},
+    {"id": "quot_midpoint_at_candidate", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "description": "the first remainder tests q' against M' instead of M' + 1/2 (drops the -T row)",
+     "before": "assign rows[25*W +: W] = ~{3'b000, tm};", "after": "assign rows[25*W +: W] = {W{1'b1}};"},
     {"id": "quot_ties_never_up", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
      "description": "an exact tie (only reachable on a subnormal grid) never rounds to the odd side",
      "before": "wire inc1 = (!neg1 & !z1) | (z1 & ms[0]);", "after": "wire inc1 = (!neg1 & !z1);"},
@@ -426,7 +462,11 @@ MUTATIONS = (
      "after2": "ot_hdc_sk_add u_s2 (.ea(g1), .ua(u1), .ma(m1), .eb(ee[1]), .mb(mm[1]),"},
     {"id": "chain_late_increment_ignored", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
      "description": "the chained add ignores the late exponent increment when ordering the operands",
-     "before": "wire        a_ge  = ua ? age_c[1] : age_c[0];", "after": "wire        a_ge  = age_c[0];"},
+     "before": "wire        a_ge  = ua ? age_c[1] : age_c[0];", "after": "wire        a_ge  = age_c[0];",
+     "equivalent": "a true equivalent mutant: the two orders differ only when a's incremented exponent equals b's, where the alignment distance is 0 either way and the sum is the same"},
+    {"id": "chain_alignment_ignores_increment", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "description": "the chained add aligns the early operand for the un-incremented running-sum exponent",
+     "before": "wire [24:0] shb   = ua ? shb_c[1] : shb_c[0];", "after": "wire [24:0] shb   = shb_c[0];"},
     {"id": "no_transpose", "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
      "description": "the steady step writes rows back untransposed (normalises rows twice)",
      "before": "assign s_out[4*c + r] = {1'b0, q};", "after": "assign s_out[4*r + c] = {1'b0, q};"},
@@ -454,6 +494,8 @@ def mutant_sources(spec, d: Path):
 def run_mutation(spec, d: Path, unit_vec: Path, arith_vec: Path):
     srcs = mutant_sources(spec, d)
     res = {"id": spec["id"], "source": spec["source"], "description": spec["description"]}
+    if "equivalent" in spec:
+        res["equivalent"] = spec["equivalent"]
     caught_by = []
     rc, log, _ = build_verilator(d / f"obj_mu_{spec['id']}", "tb_hdc_sinkhorn", srcs)
     if rc == 0:
@@ -518,6 +560,9 @@ def run(args) -> dict:
         arng = np.random.default_rng(7)
         lines, acounts = arith_vectors(arng, args.arith_per_pair)
         edge = edge_arith_lines()
+        n_edge = len(edge)
+        dlines, directed = directed_arith_lines(np.random.default_rng(11), args.directed, args.directed_keep)
+        edge = edge + dlines                     # the front block: every mutation run sees all of it
         lines = edge + lines
         order = arng.permutation(len(lines))
         per_a = -(-len(lines) // args.shards)
@@ -588,8 +633,9 @@ def run(args) -> dict:
             with ThreadPoolExecutor(args.jobs) as ex:
                 mutations = list(ex.map(lambda sp: run_mutation(sp, s, mu_unit, mu_arith), MUTATIONS))
             for m in mutations:
-                print("mutation", m["id"], "caught" if m["caught"] else "MISSED", m["caught_by"], flush=True)
-            ok &= all(m["caught"] for m in mutations)
+                print("mutation", m["id"], "caught" if m["caught"] else
+                      ("not caught (equivalent)" if m.get("equivalent") else "MISSED"), m["caught_by"], flush=True)
+            ok &= all(m["caught"] for m in mutations if not m.get("equivalent"))
 
         icarus = icarus_fut.result() if icarus_fut else {}
         icarus_pool.shutdown()
@@ -616,7 +662,8 @@ def run(args) -> dict:
         "real_data": real_meta,
         "random_classes": class_counts,
         "unit": {"counts": unit_ok_counts, "runs": unit_runs, "vectors_sha256": vec_sha},
-        "arithmetic": {"generated": acounts, "edge_pairs": len(edge) // 2, "totals": arith_total,
+        "arithmetic": {"generated": acounts, "edge_pairs": n_edge // 2, "directed_quotients": directed,
+                       "totals": arith_total,
                        "shards": arith_runs},
         "icarus": icarus,
         "mutations": mutations,
@@ -634,7 +681,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--output", type=Path, default=OUT)
     ap.add_argument("--positions", type=int, default=REAL_POSITIONS)
-    ap.add_argument("--random-cases", type=int, default=200_000)
+    ap.add_argument("--random-cases", type=int, default=1_000_000)
+    ap.add_argument("--directed", type=int, default=4_000_000, help="pairs tried per directed-quotient class")
+    ap.add_argument("--directed-keep", type=int, default=100_000, help="near-boundary pairs simulated per class")
     ap.add_argument("--arith-per-pair", type=int, default=60_000)
     ap.add_argument("--model-samples", type=int, default=100_000)
     ap.add_argument("--shards", type=int, default=8)
