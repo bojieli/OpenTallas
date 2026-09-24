@@ -118,7 +118,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # figures (36) to the per-iteration records in results/rtl/hdc_iterations/
     # and the routed records in results/physical_abi3/asap7/hdc/.
     # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 739
+    # 801: docs/ANALYTICAL_REPORT.md gains the serial-latency section (the
+    # before/after per-target table and the candidate-model tables), 80 -> 142.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 801
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -306,13 +308,14 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # `make roofline` reruns and this literal has to move with it -- which is
     # the same discipline the checker imposes on prose. It was 9.50 before the
     # per-model design rule, 8.98 after it, 5.76 after the scale-out link
-    # evidence was corrected, and 6.16 after the 2026-09-23 framework revision.
+    # evidence was corrected, 6.16 after the 2026-09-23 framework revision, and
+    # 6.58 once the serial path came from the per-token operator graph.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 6.16 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 6.58 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 6.16x.\n")
+        "The ratio is 6.58x.\n")
     code, out = _run(document)
     assert code == 0, out
 

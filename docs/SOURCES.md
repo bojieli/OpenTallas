@@ -20,8 +20,8 @@ earlier generated report.
 ### Power-output boundary
 
 The rebuilt power model lands at **461.7 W against the A100's 400 W TDP
-(1.15×, PASS)** and **87.6 W against the HC1 card's 200–250 W band
-(0.44×–0.35×, FAIL)**. Vendor TDPs and system-power envelopes recorded below
+(1.15×, PASS)** and **77.8 W against the HC1 card's 200–250 W band
+(0.39×–0.31×, FAIL)**. Vendor TDPs and system-power envelopes recorded below
 are inputs, graded where they appear, and they stay. Repository-produced watts,
 joules per token, and W/mm² may be quoted only as **model outputs with these two
 gates and their assumed terms attached**; they are not measured silicon power.
