@@ -555,7 +555,7 @@ def run(args) -> dict:
             chunk = e_rand[i * per:(i + 1) * per]
             if len(chunk) == 0:
                 continue
-            rand_faults += write_unit_vectors(v, b32(chunk))
+            rand_faults += write_unit_vectors(v, chunk)             # already bit patterns
             shards.append((v, len(chunk)))
         arng = np.random.default_rng(7)
         lines, acounts = arith_vectors(arng, args.arith_per_pair)
@@ -625,7 +625,7 @@ def run(args) -> dict:
             mu_e = [b32(e_real[pick])]
             for c in sorted(set(labels)):
                 ii = [i for i, lab in enumerate(labels) if lab == c][:120]
-                mu_e.append(b32(e_rand[ii]))
+                mu_e.append(e_rand[ii].reshape(len(ii), 16))
             write_unit_vectors(mu_unit, np.concatenate(mu_e))
             mu_arith = s / "mut_arith.vec"
             mu_arith.write_text("".join(lines[:len(edge)] + [lines[len(edge) + j] for j in
