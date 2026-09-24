@@ -54,6 +54,10 @@ def test_physical_records_route_the_campaign_sources():
         design = phys["design"]
         assert design["top"] == top and "pnr" in phys["stages_completed"], top
         assert design["clock_period_ns"] <= 1.0 and design["drc"] == 0, top
+        assert design["closed"] is True and phys["acceptance"]["status"] == "pass", top
+        assert design["fmax_hz"] >= 1e9, top
+        if top == "ot_rom_pkg_ctrl":
+            assert design["parameters"] == fabric.CTRL_PARAMS
         for src in design["sources"]:
             assert src["sha256"] == record["input_sha256"][src["path"]], (top, src["path"])
         # text reports only: no netlists committed

@@ -239,7 +239,8 @@ oracle. In each run, every user starts from an empty KV cache, runs the
   point-to-point and switched with the multicast lm_head.
 
 **Multicast effect.** With one user, multicast shortens each token step by
-the chained parts' serial compute and hops. With every package busy, the ring
+the chained parts' serial compute and hops: from 32,681 to 28,461 cycles at 6
+packages, and from 34,045 to 27,529 cycles at 12. With every package busy, the ring
 is limited by its slowest stage. Multicast then changes throughput only
 slightly, because the parts' extra final-norm work is off the critical
 stage. Moving the norm onto the last body package instead would make that
@@ -264,12 +265,21 @@ Both blocks were routed on ASAP7 with `tools/run_abi3_physical.py` at a
 `results/physical_abi3/asap7/rom/<top>/`.
 
 * `ot_rom_fabric_router`: 5 ports, 512-bit flits, 4-flit buffers, a 32-entry
-  table.
+  table. It closes at 1,195 MHz with a 40 in 100 slew margin
+  (`--slew-margin-percent 40`); without the margin it reached the same clock
+  but left max-slew violations. Standard-cell area is about 10,100 µm², of
+  which the five input buffers and output registers are most of the 13,226
+  flip-flops. The critical path runs from a buffer read pointer through the
+  allocator to the drop counter.
 * `ot_rom_pkg_ctrl`: the superset configuration (package 0 reducing four
   parts, sending HIDDEN and RESULT, combining a running argmax), with the
-  core as an external port bundle.
+  core as an external port bundle. It closes at 1,162 MHz with no margin
+  options, at about 3,400 µm². The critical path is the reduction: the
+  registered RESULT's user selects that user's partial argmax, compares it,
+  and writes it back.
 
-Each record gives Fmax, area, and the signal-integrity counts.
+Both records are acceptance `pass`: setup and hold met, and zero DRC,
+antenna, max-slew, max-cap and max-fanout violations.
 
 ## Reproduce
 
@@ -278,6 +288,10 @@ python3 tools/rtl_rom_fabric_campaign.py
 python3 tools/rtl_hdc_array_campaign.py
 python3 tools/run_abi3_physical.py --view asap7 --top ot_rom_fabric_router \
     --source rtl/rom/ot_rom_fabric_router.sv --clock-period-ns 0.9 --false-path-io \
-    --slew-margin-percent 20 --max-fanout 16 --stages synth,pnr --output <dir>/physical.json
+    --slew-margin-percent 40 --stages synth,pnr --output <dir>/physical.json
+python3 tools/run_abi3_physical.py --view asap7 --top ot_rom_pkg_ctrl --source rtl/rom/ot_rom_pkg_ctrl.sv \
+    --param SOURCE=1 --param RESULT_PARTS=4 --param SEND_HIDDEN=1 --param SEND_RESULT=1 \
+    --param COMBINE_IN=1 --param ROW0=1024 --param TXB=8 \
+    --clock-period-ns 0.9 --false-path-io --stages synth,pnr --output <dir>/physical.json
 python3 -m pytest tests/test_rom_fabric_rtl.py tests/test_hdc_rtl.py
 ```
