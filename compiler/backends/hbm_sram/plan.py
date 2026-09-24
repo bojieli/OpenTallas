@@ -3981,6 +3981,19 @@ def _bind_state_tensors(
         writes = list(kernel.state_writes)
         reads = list(kernel.state_reads) or writes
         outs = [n for n in kernel.outputs if tensors[n].role == "state"]
+        if kernel.kind == "STATE_READ":
+            # A STATE_READ's output is a re-presentation of the state whatever
+            # role the graph gives it.  V4.1 declares 72 of them ``activation``
+            # -- every ``compressed_view.valid``, every shared-index
+            # ``indexer.reuse.selection`` and every ``pool_read.admission`` --
+            # and keying on the role left all 72 unbound, so each was placed in
+            # an activation arena that NOTHING writes.  Measured at a 10-token
+            # prompt: layer 3's reused selection read 512 zeros per query (KV
+            # row 0, 512 extra times) instead of layer 2's published indices,
+            # and every compressed-KV view read whatever activation last
+            # occupied its arena slot.  No verifier rule can see it: the view is
+            # in bounds and the object is legal, it is just the wrong object.
+            outs = list(kernel.outputs)
         if not outs and writes:
             outs = [
                 n

@@ -3211,9 +3211,16 @@ class _Emitter:
         # base and dropping it would address the first band's members instead --
         # legal offsets, no trap, another layer's KV history.
         offset = member * window + column
-        loop = loops.get("layer")
-        if len(state.members) > 1 and loop is not None:
-            terms.append(DynamicTerm.loop(loop, window))
+        terms.extend(
+            self._state_layer_terms(
+                plan,
+                loops.get("layer"),
+                physical_id,
+                member,
+                window,
+                self._operand_state_resolver(plan, operand, mapping),
+            )
+        )
         row_loop = (
             loops.get("row")
             if "row" in operand.terms and not whole_cache_access
@@ -3276,6 +3283,157 @@ class _Emitter:
                 else (int(operand.extent_bias) if walks_row else 0)
             ),
         )
+
+    def _band_column(self, plan: KernelPlan) -> list[Kernel] | None:
+        """The kernel this body kernel stands for in each iteration of its band.
+
+        A band is emitted once, carrying its first iteration's kernels, so the
+        kernel at the same position of iteration ``i`` is what the loop body
+        executes as on that iteration.  ``None`` outside a multi-iteration band.
+        """
+        if plan.band_id is None:
+            return None
+        band = self.plan.band(plan.band_id)
+        if band.layer_count <= 1:
+            return None
+        cache: dict[int, list[Kernel]] = self.__dict__.setdefault(
+            "_band_columns", {}
+        )
+        if plan.index in cache:
+            return cache[plan.index]
+        by_layer = self.__dict__.get("_by_layer_cache")
+        if by_layer is None:
+            by_layer = kernels_by_layer_key(self.graph)
+            self.__dict__["_by_layer_cache"] = by_layer
+
+        def block(first: int) -> list[Kernel]:
+            kernels: list[Kernel] = []
+            for offset in range(band.period):
+                kernels.extend(by_layer.get(first + offset, ()))
+            return kernels
+
+        first = block(band.first_layer)
+        positions = [k.index for k in first]
+        if plan.index not in positions:
+            return None
+        position = positions.index(plan.index)
+        column: list[Kernel] = []
+        for iteration in range(band.layer_count):
+            kernels = block(band.first_layer + iteration * band.period)
+            if position >= len(kernels):
+                raise LoweringError(
+                    f"band {band.band_id} iteration {iteration} has no kernel at "
+                    f"body position {position} ({plan.kernel_id})"
+                )
+            column.append(kernels[position])
+        cache[plan.index] = column
+        return column
+
+    def _operand_state_resolver(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        mapping: Sequence[Any],
+    ):
+        """How to find this operand's state binding in another band iteration.
+
+        The counterpart operand is the tensor at the same IR position of the
+        counterpart kernel.  When the tensor itself is unbound, the binding came
+        from the kernel's declared state names, and the counterpart's name at
+        the same position is used instead.
+        """
+        kernel = self.kernels[plan.index]
+        tensors = kernel.inputs if operand.direction == "in" else kernel.outputs
+        position = (
+            list(tensors).index(operand.tensor_id)
+            if operand.tensor_id in tensors
+            else None
+        )
+        names = list(
+            kernel.state_writes if operand.direction == "out" else kernel.state_reads
+        ) or list((*kernel.state_writes, *kernel.state_reads))
+        name_position = next(
+            (
+                i
+                for i, name in enumerate(names)
+                if list(self.plan.state_of_resource.get(name, ()))[:2]
+                == list(mapping)[:2]
+            ),
+            None,
+        )
+
+        def resolve(other: Kernel) -> Sequence[Any] | None:
+            if position is not None:
+                others = other.inputs if operand.direction == "in" else other.outputs
+                if position < len(others):
+                    bound = self.plan.state_of_tensor.get(others[position])
+                    if bound is not None:
+                        return bound
+            if name_position is None:
+                return None
+            other_names = list(
+                other.state_writes if operand.direction == "out" else other.state_reads
+            ) or list((*other.state_writes, *other.state_reads))
+            if name_position >= len(other_names):
+                return None
+            return self.plan.state_of_resource.get(other_names[name_position])
+
+        return resolve
+
+    def _state_layer_terms(
+        self,
+        plan: KernelPlan,
+        loop: int | None,
+        physical_id: str,
+        member: int,
+        window: int,
+        resolve,
+    ) -> list[DynamicTerm]:
+        """The layer-loop term of a state view, derived from what each iteration names.
+
+        A merged state resource is a row of windows, and the layer induction
+        variable selects one.  The step used to be ONE WINDOW, unconditionally,
+        which is right only when iteration ``i`` of the band names the resource
+        at ``base + i``.  V4.1 breaks that three ways: a layer that REUSES
+        another layer's compressed KV or index selection names the SAME resource
+        on every iteration (layers 15-19 all read layer 14's), the pool gives
+        that resource one window per consuming iteration, and the writer fills
+        only the first -- so iterations 1.. read windows nothing ever wrote,
+        legal offsets and no trap.  The step is therefore read off the band
+        itself: the member every iteration's counterpart binds, which must be
+        one physical resource and an arithmetic progression.  A constant member
+        takes no term; a progression takes its own stride; anything else is
+        refused rather than addressed wrongly.
+        """
+        state = self.plan.state(physical_id)
+        if loop is None or len(state.members) <= 1:
+            return []
+        column = self._band_column(plan)
+        if column is None:
+            return [DynamicTerm.loop(loop, window)]
+        members: list[int] = []
+        for iteration, other in enumerate(column):
+            bound = resolve(other)
+            if bound is None or str(bound[0]) != str(physical_id):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: band iteration {iteration} "
+                    f"({other.kernel_id}) binds state {bound!r}, not a member of "
+                    f"{physical_id!r}; one loop-body view cannot address both"
+                )
+            members.append(int(bound[1]))
+        if members[0] != int(member):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: band iteration 0 binds member "
+                f"{members[0]} of {physical_id!r} but the view is based at {member}"
+            )
+        step = members[1] - members[0] if len(members) > 1 else 0
+        if any(m != members[0] + i * step for i, m in enumerate(members)):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: the band's iterations bind members "
+                f"{members} of {physical_id!r}, which no single layer-loop stride "
+                "addresses"
+            )
+        return [DynamicTerm.loop(loop, step * window)] if step else []
 
     def _state_row_width(self, tensor_id: str) -> int:
         """Elements one position contributes: the product of the non-position axes."""
@@ -3641,9 +3799,27 @@ class _Emitter:
         _committed, direct = self._state_objects[physical_id]
         window = state.capacity_rows * state.row_elements
         terms = list(dynamic)
-        loop = self._layer_loop
-        if len(state.members) > 1 and loop is not None:
-            terms.append(DynamicTerm.loop(loop, window))
+        kernel = self.kernels[plan.index]
+        declared = [*kernel.state_writes, *kernel.state_reads]
+        name_position = (
+            declared.index(resource_id) if resource_id in declared else None
+        )
+
+        def resolve(other: Kernel) -> Sequence[Any] | None:
+            if name_position is None:
+                # Not one of the kernel's declared names: the same resource on
+                # every iteration, which is what a constant member means.
+                return self.plan.state_of_resource.get(resource_id)
+            names = [*other.state_writes, *other.state_reads]
+            if name_position >= len(names):
+                return None
+            return self.plan.state_of_resource.get(names[name_position])
+
+        terms.extend(
+            self._state_layer_terms(
+                plan, self._layer_loop, physical_id, member, window, resolve
+            )
+        )
         return self._view(
             object_id=direct,
             dtype=dtype_of(state.dtype),
@@ -5633,9 +5809,25 @@ class _Emitter:
         # base and dropping it would address the first band's members instead --
         # legal offsets, no trap, another layer's KV history.
         offset = member * window + column
-        loop = loops.get("layer")
-        if len(state.members) > 1 and loop is not None:
-            terms.append(DynamicTerm.loop(loop, window))
+
+        def resolve(other: Kernel) -> Sequence[Any] | None:
+            bound = (
+                self.plan.state_of_tensor.get(other.outputs[0])
+                if other.outputs
+                else None
+            )
+            if bound is None:
+                for name in other.state_writes:
+                    bound = self.plan.state_of_resource.get(name)
+                    if bound is not None:
+                        break
+            return bound
+
+        terms.extend(
+            self._state_layer_terms(
+                plan, loops.get("layer"), physical_id, member, window, resolve
+            )
+        )
         row_loop = loops.get("row")
         if row_loop is not None:
             terms.append(
