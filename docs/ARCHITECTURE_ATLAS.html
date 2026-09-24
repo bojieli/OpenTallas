@@ -112,6 +112,9 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <a class="l2" href="#s6-2">6.2 ROM array</a>
   <a class="l2" href="#s6-3">6.3 ROM wafer</a>
   <a class="l2" href="#s6-4">6.4 Qwen3-8B reticle</a>
+  <a class="l2" href="#s6-5">6.5 V4.1 logical datapath</a>
+  <a class="l2" href="#s6-6">6.6 V4.1 array: physical layout</a>
+  <a class="l2" href="#s6-7">6.7 V4.1 wafer: datapath &amp; layout</a>
   <a href="#s7">7 DeepSeek-V4.1 package</a>
   <a href="#s8">8 HBM comparator</a>
   <a href="#s9">9 System performance</a>
@@ -484,6 +487,51 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <div class="svgbox"><svg id="reticle" viewBox="0 0 1000 240" role="img" aria-label="Reticle concept"></svg></div>
     <figcaption><b>Figure 6-5.</b> Concept: the array pattern on one die — engines each owning a band of layers with their ROM, handing the 4,096-float hidden state on-die, users in flight. Engine width and count are sized from the cycle model (§5) and the ROM read bandwidth of the HC1-class envelope.</figcaption>
   </figure>
+
+  <h3 id="s6-5">6.5 DeepSeek-V4.1: logical datapath of one token</h3>
+  <p>Forty layers, each an attention half and a MoE half joined by hyper-connections (a four-copy residual stream). Layers share state in groups: layers 2–7 read layer 2's compressed KV and index selection, 8–13 read layer 8's, 14–19 read 14's, and 20–39 read layer 20's compressed KV and candidate-block mask. Layers 1 and 14 add Engram n-gram lookups from their own read-only tables. The partitioning follows from this: a package boundary never separates a KV source from a consumer it cannot reach cheaply.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="v41logical" viewBox="0 0 1000 560" role="img" aria-label="DeepSeek-V4.1 logical datapath"></svg></div>
+    <figcaption><b>Figure 6-6.</b> Top: the token's path through the layer groups, with the state each KV-source layer shares with the layers that read it (dashed). Bottom: one layer as it executes inside a package — attention half, hyper-connection mix, MoE half — with the hardware unit that runs each step.</figcaption>
+  </figure>
+
+  <h3 id="s6-6">6.6 DeepSeek-V4.1 ROM array: physical layout and network</h3>
+  <p>The analytical model's best per-user design for V4.1 at N5 (<code>ROM-N5-native-HBMKV-array-hw-hybrid-x188</code>): 188 reticle-sized dies of 815 mm², four per package joined by UCIe-class die-to-die links (≈10 ns), 47 packages in a pipeline joined by board SerDes (≈100 ns, no software on the path). Each die holds its share of a layer's weights in striped ROM banks and streams KV from five HBM3E stacks.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-2. V4.1 ROM array (N5, analytical model)</caption>
+    <thead><tr><th>Item</th><th class="r">Value</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Dies × area</td><td class="r m">188 × 815 mm²</td><td>153,220 mm² total</td></tr>
+      <tr><td>Packages / pipeline stages</td><td class="r m">47</td><td>tensor group of 4 dies per package</td></tr>
+      <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits/parameter, FP8 execution</td></tr>
+      <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>long-context KV; ROM holds no per-user state</td></tr>
+      <tr><td>Per-user speed, batch 1 / 64</td><td class="r m">15,556 / 12,208 tok/s</td><td>3.87× / 8.52× the best B200 (NVL72, 96 GPUs)</td></tr>
+      <tr><td>Power</td><td class="r m">≈27.4 kW</td><td>at batch 1–64</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="fig">
+    <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 620" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
+    <figcaption><b>Figure 6-7.</b> Top: the 47-package array on boards, a pipeline of board SerDes links with token feedback; the stage-to-layer mapping is illustrative (about one layer per package plus Engram-table and lm_head stages). Bottom left: one package — four 815 mm² dies on UCIe, each with HBM3E for KV. Bottom right: die floorplan by area share. Expert-parallel dispatch and combine for a layer stay <b>inside</b> its package (UCIe); only the four-copy residual stream and the forwarded compressed-KV rows cross board links.</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-3. Traffic classes in the V4.1 array</caption>
+    <thead><tr><th>Traffic</th><th>Path</th><th>Per token</th><th>Unit / RTL</th></tr></thead>
+    <tbody>
+      <tr><td>Residual stream + pending mix</td><td>package → next package (board SerDes)</td><td>4 × hidden values + 4-value mix per layer boundary</td><td>link + package controller <span class="status s-part">in design</span></td></tr>
+      <tr><td>MoE dispatch / combine</td><td>die ↔ die inside the package (UCIe)</td><td>6 routed + 1 shared expert per token, activations quantised FP8</td><td>dispatch/combine engines <span class="status s-part">in design</span></td></tr>
+      <tr><td>Compressed-KV multicast</td><td>KV-source package → consumer packages</td><td>one compressed row + index selection (layer 20: + candidate mask)</td><td>fabric router multicast <span class="status s-part">in design</span></td></tr>
+      <tr><td>Engram rows</td><td>Engram-table package → layers 1 and 14</td><td>24 rows per module</td><td>Engram hash <span class="status s-done">1.52 GHz</span></td></tr>
+      <tr><td>KV cache</td><td>die ↔ its HBM3E stacks</td><td>grows with context; sparse selection reads top-k rows</td><td>KV streaming engine <span class="status s-part">in design</span></td></tr>
+      <tr><td>Token</td><td>last package → package 0</td><td>token id (+ running argmax across vocabulary packages)</td><td>link <span class="status s-done">RTL</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="s6-7">6.7 DeepSeek-V4.1 ROM wafer: datapath and layout</h3>
+  <p>The analytical model's best aggregate-throughput design (<code>ROM-N5-native-HBMKV-wafer-hybrid-x12</code>): twelve wafers of 46,225 mm² each, every wafer a 57-region tensor group on an on-wafer mesh, with 43 HBM3E stacks at the edge for KV; wafers form a 12-stage pipeline over wafer-to-wafer SerDes. At 4,096 users it delivers ≈4.95 M tokens/s, 3.18× the best B200 configuration at equal silicon.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="v41wafer" viewBox="0 0 1000 600" role="img" aria-label="DeepSeek-V4.1 wafer datapath"></svg></div>
+    <figcaption><b>Figure 6-8.</b> Left: the twelve-wafer pipeline; each wafer holds a band of about three to four layers. Right: inside one wafer — regions for attention halves, expert regions grouped by expert id, the Engram tables and the KV-source regions, all on a 2-D mesh with ≈10 ns hops; HBM3E around the edge. The token's datapath (copper arrows) enters from the previous wafer, crosses its layers region by region — expert dispatch fans out over the mesh and combines back — and leaves over the wafer SerDes.</figcaption>
+  </figure>
 </section>
 
 <!-- 7 -->
@@ -855,10 +903,128 @@ function drawChain(){
   el("text",{x:500,y:130,"text-anchor":"middle","font-size":11.5,fill:css("--muted")},svg,"token equality at the oracle boundary; bit equality everywhere after it");
 }
 
+
+function box(svg,x,y,w,h,fill,stroke,lines,opt){opt=opt||{};
+  el("rect",{x:x,y:y,width:w,height:h,rx:opt.rx||3,fill:fill,stroke:stroke,"stroke-width":opt.sw||1,"stroke-dasharray":opt.dash||"none"},svg);
+  lines.forEach((t,i)=>el("text",{x:x+w/2,y:y+(opt.top||16)+i*(opt.lh||14),"text-anchor":"middle","font-size":i===0?(opt.fs0||11.5):(opt.fs||10.5),"font-weight":i===0?600:400,fill:i===0?css("--ink"):css("--muted")},svg,t));}
+function arrow(svg,x1,y1,x2,y2,c,dash,mk){el("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:c,"stroke-width":1.5,"stroke-dasharray":dash||"none","marker-end":"url(#"+(mk||"arR")+")"},svg);}
+
+function drawV41Logical(){
+  const svg=document.getElementById("v41logical"); svg.innerHTML="";
+  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),G=css("--rule");
+  el("text",{x:10,y:18,"font-size":12.5,"font-weight":600,fill:css("--ink")},svg,"Token path across layer groups (one residual stream of 4 × 5,120 values)");
+  const groups=[["embedding","token → x",Bs,B],["layers 0–1","Engram @ 1",Rs,R],["layers 2–7","KV source 2",Rs,R],["layers 8–13","KV source 8",Rs,R],["layers 14–19","source 14 · Engram @ 14",Rs,R],["layers 20–39","source 20 · candidates",Rs,R],["norm · lm_head","vocab split, argmax",Bs,B]];
+  const gw=122,gg=(1000-20-groups.length*gw)/(groups.length-1);
+  groups.forEach((g,i)=>{const x=10+i*(gw+gg); box(svg,x,70,gw,64,g[2],g[3],[g[0],g[1]],{top:26,lh:18});
+    if(i<groups.length-1) arrow(svg,x+gw,102,x+gw+gg-2,102,R);
+    if(i>=2&&i<=5){ // source-sharing marker
+      el("path",{d:`M${x+14},134 C ${x+14},160 ${x+gw-14},160 ${x+gw-14},136`,fill:"none",stroke:R,"stroke-dasharray":"4 3","stroke-width":1.2,"marker-end":"url(#arR)"},svg);}});
+  el("text",{x:10+2*(gw+gg),y:178,"font-size":10.5,fill:M},svg,"dashed: the group's first layer shares compressed KV + index selection with the rest of its group");
+  // Engram tables
+  box(svg,10+1*(gw+gg),26,gw,30,Bs,B,["Engram table ROM"],{top:19});
+  box(svg,10+4*(gw+gg),26,gw,30,Bs,B,["Engram table ROM"],{top:19});
+  arrow(svg,10+1*(gw+gg)+gw/2,56,10+1*(gw+gg)+gw/2,68,B,null,"arB"); arrow(svg,10+4*(gw+gg)+gw/2,56,10+4*(gw+gg)+gw/2,68,B,null,"arB");
+  el("path",{d:`M${10+6*(gw+gg)+gw/2},134 C 980,215 30,215 ${10+gw/2},136`,fill:"none",stroke:M,"stroke-width":1.3,"stroke-dasharray":"5 4","marker-end":"url(#ar)"},svg);
+  el("text",{x:500,y:212,"text-anchor":"middle","font-size":10.5,fill:M},svg,"next token fed back to the embedding stage");
+  // one layer
+  el("text",{x:10,y:252,"font-size":12.5,"font-weight":600,fill:css("--ink")},svg,"Inside one layer (in one package / on one wafer band)");
+  const att=[["HC pre-mix","Sinkhorn 4×4","SU"],["RMSNorm","","SU"],["q / kv low-rank","FP8 block linear","block-dot lanes"],["indexer","idx keys · ReLU · Σ heads","ME + SU"],["top-512 select","position order","SELECT"],["sparse attention","window + top-512 · sink","ME + SU (exp)"],["o low-rank + HC post","FP8 · 4-copy residual","block-dot + SU"]];
+  const moe=[["HC pre-mix","","SU"],["RMSNorm","","SU"],["router gate","FP32 · √softplus + bias","ME + softplus"],["top-6 select","ties → lower id","SELECT"],["dispatch","6 routed of 384 + shared","collectives"],["experts","FP4 SwiGLU (clamped)","block-dot lanes"],["combine + HC post","fixed order · weights ×1.5","collectives + SU"]];
+  function row(items,y,label,fill){
+    el("text",{x:10,y:y-8,"font-size":11.5,"font-weight":600,fill:M},svg,label);
+    const w=132,g=(1000-20-items.length*w)/(items.length-1);
+    items.forEach((it,i)=>{const x=10+i*(w+g); box(svg,x,y,w,70,fill,R,[it[0],it[1],it[2]],{top:18,lh:17});
+      el("text",{x:x+w/2,y:y+62,"text-anchor":"middle","font-size":10,fill:R,class:"t-mono"},svg,"");
+      if(i<items.length-1) arrow(svg,x+w,y+35,x+w+g-2,y+35,R);});}
+  row(att,286,"attention half",P); row(moe,420,"MoE half",Rs);
+  arrow(svg,990-66,356,990-66,418,R);
+  el("text",{x:10,y:520,"font-size":10.5,fill:M},svg,"third line of each box: the decode-core unit that executes the step (§4, §7). All steps are fixed-latency pipelines; the golden specifies every rounding.");
+  el("text",{x:10,y:538,"font-size":10.5,fill:M},svg,"Engram layers (1, 14) add a hash → table-row gather → gated add into the stream before attention.");
+}
+
+function drawV41Array(){
+  const svg=document.getElementById("v41array"); svg.innerHTML="";
+  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink");
+  el("text",{x:10,y:18,"font-size":12.5,"font-weight":600,fill:I},svg,"47 packages · 4 boards · board SerDes pipeline (≈100 ns per hop)");
+  const role=i=> i===0?["emb",Bs,B]: i===1?["L0",P,R]: i===2?["Eng 1",Bs,B]: i<=3?["L"+(i-2),P,R]: i<=9?["L"+(i-2),Rs,R]: i<=15?["L"+(i-2),P,R]: i===16?["Eng 14",Bs,B]: i<=22?["L"+(i-3),Rs,R]: i<=42?["L"+(i-3),P,R]:["V"+(i-43),Bs,B];
+  const cols=12,pw=66,ph=34,gx=(1000-20-cols*pw)/(cols-1),gy=18,y0=34;
+  const pos=i=>{const r=Math.floor(i/cols),c=r%2===0?i%cols:cols-1-i%cols;return [10+c*(pw+gx),y0+r*(ph+gy)];};
+  for(let i=0;i<47;i++){const [x,y]=pos(i),rl=role(i);
+    el("rect",{x:x,y:y,width:pw,height:ph,rx:3,fill:rl[1],stroke:rl[2],"stroke-width":(i===4||i===10||i===17||i===23)?2.4:1},svg);
+    el("text",{x:x+pw/2,y:y+14,"text-anchor":"middle","font-size":10,fill:M,class:"t-mono"},svg,"pkg "+i);
+    el("text",{x:x+pw/2,y:y+27,"text-anchor":"middle","font-size":10.5,"font-weight":600,fill:I},svg,rl[0]);
+    if(i<46){const [x2,y2]=pos(i+1); if(y2===y) arrow(svg,x2>x?x+pw:x,y+ph/2,x2>x?x2-1:x2+pw+1,y+ph/2,R); else arrow(svg,x+pw/2,y+ph,x+pw/2,y2-1,R);}}
+  for(let r=0;r<4;r++){el("text",{x:998,y:y0+r*(ph+gy)+22,"text-anchor":"end","font-size":9.5,fill:M},svg,"");}
+  el("text",{x:10,y:y0+4*(ph+gy)+8,"font-size":10.5,fill:M},svg,"bold outline: KV-source layers 2, 8, 14, 20 (multicast their compressed row to the rest of the group) · Eng: Engram-table packages · V0–V3: lm_head vocabulary quarters · L = layer (illustrative mapping)");
+  // package detail
+  const py=280; el("text",{x:10,y:py-10,"font-size":12.5,"font-weight":600,fill:I},svg,"One package: 4 dies on UCIe (≈10 ns)");
+  el("rect",{x:10,y:py,width:470,height:320,rx:6,fill:css("--grid"),stroke:css("--rule")},svg);
+  const dies=[[60,py+40],[270,py+40],[60,py+180],[270,py+180]];
+  dies.forEach(([x,y],k)=>{el("rect",{x:x,y:y,width:150,height:100,rx:3,fill:Rs,stroke:R,"stroke-width":1.3},svg);
+    el("text",{x:x+75,y:y+22,"text-anchor":"middle","font-size":11.5,"font-weight":600,fill:I},svg,"die "+k+" · 815 mm²");
+    el("text",{x:x+75,y:y+40,"text-anchor":"middle","font-size":10.5,fill:M},svg,"¼ of the layer's weights");
+    el("text",{x:x+75,y:y+56,"text-anchor":"middle","font-size":10.5,fill:M},svg,"experts striped over banks");
+    el("text",{x:x+75,y:y+72,"text-anchor":"middle","font-size":10.5,fill:M},svg,"decode core + V4.1 units");
+    const hx=(k%2===0)?x-38:x+156; for(let h=0;h<5;h++) el("rect",{x:hx,y:y+4+h*19,width:32,height:15,rx:2,fill:Bs,stroke:B},svg);
+  });
+  el("text",{x:22,y:py+310,"font-size":10,fill:B},svg,"HBM3E ×5 per die (KV cache)");
+  [[210,py+90,270,py+90],[210,py+230,270,py+230],[135,py+140,135,py+180],[345,py+140,345,py+180]].forEach(([a,b,c,d])=>el("line",{x1:a,y1:b,x2:c,y2:d,stroke:R,"stroke-width":3},svg));
+  el("line",{x1:210,y1:py+140,x2:270,y2:py+180,stroke:R,"stroke-width":2,"stroke-dasharray":"3 3"},svg);
+  el("text",{x:240,y:py+168,"text-anchor":"middle","font-size":10,fill:R},svg,"UCIe");
+  el("text",{x:245,y:py+296,"text-anchor":"middle","font-size":10.5,fill:M},svg,"MoE dispatch/combine stays on UCIe · residual in/out over board SerDes");
+  arrow(svg,-2,py+160,8,py+160,R); arrow(svg,480,py+160,498,py+160,R);
+  // die floorplan
+  const fx=530,fy=py,fw=450,fh=320; el("text",{x:fx,y:fy-10,"font-size":12.5,"font-weight":600,fill:I},svg,"Die floorplan by area (815 mm², N5)");
+  const parts=[["ROM (weights, striped banks)",289.4,Rs,R],["compute (decode cores, V4.1 units)",328.9,P,R],["HBM PHY",50,Bs,B],["die/board links",65.2,css("--grid"),M],["overhead",81.5,css("--grid"),M]];
+  let yy=fy; parts.forEach(([n,a,f,st])=>{const h=a/815*fh; el("rect",{x:fx,y:yy,width:fw,height:h,fill:f,stroke:st},svg);
+    el("text",{x:fx+10,y:yy+h/2+4,"font-size":11,fill:I},svg,n); el("text",{x:fx+fw-10,y:yy+h/2+4,"text-anchor":"end","font-size":11,fill:I,class:"t-mono"},svg,a.toFixed(0)+" mm²"); yy+=h;});
+}
+
+function drawV41Wafer(){
+  const svg=document.getElementById("v41wafer"); svg.innerHTML="";
+  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink"),G=css("--grid");
+  el("text",{x:10,y:18,"font-size":12.5,"font-weight":600,fill:I},svg,"12-wafer pipeline (wafer SerDes)");
+  const wp=i=>{const r=Math.floor(i/3),c=r%2===0?i%3:2-i%3;return [60+c*95,70+r*125];};
+  for(let i=0;i<12;i++){const [cx,cy]=wp(i); el("circle",{cx:cx,cy:cy,r:40,fill:i===4?Rs:G,stroke:R,"stroke-width":i===4?2.2:1},svg);
+    el("text",{x:cx,y:cy-3,"text-anchor":"middle","font-size":11,"font-weight":600,fill:I},svg,"wafer "+i);
+    el("text",{x:cx,y:cy+12,"text-anchor":"middle","font-size":9.5,fill:M},svg,i===11?"+ lm_head":"≈3–4 layers");
+    if(i<11){const [x2,y2]=wp(i+1); if(y2===cy) arrow(svg,x2>cx?cx+40:cx-40,cy,x2>cx?x2-41:x2+41,cy,R); else arrow(svg,cx,cy+40,cx,y2-41,R);}}
+  el("text",{x:10,y:590,"font-size":10.5,fill:M},svg,"highlighted: the wafer drawn on the right");
+  // detailed wafer
+  const cx=660,cy=285,rad=250;
+  el("circle",{cx:cx,cy:cy,r:rad,fill:G,stroke:css("--rule")},svg);
+  // HBM around the edge
+  for(let k=0;k<43;k++){const a=k/43*2*Math.PI; const x=cx+(rad+12)*Math.cos(a)-7,y=cy+(rad+12)*Math.sin(a)-5; el("rect",{x:x,y:y,width:14,height:10,rx:1.5,fill:Bs,stroke:B},svg);}
+  const n=11,cs=40,gp=4,x0=cx-(n*(cs+gp))/2,y0=cy-(n*(cs+gp))/2;
+  const kind=(r,c)=>{ if(c<=1) return "att"; if(c===2&&r%3===0) return "src"; if(r>=4&&r<=6&&c>=9) return "eng"; return c<=3?"att":"exp";};
+  const colr={att:[P,R],src:[R,R],exp:[Rs,R],eng:[Bs,B]};
+  const cells=[];
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){const x=x0+c*(cs+gp),y=y0+r*(cs+gp); if(Math.hypot(x+cs/2-cx,y+cs/2-cy)>rad-24) continue;
+    const k=kind(r,c); el("rect",{x:x,y:y,width:cs,height:cs,rx:3,fill:colr[k][0],stroke:colr[k][1],"stroke-width":0.8},svg); cells.push([r,c,x,y,k]);}
+  // mesh lines
+  for(let r=0;r<n;r++) el("line",{x1:x0,x2:x0+n*(cs+gp),y1:y0+r*(cs+gp)+cs/2,y2:y0+r*(cs+gp)+cs/2,stroke:R,"stroke-width":0.5,opacity:0.35},svg);
+  for(let c=0;c<n;c++) el("line",{y1:y0,y2:y0+n*(cs+gp),x1:x0+c*(cs+gp)+cs/2,x2:x0+c*(cs+gp)+cs/2,stroke:R,"stroke-width":0.5,opacity:0.35},svg);
+  // datapath
+  const ctr=(r,c)=>[x0+c*(cs+gp)+cs/2,y0+r*(cs+gp)+cs/2];
+  const [ax,ay]=ctr(5,1),[sx,sy]=ctr(3,2);
+  arrow(svg,cx-rad-30,ay,ax-cs/2-1,ay,R); el("text",{x:cx-rad-30,y:ay-8,"font-size":10.5,fill:I},svg,"from wafer k−1");
+  arrow(svg,ax+cs/2,ay,ax+cs+gp+cs/2-2,ay,R);
+  const [dx,dy]=ctr(5,3); [[2,5],[3,7],[5,6],[7,5],[8,7],[6,8]].forEach(([r,c])=>{const [ex,ey]=ctr(r,c); arrow(svg,dx,dy,ex,ey,R);});
+  const [cbx,cby]=ctr(5,4);
+  el("text",{x:dx-70,y:dy+60,"font-size":10.5,"font-weight":600,fill:I,stroke:css("--panel"),"stroke-width":3,"paint-order":"stroke"},svg,"dispatch → 6 experts + shared");
+  const [ox,oy]=ctr(8,9); arrow(svg,ox+cs/2,oy,cx+rad+34,oy,R); el("text",{x:cx+rad-40,y:oy+26,"font-size":10.5,fill:I},svg,"to wafer k+1");
+  el("path",{d:`M${sx},${sy} C ${sx+60},${sy-60} ${sx+200},${sy-80} ${ctr(2,8)[0]},${ctr(2,8)[1]}`,fill:"none",stroke:R,"stroke-width":1.3,"stroke-dasharray":"4 3","marker-end":"url(#arR)"},svg);
+  el("text",{x:sx+70,y:sy-72,"font-size":10,fill:I},svg,"compressed-KV multicast");
+  // legend
+  const lg=[["attention half-layer regions",P,R],["KV-source regions",R,R],["expert regions (by expert id)",Rs,R],["Engram table regions",Bs,B],["HBM3E stacks (43, KV)",Bs,B]];
+  lg.forEach(([t,f,st],i)=>{el("rect",{x:330,y:540+i*0,width:0,height:0},svg);});
+  lg.forEach(([t,f,st],i)=>{const lx=360+(i%3)*210,ly=i<3?566:584; el("rect",{x:lx,y:ly-9,width:11,height:11,fill:f,stroke:st},svg); el("text",{x:lx+16,y:ly,"font-size":10.5,fill:I},svg,t);});
+}
+
 function drawAll(){
   let m="b1"; try{m=localStorage.getItem("atlas-metric")||"b1"}catch(e){}
   document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o.dataset.m===m?"true":"false"));
-  drawPerf(m); drawHeat(); drawISA(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawWafer(); drawReticle(); drawChain();
+  drawPerf(m); drawHeat(); drawISA(); drawV41Logical(); drawV41Array(); drawV41Wafer(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawWafer(); drawReticle(); drawChain();
   const grp=document.getElementById("grp"); grp.innerHTML="";
   for(let g=0;g<4;g++){const x0=250+g*103;
     el("rect",{x:x0,y:50,width:95,height:138,rx:3,fill:css("--panel"),stroke:css("--rom")},grp);
