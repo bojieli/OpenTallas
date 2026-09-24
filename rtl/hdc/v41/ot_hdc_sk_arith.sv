@@ -166,42 +166,74 @@ endmodule
 //   carry:    result S >> 1 (+1 if S[0] & (any shifted-out | S[1]))
 // S and S + 1 come from ONE compound prefix adder and the round only selects.
 // `ovf`: the exponent reached 255 (the caller fails closed).
+//
+// CHAINING.  Operand a is the running sum of a chain; its exponent arrives as
+// ea + ua, where ea is known early and the increment ua (the previous add's
+// carry/round-up) is the LAST bit that previous add resolves.  Everything that
+// depends only on exponents and on the early operand b -- both exponent
+// differences, the order, b's alignment shift and its sticky bits -- is formed
+// for BOTH values of ua and selected when ua arrives, so a chained add waits
+// only for a's significand, not for an exponent subtraction.  The outputs are
+// in the same form: eg + up (eg early, up late).  ua = 0 for a first add.
 module ot_hdc_sk_add (
     input  wire [7:0]  ea,
+    input  wire        ua,
     input  wire [23:0] ma,
     input  wire [7:0]  eb,
     input  wire [23:0] mb,
+    output wire [7:0]  eg,
+    output wire        up,
     output wire [7:0]  e,
     output wire [23:0] m,
     output wire        ovf
 );
-    // both exponent differences at once; the sign of one orders the operands
-    wire [8:0] dab_s0, dab_s1, dba_s0, dba_s1;
-    ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea), .b(~eb), .s0(dab_s0), .s1(dab_s1));   // ea - eb
-    ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb), .b(~ea), .s0(dba_s0), .s1(dba_s1));   // eb - ea
-    wire       a_ge = dab_s1[8];
-    wire       swap = !a_ge;                   // b strictly larger exponent
-    wire [7:0] dab = dab_s1[7:0];              // valid when a_ge
-    wire [7:0] dba = dba_s1[7:0];              // valid when swap
-
-    // align BOTH candidates in parallel (b under a, a under b), select after
-    wire [24:0] shb = (dab >= 8'd25) ? 25'd0 : ({mb, 1'b0} >> dab[4:0]);
-    wire [24:0] sha = (dba >= 8'd25) ? 25'd0 : ({ma, 1'b0} >> dba[4:0]);
-    // shifted-out masks: bit i is below the cut when i < d (any) or i < d-1 (sticky)
-    wire [23:0] mk_b_any, mk_b_st, mk_a_any, mk_a_st;
-    genvar i;
+    wire [8:0] ea1 = {1'b0, ea} + 9'd1;
+    wire [7:0] ea_c [0:1];
+    assign ea_c[0] = ea;
+    assign ea_c[1] = ea1[7:0];
+    wire [1:0]  age_c;
+    wire [7:0]  dba_c [0:1];
+    wire [24:0] shb_c [0:1];
+    wire [1:0]  bany_c, bst_c;
+    genvar u, i;
     generate
-        for (i = 0; i < 24; i = i + 1) begin : g_mk
-            assign mk_b_any[i] = (dab > i);
-            assign mk_b_st[i]  = (dab > i + 1);
+        for (u = 0; u < 2; u = u + 1) begin : g_u
+            wire [8:0] ab0, ab1, ba0, ba1;
+            ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea_c[u]), .b(~eb), .s0(ab0), .s1(ab1));   // ea - eb
+            ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb), .b(~ea_c[u]), .s0(ba0), .s1(ba1));   // eb - ea
+            assign age_c[u] = ab1[8];
+            assign dba_c[u] = ba1[7:0];                  // valid when b > a
+            // b aligned under a, and its shifted-out bits (all early); dab valid when a >= b
+            assign shb_c[u] = (ab1[7:0] >= 8'd25) ? 25'd0 : ({mb, 1'b0} >> ab1[4:0]);
+            wire [23:0] mk_any, mk_st;
+            for (i = 0; i < 24; i = i + 1) begin : g_mk
+                assign mk_any[i] = (ab1[7:0] > i);
+                assign mk_st[i]  = (ab1[7:0] > i + 1);
+            end
+            assign bany_c[u] = |(mb & mk_any);
+            assign bst_c[u]  = |(mb & mk_st);
+        end
+    endgenerate
+    wire        a_ge  = ua ? age_c[1] : age_c[0];
+    wire        swap  = !a_ge;                   // b strictly larger exponent
+    wire [7:0]  dba   = ua ? dba_c[1] : dba_c[0];
+    wire [24:0] shb   = ua ? shb_c[1] : shb_c[0];
+    wire        b_any = ua ? bany_c[1] : bany_c[0];
+    wire        b_st  = ua ? bst_c[1] : bst_c[0];
+
+    // a aligned under b (a is the late operand)
+    wire [24:0] sha = (dba >= 8'd25) ? 25'd0 : ({ma, 1'b0} >> dba[4:0]);
+    wire [23:0] mk_a_any, mk_a_st;
+    generate
+        for (i = 0; i < 24; i = i + 1) begin : g_mka
             assign mk_a_any[i] = (dba > i);
             assign mk_a_st[i]  = (dba > i + 1);
         end
     endgenerate
-    wire b_any = |(mb & mk_b_any), b_st = |(mb & mk_b_st);
     wire a_any = |(ma & mk_a_any), a_st = |(ma & mk_a_st);
 
-    wire [7:0]  eg   = swap ? eb : ea;
+    wire [7:0]  eA   = ua ? ea1[7:0] : ea;
+    assign eg        = swap ? eb : eA;
     wire [23:0] mg   = swap ? mb : ma;
     wire [23:0] ahi  = swap ? sha[24:1] : shb[24:1];
     wire        g    = swap ? sha[0] : shb[0];
@@ -216,17 +248,18 @@ module ot_hdc_sk_add (
     wire [23:0] mp = carry ? (rc ? s1[24:1] : s0[24:1]) : (rnc ? s1[23:0] : s0[23:0]);
     wire ovm = !carry & rnc & s1[24];          // S = 2^24 - 1 rounded up to 2^24
     wire [8:0] eg1 = {1'b0, eg} + 9'd1;
-    wire up = carry | ovm;
-    assign e = up ? eg1[7:0] : eg;
-    assign m = {mp[23] | ovm, mp[22:0]};
+    assign up  = carry | ovm;
+    assign e   = up ? eg1[7:0] : eg;
+    assign m   = {mp[23] | ovm, mp[22:0]};
     assign ovf = up & (eg1[7:0] == 8'hFF);
 endmodule
 
 // ---- reciprocal seed: 1/T - 2^-26 < R <= 1/T, R in units of 2^-28 ---------------
 // T = tm * 2^-23 in [1, 2).  One carry-save tree forms, exactly, at 2^-46:
-//   S = c0 2^14 - c1 (h - 2^13) 2 + c2 floor(dm^2 / 2^12) - 2^18
-// (h = tm[13:0], dm its one's-complement distance from the segment centre),
-// and R = S[46:18].  The generator proves the bound for all 2^23 significands.
+//   S = c0 2^14 - c1 (h - 2^13) 2 + c2 sq(dm >> 4) - 2^18
+// (h = tm[13:0], dm its one's-complement distance from the segment centre,
+// sq the square of dm's 16-wide bucket centre / 2^12, from a ROM), and
+// R = S[46:18].  The generator proves the bound for all 2^23 significands.
 module ot_hdc_sk_seed (
     input  wire [23:0] tm,
     output wire [28:0] r
@@ -237,9 +270,10 @@ module ot_hdc_sk_seed (
     ot_hdc_sk_recip_rom u_rom (.i(tm[22:14]), .c0(c0), .c1(c1), .c2(c2));
     wire [13:0] h  = tm[13:0];
     wire [12:0] dm = h[13] ? h[12:0] : ~h[12:0];
-    wire [25:0] dsq;
-    ot_hdc_sk_mul #(.WA(13), .WB(13), .DROP(0)) u_sq (.a(dm), .b(dm), .p(dsq));
-    wire [13:0] sq = dsq[25:12];
+    // the C2 term's square is read, not computed: a 512-entry ROM on dm's top 9 bits,
+    // looked up in parallel with the coefficients (bucket-centre square; proved in the bound)
+    wire [13:0] sq;
+    ot_hdc_sk_sq_rom u_sq (.dmh(dm[12:4]), .sq(sq));
 
     localparam integer W = 48;
     localparam integer NR = 2 + 14 + 14 + 1;

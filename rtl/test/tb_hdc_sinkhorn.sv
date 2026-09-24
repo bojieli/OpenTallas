@@ -15,7 +15,9 @@
 //   +IN=<file>   "<op> <a hex> <b hex> <expected hex> <flag>" per line; op 0: positive add
 //                (flag = overflow), op 1: general divide with gradual underflow (norm ->
 //                seed -> quotient SUBN=1; flag = overflow), op 2: the steady-step divide
-//                (normal operands, normal quotient, SUBN=0; flag = range)
+//                (normal operands, normal quotient, SUBN=0; flag = range), op 3: the add of
+//                op 0 with a's exponent presented as (field - 1) + a late increment, the
+//                form in which a chain feeds its running sum (a normal, field >= 2)
 module tb_hdc_sinkhorn
 `ifdef VERILATOR
     (input wire clk)
@@ -169,11 +171,18 @@ module tb_hdc_sk_arith
     wire [23:0] ma = {a[30:23] != 8'd0, a[22:0]};
     wire [7:0]  eb = (b[30:23] == 8'd0) ? 8'd1 : b[30:23];
     wire [23:0] mb = {b[30:23] != 8'd0, b[22:0]};
-    wire [7:0]  se;
+    wire [7:0]  se, sg;
     wire [23:0] sm;
-    wire        sovf;
-    ot_hdc_sk_add u_add (.ea(ea), .ma(ma), .eb(eb), .mb(mb), .e(se), .m(sm), .ovf(sovf));
+    wire        sovf, su;
+    ot_hdc_sk_add u_add (.ea(ea), .ua(1'b0), .ma(ma), .eb(eb), .mb(mb), .eg(sg), .up(su), .e(se), .m(sm), .ovf(sovf));
     wire [31:0] add_y = {1'b0, sm[23] ? se : 8'd0, sm[22:0]};
+    // op 3: the same add with a's exponent presented as (ea - 1) + late increment, as a chain feeds it
+    wire [7:0]  ce, cg;
+    wire [23:0] cm;
+    wire        covf, cu;
+    ot_hdc_sk_add u_addc (.ea(ea - 8'd1), .ua(1'b1), .ma(ma), .eb(eb), .mb(mb), .eg(cg), .up(cu), .e(ce), .m(cm),
+                          .ovf(covf));
+    wire [31:0] addc_y = {1'b0, cm[23] ? ce : 8'd0, cm[22:0]};
 
     // op 1: general divide (the step-0 path)
     wire [23:0]       xm, tm;
@@ -197,7 +206,7 @@ module tb_hdc_sk_arith
                                      .y(qs), .range(rso));
 
     integer fin, rc, cyc = 0, n = 0, errors = 0;
-    integer n_op [0:2];
+    integer n_op [0:3];
     reg [31:0] op, ra, rb, ex, fl;
     reg [8*512-1:0] fname;
     reg        live = 1'b0;
@@ -205,7 +214,7 @@ module tb_hdc_sk_arith
     reg [31:0] got;
     reg        gflag;
     initial begin
-        n_op[0] = 0; n_op[1] = 0; n_op[2] = 0;
+        n_op[0] = 0; n_op[1] = 0; n_op[2] = 0; n_op[3] = 0;
         if (!$value$plusargs("IN=%s", fname)) begin $display("need +IN"); $finish; end
         fin = $fopen(fname, "r");
         if (fin == 0) begin $display("cannot open vectors"); $finish; end
@@ -213,8 +222,8 @@ module tb_hdc_sk_arith
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (live) begin                         // check the operation applied last edge
-            got = (c_op == 0) ? add_y : (c_op == 1) ? {1'b0, qg} : {1'b0, qs};
-            gflag = (c_op == 0) ? sovf : (c_op == 1) ? rgo : rso;
+            got = (c_op == 0) ? add_y : (c_op == 1) ? {1'b0, qg} : (c_op == 2) ? {1'b0, qs} : addc_y;
+            gflag = (c_op == 0) ? sovf : (c_op == 1) ? rgo : (c_op == 2) ? rso : covf;
             n = n + 1;
             n_op[c_op] = n_op[c_op] + 1;
             if (gflag !== c_fl[0] || (!c_fl[0] && got !== c_ex)) begin
@@ -226,7 +235,7 @@ module tb_hdc_sk_arith
         if (rc == 5) begin
             a = ra; b = rb; c_op = op; c_ex = ex; c_fl = fl; live = 1'b1;
         end else begin
-            $display("SKARITH ops=%0d add=%0d div=%0d div_steady=%0d errors=%0d", n, n_op[0], n_op[1], n_op[2], errors);
+            $display("SKARITH ops=%0d add=%0d div=%0d div_steady=%0d add_chained=%0d errors=%0d", n, n_op[0], n_op[1], n_op[2], n_op[3], errors);
             if (errors == 0 && n > 0) $display("PASS"); else $display("FAIL");
             $finish;
         end

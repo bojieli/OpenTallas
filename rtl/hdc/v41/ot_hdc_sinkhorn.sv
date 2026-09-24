@@ -121,12 +121,15 @@ module ot_hdc_sinkhorn #(
                 assign ee[c] = (w[30:23] == 8'd0) ? 8'd1 : w[30:23];
                 assign mm[c] = {w[30:23] != 8'd0, w[22:0]};
             end
-            wire [7:0] e1, e2, e3;
+            wire [7:0] e1, e2, e3, g1, g2, g3;
             wire [23:0] m1, m2, m3;
-            wire o1, o2, o3, tz;
-            ot_hdc_sk_add u_a1 (.ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]), .e(e1), .m(m1), .ovf(o1));
-            ot_hdc_sk_add u_a2 (.ea(e1), .ma(m1), .eb(ee[2]), .mb(mm[2]), .e(e2), .m(m2), .ovf(o2));
-            ot_hdc_sk_add u_a3 (.ea(e2), .ma(m2), .eb(ee[3]), .mb(mm[3]), .e(e3), .m(m3), .ovf(o3));
+            wire o1, o2, o3, u1, u2, u3, tz;
+            ot_hdc_sk_add u_a1 (.ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]),
+                                .eg(g1), .up(u1), .e(e1), .m(m1), .ovf(o1));
+            ot_hdc_sk_add u_a2 (.ea(g1), .ua(u1), .ma(m1), .eb(ee[2]), .mb(mm[2]),
+                                .eg(g2), .up(u2), .e(e2), .m(m2), .ovf(o2));
+            ot_hdc_sk_add u_a3 (.ea(g2), .ua(u2), .ma(m2), .eb(ee[3]), .mb(mm[3]),
+                                .eg(g3), .up(u3), .e(e3), .m(m3), .ovf(o3));
             wire [30:0] sum = {m3[23] ? e3 : 8'd0, m3[22:0]};
             ot_hdc_sk_norm u_nt (.x(sum), .m(nt_m[r]), .e(nt_e[r]), .z(tz));
             assign a_bad_sum[r] = o1 | o2 | o3 | tz;
@@ -147,9 +150,11 @@ module ot_hdc_sinkhorn #(
                                                 .tm(a_tm[r]), .te(a_te[r]), .r(rs), .y(q), .range(rng));
                 wire [7:0]  qe = (q[30:23] == 8'd0) ? 8'd1 : q[30:23];
                 wire [23:0] qm = {q[30:23] != 8'd0, q[22:0]};
-                wire [7:0]  oe;
+                wire [7:0]  oe, og;
                 wire [23:0] om;
-                ot_hdc_sk_add u_eps (.ea(qe), .ma(qm), .eb(EPS_E), .mb(EPS_M), .e(oe), .m(om), .ovf(ov));
+                wire        ou;
+                ot_hdc_sk_add u_eps (.ea(qe), .ua(1'b0), .ma(qm), .eb(EPS_E), .mb(EPS_M),
+                                     .eg(og), .up(ou), .e(oe), .m(om), .ovf(ov));
                 // transposed write: storage row c holds logical column c
                 assign b_out[4*c + r] = {1'b0, om[23] ? oe : 8'd0, om[22:0]};
                 assign b_bad[4*r + c] = rng | ov;
@@ -171,13 +176,18 @@ module ot_hdc_sinkhorn #(
                 assign mm[c]  = {w[30:23] != 8'd0, w[22:0]};
                 assign sub[c] = (w[30:23] == 8'd0);
             end
-            wire [7:0] e1, e2, e3, et;
+            wire [7:0] e1, e2, e3, et, g1, g2, g3, gt;
             wire [23:0] m1, m2, m3, mt;
-            wire o1, o2, o3, ot;
-            ot_hdc_sk_add u_s1 (.ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]), .e(e1), .m(m1), .ovf(o1));
-            ot_hdc_sk_add u_s2 (.ea(e1), .ma(m1), .eb(ee[2]), .mb(mm[2]), .e(e2), .m(m2), .ovf(o2));
-            ot_hdc_sk_add u_s3 (.ea(e2), .ma(m2), .eb(ee[3]), .mb(mm[3]), .e(e3), .m(m3), .ovf(o3));
-            ot_hdc_sk_add u_ae (.ea(e3), .ma(m3), .eb(EPS_E), .mb(EPS_M), .e(et), .m(mt), .ovf(ot));
+            wire o1, o2, o3, ot, u1, u2, u3, ut;
+            // the chain: each add takes the previous one's exponent as eg + up (up resolves last)
+            ot_hdc_sk_add u_s1 (.ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]),
+                                .eg(g1), .up(u1), .e(e1), .m(m1), .ovf(o1));
+            ot_hdc_sk_add u_s2 (.ea(g1), .ua(u1), .ma(m1), .eb(ee[2]), .mb(mm[2]),
+                                .eg(g2), .up(u2), .e(e2), .m(m2), .ovf(o2));
+            ot_hdc_sk_add u_s3 (.ea(g2), .ua(u2), .ma(m2), .eb(ee[3]), .mb(mm[3]),
+                                .eg(g3), .up(u3), .e(e3), .m(m3), .ovf(o3));
+            ot_hdc_sk_add u_ae (.ea(g3), .ua(u3), .ma(m3), .eb(EPS_E), .mb(EPS_M),
+                                .eg(gt), .up(ut), .e(et), .m(mt), .ovf(ot));
             // t >= eps is normal: its significand is already normalised
             wire signed [9:0] te = $signed({2'b00, et}) - 10'sd127;
             wire [28:0] rs;

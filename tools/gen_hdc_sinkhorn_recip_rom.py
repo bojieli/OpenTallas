@@ -47,6 +47,7 @@ F0, F1, F2 = 32, 22, 12      # coefficient fraction bits
 FS = 46                      # fraction bits of the internal sum (exact: no intermediate rounding)
 FR = 28                      # fraction bits of R
 SQ_DROP = 12                 # delta^2 >> SQ_DROP before the C2 product
+SQ_K = 4                     # the square reads only dm >> SQ_K (a 512-entry ROM, no multiplier)
 WINDOW = 1 << (FR - 26)      # R may undershoot 1/T by less than 2^-26
 
 
@@ -65,17 +66,25 @@ C0, C1, C2 = coefficients()
 
 def seed_sum(t_int):
     """The seed's exact fixed-point sum at 2^-FS, as ONE carry-save tree forms it:
-    S = C0 2^(FS-F0) - C1 (h - 2^13) 2^(FS-F1-23) + C2 floor(dm^2 / 2^SQ_DROP) 2^(FS-F2-46+SQ_DROP)
-    with h = f[13:0], and dm = |delta| in ONE's complement (delta < 0 -> ~delta, i.e. |delta| - 1),
-    which spares an incrementer; the generator's exhaustive check covers the difference."""
+    S = C0 2^(FS-F0) - C1 (h - 2^13) 2^(FS-F1-23) + C2 sq 2^(FS-F2-46+SQ_DROP)
+    with h = f[13:0], dm = |delta| in ONE's complement (delta < 0 -> ~delta, i.e. |delta| - 1), and
+    sq = floor(dm'^2 / 2^SQ_DROP) where dm' = (dm >> SQ_K) 2^SQ_K + 2^(SQ_K-1) is the centre of dm's
+    2^SQ_K-wide bucket: a 512-entry ROM read in parallel with the coefficients instead of a squarer
+    after them.  The generator's exhaustive check covers every approximation."""
     t_int = np.asarray(t_int, np.int64)
     i = (t_int >> DB) & ((1 << IDX) - 1)
     h = t_int & ((1 << DB) - 1)
     d = h - (1 << (DB - 1))
     dm = np.where(d < 0, -d - 1, d)                             # 13-bit one's-complement magnitude
-    sq = (dm * dm) >> SQ_DROP
+    sq = sq_rom_value(dm >> SQ_K)
     return (C0[i] << (FS - F0)) - ((C1[i] * h - (C1[i] << (DB - 1))) << (FS - F1 - 23)) \
         + (C2[i] * sq << (FS - F2 - 46 + SQ_DROP))
+
+
+def sq_rom_value(dmh):
+    """sq for the bucket dmh = dm >> SQ_K: floor(((2 dmh + 1) 2^(SQ_K-1))^2 / 2^SQ_DROP)."""
+    v = 2 * np.asarray(dmh, np.int64) + 1
+    return (v * v << (2 * SQ_K - 2)) >> SQ_DROP
 
 
 def seed_raw(t_int):
@@ -275,6 +284,21 @@ def rom_text():
                      f"c2 = {w2}'h{int(C2[k]):x}; end")
     lines += ["            default: begin c0 = 'x; c1 = 'x; c2 = 'x; end",
               "        endcase", "    end", "endmodule", ""]
+    nb = 13 - SQ_K
+    sq = sq_rom_value(np.arange(1 << nb))
+    ws = int(sq.max()).bit_length()
+    lines += [
+        f"// sq(dmh) = floor(((2 dmh + 1) 2^{SQ_K - 1})^2 / 2^{SQ_DROP}): the square of the centre of the",
+        f"// bucket dm >> {SQ_K} that the seed's C2 term multiplies.",
+        "module ot_hdc_sk_sq_rom (",
+        f"    input  wire [{nb - 1}:0] dmh,",
+        f"    output reg  [{ws - 1}:0] sq",
+        ");",
+        "    always @* begin",
+        "        case (dmh)",
+    ]
+    lines += [f"            {nb}'d{k}: sq = {ws}'h{int(sq[k]):x};" for k in range(1 << nb)]
+    lines += [f"            default: sq = 'x;", "        endcase", "    end", "endmodule", ""]
     return "\n".join(lines)
 
 

@@ -62,7 +62,7 @@ TOOLS = [ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py", ROOT / 
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED")
 UNIT_LINE = re.compile(r"SINKHORN ITERS=(\d+) cases=(\d+) outputs=(\d+) errors=(\d+) word_errors=(\d+) faults=(\d+) "
                        r"lat_min=(-?\d+) lat_max=(-?\d+) lat_expect=(\d+) cycles=(\d+)")
-ARITH_LINE = re.compile(r"SKARITH ops=(\d+) add=(\d+) div=(\d+) div_steady=(\d+) errors=(\d+)")
+ARITH_LINE = re.compile(r"SKARITH ops=(\d+) add=(\d+) div=(\d+) div_steady=(\d+) add_chained=(\d+) errors=(\d+)")
 F = np.float32
 EPS = F(1e-6)
 ITERS = 20
@@ -255,7 +255,7 @@ KINDS = ("raw", "subnormal", "near", "unit", "sparse", "eps", "top")
 
 def arith_vectors(rng, per_pair):
     """Lines "<op> a b expected flag" for tb_hdc_sk_arith, with counts per op."""
-    lines, counts = [], {"add": 0, "div": 0, "div_steady": 0}
+    lines, counts = [], {"add": 0, "div": 0, "div_steady": 0, "add_chained": 0}
     for ka in KINDS:
         for kb in KINDS:
             a, b = arith_operands(rng, ka, per_pair), arith_operands(rng, kb, per_pair)
@@ -265,6 +265,10 @@ def arith_vectors(rng, per_pair):
             ex = np.where(fl, 0, b32(s))
             lines += [f"0 {x:x} {y:x} {z:x} {int(f)}\n" for x, y, z, f in zip(a, b, ex, fl)]
             counts["add"] += per_pair
+            # the chained form of the same add (a's exponent as field - 1 plus a late increment)
+            ch = ((a >> 23) & 0xFF) >= 2
+            lines += [f"3 {x:x} {y:x} {z:x} {int(f)}\n" for x, y, z, f, c in zip(a, b, ex, fl, ch) if c]
+            counts["add_chained"] += int(ch.sum())
             b = np.where((b & 0x7FFFFFFF) == 0, 1, b)
             with np.errstate(all="ignore"):
                 q = G.div(f32(a), f32(b))
@@ -343,8 +347,9 @@ def parse_arith(out):
     m = ARITH_LINE.search(out)
     if not m:
         return {"pass": False, "log": out[-2000:]}
-    ops, na, nd, ns, err = map(int, m.groups())
-    return {"ops": ops, "add": na, "div": nd, "div_steady": ns, "errors": err, "pass": "PASS" in out and err == 0}
+    ops, na, nd, ns, nc, err = map(int, m.groups())
+    return {"ops": ops, "add": na, "div": nd, "div_steady": ns, "add_chained": nc, "errors": err,
+            "pass": "PASS" in out and err == 0}
 
 
 def run_unit(exe: Path, vec: Path, gap=0, early=0, seed=1):
@@ -411,14 +416,17 @@ MUTATIONS = (
      "before": "wire signed [10:0] sfull = -11'sd126 - E;", "after": "wire signed [10:0] sfull = -11'sd125 - E;"},
     {"id": "steady_eps_dropped", "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
      "description": "the steady step divides by the bare sum (no + eps)",
-     "before": "ot_hdc_sk_add u_ae (.ea(e3), .ma(m3), .eb(EPS_E), .mb(EPS_M)",
-     "after": "ot_hdc_sk_add u_ae (.ea(e3), .ma(m3), .eb(8'd1), .mb(24'd0)"},
+     "before": "ot_hdc_sk_add u_ae (.ea(g3), .ua(u3), .ma(m3), .eb(EPS_E), .mb(EPS_M),",
+     "after": "ot_hdc_sk_add u_ae (.ea(g3), .ua(u3), .ma(m3), .eb(8'd1), .mb(24'd0),"},
     {"id": "steady_sum_order_swapped", "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
      "description": "the steady sum adds the third term before the second: ((a + c) + b) + d",
-     "before": "ot_hdc_sk_add u_s1 (.ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1])",
-     "after": "ot_hdc_sk_add u_s1 (.ea(ee[0]), .ma(mm[0]), .eb(ee[2]), .mb(mm[2])",
-     "before2": "ot_hdc_sk_add u_s2 (.ea(e1), .ma(m1), .eb(ee[2]), .mb(mm[2])",
-     "after2": "ot_hdc_sk_add u_s2 (.ea(e1), .ma(m1), .eb(ee[1]), .mb(mm[1])"},
+     "before": "ot_hdc_sk_add u_s1 (.ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]),",
+     "after": "ot_hdc_sk_add u_s1 (.ea(ee[0]), .ua(1'b0), .ma(mm[0]), .eb(ee[2]), .mb(mm[2]),",
+     "before2": "ot_hdc_sk_add u_s2 (.ea(g1), .ua(u1), .ma(m1), .eb(ee[2]), .mb(mm[2]),",
+     "after2": "ot_hdc_sk_add u_s2 (.ea(g1), .ua(u1), .ma(m1), .eb(ee[1]), .mb(mm[1]),"},
+    {"id": "chain_late_increment_ignored", "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "description": "the chained add ignores the late exponent increment when ordering the operands",
+     "before": "wire        a_ge  = ua ? age_c[1] : age_c[0];", "after": "wire        a_ge  = age_c[0];"},
     {"id": "no_transpose", "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
      "description": "the steady step writes rows back untransposed (normalises rows twice)",
      "before": "assign s_out[4*c + r] = {1'b0, q};", "after": "assign s_out[4*r + c] = {1'b0, q};"},
@@ -488,7 +496,8 @@ def run(args) -> dict:
         s = Path(scratch)
         lint = {}
         for top in ("ot_hdc_sinkhorn", "ot_hdc_sk_add", "ot_hdc_sk_quot", "ot_hdc_sk_seed"):
-            r = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", top, *map(str, RTL)],
+            srcs = RTL if top == "ot_hdc_sinkhorn" else [ARITH, ROM]
+            r = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", top, *map(str, srcs)],
                                capture_output=True, text=True)
             lint[top] = {"returncode": r.returncode, "messages": r.stderr.strip().splitlines()[:10]}
             ok &= r.returncode == 0
@@ -559,7 +568,7 @@ def run(args) -> dict:
             "quotients_checked": int(sum(r.get("cases", 0) for r in unit_runs.values())) * 16 * 2 * ITERS,
         }
         ok &= unit_ok_counts["real_cases"] > 0
-        arith_total = {k: int(sum(r.get(k, 0) for r in arith_runs)) for k in ("ops", "add", "div", "div_steady",
+        arith_total = {k: int(sum(r.get(k, 0) for r in arith_runs)) for k in ("ops", "add", "div", "div_steady", "add_chained",
                                                                                   "errors")}
         print("arith", arith_total, flush=True)
 
