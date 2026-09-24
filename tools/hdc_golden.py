@@ -14,6 +14,8 @@ each op), applied in exactly the order the hardware applies it:
 * exp         n = rint(x*log2e) by the 1.5*2^23 trick, two-constant Cody-Waite
               reduction, degree-6 Horner polynomial, scale by 2^n in the exponent
 * softmax     max, exp(s - max), reduction sum, reciprocal, multiply
+* attention   KV cache in BF16; q and the probabilities rounded to BF16 before
+              their products (exact BF16 x BF16 products, FP32 accumulation)
 * silu        g * reciprocal(1 + exp(-g))
 
 See docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md.  `decode_token` returns the
@@ -238,15 +240,18 @@ class Model:
             qn, kn = self.lw(L, "self_attn.q_norm.weight"), self.lw(L, "self_attn.k_norm.weight")
             q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(self.heads)])
             k = np.stack([rope(rmsnorm(k[i], kn, self.eps), cos, sin, half) for i in range(self.kv_heads)])
-            cache[L].append((k, v))
+            # KV cache in BF16; q and the probabilities are BF16-rounded before
+            # their products, so every attention product is an exact BF16 x BF16
+            # product any lane can form
+            cache[L].append((to_bf16(k), to_bf16(v)))
             attn = np.zeros((self.heads, self.hd), dtype=F)
             scale = F(1.0 / np.sqrt(self.hd))  # 0.25: exact
             for hh in range(self.heads):
                 g = hh // group
                 keys = np.stack([kv[0][g] for kv in cache[L]])       # [T, hd]
                 vals = np.stack([kv[1][g] for kv in cache[L]])
-                s = mul(matvec_fp32(keys, q[hh]), scale)             # sequential over head dim
-                attn[hh] = matvec_fp32(vals.T, softmax(s))            # sequential over positions
+                s = mul(matvec_fp32(keys, to_bf16(q[hh])), scale)    # sequential over head dim
+                attn[hh] = matvec_fp32(vals.T, to_bf16(softmax(s)))  # sequential over positions
             x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
             gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))

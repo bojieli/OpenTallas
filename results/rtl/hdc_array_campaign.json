@@ -2,8 +2,8 @@
   "claim_boundary": "functional, cycle-accurate RTL simulation of a layer-per-package array of decode cores with behavioural memories; the package link's PHY is a 60-cycle delay-line stand-in (ot_rom_pkg_link). All users share the oracle's one prompt.",
   "configurations": [
     {
-      "aggregate_speedup_vs_single_core": 2.218,
-      "cycles_per_token_step": 14512.8,
+      "aggregate_speedup_vs_single_core": 2.221,
+      "cycles_per_token_step": 14498.6,
       "generated": [
         {
           "cycle": 884357,
@@ -30,49 +30,49 @@
           "user": 3
         },
         {
-          "cycle": 942393,
+          "cycle": 942265,
           "position": 16,
           "token": 382,
           "user": 0
         },
         {
-          "cycle": 957022,
+          "cycle": 956766,
           "position": 16,
           "token": 382,
           "user": 1
         },
         {
-          "cycle": 971651,
+          "cycle": 971267,
           "position": 16,
           "token": 382,
           "user": 2
         },
         {
-          "cycle": 986280,
+          "cycle": 985768,
           "position": 16,
           "token": 382,
           "user": 3
         },
         {
-          "cycle": 1000941,
+          "cycle": 1000301,
           "position": 17,
           "token": 93,
           "user": 0
         },
         {
-          "cycle": 1015602,
+          "cycle": 1014834,
           "position": 17,
           "token": 93,
           "user": 1
         },
         {
-          "cycle": 1030263,
+          "cycle": 1029367,
           "position": 17,
           "token": 93,
           "user": 2
         },
         {
-          "cycle": 1044924,
+          "cycle": 1043900,
           "position": 17,
           "token": 93,
           "user": 3
@@ -84,21 +84,21 @@
       "lm_head_packages": 1,
       "mismatches": 0,
       "package_busy_cycles": [
-        425824,
-        425824,
-        425824,
-        1027096
+        424800,
+        424800,
+        424800,
+        1026072
       ],
       "package_busy_cycles_per_step": [
-        5914.2,
-        5914.2,
-        5914.2,
-        14265.2
+        5900.0,
+        5900.0,
+        5900.0,
+        14251.0
       ],
       "packages": 4,
       "pass": true,
       "token_steps": 72,
-      "total_cycles": 1044925,
+      "total_cycles": 1043901,
       "users": 4
     },
     {
@@ -202,17 +202,17 @@
       "lm_head_packages": 1,
       "mismatches": 0,
       "package_busy_cycles": [
-        532280,
-        532280,
-        532280,
-        532280,
+        531000,
+        531000,
+        531000,
+        531000,
         769140
       ],
       "package_busy_cycles_per_step": [
-        5914.2,
-        5914.2,
-        5914.2,
-        5914.2,
+        5900.0,
+        5900.0,
+        5900.0,
+        5900.0,
         8546.0
       ],
       "packages": 5,
@@ -222,8 +222,8 @@
       "users": 5
     },
     {
-      "aggregate_speedup_vs_single_core": 5.206,
-      "cycles_per_token_step": 6183.9,
+      "aggregate_speedup_vs_single_core": 5.22,
+      "cycles_per_token_step": 6167.4,
       "generated": [
         {
           "cycle": 561227,
@@ -262,73 +262,73 @@
           "user": 5
         },
         {
-          "cycle": 598463,
+          "cycle": 598079,
           "position": 16,
           "token": 382,
           "user": 0
         },
         {
-          "cycle": 604749,
+          "cycle": 604237,
           "position": 16,
           "token": 382,
           "user": 1
         },
         {
-          "cycle": 611035,
+          "cycle": 610395,
           "position": 16,
           "token": 382,
           "user": 2
         },
         {
-          "cycle": 617321,
+          "cycle": 616553,
           "position": 16,
           "token": 382,
           "user": 3
         },
         {
-          "cycle": 623607,
+          "cycle": 622711,
           "position": 16,
           "token": 382,
           "user": 4
         },
         {
-          "cycle": 629893,
+          "cycle": 628869,
           "position": 16,
           "token": 382,
           "user": 5
         },
         {
-          "cycle": 636275,
+          "cycle": 635123,
           "position": 17,
           "token": 93,
           "user": 0
         },
         {
-          "cycle": 642593,
+          "cycle": 641313,
           "position": 17,
           "token": 93,
           "user": 1
         },
         {
-          "cycle": 648911,
+          "cycle": 647503,
           "position": 17,
           "token": 93,
           "user": 2
         },
         {
-          "cycle": 655229,
+          "cycle": 653693,
           "position": 17,
           "token": 93,
           "user": 3
         },
         {
-          "cycle": 661547,
+          "cycle": 659883,
           "position": 17,
           "token": 93,
           "user": 4
         },
         {
-          "cycle": 667865,
+          "cycle": 666073,
           "position": 17,
           "token": 93,
           "user": 5
@@ -340,25 +340,25 @@
       "lm_head_packages": 2,
       "mismatches": 0,
       "package_busy_cycles": [
-        638736,
-        638736,
-        638736,
-        638736,
+        637200,
+        637200,
+        637200,
+        637200,
         480600,
         447012
       ],
       "package_busy_cycles_per_step": [
-        5914.2,
-        5914.2,
-        5914.2,
-        5914.2,
+        5900.0,
+        5900.0,
+        5900.0,
+        5900.0,
         4450.0,
         4139.0
       ],
       "packages": 6,
       "pass": true,
       "token_steps": 108,
-      "total_cycles": 667866,
+      "total_cycles": 666074,
       "users": 6
     },
     {
@@ -552,25 +552,25 @@
       "lm_head_packages": 2,
       "mismatches": 0,
       "package_busy_cycles": [
-        534460,
+        531900,
         565200,
-        534460,
+        531900,
         565200,
-        534460,
+        531900,
         565200,
-        534460,
+        531900,
         565200,
         801000,
         745020
       ],
       "package_busy_cycles_per_step": [
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
         4450.0,
         4139.0
@@ -582,8 +582,8 @@
       "users": 10
     },
     {
-      "aggregate_speedup_vs_single_core": 9.677,
-      "cycles_per_token_step": 3327.0,
+      "aggregate_speedup_vs_single_core": 9.722,
+      "cycles_per_token_step": 3311.6,
       "generated": [
         {
           "cycle": 602689,
@@ -658,145 +658,145 @@
           "user": 11
         },
         {
-          "cycle": 641341,
+          "cycle": 640957,
           "position": 16,
           "token": 382,
           "user": 0
         },
         {
-          "cycle": 644682,
+          "cycle": 644170,
           "position": 16,
           "token": 382,
           "user": 1
         },
         {
-          "cycle": 648023,
+          "cycle": 647383,
           "position": 16,
           "token": 382,
           "user": 2
         },
         {
-          "cycle": 651364,
+          "cycle": 650596,
           "position": 16,
           "token": 382,
           "user": 3
         },
         {
-          "cycle": 654705,
+          "cycle": 653809,
           "position": 16,
           "token": 382,
           "user": 4
         },
         {
-          "cycle": 658046,
+          "cycle": 657022,
           "position": 16,
           "token": 382,
           "user": 5
         },
         {
-          "cycle": 661387,
+          "cycle": 660235,
           "position": 16,
           "token": 382,
           "user": 6
         },
         {
-          "cycle": 664728,
+          "cycle": 663448,
           "position": 16,
           "token": 382,
           "user": 7
         },
         {
-          "cycle": 668069,
+          "cycle": 666661,
           "position": 16,
           "token": 382,
           "user": 8
         },
         {
-          "cycle": 671410,
+          "cycle": 669874,
           "position": 16,
           "token": 382,
           "user": 9
         },
         {
-          "cycle": 674751,
+          "cycle": 673087,
           "position": 16,
           "token": 382,
           "user": 10
         },
         {
-          "cycle": 678092,
+          "cycle": 676300,
           "position": 16,
           "token": 382,
           "user": 11
         },
         {
-          "cycle": 681529,
+          "cycle": 679609,
           "position": 17,
           "token": 93,
           "user": 0
         },
         {
-          "cycle": 684902,
+          "cycle": 682854,
           "position": 17,
           "token": 93,
           "user": 1
         },
         {
-          "cycle": 688275,
+          "cycle": 686099,
           "position": 17,
           "token": 93,
           "user": 2
         },
         {
-          "cycle": 691648,
+          "cycle": 689344,
           "position": 17,
           "token": 93,
           "user": 3
         },
         {
-          "cycle": 695021,
+          "cycle": 692589,
           "position": 17,
           "token": 93,
           "user": 4
         },
         {
-          "cycle": 698394,
+          "cycle": 695834,
           "position": 17,
           "token": 93,
           "user": 5
         },
         {
-          "cycle": 701767,
+          "cycle": 699079,
           "position": 17,
           "token": 93,
           "user": 6
         },
         {
-          "cycle": 705140,
+          "cycle": 702324,
           "position": 17,
           "token": 93,
           "user": 7
         },
         {
-          "cycle": 708513,
+          "cycle": 705569,
           "position": 17,
           "token": 93,
           "user": 8
         },
         {
-          "cycle": 711886,
+          "cycle": 708814,
           "position": 17,
           "token": 93,
           "user": 9
         },
         {
-          "cycle": 715259,
+          "cycle": 712059,
           "position": 17,
           "token": 93,
           "user": 10
         },
         {
-          "cycle": 718632,
+          "cycle": 715304,
           "position": 17,
           "token": 93,
           "user": 11
@@ -808,13 +808,13 @@
       "lm_head_packages": 4,
       "mismatches": 0,
       "package_busy_cycles": [
-        641352,
+        638280,
         678240,
-        641352,
+        638280,
         678240,
-        641352,
+        638280,
         678240,
-        641352,
+        638280,
         678240,
         518832,
         451656,
@@ -822,13 +822,13 @@
         451656
       ],
       "package_busy_cycles_per_step": [
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
-        2969.2,
+        2955.0,
         3140.0,
         2402.0,
         2091.0,
@@ -838,29 +838,29 @@
       "packages": 12,
       "pass": true,
       "token_steps": 216,
-      "total_cycles": 718633,
+      "total_cycles": 715305,
       "users": 12
     }
   ],
   "input_sha256": {
-    "rtl/hdc/ot_hdc_core.sv": "3a2d5d3844dbf73cd9da6614d638611d46d7d2ae5a0c584f4b767e6add2ab704",
+    "rtl/hdc/ot_hdc_core.sv": "6f279db98b772e96a792c2eaf501f49ea27b6af4d30849c2484d8e637547a957",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
     "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
-    "rtl/hdc/ot_hdc_matvec.sv": "cadacc0561e471c6ed966c50db5eca0e9862672aa0b6a00abb5a2f880f4a898e",
+    "rtl/hdc/ot_hdc_matvec.sv": "e1d352760edcdec9743c0fbfaf21ad38dd3c5b824437313642cbeed284fc8fa6",
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
-    "rtl/hdc/ot_hdc_stream.sv": "7f04ae9d14a65f46615f3286d43cd5a670c491d1ce71e09344a88e08b9af96f6",
+    "rtl/hdc/ot_hdc_stream.sv": "0ac8993138829ea6a87c72f0d9b5c0f6228a5e3956bb7ee9efa761cfee928c42",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
     "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
-    "rtl/test/tb_hdc_array.sv": "44fe761f23e8857487390fa8052f4ade9afd6cb6b8960a26ec404c4c363d94b6",
-    "tools/hdc_golden.py": "050ef788e63eb52b40ccbf533f7a7ce0f3e6f33e8ded92718ac13225b9586fa7",
-    "tools/hdc_isa.py": "62498d8e70bbf20dd447b483fe1f52f6e0934e9e8eccc678dafdbad5a6bff215",
-    "tools/hdc_program.py": "326ece2b37a0d56828a22a2d7ed9fab1d4cb0ab535fd155bd03578a6fc7f9893",
-    "tools/rtl_hdc_decode_campaign.py": "86465e0123ac5ae1f921d9f1aea5a312ff57963fba5df3fac8f16f35735a4946"
+    "rtl/test/tb_hdc_array.sv": "d281a6ecf46d65dcd4b249af0acce7576dcf9e82532d31cb46a09e12af7e98fa",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_isa.py": "05b9e689c57e607dbb0ff0b7eecc04be4bbe2e1707b9926b7ee27271440c6e55",
+    "tools/hdc_program.py": "53c5fa418836eda12c229eeade9e460314bfad1ffa1cbbd4c40944f5f8d0a14c",
+    "tools/rtl_hdc_decode_campaign.py": "a3d64fe99eee2613fe545d23613d3a33c2b1b769accab433bef974203e519be8"
   },
   "schema": "opentallas.hdc-array-campaign.v1",
   "single_core_cycles_per_token": 32196,

@@ -51,8 +51,8 @@ module ot_hdc_core #(
     input  wire [63:0]       crom_q,
     // KV SRAM
     output wire              kv_re,
-    output wire [AW-1:0]     kv_raddr,
-    input  wire [W*32-1:0]   kv_q,
+    output wire [G*AW-1:0]   kv_raddr,        // one read port per lane group
+    input  wire [G*W*32-1:0] kv_q,
     output wire              kv_we,
     output wire [AW-1:0]     kv_waddr,
     output wire [31:0]       kv_wdata,
@@ -88,6 +88,7 @@ module ot_hdc_core #(
     `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
     localparam integer LT = $clog2(W * IL);
+    localparam integer LT0 = $clog2(W * G);
 
     // -- sequencer ----------------------------------------------------------------
     localparam [3:0] S_IDLE = 0, S_DYN = 1, S_FETCH = 2, S_WAIT = 3, S_CAP = 4, S_DEC = 5,
@@ -175,7 +176,7 @@ module ot_hdc_core #(
         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
         dyn[4] <= pos_r * HD;
         dyn[5] <= pos_r + 1;
-        dyn[6] <= (pos_r >> LW) + 1;
+        dyn[6] <= (pos_r >> LT0) + 1;            // rounds of G position tiles
         dyn[7] <= 0;
     end
 

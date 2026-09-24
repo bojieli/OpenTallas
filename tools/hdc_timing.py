@@ -34,16 +34,16 @@ K = dict(seq_gap=5,        # go -> next go, sequencer fetch/decode (S_GO..S_ISSU
          idle_reg=2)       # last write -> registered idle seen by the sequencer
 
 
-def dyn_values(pos, token=0, H=128, half=8, HD=16):
+def dyn_values(pos, token=0, H=128, half=8, HD=16, groups=I.GROUPS):
     W = I.W_LANES
-    return [0, token * H, pos * half, (pos // W) * HD * W + pos % W, pos * HD, pos + 1, pos // W + 1]
+    return [0, token * H, pos * half, (pos // W) * HD * W + pos % W, pos * HD, pos + 1, pos // (W * groups) + 1]
 
 
 def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=1):
     """attn_groups / su_width > 1 are PROJECTIONS of design options the RTL does
     not have yet: KV-sourced ops spread over that many lane groups (each taking
     its own heads), and a stream unit retiring su_width elements per cycle."""
-    dyn = dyn_values(pos, **(dyn_shape or {}))
+    dyn = dyn_values(pos, groups=groups, **(dyn_shape or {}))
     t = 0                              # sequencer time: earliest next issue
     me_free = su_free = 0              # unit accepts a new op from here
     me_idle = su_idle = 0              # unit fully drained at
@@ -71,8 +71,8 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             go = max(ready, me_free)
             split = 0 if f["me_wsrc"] else f["me_split"]
             rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
-            if f["me_wsrc"] and attn_groups > 1:
-                rounds = -(-rounds // attn_groups)
+            # (attention now spreads over every group in the RTL itself; the
+            # attn_groups projection is retired and kept only as 1)
             kc = f["me_k"] + dyn[f["me_d_k"]]
             n_el = rounds * kc * IL
             e0 = go + k["me_start"]

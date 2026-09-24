@@ -23,9 +23,11 @@
 // is valid when (t*IL + j)*W + l < nout (mmode 0: rows) or t*W + l < nout
 // (mmode 1: every slot its own vector -- one attention head per slot).
 //
-// MULTIPLIERS.  Group 0 has full binary32 multipliers and alone serves
-// KV-sourced (FP32 x FP32) ops, with t = r.  Groups 1.. multiply BF16 by BF16
-// exactly (ot_hdc_bmul), which is all a rounded ROM-weight op needs.
+// MULTIPLIERS.  Every product is BF16 x BF16: ROM weights times BF16-rounded
+// x, and (KV-sourced ops) the BF16 KV cache times BF16-rounded q or
+// probabilities.  Every lane therefore has the exact BF16 multiplier
+// (ot_hdc_bmul), and KV-sourced ops spread over all groups: group g takes
+// tile r*G + g through its own KV port.
 //
 // Timing from an issue cycle c: memories return at c+1, operands are captured
 // at c+2 and conditioned at c+3, products leave at c+8, sums at c+13, the
@@ -47,7 +49,7 @@ module ot_hdc_matvec #(
     input  wire [NW-1:0]     i_nout,
     input  wire [NW-1:0]     i_tiles,     // rounds
     input  wire [NW-1:0]     i_k,         // k per chunk
-    input  wire              i_wsrc,      // 0 weight ROM (bf16), 1 KV SRAM (fp32)
+    input  wire              i_wsrc,      // 0 weight ROM, 1 KV SRAM (both BF16 values)
     input  wire [AW-1:0]     i_wbase,
     input  wire [AW-1:0]     i_ts,
     input  wire [AW-1:0]     i_ks,
@@ -69,10 +71,10 @@ module ot_hdc_matvec #(
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
     input  wire [G*W*16-1:0] wrom_q,
-    // KV SRAM: W fp32 lanes per word (group 0)
+    // KV SRAM: one port per group, W lanes (BF16 values in 32-bit words) per word
     output reg               kv_re,
-    output reg  [AW-1:0]     kv_addr,
-    input  wire [W*32-1:0]   kv_q,
+    output reg  [G*AW-1:0]   kv_addr,
+    input  wire [G*W*32-1:0] kv_q,
     // x reads (vector memory, element), one port per group
     output reg  [G-1:0]      x_re,
     output reg  [G*AW-1:0]   x_addr,
@@ -97,6 +99,7 @@ module ot_hdc_matvec #(
     localparam integer OD = 5 * LG;       // split tree
 
     // -- issue loop -----------------------------------------------------------
+    integer gi;
     reg              active;
     reg [NW-1:0]     nout_r, tiles_r, k_r;
     reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
@@ -111,7 +114,7 @@ module ot_hdc_matvec #(
     reg              t_last, k_last;
     wire             j_last = (j == IL - 1);
     // tiles one round covers: G/S for ROM ops, 1 for KV ops
-    wire [LG:0]      per_round = i_wsrc ? 1 : (G >> i_split);
+    wire [LG:0]      per_round = G >> (i_wsrc ? 2'd0 : i_split);
 
     assign ready = !active;
 
@@ -139,7 +142,9 @@ module ot_hdc_matvec #(
         end else begin
             // this cycle's element: (r, k, j) at `cur`
             wrom_re <= !wsrc_r; kv_re <= wsrc_r;
-            wrom_addr <= cur; kv_addr <= cur;
+            wrom_addr <= cur;
+            //: KV ops: group g takes tile r*G + g, its own word
+            for (gi = 0; gi < G; gi = gi + 1) kv_addr[gi*AW +: AW] <= cur + gi * ts_r;
             x_re <= {G{1'b1}};
             if (!j_last) begin
                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
@@ -167,7 +172,6 @@ module ot_hdc_matvec #(
         end
     end
     // x address per group: chunk c = g mod S
-    integer gi;
     always @(posedge clk) begin
         for (gi = 0; gi < G; gi = gi + 1)
             x_addr[gi*AW +: AW] <= xc + (gi & ((1 << split_r) - 1)) * xcs_r;
@@ -199,7 +203,7 @@ module ot_hdc_matvec #(
     //: weight word is 2,048 bits wide and its lanes span the whole engine, so a
     //: pin-to-lane wire gets a cycle of its own.
     reg [G*W*16-1:0] mq_wrom;
-    reg [W*32-1:0]   mq_kv;
+    reg [G*W*32-1:0] mq_kv;
     reg [G*32-1:0]   mq_x;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
     always @(posedge clk or negedge rst_n) begin
@@ -217,7 +221,7 @@ module ot_hdc_matvec #(
         mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
         s3_wsrc <= s2_tag[TW-4];
         for (l = 0; l < G * W; l = l + 1)
-            s2_w[32*l +: 32] <= (s1b_wsrc && l < W) ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
+            s2_w[32*l +: 32] <= s1b_wsrc ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
         s2_x <= mq_x;
         s3_w <= s2_w;
         for (l = 0; l < G; l = l + 1)
@@ -228,9 +232,8 @@ module ot_hdc_matvec #(
     ot_hdc_delay #(.W(TW), .D(10 + OD)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
     wire [10+OD:0] vline;
     ot_hdc_vline #(.D(10 + OD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
-    wire [5:0] fl_first, kv5;
+    wire [5:0] fl_first;
     ot_hdc_vline #(.D(5)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
-    ot_hdc_vline #(.D(5)) u_kv5 (.clk(clk), .rst_n(rst_n), .v(s3_wsrc && s3_v), .vd(kv5));
     // split and KV flag reach the tree 10 cycles after S3
     wire [1:0] t_split;
     ot_hdc_delay #(.W(2), .D(10)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 2]), .q(t_split));
@@ -245,16 +248,13 @@ module ot_hdc_matvec #(
                 localparam integer LI = g * W + gl;
                 wire [31:0] prod, fb, acc_in;
                 wire f0, f1;
-                if (g == 0) begin : g_fp32
-                    ot_hdc_fmul u_mul (clk, rst_n, s3_v, s3_w[32*LI +: 32], s3_x[0 +: 32], prod, f0);
-                end else begin : g_bf16
-                    //: KV-sourced ops leave groups 1.. idle (their words are not weights)
-                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v && !s3_wsrc),
-                                       .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
-                end
+                //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
+                //: probabilities rounded), so every lane has the small exact multiplier
+                ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
+                                   .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 // add input at c+8; the circulating sum from IL cycles earlier
                 assign acc_in = fl_first[5] ? 32'd0 : fb;
-                ot_hdc_fadd u_add (clk, rst_n, vline[5] && (g == 0 || !kv5[5]), acc_in, prod,
+                ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
                                    sum[32*LI +: 32], f1);
                 ot_hdc_delay #(.W(32), .D(FB)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb));
                 assign lfault[LI] = f0 | f1;
@@ -316,7 +316,7 @@ module ot_hdc_matvec #(
     wire [AW-1:0] r_oa, r_ots;
     wire [NW:0]   r_nb, r_lb, r_nout;
     assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout} = a_tag;
-    wire [LG:0]   r_ports = r_wsrc ? 1 : (G >> r_split);
+    wire [LG:0]   r_ports = G >> r_split;
     reg  [G*W-1:0] r_mask;
     integer q, ql;
     always @(*) begin

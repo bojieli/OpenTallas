@@ -115,10 +115,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # sections of README.md and docs/OVERVIEW.md went with them. This is the one
     # sanctioned drop; the floor rises again from here.
     # 727: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md binds its decode-core RTL
-    # figures (35) to the per-iteration records in results/rtl/hdc_iterations/
+    # figures (36) to the per-iteration records in results/rtl/hdc_iterations/
     # and the routed records in results/physical_abi3/asap7/hdc/.
     # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 738
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 739
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

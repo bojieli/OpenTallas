@@ -226,7 +226,7 @@ def build_program(lay, layers=None, embed=True, head=True):
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
                 me(dict(n=0, tiles=0, k=HD, base=(lay.k_elem(L, hb // group, 0, 0)) // W), VM["QR"] + hb * HD,
-                   VM["S"] + hb * S_STRIDE, rnd=False, me_xcs=0,
+                   VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=0,
                    me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
                    me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
                    me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
@@ -243,9 +243,9 @@ def build_program(lay, layers=None, embed=True, head=True):
             # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
-                me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
+                me(dict(n=HD, tiles=-(-HD // (W * GR)), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
                    VM["S"] + hb * S_STRIDE, VM["ATT"] + hb * HD,
-                   rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
+                   rnd=True, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
                    me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
                    me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
                    reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={"ATT"})
@@ -378,7 +378,7 @@ def chase_threshold(f, prod):
 # -- ISA-level simulator --------------------------------------------------------------
 def dyn_values(lay, token, pos):
     return [0, token * lay.H, pos * lay.half,
-            (pos // W) * lay.HD * W + pos % W, pos * lay.HD, pos + 1, pos // W + 1]
+            (pos // W) * lay.HD * W + pos % W, pos * lay.HD, pos + 1, pos // (W * GR) + 1]
 
 
 class Machine:
@@ -413,7 +413,7 @@ class Machine:
         ob = f["me_obase"] + dyn[f["me_d_obase"]]
         split = 0 if f["me_wsrc"] else f["me_split"]
         S = 1 << split
-        per_round = 1 if f["me_wsrc"] else GR // S
+        per_round = GR // S
         r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
                                                          np.arange(W), indexing="ij"))
         t = r * per_round + q
@@ -425,10 +425,12 @@ class Machine:
             g = q * S + c
             acc = np.zeros(len(t), dtype=F)
             for k in range(K):
-                word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                 if f["me_wsrc"]:
+                    # KV ops: every group reads its own tile's word
+                    word = wb + t * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.kv[word * W + l]
                 else:
+                    word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.wrom_f32(word * (W * GR) + g * W + l)
                 x = self.vm[xb + c * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
                 if f["me_round"]:
@@ -484,7 +486,10 @@ class Machine:
                 self.vm[f["r_base"] + o * f["r_so"]] = v
         if f["dst"]:
             ed = self.stream(f, dyn, "d", n_out, n_in)
-            (self.vm if f["dst"] == I.DST_VM else self.kv)[ed] = out
+            if f["dst"] == I.DST_VM:
+                self.vm[ed] = out
+            else:
+                self.kv[ed] = G.to_bf16(out)          # the KV cache holds BF16
 
 
 # -- images ----------------------------------------------------------------------------
@@ -500,9 +505,14 @@ def pack_lanes(lanes, bits_per_lane):
     return word
 
 
-def golden_state():
+def golden_state(context=None):
+    """Golden prefill of the oracle's prompt, or (context=N) of that prompt
+    cycled to N tokens -- a longer context with no oracle, checked against the
+    ISA-level model only."""
     model = G.Model(GR)
     prompt, expected = G.prompt_and_expected()
+    if context:
+        prompt = (list(prompt) * (-(-context // len(prompt))))[:context]
     cache = [[] for _ in range(model.layers)]
     for pos, tok in enumerate(prompt[:-1]):
         model.decode_token(tok, pos, cache)
@@ -513,6 +523,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, help="write RTL images and expectations here")
     ap.add_argument("--stop", type=int, help="debug: end the program after this many instructions")
+    ap.add_argument("--context", type=int, help=f"decode at position N-1 of the prompt cycled to N tokens "
+                                                 f"(N <= {TMAX}); checked against the ISA model, not the oracle")
     ap.add_argument("--stages", type=int, default=0,
                     help="also write per-package programs (prog_stageN.hex) for a layer-per-package array: "
                          "layer (or half-layer) packages plus --head-parts lm_head packages")
@@ -520,7 +532,7 @@ def main():
     ap.add_argument("--head-parts", type=int, default=-1,
                     help="lm_head packages: 0 (with the last layer), 1, 2 or 4 (default: stages minus body)")
     args = ap.parse_args()
-    model, prompt, expected, cache = golden_state()
+    model, prompt, expected, cache = golden_state(args.context)
     lay = Layout(model)
     token, pos = prompt[-1], len(prompt) - 1
     kv = lay.kv_image(cache)
@@ -572,7 +584,7 @@ def main():
         (out / "expect_kv.hex").write_text(hexwords(G.bits(mach.kv), 32))
         (out / "prompt.hex").write_text(hexwords(prompt, 16))
         (out / "generated.hex").write_text(hexwords(expected, 16))
-        (out / "run.args").write_text(f"+TOKEN={token} +POS={pos} +EXPECT={got}\n")
+        (out / "run.args").write_text(f"+TOKEN={token} +POS={pos} +EXPECT={got}\n")   # EXPECT: ISA argmax
         (out / "expect.json").write_text(json.dumps({
             "token": token, "pos": pos, "argmax": got, "oracle": expected[0],
             "logits": [int(b) for b in G.bits(mach.logits)],
@@ -580,7 +592,7 @@ def main():
             "kv_words": len(kvw), "wrom_words": len(lay.words), "crom_words": len(lay.crom),
             "prog_words": len(words)}))
         print("wrote", out)
-    return 0 if exact and got == expected[0] else 1
+    return 0 if exact and (args.context or got == expected[0]) else 1
 
 
 if __name__ == "__main__":

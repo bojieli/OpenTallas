@@ -123,6 +123,12 @@ def run() -> dict:
                                capture_output=True, text=True).stdout
         expect = json.loads((img / "expect.json").read_text())
         prog_len = expect["prog_words"]
+        # long context: attention over every group
+        imgc = s / "imgc"
+        subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(imgc), "--context", "60"],
+                       check=True, capture_output=True)
+        onec = subprocess.run([exe, f"+DIR={imgc}", *(imgc / "run.args").read_text().split()], check=True,
+                              capture_output=True, text=True).stdout
         # scaling point: 8 lane groups
         img8, obj8 = s / "img8", s / "obj8"
         env8 = dict(os.environ, HDC_GROUPS="8")
@@ -150,6 +156,11 @@ def run() -> dict:
                  "oracle_generated_tokens": [st["oracle"] for st in steps], "steps": mm[0],
                  "mismatches": mm[2], "total_cycles": mm[3], "generation_steps": steps,
                  "pass": "PASS" in multi and mm[2] == 0}
+    mc = SINGLE.search(onec)
+    longc = {"position": int(mc.group(2)), "next_token": int(mc.group(3)), "isa_next_token": int(mc.group(4)),
+             "cycles": int(mc.group(5)), "logit_mismatches": int(mc.group(7)),
+             "vector_memory_mismatches": int(mc.group(8)), "kv_cache_mismatches": int(mc.group(9)),
+             "pass": "PASS" in onec and mc.group(3) == mc.group(4) and int(mc.group(6)) == 0}
     m8 = SINGLE.search(one8)
     u8 = list(map(int, UTIL.search(one8).groups()))
     scale8 = {"groups": 8, "next_token": int(m8.group(3)), "cycles": int(m8.group(5)),
@@ -158,7 +169,7 @@ def run() -> dict:
               "both_units_idle_cycles": u8[2],
               "pass": "PASS" in one8 and int(m8.group(3)) == int(m8.group(4)) and int(m8.group(6)) == 0}
     macs = 4 * (128 * 192 + 128 * 128 + 128 * 768 + 384 * 128) + 128 * 4096
-    status = "pass" if sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and scale8["pass"] and multi_rec["pass"] and lint.returncode == 0 \
+    status = "pass" if sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and scale8["pass"] and longc["pass"] and multi_rec["pass"] and lint.returncode == 0 \
         else "fail"
     return {
         "schema": "opentallas.hdc-decode-campaign.v1",
@@ -176,6 +187,7 @@ def run() -> dict:
         "single_step": single,
         "end_to_end": multi_rec,
         "scaling_8_groups": scale8,
+        "long_context": longc,
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)

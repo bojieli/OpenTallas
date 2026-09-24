@@ -15,8 +15,8 @@ The core runs a static program of macro-operations.  Two units execute them:
       result  lane l of word      obase + t*ots + j*ojs   (after the last k)
   valid when (t*I + j)*W + l < nout (mmode 0, rows) or t*W + l < nout (mmode 1,
   lanes: every slot is its own vector, e.g. one attention head per slot).
-  KV-sourced ops (wsrc 1) use group 0 only (t = r); groups 1.. multiply BF16 by
-  BF16 exactly, so they serve only rounded, ROM-weight ops.
+  KV-sourced ops (wsrc 1) spread over all groups (tile t = r*G + g, word
+  wbase + t*ts + ..., one KV port per group).  Every product is BF16 x BF16.
   `chase` (either unit): instead of waiting for a barrier, start once the
   OTHER unit's latest instruction has made `chase_n` progress -- elements
   written for the stream unit, result slots (one per slot per round) for the
@@ -62,7 +62,7 @@ D = 3    # DYN select width
 UNIT_END, UNIT_ME, UNIT_SU = 0, 1, 2
 # DYN values (sequencer): 0 is zero.
 DYN_NONE, DYN_EMBED, DYN_ROPE, DYN_KWRITE, DYN_VWRITE, DYN_T, DYN_TTILES = range(7)
-# DYN_TTILES = pos // W + 1: lane tiles covering the context (mmode 1).
+# DYN_TTILES = pos // (W * GROUPS) + 1: rounds of G lane tiles covering the context.
 # SU source / mode encodings
 SRC_VM, SRC_ALT = 0, 1                 # ALT: A -> weight ROM (bf16), B/C -> constant ROM
 MA_BYP, MA_AB, MA_AA, MA_AIMM = range(4)

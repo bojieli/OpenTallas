@@ -79,7 +79,7 @@ module tb_hdc_array #(
             wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
             wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
             wire crom_re; wire [AW-1:0] crom_addr; reg [63:0] crom_q;
-            wire kv_re, kv_we; wire [AW-1:0] kv_raddr, kv_waddr; reg [W*32-1:0] kv_q; wire [31:0] kv_wdata;
+            wire kv_re, kv_we; wire [G*AW-1:0] kv_raddr; wire [AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q; wire [31:0] kv_wdata;
             wire va_re, vb_re, vc_re; wire [AW-1:0] va_addr, vb_addr, vc_addr;
             wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
             reg [31:0] va_q, vb_q, vc_q;
@@ -158,14 +158,14 @@ module tb_hdc_array #(
             wire [NW-1:0] tok_out = own_wins ? own_idx : pa_idx;
             wire [31:0]   best_val = own_wins ? nval_w[n*32 +: 32] : pa_val;
             // KV slice of the running user
-            wire [AW-1:0] kv_rword = kv_raddr + user * KVW;
             wire [AW-1:0] kv_wword = (kv_waddr >> 4) + user * KVW;
 
             always @(posedge clk) begin
                 if (prog_re) prog_q <= prog[prog_addr];
                 if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
                 if (crom_re) crom_q <= crom[crom_addr[11:0]];
-                if (kv_re) kv_q <= kv[kv_rword];
+                for (q = 0; q < G; q = q + 1)
+                    if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: AW] + user * KVW];
                 for (q = 0; q < G; q = q + 1)
                     if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: 12]];
                 if (va_re) va_q <= vm[va_addr[11:0]];

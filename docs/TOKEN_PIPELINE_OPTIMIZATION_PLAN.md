@@ -288,17 +288,17 @@ array and generates 1073, 382, 93. The links never stalled.
 
 | Packages / users | Cycles per token-step | Busy per step (layer packages / last) |
 |---|---|---|
-| 4 / 4 (lm_head on layer 3's package) | 14,513 | 5,914 / 14,265 |
-| 5 / 5 (lm_head alone) | 8,810 | 5,914 / 8,546 |
-| 6 / 6 (lm_head split by vocabulary) | 6,184 | 5,914 / 4,450 and 4,139 |
-| 10 / 10 (layers split into attention and MLP packages) | 4,624 | 2,969 and 3,140 / 4,450 and 4,139 |
-| 12 / 12 (as 10, lm_head split over four packages) | 3,327 | 2,969 and 3,140 / 2,402, then 2,091 each |
+| 4 / 4 (lm_head on layer 3's package) | 14,499 | 5,900 / 14,251 |
+| 5 / 5 (lm_head alone) | 8,810 | 5,900 / 8,546 |
+| 6 / 6 (lm_head split by vocabulary) | 6,167 | 5,900 / 4,450 and 4,139 |
+| 10 / 10 (layers split into attention and MLP packages) | 4,624 | 2,955 and 3,140 / 4,450 and 4,139 |
+| 12 / 12 (as 10, lm_head split over four packages) | 3,312 | 2,955 and 3,140 / 2,402, then 2,091 each |
 
-- 4 / 4 aggregate speed-up over one core: 2.218× <!-- figure: 2.218 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
+- 4 / 4 aggregate speed-up over one core: 2.221× <!-- figure: 2.221 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
 - 5 / 5 aggregate speed-up over one core: 3.655× <!-- figure: 3.655 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
 - 5 / 5 cycles per token-step: 8,810. <!-- figure: 8809.5 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
 
-- 6 / 6 aggregate speed-up over one core: 5.206× <!-- figure: 5.206 src="results/rtl/hdc_array_campaign.json#configurations[packages=6].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
+- 6 / 6 aggregate speed-up over one core: 5.22× <!-- figure: 5.22 src="results/rtl/hdc_array_campaign.json#configurations[packages=6].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
 
 In the 6-package array lm_head is split by vocabulary:
 
@@ -313,7 +313,7 @@ The 10-package array also splits every layer at the residual after o_proj,
 into an attention package and an MLP package. That cut is as exact as a layer
 boundary: the MLP package opens with the sum of squares of the X it receives.
 
-- 12 / 12 aggregate speed-up over one core: 9.677× <!-- figure: 9.677 src="results/rtl/hdc_array_campaign.json#configurations[packages=12].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
+- 12 / 12 aggregate speed-up over one core: 9.722× <!-- figure: 9.722 src="results/rtl/hdc_array_campaign.json#configurations[packages=12].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
 
 With more than two lm_head packages, each one carries the running best
 {row, logit} forward and replaces it only when strictly greater.
@@ -355,3 +355,23 @@ reticle therefore needs three things:
    the array already proves.
 
 Those are the next RTL iterations for that target.
+
+**Iteration 6: BF16 KV cache, attention on every lane group, one lane type.**
+
+- *Numerics* (a spec change, in the golden). The KV cache holds BF16, and q
+  and the softmax probabilities are rounded to BF16 before their products.
+  That is the common serving choice, and the golden still decodes the oracle's
+  tokens. It makes every matrix-engine product an exact BF16 × BF16 product.
+- *Lanes.* All 64 lanes now use the small exact BF16 multiplier. Group 0's
+  FP32 multipliers are gone.
+- *Attention.* KV-sourced ops spread over all groups: group g takes context
+  tile r·G + g through its own KV port. At the vehicle's position 15 the
+  context is one tile, so the token is unchanged (32,196 cycles).
+- *Long-context check.* The prompt cycled to 60 tokens exercises all four
+  groups. The RTL is bit-exact against the ISA model in every logit, the
+  vector memory and the KV cache.
+  That token took 37,828 cycles. <!-- figure: 37828 src="results/rtl/hdc_iterations/iter6_bf16_kv_attention_all_groups.json#long_context.cycles" name="HDC cycles at position 59" -->
+- *Effect on Qwen3-8B* (timing model, re-checked against the RTL on the
+  vehicle). At 16,384 lanes and position 1,024, 24.7 M cycles per token become
+  8.2 M. The next limits are the weighted sum over positions, whose K is the
+  whole context, and the one-element stream unit.

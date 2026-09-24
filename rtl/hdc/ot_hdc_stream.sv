@@ -364,7 +364,8 @@ module ot_hdc_stream #(
     end
     always @(posedge clk) begin
         vm_waddr <= o_daddr; vm_wdata <= out;
-        kv_waddr <= o_daddr; kv_wdata <= out;
+        //: the KV cache holds BF16 (RNE), so attention products are exact BF16 x BF16
+        kv_waddr <= o_daddr; kv_wdata <= (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
     end
 
     // -- reducer ------------------------------------------------------------------
