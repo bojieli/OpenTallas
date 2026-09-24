@@ -835,6 +835,55 @@ def _deepseek_v41_inventory(
     )
 
 
+def _attention_group_components(
+    model: ModelProfile, context_tokens: int
+) -> list[OperationComponent]:
+    """Attention-core arithmetic a profile declares per attention group.
+
+    The active-parameter identity counts weight matrices only.  A profile may
+    declare, per group, the arithmetic of its attention core: per attended
+    cache entry for a softmax cache (QK plus AV) and per token for a recurrent
+    linear-attention layer (state decay, delta-rule update and readout).  The
+    attended entries are exactly the entries ``workload.kv_traffic`` reads.
+    A profile that declares none -- every profile that predates the fields --
+    gets no component, so its inventory is unchanged.
+    """
+
+    components: list[OperationComponent] = []
+    for group in model.attention_groups:
+        numeric_format = group.operations_format or model.dense_compute_format
+        label = group.label or group.kind
+        if group.operations_per_token:
+            components.append(
+                OperationComponent(
+                    name=f"attention_state_update:{label}",
+                    numeric_format=numeric_format,
+                    operations=group.count * group.operations_per_token,
+                    layer_index=None,
+                    formula="layers*operations_per_token (context-independent)",
+                    evidence=group.evidence,
+                )
+            )
+        if group.operations_per_entry:
+            if group.kind == "window":
+                entries = min(context_tokens, group.window_tokens)
+                formula = "layers*operations_per_entry*min(context, window)"
+            else:
+                entries = context_tokens
+                formula = "layers*operations_per_entry*context"
+            components.append(
+                OperationComponent(
+                    name=f"attention_core:{label}",
+                    numeric_format=numeric_format,
+                    operations=group.count * group.operations_per_entry * entries,
+                    layer_index=None,
+                    formula=formula,
+                    evidence=group.evidence,
+                )
+            )
+    return components
+
+
 def _active_parameter_fallback(
     model: ModelProfile, context_tokens: int
 ) -> OperationInventory:
@@ -867,6 +916,7 @@ def _active_parameter_fallback(
                 evidence="legacy fallback; exact operator inventory unavailable",
             )
         )
+    components.extend(_attention_group_components(model, context_tokens))
     totals: dict[str, float] = {}
     for component in components:
         totals[component.numeric_format] = (

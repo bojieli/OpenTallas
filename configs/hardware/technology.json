@@ -336,6 +336,24 @@
         "note": "5: the engram_hbm placement variant of DeepSeek-V4.1-Flash is the same model with its Engram tables resident in the store that holds the KV cache, so serial depth is unchanged for the same reason the engram_host variant's is. THE PLACEMENT DOES NOT ADD A PASS BOUNDARY, AND THIS IS THE ONE PLACEMENT WHERE THAT CLAIM COULD BE WRONG: the lookup now reads the same HBM the attention KV reads, so a lookup that could not be prefetched would serialise behind the KV round trip. It is charged as prefetchable here on the same evidence as the other two entries -- the row address is a function of the token ids alone (technical report sections 2.4.2 and 3.1.3), so it is available before the layer runs -- and the capacity and bandwidth the placement does cost are charged by the analytical model instead, as KV-store capacity on the stage that owns the region and as KV read bytes per token. Plan section 3.4 revisits exactly this at gate DS41-C2, when the cycle model prices the lookup with a measured transaction size; if it lands on the critical path this entry is what has to move.",
         "source": "DeepSeek-V4.1-Flash technical report sections 2.1-2.4 and pinned inference/model.py; same decoder-block enumeration as DeepSeek-V4-Flash-0731",
         "value": 5.0
+      },
+      "Kimi-K3": {
+        "grade": "assumed",
+        "note": "7. Kimi-K3's layer is the standard chain plus a router and a latent MoE: the routed experts run in a 3,584-wide latent, so a routed_expert_down_proj must finish before the expert gate/up starts and a routed_expert_up_proj after the expert down (header tensors block_sparse_moe.routed_expert_{down,up}_proj). Chain: attention projections, attention output, router score, latent down, expert gate/up, expert down, latent up. Two further serial candidates are NOT counted and would raise it to 8-9: the KDA layers' low-rank gate (f_a_proj then f_b_proj) and the attention-residual projections (self_attention_res_proj, mlp_res_proj). The KDA recurrence itself is element-serial within a head, not a matrix pass. Graded `assumed`: a reading of the pinned tensor graph, not a measurement of serial depth.",
+        "source": "moonshotai/Kimi-K3@a590ce09 config.json and safetensors header tensor names",
+        "value": 7.0
+      },
+      "MiMo-V2.6-Pro": {
+        "grade": "assumed",
+        "note": "5, the DeepSeek-V4 reading of a routed decoder layer: fused QKV, attention output, router score, expert gate/up, expert down. MiMo-V2.6 has no shared expert, no latent MoE and no low-rank attention projections, so nothing serial is added; layer 0's dense FFN has the same depth minus the router. Graded `assumed`: a reading of the pinned tensor graph, not a measurement.",
+        "source": "XiaomiMiMo/MiMo-V2.6-Pro-RL@73875d00 config.json and safetensors header tensor names",
+        "value": 5.0
+      },
+      "MiMo-V2.6-Flash": {
+        "grade": "assumed",
+        "note": "5, the DeepSeek-V4 reading of a routed decoder layer: fused QKV, attention output, router score, expert gate/up, expert down. MiMo-V2.6 has no shared expert, no latent MoE and no low-rank attention projections, so nothing serial is added; layer 0's dense FFN has the same depth minus the router. Graded `assumed`: a reading of the pinned tensor graph, not a measurement.",
+        "source": "XiaomiMiMo/MiMo-V2.6-Flash-RL@5711b268 config.json and safetensors header tensor names",
+        "value": 5.0
       }
     },
     "global_wire_delay_s_per_mm": {

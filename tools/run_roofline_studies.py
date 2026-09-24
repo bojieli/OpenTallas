@@ -24,7 +24,7 @@ from dataclasses import dataclass, replace
 import hashlib
 import io
 import json
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 import math
 from pathlib import Path
 import sys
@@ -191,6 +191,26 @@ CANDIDATE_MODELS: tuple[tuple[str, str, Path, int], ...] = (
         / "candidates"
         / "deepseek-v4.1-flash-engram_hbm.json",
         200_000,
+    ),
+    # Kimi-K3 (69 KDA linear-attention layers + 24 MLA) and Xiaomi
+    # MiMo-V2.6 Pro/Flash (hybrid 128-token SWA + global GQA), 2026-09-24.
+    # Each is run at the DeepSeek primary context and at the two ends of the
+    # context ladder, 8,192 and 1,000,000, because the three attention designs
+    # scale with context in three different ways: a fixed recurrent state, a
+    # 576-byte latent per token, and a 2.5-5 KB GQA entry per token.
+    *(
+        (
+            f"{family}{suffix}",
+            model_name,
+            ROOT / "configs" / "models" / "candidates" / profile,
+            context,
+        )
+        for family, model_name, profile in (
+            ("kimi-k3", "Kimi-K3", "kimi-k3-attention_ops.json"),
+            ("mimo-v26-pro", "MiMo-V2.6-Pro", "mimo-v2.6-pro.json"),
+            ("mimo-v26-flash", "MiMo-V2.6-Flash", "mimo-v2.6-flash.json"),
+        )
+        for suffix, context in (("", 200_000), ("-8k", 8_192), ("-1m", 1_000_000))
     ),
 )
 """Candidate models, each run as a single-model study in its own tree.
@@ -8199,8 +8219,36 @@ def run_all(
                 )
 
     # --- candidate models, each in its own tree ---------------------------
+    planned.extend(_candidate_files(output_root, technology, anchors))
+
+    existing = [path for path, _ in planned if path.exists()]
+    if existing and not force:
+        raise SystemExit(
+            "refusing to overwrite existing study artifacts without --force:\n  "
+            + "\n  ".join(str(path) for path in existing)
+        )
+    for path, payload in planned:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(payload, encoding="utf-8", newline="")
+    return results
+
+
+def _candidate_files(
+    output_root: Path,
+    technology: Technology,
+    anchors: dict[str, Any],
+    slugs: Sequence[str] | None = None,
+) -> list[tuple[Path, str]]:
+    """Every candidate model's single-model study, or only ``slugs``."""
+
+    unknown = set(slugs or ()) - {entry[0] for entry in CANDIDATE_MODELS}
+    if unknown:
+        raise SystemExit(f"unknown candidate slug(s): {sorted(unknown)}")
+    planned: list[tuple[Path, str]] = []
     for study_id in STUDIES:
         for slug, model_name, model_path, context in CANDIDATE_MODELS:
+            if slugs is not None and slug not in slugs:
+                continue
             config = dict(STUDIES[study_id])
             config["models"] = ((model_name, model_path, context),)
             config["contract"] = (
@@ -8232,7 +8280,22 @@ def run_all(
                     render_report(candidate, anchors).rstrip() + "\n",
                 )
             )
+    return planned
 
+
+def run_candidates(
+    output_root: Path, slugs: Sequence[str], *, force: bool = False
+) -> list[Path]:
+    """Run only the named candidate studies; the primaries are not touched.
+
+    Same rule and code path as ``run_all``, which runs every candidate after
+    the primaries; this exists so adding a candidate does not cost the ~26
+    minutes of regenerating every primary artifact.
+    """
+
+    technology = Technology.load(TECHNOLOGY_PATH)
+    anchors = run_anchors(technology)
+    planned = _candidate_files(output_root, technology, anchors, tuple(slugs))
     existing = [path for path, _ in planned if path.exists()]
     if existing and not force:
         raise SystemExit(
@@ -8242,7 +8305,7 @@ def run_all(
     for path, payload in planned:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(payload, encoding="utf-8", newline="")
-    return results
+    return [path for path, _ in planned]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -8253,7 +8316,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="overwrite existing artifacts under the output directory",
     )
+    parser.add_argument(
+        "--candidates",
+        nargs="+",
+        metavar="SLUG",
+        help=(
+            "run only these candidate-model studies (slugs from CANDIDATE_MODELS) "
+            "and leave every other artifact untouched"
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.candidates:
+        for path in run_candidates(args.output, args.candidates, force=args.force):
+            print(path.resolve())
+        return 0
     results = run_all(args.output, force=args.force)
     for study_id, result in results.items():
         audit = result["consistency_audit"]

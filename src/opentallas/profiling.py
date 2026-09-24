@@ -121,6 +121,43 @@ SOURCES: tuple[SourceSpec, ...] = (
         total_parameters=2.8e12,
         active_parameters=104e9,
     ),
+    # The same Kimi-K3 checkpoint as a candidate whose attention groups also
+    # declare their attention-core arithmetic (KDA state update per token, MLA
+    # QK+AV per cached entry).  The legacy profile above feeds artifacts that
+    # predate the fields and is left byte-identical; this one is the input to
+    # results/roofline/candidates/kimi-k3*/.
+    SourceSpec(
+        slug="kimi-k3-attention_ops",
+        repo="moonshotai/Kimi-K3",
+        revision="a590ce090cb049c93a33dfe8c208ec652aa20503",
+        adapter="kimi_k3",
+        total_parameters=2.8e12,
+        active_parameters=104e9,
+        variant="attention_ops",
+        profile_dir="candidates",
+    ),
+    # Xiaomi MiMo-V2.6, released 2026-09-21 (model cards: 1.02T total / 42B
+    # activated for Pro, 309B / 15B for Flash; hybrid 128-token SWA plus global
+    # GQA attention, no linear attention).  Candidates profiled from the pinned
+    # config.json and the safetensors headers only.
+    SourceSpec(
+        slug="mimo-v2.6-pro",
+        repo="XiaomiMiMo/MiMo-V2.6-Pro-RL",
+        revision="73875d00b30a89ef8cc353a0b60b0e9f9561952d",
+        adapter="mimo_v2",
+        total_parameters=1.02e12,
+        active_parameters=42e9,
+        profile_dir="candidates",
+    ),
+    SourceSpec(
+        slug="mimo-v2.6-flash",
+        repo="XiaomiMiMo/MiMo-V2.6-Flash-RL",
+        revision="5711b268169967567844e1e560e8a3966da959b1",
+        adapter="mimo_v2",
+        total_parameters=309e9,
+        active_parameters=15e9,
+        profile_dir="candidates",
+    ),
     SourceSpec(
         slug="qwen3-8b",
         repo="Qwen/Qwen3-8B",
@@ -240,7 +277,9 @@ DEEPSEEK_ADAPTERS = frozenset({"deepseek_v4", "deepseek_v41"})
 def _parameter_count(name: str, dtype: str, shape: list[int]) -> int:
     """Elements a released tensor holds, packed I8 MXFP4 counted as two."""
 
-    if name.endswith(".scale"):
+    if name.endswith((".scale", ".weight_scale", ".weight_scale_inv")):
+        # Block scales (DeepSeek ``.scale``, MiMo/Kimi E8M0 ``.weight_scale``,
+        # FP8 ``.weight_scale_inv``) carry no parameters.
         return 0
     count = 1
     for extent in shape:
@@ -249,13 +288,23 @@ def _parameter_count(name: str, dtype: str, shape: list[int]) -> int:
         if not (_is_routed(name) and name.endswith(".weight")):
             raise RuntimeError(f"unexpected I8 tensor {name!r}")
         return 2 * count
+    if dtype == "U8" and _is_routed(name) and name.endswith((".weight", ".weight_packed")):
+        # MXFP4 packed two values per byte (Kimi-K3 ``weight_packed``,
+        # MiMo-V2.6 ``weight``).  No DeepSeek checkpoint carries U8.
+        return 2 * count
     return count
 
 
 def _is_routed(name: str) -> bool:
     return bool(
         re.search(r"(?:^|\.)(?:experts)\.\d+(?:\.|$)", name)
-        and (".ffn." in name or ".block_sparse_moe." in name)
+        and (
+            ".ffn." in name
+            or ".block_sparse_moe." in name
+            # MiMo-V2.6 ``model.layers.N.mlp.experts.E``.  No profiled
+            # checkpoint before it names an expert under ``.mlp.``.
+            or ".mlp.experts." in name
+        )
     )
 
 
@@ -295,6 +344,21 @@ def _weight_role(adapter: str, name: str) -> str:
             name == "language_model.model.embed_tokens.weight"
             or name.startswith("vision_tower.")
             or name.startswith("mm_projector.")
+        ):
+            return "resident_only"
+    elif adapter == "mimo_v2":
+        # The three MTP layers are a speculative drafter, read only under
+        # speculation.  The input embedding, the vision encoder, the audio
+        # encoder and the speech embeddings are the omni front end: looked up
+        # or run on the prompt, never streamed per text decode token.  The
+        # untied head and everything under ``model.layers`` is streamed.
+        if name.startswith("model.mtp."):
+            return "draft_routed" if _is_routed(name) else "draft_dense"
+        if (
+            name == "model.embed_tokens.weight"
+            or name.startswith("visual.")
+            or name.startswith("audio_encoder.")
+            or name.startswith("speech_embeddings.")
         ):
             return "resident_only"
     elif adapter == "qwen3":
@@ -1063,6 +1127,35 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
     # The reference Transformers implementation expands K/V in BF16 and is
     # retained as a pessimistic sensitivity case rather than the baseline.
     mla_entry_bytes = float(latent_dims)
+    attention_ops = spec.variant == "attention_ops"
+    if spec.variant not in ("", "attention_ops"):
+        raise ValueError(f"unknown Kimi-K3 variant {spec.variant!r}")
+    kda_ops: dict[str, Any] = {}
+    mla_ops: dict[str, Any] = {}
+    if attention_ops:
+        # KDA decode recurrence per head (Kimi Linear, fused_recurrent_kda):
+        #   S <- Diag(exp g) S                     dk*dv multiplies
+        #   u <- beta * (v - S^T k)                2*dk*dv
+        #   S <- S + k u^T                          2*dk*dv
+        #   o <- S^T q                              2*dk*dv
+        # = 7*dk*dv operations, FP32 because the state is FP32.  The three
+        # depthwise short convolutions add 2*kernel per channel.
+        per_head = 7 * state_dim * state_dim
+        conv_ops = 3 * heads * state_dim * 2 * conv_kernel
+        kda_ops = {
+            "operations_per_token": float(heads * per_head + conv_ops),
+            "operations_format": "fp32_x_fp32",
+        }
+        # Absorbed MLA decode: QK over the (kv_lora + rope) latent and AV over
+        # the kv_lora latent, every head, every cached token.
+        mla_heads = int(text["num_attention_heads"])
+        kv_rank = int(text["kv_lora_rank"])
+        mla_ops = {
+            "operations_per_entry": float(
+                2 * mla_heads * latent_dims + 2 * mla_heads * kv_rank
+            ),
+            "operations_format": "bf16_x_bf16",
+        }
     groups = (
         AttentionGroup(
             kind="recurrent",
@@ -1070,6 +1163,7 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
             recurrent_state_bytes=recurrent_state_bytes,
             label="kda",
             evidence="derived from official KDA state shapes; precision assumed FP32/BF16",
+            **kda_ops,
         ),
         AttentionGroup(
             kind="dense_mla",
@@ -1077,8 +1171,59 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
             entry_bytes=mla_entry_bytes,
             label="gated-mla",
             evidence="optimized latent cache; FP8 precision is an explicit assumption",
+            **mla_ops,
         ),
     )
+    variant_metadata: dict[str, Any] = {}
+    if attention_ops:
+        state_per_user = kda_count * recurrent_state_bytes
+        variant_metadata = {
+            "variant": "attention_ops",
+            "attention_operations": {
+                "kda_operations_per_layer_per_token": kda_ops["operations_per_token"],
+                "kda_formula": (
+                    "heads*7*dk*dv (decay, delta-rule residual, rank-1 update, "
+                    "readout) + 3*heads*dk*2*short_conv_kernel, FP32 state"
+                ),
+                "mla_operations_per_layer_per_entry": mla_ops["operations_per_entry"],
+                "mla_formula": (
+                    "2*heads*(kv_lora_rank+qk_rope_head_dim) QK + "
+                    "2*heads*kv_lora_rank AV, absorbed decode"
+                ),
+                "status": (
+                    "derived from the pinned config and the published KDA "
+                    "recurrence; not measured.  The legacy configs/models/"
+                    "kimi-k3.json omits both terms and is left unchanged"
+                ),
+            },
+            "kv_precision_assumption": {
+                "note": (
+                    "The gated-mla entry of 576 bytes assumes an FP8 latent, as "
+                    "the legacy profile does. The same FP8 assumption in the "
+                    "DeepSeek-V4 profiles was measured wrong against that "
+                    "vendor's implementation (OI-39, results/roofline/"
+                    "deepseek_v4_kv_model_validation.json); if K3 serves a BF16 "
+                    "latent the MLA term is 2x low. The KDA state is FP32, the "
+                    "precision of the reference fused_recurrent kernel; a BF16 "
+                    "state would halve it."
+                ),
+                "status": "assumed",
+            },
+            "kda_state": {
+                "heads": heads,
+                "key_dim": state_dim,
+                "value_dim": state_dim,
+                "short_conv_kernel": conv_kernel,
+                "state_precision": "FP32 recurrent state, BF16 conv history (assumed)",
+                "bytes_per_layer": recurrent_state_bytes,
+                "bytes_per_user": state_per_user,
+                "read_plus_write_bytes_per_token": 2 * state_per_user,
+                "mla_bytes_per_cached_token": mla_count * mla_entry_bytes,
+                "context_at_which_mla_cache_equals_kda_state": (
+                    state_per_user / (mla_count * mla_entry_bytes)
+                ),
+            },
+        }
     sequence = ["kda" if layer in kda_ids else "gated-mla" for layer in range(layers)]
     return ModelProfile(
         name="Kimi-K3",
@@ -1112,7 +1257,7 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
         metadata={
             "adapter": "kimi_k3",
             "attention_sequence": sequence,
-            "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
+            "checkpoint_inventory": f"data/inventory/{spec.inventory_slug}.json",
             "kv_cache_policy": "FP32 KDA recurrent state + optimized FP8 latent MLA",
             "kv_cache_policy_status": "mixed derived/assumed; swept in sensitivity analysis",
             "compute_precision_policy": (
@@ -1123,6 +1268,7 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
             "full_attention_layers": mla_count,
             "kda_layers": kda_count,
             "weight_traffic_policy": "text decode streamed; embedding and multimodal front end resident-only",
+            **variant_metadata,
         },
     )
 
@@ -1205,6 +1351,188 @@ def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Mode
     )
 
 
+MIMO_NAMES = {"mimo-v2.6-pro": "MiMo-V2.6-Pro", "mimo-v2.6-flash": "MiMo-V2.6-Flash"}
+
+
+def _mimo_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
+    """Xiaomi MiMo-V2.6 (Pro / Flash): hybrid sliding-window + global GQA MoE.
+
+    Every layer is softmax attention.  ``hybrid_layer_pattern`` marks global
+    layers 0 and sliding-window layers 1; the two kinds carry their own head
+    counts (``num_key_value_heads`` for global, ``swa_num_key_value_heads`` for
+    SWA) and share QK 192 / V 128 head dimensions.  A cached token is one K of
+    ``head_dim`` and one V of ``v_head_dim`` per KV head.  The KV precision is
+    not stated anywhere in the release: BF16 (the checkpoint ``dtype`` and the
+    SGLang/vLLM default without a KV-quantisation flag) is assumed.
+    """
+
+    name = MIMO_NAMES[spec.slug]
+    layers = int(config["num_hidden_layers"])
+    pattern = [int(value) for value in config["hybrid_layer_pattern"]]
+    if len(pattern) != layers:
+        raise ValueError("hybrid_layer_pattern length differs from num_hidden_layers")
+    global_count = pattern.count(0)
+    swa_count = pattern.count(1)
+    if global_count + swa_count != layers:
+        raise ValueError("hybrid_layer_pattern must hold only 0 (global) and 1 (SWA)")
+    window = int(config["sliding_window"])
+    kv_bytes = 2  # BF16, assumed
+    ga_heads = int(config["num_attention_heads"])
+    ga_kv = int(config["num_key_value_heads"])
+    ga_qk = int(config["head_dim"])
+    ga_v = int(config["v_head_dim"])
+    swa_heads = int(config["swa_num_attention_heads"])
+    swa_kv = int(config["swa_num_key_value_heads"])
+    swa_qk = int(config["swa_head_dim"])
+    swa_v = int(config["swa_v_head_dim"])
+    ga_entry = float(ga_kv * (ga_qk + ga_v) * kv_bytes)
+    swa_entry = float(swa_kv * (swa_qk + swa_v) * kv_bytes)
+    groups = (
+        AttentionGroup(
+            kind="window",
+            count=swa_count,
+            entry_bytes=swa_entry,
+            window_tokens=window,
+            label="swa",
+            evidence=(
+                "config swa_num_key_value_heads x (swa_head_dim + swa_v_head_dim), "
+                f"{window}-token window; BF16 KV assumed"
+            ),
+            operations_per_entry=float(2 * swa_heads * (swa_qk + swa_v)),
+            operations_format="bf16_x_bf16",
+        ),
+        AttentionGroup(
+            kind="dense_kv",
+            count=global_count,
+            entry_bytes=ga_entry,
+            label="global-gqa",
+            evidence=(
+                "config num_key_value_heads x (head_dim + v_head_dim); "
+                "BF16 KV assumed"
+            ),
+            operations_per_entry=float(2 * ga_heads * (ga_qk + ga_v)),
+            operations_format="bf16_x_bf16",
+        ),
+    )
+    experts = int(config["n_routed_experts"])
+    top_k = int(config["num_experts_per_tok"])
+    counts = inventory.parameter_counts
+    decode_active_from_headers = counts.get("decode_dense", 0) + counts.get(
+        "decode_routed", 0
+    ) * top_k / experts
+    quant = config.get("quantization_config", {})
+    return ModelProfile(
+        name=name,
+        source_repo=spec.repo,
+        source_revision=spec.revision,
+        total_parameters=spec.total_parameters,
+        active_parameters=spec.active_parameters,
+        checkpoint_bytes=inventory.checkpoint_bytes,
+        dense_weight_bytes=inventory.decode_dense_bytes,
+        routed_weight_bytes=inventory.decode_routed_bytes,
+        dense_compute_format="fp8_e4m3_x_fp8_e4m3",
+        routed_compute_format="mxfp4_e2m1_x_fp8_e4m3",
+        draft_dense_weight_bytes=inventory.draft_dense_bytes,
+        draft_routed_weight_bytes=inventory.draft_routed_bytes,
+        resident_only_weight_bytes=inventory.resident_only_bytes,
+        num_layers=layers,
+        num_experts=experts,
+        experts_per_token=top_k,
+        hidden_size=int(config["hidden_size"]),
+        max_context_tokens=int(config["max_position_embeddings"]),
+        attention_groups=groups,
+        layer_dense_weight_bytes=tuple(
+            inventory.decode_layer_dense_bytes.get(str(layer), 0)
+            for layer in range(layers)
+        ),
+        layer_routed_weight_bytes=tuple(
+            inventory.decode_layer_routed_bytes.get(str(layer), 0)
+            for layer in range(layers)
+        ),
+        router_trace_status="synthetic; no production activations",
+        metadata={
+            "adapter": "mimo_v2",
+            "attention_sequence": [
+                "global-gqa" if kind == 0 else "swa" for kind in pattern
+            ],
+            "checkpoint_inventory": f"data/inventory/{spec.inventory_slug}.json",
+            "architecture": (
+                f"{layers} layers: {global_count} global GQA ({ga_heads} Q / {ga_kv} KV "
+                f"heads) and {swa_count} {window}-token sliding-window ({swa_heads} Q / "
+                f"{swa_kv} KV heads, attention-sink bias); QK {ga_qk} / V {ga_v}; layer "
+                f"0 dense FFN, layers 1-{layers - 1} {experts} routed experts top-{top_k}, "
+                "no shared expert; untied head"
+            ),
+            "linear_attention": "none: every layer is softmax attention",
+            "kv_topology_header_check": (
+                "qkv_proj.weight rows read from the pinned safetensors headers "
+                "equal q_heads*qk + kv_heads*qk + kv_heads*v with the config's head "
+                "counts: MiMo-V2.6-Flash layer 0 (global) 13,568 = 64*192+4*192+4*128 "
+                "and layer 1 (SWA) 14,848 = 64*192+8*192+8*128; MiMo-V2.6-Pro layers "
+                "0 and 1 27,136 = 128*192+8*192+8*128"
+            ),
+            "compute_precision_policy": (
+                "routed experts stored MXFP4 (U8 + E8M0 per 32) x FP8 dynamic "
+                "activations; qkv_proj and the layer-0 MLP FP8 E4M3 128x128 blocks; "
+                "o_proj and lm_head BF16 (quantization_config.ignored_layers).  The "
+                "profile carries one dense format, FP8: about 40% of dense decode "
+                "operations (o_proj, head) are BF16 in the release, which this "
+                "rounds in the GPU's favour"
+            ),
+            "compute_precision_status": "pinned config quantization_config and header dtypes",
+            "kv_cache_policy": (
+                f"BF16 K/V: {ga_entry:.0f} B per token per global layer, "
+                f"{swa_entry:.0f} B per token per SWA layer over {window} tokens"
+            ),
+            "kv_cache_policy_status": (
+                "topology from the pinned config; BF16 precision ASSUMED (no KV "
+                "quantisation declared in the release).  FP8 KV would halve the "
+                "global-layer cache"
+            ),
+            "global_kv_bytes_per_token": global_count * ga_entry,
+            "operator_config": {
+                "num_attention_heads": ga_heads,
+                "num_key_value_heads": ga_kv,
+                "head_dim": ga_qk,
+                "v_head_dim": ga_v,
+                "swa_num_attention_heads": swa_heads,
+                "swa_num_key_value_heads": swa_kv,
+                "swa_head_dim": swa_qk,
+                "swa_v_head_dim": swa_v,
+                "sliding_window": window,
+                "moe_intermediate_size": int(config["moe_intermediate_size"]),
+                "intermediate_size": int(config["intermediate_size"]),
+                "vocab_size": int(config["vocab_size"]),
+                "num_nextn_predict_layers": int(
+                    config.get("num_nextn_predict_layers", 0) or 0
+                ),
+                "quantization": {
+                    key: quant.get(key)
+                    for key in ("quant_method", "fmt", "store_dtype", "mxfp4_block_size")
+                },
+            },
+            "attention_operations": {
+                "per_entry_formula": "2*q_heads*(qk_head_dim + v_head_dim): QK + AV",
+                "status": "derived from the pinned config; not measured",
+            },
+            "parameter_counts": counts,
+            "decode_active_parameters_from_headers": decode_active_from_headers,
+            "published_parameters": {
+                "total": spec.total_parameters,
+                "active": spec.active_parameters,
+                "source": f"https://huggingface.co/{spec.repo} model card, Model Summary",
+            },
+            "weight_traffic_policy": (
+                "all backbone layers and the untied head streamed on every decode "
+                "token; MTP drafter charged only under speculation; input "
+                "embedding, vision encoder, audio encoder and speech embeddings "
+                "resident-only.  The separate dflash/ drafter is not in the "
+                "weight map and is not counted"
+            ),
+        },
+    )
+
+
 def build_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
     if spec.adapter == "deepseek_v4":
         return _deepseek_profile(spec, config, inventory)
@@ -1214,6 +1542,8 @@ def build_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
         return _kimi_profile(spec, config, inventory)
     if spec.adapter == "qwen3":
         return _qwen3_profile(spec, config, inventory)
+    if spec.adapter == "mimo_v2":
+        return _mimo_profile(spec, config, inventory)
     raise ValueError(f"unknown source adapter {spec.adapter!r}")
 
 

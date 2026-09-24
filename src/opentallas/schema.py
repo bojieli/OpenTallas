@@ -88,6 +88,28 @@ class AttentionGroup:
     #: different precision from the compressed main cache (V4.1: FP8 window,
     #: FP4 main).  0 means the window entry is ``entry_bytes`` wide.
     window_entry_bytes: float = 0.0
+    #: Attention arithmetic that the active-parameter count does not see.
+    #: ``2 * active_parameters`` counts every weight matrix once and nothing
+    #: else, so a profile without an exact operator inventory used to charge
+    #: its attention core -- QK and AV over the cache, or a recurrent state
+    #: update -- nothing at all.  These three fields let a profile state that
+    #: arithmetic per layer; ``operations.operation_inventory`` adds it for
+    #: the non-DeepSeek adapters.  All default to zero / empty, which is the
+    #: previous behaviour, and are omitted from serialisation at the default
+    #: so every profile that predates them round-trips byte for byte.
+    #:
+    #: ``operations_per_token``: context-independent operations per layer per
+    #: token -- the recurrent-state update and readout of a linear-attention
+    #: layer.  ``recurrent`` layers only.
+    operations_per_token: float = 0.0
+    #: Operations per attended cache entry per layer (QK plus AV over every
+    #: head).  The attended entries are the ones ``workload.kv_traffic``
+    #: reads: ``min(context, window)`` for ``window`` and ``context`` for
+    #: ``dense_kv`` / ``dense_mla``.
+    operations_per_entry: float = 0.0
+    #: Canonical compute format of those operations; empty means the model's
+    #: ``dense_compute_format``.
+    operations_format: str = ""
     label: str = ""
     evidence: str = "assumed"
 
@@ -133,6 +155,18 @@ class AttentionGroup:
             raise ValidationError("window_entry_bytes cannot be negative")
         if self.window_entry_bytes and not self.window_tokens:
             raise ValidationError("window_entry_bytes requires a sliding window")
+        if self.operations_per_token < 0 or self.operations_per_entry < 0:
+            raise ValidationError("attention operation counts cannot be negative")
+        if self.operations_per_token and self.kind != "recurrent":
+            raise ValidationError("operations_per_token applies to recurrent layers only")
+        if self.operations_per_entry and self.kind not in {
+            "window",
+            "dense_kv",
+            "dense_mla",
+        }:
+            raise ValidationError(
+                "operations_per_entry applies to window, dense_kv and dense_mla layers only"
+            )
 
 
 @dataclass(frozen=True)
@@ -308,7 +342,15 @@ class ModelProfile:
 
 
 _SHARING_FIELDS = frozenset(
-    {"kv_owner", "scans_index", "index_scan_entries_cap", "window_entry_bytes"}
+    {
+        "kv_owner",
+        "scans_index",
+        "index_scan_entries_cap",
+        "window_entry_bytes",
+        "operations_per_token",
+        "operations_per_entry",
+        "operations_format",
+    }
 )
 
 

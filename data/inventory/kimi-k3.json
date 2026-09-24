@@ -193,6 +193,7 @@
   },
   "decode_routed_bytes": 1446456066048,
   "dense_bytes": 114404258816,
+  "deployment_storage": {},
   "draft_dense_bytes": 0,
   "draft_routed_bytes": 0,
   "dtype_bytes": {
@@ -395,6 +396,11 @@
     "90": 15722348544,
     "91": 15722348544,
     "92": 15722348544
+  },
+  "parameter_counts": {
+    "decode_dense": 55569242880,
+    "decode_routed": 2722740830208,
+    "resident_only": 1621764096
   },
   "repo": "moonshotai/Kimi-K3",
   "resident_only_bytes": 3243528192,
