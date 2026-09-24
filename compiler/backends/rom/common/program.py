@@ -1467,6 +1467,20 @@ class RomLowering:
         #: STATE_READ results the graph names ``activation``, mapped to the state
         #: plane they re-present (see ``_state_tensors``).
         self._state_read_alias: dict[str, str] = {}
+        #: Outputs of kernels that commit at ``POSITION_START`` + row, and the
+        #: state resources they write (see ``_absolute_row_view``).
+        self._absolute_row_tensors: frozenset[str] = frozenset(
+            name
+            for kernel in self.graph.kernels
+            if str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+            for name in kernel.outputs
+        )
+        self._absolute_row_states: frozenset[str] = frozenset(
+            state_id
+            for kernel in self.graph.kernels
+            if str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+            for state_id in kernel.state_writes
+        )
         #: Next free byte of the explicit HBM map; zero until the first object
         #: is placed.  See :meth:`_hbm_address`.
         self._hbm_cursor = 0
@@ -3233,6 +3247,18 @@ class RomLowering:
             if slot_bytes <= 0:
                 raise RomLoweringError(f"state group {index} has no capacity")
             total = slot_bytes * len(members)
+            #: A resource an absolute-row writer commits to is addressed at
+            #: ``POSITION_START`` + row, and the verifier proves that over the
+            #: capability's whole POSITION_START range -- far wider than the
+            #: deployment's context -- so its objects carry that range as an
+            #: unreachable tail past the last slot.  Capacity, slots and the
+            #: STATE descriptor are unchanged; the host request window is sized
+            #: by the same argument.
+            object_bytes = total
+            if any(m.state_id in self._absolute_row_states for m in members):
+                object_bytes = total + row_bytes * int(
+                    self.capability.limits["max_context_positions"]
+                )
             group_key = f"state.{index}"
             self._state_group_count += 1
             self._state_group_shape[group_key] = (slot_bytes, capacity, row_elements)
@@ -3282,18 +3308,18 @@ class RomLowering:
             # while the commit record stays readable.
             committed = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
-                size_bytes=total,
-                source=ObjectSource.zeros(total),
+                size_bytes=object_bytes,
+                source=ObjectSource.zeros(object_bytes),
                 permissions=int(Permission.READ | Permission.STATE_COMMIT),
-                base_address=self._hbm_address(total),
+                base_address=self._hbm_address(object_bytes),
                 key=f"obj.{group_key}.committed",
             )
             prepared = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
-                size_bytes=total,
-                source=ObjectSource.zeros(total),
+                size_bytes=object_bytes,
+                source=ObjectSource.zeros(object_bytes),
                 permissions=int(Permission.READ | Permission.STATE_PREPARE),
-                base_address=self._hbm_address(total),
+                base_address=self._hbm_address(object_bytes),
                 key=f"obj.{group_key}.prepared",
             )
             view = self._view(
@@ -3633,6 +3659,43 @@ class RomLowering:
             label="view.state",
         )
 
+    def _absolute_row_view(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        name: str,
+        run: LayerRun | None,
+        loop: int | None,
+    ) -> int | None:
+        """The destination of a ``committed_row: absolute_position`` write.
+
+        Position ``p`` is row ``p`` of the resource
+        (``runtime/reference/lookup.py::lookup_compressed_token_ids``), so one
+        block of the request's rows lands at ``POSITION_START`` + block offset.
+        V4.1's Engram token ring is the one such writer, and its reader,
+        ``DMA.NGRAM_HASH``, reads the committed prefix ``[0, CONTEXT_LENGTH)``.
+        Presented as that same prefix and walked by the context loop, the write
+        took ``[0, CONTEXT_LENGTH)`` of a host window that holds only this
+        request's ids: at decode, ring row 0 became the new token and rows 1..
+        kept stale prompt ids, so the n-grams hashed the wrong history.
+        """
+        tensor = self.tensors[name]
+        if loop is None or not shape.row_symbolic:
+            return None
+        rows = int(self._blocked_dims(tensor, shape)[0])
+        row = self._state_plane_row_elements(name, tensor)
+        return self._state_plane_view(
+            kernel,
+            name,
+            "out",
+            run,
+            leading_rows=rows,
+            extra_terms=(
+                DynamicTerm.loop(loop, rows * row),
+                DynamicTerm.symbol(Symbol.POSITION_START, row),
+            ),
+        )
+
     def _compressor_history_view(
         self,
         kernel: Kernel,
@@ -3851,7 +3914,13 @@ class RomLowering:
         destination row is addressed is saying its destination is a cache, so
         the rows moved are the source's.
         """
-        if kernel.attributes.get("cache_row") and kernel.inputs:
+        # ``committed_row: absolute_position`` says the same of a commit: the
+        # destination is the whole committed sequence, the rows moved are the
+        # request's.
+        if kernel.inputs and (
+            kernel.attributes.get("cache_row")
+            or str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+        ):
             return self.tensors[kernel.inputs[0]]
         if kernel.outputs:
             return self.tensors[kernel.outputs[0]]
@@ -5295,6 +5364,10 @@ class RomLowering:
     ) -> int:
         tensor = self.tensors[name]
         writable = direction == "out"
+        if writable and name in self._absolute_row_tensors:
+            view = self._absolute_row_view(kernel, shape, name, run, loop)
+            if view is not None:
+                return view
         # A declared state effect is the authority: a kernel that writes a state
         # resource writes into that resource's prepared image, even when the
         # graph names the result as an ordinary activation.

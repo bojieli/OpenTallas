@@ -101,6 +101,7 @@ from runtime.abi3.descriptors import (
 
 from .plan import (
     FLOOR_DIV_INDEX_PREFIX,
+    absolute_row_writers,
     KernelPlan,
     RING_INDEX_PREFIX,
     _extent_value as _static_extent,
@@ -465,6 +466,7 @@ class _Emitter:
         self.token_ring_tensor: str | None = None
         self.token_input_tensor: str | None = None
         self._position_inputs = frozenset(position_inputs(graph))
+        self._absolute_row_tensors = frozenset(absolute_row_writers(graph))
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
         #: One capacity-proved symmetric participant array shared by every
@@ -3229,6 +3231,16 @@ class _Emitter:
         walks_row = row_loop is not None
         if row_loop is not None:
             terms.append(DynamicTerm.loop(row_loop, row_stride))
+        if (
+            operand.direction == "out"
+            and operand.tensor_id in self._absolute_row_tensors
+        ):
+            # ``committed_row: absolute_position``: position p is row p of the
+            # resource, so the request's rows land at POSITION_START onwards and
+            # a decode step appends after the history instead of overwriting
+            # row 0.  The object's position tail (``position_pad_rows``) is what
+            # proves this in bounds over the capability's POSITION_START range.
+            terms.append(DynamicTerm.symbol(Symbol.POSITION_START, strides[0]))
         context_axis = -1
         context_loop = (
             loops.get("context") if "context" in operand.terms else None

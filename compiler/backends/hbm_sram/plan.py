@@ -610,13 +610,23 @@ class StatePlacement:
     #: its pooled keys at zero and its pooled scores at negative infinity -- are
     #: different resources and may not share a descriptor.
     initialization: str = "zero"
+    #: Rows allocated PAST the capacity, and never a slot of the resource.  A
+    #: resource written at ``POSITION_START`` + row (see
+    #: :func:`absolute_row_writers`) is proved in bounds by the verifier over
+    #: the capability's whole POSITION_START range, which is far wider than the
+    #: deployment's context, so the object carries that range as an unreachable
+    #: tail -- the same argument that sizes a host request window.  Zero for
+    #: every resource of every graph without such a writer.
+    position_pad_rows: int = 0
 
     @property
     def size_bytes(self) -> int:
-        return self.row_bytes * self.capacity_rows * len(self.members)
+        return self.row_bytes * (
+            self.capacity_rows * len(self.members) + self.position_pad_rows
+        )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        body = {
             "physical_id": self.physical_id,
             "state_class": self.state_class,
             "members": list(self.members),
@@ -628,6 +638,9 @@ class StatePlacement:
             "initialization": self.initialization,
             "size_bytes": self.size_bytes,
         }
+        if self.position_pad_rows:
+            body["position_pad_rows"] = self.position_pad_rows
+        return body
 
 
 @dataclass(frozen=True, slots=True)
@@ -2017,6 +2030,12 @@ def build_plan(
     units, body_position, band_of_kernel = _emission_order(graph, bands)
     states, state_of_resource, warn_state = _place_states(
         graph, bands, band_of_kernel, span_max
+    )
+    states = _pad_absolute_row_states(
+        graph,
+        states,
+        state_of_resource,
+        int(capability.limits["max_context_positions"]),
     )
     warnings.extend(warn_state)
     state_of_tensor = _bind_state_tensors(graph, tensors, state_of_resource)
@@ -3681,6 +3700,53 @@ def _unify_loop_carried(
 
 
 # -- states -----------------------------------------------------------------
+def absolute_row_writers(graph: KernelGraph) -> dict[str, Kernel]:
+    """Tensors a kernel commits at ``POSITION_START`` + row, and that kernel.
+
+    ``committed_row: absolute_position`` says the value for position ``p`` is
+    row ``p`` of the state it commits to
+    (``runtime/reference/lookup.py::lookup_compressed_token_ids``).  V4.1's
+    Engram token ring is the one such kernel: ``DMA.NGRAM_HASH`` reads the
+    ring's committed prefix ``[0, CONTEXT_LENGTH)``, so each step's ids must
+    land after the ones before them.  Written at rows ``[0, span)`` instead, a
+    decode step overwrote id 0 and the hash saw one token of history.
+    """
+    found: dict[str, Kernel] = {}
+    for kernel in graph.kernels:
+        if str(kernel.attributes.get("committed_row", "")) != "absolute_position":
+            continue
+        for name in kernel.outputs:
+            found[name] = kernel
+    return found
+
+
+def _pad_absolute_row_states(
+    graph: KernelGraph,
+    states: Sequence[StatePlacement],
+    state_of_resource: Mapping[str, Sequence[Any]],
+    position_rows: int,
+) -> tuple[StatePlacement, ...]:
+    """Give every resource an absolute-row writer commits to its position tail."""
+    written = {
+        state_id
+        for kernel in absolute_row_writers(graph).values()
+        for state_id in kernel.state_writes
+    }
+    if not written:
+        return tuple(states)
+    physical = {
+        str(state_of_resource[state_id][0])
+        for state_id in written
+        if state_id in state_of_resource
+    }
+    return tuple(
+        replace(state, position_pad_rows=int(position_rows))
+        if state.physical_id in physical
+        else state
+        for state in states
+    )
+
+
 def _place_states(
     graph: KernelGraph,
     bands: Sequence[LayerBand],
@@ -4946,6 +5012,7 @@ def _plan_kernels(
         if kernel.attributes.get("phase_symbol_binding")
         for name in kernel.outputs
     }
+    absolute_rows = absolute_row_writers(graph)
     # Expert ownership is a placement property, not a spelling convention.
     # A layer is expert-sharded only when its routed bank divides exactly over
     # the admitted nodes; smaller diagnostic MoEs keep the existing column
@@ -5047,6 +5114,13 @@ def _plan_kernels(
         phase_context = bool(kernel.attributes.get("phase_symbol_binding")) or any(
             name in phase_extent_tensors for name in kernel.inputs
         )
+        # A reader of a sequence committed at absolute rows reads the committed
+        # PREFIX -- ``[0, CONTEXT_LENGTH)`` -- which only a context loop
+        # resolves.  Walked by the token loop, the ring presented ``[0, span)``
+        # and in decode that is the current token alone: device decode at
+        # context 14 matched a prefill of the same 14 tokens through layer 0
+        # and fell to cosine 0.887 right after the layer-1 Engram.
+        sequence_context = any(name in absolute_rows for name in kernel.inputs)
         if context_op:
             # A18 names one request-determined axis per view and this
             # operator's row has two.  The token axis is the one that becomes
@@ -5256,7 +5330,7 @@ def _plan_kernels(
             )
 
         context_loop = None
-        if context_op or phase_context:
+        if context_op or phase_context or sequence_context:
             # One block over the whole declared capacity: the loop runs once at
             # every request, and what it carries is A18's resolution of the
             # candidate axis.  The divisor is in the bound symbol's own units,
