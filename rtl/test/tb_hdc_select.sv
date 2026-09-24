@@ -26,7 +26,9 @@ module tb_hdc_select
     parameter integer IW = 16;
     parameter integer ORDER = 1;
     localparam integer KW = $clog2(K + 1);
-    localparam integer LAT = K + 3 + (ORDER != 0 ? K : 0);   // edges between sampling the accept and the first output
+    // edges from the one that accepts the last element to the one that registers
+    // the first output (the checker samples that output one edge later)
+    localparam integer LAT = K + 2 + (ORDER != 0 ? K : 0);
     localparam integer MAXSEG = 1 << 20;
 
     reg          rst_n = 1'b0;
@@ -142,8 +144,8 @@ module tb_hdc_select
                 rc = $fscanf(fexp, "%h %d\n", e_idx, e_ninf);
                 if (first_pend) begin
                     first_pend = 0;
-                    if (cyc - acc_cyc[seg_out] < lat_min) lat_min = cyc - acc_cyc[seg_out];
-                    if (cyc - acc_cyc[seg_out] > lat_max) lat_max = cyc - acc_cyc[seg_out];
+                    if (cyc - 1 - acc_cyc[seg_out] < lat_min) lat_min = cyc - 1 - acc_cyc[seg_out];
+                    if (cyc - 1 - acc_cyc[seg_out] > lat_max) lat_max = cyc - 1 - acc_cyc[seg_out];
                 end
                 left = left - 1;
                 if (out_idx !== e_idx[IW-1:0] || out_ninf !== e_ninf[0] || out_last !== (left == 0)) begin
