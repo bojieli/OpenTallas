@@ -33,6 +33,7 @@ second token.  Only the prefill comparison is a token claim.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -304,9 +305,10 @@ def build(case: dict[str, object], out_dir: Path, work: Path) -> dict[str, objec
     return {"banks": banks, "parameters": params, "binary": binary}
 
 
-def run_case(out_dir: Path, binary: str) -> dict[str, object]:
+def run_case(out_dir: Path, binary: str,
+             timeout: float = 7200) -> dict[str, object]:
     done = subprocess.run([f"./{binary}"], cwd=out_dir, capture_output=True,
-                          text=True, timeout=7200)
+                          text=True, timeout=timeout)
     log = done.stdout + done.stderr
     counters = {m.group("key").strip().replace("/", "_").replace(" ", "_"):
                 m.group("value").strip()
@@ -334,6 +336,14 @@ def main() -> int:
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--force", action="store_true")
+    #: A span-16 prefill is ~100 M cycles: about 70 minutes on an idle host,
+    #: and past the old fixed two hours on a saturated one, where it was killed.
+    ap.add_argument("--timeout", type=float, default=7200,
+                    help="seconds allowed for one case's simulation")
+    #: The cases share nothing but the read-only deployments, so they can run
+    #: side by side; records are still written in CASES order.
+    ap.add_argument("--jobs", type=int, default=1,
+                    help="cases staged, built and simulated concurrently")
     args = ap.parse_args()
     if args.output.exists() and not args.force:
         raise SystemExit(f"refusing to overwrite {args.output}; pass --force")
@@ -345,12 +355,17 @@ def main() -> int:
                   oracle["results"][WORKLOAD_ID]["generated_token_ids"]]
     args.work.mkdir(parents=True, exist_ok=True)
 
-    records = []
-    for case in CASES:
+    def execute(case: dict[str, object]) -> tuple[dict, dict]:
         out_dir = args.work / f"stage_{case['name']}"
         stage(case, out_dir)
         built = build(case, out_dir, args.work)
-        result = run_case(out_dir, str(built["binary"]))
+        return built, run_case(out_dir, str(built["binary"]), args.timeout)
+
+    with ThreadPoolExecutor(max_workers=max(1, args.jobs)) as pool:
+        executed = list(pool.map(execute, CASES))
+
+    records = []
+    for case, (built, result) in zip(CASES, executed):
         emitted = result["selected_token"]
         expected = oracle_ids[0] if case["token_is_asserted"] else None
         agrees = (None if expected is None else emitted == expected)

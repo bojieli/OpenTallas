@@ -225,7 +225,14 @@ module ot_a3_engine_issue_bridge #(
     //: (ids 1..9,442), deepseek-v41-flash-rom-array-64 678, and
     //: deepseek-v4-flash-rom 264, against Qwen3-reduced's 32.  2,048 holds
     //: any of them at or below 33% load.
-    parameter integer PLACE_ENTRIES = 64
+    parameter integer PLACE_ENTRIES = 64,
+    //: A scatter here always lands in place -- mapped_prior_base and
+    //: mapped_output_base are both slot4_base -- so republishing the prior
+    //: plane reads every KV word and writes it back unchanged.  On, the mover
+    //: skips that pass: same final memory, 8,256 x 32 fewer read/write beats
+    //: per reduced-Qwen3 scatter.  Off reproduces the republish write stream
+    //: for benches that count write beats (tb_a3_operator_admission).
+    parameter integer DMA_ELIDE_IDENTITY_PRIOR = 1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -4392,7 +4399,9 @@ module ot_a3_engine_issue_bridge #(
         .candidates(widx_candidates)
     );
 
-    ot_a3_engine_array engines (
+    ot_a3_engine_array #(
+        .DMA_ELIDE_IDENTITY_PRIOR(DMA_ELIDE_IDENTITY_PRIOR)
+    ) engines (
         .clk(clk),
         .rst_n(rst_n),
         .start(engine_start & !rms_norm_q & !rope_q &

@@ -25,7 +25,13 @@ module ot_hdc_core #(
     // model constants for the DYN offsets
     parameter integer HID  = 128,
     parameter integer HALF = 8,
-    parameter integer HD   = 16
+    parameter integer HD   = 16,
+    // KV_HBM = 1: the KV cache lives in HBM behind ot_hdc_kv_stream.  A
+    // KV-sourced matrix op then announces its descriptor (kvd_*) when the
+    // sequencer reaches it and issues only once the streamer raises kv_ok
+    // (its prefetch window covers the op; the engine never stalls).  With
+    // KV_HBM = 0 the kvd_* outputs are unused and kv_ok is ignored.
+    parameter integer KV_HBM = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -83,7 +89,15 @@ module ot_hdc_core #(
     output wire              me_ov,
     output wire [G*AW-1:0]   me_oaddr,
     output wire [G*W-1:0]    me_omask,
-    output wire [G*W*32-1:0] me_odata
+    output wire [G*W*32-1:0] me_odata,
+    // KV-streaming handshake (KV_HBM = 1 only)
+    output reg               kvd_v,           // descriptor of the KV op now waiting to issue
+    output wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    output wire [2:0]        kvd_jsh,
+    output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
+    output wire              kvd_kindk,       // positions tile the lanes (scores); else positions are k (weighted sum)
+    output wire [NW-1:0]     kvd_pos,
+    input  wire              kv_ok
 );
     `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
@@ -128,7 +142,11 @@ module ot_hdc_core #(
     reg [31:0]   imm1, imm2;
 
     wire [15:0] su_progress, me_progress;
+    reg          me_kindk;
     wire unit_ready = (d_unit == 2'd1) ? me_ready : su_ready;
+    //: KV_HBM: a KV op waits for the streamer; never on the cycle its
+    //: descriptor is announced, when kv_ok may still describe the previous op.
+    wire kv_gate = (KV_HBM == 0) || !(d_unit == 2'd1 && me_wsrc) || (kv_ok && !kvd_v);
     wire drained = me_idle && su_idle && !me_go && !su_go;
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress; a go on that cycle would make the count stale.
@@ -157,7 +175,7 @@ module ot_hdc_core #(
                         if (drained) begin
                             done <= 1'b1; next_token <= am_idx; next_val <= am_val; st <= S_IDLE;
                         end
-                    end else if ((d_barrier ? drained : (!d_chase || chased)) && unit_ready) begin
+                    end else if ((d_barrier ? drained : (!d_chase || chased)) && unit_ready && kv_gate) begin
                         me_go <= (d_unit == 2'd1); su_go <= (d_unit == 2'd2);
                         st <= S_GO;
                     end
@@ -167,6 +185,14 @@ module ot_hdc_core #(
             endcase
         end
     end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) kvd_v <= 1'b0;
+        else kvd_v <= (st == S_DEC) && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];
+    end
+    assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
+    assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
+    assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
 
     // DYN offsets derived once per token.
     always @(posedge clk) if (st == S_DYN) begin
@@ -186,6 +212,7 @@ module ot_hdc_core #(
         me_nout <= `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
         me_tiles <= `F(ME_TILES) + dyn[`F(ME_D_TILES)];
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
+        me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
         me_wbase <= `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);

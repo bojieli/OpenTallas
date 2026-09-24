@@ -279,6 +279,10 @@ array the analytical report proposes, now as token-level RTL
 - *Links.* The 128-float hidden state crosses `ot_rom_pkg_link` (a 60-cycle
   stand-in for the PHY) as one header and 8 data flits. They land in the next
   package's vector memory as they arrive. The last package returns the token.
+- *Control.* Each package's control is the synthesizable `ot_rom_pkg_ctrl`
+  (docs/ROM_ARRAY_FABRIC_RTL.md), not testbench code: message framing, core
+  start/done, per-user context, the argmax reduction and token feedback at
+  package 0. Only the memories stay behavioural.
 - *Exactness.* Splitting the program at layer boundaries is exact. A package
   that receives X opens with its sum of squares, the same arithmetic the fused
   residual performed.
@@ -288,17 +292,17 @@ array and generates 1073, 382, 93. The links never stalled.
 
 | Packages / users | Cycles per token-step | Busy per step (layer packages / last) |
 |---|---|---|
-| 4 / 4 (lm_head on layer 3's package) | 14,499 | 5,900 / 14,251 |
-| 5 / 5 (lm_head alone) | 8,810 | 5,900 / 8,546 |
-| 6 / 6 (lm_head split by vocabulary) | 6,167 | 5,900 / 4,450 and 4,139 |
-| 10 / 10 (layers split into attention and MLP packages) | 4,624 | 2,955 and 3,140 / 4,450 and 4,139 |
-| 12 / 12 (as 10, lm_head split over four packages) | 3,312 | 2,955 and 3,140 / 2,402, then 2,091 each |
+| 4 / 4 (lm_head on layer 3's package) | 14,496 | 5,899 / 14,250 |
+| 5 / 5 (lm_head alone) | 8,806 | 5,899 / 8,545 |
+| 6 / 6 (lm_head split by vocabulary) | 6,162 | 5,899 / 4,449 and 4,138 |
+| 10 / 10 (layers split into attention and MLP packages) | 4,614 | 2,954 and 3,139 / 4,449 and 4,138 |
+| 12 / 12 (as 10, lm_head split over four packages) | 3,301 | 2,954 and 3,139 / 2,401, then 2,090 each |
 
-- 4 / 4 aggregate speed-up over one core: 2.221× <!-- figure: 2.221 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
-- 5 / 5 aggregate speed-up over one core: 3.655× <!-- figure: 3.655 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
-- 5 / 5 cycles per token-step: 8,810. <!-- figure: 8809.5 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
+- 4 / 4 aggregate speed-up over one core: 2.221× <!-- figure: 2.221 src="results/rtl/hdc_array_campaign.json#configurations[packages=4,users=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
+- 5 / 5 aggregate speed-up over one core: 3.656× <!-- figure: 3.656 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
+- 5 / 5 cycles per token-step: 8,806. <!-- figure: 8806.2 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
 
-- 6 / 6 aggregate speed-up over one core: 5.22× <!-- figure: 5.22 src="results/rtl/hdc_array_campaign.json#configurations[packages=6].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
+- 6 / 6 aggregate speed-up over one core: 5.225× <!-- figure: 5.225 src="results/rtl/hdc_array_campaign.json#configurations[packages=6,users=6,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
 
 In the 6-package array lm_head is split by vocabulary:
 
@@ -307,13 +311,13 @@ In the 6-package array lm_head is split by vocabulary:
 - The second does rows 2048–4095 and keeps its own best only when it is
   strictly greater, so a tie keeps the lower row, as numpy's argmax does.
 
-- 10 / 10 aggregate speed-up over one core: 6.963× <!-- figure: 6.963 src="results/rtl/hdc_array_campaign.json#configurations[packages=10].aggregate_speedup_vs_single_core" name="HDC array 10-package aggregate speed-up" -->
+- 10 / 10 aggregate speed-up over one core: 6.979× <!-- figure: 6.979 src="results/rtl/hdc_array_campaign.json#configurations[packages=10,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 10-package aggregate speed-up" -->
 
 The 10-package array also splits every layer at the residual after o_proj,
 into an attention package and an MLP package. That cut is as exact as a layer
 boundary: the MLP package opens with the sum of squares of the X it receives.
 
-- 12 / 12 aggregate speed-up over one core: 9.722× <!-- figure: 9.722 src="results/rtl/hdc_array_campaign.json#configurations[packages=12].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
+- 12 / 12 aggregate speed-up over one core: 9.754× <!-- figure: 9.754 src="results/rtl/hdc_array_campaign.json#configurations[packages=12,users=12,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
 
 With more than two lm_head packages, each one carries the running best
 {row, logit} forward and replaces it only when strictly greater.
@@ -321,6 +325,13 @@ With more than two lm_head packages, each one carries the running best
 Per-user latency stays near one core's, as a layer pipeline should.
 Throughput is set by the slowest package. At 12 packages the pipeline is
 balanced: the MLP half-layer package (about 3.1K cycles) limits.
+
+Through a switch (`ot_rom_fabric_router`), the last body package can instead
+multicast its hidden state to every lm_head package at once. Each part then
+applies the final norm and its rows in parallel, and package 0 reduces their
+results. That shortens one user's token step, from 34,045 to 27,529 cycles at
+12 packages, but barely changes the throughput of a full pipeline, which the
+MLP package still limits. See docs/ROM_ARRAY_FABRIC_RTL.md.
 
 ## 5. Toward a single-reticle Qwen3-8B chip
 

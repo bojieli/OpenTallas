@@ -1,0 +1,159 @@
+{
+  "claim_boundary": "functional RTL simulation (Icarus) of the packet router under random traffic and a Verilator lint of the router and the package controller; token-level results are results/rtl/hdc_array_campaign.json, clock rate the ASAP7 physical records.",
+  "input_sha256": {
+    "rtl/rom/ot_rom_fabric_router.sv": "f4c2f0737c03cec072c8cabc23a873090a441d0ffdef26d3dc1a93e9f8e60277",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/test/tb_rom_fabric_router.sv": "6037982c3f2585d350a45ae37d63115707868643500e95dd4b7c7c45c518b8f0",
+    "tools/rtl_rom_fabric_campaign.py": "455515d9d45c60e3ad9a35c8394b8245b957561a6a57a6d5c3b40c3dd94d9a3b"
+  },
+  "router_random_traffic": [
+    {
+      "buffer_flits": 4,
+      "cycles": 20124,
+      "delivered_flits": 16804,
+      "dropped_packets": 137,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 949,
+      "packets": 2000,
+      "pass": true,
+      "ports": 5,
+      "ready_percent": 70,
+      "seed": 1,
+      "sent_flits": 10241
+    },
+    {
+      "buffer_flits": 4,
+      "cycles": 18864,
+      "delivered_flits": 16134,
+      "dropped_packets": 157,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 989,
+      "packets": 2000,
+      "pass": true,
+      "ports": 5,
+      "ready_percent": 70,
+      "seed": 2,
+      "sent_flits": 9899
+    },
+    {
+      "buffer_flits": 4,
+      "cycles": 45805,
+      "delivered_flits": 16510,
+      "dropped_packets": 98,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 1001,
+      "packets": 2000,
+      "pass": true,
+      "ports": 5,
+      "ready_percent": 30,
+      "seed": 3,
+      "sent_flits": 9847
+    },
+    {
+      "buffer_flits": 4,
+      "cycles": 17514,
+      "delivered_flits": 18552,
+      "dropped_packets": 150,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 957,
+      "packets": 2000,
+      "pass": true,
+      "ports": 5,
+      "ready_percent": 100,
+      "seed": 4,
+      "sent_flits": 9879
+    },
+    {
+      "buffer_flits": 2,
+      "cycles": 15155,
+      "delivered_flits": 8502,
+      "dropped_packets": 91,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 594,
+      "packets": 1200,
+      "pass": true,
+      "ports": 3,
+      "ready_percent": 60,
+      "seed": 5,
+      "sent_flits": 6013
+    },
+    {
+      "buffer_flits": 4,
+      "cycles": 35515,
+      "delivered_flits": 28271,
+      "dropped_packets": 168,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 1151,
+      "packets": 2400,
+      "pass": true,
+      "ports": 8,
+      "ready_percent": 70,
+      "seed": 6,
+      "sent_flits": 11869
+    },
+    {
+      "buffer_flits": 1,
+      "cycles": 46375,
+      "delivered_flits": 30480,
+      "dropped_packets": 175,
+      "errors": 0,
+      "flit_bits": 64,
+      "multicast_packets": 1126,
+      "packets": 2400,
+      "pass": true,
+      "ports": 8,
+      "ready_percent": 80,
+      "seed": 7,
+      "sent_flits": 12098
+    },
+    {
+      "buffer_flits": 4,
+      "cycles": 7569,
+      "delivered_flits": 6494,
+      "dropped_packets": 50,
+      "errors": 0,
+      "flit_bits": 512,
+      "multicast_packets": 362,
+      "packets": 750,
+      "pass": true,
+      "ports": 5,
+      "ready_percent": 70,
+      "seed": 8,
+      "sent_flits": 3773
+    }
+  ],
+  "schema": "opentallas.rom-fabric-campaign.v1",
+  "status": "pass",
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH"
+    ],
+    "ot_rom_fabric_router": {
+      "messages": [],
+      "parameters": {},
+      "returncode": 0
+    },
+    "ot_rom_pkg_ctrl": {
+      "messages": [],
+      "parameters": {
+        "COMBINE_IN": 1,
+        "RESULT_PARTS": 4,
+        "ROW0": 1024,
+        "SEND_HIDDEN": 1,
+        "SEND_RESULT": 1,
+        "SOURCE": 1,
+        "TXB": 8
+      },
+      "returncode": 0
+    }
+  }
+}

@@ -28,7 +28,13 @@
 // implement raises ERR_SHAPE and executes nothing, rather than falling through
 // to whichever datapath happened to be wired up.
 // ---------------------------------------------------------------------------
-module ot_a3_engine_array (
+module ot_a3_engine_array #(
+    //: Passed to ot_a3_dma_index_mover: skip a scatter's prior-plane
+    //: republish when the prior and the output are the same words.  Off here
+    //: so the engine campaign's write-beat counts are unchanged; the issue
+    //: bridge, which always scatters in place, turns it on.
+    parameter integer DMA_ELIDE_IDENTITY_PRIOR = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
 
@@ -656,7 +662,9 @@ module ot_a3_engine_array (
     wire [31:0] dma_moved, dma_checked;
     wire [7:0]  dma_error;
 
-    ot_a3_dma_index_mover mover (
+    ot_a3_dma_index_mover #(
+        .ELIDE_IDENTITY_PRIOR(DMA_ELIDE_IDENTITY_PRIOR)
+    ) mover (
         .clk(clk), .rst_n(rst_n),
         .start(start & select_dma),
         .cfg_scatter(dma_is_scatter),

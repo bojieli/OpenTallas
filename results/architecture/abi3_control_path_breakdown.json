@@ -1,0 +1,678 @@
+{
+  "schema": "opentallas.architecture.abi3_control_path_breakdown.v1",
+  "question": "On the ABI 3.0 RTL path, where do the reduced Qwen3 token's cycles go -- control (sequencer, admission, issue, engine-internal walk control) or datapath -- and which blocks set the clock?",
+  "answer": "Throughput: 12,962,353 profiled cycles for the ROM decode token, of which only 5,984 (0.046%) are spent outside an engine -- 72 cycles per issue across 83 issues in the microsequencer front end, the completion adapter and the admission bridge. The control overhead that matters is INSIDE an engine: DMA.SCATTER took 6,341,464 cycles (48.9%) to append eight one-row KV entries, because the index mover republished the whole 8,256-row prior plane into itself at three cycles per word. The correctly rounded exponential behind VECTOR.SILU_MUL and ATTENTION.GQA takes another 5,269,625 (40.7%) and is serial datapath arithmetic, not control; the MAC lane is active 1,277,952 cycles (9.9%) at 98.4% efficiency inside its launches. The \"six cycles of control per MAC\" ratio is therefore half an engine-internal walk (a control fix) and half a serial transcendental (a datapath fix). Latency: an issue reaches its engine 9 + 33 cycles after the sequencer issues it and the next bridge accept follows 36 cycles after the previous completion -- negligible against engine runs of 46 to 1.1 M cycles. Clock: the slowest measured vehicle blocks are datapath (ot_a3_qwen_gqa 69.7 MHz not met, fp32_div_rne 283.5, the transcendental 306.8). The control block quoted as a limiter, the full 12-module microsequencer, was recorded at 74.9 MHz not met WITH the state controller at the 2026-09-19 sources (worst path: the state controller's combinational modulo) and 317.1 MHz closed without it; re-routed here at the current sources it closes at 3.0 ns, 397.5 MHz with the state controller (478,193 cells), above the divider, the transcendental and the GQA engine it issues to -- the sequencer is not the clock limiter today. The admission bridge, device top and engine array have never been routed on their own.",
+  "vehicle": {
+    "top": "rtl/test/a3_shipped_prefix_top.sv (ot_a3_shipped_prefix_top)",
+    "case": "qwen3-reduced-rom-single-chip/decode on build/abi3/qwen3-reduced-rom",
+    "rtl_commit": "ca841aa3",
+    "driver": "rtl/test/a3_reduced_token_driver.cpp with OT_A3_PROFILE",
+    "simulator": "Verilator 5.050"
+  },
+  "method": {
+    "tool": "tools/profile_abi3_control_path.py --case rom-decode --work <dir> --output <json>",
+    "instrument": [
+      "rtl/test/a3_control_profile.h",
+      "rtl/test/a3_control_profile.vlt"
+    ],
+    "buckets": {
+      "engine": "issue bridge in S_START or S_ENGINE_WAIT: an engine owns the cycle, including its internal walk control",
+      "admission": "bridge in any other non-idle state: descriptor fetches, placement and admission checks, index reads, response",
+      "adapter": "bridge idle, completion adapter replaying captured views or completing",
+      "frontend": "bridge and adapter idle: microsequencer fetch/decode/predicate/wait/resolve/hazard/issue with nothing in flight"
+    },
+    "per_issue_timeline": "trace_issue_valid, bridge IDLE->busy, first/last ENGINE_WAIT cycle, bridge busy->IDLE, engine_work_count at RESPONSE",
+    "mac_active": "a product entering ot_a3_mac_lane_pipe (iss_v) or the legacy lane busy",
+    "clock": "best routed ASAP7 record per block from results/physical_abi3/asap7 (closed first, else fastest routed); each record's fmax is 1/(target - WNS) at the target it was routed at, so a record from a loose target is a lower bound",
+    "profile_cycles_vs_reported": "profile counts from start to done (12,962,353); the driver's \"cycles\" (12,973,713) also counts reset, image load and placement load"
+  },
+  "sources_at_rtl_commit": {
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_array.sv": "fbdc4a42983158db3db4505860a1a4c48510e65217a065c75f30bc24b8613828",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "a103c46da8d718b09f6f37af029347855e00b4c3f380f8b33c76584e204e3a98",
+    "rtl/test/a3_reduced_token_driver.cpp": "754ea7e2ed462861ccbba27d5ac2872e8f4cce1f9252706ed2b80e1316b5c292",
+    "profile_log_sha256": "eab0e69cd8475de9382cfd06c65ae87b1ea0fbe613d86f883dfae48b24fb7e80"
+  },
+  "throughput": {
+    "token_cycles_profiled": 12962353,
+    "token_cycles_reported_by_driver": 12973713,
+    "selected_token": 652,
+    "issues": 83,
+    "buckets": {
+      "engine": {
+        "cycles": 12956369,
+        "share": 0.9995383554205012
+      },
+      "admission": {
+        "cycles": 2817,
+        "share": 0.0002173216544866507
+      },
+      "adapter": {
+        "cycles": 749,
+        "share": 5.778271892456563e-05
+      },
+      "frontend": {
+        "cycles": 2418,
+        "share": 0.00018654020608758302
+      }
+    },
+    "mac_active_cycles": 1277952,
+    "mac_active_share": 0.09858950763028904,
+    "attribution": {
+      "engine_internal_control_dma_scatter_walk": {
+        "cycles": 6341464,
+        "share": 0.4892216714048753,
+        "why": "republishes the 8,256 x 32-word prior KV plane into the same words at 3 cycles per word, for a one-row append; moved_elements = 32 per launch"
+      },
+      "datapath_serial_correctly_rounded_exponential": {
+        "cycles": 5269625,
+        "share": 0.4065330576940776,
+        "operators": [
+          "VECTOR.SILU_MUL (2,923 cycles per element)",
+          "ATTENTION.GQA (195 k cycles per head-group launch)"
+        ],
+        "why": "ot_a3_fp32_transcendental_cr_rne evaluates a 57-term interval series with bit-serial wide multiply and divide primitives, one element at a time"
+      },
+      "datapath_mac_active": {
+        "cycles": 1277952,
+        "share": 0.09858950763028904
+      },
+      "matmul_launch_overhead": {
+        "cycles": 20305,
+        "share": 0.0015664594229149599,
+        "per_launch": 700.1724137931035
+      },
+      "other_engines_walks": {
+        "cycles": 47023,
+        "share": 0.0036276592683442584,
+        "why": "RMS/head-RMS/RoPE/ADD at 8.6-12.3 cycles per element, ARGMAX at 3, gather/embed/append; each is an issue-wait-use walk"
+      },
+      "control_outside_engines": {
+        "cycles": 5984,
+        "share": 0.00046164457949879936
+      }
+    },
+    "per_operator": {
+      "DMA.SCATTER": {
+        "launches": 8,
+        "engine_cycles": 6341464,
+        "mac_active_cycles": 0,
+        "work": 8,
+        "bridge_cycles_outside_engine": 288,
+        "share_of_token_cycles": 0.4892216714048753,
+        "engine_cycles_per_work_unit": 792683.0,
+        "engine_cycles_per_launch": 792683.0
+      },
+      "VECTOR.SILU_MUL": {
+        "launches": 4,
+        "engine_cycles": 4489737,
+        "mac_active_cycles": 0,
+        "work": 3072,
+        "bridge_cycles_outside_engine": 140,
+        "share_of_token_cycles": 0.3463674380723932,
+        "engine_cycles_per_work_unit": 1461.5029296875,
+        "engine_cycles_per_launch": 1122434.25
+      },
+      "TENSOR.MATMUL": {
+        "launches": 29,
+        "engine_cycles": 1298257,
+        "mac_active_cycles": 1277952,
+        "work": 1277952,
+        "bridge_cycles_outside_engine": 958,
+        "share_of_token_cycles": 0.100155967053204,
+        "engine_cycles_per_work_unit": 1.01588870317508,
+        "engine_cycles_per_launch": 44767.48275862069
+      },
+      "ATTENTION.GQA": {
+        "launches": 4,
+        "engine_cycles": 779888,
+        "mac_active_cycles": 0,
+        "work": 8704,
+        "bridge_cycles_outside_engine": 196,
+        "share_of_token_cycles": 0.06016561962168443,
+        "engine_cycles_per_work_unit": 89.60110294117646,
+        "engine_cycles_per_launch": 194972.0
+      },
+      "SELECTION.ARGMAX": {
+        "launches": 1,
+        "engine_cycles": 12294,
+        "mac_active_cycles": 0,
+        "work": 4096,
+        "bridge_cycles_outside_engine": 32,
+        "share_of_token_cycles": 0.0009484389138299196,
+        "engine_cycles_per_work_unit": 3.00146484375,
+        "engine_cycles_per_launch": 12294.0
+      },
+      "VECTOR.ADD": {
+        "launches": 8,
+        "engine_cycles": 10280,
+        "mac_active_cycles": 0,
+        "work": 1024,
+        "bridge_cycles_outside_engine": 264,
+        "share_of_token_cycles": 0.0007930658885774828,
+        "engine_cycles_per_work_unit": 10.0390625,
+        "engine_cycles_per_launch": 1285.0
+      },
+      "VECTOR.RMS_NORM": {
+        "launches": 9,
+        "engine_cycles": 9864,
+        "mac_active_cycles": 0,
+        "work": 1152,
+        "bridge_cycles_outside_engine": 288,
+        "share_of_token_cycles": 0.0007609729498957481,
+        "engine_cycles_per_work_unit": 8.5625,
+        "engine_cycles_per_launch": 1096.0
+      },
+      "VECTOR.HEAD_RMS_NORM": {
+        "launches": 8,
+        "engine_cycles": 7872,
+        "mac_active_cycles": 0,
+        "work": 640,
+        "bridge_cycles_outside_engine": 256,
+        "share_of_token_cycles": 0.0006072971473620568,
+        "engine_cycles_per_work_unit": 12.3,
+        "engine_cycles_per_launch": 984.0
+      },
+      "VECTOR.ROPE": {
+        "launches": 8,
+        "engine_cycles": 5808,
+        "mac_active_cycles": 0,
+        "work": 640,
+        "bridge_cycles_outside_engine": 256,
+        "share_of_token_cycles": 0.00044806679774883466,
+        "engine_cycles_per_work_unit": 9.075,
+        "engine_cycles_per_launch": 726.0
+      },
+      "DMA.GATHER": {
+        "launches": 2,
+        "engine_cycles": 502,
+        "mac_active_cycles": 0,
+        "work": 2,
+        "bridge_cycles_outside_engine": 72,
+        "share_of_token_cycles": 3.872753658228564e-05,
+        "engine_cycles_per_work_unit": 251.0,
+        "engine_cycles_per_launch": 251.0
+      },
+      "TENSOR.EMBED_LOOKUP": {
+        "launches": 1,
+        "engine_cycles": 395,
+        "mac_active_cycles": 0,
+        "work": 1,
+        "bridge_cycles_outside_engine": 34,
+        "share_of_token_cycles": 3.0472862450204835e-05,
+        "engine_cycles_per_work_unit": 395.0,
+        "engine_cycles_per_launch": 395.0
+      },
+      "SELECTION.TOKEN_APPEND": {
+        "launches": 1,
+        "engine_cycles": 8,
+        "mac_active_cycles": 0,
+        "work": 1,
+        "bridge_cycles_outside_engine": 33,
+        "share_of_token_cycles": 6.171718977256675e-07,
+        "engine_cycles_per_work_unit": 8.0,
+        "engine_cycles_per_launch": 8.0
+      }
+    }
+  },
+  "latency": {
+    "per_issue_cycles": {
+      "sequencer_issue_to_bridge_accept_mean": 9.024096385542169,
+      "bridge_accept_to_engine_start_mean": 32.93975903614458,
+      "engine_end_to_bridge_idle_mean": 2.0,
+      "bridge_idle_to_next_bridge_accept_mean": 36.3780487804878,
+      "bridge_idle_to_next_bridge_accept_max": 70
+    },
+    "control_cycles_per_issue_outside_engines": 72.09638554216868,
+    "sequencer_state_cycles_while_nothing_in_flight": {
+      "IDLE": 1,
+      "CHECK_PC": 2,
+      "FETCH_WAIT": 6,
+      "DECODE_PUSH": 3,
+      "DECODE_WAIT": 30,
+      "PRED_REQ": 3,
+      "WAIT_REQ": 3,
+      "WAIT_WAIT": 2,
+      "WAIT_EVAL": 274,
+      "DISPATCH": 48,
+      "LOOP_WAIT": 2,
+      "LOOP_SYM": 1,
+      "LOOP_OP": 1,
+      "LOOP_DONE": 8,
+      "ENG_WAIT": 92,
+      "SCHED_WAIT": 92,
+      "RESOLVE": 1402,
+      "HAZARD": 152,
+      "HAZARD_STALL": 4,
+      "VIEW_PUB": 206,
+      "ISSUE": 83,
+      "DRAIN": 2,
+      "DONE": 1
+    },
+    "bridge_state_cycles": {
+      "IDLE": 3167,
+      "OP_WAIT": 415,
+      "INDEX_WAIT": 21,
+      "SOURCE_WAIT": 399,
+      "OUTPUT_WAIT": 429,
+      "NUM_WAIT": 285,
+      "START": 83,
+      "ENGINE_WAIT": 12956286,
+      "RESPONSE": 83,
+      "RMS_INPUT_WAIT": 386,
+      "MAP_VIEW_WAIT": 610,
+      "MAP_NUM_WAIT": 130,
+      "MAP_POLICY_WAIT": 7,
+      "MAP_INDEX_ISSUE": 12,
+      "MAP_INDEX_WAIT": 12,
+      "MAP_ADMIT": 26,
+      "EMBED_INDEX_ISSUE": 1,
+      "EMBED_INDEX_WAIT": 1
+    },
+    "adapter_state_cycles": {
+      "IDLE": 2418,
+      "REPLAY": 498,
+      "RUN": 12959354,
+      "GAP": 83
+    },
+    "reading": "the largest front-end state with nothing in flight is RESOLVE, 1,402 cycles = 16.9 per issue; the bridge spends ~33 cycles per issue fetching four to six descriptors serially before START. Together ~72 cycles per issue, 0.046% of the token."
+  },
+  "prefill_case_before": {
+    "rom-prefill_cycles": 103107755,
+    "source": "results/rtl/abi3_reduced_token_campaign.json as committed before this work (its sources had already drifted in 13 files)"
+  },
+  "clock": {
+    "vehicle_blocks": [
+      {
+        "block": "ot_a3_microsequencer",
+        "role": "control",
+        "what": "front end: fetch/decode/predicate/wait/resolve/dependence/issue (12-module hierarchy)",
+        "routed_records": 11,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_2p2ns.json",
+          "fmax_mhz": 548.5,
+          "closed": true,
+          "cells": 66110,
+          "target_ns": 2.2,
+          "parameters": [
+            "STATE_COMPAT=0"
+          ],
+          "completed_at": "2026-09-05T02:39:27.685019+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_dependence_table",
+        "role": "control",
+        "what": "dependence (hazard) check inside the microsequencer",
+        "routed_records": 2,
+        "best": {
+          "record": "results/physical_abi3/asap7/dependence_table/pnr_1p8ns_check_stages_2_closed.json",
+          "fmax_mhz": 603.7,
+          "closed": true,
+          "cells": 149194,
+          "target_ns": 1.8,
+          "parameters": [
+            "CHECK_STAGES=2"
+          ],
+          "completed_at": "2026-09-19T03:28:26.923028+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_state_controller",
+        "role": "control",
+        "what": "transactional STATE family inside the microsequencer",
+        "routed_records": 8,
+        "best": {
+          "record": "results/physical_abi3/asap7/state_controller/pnr_remaining_capacity_cts12_1ns.json",
+          "fmax_mhz": 833.0,
+          "closed": false,
+          "cells": 35657,
+          "target_ns": 1.0,
+          "parameters": [],
+          "completed_at": "2026-09-23T04:47:28.095567+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_program_header",
+        "role": "control",
+        "what": "program header / entrypoint table",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_program_header/pnr_4p0ns_coverage.json",
+          "fmax_mhz": 540.9,
+          "closed": true,
+          "cells": 4773,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T15:28:45.438088+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_place_table",
+        "role": "control",
+        "what": "bridge placement table (object -> base)",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_place_table/pnr_4p0ns_coverage.json",
+          "fmax_mhz": 850.4,
+          "closed": true,
+          "cells": 21433,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T15:10:39.950999+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_descriptor_record_validator",
+        "role": "control",
+        "what": "descriptor record validation",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_descriptor_record_validator/pnr_4p0ns_coverage.json",
+          "fmax_mhz": 677.2,
+          "closed": true,
+          "cells": 13423,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T15:20:31.723900+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_dma_index_mover",
+        "role": "control",
+        "what": "DMA gather/scatter walk: an address generator around a word copy",
+        "routed_records": 3,
+        "best": {
+          "record": "results/physical_abi3/asap7/dma_index_mover/pnr_1p2ns_pipelined_walk_closed.json",
+          "fmax_mhz": 843.9,
+          "closed": true,
+          "cells": 16085,
+          "target_ns": 1.2,
+          "parameters": [],
+          "completed_at": "2026-09-24T15:18:40.322757+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_engine_issue_bridge",
+        "role": "control",
+        "what": "admission bridge: descriptor fetch, admission checks, engine launch",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_device_top",
+        "role": "control",
+        "what": "device top: sequencer + stores",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_engine_array",
+        "role": "mixed",
+        "what": "engine array: matmul/argmax/mover/add/... behind one launch port",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_mac_lane_pipe",
+        "role": "datapath",
+        "what": "pipelined BF16 MAC lane (TENSOR.MATMUL)",
+        "routed_records": 2,
+        "best": {
+          "record": "results/physical_abi3/asap7/mac_lane_pipe/pnr_4p0ns_fp8_capable_closed.json",
+          "fmax_mhz": 608.6,
+          "closed": true,
+          "cells": 4639,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T20:03:09.892016+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_mac_lane",
+        "role": "datapath",
+        "what": "legacy MAC lane",
+        "routed_records": 3,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_mac_lane/pnr_3p4ns_pipelined_closed.json",
+          "fmax_mhz": 652.5,
+          "closed": true,
+          "cells": 23783,
+          "target_ns": 3.4,
+          "parameters": [],
+          "completed_at": "2026-09-20T14:37:26.955624+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_qwen_gqa",
+        "role": "datapath",
+        "what": "ATTENTION.GQA engine",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_qwen_gqa/pnr_3p4ns_not_met.json",
+          "fmax_mhz": 69.7,
+          "closed": false,
+          "cells": 496266,
+          "target_ns": 3.4,
+          "parameters": [],
+          "completed_at": "2026-09-20T10:58:56.610534+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_vector_rms_norm",
+        "role": "datapath",
+        "what": "VECTOR.RMS_NORM / HEAD_RMS_NORM",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_vector_rope",
+        "role": "datapath",
+        "what": "VECTOR.ROPE",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_vector_silu_mul",
+        "role": "datapath",
+        "what": "VECTOR.SILU_MUL",
+        "routed_records": 0,
+        "best": null
+      },
+      {
+        "block": "ot_a3_fp32_transcendental_cr_rne",
+        "role": "datapath",
+        "what": "correctly rounded exp (SiLU, GQA)",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_fp32_transcendental_cr_rne/pnr_3p4ns_sequential_closed.json",
+          "fmax_mhz": 306.8,
+          "closed": true,
+          "cells": 83980,
+          "target_ns": 3.4,
+          "parameters": [],
+          "completed_at": "2026-09-20T04:41:20.901897+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_fp32_div_rne",
+        "role": "datapath",
+        "what": "correctly rounded divide (SiLU, GQA)",
+        "routed_records": 3,
+        "best": {
+          "record": "results/physical_abi3/asap7/fp32_div_rne/pnr_3p6ns_closed.json",
+          "fmax_mhz": 283.5,
+          "closed": true,
+          "cells": 15203,
+          "target_ns": 3.6,
+          "parameters": [],
+          "completed_at": "2026-09-18T17:09:20.348695+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_selection_argmax",
+        "role": "datapath",
+        "what": "SELECTION.ARGMAX",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_selection_argmax/pnr_4p0ns_coverage.json",
+          "fmax_mhz": 622.0,
+          "closed": true,
+          "cells": 2900,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T14:55:51.205452+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_selection_token_append",
+        "role": "datapath",
+        "what": "SELECTION.TOKEN_APPEND",
+        "routed_records": 1,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_selection_token_append/pnr_4p0ns_coverage.json",
+          "fmax_mhz": 800.7,
+          "closed": true,
+          "cells": 2470,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T14:40:25.137952+00:00"
+        }
+      },
+      {
+        "block": "ot_a3_vector_add",
+        "role": "datapath",
+        "what": "VECTOR.ADD",
+        "routed_records": 2,
+        "best": {
+          "record": "results/physical_abi3/asap7/a3_vector_add/pnr_4p0ns_pipelined_closed.json",
+          "fmax_mhz": 674.1,
+          "closed": true,
+          "cells": 4907,
+          "target_ns": 4.0,
+          "parameters": [],
+          "completed_at": "2026-09-19T18:11:40.756343+00:00"
+        }
+      }
+    ],
+    "microsequencer_full_hierarchy_records": [
+      {
+        "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_3p4ns_full_hierarchy_closed.json",
+        "fmax_mhz": 317.1,
+        "closed": true,
+        "cells": 430151,
+        "target_clock_period_ns": 3.4,
+        "parameters": [
+          "STATE_COMPAT=0"
+        ],
+        "modules": 11,
+        "completed_at": "2026-09-15T09:43:41.101753+00:00"
+      },
+      {
+        "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_2p0ns_full_hierarchy_fastest.json",
+        "fmax_mhz": 491.4,
+        "closed": false,
+        "cells": 429015,
+        "target_clock_period_ns": 2.0,
+        "parameters": [
+          "STATE_COMPAT=0"
+        ],
+        "modules": 11,
+        "completed_at": "2026-09-15T01:51:25.350159+00:00"
+      },
+      {
+        "record": "results/physical_abi3/asap7/a3_microsequencer_dep_depth/pnr_2p6ns_dep1_control_not_met.json",
+        "fmax_mhz": 74.9,
+        "closed": false,
+        "cells": 490020,
+        "target_clock_period_ns": 2.6,
+        "parameters": [
+          "DEP_CHECK_STAGES=1"
+        ],
+        "modules": 11,
+        "completed_at": "2026-09-19T16:30:22.959477+00:00"
+      },
+      {
+        "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_2p2ns.json",
+        "fmax_mhz": 548.5,
+        "closed": true,
+        "cells": 66110,
+        "target_clock_period_ns": 2.2,
+        "parameters": [
+          "STATE_COMPAT=0"
+        ],
+        "modules": 6,
+        "completed_at": "2026-09-05T02:39:27.685019+00:00"
+      }
+    ],
+    "microsequencer_full_hierarchy_at_rtl_commit": {
+      "fmax_mhz": 397.5,
+      "closed": true,
+      "target_clock_period_ns": 3.0,
+      "setup_wns_ns": 0.484302,
+      "cells": 478193,
+      "standard_cell_area_um2": 59927.5,
+      "max_slew_violations": 0,
+      "argv": [
+        "tools/run_abi3_physical.py",
+        "--view",
+        "asap7",
+        "--top",
+        "ot_a3_microsequencer",
+        "--source",
+        "rtl/abi3/ot_a3_pkg.sv",
+        "--source",
+        "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "--source",
+        "rtl/abi3/ot_a3_shared_divider.sv",
+        "--source",
+        "rtl/abi3/ot_a3_symbol_file.sv",
+        "--source",
+        "rtl/abi3/ot_a3_loop_stack.sv",
+        "--source",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "--source",
+        "rtl/abi3/ot_a3_resolver_bank.sv",
+        "--source",
+        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "--source",
+        "rtl/abi3/ot_a3_issue_record_store.sv",
+        "--source",
+        "rtl/abi3/ot_a3_dependence_table.sv",
+        "--source",
+        "rtl/abi3/ot_a3_state_controller.sv",
+        "--source",
+        "rtl/abi3/ot_a3_microsequencer.sv",
+        "--param",
+        "DEP_CHECK_STAGES=1",
+        "--clock-period-ns",
+        "3.0",
+        "--stages",
+        "synth,pnr",
+        "--purpose",
+        "characterization",
+        "--false-path-from",
+        "rst_n",
+        "--slew-margin-percent",
+        "60",
+        "--output",
+        "<scratch>",
+        "--keep-workdir",
+        "<scratch>"
+      ],
+      "source_commit": "ca841aa3",
+      "parameters": [
+        "DEP_CHECK_STAGES=1",
+        "STATE_COMPAT=1 (default)"
+      ],
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_3p0ns_full_hierarchy_state_compat_closed.json",
+      "worst_path": "ins_descriptor_id[5] -> g_state_compat.states.count_commits[23] (state admission lookup), slack +0.484 ns at 3.0 ns"
+    },
+    "reading": "The 74.9 MHz \"dep-depth\" figure was the full sequencer WITH the state controller at the 2026-09-19 sources; its routed worst path (retained 6_finish.rpt) ran g_state_compat.states.apply_index -> slot_cursor through a 509-cell combinational modulo, which 575439a2 (2026-09-22) replaced with a sequential one (state controller alone: 78.3 -> 833.0 MHz). The row microsequencer_full_hierarchy_at_rtl_commit is the first route of the full 12-module hierarchy with the state controller since then.",
+    "unmeasured_control_blocks": [
+      "ot_a3_engine_issue_bridge (instantiates every engine; never routed alone)",
+      "ot_a3_device_top",
+      "ot_a3_engine_array (synthesis timeout record only)"
+    ]
+  }
+}
