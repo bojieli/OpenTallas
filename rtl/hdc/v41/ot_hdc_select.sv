@@ -159,6 +159,9 @@ module ot_hdc_select #(
     reg          sorting, emitting;
     reg [KW:0]   pc;
     reg          par;
+    // the phase enables are decoded into their own registers so each broadcast
+    // to the bank is rooted at a flop, not at a gate (routed slew at K = 512)
+    reg          sort_ev, sort_od;
     reg [K-1:0]  bv, bn;
     reg [IW*K-1:0] bi;
     // swap[j]: the pair (j, j+1) exchanges in this sort phase; the sort key is
@@ -170,7 +173,7 @@ module ot_hdc_select #(
             localparam integer JR = (j + 1 < K) ? j + 1 : j;
             localparam [0:0]   JP = ((j % 2) == 1);
             if (j + 1 < K) begin : g_cmp
-                assign swap[j] = sorting && (par == JP) && bv[JR] &&
+                assign swap[j] = (JP ? sort_od : sort_ev) && bv[JR] &&
                                  (!bv[j] || bi[IW*j +: IW] > bi[IW*JR +: IW]);
             end else begin : g_end
                 assign swap[j] = 1'b0;
@@ -196,6 +199,7 @@ module ot_hdc_select #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             bsy <= 1'b0; sorting <= 1'b0; emitting <= 1'b0; pc <= 0; par <= 1'b0;
+            sort_ev <= 1'b0; sort_od <= 1'b0;
             out_valid <= 1'b0; out_last <= 1'b0;
         end else begin
             if (acc && in_last) bsy <= 1'b1;
@@ -203,10 +207,13 @@ module ot_hdc_select #(
             out_last  <= emitting && bv[0] && (pc == KM1 || !bv[B1]);
             if (xw[K-1]) begin                      // the bank's last cell loads on this edge
                 pc <= 0; par <= 1'b0;
-                if (SK != 0) sorting <= 1'b1; else emitting <= 1'b1;
+                if (SK != 0) begin sorting <= 1'b1; sort_ev <= 1'b1; end else emitting <= 1'b1;
             end else if (sorting) begin
                 pc <= pc + 1'b1; par <= !par;
-                if (pc == KM1) begin sorting <= 1'b0; emitting <= 1'b1; pc <= 0; end
+                sort_ev <= par; sort_od <= !par;            // the next phase's parity
+                if (pc == KM1) begin
+                    sorting <= 1'b0; emitting <= 1'b1; pc <= 0; sort_ev <= 1'b0; sort_od <= 1'b0;
+                end
             end else if (emitting) begin
                 pc <= pc + 1'b1;
                 if (pc == KM1) begin emitting <= 1'b0; bsy <= 1'b0; end
