@@ -87,7 +87,7 @@
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
     "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
-    "rtl/hdc/ot_hdc_matvec.sv": "ae09eb6853d308f8364dfa30ddb335445744465137cbb550285778f6cdbd7358",
+    "rtl/hdc/ot_hdc_matvec.sv": "48f4cbc47dab6f005f8599c30e91dc48799316fd28805c5e4c77884d0d0fdabf",
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
     "rtl/hdc/ot_hdc_stream.sv": "0ac8993138829ea6a87c72f0d9b5c0f6228a5e3956bb7ee9efa761cfee928c42",
@@ -102,7 +102,7 @@
     "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
     "tools/hdc_isa.py": "05b9e689c57e607dbb0ff0b7eecc04be4bbe2e1707b9926b7ee27271440c6e55",
     "tools/hdc_program.py": "53c5fa418836eda12c229eeade9e460314bfad1ffa1cbbd4c40944f5f8d0a14c",
-    "tools/hdc_timing.py": "1a1d958eb82fdf3a9e5d13ef189f17530d0b7f21a29d83ec109f8c9176655ed6",
+    "tools/hdc_timing.py": "0a056e6c0ead12edad334303a818489e0414fb71704e6e4137781857ce0da3e3",
     "tools/rtl_hdc_decode_campaign.py": "a3d64fe99eee2613fe545d23613d3a33c2b1b769accab433bef974203e519be8",
     "tools/rtl_hdc_kv_stream_campaign.py": "6df4311a3450225d33d149975d89053b5264e1d5706a77de4b7229d5f97ab520"
   },
@@ -144,28 +144,28 @@
   "qwen3_8b_projection": [
     {
       "configuration": "64 lanes (the built core), KV in SRAM",
-      "cycles_per_token": 185412871,
+      "cycles_per_token": 185413521,
       "kv_store": "sram",
       "lanes": 64,
       "position": 8192
     },
     {
       "configuration": "64 lanes (the built core), KV in SRAM",
-      "cycles_per_token": 1732152583,
+      "cycles_per_token": 1732153233,
       "kv_store": "sram",
       "lanes": 64,
       "position": 200000
     },
     {
       "configuration": "64 lanes (the built core), KV in SRAM",
-      "cycles_per_token": 8183352583,
+      "cycles_per_token": 8183353233,
       "kv_store": "sram",
       "lanes": 64,
       "position": 1000000
     },
     {
       "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
-      "cycles_per_token": 185412871,
+      "cycles_per_token": 185413521,
       "hbm_pseudo_channels": 4,
       "kv_bytes_per_token": 1206853632,
       "kv_ops": 288,
@@ -179,7 +179,7 @@
     },
     {
       "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
-      "cycles_per_token": 1732152583,
+      "cycles_per_token": 1732153233,
       "hbm_pseudo_channels": 4,
       "kv_bytes_per_token": 29490094080,
       "kv_ops": 288,
@@ -193,7 +193,7 @@
     },
     {
       "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
-      "cycles_per_token": 8183352583,
+      "cycles_per_token": 8183353233,
       "hbm_pseudo_channels": 4,
       "kv_bytes_per_token": 147454894080,
       "kv_ops": 288,
@@ -207,28 +207,28 @@
     },
     {
       "configuration": "16,384 lanes, KV in SRAM",
-      "cycles_per_token": 49482959,
+      "cycles_per_token": 49486209,
       "kv_store": "sram",
       "lanes": 16384,
       "position": 8192
     },
     {
       "configuration": "16,384 lanes, KV in SRAM",
-      "cycles_per_token": 1156066511,
+      "cycles_per_token": 1156069761,
       "kv_store": "sram",
       "lanes": 16384,
       "position": 200000
     },
     {
       "configuration": "16,384 lanes, KV in SRAM",
-      "cycles_per_token": 5771291855,
+      "cycles_per_token": 5771295105,
       "kv_store": "sram",
       "lanes": 16384,
       "position": 1000000
     },
     {
       "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
-      "cycles_per_token": 50161307,
+      "cycles_per_token": 50164557,
       "hbm_pseudo_channels": 32,
       "kv_bytes_per_token": 1206853632,
       "kv_ops": 288,
@@ -242,7 +242,7 @@
     },
     {
       "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
-      "cycles_per_token": 1174704215,
+      "cycles_per_token": 1174707465,
       "hbm_pseudo_channels": 32,
       "kv_bytes_per_token": 29490094080,
       "kv_ops": 288,
@@ -256,7 +256,7 @@
     },
     {
       "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
-      "cycles_per_token": 5864989955,
+      "cycles_per_token": 5864993205,
       "hbm_pseudo_channels": 32,
       "kv_bytes_per_token": 147454894080,
       "kv_ops": 288,
@@ -270,7 +270,7 @@
     },
     {
       "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
-      "cycles_per_token": 49482959,
+      "cycles_per_token": 49486209,
       "hbm_pseudo_channels": 384,
       "kv_bytes_per_token": 1206853632,
       "kv_ops": 288,
@@ -284,7 +284,7 @@
     },
     {
       "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
-      "cycles_per_token": 1156068095,
+      "cycles_per_token": 1156071345,
       "hbm_pseudo_channels": 384,
       "kv_bytes_per_token": 29490094080,
       "kv_ops": 288,
@@ -298,7 +298,7 @@
     },
     {
       "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
-      "cycles_per_token": 5771294231,
+      "cycles_per_token": 5771297481,
       "hbm_pseudo_channels": 384,
       "kv_bytes_per_token": 147454894080,
       "kv_ops": 288,
@@ -329,7 +329,7 @@
           "position": 15
         },
         {
-          "cycles": 32324,
+          "cycles": 32374,
           "fault": 0,
           "input": 1073,
           "oracle": 382,
@@ -337,7 +337,7 @@
           "position": 16
         },
         {
-          "cycles": 32452,
+          "cycles": 32728,
           "fault": 0,
           "input": 382,
           "oracle": 93,
@@ -346,7 +346,7 @@
         }
       ],
       "kv_ops": 144,
-      "kv_stall_cycles": 6086,
+      "kv_stall_cycles": 5558,
       "mismatches": 0,
       "oracle_generated_tokens": [
         1073,
@@ -356,12 +356,12 @@
       "pass": true,
       "steps": 18,
       "stream_fault": 0,
-      "total_cycles": 570638,
+      "total_cycles": 571010,
       "underflow_detected": false,
       "zero_substituted_words": 13088
     },
     "lead_0": {
-      "cycles": 1710,
+      "cycles": 1714,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
@@ -378,26 +378,26 @@
       "isa_next_token": 1332,
       "kv_cache_mismatches": 192,
       "kv_ops": 1,
-      "kv_stall_cycles": 40,
+      "kv_stall_cycles": 42,
       "logit_mismatches": 4096,
       "next_token": 0,
       "outcome": "underflow_detected",
       "pass": false,
       "position": 59,
       "stream_fault": 1,
-      "total_cycles": 1710,
+      "total_cycles": 1714,
       "underflow_detected": true,
       "vector_memory_mismatches": 2670,
       "zero_substituted_words": 2
     },
     "lead_128": {
-      "cycles": 38219,
+      "cycles": 38255,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
         "activates": 131,
-        "read_latency_avg_ps": 67348,
-        "read_latency_max_ps": 324293,
+        "read_latency_avg_ps": 65859,
+        "read_latency_max_ps": 298293,
         "reads": 736,
         "refreshes": 23,
         "request_backpressure_cycles": 0,
@@ -408,56 +408,26 @@
       "isa_next_token": 1332,
       "kv_cache_mismatches": 0,
       "kv_ops": 8,
-      "kv_stall_cycles": 391,
+      "kv_stall_cycles": 377,
       "logit_mismatches": 0,
       "next_token": 1332,
       "outcome": "bit_exact",
       "pass": true,
       "position": 59,
       "stream_fault": 0,
-      "total_cycles": 38219,
+      "total_cycles": 38255,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 5568
     },
     "lead_32": {
-      "cycles": 9169,
-      "delivered_word_mismatches": 0,
-      "fault": 0,
-      "hbm": {
-        "activates": 50,
-        "read_latency_avg_ps": 62806,
-        "read_latency_max_ps": 165187,
-        "reads": 248,
-        "refreshes": 6,
-        "request_backpressure_cycles": 0,
-        "row_conflicts": 0,
-        "row_hits": 202,
-        "writes": 4
-      },
-      "isa_next_token": 1332,
-      "kv_cache_mismatches": 128,
-      "kv_ops": 3,
-      "kv_stall_cycles": 118,
-      "logit_mismatches": 4096,
-      "next_token": 0,
-      "outcome": "underflow_detected",
-      "pass": false,
-      "position": 59,
-      "stream_fault": 1,
-      "total_cycles": 9169,
-      "underflow_detected": true,
-      "vector_memory_mismatches": 2670,
-      "zero_substituted_words": 1394
-    },
-    "long_context": {
-      "cycles": 38219,
+      "cycles": 38152,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
         "activates": 131,
-        "read_latency_avg_ps": 67348,
-        "read_latency_max_ps": 324293,
+        "read_latency_avg_ps": 70278,
+        "read_latency_max_ps": 401293,
         "reads": 736,
         "refreshes": 23,
         "request_backpressure_cycles": 0,
@@ -468,28 +438,58 @@
       "isa_next_token": 1332,
       "kv_cache_mismatches": 0,
       "kv_ops": 8,
-      "kv_stall_cycles": 391,
+      "kv_stall_cycles": 274,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "outcome": "bit_exact",
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 38152,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 5568
+    },
+    "long_context": {
+      "cycles": 38255,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 131,
+        "read_latency_avg_ps": 65859,
+        "read_latency_max_ps": 298293,
+        "reads": 736,
+        "refreshes": 23,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 613,
+        "writes": 8
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 377,
       "logit_mismatches": 0,
       "next_token": 1332,
       "pass": true,
       "position": 59,
       "stream_fault": 0,
-      "total_cycles": 38219,
+      "total_cycles": 38255,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 5568
     },
     "npc2_long_context": {
-      "cycles": 38224,
+      "cycles": 38274,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
         "activates": 65,
-        "read_latency_avg_ps": 86660,
-        "read_latency_max_ps": 338205,
+        "read_latency_avg_ps": 83834,
+        "read_latency_max_ps": 298205,
         "reads": 736,
         "refreshes": 12,
-        "request_backpressure_cycles": 276,
+        "request_backpressure_cycles": 236,
         "row_conflicts": 0,
         "row_hits": 679,
         "writes": 8
@@ -503,42 +503,42 @@
       "pass": true,
       "position": 59,
       "stream_fault": 0,
-      "total_cycles": 38224,
+      "total_cycles": 38274,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 5568
     },
     "npc2_prompt60_from_empty": {
-      "cycles": 39019,
+      "cycles": 38982,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
-        "activates": 2894,
-        "read_latency_avg_ps": 86569,
-        "read_latency_max_ps": 476922,
+        "activates": 2895,
+        "read_latency_avg_ps": 88145,
+        "read_latency_max_ps": 478398,
         "reads": 19760,
-        "refreshes": 1051,
-        "request_backpressure_cycles": 1751,
+        "refreshes": 1052,
+        "request_backpressure_cycles": 2126,
         "row_conflicts": 0,
-        "row_hits": 17730,
+        "row_hits": 17729,
         "writes": 864
       },
       "isa_next_token": 1332,
       "kv_cache_mismatches": 0,
       "kv_ops": 480,
-      "kv_stall_cycles": 20884,
+      "kv_stall_cycles": 19874,
       "logit_mismatches": 0,
       "next_token": 1332,
       "pass": true,
       "position": 59,
       "stream_fault": 0,
-      "total_cycles": 2064004,
+      "total_cycles": 2065994,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 164288
     },
     "npc2_single_step": {
-      "cycles": 32196,
+      "cycles": 32246,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
@@ -561,42 +561,42 @@
       "pass": true,
       "position": 15,
       "stream_fault": 0,
-      "total_cycles": 32196,
+      "total_cycles": 32246,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 1344
     },
     "prompt60_from_empty": {
-      "cycles": 38497,
+      "cycles": 38496,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
-        "activates": 5563,
-        "read_latency_avg_ps": 73280,
-        "read_latency_max_ps": 457298,
+        "activates": 5557,
+        "read_latency_avg_ps": 73304,
+        "read_latency_max_ps": 461894,
         "reads": 19760,
-        "refreshes": 2105,
+        "refreshes": 2108,
         "request_backpressure_cycles": 0,
         "row_conflicts": 0,
-        "row_hits": 15061,
+        "row_hits": 15067,
         "writes": 864
       },
       "isa_next_token": 1332,
       "kv_cache_mismatches": 0,
       "kv_ops": 480,
-      "kv_stall_cycles": 25322,
+      "kv_stall_cycles": 25680,
       "logit_mismatches": 0,
       "next_token": 1332,
       "pass": true,
       "position": 59,
       "stream_fault": 0,
-      "total_cycles": 2068442,
+      "total_cycles": 2071800,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 164288
     },
     "single_step": {
-      "cycles": 32196,
+      "cycles": 32246,
       "delivered_word_mismatches": 0,
       "fault": 0,
       "hbm": {
@@ -619,13 +619,13 @@
       "pass": true,
       "position": 15,
       "stream_fault": 0,
-      "total_cycles": 32196,
+      "total_cycles": 32246,
       "underflow_detected": false,
       "vector_memory_mismatches": 0,
       "zero_substituted_words": 1344
     },
     "sram_long_context": {
-      "cycles": 37828,
+      "cycles": 37878,
       "fault": 0,
       "isa_next_token": 1332,
       "kv_cache_mismatches": 0,
@@ -642,7 +642,7 @@
       ],
       "generation_steps": [
         {
-          "cycles": 37828,
+          "cycles": 37878,
           "fault": 0,
           "input": 198,
           "oracle": 1073,
@@ -656,11 +656,11 @@
       ],
       "pass": false,
       "steps": 60,
-      "total_cycles": 2043120,
+      "total_cycles": 2046120,
       "underflow_detected": false
     },
     "sram_single_step": {
-      "cycles": 32196,
+      "cycles": 32246,
       "fault": 0,
       "isa_next_token": 1073,
       "kv_cache_mismatches": 0,
@@ -852,14 +852,14 @@
     "fits": [
       {
         "error_pct": 0.0093,
-        "model_cycles": 32199,
-        "rtl_cycles": 32196,
+        "model_cycles": 32249,
+        "rtl_cycles": 32246,
         "run": "single_step_position_15"
       },
       {
-        "error_pct": 0.0209,
-        "model_cycles": 38227,
-        "rtl_cycles": 38219,
+        "error_pct": 0.0575,
+        "model_cycles": 38277,
+        "rtl_cycles": 38255,
         "run": "single_step_position_59"
       }
     ],
@@ -868,28 +868,28 @@
   "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16)",
   "vehicle_cost": {
     "end_to_end_16_plus_3_total": {
-      "added_cycles": 6086,
-      "added_fraction": 0.01078,
-      "hbm_cycles": 570638,
-      "sram_cycles": 564552
+      "added_cycles": 5558,
+      "added_fraction": 0.00983,
+      "hbm_cycles": 571010,
+      "sram_cycles": 565452
     },
     "prompt60_from_empty_total": {
-      "added_cycles": 25322,
-      "added_fraction": 0.01239,
-      "hbm_cycles": 2068442,
-      "sram_cycles": 2043120
+      "added_cycles": 25680,
+      "added_fraction": 0.01255,
+      "hbm_cycles": 2071800,
+      "sram_cycles": 2046120
     },
     "single_step_position_15": {
       "added_cycles": 0,
       "added_fraction": 0.0,
-      "hbm_cycles": 32196,
-      "sram_cycles": 32196
+      "hbm_cycles": 32246,
+      "sram_cycles": 32246
     },
     "single_step_position_59": {
-      "added_cycles": 391,
-      "added_fraction": 0.01034,
-      "hbm_cycles": 38219,
-      "sram_cycles": 37828
+      "added_cycles": 377,
+      "added_fraction": 0.00995,
+      "hbm_cycles": 38255,
+      "sram_cycles": 37878
     }
   },
   "verilator_lint": {
