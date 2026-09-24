@@ -870,8 +870,8 @@ def sdc_lines(
         f"set clk_period {period_lib:g}",
         f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
         "set non_clock_inputs [all_inputs -no_clocks]",
-        "set_input_delay [expr $clk_period * 0.2] -clock core_clk $non_clock_inputs",
-        "set_output_delay [expr $clk_period * 0.2] -clock core_clk [all_outputs]",
+        f"set_input_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk $non_clock_inputs",
+        f"set_output_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk [all_outputs]",
         f"set_load {load_lib:g} [all_outputs]",
         *signal_integrity_sdc_lines(constraints),
         *(f"set_false_path -from [get_ports {port}]" for port in block["false_path_from_ports"]),
@@ -2187,6 +2187,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--param", action="append", default=[], help="NAME=VALUE top parameter, repeatable")
     parser.add_argument("--clock-port", default="clk")
     parser.add_argument("--false-path-from", action="append", default=None)
+    parser.add_argument(
+        "--io-delay-fraction",
+        type=float,
+        default=None,
+        help="external input/output delay as a fraction of the clock period (default 0.2). "
+             "0 models a block whose ports face adjacent macros or registered neighbours in the "
+             "same clock domain, so only its internal register-to-register paths set closure; the "
+             "value is recorded under design.io_delay_fraction",
+    )
     parser.add_argument("--corner", default=None, help="corner name within the view")
     parser.add_argument("--clock-period-ns", type=float, required=True)
     parser.add_argument("--stages", default="synth,sta", help="comma list of synth,sta,pnr")
@@ -2453,6 +2462,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.false_path_from is not None:
         block["false_path_from_ports"] = args.false_path_from
+    if args.io_delay_fraction is not None:
+        block["io_delay_fraction"] = args.io_delay_fraction
 
     corner_name = args.corner or view["default_corner"]
     if corner_name not in view["corners"]:
@@ -2544,6 +2555,7 @@ def main(argv: list[str] | None = None) -> int:
             "parameters": block["parameters"],
             "clock_port": block["clock_port"],
             "false_path_from_ports": block["false_path_from_ports"],
+            "io_delay_fraction": block.get("io_delay_fraction", 0.2),
             "sources": [
                 {
                     "path": source,
