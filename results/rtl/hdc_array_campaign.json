@@ -357,6 +357,225 @@
       "token_steps": 108,
       "total_cycles": 667200,
       "users": 6
+    },
+    {
+      "aggregate_speedup_vs_single_core": 6.958,
+      "cycles_per_token_step": 4624.0,
+      "generated": [
+        {
+          "cycle": 702747,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 707215,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 711683,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 716151,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 720619,
+          "position": 15,
+          "token": 1073,
+          "user": 4
+        },
+        {
+          "cycle": 725087,
+          "position": 15,
+          "token": 1073,
+          "user": 5
+        },
+        {
+          "cycle": 729555,
+          "position": 15,
+          "token": 1073,
+          "user": 6
+        },
+        {
+          "cycle": 734023,
+          "position": 15,
+          "token": 1073,
+          "user": 7
+        },
+        {
+          "cycle": 738491,
+          "position": 15,
+          "token": 1073,
+          "user": 8
+        },
+        {
+          "cycle": 742959,
+          "position": 15,
+          "token": 1073,
+          "user": 9
+        },
+        {
+          "cycle": 747427,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 751895,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 756363,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 760831,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 765299,
+          "position": 16,
+          "token": 382,
+          "user": 4
+        },
+        {
+          "cycle": 769767,
+          "position": 16,
+          "token": 382,
+          "user": 5
+        },
+        {
+          "cycle": 774235,
+          "position": 16,
+          "token": 382,
+          "user": 6
+        },
+        {
+          "cycle": 778703,
+          "position": 16,
+          "token": 382,
+          "user": 7
+        },
+        {
+          "cycle": 783171,
+          "position": 16,
+          "token": 382,
+          "user": 8
+        },
+        {
+          "cycle": 787639,
+          "position": 16,
+          "token": 382,
+          "user": 9
+        },
+        {
+          "cycle": 792107,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 796575,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 801043,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 805511,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        },
+        {
+          "cycle": 809979,
+          "position": 17,
+          "token": 93,
+          "user": 4
+        },
+        {
+          "cycle": 814447,
+          "position": 17,
+          "token": 93,
+          "user": 5
+        },
+        {
+          "cycle": 818915,
+          "position": 17,
+          "token": 93,
+          "user": 6
+        },
+        {
+          "cycle": 823383,
+          "position": 17,
+          "token": 93,
+          "user": 7
+        },
+        {
+          "cycle": 827851,
+          "position": 17,
+          "token": 93,
+          "user": 8
+        },
+        {
+          "cycle": 832319,
+          "position": 17,
+          "token": 93,
+          "user": 9
+        }
+      ],
+      "generated_tokens": 30,
+      "link_credit_stalls": 0,
+      "lm_head_split": true,
+      "mismatches": 0,
+      "package_busy_cycles": [
+        533740,
+        564840,
+        533740,
+        564840,
+        533740,
+        564840,
+        533740,
+        564840,
+        801000,
+        745020
+      ],
+      "package_busy_cycles_per_step": [
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        4450.0,
+        4139.0
+      ],
+      "packages": 10,
+      "pass": true,
+      "token_steps": 180,
+      "total_cycles": 832320,
+      "users": 10
     }
   ],
   "input_sha256": {
@@ -376,7 +595,7 @@
     "rtl/test/tb_hdc_array.sv": "7c63874fdd19286b68bd95728f20b33e97a3c1e9f2c19ab5e4463d63cceaafd6",
     "tools/hdc_golden.py": "050ef788e63eb52b40ccbf533f7a7ce0f3e6f33e8ded92718ac13225b9586fa7",
     "tools/hdc_isa.py": "62498d8e70bbf20dd447b483fe1f52f6e0934e9e8eccc678dafdbad5a6bff215",
-    "tools/hdc_program.py": "bacaef662d2069cb9c1c155cd8ae07eb31f5eb6b8de1137ce7fbe30467219f5e",
+    "tools/hdc_program.py": "39cda402ff16f6e3841b3eb6c1dd1b57bbbd82ff6242e50e35fe5942c0dab6fb",
     "tools/rtl_hdc_decode_campaign.py": "86465e0123ac5ae1f921d9f1aea5a312ff57963fba5df3fac8f16f35735a4946"
   },
   "schema": "opentallas.hdc-array-campaign.v1",

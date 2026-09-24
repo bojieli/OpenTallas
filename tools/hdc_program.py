@@ -184,75 +184,79 @@ def build_program(lay, layers=None, embed=True, head=True):
     else:
         su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W * GR, a_d=I.DYN_EMBED, a_si=1,
            dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"}, red_writes={"SSX"}, **sq)
-    for L in layers:
-        rmsnorm("X", H, lay.cb[(L, "in")], "H")
-        me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
-        # V row straight to the cache: independent of the head norms
-        su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
-           dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
-           d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
-           reads={"QKV"}, writes={f"V{L}"})
-        nh = NH + KV
-        su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
-           r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
-        su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
-           ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
-           reads={"SS"}, writes={"RS"})
-        su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
-           b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
-           dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKV", "RS"}, writes={"QN"})
-        rope = dict(b_src=I.SRC_ALT, b_base=lay.cb["rope"], b_d=I.DYN_ROPE, b_si=1, ma=I.MA_AB,
-                    ad=I.AD_Q, a_so=HD, a_si=1, c_so=HD, c_si=1, su_nin=half)
-        for lo in (True, False):
-            a_off, c_off, mb = (0, half, I.MB_NEG) if lo else (half, 0, I.MB_POS)
-            su(su_nout=NH, a_base=VM["QN"] + a_off, c_base=VM["QN"] + c_off, mb=mb,
-               dst=I.DST_VM, d_base=VM["QR"] + a_off, d_so=HD, d_si=1,
-               reads={"QN"}, writes={"QRlo" if lo else "QRhi"}, **rope)
-            kq = VM["QN"] + NH * HD
-            su(su_nout=KV, a_base=kq + a_off, c_base=kq + c_off, mb=mb, dst=I.DST_KV,
-               d_base=lay.k_elem(L, 0, 0, a_off), d_d=I.DYN_KWRITE,
-               d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
-               reads={"QN"}, writes={f"K{L}lo" if lo else f"K{L}hi"}, **rope)
-        jsh = group.bit_length() - 1
-        assert 1 << jsh == group and NH <= IL
-        heads = {f"S{h}" for h in range(NH)}
-        # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
-        me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False, me_xcs=0,
-           me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
-           me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
-           me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes=heads)
-        heads = {f"S{h}" for h in range(NH)}
-        sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
-                  d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
-        su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
-           reads=heads, writes=heads, red_writes={"M"}, **sm)
-        su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
-           r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
-        su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
-           d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
-        su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
-        # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
-        me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, 0, 0, 0) // W), VM["S"], VM["ATT"],
-           rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
-           me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
-           me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
-           reads=heads | {f"V{L}"}, writes={"ATT"})
-        me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
-        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
-        rmsnorm("X", H, lay.cb[(L, "post")], "H")
-        me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // (W * IL))})
-        FF = lay.FF
-        tb = W * IL
-        for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
-            g0 = VM["GU"] + 2 * tb * r
-            su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
-               c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
-               d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
-        me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // (W * IL))},
-           writes={"T1"})
-        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
+    for item in layers:
+        # an item is a layer, or (layer, "attn" | "mlp") for half a layer per package
+        L, part = item if isinstance(item, tuple) else (item, "both")
+        if part in ("both", "attn"):
+            rmsnorm("X", H, lay.cb[(L, "in")], "H")
+            me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
+            # V row straight to the cache: independent of the head norms
+            su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
+               dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
+               d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
+               reads={"QKV"}, writes={f"V{L}"})
+            nh = NH + KV
+            su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
+               r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
+            su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
+               ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
+               reads={"SS"}, writes={"RS"})
+            su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
+               b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
+               dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKV", "RS"}, writes={"QN"})
+            rope = dict(b_src=I.SRC_ALT, b_base=lay.cb["rope"], b_d=I.DYN_ROPE, b_si=1, ma=I.MA_AB,
+                        ad=I.AD_Q, a_so=HD, a_si=1, c_so=HD, c_si=1, su_nin=half)
+            for lo in (True, False):
+                a_off, c_off, mb = (0, half, I.MB_NEG) if lo else (half, 0, I.MB_POS)
+                su(su_nout=NH, a_base=VM["QN"] + a_off, c_base=VM["QN"] + c_off, mb=mb,
+                   dst=I.DST_VM, d_base=VM["QR"] + a_off, d_so=HD, d_si=1,
+                   reads={"QN"}, writes={"QRlo" if lo else "QRhi"}, **rope)
+                kq = VM["QN"] + NH * HD
+                su(su_nout=KV, a_base=kq + a_off, c_base=kq + c_off, mb=mb, dst=I.DST_KV,
+                   d_base=lay.k_elem(L, 0, 0, a_off), d_d=I.DYN_KWRITE,
+                   d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
+                   reads={"QN"}, writes={f"K{L}lo" if lo else f"K{L}hi"}, **rope)
+            jsh = group.bit_length() - 1
+            assert 1 << jsh == group and NH <= IL
+            heads = {f"S{h}" for h in range(NH)}
+            # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
+            me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False, me_xcs=0,
+               me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
+               me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
+               me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes=heads)
+            heads = {f"S{h}" for h in range(NH)}
+            sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
+                      d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
+            su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
+               reads=heads, writes=heads, red_writes={"M"}, **sm)
+            su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
+               r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
+            su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
+               d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
+            su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
+            # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
+            me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, 0, 0, 0) // W), VM["S"], VM["ATT"],
+               rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
+               me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
+               me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
+               reads=heads | {f"V{L}"}, writes={"ATT"})
+            me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
+            su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
+               dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
+        if part in ("both", "mlp"):
+            rmsnorm("X", H, lay.cb[(L, "post")], "H")
+            me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // (W * IL))})
+            FF = lay.FF
+            tb = W * IL
+            for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
+                g0 = VM["GU"] + 2 * tb * r
+                su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
+                   c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
+                   d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
+            me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // (W * IL))},
+               writes={"T1"})
+            su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
+               dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
     # head: True (final norm + lm_head), "a" (final norm + first vocabulary half)
     # or "b" (second half, on the normalised state H received over the link)
     if head in (True, "a"):
@@ -530,17 +534,21 @@ def main():
         (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
         if args.stages:
             # L: lm_head with the last layer; L+1: lm_head alone; L+2: lm_head split
-            # by vocabulary over two packages (argmax combined by the last)
-            assert args.stages in (lay.L, lay.L + 1, lay.L + 2)
-            extra = args.stages - lay.L
+            # by vocabulary over two packages (argmax combined by the last);
+            # 2L+2: as L+2 with every layer split into attention and MLP packages
+            assert args.stages in (lay.L, lay.L + 1, lay.L + 2, 2 * lay.L + 2)
+            half = args.stages == 2 * lay.L + 2
+            body = [(L, part) for L in range(lay.L) for part in ("attn", "mlp")] if half else list(range(lay.L))
+            nb = len(body)
+            extra = args.stages - nb
             for n in range(args.stages):
-                layers = [n] if n < lay.L else []
+                layers = [body[n]] if n < nb else []
                 if extra == 0:
-                    head = n == lay.L - 1
+                    head = n == nb - 1
                 elif extra == 1:
-                    head = n == lay.L
+                    head = n == nb
                 else:
-                    head = {lay.L: "a", lay.L + 1: "b"}.get(n, False)
+                    head = {nb: "a", nb + 1: "b"}.get(n, False)
                 st = build_program(lay, layers, embed=(n == 0), head=head)
                 (out / f"prog_stage{n}.hex").write_text(
                     hexwords((I.encode(**f) for f in st), I.INSTR_BITS))

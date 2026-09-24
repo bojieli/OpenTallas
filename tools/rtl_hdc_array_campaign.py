@@ -12,7 +12,9 @@ with the torch oracle's.  Configurations (built and run in parallel):
 * 5 packages, 5 users: lm_head on a package of its own;
 * 6 packages, 6 users: lm_head split by vocabulary over two packages, the
   last combining the two halves' argmax (strictly greater wins, so ties keep
-  the lower row, as numpy's argmax does).
+  the lower row, as numpy's argmax does);
+* 10 packages, 10 users: as 6, with every layer split into an attention
+  package and an MLP package.
 
 Aggregate throughput is token-steps per cycle across all users; the single-core
 reference is results/rtl/hdc_decode_campaign.json.  Writes
@@ -36,7 +38,7 @@ OUT = ROOT / "results/rtl/hdc_array_campaign.json"
 TB = ROOT / "rtl/test/tb_hdc_array.sv"
 HARNESS = ROOT / "rtl/test/hdc_array_harness.cpp"
 LINK = ROOT / "rtl/rom/ot_rom_pkg_link.sv"
-CONFIGS = [(4, 4, 0), (5, 5, 0), (6, 6, 1)]
+CONFIGS = [(4, 4, 0), (5, 5, 0), (6, 6, 1), (10, 10, 1)]
 STEPS_PER_USER = 16 + 3 - 1
 RES = re.compile(r"HDC_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+)")
 BUSY = re.compile(r"NODE_BUSY node=(\d+) cycles=(\d+)")

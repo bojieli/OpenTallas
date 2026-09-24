@@ -291,6 +291,7 @@ array and generates 1073, 382, 93. The links never stalled.
 | 4 / 4 (lm_head on layer 3's package) | 14,507 | 5,908 / 14,259 |
 | 5 / 5 (lm_head alone) | 8,809 | 5,908 / 8,546 |
 | 6 / 6 (lm_head split by vocabulary) | 6,178 | 5,908 / 4,450 and 4,139 |
+| 10 / 10 (layers split into attention and MLP packages) | 4,624 | 2,965 and 3,138 / 4,450 and 4,139 |
 
 - 4 / 4 aggregate speed-up over one core: 2.218× <!-- figure: 2.218 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
 - 5 / 5 aggregate speed-up over one core: 3.652× <!-- figure: 3.652 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
@@ -305,5 +306,13 @@ In the 6-package array lm_head is split by vocabulary:
 - The second does rows 2048–4095 and keeps its own best only when it is
   strictly greater, so a tie keeps the lower row, as numpy's argmax does.
 
+- 10 / 10 aggregate speed-up over one core: 6.958× <!-- figure: 6.958 src="results/rtl/hdc_array_campaign.json#configurations[packages=10].aggregate_speedup_vs_single_core" name="HDC array 10-package aggregate speed-up" -->
+
+The 10-package array also splits every layer at the residual after o_proj,
+into an attention package and an MLP package. That cut is as exact as a layer
+boundary: the MLP package opens with the sum of squares of the X it receives.
+
 Per-user latency stays near one core's, as a layer pipeline should.
-Throughput is set by the slowest package, which is now a layer package.
+Throughput is set by the slowest package. At 10 packages that is the lm_head
+pair again (about 4.4K cycles); a four-way vocabulary split would leave the
+MLP half-layer (about 3.1K) as the limit.
