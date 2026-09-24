@@ -225,7 +225,7 @@ that specialisation, taken to one token of the reduced Qwen3 vehicle.
 - A static program drives two fully pipelined units: a 64-lane matrix engine
   and a stream unit with exp, reciprocal, rsqrt and sigmoid pipelines.
   Element-level chaining replaces most barriers.
-- In Verilator it decodes a token in 32,147 cycles, <!-- figure: 32147 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="HDC cycles per token" -->
+- In Verilator it decodes a token in 32,172 cycles, <!-- figure: 32172 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="HDC cycles per token" -->
   with every logit, the vector memory and the KV cache bit-exact against a
   golden model.
 - From an empty KV cache it consumes the 16-token prompt and generates the

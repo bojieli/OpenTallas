@@ -262,3 +262,34 @@ Re-routed at a 0.85 ns target:
 It routed with no DRC or design-rule violations. The critical path is stage 3
 of the rebalanced multiplier (the partial-product sum and select), so the two
 product stages are now close to balanced.
+
+**ROM array: a layer-per-package pipeline of decode cores.** This is the
+array the analytical report proposes, now as token-level RTL
+(`rtl/test/tb_hdc_array.sv`, `tools/rtl_hdc_array_campaign.py`).
+
+- *Packages.* Package n is an `ot_hdc_core` running only layer n's program
+  (`hdc_program.py --stages`). It has its own vector memory and a KV SRAM
+  slice per user. Package 0 also does the embedding.
+- *Links.* The 128-float hidden state crosses `ot_rom_pkg_link` (a 60-cycle
+  stand-in for the PHY) as one header and 8 data flits. They land in the next
+  package's vector memory as they arrive. The last package returns the token.
+- *Exactness.* Splitting the program at layer boundaries is exact. A package
+  that receives X opens with its sum of squares, the same arithmetic the fused
+  residual performed.
+
+Every user starts from an empty KV cache, runs the oracle's prompt through the
+array and generates 1073, 382, 93. The links never stalled.
+
+| Packages / users | Cycles per token-step | Busy per step (layer packages / last) |
+|---|---|---|
+| 4 / 4 (lm_head on layer 3's package) | 14,507 | 5,908 / 14,259 |
+| 5 / 5 (lm_head alone) | 8,809 | 5,908 / 8,546 |
+
+- 4 / 4 aggregate speed-up over one core: 2.218× <!-- figure: 2.218 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
+- 5 / 5 aggregate speed-up over one core: 3.652× <!-- figure: 3.652 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
+- 5 / 5 cycles per token-step: 8,809. <!-- figure: 8809.2 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
+
+Per-user latency stays near one core's, as a layer pipeline should.
+Throughput is set by the slowest package. lm_head is the next split: two
+packages of 2,048 vocabulary rows each, with an argmax combine, would bring
+every package to about 5.9K cycles.

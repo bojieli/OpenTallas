@@ -47,3 +47,13 @@ def test_committed_record_is_current_and_passes():
     assert record["end_to_end"]["generated_tokens"] == record["end_to_end"]["oracle_generated_tokens"]
     for name, digest in record["input_sha256"].items():
         assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+
+
+def test_committed_array_record_is_current_and_passes():
+    import rtl_hdc_array_campaign as array
+    record = json.loads(array.OUT.read_text())
+    assert record["status"] == "pass"
+    for cfg in record["configurations"]:
+        assert cfg["mismatches"] == 0 and cfg["generated_tokens"] == 3 * cfg["users"]
+    for name, digest in record["input_sha256"].items():
+        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name

@@ -139,7 +139,11 @@ class Layout:
 
 
 # -- program -----------------------------------------------------------------------
-def build_program(lay):
+def build_program(lay, layers=None, embed=True, head=True):
+    """The decode program; with `layers`/`embed`/`head` one pipeline stage of it
+    (layer-per-package ROM array): a stage without the embedding starts from
+    the hidden state X delivered by the previous package."""
+    layers = range(lay.L) if layers is None else layers
     prog = []          # (fields, reads, writes)
 
     def me(mat, x, out, rnd=True, amax=False, oen=True, reads=(), writes=(), **over):
@@ -168,9 +172,13 @@ def build_program(lay):
 
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
-    su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W * GR, a_d=I.DYN_EMBED, a_si=1,
-       dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"}, red_writes={"SSX"}, **sq)
-    for L in range(lay.L):
+    if not embed:
+        # X arrived over the package link: its sum of squares opens the stage
+        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, reads={"X"}, red_writes={"SSX"}, **sq)
+    else:
+        su(su_nout=1, su_nin=H, a_src=I.SRC_ALT, a_base=lay.emb_word * W * GR, a_d=I.DYN_EMBED, a_si=1,
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"EMB"}, writes={"X"}, red_writes={"SSX"}, **sq)
+    for L in layers:
         rmsnorm("X", H, lay.cb[(L, "in")], "H")
         me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
         # V row straight to the cache: independent of the head norms
@@ -239,8 +247,9 @@ def build_program(lay):
            writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
            dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
-    rmsnorm("X", H, lay.cb["final"], "H")
-    me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
+    if head:
+        rmsnorm("X", H, lay.cb["final"], "H")
+        me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
     prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
@@ -480,6 +489,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, help="write RTL images and expectations here")
     ap.add_argument("--stop", type=int, help="debug: end the program after this many instructions")
+    ap.add_argument("--stages", type=int, default=0,
+                    help="also write per-package programs (prog_stageN.hex) for a layer-per-package array: "
+                         "L packages (lm_head on the last) or L+1 (lm_head alone on its own package)")
     args = ap.parse_args()
     model, prompt, expected, cache = golden_state()
     lay = Layout(model)
@@ -506,6 +518,14 @@ def main():
         (out / "kv.hex").write_text(hexwords((pack_lanes(w, 32) for w in kvw), 32 * W))
         words = [I.encode(**{k: v for k, v in f.items()}) for f in prog]
         (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
+        if args.stages:
+            assert args.stages in (lay.L, lay.L + 1)
+            sep = args.stages == lay.L + 1
+            for n in range(args.stages):
+                layers = [n] if n < lay.L else []
+                st = build_program(lay, layers, embed=(n == 0), head=(n == args.stages - 1 if sep else n == lay.L - 1))
+                (out / f"prog_stage{n}.hex").write_text(
+                    hexwords((I.encode(**f) for f in st), I.INSTR_BITS))
         (out / "expect_logits.hex").write_text(hexwords(G.bits(mach.logits), 32))
         (out / "expect_vm.hex").write_text(hexwords(G.bits(mach.vm), 32))
         (out / "expect_kv.hex").write_text(hexwords(G.bits(mach.kv), 32))
