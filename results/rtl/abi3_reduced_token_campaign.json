@@ -29,8 +29,9 @@
     "that id equals the first generated token of the reduced reference oracle, which a separate process produced by reading the fixture's shard off disk and running the released reference implementation"
   ],
   "git": {
-    "commit": "02f9766363bfd5ae39551c99984cd5f1e1a3bea2",
-    "worktree_dirty": true
+    "commit": "8460c2f8e00fee3aa98022ce2e94d9b197072a1d",
+    "provenance": "run from a `git archive` export of this commit (not a checkout, so the tool's own git query returned null); build/ hard-linked from the main checkout; --jobs 4 --timeout 36000",
+    "worktree_dirty": false
   },
   "oracle": {
     "generated_token_ids": [
@@ -77,7 +78,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "103107755",
+          "cycles": "96753768",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -93,8 +94,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "4e1cdf7a7dbde4360d5a09728b191ec205cd4be8a97dba38a6ec01839046e880",
-        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              103107755\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "fe089c577a4b4be7ee7cf99d6077867bc68df9ce099528355633b90be383f039",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              96753768\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 1073,
         "self_check": {
@@ -144,7 +145,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "12973713",
+          "cycles": "6632148",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -160,8 +161,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "4bafd24038db188af7be201f873e1619a40ad110df4c2d53dc48b8c0fa3d0aea",
-        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              12973713\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "0b4e1182bab4c1aa444a030a7dda0055f00e9ac4393e56f5c284c68cb7e01a92",
+        "log_tail": "placement           32 bindings on the 32-port surface\n  cycles              6632148\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   32  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 652,
         "self_check": {
@@ -213,7 +214,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "103107770",
+          "cycles": "96753783",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -229,8 +230,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "ba1850b8d058d1107f99ee85d2f749896dd204706a4a49259327be2689847ff2",
-        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              103107770\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "015d1cc405e5fcdd839b8e4bd90dd65f299b5da282742753b4208a2f17efd79e",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              96753783\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      1073\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 1073,
         "self_check": {
@@ -280,7 +281,7 @@
         "counters": {
           "argmax_launches": "1",
           "complete": "1",
-          "cycles": "12973725",
+          "cycles": "6632160",
           "done": "1",
           "fetched_retired": "248 / 248",
           "first_fault_instr": "4294967295",
@@ -296,8 +297,8 @@
           "views_resolved": "255",
           "wait_events": "81"
         },
-        "log_sha256": "d186db61bcfc4b9157bf8a88b45f1004e2392fca06dcf31d560512bd79de0ab0",
-        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              12973725\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
+        "log_sha256": "1f4c886ebcf9521bc1c3028c3e63e02b4b87d0a76f4e9432a7d9a04fb492d486",
+        "log_tail": "placement           30 bindings on the 32-port surface\n  cycles              6632160\n  done                1\n  complete            1\n  trapped             0  trap_class=0\n  fetched/retired     248 / 248\n  issued              83\n  loop_iterations     83\n  argmax launches     1\n  selected_token      652\n  selected_eos_reason 2\n  session_retired     1\n  operand_read_oob    0\n  first_fault_instr   4294967295\n  views_resolved      255\n  response_trap_class 0\n  engine_result_count 1\n  wait_events         81\n  result_write_oob    0\n  place_bound_count   30  (twice=0 overflow=0 conflict=0)\nPASS reduced end-to-end: retired 248 vs golden 248, issued 83 vs 83",
         "returncode": 0,
         "selected_token": 652,
         "self_check": {
@@ -392,7 +393,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_state_controller.sv",
-      "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006"
+      "sha256": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e"
     },
     {
       "path": "rtl/abi3/ot_a3_microsequencer.sv",
@@ -420,7 +421,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_dma_index_mover.sv",
-      "sha256": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64"
+      "sha256": "33a6a3c8a73a3b9a4e7fd692c91d8189414578dc12ad4f8a32ac531424c6d430"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_add.sv",
@@ -452,7 +453,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_engine_array.sv",
-      "sha256": "fdd56acaca43f735bcaf78cbbb39f57af732e5e9ef81f4fa0397f4fc1bbc343a"
+      "sha256": "91aecbe700b1ee54e073672e6d0c8d18d4bf6095957264541b7da70957eaabce"
     },
     {
       "path": "rtl/abi3/ot_a3_vector_rms_norm.sv",
@@ -460,7 +461,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_vector_rope.sv",
-      "sha256": "4f010e3829542b9624e97890bcd174a49171534408651a949e483f8cbf40404a"
+      "sha256": "ca66162e5082ab61fc23a3f167d068fa844f6dd86fec52926ae78387c24a4c38"
     },
     {
       "path": "rtl/abi3/ot_a3_rope_lane_pipe.sv",
@@ -472,7 +473,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
-      "sha256": "058e767b96f9d6da4550de1cec14d66bfd05247dd2ad11732210f1467663b4e6"
+      "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7"
     },
     {
       "path": "rtl/abi3/ot_a3_qwen_gqa.sv",
@@ -528,7 +529,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
-      "sha256": "acbe6172b6286934597d121a59e389fcd7e3d58286c1ff123d4b91847efe3ac6"
+      "sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117"
     },
     {
       "path": "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
@@ -536,7 +537,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
-      "sha256": "681b1c2fb6c4e21de68ddd6343478a270623bc226a4c9bdee3608664488a225a"
+      "sha256": "a6113740db44bf1f3ebe7e550ede74d696e68312d8d439d9d0d16de0eb697975"
     },
     {
       "path": "rtl/abi3/ot_a3_attention_qk_walk.sv",
@@ -556,7 +557,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
-      "sha256": "b819f251012bb9f1e325969b24940c809b97a500f6d460a3cef32ceea4e6aff9"
+      "sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d"
     },
     {
       "path": "rtl/abi3/ot_a3_attention_sparse.sv",
@@ -608,7 +609,7 @@
     },
     {
       "path": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
-      "sha256": "a103c46da8d718b09f6f37af029347855e00b4c3f380f8b33c76584e204e3a98"
+      "sha256": "cddc5811fe95a95de0b91b61336c7ded2f868ba448bff6619f9f6b283196cdaa"
     },
     {
       "path": "rtl/test/a3_engine_completion_adapter.sv",
@@ -624,19 +625,19 @@
     },
     {
       "path": "rtl/lib/ot_wide_div_seq.sv",
-      "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a"
     },
     {
       "path": "rtl/lib/ot_wide_div_small_seq.sv",
-      "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff"
+      "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6"
     },
     {
       "path": "rtl/lib/ot_wide_mul_seq.sv",
-      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+      "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82"
     },
     {
       "path": "rtl/test/a3_reduced_token_driver.cpp",
-      "sha256": "50cbdea5cf3be3cbe3c4ee376ff4f01d9612d23a287f85ac023f3ecf521aabd8"
+      "sha256": "754ea7e2ed462861ccbba27d5ac2872e8f4cce1f9252706ed2b80e1316b5c292"
     }
   ],
   "status": "pass",

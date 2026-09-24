@@ -1,0 +1,350 @@
+{
+  "schema": "opentallas.architecture.abi3_control_path_optimization.v1",
+  "baseline": "results/architecture/abi3_control_path_breakdown.json",
+  "changes": [
+    {
+      "commit": "e5672945",
+      "block": "rtl/abi3/ot_a3_dma_index_mover.sv",
+      "what": "every pass (index check, prior republish, per-slot move) issues one read per cycle and consumes the word two cycles later instead of issue/wait/use; the row-base products are registered once per slot instead of sitting on every word's address path; ELIDE_IDENTITY_PRIOR skips the prior republish when prior == out",
+      "semantics": "write stream unchanged beat for beat with elision off; with it on, final memory unchanged (the skipped writes store each word's own value); moved_elements, indices_checked and error codes unchanged",
+      "enabled_where": "ot_a3_engine_issue_bridge DMA_ELIDE_IDENTITY_PRIOR=1 (its prior and output bases are one register); engine array, KV-scatter adapter and tb_a3_operator_admission keep the republish"
+    }
+  ],
+  "throughput": {
+    "rom_decode": {
+      "before_cycles_profiled": 12962353,
+      "after_cycles_profiled": 6620788,
+      "before_cycles_reported": 12973713,
+      "after_cycles_reported": 6632148,
+      "speedup": 1.9578263191632175,
+      "selected_token_before": 652,
+      "selected_token_after": 652,
+      "dma_scatter_engine_cycles": {
+        "before": 6341464,
+        "after": 368
+      },
+      "dma_gather_engine_cycles": {
+        "before": 502,
+        "after": 188
+      },
+      "embed_lookup_engine_cycles": {
+        "before": 395,
+        "after": 142
+      },
+      "mac_active_share": {
+        "before": 0.09858950763028904,
+        "after": 0.19302113283192274
+      },
+      "control_outside_engines_cycles": {
+        "before": 5984,
+        "after": 6082
+      },
+      "engine_internal_control_share": {
+        "before": 0.49441579009613457,
+        "after": 0.010139125433407625
+      },
+      "idle_waiting_on_control_share": {
+        "definition": "cycles where no datapath work proceeds because a control FSM (sequencer, admission, adapter, or an engine walk that is not computing) owns the cycle",
+        "before": 0.49487743467563333,
+        "after": 0.011057747204713397
+      },
+      "after_attribution": {
+        "VECTOR.SILU_MUL": {
+          "engine_cycles": 4489737,
+          "share": 0.6781272863592672
+        },
+        "TENSOR.MATMUL": {
+          "engine_cycles": 1298257,
+          "share": 0.19608798831800686
+        },
+        "ATTENTION.GQA": {
+          "engine_cycles": 779888,
+          "share": 0.11779383360409668
+        },
+        "SELECTION.ARGMAX": {
+          "engine_cycles": 12294,
+          "share": 0.0018568786676147915
+        },
+        "VECTOR.ADD": {
+          "engine_cycles": 10280,
+          "share": 0.0015526852694875595
+        },
+        "VECTOR.RMS_NORM": {
+          "engine_cycles": 9864,
+          "share": 0.001489852869477168
+        },
+        "VECTOR.HEAD_RMS_NORM": {
+          "engine_cycles": 7872,
+          "share": 0.0011889823386581778
+        },
+        "VECTOR.ROPE": {
+          "engine_cycles": 5808,
+          "share": 0.0008772369693758507
+        },
+        "DMA.SCATTER": {
+          "engine_cycles": 368,
+          "share": 5.558250770150018e-05
+        },
+        "DMA.GATHER": {
+          "engine_cycles": 188,
+          "share": 2.83954115431577e-05
+        },
+        "TENSOR.EMBED_LOOKUP": {
+          "engine_cycles": 142,
+          "share": 2.144759808047018e-05
+        },
+        "SELECTION.TOKEN_APPEND": {
+          "engine_cycles": 8,
+          "share": 1.2083153848152214e-06
+        }
+      },
+      "profile_log_sha256": {
+        "before": "eab0e69cd8475de9382cfd06c65ae87b1ea0fbe613d86f883dfae48b24fb7e80",
+        "after": "80cbaa470892f134adb44bdfe58a7ebe7c972531f9e3c329f5000b6df100a2a7"
+      }
+    },
+    "token_campaign": {
+      "tool": "tools/rtl_abi3_reduced_token_campaign.py (unmodified), run from a pinned export of e5672945",
+      "before": {
+        "record": "results/rtl/abi3_reduced_token_campaign.json at 8460c2f8 (git commit 02f97663 sources, dirty)",
+        "cases": {
+          "rom-prefill": {
+            "cycles": 103107755,
+            "selected_token": 1073,
+            "agrees_with_oracle": true,
+            "self_check": "PASS"
+          },
+          "rom-decode": {
+            "cycles": 12973713,
+            "selected_token": 652,
+            "agrees_with_oracle": null,
+            "self_check": "PASS"
+          },
+          "hbm-prefill": {
+            "cycles": 103107770,
+            "selected_token": 1073,
+            "agrees_with_oracle": true,
+            "self_check": "PASS"
+          },
+          "hbm-decode": {
+            "cycles": 12973725,
+            "selected_token": 652,
+            "agrees_with_oracle": null,
+            "self_check": "PASS"
+          }
+        }
+      },
+      "after": {
+        "record": "results/rtl/abi3_reduced_token_campaign.json (this commit)",
+        "cases": {
+          "rom-prefill": {
+            "cycles": 96753768,
+            "selected_token": 1073,
+            "agrees_with_oracle": true,
+            "self_check": "PASS"
+          },
+          "rom-decode": {
+            "cycles": 6632148,
+            "selected_token": 652,
+            "agrees_with_oracle": null,
+            "self_check": "PASS"
+          },
+          "hbm-prefill": {
+            "cycles": 96753783,
+            "selected_token": 1073,
+            "agrees_with_oracle": true,
+            "self_check": "PASS"
+          },
+          "hbm-decode": {
+            "cycles": 6632160,
+            "selected_token": 652,
+            "agrees_with_oracle": null,
+            "self_check": "PASS"
+          }
+        },
+        "status": "pass",
+        "certificate": {
+          "every_case_reached_completion": true,
+          "prefill_token_matches_oracle": true,
+          "result_injection_disabled": true,
+          "stores_agree": true
+        }
+      },
+      "speedup_per_case": {
+        "rom-prefill": 1.0656717266039706,
+        "rom-decode": 1.9561856882566553,
+        "hbm-prefill": 1.0656717164227056,
+        "hbm-decode": 1.956183958167475
+      }
+    }
+  },
+  "clock": {
+    "ot_a3_dma_index_mover": {
+      "recipe": "tools/run_abi3_physical.py --view asap7 --top <top> --source rtl/abi3/ot_a3_engine_pkg.sv --source <mover> --stages synth,pnr --purpose characterization --false-path-from rst_n --slew-margin-percent 60 --clock-period-ns <T>",
+      "committed_record": "results/physical_abi3/asap7/dma_index_mover/pnr_4p0ns_closed.json (460.6 MHz at a loose 4.0 ns target: a lower bound)",
+      "before_1p5ns": {
+        "fmax_mhz": 668.6,
+        "closed": true,
+        "target_clock_period_ns": 1.5,
+        "setup_wns_ns": 0.00433231,
+        "cells": 16010,
+        "standard_cell_area_um2": 1575.7,
+        "max_slew_violations": 0,
+        "record": "results/physical_abi3/asap7/dma_index_mover/pnr_1p5ns_original_walk_closed.json"
+      },
+      "after_1p5ns": {
+        "fmax_mhz": 730.4,
+        "closed": true,
+        "target_clock_period_ns": 1.5,
+        "setup_wns_ns": 0.130809,
+        "cells": 15502,
+        "standard_cell_area_um2": 1547.71,
+        "max_slew_violations": 0,
+        "record": "results/physical_abi3/asap7/dma_index_mover/pnr_1p5ns_pipelined_walk_closed.json"
+      },
+      "before_1p2ns": {
+        "fmax_mhz": 711.9,
+        "closed": false,
+        "target_clock_period_ns": 1.2,
+        "setup_wns_ns": -0.20461500000000002,
+        "cells": 16334,
+        "standard_cell_area_um2": 1609.08,
+        "max_slew_violations": 0,
+        "record": "results/physical_abi3/asap7/dma_index_mover/pnr_1p2ns_original_walk_not_met.json"
+      },
+      "after_1p2ns": {
+        "fmax_mhz": 843.9,
+        "closed": true,
+        "target_clock_period_ns": 1.2,
+        "setup_wns_ns": 0.015006,
+        "cells": 16085,
+        "standard_cell_area_um2": 1615.33,
+        "max_slew_violations": 0,
+        "record": "results/physical_abi3/asap7/dma_index_mover/pnr_1p2ns_pipelined_walk_closed.json"
+      },
+      "before_top": "ot_a3_dma_index_mover_ref (rtl/test/a3_dma_index_mover_ref.sv, the file at ca841aa3 renamed)",
+      "reading": "at the common 1.2 ns target the original does not close (711.9 MHz) and the pipelined walk closes (843.9 MHz), in fewer cells"
+    },
+    "ot_a3_microsequencer": {
+      "fmax_mhz": 397.5,
+      "closed": true,
+      "target_clock_period_ns": 3.0,
+      "setup_wns_ns": 0.484302,
+      "cells": 478193,
+      "standard_cell_area_um2": 59927.5,
+      "max_slew_violations": 0,
+      "argv": [
+        "tools/run_abi3_physical.py",
+        "--view",
+        "asap7",
+        "--top",
+        "ot_a3_microsequencer",
+        "--source",
+        "rtl/abi3/ot_a3_pkg.sv",
+        "--source",
+        "rtl/abi3/ot_a3_instruction_decoder.sv",
+        "--source",
+        "rtl/abi3/ot_a3_shared_divider.sv",
+        "--source",
+        "rtl/abi3/ot_a3_symbol_file.sv",
+        "--source",
+        "rtl/abi3/ot_a3_loop_stack.sv",
+        "--source",
+        "rtl/abi3/ot_a3_view_resolver.sv",
+        "--source",
+        "rtl/abi3/ot_a3_resolver_bank.sv",
+        "--source",
+        "rtl/abi3/ot_a3_event_scoreboard.sv",
+        "--source",
+        "rtl/abi3/ot_a3_issue_record_store.sv",
+        "--source",
+        "rtl/abi3/ot_a3_dependence_table.sv",
+        "--source",
+        "rtl/abi3/ot_a3_state_controller.sv",
+        "--source",
+        "rtl/abi3/ot_a3_microsequencer.sv",
+        "--param",
+        "DEP_CHECK_STAGES=1",
+        "--clock-period-ns",
+        "3.0",
+        "--stages",
+        "synth,pnr",
+        "--purpose",
+        "characterization",
+        "--false-path-from",
+        "rst_n",
+        "--slew-margin-percent",
+        "60",
+        "--output",
+        "<scratch>",
+        "--keep-workdir",
+        "<scratch>"
+      ],
+      "source_commit": "ca841aa3",
+      "parameters": [
+        "DEP_CHECK_STAGES=1",
+        "STATE_COMPAT=1 (default)"
+      ],
+      "record": "results/physical_abi3/asap7/a3_microsequencer/pnr_3p0ns_full_hierarchy_state_compat_closed.json",
+      "worst_path": "ins_descriptor_id[5] -> g_state_compat.states.count_commits[23] (state admission lookup), slack +0.484 ns at 3.0 ns"
+    },
+    "io_constraints": "no --false-path-io: the mover's cfg inputs feed combinational compares"
+  },
+  "verification": {
+    "tb_a3_dma_index_mover_pipe_equiv": {
+      "bench": "rtl/test/tb_a3_dma_index_mover_pipe_equiv.sv (Icarus 12)",
+      "cases": 400,
+      "verdict": "PASS",
+      "cycles": {
+        "ref": 181652,
+        "pipe": 68312,
+        "elide": 45435
+      },
+      "mutations_caught": [
+        "elide without the prior==out test",
+        "move address off by one at word 3",
+        "range check >= weakened to >"
+      ]
+    },
+    "abi3_engine_campaign": "results/rtl/abi3_engine_campaign.json re-run (b57d1e9f): Icarus and Verilator PASS, 40,878 checks each",
+    "kv_scatter_bench": "tb_a3_qwen_kv_scatter under Icarus on the committed vectors: 12 cases, 209,076 checks, every observation equal to the manifest (the campaign wrapper itself stops earlier on pre-existing vector drift: its index.json embeds a deployment certificate digest that changed upstream)",
+    "operator_admission_bench": {
+      "bench": "tb_a3_operator_admission under Verilator, committed ROM vectors (30 cases)",
+      "head_verdict": "PASS",
+      "new_verdict": "PASS",
+      "results_equal_ignoring_cycle_counts": true,
+      "verification_cycles": {
+        "head": 49048998,
+        "new": 48876480
+      }
+    },
+    "reduced_token_campaign": {
+      "status": "pass",
+      "certificate": {
+        "every_case_reached_completion": true,
+        "prefill_token_matches_oracle": true,
+        "result_injection_disabled": true,
+        "stores_agree": true
+      },
+      "tokens": {
+        "rom-prefill": 1073,
+        "rom-decode": 652,
+        "hbm-prefill": 1073,
+        "hbm-decode": 652
+      },
+      "tokens_before": {
+        "rom-prefill": 1073,
+        "rom-decode": 652,
+        "hbm-prefill": 1073,
+        "hbm-decode": 652
+      }
+    }
+  },
+  "remaining": [
+    "VECTOR.SILU_MUL is now 67.8% of the decode token and ATTENTION.GQA 11.8%: both wait on one correctly rounded exponential per element (~2,900 cycles each). That is datapath: a faster certified exp or several interleaved units, not control.",
+    "the span-16 prefill gains only 1.066x (103,107,755 -> 96,753,768 cycles): the scatter saving is the same ~6.35 M cycles, and the rest of prefill was not profiled here; with 16 query rows its SiLU and attention exponentials are 16x the decode count, so it is expected to be even more exponential-bound",
+    "the admission bridge (~33 cycles per issue of serial descriptor reads) and the front end (RESOLVE ~17 cycles per issue) could be prefetched ahead of the wait set; measured at ~72 cycles per issue, 0.09% of the new token, it is not worth the bridge risk on this workload",
+    "vector walks (RMS, head-RMS, RoPE, ADD at 8.6-12.3 cycles per element; ARGMAX at 3) are issue-wait-use loops like the old mover: ~46 k cycles, 0.7% of the new token",
+    "clock: the vehicle is bounded by datapath blocks (qwen_gqa 69.7 MHz not met, fp32_div_rne 283.5, transcendental 306.8); the bridge, device top and engine array have no routed record"
+  ]
+}
