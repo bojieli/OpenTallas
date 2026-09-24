@@ -219,14 +219,18 @@ def build_program(lay, layers=None, embed=True, head=True):
                    d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
                    reads={"QN"}, writes={f"K{L}lo" if lo else f"K{L}hi"}, **rope)
             jsh = group.bit_length() - 1
-            assert 1 << jsh == group and NH <= IL
+            assert 1 << jsh == group and IL % group == 0
             heads = {f"S{h}" for h in range(NH)}
             # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
-            me(dict(n=0, tiles=0, k=HD, base=lay.k_elem(L, 0, 0, 0) // W), VM["QR"], VM["S"], rnd=False, me_xcs=0,
-               me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
-               me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
-               me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES, reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes=heads)
-            heads = {f"S{h}" for h in range(NH)}
+            # (IL heads per op: one head per slot, a batch of whole KV groups)
+            for hb in range(0, NH, IL):
+                nb = min(IL, NH - hb)
+                me(dict(n=0, tiles=0, k=HD, base=(lay.k_elem(L, hb // group, 0, 0)) // W), VM["QR"] + hb * HD,
+                   VM["S"] + hb * S_STRIDE, rnd=False, me_xcs=0,
+                   me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
+                   me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
+                   me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
+                   reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes={f"S{h}" for h in range(hb, hb + nb)})
             sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                       d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
             su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
@@ -237,11 +241,14 @@ def build_program(lay, layers=None, embed=True, head=True):
                d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
             su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
             # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
-            me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, 0, 0, 0) // W), VM["S"], VM["ATT"],
-               rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
-               me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
-               me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
-               reads=heads | {f"V{L}"}, writes={"ATT"})
+            for hb in range(0, NH, IL):
+                nb = min(IL, NH - hb)
+                me(dict(n=HD, tiles=-(-HD // W), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
+                   VM["S"] + hb * S_STRIDE, VM["ATT"] + hb * HD,
+                   rnd=False, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
+                   me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
+                   me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
+                   reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={"ATT"})
             me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)

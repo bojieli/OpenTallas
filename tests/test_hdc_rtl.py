@@ -57,3 +57,12 @@ def test_committed_array_record_is_current_and_passes():
         assert cfg["mismatches"] == 0 and cfg["generated_tokens"] == 3 * cfg["users"]
     for name, digest in record["input_sha256"].items():
         assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+
+
+@needs_checkpoint
+def test_timing_model_tracks_the_rtl_within_half_a_percent():
+    import hdc_timing as T
+    model, prompt, expected, cache = P.golden_state()
+    _, cycles = T.simulate(P.build_program(P.Layout(model)), len(prompt) - 1)
+    rtl = json.loads(campaign.OUT.read_text())["single_step"]["cycles"]
+    assert abs(cycles - rtl) / rtl < 0.005

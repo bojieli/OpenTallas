@@ -321,3 +321,37 @@ With more than two lm_head packages, each one carries the running best
 Per-user latency stays near one core's, as a layer pipeline should.
 Throughput is set by the slowest package. At 12 packages the pipeline is
 balanced: the MLP half-layer package (about 3.1K cycles) limits.
+
+## 5. Toward a single-reticle Qwen3-8B chip
+
+`tools/hdc_timing.py` is a cycle model of the core. It covers the sequencer,
+the two units, barriers, chases, class drains and the reducer tail. Its
+constants were fitted to the RTL's issue trace. It matches the RTL's token
+within 0.5% (a test enforces this) and every issue time within a few cycles.
+It needs only the program's shapes, so it can price Qwen3-8B (hidden 4096,
+36 layers, 32/8 heads of 128, FFN 12288, vocabulary 151,936), which the RTL
+simulator cannot reach. The attention op now batches heads 8 at a time, one
+per slot, for models with more heads than slots.
+
+At position 1,024 the as-built core scales poorly with lanes. At 16,384 lanes
+attention takes 77% of the token and the stream unit 21%. Attention runs only
+on group 0's 16 FP32 lanes, and the stream unit retires one element per cycle.
+The timing model's projection options price the two fixes the chip needs:
+
+| Qwen3-8B, 16,384 lanes, position 1,024 | Cycles per token |
+|---|---|
+| as built | 24.7 M |
+| stream unit 16 elements per cycle | 19.9 M |
+| attention spread over all groups | 7.0 M |
+| both | 2.18 M |
+
+The weight work alone is about 0.46 M cycles at that width. The Qwen3-8B
+reticle therefore needs three things:
+
+1. KV-sourced ops that give every lane group its own heads and KV words;
+2. a vector-wide stream unit (reductions then need a wider partial order,
+   specified in the golden);
+3. several engines on the die in a layer pipeline, with users in flight, as
+   the array already proves.
+
+Those are the next RTL iterations for that target.
