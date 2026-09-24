@@ -1,0 +1,140 @@
+{
+  "claim_boundary": "functional RTL simulation (Verilator 4.038 and Icarus 11, cycle-accurate at the module boundary) of the Engram hash and softplus/router-score pipes against the V4.1 HDC golden; clock rate and area are in the ASAP7 physical records under results/physical_abi3/asap7/hdc/v41/.",
+  "engram_hash": {
+    "columns_per_position": 48,
+    "icarus": {
+      "checked": 18861,
+      "cycles": 21550,
+      "errors": 0,
+      "pass": true
+    },
+    "pass": true,
+    "positions": 18861,
+    "positions_by_stream": {
+      "extremes": 12,
+      "oracle_workload": 24,
+      "pad_ids": 6,
+      "random": 18652,
+      "single_positions": 1,
+      "tokenised_text": 166
+    },
+    "reference": "tools/hdc_golden_v41.EngramTables.hashes (Python integers)",
+    "verilator": {
+      "checked": 18861,
+      "cycles": 21550,
+      "errors": 0,
+      "pass": true
+    }
+  },
+  "fdiv": {
+    "checked": 20000000,
+    "mismatches": 0,
+    "operands": 20000000,
+    "pass": true,
+    "reference": "host IEEE binary32 division, RNE, canonical +0",
+    "refusals_expected_and_raised": 5515007,
+    "subnormal_results": 824843
+  },
+  "fsqrt": {
+    "checked": 20000000,
+    "mismatches": 0,
+    "operands": 20000000,
+    "pass": true,
+    "qualified_equivalence": {
+      "checked": 20000000,
+      "latency_offset_cycles": 1,
+      "mismatches": 0,
+      "module": "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+      "pass": true,
+      "refused": 3855249
+    },
+    "reference": "host IEEE binary32 square root, RNE, canonical +0",
+    "refusals_expected_and_raised": 5604224
+  },
+  "input_sha256": {
+    "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv": "a80fcae168fa258dc60fd6075ced1ee260db94424d93e5396998f4672c0007d3",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "aa1931c171c0b4c78d463debb138b583afc9a2d1715101712f101707c9ecd43a",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/hdc_v41_arith_harness.cpp": "6d96f7f11349289d29ea072dd5f6987ffad8e9e4b498db683e978a693660cdef",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "rtl/test/tb_hdc_engram_hash.sv": "af27aaad264a99fdc7867391606479ce240bd88edcc0e5b147dbae714328fdde",
+    "rtl/test/tb_hdc_fsqrt_equiv.sv": "f64665b50e43ab250079455b3aab2eb1495f408f284a0e8bb46239eb5a295d4c",
+    "rtl/test/tb_hdc_softplus.sv": "f771bd697aa1e2c97d6bb157de999ad53534a424e2617d7aea2295d81bae510a",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/rtl_hdc_v41_engram_campaign.py": "6d8e8f6967f3a91d1b8515e7a7667552253bf0a782200a34a2f97efb3d88410a"
+  },
+  "pipelines": {
+    "ot_hdc_engram_hash": {
+      "initiation_interval": 1,
+      "latency_cycles": 12
+    },
+    "ot_hdc_fdiv": {
+      "initiation_interval": 1,
+      "latency_cycles": 31
+    },
+    "ot_hdc_fsqrt": {
+      "initiation_interval": 1,
+      "latency_cycles": 31
+    },
+    "ot_hdc_softplus": {
+      "initiation_interval": 1,
+      "latency_cycles": 259
+    }
+  },
+  "schema": "opentallas.hdc-v41-engram-campaign.v1",
+  "softplus": {
+    "arguments": 53552,
+    "icarus": {
+      "checked": 53552,
+      "cycles": 61484,
+      "errors": 0,
+      "faults": 15,
+      "pass": true
+    },
+    "nonfinite_golden_results": 15,
+    "pass": true,
+    "reference": "tools/hdc_golden_v41.softplus and .sqrt; a nonfinite golden result must be a fault with +0 outputs",
+    "router_argument_range": [
+      -1.1550854444503784,
+      0.9365441799163818
+    ],
+    "router_argument_sha256": "9137fc7dde6ea84c4fcf902cf0700aed3a077a0b59f31c3d809667f57f27b77b",
+    "router_arguments": 11520,
+    "verilator": {
+      "checked": 53552,
+      "cycles": 61484,
+      "errors": 0,
+      "faults": 15,
+      "pass": true
+    }
+  },
+  "status": "pass",
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ",
+      "-Wno-PINCONNECTEMPTY",
+      "-Wno-IMPORTSTAR"
+    ],
+    "ot_hdc_engram_hash": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_hdc_softplus": {
+      "messages": [],
+      "returncode": 0
+    }
+  }
+}
