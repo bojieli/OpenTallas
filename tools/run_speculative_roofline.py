@@ -24,8 +24,12 @@ five entries of ``p.component_times_s`` (already multiplied by ``token_slots``):
 
 * ``bal``  = ``stage_balance`` when ``device_count > 1 and parallelism != "none"``, else 1
 * ``M0``   = ``W + K`` if ``d.shared_memory_path`` else ``max(W, K)``
-* ``T0``   = ``(max(M0, C)/bal + Lk + F) * p.thermal_scale`` -- and this MUST equal
-  ``p.step_time_s``.  It is checked on every feasible point before any
+* ``S``    = ``max(M0, C)/bal``, the sweep a token waits for, and
+  ``T0``   = ``max(S, P(mb, S)) * p.thermal_scale`` -- and this MUST equal
+  ``p.step_time_s``.  ``P(mb, S)`` is the longest path of the token's operator
+  graph (``opentallas.critical_path``) at the point's own microbatch with ``S``
+  spread over its operators, plus its pipeline hops: ``Lk + F + sweep on the
+  path``.  It is checked on every feasible point before any
   speculative arithmetic runs; a failure stops the run, because it means this
   layer has misread the model rather than that the point is odd.
 
@@ -39,8 +43,9 @@ The verification pass carries ``n`` positions on one pass through the weights:
   context is read ONCE per cycle and only the writes multiply
 * ``C_v = C * n`` -- exact under the model's own convention, ``_scaled_operations``
   being linear in ``effective_batch``
-* ``L_v = lat + xfer*n`` -- only the payload half of a link event scales with positions
-* ``F_v = F`` -- one traversal of the layers however many positions ride it
+* the verification pass is ``max(S_v, P(mb*n, S_v))``: the same operator graph with
+  ``n`` positions riding every operator, so every collective and hop payload and
+  every vector op's issue scale with ``n`` and every latency is paid once
 
 The draft pass is the same machine under the same rules with the drafter's own
 numbers, and on a ROM machine it is where the locality rule bites: ``t =
@@ -69,9 +74,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from opentallas import critical_path as serial_graph  # noqa: E402
 from opentallas.roofline import (  # noqa: E402
     Technology,
-    Topology,
     effective_engaged_devices,
     expected_max_region_load,
 )
@@ -383,6 +388,53 @@ class Baseline:
     kv_write_bytes: float
 
 
+def _row_machine(point: dict, microbatch: float) -> tuple[Any, tuple | None]:
+    """The machine a published point's serial path was priced on, at ``microbatch`` users per slot."""
+
+    single = point["topology_kind"] == "single_chip" or point["parallelism"] == "none"
+    expert = point["parallelism"] == "expert"
+    parts = int(point["device_count"])
+    machine = serial_graph.MachineSpec(
+        family=point["family"],
+        group=1 if single else int(point["tensor_group"]),
+        microbatch=float(microbatch),
+        clock_hz=float(point["serial_clock_hz"]),
+        su_width=int(point["stream_unit_width"] or 16),
+        kv_in_hbm=point["kv_store"] == "hbm",
+        multi_stage=int(point["pipeline_stages"]) > 1,
+        expert_parallel=expert,
+        ep_span=parts if expert else 1,
+        ep_tokens_per_node=float(microbatch) / parts if expert else 0.0,
+    )
+    links = None if single else (
+        point["intra_link"], point["link"], int(point["intra_domain_size"]), parts if expert else 0
+    )
+    return machine, links
+
+
+def serial_path(point: dict, model: ModelProfile, technology: Technology, microbatch: float,
+                sweep_s: float) -> tuple[float, float, float]:
+    """(path, collectives-and-hops on it, sweep on it) of one token at ``microbatch`` users per slot."""
+
+    machine, links = _row_machine(point, microbatch)
+    context = int(point["context_tokens"])
+    compiled, _summary = serial_graph.serial_compiled(
+        technology, model, context_tokens=context, machine=machine, fabric_links=links
+    )
+    share = float(point["serial_kv_share_of_sweep"])
+    path, comm, sweep = compiled.solve(sweep_s * (1.0 - share), sweep_s * share)
+    hops = serial_graph.price_stage_hops(
+        technology,
+        serial_graph.decode_shape(model, context),
+        stages=int(point["pipeline_stages"]),
+        fabric_links=links,
+        group=machine.group,
+        microbatch=float(microbatch),
+    )
+    hop = hops["latency_s"] + hops["bytes_s"]
+    return path + hop, comm + hop, sweep
+
+
 def decompose(point: dict, design: dict, model: ModelProfile, technology: Technology, kv, balance_value: float) -> tuple[Baseline, list[str]]:
     """Recover every term of one published point, and check it reproduces."""
 
@@ -401,25 +453,27 @@ def decompose(point: dict, design: dict, model: ModelProfile, technology: Techno
 
     memory = weight + kv_time if shared else max(weight, kv_time)
     service = max(weight, kv_time) if fused else max(memory, compute)
+    sweep = service / balance
     thermal = float(point["thermal_scale"])
-    rebuilt = (service / balance + link + fixed) * thermal
+    path, comm, sweep_on_path = serial_path(point, model, technology, microbatch, sweep)
+    rebuilt = max(sweep, path) * thermal
     if not _close(rebuilt, float(point["step_time_s"])):
         problems.append(
             f"{point['design']} @ batch {point['batch_size']}: step time reconstructs to "
             f"{rebuilt:.12e} against the published {point['step_time_s']:.12e}"
         )
-
-    # The link term split into the half that is free per extra position and the
-    # half that is not.  ``activation_bytes = 0`` prices the latency alone.
-    topology = Topology(**{key: design["topology"][key] for key in TOPOLOGY_FIELDS})
-    latency_only, _, _ = technology.link_time_s(topology, model.num_layers, activation_bytes=0.0)
-    activation_bytes = microbatch * model.hidden_size * 2.0
-    full, _, _ = technology.link_time_s(topology, model.num_layers, activation_bytes=activation_bytes)
-    if not _close(full, link):
+    if not _close(comm, link) or not _close(path - comm - sweep_on_path, fixed, 1e-6):
         problems.append(
-            f"{point['design']} @ batch {point['batch_size']}: link term reconstructs to "
-            f"{full:.12e} against the published {link:.12e}"
+            f"{point['design']} @ batch {point['batch_size']}: serial terms reconstruct to "
+            f"link {comm:.12e} / chain {path - comm - sweep_on_path:.12e} against the published "
+            f"{link:.12e} / {fixed:.12e}"
         )
+
+    # The link term split into what one more microbatch of positions adds to
+    # it (its payloads) and what it does not (its latencies): the operator
+    # graph re-priced at twice the users per slot.
+    _p2, comm2, _s2 = serial_path(point, model, technology, 2.0 * microbatch, sweep)
+    transfer = max(0.0, comm2 - comm)
 
     # The representation scale, solved from the point's own engaged bytes.
     unit = _engaged_bytes(
@@ -448,8 +502,8 @@ def decompose(point: dict, design: dict, model: ModelProfile, technology: Techno
             slots=slots,
             microbatch=microbatch,
             scale=scale,
-            link_latency_only_s=latency_only,
-            link_transfer_s=max(0.0, link - latency_only),
+            link_latency_only_s=max(0.0, link - transfer),
+            link_transfer_s=transfer,
             step_time_s=float(point["step_time_s"]),
             raw_step_time_s=float(point["step_time_s"]) / max(thermal, 1e-30),
             thermal_scale=thermal,
@@ -535,9 +589,15 @@ def speculative_cycle(
     kv_ratio = (base.kv_read_bytes + positions * base.kv_write_bytes) / kv_total if kv_total > 0 else 1.0
     kv_verify = base.kv_s * kv_ratio
     compute_verify = base.compute_s * positions
-    link_verify = base.link_latency_only_s + base.link_transfer_s * positions
-    fixed_verify = base.fixed_s
-    verify_s = _service(weight_verify, kv_verify, compute_verify, base) / base.balance + link_verify + fixed_verify
+    # The verification pass is the same operator graph with ``n`` positions
+    # riding every operator: every payload and every vector issue scale with
+    # them, every latency is paid once.
+    sweep_verify = _service(weight_verify, kv_verify, compute_verify, base) / base.balance
+    path_verify, link_verify, sweep_on_path_verify = serial_path(
+        point, model, technology, base.microbatch * positions, sweep_verify
+    )
+    fixed_verify = max(0.0, path_verify - link_verify - sweep_on_path_verify)
+    verify_s = max(sweep_verify, path_verify)
 
     # -- draft pass -------------------------------------------------------
     draft = {
@@ -956,11 +1016,12 @@ def process_study(
             "failures": 0,
             "tolerance_relative": RECONSTRUCTION_TOLERANCE,
             "statement": (
-                "(max(memory, compute)/stage_balance + link_latency + layer_fixed_latency) "
-                "x thermal_scale == step_time_s, with memory assembled by "
-                "designs[].shared_memory_path and the compute-in-ROM fusion rule, and the "
-                "weight and link terms independently rebuilt from the model profile and the "
-                "technology file"
+                "max(max(memory, compute)/stage_balance, serial path) x thermal_scale == "
+                "step_time_s, with memory assembled by designs[].shared_memory_path and the "
+                "compute-in-ROM fusion rule, and the serial path -- link_latency + "
+                "layer_fixed_latency + the sweep on the path -- independently rebuilt from "
+                "the model profile, the technology file and the token's operator graph "
+                "(opentallas.critical_path)"
             ),
         },
         "points": rows,

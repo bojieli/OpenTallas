@@ -35,11 +35,20 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "src"))
 
+import decode_targets  # noqa: E402
 import hdc_isa as I  # noqa: E402
 import hdc_timing  # noqa: E402
 
 from opentallas import critical_path as C  # noqa: E402
-from opentallas.roofline import Technology, taalas_hc1_anchor  # noqa: E402
+from opentallas.roofline import (  # noqa: E402
+    AreaSplit,
+    DeviceBudget,
+    StaticPower,
+    Technology,
+    Topology,
+    evaluate,
+    taalas_hc1_anchor,
+)
 from opentallas.schema import ModelProfile  # noqa: E402
 
 SCHEMA = "opentallas.decode-critical-path.v2"
@@ -49,6 +58,8 @@ LLAMA = ROOT / "configs/models/anchors/llama-3.1-8b.json"
 QWEN = ROOT / "configs/models/qwen3-8b.json"
 V41 = ROOT / "configs/models/candidates/deepseek-v4.1-flash.json"
 V41_POINTS = ROOT / "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/points.json"
+RESULTS = ROOT / "results/roofline"
+LEGACY = ROOT / "results/roofline/critical_path/legacy_serial_model_targets.json"
 ARRAY_DESIGN = "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188"
 WAFER_DESIGN = "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12"
 PHYS = ROOT / "results/physical_abi3/asap7/hdc"
@@ -156,6 +167,77 @@ def summary_row(row: dict, det: dict) -> dict:
     }
 
 
+def budget_from(d: dict) -> DeviceBudget:
+    """A DeviceBudget rebuilt from an artifact's design entry (its area split, rates and power are
+    outputs of the floorplan, independent of the serial-latency model)."""
+    t, sp, st = d["topology"], d["area_split_per_device"], d["static_power"]
+    topo = Topology(kind=t["kind"], device_count=t["device_count"], parallelism=t["parallelism"], link=t["link"],
+                    on_wafer_regions=t["on_wafer_regions"], intra_link=t["intra_link"],
+                    intra_domain_size=t["intra_domain_size"], tensor_group_size=t["tensor_group_size"],
+                    moe_fanout=t["moe_fanout"])
+    split = AreaSplit(total_mm2=sp["total_mm2"], rom_mm2=sp["rom_mm2"], compute_mm2=sp["compute_mm2"],
+                      sram_mm2=sp["sram_mm2"], interconnect_mm2=sp["interconnect_mm2"], hbm_phy_mm2=sp["hbm_phy_mm2"],
+                      overhead_mm2=sp["overhead_mm2"], policy=sp["policy"], reasons=tuple(sp["reasons"]))
+    static = StaticPower(leakage_w=st["leakage_w"], clock_w=st["clock_w"], memory_interface_w=st["memory_interface_w"],
+                         enumerated_w=st["enumerated_w"], floor_w=st["floor_w"], total_w=st["total_w"],
+                         clock_frequency_hz=st["clock_frequency_hz"], detail=st["detail"])
+    return DeviceBudget(name=d["name"], node=d["node"], topology=topo, split=split, weight_store=d["weight_store"],
+                        kv_store=d["kv_store"], weight_amortization=d["weight_amortization"],
+                        silicon_area_mm2_per_device=d["silicon_area_mm2_per_device"],
+                        silicon_area_mm2_total=d["silicon_area_mm2_total"],
+                        weight_capacity_bytes=d["weight_capacity_bytes"], kv_capacity_bytes=d["kv_capacity_bytes"],
+                        weight_read_bytes_s=d["weight_read_bytes_s"], kv_read_bytes_s=d["kv_read_bytes_s"],
+                        compute_ops_s=d["compute_ops_s"], shared_memory_path=d["shared_memory_path"],
+                        cooling_limit_w=d["cooling_limit_w"], static_power=static, hbm_stacks=d["hbm_stacks"],
+                        hbm_generation=d["hbm_generation"], native_formats=tuple(d["native_formats"]),
+                        emulated_formats=d["emulated_formats"], provenance={}, reasons=tuple(d["reasons"]),
+                        published_reference=d["published_reference"], rom_bank_pooling=d["rom_bank_pooling"])
+
+
+def named_design_after(tech: Technology, entry: dict) -> dict:
+    """One of the legacy snapshot's named designs, re-evaluated on the same budget with the serial path."""
+    d = entry["budget"]
+    model = ModelProfile.load(V41)
+    budget = budget_from(d)
+    rows = {}
+    for batch in (1, 64, 1024, 4096):
+        step = evaluate(budget, model, context_tokens=200_000, batch_size=batch, technology=tech,
+                        execution_format=d["execution_format"])
+        sl = step.metrics["serial_latency"]
+        rows[batch] = dict(per_user=step.per_user_tokens_s if step.feasible else None,
+                           aggregate=step.aggregate_tokens_s if step.feasible else None,
+                           tensor_group=step.metrics["tensor_group"], pipeline_stages=step.metrics["pipeline_stages"],
+                           chain_s=step.component_times_s["layer_fixed_latency"],
+                           communication_s=step.component_times_s["link_latency"], sweep_s=sl["sweep_s"],
+                           collectives_per_layer=sl["collectives_per_layer"],
+                           collective_algorithms=sl["collective_algorithms"],
+                           tensor_group_search=[dict(tensor_group=r["tensor_group"], tokens_s_per_user=1 / r["step_s"])
+                                                for r in sl["tensor_group_search"]])
+    aggs = [r["aggregate"] for r in rows.values() if r["aggregate"]]
+    return {"design": entry["design"], "per_user_b1": rows[1]["per_user"], "per_user_b64": rows[64]["per_user"],
+            "aggregate_b64": rows[64]["aggregate"], "aggregate_max_of_1_64_1024_4096": max(aggs) if aggs else None,
+            "by_batch": rows}
+
+
+def before_after(tech: Technology, rec: dict) -> dict:
+    legacy = json.loads(LEGACY.read_text())
+    after = decode_targets.targets(RESULTS)
+    out: dict = {"legacy_source_commit": legacy["source_commit"], "targets": {}}
+    for key in legacy["targets"]:
+        out["targets"][key] = {"before": legacy["targets"][key], "after": after[key]}
+    for key, entry in legacy["named_designs"].items():
+        out["targets"][key] = {"before": {k: v for k, v in entry.items() if k != "budget"},
+                               "after": named_design_after(tech, entry)}
+    out["targets"]["hc1_llama31_8b"] = {
+        "before": legacy["hc1_llama31_8b"],
+        "after": {"per_user_b1": rec["hc1_llama31_8b"]["tokens_s_per_user"],
+                  "ratio_to_published": rec["hc1_llama31_8b"]["modelled_over_published_rate"]}}
+    out["targets"]["qwen3_8b_single_reticle"] = {
+        "before": legacy["qwen3_8b_single_reticle"],
+        "after": {"per_user_b1": rec["qwen3_8b_single_reticle"]["tokens_s_per_user"]}}
+    return out
+
+
 def build() -> dict:
     tech = Technology.load(TECH)
     rec: dict = dict(schema=SCHEMA, tool="tools/decode_critical_path.py",
@@ -209,6 +291,7 @@ def build() -> dict:
                                                    for k, v in algos.items()}
             rows[f"{kind}_batch{bt}"] = s
     rec["deepseek_v41_flash"] = rows
+    rec["before_after"] = before_after(tech, rec)
     return rec
 
 
