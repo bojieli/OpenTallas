@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Published copy: https://claude.ai/artifact/75zDF861EtSPpxDHbxSR5Z . Figures are copied from
+     results/roofline/**/analytical.json (N5 vs B200) and results/rtl/, results/physical_abi3/asap7/ as of 2026-09-24. -->
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>OpenTallas Architecture Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F5F6F3; --panel:#FFFFFF; --ink:#1A222D; --muted:#5B6672; --faint:#8A949E;
+  --rule:#D8DCD6; --grid:#E6E9E4;
+  --rom:#B35F27; --rom-soft:#F4E3D6; --hbm:#35679C; --hbm-soft:#DCE7F2;
+  --ok:#2F7D55; --warn:#A8791B; --bad:#A23B3B;
+  --shadow:0 1px 2px rgba(20,30,40,.06), 0 4px 18px rgba(20,30,40,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#11161C; --panel:#18202A; --ink:#E4E8EC; --muted:#A3AEB9; --faint:#7C8793;
+    --rule:#2C3743; --grid:#222C37;
+    --rom:#E38A50; --rom-soft:#3A2A20; --hbm:#78A6DA; --hbm-soft:#1E2E40;
+    --ok:#5DBB8A; --warn:#D9A949; --bad:#E07B7B;
+    --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#11161C; --panel:#18202A; --ink:#E4E8EC; --muted:#A3AEB9; --faint:#7C8793;
+  --rule:#2C3743; --grid:#222C37;
+  --rom:#E38A50; --rom-soft:#3A2A20; --hbm:#78A6DA; --hbm-soft:#1E2E40;
+  --ok:#5DBB8A; --warn:#D9A949; --bad:#E07B7B;
+  --shadow:none; color-scheme:dark;
+}
+body{background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15.5px;line-height:1.6;padding-inline:20px;padding-block:0 64px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(22px,3vw,28px);font-weight:600;margin-top:8px}
+h3{font-size:18px;font-weight:600}
+p{margin:0;max-width:68ch}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+code{font-size:.9em;background:var(--grid);padding:1px 5px;border-radius:3px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+header.top{padding-block:40px 28px;border-bottom:1px solid var(--rule);display:grid;gap:14px}
+.lede{font-size:17px;color:var(--muted);max-width:72ch}
+.legend-row{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:2px;display:inline-block}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;padding-block:14px;border-bottom:1px solid var(--rule)}
+nav.toc a{color:var(--muted);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--rom);text-decoration:underline}
+section{padding-block:40px 8px;display:grid;gap:18px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:18px;display:grid;gap:10px;min-width:0}
+.fig .svgbox{overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:520px}
+.fig.narrow svg{min-width:0}
+figcaption{font-size:13.5px;color:var(--muted);max-width:none}
+.note{font-size:13.5px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+table.data{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+table.data th,table.data td{padding:7px 10px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data thead th{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.tablebox{overflow-x:auto}
+.status{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:2px 7px;border-radius:10px;border:1px solid currentColor}
+.s-done{color:var(--ok)} .s-part{color:var(--warn)} .s-open{color:var(--bad)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;background:var(--panel);color:var(--ink);border:0;border-right:1px solid var(--rule);padding:6px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.seg button:focus-visible{outline:2px solid var(--rom);outline-offset:-2px}
+svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
+svg .t-mono{font-family:"IBM Plex Mono",monospace}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted);display:grid;gap:6px}
+@media (prefers-reduced-motion: no-preference){ .bar{transition:width .35s ease, x .35s ease} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">OpenTallas · architecture atlas · 2026-09-24</div>
+  <h1>Hardwired ROM machines against the HBM accelerator</h1>
+  <p class="lede">Every target in the project on one page: what each machine is, how it is built from the same pipelined decode core, what is implemented and routed in RTL, and how the analytical model prices ROM against the best-practice HBM/GPU baseline at 8K, 200K and 1M tokens of context.</p>
+  <div class="legend-row">
+    <span class="chip"><span class="sw" style="background:var(--rom)"></span>ROM machine (model-specific, weights in ROM)</span>
+    <span class="chip"><span class="sw" style="background:var(--hbm)"></span>HBM machine (general accelerator / B200-class baseline)</span>
+  </div>
+</header>
+<nav class="toc" aria-label="Contents">
+  <a href="#targets">Targets</a><a href="#core">Decode core</a><a href="#qwen">Qwen3-8B reticle</a><a href="#array">ROM array</a><a href="#wafer">ROM wafer</a><a href="#v41">DeepSeek-V4.1 package</a><a href="#hbm">HBM machine</a><a href="#perf">Performance</a><a href="#rtl">RTL status</a>
+</nav>
+
+<!-- ================= TARGETS ================= -->
+<section id="targets">
+  <div class="eyebrow">Which machine serves which model</div>
+  <h2>Targets</h2>
+  <p>The ROM machine hardwires one model's weights into ROM and specialises everything around them: arithmetic order, links, the control program. The HBM machine is a general accelerator and stays the comparator, priced at its best practice (B200/NVL72, NVLink, expert parallelism).</p>
+  <div class="tablebox fig">
+    <table class="data">
+      <thead><tr><th>Model</th><th>Size (total / active)</th><th>Design</th><th>Why</th><th>State</th></tr></thead>
+      <tbody>
+        <tr><td>Qwen3-8B</td><td>8.2B / 7.6B</td><td>ROM single reticle</td><td style="text-align:left;white-space:normal">weights fit one die; no array needed</td><td><span class="status s-part">RTL core, routing</span></td></tr>
+        <tr><td>DeepSeek-V4.1-Flash</td><td>552B + 197B Engram / 16B</td><td>ROM array → ROM wafer</td><td style="text-align:left;white-space:normal">primary MoE target: Engram tables and cross-layer KV favour ROM</td><td><span class="status s-part">units built, integrating</span></td></tr>
+        <tr><td>DeepSeek-V4-Flash</td><td>284B / 13B</td><td>ROM array (later chip)</td><td style="text-align:left;white-space:normal">different architecture (hash-routed layers); reuses the engine library</td><td><span class="status s-open">analysis only</span></td></tr>
+        <tr><td>Kimi K3 · MiMo-V2.6 Pro/Flash</td><td>2.8T/104B · 1.0T/41B · 311B/15B</td><td>—</td><td style="text-align:left;white-space:normal">recurrent state / full GQA caches move cost out of weights</td><td><span class="status s-open">analysis only</span></td></tr>
+        <tr><td>All of the above</td><td>—</td><td>HBM machine</td><td style="text-align:left;white-space:normal">the general comparator</td><td><span class="status s-part">ABI 3.0 RTL, comparator</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= DECODE CORE ================= -->
+<section id="core">
+  <div class="eyebrow">rtl/hdc · the building block of every ROM target</div>
+  <h2>The hardwired decode core</h2>
+  <p>A static program of macro-operations drives two fully pipelined units. Every arithmetic unit is a pipelined binary32 add/multiply (latency 5, one result per cycle); there is no divider, no iteration and no stall on any path. The arithmetic order is a golden specification, so the RTL is bit-exact with it.</p>
+  <figure class="fig">
+    <div class="svgbox">
+    <svg viewBox="0 0 1000 470" role="img" aria-label="Block diagram of the hardwired decode core">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+        <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--rom)"/></marker>
+      </defs>
+      <!-- memories -->
+      <g font-size="13">
+        <rect x="20" y="30" width="170" height="70" rx="4" fill="var(--rom-soft)" stroke="var(--rom)"/>
+        <text x="105" y="58" text-anchor="middle" fill="var(--ink)" font-weight="600">Weight ROM</text>
+        <text x="105" y="78" text-anchor="middle" fill="var(--muted)" font-size="11.5">G×16 BF16 per word, in stream order</text>
+        <rect x="20" y="130" width="170" height="70" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+        <text x="105" y="158" text-anchor="middle" fill="var(--ink)" font-weight="600">KV SRAM / HBM</text>
+        <text x="105" y="178" text-anchor="middle" fill="var(--muted)" font-size="11.5">BF16, one port per lane group</text>
+        <rect x="20" y="230" width="170" height="70" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+        <text x="105" y="258" text-anchor="middle" fill="var(--ink)" font-weight="600">Vector memory</text>
+        <text x="105" y="278" text-anchor="middle" fill="var(--muted)" font-size="11.5">FP32 activations</text>
+        <rect x="20" y="330" width="170" height="70" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+        <text x="105" y="358" text-anchor="middle" fill="var(--ink)" font-weight="600">Constant ROM</text>
+        <text x="105" y="378" text-anchor="middle" fill="var(--muted)" font-size="11.5">norm weights, RoPE tables</text>
+      </g>
+      <!-- sequencer -->
+      <rect x="250" y="400" width="700" height="52" rx="4" fill="var(--grid)" stroke="var(--rule)"/>
+      <text x="600" y="423" text-anchor="middle" fill="var(--ink)" font-weight="600" font-size="13.5">Sequencer · static program (113 macro-ops per token) · DYN offsets from (token, position)</text>
+      <text x="600" y="441" text-anchor="middle" fill="var(--muted)" font-size="11.5">barriers only where a hazard needs one; chases start an op on the other unit's measured progress</text>
+      <!-- matrix engine -->
+      <rect x="250" y="20" width="400" height="200" rx="5" fill="var(--rom-soft)" stroke="var(--rom)"/>
+      <text x="265" y="42" fill="var(--ink)" font-weight="600" font-size="14">Matrix engine · 4 groups × 16 lanes</text>
+      <g font-size="11">
+        <g>
+          <rect x="265" y="55" width="86" height="118" rx="3" fill="var(--panel)" stroke="var(--rom)"/>
+          <rect x="360" y="55" width="86" height="118" rx="3" fill="var(--panel)" stroke="var(--rom)"/>
+          <rect x="455" y="55" width="86" height="118" rx="3" fill="var(--panel)" stroke="var(--rom)"/>
+          <rect x="550" y="55" width="86" height="118" rx="3" fill="var(--panel)" stroke="var(--rom)"/>
+          <text x="308" y="73" text-anchor="middle" fill="var(--muted)">group 0</text><text x="403" y="73" text-anchor="middle" fill="var(--muted)">group 1</text><text x="498" y="73" text-anchor="middle" fill="var(--muted)">group 2</text><text x="593" y="73" text-anchor="middle" fill="var(--muted)">group 3</text>
+        </g>
+        <g fill="var(--ink)">
+          <text x="308" y="96" text-anchor="middle">BF16×BF16</text><text x="308" y="112" text-anchor="middle">exact mul</text>
+          <text x="308" y="134" text-anchor="middle">FP32 add</text><text x="308" y="150" text-anchor="middle">sum circulates</text><text x="308" y="164" text-anchor="middle">8 cycles</text>
+        </g>
+        <text x="450" y="200" text-anchor="middle" fill="var(--muted)">K-split tree ((c0+c1)+(c2+c3)) · argmax tree · 2,048-bit result bus</text>
+      </g>
+      <!-- stream unit -->
+      <rect x="690" y="20" width="260" height="360" rx="5" fill="var(--panel)" stroke="var(--rule)"/>
+      <text x="705" y="42" fill="var(--ink)" font-weight="600" font-size="14">Stream unit</text>
+      <g font-size="12" fill="var(--ink)">
+        <rect x="705" y="56" width="230" height="30" rx="3" fill="var(--grid)"/><text x="820" y="76" text-anchor="middle">P = A·B | A·A | A·imm · Q = C·(±B.hi)</text>
+        <rect x="705" y="94" width="230" height="30" rx="3" fill="var(--grid)"/><text x="820" y="114" text-anchor="middle">R = P + (Q | C | −B | imm)</text>
+        <rect x="705" y="132" width="230" height="58" rx="3" fill="var(--rom-soft)" stroke="var(--rom)"/><text x="820" y="154" text-anchor="middle" font-weight="600">SFU: exp · 1/x · 1/√x · sigmoid</text><text x="820" y="174" text-anchor="middle" fill="var(--muted)" font-size="11">Horner / Newton pipelines, depth 46–143</text>
+        <rect x="705" y="198" width="230" height="30" rx="3" fill="var(--grid)"/><text x="820" y="218" text-anchor="middle">out = (S·C)·B</text>
+        <rect x="705" y="236" width="230" height="48" rx="3" fill="var(--grid)"/><text x="820" y="256" text-anchor="middle">segmented reducer</text><text x="820" y="274" text-anchor="middle" fill="var(--muted)" font-size="11">P=8 interleaved partials + pairwise tree · max</text>
+        <text x="820" y="312" text-anchor="middle" fill="var(--muted)" font-size="11.5">norms · RoPE · softmax · SiLU·up</text>
+        <text x="820" y="330" text-anchor="middle" fill="var(--muted)" font-size="11.5">residuals · KV writes (BF16)</text>
+      </g>
+      <!-- arrows -->
+      <g stroke="var(--muted)" stroke-width="1.4" fill="none" marker-end="url(#ar)">
+        <path d="M190,65 L248,65"/><path d="M190,165 L248,165"/><path d="M190,265 C 220,265 220,210 248,200"/>
+        <path d="M190,265 L688,265"/><path d="M190,365 L688,350"/>
+        <path d="M650,120 L688,120"/>
+      </g>
+      <g stroke="var(--rom)" stroke-width="1.4" fill="none" marker-end="url(#arR)">
+        <path d="M450,400 L450,222"/><path d="M820,400 L820,382"/>
+      </g>
+    </svg>
+    </div>
+    <figcaption>One token of the reduced Qwen3 vehicle takes 32,172–32,196 cycles in Verilator, bit-exact in every logit, the vector memory and the KV cache. From an empty KV cache the core consumes the prompt and generates the torch oracle's tokens.</figcaption>
+  </figure>
+</section>
+
+<!-- ================= QWEN RETICLE ================= -->
+<section id="qwen">
+  <div class="eyebrow">Qwen3-8B · one die</div>
+  <h2>Single-reticle ROM chip for Qwen3-8B</h2>
+  <div class="two">
+    <figure class="fig">
+      <div class="svgbox">
+      <svg viewBox="0 0 520 330" role="img" aria-label="Qwen3-8B reticle floorplan concept">
+        <rect x="10" y="10" width="500" height="300" rx="6" fill="var(--rom-soft)" stroke="var(--rom)" stroke-width="1.5"/>
+        <text x="24" y="34" fill="var(--ink)" font-weight="600" font-size="14">One reticle (≈ 815 mm² class, Taalas-HC1 envelope)</text>
+        <g font-size="11" text-anchor="middle">
+          <!-- 6 engine blocks, layer pipeline -->
+          <g id="eng">
+            <rect x="30" y="54" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="100" y="80" fill="var(--ink)" font-weight="600">engine 1</text><text x="100" y="98" fill="var(--muted)">layers 1–6 ROM</text><text x="100" y="114" fill="var(--muted)">KV SRAM · lanes</text>
+            <rect x="190" y="54" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="260" y="80" fill="var(--ink)" font-weight="600">engine 2</text><text x="260" y="98" fill="var(--muted)">layers 7–12 ROM</text>
+            <rect x="350" y="54" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="420" y="80" fill="var(--ink)" font-weight="600">engine 3</text><text x="420" y="98" fill="var(--muted)">layers 13–18 ROM</text>
+            <rect x="350" y="164" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="420" y="190" fill="var(--ink)" font-weight="600">engine 4</text><text x="420" y="208" fill="var(--muted)">layers 19–24</text>
+            <rect x="190" y="164" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="260" y="190" fill="var(--ink)" font-weight="600">engine 5</text><text x="260" y="208" fill="var(--muted)">layers 25–30</text>
+            <rect x="30" y="164" width="140" height="90" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="100" y="190" fill="var(--ink)" font-weight="600">engine 6</text><text x="100" y="208" fill="var(--muted)">layers 31–36 · lm_head</text>
+          </g>
+          <g stroke="var(--rom)" stroke-width="2" fill="none" marker-end="url(#arR)">
+            <path d="M170,99 L188,99"/><path d="M330,99 L348,99"/><path d="M420,144 L420,162"/><path d="M350,209 L332,209"/><path d="M190,209 L172,209"/>
+          </g>
+          <text x="260" y="282" fill="var(--muted)" font-size="12">on-die hidden-state hand-off (no SerDes) · users in flight, one per engine</text>
+        </g>
+      </svg>
+      </div>
+      <figcaption>Concept: the array pattern moved on-die. Weight reads come from ROM beside each engine's lanes; only the 4,096-float hidden state moves between engines.</figcaption>
+    </figure>
+    <div class="fig">
+      <h3>What the cycle model says for Qwen3-8B</h3>
+      <p class="note">Calibrated to the RTL (within 0.5% on the vehicle), one 16,384-lane engine at position 1,024 and 1.1 GHz:</p>
+      <div class="svgbox"><svg id="qwenbars" viewBox="0 0 480 190" role="img" aria-label="Qwen3-8B cycles per token by design step"></svg></div>
+      <p class="note">Iteration 6 put attention on every lane group (BF16 KV). The remaining gap is the one-element stream unit and a whole-context sequential weighted sum; the control path is &lt;1% of the token. <br>* projection from the timing model; the wider stream unit is not yet in RTL.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROM ARRAY ================= -->
+<section id="array">
+  <div class="eyebrow">DeepSeek-V4.1 per-user speed · proven in RTL on the reduced vehicle</div>
+  <h2>ROM array: a layer-per-package pipeline</h2>
+  <figure class="fig">
+    <div class="svgbox">
+    <svg viewBox="0 0 1000 250" role="img" aria-label="ROM array pipeline of packages joined by links">
+      <g font-size="12" text-anchor="middle">
+        <g id="pk">
+        </g>
+      </g>
+    </svg>
+    </div>
+    <figcaption>Each package is a decode core running one layer's (or half-layer's) program, with per-user KV slices. The hidden state crosses a cut-through, credit-flow link as one header and 8 flits (a ~60-cycle PHY stand-in). The last packages split lm_head by vocabulary and carry the running argmax forward; the token returns to package 0. Every configuration below generates the oracle's tokens for every user.</figcaption>
+  </figure>
+  <div class="two">
+    <div class="fig narrow">
+      <h3>Throughput over one core (RTL, token-exact)</h3>
+      <div class="svgbox"><svg id="arraybars" viewBox="0 0 460 230" role="img" aria-label="Array speed-up by package count"></svg></div>
+    </div>
+    <div class="fig">
+      <h3>Communication in the array</h3>
+      <dl class="kv">
+        <dt>Package link</dt><dd>cut-through, credits, registered output · routes at 1,339 MHz <span class="status s-done">RTL</span></dd>
+        <dt>Package controller</dt><dd>synthesizable controller replacing the testbench FSM <span class="status s-part">in progress</span></dd>
+        <dt>Fabric router</dt><dd>credit-based, multicast, deadlock-free 2-D mesh rules <span class="status s-part">in progress</span></dd>
+        <dt>MoE all-to-all</dt><dd>dispatch to expert packages, deterministic combine <span class="status s-part">in progress</span></dd>
+        <dt>KV-source multicast</dt><dd>V4.1 layers 2/8/14/20 feed later layers <span class="status s-part">in progress</span></dd>
+        <dt>KV streaming</dt><dd>HBM model + prefetch engine feeding the never-stall engine <span class="status s-part">in progress</span></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROM WAFER ================= -->
+<section id="wafer">
+  <div class="eyebrow">DeepSeek-V4.1 throughput and energy</div>
+  <h2>ROM wafer: the same package, stitched on one wafer</h2>
+  <div class="two">
+    <figure class="fig narrow">
+      <div class="svgbox"><svg id="wafer" viewBox="0 0 360 360" role="img" aria-label="Wafer of reticle tiles with a mesh"></svg></div>
+      <figcaption>Reticle tiles in a 2-D mesh (≈10 ns die hops instead of ≈100 ns package hops). Copper tiles hold layers; the darker ones are KV-source layers that multicast compressed KV rows; blue tiles hold Engram tables.</figcaption>
+    </figure>
+    <div class="fig">
+      <h3>Array or wafer?</h3>
+      <p>Both use the identical package. The array wins per-user speed and yield flexibility; the wafer holds the whole model with shorter hops and wins aggregate throughput and tokens per joule (3.18× throughput, 3.97× tokens/J best-vs-best at 200K for V4.1).</p>
+      <p class="note">V4.1-specific units already built and bit-exact against the V4.1 golden, all closed on ASAP7: FP8/FP4 block-linear lane (1.20 GHz), activation quantiser (1.13 GHz), top-k SELECT (1.62 GHz at K=6, 1.12 GHz at K=512), Engram hash (1.52 GHz), softplus/sqrt (1.03 GHz).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= V4.1 PACKAGE ================= -->
+<section id="v41">
+  <div class="eyebrow">DeepSeek-V4.1 · one layer package</div>
+  <h2>What a V4.1 package adds to the decode core</h2>
+  <figure class="fig">
+    <div class="svgbox">
+    <svg viewBox="0 0 1000 300" role="img" aria-label="DeepSeek V4.1 layer package">
+      <g font-size="12" text-anchor="middle">
+        <rect x="20" y="30" width="200" height="110" rx="4" fill="var(--rom-soft)" stroke="var(--rom)"/><text x="120" y="56" fill="var(--ink)" font-weight="600">Expert ROM, striped</text><text x="120" y="76" fill="var(--muted)">FP4 routed experts</text><text x="120" y="94" fill="var(--muted)">6 of 384 per token</text><text x="120" y="112" fill="var(--muted)">all banks busy</text>
+        <rect x="250" y="30" width="200" height="110" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="350" y="56" fill="var(--ink)" font-weight="600">FP8/FP4 block-linear lanes</text><text x="350" y="76" fill="var(--muted)">exact 32-term block dot</text><text x="350" y="94" fill="var(--muted)">UE8M0 scales · FP32 ring</text><text x="350" y="112" fill="var(--ok)">1.20 GHz routed</text>
+        <rect x="480" y="30" width="200" height="110" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="580" y="56" fill="var(--ink)" font-weight="600">Sparse attention</text><text x="580" y="76" fill="var(--muted)">indexer + top-k SELECT</text><text x="580" y="94" fill="var(--muted)">compressed KV, sinks</text><text x="580" y="112" fill="var(--ok)">SELECT 1.12–1.62 GHz</text>
+        <rect x="710" y="30" width="200" height="110" rx="4" fill="var(--panel)" stroke="var(--rom)"/><text x="810" y="56" fill="var(--ink)" font-weight="600">Router</text><text x="810" y="76" fill="var(--muted)">√softplus scores, top-6</text><text x="810" y="94" fill="var(--muted)">weights ×1.5</text><text x="810" y="112" fill="var(--ok)">softplus 1.03 GHz</text>
+        <rect x="250" y="170" width="200" height="100" rx="4" fill="var(--hbm-soft)" stroke="var(--hbm)"/><text x="350" y="196" fill="var(--ink)" font-weight="600">Engram lookup</text><text x="350" y="216" fill="var(--muted)">n-gram hash → table rows</text><text x="350" y="234" fill="var(--muted)">197B read-only params</text><text x="350" y="252" fill="var(--ok)">hash 1.52 GHz</text>
+        <rect x="480" y="170" width="200" height="100" rx="4" fill="var(--panel)" stroke="var(--rule)"/><text x="580" y="196" fill="var(--ink)" font-weight="600">Hyper-connections</text><text x="580" y="216" fill="var(--muted)">4-copy residual · Sinkhorn</text><text x="580" y="234" fill="var(--muted)">mixes overlap sublayers</text>
+        <rect x="710" y="170" width="200" height="100" rx="4" fill="var(--panel)" stroke="var(--rule)"/><text x="810" y="196" fill="var(--ink)" font-weight="600">Collectives</text><text x="810" y="216" fill="var(--muted)">MoE dispatch / combine</text><text x="810" y="234" fill="var(--muted)">KV-source multicast</text><text x="810" y="252" fill="var(--warn)">in progress</text>
+        <rect x="20" y="170" width="200" height="100" rx="4" fill="var(--panel)" stroke="var(--rule)"/><text x="120" y="196" fill="var(--ink)" font-weight="600">Decode-core base</text><text x="120" y="216" fill="var(--muted)">sequencer · stream unit</text><text x="120" y="234" fill="var(--muted)">norms · RoPE · softmax</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>Every block is specified by a DeepSeek-V4.1 golden written in the decode core's style (each op one binary32 operation in hardware order). The golden reproduces the reduced model's first oracle token and is bit-exact layer by layer at every prompt position.</figcaption>
+  </figure>
+</section>
+
+<!-- ================= HBM ================= -->
+<section id="hbm">
+  <div class="eyebrow">The comparator</div>
+  <h2>HBM machine: a general accelerator</h2>
+  <div class="two">
+    <figure class="fig narrow">
+      <div class="svgbox"><svg viewBox="0 0 440 260" role="img" aria-label="HBM accelerator node">
+        <g font-size="12" text-anchor="middle">
+          <rect x="120" y="70" width="200" height="120" rx="5" fill="var(--hbm-soft)" stroke="var(--hbm)" stroke-width="1.5"/>
+          <text x="220" y="100" fill="var(--ink)" font-weight="600">Compute die</text><text x="220" y="120" fill="var(--muted)">tensor engines · descriptors</text><text x="220" y="138" fill="var(--muted)">microsequencer · admission</text><text x="220" y="156" fill="var(--muted)">general: any model</text>
+          <g fill="var(--panel)" stroke="var(--hbm)">
+            <rect x="20" y="70" width="80" height="54" rx="3"/><rect x="20" y="136" width="80" height="54" rx="3"/><rect x="340" y="70" width="80" height="54" rx="3"/><rect x="340" y="136" width="80" height="54" rx="3"/>
+          </g>
+          <g fill="var(--ink)"><text x="60" y="102">HBM</text><text x="60" y="168">HBM</text><text x="380" y="102">HBM</text><text x="380" y="168">HBM</text></g>
+          <text x="220" y="40" fill="var(--muted)">weights + KV stream from HBM every token</text>
+          <rect x="120" y="210" width="200" height="34" rx="4" fill="var(--panel)" stroke="var(--hbm)"/><text x="220" y="232" fill="var(--ink)">NVLink / NVL72 domain</text>
+          <path d="M220,190 L220,208" stroke="var(--hbm)" stroke-width="2"/>
+        </g>
+      </svg></div>
+      <figcaption>Priced at its best per metric: B200 or NVL72, tensor/pipeline/expert parallelism, native FP4/FP8.</figcaption>
+    </figure>
+    <div class="fig">
+      <h3>Why ROM wins, and where it stops</h3>
+      <p>Weights read from ROM next to the arithmetic cost no HBM bandwidth and little energy; specialised links and a static schedule remove software and collective overhead. The advantage shrinks when per-user state dominates — long-context KV caches, recurrent state, uncompressed attention — because ROM does nothing for that traffic.</p>
+      <p class="note">Control path: in the decode core the sequencer is under 2% of a token; on the HBM machine the control path has repeatedly been the limiter (clock, issue latency, issue rate), and an optimisation pass is in progress.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PERFORMANCE ================= -->
+<section id="perf">
+  <div class="eyebrow">Analytical model · ROM at N5 against B200 · ratios &gt; 1 favour ROM</div>
+  <h2>Performance across models and contexts</h2>
+  <p>Each figure is the best over feasible designs on each side. Qwen3-8B at 200K and 1M is hypothetical (the released model serves 40,960 tokens). “None” means no feasible ROM design at that point.</p>
+  <div class="fig">
+    <div class="controls" role="group" aria-label="Metric">
+      <span class="eyebrow">Metric</span>
+      <div class="seg" id="metricSeg">
+        <button type="button" id="m-b1" aria-pressed="true" data-m="b1">Per user · batch 1</button>
+        <button type="button" id="m-b64" aria-pressed="false" data-m="b64">Per user · batch 64</button>
+        <button type="button" id="m-agg" aria-pressed="false" data-m="agg">Best throughput</button>
+        <button type="button" id="m-tpj" aria-pressed="false" data-m="tpj">Best tokens/J</button>
+      </div>
+    </div>
+    <div class="svgbox"><svg id="perfchart" viewBox="0 0 1000 560" role="img" aria-label="ROM over B200 ratio by model and context"></svg></div>
+    <div class="legend-row" id="ctxLegend"></div>
+  </div>
+  <div class="fig">
+    <h3>All ratios at a glance</h3>
+    <div class="tablebox"><table class="data" id="heat"></table></div>
+    <p class="note">Cell shading: copper where ROM leads, blue where the HBM baseline leads; darker is further from parity (log scale).</p>
+  </div>
+</section>
+
+<!-- ================= RTL STATUS ================= -->
+<section id="rtl">
+  <div class="eyebrow">ASAP7 · routed Fmax of the pipelined units</div>
+  <h2>RTL and physical status</h2>
+  <div class="two">
+    <div class="fig">
+      <h3>Decode-core cycles per token, by iteration</h3>
+      <div class="svgbox"><svg id="iterbars" viewBox="0 0 480 250" role="img" aria-label="Cycles per token by iteration"></svg></div>
+    </div>
+    <div class="fig">
+      <h3>Routed clock of each block</h3>
+      <div class="svgbox"><svg id="fmax" viewBox="0 0 480 400" role="img" aria-label="Routed Fmax by block"></svg></div>
+      <p class="note">Dashed line: 1 GHz. * the matrix engine routes at 1,067 MHz but still has max-slew violations (re-route in progress); the full-core route is in progress.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>Sources: <code>docs/ANALYTICAL_REPORT.md</code>, <code>results/roofline/**/analytical.json</code>, <code>docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md</code>, <code>results/rtl/hdc_*.json</code>, <code>results/physical_abi3/asap7/hdc/**</code> in the OpenTallas repository.</div>
+  <div>Analytical figures are model outputs, not silicon measurements; RTL figures are Verilator simulations and OpenROAD/ASAP7 routes.</div>
+</footer>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+
+// ---------- data (analytical, N5 vs B200) ----------
+const MODELS=[
+ {name:"Qwen3-8B",note:"200K/1M hypothetical",d:{"8K":[18.99,3.27,5.16,13.41],"200K":[17.21,0.50,10.23,34.30],"1M":[11.78,null,9.08,35.07]}},
+ {name:"DeepSeek-V4-Flash",d:{"8K":[5.85,9.50,4.20,6.34],"200K":[5.08,7.21,2.75,3.15],"1M":[3.85,3.74,1.93,5.73]}},
+ {name:"DeepSeek-V4.1-Flash",d:{"8K":[4.07,8.79,4.05,8.19],"200K":[3.87,8.52,3.18,3.97],"1M":[3.26,7.92,3.38,3.09]}},
+ {name:"V4.1-Flash · Engram in KV HBM",d:{"8K":[4.59,10.22,6.10,10.52],"200K":[4.40,9.55,3.35,5.10],"1M":[3.80,8.17,3.34,3.12]}},
+ {name:"Kimi K3",d:{"8K":[2.38,4.86,4.17,4.15],"200K":[2.26,1.77,2.60,3.58],"1M":[1.87,1.24,0.54,4.32]}},
+ {name:"MiMo-V2.6-Pro",d:{"8K":[3.99,10.07,4.50,3.46],"200K":[3.05,0.94,0.50,4.50],"1M":[3.00,0.60,1.44,11.06]}},
+ {name:"MiMo-V2.6-Flash",d:{"8K":[6.35,11.43,3.28,6.24],"200K":[4.82,2.37,1.64,12.08],"1M":[4.08,0.54,3.48,20.10]}},
+];
+const METRICS={b1:[0,"Per-user speed, batch 1"],b64:[1,"Per-user speed, batch 64"],agg:[2,"Best aggregate throughput"],tpj:[3,"Best tokens per joule"]};
+const CTX=["8K","200K","1M"];
+const CTXCOL=()=>[css("--rom"),css("--hbm"),css("--muted")];
+
+// ---------- perf chart: grouped horizontal bars, log x ----------
+function drawPerf(mk){
+  const svg=document.getElementById("perfchart"); svg.innerHTML="";
+  const W=1000,L=250,R=40,T=30,rowH=72,barH=17;
+  const H=T+MODELS.length*rowH+40; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const lo=Math.log10(0.4),hi=Math.log10(40);
+  const x=v=>L+(Math.log10(v)-lo)/(hi-lo)*(W-L-R);
+  const ticks=[0.5,1,2,5,10,20,40];
+  ticks.forEach(t=>{
+    el("line",{x1:x(t),x2:x(t),y1:T-8,y2:H-30,stroke:t===1?css("--ink"):css("--grid"),"stroke-width":t===1?1.4:1,"stroke-dasharray":t===1?"4 3":"none"},svg);
+    el("text",{x:x(t),y:H-12,"text-anchor":"middle","font-size":12,fill:css("--muted"),class:"t-mono"},svg,t+"×");
+  });
+  el("text",{x:x(1)+6,y:T-12,"font-size":11.5,fill:css("--muted")},svg,"parity");
+  const idx=METRICS[mk][0], cols=CTXCOL();
+  MODELS.forEach((m,i)=>{
+    const y0=T+i*rowH;
+    el("text",{x:L-12,y:y0+22,"text-anchor":"end","font-size":13.5,fill:css("--ink"),"font-weight":600},svg,m.name);
+    if(m.note) el("text",{x:L-12,y:y0+40,"text-anchor":"end","font-size":11,fill:css("--muted")},svg,m.note);
+    CTX.forEach((c,j)=>{
+      const v=m.d[c][idx], y=y0+4+j*(barH+3);
+      if(v==null){ el("text",{x:x(0.4)+6,y:y+13,"font-size":11.5,fill:css("--muted"),class:"t-mono"},svg,c+" · none"); return; }
+      el("rect",{class:"bar",x:x(0.4),y:y,width:Math.max(1,x(v)-x(0.4)),height:barH,rx:2,fill:cols[j],opacity:v<1?0.55:0.92},svg);
+      el("text",{x:x(v)+6,y:y+13,"font-size":11.5,fill:css("--ink"),class:"t-mono"},svg,v.toFixed(2)+"×");
+    });
+  });
+  const lg=document.getElementById("ctxLegend"); lg.innerHTML="";
+  CTX.forEach((c,j)=>{const s=document.createElement("span");s.className="chip";s.innerHTML=`<span class="sw" style="background:${cols[j]}"></span>${c} context`;lg.appendChild(s);});
+}
+document.querySelectorAll("#metricSeg button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o===b?"true":"false"));
+  drawPerf(b.dataset.m); try{localStorage.setItem("atlas-metric",b.dataset.m)}catch(e){}
+}));
+
+// ---------- heat table ----------
+function drawHeat(){
+  const t=document.getElementById("heat"); t.innerHTML="";
+  const th=document.createElement("thead"); let r=document.createElement("tr");
+  r.innerHTML="<th>Model</th>"+Object.values(METRICS).map(m=>`<th colspan="3" style="text-align:center">${m[1]}</th>`).join("");
+  th.appendChild(r); r=document.createElement("tr");
+  r.innerHTML="<th></th>"+Object.keys(METRICS).map(()=>CTX.map(c=>`<th>${c}</th>`).join("")).join(""); th.appendChild(r); t.appendChild(th);
+  const tb=document.createElement("tbody");
+  MODELS.forEach(m=>{
+    const tr=document.createElement("tr"); let h=`<td>${m.name}</td>`;
+    Object.values(METRICS).forEach(([i])=>CTX.forEach(c=>{
+      const v=m.d[c][i];
+      if(v==null){h+=`<td style="color:var(--muted)">none</td>`;return;}
+      const s=Math.min(1,Math.abs(Math.log10(v))/1.3);
+      const base=v>=1?"--rom":"--hbm";
+      h+=`<td style="background:color-mix(in srgb, var(${base}) ${Math.round(8+s*52)}%, transparent)">${v.toFixed(2)}×</td>`;
+    }));
+    tr.innerHTML=h; tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+// ---------- simple horizontal bar helper (linear) ----------
+function hbars(id,rows,opt){
+  const svg=document.getElementById(id); svg.innerHTML="";
+  const W=opt.W||480,L=opt.L||170,R=70,T=14,bh=opt.bh||22,gap=opt.gap||10;
+  const H=T+rows.length*(bh+gap)+28; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const max=opt.max||Math.max(...rows.map(r=>r[1]));
+  const x=v=>L+v/max*(W-L-R);
+  (opt.ticks||[]).forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:T-4,y2:H-24,stroke:css("--grid")},svg);el("text",{x:x(t),y:H-8,"text-anchor":"middle","font-size":11,fill:css("--muted"),class:"t-mono"},svg,opt.tfmt?opt.tfmt(t):t);});
+  if(opt.ref) el("line",{x1:x(opt.ref),x2:x(opt.ref),y1:T-6,y2:H-24,stroke:css("--ink"),"stroke-dasharray":"4 3"},svg);
+  rows.forEach((r,i)=>{
+    const y=T+i*(bh+gap);
+    el("text",{x:L-10,y:y+bh*0.68,"text-anchor":"end","font-size":12,fill:css("--ink")},svg,r[0]);
+    el("rect",{x:L,y:y,width:Math.max(1,x(r[1])-L),height:bh,rx:2,fill:r[2]?css(r[2]):css("--rom")},svg);
+    el("text",{x:x(r[1])+6,y:y+bh*0.68,"font-size":11.5,fill:css("--ink"),class:"t-mono"},svg,opt.fmt(r[1]));
+  });
+}
+
+function drawAll(){
+  let m="b1"; try{m=localStorage.getItem("atlas-metric")||"b1"}catch(e){}
+  document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o.dataset.m===m?"true":"false"));
+  drawPerf(m); drawHeat();
+  hbars("qwenbars",[["as built (iter. 5)",24.7,"--faint"],["+ attention on all groups",8.2,"--rom"],["+ 16-wide stream unit*",3.36,"--rom"]],
+    {max:26,ticks:[0,5,10,15,20,25],fmt:v=>v+" M cycles",L:190});
+  hbars("arraybars",[["1 core",1,"--faint"],["4 packages",2.22],["5 packages",3.66],["6 packages",5.22],["10 packages",6.96],["12 packages",9.72]],
+    {max:11,ticks:[0,2,4,6,8,10],fmt:v=>v.toFixed(2)+"×",L:110,tfmt:t=>t+"×"});
+  hbars("iterbars",[["1 · baseline 16 lanes",107228,"--faint"],["2 · batched heads, chaining",95590,"--faint"],["3 · 64 lanes, K-split",36950],["4 · fused SiLU, progress chase",32212],["5–6 · BF16 KV, all-group attn",32196]],
+    {max:115000,ticks:[0,25000,50000,75000,100000],fmt:v=>v.toLocaleString(),L:200,tfmt:t=>(t/1000)+"K"});
+  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine*",1067],["FP8/FP4 block dot",1196],["activation quantiser",1126],["SELECT K=6",1618],["SELECT K=512",1115],["Engram hash",1524],["softplus/sqrt",1034],["package link",1339,"--hbm"]],
+    {max:1700,ticks:[0,500,1000,1500],fmt:v=>v+" MHz",L:150,bh:17,gap:7,ref:1000});
+  // array diagram
+  const pk=document.getElementById("pk"); pk.innerHTML="";
+  const names=["embed · L0 attn","L0 MLP","L1 attn","L1 MLP","…","L3 MLP","lm_head ¼","lm_head ¼","lm_head ¼","lm_head ¼"];
+  const n=names.length, w=80, gp=(1000-40-n*w)/(n-1);
+  names.forEach((nm,i)=>{
+    const x0=20+i*(w+gp), head=i>=6;
+    el("rect",{x:x0,y:60,width:w,height:90,rx:4,fill:head?css("--rom-soft"):css("--panel"),stroke:css("--rom")},pk);
+    el("text",{x:x0+w/2,y:92,"font-size":11.5,fill:css("--ink"),"font-weight":600},pk,"pkg "+(i===4?"…":i));
+    el("text",{x:x0+w/2,y:112,"font-size":10.5,fill:css("--muted")},pk,nm);
+    el("text",{x:x0+w/2,y:130,"font-size":10,fill:css("--muted")},pk,"core+KV");
+    if(i<n-1){el("line",{x1:x0+w,x2:x0+w+gp-2,y1:105,y2:105,stroke:css("--rom"),"stroke-width":2,"marker-end":"url(#arR)"},pk);}
+  });
+  el("path",{d:`M${20+(n-1)*(w+gp)+w/2},150 C ${900},225 ${100},225 ${60},152`,fill:"none",stroke:css("--muted"),"stroke-width":1.4,"stroke-dasharray":"5 4","marker-end":"url(#ar)"},pk);
+  el("text",{x:500,y:232,"font-size":11.5,fill:css("--muted")},pk,"token feedback to package 0 · 12 users in flight");
+  el("text",{x:500,y:40,"font-size":12,fill:css("--ink")},pk,"link: header + 8 flits of the 128-float hidden state, cut-through, credit flow");
+  // wafer
+  const wf=document.getElementById("wafer"); wf.innerHTML="";
+  el("circle",{cx:180,cy:180,r:168,fill:css("--grid"),stroke:css("--rule")},wf);
+  const src=new Set(["3,2","5,3","2,5","4,5"]), eng=new Set(["1,3","6,4"]);
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const x0=40+c*35,y0=40+r*35,cx=x0+15,cy=y0+15;
+    if(Math.hypot(cx-180,cy-180)>150) continue;
+    const k=c+","+r;
+    el("rect",{x:x0,y:y0,width:30,height:30,rx:3,fill:eng.has(k)?css("--hbm"):src.has(k)?css("--rom"):css("--rom-soft"),stroke:css("--rom"),"stroke-width":0.8},wf);
+  }
+  for(let r=0;r<8;r++) el("line",{x1:40,x2:320,y1:55+r*35,y2:55+r*35,stroke:css("--rom"),"stroke-width":0.6,opacity:0.5},wf);
+}
+drawAll();
+const mq=window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change",drawAll);
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+</script>
+</body>
+</html>
