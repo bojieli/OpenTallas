@@ -1439,5 +1439,269 @@
       "source": "https://www.cerebras.ai/chip",
       "value": 57.0
     }
+  },
+  "serial_latency": {
+    "purpose": "Inputs of the per-token operator dependency graph (src/opentallas/critical_path.py) that replaced the flat per-layer floor (latency.*) and the two-all-reduces-per-layer link charge as the serial part of every decode step. The `latency` block is kept for the legacy floor, which every point still reports as a diagnostic.",
+    "rom_datapath": {
+      "purpose": "Measured depths of this repository's own hardwired decode datapath (rtl/hdc, rtl/hdc/v41). Every ROM-side operator node of the per-token dependency graph is priced from these; nothing here is fitted to any anchor.",
+      "clock_hz": {
+        "value": 1033900000.0,
+        "grade": "executed",
+        "source": "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json design.fmax_hz",
+        "note": "The slowest routed fmax among the token path's units (ot_hdc_softplus, 1.034 GHz, closed; ot_hdc_matvec 1.067 GHz and ot_hdc_stream 1.111 GHz did not close at their probe targets), ASAP7 TT 0.7 V, applied unscaled to the N5/N6 designs.",
+        "range_low": 800000000.0,
+        "range_high": 1200000000.0,
+        "artifact": "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json"
+      },
+      "sequencer_gap_cycles": {
+        "value": 5,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "cycles between two issued instructions (K.seq_gap)",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "barrier_idle_cycles": {
+        "value": 2,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "extra cycles when an instruction waits on a barrier rather than chasing its producer (K.idle_reg)",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "matrix_engine_latency_cycles": {
+        "value": 16,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "matrix-engine pipeline latency from last operand to first output (K.me_lat)",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "matrix_engine_tree_cycles_per_level": {
+        "value": 5,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "per adder-tree level of the matrix engine (K.me_tree)",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "matrix_engine_interleave": {
+        "value": 8,
+        "grade": "executed",
+        "source": "tools/hdc_isa.py INTERLEAVE",
+        "note": "outputs in flight per matrix-engine lane; also sets the lane-walk floor of a small matvec",
+        "artifact": "tools/hdc_isa.py"
+      },
+      "reducer_tail_cycles": {
+        "value": 32,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "reduction tail after the last element (K.red_tail)",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "stream_depth_none_cycles": {
+        "value": 29,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "stream unit address-to-write with no SFU (K.su_depth[SFU_NONE])",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "stream_depth_exp_cycles": {
+        "value": 121,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "stream unit with the exp SFU (K.su_depth[SFU_EXP])",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "stream_depth_recip_cycles": {
+        "value": 75,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "stream unit with the reciprocal SFU (K.su_depth[SFU_RECIP])",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "stream_depth_rsqrt_cycles": {
+        "value": 90,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "stream unit with the rsqrt SFU (K.su_depth[SFU_RSQRT])",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "stream_depth_sigmoid_cycles": {
+        "value": 172,
+        "grade": "executed",
+        "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
+        "note": "stream unit with the sigmoid SFU (K.su_depth[SFU_SIGM])",
+        "artifact": "results/rtl/hdc_decode_campaign.json"
+      },
+      "fp_add_cycles": {
+        "value": 5,
+        "grade": "executed",
+        "source": "rtl/hdc/ot_hdc_fpu.sv LATENCY",
+        "note": "fadd / fmul pipeline depth",
+        "artifact": "rtl/hdc/ot_hdc_fpu.sv"
+      },
+      "fp_div_cycles": {
+        "value": 31,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_fdiv.sv DEPTH",
+        "note": "IEEE divide, II 1",
+        "artifact": "rtl/hdc/v41/ot_hdc_fdiv.sv"
+      },
+      "fp_sqrt_cycles": {
+        "value": 31,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_fsqrt.sv DEPTH",
+        "note": "IEEE square root, II 1",
+        "artifact": "rtl/hdc/v41/ot_hdc_fsqrt.sv"
+      },
+      "softplus_cycles": {
+        "value": 259,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_softplus.sv",
+        "note": "sqrt(softplus): exp, divide, Horner, sqrt; II 1",
+        "artifact": "rtl/hdc/v41/ot_hdc_softplus.sv"
+      },
+      "blockdot_cycles": {
+        "value": 15,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_blockdot.sv; results/rtl/hdc_v41_blockdot_campaign.json latency_cycles",
+        "note": "FP8/FP4 block-scaled dot, last block to output",
+        "artifact": "results/rtl/hdc_v41_blockdot_campaign.json"
+      },
+      "actquant_cycles": {
+        "value": 13,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_actquant.sv; campaign 13",
+        "note": "FP8 activation quantiser",
+        "artifact": "rtl/hdc/v41/ot_hdc_actquant.sv"
+      },
+      "fp4qdq_cycles": {
+        "value": 8,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_fp4qdq.sv; campaign 8",
+        "note": "FP4 quantise-dequantise",
+        "artifact": "rtl/hdc/v41/ot_hdc_fp4qdq.sv"
+      },
+      "engram_hash_cycles": {
+        "value": 12,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_engram_hash.sv LATENCY",
+        "note": "24 hash columns (multiply, XOR, Barrett modulo)",
+        "artifact": "results/rtl/hdc_v41_engram_campaign.json"
+      },
+      "select_extra_cycles": {
+        "value": 2,
+        "grade": "executed",
+        "source": "rtl/hdc/v41/ot_hdc_select.sv; results/rtl/hdc_v41_select_campaign.json latency_cycles",
+        "note": "a top-K select emits K+2 cycles after its last element in rank order, 2K+2 in ascending-index order",
+        "artifact": "results/rtl/hdc_v41_select_campaign.json"
+      },
+      "stream_lane_area_um2": {
+        "value": 42443.2,
+        "grade": "executed",
+        "source": "results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json design.area_um2",
+        "note": "area of one stream-unit element per cycle, SFU included, ASAP7, not scaled to N5/N6",
+        "artifact": "results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json"
+      },
+      "stream_area_fraction": {
+        "value": 0.1,
+        "grade": "assumed",
+        "range_low": 0.05,
+        "range_high": 0.2,
+        "source": "tools/decode_critical_path.py Params.su_area_fraction",
+        "note": "share of a die's compute area given to stream-unit lanes; the width is floor-power-of-two of that area over stream_lane_area_um2, at least 16"
+      },
+      "select_units_per_die": {
+        "value": 64,
+        "grade": "assumed",
+        "range_low": 16,
+        "range_high": 256,
+        "source": "tools/decode_critical_path.py Params.select_units",
+        "note": "ot_hdc_select instances available to the first level of a top-k; the merge tree and ascending pass on merged input are not built RTL"
+      },
+      "hbm_random_row_latency_s": {
+        "value": 1e-07,
+        "grade": "assumed",
+        "range_low": 6e-08,
+        "range_high": 2e-07,
+        "source": "tools/decode_critical_path.py Params.hbm_gather_s",
+        "note": "random-row HBM read latency, charged only where a gather address is data dependent (the rows an index scan selects); technology.json had no HBM latency constant"
+      },
+      "rom_row_access_s": {
+        "value": 2e-09,
+        "grade": "assumed",
+        "range_low": 1e-09,
+        "range_high": 5e-09,
+        "source": "tools/decode_critical_path.py embed node",
+        "note": "one ROM row read for an embedding or Engram row gather"
+      }
+    },
+    "gpu_datapath": {
+      "purpose": "The GPU side's serial per-token cost, priced on the same operator dependency graph as the ROM side: every dependent kernel pays a launch-and-synchronisation gap, every collective its measured small-message floor (links.*.hop_latency_s), and a dependent arithmetic chain inside one kernel its published instruction latencies. Graded, cited, never fitted.",
+      "kernel_launch_gap_s": {
+        "value": 1.3e-06,
+        "grade": "published",
+        "range_low": 5e-07,
+        "range_high": 2.1e-06,
+        "source": "Hazy Research, Look Ma, No Bubbles! Designing a Low-Latency Megakernel for Llama-1B (2025-05-27), https://hazyresearch.stanford.edu/blog/2025-05-27-no-bubbles ; NVIDIA Developer Blog, Getting Started with CUDA Graphs (A. Gray, 2019), https://developer.nvidia.com/blog/cuda-graphs/",
+        "note": "Cost per dependent kernel boundary of a CUDA-graph decode step. STATED 1.3 us: measured on H100, \"launch cost only decreases to around 1.3 microseconds\" with CUDA graphs, against about 2.1 us with stream launches (the high end), and existing serving stacks issue \"7 kernel launches per layer\" for Llama-1B. LOW 0.5 us: V100, a 2.9 us kernel costs 3.4 us per kernel inside a CUDA graph (9.6 us with a per-kernel sync, 3.8 us with overlapped stream launches). Charged once per kernel on the graph's critical path, on both GPU parts; a megakernel that removes the boundaries is not a shipping serving stack and is not credited."
+      },
+      "fp32_dependent_cycles": {
+        "value": 4,
+        "grade": "published",
+        "range_low": 4,
+        "range_high": 6,
+        "source": "Jia, Maggioni, Staiger, Scarpazza, Dissecting the NVIDIA Volta GPU Architecture via Microbenchmarking, arXiv:1804.06826 (2018), section 4.1",
+        "note": "\"On Volta, most integer and single-precision instructions have a latency of 4 cycles\" (6 on Pascal: the high end). Used for a dependent FP32 add or multiply inside one kernel."
+      },
+      "fp32_divide_cycles": {
+        "value": 26,
+        "grade": "derived",
+        "range_low": 18,
+        "range_high": 40,
+        "source": "Jia et al. arXiv:1804.06826 (MUFU class 14 cycles on Pascal, 4-cycle FFMA on Volta); Abdelkhalik et al., Demystifying the Nvidia Ampere Architecture through Microbenchmarking, arXiv:2208.11174 Table V (div.rn.f32 and rcp.rn.f32 compile to a multi-instruction MUFU.RCP sequence)",
+        "note": "IEEE div.rn.f32 as compiled: MUFU.RCP (14) plus three dependent FFMA refinement steps (3 x 4) = 26 cycles on the dependent chain; the band spans an approximate reciprocal (18) to the slow-path fixup (40)."
+      }
+    },
+    "hardware_links": {
+      "purpose": "Links priced as hardware traversals with no software stack, on which the collective's logical algorithm (two-step, one-shot, ring, recursive doubling, tree, centre-rooted mesh; hierarchical across link classes) is searched per collective. Every other link's hop_latency_s is half a MEASURED small-message collective (see links.nvlink3), so a collective on it is priced as its measured floor per switch tier and no algorithm is credited beyond the measured best kernel.",
+      "rom_package_ucie": {
+        "value": "full",
+        "grade": "assumed",
+        "source": "links.rom_package_ucie.fabric note",
+        "note": "every die in a package has a direct link to every other; bytes_s is per link",
+        "links_per_node": 3,
+        "bandwidth_scope": "per_link"
+      },
+      "rom_board_serdes": {
+        "value": "mesh",
+        "grade": "assumed",
+        "source": "links.rom_board_serdes.fabric note",
+        "note": "packages on a 2-D board mesh; bytes_s is per package, split over its 4 neighbour links",
+        "links_per_node": 4,
+        "bandwidth_scope": "per_node"
+      },
+      "on_wafer": {
+        "value": "mesh",
+        "grade": "published",
+        "source": "Rocki et al., Fast Stencil-Code Computation on a Wafer-Scale Processor, SC20, arXiv:2010.03660",
+        "note": "reticle fields on the stitched wafer mesh; bytes_s is the whole wafer's, so one field edge carries bytes_s / fields per wafer / 4",
+        "links_per_node": 4,
+        "bandwidth_scope": "per_wafer"
+      },
+      "on_wafer_n5": {
+        "value": "mesh",
+        "grade": "published",
+        "source": "Cerebras (Sean Lie), Wafer-Scale AI: GPU Impossible Performance, Hot Chips 36, 2024, doi:10.1109/HCS61935.2024.10664673 ; Rocki et al., Fast Stencil-Code Computation on a Wafer-Scale Processor, SC20, arXiv:2010.03660",
+        "note": "as on_wafer",
+        "links_per_node": 4,
+        "bandwidth_scope": "per_wafer"
+      },
+      "rom_wafer_serdes": {
+        "value": "mesh",
+        "grade": "assumed",
+        "source": "links.rom_wafer_serdes.fabric note",
+        "note": "wafers on direct neighbour SerDes; bytes_s is per wafer",
+        "links_per_node": 4,
+        "bandwidth_scope": "per_node"
+      }
+    }
   }
 }

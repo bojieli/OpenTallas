@@ -165,6 +165,7 @@ import math
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from . import critical_path as _cp
 from .operations import operation_inventory
 from .schema import ModelProfile, ValidationError
 from .workload import (
@@ -2779,6 +2780,25 @@ class RooflineStep:
         return data
 
 
+_INVENTORY_CACHE: dict[tuple[int, int], tuple[ModelProfile, Any]] = {}
+
+
+def _operation_inventory(model: ModelProfile, context_tokens: int) -> Any:
+    """``operation_inventory``, memoised per model object and context: it is a
+    pure function of both, and the tensor-group search asks for it once per
+    candidate group."""
+
+    key = (id(model), int(context_tokens))
+    hit = _INVENTORY_CACHE.get(key)
+    if hit is not None and hit[0] is model:
+        return hit[1]
+    inventory = operation_inventory(model, context_tokens)
+    if len(_INVENTORY_CACHE) > 256:
+        _INVENTORY_CACHE.clear()
+    _INVENTORY_CACHE[key] = (model, inventory)
+    return inventory
+
+
 def _scaled_operations(
     model: ModelProfile,
     technology: Technology,
@@ -2807,7 +2827,7 @@ def _scaled_operations(
     the emulation stays visible as an architecture property.
     """
 
-    inventory = operation_inventory(model, context_tokens)
+    inventory = _operation_inventory(model, context_tokens)
     scaled: dict[str, float] = {}
     for model_format, operations in inventory.operations_by_format.items():
         canonical = technology.canonical_format(model_format)
@@ -3336,6 +3356,148 @@ def _prefill(
     }
 
 
+#: Largest power-of-two tensor group a hybrid layout is offered beyond its
+#: domain multiples.  Past 64 partitions a group's collectives cross so many
+#: package or switch boundaries that no study point has chosen one; the
+#: ``tensor`` layout still covers a group spanning the whole machine.
+HYBRID_GROUP_SEARCH_MAX = 64
+
+
+def _tensor_group_candidates(topology: Topology) -> list[Topology]:
+    """The tensor groups a hybrid layout may choose between.
+
+    The declared group (the high-bandwidth domain) comes first, then every
+    power of two and small multiples of the domain, each strictly between one
+    partition (a pipeline) and all of them (tensor parallelism).  Other
+    parallelisms have exactly one group."""
+
+    if topology.parallelism != "hybrid":
+        return [topology]
+    partitions = topology.partitions
+    base = topology.tensor_group
+    groups = [base]
+    g = 2
+    while g < partitions and g <= HYBRID_GROUP_SEARCH_MAX:
+        groups.append(g)
+        g *= 2
+    domain = max(1, topology.intra_domain_size)
+    for multiple in (1, 2, 4):
+        groups.append(domain * multiple)
+    out = [topology]
+    seen = {base}
+    for g in groups:
+        if g in seen or not (2 <= g < partitions):
+            continue
+        seen.add(g)
+        out.append(replace(topology, tensor_group_size=g))
+    return out
+
+
+def machine_family(budget: DeviceBudget) -> str:
+    """``gpu`` for a published HBM part, ``rom`` for a modelled hardwired design."""
+
+    return "gpu" if (budget.weight_store == "hbm" and budget.published_reference) else "rom"
+
+
+def serial_step(
+    budget: DeviceBudget,
+    model: ModelProfile,
+    technology: Technology,
+    *,
+    context_tokens: int,
+    microbatch: float,
+    weight_time_s: float,
+    kv_time_s: float,
+    sweep_s: float,
+    attribute: bool = True,
+) -> dict[str, Any]:
+    """One token's step on the operator dependency graph (``critical_path``).
+
+    ``sweep_s`` is the service time a token waits for across every slot it
+    visits.  It is spread over the graph's operators by the bytes each reads
+    (weights versus KV in the ratio of ``weight_time_s`` to ``kv_time_s``);
+    the step is the graph's longest path plus every pipeline boundary the
+    token crosses, and never less than the sweep.  Returned in parts:
+    ``chain_s`` (dependent operators, control, kernel launches),
+    ``communication_s`` (collectives and hops on the path) and
+    ``sweep_on_path_s``."""
+
+    topo = budget.topology
+    family = machine_family(budget)
+    rom, _gpu = _cp.datapaths(technology)
+    if family == "gpu":
+        clock = technology.clock_frequency_hz(budget.published_reference).value
+    else:
+        clock = rom.clock_hz
+    partitions = topo.partitions
+    single = topo.kind == "single_chip" or partitions <= 1 or topo.parallelism == "none"
+    group = 1 if single else max(1, topo.tensor_group)
+    stages = 1 if single else topo.stages_for(model.num_layers)
+    domain = max(1, topo.intra_domain_size)
+    expert = topo.parallelism == "expert" and not single
+    fabric_links = None if single else (topo.inner_link, topo.link, domain, partitions if expert else 0)
+    machine = _cp.MachineSpec(
+        family=family,
+        group=group,
+        microbatch=float(microbatch),
+        clock_hz=float(clock),
+        su_width=rom.su_width(budget.split.compute_mm2) if family == "rom" else 16,
+        kv_in_hbm=budget.kv_store == "hbm",
+        multi_stage=stages > 1,
+        expert_parallel=expert,
+        ep_span=partitions if expert else 1,
+        ep_tokens_per_node=(float(microbatch) / partitions) if expert else 0.0,
+    )
+    compiled, summary = _cp.serial_compiled(
+        technology,
+        model,
+        context_tokens=context_tokens,
+        machine=machine,
+        fabric_links=fabric_links,
+    )
+    split = weight_time_s + kv_time_s
+    share = kv_time_s / split if split > 0 and math.isfinite(split) else 0.0
+    W, K = sweep_s * (1.0 - share), sweep_s * share
+    if attribute:
+        path_s, comm_s, sweep_on_path = compiled.solve(W, K)
+    else:
+        path_s, comm_s, sweep_on_path = compiled.critical(W, K), float("nan"), float("nan")
+    hops = _cp.price_stage_hops(
+        technology,
+        _cp.decode_shape(model, context_tokens),
+        stages=stages,
+        fabric_links=fabric_links,
+        group=group,
+        microbatch=float(microbatch),
+    )
+    hop_s = hops["latency_s"] + hops["bytes_s"]
+    critical = path_s + hop_s
+    communication = comm_s + hop_s
+    chain = max(0.0, critical - communication - sweep_on_path)
+    step = max(critical, sweep_s)
+    return {
+        "step_s": step,
+        "critical_path_s": critical,
+        "sweep_s": sweep_s,
+        "sweep_on_path_s": sweep_on_path,
+        "chain_s": chain,
+        "communication_s": communication,
+        "collective_s": comm_s,
+        "pipeline_hop_s": hop_s,
+        "pipeline_hops": hops["count"],
+        "binding": "sweep" if sweep_s >= critical else "critical_path",
+        "family": family,
+        "clock_hz": float(clock),
+        "tensor_group": group,
+        "stages": stages,
+        "microbatch": float(microbatch),
+        "stream_unit_width": machine.su_width if family == "rom" else None,
+        "kv_share_of_sweep": share,
+        **summary,
+        "_compiled": compiled,
+    }
+
+
 def evaluate(
     budget: DeviceBudget,
     model: ModelProfile,
@@ -3468,26 +3630,71 @@ def evaluate(
     # many partitions it holds, because they are all on the same token.  A
     # 672-way pipeline has 672, and a token is served by exactly one of them at
     # a time.
-    slots = float(budget.topology.token_slots)
-    # Users sharing one weight pass inside one slot.  Below one slot's worth of
-    # users the pass still happens, so the microbatch floors at one and the
-    # surplus slots idle.
-    microbatch = max(1.0, batch_size / slots) if slots > 0 else float(batch_size)
-
-    terms = _service_terms(
-        budget,
-        model,
-        technology,
-        context_tokens=context_tokens,
-        effective_batch=microbatch,
-        stored_weight_bytes=stored_weight_bytes,
-        representation_scale=representation_scale,
-        weight_traffic_policy=weight_traffic_policy,
-        execution_format=execution_format,
-        measured_expert_coverage=measured_expert_coverage,
-        kv=kv,
-        kv_inflation=kv_inflation,
-    )
+    # **The tensor group is searched, per point.**  A hybrid layout used to be
+    # offered with exactly one group -- the whole high-bandwidth domain -- so
+    # the model could not see that a smaller group trades fewer, cheaper
+    # collectives for more pipeline slots, or that a larger one does the
+    # opposite.  Every candidate is priced on the same serial path and the
+    # fastest per-user latency at THIS batch is kept; ``tensor`` and
+    # ``pipeline`` layouts have one group by definition and are not searched.
+    candidates = _tensor_group_candidates(budget.topology)
+    choice = None
+    searched: list[dict[str, Any]] = []
+    for topology_c in candidates:
+        budget_c = (
+            budget if topology_c is budget.topology else replace(budget, topology=topology_c)
+        )
+        slots_c = float(topology_c.token_slots)
+        # Users sharing one weight pass inside one slot.  Below one slot's
+        # worth of users the pass still happens, so the microbatch floors at
+        # one and the surplus slots idle.
+        microbatch_c = max(1.0, batch_size / slots_c) if slots_c > 0 else float(batch_size)
+        terms_c = _service_terms(
+            budget_c,
+            model,
+            technology,
+            context_tokens=context_tokens,
+            effective_batch=microbatch_c,
+            stored_weight_bytes=stored_weight_bytes,
+            representation_scale=representation_scale,
+            weight_traffic_policy=weight_traffic_policy,
+            execution_format=execution_format,
+            measured_expert_coverage=measured_expert_coverage,
+            kv=kv,
+            kv_inflation=kv_inflation,
+        )
+        serial_c = serial_step(
+            budget_c,
+            model,
+            technology,
+            context_tokens=context_tokens,
+            microbatch=microbatch_c,
+            weight_time_s=terms_c.weight_time_s,
+            kv_time_s=terms_c.kv_time_s,
+            sweep_s=terms_c.service_time_s * slots_c,
+            attribute=len(candidates) == 1,
+        )
+        searched.append(
+            {
+                "tensor_group": topology_c.tensor_group,
+                "token_slots": slots_c,
+                "step_s": serial_c["step_s"],
+            }
+        )
+        if choice is None or serial_c["step_s"] < choice[4]["step_s"] * (1.0 - 1e-12):
+            choice = (budget_c, slots_c, microbatch_c, terms_c, serial_c)
+    budget, slots, microbatch, terms, serial = choice
+    if len(candidates) > 1:
+        serial = serial_step(
+            budget,
+            model,
+            technology,
+            context_tokens=context_tokens,
+            microbatch=microbatch,
+            weight_time_s=terms.weight_time_s,
+            kv_time_s=terms.kv_time_s,
+            sweep_s=terms.service_time_s * slots,
+        )
     reasons.extend(terms.reasons)
     if math.isclose(microbatch, float(batch_size), rel_tol=1e-12):
         throughput_view = terms
@@ -3507,36 +3714,41 @@ def evaluate(
             kv_inflation=kv_inflation,
         )
 
-    # -- the per-layer serial floor ---------------------------------------
-    # Decode is sequential across layers, and each layer has dependencies that
-    # no bandwidth removes.  Before this term a single_chip design had no fixed
-    # cost whatsoever on its critical path.
-    fixed_latency, fixed_latency_detail, fixed_latency_provenance = (
+    # -- the legacy per-layer floor, kept as a diagnostic -----------------
+    # Until the operator graph replaced it, this flat floor (~250 ns a layer)
+    # plus two all-reduces per layer WAS the serial part of every step.  It is
+    # still computed and reported so the size of the correction is visible on
+    # every point, and it prices nothing.
+    legacy_fixed_latency, fixed_latency_detail, fixed_latency_provenance = (
         layer_fixed_latency(technology, model)
     )
 
     # -- the serial path --------------------------------------------------
-    # **The correction.**  A token is served by one slot at a time, so it gets
-    # ``1/slots`` of the machine's aggregate resource and must visit every slot
-    # before its step is done.  The two factors do not cancel: they multiply the
-    # service time by ``slots``.  Charging the aggregate service time and then
-    # adding the hops -- which is what this model did -- is a throughput view of
-    # the silicon wearing a latency view of the fabric, and it reported a
-    # balanced S-stage pipeline as S times faster per user than it is.
-    #
-    # Tensor parallelism is the exception and that is the whole point of it:
-    # every partition works on the same token, ``slots`` is one, and the
-    # multiplier disappears.  What the tensor group pays instead is two
-    # all-reduces per layer, already priced in ``link_time_s``.
+    # A token is served by one slot at a time, so it gets ``1/slots`` of the
+    # machine's aggregate resource and must visit every slot before its step
+    # is done: the sweep a token waits for is ``service x slots``.  That sweep
+    # is distributed over the operator graph of one token by the bytes each
+    # operator reads, and the step is the graph's longest path: the dependent
+    # operator chain, every collective the weight split needs, and every
+    # pipeline hop, none of which overlaps the operator it waits for.  It is
+    # never shorter than the sweep itself.
     service_time = terms.service_time_s * slots
-    raw_step_time = service_time + terms.link_time_s + fixed_latency
+    raw_step_time = serial["step_s"]
+    fixed_latency = serial["chain_s"]
+    link_latency = serial["communication_s"]
     # The number this model used to report as per-user latency, kept on every
-    # point so the size of this correction is separable from every other one.
-    throughput_view_step_time = (
-        throughput_view.service_time_s
-        + throughput_view.link_time_s
-        + fixed_latency
-    )
+    # point so the size of the slot correction is separable from every other
+    # one: the aggregate service time plus the same serial terms.
+    tv_sweep = throughput_view.service_time_s
+    tv_share = serial["kv_share_of_sweep"]
+    if throughput_view is terms and slots == 1.0:
+        throughput_view_step_time = raw_step_time      # one slot: the two views are one path
+    else:
+        throughput_view_step_time = max(
+            serial["_compiled"].critical(tv_sweep * (1.0 - tv_share), tv_sweep * tv_share)
+            + serial["pipeline_hop_s"],
+            tv_sweep,
+        )
 
     # -- power and thermal ------------------------------------------------
     # Energy per token, times the rate the machine actually produces tokens at.
@@ -3633,7 +3845,10 @@ def evaluate(
         # The MACs still happen; they take exactly as long as the walk.
         "compute": (terms.weight_time_s if fused_compute else terms.compute_time_s)
         * slots,
-        "link_latency": terms.link_time_s,
+        # The serial terms of the operator graph: every collective and pipeline
+        # hop on the critical path, and the dependent-operator chain (the
+        # key keeps its historical name; it is no longer a flat floor).
+        "link_latency": link_latency,
         "layer_fixed_latency": fixed_latency,
     }
     if reasons:
@@ -3671,7 +3886,7 @@ def evaluate(
             weight_traffic_policy=weight_traffic_policy,
             execution_format=execution_format,
             measured_expert_coverage=measured_expert_coverage,
-            fixed_latency=fixed_latency,
+            fixed_latency=fixed_latency + link_latency,
             slots=slots,
             decode_step_s=step_time,
         )
@@ -3754,10 +3969,18 @@ def evaluate(
             "kv_read_s_under_bank_locality"
         ],
         "layer_fixed_latency_s": fixed_latency,
+        # The legacy flat floor's own breakdown, a diagnostic that prices
+        # nothing: what the step used to charge for serial latency.
         "layer_fixed_latency": fixed_latency_detail,
+        "legacy_layer_fixed_latency_s": legacy_fixed_latency,
+        "legacy_link_latency_s": terms.link_time_s,
         "layer_fixed_latency_fraction_of_step": (
             fixed_latency / raw_step_time if raw_step_time > 0 else 0.0
         ),
+        "serial_latency": {
+            **{k: v for k, v in serial.items() if not k.startswith("_")},
+            "tensor_group_search": searched,
+        },
         "kv_read_bytes_per_user_token": kv.read_bytes,
         "kv_write_bytes_per_user_token": kv.write_bytes,
         "kv_storage_bytes_per_user": kv.storage_bytes_per_user,
@@ -4079,12 +4302,14 @@ def taalas_hc1_anchor(
     # fit.  The band is what the reader is asked to believe.
     band: dict[str, Any] = {}
     for bound in ("low", "stated", "high"):
+        # The serial path is priced from measured RTL depths plus a few
+        # assumed terms (clock, stream-unit area share, select units, row
+        # access), each with a range.  The gate is reported at both ends.
         variant = (
             technology
             if bound == "stated"
-            else technology.at_layer_latency_bound(bound)
+            else _cp.at_serial_latency_bound(technology, bound)
         )
-        fixed_s, fixed_detail, _ = layer_fixed_latency(variant, model)
         bound_step = evaluate(
             budget,
             model,
@@ -4094,9 +4319,11 @@ def taalas_hc1_anchor(
             weight_bits_per_parameter=weight_bits_per_parameter,
             execution_format=str(spec["execution_format_name"]),
         )
+        chain_s = bound_step.component_times_s["layer_fixed_latency"]
         band[bound] = {
-            "layer_fixed_latency_s_per_layer": fixed_detail["seconds_per_layer"],
-            "layer_fixed_latency_s_per_token": fixed_s,
+            "layer_fixed_latency_s_per_layer": chain_s / model.num_layers,
+            "layer_fixed_latency_s_per_token": chain_s,
+            "legacy_floor_s_per_token": layer_fixed_latency(technology, model)[0],
             "modelled_tokens_s": bound_step.per_user_tokens_s,
             "ratio_to_published": (
                 bound_step.per_user_tokens_s / published.value
@@ -4115,15 +4342,15 @@ def taalas_hc1_anchor(
         gap_s / model.num_layers if model.num_layers else math.inf
     )
     band["note"] = (
-        "The per-layer latency terms are derived from primitives independent of "
-        "this anchor -- SRAM access time, sequencer issue and decode, pipeline "
-        "fill and drain across a dependent array-pass boundary, the layer "
-        "barrier, and a floorplan-derived on-die wire delay -- and are reported "
-        "at both ends of their stated range. A negative "
-        "'per_layer_cost_that_would_close_the_gap_s' means the model is already "
-        "slower than the shipping part before any fixed cost is charged, so no "
-        "value of this term could have closed the gap and the residual lies "
-        "elsewhere."
+        "The per-layer serial cost is the dependent-operator chain of the "
+        "Llama-3.1-8B decode graph priced with this repository's measured RTL "
+        "depths (serial_latency.rom_datapath) -- nothing is fitted to this "
+        "anchor -- and it is reported at both ends of the ranged inputs. "
+        "'per_layer_cost_that_would_close_the_gap_s' is what the chain would "
+        "have to cost for the model to land exactly on the shipping rate; a "
+        "value below the modelled chain means the model is SLOWER than the "
+        "part, and the residual is the hardwired datapath's own serial depth, "
+        "which the gate reports rather than tunes."
     )
 
     # Back-derive what each density would have to be for the model to land
