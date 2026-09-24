@@ -212,6 +212,32 @@ CANDIDATE_MODELS: tuple[tuple[str, str, Path, int], ...] = (
         )
         for suffix, context in (("", 200_000), ("-8k", 8_192), ("-1m", 1_000_000))
     ),
+    # DeepSeek-V4.1-Flash at the ends of the context ladder (2026-09-24), for
+    # the base profile and for the Engram-in-KV-store placement the ROM target
+    # takes; its 200K primary rows above are unchanged.
+    *(
+        (
+            f"{slug}{suffix}",
+            model_name,
+            ROOT / "configs" / "models" / "candidates" / profile,
+            context,
+        )
+        for slug, model_name, profile in (
+            ("deepseek-v41-flash", "DeepSeek-V4.1-Flash", "deepseek-v4.1-flash.json"),
+            ("deepseek-v41-flash-engram-hbm", "DeepSeek-V4.1-Flash-engram-hbm",
+             "deepseek-v4.1-flash-engram_hbm.json"),
+        )
+        for suffix, context in (("-8k", 8_192), ("-1m", 1_000_000))
+    ),
+    # Qwen3-8B beyond its 8,192-token primary study (2026-09-24).  These rungs
+    # are HYPOTHETICAL: the released model's native context is 40,960 tokens
+    # (131,072 with YaRN), so 200K and 1M price the machines as if the model
+    # served them -- same weights, a KV cache grown to that context.
+    *(
+        (f"qwen3-8b{suffix}", "Qwen3-8B",
+         ROOT / "configs" / "models" / "candidates" / "qwen3-8b-context-extended.json", context)
+        for suffix, context in (("-200k", 200_000), ("-1m", 1_000_000))
+    ),
 )
 """Candidate models, each run as a single-model study in its own tree.
 
