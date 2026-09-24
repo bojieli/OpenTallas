@@ -622,7 +622,7 @@ def run(args) -> dict:
         if not args.skip_mutations:
             mu_unit = s / "mut_unit.vec"
             pick = np.concatenate([np.arange(min(300, len(e_real)))])
-            mu_e = [b32(e_real[pick])]
+            mu_e = [b32(e_real[pick]).reshape(len(pick), 16)]
             for c in sorted(set(labels)):
                 ii = [i for i, lab in enumerate(labels) if lab == c][:120]
                 mu_e.append(e_rand[ii].reshape(len(ii), 16))
