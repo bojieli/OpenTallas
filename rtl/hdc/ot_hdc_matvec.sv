@@ -305,6 +305,11 @@ module ot_hdc_matvec #(
     end
 
     // -- results -------------------------------------------------------------------
+    reg           ov1;
+    reg  [G-1:0]  o_we1;
+    reg  [G*AW-1:0] o_addr1;
+    reg  [G*W-1:0]  o_mask1;
+    reg  [G*W*32-1:0] o_data1;
     wire          r_v = vline[10 + OD];
     wire          r_last, r_oen, r_amax, r_wsrc, r_mmode;
     wire [1:0]    r_split;
@@ -322,17 +327,27 @@ module ot_hdc_matvec #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            ov <= 1'b0; o_we <= 0;
+            ov1 <= 1'b0; o_we1 <= 0;
         end else begin
-            ov <= r_v && r_last;
+            ov1 <= r_v && r_last;
             for (q = 0; q < G; q = q + 1)
-                o_we[q] <= r_v && r_last && r_oen && (q < r_ports);
+                o_we1[q] <= r_v && r_last && r_oen && (q < r_ports);
         end
     end
     always @(posedge clk) begin
         for (q = 0; q < G; q = q + 1)
-            o_addr[q*AW +: AW] <= r_oa + q * r_ots;
-        o_mask <= r_mask; o_data <= res;
+            o_addr1[q*AW +: AW] <= r_oa + q * r_ots;
+        o_mask1 <= r_mask; o_data1 <= res;
+    end
+    //: A second output register: the result bus is 2,048 bits wide and its
+    //: flops sit by the lanes, so the pins get flops of their own.  ov, and the
+    //: chaining progress counted from it, move with the data.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ov <= 1'b0; o_we <= 0; end
+        else begin ov <= ov1; o_we <= o_we1; end
+    end
+    always @(posedge clk) begin
+        o_addr <= o_addr1; o_mask <= o_mask1; o_data <= o_data1;
     end
 
     // -- argmax: a registered compare tree over the round-slot, then a running best --
@@ -417,7 +432,7 @@ module ot_hdc_matvec #(
 
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
-    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov;
+    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);

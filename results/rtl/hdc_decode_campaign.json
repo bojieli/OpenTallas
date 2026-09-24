@@ -8,7 +8,7 @@
     ],
     "generation_steps": [
       {
-        "cycles": 32172,
+        "cycles": 32196,
         "fault": 0,
         "input": 271,
         "oracle": 1073,
@@ -16,7 +16,7 @@
         "position": 15
       },
       {
-        "cycles": 32812,
+        "cycles": 32836,
         "fault": 0,
         "input": 1073,
         "oracle": 382,
@@ -24,7 +24,7 @@
         "position": 16
       },
       {
-        "cycles": 32940,
+        "cycles": 32964,
         "fault": 0,
         "input": 382,
         "oracle": 93,
@@ -41,7 +41,7 @@
     "pass": true,
     "prompt_tokens": 16,
     "steps": 18,
-    "total_cycles": 565144
+    "total_cycles": 565576
   },
   "input_sha256": {
     "rtl/hdc/ot_hdc_core.sv": "3a2d5d3844dbf73cd9da6614d638611d46d7d2ae5a0c584f4b767e6add2ab704",
@@ -49,7 +49,7 @@
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
     "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
-    "rtl/hdc/ot_hdc_matvec.sv": "aa77257f86d4b277d451da8081d1da3f8a3cf77503e5ab910d510119b6ff7cd7",
+    "rtl/hdc/ot_hdc_matvec.sv": "cadacc0561e471c6ed966c50db5eca0e9862672aa0b6a00abb5a2f880f4a898e",
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
     "rtl/hdc/ot_hdc_stream.sv": "7f04ae9d14a65f46615f3286d43cd5a670c491d1ce71e09344a88e08b9af96f6",
@@ -82,8 +82,8 @@
     "program_instructions": 113
   },
   "scaling_8_groups": {
-    "both_units_idle_cycles": 4866,
-    "cycles": 22506,
+    "both_units_idle_cycles": 4890,
+    "cycles": 22530,
     "groups": 8,
     "kv_cache_mismatches": 0,
     "logit_mismatches": 0,
@@ -101,8 +101,8 @@
     "vectors": 18010
   },
   "single_step": {
-    "both_units_idle_cycles": 4548,
-    "cycles": 32172,
+    "both_units_idle_cycles": 4572,
+    "cycles": 32196,
     "fault": 0,
     "kv_cache_mismatches": 0,
     "logit_mismatches": 0,
