@@ -68,10 +68,12 @@ class Layout:
                             ("down", lw("mlp.down_proj.weight"))):
                 self.mat[(L, name)] = self.place_matrix(w)
         self.mat["lm_head"] = self.place_matrix(model.w["lm_head.weight"])
-        # the vocabulary halves, for an array that splits lm_head over two packages
-        v2 = model.w["lm_head.weight"].shape[0] // 2
-        self.mat["lm_head_a"] = self.place_matrix(model.w["lm_head.weight"][:v2])
-        self.mat["lm_head_b"] = self.place_matrix(model.w["lm_head.weight"][v2:])
+        # vocabulary parts, for arrays that split lm_head over 2 or 4 packages
+        vocab = model.w["lm_head.weight"].shape[0]
+        for parts in (2, 4):
+            vp = vocab // parts
+            for i in range(parts):
+                self.mat[("lm_head", parts, i)] = self.place_matrix(model.w["lm_head.weight"][i * vp:(i + 1) * vp])
         emb = model.w["model.embed_tokens.weight"]
         self.emb_word = len(self.words)
         flat = (G.bits(emb.reshape(-1)) >> 16).astype(np.uint16)
@@ -176,7 +178,7 @@ def build_program(lay, layers=None, embed=True, head=True):
 
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
-    if head == "b":
+    if isinstance(head, tuple) and head[0] > 0:
         pass
     elif not embed:
         # X arrived over the package link: its sum of squares opens the stage
@@ -257,13 +259,14 @@ def build_program(lay, layers=None, embed=True, head=True):
                writes={"T1"})
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
-    # head: True (final norm + lm_head), "a" (final norm + first vocabulary half)
-    # or "b" (second half, on the normalised state H received over the link)
-    if head in (True, "a"):
+    # head: True (final norm + lm_head) or (part, parts): vocabulary part `part`
+    # of `parts`; part 0 also does the final norm, the others start from the
+    # normalised state H received over the link
+    if head is True or (isinstance(head, tuple) and head[0] == 0):
         rmsnorm("X", H, lay.cb["final"], "H")
     if head:
-        mat = {True: "lm_head", "a": "lm_head_a", "b": "lm_head_b"}[head]
-        me(lay.mat[mat], VM["H"], 0, amax=True, oen=False, reads={"H"})
+        mat = lay.mat["lm_head"] if head is True else lay.mat[("lm_head", head[1], head[0])]
+        me(mat, VM["H"], 0, amax=True, oen=False, reads={"H"})
     prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
@@ -505,7 +508,10 @@ def main():
     ap.add_argument("--stop", type=int, help="debug: end the program after this many instructions")
     ap.add_argument("--stages", type=int, default=0,
                     help="also write per-package programs (prog_stageN.hex) for a layer-per-package array: "
-                         "L packages (lm_head on the last) or L+1 (lm_head alone on its own package)")
+                         "layer (or half-layer) packages plus --head-parts lm_head packages")
+    ap.add_argument("--half-layers", action="store_true", help="split every layer into attention and MLP packages")
+    ap.add_argument("--head-parts", type=int, default=-1,
+                    help="lm_head packages: 0 (with the last layer), 1, 2 or 4 (default: stages minus body)")
     args = ap.parse_args()
     model, prompt, expected, cache = golden_state()
     lay = Layout(model)
@@ -533,24 +539,26 @@ def main():
         words = [I.encode(**{k: v for k, v in f.items()}) for f in prog]
         (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
         if args.stages:
-            # L: lm_head with the last layer; L+1: lm_head alone; L+2: lm_head split
-            # by vocabulary over two packages (argmax combined by the last);
-            # 2L+2: as L+2 with every layer split into attention and MLP packages
-            assert args.stages in (lay.L, lay.L + 1, lay.L + 2, 2 * lay.L + 2)
-            half = args.stages == 2 * lay.L + 2
-            body = [(L, part) for L in range(lay.L) for part in ("attn", "mlp")] if half else list(range(lay.L))
-            nb = len(body)
-            extra = args.stages - nb
+            # body: L layer packages, or 2L with every layer split into attention
+            # and MLP packages (--half-layers); then --head-parts lm_head packages:
+            # 0 (lm_head with the last layer), 1, 2 or 4 (split by vocabulary,
+            # the running argmax carried forward and combined in order)
+            if args.head_parts < 0:
+                args.head_parts = args.stages - (2 * lay.L if args.half_layers else lay.L)
+            body = ([(L, part) for L in range(lay.L) for part in ("attn", "mlp")] if args.half_layers
+                    else list(range(lay.L)))
+            nb, hp = len(body), args.head_parts
+            assert args.stages == nb + hp and hp in (0, 1, 2, 4)
             for n in range(args.stages):
                 layers = [body[n]] if n < nb else []
-                if extra == 0:
+                if hp == 0:
                     head = n == nb - 1
-                elif extra == 1:
+                elif hp == 1:
                     head = n == nb
                 else:
-                    head = {nb: "a", nb + 1: "b"}.get(n, False)
+                    head = (n - nb, hp) if n >= nb else False
                 st = build_program(lay, layers, embed=(n == 0), head=head)
-                (out / f"prog_stage{n}.hex").write_text(
+                (out / f"prog_stage{n:02d}.hex").write_text(
                     hexwords((I.encode(**f) for f in st), I.INSTR_BITS))
         (out / "expect_logits.hex").write_text(hexwords(G.bits(mach.logits), 32))
         (out / "expect_vm.hex").write_text(hexwords(G.bits(mach.vm), 32))

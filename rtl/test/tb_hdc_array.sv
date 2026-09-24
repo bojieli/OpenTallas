@@ -21,7 +21,8 @@ module tb_hdc_array #(
     parameter integer G = 4,
     parameter integer NODES = 4,
     parameter integer USERS = 4,
-    parameter integer HEADSPLIT = 0      // 1: the last two packages split lm_head by vocabulary
+    parameter integer HEADSPLIT = 0,     // N >= 2: the last N packages split lm_head by vocabulary
+    parameter integer VOCAB = 4096
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -129,28 +130,33 @@ module tb_hdc_array #(
             // node 0: users start at position 0 with the first prompt token
             integer next_u, k, q, l;
             reg [8*512-1:0] pdir;
-            localparam [7:0] NCH = 8'h30 + n;
+            localparam [7:0] D1 = 8'h30 + n / 10;
+            localparam [7:0] D0 = 8'h30 + n % 10;
             reg printed = 1'b0;
             initial begin
                 if (!$value$plusargs("DIR=%s", pdir)) pdir = ".";
-                $readmemh({pdir, "/prog_stage", NCH, ".hex"}, prog);
+                $readmemh({pdir, "/prog_stage", D1, D0, ".hex"}, prog);
                 for (k = 0; k < VM_ELEMS; k = k + 1) vm[k] = 32'd0;
                 for (k = 0; k < USERS * KVW; k = k + 1) kv[k] = {(W*32){1'b0}};
             end
             // vector-memory words a package receives / sends: X (0..7), except around
             // a split lm_head, where the normalised state H (8..15) crosses
-            localparam integer RXB = (HEADSPLIT != 0 && n == NODES - 1) ? 8 : 0;
-            localparam integer TXB = (HEADSPLIT != 0 && n == NODES - 2) ? 8 : 0;
-            reg [NW-1:0] pa_idx;                   // first vocabulary half's best
+            // head part h of HEADSPLIT (-1: not an lm_head part)
+            localparam integer HP = (HEADSPLIT >= 2 && n >= NODES - HEADSPLIT) ? n - (NODES - HEADSPLIT) : -1;
+            localparam integer RXB = (HP > 0) ? 8 : 0;
+            localparam integer TXB = (HP >= 0 && HP < HEADSPLIT - 1) ? 8 : 0;
+            localparam integer ROW0 = (HP > 0) ? HP * (VOCAB / HEADSPLIT) : 0;
+            reg [NW-1:0] pa_idx;                   // running best of the earlier parts
             reg [31:0]   pa_val;
             function automatic [31:0] okey(input [31:0] v);
                 okey = v[31] ? ~v : {1'b1, v[30:0]};
             endfunction
-            //: argmax over both halves: the second wins only when strictly greater
-            wire [NW-1:0] tok_out = (HEADSPLIT != 0 && n == NODES - 1 &&
-                                     !(okey(nval_w[n*32 +: 32]) > okey(pa_val)))
-                                    ? pa_idx
-                                    : ntok_w[n*NW +: NW] + ((HEADSPLIT != 0 && n == NODES - 1) ? 16'd2048 : 16'd0);
+            //: running argmax: a later part wins only when strictly greater, so
+            //: ties keep the lower row (numpy's argmax)
+            wire [NW-1:0] own_idx = ntok_w[n*NW +: NW] + ROW0[NW-1:0];
+            wire          own_wins = (HP <= 0) || (okey(nval_w[n*32 +: 32]) > okey(pa_val));
+            wire [NW-1:0] tok_out = own_wins ? own_idx : pa_idx;
+            wire [31:0]   best_val = own_wins ? nval_w[n*32 +: 32] : pa_val;
             // KV slice of the running user
             wire [AW-1:0] kv_rword = kv_raddr + user * KVW;
             wire [AW-1:0] kv_wword = (kv_waddr >> 4) + user * KVW;
@@ -242,7 +248,7 @@ module tb_hdc_array #(
                                     st <= N_IDLE;
                                 end else if (fl == 0) begin
                                     out_v <= 1'b1; out_last <= 1'b0;
-                                    out_d <= {{(FLIT-72){1'b0}}, nval_w[n*32 +: 32], user, pos, ntok_w[n*NW +: NW]};
+                                    out_d <= {{(FLIT-72){1'b0}}, best_val, user, pos, tok_out};
                                     fl <= 1;
                                 end else begin
                                     out_v <= 1'b1; out_last <= (fl == XWORDS);

@@ -14,7 +14,9 @@ with the torch oracle's.  Configurations (built and run in parallel):
   last combining the two halves' argmax (strictly greater wins, so ties keep
   the lower row, as numpy's argmax does);
 * 10 packages, 10 users: as 6, with every layer split into an attention
-  package and an MLP package.
+  package and an MLP package;
+* 12 packages, 12 users: half-layer packages and lm_head split over four
+  packages, the running argmax carried forward.
 
 Aggregate throughput is token-steps per cycle across all users; the single-core
 reference is results/rtl/hdc_decode_campaign.json.  Writes
@@ -38,7 +40,8 @@ OUT = ROOT / "results/rtl/hdc_array_campaign.json"
 TB = ROOT / "rtl/test/tb_hdc_array.sv"
 HARNESS = ROOT / "rtl/test/hdc_array_harness.cpp"
 LINK = ROOT / "rtl/rom/ot_rom_pkg_link.sv"
-CONFIGS = [(4, 4, 0), (5, 5, 0), (6, 6, 1), (10, 10, 1)]
+# (packages, users, lm_head parts, half-layer packages)
+CONFIGS = [(4, 4, 0, False), (5, 5, 1, False), (6, 6, 2, False), (10, 10, 2, True), (12, 12, 4, True)]
 STEPS_PER_USER = 16 + 3 - 1
 RES = re.compile(r"HDC_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+)")
 BUSY = re.compile(r"NODE_BUSY node=(\d+) cycles=(\d+)")
@@ -46,10 +49,12 @@ GEN = re.compile(r"GEN user=(\d+) pos=(\d+) token=(\d+) cycle=(\d+)")
 STALLS = re.compile(r"LINK_STALLS (\d+)")
 
 
-def run_config(scratch: Path, nodes: int, users: int, headsplit: int) -> dict:
+def run_config(scratch: Path, nodes: int, users: int, head_parts: int, half: bool) -> dict:
     img, obj = scratch / f"img{nodes}", scratch / f"obj{nodes}_{users}"
-    subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img), "--stages", str(nodes)],
+    subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img), "--stages", str(nodes),
+                    "--head-parts", str(head_parts), *(["--half-layers"] if half else [])],
                    check=True, capture_output=True)
+    headsplit = head_parts if head_parts >= 2 else 0
     subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                     "-Wno-BLKSEQ", "--top-module", "tb_hdc_array", f"-GNODES={nodes}", f"-GUSERS={users}",
                     f"-GHEADSPLIT={headsplit}",
@@ -63,7 +68,7 @@ def run_config(scratch: Path, nodes: int, users: int, headsplit: int) -> dict:
     busy = {int(a): int(b) for a, b in BUSY.findall(out)}
     gens = [dict(zip(("user", "position", "token", "cycle"), map(int, g))) for g in GEN.findall(out)]
     steps = users * STEPS_PER_USER
-    return {"packages": n, "users": u, "lm_head_split": bool(headsplit), "generated_tokens": gen, "mismatches": bad, "total_cycles": cycles,
+    return {"packages": n, "users": u, "lm_head_packages": max(head_parts, 1), "half_layer_packages": half, "generated_tokens": gen, "mismatches": bad, "total_cycles": cycles,
             "token_steps": steps, "cycles_per_token_step": round(cycles / steps, 1),
             "package_busy_cycles": [busy[i] for i in sorted(busy)],
             "package_busy_cycles_per_step": [round(busy[i] / steps, 1) for i in sorted(busy)],

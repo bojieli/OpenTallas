@@ -79,8 +79,9 @@
         }
       ],
       "generated_tokens": 12,
+      "half_layer_packages": false,
       "link_credit_stalls": 0,
-      "lm_head_split": false,
+      "lm_head_packages": 1,
       "mismatches": 0,
       "package_busy_cycles": [
         425392,
@@ -196,8 +197,9 @@
         }
       ],
       "generated_tokens": 15,
+      "half_layer_packages": false,
       "link_credit_stalls": 0,
-      "lm_head_split": false,
+      "lm_head_packages": 1,
       "mismatches": 0,
       "package_busy_cycles": [
         531740,
@@ -333,8 +335,9 @@
         }
       ],
       "generated_tokens": 18,
+      "half_layer_packages": false,
       "link_credit_stalls": 0,
-      "lm_head_split": true,
+      "lm_head_packages": 2,
       "mismatches": 0,
       "package_busy_cycles": [
         638088,
@@ -544,8 +547,9 @@
         }
       ],
       "generated_tokens": 30,
+      "half_layer_packages": true,
       "link_credit_stalls": 0,
-      "lm_head_split": true,
+      "lm_head_packages": 2,
       "mismatches": 0,
       "package_busy_cycles": [
         533740,
@@ -576,6 +580,266 @@
       "token_steps": 180,
       "total_cycles": 832320,
       "users": 10
+    },
+    {
+      "aggregate_speedup_vs_single_core": 9.677,
+      "cycles_per_token_step": 3324.6,
+      "generated": [
+        {
+          "cycle": 602305,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 605482,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 608659,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 611836,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 615013,
+          "position": 15,
+          "token": 1073,
+          "user": 4
+        },
+        {
+          "cycle": 618190,
+          "position": 15,
+          "token": 1073,
+          "user": 5
+        },
+        {
+          "cycle": 621367,
+          "position": 15,
+          "token": 1073,
+          "user": 6
+        },
+        {
+          "cycle": 624544,
+          "position": 15,
+          "token": 1073,
+          "user": 7
+        },
+        {
+          "cycle": 627721,
+          "position": 15,
+          "token": 1073,
+          "user": 8
+        },
+        {
+          "cycle": 630898,
+          "position": 15,
+          "token": 1073,
+          "user": 9
+        },
+        {
+          "cycle": 634075,
+          "position": 15,
+          "token": 1073,
+          "user": 10
+        },
+        {
+          "cycle": 637252,
+          "position": 15,
+          "token": 1073,
+          "user": 11
+        },
+        {
+          "cycle": 640909,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 644246,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 647583,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 650920,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 654257,
+          "position": 16,
+          "token": 382,
+          "user": 4
+        },
+        {
+          "cycle": 657594,
+          "position": 16,
+          "token": 382,
+          "user": 5
+        },
+        {
+          "cycle": 660931,
+          "position": 16,
+          "token": 382,
+          "user": 6
+        },
+        {
+          "cycle": 664268,
+          "position": 16,
+          "token": 382,
+          "user": 7
+        },
+        {
+          "cycle": 667605,
+          "position": 16,
+          "token": 382,
+          "user": 8
+        },
+        {
+          "cycle": 670942,
+          "position": 16,
+          "token": 382,
+          "user": 9
+        },
+        {
+          "cycle": 674279,
+          "position": 16,
+          "token": 382,
+          "user": 10
+        },
+        {
+          "cycle": 677616,
+          "position": 16,
+          "token": 382,
+          "user": 11
+        },
+        {
+          "cycle": 681049,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 684418,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 687787,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 691156,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        },
+        {
+          "cycle": 694525,
+          "position": 17,
+          "token": 93,
+          "user": 4
+        },
+        {
+          "cycle": 697894,
+          "position": 17,
+          "token": 93,
+          "user": 5
+        },
+        {
+          "cycle": 701263,
+          "position": 17,
+          "token": 93,
+          "user": 6
+        },
+        {
+          "cycle": 704632,
+          "position": 17,
+          "token": 93,
+          "user": 7
+        },
+        {
+          "cycle": 708001,
+          "position": 17,
+          "token": 93,
+          "user": 8
+        },
+        {
+          "cycle": 711370,
+          "position": 17,
+          "token": 93,
+          "user": 9
+        },
+        {
+          "cycle": 714739,
+          "position": 17,
+          "token": 93,
+          "user": 10
+        },
+        {
+          "cycle": 718108,
+          "position": 17,
+          "token": 93,
+          "user": 11
+        }
+      ],
+      "generated_tokens": 36,
+      "half_layer_packages": true,
+      "link_credit_stalls": 0,
+      "lm_head_packages": 4,
+      "mismatches": 0,
+      "package_busy_cycles": [
+        640488,
+        677808,
+        640488,
+        677808,
+        640488,
+        677808,
+        640488,
+        677808,
+        518832,
+        451656,
+        451656,
+        451656
+      ],
+      "package_busy_cycles_per_step": [
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        2965.2,
+        3138.0,
+        2402.0,
+        2091.0,
+        2091.0,
+        2091.0
+      ],
+      "packages": 12,
+      "pass": true,
+      "token_steps": 216,
+      "total_cycles": 718109,
+      "users": 12
     }
   ],
   "input_sha256": {
@@ -592,10 +856,10 @@
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
     "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
-    "rtl/test/tb_hdc_array.sv": "7c63874fdd19286b68bd95728f20b33e97a3c1e9f2c19ab5e4463d63cceaafd6",
+    "rtl/test/tb_hdc_array.sv": "44fe761f23e8857487390fa8052f4ade9afd6cb6b8960a26ec404c4c363d94b6",
     "tools/hdc_golden.py": "050ef788e63eb52b40ccbf533f7a7ce0f3e6f33e8ded92718ac13225b9586fa7",
     "tools/hdc_isa.py": "62498d8e70bbf20dd447b483fe1f52f6e0934e9e8eccc678dafdbad5a6bff215",
-    "tools/hdc_program.py": "39cda402ff16f6e3841b3eb6c1dd1b57bbbd82ff6242e50e35fe5942c0dab6fb",
+    "tools/hdc_program.py": "f8d9c9084042547ac44bd4cb28ceb7680b9da921a9ba576c430a99b5830b727e",
     "tools/rtl_hdc_decode_campaign.py": "86465e0123ac5ae1f921d9f1aea5a312ff57963fba5df3fac8f16f35735a4946"
   },
   "schema": "opentallas.hdc-array-campaign.v1",
