@@ -34,7 +34,12 @@ module ot_hdc_sk_cadd #(
     genvar l, i;
     generate
         for (l = 0; l <= L; l = l + 1) begin : g_lv
-            wire [W-1:0] g, p;
+            // KEEP: every prefix level is a netlist boundary.  The flow extracts half/full adders
+            // into library cells, which cuts ABC's view of the path into short cones; each cone
+            // then looks far faster than the clock and ABC's area recovery re-maps the prefix
+            // network as a RIPPLE chain (seen routed: 22 OA21 in a row per 24-bit add).  Kept
+            // level wires pin the log-depth structure.
+            (* keep *) wire [W-1:0] g, p;
             if (l == 0) begin : g_init
                 assign g = a & b;
                 assign p = a ^ b;
