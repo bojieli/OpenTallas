@@ -289500,6 +289500,9 @@
       "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash",
       "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-hbm",
       "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-host",
+      "latency.array_pass_boundaries_per_layer_by_model.Kimi-K3",
+      "latency.array_pass_boundaries_per_layer_by_model.MiMo-V2.6-Flash",
+      "latency.array_pass_boundaries_per_layer_by_model.MiMo-V2.6-Pro",
       "latency.array_pass_boundaries_per_layer_by_model.Qwen3-8B",
       "latency.global_wire_delay_s_per_mm",
       "latency.layer_barrier_s",
@@ -289731,7 +289734,7 @@
     ],
     "rom_node": "N5",
     "technology_config": "configs/hardware/technology.json",
-    "technology_sha256": "34494cdf63e884e3ee0d5417612f0a4ee537673458b1b672b3f1c220dd6f0254",
+    "technology_sha256": "9cd9e0901cf278f0a6f45b6a62bb6db238adfabac8a5395e54e150a51abfe754",
     "wafer_area_mm2": 46225.0
   },
   "latency_correction_ladder": [

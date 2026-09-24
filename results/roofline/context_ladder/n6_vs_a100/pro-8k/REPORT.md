@@ -1455,7 +1455,7 @@ Why the infeasible points are infeasible:
 | measured | 4 |
 | published | 71 |
 | derived | 47 |
-| assumed | 67 |
+| assumed | 70 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1489,6 +1489,9 @@ failure mode this program exists to prevent:
 - `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash`
 - `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-hbm`
 - `latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4.1-Flash-engram-host`
+- `latency.array_pass_boundaries_per_layer_by_model.Kimi-K3`
+- `latency.array_pass_boundaries_per_layer_by_model.MiMo-V2.6-Flash`
+- `latency.array_pass_boundaries_per_layer_by_model.MiMo-V2.6-Pro`
 - `latency.array_pass_boundaries_per_layer_by_model.Qwen3-8B`
 - `latency.global_wire_delay_s_per_mm`
 - `latency.layer_barrier_s`
