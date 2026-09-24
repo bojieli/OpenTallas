@@ -4116,6 +4116,45 @@ class RomLowering:
         self.builder.open_loop(loop)
         return loop
 
+    def _context_capacity(self, kernel: Kernel) -> int:
+        """``CONTEXT_LENGTH`` positions one context-loop block must cover.
+
+        A18 resolves an axis only through a term that walks it, and the walk
+        test (``runtime/sim/memory.py::_walks_extent_axis``, 3d33a008) requires
+        the view's declared extent to hold one whole iteration.  A context loop
+        blocked by the capability's architectural bound -- 1,048,576 positions
+        on every V4.1 ROM target -- steps 1,048,576 rows of a compressed plane
+        that holds 8,192, so no operand walks it, no extent resolves, and the
+        decode KV join presented its full ``(16384, 512)`` output against an
+        ``(8320, 512)`` sum at the first decode step, on unmodified HEAD.
+
+        The block is the context the operands can actually hold: each
+        context-led operand's declared rows in context units, the smallest of
+        them, bounded by the horizon the graph was built for.  One iteration
+        still covers the whole context, which is all the loop is for.
+        """
+        bound = int(self.capability.limits["max_context_positions"])
+        horizon = int(self.graph.source.get("deployment_context_tokens") or 0)
+        if horizon:
+            bound = min(bound, horizon)
+        capacities: list[int] = []
+        for name in (*kernel.inputs, *kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or tensor.role in WEIGHT_ROLES:
+                continue
+            symbol, multiplier, axis = self._leading_symbol(tensor)
+            if symbol != int(Symbol.CONTEXT_LENGTH) or multiplier != 1:
+                continue
+            rows = int(self._dims(tensor)[0]) - int(axis.bias)
+            if rows <= 0:
+                continue
+            capacities.append(
+                rows * int(axis.unit) // max(int(axis.numerator), 1)
+            )
+        if capacities:
+            bound = min(bound, min(capacities))
+        return max(bound, 1)
+
     def _open_context_loop(
         self, kernel: Kernel, capacity: int, axis: RequestAxis
     ) -> int:
@@ -9519,10 +9558,10 @@ class RomLowering:
                 # So when this kernel's phase layout needs a context form, the
                 # loop is opened on CONTEXT_LENGTH over the capability's declared
                 # context -- exactly what the no-plane branch below already does,
-                # and for the same stated reason.
-                context_divisor = int(
-                    self.capability.limits["max_context_positions"]
-                )
+                # and for the same stated reason -- over the context the
+                # DEPLOYMENT holds, not the capability's architectural bound
+                # (see ``_context_capacity``).
+                context_divisor = self._context_capacity(kernel)
                 context = self._open_context_loop(
                     kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
                 )
@@ -9551,7 +9590,7 @@ class RomLowering:
             # that resolves the context form has to be opened for the operand
             # rather than for a plane: one block over the whole context, run
             # once, exactly as ``_open_context_loop`` does for a plane.
-            context_divisor = int(self.capability.limits["max_context_positions"])
+            context_divisor = self._context_capacity(kernel)
             context = self._open_context_loop(
                 kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
             )

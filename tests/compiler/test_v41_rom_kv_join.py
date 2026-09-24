@@ -1,15 +1,21 @@
 """The ROM lowering of V4.1's attention KV join, resolved the way the runtime does.
 
-Measured on the shipped V4.1 ROM cells (see
+Two defects measured on the shipped V4.1 ROM cells (see
 ``results/abi3/deepseek_v41_state_read_results_were_unbound.json``, ``open``):
-the ratio-1 PREFILL join (layers 20-39) was emitted one token per iteration,
-writing ``[current r, compressed r]`` at rows ``2r, 2r + 1`` -- the two segments
-interleaved -- while ``ATTENTION.SPARSE``'s indices address every current row
-first and compressed row ``j`` at ``span + j``.
 
-The test resolves the emitted views through ``runtime.sim.memory.ViewResolver``
+* the ratio-1 PREFILL join (layers 20-39) was emitted one token per iteration,
+  writing ``[current r, compressed r]`` at rows ``2r, 2r + 1`` -- the two
+  segments interleaved -- while ``ATTENTION.SPARSE``'s indices address every
+  current row first and compressed row ``j`` at ``span + j``;
+* the DECODE join's context loop was blocked by the capability's 1,048,576
+  positions against a compressed plane of 8,192 rows, so A18's walk test
+  (``dim >= step``, 3d33a008) resolved no extent and the join refused at the
+  first decode step: ``dims (16384, 512) differ from the axis-0 concatenation
+  (8320, 512)``.
+
+Each test resolves the emitted views through ``runtime.sim.memory.ViewResolver``
 -- the resolver the engines use -- at a concrete request, so it checks what the
-engine is handed rather than how the lowering spelled it.  It needs the shipped
+engine is handed rather than how the lowering spelled it.  They need the shipped
 V4.1 Kernel IR under ``build/`` and skip without it.
 """
 
@@ -141,3 +147,48 @@ def test_ratio1_prefill_join_lays_its_segments_end_to_end(graph, target) -> None
             prefill["output_view_0"]
         ].payload["element_offset"]
     assert emitted >= 1
+
+
+@pytest.mark.parametrize("target", ["wafer", "array64"])
+def test_decode_join_resolves_the_context_it_holds(graph, target) -> None:
+    from runtime.abi3.descriptors import Symbol
+
+    deployment = _deployment(graph, target)
+    context = 14
+    symbols = {
+        int(Symbol.SPAN_TOKENS): 1,
+        int(Symbol.POSITION_START): context - 1,
+        int(Symbol.CONTEXT_LENGTH): context,
+    }
+    joins = [
+        kernel.index
+        for kernel in graph.kernels
+        if kernel.kind == "CONCAT" and "phase_inputs" in kernel.attributes
+    ]
+    assert joins
+    checked = 0
+    for kernel_index in joins:
+        operators = _join_operators(deployment, kernel_index)
+        if not operators:
+            continue
+        decode = operators["decode"]
+        window = _resolve(deployment, decode["input_view_1"], symbols)
+        compressed = _resolve(deployment, decode["input_view_2"], symbols)
+        out = _resolve(deployment, decode["output_view_0"], symbols)
+        # A17: the output is the operands' sum, which the engine checks.
+        assert out.dims[0] == window.dims[0] + compressed.dims[0], (
+            kernel_index,
+            out.dims,
+            window.dims,
+            compressed.dims,
+        )
+        assert window.dims[0] == 128
+        # The compressed prefix is the context's, not the plane's capacity:
+        # ratio 1 holds 14 rows, ratio 2 holds 7.
+        assert compressed.dims[0] in (context, context // 2), (
+            kernel_index,
+            compressed.dims,
+        )
+        checked += 1
+    # One representative per layer run: at least the ratio-2 and ratio-1 joins.
+    assert checked >= 2
