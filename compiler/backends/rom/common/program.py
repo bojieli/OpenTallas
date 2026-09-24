@@ -3875,11 +3875,30 @@ class RomLowering:
         # contraction sees the neutral graph's request-wide row grouping.
         # Other multiplied-symbol operations retain the older exact fallback:
         # iteration ``t`` presents precisely that token's multiplied rows.
+        #
+        # A phase-selected axis-0 JOIN is the exception to that fallback.  Its
+        # multiplied output is not "each token's rows": it is the SEGMENTS laid
+        # end to end -- every current row, then every compressed row -- and the
+        # attention indices address it that way (compressed row j at
+        # ``span + j``).  One token per iteration wrote ``[cur r, comp r]`` at
+        # rows ``2r, 2r + 1``, interleaving the two segments; measured on V4.1
+        # layers 20-39 (ratio 1), ROM and HBM residuals are bit-identical up to
+        # layer 20's attention and differ at rows 1..S-2 after it (a query that
+        # sees every row is permutation-invariant, so rows 0 and S-1 agreed).
+        # The join is therefore emitted as ONE block over the whole span -- the
+        # form HBM ships -- and ``whole_span_join`` pins that block below.
+        whole_span_join = (
+            symbol is not None
+            and multiplier > 1
+            and kernel.kind == "CONCAT"
+            and int(kernel.attributes.get("axis", 0)) == 0
+            and _phase_inputs(kernel.inputs, kernel.attributes) is not None
+        )
         batch_multiplier = (
             multiplier
             if symbol is not None
             and multiplier > 1
-            and kernel.kind in MULTIPLIED_SPAN_BATCH_KINDS
+            and (kernel.kind in MULTIPLIED_SPAN_BATCH_KINDS or whole_span_join)
             else 1
         )
         per_token = (
@@ -3912,6 +3931,17 @@ class RomLowering:
             symbol_max = min(symbol_max, horizon)
         configured = int(self.policy.token_block_rows or 0)
         divisor = max(min(configured or symbol_max, symbol_max), 1)
+        if whole_span_join:
+            # A second block would lay ITS segments after the first block's,
+            # interleaving them blockwise -- the defect above, one level up.
+            # The join is one block over the whole span whatever the target's
+            # token block; it runs once.
+            divisor = max(symbol_max, 1)
+            if divisor * self._widest_row(kernel) * multiplier > 0xFFFFFFFF:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: a whole-span join of "
+                    f"{symbol_max} tokens does not fit a 32-bit row term"
+                )
         # A view's row term advances by ``step * row width`` elements and that
         # stride is a 32-bit field, so the block is halved until every operand's
         # stride fits.  Halving costs iterations, never correctness; refusing
@@ -5298,11 +5328,12 @@ class RomLowering:
                 and shape.row_symbolic
                 and self._leading_symbol(tensor)[0] is not None
             ):
-                # A re-presented state plane consumed ONE ROW PER ITERATION of
-                # the token loop -- the ratio-1 prefill join, which pairs query
-                # row r with compressed row r -- is that row of the state, not
-                # the whole capacity.  This is the blocked addressing the buffer
-                # path gave it, pointed at the object that actually holds it.
+                # A re-presented state plane consumed ONE BLOCK PER ITERATION of
+                # the token loop -- the ratio-1 prefill join, which lays the
+                # span's compressed rows after its current rows in one block --
+                # is that block of the state, not the whole capacity.  This is
+                # the blocked addressing the buffer path gave it, pointed at the
+                # object that actually holds it.
                 leading_rows = int(self._blocked_dims(tensor, shape)[0])
                 row = self._state_plane_row_elements(name, tensor)
                 terms = (DynamicTerm.loop(loop, leading_rows * row),)
@@ -8225,10 +8256,11 @@ class RomLowering:
         Both phases of the V4.1 attention join were measured, and they are
         stated differently:
 
-        * prefill's sum is a STATIC two rows -- one new token row joined to one
-          prefix row -- emitted inside the row loop and advancing by a row an
-          iteration.  Every operand there is the blocked per-row view, and that
-          is the form the closed cells already ship.
+        * prefill's sum is the declared ``2 * SPAN_TOKENS`` (ratio 1) -- every
+          current row, then every compressed row -- emitted as ONE block of the
+          row loop (see ``whole_span_join`` in ``_shape_of``; it was once one
+          token per iteration, which interleaved the two segments).  Every
+          operand there is the blocked view.
         * decode's sum is ``CONTEXT_LENGTH + 128``: the whole 128-row window
           joined to the whole compressed prefix, once.
 
