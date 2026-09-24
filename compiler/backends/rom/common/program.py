@@ -1464,6 +1464,9 @@ class RomLowering:
         self._substituted_inputs: dict[str, str] = {}
         self._position_input_cache: frozenset[str] | None = None
         self._state_owner: dict[str, str] = {}
+        #: STATE_READ results the graph names ``activation``, mapped to the state
+        #: plane they re-present (see ``_state_tensors``).
+        self._state_read_alias: dict[str, str] = {}
         #: Next free byte of the explicit HBM map; zero until the first object
         #: is placed.  See :meth:`_hbm_address`.
         self._hbm_cursor = 0
@@ -2878,6 +2881,13 @@ class RomLowering:
         }
 
     def _buffer_key(self, tensor_id: str) -> str:
+        # A re-presented state plane whose resource this target keeps in a
+        # buffer (a scratch plane capped to one query block, whose declared
+        # extent then exceeds the resource) is read from its SOURCE's buffer --
+        # which is the one its producer wrote -- not from a buffer of its own.
+        source = self._state_read_alias.get(tensor_id)
+        if source is not None and self.tensors[source].role == "state":
+            tensor_id = source
         base = self._base_buffer_key(tensor_id)
         return self._buffer_root.get(base, base)
 
@@ -2991,6 +3001,7 @@ class RomLowering:
         """
         order: dict[str, list[tuple[str, str]]] = {}
         owner: dict[str, str] = {}
+        alias: dict[str, str] = {}
         for kernel in self.graph.kernels:
             state_ids = kernel.state_reads or kernel.state_writes
             if not state_ids:
@@ -3010,7 +3021,29 @@ class RomLowering:
                     )
                     owner[name] = state_id
                     order.setdefault(state_id, []).append((name, direction))
+            if kernel.kind == "STATE_READ":
+                # A STATE_READ result the graph names ``activation`` is still
+                # the state it re-presents, not a buffer of its own.  V4.1 has
+                # 72 -- every non-owning layer's ``compressed_view.valid`` and
+                # ``indexer.reuse.selection`` -- and without this each became
+                # an ordinary buffer that NOTHING writes: measured on the wafer
+                # cell, layer 3's reused selection read object 3100, which has
+                # no writer, while layer 2 published its indices to object 1062.
+                # The result is an ALIAS of its source plane: same owner, same
+                # column, no plane of its own (counting it as a read plane would
+                # reserve one column per consuming layer in a row that holds
+                # exactly one record).
+                for position_index, name in enumerate(kernel.outputs):
+                    if name in owner or self.tensors[name].role == "state":
+                        continue
+                    if not kernel.inputs:
+                        continue
+                    source = kernel.inputs[min(position_index, len(kernel.inputs) - 1)]
+                    if source in owner:
+                        owner[name] = owner[source]
+                        alias[name] = alias.get(source, source)
         self._state_owner = owner
+        self._state_read_alias = alias
         #: A re-presentation -- ``state_reads`` and no ``state_writes``, with
         #: a result declared ``role: state`` -- names the written plane it
         #: re-presents as its INPUT.  That is the pairing, and it is the one
@@ -3387,7 +3420,9 @@ class RomLowering:
         named: list[str] = []
         for name in (*kernel.inputs, *kernel.outputs):
             tensor = self.tensors.get(name)
-            if tensor is None or tensor.role != "state":
+            if tensor is None or (
+                tensor.role != "state" and name not in self._state_read_alias
+            ):
                 continue
             symbol, _multiplier, axis = self._leading_symbol(tensor)
             #: A SEQUENCE resource is request-sized on the identity axis too.
@@ -3452,6 +3487,8 @@ class RomLowering:
 
     def _state_struct_key(self, tensor_id: str) -> str:
         """Structural identity of a state operand, shared by every layer."""
+        # An aliasing STATE_READ result addresses its source plane's column.
+        tensor_id = self._state_read_alias.get(tensor_id, tensor_id)
         placement = self.analysis.body_input.get(
             tensor_id
         ) or self.analysis.body_output.get(tensor_id)
@@ -3489,6 +3526,7 @@ class RomLowering:
         extent_numerator: int = 0,
         extent_bias: int = 0,
         extra_terms: Sequence[DynamicTerm] = (),
+        leading_rows: int | None = None,
     ) -> int | None:
         """One plane of a merged state resource, moved by the layer loop.
 
@@ -3544,6 +3582,8 @@ class RomLowering:
             extents = [capacity, max(row_elements - column, 1)]
         else:
             extents[0] = capacity
+        if leading_rows is not None:
+            extents[0] = min(int(leading_rows), int(capacity))
         strides = [1] * len(extents)
         running = 1
         for axis in range(len(extents) - 1, 0, -1):
@@ -5189,7 +5229,11 @@ class RomLowering:
         # A declared state effect is the authority: a kernel that writes a state
         # resource writes into that resource's prepared image, even when the
         # graph names the result as an ordinary activation.
-        if tensor.role == "state" or (writable and kernel.state_writes):
+        if (
+            tensor.role == "state"
+            or name in self._state_read_alias
+            or (writable and kernel.state_writes)
+        ):
             plane_axis = IDENTITY_AXIS
             terms: tuple[DynamicTerm, ...] = ()
             if context is not None:
@@ -5246,15 +5290,34 @@ class RomLowering:
                     else:
                         plane_axis = declared
                         terms = (DynamicTerm.loop(context, stride),)
+            leading_rows: int | None = None
+            if (
+                name in self._state_read_alias
+                and not terms
+                and loop is not None
+                and shape.row_symbolic
+                and self._leading_symbol(tensor)[0] is not None
+            ):
+                # A re-presented state plane consumed ONE ROW PER ITERATION of
+                # the token loop -- the ratio-1 prefill join, which pairs query
+                # row r with compressed row r -- is that row of the state, not
+                # the whole capacity.  This is the blocked addressing the buffer
+                # path gave it, pointed at the object that actually holds it.
+                leading_rows = int(self._blocked_dims(tensor, shape)[0])
+                row = self._state_plane_row_elements(name, tensor)
+                terms = (DynamicTerm.loop(loop, leading_rows * row),)
             view = self._state_plane_view(
                 kernel,
                 name,
                 direction,
                 run,
-                extent_unit=plane_axis.unit if terms else 0,
-                extent_numerator=plane_axis.numerator if terms else 0,
-                extent_bias=plane_axis.bias if terms else 0,
+                extent_unit=plane_axis.unit if terms and leading_rows is None else 0,
+                extent_numerator=(
+                    plane_axis.numerator if terms and leading_rows is None else 0
+                ),
+                extent_bias=plane_axis.bias if terms and leading_rows is None else 0,
                 extra_terms=terms,
+                leading_rows=leading_rows,
             )
             if view is not None:
                 return view
@@ -8227,6 +8290,25 @@ class RomLowering:
                 f"{extent.numerator}/{extent.unit}"
             )
         dims[0] = min(step + int(extent.bias), declared[0])
+        if not writable and tensor.tensor_id in self._state_read_alias:
+            # A re-presented STATE plane (a compressed-KV valid view) is read
+            # where the state holds it.  The buffer path below would give it an
+            # activation buffer of its own that nothing writes -- at decode, the
+            # compressed history every layer attends.
+            row = self._state_plane_row_elements(tensor.tensor_id, tensor)
+            view = self._state_plane_view(
+                None,  # only a write consults the kernel
+                tensor.tensor_id,
+                "in",
+                None,
+                extent_axis=0,
+                extent_unit=extent.unit,
+                extent_numerator=extent.numerator,
+                extent_bias=extent.bias,
+                extra_terms=(DynamicTerm.loop(loop, step * row),),
+            )
+            if view is not None:
+                return view
         return self._buffer_view(
             tensor,
             dims=dims,
