@@ -72,7 +72,11 @@ def test_select_latency_is_the_campaigns(tech):
 
 def test_technology_datapath_is_the_rtl_timing_model(tech):
     # every executed depth in serial_latency.rom_datapath equals tools/hdc_timing.py K, the routed stream
-    # lane area and the slowest routed clock among the token path's units
+    # lane area and the slowest routed clock among the token path's units.  When an RTL change moves one,
+    # the fix is mechanical and named: `python3 tools/sync_serial_latency_constants.py && python3
+    # tools/regenerate_roofline.py`, then re-take the prose-figure census and commit the artifacts.
+    import sync_serial_latency_constants as sync
+    assert sync.drift(tech.raw) == {}, f"stale serial-latency constants: run `{sync.REGEN}`"
     assert D.rtl_constant_check(tech) == {}
     clock, rows = D.routed_clock()
     assert clock == min(r["fmax_hz"] for r in rows)

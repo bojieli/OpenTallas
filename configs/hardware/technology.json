@@ -1475,7 +1475,7 @@
         "artifact": "results/rtl/hdc_decode_campaign.json"
       },
       "matrix_engine_tree_cycles_per_level": {
-        "value": 5,
+        "value": 6,
         "grade": "executed",
         "source": "tools/hdc_timing.py K (fitted to the Verilator issue trace of rtl/hdc: 32,191 model vs 32,196 RTL cycles, results/rtl/hdc_decode_campaign.json)",
         "note": "per adder-tree level of the matrix engine (K.me_tree)",

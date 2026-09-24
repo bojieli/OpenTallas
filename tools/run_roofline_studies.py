@@ -26,6 +26,7 @@ import io
 import json
 from collections.abc import Mapping, Sequence
 import math
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -1736,8 +1737,7 @@ def _link_latency_sensitivity(
     for scope, links in scopes.items():
         for bound in ("low", "high"):
             bounded = technology.at_link_latency_bound(bound, links)
-            result = _simulate_study(study_id, bounded, with_sensitivity=False)
-            for row in _headline_rows(result):
+            for row in _variant_headline_rows(study_id, bounded):
                 rows.append(
                     {
                         "scope": scope,
@@ -1952,11 +1952,10 @@ def _fabric_clock_sensitivity(
     rows: list[dict[str, Any]] = []
     for point in _fabric_clock_points(technology):
         variant = _fabric_clock_variant(technology, point["fabric_clock_hz"])
-        result = _simulate_study(study_id, variant, with_sensitivity=False)
         fixed = layer_fixed_latency(
             variant, ModelProfile.load(STUDY_MODELS[0][1])
         )[0]
-        for row in _headline_rows(result):
+        for row in _variant_headline_rows(study_id, variant):
             rows.append(
                 {
                     **{
@@ -2116,10 +2115,9 @@ def _rom_cell_ratio_sensitivity(
         variant = _rom_cell_ratio_variant(
             technology, point["cell_to_sram_cell_area_ratio"]
         )
-        result = _simulate_study(study_id, variant, with_sensitivity=False)
         capacity = variant.rom_bits_per_mm2(node).value / BITS_PER_BYTE
         sweep_s = _rom_sweep_time_s(variant, node)
-        for row in _headline_rows(result):
+        for row in _variant_headline_rows(study_id, variant):
             rows.append(
                 {
                     **{
@@ -2747,6 +2745,72 @@ def _design_selection(
     }
 
 
+# --------------------------------------------------------------------------
+# parallel regeneration
+# --------------------------------------------------------------------------
+
+#: Worker processes a primary study may use for its sensitivity re-runs
+#: (``ROOFLINE_WORKERS``; 1, the default, is the old serial behaviour).  Each
+#: re-run is an independent ``_simulate_study`` on a varied technology table
+#: and only its headline rows are kept, so the result is identical either way.
+_HEADLINE_CACHE: dict[tuple[str, str], list[dict[str, Any]]] = {}
+
+
+def _technology_key(technology: Technology) -> str:
+    return hashlib.sha256(
+        json.dumps([technology.raw, technology.efficiency_override], sort_keys=True, default=str).encode()
+    ).hexdigest()
+
+
+def _headline_job(job: tuple[str, dict[str, Any], Any]) -> list[dict[str, Any]]:
+    study_id, raw, efficiency_override = job
+    variant = Technology(raw=raw, efficiency_override=efficiency_override)
+    return _headline_rows(_simulate_study(study_id, variant, with_sensitivity=False))
+
+
+def _variant_headline_rows(study_id: str, technology: Technology) -> list[dict[str, Any]]:
+    key = (study_id, _technology_key(technology))
+    if key not in _HEADLINE_CACHE:
+        _HEADLINE_CACHE[key] = _headline_job(
+            (study_id, technology.raw, technology.efficiency_override)
+        )
+    return _HEADLINE_CACHE[key]
+
+
+def _sensitivity_variants(study_id: str, technology: Technology) -> list[Technology]:
+    """Every technology table the three sensitivity tables re-run the study on."""
+
+    variants: list[Technology] = []
+    for _scope, links in _link_latency_scopes(STUDIES[study_id]).items():
+        for bound in ("low", "high"):
+            variants.append(technology.at_link_latency_bound(bound, links))
+    for point in _fabric_clock_points(technology):
+        variants.append(_fabric_clock_variant(technology, point["fabric_clock_hz"]))
+    for point in _rom_cell_ratio_points(technology):
+        variants.append(_rom_cell_ratio_variant(technology, point["cell_to_sram_cell_area_ratio"]))
+    return variants
+
+
+def _prefetch_sensitivity(study_id: str, technology: Technology) -> None:
+    workers = int(os.environ.get("ROOFLINE_WORKERS", "1"))
+    if workers <= 1:
+        return
+    jobs, keys = [], []
+    for variant in _sensitivity_variants(study_id, technology):
+        key = (study_id, _technology_key(variant))
+        if key in _HEADLINE_CACHE or key in keys:
+            continue
+        keys.append(key)
+        jobs.append((study_id, variant.raw, variant.efficiency_override))
+    if not jobs:
+        return
+    import multiprocessing
+
+    with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
+        for key, rows in zip(keys, pool.map(_headline_job, jobs, chunksize=1)):
+            _HEADLINE_CACHE[key] = rows
+
+
 def _simulate_study(
     study_id: str,
     technology: Technology,
@@ -2769,6 +2833,8 @@ def _simulate_study(
     # artifact -- densities, designs, sweeps, sensitivities -- is priced at one
     # ratio.  Refuses a node it has no entry for.
     technology = _node_technology(technology, node)
+    if with_sensitivity:
+        _prefetch_sensitivity(study_id, technology)
     hbm_generation = str(config["hbm_generation"])
     reticle_area = technology.graded("reticle", "area_mm2").value
     wafer_area = technology.graded("wafer", "area_mm2").value
@@ -8210,122 +8276,113 @@ def _study_files(destination: Path, result: dict[str, Any]) -> list[tuple[Path, 
         ),
     ]
 
-def run_all(
-    output_root: Path = OUTPUT_ROOT, *, force: bool = False, candidates: bool = True
-) -> dict[str, dict[str, Any]]:
-    technology = Technology.load(TECHNOLOGY_PATH)
-    anchors = run_anchors(technology)
-    results: dict[str, dict[str, Any]] = {}
-    variants: dict[str, dict[str, Any]] = {}
+def _plan_primary(
+    output_root: Path, technology: Technology, anchors: dict[str, Any], study_id: str
+) -> tuple[dict[str, Any], list[tuple[Path, str]]]:
+    result = _simulate_study(study_id, technology)
+    result["validation_gates"] = anchors
+    destination = output_root / study_id
+    planned = list(_study_files(destination, result))
+    planned.append((destination / "sweep.csv", render_csv(result)))
+    planned.append(
+        (destination / "REPORT.md", render_report(result, anchors).rstrip() + "\n")
+    )
+    return result, planned
+
+
+def _plan_quantised(
+    output_root: Path,
+    technology: Technology,
+    anchors: dict[str, Any],
+    study_id: str,
+    primary: dict[str, Any] | None = None,
+) -> list[tuple[Path, str]]:
+    """The quantised variant of one primary.
+
+    It is deliberately NOT another entry in ``STUDIES``: a secondary result
+    that lands in the same directory as the primary, under the same file names,
+    is one copy-paste away from being quoted as the primary.  It gets its own
+    directory, its own short report that opens with what it is not, and no
+    sweep.csv at all.  Its report reads only the primary's design selection,
+    which does not depend on the primary's sensitivity tables, so a standalone
+    run re-simulates the primary without them."""
+
+    if primary is None:
+        primary = _simulate_study(study_id, technology, with_sensitivity=False)
+    config = dict(STUDIES[study_id])
+    config.update(QUANTISED_VARIANT)
+    config["contract"] = (
+        f"SECONDARY VARIANT of {study_id}. "
+        + str(STUDIES[study_id]["contract"])
+        + " Both sides re-quantised to "
+        f"{QUANTISED_VARIANT['bits_per_parameter']:g} bits per parameter. "
+        "A projection: no token has been produced at this precision on "
+        "either backend."
+    )
+    variant = _simulate_study(study_id, technology, with_sensitivity=False, config=config)
+    variant["study_id"] = f"{study_id}-{QUANTISED_VARIANT['variant_id']}"
+    variant["primary_study_id"] = study_id
+    variant["representation_variant"] = {
+        key: value
+        for key, value in QUANTISED_VARIANT.items()
+        if key not in ("models", "representation")
+    }
+    variant["representation_variant"]["representation"] = list(
+        QUANTISED_VARIANT["representation"]
+    )
+    variant["validation_gates"] = anchors
+    destination = variant_output_root(output_root) / study_id
+    planned = list(_study_files(destination, variant))
+    planned.append(
+        (
+            destination / "REPORT.md",
+            render_variant_report(variant, primary).rstrip() + "\n",
+        )
+    )
+    return planned
+
+
+def _plan_ladder(
+    output_root: Path, technology: Technology, anchors: dict[str, Any], study_id: str
+) -> list[tuple[Path, str]]:
+    """One single-model study per (model, context) that is not the primary
+    context, selected by the same rule on the same code path.  Kept out of the
+    primary results for the same reason the quantised variant is."""
+
     planned: list[tuple[Path, str]] = []
-    for study_id in STUDIES:
-        result = _simulate_study(study_id, technology)
-        result["validation_gates"] = anchors
-        results[study_id] = result
-        destination = output_root / study_id
-        planned.extend(_study_files(destination, result))
-        planned.append((destination / "sweep.csv", render_csv(result)))
-        planned.append(
-            (
-                destination / "REPORT.md",
-                render_report(result, anchors).rstrip() + "\n",
+    for model_name, model_path, primary_context in STUDY_MODELS:
+        for context in CONTEXT_LADDER.get(model_name, ()):
+            if context == primary_context:
+                continue
+            config = dict(STUDIES[study_id])
+            config["models"] = ((model_name, model_path, context),)
+            config["contract"] = (
+                f"CONTEXT-LADDER RUNG of {study_id}: {model_name} at "
+                f"{context:,} tokens. "
+                + str(STUDIES[study_id]["contract"])
+                + " Same rule, same code path as the primary; only the "
+                "context differs, and the primary artifact is unchanged."
             )
-        )
-
-    # --- the quantised variant, in its own tree ---------------------------
-    # It is deliberately NOT another entry in ``STUDIES``: a secondary result
-    # that lands in the same directory as the primary, under the same file
-    # names, is one copy-paste away from being quoted as the primary.  It gets
-    # its own directory, its own short report that opens with what it is not,
-    # and no sweep.csv at all -- there is no row here anyone should be reading
-    # into a spreadsheet.
-    for study_id in STUDIES:
-        config = dict(STUDIES[study_id])
-        config.update(QUANTISED_VARIANT)
-        config["contract"] = (
-            f"SECONDARY VARIANT of {study_id}. "
-            + str(STUDIES[study_id]["contract"])
-            + " Both sides re-quantised to "
-            f"{QUANTISED_VARIANT['bits_per_parameter']:g} bits per parameter. "
-            "A projection: no token has been produced at this precision on "
-            "either backend."
-        )
-        variant = _simulate_study(
-            study_id, technology, with_sensitivity=False, config=config
-        )
-        variant["study_id"] = f"{study_id}-{QUANTISED_VARIANT['variant_id']}"
-        variant["primary_study_id"] = study_id
-        variant["representation_variant"] = {
-            key: value
-            for key, value in QUANTISED_VARIANT.items()
-            if key not in ("models", "representation")
-        }
-        variant["representation_variant"]["representation"] = list(
-            QUANTISED_VARIANT["representation"]
-        )
-        variant["validation_gates"] = anchors
-        # Deliberately NOT added to ``results``: every consumer of that mapping
-        # -- the report, the tests, the printed summary -- treats its entries as
-        # the study's result, and a secondary projection sitting in that
-        # mapping is one loop away from being read as one.  The variant is
-        # written, and it is found by path.
-        variants[variant["study_id"]] = variant
-        destination = variant_output_root(output_root) / study_id
-        planned.extend(_study_files(destination, variant))
-        planned.append(
-            (
-                destination / "REPORT.md",
-                render_variant_report(variant, results[study_id]).rstrip() + "\n",
+            rung = _simulate_study(study_id, technology, with_sensitivity=False, config=config)
+            label = context_rung_label(model_name, context)
+            rung["study_id"] = f"{study_id}-{label}"
+            rung["primary_study_id"] = study_id
+            rung["context_ladder"] = {
+                "model": model_name,
+                "context_tokens": context,
+                "primary_context_tokens": primary_context,
+                "label": label,
+            }
+            rung["validation_gates"] = anchors
+            destination = context_ladder_output_root(output_root) / study_id / label
+            planned.extend(_study_files(destination, rung))
+            planned.append(
+                (destination / "REPORT.md", render_report(rung, anchors).rstrip() + "\n")
             )
-        )
+    return planned
 
-    # --- the context ladder, in its own tree ------------------------------
-    # One single-model study per (model, context) that is not the primary
-    # context, selected by the same rule on the same code path.  Kept out of
-    # ``results`` for the same reason the quantised variant is: a rung sitting
-    # in that mapping is one loop away from being read as the primary.
-    for study_id in STUDIES:
-        for model_name, model_path, primary_context in STUDY_MODELS:
-            for context in CONTEXT_LADDER.get(model_name, ()):
-                if context == primary_context:
-                    continue
-                config = dict(STUDIES[study_id])
-                config["models"] = ((model_name, model_path, context),)
-                config["contract"] = (
-                    f"CONTEXT-LADDER RUNG of {study_id}: {model_name} at "
-                    f"{context:,} tokens. "
-                    + str(STUDIES[study_id]["contract"])
-                    + " Same rule, same code path as the primary; only the "
-                    "context differs, and the primary artifact is unchanged."
-                )
-                rung = _simulate_study(
-                    study_id, technology, with_sensitivity=False, config=config
-                )
-                label = context_rung_label(model_name, context)
-                rung["study_id"] = f"{study_id}-{label}"
-                rung["primary_study_id"] = study_id
-                rung["context_ladder"] = {
-                    "model": model_name,
-                    "context_tokens": context,
-                    "primary_context_tokens": primary_context,
-                    "label": label,
-                }
-                rung["validation_gates"] = anchors
-                destination = context_ladder_output_root(output_root) / study_id / label
-                planned.extend(_study_files(destination, rung))
-                planned.append(
-                    (
-                        destination / "REPORT.md",
-                        render_report(rung, anchors).rstrip() + "\n",
-                    )
-                )
 
-    # --- candidate models, each in its own tree ---------------------------
-    # ``--no-candidates`` leaves them to separate ``--candidates`` runs, so the
-    # two halves of a full regeneration can run as parallel processes.
-    if candidates:
-        planned.extend(_candidate_files(output_root, technology, anchors))
-
+def _write_planned(planned: list[tuple[Path, str]], force: bool) -> None:
     existing = [path for path, _ in planned if path.exists()]
     if existing and not force:
         raise SystemExit(
@@ -8335,6 +8392,61 @@ def run_all(
     for path, payload in planned:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(payload, encoding="utf-8", newline="")
+
+
+#: The independent pieces of a full regeneration, for ``--part``.  Every
+#: piece writes disjoint files by the same code path ``run_all`` uses, so
+#: running them as separate processes (tools/regenerate_roofline.py) produces
+#: the same bytes as one ``run_all``.
+PARTS = ("primary", "quantised", "ladder")
+
+
+def run_part(output_root: Path, part: str, *, force: bool = False) -> list[Path]:
+    kind, _, study_id = part.partition(":")
+    if kind not in PARTS or study_id not in STUDIES:
+        raise SystemExit(
+            f"--part must be one of {PARTS} followed by ':' and a study id in "
+            f"{sorted(STUDIES)}; got {part!r}"
+        )
+    technology = Technology.load(TECHNOLOGY_PATH)
+    anchors = run_anchors(technology)
+    if kind == "primary":
+        _result, planned = _plan_primary(output_root, technology, anchors, study_id)
+    elif kind == "quantised":
+        planned = _plan_quantised(output_root, technology, anchors, study_id)
+    else:
+        planned = _plan_ladder(output_root, technology, anchors, study_id)
+    _write_planned(planned, force)
+    return [path for path, _ in planned]
+
+
+def run_all(
+    output_root: Path = OUTPUT_ROOT, *, force: bool = False, candidates: bool = True
+) -> dict[str, dict[str, Any]]:
+    technology = Technology.load(TECHNOLOGY_PATH)
+    anchors = run_anchors(technology)
+    results: dict[str, dict[str, Any]] = {}
+    planned: list[tuple[Path, str]] = []
+    for study_id in STUDIES:
+        result, files = _plan_primary(output_root, technology, anchors, study_id)
+        results[study_id] = result
+        planned.extend(files)
+    # The quantised variant and the context ladder are deliberately NOT added
+    # to ``results``: every consumer of that mapping treats its entries as the
+    # study's result, and a secondary projection sitting in it is one loop
+    # away from being read as one.  They are written, and found by path.
+    for study_id in STUDIES:
+        planned.extend(
+            _plan_quantised(output_root, technology, anchors, study_id, results[study_id])
+        )
+    for study_id in STUDIES:
+        planned.extend(_plan_ladder(output_root, technology, anchors, study_id))
+    # --- candidate models, each in its own tree ---------------------------
+    # ``--no-candidates`` leaves them to separate ``--candidates`` runs, so the
+    # two halves of a full regeneration can run as parallel processes.
+    if candidates:
+        planned.extend(_candidate_files(output_root, technology, anchors))
+    _write_planned(planned, force)
     return results
 
 
@@ -8438,7 +8550,19 @@ def main(argv: list[str] | None = None) -> int:
             "candidate models (run those with --candidates, possibly in parallel)"
         ),
     )
+    parser.add_argument(
+        "--part",
+        metavar="KIND:STUDY",
+        help=(
+            "write only one independent piece: primary:<study>, "
+            "quantised:<study> or ladder:<study> (see tools/regenerate_roofline.py)"
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.part:
+        for path in run_part(args.output, args.part, force=args.force):
+            print(path.resolve())
+        return 0
     if args.candidates:
         for path in run_candidates(args.output, args.candidates, force=args.force):
             print(path.resolve())
