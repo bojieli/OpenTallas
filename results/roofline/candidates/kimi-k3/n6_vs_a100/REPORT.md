@@ -10,20 +10,20 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 617x (ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream, 1,248 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 167 devices. On the GPU side the correction reaches 257x (a100_sxm_80gb-x1231-pipeline, 1,231 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 168 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Kimi-K3 takes 386 x 815 mm2 (314,590 mm2, array, KV in SRAM) at 2,212 tok/s per user and 7 tok/s per 1,000 mm2, holding 1 session, against 381 copies of one unified HBM die at the same silicon: 6.7x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Kimi-K3 on 325,185 mm2 of ROM silicon at 2,251 tok/s per user against 325,444 mm2 of a100_sxm_80gb-x394-tensor at 331 tok/s: **6.8x**, ROM binding on `link_latency` and the GPU on `link_latency`. It holds 1 resident session against the GPU cluster's 8,340. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 127x (ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream, 1,248 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 167 devices. On the GPU side the correction reaches 33x (a100_sxm_80gb-x1231-pipeline, 1,231 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 112 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Kimi-K3 takes 398 x 815 mm2 (324,370 mm2, array, KV in SRAM) at 1,097 tok/s per user and 3 tok/s per 1,000 mm2, holding 1 session, against 393 copies of one unified HBM die at the same silicon: 10.1x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Kimi-K3 on 324,370 mm2 of ROM silicon at 1,097 tok/s per user against 324,618 mm2 of a100_sxm_80gb-x393-hybrid at 108 tok/s: **10.1x**, ROM binding on `layer_fixed_latency` and the GPU on `link_latency`. It holds 1 resident session against the GPU cluster's 8,317. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
 5. **The layer cap on serial stage boundaries is still applied and is no longer visible in the headline, because no comparator it binds on wins any more.** A token cannot cross more stage boundaries than the model has layers, and this study charges at most that many. With per-user latency separated from aggregate throughput, both families now pick a topology with a tensor group at batch 1, and a tensor group has one stage and no boundary for the cap to remove. The `Ratio without the layer cap` column in the iso-area table therefore equals the stated ratio wherever the winner is tensor-parallel; it still differs wherever a pipeline wins.
-6. **Letting the GPU choose its own parallelism is worth up to 29.68x to it.** At 1,016,950 mm2 on Kimi-K3 the pipeline-only GPU delivers 11.71 tok/s and the same silicon running tensor delivers 347 tok/s.
-7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.06x (Kimi-K3, ROM binding on `link_latency`) to 0.71x (Kimi-K3, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
-8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** Kimi-K3 engages 100.0% of its ROM array at batch 1 and 100.0% at batch 4096, while the weight-read time is identical at both. What the machine delivers rises from 23 to 8,657 tok/s, and its rate with every slot occupied from 8,651 to 8,657. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 374 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
+6. **Letting the GPU choose its own parallelism is worth up to 9.40x to it.** At 369,800 mm2 on Kimi-K3 the pipeline-only GPU delivers 11.74 tok/s and the same silicon running hybrid delivers 110 tok/s.
+7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.04x (Kimi-K3, ROM binding on `link_latency`) to 1.62x (Kimi-K3, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
+8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** Kimi-K3 engages 100.0% of its ROM array at batch 1 and 100.0% at batch 4096, while the weight-read time is identical at both. What the machine delivers rises from 25 to 9,587 tok/s, and its rate with every slot occupied from 9,617 to 9,587. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 380 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
 9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 2,782 us over NVLink, capping per-user decode at 360 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 523.0 us and cap it at 1,912 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least nanx cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
-10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 8 of 10 operating points and an array 2; on tokens per second per square millimetre the same points go 5 to the array and 5 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 103 of 1646 feasible points.
+10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 6 of 10 operating points and an array 4; on tokens per second per square millimetre the same points go 6 to the array and 4 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
+11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 60 of 1750 feasible points.
 12. **The largest open question is not in this model's inputs but in the architecture, and a batch-1 anchor cannot settle its scaling law.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 4096 that costs up to 3.3x of aggregate throughput (Kimi-K3). Their sweep counts coincide at batch 1, but their cell and pre-compute costs make their floorplans different; the current compute-in-ROM anchor reconstruction fails capacity. A batch-1 validation therefore cannot establish either high-batch law.
-13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 3.24x, on Kimi-K3 at batch 4096, where the busiest region carries 3.43x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 10 of 20 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
+13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 3.27x, on Kimi-K3 at batch 4096, where the busiest region carries 3.36x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 9 of 20 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
 14. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N6.
-15. **No point in this study is power-limited.** Static power is charged per mm2 per second, so this is a statement about the designs rather than an artifact of a traffic-proportional energy model: the worst point here reaches 89% of its cooling budget. The companion study at the other node does have power-limited points.
+15. **No point in this study is power-limited.** Static power is charged per mm2 per second, so this is a statement about the designs rather than an artifact of a traffic-proportional energy model: the worst point here reaches 84% of its cooling budget. The companion study at the other node does have power-limited points.
 
 
 ## The recommended design per model, and the rule that picks it
@@ -48,97 +48,89 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 ### Kimi-K3 at 200,000 tokens
 
-**Recommended: `ROM-N6-native-SRAMKV-array-hw-tensor-x386`** -- 386 x 815 mm2 reticle dies, 314,590 mm2 total, `tensor`-parallel, KV in SRAM, spare silicon to `sram`.
+**Recommended: `ROM-N6-native-SRAMKV-array-hw-hybrid-x398`** -- 398 x 815 mm2 reticle dies, 324,370 mm2 total, `hybrid`-parallel, KV in SRAM, spare silicon to `sram`.
 
-- **2,211.7 tok/s per user** (0.45 ms/token), binding on `link_latency`
-- **7.0 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 2,212 tok/s aggregate with every slot full, over 1 resident session (fill limited by `batch`)
-- 19,523 W at 0.062 W/mm2, 8,827.2 mJ/token, thermal scale 1.000
+- **1,096.9 tok/s per user** (0.91 ms/token), binding on `layer_fixed_latency`
+- **3.4 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 1,097 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 20,146 W at 0.062 W/mm2, 18,366.9 mJ/token, thermal scale 1.000
 
-**Iso-area, at the area the rule chose.** The comparator is 381 copies of one unified HBM die -- `a100_sxm_80gb-x381-tensor`, 314,706 mm2, area ratio 0.9996 -- running the `tensor` topology it chose for itself.
+**Iso-area, at the area the rule chose.** The comparator is 393 copies of one unified HBM die -- `a100_sxm_80gb-x393-hybrid`, 324,618 mm2, area ratio 0.9992 -- running the `hybrid` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
-| silicon mm2 | 314,590 | 314,706 | 0.9996 |
-| user tok/s | 2,211.7 | 330.2 | 6.70x |
-| aggregate tok/s | 2,212 | 330 | 0.50x |
-| resident sessions | 1 | 8,049 | -- |
-| J/token | 8.8272 | 181.7398 | 20.6x |
+| silicon mm2 | 324,370 | 324,618 | 0.9992 |
+| user tok/s | 1,096.9 | 108.2 | 10.13x |
+| aggregate tok/s | 1,097 | 758 | 0.24x |
+| resident sessions | 1 | 8,317 | -- |
+| J/token | 18.3669 | 539.3592 | 29.4x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
-**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 8,049 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
+**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 8,317 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
 
-The GPU's own best machine at **any** area is `a100_sxm_80gb-x224-tensor` at 185,024 mm2 and 412.4 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+The GPU's own best machine at **any** area is `a100_sxm_80gb-x261-tensor` at 215,586 mm2 and 123.6 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
 
 **Headline before and after.**
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 314,590 | 2,211.7 | 7.0 | 1 | 6.70x |
-| rank on per-user rate alone | `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 325,185 | 2,250.7 | 6.9 | 1 | 6.80x |
-| smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-tensor-x340` | 277,100 | 1,756.4 | 6.3 | 1 | 5.37x |
-| **after -- this report's rule** | `ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 314,590 | 2,211.7 | 7.0 | 1 | 6.70x |
+| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-array-hw-hybrid-x395` | 321,925 | 1,084.1 | 3.4 | 1 | 10.03x |
+| rank on per-user rate alone | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | 1,096.9 | 3.4 | 1 | 10.13x |
+| smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-tensor-x340` | 277,100 | 698.9 | 2.5 | 1 | 6.46x |
+| **after -- this report's rule** | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | 1,096.9 | 3.4 | 1 | 10.13x |
 
-**The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
-
-| design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 314,590 | 2,211.7 | 7.0 | -- | 7.0 | ACCEPT |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x398` | 324,370 | 2,248.1 | 6.9 | 3.7 | 7.0 | stop |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 325,185 | 2,250.7 | 6.9 | 3.7 | 7.0 | stop |
+**There is nothing to walk to.** The frontier is a single row, which is what it means for one design to beat every other feasible design of this model on BOTH axes at once. No trade-off has to be argued and no threshold is doing any work here: the recommendation is simply the only non-dominated machine. What it beat is in the class table below.
 
 **The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x386` **<-- recommended** | 314,590 | 386 | 2,211.7 | 2,212 | 7.0 | 1 | `link_latency` | 19,523 | 8,827.2 | `a100_sxm_80gb-x381-tensor` | 6.70x |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x398` | 324,370 | 398 | 2,248.1 | 2,248 | 6.9 | 1 | `link_latency` | 20,262 | 9,013.0 | `a100_sxm_80gb-x393-tensor` | 6.79x |
-| `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 325,185 | 399 | 2,250.7 | 2,251 | 6.9 | 1 | `link_latency` | 20,381 | 9,055.4 | `a100_sxm_80gb-x394-tensor` | 6.80x |
+| `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` **<-- recommended** | 324,370 | 398 | 1,096.9 | 1,097 | 3.4 | 1 | `layer_fixed_latency` | 20,146 | 18,366.9 | `a100_sxm_80gb-x393-hybrid` | 10.13x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
 | class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
 | --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| array | 96 | densest | `ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 314,590 | 2,211.7 | 7.0 | 1 |
-| array | 96 | fastest | `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 325,185 | 2,250.7 | 6.9 | 1 |
-| array | 96 | smallest | `ROM-N6-native-SRAMKV-array-hw-tensor-x340` | 277,100 | 1,756.4 | 6.3 | 1 |
-| wafer | 30 | densest | `ROM-N6-native-SRAMKV-wafer-tensor-x6` | 277,350 | 1,587.9 | 5.7 | 1 |
-| wafer | 30 | fastest | `ROM-N6-native-SRAMKV-wafer-tensor-x8` | 369,800 | 2,034.9 | 5.5 | 1 |
-| wafer | 30 | smallest | `ROM-N6-native-SRAMKV-wafer-tensor-x6` | 277,350 | 1,587.9 | 5.7 | 1 |
+| array | 96 | densest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | 1,096.9 | 3.4 | 1 |
+| array | 96 | fastest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | 1,096.9 | 3.4 | 1 |
+| array | 96 | smallest | `ROM-N6-native-SRAMKV-array-hw-tensor-x340` | 277,100 | 698.9 | 2.5 | 1 |
+| wafer | 36 | densest | `ROM-N6-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 801.4 | 2.5 | 1 |
+| wafer | 36 | fastest | `ROM-N6-native-SRAMKV-wafer-hybrid-x10` | 462,250 | 1,003.7 | 2.2 | 1 |
+| wafer | 36 | smallest | `ROM-N6-native-SRAMKV-wafer-tensor-x6` | 277,350 | 570.0 | 2.1 | 1 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | array | `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 325,185 | 2,250.7 | 2,251 | 1 | 20,381 | 9,055.4 | `link_latency` | `a100_sxm_80gb-x394-tensor` | 331.0 | 8,340 | 187,019.4 | 0.999 | 6.80x | 20.7x |
-| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-tensor-x8` | 369,800 | 2,034.9 | 2,035 | 1 | 26,828 | 13,184.1 | `link_latency` | `a100_sxm_80gb-x448-tensor` | 333.8 | 9,549 | 208,933.4 | 0.999 | 6.10x | 15.8x |
-| 2 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 1,874.4 | 3,749 | 8,937 | 27,594 | 7,360.5 | `link_latency` | `a100_sxm_80gb-x394-tensor` | 293.9 | 8,340 | 106,073.4 | 0.999 | 6.38x | 14.4x |
-| 2 | wafer | `ROM-N6-native-HBMKV-wafer-tensor-x22` | 1,016,950 | 1,737.7 | 3,475 | 4,238 | 124,837 | 35,919.5 | `link_latency` | `a100_sxm_80gb-x1231-tensor` | 309.2 | 27,089 | 296,688.9 | 1.000 | 5.62x | 8.3x |
-| 4 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 1,498.7 | 5,995 | 8,937 | 28,570 | 4,765.9 | `link_latency` | `a100_sxm_80gb-x394-tensor` | 240.2 | 8,340 | 65,535.4 | 0.999 | 6.24x | 13.8x |
-| 4 | wafer | `ROM-N6-native-HBMKV-wafer-tensor-x22` | 1,016,950 | 1,662.6 | 6,651 | 4,238 | 126,234 | 18,981.0 | `link_latency` | `a100_sxm_80gb-x1231-tensor` | 253.5 | 27,089 | 181,585.0 | 1.000 | 6.56x | 9.6x |
-| 8 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 1,069.8 | 8,558 | 8,937 | 29,684 | 3,468.4 | `compute` | `a100_sxm_80gb-x394-tensor` | 176.1 | 8,340 | 45,141.7 | 0.999 | 6.07x | 13.0x |
-| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 1,548.3 | 34,063 | 4,238 | 139,445 | 10,425.6 | `link_latency` | `a100_sxm_80gb-x1231-tensor` | 186.5 | 27,089 | 123,908.4 | 1.000 | 8.30x | 11.9x |
-| 16 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 680.4 | 10,886 | 8,937 | 30,690 | 2,819.3 | `compute` | `a100_sxm_80gb-x394-tensor` | 115.3 | 8,340 | 34,715.3 | 0.999 | 5.90x | 12.3x |
-| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 1,548.3 | 34,063 | 4,238 | 139,445 | 5,450.6 | `link_latency` | `a100_sxm_80gb-x1231-tensor` | 122.1 | 27,089 | 94,840.5 | 1.000 | 12.68x | 17.4x |
-| 32 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 393.7 | 12,599 | 8,937 | 31,424 | 2,494.1 | `compute` | `a100_sxm_80gb-x394-hybrid` | 83.9 | 8,340 | 36,339.6 | 0.999 | 4.69x | 11.7x |
-| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 1,310.4 | 41,932 | 4,238 | 142,735 | 3,403.9 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 84.2 | 27,089 | 81,110.6 | 1.000 | 15.56x | 22.3x |
-| 64 | array | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | 213.7 | 13,675 | 8,937 | 31,872 | 2,330.6 | `compute` | `a100_sxm_80gb-x394-hybrid` | 79.6 | 8,340 | 23,756.2 | 0.999 | 2.68x | 7.4x |
-| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 878.4 | 56,220 | 4,238 | 148,704 | 2,645.0 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 84.2 | 27,089 | 48,133.3 | 1.000 | 10.43x | 15.6x |
-| 256 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 63.9 | 16,350 | 8,937 | 33,307 | 2,037.1 | `compute` | `a100_sxm_80gb-x394-expert` | 50.0 | 6,680 | 5,834.8 | 0.999 | 1.28x | 2.9x |
-| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 295.0 | 75,520 | 4,238 | 156,729 | 2,075.3 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 74.7 | 27,089 | 19,777.7 | 1.000 | 3.95x | 5.8x |
-| 1024 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 325,185 | 16.0 | 16,391 | 8,937 | 33,324 | 2,033.1 | `compute` | `a100_sxm_80gb-x394-expert` | 35.6 | 6,680 | 2,475.7 | 0.999 | 0.45x | 1.2x |
-| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 80.7 | 82,609 | 4,238 | 159,539 | 1,931.2 | `kv_read` | `a100_sxm_80gb-x1231-expert` | 56.1 | 21,832 | 4,012.3 | 1.000 | 1.44x | 2.1x |
-| 4096 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 325,185 | 4.0 | 16,397 | 8,937 | 33,154 | 2,022.0 | `compute` | `a100_sxm_80gb-x394-expert` | 9.7 | 6,680 | 2,232.5 | 0.999 | 0.41x | 1.1x |
-| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-pipeline-x22` | 1,016,950 | 20.8 | 85,225 | 4,238 | 161,722 | 1,897.6 | `kv_read` | `a100_sxm_80gb-x1231-expert` | 29.4 | 21,832 | 2,271.9 | 1.000 | 0.71x | 1.2x |
+| 1 | array | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | 1,096.9 | 1,097 | 1 | 20,146 | 18,366.9 | `layer_fixed_latency` | `a100_sxm_80gb-x393-hybrid` | 108.2 | 8,317 | 539,359.2 | 0.999 | 10.13x | 29.4x |
+| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-hybrid-x10` | 462,250 | 1,003.7 | 1,004 | 1 | 40,129 | 39,981.8 | `link_latency` | `a100_sxm_80gb-x560-hybrid` | 109.7 | 12,058 | 752,125.0 | 0.999 | 9.15x | 18.8x |
+| 2 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 888.6 | 6,220 | 8,937 | 28,834 | 15,035.4 | `layer_fixed_latency` | `a100_sxm_80gb-x394-hybrid` | 108.3 | 8,340 | 277,819.2 | 0.999 | 8.21x | 18.5x |
+| 2 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 814.1 | 31,750 | 4,238 | 138,345 | 76,168.9 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 108.3 | 27,089 | 835,712.9 | 1.000 | 7.52x | 11.0x |
+| 4 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 888.6 | 6,220 | 8,937 | 28,834 | 7,755.5 | `layer_fixed_latency` | `a100_sxm_80gb-x394-hybrid` | 108.3 | 8,340 | 146,487.6 | 0.999 | 8.21x | 18.9x |
+| 4 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 814.1 | 31,750 | 4,238 | 138,345 | 38,322.3 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 108.3 | 27,089 | 425,434.4 | 1.000 | 7.52x | 11.1x |
+| 8 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 812.6 | 6,501 | 8,937 | 28,939 | 4,451.8 | `layer_fixed_latency` | `a100_sxm_80gb-x394-hybrid` | 106.8 | 8,340 | 80,292.7 | 0.999 | 7.61x | 18.0x |
+| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 814.1 | 31,750 | 4,238 | 138,345 | 19,398.9 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 108.3 | 27,089 | 220,295.2 | 1.000 | 7.52x | 11.4x |
+| 16 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 601.6 | 9,626 | 8,937 | 30,391 | 3,157.2 | `compute` | `a100_sxm_80gb-x394-hybrid` | 96.0 | 8,340 | 45,580.3 | 0.999 | 6.27x | 14.4x |
+| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 814.1 | 31,750 | 4,238 | 138,345 | 9,937.3 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 108.3 | 27,089 | 117,725.6 | 1.000 | 7.52x | 11.8x |
+| 32 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 372.5 | 11,920 | 8,937 | 31,455 | 2,638.8 | `compute` | `a100_sxm_80gb-x394-hybrid` | 82.3 | 8,340 | 29,778.1 | 0.999 | 4.53x | 11.3x |
+| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 814.1 | 31,750 | 4,238 | 138,345 | 5,206.4 | `link_latency` | `a100_sxm_80gb-x1231-hybrid` | 101.8 | 27,089 | 65,344.9 | 1.000 | 8.00x | 12.6x |
+| 64 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 205.8 | 13,172 | 8,937 | 32,041 | 2,432.5 | `compute` | `a100_sxm_80gb-x394-hybrid` | 67.0 | 8,340 | 19,026.7 | 0.999 | 3.07x | 7.8x |
+| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 666.5 | 51,985 | 4,238 | 147,969 | 3,365.0 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 87.7 | 27,089 | 38,742.1 | 1.000 | 7.60x | 11.5x |
+| 256 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | 55.3 | 14,164 | 8,937 | 32,505 | 2,294.8 | `compute` | `a100_sxm_80gb-x394-hybrid` | 39.4 | 8,340 | 11,297.5 | 0.999 | 1.40x | 4.9x |
+| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 288.1 | 73,754 | 4,238 | 157,326 | 2,133.1 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 58.1 | 27,089 | 22,429.7 | 1.000 | 4.96x | 10.5x |
+| 1024 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 325,185 | 14.0 | 14,324 | 8,937 | 32,385 | 2,260.9 | `compute` | `a100_sxm_80gb-x394-hybrid` | 16.8 | 8,340 | 6,922.9 | 0.999 | 0.83x | 3.1x |
+| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | 81.6 | 83,524 | 4,238 | 161,841 | 1,937.7 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 32.3 | 27,089 | 10,474.8 | 1.000 | 2.53x | 5.4x |
+| 4096 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 325,185 | 3.5 | 14,311 | 8,937 | 32,228 | 2,252.0 | `compute` | `a100_sxm_80gb-x394-hybrid` | 6.6 | 8,340 | 4,430.6 | 0.999 | 0.53x | 2.0x |
+| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-pipeline-x22` | 1,016,950 | 20.8 | 85,109 | 4,238 | 161,670 | 1,899.6 | `kv_read` | `a100_sxm_80gb-x1231-hybrid` | 12.8 | 27,089 | 7,463.5 | 1.000 | 1.62x | 3.9x |
 
 **The best design differs by batch, and here is where it changes.**
 
 | batches | design | mm2 | class | KV | resident sessions |
 | --- | --- | ---: | --- | --- | ---: |
-| 1 | `ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 314,590 | array | SRAM | 1 |
-| 2-16 | `ROM-N6-native-HBMKV-array-hw-tensor-x399` | 325,185 | array | HBM | 8,937 |
-| 32-1024 | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | wafer | HBM | 4,238 |
+| 1 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 324,370 | array | SRAM | 1 |
+| 2-32 | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 325,185 | array | HBM | 8,937 |
+| 64-1024 | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,016,950 | wafer | HBM | 4,238 |
 | 4096 | `ROM-N6-native-HBMKV-wafer-pipeline-x22` | 1,016,950 | wafer | HBM | 4,238 |
 
 Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 mm2` at batch B is the same ordering as `delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly B times per-user. The rule is therefore the same rule at every batch, and the design moving is the study telling you the answer genuinely depends on the operating point, not the metric changing under it.
@@ -147,12 +139,29 @@ Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 m
 
 | model | KV store | spare silicon | reticle counts emitted |
 | --- | --- | --- | --- |
-| Kimi-K3 | HBM | rom | 374, 393, 399 |
-| Kimi-K3 | HBM | sram | 374, 393, 399 |
-| Kimi-K3 | SRAM | rom | 340, 353, 386, 398, 399 |
-| Kimi-K3 | SRAM | sram | 340, 353, 386, 398, 399 |
+| Kimi-K3 | HBM | rom | 380, 398, 399 |
+| Kimi-K3 | HBM | sram | 380, 398, 399 |
+| Kimi-K3 | SRAM | rom | 340, 351, 395, 397, 398 |
+| Kimi-K3 | SRAM | sram | 340, 351, 395, 397, 398 |
 
 A wafer chosen over the array class is now compared against an array sampled at the wafer's own area and at four rungs above the array's floor; the `array @ wafer area` rows in the iso-area table above are that comparison. The curve BETWEEN rungs is still not evidence and must not be read as any.
+
+## Serial latency and collectives
+
+The serial part of every step is the longest path of one token's operator
+dependency graph (`src/opentallas/critical_path.py`): the dependent-operator
+chain priced with measured RTL depths (ROM) or a published CUDA-graph launch gap
+per dependent kernel (GPU), every collective the weight split needs with its
+latency and real payload, and every pipeline hop. A hybrid layout's tensor
+group and every collective's reduction algorithm are searched per point.
+`legacy` is the flat per-layer floor plus two all-reduces per layer this
+replaced.
+
+| Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |
+|---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
+| Kimi-K3 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 1 | 64 | 5.24 | hierarchical | 349.92 | 304.60 | 274.29 | 160.53 | 1,096.9 |
+| Kimi-K3 | `a100_sxm_80gb-x393-hybrid` | 1 | 64 | 5.24 | hierarchical | 2,180.10 | 5,599.73 | 1,516.89 | 2,031.83 | 108.2 |
+| Kimi-K3 | `a100_sxm_80gb-x393-hybrid` | 64 | 32 | 5.24 | hierarchical | 2,180.10 | 7,905.72 | 5,046.79 | 3,067.46 | 66.9 |
 
 ## The overlap and serialisation rule
 
@@ -160,7 +169,9 @@ A wafer chosen over the array class is now compared against an array sampled at 
 t_memory  = t_weight + t_kv        weights and KV share one memory system
 t_memory  = max(t_weight, t_kv)    weights and KV are separate arrays
 t_service = max(t_memory, t_compute)      on the AGGREGATE machine
-t_user    = token_slots * t_service / stage_balance + t_link
+S         = token_slots * t_service / stage_balance      the sweep a token waits for
+t_user    = max(S, longest path of the token's operator graph with S spread
+                over its operators by bytes, + every pipeline hop)
 t_user   *= thermal_scale
 
 per_user_tokens_s  = 1 / t_user
@@ -186,8 +197,8 @@ long. **Under pipeline parallelism the two factors cancel exactly** -- each of
 N stages holds 1/N of the weights and reads them with 1/N of the bandwidth --
 so adding devices buys aggregate throughput and buys one user nothing.
 Tensor parallelism is different in kind: every partition is on the same token,
-`token_slots` is 1, and the price is two all-reduces per layer, charged in
-`t_link`.
+`token_slots` is 1, and the price is every collective the weight split needs,
+charged on the token's operator graph (see *Serial latency and collectives*).
 
 **`aggregate = batch x per-user rate` no longer holds and its removal is the
 point.** The aggregate rate is the machine's rate with every slot occupied,
@@ -206,14 +217,14 @@ the size of this correction is separable from every other one.
 
 | Gate | Published | Modelled | Ratio | Tolerance | Result |
 |---|---:|---:|---:|---:|---|
-| Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user | 16,960.0 tok/s | 24,675.2 tok/s | 1.45x | within 2x | PASS |
+| Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user | 16,960.0 tok/s | 10,802.5 tok/s | 0.64x | within 2x | PASS |
 | A100 80GB weight-bound, Llama-3.1-8B FP8 batch 1 on 826 mm2 | 253.91 tok/s | 253.91 tok/s | 1.00x | within 1% | PASS |
 | A100 80GB at its published TDP, saturating load | 400.0 W | 461.7 W | 1.15x | within 2x | PASS |
-| Taalas HC1 card power at its published operating point | 200.0-250.0 W | 110.6 W | 0.44x | within 2x | FAIL |
+| Taalas HC1 card power at its published operating point | 200.0-250.0 W | 77.8 W | 0.31x | within 2x | FAIL |
 
-HC1 binds on `weight_read`. Its component times are weight_read 34.47 us, kv_read 3.13 us, compute 34.47 us, link_latency 0.00 us, layer_fixed_latency 6.06 us.
+HC1 binds on `layer_fixed_latency`. Its component times are weight_read 34.47 us, kv_read 3.13 us, compute 34.47 us, link_latency 0.00 us, layer_fixed_latency 59.54 us.
 
-The model **under**-predicts the shipping part by 0.69x. Rather than tune the densities until the anchor
+The model **under**-predicts the shipping part by 1.57x. Rather than tune the densities until the anchor
 is hit, the gate back-derives what each input would have to be for the
 model to land exactly on 17,000 tok/s:
 
@@ -232,42 +243,41 @@ capacity failure. The required ROM read density remains below the SRAM
 read-bandwidth density derived from Cerebras WSE-2
 (4.327e+11 B/s/mm2).
 
-### The per-layer latency band, and why the gate is not fitted
+### The serial-latency band, and why the gate is not fitted
 
-Every term in the per-layer latency block is `assumed` and carries
-a stated range. Reporting the gate at one point inside a wide band
-would invite the point to be read as measured, which is how a gate
-becomes a one-parameter curve fit. The terms are derived from
-primitives independent of this anchor -- SRAM access time,
-sequencer issue and decode, pipeline fill and drain across a
-dependent array-pass boundary, the layer barrier, and an on-die
-wire delay over a distance taken from the floorplan -- and the gate
-is evaluated at both ends.
+The serial part of the step is the dependent-operator chain of the
+Llama-3.1-8B decode graph (`src/opentallas/critical_path.py`), priced
+with this repository's measured RTL depths
+(`serial_latency.rom_datapath`). Nothing in it is fitted to this
+anchor. Its few assumed inputs -- the clock the RTL is applied at,
+the stream-unit share of the compute area, the select units, the
+row-access latency -- carry ranges, and the gate is evaluated at both
+ends. The flat per-layer floor this chain replaced is shown beside it.
 
-| Per-layer latency | Value | Per token | Modelled tok/s | Ratio | Binds on |
-|---|---:|---:|---:|---:|---|
-| range low | 70.0 ns/layer | 2.24 us | 27,243.5 | 1.61x | weight_read |
-| range stated | 189.4 ns/layer | 6.06 us | 24,675.2 | 1.45x | weight_read |
-| range high | 894.8 ns/layer | 28.63 us | 15,847.9 | 0.93x | weight_read |
+| Serial chain | Per layer | Per token | Legacy floor per token | Modelled tok/s | Ratio | Binds on |
+|---|---:|---:|---:|---:|---:|---|
+| range low | 1,368.9 ns/layer | 43.81 us | 6.06 us | 13,014.5 | 0.77x | layer_fixed_latency |
+| range stated | 1,860.6 ns/layer | 59.54 us | 6.06 us | 10,802.5 | 0.64x | layer_fixed_latency |
+| range high | 3,206.3 ns/layer | 102.60 us | 6.06 us | 7,497.8 | 0.44x | layer_fixed_latency |
 
-The per-layer cost that would land the model exactly on the
-published figure is **765.5 ns/layer**. It is reported so the distance between the derived value and the fitted one is visible. It is never used as an input.
+The per-layer serial cost that would land the model exactly on the
+published figure is **810.3 ns/layer**. It is reported so the distance between the measured chain and the one the shipping part implies is visible. It is never used as an input: a chain longer than it means the hardwired datapath modelled here is serially slower than HC1's.
 
 ### Anchor sensitivity
 
 | Stored bits/parameter | Modelled tok/s | Ratio | Binds on |
 |---:|---:|---:|---|
-| 3.0 | 24,675.2 | 1.45x | weight_read |
-| 3.5 | 24,675.2 | 1.45x | weight_read |
-| 4.0 | 24,675.2 | 1.45x | weight_read |
+| 3.0 | 10,783.7 | 0.64x | layer_fixed_latency |
+| 3.5 | 10,802.5 | 0.64x | layer_fixed_latency |
+| 4.0 | 10,783.7 | 0.64x | layer_fixed_latency |
 | 5.0 | 0.0 | 0.00x | capacity_or_format |
 | 6.0 | 0.0 | 0.00x | capacity_or_format |
 
 | Anchor context | Modelled tok/s | Ratio | Binds on |
 |---:|---:|---:|---|
-| 1,024 | 24,675.2 | 1.45x | weight_read |
-| 1,536 | 24,675.2 | 1.45x | weight_read |
-| 2,048 | 24,675.2 | 1.45x | weight_read |
+| 1,024 | 11,698.3 | 0.69x | layer_fixed_latency |
+| 1,536 | 11,242.9 | 0.66x | layer_fixed_latency |
+| 2,048 | 10,802.5 | 0.64x | layer_fixed_latency |
 
 ### The two power gates, and the residual they leave
 
@@ -292,21 +302,21 @@ two cannot drift apart.
 | Gate | Published | Modelled | Ratio | Result |
 |---|---:|---:|---:|---|
 | A100 at TDP, saturating | 400.0 W | 461.7 W | 1.15x | PASS |
-| Taalas HC1 card power | 200.0-250.0 W | 110.6 W | 0.44x | FAIL |
+| Taalas HC1 card power | 200.0-250.0 W | 77.8 W | 0.31x | FAIL |
 
 **Where the watts come from.**
 
 | Term | A100 at TDP | Taalas HC1 |
 |---|---:|---:|
-| memory / array traffic (weights) | 213.9 W | 6.5 W |
-| KV traffic | n/a: one saturating HBM stream | 17.2 W |
-| operand delivery | 0.5 W | 20.2 W |
-| arithmetic | 103.0 W | 14.4 W |
+| memory / array traffic (weights) | 213.9 W | 2.8 W |
+| KV traffic | n/a: one saturating HBM stream | 7.5 W |
+| operand delivery | 0.5 W | 8.8 W |
+| arithmetic | 103.0 W | 6.3 W |
 | static: leakage | 31.4 W | 20.6 W |
 | static: clock distribution | 99.0 W | 31.6 W |
 | static: memory-interface idle | 14.0 W | 0.0 W |
 | **static charged** (max of the enumeration and the measured clocked-idle floor) | 144.4 W | 52.2 W |
-| **total** | 461.7 W | 110.6 W |
+| **total** | 461.7 W | 77.8 W |
 
 On HC1 the enumerated static power is 52.2 W and the measured clocked-idle floor is 50.0 W, so the enumeration binds and the floor is inert.
 
@@ -318,11 +328,11 @@ sensitivity that is really a bias.
 
 | Power band | A100 at TDP | Ratio | HC1 card | Ratio to 250 W | Ratio to 200 W |
 |---|---:|---:|---:|---:|---:|
-| low | 338.9 W | 0.85x | 78.8 W | 0.32x | 0.39x |
-| stated | 461.7 W | 1.15x | 110.6 W | 0.44x | 0.55x |
-| high | 698.3 W | 1.75x | 407.5 W | 1.63x | 2.04x |
+| low | 338.9 W | 0.85x | 57.0 W | 0.23x | 0.28x |
+| stated | 461.7 W | 1.15x | 77.8 W | 0.31x | 0.39x |
+| high | 698.3 W | 1.75x | 339.3 W | 1.36x | 1.70x |
 
-**The outcome, stated as an outcome.** The A100 gate lands at 1.15x of its published TDP. The HC1 gate lands at 0.44x of the top of its published band, **2.26x low**, against 1.81x low at the bottom of it. The asymmetry is the finding and it should not be smoothed over.
+**The outcome, stated as an outcome.** The A100 gate lands at 1.15x of its published TDP. The HC1 gate lands at 0.31x of the top of its published band, **3.21x low**, against 2.57x low at the bottom of it. The asymmetry is the finding and it should not be smoothed over.
 
 **Why the A100 gate is the weaker of the two, and must not be quoted
 as independent.** `power.clock_energy_j_per_mm2_per_cycle` was
@@ -342,10 +352,10 @@ fails.**
 
 | Part | Energy | W | tok/s |
 |---|---:|---:|---:|
-| Taalas HC1 (modelled reconstruction) | 0.004480 J/token | 110.6 | 24,675.2 |
-| A100 80GB, weight-bound gate, same model and batch | 1.465768 J/token | 359.6 | 245.3 |
+| Taalas HC1 (modelled reconstruction) | 0.007199 J/token | 77.8 | 10,802.5 |
+| A100 80GB, weight-bound gate, same model and batch | 1.537721 J/token | 336.2 | 218.6 |
 
-That is a factor of 327 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 1.8-2.3x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
+That is a factor of 214 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.6-3.2x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
 
 **Where the remaining HC1 shortfall could live, none of it fitted.**
 The ROM array is charged its stated leakage density: 1.7 W at the point
@@ -374,15 +384,15 @@ always reduced modelled power, so every design was coolable at some speed
 and `thermal_scale` was exactly 1.0 at all 11,747 feasible points across
 both studies.
 
-- **0 of 1,646 feasible points (0.0%) are power-limited.**
+- **0 of 1,750 feasible points (0.0%) are power-limited.**
 - 0 points are uncoolable at any speed (static power alone at or above the cooling budget).
 
-Nothing in this study is power-limited. That is a statement about these designs and not an artifact of the energy model: static power is charged per mm2 per second, so a design cannot escape it by moving fewer bytes. The busiest point reaches 89% of its cooling budget, and the busiest wafer-scale ROM design 32%. The companion study at the other node, whose HBM generation delivers more than twice the bandwidth per stack, does have power-limited points.
+Nothing in this study is power-limited. That is a statement about these designs and not an artifact of the energy model: static power is charged per mm2 per second, so a design cannot escape it by moving fewer bytes. The busiest point reaches 84% of its cooling budget, and the busiest wafer-scale ROM design 32%. The companion study at the other node, whose HBM generation delivers more than twice the bandwidth per stack, does have power-limited points.
 
 | Family | Area class | Points | Throttled | Median power / budget | Worst power / budget | Peak W/mm2 | Median static share |
 |---|---|---:|---:|---:|---:|---:|---:|
-| gpu | wafer (>=40,000 mm2) | 734 | 0 | 76.0% | 88.7% | 0.430 | 47% |
-| rom | wafer (>=40,000 mm2) | 912 | 0 | 19.4% | 66.5% | 0.333 | 83% |
+| gpu | wafer (>=40,000 mm2) | 814 | 0 | 42.9% | 84.4% | 0.409 | 84% |
+| rom | wafer (>=40,000 mm2) | 936 | 0 | 18.2% | 41.3% | 0.207 | 87% |
 
 ### Energy per token, both sides, at equal area
 
@@ -397,16 +407,16 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| Kimi-K3 | 1 | 314,590 | `Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x386` | 8.827172 | 19,523.2 | link_latency | `Kimi-K3/a100_sxm_80gb-x381-tensor` | 181.739797 | 60,015.2 | link_latency | 20.59x |
-| Kimi-K3 | 2 | 320,295 | `Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x393` | 7.344399 | 26,751.7 | link_latency | `Kimi-K3/a100_sxm_80gb-x388-tensor` | 104.705164 | 61,475.3 | link_latency | 14.26x |
-| Kimi-K3 | 4 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-tensor-x22` | 18.981040 | 126,233.9 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-tensor` | 181.585026 | 184,147.1 | link_latency | 9.57x |
-| Kimi-K3 | 8 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 10.425553 | 139,444.7 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-tensor` | 123.908358 | 184,850.8 | link_latency | 11.89x |
-| Kimi-K3 | 16 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 5.450582 | 139,444.7 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-tensor` | 94.840533 | 185,292.1 | link_latency | 17.40x |
-| Kimi-K3 | 32 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 3.403923 | 142,734.7 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 81.110625 | 374,293.1 | weight_read | 22.30x |
-| Kimi-K3 | 64 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 2.645023 | 148,704.2 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 48.133303 | 374,293.1 | weight_read | 15.57x |
-| Kimi-K3 | 256 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 2.075342 | 156,729.1 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 19.777749 | 378,257.1 | weight_read | 5.77x |
-| Kimi-K3 | 1024 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1.931248 | 159,538.8 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-expert` | 4.012307 | 230,378.3 | weight_read | 2.08x |
-| Kimi-K3 | 4096 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22` | 1.897596 | 161,722.2 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-expert` | 2.271885 | 273,764.0 | compute | 1.20x |
+| Kimi-K3 | 1 | 321,925 | `Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x395` | 18.318612 | 19,859.4 | layer_fixed_latency | `Kimi-K3/a100_sxm_80gb-x390-hybrid` | 535.989373 | 67,779.9 | link_latency | 29.26x |
+| Kimi-K3 | 2 | 324,370 | `Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398` | 15.062414 | 28,681.0 | layer_fixed_latency | `Kimi-K3/a100_sxm_80gb-x393-hybrid` | 277.257602 | 68,227.0 | link_latency | 18.41x |
+| Kimi-K3 | 4 | 324,370 | `Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398` | 7.769012 | 28,681.0 | layer_fixed_latency | `Kimi-K3/a100_sxm_80gb-x393-hybrid` | 146.206791 | 68,227.0 | link_latency | 18.82x |
+| Kimi-K3 | 8 | 324,370 | `Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398` | 4.459857 | 28,785.1 | layer_fixed_latency | `Kimi-K3/a100_sxm_80gb-x393-hybrid` | 80.150723 | 68,433.3 | link_latency | 17.97x |
+| Kimi-K3 | 16 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 9.937277 | 138,344.8 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 117.725592 | 210,565.5 | link_latency | 11.85x |
+| Kimi-K3 | 32 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 5.206444 | 138,344.8 | link_latency | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 65.344903 | 212,772.5 | link_latency | 12.55x |
+| Kimi-K3 | 64 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 3.364963 | 147,968.9 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 38.742100 | 217,413.5 | link_latency | 11.51x |
+| Kimi-K3 | 256 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 2.133109 | 157,326.4 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 22.429696 | 333,739.6 | weight_read | 10.52x |
+| Kimi-K3 | 1024 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1.937665 | 161,840.8 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 10.474785 | 346,119.1 | weight_read | 5.41x |
+| Kimi-K3 | 4096 | 1,016,950 | `Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22` | 1.899561 | 161,669.9 | kv_read | `Kimi-K3/a100_sxm_80gb-x1231-hybrid` | 7.463456 | 391,081.0 | weight_read | 3.93x |
 
 **Read this with the power gates beside it.** The ROM side's energy
 rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
@@ -475,11 +485,11 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| Kimi-K3 | 6 | 277,350 | 4,994.3 | wafer-pipeline | 1,587.9 | wafer-tensor | 3.15x | 1,937.2 | pipeline | 327.1 | tensor | 5.92x | 2.58x | 4.85x | 1.88x |
-| Kimi-K3 | 8 | 369,800 | 16,167.9 | wafer-pipeline | 2,034.9 | wafer-tensor | 7.95x | 2,208.3 | pipeline | 333.8 | tensor | 6.62x | 7.32x | 6.10x | 0.83x |
-| Kimi-K3 | 12 | 554,700 | 19,623.2 | wafer-pipeline | 1,917.5 | wafer-tensor | 10.23x | 2,567.5 | pipeline | 340.8 | tensor | 7.53x | 7.64x | 5.63x | 0.74x |
+| Kimi-K3 | 6 | 277,350 | 1,744.7 | wafer-pipeline | 570.0 | wafer-tensor | 3.06x | 359.3 | pipeline | 108.3 | hybrid | 3.32x | 4.86x | 5.26x | 1.08x |
+| Kimi-K3 | 8 | 369,800 | 2,702.2 | wafer-pipeline | 900.8 | wafer-hybrid | 3.00x | 367.4 | pipeline | 110.4 | hybrid | 3.33x | 7.36x | 8.16x | 1.11x |
+| Kimi-K3 | 12 | 554,700 | 2,935.2 | wafer-pipeline | 967.1 | wafer-hybrid | 3.04x | 375.8 | pipeline | 109.2 | hybrid | 3.44x | 7.81x | 8.86x | 1.13x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 0.74x to 1.88x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.08x to 1.13x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -512,26 +522,26 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| Kimi-K3 | 1 | fastest | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x399 | 325,185 | 2,250.7 | 2,250.7 | link_latency | Kimi-K3/a100_sxm_80gb-x394-tensor | 325,444 | 1.00x | tensor | 2,777.23 | 331.0 | 331.0 | link_latency | 6.80x | 0.49x | 192.26x | 6.80x |
-| Kimi-K3 | 1 | smallest silicon | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x340 | 277,100 | 1,756.4 | 1,756.4 | link_latency | Kimi-K3/a100_sxm_80gb-x335-tensor | 276,710 | 1.00x | tensor | 2,776.01 | 327.0 | 327.0 | link_latency | 5.37x | 0.45x | 150.04x | 5.37x |
-| Kimi-K3 | 2 | fastest | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x399 | 325,185 | 1,874.4 | 3,748.9 | link_latency | Kimi-K3/a100_sxm_80gb-x394-tensor | 325,444 | 1.00x | tensor | 3,114.14 | 293.9 | 587.8 | link_latency | 6.38x | 0.81x | 160.12x | 6.38x |
-| Kimi-K3 | 2 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 1,556.3 | 3,112.6 | link_latency | Kimi-K3/a100_sxm_80gb-x369-tensor | 304,794 | 1.00x | tensor | 3,113.33 | 292.4 | 584.9 | link_latency | 5.32x | 0.72x | 132.95x | 5.32x |
-| Kimi-K3 | 4 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-tensor-x22 | 1,016,950 | 1,662.6 | 6,650.5 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-tensor | 1,016,806 | 1.00x | tensor | 3,805.25 | 253.5 | 1,014.1 | link_latency | 6.56x | 0.46x | 142.03x | 6.56x |
-| Kimi-K3 | 4 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 1,129.5 | 4,518.0 | compute | Kimi-K3/a100_sxm_80gb-x369-tensor | 304,794 | 1.00x | tensor | 3,786.33 | 238.9 | 955.7 | link_latency | 4.73x | 1.05x | 96.49x | 4.73x |
-| Kimi-K3 | 8 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,548.3 | 34,062.6 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-tensor | 1,016,806 | 1.00x | tensor | 5,170.19 | 186.5 | 1,491.8 | link_latency | 8.30x | 2.36x | 132.26x | 8.30x |
-| Kimi-K3 | 8 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 729.4 | 5,835.3 | compute | Kimi-K3/a100_sxm_80gb-x369-tensor | 304,794 | 1.00x | tensor | 5,132.35 | 175.2 | 1,401.3 | link_latency | 4.16x | 1.35x | 62.31x | 4.16x |
-| Kimi-K3 | 16 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,548.3 | 34,062.6 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-tensor | 1,016,806 | 1.00x | tensor | 7,900.06 | 122.1 | 1,953.7 | link_latency | 12.68x | 2.36x | 132.26x | 12.68x |
-| Kimi-K3 | 16 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 426.9 | 6,831.2 | compute | Kimi-K3/a100_sxm_80gb-x369-tensor | 304,794 | 1.00x | tensor | 7,824.37 | 114.6 | 1,833.8 | link_latency | 3.73x | 1.58x | 36.47x | 3.73x |
-| Kimi-K3 | 32 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,310.4 | 41,932.4 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 1,192.85 | 84.2 | 12,968.9 | weight_read | 15.56x | 2.91x | 111.94x | 15.77x |
-| Kimi-K3 | 32 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 233.4 | 7,468.5 | compute | Kimi-K3/a100_sxm_80gb-x369-hybrid | 304,794 | 1.00x | hybrid | 1,073.09 | 83.7 | 3,933.7 | weight_read | 2.79x | 1.73x | 19.94x | 2.79x |
-| Kimi-K3 | 64 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 878.4 | 56,220.4 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 1,192.85 | 84.2 | 12,968.9 | weight_read | 10.43x | 3.90x | 75.04x | 10.57x |
-| Kimi-K3 | 64 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x374 | 304,810 | 122.4 | 7,833.9 | compute | Kimi-K3/a100_sxm_80gb-x369-hybrid | 304,794 | 1.00x | hybrid | 1,091.07 | 78.2 | 5,007.8 | weight_read | 1.56x | 1.56x | 10.46x | 1.56x |
-| Kimi-K3 | 256 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 295.0 | 75,519.6 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 1,243.24 | 74.7 | 19,125.4 | weight_read | 3.95x | 3.95x | 25.20x | 4.00x |
-| Kimi-K3 | 256 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x374 | 304,810 | 33.8 | 8,643.8 | compute | Kimi-K3/a100_sxm_80gb-x369-expert | 304,794 | 1.00x | expert | 2,621.38 | 48.9 | 12,518.3 | weight_read | 0.69x | 0.69x | 2.88x | 0.69x |
-| Kimi-K3 | 1024 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 80.7 | 82,609.2 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-expert | 1,016,806 | 1.00x | expert | 2,883.33 | 56.1 | 57,417.9 | weight_read | 1.44x | 1.44x | 6.89x | 1.44x |
-| Kimi-K3 | 1024 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-pipeline-x374 | 304,810 | 8.5 | 8,655.1 | compute | Kimi-K3/a100_sxm_80gb-x369-expert | 304,794 | 1.00x | expert | 6,562.78 | 34.4 | 35,244.0 | compute | 0.25x | 0.25x | 0.98x | 0.25x |
-| Kimi-K3 | 4096 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 20.8 | 85,224.7 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-expert | 1,016,806 | 1.00x | expert | 7,610.56 | 29.4 | 120,500.8 | compute | 0.71x | 0.71x | 2.62x | 0.71x |
-| Kimi-K3 | 4096 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-pipeline-x374 | 304,810 | 2.1 | 8,656.8 | compute | Kimi-K3/a100_sxm_80gb-x369-expert | 304,794 | 1.00x | expert | 22,328.38 | 9.1 | 37,144.7 | compute | 0.23x | 0.23x | 0.53x | 0.23x |
+| Kimi-K3 | 1 | fastest | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x398 | 324,370 | 1,096.9 | 1,096.9 | layer_fixed_latency | Kimi-K3/a100_sxm_80gb-x393-hybrid | 324,618 | 1.00x | hybrid | 5,599.73 | 108.2 | 757.7 | link_latency | 10.13x | 0.24x | 93.41x | 10.13x |
+| Kimi-K3 | 1 | smallest silicon | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x340 | 277,100 | 698.9 | 698.9 | link_latency | Kimi-K3/a100_sxm_80gb-x335-hybrid | 276,710 | 1.00x | hybrid | 5,590.24 | 108.3 | 649.6 | link_latency | 6.46x | 0.18x | 59.52x | 6.46x |
+| Kimi-K3 | 2 | fastest | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x399 | 325,185 | 888.6 | 6,220.2 | layer_fixed_latency | Kimi-K3/a100_sxm_80gb-x394-hybrid | 325,444 | 1.00x | hybrid | 5,599.73 | 108.3 | 758.0 | link_latency | 8.21x | 1.34x | 75.67x | 8.21x |
+| Kimi-K3 | 2 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 789.9 | 4,739.4 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 5,590.24 | 110.1 | 660.8 | link_latency | 7.17x | 1.08x | 67.27x | 7.17x |
+| Kimi-K3 | 4 | fastest | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x399 | 325,185 | 888.6 | 6,220.2 | layer_fixed_latency | Kimi-K3/a100_sxm_80gb-x394-hybrid | 325,444 | 1.00x | hybrid | 5,599.73 | 108.3 | 758.0 | link_latency | 8.21x | 1.34x | 75.67x | 8.21x |
+| Kimi-K3 | 4 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 789.9 | 4,739.4 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 5,590.24 | 110.1 | 660.8 | link_latency | 7.17x | 1.08x | 67.27x | 7.17x |
+| Kimi-K3 | 8 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 814.1 | 31,750.0 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 5,723.03 | 108.3 | 2,166.1 | link_latency | 7.52x | 2.20x | 69.33x | 7.52x |
+| Kimi-K3 | 8 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 653.7 | 5,229.7 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 5,793.36 | 106.7 | 853.4 | link_latency | 6.13x | 1.19x | 55.67x | 6.13x |
+| Kimi-K3 | 16 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 814.1 | 31,750.0 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 5,723.03 | 108.3 | 2,166.1 | link_latency | 7.52x | 2.20x | 69.33x | 7.52x |
+| Kimi-K3 | 16 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 449.8 | 7,196.3 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 6,605.84 | 94.8 | 1,517.1 | link_latency | 4.74x | 1.63x | 38.30x | 4.74x |
+| Kimi-K3 | 32 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 814.1 | 31,750.0 | link_latency | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 6,151.26 | 101.8 | 3,256.1 | link_latency | 8.00x | 2.20x | 69.33x | 8.00x |
+| Kimi-K3 | 32 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 264.5 | 8,465.4 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 6,549.77 | 81.6 | 2,612.2 | link_latency | 3.24x | 1.92x | 22.53x | 3.24x |
+| Kimi-K3 | 64 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 666.5 | 51,985.3 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 7,293.23 | 87.7 | 5,611.8 | link_latency | 7.60x | 3.60x | 56.76x | 7.60x |
+| Kimi-K3 | 64 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 141.9 | 9,083.3 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 8,106.48 | 65.8 | 4,210.6 | link_latency | 2.16x | 2.06x | 12.09x | 2.16x |
+| Kimi-K3 | 256 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 288.1 | 73,754.5 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 3,372.07 | 58.1 | 14,879.4 | weight_read | 4.96x | 4.96x | 24.54x | 5.01x |
+| Kimi-K3 | 256 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x380 | 309,700 | 37.3 | 9,538.4 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 4,161.65 | 38.7 | 9,917.8 | weight_read | 0.96x | 0.96x | 3.17x | 0.96x |
+| Kimi-K3 | 1024 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 81.6 | 83,523.6 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 6,996.91 | 32.3 | 33,043.1 | weight_read | 2.53x | 2.53x | 6.95x | 2.56x |
+| Kimi-K3 | 1024 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-pipeline-x380 | 309,700 | 9.4 | 9,603.6 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 10,435.39 | 16.4 | 16,786.3 | weight_read | 0.57x | 0.57x | 1.08x | 0.57x |
+| Kimi-K3 | 4096 | fastest | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 20.8 | 85,109.1 | kv_read | Kimi-K3/a100_sxm_80gb-x1231-hybrid | 1,016,806 | 1.00x | hybrid | 7,593.40 | 12.8 | 52,399.4 | weight_read | 1.62x | 1.62x | 2.61x | 1.65x |
+| Kimi-K3 | 4096 | smallest silicon | Kimi-K3/ROM-N6-native-HBMKV-array-hw-pipeline-x380 | 309,700 | 2.3 | 9,587.4 | compute | Kimi-K3/a100_sxm_80gb-x375-hybrid | 309,750 | 1.00x | hybrid | 35,530.31 | 6.5 | 26,678.1 | weight_read | 0.36x | 0.36x | 0.58x | 0.36x |
 
 ## The GPU's own topology choice, at batch 1
 
@@ -551,25 +561,27 @@ second while the same silicon tensor-parallel reads in the hundreds.
 
 | Model | GPUs | mm2 | Pipeline tok/s | Tensor tok/s | Hybrid tok/s | Best | Best link us | Link share | Binds on |
 |---|---:|---:|---:|---:|---:|---|---:|---:|---|
-| Kimi-K3 | 56 | 46,256 | 11.7 | 283.2 | 85.9 | tensor | 1,982.76 | 56.1% | link_latency |
-| Kimi-K3 | 112 | 92,512 | 11.7 | 357.9 | 85.8 | tensor | 2,005.62 | 71.8% | link_latency |
-| Kimi-K3 | 165 | 136,290 | 11.7 | 391.1 | 84.2 | tensor | 2,013.23 | 78.7% | link_latency |
-| Kimi-K3 | 168 | 138,768 | 11.7 | 392.5 | 85.6 | tensor | 2,013.23 | 79.0% | link_latency |
-| Kimi-K3 | 181 | 149,506 | 11.7 | 398.0 | 84.3 | tensor | 2,014.56 | 80.2% | link_latency |
-| Kimi-K3 | 205 | 169,330 | 11.7 | 406.6 | 84.4 | tensor | 2,016.16 | 82.0% | link_latency |
-| Kimi-K3 | 224 | 185,024 | 11.7 | 412.4 | 85.5 | tensor | 2,017.04 | 83.2% | link_latency |
-| Kimi-K3 | 335 | 276,710 | 11.7 | 327.0 | 85.0 | tensor | 2,776.01 | 90.8% | link_latency |
-| Kimi-K3 | 336 | 277,536 | 11.7 | 327.1 | 85.2 | tensor | 2,776.01 | 90.8% | link_latency |
-| Kimi-K3 | 348 | 287,448 | 11.7 | 328.0 | 84.3 | tensor | 2,776.36 | 91.1% | link_latency |
-| Kimi-K3 | 369 | 304,794 | 11.7 | 329.5 | 83.7 | tensor | 2,776.82 | 91.5% | link_latency |
-| Kimi-K3 | 381 | 314,706 | 11.7 | 330.2 | 84.5 | tensor | 2,776.97 | 91.7% | link_latency |
-| Kimi-K3 | 388 | 320,488 | 11.7 | 330.7 | 84.3 | tensor | 2,777.10 | 91.8% | link_latency |
-| Kimi-K3 | 393 | 324,618 | 11.7 | 330.9 | 83.7 | tensor | 2,777.23 | 91.9% | link_latency |
-| Kimi-K3 | 394 | 325,444 | 11.7 | 331.0 | 83.9 | tensor | 2,777.23 | 91.9% | link_latency |
-| Kimi-K3 | 448 | 370,048 | 11.7 | 333.8 | 85.0 | tensor | 2,777.92 | 92.7% | link_latency |
-| Kimi-K3 | 560 | 462,560 | 11.7 | 338.0 | 84.7 | tensor | 2,779.06 | 93.9% | link_latency |
-| Kimi-K3 | 672 | 555,072 | 11.7 | 340.8 | 84.4 | tensor | 2,779.82 | 94.7% | link_latency |
-| Kimi-K3 | 1231 | 1,016,806 | 11.7 | 347.4 | 84.2 | tensor | 2,781.55 | 96.6% | link_latency |
+| Kimi-K3 | 56 | 46,256 | 11.7 | 109.0 | 94.5 | tensor | 5,530.74 | 60.3% | link_latency |
+| Kimi-K3 | 112 | 92,512 | 11.7 | 117.9 | 108.8 | tensor | 5,570.93 | 65.7% | link_latency |
+| Kimi-K3 | 165 | 136,290 | 11.7 | 121.1 | 108.3 | tensor | 5,584.32 | 67.6% | link_latency |
+| Kimi-K3 | 168 | 138,768 | 11.7 | 121.2 | 108.6 | tensor | 5,584.32 | 67.7% | link_latency |
+| Kimi-K3 | 181 | 149,506 | 11.7 | 121.7 | 109.9 | tensor | 5,586.65 | 68.0% | link_latency |
+| Kimi-K3 | 205 | 169,330 | 11.7 | 122.4 | 107.0 | tensor | 5,589.47 | 68.4% | link_latency |
+| Kimi-K3 | 224 | 185,024 | 11.7 | 122.9 | 108.5 | tensor | 5,591.02 | 68.7% | link_latency |
+| Kimi-K3 | 259 | 213,934 | 11.7 | 123.6 | 107.0 | tensor | 5,594.06 | 69.1% | link_latency |
+| Kimi-K3 | 261 | 215,586 | 11.7 | 123.6 | 107.2 | tensor | 5,594.06 | 69.2% | link_latency |
+| Kimi-K3 | 335 | 276,710 | 11.7 | 103.9 | 108.3 | hybrid | 5,590.24 | 60.5% | link_latency |
+| Kimi-K3 | 336 | 277,536 | 11.7 | 103.9 | 108.3 | hybrid | 5,590.24 | 60.5% | link_latency |
+| Kimi-K3 | 346 | 285,796 | 11.7 | 104.0 | 108.8 | hybrid | 5,590.24 | 60.8% | link_latency |
+| Kimi-K3 | 375 | 309,750 | 11.7 | 104.2 | 110.1 | hybrid | 5,590.24 | 61.6% | link_latency |
+| Kimi-K3 | 390 | 322,140 | 11.7 | 104.2 | 108.1 | hybrid | 5,599.73 | 60.5% | link_latency |
+| Kimi-K3 | 392 | 323,792 | 11.7 | 104.3 | 108.2 | hybrid | 5,599.73 | 60.6% | link_latency |
+| Kimi-K3 | 393 | 324,618 | 11.7 | 104.3 | 108.2 | hybrid | 5,599.73 | 60.6% | link_latency |
+| Kimi-K3 | 394 | 325,444 | 11.7 | 104.3 | 108.3 | hybrid | 5,599.73 | 60.6% | link_latency |
+| Kimi-K3 | 448 | 370,048 | 11.7 | 104.5 | 110.4 | hybrid | 5,599.73 | 61.8% | link_latency |
+| Kimi-K3 | 560 | 462,560 | 11.7 | 104.9 | 109.7 | hybrid | 5,618.70 | 61.6% | link_latency |
+| Kimi-K3 | 672 | 555,072 | 11.7 | 105.2 | 109.2 | hybrid | 5,637.66 | 61.6% | link_latency |
+| Kimi-K3 | 1231 | 1,016,806 | 11.7 | 105.7 | 108.3 | hybrid | 5,723.03 | 62.0% | link_latency |
 
 ## Array or wafer: the crossover, reported rather than assumed
 
@@ -587,23 +599,23 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 
 | Design | Model | Devices | Parallelism | Intra link | Inter link | Hops/token | Link latency/token | Viable to (10% budget) | Hard ceiling | Events |
 |---|---|---:|---|---|---|---:|---:|---:|---:|---|
-| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x399 | Kimi-K3 | 399 | pipeline | rom_package_ucie | rom_board_serdes | 92 | 3.42 us | 29,235.7 tok/s | 292,356.8 tok/s | 69 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.94 us; 23 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 2.48 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x386 | Kimi-K3 | 386 | tensor | rom_package_ucie | rom_board_serdes | 372 | 377.90 us | 264.6 tok/s | 2,646.2 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 186 x all_reduce span 97 on rom_board_serdes (traversals 19.8) = 372.68 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x399 | Kimi-K3 | 399 | hybrid | rom_package_ucie | rom_board_serdes | 278 | 15.15 us | 6,599.5 tok/s | 65,995.1 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 92 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 9.93 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x399 | Kimi-K3 | 399 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x398 | Kimi-K3 | 398 | pipeline | rom_package_ucie | rom_board_serdes | 92 | 3.42 us | 29,235.7 tok/s | 292,356.8 tok/s | 69 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.94 us; 23 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 2.48 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x351 | Kimi-K3 | 351 | tensor | rom_package_ucie | rom_board_serdes | 372 | 377.89 us | 264.6 tok/s | 2,646.2 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 186 x all_reduce span 88 on rom_board_serdes (traversals 19.8) = 372.67 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x395 | Kimi-K3 | 395 | hybrid | rom_package_ucie | rom_board_serdes | 278 | 15.15 us | 6,599.5 tok/s | 65,995.1 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 92 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 9.93 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x398 | Kimi-K3 | 398 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
 | Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x10 | Kimi-K3 | 10 | pipeline | on_wafer | rom_wafer_serdes | 92 | 11.48 us | 8,712.7 tok/s | 87,127.5 tok/s | 91 x point_to_point span 2 on on_wafer (traversals 1.0) = 11.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.10 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x353 | Kimi-K3 | 353 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.52 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 45 on infiniband_hdr (traversals 4.0) = 1,823.19 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x8 | Kimi-K3 | 8 | tensor | on_wafer | rom_wafer_serdes | 372 | 441.06 us | 226.7 tok/s | 2,267.3 tok/s | 186 x all_reduce span 57 on on_wafer (traversals 15.4) = 358.05 us; 186 x all_reduce span 8 on rom_wafer_serdes (traversals 4.4) = 83.01 us |
-| Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x398 | Kimi-K3 | 398 | hybrid | nvlink3 | infiniband_hdr | 235 | 1,080.90 us | 92.5 tok/s | 925.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 49 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 127.57 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x351 | Kimi-K3 | 351 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.36 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 44 on infiniband_hdr (traversals 4.0) = 1,823.03 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x7 | Kimi-K3 | 7 | tensor | on_wafer | rom_wafer_serdes | 372 | 441.03 us | 226.7 tok/s | 2,267.4 tok/s | 186 x all_reduce span 57 on on_wafer (traversals 15.4) = 358.05 us; 186 x all_reduce span 7 on rom_wafer_serdes (traversals 4.4) = 82.98 us |
+| Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x397 | Kimi-K3 | 397 | hybrid | nvlink3 | infiniband_hdr | 235 | 1,080.90 us | 92.5 tok/s | 925.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 49 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 127.57 us |
 | Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x10 | Kimi-K3 | 10 | hybrid | on_wafer | rom_wafer_serdes | 195 | 358.97 us | 278.6 tok/s | 2,785.7 tok/s | 186 x all_reduce span 57 on on_wafer (traversals 15.4) = 358.05 us; 9 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.92 us |
 | Kimi-K3/ROM-N6-native-HBMKV-array-hw-pipeline-x399 | Kimi-K3 | 399 | pipeline | rom_package_ucie | rom_board_serdes | 92 | 3.42 us | 29,235.7 tok/s | 292,356.8 tok/s | 69 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.94 us; 23 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 2.48 us |
-| Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x393 | Kimi-K3 | 393 | tensor | rom_package_ucie | rom_board_serdes | 372 | 377.90 us | 264.6 tok/s | 2,646.2 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 186 x all_reduce span 99 on rom_board_serdes (traversals 19.8) = 372.68 us |
-| Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x399 | Kimi-K3 | 399 | hybrid | rom_package_ucie | rom_board_serdes | 278 | 15.15 us | 6,599.5 tok/s | 65,995.1 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 92 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 9.93 us |
+| Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x380 | Kimi-K3 | 380 | tensor | rom_package_ucie | rom_board_serdes | 372 | 377.90 us | 264.6 tok/s | 2,646.2 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 186 x all_reduce span 95 on rom_board_serdes (traversals 19.8) = 372.68 us |
+| Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398 | Kimi-K3 | 398 | hybrid | rom_package_ucie | rom_board_serdes | 278 | 15.15 us | 6,599.5 tok/s | 65,995.1 tok/s | 186 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 5.22 us; 92 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 9.93 us |
 | Kimi-K3/ROM-N6-native-HBMKV-array-pipeline-x399 | Kimi-K3 | 399 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
 | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | Kimi-K3 | 22 | pipeline | on_wafer | rom_wafer_serdes | 92 | 11.48 us | 8,712.7 tok/s | 87,127.5 tok/s | 91 x point_to_point span 2 on on_wafer (traversals 1.0) = 11.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.10 us |
-| Kimi-K3/ROM-N6-native-HBMKV-array-tensor-x374 | Kimi-K3 | 374 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.82 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 47 on infiniband_hdr (traversals 4.0) = 1,823.49 us |
+| Kimi-K3/ROM-N6-native-HBMKV-array-tensor-x380 | Kimi-K3 | 380 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.97 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 48 on infiniband_hdr (traversals 4.0) = 1,823.63 us |
 | Kimi-K3/ROM-N6-native-HBMKV-wafer-tensor-x22 | Kimi-K3 | 22 | tensor | on_wafer | rom_wafer_serdes | 372 | 523.00 us | 191.2 tok/s | 1,912.0 tok/s | 186 x all_reduce span 57 on on_wafer (traversals 15.4) = 358.05 us; 186 x all_reduce span 22 on rom_wafer_serdes (traversals 8.8) = 164.95 us |
-| Kimi-K3/ROM-N6-native-HBMKV-array-hybrid-x399 | Kimi-K3 | 399 | hybrid | nvlink3 | infiniband_hdr | 235 | 1,080.90 us | 92.5 tok/s | 925.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 49 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 127.57 us |
+| Kimi-K3/ROM-N6-native-HBMKV-array-hybrid-x398 | Kimi-K3 | 398 | hybrid | nvlink3 | infiniband_hdr | 235 | 1,080.90 us | 92.5 tok/s | 925.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 49 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 127.57 us |
 | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | Kimi-K3 | 22 | hybrid | on_wafer | rom_wafer_serdes | 207 | 360.20 us | 277.6 tok/s | 2,776.2 tok/s | 186 x all_reduce span 57 on on_wafer (traversals 15.4) = 358.05 us; 21 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 2.15 us |
 | Kimi-K3/a100_sxm_80gb-x56-pipeline | Kimi-K3 | 56 | pipeline | nvlink3 | infiniband_hdr | 55 | 140.46 us | 711.9 tok/s | 7,119.4 tok/s | 49 x point_to_point span 2 on nvlink3 (traversals 1.0) = 124.84 us; 6 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 15.62 us |
 | Kimi-K3/a100_sxm_80gb-x56-tensor | Kimi-K3 | 56 | tensor | nvlink3 | infiniband_hdr | 372 | 1,982.76 us | 50.4 tok/s | 504.3 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 7 on infiniband_hdr (traversals 2.0) = 1,029.43 us |
@@ -633,6 +645,14 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 | Kimi-K3/a100_sxm_80gb-x224-tensor | Kimi-K3 | 224 | tensor | nvlink3 | infiniband_hdr | 372 | 2,017.04 us | 49.6 tok/s | 495.8 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 28 on infiniband_hdr (traversals 2.0) = 1,063.71 us |
 | Kimi-K3/a100_sxm_80gb-x224-hybrid | Kimi-K3 | 224 | hybrid | nvlink3 | infiniband_hdr | 213 | 1,023.62 us | 97.7 tok/s | 976.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 27 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 70.29 us |
 | Kimi-K3/a100_sxm_80gb-x224-expert | Kimi-K3 | 224 | expert | nvlink3 | infiniband_hdr | 372 | 1,316.03 us | 76.0 tok/s | 759.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.83 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 385.20 us |
+| Kimi-K3/a100_sxm_80gb-x259-pipeline | Kimi-K3 | 259 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x259-tensor | Kimi-K3 | 259 | tensor | nvlink3 | infiniband_hdr | 372 | 2,018.78 us | 49.5 tok/s | 495.3 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 33 on infiniband_hdr (traversals 2.0) = 1,065.44 us |
+| Kimi-K3/a100_sxm_80gb-x259-hybrid | Kimi-K3 | 259 | hybrid | nvlink3 | infiniband_hdr | 218 | 1,036.64 us | 96.5 tok/s | 964.7 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 32 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 83.31 us |
+| Kimi-K3/a100_sxm_80gb-x259-expert | Kimi-K3 | 259 | expert | nvlink3 | infiniband_hdr | 372 | 1,314.90 us | 76.1 tok/s | 760.5 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.73 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 384.17 us |
+| Kimi-K3/a100_sxm_80gb-x261-pipeline | Kimi-K3 | 261 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x261-tensor | Kimi-K3 | 261 | tensor | nvlink3 | infiniband_hdr | 372 | 2,018.78 us | 49.5 tok/s | 495.3 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 33 on infiniband_hdr (traversals 2.0) = 1,065.44 us |
+| Kimi-K3/a100_sxm_80gb-x261-hybrid | Kimi-K3 | 261 | hybrid | nvlink3 | infiniband_hdr | 218 | 1,036.64 us | 96.5 tok/s | 964.7 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 32 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 83.31 us |
+| Kimi-K3/a100_sxm_80gb-x261-expert | Kimi-K3 | 261 | expert | nvlink3 | infiniband_hdr | 372 | 1,314.85 us | 76.1 tok/s | 760.5 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.73 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 384.12 us |
 | Kimi-K3/a100_sxm_80gb-x335-pipeline | Kimi-K3 | 335 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
 | Kimi-K3/a100_sxm_80gb-x335-tensor | Kimi-K3 | 335 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.01 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 42 on infiniband_hdr (traversals 4.0) = 1,822.68 us |
 | Kimi-K3/a100_sxm_80gb-x335-hybrid | Kimi-K3 | 335 | hybrid | nvlink3 | infiniband_hdr | 227 | 1,060.07 us | 94.3 tok/s | 943.3 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 41 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 106.74 us |
@@ -641,22 +661,22 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 | Kimi-K3/a100_sxm_80gb-x336-tensor | Kimi-K3 | 336 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.01 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 42 on infiniband_hdr (traversals 4.0) = 1,822.68 us |
 | Kimi-K3/a100_sxm_80gb-x336-hybrid | Kimi-K3 | 336 | hybrid | nvlink3 | infiniband_hdr | 227 | 1,060.07 us | 94.3 tok/s | 943.3 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 41 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 106.74 us |
 | Kimi-K3/a100_sxm_80gb-x336-expert | Kimi-K3 | 336 | expert | nvlink3 | infiniband_hdr | 372 | 1,313.21 us | 76.1 tok/s | 761.5 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.56 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.66 us |
-| Kimi-K3/a100_sxm_80gb-x348-pipeline | Kimi-K3 | 348 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
-| Kimi-K3/a100_sxm_80gb-x348-tensor | Kimi-K3 | 348 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.36 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 44 on infiniband_hdr (traversals 4.0) = 1,823.03 us |
-| Kimi-K3/a100_sxm_80gb-x348-hybrid | Kimi-K3 | 348 | hybrid | nvlink3 | infiniband_hdr | 229 | 1,065.28 us | 93.9 tok/s | 938.7 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 43 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 111.95 us |
-| Kimi-K3/a100_sxm_80gb-x348-expert | Kimi-K3 | 348 | expert | nvlink3 | infiniband_hdr | 372 | 1,313.03 us | 76.2 tok/s | 761.6 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.54 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.48 us |
-| Kimi-K3/a100_sxm_80gb-x369-pipeline | Kimi-K3 | 369 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
-| Kimi-K3/a100_sxm_80gb-x369-tensor | Kimi-K3 | 369 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.82 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 47 on infiniband_hdr (traversals 4.0) = 1,823.49 us |
-| Kimi-K3/a100_sxm_80gb-x369-hybrid | Kimi-K3 | 369 | hybrid | nvlink3 | infiniband_hdr | 232 | 1,073.09 us | 93.2 tok/s | 931.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 46 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 119.76 us |
-| Kimi-K3/a100_sxm_80gb-x369-expert | Kimi-K3 | 369 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.71 us | 76.2 tok/s | 761.8 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.51 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.20 us |
-| Kimi-K3/a100_sxm_80gb-x381-pipeline | Kimi-K3 | 381 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
-| Kimi-K3/a100_sxm_80gb-x381-tensor | Kimi-K3 | 381 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.97 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 48 on infiniband_hdr (traversals 4.0) = 1,823.63 us |
-| Kimi-K3/a100_sxm_80gb-x381-hybrid | Kimi-K3 | 381 | hybrid | nvlink3 | infiniband_hdr | 233 | 1,075.69 us | 93.0 tok/s | 929.6 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 47 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 122.36 us |
-| Kimi-K3/a100_sxm_80gb-x381-expert | Kimi-K3 | 381 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.56 us | 76.2 tok/s | 761.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.50 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.06 us |
-| Kimi-K3/a100_sxm_80gb-x388-pipeline | Kimi-K3 | 388 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
-| Kimi-K3/a100_sxm_80gb-x388-tensor | Kimi-K3 | 388 | tensor | nvlink3 | infiniband_hdr | 372 | 2,777.10 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 49 on infiniband_hdr (traversals 4.0) = 1,823.77 us |
-| Kimi-K3/a100_sxm_80gb-x388-hybrid | Kimi-K3 | 388 | hybrid | nvlink3 | infiniband_hdr | 234 | 1,078.30 us | 92.7 tok/s | 927.4 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 48 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 124.97 us |
-| Kimi-K3/a100_sxm_80gb-x388-expert | Kimi-K3 | 388 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.46 us | 76.2 tok/s | 761.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.49 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 381.98 us |
+| Kimi-K3/a100_sxm_80gb-x346-pipeline | Kimi-K3 | 346 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x346-tensor | Kimi-K3 | 346 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.36 us | 36.0 tok/s | 360.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 44 on infiniband_hdr (traversals 4.0) = 1,823.03 us |
+| Kimi-K3/a100_sxm_80gb-x346-hybrid | Kimi-K3 | 346 | hybrid | nvlink3 | infiniband_hdr | 229 | 1,065.28 us | 93.9 tok/s | 938.7 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 43 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 111.95 us |
+| Kimi-K3/a100_sxm_80gb-x346-expert | Kimi-K3 | 346 | expert | nvlink3 | infiniband_hdr | 372 | 1,313.05 us | 76.2 tok/s | 761.6 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.54 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.51 us |
+| Kimi-K3/a100_sxm_80gb-x375-pipeline | Kimi-K3 | 375 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x375-tensor | Kimi-K3 | 375 | tensor | nvlink3 | infiniband_hdr | 372 | 2,776.82 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 47 on infiniband_hdr (traversals 4.0) = 1,823.49 us |
+| Kimi-K3/a100_sxm_80gb-x375-hybrid | Kimi-K3 | 375 | hybrid | nvlink3 | infiniband_hdr | 232 | 1,073.09 us | 93.2 tok/s | 931.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 46 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 119.76 us |
+| Kimi-K3/a100_sxm_80gb-x375-expert | Kimi-K3 | 375 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.64 us | 76.2 tok/s | 761.8 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.51 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 382.13 us |
+| Kimi-K3/a100_sxm_80gb-x390-pipeline | Kimi-K3 | 390 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x390-tensor | Kimi-K3 | 390 | tensor | nvlink3 | infiniband_hdr | 372 | 2,777.10 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 49 on infiniband_hdr (traversals 4.0) = 1,823.77 us |
+| Kimi-K3/a100_sxm_80gb-x390-hybrid | Kimi-K3 | 390 | hybrid | nvlink3 | infiniband_hdr | 234 | 1,078.30 us | 92.7 tok/s | 927.4 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 48 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 124.97 us |
+| Kimi-K3/a100_sxm_80gb-x390-expert | Kimi-K3 | 390 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.44 us | 76.2 tok/s | 761.9 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.49 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 381.96 us |
+| Kimi-K3/a100_sxm_80gb-x392-pipeline | Kimi-K3 | 392 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
+| Kimi-K3/a100_sxm_80gb-x392-tensor | Kimi-K3 | 392 | tensor | nvlink3 | infiniband_hdr | 372 | 2,777.10 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 49 on infiniband_hdr (traversals 4.0) = 1,823.77 us |
+| Kimi-K3/a100_sxm_80gb-x392-hybrid | Kimi-K3 | 392 | hybrid | nvlink3 | infiniband_hdr | 234 | 1,078.30 us | 92.7 tok/s | 927.4 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 48 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 124.97 us |
+| Kimi-K3/a100_sxm_80gb-x392-expert | Kimi-K3 | 392 | expert | nvlink3 | infiniband_hdr | 372 | 1,312.41 us | 76.2 tok/s | 762.0 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 930.48 us; 186 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 381.93 us |
 | Kimi-K3/a100_sxm_80gb-x393-pipeline | Kimi-K3 | 393 | pipeline | nvlink3 | infiniband_hdr | 92 | 235.01 us | 425.5 tok/s | 4,255.2 tok/s | 81 x point_to_point span 2 on nvlink3 (traversals 1.0) = 206.37 us; 11 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 28.64 us |
 | Kimi-K3/a100_sxm_80gb-x393-tensor | Kimi-K3 | 393 | tensor | nvlink3 | infiniband_hdr | 372 | 2,777.23 us | 36.0 tok/s | 360.1 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 186 x all_reduce span 50 on infiniband_hdr (traversals 4.0) = 1,823.90 us |
 | Kimi-K3/a100_sxm_80gb-x393-hybrid | Kimi-K3 | 393 | hybrid | nvlink3 | infiniband_hdr | 235 | 1,080.90 us | 92.5 tok/s | 925.2 tok/s | 186 x all_reduce span 8 on nvlink3 (traversals 2.0) = 953.33 us; 49 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 127.57 us |
@@ -690,16 +710,16 @@ given more silicon.
 
 | Model | B | Winner on rate | Winner per mm2 | Best design | Best mm2 | Best user tok/s | tok/s per mm2 | Best array tok/s (mm2) | Best wafer tok/s (mm2) | Wafer/array | Binds on |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
-| Kimi-K3 | 1 | array | array | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x386 | 314,590 | 2,211.7 | 0.007 | 2,211.7 (314,590) | 2,034.9 (369,800) | 0.92x | link_latency |
-| Kimi-K3 | 2 | array | array | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x393 | 320,295 | 1,821.2 | 0.006 | 1,821.2 (320,295) | 1,737.7 (1,016,950) | 0.95x | link_latency |
-| Kimi-K3 | 4 | wafer | array | Kimi-K3/ROM-N6-native-HBMKV-wafer-tensor-x22 | 1,016,950 | 1,662.6 | 0.002 | 1,431.8 (320,295) | 1,662.6 (1,016,950) | 1.16x | link_latency |
-| Kimi-K3 | 8 | wafer | array | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,548.3 | 0.002 | 1,069.8 (325,185) | 1,548.3 (1,016,950) | 1.45x | link_latency |
-| Kimi-K3 | 16 | wafer | array | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,548.3 | 0.002 | 680.4 (325,185) | 1,548.3 (1,016,950) | 2.28x | link_latency |
-| Kimi-K3 | 32 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 1,310.4 | 0.001 | 393.7 (325,185) | 1,310.4 (1,016,950) | 3.33x | link_latency |
-| Kimi-K3 | 64 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 878.4 | 0.001 | 213.7 (325,185) | 878.4 (1,016,950) | 4.11x | kv_read |
-| Kimi-K3 | 256 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 295.0 | 0.000 | 63.9 (325,185) | 295.0 (1,016,950) | 4.62x | kv_read |
-| Kimi-K3 | 1024 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 80.7 | 0.000 | 16.0 (325,185) | 80.7 (1,016,950) | 5.04x | kv_read |
-| Kimi-K3 | 4096 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 20.8 | 0.000 | 4.0 (325,185) | 20.8 (1,016,950) | 5.20x | kv_read |
+| Kimi-K3 | 1 | array | array | Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x395 | 321,925 | 1,084.1 | 0.003 | 1,084.1 (321,925) | 1,003.7 (462,250) | 0.93x | layer_fixed_latency |
+| Kimi-K3 | 2 | array | array | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398 | 324,370 | 882.4 | 0.003 | 882.4 (324,370) | 814.1 (1,016,950) | 0.92x | layer_fixed_latency |
+| Kimi-K3 | 4 | array | array | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398 | 324,370 | 882.4 | 0.003 | 882.4 (324,370) | 814.1 (1,016,950) | 0.92x | layer_fixed_latency |
+| Kimi-K3 | 8 | array | array | Kimi-K3/ROM-N6-native-HBMKV-array-hw-hybrid-x398 | 324,370 | 806.8 | 0.002 | 806.8 (324,370) | 814.1 (1,016,950) | 1.01x | layer_fixed_latency |
+| Kimi-K3 | 16 | wafer | array | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 814.1 | 0.001 | 595.0 (324,370) | 814.1 (1,016,950) | 1.37x | link_latency |
+| Kimi-K3 | 32 | wafer | array | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 814.1 | 0.001 | 367.4 (324,370) | 814.1 (1,016,950) | 2.22x | link_latency |
+| Kimi-K3 | 64 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 666.5 | 0.001 | 202.7 (324,370) | 666.5 (1,016,950) | 3.29x | kv_read |
+| Kimi-K3 | 256 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 288.1 | 0.000 | 54.4 (324,370) | 288.1 (1,016,950) | 5.30x | kv_read |
+| Kimi-K3 | 1024 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22 | 1,016,950 | 81.6 | 0.000 | 13.8 (324,370) | 81.6 (1,016,950) | 5.93x | kv_read |
+| Kimi-K3 | 4096 | wafer | wafer | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 20.8 | 0.000 | 3.4 (324,370) | 20.8 (1,016,950) | 6.05x | kv_read |
 
 ## The two ROM floorplans on one die
 
@@ -772,26 +792,26 @@ distribution rather than from the mean engaged region.
 
 | Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | Per-region aggregate | Per-stream penalty | Per-region over broadcast | Batched binds on | Per-stream binds on | Per-region binds on |
 |---|---:|---|---:|---:|---:|---:|---:|---|---|---|
-| Kimi-K3 | 1 | sram | 85,066.4 | 26,091.7 | 26,091.7 | 3.26x | 1.00x | kv_read | weight_read | weight_read |
-| Kimi-K3 | 2 | sram | 85,066.4 | 26,091.7 | 26,091.7 | 3.26x | 1.00x | kv_read | weight_read | weight_read |
-| Kimi-K3 | 4 | sram | 85,066.4 | 26,091.7 | 26,091.7 | 3.26x | 1.00x | kv_read | weight_read | weight_read |
-| Kimi-K3 | 8 | sram | 85,066.4 | 26,091.7 | 26,091.7 | 3.26x | 1.00x | kv_read | weight_read | weight_read |
-| Kimi-K3 | 16 | sram | 85,066.4 | 26,091.7 | 28,344.8 | 3.26x | 1.09x | kv_read | weight_read | link_latency |
-| Kimi-K3 | 32 | sram | 85,066.4 | 26,091.7 | 37,559.6 | 3.26x | 1.44x | kv_read | weight_read | link_latency |
-| Kimi-K3 | 64 | sram | 85,066.4 | 26,091.7 | 46,333.9 | 3.26x | 1.78x | kv_read | weight_read | kv_read |
-| Kimi-K3 | 256 | sram | 85,066.4 | 26,091.7 | 75,519.6 | 3.26x | 2.89x | kv_read | weight_read | kv_read |
-| Kimi-K3 | 1024 | sram | 85,066.4 | 26,091.7 | 82,609.2 | 3.26x | 3.17x | kv_read | weight_read | kv_read |
-| Kimi-K3 | 4096 | sram | 85,224.7 | 26,106.6 | 84,594.5 | 3.26x | 3.24x | kv_read | weight_read | kv_read |
-| Kimi-K3 | 1 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 2 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 4 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 8 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 16 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 32 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 64 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 256 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 1024 | rom | 85,066.4 | 85,066.4 | 85,066.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Kimi-K3 | 4096 | rom | 85,224.7 | 85,224.7 | 85,224.7 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 1 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 2 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 4 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 8 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 16 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 32 | sram | 84,415.4 | 26,113.2 | 26,113.2 | 3.23x | 1.00x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 64 | sram | 84,415.4 | 26,113.2 | 28,524.1 | 3.23x | 1.09x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 256 | sram | 84,415.4 | 26,113.2 | 65,354.8 | 3.23x | 2.50x | kv_read | weight_read | weight_read |
+| Kimi-K3 | 1024 | sram | 84,415.4 | 26,113.2 | 82,040.6 | 3.23x | 3.14x | kv_read | weight_read | kv_read |
+| Kimi-K3 | 4096 | sram | 85,109.1 | 26,113.2 | 85,294.4 | 3.26x | 3.27x | kv_read | weight_read | kv_read |
+| Kimi-K3 | 1 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 2 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 4 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 8 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 16 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 32 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 64 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 256 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 1024 | rom | 84,082.4 | 84,605.0 | 84,605.0 | 0.99x | 1.00x | kv_read | kv_read | kv_read |
+| Kimi-K3 | 4096 | rom | 84,928.9 | 85,294.4 | 85,261.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
 
 ## The floorplan sweep: where the recovered silicon goes
 
@@ -820,66 +840,66 @@ where that is controlled for.
 
 | Model | B | Amortisation | Spare | Design | mm2 | R | Sweeps | Aggregate | tok/s/mm2 | Binds on | vs ROM+MAC/sram |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|
-| Kimi-K3 | 1 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 1 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 1 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 2 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 2 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 2 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 2 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 2 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 2 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 4 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 4 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 8 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 8 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 8 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 8 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 8 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 8 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 16 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 16 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 16 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 16 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 16 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x183-perregion | 149,145 | 1.00 | 3.05 | 28,344.8 | 0.190 | link_latency | 0.33x |
-| Kimi-K3 | 16 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 32 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 32 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 32 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 32 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 32 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-array-hw-tensor-x183-perregion | 149,145 | 1.00 | 4.10 | 37,559.6 | 0.252 | link_latency | 0.44x |
-| Kimi-K3 | 32 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 64 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 64 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 64 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 64 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 64 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-tensor-x22-perregion | 1,016,950 | 1.00 | 5.73 | 46,333.9 | 0.046 | kv_read | 0.54x |
-| Kimi-K3 | 64 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 256 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 256 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 256 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 256 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 256 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 2.63 | 75,519.6 | 0.074 | kv_read | 0.89x |
-| Kimi-K3 | 256 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1024 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1024 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1024 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,091.7 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 1024 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 1024 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 4.89 | 82,609.2 | 0.081 | kv_read | 0.97x |
-| Kimi-K3 | 1024 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 85,066.4 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4096 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,224.7 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4096 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 85,224.7 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4096 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 3.28 | 26,106.6 | 0.026 | weight_read | 0.31x |
-| Kimi-K3 | 4096 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 3.28 | 85,224.7 | 0.084 | kv_read | 1.00x |
-| Kimi-K3 | 4096 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 10.42 | 84,594.5 | 0.083 | kv_read | 0.99x |
-| Kimi-K3 | 4096 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.65 | 85,224.7 | 0.084 | kv_read | 1.00x |
+| Kimi-K3 | 1 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 1 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 1 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 2 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 2 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 2 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 2 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 2 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 2 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 4 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 4 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 4 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 4 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 4 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 4 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 8 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 8 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 8 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 8 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 8 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 8 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 16 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 16 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 16 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 16 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 16 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 16 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 32 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 32 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 32 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 32 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 32 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 32 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 64 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 64 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 64 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 64 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 64 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 1.55 | 28,524.1 | 0.028 | weight_read | 0.34x |
+| Kimi-K3 | 64 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 256 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 256 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 256 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 256 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 256 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 2.12 | 65,354.8 | 0.064 | weight_read | 0.77x |
+| Kimi-K3 | 256 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1024 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 84,415.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1024 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,082.4 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1024 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 1.00 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 1024 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 1024 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 2.79 | 82,040.6 | 0.081 | kv_read | 0.97x |
+| Kimi-K3 | 1024 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.00 | 84,605.0 | 0.083 | kv_read | 1.00x |
+| Kimi-K3 | 4096 | batched | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22 | 1,016,950 | 1.00 | 1.00 | 85,109.1 | 0.084 | kv_read | 1.00x |
+| Kimi-K3 | 4096 | batched | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-romfill | 1,016,950 | 2.07 | 1.00 | 84,928.9 | 0.084 | kv_read | 1.00x |
+| Kimi-K3 | 4096 | per_stream | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream | 1,016,950 | 1.00 | 3.28 | 26,113.2 | 0.026 | weight_read | 0.31x |
+| Kimi-K3 | 4096 | per_stream | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perstream-romfill | 1,016,950 | 7.49 | 3.28 | 85,294.4 | 0.084 | kv_read | 1.00x |
+| Kimi-K3 | 4096 | per_region | sram | Kimi-K3/ROM-N6-native-HBMKV-wafer-hybrid-x22-perregion | 1,016,950 | 1.00 | 2.79 | 85,294.4 | 0.084 | kv_read | 1.00x |
+| Kimi-K3 | 4096 | per_region | rom | Kimi-K3/ROM-N6-native-HBMKV-wafer-pipeline-x22-perregion-romfill | 1,016,950 | 7.49 | 1.65 | 85,261.4 | 0.084 | kv_read | 1.00x |
 
 ## What the completeness corrections cost
 
@@ -992,6 +1012,26 @@ correcting only the ROM side would be its own bias.
 | Kimi-K3 | 64 | 224 | 209.59 | 73.86 | 2.84x |
 | Kimi-K3 | 256 | 224 | 219.77 | 84.66 | 2.60x |
 | Kimi-K3 | 1024 | 224 | 219.93 | 84.95 | 2.59x |
+| Kimi-K3 | 1 | 259 | 15.54 | 11.69 | 1.33x |
+| Kimi-K3 | 2 | 259 | 29.90 | 16.76 | 1.78x |
+| Kimi-K3 | 4 | 259 | 55.47 | 25.86 | 2.15x |
+| Kimi-K3 | 8 | 259 | 96.36 | 36.81 | 2.62x |
+| Kimi-K3 | 16 | 259 | 150.29 | 50.74 | 2.96x |
+| Kimi-K3 | 32 | 259 | 202.29 | 65.87 | 3.07x |
+| Kimi-K3 | 64 | 259 | 234.84 | 79.49 | 2.95x |
+| Kimi-K3 | 256 | 259 | 250.63 | 91.68 | 2.73x |
+| Kimi-K3 | 1024 | 259 | 250.91 | 92.02 | 2.73x |
+| Kimi-K3 | 4096 | 259 | 250.91 | 92.02 | 2.73x |
+| Kimi-K3 | 1 | 261 | 15.55 | 11.71 | 1.33x |
+| Kimi-K3 | 2 | 261 | 29.92 | 16.79 | 1.78x |
+| Kimi-K3 | 4 | 261 | 55.52 | 25.91 | 2.14x |
+| Kimi-K3 | 8 | 261 | 96.52 | 36.90 | 2.62x |
+| Kimi-K3 | 16 | 261 | 150.72 | 50.89 | 2.96x |
+| Kimi-K3 | 32 | 261 | 203.18 | 66.10 | 3.07x |
+| Kimi-K3 | 64 | 261 | 236.21 | 79.80 | 2.96x |
+| Kimi-K3 | 256 | 261 | 252.34 | 92.06 | 2.74x |
+| Kimi-K3 | 1024 | 261 | 252.63 | 92.40 | 2.73x |
+| Kimi-K3 | 4096 | 261 | 252.63 | 92.40 | 2.73x |
 | Kimi-K3 | 1 | 335 | 15.65 | 12.32 | 1.27x |
 | Kimi-K3 | 2 | 335 | 30.30 | 17.75 | 1.71x |
 | Kimi-K3 | 4 | 335 | 56.93 | 27.49 | 2.07x |
@@ -1012,46 +1052,46 @@ correcting only the ROM side would be its own bias.
 | Kimi-K3 | 256 | 336 | 312.12 | 105.09 | 2.97x |
 | Kimi-K3 | 1024 | 336 | 312.75 | 105.50 | 2.96x |
 | Kimi-K3 | 4096 | 336 | 312.75 | 105.50 | 2.96x |
-| Kimi-K3 | 1 | 348 | 15.66 | 12.40 | 1.26x |
-| Kimi-K3 | 2 | 348 | 30.35 | 17.90 | 1.70x |
-| Kimi-K3 | 4 | 348 | 57.12 | 27.71 | 2.06x |
-| Kimi-K3 | 8 | 348 | 101.82 | 40.24 | 2.53x |
-| Kimi-K3 | 16 | 348 | 165.56 | 56.66 | 2.92x |
-| Kimi-K3 | 32 | 348 | 235.57 | 74.76 | 3.15x |
-| Kimi-K3 | 64 | 348 | 288.40 | 91.61 | 3.15x |
-| Kimi-K3 | 256 | 348 | 320.90 | 106.97 | 3.00x |
-| Kimi-K3 | 1024 | 348 | 321.59 | 107.40 | 2.99x |
-| Kimi-K3 | 4096 | 348 | 321.59 | 107.40 | 2.99x |
-| Kimi-K3 | 1 | 369 | 15.68 | 12.54 | 1.25x |
-| Kimi-K3 | 2 | 369 | 30.43 | 18.14 | 1.68x |
-| Kimi-K3 | 4 | 369 | 57.40 | 28.04 | 2.05x |
-| Kimi-K3 | 8 | 369 | 102.76 | 40.97 | 2.51x |
-| Kimi-K3 | 16 | 369 | 168.30 | 57.90 | 2.91x |
-| Kimi-K3 | 32 | 369 | 241.85 | 76.61 | 3.16x |
-| Kimi-K3 | 64 | 369 | 299.12 | 94.10 | 3.18x |
-| Kimi-K3 | 256 | 369 | 335.77 | 110.16 | 3.05x |
-| Kimi-K3 | 1024 | 369 | 336.56 | 110.61 | 3.04x |
-| Kimi-K3 | 4096 | 369 | 336.56 | 110.61 | 3.04x |
-| Kimi-K3 | 1 | 381 | 15.69 | 12.61 | 1.24x |
-| Kimi-K3 | 2 | 381 | 30.47 | 18.28 | 1.67x |
-| Kimi-K3 | 4 | 381 | 57.55 | 28.21 | 2.04x |
-| Kimi-K3 | 8 | 381 | 103.26 | 41.38 | 2.50x |
-| Kimi-K3 | 16 | 381 | 169.76 | 58.59 | 2.90x |
-| Kimi-K3 | 32 | 381 | 245.23 | 77.63 | 3.16x |
-| Kimi-K3 | 64 | 381 | 304.96 | 95.48 | 3.19x |
-| Kimi-K3 | 256 | 381 | 343.98 | 111.91 | 3.07x |
-| Kimi-K3 | 1024 | 381 | 344.84 | 112.38 | 3.07x |
-| Kimi-K3 | 4096 | 381 | 344.84 | 112.38 | 3.07x |
-| Kimi-K3 | 1 | 388 | 15.69 | 12.65 | 1.24x |
-| Kimi-K3 | 2 | 388 | 30.49 | 18.36 | 1.66x |
-| Kimi-K3 | 4 | 388 | 57.63 | 28.31 | 2.04x |
-| Kimi-K3 | 8 | 388 | 103.54 | 41.62 | 2.49x |
-| Kimi-K3 | 16 | 388 | 170.57 | 58.98 | 2.89x |
-| Kimi-K3 | 32 | 388 | 247.14 | 78.22 | 3.16x |
-| Kimi-K3 | 64 | 388 | 308.28 | 96.27 | 3.20x |
-| Kimi-K3 | 256 | 388 | 348.68 | 112.92 | 3.09x |
-| Kimi-K3 | 1024 | 388 | 349.57 | 113.39 | 3.08x |
-| Kimi-K3 | 4096 | 388 | 349.57 | 113.39 | 3.08x |
+| Kimi-K3 | 1 | 346 | 15.66 | 12.39 | 1.26x |
+| Kimi-K3 | 2 | 346 | 30.35 | 17.88 | 1.70x |
+| Kimi-K3 | 4 | 346 | 57.09 | 27.68 | 2.06x |
+| Kimi-K3 | 8 | 346 | 101.72 | 40.17 | 2.53x |
+| Kimi-K3 | 16 | 346 | 165.29 | 56.54 | 2.92x |
+| Kimi-K3 | 32 | 346 | 234.94 | 74.59 | 3.15x |
+| Kimi-K3 | 64 | 346 | 287.35 | 91.37 | 3.14x |
+| Kimi-K3 | 256 | 346 | 319.46 | 106.66 | 3.00x |
+| Kimi-K3 | 1024 | 346 | 320.13 | 107.09 | 2.99x |
+| Kimi-K3 | 4096 | 346 | 320.13 | 107.09 | 2.99x |
+| Kimi-K3 | 1 | 375 | 15.68 | 12.58 | 1.25x |
+| Kimi-K3 | 2 | 375 | 30.45 | 18.21 | 1.67x |
+| Kimi-K3 | 4 | 375 | 57.48 | 28.13 | 2.04x |
+| Kimi-K3 | 8 | 375 | 103.01 | 41.18 | 2.50x |
+| Kimi-K3 | 16 | 375 | 169.04 | 58.25 | 2.90x |
+| Kimi-K3 | 32 | 375 | 243.56 | 77.12 | 3.16x |
+| Kimi-K3 | 64 | 375 | 302.07 | 94.79 | 3.19x |
+| Kimi-K3 | 256 | 375 | 339.90 | 111.04 | 3.06x |
+| Kimi-K3 | 1024 | 375 | 340.73 | 111.50 | 3.06x |
+| Kimi-K3 | 4096 | 375 | 340.73 | 111.50 | 3.06x |
+| Kimi-K3 | 1 | 390 | 15.70 | 12.67 | 1.24x |
+| Kimi-K3 | 2 | 390 | 30.50 | 18.38 | 1.66x |
+| Kimi-K3 | 4 | 390 | 57.65 | 28.34 | 2.03x |
+| Kimi-K3 | 8 | 390 | 103.61 | 41.68 | 2.49x |
+| Kimi-K3 | 16 | 390 | 170.80 | 59.09 | 2.89x |
+| Kimi-K3 | 32 | 390 | 247.67 | 78.38 | 3.16x |
+| Kimi-K3 | 64 | 390 | 309.21 | 96.49 | 3.20x |
+| Kimi-K3 | 256 | 390 | 350.01 | 113.20 | 3.09x |
+| Kimi-K3 | 1024 | 390 | 350.91 | 113.67 | 3.09x |
+| Kimi-K3 | 4096 | 390 | 350.91 | 113.67 | 3.09x |
+| Kimi-K3 | 1 | 392 | 15.70 | 12.68 | 1.24x |
+| Kimi-K3 | 2 | 392 | 30.50 | 18.40 | 1.66x |
+| Kimi-K3 | 4 | 392 | 57.67 | 28.36 | 2.03x |
+| Kimi-K3 | 8 | 392 | 103.69 | 41.75 | 2.48x |
+| Kimi-K3 | 16 | 392 | 171.03 | 59.20 | 2.89x |
+| Kimi-K3 | 32 | 392 | 248.20 | 78.55 | 3.16x |
+| Kimi-K3 | 64 | 392 | 310.14 | 96.71 | 3.21x |
+| Kimi-K3 | 256 | 392 | 351.34 | 113.48 | 3.10x |
+| Kimi-K3 | 1024 | 392 | 352.25 | 113.96 | 3.09x |
+| Kimi-K3 | 4096 | 392 | 352.25 | 113.96 | 3.09x |
 | Kimi-K3 | 1 | 393 | 15.70 | 12.68 | 1.24x |
 | Kimi-K3 | 2 | 393 | 30.51 | 18.41 | 1.66x |
 | Kimi-K3 | 4 | 393 | 57.69 | 28.38 | 2.03x |
@@ -1125,8 +1165,8 @@ large fraction of one and a rounding error on the other.
 
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
-| gpu | Kimi-K3 | 1 | 27.74 | 1.1% |
-| rom | Kimi-K3 | 1 | 27.74 | 8.6% |
+| gpu | Kimi-K3 | 1 | 2,180.10 | 27.0% |
+| rom | Kimi-K3 | 1 | 380.02 | 50.1% |
 
 ### 4. KV access granularity, which is a layout choice
 
@@ -1168,92 +1208,93 @@ reduces the bytes fetched.
 
 | Model | B | Expert coverage | Engaged weight bytes | Engaged fraction | Effective ROM read | Peak ROM read | Per-user tok/s | Aggregate tok/s |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Kimi-K3 | 1 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 2 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 4 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 8 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 16 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 32 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 64 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 256 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 23.1 | 8,651.2 |
-| Kimi-K3 | 1024 | 4.81% | 180.8 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 8.5 | 8,655.1 |
-| Kimi-K3 | 4096 | 17.91% | 370.2 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 2.1 | 8,656.8 |
+| Kimi-K3 | 1 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 2 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 4 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 8 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 16 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 32 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 64 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 256 | 1.79% | 137.0 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 25.3 | 9,617.4 |
+| Kimi-K3 | 1024 | 4.74% | 179.7 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 9.4 | 9,603.6 |
+| Kimi-K3 | 4096 | 17.65% | 366.5 GB | 100.00% | 45,287.76 TB/s | 45,287.76 TB/s | 2.3 | 9,587.4 |
 
 ## Binding constraint census
 
 | Family | Binding constraint | Points |
 |---|---|---:|
-| gpu | compute | 30 |
+| gpu | compute | 4 |
 | gpu | infeasible | 26 |
-| gpu | link_latency | 184 |
-| gpu | weight_read | 520 |
-| rom | compute | 332 |
-| rom | infeasible | 1128 |
-| rom | kv_read | 103 |
-| rom | link_latency | 278 |
-| rom | weight_read | 199 |
+| gpu | link_latency | 412 |
+| gpu | weight_read | 398 |
+| rom | compute | 248 |
+| rom | infeasible | 1344 |
+| rom | kv_read | 60 |
+| rom | layer_fixed_latency | 172 |
+| rom | link_latency | 308 |
+| rom | weight_read | 148 |
 
 Why the infeasible points are infeasible:
 
 | Family | Reason class | Points |
 |---|---|---:|
 | gpu | CAPACITY | 26 |
-| rom | CAPACITY | 1128 |
+| rom | CAPACITY | 1344 |
 
 ## Mechanical consistency audit
 
-**FAIL** over 52,411 checks.
+**FAIL** over 56,135 checks.
 
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-hybrid-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-pipeline-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x6', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x7', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x8', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x10', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-pipeline-x12', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-tensor-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x6', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x7', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x8', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x10', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-tensor-x12', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x340', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x353', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x386', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x351', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x395', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x397', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x398', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hybrid-x399', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x6', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x7', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x8', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x10', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-wafer-hybrid-x12', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x340-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x353-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x386-romfill', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x351-romfill', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x395-romfill', 'Kimi-K3', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x397-romfill', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x398-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-pipeline-x399-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x340-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x353-romfill', 'Kimi-K3', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N6-native-SRAMKV-array-hw-tensor-x386-romfill', 'Kimi-K3', 1)
 
 - Generated arithmetic identities, area-accounting identities and the ROM full-array sweep floor only.
 - A passing audit is not evidence for ROM macro timing, array read bandwidth at a leading node, NoC timing, package, power delivery, yield, or model accuracy.
@@ -1264,9 +1305,9 @@ Why the infeasible points are infeasible:
 | Grade | Inputs |
 |---|---:|
 | measured | 4 |
-| published | 71 |
-| derived | 47 |
-| assumed | 70 |
+| published | 75 |
+| derived | 48 |
+| assumed | 77 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1340,6 +1381,13 @@ failure mode this program exists to prevent:
 - `rom.cim_cell_area_multiplier`
 - `rom.cim_precompute_area_fraction`
 - `rom.expert_bank_pooling`
+- `serial_latency.hardware_links.rom_board_serdes`
+- `serial_latency.hardware_links.rom_package_ucie`
+- `serial_latency.hardware_links.rom_wafer_serdes`
+- `serial_latency.rom_datapath.hbm_random_row_latency_s`
+- `serial_latency.rom_datapath.rom_row_access_s`
+- `serial_latency.rom_datapath.select_units_per_die`
+- `serial_latency.rom_datapath.stream_area_fraction`
 - `sram.array_efficiency`
 
 ## Interpretation boundary
@@ -1357,12 +1405,12 @@ failure mode this program exists to prevent:
   at batch 1. Each of those makes an array worse, never better, so the
   reported array crossovers are upper bounds.
 - **Power is now enumerated, and it is close on one published part and
-  1.8-2.3x low on the other.** Leakage, clock distribution, operand
+  2.6-3.2x low on the other.** Leakage, clock distribution, operand
   delivery and a measured clocked-idle floor are charged per mm2 per
   second whether or not a byte moves, and the HBM traffic energy is a
   measured SC 2025 figure rather than an HBM2-era model. The A100 lands
   at 1.15x of its published TDP under a saturating load; the Taalas HC1
-  lands at 0.44x of its published card power. **The second one FAILS its
+  lands at 0.31x of its published card power. **The second one FAILS its
   gate and the failure is reported rather than tuned away.** The A100
   gate is also the weaker of the two, because the clock term inside it
   was calibrated as a fraction of a shipping GPU's TDP density -- read
