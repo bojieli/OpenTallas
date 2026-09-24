@@ -221,6 +221,9 @@ implemented.
   engine slices, correlation, and open gates.
 - [ROM read service in RTL](ROM_SERVICE_RTL.md) — addressing, placement, repair,
   correlation, and explicit macro boundary.
+- [ROM array fabric in RTL](ROM_ARRAY_FABRIC_RTL.md) — package controller and
+  multicast packet router: message formats, credit flow, ordering, deadlock
+  rules, and what the PHY stand-in abstracts.
 - [ABI 3.0 physical implementation views](ABI3_PHYSICAL_VIEWS.md) — governed
   public physical proxies and their scope.
 - [ASAP7 predictive physical campaign](ASAP7_PHYSICAL.md) — predictive-node

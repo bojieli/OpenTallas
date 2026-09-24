@@ -1,0 +1,906 @@
+{
+  "checks": {
+    "end_to_end_oracle_tokens": true,
+    "lead_0_fail_closed": true,
+    "lead_128_fail_closed": true,
+    "lead_32_fail_closed": true,
+    "lead_covers_worst_latency": true,
+    "lint_clean": true,
+    "long_context_bit_exact": true,
+    "npc2_bit_exact": true,
+    "probe_clean": true,
+    "prompt60_from_empty_bit_exact": true,
+    "single_step_bit_exact": true,
+    "sram_cycles_match_decode_record": true,
+    "sram_reference_bit_exact": true,
+    "timing_constant_matches_probe": true,
+    "timing_model_within_half_percent": true,
+    "unit_provisioned_pass": true,
+    "unit_unprovisioned_underflow_detected": true
+  },
+  "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of the decode core with its KV cache behind the synthesizable streaming engine and a behavioural, timing-faithful HBM model (simulation only; not a JEDEC-certified controller). HBM3E-class timing: bandwidth from the repository's technology table, DRAM timings from a public simulator's HBM3 preset, controller latency assumed. The core clock of the HBM time base is 1 GHz. Qwen3-8B figures are timing-model projections (tools/hdc_timing.py), not RTL runs, and positions beyond 40,960 price a hypothetical context extension.",
+  "configuration": {
+    "core_clock_ps": 1000,
+    "demand_words_per_cycle_full_occupancy": 1.0,
+    "fetch_lead_cycles": 512,
+    "hbm_pseudo_channels": 4,
+    "k_mode_block_words": 16,
+    "layout": {
+      "LLG": 3,
+      "LOG_HD": 4,
+      "LOG_TW": 2,
+      "V0_WORD": 512
+    },
+    "supply_words_per_cycle_peak": 3.9062,
+    "tail_sram_bytes": 8192,
+    "window_bytes": 32768,
+    "window_lines": 256
+  },
+  "hbm_model": {
+    "banks_per_pseudo_channel": 32,
+    "burst_bytes": 32,
+    "grade": "bandwidth derived from the repository's technology table; DRAM timings are a public simulator's HBM3 preset (partly estimates); controller latency assumed",
+    "pin_rate_bps": 7812500000.0,
+    "pseudo_channel_bits": 32,
+    "pseudo_channel_peak_bytes_s": 31250000000.0,
+    "pseudo_channels_per_stack": 32,
+    "row_bytes": 1024,
+    "sources": {
+      "bandwidth": "configs/hardware/technology.json hbm.hbm3e.stack_bandwidth_bytes_s (B200 8 TB/s over 8 HBM3E stacks) over 32 pseudo-channels of 32 bits: the burst time BURST_PS follows",
+      "controller": "ASSUMED: 10 ns request path and 10 ns response path (controller + PHY); a 16-deep reordering window per pseudo-channel, earliest-ready first, same-sector order kept",
+      "core_timings": "Ramulator 2 HBM3 6400 Mb/s preset (CMU-SAFARI/ramulator2 python/ramulator/dram/hbm3.py at commit 72427a1bba37; nCL, nRCDRD, nRCDWR, nRP, nRAS, nWR, nRTP, nCWL, nRRDS/L, nFAW, nWTRS/L are marked there as estimates), converted to ns at its tCK 625 ps; tCCD_L = max(4 tCK, 2.5 ns) at tCK 512 ps; tRTW per JESD238 note 18 as Ramulator resolves it",
+      "organisation": "JESD238 Table 4 via Ramulator 2 HBM3_16Gb_8hi: 2 SIDs x 4 bank groups x 4 banks per pseudo-channel, 1 KB rows, BL8 of 32 bits = 32 B",
+      "refresh": "JESD238 Table 93 as Ramulator 2 cites it: tRFC 350 ns (16 Gb dies, 8-high), tREFI 3.9 us; all-bank refresh, staggered over pseudo-channels (conservative against per-bank refresh)"
+    },
+    "stack_bandwidth_bytes_s": 1000000000000.0,
+    "timings_ps": {
+      "BURST_PS": 1024,
+      "CLK_PS": 1000,
+      "CL_PS": 12500,
+      "CWL_PS": 6250,
+      "FAW_PS": 15000,
+      "RAS_PS": 28125,
+      "RCDRD_PS": 19375,
+      "RCDWR_PS": 9375,
+      "REFI_PS": 3900000,
+      "REQ_PS": 10000,
+      "RFC_PS": 350000,
+      "RP_PS": 16250,
+      "RRDL_PS": 3125,
+      "RRDS_PS": 2500,
+      "RSP_PS": 10000,
+      "RTP_PS": 5625,
+      "RTW_PS": 9948,
+      "TCCDL_PS": 2560,
+      "WR_PS": 20625,
+      "WTRL_PS": 6250,
+      "WTRS_PS": 4375
+    }
+  },
+  "input_sha256": {
+    "configs/hardware/technology.json": "9cd9e0901cf278f0a6f45b6a62bb6db238adfabac8a5395e54e150a51abfe754",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "1f943130e1fea3993df1f026872ce42a925986140c46eda6b107360fb5e62263",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "7fd0224313630d283525afb1df8f1b6ea5fa4534fa7669afa153698b7131c7e6",
+    "rtl/hdc/kv/ot_hdc_kv_walk.sv": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6",
+    "rtl/hdc/ot_hdc_core.sv": "97ffe38b12c945e7eba5405c11e5ee927126e1758cd5aec5fb3051c202daf8c7",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
+    "rtl/hdc/ot_hdc_matvec.sv": "ae09eb6853d308f8364dfa30ddb335445744465137cbb550285778f6cdbd7358",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/ot_hdc_stream.sv": "0ac8993138829ea6a87c72f0d9b5c0f6228a5e3956bb7ee9efa761cfee928c42",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/test/hdc_core_harness.cpp": "5d659a8d6994d74a2cc6d28a1e97738c74850a3df389df5aaba1d475d0093685",
+    "rtl/test/hdc_core_hbm_harness.cpp": "01932ad6f126945016eb5dae1b9937df585c101c855019c1536962590a39555d",
+    "rtl/test/hdc_kv_stream_harness.cpp": "f3ca138da5873e6bd91e97f4aa5fb11e75a2b942248052330c96c6e23342fe33",
+    "rtl/test/tb_hdc_core.sv": "3789fafa7cd8e90ce7ea79eef9b807cdc3b2a297f32c99ef6cc6605d01c4a52c",
+    "rtl/test/tb_hdc_core_hbm.sv": "e1529b95a91a05f7fb01aa5a5ce0c69e99957f5f6bb67f1720909d7a9bedb1ef",
+    "rtl/test/tb_hdc_kv_stream.sv": "c346c3265592b44731880ba667a374ab9effbf212dd84cd8fed8400d0e17f7e5",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_isa.py": "05b9e689c57e607dbb0ff0b7eecc04be4bbe2e1707b9926b7ee27271440c6e55",
+    "tools/hdc_program.py": "53c5fa418836eda12c229eeade9e460314bfad1ffa1cbbd4c40944f5f8d0a14c",
+    "tools/hdc_timing.py": "1a1d958eb82fdf3a9e5d13ef189f17530d0b7f21a29d83ec109f8c9176655ed6",
+    "tools/rtl_hdc_decode_campaign.py": "a3d64fe99eee2613fe545d23613d3a33c2b1b769accab433bef974203e519be8",
+    "tools/rtl_hdc_kv_stream_campaign.py": "6df4311a3450225d33d149975d89053b5264e1d5706a77de4b7229d5f97ab520"
+  },
+  "lead": {
+    "k_mode_block_words": 16,
+    "lead_covers_worst_latency": true,
+    "lead_cycles": 512,
+    "rule": "an op issues once min(its lines, lead >> jsh + 1) lines are complete; with the HBM supply at or above the op's demand (G words per 2^jsh cycles) the buffered lines cover a refresh plus a row-conflict fetch, so no read can find its word missing -- and one that would is detected (fault)",
+    "thresholds": [
+      {
+        "covered": false,
+        "jsh": 0,
+        "threshold_lines": 513,
+        "window_cap_lines": 128
+      },
+      {
+        "covered": false,
+        "jsh": 1,
+        "threshold_lines": 257,
+        "window_cap_lines": 192
+      },
+      {
+        "covered": true,
+        "jsh": 2,
+        "threshold_lines": 129,
+        "window_cap_lines": 224
+      },
+      {
+        "covered": true,
+        "jsh": 3,
+        "threshold_lines": 65,
+        "window_cap_lines": 240
+      }
+    ],
+    "window_lines": 256,
+    "worst_single_fetch_latency_cycles": 420,
+    "worst_single_fetch_latency_ps": 419149
+  },
+  "qwen3_8b_projection": [
+    {
+      "configuration": "64 lanes (the built core), KV in SRAM",
+      "cycles_per_token": 185412871,
+      "kv_store": "sram",
+      "lanes": 64,
+      "position": 8192
+    },
+    {
+      "configuration": "64 lanes (the built core), KV in SRAM",
+      "cycles_per_token": 1732152583,
+      "kv_store": "sram",
+      "lanes": 64,
+      "position": 200000
+    },
+    {
+      "configuration": "64 lanes (the built core), KV in SRAM",
+      "cycles_per_token": 8183352583,
+      "kv_store": "sram",
+      "lanes": 64,
+      "position": 1000000
+    },
+    {
+      "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
+      "cycles_per_token": 185412871,
+      "hbm_pseudo_channels": 4,
+      "kv_bytes_per_token": 1206853632,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 0,
+      "kv_window_lines_required": 0,
+      "lanes": 64,
+      "no_stall_window_suffices": true,
+      "position": 8192
+    },
+    {
+      "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
+      "cycles_per_token": 1732152583,
+      "hbm_pseudo_channels": 4,
+      "kv_bytes_per_token": 29490094080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 0,
+      "kv_window_lines_required": 0,
+      "lanes": 64,
+      "no_stall_window_suffices": true,
+      "position": 200000
+    },
+    {
+      "configuration": "64 lanes, KV in HBM: 4 pseudo-channels",
+      "cycles_per_token": 8183352583,
+      "hbm_pseudo_channels": 4,
+      "kv_bytes_per_token": 147454894080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 0,
+      "kv_window_lines_required": 0,
+      "lanes": 64,
+      "no_stall_window_suffices": true,
+      "position": 1000000
+    },
+    {
+      "configuration": "16,384 lanes, KV in SRAM",
+      "cycles_per_token": 49482959,
+      "kv_store": "sram",
+      "lanes": 16384,
+      "position": 8192
+    },
+    {
+      "configuration": "16,384 lanes, KV in SRAM",
+      "cycles_per_token": 1156066511,
+      "kv_store": "sram",
+      "lanes": 16384,
+      "position": 200000
+    },
+    {
+      "configuration": "16,384 lanes, KV in SRAM",
+      "cycles_per_token": 5771291855,
+      "kv_store": "sram",
+      "lanes": 16384,
+      "position": 1000000
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
+      "cycles_per_token": 50161307,
+      "hbm_pseudo_channels": 32,
+      "kv_bytes_per_token": 1206853632,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 144,
+      "kv_wait_cycles": 678348,
+      "kv_window_lines_required": 212,
+      "lanes": 16384,
+      "no_stall_window_suffices": false,
+      "position": 8192
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
+      "cycles_per_token": 1174704215,
+      "hbm_pseudo_channels": 32,
+      "kv_bytes_per_token": 29490094080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 144,
+      "kv_wait_cycles": 18637704,
+      "kv_window_lines_required": 3018,
+      "lanes": 16384,
+      "no_stall_window_suffices": false,
+      "position": 200000
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: one HBM3E stack (32 pseudo-channels)",
+      "cycles_per_token": 5864989955,
+      "hbm_pseudo_channels": 32,
+      "kv_bytes_per_token": 147454894080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 144,
+      "kv_wait_cycles": 93698100,
+      "kv_window_lines_required": 14462,
+      "lanes": 16384,
+      "no_stall_window_suffices": false,
+      "position": 1000000
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
+      "cycles_per_token": 49482959,
+      "hbm_pseudo_channels": 384,
+      "kv_bytes_per_token": 1206853632,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 0,
+      "kv_window_lines_required": 0,
+      "lanes": 16384,
+      "no_stall_window_suffices": true,
+      "position": 8192
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
+      "cycles_per_token": 1156068095,
+      "hbm_pseudo_channels": 384,
+      "kv_bytes_per_token": 29490094080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 1584,
+      "kv_window_lines_required": 0,
+      "lanes": 16384,
+      "no_stall_window_suffices": true,
+      "position": 200000
+    },
+    {
+      "configuration": "16,384 lanes, KV in HBM: 12 stacks (rate-matched, 384 pseudo-channels)",
+      "cycles_per_token": 5771294231,
+      "hbm_pseudo_channels": 384,
+      "kv_bytes_per_token": 147454894080,
+      "kv_ops": 288,
+      "kv_store": "hbm",
+      "kv_supply_limited_ops": 0,
+      "kv_wait_cycles": 2376,
+      "kv_window_lines_required": 0,
+      "lanes": 16384,
+      "no_stall_window_suffices": true,
+      "position": 1000000
+    }
+  ],
+  "runs": {
+    "end_to_end": {
+      "delivered_word_mismatches": 0,
+      "generated_tokens": [
+        1073,
+        382,
+        93
+      ],
+      "generation_steps": [
+        {
+          "cycles": 32275,
+          "fault": 0,
+          "input": 271,
+          "oracle": 1073,
+          "output": 1073,
+          "position": 15
+        },
+        {
+          "cycles": 32324,
+          "fault": 0,
+          "input": 1073,
+          "oracle": 382,
+          "output": 382,
+          "position": 16
+        },
+        {
+          "cycles": 32452,
+          "fault": 0,
+          "input": 382,
+          "oracle": 93,
+          "output": 93,
+          "position": 17
+        }
+      ],
+      "kv_ops": 144,
+      "kv_stall_cycles": 6086,
+      "mismatches": 0,
+      "oracle_generated_tokens": [
+        1073,
+        382,
+        93
+      ],
+      "pass": true,
+      "steps": 18,
+      "stream_fault": 0,
+      "total_cycles": 570638,
+      "underflow_detected": false,
+      "zero_substituted_words": 13088
+    },
+    "lead_0": {
+      "cycles": 1710,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 18,
+        "read_latency_avg_ps": 60830,
+        "read_latency_max_ps": 67187,
+        "reads": 64,
+        "refreshes": 0,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 48,
+        "writes": 2
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 192,
+      "kv_ops": 1,
+      "kv_stall_cycles": 40,
+      "logit_mismatches": 4096,
+      "next_token": 0,
+      "outcome": "underflow_detected",
+      "pass": false,
+      "position": 59,
+      "stream_fault": 1,
+      "total_cycles": 1710,
+      "underflow_detected": true,
+      "vector_memory_mismatches": 2670,
+      "zero_substituted_words": 2
+    },
+    "lead_128": {
+      "cycles": 38219,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 131,
+        "read_latency_avg_ps": 67348,
+        "read_latency_max_ps": 324293,
+        "reads": 736,
+        "refreshes": 23,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 613,
+        "writes": 8
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 391,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "outcome": "bit_exact",
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 38219,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 5568
+    },
+    "lead_32": {
+      "cycles": 9169,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 50,
+        "read_latency_avg_ps": 62806,
+        "read_latency_max_ps": 165187,
+        "reads": 248,
+        "refreshes": 6,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 202,
+        "writes": 4
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 128,
+      "kv_ops": 3,
+      "kv_stall_cycles": 118,
+      "logit_mismatches": 4096,
+      "next_token": 0,
+      "outcome": "underflow_detected",
+      "pass": false,
+      "position": 59,
+      "stream_fault": 1,
+      "total_cycles": 9169,
+      "underflow_detected": true,
+      "vector_memory_mismatches": 2670,
+      "zero_substituted_words": 1394
+    },
+    "long_context": {
+      "cycles": 38219,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 131,
+        "read_latency_avg_ps": 67348,
+        "read_latency_max_ps": 324293,
+        "reads": 736,
+        "refreshes": 23,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 613,
+        "writes": 8
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 391,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 38219,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 5568
+    },
+    "npc2_long_context": {
+      "cycles": 38224,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 65,
+        "read_latency_avg_ps": 86660,
+        "read_latency_max_ps": 338205,
+        "reads": 736,
+        "refreshes": 12,
+        "request_backpressure_cycles": 276,
+        "row_conflicts": 0,
+        "row_hits": 679,
+        "writes": 8
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 396,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 38224,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 5568
+    },
+    "npc2_prompt60_from_empty": {
+      "cycles": 39019,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 2894,
+        "read_latency_avg_ps": 86569,
+        "read_latency_max_ps": 476922,
+        "reads": 19760,
+        "refreshes": 1051,
+        "request_backpressure_cycles": 1751,
+        "row_conflicts": 0,
+        "row_hits": 17730,
+        "writes": 864
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 480,
+      "kv_stall_cycles": 20884,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 2064004,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 164288
+    },
+    "npc2_single_step": {
+      "cycles": 32196,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 34,
+        "read_latency_avg_ps": 59882,
+        "read_latency_max_ps": 69187,
+        "reads": 128,
+        "refreshes": 9,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 102,
+        "writes": 8
+      },
+      "isa_next_token": 1073,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 0,
+      "logit_mismatches": 0,
+      "next_token": 1073,
+      "pass": true,
+      "position": 15,
+      "stream_fault": 0,
+      "total_cycles": 32196,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 1344
+    },
+    "prompt60_from_empty": {
+      "cycles": 38497,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 5563,
+        "read_latency_avg_ps": 73280,
+        "read_latency_max_ps": 457298,
+        "reads": 19760,
+        "refreshes": 2105,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 15061,
+        "writes": 864
+      },
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 480,
+      "kv_stall_cycles": 25322,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "pass": true,
+      "position": 59,
+      "stream_fault": 0,
+      "total_cycles": 2068442,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 164288
+    },
+    "single_step": {
+      "cycles": 32196,
+      "delivered_word_mismatches": 0,
+      "fault": 0,
+      "hbm": {
+        "activates": 67,
+        "read_latency_avg_ps": 55653,
+        "read_latency_max_ps": 61959,
+        "reads": 128,
+        "refreshes": 17,
+        "request_backpressure_cycles": 0,
+        "row_conflicts": 0,
+        "row_hits": 69,
+        "writes": 8
+      },
+      "isa_next_token": 1073,
+      "kv_cache_mismatches": 0,
+      "kv_ops": 8,
+      "kv_stall_cycles": 0,
+      "logit_mismatches": 0,
+      "next_token": 1073,
+      "pass": true,
+      "position": 15,
+      "stream_fault": 0,
+      "total_cycles": 32196,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0,
+      "zero_substituted_words": 1344
+    },
+    "sram_long_context": {
+      "cycles": 37828,
+      "fault": 0,
+      "isa_next_token": 1332,
+      "kv_cache_mismatches": 0,
+      "logit_mismatches": 0,
+      "next_token": 1332,
+      "pass": true,
+      "position": 59,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0
+    },
+    "sram_prompt60_from_empty": {
+      "generated_tokens": [
+        1332
+      ],
+      "generation_steps": [
+        {
+          "cycles": 37828,
+          "fault": 0,
+          "input": 198,
+          "oracle": 1073,
+          "output": 1332,
+          "position": 59
+        }
+      ],
+      "mismatches": 1,
+      "oracle_generated_tokens": [
+        1073
+      ],
+      "pass": false,
+      "steps": 60,
+      "total_cycles": 2043120,
+      "underflow_detected": false
+    },
+    "sram_single_step": {
+      "cycles": 32196,
+      "fault": 0,
+      "isa_next_token": 1073,
+      "kv_cache_mismatches": 0,
+      "logit_mismatches": 0,
+      "next_token": 1073,
+      "pass": true,
+      "position": 15,
+      "underflow_detected": false,
+      "vector_memory_mismatches": 0
+    },
+    "unit_probe_npc1": {
+      "cycles": 68580,
+      "fault": 0,
+      "hbm_read_latency_max_ps": 509726,
+      "issue_wait_cycles": 140,
+      "mismatches": 0,
+      "ops": 1,
+      "ops_done": 1,
+      "probe": {
+        "cycles": 68427,
+        "pseudo_channels": 1,
+        "words": 48000,
+        "words_per_cycle": 0.7015
+      },
+      "pseudo_channels": [
+        {
+          "activates": 2547,
+          "pc": 0,
+          "reads": 48000,
+          "refreshes": 17,
+          "row_conflicts": 1975,
+          "row_hits": 45453,
+          "writes": 0
+        }
+      ],
+      "set": 2,
+      "verdict": "PASS",
+      "words_checked": 192000,
+      "zero_mismatches": 0
+    },
+    "unit_provisioned_npc2": {
+      "cycles": 44487,
+      "fault": 0,
+      "hbm_read_latency_max_ps": 492455,
+      "issue_wait_cycles": 28432,
+      "mismatches": 0,
+      "ops": 7,
+      "ops_done": 7,
+      "pseudo_channels": [
+        {
+          "activates": 827,
+          "pc": 0,
+          "reads": 12536,
+          "refreshes": 11,
+          "row_conflicts": 515,
+          "row_hits": 11709,
+          "writes": 0
+        },
+        {
+          "activates": 824,
+          "pc": 1,
+          "reads": 12528,
+          "refreshes": 10,
+          "row_conflicts": 539,
+          "row_hits": 11704,
+          "writes": 0
+        }
+      ],
+      "set": 0,
+      "verdict": "PASS",
+      "words_checked": 173696,
+      "zero_mismatches": 0
+    },
+    "unit_provisioned_npc4": {
+      "cycles": 44069,
+      "fault": 0,
+      "hbm_read_latency_max_ps": 565208,
+      "issue_wait_cycles": 28014,
+      "mismatches": 0,
+      "ops": 7,
+      "ops_done": 7,
+      "pseudo_channels": [
+        {
+          "activates": 554,
+          "pc": 0,
+          "reads": 6264,
+          "refreshes": 11,
+          "row_conflicts": 326,
+          "row_hits": 5710,
+          "writes": 0
+        },
+        {
+          "activates": 531,
+          "pc": 1,
+          "reads": 6264,
+          "refreshes": 10,
+          "row_conflicts": 311,
+          "row_hits": 5733,
+          "writes": 0
+        },
+        {
+          "activates": 545,
+          "pc": 2,
+          "reads": 6272,
+          "refreshes": 10,
+          "row_conflicts": 325,
+          "row_hits": 5727,
+          "writes": 0
+        },
+        {
+          "activates": 523,
+          "pc": 3,
+          "reads": 6264,
+          "refreshes": 10,
+          "row_conflicts": 306,
+          "row_hits": 5741,
+          "writes": 0
+        }
+      ],
+      "set": 0,
+      "verdict": "PASS",
+      "words_checked": 173696,
+      "zero_mismatches": 0
+    },
+    "unit_unprovisioned_npc4": {
+      "cycles": 564,
+      "fault": 1,
+      "hbm_read_latency_max_ps": 126870,
+      "issue_wait_cycles": 290,
+      "mismatches": 6,
+      "ops": 1,
+      "ops_done": 0,
+      "pseudo_channels": [
+        {
+          "activates": 73,
+          "pc": 0,
+          "reads": 324,
+          "refreshes": 0,
+          "row_conflicts": 49,
+          "row_hits": 252,
+          "writes": 0
+        },
+        {
+          "activates": 73,
+          "pc": 1,
+          "reads": 324,
+          "refreshes": 0,
+          "row_conflicts": 49,
+          "row_hits": 252,
+          "writes": 0
+        },
+        {
+          "activates": 76,
+          "pc": 2,
+          "reads": 345,
+          "refreshes": 0,
+          "row_conflicts": 52,
+          "row_hits": 270,
+          "writes": 0
+        },
+        {
+          "activates": 76,
+          "pc": 3,
+          "reads": 346,
+          "refreshes": 0,
+          "row_conflicts": 52,
+          "row_hits": 271,
+          "writes": 0
+        }
+      ],
+      "set": 1,
+      "verdict": "FAULT_DETECTED",
+      "words_checked": 1044,
+      "zero_mismatches": 0
+    }
+  },
+  "schema": "opentallas.hdc-kv-stream-campaign.v1",
+  "status": "pass",
+  "timing_model": {
+    "constant_matches_probe": true,
+    "constants": {
+      "bw_per_pc": 0.7,
+      "c0": 12,
+      "lat": 108,
+      "lead": 512,
+      "npc": 4,
+      "win": 256
+    },
+    "fits": [
+      {
+        "error_pct": 0.0093,
+        "model_cycles": 32199,
+        "rtl_cycles": 32196,
+        "run": "single_step_position_15"
+      },
+      {
+        "error_pct": 0.0209,
+        "model_cycles": 38227,
+        "rtl_cycles": 38219,
+        "run": "single_step_position_59"
+      }
+    ],
+    "probe_words_per_cycle_per_pseudo_channel": 0.7015
+  },
+  "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16)",
+  "vehicle_cost": {
+    "end_to_end_16_plus_3_total": {
+      "added_cycles": 6086,
+      "added_fraction": 0.01078,
+      "hbm_cycles": 570638,
+      "sram_cycles": 564552
+    },
+    "prompt60_from_empty_total": {
+      "added_cycles": 25322,
+      "added_fraction": 0.01239,
+      "hbm_cycles": 2068442,
+      "sram_cycles": 2043120
+    },
+    "single_step_position_15": {
+      "added_cycles": 0,
+      "added_fraction": 0.0,
+      "hbm_cycles": 32196,
+      "sram_cycles": 32196
+    },
+    "single_step_position_59": {
+      "added_cycles": 391,
+      "added_fraction": 0.01034,
+      "hbm_cycles": 38219,
+      "sram_cycles": 37828
+    }
+  },
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ"
+    ],
+    "messages": [],
+    "returncode": 0
+  }
+}

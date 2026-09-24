@@ -104,6 +104,7 @@ module ot_hdc_matvec #(
     reg [NW-1:0]     nout_r, tiles_r, k_r;
     reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
     reg [1:0]        split_r;
+    reg [AW-1:0]     tstep_r;          // weight step per round: ts, or G*ts for KV ops (tile r*G + g)
     reg [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, xcs_r, ots_r, ojs_r;
     reg [2:0]        jsh_r;
     reg [NW-1:0]     t, k;
@@ -129,7 +130,7 @@ module ot_hdc_matvec #(
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
                 mmode_r <= i_mmode; split_r <= i_wsrc ? 2'd0 : i_split;
-                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts << LG) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
                 t <= 0; k <= 0; j <= 0;
                 t_last <= (i_tiles == 1); k_last <= (i_k == 1);
@@ -161,7 +162,7 @@ module ot_hdc_matvec #(
                     xk <= xk_base; xc <= xk_base;
                     if (!t_last) begin
                         t <= t + 1'b1; t_last <= (t + 2 == tiles_r);
-                        base_t <= base_t + ts_r; base_k <= base_t + ts_r; cur <= base_t + ts_r;
+                        base_t <= base_t + tstep_r; base_k <= base_t + tstep_r; cur <= base_t + tstep_r;
                         ot <= ot + ot_step; oa <= ot + ot_step;
                         nb_t <= nb_t + nb_step; nb <= nb_t + nb_step; lb <= lb + lb_step;
                     end else begin
@@ -246,17 +247,23 @@ module ot_hdc_matvec #(
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
                 localparam integer LI = g * W + gl;
-                wire [31:0] prod, fb, acc_in;
+                wire [31:0] prod, fb_pre, acc_in;
+                reg  [31:0] acc_q;
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
                 ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
                                    .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
-                // add input at c+8; the circulating sum from IL cycles earlier
-                assign acc_in = fl_first[5] ? 32'd0 : fb;
+                // add input at c+8; the circulating sum from IL cycles earlier.
+                //: The first-element select is made one cycle early into acc_q: the
+                //: flag fans out to every lane bit (G*W*32 loads), and registering the
+                //: mux gives its buffer tree a whole cycle instead of sharing one with
+                //: the adder's alignment logic (me_iter11: -98 ps on this path).
+                always @(posedge clk) acc_q <= fl_first[4] ? 32'd0 : fb_pre;
+                assign acc_in = acc_q;
                 ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
                                    sum[32*LI +: 32], f1);
-                ot_hdc_delay #(.W(32), .D(FB)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end

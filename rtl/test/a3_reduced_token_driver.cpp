@@ -20,6 +20,16 @@
 #include "Vot_a3_shipped_prefix_top.h"
 #include "verilated.h"
 
+// Cycle attribution, compiled in only by tools/profile_abi3_control_path.py.
+#ifdef OT_A3_PROFILE
+#include "a3_control_profile.h"
+#define OT_A3_PROFILE_SAMPLE() ot_profile::sample(dut, cycles)
+#define OT_A3_PROFILE_REPORT() ot_profile::report()
+#else
+#define OT_A3_PROFILE_SAMPLE() ((void)0)
+#define OT_A3_PROFILE_REPORT() ((void)0)
+#endif
+
 #include <cstdio>
 #include <cstdint>
 #include <cstdlib>
@@ -294,6 +304,7 @@ int main(int argc, char** argv) {
     unsigned done_seen = 0, complete_seen = 0, trapped_seen = 0;
     while (!dut.done && !dut.trapped && cycles < guard) {
         tick();
+        OT_A3_PROFILE_SAMPLE();
         done_seen |= dut.done;
         complete_seen |= dut.complete;
         trapped_seen |= dut.trapped;
@@ -303,6 +314,7 @@ int main(int argc, char** argv) {
         tick();
         complete_seen |= dut.complete;
     }
+    OT_A3_PROFILE_REPORT();
     if (hit_guard)
         std::printf("  NOTE: stopped at the %llu-cycle guard, not on done\n",
                     (unsigned long long)guard);
