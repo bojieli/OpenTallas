@@ -18,12 +18,14 @@ module ot_hdc_kv_walk #(
     output reg  [NW-1:0] r,
     output reg  [NW-1:0] k,
     output reg  [LIL-1:0] jh,
-    output wire          last
+    output wire          last,
+    output wire          rend            // the current line is its round's last
 );
     reg [NW-1:0]  r_end, k_end;
     reg [LIL-1:0] jh_end;
     reg           r_l, k_l, jh_l;
     assign last = r_l && k_l && jh_l;
+    assign rend = k_l && jh_l;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             r <= 0; k <= 0; jh <= 0; r_l <= 1'b0; k_l <= 1'b0; jh_l <= 1'b0;

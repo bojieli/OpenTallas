@@ -168,91 +168,108 @@ module ot_hdc_kv_stream #(
     reg [31:0]      fetch_line, cp_line, cons_line;
     reg [WIN*G-1:0] vbits;
 
-    // ---- fetcher ------------------------------------------------------------------------
-    reg          f_idx, f_act, blk_open;
-    reg [NW-1:0] f_r, f_k0, blen;
+    // ---- fetcher: a registered state machine ------------------------------------------------
+    // IDLE copies the op's fields; PREP registers the block's length and the
+    // round's HBM groups; ALLOC waits for window space; ISSUE walks the block's
+    // requests with one adder per step (the next address from the current one).
+    localparam [1:0] F_IDLE = 2'd0, F_PREP = 2'd1, F_ALLOC = 2'd2, F_ISSUE = 2'd3;
+    reg [1:0]    f_st;
+    reg          f_idx;
+    reg [AW-1:0] f_ts, f_ks, f_js;
+    reg [2:0]    f_jsh;
+    reg          f_km, f_kindk;
+    reg [NW-1:0] f_tiles, f_k, f_ntile, f_to;
+    reg [NW-1:0] f_r, f_k0, blen, f_kk;
     reg [LG-1:0] f_g;
-    reg [LIL-1:0] f_jh;
-    reg [AW-1:0] f_rb, f_goff, f_jhoff, f_koff, f_kkoff;
-    reg [NW-1:0] f_kk;
-    reg [31:0]   line_base;
-    wire [2:0]   f_jsh = d_jsh[f_idx];
-    wire         f_km = d_kmode[f_idx];
-    wire [LIL-1:0] f_jh_end = (1 << (LIL - f_jsh)) - 1;
-    wire [NW-1:0] f_krem = d_k[f_idx] - f_k0;
-    wire [NW-1:0] f_blen_c = (f_krem > BK) ? BK : f_krem;
-    wire [31:0]  f_blines = {16'd0, f_blen_c} << (LIL - f_jsh);
-    wire         f_space = (fetch_line + f_blines - cons_line) <= WIN;
-    // valid groups of a round in G-mode (a prefix: no tail in weighted-sum ops)
-    wire [NW-1:0] f_rt = f_r << LG;
-    wire [NW-1:0] f_nval_raw = (d_ntile[f_idx] > f_rt) ? d_ntile[f_idx] - f_rt : 0;
-    wire [LBK:0] f_nval = (f_nval_raw > G) ? G : f_nval_raw[LBK:0];
-    wire [1:0]   f_src = src_of(f_r, f_g, d_ntile[f_idx], d_kindk[f_idx], d_to[f_idx]);
-    wire         f_emit = f_km ? (f_src == SRC_WIN) : (f_nval != 0);
-    wire [31:0]  f_tline = line_base + f_jh + (f_km ? 32'd0 : ({16'd0, f_kk} << (LIL - f_jsh)));
+    reg [LIL-1:0] f_jh, f_jh_end;
+    reg [AW-1:0] f_rb, a_blk, a_nblk, a_outer, f_addr;
+    reg [LWIN-1:0] t_lb, t_outer, f_tline;
+    reg [G-1:0]  f_mask;                 // groups of round f_r read from HBM (K-mode)
+    reg [LBK:0]  f_nval;                 // HBM groups of round f_r (G-mode: a prefix)
+    reg [NW:0]   blines, occ;            // lines of the block; allocated lines not yet consumed
+    reg          f_last_k, f_last_r;
+    reg          f_unsup;
     wire         vf_empty;
-    wire         f_req_v = f_act && blk_open && f_emit && vf_empty;
-    wire [AW-1:0] f_req_addr = f_km ? (f_rb + f_goff + f_k0 + f_jhoff) : (f_rb + f_koff + f_kkoff + f_jhoff);
+    wire [NW-1:0] f_krem = f_k - f_k0;
+    wire [NW-1:0] f_rt = f_r << LG;
+    wire         f_emit = f_km ? f_mask[f_g] : (f_nval != 0);
+    wire         f_req_v = (f_st == F_ISSUE) && f_emit && vf_empty;
+    wire [AW-1:0] f_req_addr = f_addr;
     wire [LBK:0] f_req_len = f_km ? blen[LBK:0] : f_nval;
-    wire [TAGW-1:0] f_req_tag = {!f_km, f_tline[LWIN-1:0], f_km ? f_g : {LG{1'b0}}, f_jsh};
+    wire [TAGW-1:0] f_req_tag = {!f_km, f_tline, f_km ? f_g : {LG{1'b0}}, f_jsh};
     wire         hq_free = !hq_v || hq_rdy;
     wire         f_take = hq_free && f_req_v;
-    wire         f_adv = f_act && blk_open && (!f_emit || f_take);
+    wire         f_adv = (f_st == F_ISSUE) && (!f_emit || f_take);
     wire         f_kk_last = (f_kk + 1'b1 == blen);
     wire         f_blk_last_it = (f_jh == f_jh_end) && (f_km ? (f_g == G - 1) : f_kk_last);
-    wire         f_blk_last_k = (f_k0 + blen == d_k[f_idx]);
-    wire         f_blk_last_r = (f_r + 1'b1 == d_tiles[f_idx]);
-    reg          f_unsup;
+    wire         f_alloc = (f_st == F_ALLOC) && (occ + blines <= WIN);
+    wire         c_step;
+    integer gf;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            f_idx <= 1'b0; f_act <= 1'b0; blk_open <= 1'b0; fetch_line <= 0; f_unsup <= 1'b0;
-            fdone <= 2'b00;
+            f_st <= F_IDLE; f_idx <= 1'b0; fetch_line <= 0; occ <= 0; f_unsup <= 1'b0; fdone <= 2'b00;
         end else begin
             f_unsup <= 1'b0;
+            occ <= occ + (f_alloc ? blines : {(NW+1){1'b0}}) - (c_step ? 1'b1 : 1'b0);
             if (kvd_v) fdone[wptr] <= 1'b0;
-            if (!f_act) begin
-                if (dv[f_idx] && !fdone[f_idx] && !(kvd_v && wptr == f_idx)) begin
-                    f_act <= 1'b1; blk_open <= 1'b0;
-                    f_r <= 0; f_k0 <= 0; f_g <= 0; f_jh <= 0;
-                    f_rb <= d_wbase[f_idx]; f_goff <= 0; f_jhoff <= 0; f_koff <= 0;
+            case (f_st)
+                F_IDLE: if (dv[f_idx] && !fdone[f_idx] && !(kvd_v && wptr == f_idx)) begin
+                    f_ts <= d_ts[f_idx]; f_ks <= d_ks[f_idx]; f_js <= d_js[f_idx]; f_jsh <= d_jsh[f_idx];
+                    f_km <= d_kmode[f_idx]; f_kindk <= d_kindk[f_idx]; f_tiles <= d_tiles[f_idx];
+                    f_k <= d_k[f_idx]; f_ntile <= d_ntile[f_idx]; f_to <= d_to[f_idx];
+                    f_jh_end <= (1 << (LIL - d_jsh[f_idx])) - 1;
+                    f_r <= 0; f_k0 <= 0; f_rb <= d_wbase[f_idx]; a_blk <= d_wbase[f_idx];
                     f_unsup <= !d_kmode[f_idx] && !d_gmode[f_idx];
+                    f_st <= F_PREP;
                 end
-            end else if (!blk_open) begin
-                if (f_space) begin
-                    blk_open <= 1'b1; blen <= f_blen_c; line_base <= fetch_line;
-                    fetch_line <= fetch_line + f_blines;
-                    f_g <= 0; f_jh <= 0; f_goff <= 0; f_jhoff <= 0; f_kk <= 0; f_kkoff <= 0;
+                F_PREP: begin
+                    blen <= (f_krem > BK) ? BK : f_krem;
+                    blines <= ((f_krem > BK) ? BK : f_krem) << (LIL - f_jsh);
+                    f_last_k <= (f_krem <= BK);
+                    f_last_r <= (f_r + 1'b1 == f_tiles);
+                    for (gf = 0; gf < G; gf = gf + 1)
+                        f_mask[gf] <= (src_of(f_r, gf, f_ntile, f_kindk, f_to) == SRC_WIN);
+                    f_nval <= (f_ntile <= f_rt) ? 0 : ((f_ntile - f_rt > G) ? G : (f_ntile - f_rt));
+                    f_st <= F_ALLOC;
                 end
-            end else if (f_adv) begin
-                if (!f_blk_last_it) begin
-                    if (!f_km) begin
-                        // G-mode: k-steps inner, jh outer
-                        if (!f_kk_last) begin
-                            f_kk <= f_kk + 1'b1; f_kkoff <= f_kkoff + d_ks[f_idx];
+                F_ALLOC: if (f_alloc) begin
+                    fetch_line <= fetch_line + blines;
+                    t_lb <= fetch_line[LWIN-1:0]; t_outer <= fetch_line[LWIN-1:0]; f_tline <= fetch_line[LWIN-1:0];
+                    f_addr <= a_blk; a_outer <= a_blk;
+                    if (f_km) a_nblk <= a_blk + blen;              // K-mode: ks = 1
+                    f_g <= 0; f_jh <= 0; f_kk <= 0;
+                    f_st <= F_ISSUE;
+                end
+                F_ISSUE: if (f_adv) begin
+                    //: G-mode: the block's first KV-head row ends at a_blk + (blen - 1) ks
+                    if (!f_km && f_jh == 0 && f_kk_last) a_nblk <= f_addr + f_ks;
+                    if (!f_blk_last_it) begin
+                        if (!f_km) begin                          // G-mode: k-steps inner, jh outer
+                            if (!f_kk_last) begin
+                                f_kk <= f_kk + 1'b1; f_addr <= f_addr + f_ks;
+                                f_tline <= f_tline + (1 << (LIL - f_jsh));
+                            end else begin
+                                f_kk <= 0; f_jh <= f_jh + 1'b1;
+                                a_outer <= a_outer + f_js; f_addr <= a_outer + f_js;
+                                t_outer <= t_outer + 1'b1; f_tline <= t_outer + 1'b1;
+                            end
+                        end else if (f_jh != f_jh_end) begin      // K-mode: jh inner, g outer
+                            f_jh <= f_jh + 1'b1; f_addr <= f_addr + f_js; f_tline <= f_tline + 1'b1;
                         end else begin
-                            f_kk <= 0; f_kkoff <= 0; f_jh <= f_jh + 1'b1; f_jhoff <= f_jhoff + d_js[f_idx];
+                            f_jh <= 0; f_g <= f_g + 1'b1;
+                            a_outer <= a_outer + f_ts; f_addr <= a_outer + f_ts; f_tline <= t_lb;
                         end
-                    end else if (f_jh != f_jh_end) begin
-                        f_jh <= f_jh + 1'b1; f_jhoff <= f_jhoff + d_js[f_idx];
+                    end else if (!f_last_k) begin
+                        f_k0 <= f_k0 + blen; a_blk <= a_nblk; f_st <= F_PREP;
+                    end else if (!f_last_r) begin
+                        f_k0 <= 0; f_r <= f_r + 1'b1;
+                        f_rb <= f_rb + (f_ts << LG); a_blk <= f_rb + (f_ts << LG); f_st <= F_PREP;
                     end else begin
-                        f_jh <= 0; f_jhoff <= 0; f_g <= f_g + 1'b1; f_goff <= f_goff + d_ts[f_idx];
-                    end
-                end else begin
-                    blk_open <= 1'b0;
-                    if (!f_blk_last_k) begin
-                        //: G-mode: f_kkoff holds (blen - 1) * ks on the block's last request
-                        f_k0 <= f_k0 + blen; f_koff <= f_koff + f_kkoff + d_ks[f_idx];
-                    end else begin
-                        f_k0 <= 0; f_koff <= 0;
-                        if (!f_blk_last_r) begin
-                            f_r <= f_r + 1'b1; f_rb <= f_rb + (d_ts[f_idx] << LG);
-                        end else begin
-                            f_act <= 1'b0; fdone[f_idx] <= 1'b1; f_idx <= !f_idx;
-                        end
+                        fdone[f_idx] <= 1'b1; f_idx <= !f_idx; f_st <= F_IDLE;
                     end
                 end
-            end
+            endcase
         end
     end
 
@@ -263,16 +280,26 @@ module ot_hdc_kv_stream #(
     wire [LIL-1:0] p_jh;
     wire         p_last;
     wire         p_load = !p_act && dv[p_idx] && !cpdone[p_idx] && !(kvd_v && wptr == p_idx);
-    reg  [G-1:0] p_need;
+    //: the HBM groups of the walker's round, registered; the next round's are
+    //: formed from the registered round number and loaded as the round ends
+    reg  [G-1:0] p_need, p_need0, p_need_nx;
+    wire         p_rend;
     integer gg;
     always @(*) begin
-        for (gg = 0; gg < G; gg = gg + 1)
-            p_need[gg] = (src_of(p_r, gg, d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
+        for (gg = 0; gg < G; gg = gg + 1) begin
+            p_need0[gg] = (src_of({NW{1'b0}}, gg, d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
+            p_need_nx[gg] = (src_of(p_r + 1'b1, gg, d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
+        end
     end
     wire [G-1:0] p_have = vbits[cp_line[LWIN-1:0]*G +: G];
     wire         p_step = p_act && (cp_line != fetch_line) && ((p_have & p_need) == p_need);
     ot_hdc_kv_walk #(.NW(NW), .LIL(LIL)) u_pw (.clk(clk), .rst_n(rst_n), .load(p_load), .step(p_step),
-        .tiles(d_tiles[p_idx]), .kk(d_k[p_idx]), .jsh(d_jsh[p_idx]), .r(p_r), .k(p_k), .jh(p_jh), .last(p_last));
+        .tiles(d_tiles[p_idx]), .kk(d_k[p_idx]), .jsh(d_jsh[p_idx]), .r(p_r), .k(p_k), .jh(p_jh), .last(p_last),
+        .rend(p_rend));
+    always @(posedge clk) begin
+        if (p_load) p_need <= p_need0;
+        else if (p_step && p_rend) p_need <= p_need_nx;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             p_idx <= 1'b0; p_act <= 1'b0; p_cnt <= 0; cp_line <= 0; cpdone <= 2'b00;
@@ -316,13 +343,21 @@ module ot_hdc_kv_stream #(
     wire [LWIN-1:0] c_slot = cons_line[LWIN-1:0];
     wire [2:0]   c_jsh = d_jsh[c_idx];
     wire         c_line_end = (c_e == (3'd1 << c_jsh) - 1'b1);
-    wire         c_step = kv_re && c_act && c_line_end;
+    assign       c_step = kv_re && c_act && c_line_end;
+    wire         c_rend;
     ot_hdc_kv_walk #(.NW(NW), .LIL(LIL)) u_cw (.clk(clk), .rst_n(rst_n), .load(c_load), .step(c_step),
-        .tiles(d_tiles[c_idx]), .kk(d_k[c_idx]), .jsh(c_jsh), .r(c_r), .k(c_k), .jh(c_jh), .last(c_last));
-    reg  [2*G-1:0] c_src;
+        .tiles(d_tiles[c_idx]), .kk(d_k[c_idx]), .jsh(c_jsh), .r(c_r), .k(c_k), .jh(c_jh), .last(c_last),
+        .rend(c_rend));
+    reg  [2*G-1:0] c_src, c_src0, c_src_nx;           // sources of the round, registered as p_need
     always @(*) begin
-        for (gg = 0; gg < G; gg = gg + 1)
-            c_src[2*gg +: 2] = src_of(c_r, gg, d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
+        for (gg = 0; gg < G; gg = gg + 1) begin
+            c_src0[2*gg +: 2] = src_of({NW{1'b0}}, gg, d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
+            c_src_nx[2*gg +: 2] = src_of(c_r + 1'b1, gg, d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
+        end
+    end
+    always @(posedge clk) begin
+        if (c_load) c_src <= c_src0;
+        else if (c_step && c_rend) c_src <= c_src_nx;
     end
     assign win_re = kv_re;
     assign win_raddr = c_slot;
