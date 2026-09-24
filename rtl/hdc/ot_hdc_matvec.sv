@@ -104,6 +104,7 @@ module ot_hdc_matvec #(
     reg [NW-1:0]     nout_r, tiles_r, k_r;
     reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
     reg [1:0]        split_r;
+    reg [AW-1:0]     tstep_r;          // weight step per round: ts, or G*ts for KV ops (tile r*G + g)
     reg [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, xcs_r, ots_r, ojs_r;
     reg [2:0]        jsh_r;
     reg [NW-1:0]     t, k;
@@ -129,7 +130,7 @@ module ot_hdc_matvec #(
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
                 mmode_r <= i_mmode; split_r <= i_wsrc ? 2'd0 : i_split;
-                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts << LG) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
                 t <= 0; k <= 0; j <= 0;
                 t_last <= (i_tiles == 1); k_last <= (i_k == 1);
@@ -161,7 +162,7 @@ module ot_hdc_matvec #(
                     xk <= xk_base; xc <= xk_base;
                     if (!t_last) begin
                         t <= t + 1'b1; t_last <= (t + 2 == tiles_r);
-                        base_t <= base_t + ts_r; base_k <= base_t + ts_r; cur <= base_t + ts_r;
+                        base_t <= base_t + tstep_r; base_k <= base_t + tstep_r; cur <= base_t + tstep_r;
                         ot <= ot + ot_step; oa <= ot + ot_step;
                         nb_t <= nb_t + nb_step; nb <= nb_t + nb_step; lb <= lb + lb_step;
                     end else begin
