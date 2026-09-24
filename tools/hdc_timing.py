@@ -58,17 +58,26 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             t = max(t, me_idle, su_idle) + k["idle_reg"]
             break
         ready = t
+        why = "issue"
         if f["barrier"]:
-            ready = max(ready, me_idle + k["idle_reg"], su_idle + k["idle_reg"])
+            b = max(me_idle + k["idle_reg"], su_idle + k["idle_reg"])
+            if b > ready:
+                ready, why = b, "barrier_me" if me_idle >= su_idle else "barrier_su"
+
         elif f["chase"]:
             n = f["chase_n"]
             if u == I.UNIT_ME:
                 first, cnt = su_el_t
-                ready = max(ready, first + min(n, cnt) - 1 + 1)
+                c = first + min(n, cnt) - 1 + 1
             else:
-                ready = max(ready, me_slot_t[min(n, len(me_slot_t)) - 1] + 1)
+                c = me_slot_t[min(n, len(me_slot_t)) - 1] + 1
+            if c > ready:
+                ready, why = c, "chase"
+
         if u == I.UNIT_ME:
             go = max(ready, me_free)
+            if go > ready:
+                why = "unit_busy"
             split = 0 if f["me_wsrc"] else f["me_split"]
             rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
             # (attention now spreads over every group in the RTL itself; the
@@ -83,8 +92,11 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
         else:
             cls = f["sfu"]
             go = max(ready, su_free)
-            if su_cls is not None and cls != su_cls:
-                go = max(go, su_cls_idle)
+            if go > ready:
+                why = "unit_busy"
+            if su_cls is not None and cls != su_cls and su_cls_idle > go:
+                go, why = su_cls_idle, "class_drain"
+
             n_el = -(-f["su_nout"] * (f["su_nin"] + dyn[f["su_d_nin"]]) // su_width)
             e0 = go + k["su_start"]
             d = k["su_depth"][cls]
@@ -95,6 +107,8 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             su_idle = max(su_idle, tail)
             su_cls, su_cls_idle = cls, last
         issues.append(go)
+        if trace is not False and trace is not None:
+            trace.append((why, go - t))
         t = go + k["seq_gap"]
     return issues, t
 
@@ -154,6 +168,26 @@ def price(model, groups, pos, ghz, attn_groups=1, su_width=1):
             "projection": {"attn_groups": attn_groups, "su_width": su_width}}
 
 
+def control_breakdown(prog, pos, groups, dyn_shape=None, su_width=1):
+    """Where a token's cycles go: each unit's busy (element-issue) share, the
+    sequencer's issue-gap share (the control path proper) and the rest
+    (pipeline latency exposed at dependent-op boundaries)."""
+    issues, total = simulate(prog, pos, groups=groups, dyn_shape=dyn_shape, su_width=su_width)
+    d = dyn_values(pos, groups=groups, **(dyn_shape or {}))
+    me = su = 0
+    for f in prog:
+        f = {n: f.get(n, 0) for n, _ in I.FIELDS}
+        if f["unit"] == I.UNIT_ME:
+            me += (f["me_tiles"] + d[f["me_d_tiles"]]) * (f["me_k"] + d[f["me_d_k"]]) * IL
+        elif f["unit"] == I.UNIT_SU:
+            su += -(-f["su_nout"] * (f["su_nin"] + d[f["su_d_nin"]]) // su_width)
+    n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
+    return {"cycles_per_token": total, "instructions": n,
+            "issue_gap_share": round(n * K["seq_gap"] / total, 5),
+            "matrix_engine_busy_share": round(me / total, 4), "stream_unit_busy_share": round(su / total, 4),
+            "su_width": su_width, "groups": groups, "position": pos}
+
+
 def calibrate(trace_path, prog, pos):
     txt = Path(trace_path).read_text()
     rtl = [int(c) for c, _ in re.findall(r"ISSUE cyc=(\d+) pc=(\d+)", txt)]
@@ -173,7 +207,29 @@ def main():
     ap.add_argument("--ghz", type=float, default=1.1)
     ap.add_argument("--attn-groups", type=int, default=1, help="PROJECTION: attention over this many groups")
     ap.add_argument("--su-width", type=int, default=1, help="PROJECTION: stream-unit elements per cycle")
+    ap.add_argument("--control-breakdown", type=Path, help="write the control-path breakdown record here")
     args = ap.parse_args()
+    if args.control_breakdown:
+        import hdc_program as P
+        model, prompt, expected, cache = P.golden_state()
+        rows = [dict(case="vehicle (reduced Qwen3, 4 groups, position 15)",
+                     **control_breakdown(P.build_program(P.Layout(model)), len(prompt) - 1, I.GROUPS))]
+        dyn = dict(H=4096, half=64, HD=128)
+        for g in (64, 1024):
+            for sw in (1, 16):
+                prog = P.build_program(ShapeLayout(SHAPES["qwen3-8b"], g))
+                rows.append(dict(case=f"Qwen3-8B shapes, {g} groups, position 1024" +
+                                 (", PROJECTED stream width 16" if sw > 1 else ""),
+                                 **control_breakdown(prog, 1024, g, dyn, sw)))
+        args.control_breakdown.write_text(json.dumps({
+            "schema": "opentallas.hdc-control-path-breakdown.v1",
+            "method": "tools/hdc_timing.py (constants fitted to the RTL issue trace; a test pins the vehicle "
+                      "within 0.5%). issue_gap_share is the sequencer's fetch/decode/issue cost -- the control "
+                      "path proper; unit busy shares are element-issue cycles; the remainder is pipeline latency "
+                      "exposed between dependent ops.",
+            "rows": rows}, indent=2) + "\n")
+        print(json.dumps(rows, indent=1))
+        return
     if args.model:
         for g in args.groups:
             print(json.dumps(price(args.model, g, args.pos, args.ghz, min(args.attn_groups, g), args.su_width)))

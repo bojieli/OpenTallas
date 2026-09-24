@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.hdc-control-path-breakdown.v1",
+  "method": "tools/hdc_timing.py (constants fitted to the RTL issue trace; a test pins the vehicle within 0.5%). issue_gap_share is the sequencer's fetch/decode/issue cost -- the control path proper; unit busy shares are element-issue cycles; the remainder is pipeline latency exposed between dependent ops.",
+  "rows": [
+    {
+      "case": "vehicle (reduced Qwen3, 4 groups, position 15)",
+      "cycles_per_token": 32191,
+      "instructions": 112,
+      "issue_gap_share": 0.0174,
+      "matrix_engine_busy_share": 0.668,
+      "stream_unit_busy_share": 0.2331,
+      "su_width": 1,
+      "groups": 4,
+      "position": 15
+    },
+    {
+      "case": "Qwen3-8B shapes, 64 groups, position 1024",
+      "cycles_per_token": 15079719,
+      "instructions": 4540,
+      "issue_gap_share": 0.00151,
+      "matrix_engine_busy_share": 0.6663,
+      "stream_unit_busy_share": 0.3432,
+      "su_width": 1,
+      "groups": 64,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 64 groups, position 1024, PROJECTED stream width 16",
+      "cycles_per_token": 10424718,
+      "instructions": 4540,
+      "issue_gap_share": 0.00218,
+      "matrix_engine_busy_share": 0.9638,
+      "stream_unit_busy_share": 0.031,
+      "su_width": 16,
+      "groups": 64,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 1024 groups, position 1024",
+      "cycles_per_token": 8195279,
+      "instructions": 4540,
+      "issue_gap_share": 0.00277,
+      "matrix_engine_busy_share": 0.3625,
+      "stream_unit_busy_share": 0.6315,
+      "su_width": 1,
+      "groups": 1024,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 1024 groups, position 1024, PROJECTED stream width 16",
+      "cycles_per_token": 3359318,
+      "instructions": 4540,
+      "issue_gap_share": 0.00676,
+      "matrix_engine_busy_share": 0.8844,
+      "stream_unit_busy_share": 0.0963,
+      "su_width": 16,
+      "groups": 1024,
+      "position": 1024
+    }
+  ]
+}
