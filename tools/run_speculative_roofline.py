@@ -67,6 +67,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -412,9 +413,24 @@ def _row_machine(point: dict, microbatch: float) -> tuple[Any, tuple | None]:
     return machine, links
 
 
+_SERIAL_CACHE: dict[tuple, tuple[float, float, float]] = {}
+
+
 def serial_path(point: dict, model: ModelProfile, technology: Technology, microbatch: float,
                 sweep_s: float) -> tuple[float, float, float]:
     """(path, collectives-and-hops on it, sweep on it) of one token at ``microbatch`` users per slot."""
+
+    key = (point["design"], point["batch_size"], point["context_tokens"], float(microbatch), float(sweep_s))
+    hit = _SERIAL_CACHE.get(key)
+    if hit is None:
+        if len(_SERIAL_CACHE) > 200_000:
+            _SERIAL_CACHE.clear()
+        hit = _SERIAL_CACHE[key] = _serial_path(point, model, technology, microbatch, sweep_s)
+    return hit
+
+
+def _serial_path(point: dict, model: ModelProfile, technology: Technology, microbatch: float,
+                 sweep_s: float) -> tuple[float, float, float]:
 
     machine, links = _row_machine(point, microbatch)
     context = int(point["context_tokens"])
@@ -2418,6 +2434,17 @@ def _guard_output(path: Path) -> None:
         )
 
 
+def _study_job(job: tuple) -> dict:
+    source, profile_name, profile, gammas, verify_shas = job
+    technology = Technology.load(TECHNOLOGY_PATH)
+    study = process_study(source, profile_name, profile, technology, gammas, verify_shas)
+    study["class_table"] = class_table(study, profile)
+    study["break_even_census"] = break_even_census(study)
+    study["capacity_requirements"] = capacity_requirements(study, technology)
+    study["selection_under_speculation"] = selection_under_speculation(study, profile)
+    return study
+
+
 def build_payload(
     profile_name: str,
     config: dict,
@@ -2440,21 +2467,19 @@ def build_payload(
     if "grade" not in acceptance or "source" not in acceptance:
         raise SystemExit(f"profile {profile_name}: acceptance_length carries no grade or no source")
 
-    studies = []
-    for source in sources:
-        study = process_study(
-            source,
-            profile_name,
-            profile,
-            technology,
-            [int(value) for value in config["gamma_ladder"]],
-            verify_shas,
-        )
-        study["class_table"] = class_table(study, profile)
-        study["break_even_census"] = break_even_census(study)
-        study["capacity_requirements"] = capacity_requirements(study, technology)
-        study["selection_under_speculation"] = selection_under_speculation(study, profile)
-        studies.append(study)
+    # One study per source, in parallel worker processes when more than one CPU
+    # is offered (SPECULATIVE_WORKERS, default a quarter of the machine): each
+    # study is independent and the result list keeps the source order, so the
+    # artifact is byte-identical to a serial run.
+    jobs = [(source, profile_name, profile, [int(value) for value in config["gamma_ladder"]], verify_shas)
+            for source in sources]
+    workers = max(1, int(os.environ.get("SPECULATIVE_WORKERS", max(1, (os.cpu_count() or 1) // 4))))
+    if workers > 1 and len(jobs) > 1:
+        import multiprocessing
+        with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
+            studies = pool.map(_study_job, jobs, chunksize=1)
+    else:
+        studies = [_study_job(job) for job in jobs]
 
     headline_study = next(
         (study for study in studies if study["study_id"] == "n5_vs_b200"), studies[0] if studies else None
