@@ -103,6 +103,12 @@ rebalances.
 - reciprocal: 988 MHz; <!-- figure: 988 src="results/physical_abi3/asap7/hdc/ot_hdc_recip/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC reciprocal routed fmax" -->
 - rsqrt: 949 MHz. <!-- figure: 949 src="results/physical_abi3/asap7/hdc/ot_hdc_rsqrt/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC rsqrt routed fmax" -->
 
+With iteration 3's rebalanced multiplier, re-routed at 0.8 ns:
+
+- exp: 1,196 MHz; <!-- figure: 1196 src="results/physical_abi3/asap7/hdc/ot_hdc_exp_rebalanced_mul/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC exp routed fmax, rebalanced multiplier" -->
+- reciprocal: 1,223 MHz; <!-- figure: 1223 src="results/physical_abi3/asap7/hdc/ot_hdc_recip_rebalanced_mul/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC reciprocal routed fmax, rebalanced multiplier" -->
+- rsqrt: 1,210 MHz. <!-- figure: 1210 src="results/physical_abi3/asap7/hdc/ot_hdc_rsqrt_rebalanced_mul/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC rsqrt routed fmax, rebalanced multiplier" -->
+
 **P3–P4 (done).** The core has four parts:
 
 - `ot_hdc_matvec`: 16 lanes × 8 interleaved outputs; the sum circulates in the
@@ -284,12 +290,20 @@ array and generates 1073, 382, 93. The links never stalled.
 |---|---|---|
 | 4 / 4 (lm_head on layer 3's package) | 14,507 | 5,908 / 14,259 |
 | 5 / 5 (lm_head alone) | 8,809 | 5,908 / 8,546 |
+| 6 / 6 (lm_head split by vocabulary) | 6,178 | 5,908 / 4,450 and 4,139 |
 
 - 4 / 4 aggregate speed-up over one core: 2.218× <!-- figure: 2.218 src="results/rtl/hdc_array_campaign.json#configurations[packages=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
 - 5 / 5 aggregate speed-up over one core: 3.652× <!-- figure: 3.652 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
 - 5 / 5 cycles per token-step: 8,809. <!-- figure: 8809.2 src="results/rtl/hdc_array_campaign.json#configurations[packages=5].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
 
+- 6 / 6 aggregate speed-up over one core: 5.208× <!-- figure: 5.208 src="results/rtl/hdc_array_campaign.json#configurations[packages=6].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
+
+In the 6-package array lm_head is split by vocabulary:
+
+- The first lm_head package does the final norm and rows 0–2047. It sends the
+  normalised state with its best {row, logit}.
+- The second does rows 2048–4095 and keeps its own best only when it is
+  strictly greater, so a tie keeps the lower row, as numpy's argmax does.
+
 Per-user latency stays near one core's, as a layer pipeline should.
-Throughput is set by the slowest package. lm_head is the next split: two
-packages of 2,048 vocabulary rows each, with an argmax combine, would bring
-every package to about 5.9K cycles.
+Throughput is set by the slowest package, which is now a layer package.

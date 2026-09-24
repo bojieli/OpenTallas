@@ -34,6 +34,7 @@ module ot_hdc_core #(
     input  wire [NW-1:0]     pos,
     output reg               done,
     output reg  [NW-1:0]     next_token,
+    output reg  [31:0]       next_val,        // its logit (for an argmax combined across packages)
     output reg  [31:0]       cycles,
     output reg               fault,
     // program ROM
@@ -153,7 +154,7 @@ module ot_hdc_core #(
                 S_ISSUE: begin
                     if (d_unit == 2'd0) begin
                         if (drained) begin
-                            done <= 1'b1; next_token <= am_idx; st <= S_IDLE;
+                            done <= 1'b1; next_token <= am_idx; next_val <= am_val; st <= S_IDLE;
                         end
                     end else if ((d_barrier ? drained : (!d_chase || chased)) && unit_ready) begin
                         me_go <= (d_unit == 2'd1); su_go <= (d_unit == 2'd2);

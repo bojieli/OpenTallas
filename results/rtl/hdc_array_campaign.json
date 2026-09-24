@@ -80,6 +80,7 @@
       ],
       "generated_tokens": 12,
       "link_credit_stalls": 0,
+      "lm_head_split": false,
       "mismatches": 0,
       "package_busy_cycles": [
         425392,
@@ -196,6 +197,7 @@
       ],
       "generated_tokens": 15,
       "link_credit_stalls": 0,
+      "lm_head_split": false,
       "mismatches": 0,
       "package_busy_cycles": [
         531740,
@@ -216,10 +218,149 @@
       "token_steps": 90,
       "total_cycles": 792829,
       "users": 5
+    },
+    {
+      "aggregate_speedup_vs_single_core": 5.208,
+      "cycles_per_token_step": 6177.8,
+      "generated": [
+        {
+          "cycle": 560663,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 566783,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 572903,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 579023,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 585143,
+          "position": 15,
+          "token": 1073,
+          "user": 4
+        },
+        {
+          "cycle": 591263,
+          "position": 15,
+          "token": 1073,
+          "user": 5
+        },
+        {
+          "cycle": 597863,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 604143,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 610423,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 616703,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 622983,
+          "position": 16,
+          "token": 382,
+          "user": 4
+        },
+        {
+          "cycle": 629263,
+          "position": 16,
+          "token": 382,
+          "user": 5
+        },
+        {
+          "cycle": 635639,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 641951,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 648263,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 654575,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        },
+        {
+          "cycle": 660887,
+          "position": 17,
+          "token": 93,
+          "user": 4
+        },
+        {
+          "cycle": 667199,
+          "position": 17,
+          "token": 93,
+          "user": 5
+        }
+      ],
+      "generated_tokens": 18,
+      "link_credit_stalls": 0,
+      "lm_head_split": true,
+      "mismatches": 0,
+      "package_busy_cycles": [
+        638088,
+        638088,
+        638088,
+        638088,
+        480600,
+        447012
+      ],
+      "package_busy_cycles_per_step": [
+        5908.2,
+        5908.2,
+        5908.2,
+        5908.2,
+        4450.0,
+        4139.0
+      ],
+      "packages": 6,
+      "pass": true,
+      "token_steps": 108,
+      "total_cycles": 667200,
+      "users": 6
     }
   ],
   "input_sha256": {
-    "rtl/hdc/ot_hdc_core.sv": "904692212d0fa7f140381ef4322fee0969c194b35cbe641e207b22bbb4e78557",
+    "rtl/hdc/ot_hdc_core.sv": "3a2d5d3844dbf73cd9da6614d638611d46d7d2ae5a0c584f4b767e6add2ab704",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
@@ -232,10 +373,10 @@
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
     "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
-    "rtl/test/tb_hdc_array.sv": "74971c5c34475a4116b9ff801e296b6ca419f3ab0afd586578391345c7075d89",
+    "rtl/test/tb_hdc_array.sv": "7c63874fdd19286b68bd95728f20b33e97a3c1e9f2c19ab5e4463d63cceaafd6",
     "tools/hdc_golden.py": "050ef788e63eb52b40ccbf533f7a7ce0f3e6f33e8ded92718ac13225b9586fa7",
     "tools/hdc_isa.py": "62498d8e70bbf20dd447b483fe1f52f6e0934e9e8eccc678dafdbad5a6bff215",
-    "tools/hdc_program.py": "82fc8d385270a5b18cd8f36cb8e37dab024f483b7cd0b6fac9254068bc695de7",
+    "tools/hdc_program.py": "bacaef662d2069cb9c1c155cd8ae07eb31f5eb6b8de1137ce7fbe30467219f5e",
     "tools/rtl_hdc_decode_campaign.py": "86465e0123ac5ae1f921d9f1aea5a312ff57963fba5df3fac8f16f35735a4946"
   },
   "schema": "opentallas.hdc-array-campaign.v1",

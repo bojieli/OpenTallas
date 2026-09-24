@@ -68,6 +68,10 @@ class Layout:
                             ("down", lw("mlp.down_proj.weight"))):
                 self.mat[(L, name)] = self.place_matrix(w)
         self.mat["lm_head"] = self.place_matrix(model.w["lm_head.weight"])
+        # the vocabulary halves, for an array that splits lm_head over two packages
+        v2 = model.w["lm_head.weight"].shape[0] // 2
+        self.mat["lm_head_a"] = self.place_matrix(model.w["lm_head.weight"][:v2])
+        self.mat["lm_head_b"] = self.place_matrix(model.w["lm_head.weight"][v2:])
         emb = model.w["model.embed_tokens.weight"]
         self.emb_word = len(self.words)
         flat = (G.bits(emb.reshape(-1)) >> 16).astype(np.uint16)
@@ -172,7 +176,9 @@ def build_program(lay, layers=None, embed=True, head=True):
 
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
-    if not embed:
+    if head == "b":
+        pass
+    elif not embed:
         # X arrived over the package link: its sum of squares opens the stage
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, reads={"X"}, red_writes={"SSX"}, **sq)
     else:
@@ -247,9 +253,13 @@ def build_program(lay, layers=None, embed=True, head=True):
            writes={"T1"})
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
            dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
-    if head:
+    # head: True (final norm + lm_head), "a" (final norm + first vocabulary half)
+    # or "b" (second half, on the normalised state H received over the link)
+    if head in (True, "a"):
         rmsnorm("X", H, lay.cb["final"], "H")
-        me(lay.mat["lm_head"], VM["H"], 0, amax=True, oen=False, reads={"H"})
+    if head:
+        mat = {True: "lm_head", "a": "lm_head_a", "b": "lm_head_b"}[head]
+        me(lay.mat[mat], VM["H"], 0, amax=True, oen=False, reads={"H"})
     prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
@@ -519,11 +529,19 @@ def main():
         words = [I.encode(**{k: v for k, v in f.items()}) for f in prog]
         (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
         if args.stages:
-            assert args.stages in (lay.L, lay.L + 1)
-            sep = args.stages == lay.L + 1
+            # L: lm_head with the last layer; L+1: lm_head alone; L+2: lm_head split
+            # by vocabulary over two packages (argmax combined by the last)
+            assert args.stages in (lay.L, lay.L + 1, lay.L + 2)
+            extra = args.stages - lay.L
             for n in range(args.stages):
                 layers = [n] if n < lay.L else []
-                st = build_program(lay, layers, embed=(n == 0), head=(n == args.stages - 1 if sep else n == lay.L - 1))
+                if extra == 0:
+                    head = n == lay.L - 1
+                elif extra == 1:
+                    head = n == lay.L
+                else:
+                    head = {lay.L: "a", lay.L + 1: "b"}.get(n, False)
+                st = build_program(lay, layers, embed=(n == 0), head=head)
                 (out / f"prog_stage{n}.hex").write_text(
                     hexwords((I.encode(**f) for f in st), I.INSTR_BITS))
         (out / "expect_logits.hex").write_text(hexwords(G.bits(mach.logits), 32))

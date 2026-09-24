@@ -9,7 +9,10 @@ oracle's 16-token prompt and generates 3 tokens; each generated id is compared
 with the torch oracle's.  Configurations (built and run in parallel):
 
 * 4 packages, 4 users: lm_head shares the last layer's package;
-* 5 packages, 5 users: lm_head on a package of its own.
+* 5 packages, 5 users: lm_head on a package of its own;
+* 6 packages, 6 users: lm_head split by vocabulary over two packages, the
+  last combining the two halves' argmax (strictly greater wins, so ties keep
+  the lower row, as numpy's argmax does).
 
 Aggregate throughput is token-steps per cycle across all users; the single-core
 reference is results/rtl/hdc_decode_campaign.json.  Writes
@@ -33,7 +36,7 @@ OUT = ROOT / "results/rtl/hdc_array_campaign.json"
 TB = ROOT / "rtl/test/tb_hdc_array.sv"
 HARNESS = ROOT / "rtl/test/hdc_array_harness.cpp"
 LINK = ROOT / "rtl/rom/ot_rom_pkg_link.sv"
-CONFIGS = [(4, 4), (5, 5)]
+CONFIGS = [(4, 4, 0), (5, 5, 0), (6, 6, 1)]
 STEPS_PER_USER = 16 + 3 - 1
 RES = re.compile(r"HDC_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+)")
 BUSY = re.compile(r"NODE_BUSY node=(\d+) cycles=(\d+)")
@@ -41,12 +44,13 @@ GEN = re.compile(r"GEN user=(\d+) pos=(\d+) token=(\d+) cycle=(\d+)")
 STALLS = re.compile(r"LINK_STALLS (\d+)")
 
 
-def run_config(scratch: Path, nodes: int, users: int) -> dict:
+def run_config(scratch: Path, nodes: int, users: int, headsplit: int) -> dict:
     img, obj = scratch / f"img{nodes}", scratch / f"obj{nodes}_{users}"
     subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img), "--stages", str(nodes)],
                    check=True, capture_output=True)
     subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                     "-Wno-BLKSEQ", "--top-module", "tb_hdc_array", f"-GNODES={nodes}", f"-GUSERS={users}",
+                    f"-GHEADSPLIT={headsplit}",
                     "-Mdir", str(obj), f"-I{core.ISA_SVH.parent}", *map(str, core.HDC), *map(str, core.PIPES),
                     str(LINK), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"],
                    check=True, capture_output=True)
@@ -57,7 +61,7 @@ def run_config(scratch: Path, nodes: int, users: int) -> dict:
     busy = {int(a): int(b) for a, b in BUSY.findall(out)}
     gens = [dict(zip(("user", "position", "token", "cycle"), map(int, g))) for g in GEN.findall(out)]
     steps = users * STEPS_PER_USER
-    return {"packages": n, "users": u, "generated_tokens": gen, "mismatches": bad, "total_cycles": cycles,
+    return {"packages": n, "users": u, "lm_head_split": bool(headsplit), "generated_tokens": gen, "mismatches": bad, "total_cycles": cycles,
             "token_steps": steps, "cycles_per_token_step": round(cycles / steps, 1),
             "package_busy_cycles": [busy[i] for i in sorted(busy)],
             "package_busy_cycles_per_step": [round(busy[i] / steps, 1) for i in sorted(busy)],

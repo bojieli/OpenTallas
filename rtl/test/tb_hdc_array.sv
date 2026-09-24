@@ -20,7 +20,8 @@
 module tb_hdc_array #(
     parameter integer G = 4,
     parameter integer NODES = 4,
-    parameter integer USERS = 4
+    parameter integer USERS = 4,
+    parameter integer HEADSPLIT = 0      // 1: the last two packages split lm_head by vocabulary
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -43,6 +44,7 @@ module tb_hdc_array #(
     // per-node control, flattened across the generate
     wire [NODES-1:0] done_w, fault_w;
     wire [NODES*NW-1:0] ntok_w;
+    wire [NODES*32-1:0] nval_w;
     // links: node n -> n+1 (index n), feedback last -> 0 (index NODES-1)
     wire [NODES-1:0] l_in_valid, l_in_ready, l_in_last, l_out_valid, l_out_ready, l_out_last;
     wire [NODES*FLIT-1:0] l_in_data, l_out_data;
@@ -91,7 +93,8 @@ module tb_hdc_array #(
             reg [7:0]    user;
             ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW)) core (
                 .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
-                .done(done_w[n]), .next_token(ntok_w[n*NW +: NW]), .cycles(cycles), .fault(fault_w[n]),
+                .done(done_w[n]), .next_token(ntok_w[n*NW +: NW]), .next_val(nval_w[n*32 +: 32]),
+                .cycles(cycles), .fault(fault_w[n]),
                 .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
                 .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
                 .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
@@ -134,6 +137,20 @@ module tb_hdc_array #(
                 for (k = 0; k < VM_ELEMS; k = k + 1) vm[k] = 32'd0;
                 for (k = 0; k < USERS * KVW; k = k + 1) kv[k] = {(W*32){1'b0}};
             end
+            // vector-memory words a package receives / sends: X (0..7), except around
+            // a split lm_head, where the normalised state H (8..15) crosses
+            localparam integer RXB = (HEADSPLIT != 0 && n == NODES - 1) ? 8 : 0;
+            localparam integer TXB = (HEADSPLIT != 0 && n == NODES - 2) ? 8 : 0;
+            reg [NW-1:0] pa_idx;                   // first vocabulary half's best
+            reg [31:0]   pa_val;
+            function automatic [31:0] okey(input [31:0] v);
+                okey = v[31] ? ~v : {1'b1, v[30:0]};
+            endfunction
+            //: argmax over both halves: the second wins only when strictly greater
+            wire [NW-1:0] tok_out = (HEADSPLIT != 0 && n == NODES - 1 &&
+                                     !(okey(nval_w[n*32 +: 32]) > okey(pa_val)))
+                                    ? pa_idx
+                                    : ntok_w[n*NW +: NW] + ((HEADSPLIT != 0 && n == NODES - 1) ? 16'd2048 : 16'd0);
             // KV slice of the running user
             wire [AW-1:0] kv_rword = kv_raddr + user * KVW;
             wire [AW-1:0] kv_wword = (kv_waddr >> 4) + user * KVW;
@@ -157,7 +174,7 @@ module tb_hdc_array #(
                 if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
                 // received hidden-state flits land in X (words 0..7)
                 if (st == N_RECV && in_v)
-                    for (l = 0; l < W; l = l + 1) vm[{fl[2:0], 4'b0} + l] <= in_d[32*l +: 32];
+                    for (l = 0; l < W; l = l + 1) vm[{fl[2:0] + RXB[3:0], 4'b0} + l] <= in_d[32*l +: 32];
             end
 
             always @(posedge clk) begin
@@ -186,6 +203,7 @@ module tb_hdc_array #(
                                     start <= 1'b1; st <= N_RUN;
                                 end else begin
                                     user <= in_d[39:32]; pos <= in_d[31:16]; token <= 0;
+                                    pa_idx <= in_d[15:0]; pa_val <= in_d[71:40];
                                     fl <= 0; st <= N_RECV;
                                 end
                             end
@@ -200,13 +218,13 @@ module tb_hdc_array #(
                             if (n == NODES - 1) begin
                                 if (fault_w[n]) bad = bad + 1;
                                 if (pos >= n_prompt - 1) begin
-                                    if (ntok_w[n*NW +: NW] != gold[gen_n[user]]) begin
+                                    if (tok_out != gold[gen_n[user]]) begin
                                         bad = bad + 1;
                                         $display("MISMATCH user=%0d step=%0d got=%0d gold=%0d", user, gen_n[user],
-                                                 ntok_w[n*NW +: NW], gold[gen_n[user]]);
+                                                 tok_out, gold[gen_n[user]]);
                                     end
                                     $display("GEN user=%0d pos=%0d token=%0d cycle=%0d", user, pos,
-                                             ntok_w[n*NW +: NW], cyc);
+                                             tok_out, cyc);
                                     gen_n[user] = gen_n[user] + 1; gen_total = gen_total + 1;
                                     last_cyc[user] = cyc;
                                     if (gen_n[user] == 1) first_cyc[user] = cyc;
@@ -219,16 +237,17 @@ module tb_hdc_array #(
                                 if (n == NODES - 1) begin
                                     // feedback: one flit, only while the user has steps left
                                     out_v <= (pos + 1 < n_prompt + n_gen - 1);
-                                    out_d <= {{(FLIT-40){1'b0}}, user, pos, ntok_w[n*NW +: NW]};
+                                    out_d <= {{(FLIT-40){1'b0}}, user, pos, tok_out};
                                     out_last <= 1'b1;
                                     st <= N_IDLE;
                                 end else if (fl == 0) begin
                                     out_v <= 1'b1; out_last <= 1'b0;
-                                    out_d <= {{(FLIT-40){1'b0}}, user, pos, 16'd0};
+                                    out_d <= {{(FLIT-72){1'b0}}, nval_w[n*32 +: 32], user, pos, ntok_w[n*NW +: NW]};
                                     fl <= 1;
                                 end else begin
                                     out_v <= 1'b1; out_last <= (fl == XWORDS);
-                                    for (l = 0; l < W; l = l + 1) out_d[32*l +: 32] <= vm[{fl[2:0] - 3'd1, 4'b0} + l];
+                                    for (l = 0; l < W; l = l + 1)
+                                        out_d[32*l +: 32] <= vm[{(fl[3:0] - 4'd1) + TXB[3:0], 4'b0} + l];
                                     fl <= fl + 1'b1;
                                     if (fl == XWORDS) st <= N_IDLE;
                                 end
