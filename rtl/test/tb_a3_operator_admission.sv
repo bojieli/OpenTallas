@@ -202,7 +202,8 @@ module tb_a3_operator_admission;
         end
     endtask
 
-    ot_a3_engine_issue_bridge dut (
+    //: The golden write-beat counts include a scatter's prior-plane republish.
+    ot_a3_engine_issue_bridge #(.DMA_ELIDE_IDENTITY_PRIOR(0)) dut (
         .clk(clk),
         .rst_n(rst_n),
         .clear(clear),
