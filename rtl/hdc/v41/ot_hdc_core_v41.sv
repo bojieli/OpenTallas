@@ -5,14 +5,15 @@
 // tools/hdc_isa_v41.py).
 //
 // The sibling of ot_hdc_core (the reduced Qwen3 core).  It shares the matrix-
-// vector engine (ot_hdc_matvec, with its FP32-weight lane mode for the
-// hyper-connection projections) and the arithmetic primitives, and adds three
-// units:
+// vector engine (ot_hdc_matvec, unchanged) and the arithmetic primitives, and
+// adds four units:
 //
 //   SU  ot_hdc_v41_stream  the four-operand stream pipeline (norms, RoPE,
 //                          softmax, divides, sigmoid/SiLU/softplus, mixes)
 //   QE  ot_hdc_v41_qe      activation quantiser + block-dot lanes (FP8/FP4)
 //   XU  ot_hdc_v41_xu      top-k SELECT, Sinkhorn, Engram hash and gather
+//   HE  ot_hdc_v41_hcproj  the FP32-weight hyper-connection projections,
+//                          beside the matrix engine
 //
 // The sequencer fetches an instruction, adds the per-token DYN values, skips it
 // when its predicate fails or a count is zero, waits for the units named in
@@ -33,7 +34,8 @@ module ot_hdc_core_v41 #(
     parameter integer NW   = 16,
     parameter integer PAW  = 14,
     parameter integer DIM  = 160,
-    parameter integer TOPK = 16
+    parameter integer TOPK = 16,
+    parameter integer HNL  = 3             // HE lanes
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -60,6 +62,10 @@ module ot_hdc_core_v41 #(
     output wire              ewrom_re,
     output wire [AW-1:0]     ewrom_addr,
     input  wire [G*W*16-1:0] ewrom_q,
+    // HE weight ROM (HNL binary32 lanes per word)
+    output wire              hrom_re,
+    output wire [AW-1:0]     hrom_addr,
+    input  wire [HNL*32-1:0] hrom_q,
     // quantised weight ROM, Engram table ROM
     output wire              qrom_re,
     output wire [AW-1:0]     qrom_addr,
@@ -100,6 +106,9 @@ module ot_hdc_core_v41 #(
     output wire              wqr_re,          // QE 32-element read
     output wire [AW-1:0]     wqr_addr,
     input  wire [1023:0]     wqr_q,
+    output wire              vh_re,           // HE x read
+    output wire [AW-1:0]     vh_addr,
+    input  wire [31:0]       vh_q,
     output wire              wxr_re,          // XU 32-element read
     output wire [AW-1:0]     wxr_addr,
     input  wire [1023:0]     wxr_q,
@@ -120,6 +129,10 @@ module ot_hdc_core_v41 #(
     output wire [AW-1:0]     ww_q_addr,
     output wire [31:0]       ww_q_mask,
     output wire [1023:0]     ww_q_data,
+    output wire              ww_h_we,         // HE masked write
+    output wire [AW-1:0]     ww_h_addr,
+    output wire [31:0]       ww_h_mask,
+    output wire [1023:0]     ww_h_data,
     output wire              ww_x_we,         // XU masked 32-element write
     output wire [AW-1:0]     ww_x_addr,
     output wire [31:0]       ww_x_mask,
@@ -130,7 +143,7 @@ module ot_hdc_core_v41 #(
     output wire [G*W-1:0]    me_omask,
     output wire [G*W*32-1:0] me_odata,
     // per-unit activity (cycle accounting)
-    output wire [3:0]        unit_busy,
+    output wire [4:0]        unit_busy,
     output reg  [2:0]        issue_unit       // unit of the instruction issued this cycle (0: none)
 );
     `include "ot_hdc_isa_v41.svh"
@@ -144,9 +157,9 @@ module ot_hdc_core_v41 #(
     reg [NW-1:0] tok_r, pos_r;
     reg [AW-1:0] dyn [0:31];
     reg [INSTR_BITS-1:0] ir;
-    reg        me_go, su_go, qe_go, xu_go;
-    wire       me_ready, me_idle, su_ready, su_idle, qe_ready, qe_idle, xu_ready, xu_idle;
-    wire       me_fault, su_fault, qe_fault, xu_fault;
+    reg        me_go, su_go, qe_go, xu_go, he_go;
+    wire       me_ready, me_idle, su_ready, su_idle, qe_ready, qe_idle, xu_ready, xu_idle, he_ready, he_idle;
+    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;
     wire [NW-1:0] am_idx;
     wire [31:0] am_val;
     wire       am_any;
@@ -156,11 +169,11 @@ module ot_hdc_core_v41 #(
     `define DY(name) dyn[ir[O_``name +: W_``name]]
 
     reg [2:0]  d_unit;
-    reg [3:0]  d_wait;
+    reg [4:0]  d_wait;
     reg        d_skip;
     // ME
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, me_f32;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs, me_xcs;
     reg [2:0]    me_jsh;
     reg [1:0]    me_split;
@@ -184,21 +197,26 @@ module ot_hdc_core_v41 #(
     reg [NW-1:0] xu_n;
     reg [4:0]    xu_k;
     reg          xu_layer;
+    // HE
+    reg [NW-1:0] he_nout, he_k;
+    reg [AW-1:0] he_wbase, he_xbase, he_obase;
 
     wire unit_ready = (d_unit == 3'd1) ? me_ready : (d_unit == 3'd2) ? su_ready :
-                      (d_unit == 3'd3) ? qe_ready : xu_ready;
-    wire [3:0] idles = {xu_idle, qe_idle, su_idle, me_idle};
-    wire [3:0] gos = {xu_go, qe_go, su_go, me_go};
+                      (d_unit == 3'd3) ? qe_ready : (d_unit == 3'd4) ? xu_ready : he_ready;
+    wire [4:0] idles = {he_idle, xu_idle, qe_idle, su_idle, me_idle};
+    wire [4:0] gos = {he_go, xu_go, qe_go, su_go, me_go};
     //: the wait mask names units whose in-flight work must have drained
-    wire waited = ((d_wait & ~(idles & ~gos)) == 4'd0);
+    wire waited = ((d_wait & ~(idles & ~gos)) == 5'd0);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; done <= 1'b0; prog_re <= 1'b0;
-            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; cycles <= 0; next_token <= 0;
+            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0; cycles <= 0;
+            next_token <= 0;
             issue_unit <= 0;
         end else begin
-            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; prog_re <= 1'b0; issue_unit <= 0;
+            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0; prog_re <= 1'b0;
+            issue_unit <= 0;
             if (st != S_IDLE) cycles <= cycles + 1;
             case (st)
                 S_IDLE: if (start) begin
@@ -219,7 +237,7 @@ module ot_hdc_core_v41 #(
                         pc <= pc + 1'b1; st <= S_FETCH;
                     end else if (waited && unit_ready) begin
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
-                        qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4);
+                        qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4); he_go <= (d_unit == 3'd5);
                         issue_unit <= d_unit;
                         st <= S_GO;
                     end
@@ -281,7 +299,6 @@ module ot_hdc_core_v41 #(
         d_unit <= c_unit; d_wait <= `F(WAIT); d_skip <= !pred_ok || zero;
         me_nout <= c_me_nout; me_tiles <= c_me_tiles; me_k <= c_me_k;
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
-        me_f32 <= `F(ME_F32);
         me_wbase <= `F(ME_WBASE) + `DY(ME_D_WBASE);
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + `DY(ME_D_XBASE);
@@ -310,6 +327,8 @@ module ot_hdc_core_v41 #(
         qe_nb <= `F(QE_NB); qe_nout <= `F(QE_NOUT); qe_tiles <= `F(QE_TILES);
         xu_op <= `F(XU_OP); xu_src <= `F(XU_SRC); xu_dst <= `F(XU_DST); xu_n <= c_xu_n;
         xu_k <= c_xu_k[4:0]; xu_layer <= `F(XU_LAYER);
+        he_nout <= `F(HE_NOUT); he_k <= `F(HE_K); he_wbase <= `F(HE_WBASE); he_xbase <= `F(HE_XBASE);
+        he_obase <= `F(HE_OBASE);
     end
     `undef F
     `undef DY
@@ -317,12 +336,12 @@ module ot_hdc_core_v41 #(
     // -- units -----------------------------------------------------------------------------------------
     wire me_wrom_re;
     wire [AW-1:0] me_wrom_addr;
-    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .F32G(1)) u_me (
+    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_round(me_round), .i_obase(me_obase),
-        .i_ots(me_ots), .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_f32(me_f32),
+        .i_ots(me_ots), .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
@@ -372,11 +391,17 @@ module ot_hdc_core_v41 #(
         .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
         .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
 
+    ot_hdc_v41_hcproj #(.NL(HNL), .IL(IL), .AW(AW), .NW(NW)) u_he (
+        .clk(clk), .rst_n(rst_n), .go(he_go), .ready(he_ready), .idle(he_idle),
+        .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
+        .hr_re(hrom_re), .hr_addr(hrom_addr), .hr_q(hrom_q), .x_re(vh_re), .x_addr(vh_addr), .x_q(vh_q),
+        .o_we(ww_h_we), .o_addr(ww_h_addr), .o_mask(ww_h_mask), .o_data(ww_h_data), .fault(he_fault));
+
     assign unit_busy = ~idles;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || qe_fault || xu_fault) fault <= 1'b1;
+        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault) fault <= 1'b1;
     end
 endmodule

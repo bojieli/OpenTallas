@@ -14,11 +14,13 @@
 // +TRACE prints every issue (cycle, pc, unit) for the per-op breakdown.
 module tb_hdc_core_v41 (input wire clk);
     localparam integer INSTR_BITS = 1536;
-    localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14;
+    localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
+    localparam integer HROM_WORDS = 1 << 19;
     localparam integer WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19, CROM_WORDS = 1 << 15;
     localparam integer KV_WORDS = 32768, VM_ELEMS = 65536, VOCAB = 4040, PROG_WORDS = 1 << PAW;
 
     reg [G*W*16-1:0]    wrom [0:WROM_WORDS-1];
+    reg [HNL*32-1:0]    hrom [0:HROM_WORDS-1];
     reg [BL*QLB-1:0]    qrom [0:QROM_WORDS-1];
     reg [263:0]         erom [0:EROM_WORDS-1];
     reg [63:0]          crom [0:CROM_WORDS-1];
@@ -42,6 +44,9 @@ module tb_hdc_core_v41 (input wire clk);
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
     wire wrom_re, ewrom_re; wire [AW-1:0] wrom_addr, ewrom_addr; reg [G*W*16-1:0] wrom_q, ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
+    wire hrom_re; wire [AW-1:0] hrom_addr; reg [HNL*32-1:0] hrom_q;
+    wire vh_re; wire [AW-1:0] vh_addr; reg [31:0] vh_q;
+    wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
     wire erom_re; wire [AW-1:0] erom_addr; reg [263:0] erom_q;
     wire [3:0] crom_re; wire [4*AW-1:0] crom_addr; reg [4*64-1:0] crom_q;
     wire xcrom_re; wire [AW-1:0] xcrom_addr; reg [63:0] xcrom_q;
@@ -58,7 +63,7 @@ module tb_hdc_core_v41 (input wire clk);
     wire [31:0] vw_su_data, vw_rd_data, vw_xe_data, ww_q_mask, ww_x_mask;
     wire [1023:0] ww_q_data, ww_x_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
-    wire [3:0] unit_busy; wire [2:0] issue_unit;
+    wire [4:0] unit_busy; wire [2:0] issue_unit;
 
     ot_hdc_core_v41 dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
@@ -68,6 +73,8 @@ module tb_hdc_core_v41 (input wire clk);
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),
         .qrom_re(qrom_re), .qrom_addr(qrom_addr), .qrom_q(qrom_q),
+        .hrom_re(hrom_re), .hrom_addr(hrom_addr), .hrom_q(hrom_q), .vh_re(vh_re), .vh_addr(vh_addr), .vh_q(vh_q),
+        .ww_h_we(ww_h_we), .ww_h_addr(ww_h_addr), .ww_h_mask(ww_h_mask), .ww_h_data(ww_h_data),
         .erom_re(erom_re), .erom_addr(erom_addr), .erom_q(erom_q),
         .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
         .xcrom_re(xcrom_re), .xcrom_addr(xcrom_addr), .xcrom_q(xcrom_q),
@@ -92,6 +99,9 @@ module tb_hdc_core_v41 (input wire clk);
         if (wrom_re) wrom_q <= wrom[wrom_addr[18:0]];
         if (ewrom_re) ewrom_q <= wrom[ewrom_addr[18:0]];
         if (qrom_re) qrom_q <= qrom[qrom_addr[15:0]];
+        if (hrom_re) hrom_q <= hrom[hrom_addr[18:0]];
+        if (vh_re) vh_q <= vm[vh_addr[15:0]];
+        if (ww_h_we) for (q = 0; q < 32; q = q + 1) if (ww_h_mask[q]) vm[ww_h_addr[15:0] + q] <= ww_h_data[32*q +: 32];
         if (erom_re) erom_q <= erom[erom_addr[18:0]];
         for (q = 0; q < 4; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 15]];
         if (xcrom_re) xcrom_q <= crom[xcrom_addr[14:0]];
@@ -129,15 +139,17 @@ module tb_hdc_core_v41 (input wire clk);
     reg [NW-1:0] prime [0:7];
     integer n_prompt = 0, n_gen = 0, step = 0, gen_bad = 0;
     reg [63:0] total_cycles = 0;
-    integer busy_me = 0, busy_su = 0, busy_qe = 0, busy_xu = 0, all_idle = 0;
+    integer busy_me = 0, busy_su = 0, busy_qe = 0, busy_xu = 0, busy_he = 0, all_idle = 0;
     always @(posedge clk) if (dut.st != 0) begin
         if (unit_busy[0]) busy_me <= busy_me + 1;
         if (unit_busy[1]) busy_su <= busy_su + 1;
         if (unit_busy[2]) busy_qe <= busy_qe + 1;
         if (unit_busy[3]) busy_xu <= busy_xu + 1;
+        if (unit_busy[4]) busy_he <= busy_he + 1;
         if (unit_busy == 0) all_idle <= all_idle + 1;
     end
     reg [31:0] kv_e;
+    reg [4:0] busy_q = 5'd0;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         if ($test$plusargs("TRACE")) trace = 1'b1;
@@ -149,6 +161,7 @@ module tb_hdc_core_v41 (input wire clk);
         if (!$value$plusargs("PFIRST=%d", pfirst)) pfirst = 0;
         $readmemh({dir, "/wrom.hex"}, wrom);
         $readmemh({dir, "/qrom.hex"}, qrom);
+        $readmemh({dir, "/hrom.hex"}, hrom);
         $readmemh({dir, "/erom.hex"}, erom);
         $readmemh({dir, "/crom.hex"}, crom);
         $readmemh({dir, "/prog.hex"}, prog);
@@ -230,8 +243,8 @@ module tb_hdc_core_v41 (input wire clk);
             check_state(1);
             $display("HDC41 token=%0d pos=%0d next_token=%0d expect=%0d cycles=%0d fault=%0d logit_mismatch=%0d vm_mismatch=%0d kv_mismatch=%0d",
                      token, pos, next_token, expect_tok, cycles, fault, bad_lg, bad_vm, bad_kv);
-            $display("UTIL me_busy=%0d su_busy=%0d qe_busy=%0d xu_busy=%0d all_idle=%0d", busy_me, busy_su, busy_qe,
-                     busy_xu, all_idle);
+            $display("UTIL me_busy=%0d su_busy=%0d qe_busy=%0d xu_busy=%0d he_busy=%0d all_idle=%0d", busy_me,
+                     busy_su, busy_qe, busy_xu, busy_he, all_idle);
             if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
                 $display("PASS");
             else
@@ -241,6 +254,9 @@ module tb_hdc_core_v41 (input wire clk);
         if (dbg && (vw_su_we || vw_rd_we || kv_we))
             $display("DBG cyc=%0d su_we=%0d a=%0d d=%h rd_we=%0d a=%0d d=%h kv_we=%0d a=%0d d=%h", cycles, vw_su_we,
                      vw_su_addr, vw_su_data, vw_rd_we, vw_rd_addr, vw_rd_data, kv_we, kv_waddr, kv_wdata);
+        if (dbg && (unit_busy != busy_q))
+            $display("BUSY cyc=%0d units=%b", cycles, unit_busy);
+        busy_q <= unit_busy;
         if (trace && issue_unit != 0)
             $display("ISSUE cyc=%0d pc=%0d unit=%0d", cycles, dut.pc, issue_unit);
         if (cyc > 50000000) begin

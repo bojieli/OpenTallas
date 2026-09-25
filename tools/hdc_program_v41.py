@@ -36,6 +36,14 @@ TMAX, PMAX = I.T_MAX, I.POS_MAX
 DY = I.DYN
 HD = 32
 STR = TMAX                       # S-region stride per head
+# Where a sublayer's own mixes are finished (the mix passes and the Sinkhorn):
+# in attention after ATTN_HOOK ("qkv", "scores", "softmax" or "pv"), in the MoE
+# before routed expert MOE_HOOK (7: after the shared expert).  Swept with
+# tools/hdc_timing_v41.py: late enough that the HE's 5,120-cycle chain has run,
+# early enough that the simple Sinkhorn's ~3,700 cycles hide behind the rest.
+# (With the one-step-per-cycle Sinkhorn, MOE_HOOK = 6 is best.)
+ATTN_HOOK = "softmax"
+MOE_HOOK = 1
 KT_WORDS = (TMAX // W) * HD      # transposed rows of one layer (words)
 KR_WORDS = TMAX * HD // W        # row-major rows of one layer (words)
 
@@ -144,6 +152,7 @@ class Layout:
         self.crom.extend((u32f(int(x)), F(0)) for x in m.engram.token_map)
         # -- ME weight ROM (W*GR bf16 lanes per word) -----------------------------------
         self.words = []
+        self.hwords = []
         self.mat = {}
         # the embedding first: the stream unit addresses it by element (24-bit)
         emb = m.w["embed.weight"]
@@ -155,7 +164,7 @@ class Layout:
             self.words.append(wd)
         for L in range(self.L):
             for wh in ("attn", "ffn"):
-                self.mat[(L, wh, "fn")] = self.place_f32(lw(L, f"hc_{wh}_fn"))
+                self.mat[(L, wh, "fn")] = self.hplace(lw(L, f"hc_{wh}_fn"))
             self.mat[(L, "gate")] = self.place(lw(L, "ffn.gate.weight"))
             self.mat[(L, "wo_a")] = self.place_wo_a(lw(L, "attn.wo_a.weight"))
             if L in m.kv_src:
@@ -233,24 +242,17 @@ class Layout:
         return self.place_rows(w, lambda t, j, l: j * o_rank + t * W + l if t * W + l < o_rank else -1,
                                o_rank // W)
 
-    def place_f32(self, w):
-        """FP32 weights for lane group 0: lane l's low half in lane l, high half in
-        lane W+l (group 1's lanes, whose outputs an FP32 op never writes)."""
+    def hplace(self, w):
+        """HE placement (FP32 weights): word k*IL + j holds rows j*NL + l, lane l."""
         n, k = w.shape
-        assert n <= W * IL
-        base = len(self.words)
-        b = G.bits(np.asarray(w, dtype=F))
-        slots = -(-n // W)
+        assert n <= I.HE_LANES * IL
+        base = len(self.hwords)
+        wf = np.zeros((I.HE_LANES * IL, k), dtype=F)
+        wf[:n] = w
         for kk in range(k):
-            for j in range(slots):
-                word = np.zeros(W * GR, dtype=np.uint16)
-                for l in range(W):
-                    row = j * W + l
-                    if row < n:
-                        word[l] = b[row, kk] & 0xFFFF
-                        word[W + l] = b[row, kk] >> 16
-                self.words.append(word)
-        return dict(base=base, n=n, k=k, tiles=1, slots=slots)
+            for j in range(IL):
+                self.hwords.append(wf[j * I.HE_LANES:(j + 1) * I.HE_LANES, kk].copy())
+        return dict(base=base, n=n, k=k)
 
     # QE placement: word (round r, block kb, slot j), lane l: row (r*IL + j)*BL + l
     def qplace(self, q8, fp4=False):
@@ -398,16 +400,20 @@ class Builder:
                 qe_obase=dst_base, qe_d_obase=dsel)
 
     # -- model ---------------------------------------------------------------------------
-    def hc_mixes(self, L, wh):
-        m, V_ = self.m, self.V
-        P, PO, C = {"attn": ("PA", "POA", "CA"), "ffn": ("PF", "POF", "CF")}[wh]
+    def hc_mix_issue(self, L, wh):
+        """The mixes' projection on the HE and the stream's norm scalar; the rest
+        (hc_mix_finish) is placed inside the sublayer, which runs meanwhile."""
+        V_ = self.V
         t = f"L{L}.hc_{wh}"
         self.rms_r("SSX", 640, "RF", t)
         mat = self.lay.mat[(L, wh, "fn")]
-        # only `slots` words per k are stored: slots past the matrix read the next
-        # k's words, and their rows are never written (nout masks them)
-        self.me(mat, V_["H"], V_["MIX"], {"H"}, {"MIX"}, t, me_f32=1, me_round=0, me_tiles=1,
-                me_ks=mat["slots"], me_ts=mat["k"] * mat["slots"])
+        self.emit(dict(unit=I.UNIT_HE, he_nout=mat["n"], he_k=mat["k"], he_wbase=mat["base"], he_xbase=V_["H"],
+                       he_obase=V_["MIX"]), {"H"}, {"MIX"}, t)
+
+    def hc_mix_finish(self, L, wh):
+        m, V_ = self.m, self.V
+        P, PO, C = {"attn": ("PA", "POA", "CA"), "ffn": ("PF", "POF", "CF")}[wh]
+        t = f"L{L}.hc_{wh}"
         sc, bs = self.lay.cb[(L, wh, "scale")], self.lay.cb[(L, wh, "base")]
         common = dict(a_si=1, b_base=V_["RF"], m1=I.M1_AB, c_src=I.SRC_CLO, c_si=1, m2=I.M2_C,
                       d_src=I.SRC_CLO, d_si=1, ad=I.AD_D, dst=I.DST_VM, o_si=1, su_nout=1)
@@ -549,7 +555,7 @@ class Builder:
         self.xu({"IS"}, {"SEL"}, t, pred=pred, xu_op=I.XU_SEL, xu_src=V_["IS"], xu_dst=V_["SEL"], xu_d_n=nsel,
                 xu_d_k=DY["NSEL2"] if r == 2 else DY["NSEL1"])
 
-    def attention(self, L):
+    def attention(self, L, hook=None):
         m, V_, lay, K = self.m, self.V, self.lay, self.K
         t = f"L{L}.attn"
         r = m.ratio[L]
@@ -585,11 +591,15 @@ class Builder:
                     o_base=K[f"KR{L}"], o_d=DY["ROW1"], o_so=HD, o_si=1)
         T = {0: DY["POS1"], 1: DY["T1"], 2: DY["T2"]}[r]
         TR = {0: DY["RND_POS1"], 1: DY["RND_T1"], 2: DY["RND_T2"]}[r]
+        if hook and ATTN_HOOK == "qkv":
+            hook()
         ts = f"L{L}.scores"
         for hb in range(0, m.heads, IL):
             self.me(dict(n=0, tiles=0, k=HD, base=K[f"KT{L}"] // W), V_["Q"] + hb * HD, V_["S"] + hb * STR,
                     {"Q", f"KT{L}"}, {"S"}, ts, me_xcs=0, me_wsrc=1, me_ts=HD, me_ks=1, me_js=0, me_jsh=3,
                     me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W, me_mmode=1, me_d_nout=T, me_d_tiles=TR)
+        if hook and ATTN_HOOK == "scores":
+            hook()
         sm = dict(su_nout=m.heads, su_nin=0, su_d_nin=T, a_base=V_["S"], a_so=STR, a_si=1, dst=I.DST_VM,
                   o_base=V_["S"], o_so=STR, o_si=1)
         tsm = f"L{L}.softmax"
@@ -597,6 +607,8 @@ class Builder:
                 r_so=1, **sm)
         self.su({"S", "M"}, {"S", "Z"}, tsm, b_base=V_["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM,
                 r_base=V_["Z"], r_so=1, **sm)
+        if hook and ATTN_HOOK == "softmax":
+            hook()
         tp = f"L{L}.pv"
         for hb in range(0, m.heads, IL):
             self.me(dict(n=HD, tiles=1, k=0, base=K[f"KR{L}"] // W), V_["S"] + hb * STR, V_["ACC"] + hb * HD,
@@ -608,13 +620,15 @@ class Builder:
         self.su({"ACC", "DEN"}, {"ACC"}, tsm, su_nout=m.heads, su_nin=HD, a_base=V_["ACC"], a_so=HD, a_si=1,
                 b_base=V_["DEN"], b_so=1, m1=I.M1_DIVB, rnd=1, dst=I.DST_VM, o_base=V_["ACC"], o_so=HD, o_si=1)
         self.rope("ACC", V_["ACC"], m.heads, HD, table, DY["ROPE"], True, tsm)
+        if hook and ATTN_HOOK == "pv":
+            hook()
         to = f"L{L}.out"
         mat = lay.mat[(L, "wo_a")]
         self.me(mat, V_["ACC"], V_["ZA"], {"ACC"}, {"ZA"}, to, me_xjs=256, me_ots=1, me_ojs=2)
         self.bf16("ZA", 256, "ZA", to)
         self.linq(lay.qmat[(L, "wo_b")], "ZA", "Y", set(), set(), to)
 
-    def moe(self, L):
+    def moe(self, L, hook=None):
         m, V_, lay = self.m, self.V, self.lay
         t = f"L{L}.router"
         self.me(lay.mat[(L, "gate")], V_["XN"], V_["G12"], {"XN"}, {"G12"}, t)
@@ -633,6 +647,8 @@ class Builder:
                 imm1=f32(m.route_scale), dst=I.DST_VM, o_base=V_["WGT"], o_si=1)
         stride = lay.qmat[(L, "exp_stride")]
         for k in range(m.k_exp + 1):
+            if hook and k == MOE_HOOK:
+                hook()
             shared = k == m.k_exp
             te = f"L{L}.shared" if shared else f"L{L}.experts"
             if shared:
@@ -648,6 +664,8 @@ class Builder:
                 f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
             self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f)
             self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind)
+        if hook and MOE_HOOK > m.k_exp:
+            hook()
         ty = f"L{L}.moe_sum"
         for k in range(1, m.k_exp + 1):
             src = V_["E0"] if k == 1 else V_["Y"]
@@ -668,21 +686,23 @@ class Builder:
         for L in layers:
             if L in m.engram.layer_ids:
                 self.engram(L)
-            self.hc_mixes(L, "attn")
+            # the mixes accumulate on the HE while the sublayer runs; the sublayer
+            # itself reads only the previous mix (hc_pre), its own is needed at hc_post
+            self.hc_mix_issue(L, "attn")
             self.hc_pre("PF", "X", f"L{L}.attn_norm", "SS")
             self.rmsnorm("X", 160, lay.cb[(L, "attn_norm")], "XN", f"L{L}.attn_norm", have_ss="SS")
-            self.attention(L)
+            self.attention(L, hook=lambda: self.hc_mix_finish(L, "attn"))
             self.hc_post("Y", "POA", "CA", f"L{L}.hc_post")
-            self.hc_mixes(L, "ffn")
+            self.hc_mix_issue(L, "ffn")
             self.hc_pre("PA", "X", f"L{L}.ffn_norm", "SS")
             self.rmsnorm("X", 160, lay.cb[(L, "ffn_norm")], "XN", f"L{L}.ffn_norm", have_ss="SS")
-            self.moe(L)
+            self.moe(L, hook=lambda: self.hc_mix_finish(L, "ffn"))
             self.hc_post("Y", "POF", "CF", f"L{L}.hc_post")
         if head:
             self.hc_pre("PF", "X", "head", "SS")
             self.rmsnorm("X", 160, lay.cb["norm"], "XN", "head", have_ss="SS")
             self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
-        self.emit(dict(unit=I.UNIT_END, wait=15), set(), set(), "end")
+        self.emit(dict(unit=I.UNIT_END, wait=31), set(), set(), "end")
         return schedule(self.prog)
 
 
@@ -692,15 +712,15 @@ def schedule(prog):
     it reads or writes).  A unit executes in order, so waiting for it to drain
     covers all its older work."""
     out = []
-    rd = {u: set() for u in (1, 2, 3, 4)}
-    wr = {u: set() for u in (1, 2, 3, 4)}
+    rd = {u: set() for u in I.UNITS}
+    wr = {u: set() for u in I.UNITS}
     for f, reads, writes, tag in prog:
         f = dict(f)
         wait = f.get("wait", 0)
-        for u in (1, 2, 3, 4):
+        for u in I.UNITS:
             if (reads & wr[u]) or (writes & (rd[u] | wr[u])):
                 wait |= 1 << (u - 1)
-        for u in (1, 2, 3, 4):
+        for u in I.UNITS:
             if wait >> (u - 1) & 1:
                 rd[u], wr[u] = set(), set()
         f["wait"] = wait
@@ -726,6 +746,7 @@ class Machine:
         self.wrom = np.stack(lay.words).reshape(-1)
         self.crom = np.array(lay.crom, dtype=F)
         self.qcodes = np.stack(lay.qcodes)             # [words, BL, 32]
+        self.hrom = np.stack(lay.hwords)               # [words, HE lanes] binary32
         self.qexp = np.stack(lay.qexp)                 # [words, BL]
         self.tokens = []
         self.eh = None
@@ -748,7 +769,8 @@ class Machine:
                 continue
             if f["pred"] == I.PRED_NZ and pos == 0:
                 continue
-            {I.UNIT_ME: self.me, I.UNIT_SU: self.su, I.UNIT_QE: self.qe, I.UNIT_XU: self.xu}.get(
+            {I.UNIT_ME: self.me, I.UNIT_SU: self.su, I.UNIT_QE: self.qe, I.UNIT_XU: self.xu,
+             I.UNIT_HE: self.he}.get(
                 f["unit"], lambda f: None)(f)
         return self.argmax
 
@@ -771,8 +793,6 @@ class Machine:
         t = r * per_round + q
         nidx = (t * IL + j) * W + l
         keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
-        if f["me_f32"]:
-            keep &= (q == 0)
         r, q, t, j, l, nidx = r[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
         parts = []
         for c in range(S):
@@ -784,12 +804,7 @@ class Machine:
                     w = self.kv[word * W + l]
                 else:
                     word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
-                    if f["me_f32"]:
-                        lo = self.wrom[word * (W * GR) + l].astype(np.uint32)
-                        hi = self.wrom[word * (W * GR) + W + l].astype(np.uint32)
-                        w = G.from_bits((hi << 16) | lo)
-                    else:
-                        w = self.wrom_f32(word * (W * GR) + g * W + l)
+                    w = self.wrom_f32(word * (W * GR) + g * W + l)
                 x = self.vm[xb + c * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
                 if f["me_round"]:
                     x = G.to_bf16(x)
@@ -804,6 +819,16 @@ class Machine:
             order = np.argsort(nidx)
             self.logits = acc[order]
             self.argmax = int(nidx[order][np.argmax(acc[order])])
+
+    # -- hyper-connection projection engine ------------------------------------------------
+    def he(self, f):
+        """out[row] = sum_k w[row, k] * x[k], sequential from +0 (binary32)."""
+        n, K = f["he_nout"], f["he_k"]
+        acc = np.zeros(I.HE_LANES * IL, dtype=F)
+        for k in range(K):
+            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(-1)
+            acc = G.add(acc, G.mul(w, self.vm[f["he_xbase"] + k]))
+        self.vm[f["he_obase"]:f["he_obase"] + n] = acc[:n]
 
     # -- stream unit -------------------------------------------------------------------------
     def addr(self, f, s, no, ni, idx=None):
@@ -1018,11 +1043,12 @@ def write_images(out, lay, prog, roms_from=None):
     (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
     (out / "prog_tags.txt").write_text("".join(f"{n} {f['_tag']}\n" for n, f in enumerate(prog)))
     if roms_from:                       # debug: reuse another image directory's ROMs
-        for n in ("wrom.hex", "crom.hex", "qrom.hex", "erom.hex"):
+        for n in ("wrom.hex", "hrom.hex", "crom.hex", "qrom.hex", "erom.hex"):
             (out / n).unlink(missing_ok=True)
             (out / n).symlink_to(Path(roms_from).resolve() / n)
         return len(words)
     (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W * GR))
+    (out / "hrom.hex").write_text(hexwords((pack_lanes(G.bits(w), 32) for w in lay.hwords), 32 * I.HE_LANES))
     (out / "crom.hex").write_text(hexwords(((f32(hi) << 32) | f32(lo) for lo, hi in lay.crom), 64))
     qw = []
     for cw, ew in zip(lay.qcodes, lay.qexp):
@@ -1055,7 +1081,7 @@ def main():
     lay = Layout(model)
     prog = Builder(lay).build()
     if args.stop is not None:
-        prog = prog[:args.stop] + [dict(unit=I.UNIT_END, wait=15, _tag="end")]
+        prog = prog[:args.stop] + [dict(unit=I.UNIT_END, wait=31, _tag="end")]
     for f in prog:                                    # every field fits its width
         I.encode(**{k: v for k, v in f.items() if not k.startswith("_")})
     token, pos = prompt[-1], len(prompt) - 1
@@ -1068,8 +1094,9 @@ def main():
     ref = model.decode_token(token, pos, copy.deepcopy(st), trace)
     exact = bool(len(mach.logits) and np.array_equal(G.bits(mach.logits), G.bits(ref)))
     gold_tok = int(np.argmax(ref))
-    counts = {u: sum(1 for f in prog if f["unit"] == u) for u in (1, 2, 3, 4)}
-    print(f"program: {len(prog)} instructions (ME {counts[1]}, SU {counts[2]}, QE {counts[3]}, XU {counts[4]}); "
+    counts = {u: sum(1 for f in prog if f["unit"] == u) for u in I.UNITS}
+    print(f"program: {len(prog)} instructions (ME {counts[1]}, SU {counts[2]}, QE {counts[3]}, XU {counts[4]}, "
+          f"HE {counts[5]}); "
           f"ME ROM {len(lay.words)} words; QE ROM {len(lay.qcodes)} words; CROM {len(lay.crom)}")
     print(f"ISA simulator at pos {pos}: token {got} golden {gold_tok} oracle {expected[0] if not args.context else '-'};"
           f" logits bit-exact with golden: {exact}")

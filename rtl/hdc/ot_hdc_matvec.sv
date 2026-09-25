@@ -39,11 +39,7 @@ module ot_hdc_matvec #(
     parameter integer G  = 4,
     parameter integer IL = 8,
     parameter integer AW = 24,
-    parameter integer NW = 16,
-    // F32G = 1: lane group 0 also has a binary32 multiplier, used by ops with
-    // i_f32 (FP32 weights: lane l's low half in weight lane l, its high half in
-    // lane W+l).  Groups 1.. are idle in such an op.  0 builds the BF16-only engine.
-    parameter integer F32G = 0
+    parameter integer NW = 16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -72,7 +68,6 @@ module ot_hdc_matvec #(
     input  wire              i_mmode,
     input  wire              i_oen,
     input  wire              i_amax,
-    input  wire              i_f32,
     // weight ROM: G*W bf16 lanes per word
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
@@ -109,7 +104,7 @@ module ot_hdc_matvec #(
     integer gi;
     reg              active;
     reg [NW-1:0]     nout_r, tiles_r, k_r;
-    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r, f32_r;
+    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
     reg [1:0]        split_r;
     reg [AW-1:0]     tstep_r;          // weight step per round: ts, or G*ts for KV ops (tile r*G + g)
     reg [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, xcs_r, ots_r, ojs_r;
@@ -135,7 +130,7 @@ module ot_hdc_matvec #(
             if (go) begin
                 active <= 1'b1;
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= i_k;
-                wsrc_r <= i_wsrc; f32_r <= (F32G != 0) && i_f32; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
+                wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
                 mmode_r <= i_mmode; split_r <= i_wsrc ? 2'd0 : i_split;
                 ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts << LG) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
@@ -186,7 +181,7 @@ module ot_hdc_matvec #(
     end
 
     // Tag of the element issued this cycle (registered alongside the address).
-    reg          e_v, e_first, e_last, e_oen, e_amax, e_wsrc, e_round, e_mmode, e_f32;
+    reg          e_v, e_first, e_last, e_oen, e_amax, e_wsrc, e_round, e_mmode;
     reg [1:0]    e_split;
     reg [AW-1:0] e_oa, e_ots;
     reg [NW:0]   e_nb, e_lb, e_rem;
@@ -196,7 +191,7 @@ module ot_hdc_matvec #(
     end
     always @(posedge clk) begin
         e_first <= (k == 0); e_last <= k_last;
-        e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_f32 <= f32_r; e_round <= round_r; e_mmode <= mmode_r;
+        e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
         e_split <= split_r; e_oa <= oa; e_ots <= ots_r; e_nb <= nb; e_lb <= lb;
         e_rem <= {1'b0, nout_r};
     end
@@ -214,7 +209,6 @@ module ot_hdc_matvec #(
     reg [G*W*32-1:0] mq_kv;
     reg [G*32-1:0]   mq_x;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
-    reg          s1_f32, s1b_f32, s2_f32, s3_f32;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin s1_v <= 0; s1b_v <= 0; s2_v <= 0; s3_v <= 0; end
         else begin s1_v <= e_v; s1b_v <= s1_v; s2_v <= s1b_v; s3_v <= s2_v; end
@@ -225,15 +219,12 @@ module ot_hdc_matvec #(
     always @(posedge clk) begin
         s1_tag <= e_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
         s1_first <= e_first; s1b_first <= s1_first; s2_first <= s1b_first; s3_first <= s2_first;
-        s1_f32 <= e_f32; s1b_f32 <= s1_f32; s2_f32 <= s1b_f32; s3_f32 <= s2_f32;
         s1_wsrc <= e_wsrc; s1_round <= e_round; s1b_wsrc <= s1_wsrc; s1b_round <= s1_round;
         s2_round <= s1b_round;
         mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
         s3_wsrc <= s2_tag[TW-4];
         for (l = 0; l < G * W; l = l + 1)
-            s2_w[32*l +: 32] <= s1b_wsrc ? mq_kv[32*l +: 32] :
-                                (F32G != 0 && s1b_f32 && l < W) ? {mq_wrom[16*(W+l) +: 16], mq_wrom[16*l +: 16]} :
-                                {mq_wrom[16*l +: 16], 16'h0000};
+            s2_w[32*l +: 32] <= s1b_wsrc ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
         s2_x <= mq_x;
         s3_w <= s2_w;
         for (l = 0; l < G; l = l + 1)
@@ -258,29 +249,13 @@ module ot_hdc_matvec #(
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
                 localparam integer LI = g * W + gl;
-                wire [31:0] prod, fb_pre, acc_in, prod_b;
+                wire [31:0] prod, fb_pre, acc_in;
                 reg  [31:0] acc_q;
-                wire f0, f1, f0b;
+                wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
-                ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v && !s3_f32),
-                                   .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod_b), .fault(f0b));
-                if (F32G != 0 && g == 0) begin : g_f32
-                    //: FP32-weight ops (V4.1 hyper-connection projections): the
-                    //: qualified binary32 multiplier; the op's flag is constant
-                    //: across the 5-cycle product, so a registered select suffices
-                    wire [31:0] prod_f;
-                    wire f0f;
-                    reg  sel_f;
-                    reg  [4:0] fl;
-                    always @(posedge clk) begin fl <= {fl[3:0], s3_f32}; end
-                    ot_hdc_fmul u_fm (clk, rst_n, s3_v && s3_f32, s3_w[32*LI +: 32], s3_x[32*g +: 32], prod_f, f0f);
-                    assign prod = fl[4] ? prod_f : prod_b;
-                    assign f0 = f0b | f0f;
-                end else begin : g_bf
-                    assign prod = prod_b;
-                    assign f0 = f0b;
-                end
+                ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
+                                   .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 // add input at c+8; the circulating sum from IL cycles earlier.
                 //: The first-element select is made one cycle early into acc_q: the
                 //: flag fans out to every lane bit (G*W*32 loads), and registering the

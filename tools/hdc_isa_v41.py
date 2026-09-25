@@ -2,10 +2,14 @@
 """Instruction set of the DeepSeek-V4.1 configuration of the hardwired decode core.
 
 The V4.1 core (rtl/hdc/v41/ot_hdc_core_v41.sv) is the reduced-Qwen3 core
-(tools/hdc_isa.py) with two more units and a wider stream pipeline.  It shares
-the matrix-vector engine (ot_hdc_matvec, with an FP32-weight mode on lane group
-0 for the hyper-connection projections) and keeps its field semantics; the
-other units are:
+(tools/hdc_isa.py) with more units and a wider stream pipeline.  It shares the
+matrix-vector engine (ot_hdc_matvec, unchanged: exact BF16 lanes) and keeps its
+field semantics; the other units are:
+
+* HE, the hyper-connection projection engine (ot_hdc_v41_hcproj): the FP32-
+  weight mixes matvec_fp32(fn, flat), NL lanes x IL interleaved outputs of the
+  qualified binary32 multiplier and adder, sequential over K per output; word
+  wbase + k*IL + j holds rows j*NL + l.  It runs beside the matrix engine.
 
 * SU, the V4.1 stream unit (ot_hdc_v41_stream): a 2-D element loop (outer o,
   inner i), one element per cycle, four operand streams A, B, C, D (vector
@@ -41,7 +45,7 @@ other units are:
   token, ot_hdc_engram_hash) and EGATHER (24 Engram rows, dequantised).
 
 Sequencing.  An instruction names the units whose in-flight work it must see
-drained (`wait`, a mask; bit u-1 for unit u); the program generator computes
+drained (`wait`, a mask; bit u-1 for unit u, u = ME, SU, QE, XU, HE); the program generator computes
 it from region hazards, so independent units overlap.  `pred` skips an
 instruction by position parity (group-completing compressor steps) or at
 position 0 (an empty index set).  A count that evaluates to zero skips.
@@ -57,6 +61,7 @@ W_LANES = 16          # lanes per ME group; vector/KV word width
 GROUPS = 4            # ME lane groups
 INTERLEAVE = 8        # ME / QE outputs in flight per lane
 BL = 16               # QE block-dot lanes
+HE_LANES = 3          # HE lanes (x INTERLEAVE outputs)
 T_MAX = 144           # attention rows per layer: window 128 + 16 selected
 POS_MAX = 128         # positions provisioned (max_seq_len of the reduced model)
 VM_ELEMS = 65536
@@ -67,7 +72,8 @@ A = 24   # address / stride width
 N = 16   # count width
 D = 5    # DYN select width
 
-UNIT_END, UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU = range(5)
+UNIT_END, UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE = range(6)
+UNITS = (UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE)
 PRED_ALWAYS, PRED_ODD, PRED_NZ = range(3)
 
 # DYN values, derived by the sequencer from (token, pos) at the start of a token.
@@ -107,7 +113,7 @@ QE_LINQ, QE_QDQ8, QE_QDQ4, QE_QDQ4E = range(4)
 XU_SEL, XU_SINK, XU_EHASH, XU_EGATHER = range(4)
 
 FIELDS = [
-    ("unit", 3), ("wait", 4), ("pred", 2),
+    ("unit", 3), ("wait", 5), ("pred", 2),
     # ME (tools/hdc_isa.py semantics)
     ("me_nout", N), ("me_tiles", N), ("me_k", N), ("me_wsrc", 1),
     ("me_wbase", A), ("me_ts", A), ("me_ks", A), ("me_js", A),
@@ -115,7 +121,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_split", 2), ("me_xcs", A), ("me_f32", 1),
+    ("me_split", 2), ("me_xcs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nout", D), ("su_d_nin", D),
     ("a_src", 2), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D), ("a_ind", 2), ("a_ibase", A),
@@ -133,6 +139,8 @@ FIELDS = [
     # XU
     ("xu_op", 2), ("xu_src", A), ("xu_dst", A), ("xu_n", N), ("xu_d_n", D), ("xu_k", 5), ("xu_d_k", D),
     ("xu_layer", 1),
+    # HE
+    ("he_nout", N), ("he_k", N), ("he_wbase", A), ("he_xbase", A), ("he_obase", A),
 ]
 
 
