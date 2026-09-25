@@ -88,6 +88,7 @@ table.data td.m{font-family:"IBM Plex Mono",monospace;font-size:12px}
 svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
 svg .t-mono{font-family:"IBM Plex Mono",monospace}
 footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
+.k-me{color:var(--rom)}.k-su{color:var(--hbm)}.k-sel{color:#6B7B3A}.k-sk{color:#7A2E0E}.k-col{color:#5B4B8A}
 </style>
 </head>
 <body>
@@ -97,6 +98,9 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <div class="eyebrow" style="margin-bottom:8px">Contents</div>
   <a href="#s1">1 Introduction</a>
   <a href="#s2">2 Product definition</a>
+  <a href="#sM">2A Model architectures &amp; operator graphs</a>
+  <a class="l2" href="#sM-2">2A.2 Qwen3-8B graph</a>
+  <a class="l2" href="#sM-3">2A.3 DeepSeek-V4.1 graph</a>
   <a href="#s3">3 Architecture principles</a>
   <a href="#s4">4 Decode core</a>
   <a class="l2" href="#s4-1">4.1 Top level &amp; interfaces</a>
@@ -116,6 +120,7 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <a class="l2" href="#s6-6">6.6 V4.1 array: physical layout</a>
   <a class="l2" href="#s6-7">6.7 V4.1 wafer: datapath &amp; layout</a>
   <a class="l2" href="#s6-8">6.8 Topology selection &amp; critical path</a>
+  <a class="l2" href="#s6-9">6.9 Wafer vs array at equal silicon</a>
   <a href="#s7">7 DeepSeek-V4.1 package</a>
   <a href="#s8">8 HBM comparator</a>
   <a href="#s9">9 System performance</a>
@@ -168,7 +173,7 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <tbody>
       <tr><td><b>ROM reticle</b></td><td>Qwen3-8B (8.2B params)</td><td>one die; engines in an on-die layer pipeline; ROM beside each engine's lanes</td><td>per-user latency, energy</td><td><span class="status s-part">core RTL; die concept</span></td></tr>
       <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash (552B + 197B Engram)</td><td>packages in a layer pipeline over SerDes links (≈100 ns hops)</td><td>per-user speed, flexibility, yield</td><td><span class="status s-part">units built; integration</span></td></tr>
-      <tr><td><b>ROM wafer</b></td><td>DeepSeek-V4.1-Flash</td><td>the array package as reticle tiles stitched on one wafer (≈10 ns hops)</td><td>aggregate throughput, tokens/J</td><td><span class="status s-open">architecture only</span></td></tr>
+      <tr><td><b>ROM wafer</b></td><td>DeepSeek-V4.1-Flash</td><td>the array package as reticle tiles stitched on one wafer (≈10 ns hops)</td><td>aggregate throughput, tokens/J</td><td><span class="status s-open">rejected: no gain at equal silicon (§6.9)</span></td></tr>
       <tr><td><b>ROM array (later)</b></td><td>DeepSeek-V4-Flash (284B)</td><td>separate chip; reuses the engine library</td><td>—</td><td><span class="status s-open">analysis only</span></td></tr>
       <tr style="background:var(--hbm-soft)"><td><b>HBM machine</b></td><td>any</td><td>general accelerator; B200/NVL72 class, NVLink, TP/PP/EP</td><td>the comparator</td><td><span class="status s-part">ABI 3.0 RTL</span></td></tr>
     </tbody>
@@ -187,6 +192,84 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
       <tr><td>KV positions provisioned</td><td class="r m">64 (vehicle)</td><td>KV streaming from HBM in design (§12)</td></tr>
     </tbody>
   </table></div>
+</section>
+
+<!-- M -->
+<section id="sM">
+  <h2><span class="num">2A</span>Model architectures and operator graphs</h2>
+  <p>This section fixes <em>what</em> the hardware computes. Both models are specified bit-exactly by a golden model, <code>tools/hdc_golden.py</code> for Qwen3-8B and <code>tools/hdc_golden_v41.py</code> for DeepSeek-V4.1-Flash, and the RTL is checked against it in every logit. The graphs below give one decode step of one layer. Each node shows the operation, its shape (<i>in → out</i>, or heads × width × rows), its number format, and the unit that executes it: <span class="k-me">■ matrix engine</span>, <span class="k-su">■ stream unit / SFU</span>, <span class="k-sel">■ SELECT</span>, <span class="k-sk">■ Sinkhorn unit</span>, <span class="k-col">■ collective</span> (4-die one-shot, array only). Parallel nodes in a column are independent and run concurrently. An arrow between columns is a data dependency, and those dependencies make up the critical path of §6.8.</p>
+
+  <h3 id="sM-1">2A.1 Model parameters</h3>
+  <div class="tablebox"><table class="data">
+    <caption>Table 2A-1. Architecture parameters (from the released configurations)</caption>
+    <thead><tr><th>Parameter</th><th class="r">Qwen3-8B</th><th class="r">DeepSeek-V4.1-Flash</th></tr></thead>
+    <tbody>
+      <tr><td>Parameters, total / active per token</td><td class="r m">8.19 B / 7.57 B (dense)</td><td class="r m">552 B / 16 B (MoE)</td></tr>
+      <tr><td>Layers</td><td class="r m">36</td><td class="r m">40</td></tr>
+      <tr><td>Hidden size</td><td class="r m">4,096</td><td class="r m">5,120 × 4 residual copies (hyper-connections)</td></tr>
+      <tr><td>Attention</td><td class="r m">GQA: 32 query heads, 8 KV heads, head dim 128</td><td class="r m">sparse MLA-style: 64 heads, head dim 512, one shared latent KV (key = value)</td></tr>
+      <tr><td>Query / KV projection</td><td class="r m">full rank: 4096→4096 / 4096→1024 ×2</td><td class="r m">low rank: q 5120→1280→64×512; kv 5120→512</td></tr>
+      <tr><td>Attention span per token</td><td class="r m">all past positions</td><td class="r m">window 128 + top-512 selected compressed rows + sink</td></tr>
+      <tr><td>KV sharing across layers</td><td class="r m">none</td><td class="r m">sources 2, 8, 14, 20 serve groups 2–7, 8–13, 14–19, 20–39; KV compression ratio 2 (layers 2–19), 1 (20–39)</td></tr>
+      <tr><td>Indexer</td><td class="r m">—</td><td class="r m">32 heads × 128, on layers 2, 8, 14, 20, 24, 28, 32, 36; top-512</td></tr>
+      <tr><td>Position encoding</td><td class="r m">RoPE θ = 10⁶, full head</td><td class="r m">RoPE on 64 of 512 dims (interleaved pairs); YaRN on compressed layers</td></tr>
+      <tr><td>Output projection</td><td class="r m">4096→4096</td><td class="r m">grouped: 8 × [1024, 4096], then 8192→5120</td></tr>
+      <tr><td>Feed-forward</td><td class="r m">SwiGLU, 4096→12288→4096</td><td class="r m">MoE: 384 routed + 1 shared expert, top-6; each 5120→2304→5120, clamped SwiGLU</td></tr>
+      <tr><td>Router</td><td class="r m">—</td><td class="r m">FP32 5120→384; √softplus + bias; top-6; weights ÷ (sum + 1e-20) × 1.5</td></tr>
+      <tr><td>Residual mixing</td><td class="r m">plain add</td><td class="r m">mHC: 4×4 doubly stochastic mix (20 Sinkhorn iterations), sigmoid pre/post gates</td></tr>
+      <tr><td>Engram</td><td class="r m">—</td><td class="r m">layers 1 and 14: 24 hash columns → table rows → gated add</td></tr>
+      <tr><td>Vocabulary</td><td class="r m">151,936</td><td class="r m">129,280</td></tr>
+      <tr><td>Weight formats</td><td class="r m">BF16</td><td class="r m">FP8 E4M3 (dense, block 32), MXFP4 E2M1 (routed experts)</td></tr>
+      <tr><td>Native context</td><td class="r m">40,960</td><td class="r m">1,048,576</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="sM-2">2A.2 Qwen3-8B: one decode layer</h3>
+  <figure class="fig">
+    <div class="svgbox"><svg id="gQwen" viewBox="0 0 1000 470" role="img" aria-label="Qwen3-8B operator graph"></svg></div>
+    <figcaption><b>Figure 2A-1.</b> Qwen3-8B decode, one layer, plus the output head. The attention half has one parallel fan-out (Q, K and V) and a strictly serial softmax. The MLP half is two matrix passes around SiLU. Every matrix pass is BF16 × BF16 with FP32 accumulation, in the fixed summation order of the golden. L is the number of past positions.</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 2A-2. Qwen3-8B multiply-accumulates per decode token</caption>
+    <thead><tr><th>Operator</th><th class="r">Shape</th><th class="r">MACs per layer</th><th class="r">× 36 layers</th></tr></thead>
+    <tbody>
+      <tr><td>Q, O projections</td><td class="r m">2 × [4096, 4096]</td><td class="r m">33.6 M</td><td class="r m">1.21 G</td></tr>
+      <tr><td>K, V projections</td><td class="r m">2 × [1024, 4096]</td><td class="r m">8.4 M</td><td class="r m">0.30 G</td></tr>
+      <tr><td>Gate, up, down</td><td class="r m">3 × [12288, 4096]</td><td class="r m">151.0 M</td><td class="r m">5.44 G</td></tr>
+      <tr><td>Attention (scores + P·V)</td><td class="r m">32 heads × 128 × L × 2</td><td class="r m">8,192 · L</td><td class="r m">0.29 M · L</td></tr>
+      <tr><td>lm_head</td><td class="r m">[151936, 4096]</td><td class="r m">—</td><td class="r m">0.62 G</td></tr>
+      <tr><td><b>Total</b></td><td></td><td></td><td class="r m"><b>7.57 G + 0.29 M · L</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="sM-3">2A.3 DeepSeek-V4.1-Flash: one decode layer</h3>
+  <figure class="fig">
+    <div class="svgbox"><svg id="gV41" viewBox="0 0 1000 560" role="img" aria-label="DeepSeek-V4.1 operator graph"></svg></div>
+    <figcaption><b>Figure 2A-2.</b> DeepSeek-V4.1-Flash decode, one layer. Each half (attention, MoE) is wrapped in a hyper-connection mix. The mix's Sinkhorn runs <i>alongside</i> the sublayer, and <code>hc_post</code> waits for both. Nodes marked † exist only on the index-source layers (2, 8, 14, 20, 24, 28, 32, 36), and ‡ only on the KV-source layers (2, 8, 14, 20). Engram (layers 1 and 14) adds a hash, a table-row gather and a gated add before attention. Rows continue from one to the next: the queries after RoPE feed the attention scores in the second row. In the array each matrix pass is split over the package's 4 dies, and the <span class="k-col">■</span> collectives join the partial results (Table 6-3).</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 2A-3. DeepSeek-V4.1-Flash multiply-accumulates per decode token (shipped shapes)</caption>
+    <thead><tr><th>Operator</th><th class="r">Shape</th><th class="r">Format</th><th class="r">MACs per layer</th><th class="r">× 40 layers</th></tr></thead>
+    <tbody>
+      <tr><td>q low rank: wq_a, wq_b</td><td class="r m">[1280, 5120], [32768, 1280]</td><td class="r m">FP8</td><td class="r m">48.5 M</td><td class="r m">1.94 G</td></tr>
+      <tr><td>kv: wkv</td><td class="r m">[512, 5120]</td><td class="r m">FP8</td><td class="r m">2.6 M</td><td class="r m">0.10 G</td></tr>
+      <tr><td>Grouped output: wo_a, wo_b</td><td class="r m">8 × [1024, 4096], [5120, 8192]</td><td class="r m">BF16 / FP8</td><td class="r m">75.5 M</td><td class="r m">3.02 G</td></tr>
+      <tr><td>Sparse attention (scores + P·V)</td><td class="r m">64 heads × 512 × 640 rows × 2</td><td class="r m">BF16</td><td class="r m">41.9 M</td><td class="r m">1.68 G</td></tr>
+      <tr><td>Router</td><td class="r m">[384, 5120]</td><td class="r m">FP32</td><td class="r m">2.0 M</td><td class="r m">0.08 G</td></tr>
+      <tr><td>6 routed experts: w1, w3, w2</td><td class="r m">6 × 3 × [2304, 5120]</td><td class="r m">MXFP4</td><td class="r m">212.3 M</td><td class="r m">8.49 G</td></tr>
+      <tr><td>Shared expert</td><td class="r m">3 × [2304, 5120]</td><td class="r m">FP8</td><td class="r m">35.4 M</td><td class="r m">1.42 G</td></tr>
+      <tr><td>Hyper-connection mixes</td><td class="r m">2 × [24, 20480]</td><td class="r m">FP32</td><td class="r m">1.0 M</td><td class="r m">0.04 G</td></tr>
+      <tr><td>Indexer scores † (8 layers)</td><td class="r m">32 heads × 128 × context / ratio</td><td class="r m">BF16</td><td class="r m">4,096 · L / r</td><td class="r m">grows with context</td></tr>
+      <tr><td>lm_head</td><td class="r m">[129280, 5120]</td><td class="r m">FP8</td><td class="r m">—</td><td class="r m">0.66 G</td></tr>
+      <tr><td><b>Total (fixed part)</b></td><td></td><td></td><td class="r m"><b>419 M</b></td><td class="r m"><b>≈17.4 G + indexer</b></td></tr>
+    </tbody>
+  </table></div>
+  <p><b>What the graphs imply for hardware.</b></p>
+  <ul>
+    <li><b>Qwen3-8B</b> is shallow and wide: about 12 dependent steps per layer, dominated by the matrix passes. A fast matrix engine and short softmax/SiLU pipelines set its token time.</li>
+    <li><b>V4.1</b> fixes its attention work per token at 640 rows, whatever the context, and moves the context-dependent cost into the indexer on 8 layers. Its MoE touches only 6 of 384 experts, but a ROM machine sweeps all of them (§3).</li>
+    <li><b>V4.1 needs five unit types beyond the matrix engine and stream unit:</b> FP8/MXFP4 block-dot lanes, SELECT (top-k, router top-6, candidate blocks), a Sinkhorn unit, the Engram hash-and-gather unit, and the IEEE divide/sqrt/softplus functions. Its dependency chain per layer is about twice Qwen's.</li>
+  </ul>
 </section>
 
 <!-- 3 -->
@@ -467,6 +550,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </div>
 
   <h3 id="s6-3">6.3 ROM wafer</h3>
+  <p class="note"><b>Status: rejected as an implementation target</b> (§6.9). At equal silicon the wafer is no faster than the array. It is kept here as an analysed comparison only.</p>
   <div class="two">
     <figure class="fig narrow">
       <div class="svgbox"><svg id="wafer" viewBox="0 0 360 360" role="img" aria-label="Wafer tiles"></svg></div>
@@ -507,13 +591,13 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>Board fabric / pipeline</td><td class="r m">ring · 40 stages</td><td>one layer per package; the 4-copy residual is 41 KB per hop</td></tr>
       <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits per parameter, FP8 execution</td></tr>
       <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>ROM holds no per-user state</td></tr>
-      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">4,139 / 4,034 tok/s</td><td>bottom-up, measured RTL depths (§6.8); the analytical model's 15,556 / 12,208 omits most serial latency</td></tr>
+      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">5,005 / 4,436 tok/s</td><td>bottom-up, measured RTL depths, with the routed Sinkhorn unit (§6.8); the analytical model's 15,556 / 12,208 omitted most serial latency</td></tr>
       <tr><td>Aggregate at 4,096 users</td><td class="r m">≈504 K tok/s</td><td>bound by stage occupancy; 3.6 MB per hop at this load</td></tr>
     </tbody>
   </table></div>
   <figure class="fig">
     <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 720" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
-    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1, which is dominated by the hyper-connection Sinkhorn chain rather than by the network.</figcaption>
+    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1 with the Sinkhorn unit: the compute chain and the ROM sweep, not the network.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
     <caption>Table 6-3. Communication per V4.1 layer in the selected array (batch 1)</caption>
@@ -544,17 +628,18 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 6-4. Per-user decode rate, analytical model against the critical path (tok/s, batch 1)</caption>
     <thead><tr><th>Target</th><th class="r">Analytical</th><th class="r">Critical path</th><th>What binds on the critical path</th></tr></thead>
     <tbody>
-      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,161</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
-      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,728</td><td>compute chain</td></tr>
-      <tr><td>V4.1 array: 4-die group, ring (selected)</td><td class="r m">15,556</td><td class="r m">4,139</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
-      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,997</td><td>collective latency, 336 µs</td></tr>
-      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,779</td><td>collectives 169 µs + chain 131 µs</td></tr>
+      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,103</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
+      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,680</td><td>compute chain</td></tr>
+      <tr><td>V4.1 array: 4-die group, ring (selected), pipelined Sinkhorn</td><td class="r m">15,556</td><td class="r m">4,136</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
+      <tr><td>V4.1 array: as above with the routed Sinkhorn unit</td><td class="r m">—</td><td class="r m">5,005</td><td>compute chain 138 µs + ROM sweep 43 µs of a 200 µs token</td></tr>
+      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,992</td><td>collective latency, 336 µs</td></tr>
+      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,768</td><td>collectives 169 µs + chain 131 µs</td></tr>
     </tbody>
   </table></div>
   <p><b>The sweep.</b> 2,038 configurations at fixed silicon. The array was swept over 2, 4 or 8 dies per package; board fabrics chain, ring, mesh, torus, fully connected groups of 2, 4 or 8 packages, or one switch; tensor groups of 1–32 dies; and six reduction algorithms. The wafer was swept over groups of 4–57 fields in square and rectangular shapes. Both were run with experts either striped across the group or placed one per device. The results:</p>
   <ul>
     <li><b>The array is insensitive to its network.</b> The best configuration (8-die packages, 8-die group, ring) reaches 4,262 tok/s per user, only 3% above the selected 4-die ring. That group gives up a quarter of the aggregate at 4,096 users (379 K against 504 K tok/s) and needs a 6,520 mm² interposer. A single switch tier costs 3–6%.</li>
-    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,997 tok/s with one 57-field group to 2,779 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
+    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,992 tok/s with one 57-field group to 2,768 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
     <li><b>One-shot wins</b> almost everywhere at decode payloads (1.5–68 KB). Every static algorithm keeps a fixed summation order, so results stay reproducible.</li>
     <li><b>Placing each expert on its own device is 11% slower</b> than striping at batch 64. It also needs arrivals buffered and summed in expert-id order to stay bit-exact.</li>
   </ul>
@@ -562,19 +647,41 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 6-5. Selected topologies and sensitivities</caption>
     <thead><tr><th>Target</th><th>Physical</th><th>Logical</th><th class="r">Batch 1 / 64 per user</th><th class="r">Aggregate, 4,096 users</th></tr></thead>
     <tbody>
-      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">4,139 / 4,034</td><td class="r m">504 K</td></tr>
-      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">4,262 / 3,905</td><td class="r m">379 K</td></tr>
-      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,779 / 2,430</td><td class="r m">1.00 M</td></tr>
+      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">5,005 / 4,436</td><td class="r m">504 K</td></tr>
+      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">5,603 / 4,095</td><td class="r m">379 K</td></tr>
+      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,768 / 2,422</td><td class="r m">1.00 M</td></tr>
       <tr><td>Wafer + dedicated reduction network (sensitivity)</td><td>express tree, 10 ns per level</td><td>tree</td><td class="r m">3,929 at batch 1</td><td class="r m">—</td></tr>
-      <tr><td>V4.1 array with a 12-cycle divider (hypothetical)</td><td>as selected</td><td>as selected</td><td class="r m">4,995 at batch 1</td><td class="r m">—</td></tr>
+      <tr><td>V4.1 array before the Sinkhorn unit (pipelined adders + 31-cycle divider)</td><td>as selected</td><td>as selected</td><td class="r m">4,136 / 4,024</td><td class="r m">504 K</td></tr>
     </tbody>
   </table></div>
-  <p><b>What this changes in the design.</b> The per-user bound for V4.1 is not bandwidth, links or control. It is the hyper-connection Sinkhorn: 39 dependent normalisation steps of 4×4 per sublayer, 80 per token. Each step is a sequential four-term FP32 sum, an eps add and an IEEE divide, ≈51 cycles or ≈2.1 µs per sublayer at our unit depths, which caps the rate near 6,000 tok/s whatever the silicon. A latency-optimised Sinkhorn unit, bit-exact to the golden, is therefore the next RTL priority. After it come the index top-k merge (≈3.8 µs on each of the eight index-source layers) and the stream-unit functions on the norm and softmax chains (sigmoid 172, exp 121, rsqrt 90 cycles). The analytical model is being corrected to use this critical path and collective census for every target, including the GPU side, and the tables above will be regenerated from it.</p>
+  <p><b>What this changed in the design.</b> Before the Sinkhorn unit, V4.1's per-user rate was bound by the hyper-connection Sinkhorn. Its 39 dependent 4×4 normalisations per sublayer took ≈2.0 µs, 80 times per token, on pipelined adders and a 31-cycle divider. The <b>Sinkhorn unit</b> (<code>rtl/hdc/v41/ot_hdc_sinkhorn.sv</code>) now does one whole normalisation per clock: positive-only chained adders, and a table-seeded reciprocal with an exact remainder correction that is bit-identical to IEEE division. That brings a step to 6.6 ns and a Sinkhorn to 270 ns, verified bit-exact on 3,840 real and 1,000,000 random Sinkhorns. The Sinkhorn is now off the critical path. The selected array rises to <b>5,005 / 4,436 tok/s per user at batch 1 / 64</b>, where the token is set by the compute chain (norms, softmax, SiLU and the matrix passes, 138 µs) and the ROM sweep (43 µs). The next RTL priorities are the stream-unit function depths (sigmoid, exp, rsqrt) and the index top-k merge. The per-user optimum at batch 1 is now an 8-die group, 12% faster, but it loses 8% at batch 64 and 25% of the aggregate, so the 4-die package stays selected.</p>
+  <h3 id="s6-9">6.9 Wafer vs array at equal silicon: the wafer is rejected</h3>
+  <p>The ×12 wafer design of §6.7 uses 3.6× the array's silicon, so comparing it with the array directly flatters the wafer. <code>tools/wafer_vs_array_study.py</code> (report: <code>docs/WAFER_VS_ARRAY_ISO_AREA.md</code>) sizes wafers of 2, 3, 4 and 12 against arrays of the same area, rounded down to whole 4-die packages. Both are sized with the analytical model's own rules, and both are priced on the bottom-up critical path. Every size holds the weights; a single wafer does not.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-6. Wafer ÷ array at equal silicon (divider as built, Cerebras-style mesh at 125 ns per field)</caption>
+    <thead><tr><th>Wafers</th><th class="r">Silicon</th><th class="r">Wafer / array per user, batch 1 (tok/s)</th><th class="r">Ratio, batch 1</th><th class="r">Ratio, batch 64</th><th class="r">Aggregate ratio, 4,096 users</th></tr></thead>
+    <tbody>
+      <tr><td>2</td><td class="r m">92,450 mm²</td><td class="r m">3,487 / 4,196</td><td class="r m">0.83</td><td class="r m">1.05</td><td class="r m">1.20</td></tr>
+      <tr><td>3</td><td class="r m">138,675 mm²</td><td class="r m">3,814 / 4,279</td><td class="r m">0.89</td><td class="r m">0.56</td><td class="r m">0.92</td></tr>
+      <tr><td>4</td><td class="r m">184,900 mm²</td><td class="r m">3,705 / 4,254</td><td class="r m">0.87</td><td class="r m">0.56</td><td class="r m">0.90</td></tr>
+      <tr><td>12</td><td class="r m">554,700 mm²</td><td class="r m">3,083 / 4,216</td><td class="r m">0.73</td><td class="r m">0.61</td><td class="r m">1.03</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Wafer fabric is the only lever for batch 1.</b> The wafer only matches the array when a field crossing costs about 13–18 ns or less, which needs a designed long-wire network that has not been built, instead of Cerebras' fine-grained mesh. Even at the wire limit (≈5 ns) the wafer's lead is 2–3%.</li>
+    <li><b>Measured: a designed fabric is not fast enough.</b> A pipelined long-wire link routed on ASAP7 (<code>rtl/rom/ot_rom_express_link.sv</code>, <code>results/architecture/wafer_express_link_measurement.json</code>) runs at 605 ps/mm with a register every 1.0 mm at 1 GHz. That makes a 28.55 mm field crossing ≈30 ns with a forwarding boundary, or ≈35 ns with an FP32 reduction boundary. It is 4× better than Cerebras' mesh but still above the 13–18 ns the wafer needs to match the array, and above the 22.5 ns beyond which, in this model, the wafer never reaches the array at batch 1. ASAP7's thin routing metal makes this an upper-side figure for N5, but even a 2× better N5 wire would leave the wafer at parity, not ahead.</li>
+    <li><b>Up to 16%, and only with two unbuilt parts.</b> The lead reaches 6–16% only when the Sinkhorn chain is also cut in half, from ≈168 µs to ≈84 µs per token with a 4-cycle bit-exact divider. Even then the wafer is slower at batch 64 at three of the four sizes.</li>
+    <li><b>Aggregate throughput is a wash.</b> At 4,096 users it is set by pipeline occupancy, not the fabric: 0.90–1.20.</li>
+    <li><b>HBM is the wafer's hard limit.</b> A wafer edge carries 43 HBM3E stacks against 5 per die, so the array has 6.5× the stacks at every size.</li>
+    <li><b>Manufacturing:</b> everything is harder on the wafer. It needs in-place defect tolerance instead of discarding bad dies, stitching across fields, HBM limited to the wafer edge, and whole-wafer test.</li>
+  </ul>
+  <p><b>Decision.</b> The wafer's advantage is at most a few percent at batch 1, only there, and it depends on two parts that have not been built. That does not justify its manufacturing risk. DeepSeek-V4.1 is implemented on the <b>ROM array</b> with the topology of §6.6: 4-die tensor-group packages, one-shot fixed-order collectives on UCIe, and a board ring. The wafer stays in the analytical model as a comparison, with Cerebras' mesh as the conservative control, but it is no longer a simulation target.</p>
 </section>
 
 <!-- 7 -->
 <section id="s7">
   <h2><span class="num">7</span>DeepSeek-V4.1 package</h2>
+  <p class="note"><b>Status: one V4.1 decode token runs bit-exact in RTL.</b> The V4.1 configuration of the decode core (<code>rtl/hdc/v41/ot_hdc_core_v41.sv</code>) shares the matrix engine and adds a four-operand stream unit, an FP8/FP4 quantised engine, an auxiliary unit (top-k select, Sinkhorn, Engram hash and gather) and a hyper-connection projection engine. It runs a 4,416-instruction program over all 40 layers of the reduced model. It decodes token 3118 (the golden's and the oracle's) in 1,088,551 cycles, bit-exact in every logit, the vector memory and the KV cache. From an empty state it consumes the prompt and generates three tokens identical to the golden. The timing model agrees to 0.002%. The token is bound by the one-element-per-cycle stream unit (729 K busy cycles) and by the golden's sequential 640-term hyper-connection sums, which are the current optimisation targets. The core has not been routed yet.</p>
   <p>A V4.1 package is the decode core plus the units below, each specified by a V4.1 golden written in the same style (every operation one binary32 op in hardware order). The golden reproduces the reduced model's first oracle token and is bit-exact layer by layer at every prompt position.</p>
   <div class="tablebox"><table class="data">
     <caption>Table 7-1. V4.1 units (all II = 1, bit-exact vs the golden, routed at a 0.9 ns target unless noted)</caption>
@@ -664,7 +771,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 10-1. Block records</caption>
     <thead><tr><th>Block</th><th class="r">Cells</th><th class="r">Area µm²</th><th class="r">Seq. µm²</th><th class="r">Target ns</th><th class="r">Routed</th><th class="r">Slew viol.</th><th>Worst reg→reg path</th></tr></thead>
     <tbody>
-      <tr><td class="m">ot_hdc_matvec</td><td class="r m">360,206</td><td class="r m">54,792</td><td class="r m">29,900</td><td class="r m">0.9</td><td class="r m">1,067 MHz</td><td class="r m">61</td><td class="m">first-k flag → lane adder s1 (fan-out 64)</td></tr>
+      <tr><td class="m">ot_hdc_matvec</td><td class="r m">373,000</td><td class="r m">56,838</td><td class="r m">31,700</td><td class="r m">0.9</td><td class="r m">1,099 MHz</td><td class="r m">37</td><td class="m">first-select register fan-out (−10 ps); first-select retimed and split-tree levels registered (1,009 → 1,099 MHz)</td></tr>
       <tr><td class="m">ot_hdc_stream</td><td class="r m">242,220</td><td class="r m">35,300</td><td class="r m">17,090</td><td class="r m">0.85</td><td class="r m">1,111 MHz</td><td class="r m">0</td><td class="m">rsqrt multiplier stage 3</td></tr>
       <tr><td class="m">ot_hdc_fp32_mul_pipe</td><td class="r m">4,632</td><td class="r m">615</td><td class="r m">136</td><td class="r m">0.7</td><td class="r m">1,275 MHz</td><td class="r m">0</td><td class="m">s1_b → s2 partial product</td></tr>
       <tr><td class="m">ot_fp32_mul_rne_pipe (qualified)</td><td class="r m">4,646</td><td class="r m">588</td><td class="r m">105</td><td class="r m">0.7</td><td class="r m">1,052 MHz</td><td class="r m">0</td><td class="m">s1_a → s2 24×24 product</td></tr>
@@ -704,6 +811,8 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <tbody>
       <tr><td class="m">rtl_hdc_decode_campaign</td><td>SFU 18,010 vectors; multipliers 20 M vectors; single step (logits, VM, KV bit-exact); end to end from empty KV; position 59; 8-group scaling</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_array_campaign</td><td>4/5/6/10/12-package arrays, every user token-exact, link stalls</td><td><span class="status s-done">pass</span></td></tr>
+      <tr><td class="m">rtl_hdc_v41_decode_campaign</td><td>one reduced V4.1 token at positions 7 and 39 (top-k live), 8-token prompt + 3 generated from empty state; every logit, vector memory and KV cache vs the ISA model; ISA model vs golden</td><td><span class="status s-done">pass</span></td></tr>
+      <tr><td class="m">rtl_hdc_v41_sinkhorn_campaign</td><td>3,840 real + 1,000,000 random 4×4 Sinkhorns (≈645 M quotients), fail-closed classes, 14/14 mutations caught</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_blockdot_campaign</td><td>36,573 quantiser blocks, 100,592 dot rows, ties, subnormals, mutation check</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_select_campaign</td><td>8 configurations, tie-heavy random + 2,349 real reduced-V4.1 selections</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_engram_campaign</td><td>divider/sqrt 20 M each; hash 18,861 positions; softplus 53,552 arguments</td><td><span class="status s-done">pass</span></td></tr>
@@ -1032,10 +1141,10 @@ function drawV41Array(){
   const parts=[["ROM",289.4,Rs,R],["compute",328.9,P,R],["PHY",50,Bs,B],["links",65.2,G,M],["overhead",81.5,G,M]];
   let xx=10; const fw=440/815; parts.forEach(([n,a,f,st])=>{const w=a*fw; el("rect",{x:xx,y:cy0+26,width:w,height:22,fill:f,stroke:st},svg);
     txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
-  const sc=460/241.6;
-  budgetBar(svg,520,cy0+26,460,sc,"",[[223.7,Rs,R,"compute chain 223.7 µs (Sinkhorn-bound)"],[4.9+2.1,P,M,""],[7.0,R,R,""],[3.3,G,M,""],[0.6,B,B,""]]);
-  txt(svg,520,cy0+62,"241.6 µs per token → 4,139 tokens/s per user (critical path)",{fs:10,fill:I});
-  txt(svg,520,cy0+76,"sweep + KV 7.0 · stage hops 7.0 · control 3.3 · collectives 0.6 µs",{fs:10,fill:R});
+  const sc=460/199.8;
+  budgetBar(svg,520,cy0+26,460,sc,"",[[137.5,Rs,R,"compute chain 137.5 µs"],[42.8+2.1,P,M,"ROM sweep + KV"],[7.0,R,R,""],[7.3,G,M,""],[3.0,B,B,""]]);
+  txt(svg,520,cy0+62,"199.8 µs per token → 5,005 tokens/s per user (critical path, Sinkhorn unit)",{fs:10,fill:I});
+  txt(svg,520,cy0+76,"sweep + KV 44.9 · stage hops 7.0 · control 7.3 · collectives 3.0 µs",{fs:10,fill:R});
 }
 
 function drawV41Wafer(){
@@ -1077,18 +1186,109 @@ function drawV41Wafer(){
   // C: time budget comparison
   const y=490; head(svg,10,y,"C · One token's critical path at batch 1 (200K context), same scale");
   const sc=(1000-20-170)/500.8;
-  const rowsC=[["array, 4-die groups",[[223.7,Rs,R,"compute chain 223.7"],[7.0,P,M,""],[7.0,R,R,""],[3.9,G,M,""]],"241.6 µs · 4,139 tok/s"],
-    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"500.8 µs · 1,997 tok/s"],
-    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"359.9 µs · 2,779 tok/s"]];
+  const rowsC=[["array, 4-die groups",[[137.5,Rs,R,"chain 137.5"],[44.9,P,M,""],[7.0,R,R,""],[10.3,G,M,""]],"199.8 µs · 5,005 tok/s"],
+    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"502.0 µs · 1,992 tok/s"],
+    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"361.3 µs · 2,768 tok/s"]];
   rowsC.forEach(([lab,segs,tot],i)=>{const yy=y+24+i*36; txt(svg,10,yy+15,lab,{fs:10.5,fw:600,fill:I});
     const end=budgetBar(svg,170,yy,0,sc,"",segs); txt(svg,990,yy-3,tot,{fs:10,fill:R,anchor:"end"});});
-  txt(svg,10,y+140,"copper: compute chain (Sinkhorn-bound) · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
+  txt(svg,10,y+140,"copper: compute chain · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
+}
+
+function drawOpGraph(id, rows, opts){
+  const svg=document.getElementById(id); if(!svg) return; svg.innerHTML="";
+  const U={me:[css("--rom-soft"),css("--rom")],su:[css("--hbm-soft"),css("--hbm")],sel:["#EEF1E2","#6B7B3A"],sk:["#F1DDD2","#7A2E0E"],col:["#ECE8F4","#5B4B8A"],io:[css("--panel"),css("--muted")]};
+  let y=opts.top||10; const W=1000, bw=opts.bw||118, bh=opts.bh||50, gapY=6;
+  let prevRowLast=null;
+  rows.forEach((row,ri)=>{
+    if(row.label){txt(svg,10,y+12,row.label,{fs:12,fw:600,fill:css("--ink")}); y+=20;}
+    const st=row.stages, n=st.length, gx=(W-20-n*bw)/Math.max(1,n-1);
+    const maxK=Math.max(...st.map(s=>s.length)); const rowH=maxK*(bh+gapY)-gapY;
+    let prevCenters=null; const firstCenters=[];
+    st.forEach((stage,si)=>{
+      const x=10+si*(bw+gx); const k=stage.length; const y0=y+(rowH-(k*(bh+gapY)-gapY))/2;
+      const centers=[];
+      stage.forEach((nd,ni)=>{
+        const yy=y0+ni*(bh+gapY); const [f,st_]=U[nd.u||"io"];
+        el("rect",{x:x,y:yy,width:bw,height:bh,rx:4,fill:f,stroke:st_,"stroke-width":nd.u==="col"?1.4:1,"stroke-dasharray":nd.u==="col"?"4 2":"none"},svg);
+        txt(svg,x+bw/2,yy+15,nd.t,{anchor:"middle",fs:10.5,fw:600,fill:css("--ink")});
+        if(nd.s) txt(svg,x+bw/2,yy+29,nd.s,{anchor:"middle",fs:9.2,cls:"t-mono"});
+        if(nd.f) txt(svg,x+bw/2,yy+42,nd.f,{anchor:"middle",fs:9,fill:st_});
+        centers.push([x,yy+bh/2]);
+      });
+      const link=([px,py],[cx,cy])=>el("path",{d:`M${px+bw},${py} C ${px+bw+gx/2},${py} ${cx-gx/2},${cy} ${cx-1},${cy}`,fill:"none",stroke:css("--muted"),"stroke-width":1,"marker-end":"url(#ar)"},svg);
+      if(prevCenters){
+        const src=prevCenters.filter(c=>!c.noout);
+        if(src.length===centers.length && src.length>1) src.forEach((c,i)=>link(c,centers[i]));
+        else src.forEach(c=>centers.forEach(d=>link(c,d)));
+      }
+      stage.forEach((nd,ni)=>{ if(nd.noout) centers[ni].noout=true; });
+      if(si===0) firstCenters.push(...centers);
+      prevCenters=centers;
+    });
+    if(prevRowLast && firstCenters.length){ const [px,py]=prevRowLast; const [cx,cy]=firstCenters[0];
+      el("path",{d:`M${px+bw/2},${py+bh/2} C ${px+bw/2},${py+bh/2+18} ${cx+bw/2},${cy-bh/2-30} ${cx+bw/2},${cy-bh/2-1}`,fill:"none",stroke:css("--muted"),"stroke-width":1,"stroke-dasharray":"4 3","marker-end":"url(#ar)"},svg);}
+    prevRowLast=prevCenters[prevCenters.length-1]; y+=rowH+34;
+  });
+}
+function drawModelGraphs(){
+  drawOpGraph("gQwen",[
+    {label:"Attention half",stages:[
+      [{t:"RMSNorm",s:"4096",f:"SU · reduce, rsqrt",u:"su"}],
+      [{t:"Q proj",s:"4096→4096",f:"ME · BF16",u:"me"},{t:"K proj",s:"4096→1024",f:"ME · BF16",u:"me"},{t:"V proj",s:"4096→1024",f:"ME · BF16",u:"me"}],
+      [{t:"q-norm + RoPE",s:"32 × 128",f:"SU",u:"su"},{t:"k-norm + RoPE",s:"8 × 128",f:"SU",u:"su"},{t:"KV append",s:"8 × 128 × 2",f:"KV write",u:"io"}],
+      [{t:"scores q·Kᵀ",s:"32h × 128 × L",f:"ME · GQA 4:1",u:"me"}],
+      [{t:"softmax",s:"max · exp · Σ · 1/x",f:"SU · reducer",u:"su"}],
+      [{t:"P · V",s:"32h × L × 128",f:"ME",u:"me"}],
+      [{t:"O proj + add",s:"4096→4096",f:"ME · residual",u:"me"}]]},
+    {label:"MLP half",stages:[
+      [{t:"RMSNorm",s:"4096",f:"SU",u:"su"}],
+      [{t:"gate",s:"4096→12288",f:"ME · BF16",u:"me"},{t:"up",s:"4096→12288",f:"ME · BF16",u:"me"}],
+      [{t:"SiLU(g) · u",s:"12288",f:"SU · sigmoid",u:"su"}],
+      [{t:"down + add",s:"12288→4096",f:"ME · residual",u:"me"}]]},
+    {label:"Output head (once per token)",stages:[
+      [{t:"final RMSNorm",s:"4096",f:"SU",u:"su"}],
+      [{t:"lm_head",s:"4096→151936",f:"ME · vocab split",u:"me"}],
+      [{t:"argmax",s:"151936",f:"ME argmax tree",u:"sel"}]]}
+  ],{bw:122,bh:50});
+  drawOpGraph("gV41",[
+    {label:"Attention half (hyper-connection pre → sublayer → post)",stages:[
+      [{t:"HC pre",s:"rsqrt · 24×20480 · σ",f:"ME + SU · FP32",u:"su"},{t:"Sinkhorn → HC post",s:"4×4, 20 iterations",f:"Sinkhorn unit (parallel)",u:"sk",noout:true}],
+      [{t:"RMSNorm",s:"5120",f:"SU",u:"su"}],
+      [{t:"wq_a",s:"5120→1280",f:"ME · FP8",u:"me"},{t:"wkv",s:"5120→512",f:"ME · FP8",u:"me"}],
+      [{t:"q-norm",s:"1280",f:"SU",u:"su"},{t:"kv-norm, RoPE",s:"512 (+compress ‡)",f:"SU · KV write",u:"su"}],
+      [{t:"all-gather",s:"q_a | kv | idx w",f:"4 dies · one-shot",u:"col"}],
+      [{t:"wq_b",s:"1280→64×512",f:"ME · FP8",u:"me"},{t:"indexer q †",s:"1280→32×128",f:"ME · FP8",u:"me"}],
+      [{t:"RoPE q",s:"64 × 64 dims",f:"SU",u:"su"},{t:"index scores †",s:"32h×128×L/r · ReLU·Σ",f:"ME + SU",u:"me"}]]},
+    {stages:[
+      [{t:"top-512 †",s:"of L/r keys",f:"SELECT + merge",u:"sel"}],
+      [{t:"row gather",s:"128 win + 512 sel",f:"KV read · all-gather",u:"col"}],
+      [{t:"scores",s:"64h × 512 × 640",f:"ME · BF16",u:"me"}],
+      [{t:"softmax + sink",s:"max · exp · Σ · ÷",f:"SU · divider",u:"su"}],
+      [{t:"P · V",s:"64h × 640 × 512",f:"ME",u:"me"}],
+      [{t:"wo_a (grouped)",s:"8 × [1024,4096]",f:"ME · BF16",u:"me"}],
+      [{t:"wo_b + reduce",s:"8192→5120",f:"ME · FP8 · all-reduce",u:"col"}],
+      [{t:"HC post",s:"4×4 mix · σ",f:"SU (waits Sinkhorn)",u:"su"}]]},
+    {label:"MoE half",stages:[
+      [{t:"HC pre",s:"rsqrt · 24×20480 · σ",f:"ME + SU · FP32",u:"su"},{t:"Sinkhorn → HC post",s:"4×4, 20 iterations",f:"Sinkhorn unit (parallel)",u:"sk",noout:true}],
+      [{t:"RMSNorm",s:"5120",f:"SU",u:"su"}],
+      [{t:"router",s:"5120→384",f:"ME · FP32",u:"me"}],
+      [{t:"√softplus + bias",s:"384",f:"SU · exp, ÷, sqrt",u:"su"}],
+      [{t:"top-6",s:"of 384",f:"SELECT",u:"sel"}],
+      [{t:"w1 | w3 × 6",s:"5120→2304",f:"ME · MXFP4",u:"me"},{t:"shared w1 | w3",s:"5120→2304",f:"ME · FP8",u:"me"}],
+      [{t:"clamped SwiGLU",s:"2304 × 7",f:"SU · sigmoid",u:"su"}]]},
+    {stages:[
+      [{t:"w2 × 6",s:"2304→5120",f:"ME · MXFP4",u:"me"},{t:"shared w2",s:"2304→5120",f:"ME · FP8",u:"me"}],
+      [{t:"weights ÷ Σ × 1.5",s:"6",f:"SU · divider",u:"su"}],
+      [{t:"combine + reduce",s:"fixed id order",f:"all-reduce (4 dies)",u:"col"}],
+      [{t:"HC post",s:"4×4 mix · σ",f:"SU (waits Sinkhorn)",u:"su"}],
+      [{t:"→ next layer",s:"4 × 5120 residual",f:"stage hop (board)",u:"io"}]]}
+  ],{bw:118,bh:52});
 }
 
 function drawAll(){
   let m="b1"; try{m=localStorage.getItem("atlas-metric")||"b1"}catch(e){}
   document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o.dataset.m===m?"true":"false"));
-  drawPerf(m); drawHeat(); drawISA(); drawV41Logical(); drawV41Array(); drawV41Wafer(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawWafer(); drawReticle(); drawChain();
+  drawPerf(m); drawHeat(); drawISA(); drawModelGraphs(); drawV41Logical(); drawV41Array(); drawV41Wafer(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawWafer(); drawReticle(); drawChain();
   const grp=document.getElementById("grp"); grp.innerHTML="";
   for(let g=0;g<4;g++){const x0=250+g*103;
     el("rect",{x:x0,y:50,width:95,height:138,rx:3,fill:css("--panel"),stroke:css("--rom")},grp);
@@ -1104,7 +1304,7 @@ function drawAll(){
     {max:26,ticks:[0,5,10,15,20,25],fmt:v=>v+" M",L:190});
   hbars("arraybars",[["1 core",1,"--faint"],["4 packages",2.22],["5 packages",3.66],["6 packages",5.22],["10 packages",6.96],["12 packages",9.72]],
     {max:11,ticks:[0,2,4,6,8,10],fmt:v=>v.toFixed(2)+"×",L:110,tfmt:t=>t+"×"});
-  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["qualified FP32 mul",1052,"--faint"],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine (slew open)",1067,"--warn"],["package link",1339,"--hbm"],["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 SELECT K=6",1618],["V4.1 SELECT K=512",1115],["V4.1 Engram hash",1524],["V4.1 softplus",1034]],
+  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["qualified FP32 mul",1052,"--faint"],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine (−10 ps open)",1099,"--warn"],["package link",1339,"--hbm"],["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 SELECT K=6",1618],["V4.1 SELECT K=512",1115],["V4.1 Engram hash",1524],["V4.1 softplus",1034]],
     {W:520,max:1700,ticks:[0,500,1000,1500],fmt:v=>v+" MHz",L:170,bh:16,gap:7,ref:1000});
 }
 drawAll();

@@ -1,0 +1,993 @@
+{
+  "arithmetic": {
+    "directed_quotients": {
+      "classes": {
+        "second_threshold": {
+          "pairs_separating_the_defective_variant": 0,
+          "pairs_simulated": 100000,
+          "pairs_tried": 4000000
+        },
+        "seed_overshoot": {
+          "pairs_separating_the_defective_variant": 0,
+          "pairs_simulated": 100000,
+          "pairs_tried": 3081972
+        }
+      },
+      "note": "seed_overshoot: q' just below an integer over significands where an unbiased seed exceeds 1/T; second_threshold: q' just above a midpoint over the seed's deepest undershoots with X' near 4"
+    },
+    "edge_pairs": 24,
+    "generated": {
+      "add": 2940000,
+      "add_chained": 2514991,
+      "div": 2940000,
+      "div_steady": 2909016
+    },
+    "shards": [
+      {
+        "add": 183421,
+        "add_chained": 156942,
+        "div": 196271,
+        "div_steady": 194870,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183519,
+        "add_chained": 156916,
+        "div": 196138,
+        "div_steady": 194931,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183117,
+        "add_chained": 156929,
+        "div": 196033,
+        "div_steady": 195425,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183433,
+        "add_chained": 157626,
+        "div": 196469,
+        "div_steady": 193976,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183745,
+        "add_chained": 157131,
+        "div": 196189,
+        "div_steady": 194439,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183759,
+        "add_chained": 156525,
+        "div": 196211,
+        "div_steady": 195009,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 184263,
+        "add_chained": 156737,
+        "div": 196469,
+        "div_steady": 194035,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183180,
+        "add_chained": 158088,
+        "div": 196400,
+        "div_steady": 193836,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 184730,
+        "add_chained": 156764,
+        "div": 196072,
+        "div_steady": 193938,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183169,
+        "add_chained": 157827,
+        "div": 196491,
+        "div_steady": 194017,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 184134,
+        "add_chained": 156896,
+        "div": 195982,
+        "div_steady": 194492,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183543,
+        "add_chained": 157609,
+        "div": 196461,
+        "div_steady": 193891,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183889,
+        "add_chained": 157381,
+        "div": 196228,
+        "div_steady": 194006,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 184417,
+        "add_chained": 157253,
+        "div": 195812,
+        "div_steady": 194022,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 183453,
+        "add_chained": 157178,
+        "div": 197030,
+        "div_steady": 193843,
+        "errors": 0,
+        "ops": 731504,
+        "pass": true
+      },
+      {
+        "add": 184252,
+        "add_chained": 157189,
+        "div": 195768,
+        "div_steady": 194286,
+        "errors": 0,
+        "ops": 731495,
+        "pass": true
+      }
+    ],
+    "totals": {
+      "add": 2940024,
+      "add_chained": 2514991,
+      "div": 3140024,
+      "div_steady": 3109016,
+      "errors": 0,
+      "ops": 11704055
+    }
+  },
+  "claim_boundary": "functional cycle-level RTL simulation of the Sinkhorn unit and its arithmetic against tools/hdc_golden_v41.py (add, div, seqsum, and hc_mixes' Sinkhorn tail); the clock is not claimed here -- see results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/.",
+  "fail_closed": "negative (nonzero) or nonfinite input, overflowing or zero row sum, out-of-range quotient -> fault with out_valid and y all +0; -0 reads as +0",
+  "function": "hc_mixes after the exponential: rows softmax-normalised + eps, columns, then 19 x (rows, columns); sums sequential in index order, binary32 RNE, canonical +0",
+  "generator": {
+    "model_classes": 50,
+    "model_vs_ieee_samples_per_class": 100000,
+    "rom_matches_generator": true,
+    "seed_bound": {
+      "bias_needed": 262144,
+      "bias_used": 262144,
+      "max_undershoot_units_2^-28": 2.722485601902008,
+      "min_slack_units": 10800352,
+      "one_sided_window": "1/T - 2^-26 < R <= 1/T",
+      "significands_checked": 8388608
+    }
+  },
+  "icarus": {
+    "arith_slice": {
+      "add": 24,
+      "add_chained": 0,
+      "div": 376,
+      "div_steady": 0,
+      "errors": 0,
+      "ops": 400,
+      "pass": true,
+      "seconds": 199
+    },
+    "unit_real_slice": {
+      "cases": 2,
+      "cycles": 90,
+      "errors": 0,
+      "faults": 0,
+      "latency_expected": 41,
+      "latency_max": 41,
+      "latency_min": 41,
+      "outputs": 2,
+      "pass": true,
+      "seconds": 701,
+      "word_errors": 0
+    }
+  },
+  "input_sha256": {
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/test/hdc_sinkhorn_harness.cpp": "1be6f98e872c6bba270de28d085d62e1f977dd090c4b92ecc83ac97f7a709ef3",
+    "rtl/test/tb_hdc_sinkhorn.sv": "dca7e264712b2f72ca0f75d41180d124fd3aa5574d3e17abf69caf6d32f81dc8",
+    "tools/gen_hdc_sinkhorn_recip_rom.py": "f15e0d351a2168cfad6cd7d78639e106d20a47aa12773bd836e43666631a7291",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/rtl_hdc_v41_sinkhorn_campaign.py": "9897c936b4968c96059d1320fd8af81def239c6b5dbaafd468e5db7ad7b3fbc0"
+  },
+  "latency_cycles": 41,
+  "latency_definition": "clock edges from the accepting edge to the edge that registers out_valid: 2 ITERS + 1 (A: row sums; B: step-0 divide + eps; 2 ITERS - 1 steady steps, one per clock)",
+  "mutations": [
+    {
+      "arith": {
+        "errors": 12784,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "no-carry round-up ignores the sticky bit (round-half-even applied to every half-ulp-or-more)",
+      "id": "add_round_drops_sticky",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 15192
+      }
+    },
+    {
+      "arith": {
+        "errors": 613,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "carry-case round-up ignores the shifted-out bits",
+      "id": "add_carry_round_ignores_shifted_out",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1231,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 12582
+      }
+    },
+    {
+      "arith": {
+        "errors": 114,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "an exponent reaching 255 no longer fails closed",
+      "id": "add_overflow_unflagged",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 40,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 640
+      }
+    },
+    {
+      "arith": {
+        "errors": 0,
+        "ops": 891527,
+        "pass": true
+      },
+      "caught": false,
+      "caught_by": [],
+      "compiled": true,
+      "description": "drop the one-unit bias: the seed may exceed 1/T and M' may be M + 1",
+      "equivalent": "a margin, not load-bearing here: without the bias the seed exceeds 1/T by under one unit of 2^-28 on some significands, but the truncated X*R product (columns below 2^20 dropped) lowers M' by more than that overshoot lifts it; the directed search (seed_overshoot) found no operand pair where the unbiased seed changes a quotient",
+      "id": "seed_bias_removed",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 0,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": true,
+        "word_errors": 0
+      }
+    },
+    {
+      "arith": {
+        "errors": 425186,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "the seed loses its quadratic term: R overshoots 1/T by up to 2^-20",
+      "id": "seed_c2_term_dropped",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 19592
+      }
+    },
+    {
+      "arith": {
+        "errors": 0,
+        "ops": 891527,
+        "pass": true
+      },
+      "caught": false,
+      "caught_by": [],
+      "compiled": true,
+      "description": "ignore the second remainder: never M' + 2",
+      "equivalent": "a margin, not load-bearing here: M' + 2 needs the seed's undershoot to push M' a unit low while the quotient's fraction exceeds 1/2, i.e. an undershoot above 1/2 unit of M'; the exhaustive seed bound (max 2.72 x 2^-28) plus the truncation allow at most 0.53, and the directed search (second_threshold) found no pair that reaches it -- the second remainder is kept so the proof needs only the 2^-26 window",
+      "id": "quot_single_threshold",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 0,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": true,
+        "word_errors": 0
+      }
+    },
+    {
+      "arith": {
+        "errors": 267700,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "the first remainder tests q' against M' instead of M' + 1/2 (drops the -T row)",
+      "id": "quot_midpoint_at_candidate",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 15765
+      }
+    },
+    {
+      "arith": {
+        "errors": 3,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "arith"
+      ],
+      "compiled": true,
+      "description": "an exact tie (only reachable on a subnormal grid) never rounds to the odd side",
+      "id": "quot_ties_never_up",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 0,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": true,
+        "word_errors": 0
+      }
+    },
+    {
+      "arith": {
+        "errors": 524128,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "truncate the X*R array below column 27 instead of 20: M' can fall two units short",
+      "id": "quot_truncation_too_deep",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 19599
+      }
+    },
+    {
+      "arith": {
+        "errors": 10962,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "arith"
+      ],
+      "compiled": true,
+      "description": "subnormal results rounded on the wrong grid",
+      "id": "quot_subnormal_grid_off_by_one",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 0,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": true,
+        "word_errors": 0
+      }
+    },
+    {
+      "caught": true,
+      "caught_by": [
+        "unit"
+      ],
+      "compiled": true,
+      "description": "the steady step divides by the bare sum (no + eps)",
+      "id": "steady_eps_dropped",
+      "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 20124
+      }
+    },
+    {
+      "caught": true,
+      "caught_by": [
+        "unit"
+      ],
+      "compiled": true,
+      "description": "the steady sum adds the third term before the second: ((a + c) + b) + d",
+      "id": "steady_sum_order_swapped",
+      "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "unit": {
+        "errors": 1250,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 12489
+      }
+    },
+    {
+      "arith": {
+        "errors": 0,
+        "ops": 891527,
+        "pass": true
+      },
+      "caught": false,
+      "caught_by": [],
+      "compiled": true,
+      "description": "the chained add ignores the late exponent increment when ordering the operands",
+      "equivalent": "a true equivalent mutant: the two orders differ only when a's incremented exponent equals b's, where the alignment distance is 0 either way and the sum is the same",
+      "id": "chain_late_increment_ignored",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 0,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": true,
+        "word_errors": 0
+      }
+    },
+    {
+      "arith": {
+        "errors": 17978,
+        "ops": 891527,
+        "pass": false
+      },
+      "caught": true,
+      "caught_by": [
+        "unit",
+        "arith"
+      ],
+      "compiled": true,
+      "description": "the chained add aligns the early operand for the un-incremented running-sum exponent",
+      "id": "chain_alignment_ignores_increment",
+      "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 20071
+      }
+    },
+    {
+      "caught": true,
+      "caught_by": [
+        "unit"
+      ],
+      "compiled": true,
+      "description": "the steady step writes rows back untransposed (normalises rows twice)",
+      "id": "no_transpose",
+      "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "unit": {
+        "errors": 1260,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 20120
+      }
+    },
+    {
+      "caught": true,
+      "caught_by": [
+        "unit"
+      ],
+      "compiled": true,
+      "description": "a zero row sum (0/0) no longer fails closed",
+      "id": "zero_row_unflagged",
+      "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "unit": {
+        "errors": 8,
+        "latency_max": 41,
+        "latency_min": 41,
+        "pass": false,
+        "word_errors": 128
+      }
+    },
+    {
+      "caught": true,
+      "caught_by": [
+        "unit"
+      ],
+      "compiled": true,
+      "description": "19 Sinkhorn iterations instead of 20",
+      "id": "one_iteration_short",
+      "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "unit": {
+        "errors": 637,
+        "latency_max": 39,
+        "latency_min": 39,
+        "pass": false,
+        "word_errors": 9052
+      }
+    }
+  ],
+  "random_classes": {
+    "eps_dominated": 100076,
+    "faults": 50747,
+    "near_overflow": 30056,
+    "raw": 100027,
+    "softmax": 300062,
+    "subnormal": 60096,
+    "ties": 99638,
+    "tiny_with_one": 99775,
+    "unit": 99380,
+    "zeros": 60143
+  },
+  "real_data": {
+    "cases": 3840,
+    "hc_eps_bits": "0x358637bd",
+    "positions": 48,
+    "reference_equals_golden_hc_mixes": true,
+    "sinkhorn_iters": 20,
+    "sublayers_per_position": 80,
+    "tokens": [
+      0,
+      3563,
+      3745,
+      418,
+      170,
+      16,
+      3564,
+      3582,
+      3118,
+      3583,
+      2357,
+      276,
+      3270,
+      44,
+      790,
+      223,
+      2498,
+      1741,
+      858,
+      2588,
+      983,
+      1289,
+      2967,
+      2084,
+      106,
+      1236,
+      1183,
+      267,
+      1607,
+      2176,
+      3012,
+      3341,
+      2719,
+      4014,
+      3545,
+      1685,
+      786,
+      289,
+      1889,
+      1233,
+      2413,
+      1515,
+      2588,
+      1141,
+      1386,
+      2008,
+      1635,
+      1053,
+      2476
+    ]
+  },
+  "schema": "opentallas.hdc-v41-sinkhorn-campaign.v1",
+  "simulators": {
+    "icarus": "Icarus Verilog version 11.0 (stable) ()",
+    "verilator": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad"
+  },
+  "status": "pass",
+  "unit": {
+    "counts": {
+      "cases_checked": 1007680,
+      "quotients_checked": 644915200,
+      "random_cases": 1000000,
+      "random_fault_cases": 80803,
+      "real_cases": 3840,
+      "real_fault_cases": 0
+    },
+    "runs": {
+      "random_shard0": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 4939,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 193.8,
+        "seed": 11,
+        "word_errors": 0
+      },
+      "random_shard1": {
+        "cases": 62500,
+        "cycles": 2680045,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5105,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 191.4,
+        "seed": 12,
+        "word_errors": 0
+      },
+      "random_shard10": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 4900,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 220.3,
+        "seed": 21,
+        "word_errors": 0
+      },
+      "random_shard11": {
+        "cases": 62500,
+        "cycles": 2680499,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5208,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 228.0,
+        "seed": 22,
+        "word_errors": 0
+      },
+      "random_shard12": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5005,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 213.2,
+        "seed": 23,
+        "word_errors": 0
+      },
+      "random_shard13": {
+        "cases": 62500,
+        "cycles": 2680391,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 4998,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 219.5,
+        "seed": 24,
+        "word_errors": 0
+      },
+      "random_shard14": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5090,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 231.1,
+        "seed": 25,
+        "word_errors": 0
+      },
+      "random_shard15": {
+        "cases": 62500,
+        "cycles": 2679752,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5026,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 226.6,
+        "seed": 26,
+        "word_errors": 0
+      },
+      "random_shard2": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5098,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 228.1,
+        "seed": 13,
+        "word_errors": 0
+      },
+      "random_shard3": {
+        "cases": 62500,
+        "cycles": 2679118,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5049,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 198.0,
+        "seed": 14,
+        "word_errors": 0
+      },
+      "random_shard4": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5135,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 205.0,
+        "seed": 15,
+        "word_errors": 0
+      },
+      "random_shard5": {
+        "cases": 62500,
+        "cycles": 2679311,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5013,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 216.3,
+        "seed": 16,
+        "word_errors": 0
+      },
+      "random_shard6": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5050,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 210.0,
+        "seed": 17,
+        "word_errors": 0
+      },
+      "random_shard7": {
+        "cases": 62500,
+        "cycles": 2679704,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5053,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 216.4,
+        "seed": 18,
+        "word_errors": 0
+      },
+      "random_shard8": {
+        "cases": 62500,
+        "cycles": 2625006,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 5024,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 210.8,
+        "seed": 19,
+        "word_errors": 0
+      },
+      "random_shard9": {
+        "cases": 62500,
+        "cycles": 2680394,
+        "early_percent": 40,
+        "errors": 0,
+        "faults": 5110,
+        "gap_percent": 20,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 62500,
+        "pass": true,
+        "seconds": 207.4,
+        "seed": 20,
+        "word_errors": 0
+      },
+      "real_back_to_back": {
+        "cases": 3840,
+        "cycles": 161286,
+        "early_percent": 0,
+        "errors": 0,
+        "faults": 0,
+        "gap_percent": 0,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 3840,
+        "pass": true,
+        "seconds": 10.6,
+        "seed": 1,
+        "word_errors": 0
+      },
+      "real_gaps_early": {
+        "cases": 3840,
+        "cycles": 166299,
+        "early_percent": 50,
+        "errors": 0,
+        "faults": 0,
+        "gap_percent": 30,
+        "latency_expected": 41,
+        "latency_max": 41,
+        "latency_min": 41,
+        "outputs": 3840,
+        "pass": true,
+        "seconds": 12.3,
+        "seed": 5,
+        "word_errors": 0
+      }
+    },
+    "vectors_sha256": "8485a4c86283c0bc90609c246700b726c83ce35adb791bccd1b0cf30c5f10e1e"
+  },
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED"
+    ],
+    "tops": {
+      "ot_hdc_sinkhorn": {
+        "messages": [],
+        "returncode": 0
+      },
+      "ot_hdc_sk_add": {
+        "messages": [],
+        "returncode": 0
+      },
+      "ot_hdc_sk_quot": {
+        "messages": [],
+        "returncode": 0
+      },
+      "ot_hdc_sk_seed": {
+        "messages": [],
+        "returncode": 0
+      }
+    }
+  },
+  "wall_seconds": 1973
+}

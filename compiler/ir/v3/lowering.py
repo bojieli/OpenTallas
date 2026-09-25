@@ -578,3 +578,73 @@ def check_table_complete() -> list[str]:
     from compiler.ir.v3.kernel_ir import OPERATION_KINDS
 
     return sorted(OPERATION_KINDS - set(KERNEL_TO_ENGINE))
+
+
+#: ``ROUTE.INDEX_TOPK`` ``aux_id_1`` carries, above bit 16, the DECODE rebase of
+#: a selection whose window join was separated out of the operator.  Mirrors
+#: ``runtime.sim.engines.route.DECODE_REBASE_SHIFT``.
+INDEX_TOPK_DECODE_REBASE_SHIFT = 16
+
+
+def separated_join_window(graph: object, kernel: object) -> int:
+    """The window capacity a separated-join ``INDEX_TOPK`` must rebase above in decode.
+
+    Amendment A19 put the window join inside ``ROUTE.INDEX_TOPK``: with the window
+    index block in ``in1`` the operator rebases a compressed selection above
+    ``context`` rows in prefill and above the window's CAPACITY in decode, which
+    is ``kv.size(1)`` -- the ``offset`` the released ``Attention._compress_kv``
+    passes to the indexer.  The V4.1 exporter separates that join: the select
+    declares ``in1`` absent and a ``CONCAT`` with ``segment_order
+    window_then_rebased_compressed`` joins its result behind the window.  The
+    operator then has no window to measure, and decode rebased by zero: every
+    decode query attended window rows ``0..k`` a second time instead of the
+    compressed rows behind the 128-row window.  This returns the width the join
+    declares for the window segment (0 when the kernel is not that form, which
+    leaves the descriptor exactly as it was).
+    """
+    attributes = dict(getattr(kernel, "attributes", {}) or {})
+    if getattr(kernel, "kind", None) != "INDEX_TOPK" or "block" in attributes:
+        return 0
+    if 1 not in [int(slot) for slot in attributes.get(ABSENT_OPERANDS, ())]:
+        return 0
+    if not attributes.get("rebase"):
+        return 0
+    outputs = set(getattr(kernel, "outputs", ()) or ())
+    widths: set[int] = set()
+    for other in getattr(graph, "kernels", ()):
+        if other.kind != "CONCAT" or not outputs.intersection(other.inputs):
+            continue
+        other_attributes = dict(other.attributes or {})
+        if other_attributes.get("segment_order") != "window_then_rebased_compressed":
+            continue
+        segments = list(other_attributes.get("segment_widths") or ())
+        if segments:
+            widths.add(int(segments[0]))
+    if len(widths) > 1:
+        raise ValueError(
+            f"kernel {getattr(kernel, 'kernel_id', '?')} is joined behind windows "
+            f"of {sorted(widths)} rows; one decode rebase cannot serve both"
+        )
+    return widths.pop() if widths else 0
+
+
+def compressed_rope_gather(kernel: object) -> bool:
+    """Whether a GATHER selects the rotary rows of POOLED compression groups.
+
+    A pooled group of ``ratio`` tokens is rotated at the position of its first
+    token.  In prefill that is a ``ratio``-strided range from ``POSITION_START``;
+    at a decode boundary the just-completed token sits at ``p`` and the group
+    at ``p + 1 - ratio`` -- the released ``freqs_cis[start_pos + 1 - ratio]`` --
+    which both lanes select through ``floor_div_indices_v1`` and a ratio-strided
+    coefficient table.  The V4 exporter marks such a gather ``compressed``; the
+    V4.1 exporter states only ``position_stride`` (the group width), so the
+    decode path read the plain position ``p`` and rotated every compressed KV
+    row and index key a ratio-2 layer completed in decode one position late.
+    Either spelling is the same statement.
+    """
+    if getattr(kernel, "kind", None) != "GATHER":
+        return False
+    attributes = dict(getattr(kernel, "attributes", {}) or {})
+    if bool(attributes.get("compressed", False)):
+        return True
+    return int(attributes.get("position_stride", 1) or 1) > 1

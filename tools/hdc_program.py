@@ -39,15 +39,33 @@ def f32(x):
     return int(G.bits(F(x)))
 
 
-class Layout:
-    """Weight ROM, constant ROM and KV placement for one model."""
+# One-shot collective after a program segment (tools/hdc_golden.fold; the
+# segment descriptor that rtl/rom/ot_rom_tp_seq.sv reads): 0 end of the step,
+# 1 all-reduce of a vector-memory range, 2 all-gather of the argmax.
+COLL_END, COLL_ALLREDUCE, COLL_ARGMAX = 0, 1, 2
 
-    def __init__(self, model):
+
+class Layout:
+    """Weight ROM, constant ROM and KV placement for one model -- or, with
+    tp > 1, for die `die` of a tensor group (hdc_golden.Model.decode_token_tp):
+    NH/KV/FF are then the die's own query heads, KV heads and FFN rows."""
+
+    def __init__(self, model, tp=1, die=0):
         self.m = model
+        self.tp, self.die = tp, die
         c = model.cfg
         self.H, self.L = c["hidden_size"], c["num_hidden_layers"]
         self.NH, self.KV, self.HD = c["num_attention_heads"], c["num_key_value_heads"], c["head_dim"]
         self.FF, self.V = c["intermediate_size"], c["vocab_size"]
+        self.row0 = 0
+        sl = None
+        if tp > 1:
+            sl = model.die_slices(die)
+            self.sl = sl
+            self.NH, self.KV, self.FF = len(sl["heads"]), len(sl["kv"]), len(sl["ff"])
+            self.row0 = int(sl["vocab"][0])
+        self.GUB = min(W * IL, self.FF)          # gate/up interleave block
+        assert self.FF % self.GUB == 0
         self.half = self.HD // 2
         self.eps = F(c["rms_norm_eps"])
         assert self.HD % W == 0 or W % self.HD == 0
@@ -57,20 +75,26 @@ class Layout:
         self.mat = {}
         for L in range(self.L):
             lw = lambda n: model.lw(L, n)
-            qkv = np.concatenate([lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"),
-                                  lw("self_attn.v_proj.weight")])
+            qw, kw, vw = lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"), lw("self_attn.v_proj.weight")
+            ow, dw = lw("self_attn.o_proj.weight"), lw("mlp.down_proj.weight")
+            gate, up = lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")
+            if tp > 1:
+                # column split: the die's heads / FFN rows; row split: its input columns
+                qw, kw, vw = qw[sl["q_rows"]], kw[sl["kv_rows"]], vw[sl["kv_rows"]]
+                ow, dw = ow[:, sl["q_rows"]], dw[:, sl["ff"]]
+                gate, up = gate[sl["ff"]], up[sl["ff"]]
+            qkv = np.concatenate([qw, kw, vw])
             # gate and up interleaved by output tile, so each engine round yields
             # matching gate/up rows and SiLU can run on it while the next computes
-            gate, up = lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")
-            tb = W * IL
+            tb = self.GUB
             gu = np.concatenate([m[i:i + tb] for i in range(0, gate.shape[0], tb) for m in (gate, up)])
-            for name, w in (("qkv", qkv), ("o", lw("self_attn.o_proj.weight")), ("gu", gu),
-                            ("down", lw("mlp.down_proj.weight"))):
+            for name, w in (("qkv", qkv), ("o", ow), ("gu", gu), ("down", dw)):
                 self.mat[(L, name)] = self.place_matrix(w)
-        self.mat["lm_head"] = self.place_matrix(model.w["lm_head.weight"])
+        lm = model.w["lm_head.weight"]
+        self.mat["lm_head"] = self.place_matrix(lm[sl["vocab"]] if tp > 1 else lm)
         # vocabulary parts, for arrays that split lm_head over 2 or 4 packages
         vocab = model.w["lm_head.weight"].shape[0]
-        for parts in (2, 4):
+        for parts in (() if tp > 1 else (2, 4)):
             vp = vocab // parts
             for i in range(parts):
                 self.mat[("lm_head", parts, i)] = self.place_matrix(model.w["lm_head.weight"][i * vp:(i + 1) * vp])
@@ -133,14 +157,18 @@ class Layout:
     def v_elem(self, L, g, t, d):
         return self.kv_v0 + ((L * self.KV + g) * TMAX + t) * self.HD + d
 
+    def kv_heads(self):
+        """Global KV head of each local one."""
+        return self.sl["kv"] if self.tp > 1 else list(range(self.KV))
+
     def kv_image(self, cache):
         kv = np.zeros(self.kv_elems, dtype=F)
         for L in range(self.L):
             for t, (k, v) in enumerate(cache[L]):
-                for g in range(self.KV):
+                for g, gg in enumerate(self.kv_heads()):
                     for d in range(self.HD):
-                        kv[self.k_elem(L, g, t, d)] = k[g][d]
-                        kv[self.v_elem(L, g, t, d)] = v[g][d]
+                        kv[self.k_elem(L, g, t, d)] = k[gg][d]
+                        kv[self.v_elem(L, g, t, d)] = v[gg][d]
         return kv
 
 
@@ -160,6 +188,13 @@ def build_program(lay, layers=None, embed=True, head=True):
                  me_xcs=mat["k"])
         f.update(over)
         prog.append((f, set(reads), set(writes)))
+
+    def coll(kind, region):
+        """Tensor group: end the segment; the die sequencer runs the collective
+        on vector-memory words of `region` (H elements) and starts the next."""
+        if lay.tp > 1:
+            prog.append((dict(unit=I.UNIT_END, barrier=1, _coll=(kind, VM[region] // W, lay.H // W, 0)),
+                         set(), set()))
 
     def su(reads=(), writes=(), red_writes=(), **f):
         f = dict(f, unit=I.UNIT_SU, _red_regions=set(red_writes))
@@ -219,6 +254,11 @@ def build_program(lay, layers=None, embed=True, head=True):
                    d_so=lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0), d_si=W,
                    reads={"QN"}, writes={f"K{L}lo" if lo else f"K{L}hi"}, **rope)
             jsh = group.bit_length() - 1
+            # slot j reads KV group j >> jsh; a die with one KV head (tensor group)
+            # has fewer heads than slots, and every slot reads that head (the
+            # extra slots compute unused rows at no cycle cost)
+            kjs = (lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W if KV > 1 else 0
+            vjs = (lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W if KV > 1 else 0
             assert 1 << jsh == group and IL % group == 0
             heads = {f"S{h}" for h in range(NH)}
             # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
@@ -227,7 +267,7 @@ def build_program(lay, layers=None, embed=True, head=True):
                 nb = min(IL, NH - hb)
                 me(dict(n=0, tiles=0, k=HD, base=(lay.k_elem(L, hb // group, 0, 0)) // W), VM["QR"] + hb * HD,
                    VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=0,
-                   me_wsrc=1, me_ts=HD, me_ks=1, me_js=(lay.k_elem(L, 1, 0, 0) - lay.k_elem(L, 0, 0, 0)) // W,
+                   me_wsrc=1, me_ts=HD, me_ks=1, me_js=kjs,
                    me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
                    me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
                    reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes={f"S{h}" for h in range(hb, hb + nb)})
@@ -246,24 +286,26 @@ def build_program(lay, layers=None, embed=True, head=True):
                 me(dict(n=HD, tiles=-(-HD // (W * GR)), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
                    VM["S"] + hb * S_STRIDE, VM["ATT"] + hb * HD,
                    rnd=True, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
-                   me_js=(lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0)) // W, me_jsh=jsh, me_xks=1,
+                   me_js=vjs, me_jsh=jsh, me_xks=1,
                    me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
                    reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={"ATT"})
             me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
+            coll(COLL_ALLREDUCE, "T1")
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
         if part in ("both", "mlp"):
             rmsnorm("X", H, lay.cb[(L, "post")], "H")
-            me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // (W * IL))})
+            me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // lay.GUB)})
             FF = lay.FF
-            tb = W * IL
+            tb = lay.GUB
             for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
                 g0 = VM["GU"] + 2 * tb * r
                 su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
                    c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
                    d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
-            me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // (W * IL))},
+            me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // lay.GUB)},
                writes={"T1"})
+            coll(COLL_ALLREDUCE, "T1")
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
     # head: True (final norm + lm_head) or (part, parts): vocabulary part `part`
@@ -274,7 +316,8 @@ def build_program(lay, layers=None, embed=True, head=True):
     if head:
         mat = lay.mat["lm_head"] if head is True else lay.mat[("lm_head", head[1], head[0])]
         me(mat, VM["H"], 0, amax=True, oen=False, reads={"H"})
-    prog.append((dict(unit=I.UNIT_END, barrier=1), set(), set()))
+    last_coll = COLL_ARGMAX if (head and lay.tp > 1) else COLL_END
+    prog.append((dict(unit=I.UNIT_END, barrier=1, _coll=(last_coll, 0, 0, lay.row0)), set(), set()))
     # Barriers: an instruction waits for everything in flight when it touches a
     # region an in-flight instruction writes, or writes one it reads.
     # ELEMENT CHAINING.  An op whose only hazards are reads of what the OTHER
@@ -319,6 +362,8 @@ def build_program(lay, layers=None, embed=True, head=True):
             main[f["unit"]] |= writes - red
     for f in out:
         f.pop("_red_regions", None)
+        if lay.tp == 1:
+            f.pop("_coll", None)
     return out
 
 
@@ -519,6 +564,163 @@ def golden_state(context=None):
     return model, prompt, expected, cache
 
 
+# -- tensor group (4 dies per package, one-shot collectives) ----------------------------
+def segments(prog):
+    """Split a tensor-group program at its END instructions: [(instructions, coll)],
+    coll = (kind, vector-memory word, words, vocabulary row 0)."""
+    out, cur = [], []
+    for f in prog:
+        cur.append(f)
+        if f["unit"] == I.UNIT_END:
+            out.append((cur, f["_coll"]))
+            cur = []
+    assert not cur
+    return out
+
+
+def encode_segments(prog):
+    """Program words (segments back to back) and one 64-bit descriptor per
+    segment for rtl/rom/ot_rom_tp_seq.sv:
+    [1:0] kind, [9:2] vector-memory word, [17:10] words, [47:32] program base,
+    [63:48] vocabulary row of the die's lm_head row 0."""
+    words, desc = [], []
+    for instrs, (kind, vw, nw, row0) in segments(prog):
+        desc.append(kind | (vw << 2) | (nw << 10) | (len(words) << 32) | (row0 << 48))
+        words.extend(I.encode(**{k: v for k, v in f.items() if not k.startswith("_")}) for f in instrs)
+    return words, desc
+
+
+def okey(v):
+    """Total order of FP32 bit patterns (the controller's argmax key)."""
+    b = int(G.bits(F(v)))
+    return (~b & 0xFFFFFFFF) if b >> 31 else (b | 0x80000000)
+
+
+class TPGroup:
+    """ISA-level model of one package: `tp` decode cores, each running its die's
+    program segment by segment, joined by the one-shot collectives (all-reduce
+    in rank order, argmax all-gather combined in rank order, strictly greater
+    wins so ties keep the lower die and therefore the lower vocabulary row)."""
+
+    def __init__(self, lays, kvs=None):
+        self.lays = lays
+        kvs = kvs if kvs is not None else [np.zeros(l.kv_elems, dtype=F) for l in lays]
+        self.m = [Machine(l, kv) for l, kv in zip(lays, kvs)]
+        self.coll_log = []
+
+    def run(self, progs, token, pos):
+        segs = [segments(p) for p in progs]
+        assert len({len(s) for s in segs}) == 1
+        self.token, self.val = None, None
+        self.coll_log = []
+        for i in range(len(segs[0])):
+            colls = {s[i][1][:3] for s in segs}
+            assert len(colls) == 1, colls
+            for mach, s in zip(self.m, segs):
+                mach.run(s[i][0], token, pos)
+            kind, vw, nw = segs[0][i][1][:3]
+            if kind == COLL_ALLREDUCE:
+                lo, hi = vw * W, (vw + nw) * W
+                y = G.fold([mach.vm[lo:hi].copy() for mach in self.m])
+                for mach in self.m:
+                    mach.vm[lo:hi] = y
+                self.coll_log.append(("allreduce", nw))
+            elif kind == COLL_ARGMAX:
+                best = None
+                for mach, s in zip(self.m, segs):
+                    idx = mach.argmax + s[i][1][3]
+                    val = mach.logits[mach.argmax]
+                    if best is None or okey(val) > okey(best[1]):
+                        best = (idx, val)
+                self.token, self.val = best
+                self.coll_log.append(("argmax", 1))
+        return self.token
+
+    def logits(self):
+        return np.concatenate([mach.logits for mach in self.m])
+
+
+def tp_layouts(model, tp):
+    return [Layout(model, tp, d) for d in range(tp)]
+
+
+def stage_plan(lay, stages):
+    """(layers, embed, head) of each package of a layer-per-package array of
+    tensor groups; lm_head shares the last layer's package."""
+    assert stages == lay.L, "tensor-group arrays: one layer per package, lm_head with the last"
+    return [([n], n == 0, n == stages - 1) for n in range(stages)]
+
+
+def tp_main(args):
+    """--tp N: images, programs and expectations of an N-die tensor group."""
+    tp = args.tp
+    model = G.Model(GR, tp)
+    prompt, expected = G.prompt_and_expected()
+    lays = tp_layouts(model, tp)
+    # 1. one decode step at the last prompt position on the golden prefill:
+    #    the ISA-level group against hdc_golden.Model.decode_token_tp, every logit
+    cache = [[] for _ in range(model.layers)]
+    for pos, tok in enumerate(prompt[:-1]):
+        model.decode_token(tok, pos, cache)
+    token, pos = prompt[-1], len(prompt) - 1
+    progs = [build_program(l) for l in lays]
+    grp = TPGroup(lays, [l.kv_image(cache) for l in lays])
+    got = grp.run(progs, token, pos)
+    ref = model.decode_token(token, pos, [list(c) for c in cache])
+    exact = bool(np.array_equal(G.bits(grp.logits()), G.bits(ref)))
+    n_ar = sum(1 for c in grp.coll_log if c[0] == "allreduce")
+    print(f"tensor group of {tp}: {len(progs[0])} instructions per die, {len(segments(progs[0]))} segments "
+          f"({n_ar} all-reduces, 1 argmax gather); weight ROM {len(lays[0].words)} words per die")
+    print(f"ISA group: token {got} (oracle {expected[0]}), logits bit-exact with the tensor-split golden: {exact}")
+    # 2. end to end from an EMPTY KV cache: the prompt, then generated tokens;
+    #    per-position (token, logit) and the final memories are what the RTL is held to
+    n_gen = args.ngen
+    e2e = TPGroup(lays)
+    gcache = [[] for _ in range(model.layers)]
+    seq, steps, gen = list(prompt), [], []
+    e2e_exact = True
+    for p in range(len(prompt) + n_gen - 1):
+        t = e2e.run(progs, seq[p], p)
+        lg = model.decode_token(seq[p], p, gcache)
+        e2e_exact &= bool(np.array_equal(G.bits(e2e.logits()), G.bits(lg)))
+        steps.append((int(seq[p]), int(t), int(G.bits(e2e.val))))
+        if p >= len(prompt) - 1:
+            gen.append(int(t))
+            seq.append(int(t))
+    print(f"end to end: generated {gen} (oracle {list(expected[:n_gen])}); every step's logits bit-exact "
+          f"with the golden: {e2e_exact}")
+    ok = exact and e2e_exact and got == expected[0] and gen == list(expected[:n_gen])
+    if args.out:
+        out = args.out
+        out.mkdir(parents=True, exist_ok=True)
+        for d, l in enumerate(lays):
+            (out / f"wrom_d{d}.hex").write_text(hexwords((pack_lanes(w, 16) for w in l.words), 16 * W * GR))
+            (out / f"crom_d{d}.hex").write_text(hexwords(((f32(hi) << 32) | f32(lo) for lo, hi in l.crom), 64))
+            words, desc = encode_segments(progs[d])
+            (out / f"prog_d{d}.hex").write_text(hexwords(words, I.INSTR_BITS))
+            (out / f"desc_d{d}.hex").write_text(hexwords(desc, 64))
+            (out / f"expect_vm_d{d}.hex").write_text(hexwords(G.bits(e2e.m[d].vm), 32))
+            (out / f"expect_kv_d{d}.hex").write_text(hexwords(G.bits(e2e.m[d].kv), 32))
+            if args.stages:
+                for n, (layers, embed, head) in enumerate(stage_plan(l, args.stages)):
+                    words, desc = encode_segments(build_program(l, layers, embed=embed, head=head))
+                    (out / f"prog_stage{n:02d}_d{d}.hex").write_text(hexwords(words, I.INSTR_BITS))
+                    (out / f"desc_stage{n:02d}_d{d}.hex").write_text(hexwords(desc, 64))
+        (out / "prompt.hex").write_text(hexwords(prompt, 16))
+        (out / "generated.hex").write_text(hexwords(gen, 16))
+        (out / "expect_steps.hex").write_text(hexwords(((a << 48) | (b << 32) | c for a, b, c in steps), 64))
+        (out / "expect.json").write_text(json.dumps({
+            "tp": tp, "single_step": {"token": token, "pos": pos, "argmax": got, "oracle": expected[0],
+                                      "logits_bit_exact": exact},
+            "end_to_end": {"generated": gen, "oracle": list(expected[:n_gen]), "logits_bit_exact": e2e_exact,
+                           "steps": [dict(token_in=a, token_out=b, logit_bits=c) for a, b, c in steps]},
+            "kv_elems": lays[0].kv_elems, "wrom_words": len(lays[0].words), "crom_words": len(lays[0].crom),
+            "prog_words": len(encode_segments(progs[0])[0]), "segments": len(segments(progs[0])),
+            "allreduces_per_token": n_ar}))
+        print("wrote", out)
+    return 0 if ok else 1
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, help="write RTL images and expectations here")
@@ -531,7 +733,12 @@ def main():
     ap.add_argument("--half-layers", action="store_true", help="split every layer into attention and MLP packages")
     ap.add_argument("--head-parts", type=int, default=-1,
                     help="lm_head packages: 0 (with the last layer), 1, 2 or 4 (default: stages minus body)")
+    ap.add_argument("--tp", type=int, default=1,
+                    help="tensor group: N dies per package, every matrix split over them (writes *_dD.hex)")
+    ap.add_argument("--ngen", type=int, default=3, help="--tp: tokens generated in the end-to-end expectation")
     args = ap.parse_args()
+    if args.tp > 1:
+        return tp_main(args)
     model, prompt, expected, cache = golden_state(args.context)
     lay = Layout(model)
     token, pos = prompt[-1], len(prompt) - 1

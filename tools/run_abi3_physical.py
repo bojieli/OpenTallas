@@ -1054,6 +1054,7 @@ def search_fmax(
 PNR_ARTIFACTS_LIGHT = [
     "config.mk",
     "constraint.sdc",
+    "io_constraints.tcl",
     "metadata.json",
     "1_2_yosys.v",
     "6_final.v",
@@ -1555,6 +1556,126 @@ def memory_macro_config_lines(macros: dict[str, Any] | None) -> list[str]:
     return lines
 
 
+# Floorplan geometry, pin edges and routing layers.
+#
+# Every route so far is a square core sized by utilisation with the pins left
+# to the IO placer, which is right for a block and wrong for a WIRE: to measure
+# what a long repeated link costs, the die has to be long and thin and the two
+# ends of the link have to be pinned to opposite edges, so the routed wire
+# really spans a known distance.  ``--die-area``/``--core-area`` hand ORFS an
+# explicit DIE_AREA/CORE_AREA (in place of CORE_UTILIZATION), ``--pin-region
+# REGEX=EDGE`` writes an IO_CONSTRAINTS file that pins every port whose name
+# matches REGEX to that die edge, and ``--routing-layers MIN MAX`` overrides the
+# platform's MIN/MAX_ROUTING_LAYER.  Without any of them nothing is emitted and
+# the config.mk is byte-for-byte what it was.
+
+PIN_EDGES = ("left", "right", "top", "bottom")
+
+
+def floorplan_size_lines(core_utilization: int, floorplan: dict[str, Any] | None) -> list[str]:
+    if floorplan and floorplan.get("die_area_um"):
+        return [
+            "export DIE_AREA = " + " ".join(f"{v:g}" for v in floorplan["die_area_um"]),
+            "export CORE_AREA = " + " ".join(f"{v:g}" for v in floorplan["core_area_um"]),
+        ]
+    return [
+        f"export CORE_UTILIZATION = {core_utilization}",
+        "export CORE_ASPECT_RATIO = 1",
+        "export CORE_MARGIN = 2",
+    ]
+
+
+def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
+    if not floorplan:
+        return []
+    lines = []
+    if floorplan.get("pin_regions"):
+        lines.append("export IO_CONSTRAINTS = /work/io_constraints.tcl")
+    if floorplan.get("routing_layers"):
+        low, high = floorplan["routing_layers"]
+        lines.append(f"export MIN_ROUTING_LAYER = {low}")
+        lines.append(f"export MAX_ROUTING_LAYER = {high}")
+    for hook in floorplan.get("step_tcl", []):
+        lines.append(f"export {hook['hook']}_TCL = /work/hooks/{hook['name']}")
+    return lines
+
+
+def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
+    """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
+    block's own terminal names, so a bus is pinned bit by bit, in order."""
+    lines = [
+        "# Written by tools/run_abi3_physical.py --pin-region.",
+        "proc ot_match_pins {pattern} {",
+        "  set names {}",
+        "  foreach bterm [[ord::get_db_block] getBTerms] {",
+        "    set name [$bterm getName]",
+        "    if {[regexp -- $pattern $name]} { lappend names $name }",
+        "  }",
+        "  if {[llength $names] == 0} { error \"--pin-region $pattern matches no port\" }",
+        "  return [lsort -dictionary $names]",
+        "}",
+    ]
+    for region in pin_regions:
+        lines.append(
+            f"set_io_pin_constraint -group -order -region {region['edge']}:* "
+            f"-pin_names [ot_match_pins {{{region['regex']}}}]"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def resolve_floorplan(
+    die_area: list[float] | None,
+    core_area: list[float] | None,
+    pin_regions: list[str] | None,
+    routing_layers: list[str] | None,
+    step_tcl: list[str] | None = None,
+) -> dict[str, Any] | None:
+    """Validate the floorplan options into the block recorded under
+    place_and_route.floorplan, or None when none was given."""
+    if (die_area is None) != (core_area is None):
+        raise ValueError("--die-area and --core-area must be given together")
+    floorplan: dict[str, Any] = {}
+    if die_area is not None:
+        dx0, dy0, dx1, dy1 = die_area
+        cx0, cy0, cx1, cy1 = core_area
+        if not (dx1 > dx0 and dy1 > dy0 and cx1 > cx0 and cy1 > cy0):
+            raise ValueError("--die-area/--core-area need x1 > x0 and y1 > y0")
+        if not (dx0 <= cx0 and dy0 <= cy0 and cx1 <= dx1 and cy1 <= dy1):
+            raise ValueError("--core-area must lie inside --die-area")
+        floorplan["die_area_um"] = list(die_area)
+        floorplan["core_area_um"] = list(core_area)
+    if pin_regions:
+        regions = []
+        for item in pin_regions:
+            regex, sep, edge = item.rpartition("=")
+            if not sep or not regex or edge not in PIN_EDGES:
+                raise ValueError(f"--pin-region {item!r}: expected REGEX=EDGE, EDGE in {PIN_EDGES}")
+            regions.append({"regex": regex, "edge": edge})
+        floorplan["pin_regions"] = regions
+    if routing_layers:
+        floorplan["routing_layers"] = list(routing_layers)
+    if step_tcl:
+        hooks = []
+        for item in step_tcl:
+            hook, sep, path = item.partition("=")
+            if not sep or not re.fullmatch(r"(PRE|POST)_[A-Z_]+", hook):
+                raise ValueError(f"--step-tcl {item!r}: expected (PRE|POST)_STEP=FILE")
+            source = Path(path)
+            if not source.is_absolute():
+                source = ROOT / source
+            if not source.is_file():
+                raise ValueError(f"--step-tcl {item!r}: no such file {source}")
+            hooks.append({
+                "hook": hook,
+                "path": path,
+                "name": f"{hook.lower()}_{source.name}",
+                "sha256": sha256_file(source),
+                "source": str(source),
+            })
+        floorplan["step_tcl"] = hooks
+    return floorplan or None
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -1564,6 +1685,7 @@ def orfs_config_lines(
     place_density: float,
     constraints: dict[str, Any] | None = None,
     memory_macros: dict[str, Any] | None = None,
+    floorplan: dict[str, Any] | None = None,
 ) -> list[str]:
     """The ORFS config.mk for one route.
 
@@ -1582,9 +1704,7 @@ def orfs_config_lines(
         "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in block["sources"]),
         "export VERILOG_DEFINES = -DSYNTHESIS",
         "export SDC_FILE = /work/constraint.sdc",
-        f"export CORE_UTILIZATION = {core_utilization}",
-        "export CORE_ASPECT_RATIO = 1",
-        "export CORE_MARGIN = 2",
+        *floorplan_size_lines(core_utilization, floorplan),
         f"export PLACE_DENSITY = {place_density}",
         "export PLACE_DENSITY_LB_ADDON = 0.05",
         "export SYNTH_REPEATABLE_BUILD = 1",
@@ -1636,6 +1756,7 @@ def orfs_config_lines(
             f"export HOLD_SLACK_MARGIN = {constraints['hold_margin_ns']:g}"
         )
     config.extend(memory_macro_config_lines(memory_macros))
+    config.extend(floorplan_extra_lines(floorplan))
     return config
 
 
@@ -1652,6 +1773,7 @@ def run_pnr(
     artifact_dir: Path,
     constraints: dict[str, Any] | None = None,
     memory_macros: dict[str, Any] | None = None,
+    floorplan: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -1668,9 +1790,17 @@ def run_pnr(
     nickname = f"opentallas_{block_name}_{view_name}"
     config = orfs_config_lines(
         nickname, block, platform_name, pnr, core_utilization, place_density,
-        constraints, memory_macros,
+        constraints, memory_macros, floorplan,
     )
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
+    if floorplan and floorplan.get("pin_regions"):
+        (case / "io_constraints.tcl").write_text(
+            io_constraints_tcl(floorplan["pin_regions"]), encoding="utf-8"
+        )
+    if floorplan and floorplan.get("step_tcl"):
+        (case / "hooks").mkdir(exist_ok=True)
+        for hook in floorplan["step_tcl"]:
+            shutil.copy2(hook["source"], case / "hooks" / hook["name"])
 
     def orfs_make(goal: str, log_name: str, timeout: int) -> subprocess.CompletedProcess:
         cmd = [
@@ -1811,6 +1941,7 @@ def run_pnr(
         "sdc_clock_period_library_units": period_lib,
         **({"signal_integrity_constraints": constraints} if constraints else {}),
         **({"memory_macros": memory_macros} if memory_macros else {}),
+        **({"floorplan": floorplan} if floorplan else {}),
         "metrics": metrics,
         "artifacts": artifacts,
         "artifact_dir": str(out_dir.relative_to(ROOT)) if out_dir.is_relative_to(ROOT) else str(out_dir),
@@ -2335,6 +2466,28 @@ def build_parser() -> argparse.ArgumentParser:
             "the target period; does not change status, only documents intent"
         ),
     )
+    parser.add_argument(
+        "--die-area", nargs=4, type=float, default=None, metavar=("X0", "Y0", "X1", "Y1"),
+        help="explicit ORFS DIE_AREA in um (with --core-area; replaces --core-utilization)",
+    )
+    parser.add_argument(
+        "--core-area", nargs=4, type=float, default=None, metavar=("X0", "Y0", "X1", "Y1"),
+        help="explicit ORFS CORE_AREA in um (with --die-area)",
+    )
+    parser.add_argument(
+        "--pin-region", action="append", default=None, metavar="REGEX=EDGE",
+        help="pin every port whose name matches REGEX to die edge EDGE "
+             "(left/right/top/bottom); repeatable. Recorded under place_and_route.floorplan",
+    )
+    parser.add_argument(
+        "--routing-layers", nargs=2, default=None, metavar=("MIN", "MAX"),
+        help="override the platform's MIN_ROUTING_LAYER / MAX_ROUTING_LAYER",
+    )
+    parser.add_argument(
+        "--step-tcl", action="append", default=None, metavar="HOOK=FILE",
+        help="source FILE at ORFS step hook HOOK (e.g. POST_PDN), repeatable; "
+             "its sha256 is recorded under place_and_route.floorplan.step_tcl",
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
@@ -2505,6 +2658,19 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
+        floorplan = resolve_floorplan(
+            args.die_area, args.core_area, args.pin_region, args.routing_layers,
+            args.step_tcl,
+        )
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    if floorplan and "pnr" not in stages:
+        print("--die-area/--core-area/--pin-region/--routing-layers/--step-tcl require stage pnr",
+              file=sys.stderr)
+        return 2
+
+    try:
         memory_macros = resolve_memory_macros(
             args.view, view, args.memory_macro, args.macro_place_halo
         )
@@ -2639,6 +2805,7 @@ def main(argv: list[str] | None = None) -> int:
                 output.parent / f"{output.stem}_artifacts",
                 constraints,
                 memory_macros,
+                floorplan,
             )
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {

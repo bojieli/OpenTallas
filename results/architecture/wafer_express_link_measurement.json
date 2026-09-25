@@ -1,0 +1,659 @@
+{
+  "schema_version": 1,
+  "grade": "measured",
+  "grade_scope": "measured on ASAP7 -- a PREDICTIVE 7 nm academic PDK (ORFS platform asap7, RVT, TT corner) -- standing in for N5; no N5 wire has been routed. The numbers are this flow's post-route, RCX-extracted OpenSTA timing of a real placed and routed link, not a model",
+  "question": "what a pipelined, repeated on-wafer express link costs per mm and per 28.55 mm reticle-field crossing, so technology.json latency.global_wire_delay_s_per_mm (assumed 150 ps/mm) and the wafer fabric's 125 ns field crossing (links.on_wafer_n5) can rest on a measurement",
+  "design": {
+    "rtl": "rtl/rom/ot_rom_express_link.sv",
+    "placement_hook": "tools/rom_express_link_place.tcl",
+    "method": "a W-bit register-to-register link on a long thin die (height 40 um), input pins on the west edge and output pins on the east edge (--pin-region), every register column FIXED at its distance along the die by the POST_PDN hook so the wire between columns really spans it; repeaters are inserted and sized by ORFS (repair_design/repair_timing), not hand-placed. Pin-to-register paths are false-pathed (--false-path-io) because the registers sit at the pins; the link itself is register-to-register and fully timed"
+  },
+  "measured": {
+    "ps_per_mm": 604.9,
+    "ps_per_mm_wire_and_repeaters_only": 596.0,
+    "fit": {
+      "model": "register_to_register_ps = intercept + slope * span_mm, single-segment 64-bit links, default layers M2-M7",
+      "points": [
+        {
+          "run": "d0_w64_L1000",
+          "span_mm": 0.9939,
+          "register_to_register_ps": 781.37
+        },
+        {
+          "run": "d0_w64_L2000",
+          "span_mm": 1.9939,
+          "register_to_register_ps": 1320.95
+        },
+        {
+          "run": "d0_w64_L3000",
+          "span_mm": 2.9939,
+          "register_to_register_ps": 1991.27
+        }
+      ],
+      "slope_ps_per_mm": 604.95,
+      "intercept_ps": 158.33,
+      "max_residual_ps": 43.59
+    },
+    "max_register_spacing_at_1ghz_um": {
+      "from_fit": 1326.1,
+      "fit_budget": "1000 ps - intercept 158.3 - setup 4.7 - worst |skew| 34.7 ps, divided by the slope",
+      "largest_spacing_routed_closed_at_1ns": 997.957,
+      "sweep": [
+        {
+          "run": "s1000_w64_L3000",
+          "segment_um": 997.957,
+          "segments": 3,
+          "status": "pass",
+          "setup_wns_ns": 0.12806,
+          "hold_wns_ns": 0.347952,
+          "worst_register_to_register_ps": 741.08,
+          "worst_path_clock_skew_ps": -138.87,
+          "worst_path": "launch_data[2]$_DFF_P_ -> chain_data[2]$_DFF_P_"
+        },
+        {
+          "run": "s1500_w64_L3000",
+          "segment_um": 1496.935,
+          "segments": 2,
+          "status": "not_met",
+          "setup_wns_ns": -0.214477,
+          "hold_wns_ns": 0.607292,
+          "worst_register_to_register_ps": 890.64,
+          "worst_path_clock_skew_ps": -329.57,
+          "worst_path": "launch_data[0]$_DFF_P_ -> chain_data[0]$_DFF_P_"
+        }
+      ],
+      "reading": "1.0 mm register spacing closes at 1 GHz with the flow's own clock tree (setup, hold, slew and DRC all clean). 1.5 mm does NOT close, but its worst data path is under 1 ns: what fails it is ~330 ps of clock skew from a conventional tree spread over 3 mm. With a clock forwarded alongside the data (source-synchronous, the normal choice for a long link) the reach is the zero-skew fit value, ~1.3 mm. The field crossing below uses the routed-and-closed 1.0 mm, the conservative figure"
+    },
+    "energy_per_bit_per_mm": {
+      "fj_per_transition_per_mm": 46.62,
+      "fj_per_bit_per_mm_random_data": 23.31,
+      "basis": "slope of the post-route Combinational power group (repeaters plus the wire they drive) over span, at the route's clock and OpenSTA's default activity 0.1 transitions/cycle on 65 wires; random data toggles a wire 0.5 times per bit. Clock-tree power excluded"
+    },
+    "repeater_area_um2_per_wire_per_mm": 3.003
+  },
+  "extrapolation_to_one_field": {
+    "field_pitch_mm": 28.548,
+    "statement": "a linear extrapolation of the ASAP7 per-mm fit from 1-3 mm to 28.55 mm: a repeated, registered wire's delay is linear in length (every segment is the same), so the per-mm slope carries; what does NOT carry is the node -- N5's thick upper metals are several times less resistive than ASAP7's M6/M8, so N5 would be faster, not slower",
+    "unregistered_flight_time_ns": 17.27,
+    "register_spacing_used_um": 998.0,
+    "register_spacing_source": "routed-closed",
+    "wire_cycles_at_1ghz": 29,
+    "boundary_stage_cycles": {
+      "forwarding_mux": 1,
+      "fp32_reduction": 6
+    },
+    "boundary_evidence": {
+      "forwarding_mux": [
+        {
+          "run": "s1000_w64_L3000",
+          "status": "pass",
+          "setup_wns_ns": 0.12806
+        },
+        {
+          "run": "s1500_w64_L3000",
+          "status": "not_met",
+          "setup_wns_ns": -0.214477
+        }
+      ],
+      "fp32_reduction": [
+        {
+          "record": "results/physical_abi3/asap7/hdc/ot_fp32_add_rne_pipe/physical.json",
+          "record_sha256": "60f36cad06f7d8e3a7fce2c512b98c736df9676539cbc7317cb484995462a2eb",
+          "top": "ot_fp32_add_rne_pipe",
+          "status": "pass",
+          "target_clock_period_ns": 0.7,
+          "fmax_hz": 1447450000.0,
+          "note": "the 5-stage binary32 adder the reduction boundary instantiates closes routed at 0.7 ns on its own, so 5 adder cycles + 1 output register at 1 GHz is supported; the link with BOUNDARY_ADD=1 was not itself routed"
+        }
+      ]
+    },
+    "per_field_crossing": {
+      "forwarding_mux": {
+        "cycles": 30,
+        "ns_at_1ghz": 30.0
+      },
+      "fp32_reduction": {
+        "cycles": 35,
+        "ns_at_1ghz": 35.0
+      }
+    }
+  },
+  "wires_per_field_edge": {
+    "track_budget": {
+      "layers": [
+        "M6",
+        "M8"
+      ],
+      "fraction_of_tracks": 0.25,
+      "tracks_per_wire": 2,
+      "basis": "an east-west express bus crossing a 28.55 mm field edge on the two upper horizontal ASAP7 layers, given a quarter of their tracks (the rest carry power, the clock and local routing) and one spacing track per wire (shielding/crosstalk), a conventional budget for long parallel buses"
+    },
+    "wires": 100364,
+    "bandwidth_per_edge_tbit_s_at_1ghz": 100.4,
+    "bandwidth_per_wire": "one bit per cycle per wire: 1 Gbit/s at the 1 GHz fabric clock",
+    "repeater_area_mm2_for_those_wires_across_one_field": 8.61,
+    "field_area_mm2": 815.0
+  },
+  "comparison": {
+    "technology_global_wire_delay_ps_per_mm": 150.0,
+    "measured_over_assumed": 4.03,
+    "technology_field_crossing_at_assumed_ps_per_mm_ns": 4.28,
+    "cerebras_mesh_field_crossing_ns": 125.0,
+    "cerebras_mesh_source": "configs/hardware/technology.json#links.on_wafer_n5.hop_latency_s",
+    "express_link_field_crossing_ns": 30.0,
+    "speedup_over_cerebras_mesh": 4.17
+  },
+  "conclusion": "On ASAP7 a flow-repeated wire costs 605 ps/mm register to register, 4.0x the 150 ps/mm technology.json assumes and well above its 100-250 range: ASAP7's routing metals are thin (M6/M8 at 64/80 nm pitch) and ORFS repeats with buffers it sizes for timing, not an optimally sized inverter chain, so this is a pessimistic 7 nm point and an N5 top-metal link would be faster. Even so a purpose-built express link crosses a 28.55 mm field in 30 cycles = 30 ns at 1 GHz with a forwarding boundary (35 ns with a one-shot FP32 reduction), about 4.2x less than the 125 ns Cerebras-mesh crossing the model charges. The latency a field crossing should carry for a purpose-built collective network is therefore ~30 ns (35 ns reducing), and a single unregistered reticle traversal at the measured slope is 17.3 ns, not the 4.28 ns the 150 ps/mm assumption gives",
+  "variants": [
+    {
+      "run": "d0_w64_L1000_tr60",
+      "span_um": 993.87,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": 0.06,
+      "W": 64,
+      "register_to_register_ps": 746.06,
+      "fit_at_this_span_ps": 759.6,
+      "signal_wirelength_um_by_layer": {
+        "M2": 31644.8,
+        "M3": 2047.0,
+        "M4": 933.1,
+        "M5": 179.3,
+        "M6": 36603.1,
+        "M7": 120.5
+      }
+    },
+    {
+      "run": "d0_w64_L2000_m9",
+      "span_um": 1993.9,
+      "routing_layers": [
+        "M2",
+        "M9"
+      ],
+      "max_transition_ns": null,
+      "W": 64,
+      "register_to_register_ps": 1301.37,
+      "fit_at_this_span_ps": 1364.5,
+      "signal_wirelength_um_by_layer": {
+        "M2": 55046.8,
+        "M3": 1469.7,
+        "M4": 579.1,
+        "M5": 46.8,
+        "M6": 67.4,
+        "M7": 253.3,
+        "M8": 84115.4,
+        "M9": 169.3
+      }
+    }
+  ],
+  "variants_reading": "the per-mm cost is set by the flow's repeater insertion, not by the metal: opening M8/M9 moved the long wire from M6 to M8 (lower RC) and a 60 ps max-transition limit forced denser buffering, and neither moved the register-to-register delay by more than a few percent. A run restricted to M4-M9 failed detailed routing (pin access, DRT-0255) and has no record",
+  "runs": [
+    {
+      "run": "d0_w64_L1000",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000/physical.json",
+      "record_sha256": "29511db899d041c0ae9e99990935d8083e84f20807cc1748ac6e77480a0d78c2",
+      "finish_report_sha256": "22c456efd95c5df4b95519f2dcf7d38a0bdcd35c821776d88320c2cfe4aaaa22",
+      "W": 64,
+      "LINK_UM": 1000,
+      "SPACING_UM": 1000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 0.3,
+      "status": "not_met",
+      "span_um": 993.87,
+      "segments": 1,
+      "segment_um": 993.87,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 997.92,
+          "x_min": 997.92
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 22546.3,
+        "M3": 2183.6,
+        "M4": 1014.6,
+        "M5": 153.7,
+        "M6": 45958.7,
+        "M7": 192.1
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[35]$_DFF_P_",
+        "endpoint": "out_data[35]$_DFF_P_",
+        "clock_period_ps": 300.0,
+        "slack_ps": -508.61,
+        "clk_to_q_ps": 101.29,
+        "wire_and_repeaters_ps": 680.09,
+        "register_to_register_ps": 781.37,
+        "library_setup_ps": 4.6,
+        "clock_skew_capture_minus_launch_ps": -28.51,
+        "repeaters_on_path": 5
+      },
+      "power": {
+        "sequential_w": 0.000592,
+        "combinational_w": 0.00137,
+        "clock_w": 0.00281,
+        "total_w": 0.00477
+      },
+      "standard_cell_area_um2": 306.967,
+      "timing_repair_buffer_area_um2": 138.685,
+      "setup_wns_ns": -0.508606,
+      "hold_wns_ns": 0.432676,
+      "drc_errors": 0,
+      "max_slew_violations": 16
+    },
+    {
+      "run": "d0_w64_L1000_tr60",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000_tr60/physical.json",
+      "record_sha256": "576d77427b07c2dfdef6d6462951795fce6d0387148b955dc6f9d56fa10dbd88",
+      "finish_report_sha256": "3549cb17360df45ae90116c203771edcc2918200d1357c47f932c9acba371770",
+      "W": 64,
+      "LINK_UM": 1000,
+      "SPACING_UM": 1000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": 0.06,
+      "target_clock_period_ns": 0.3,
+      "status": "not_met",
+      "span_um": 993.87,
+      "segments": 1,
+      "segment_um": 993.87,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 997.92,
+          "x_min": 997.92
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 31644.8,
+        "M3": 2047.0,
+        "M4": 933.1,
+        "M5": 179.3,
+        "M6": 36603.1,
+        "M7": 120.5
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[29]$_DFF_P_",
+        "endpoint": "out_data[29]$_DFF_P_",
+        "clock_period_ps": 300.0,
+        "slack_ps": -455.13,
+        "clk_to_q_ps": 88.2,
+        "wire_and_repeaters_ps": 657.86,
+        "register_to_register_ps": 746.06,
+        "library_setup_ps": 3.13,
+        "clock_skew_capture_minus_launch_ps": -10.22,
+        "repeaters_on_path": 14
+      },
+      "power": {
+        "sequential_w": 0.000558,
+        "combinational_w": 0.00162,
+        "clock_w": 0.00287,
+        "total_w": 0.00505
+      },
+      "standard_cell_area_um2": 357.443,
+      "timing_repair_buffer_area_um2": 188.898,
+      "setup_wns_ns": -0.455127,
+      "hold_wns_ns": 0.459756,
+      "drc_errors": 0,
+      "max_slew_violations": 270
+    },
+    {
+      "run": "d0_w64_L2000",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000/physical.json",
+      "record_sha256": "ac321222930a9c61e5b7a81f04b624dd925a45cb946204ec51140cd4ac936e75",
+      "finish_report_sha256": "07477428558d8471b4d5da25f7f6a001e3389f0c383a64a1b1828b9782fc66fc",
+      "W": 64,
+      "LINK_UM": 2000,
+      "SPACING_UM": 2000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 0.3,
+      "status": "not_met",
+      "span_um": 1993.9,
+      "segments": 1,
+      "segment_um": 1993.9,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 1998.0,
+          "x_min": 1997.95
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 63634.8,
+        "M3": 1555.8,
+        "M4": 1605.0,
+        "M5": 301.8,
+        "M6": 74492.1,
+        "M7": 230.5
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[36]$_DFF_P_",
+        "endpoint": "out_data[36]$_DFF_P_",
+        "clock_period_ps": 300.0,
+        "slack_ps": -1050.01,
+        "clk_to_q_ps": 103.59,
+        "wire_and_repeaters_ps": 1217.36,
+        "register_to_register_ps": 1320.95,
+        "library_setup_ps": 4.72,
+        "clock_skew_capture_minus_launch_ps": -34.74,
+        "repeaters_on_path": 14
+      },
+      "power": {
+        "sequential_w": 0.000633,
+        "combinational_w": 0.00242,
+        "clock_w": 0.00577,
+        "total_w": 0.00883
+      },
+      "standard_cell_area_um2": 516.876,
+      "timing_repair_buffer_area_um2": 247.947,
+      "setup_wns_ns": -1.05001,
+      "hold_wns_ns": 0.820006,
+      "drc_errors": 0,
+      "max_slew_violations": 8
+    },
+    {
+      "run": "d0_w64_L2000_m9",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000_m9/physical.json",
+      "record_sha256": "505683251e7181cb91fd365e8364e06357178c91cc23cb30c7a7deba02234052",
+      "finish_report_sha256": "2888bc2c8d9b03cdcf3aadf0460d40a7c9f1beb521e0edad51c5161068abde1c",
+      "W": 64,
+      "LINK_UM": 2000,
+      "SPACING_UM": 2000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M9"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 0.3,
+      "status": "not_met",
+      "span_um": 1993.9,
+      "segments": 1,
+      "segment_um": 1993.9,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 1998.0,
+          "x_min": 1997.95
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 55046.8,
+        "M3": 1469.7,
+        "M4": 579.1,
+        "M5": 46.8,
+        "M6": 67.4,
+        "M7": 253.3,
+        "M8": 84115.4,
+        "M9": 169.3
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[35]$_DFF_P_",
+        "endpoint": "out_data[35]$_DFF_P_",
+        "clock_period_ps": 300.0,
+        "slack_ps": -1047.63,
+        "clk_to_q_ps": 102.56,
+        "wire_and_repeaters_ps": 1198.82,
+        "register_to_register_ps": 1301.37,
+        "library_setup_ps": 4.83,
+        "clock_skew_capture_minus_launch_ps": -49.75,
+        "repeaters_on_path": 13
+      },
+      "power": {
+        "sequential_w": 0.000618,
+        "combinational_w": 0.00215,
+        "clock_w": 0.00564,
+        "total_w": 0.0084
+      },
+      "standard_cell_area_um2": 488.182,
+      "timing_repair_buffer_area_um2": 219.312,
+      "setup_wns_ns": -1.04763,
+      "hold_wns_ns": 0.651808,
+      "drc_errors": 0,
+      "max_slew_violations": 17
+    },
+    {
+      "run": "d0_w64_L3000",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L3000/physical.json",
+      "record_sha256": "e8c09264894687188310214bea59387fa2c01882f32791a426c9be591a5130a6",
+      "finish_report_sha256": "60ef359098917449e3d2f6cfb08cfda58883ae53f7bb940ca94eb9792f8b76e7",
+      "W": 64,
+      "LINK_UM": 3000,
+      "SPACING_UM": 3000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 0.3,
+      "status": "not_met",
+      "span_um": 2993.87,
+      "segments": 1,
+      "segment_um": 2993.87,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 2997.92,
+          "x_min": 2997.92
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 95150.9,
+        "M3": 2281.7,
+        "M4": 2923.4,
+        "M5": 437.0,
+        "M6": 111389.0,
+        "M7": 614.6
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[30]$_DFF_P_",
+        "endpoint": "out_data[30]$_DFF_P_",
+        "clock_period_ps": 300.0,
+        "slack_ps": -1708.03,
+        "clk_to_q_ps": 119.15,
+        "wire_and_repeaters_ps": 1872.13,
+        "register_to_register_ps": 1991.27,
+        "library_setup_ps": -0.21,
+        "clock_skew_capture_minus_launch_ps": -31.51,
+        "repeaters_on_path": 21
+      },
+      "power": {
+        "sequential_w": 0.000627,
+        "combinational_w": 0.00339,
+        "clock_w": 0.0085,
+        "total_w": 0.0125
+      },
+      "standard_cell_area_um2": 697.42,
+      "timing_repair_buffer_area_um2": 330.062,
+      "setup_wns_ns": -1.70803,
+      "hold_wns_ns": 1.19332,
+      "drc_errors": 0,
+      "max_slew_violations": 23
+    },
+    {
+      "run": "s1000_w64_L3000",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/s1000_w64_L3000/physical.json",
+      "record_sha256": "29229b374b4b058e45224a70b71b57eabe5c7ec3801f6a9d6ac209138cb851de",
+      "finish_report_sha256": "0bbdf3b18468683f5e383ba8f9b49b104cf1fe7c3bb9689c91a52bc99073ceaf",
+      "W": 64,
+      "LINK_UM": 3000,
+      "SPACING_UM": 1000,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 1.0,
+      "status": "pass",
+      "span_um": 2993.87,
+      "segments": 3,
+      "segment_um": 997.957,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 1002.02,
+          "x_min": 1002.02
+        },
+        {
+          "count": 65,
+          "x_max": 1999.94,
+          "x_min": 1999.94
+        },
+        {
+          "count": 65,
+          "x_max": 2997.92,
+          "x_min": 2997.92
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 160806.8,
+        "M3": 2271.2,
+        "M4": 732.6,
+        "M5": 110.3,
+        "M6": 48915.8,
+        "M7": 184.0
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[2]$_DFF_P_",
+        "endpoint": "chain_data[2]$_DFF_P_",
+        "clock_period_ps": 1000.0,
+        "slack_ps": 128.06,
+        "clk_to_q_ps": 87.44,
+        "wire_and_repeaters_ps": 653.64,
+        "register_to_register_ps": 741.08,
+        "library_setup_ps": 19.96,
+        "clock_skew_capture_minus_launch_ps": -138.87,
+        "repeaters_on_path": 10
+      },
+      "power": {
+        "sequential_w": 0.000383,
+        "combinational_w": 0.00103,
+        "clock_w": 0.00269,
+        "total_w": 0.00411
+      },
+      "standard_cell_area_um2": 781.955,
+      "timing_repair_buffer_area_um2": 358.581,
+      "setup_wns_ns": 0.12806,
+      "hold_wns_ns": 0.347952,
+      "drc_errors": 0,
+      "max_slew_violations": 0
+    },
+    {
+      "run": "s1500_w64_L3000",
+      "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/s1500_w64_L3000/physical.json",
+      "record_sha256": "20fcda2b0758e7d8b908b1226b783f10a8e1928f3cffa48425aa23d04d63ad75",
+      "finish_report_sha256": "3ea5a05a5e29e681b2e39e7d3e1719dafcd1b95f2ec728ea8f6e7429584e4da4",
+      "W": 64,
+      "LINK_UM": 3000,
+      "SPACING_UM": 1500,
+      "BOUNDARY_ADD": 0,
+      "routing_layers": [
+        "M2",
+        "M7"
+      ],
+      "max_transition_ns": null,
+      "target_clock_period_ns": 1.0,
+      "status": "not_met",
+      "span_um": 2993.87,
+      "segments": 2,
+      "segment_um": 1496.935,
+      "register_columns_um": [
+        {
+          "count": 65,
+          "x_max": 4.05,
+          "x_min": 4.05
+        },
+        {
+          "count": 65,
+          "x_max": 1500.98,
+          "x_min": 1500.98
+        },
+        {
+          "count": 65,
+          "x_max": 2997.92,
+          "x_min": 2997.92
+        }
+      ],
+      "signal_wirelength_um_by_layer": {
+        "M2": 103339.6,
+        "M3": 14085.4,
+        "M4": 6251.0,
+        "M5": 581.2,
+        "M6": 118756.8,
+        "M7": 10860.2
+      },
+      "worst_setup_path": {
+        "startpoint": "launch_data[0]$_DFF_P_",
+        "endpoint": "chain_data[0]$_DFF_P_",
+        "clock_period_ps": 1000.0,
+        "slack_ps": -214.48,
+        "clk_to_q_ps": 116.71,
+        "wire_and_repeaters_ps": 773.93,
+        "register_to_register_ps": 890.64,
+        "library_setup_ps": 9.59,
+        "clock_skew_capture_minus_launch_ps": -329.57,
+        "repeaters_on_path": 15
+      },
+      "power": {
+        "sequential_w": 0.000278,
+        "combinational_w": 0.00122,
+        "clock_w": 0.00274,
+        "total_w": 0.00423
+      },
+      "standard_cell_area_um2": 734.467,
+      "timing_repair_buffer_area_um2": 337.906,
+      "setup_wns_ns": -0.214477,
+      "hold_wns_ns": 0.607292,
+      "drc_errors": 0,
+      "max_slew_violations": 29
+    }
+  ]
+}

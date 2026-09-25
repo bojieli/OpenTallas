@@ -22,7 +22,11 @@ from math import ceil, prod
 from typing import Any, Callable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
-from compiler.ir.v3.lowering import canonical_cache_row, engine_for
+from compiler.ir.v3.lowering import (
+    canonical_cache_row,
+    compressed_rope_gather,
+    engine_for,
+)
 from compiler.backends.schedule_rule import (
     COLUMN_LANE_FAMILIES,
     E9_TILE_COLS,
@@ -2963,7 +2967,7 @@ def _check_rolling_compressor(
             f"rolling consumer {kernel.index} decode path is not a static one-group view",
         )
 
-        if kernel.kind == "GATHER" and bool(kernel.attributes.get("compressed", False)):
+        if compressed_rope_gather(kernel):
             prefill_index = _operator_view(prefill[0][2], views, "input_view_0")
             decode_index = _operator_view(decode_item[2], views, "input_view_0")
             coefficient = _operator_view(decode_item[2], views, "input_view_1")
