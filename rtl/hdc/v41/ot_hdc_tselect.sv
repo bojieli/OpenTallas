@@ -472,11 +472,14 @@ module ot_hdc_tselect #(
         end
     end
 
+    // segments accepted and not yet closed by out_last: a second segment can be walking while the
+    // first still drains its output, so a flag cleared by the first out_last would drop busy early
+    reg  [1:0]    inflight;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) pipe_busy <= 1'b0;
-        else if (acc_in && in_last) pipe_busy <= 1'b1;
-        else if (out_valid && out_last) pipe_busy <= 1'b0;
+        if (!rst_n) inflight <= 2'd0;
+        else inflight <= inflight + {1'b0, acc_in && in_last} - {1'b0, out_valid && out_last};
     end
+    always @(*) pipe_busy = inflight != 0;
     assign busy = pipe_busy || state != S_ING;
 endmodule
 
