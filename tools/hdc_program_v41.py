@@ -316,6 +316,40 @@ class Layout:
 
 
 # -- program -------------------------------------------------------------------------
+SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)   # lane 0 only
+DYN_GUESS = 16                   # a count taken from a DYN value: assume a short context
+
+
+def split_tree(parts):
+    """The segment tree of a red_tree op: ((s0+s1)+(s2+s3))+... over the segment
+    sums, padded with +0 to a power of two (x + 0 = x exactly)."""
+    parts = [F(p) for p in parts]
+    while len(parts) & (len(parts) - 1):
+        parts.append(F(0))
+    while len(parts) > 1:
+        parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return F(parts[0])
+
+
+def su_vec_mode(f, lanes=None):
+    """The stream unit's lane axis for one op: SCALAR where only lane 0 can do the
+    op (lane-0-only SFU functions, SEQ, the whole-op P=8 reduction), VEC_O where
+    each segment must stay in one lane (a per-segment reduction or the segmented
+    tree), else whichever axis issues fewer vectors (VEC_I on a tie)."""
+    lanes = lanes or I.SU_LANES
+    if f.get("sfu", 0) in SCALAR_SFU or f.get("red", 0) == I.RED_SEQ or \
+            (f.get("red_whole", 0) and not f.get("red_tree", 0)):
+        return I.VEC_SCALAR
+    no = f.get("su_nout", 0) or DYN_GUESS
+    ni = f.get("su_nin", 0) or DYN_GUESS
+    if f.get("red", 0) or f.get("red_tree", 0):
+        return I.VEC_O if no > 1 else I.VEC_SCALAR
+    vi, vo = no * -(-ni // lanes), -(-no // lanes) * ni
+    if min(vi, vo) == no * ni:
+        return I.VEC_SCALAR
+    return I.VEC_I if vi <= vo else I.VEC_O
+
+
 class Builder:
     def __init__(self, lay):
         self.lay, self.m = lay, lay.m
@@ -335,6 +369,7 @@ class Builder:
 
     def su(self, reads, writes, tag, **f):
         f = dict(f, unit=I.UNIT_SU)
+        f.setdefault("su_vec", su_vec_mode(f))
         self.emit(f, reads, writes, tag)
 
     def qe(self, reads, writes, tag, **f):
@@ -904,7 +939,13 @@ class Machine:
         out = np.asarray(u, dtype=F).reshape(-1)
         if f["rnd"]:
             out = G.to_bf16(out)
-        if f["red"]:
+        if f["red"] and f["red_tree"]:
+            v = G.mul(out, out) if f["red_sq"] else out
+            x = split_tree([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
+            if f["red_rnd"]:
+                x = G.to_bf16(x)
+            self.vm[f["r_base"]] = x
+        elif f["red"]:
             v = G.mul(out, out) if f["red_sq"] else out
             segs = v.reshape(1, -1) if f["red_whole"] else v.reshape(no, ni)
             vals = []

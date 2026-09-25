@@ -34,26 +34,29 @@ import hdc_isa_v41 as I
 ROOT = Path(__file__).resolve().parents[1]
 IL, W, G = I.INTERLEAVE, I.W_LANES, I.GROUPS
 
-# RTL constants (cycles), fitted by `calibrate` against the reduced vehicle's trace.
+# RTL constants (cycles), fitted by `calibrate` jointly against the reduced vehicle's traces
+# (stream-unit widths 4, 8, 16; before and after the K-splits and the overlap scheduling).
 K = dict(
     gap=6,              # go -> next go of a following instruction (S_GO, FETCH, WAIT, CAP, DEC, ISSUE)
     skip=5,             # a skipped instruction (predicate / zero count): ISSUE -> FETCH ..
-    me_start=-1,         # go -> first element
-    me_drain=32,        # last element -> idle seen by the sequencer
-    me_next=-2,         # last element -> a following op may be accepted
+    me_start=2,         # go -> first element
+    me_drain=29,        # last element -> idle seen by the sequencer
+    me_next=0,          # last element -> a following op may be accepted
     su_start=1,
     su_base=28,         # emit -> retire without M1 divide and SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
     su_div=26,          # extra depth of an M1 divide (31 vs 5)
     su_cls=5,           # a class change: last retire -> the new op accepted
     su_idle=7,          # last retire -> idle seen (no reduction)
     su_red=35,          # last retire -> idle seen, with a reduction
-    qe_start=-3,
-    qe_idx=3,
+    su_tree=25,         # red_tree: the segment tree after the last segment sum
+    su_tree_free=-1,    # red_tree: idle seen -> the unit accepts again
+    qe_start=-2,
+    qe_idx=2,
     qe_load=16,         # after the nb block reads: the quantiser's latency and the state step
     qe_rows_lat=25,     # last word -> last result written -> idle seen
-    qe_qdq_lat=21,      # QDQ: after the reads
-    qe_phase0=-2,        # absolute-cycle offset of the lanes' slot counter
-    xu_sel=46,          # SELECT: after the n reads, to the last index written (plus k)
+    qe_qdq_lat=20,      # QDQ: after the reads
+    qe_phase0=-3,       # absolute-cycle offset of the lanes' slot counter
+    xu_sel=47,          # SELECT: after the n reads, to the last index written (plus k)
     xu_sink=4,          # simple Sinkhorn: sink_cycles() + this
     sk_step=7,          # routed Sinkhorn: core cycles per unit step (ot_hdc_sinkhorn_mc STEP_CYC)
     xu_skmc=10,         # routed Sinkhorn: (2 ITERS + 1) steps + this          # Sinkhorn (simple unit): computed by sink_cycles() + this
@@ -126,7 +129,9 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
             free[unit] = s + k["me_start"] + e - 1 + k["me_next"]
             idle[unit] = s + k["me_start"] + e + k["me_drain"]
         elif unit == I.UNIT_SU:
-            e = no * ni
+            vec = f.get("su_vec", 0)
+            e = (no * -(-ni // I.SU_LANES) if vec == I.VEC_I else
+                 -(-no // I.SU_LANES) * ni if vec == I.VEC_O else no * ni)
             step = 8 if f["red"] == I.RED_SEQ else 1
             last_emit = s + k["su_start"] + step * (e - 1)
             depth = k["su_base"] + (k["su_div"] if cls[0] else 0) + SFU_DEPTH[cls[1]]
@@ -134,6 +139,9 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
             su_last_retire = max(su_last_retire, last_emit + depth) if su_cls == cls else last_emit + depth
             su_cls = cls
             idle[unit] = max(idle[unit], su_last_retire + (k["su_red"] if f["red"] else k["su_idle"]))
+            if f.get("red_tree"):             # the unit holds until the segment tree has written
+                idle[unit] += k["su_tree"]
+                free[unit] = idle[unit] + k["su_tree_free"]
         elif unit == I.UNIT_QE:
             c = s + k["qe_start"] + (k["qe_idx"] if f["qe_ind"] else 0) + f["qe_nb"]
             if f["qe_mode"] == I.QE_LINQ:

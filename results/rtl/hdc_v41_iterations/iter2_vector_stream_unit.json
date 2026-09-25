@@ -1,4 +1,12 @@
 {
+  "iteration": {
+    "number": 2,
+    "name": "vector stream unit",
+    "summary": "ot_hdc_v41_stream becomes SU_LANES lanes (8): each lane the whole scalar datapath (ot_hdc_v41_su_lane) with its own operand, write and reducer ports; su_vec picks the lane axis per op (SCALAR, VEC_I over inner indices, VEC_O over rows, each lane owning whole segments so per-segment reductions keep the P=8 order); lane 0 alone has rsqrt, sqrt, sqrt(softplus) and the Engram gate. Arithmetic unchanged.",
+    "cycles_per_token": 737483,
+    "previous_cycles_per_token": 1088551,
+    "cycles_saved": 351068
+  },
   "schema": "opentallas.hdc-v41-decode-campaign.v1",
   "status": "pass",
   "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
