@@ -1,0 +1,82 @@
+{
+ "blocks": {
+  "pkg_ctrl": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 1223,
+    "chains": 5,
+    "classes": {
+     "AU": 484,
+     "DS": 24171,
+     "DT": 161275,
+     "ND": 0,
+     "UT": 3810
+    },
+    "fault_coverage": 0.977369,
+    "faults": 189740,
+    "gate_level": {
+     "capture_faults_confirmed": 200,
+     "capture_faults_injected": 200,
+     "chain_faults_confirmed": 50,
+     "chain_faults_injected": 50,
+     "good_machine_mismatches": 0,
+     "good_machine_patterns": 123
+    },
+    "max_chain_length": 897,
+    "scan_cells": 4482,
+    "test_coverage": 0.997397,
+    "tester_cycles": 1100049,
+    "top": "ot_rom_pkg_ctrl"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 9042.87,
+     "drc_errors": 0,
+     "fmax_mhz": 1161.81,
+     "instance_count": 69477,
+     "routed_wirelength_um": 122059,
+     "sequential_area_um2": 1463.54,
+     "setup_wns_ns": 0.039277099999999995,
+     "standard_cell_area_um2": 3444.39,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.13548,
+     "fmax": -0.025107,
+     "instances": 0.102566,
+     "routed_wirelength": 0.150034,
+     "standard_cell_area": 0.137813
+    },
+    "scan": {
+     "core_area_um2": 10268,
+     "drc_errors": 0,
+     "fmax_mhz": 1132.64,
+     "instance_count": 76603,
+     "routed_wirelength_um": 140372,
+     "scan": {
+      "cell_area_added_fraction": 0.136045,
+      "chain_count": 5,
+      "chain_length_max": 897,
+      "flops": 4482,
+      "lockup_latches": 0,
+      "scan_cells": 2692,
+      "scan_mux_cells": 1790
+     },
+     "sequential_area_um2": 1659.79,
+     "setup_wns_ns": 0.0171092,
+     "standard_cell_area_um2": 3919.07,
+     "status": "pass"
+    }
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 5660,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  }
+ },
+ "route_settings": "asap7, 0.9 ns target, --false-path-io, --slew-margin-percent 20, --stages pnr; scan adds --dft scan --scan-max-length 1024",
+ "schema": "opentallas.dft.summary.v1"
+}
