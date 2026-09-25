@@ -93,8 +93,11 @@ module tb_hdc_wstream #(
                      set, NPC, words, got, bad, fault, why, t_ok - 12, cyc - t_first, (got * 1000) / (cyc - t_first + 1),
                      u_hbm.st_ref[0]);
             $display("WSTREAM_DIAG rsp_wait=%0d req_idle=%0d", rsp_wait, req_idle);
-            if (set == 1) $display(fault && why[0] ? "FAULT_DETECTED" : "FAIL");
-            else $display(!fault && bad == 0 && got == words ? "PASS" : "FAIL");
+            if (set == 1) begin
+                if (fault && why[0]) $display("FAULT_DETECTED"); else $display("FAIL");
+            end else begin
+                if (!fault && bad == 0 && got == words) $display("PASS"); else $display("FAIL");
+            end
             $finish;
         end
     end

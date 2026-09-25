@@ -1141,7 +1141,9 @@ def write_hbm_images(out, lay, prog):
             "release_groups": max(e["grp"] for e in ents),
             "words_per_token_by_pred": {str(p): sum(e["n"] for e in ents if e["pred"] == p) for p in (0, 1, 2)},
             "fp8_words_per_token_pred0": sum(e["n"] for e in ents if not e["fp4"] and e["pred"] == 0),
-            "fp4_words_per_token_pred0": sum(e["n"] for e in ents if e["fp4"] and e["pred"] == 0)}
+            "fp4_words_per_token_pred0": sum(e["n"] for e in ents if e["fp4"] and e["pred"] == 0),
+            # HBM sectors a decode step at an odd position > 0 reads (every predicate holds)
+            "hbm_sectors_per_token": sum(e["n"] * (QSPW4 if e["fp4"] else QSPW8) for e in ents)}
     (out / "hbm_q.json").write_text(json.dumps(meta))
     (out / "hbm_q.args").write_text(f"+QSEC={len(sectors)}\n")
     return meta

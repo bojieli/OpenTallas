@@ -90,11 +90,14 @@ def sink_cycles(iters=20):
     return total + 2               # P_DONE, out_valid
 
 
-# QE weights in HBM: sec_per_pc, sustained sectors (32 B) per cycle per pseudo-
-# channel of the in-order word stream; lat, request to arrival; c_ann, announce
-# to issue; rel, a release instruction's issue to the indexed entry's first
-# request (the id read).
-QH = dict(npc=8, sec_per_pc=0.80, lat=80, c_ann=6, rel=4, lead=512, win=1024, margin=0.9)
+# QE weights in HBM, fitted to the reduced vehicle's Verilator runs at 8 and 32
+# pseudo-channels: sec_per_pc, the effective sectors (32 B) per cycle per
+# pseudo-channel of the QE stream (its 17-sector words span up to 5 channels, so
+# a refreshing channel holds back the words that touch it: well below the
+# 128-byte-word stream's rate); lat, request to arrival; c_ann, announce to
+# issue; rel, a release instruction's issue to the routed expert's first word
+# being fetchable (the walker reaching the entry, the id read, the cold rows).
+QH = dict(npc=8, sec_per_pc=0.30, lat=80, c_ann=6, rel=240, lead=512, win=1024, margin=0.9)
 SPW8, SPW4 = 17, 9
 
 

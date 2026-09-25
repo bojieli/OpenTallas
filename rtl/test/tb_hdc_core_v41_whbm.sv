@@ -132,7 +132,7 @@ module tb_hdc_core_v41_whbm #(
         .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
         .fault(qs_fault), .fault_why(qs_why), .st_fetched(qs_fetched), .st_consumed(qs_consumed));
     ot_hdc_hbm_model #(.NPC(NPC), .AW(24), .DW(256), .MEM_WORDS(HMEM), .TAGW(LWIN), .LENW(6), .BEATW(5),
-                       .CLK_PS(CLK_PS), .PC_RDY(1), .PC_ROOM(2 * SPW)) u_hbm (
+                       .CLK_PS(CLK_PS), .PC_RDY(1), .PC_ROOM(16)) u_hbm (
         .clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .pc_room(pc_room), .req_we(1'b0),
         .req_addr(hq_addr), .req_len(hq_len), .req_tag(hq_tag), .req_wdata(256'd0),
         .rsp_v(hr_v), .rsp_rdy(hr_rdy), .rsp_tag(hr_tag), .rsp_beat(hr_beat), .rsp_data(hr_data));
