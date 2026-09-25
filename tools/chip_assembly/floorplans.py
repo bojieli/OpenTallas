@@ -99,6 +99,7 @@ class Block:
     place_density: float = 0.60
     record: str | None = None      # the flat routed record this block came from
     notes: str = ""
+    extra_sdc: list[str] = field(default_factory=list)   # block-internal constraints
 
     @property
     def core_area_um2(self) -> float:
@@ -179,10 +180,21 @@ BLOCKS.update({
             "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv", "rtl/hdc/v41/ot_hdc_engram_hash.sv",
             "rtl/hdc/v41/ot_hdc_select.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
             "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
-            "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv", "rtl/hdc/v41/ot_hdc_v41_xu.sv"],
+            "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+            "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_tselect.sv", "rtl/hdc/v41/ot_hdc_v41_xu.sv"],
         480.0, 480.0,
         [(r"^er_", "N"), (r"^(vr_|xr_|vw_|w_|cr_)", "S")],
-        notes="V4.1 select / Sinkhorn / Engram unit; the Sinkhorn runs on a divided clock (1/7)"),
+        notes=("V4.1 select / Sinkhorn / Engram unit; the Sinkhorn (ot_hdc_sinkhorn_mc, the "
+               "configuration the decode campaign runs) is clocked by a divided clock (1/7)"),
+        extra_sdc=[
+            "# ot_hdc_sinkhorn_mc: the unit clock is a register output, one edge per 7 core cycles",
+            "set sk_q [get_pins -quiet {*sclk*/QN}]",
+            "if {[llength $sk_q] == 0} { set sk_q [get_pins -quiet {*sclk*/Q}] }",
+            "create_generated_clock -name sk_clk -source [get_ports clk] -divide_by 7 $sk_q",
+            "# the caller holds req / in_e until the unit is busy: 7 core cycles to the unit edge",
+            "set_multicycle_path -setup 7 -from [get_clocks clk] -to [get_clocks sk_clk]",
+            "set_multicycle_path -hold 6 -from [get_clocks clk] -to [get_clocks sk_clk]",
+        ]),
     "ot_hdc_v41_hcproj": Block(
         "ot_hdc_v41_hcproj", V41_COMMON + ["rtl/hdc/v41/ot_hdc_v41_hcproj.sv"],
         160.0, 160.0,

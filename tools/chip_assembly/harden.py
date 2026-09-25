@@ -83,6 +83,7 @@ def budget_sdc(block: str, budget: dict[str, Any]) -> str:
         else:
             lines.append(f"set_output_delay {b['external_ps']:.1f} -clock clk {sel}")
             lines.append(f"set_load {b.get('load_ff', 4.0):.1f} {sel}")
+    lines += fp.BLOCKS[block].extra_sdc
     return "\n".join(lines) + "\n"
 
 
