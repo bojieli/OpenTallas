@@ -1,0 +1,20 @@
+{
+ "tool": "scratch decode_consistency.py (default expert path, as the previous record) on the fixed HBM deployment",
+ "taps": {
+  "L00.attn_norm": 1.0,
+  "L00.ffn_norm": 1.0,
+  "L01.attn_norm": 1.0,
+  "L01.ffn_norm": 0.999999,
+  "L02.attn_norm": 0.999974,
+  "L02.ffn_norm": 0.999915,
+  "L38.ffn_norm": 0.983086,
+  "L39.attn_norm": 0.983476,
+  "L39.ffn_norm": 0.981061,
+  "L40.attn_norm": 0.981792
+ },
+ "raw": [
+  "decode tokens [983, 344, 1902] prefill14 tokens [11300] taps 81 81",
+  "first non-identical {'tap': 'L01.ffn_norm', 'identical': False, 'cosine': 0.999999}",
+  "min cosine 0.981061"
+ ]
+}

@@ -47,12 +47,19 @@ def test_iso_area_pairs_never_give_the_array_more_silicon(env):
 def test_designs_are_the_analytical_models_own(env):
     """The sizing is run_roofline_studies' code: regenerated points equal the published artifact."""
     published = json.loads(D.V41_POINTS.read_text())
-    for kind, n in (("wafer", 2), ("wafer", 12), ("array", 188), ("array", 113)):
+    emitted = sorted({(q["design"].rsplit("-x", 1)[0].endswith("wafer-hybrid"), int(q["design"].rsplit("-x", 1)[1]))
+                      for q in published if "HBMKV-wafer-hybrid-x" in q["design"] or
+                      "HBMKV-array-hw-hybrid-x" in q["design"] if q["design"].rsplit("-x", 1)[1].isdigit()})
+    checked = 0
+    for is_wafer, n in [e for e in emitted if e[0]][:2] + [e for e in emitted if not e[0]][:2]:
+        kind = "wafer" if is_wafer else "array"
         _s, d, pts = S.analytical_design(env["renv"], kind, n)
         pub = {p["batch_size"]: p for p in published if p["design"] == d["name"]}
         assert pub, d["name"]
+        checked += 1
         for q in pts:
             assert q["per_user_tokens_s"] == pytest.approx(pub[q["batch_size"]]["per_user_tokens_s"], rel=1e-9)
+    assert checked == 4
 
 
 def test_a_single_wafer_cannot_hold_the_weights_and_two_can(env):

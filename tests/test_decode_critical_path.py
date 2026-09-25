@@ -23,9 +23,7 @@ def env():
     links = D.link_consts(tech)
     clock, _ = D.routed_clock()
     p = replace(D.Params(), clock_hz=clock)
-    points = json.loads(D.V41_POINTS.read_text())
-    designs = {d["name"]: d for d in json.loads(D.V41_ANALYTICAL.read_text())["designs"]
-               if d["name"] in (D.ARRAY_DESIGN, D.WAFER_DESIGN)}
+    points, designs = D.v41_study_rows()
     return dict(links=links, clock=clock, p=p, points=points, designs=designs, c=D.v41_shape())
 
 

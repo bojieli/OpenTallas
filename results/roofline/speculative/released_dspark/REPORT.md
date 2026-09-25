@@ -7,17 +7,17 @@
 
 ## What this layer says
 
-1. **Every term the speculative arithmetic needs is already in the published artifact, exactly.** 98,262 feasible points across 22 studies were rebuilt from their own five critical-path terms and every one reproduced its published step time to 1e-9 relative. Nothing here re-ran the machine model, and the layer is additive by construction rather than by promise.
-2. **The headline is a break-even, not a speedup.** `tau* = T_cycle / step_time_s`, and `tau <= gamma+1` always. Of 137,883 (point, draft-placement) pairs where this profile's drafter applies, 55,764 (40.4%) cannot be sped up by speculation at ANY acceptance rate, at any block size on the ladder, even charging the drafter no KV traffic at all.
+1. **Every term the speculative arithmetic needs is already in the published artifact, exactly.** 183,227 feasible points across 52 studies were rebuilt from their own five critical-path terms and every one reproduced its published step time to 1e-9 relative. Nothing here re-ran the machine model, and the layer is additive by construction rather than by promise.
+2. **The headline is a break-even, not a speedup.** `tau* = T_cycle / step_time_s`, and `tau <= gamma+1` always. Of 245,677 (point, draft-placement) pairs where this profile's drafter applies, 86,976 (35.4%) cannot be sped up by speculation at ANY acceptance rate, at any block size on the ladder, even charging the drafter no KV traffic at all.
 3. **The ROM-versus-GPU ratio under speculation carries no acceptance rate.** It is `T_cycle(GPU) / T_cycle(ROM)`: `tau` is a property of the model and its drafter, not of the machine, so it is identical on both sides and cancels. Every movement this report shows is a machine effect and nothing else, which is why it can be published without inventing an acceptance rate.
-4. **The ratio moves, and it mostly compresses.** Across 429 model-context-batch-class rows, 407 move the ROM-versus-GPU per-user ratio DOWN under speculation and 22 move it UP, spanning 0.006x to 3.598x. The ROM advantage compresses on most operating points.
-5. **At batch 1 the two extremes are opposite in sign, and they are the result.** DeepSeek-V4.1-Flash on `array` silicon goes from 3.87x to 0.02x -- a 0.006x movement -- while DeepSeek-V4-Pro-0813 on `array` silicon goes from 6.40x to 4.99x, a 0.780x movement. A layer that multiplied both sides by `tau` would have reported neither.
-6. **A moving ratio is not a win for either side, and the report says so on every table.** At the most favourable sourced acceptance (5.00) speculation is worth having on 61 of 431 ROM class rows and 382 of 431 GPU rows; everywhere else the design runs SLOWER with a drafter than without one. Where both sides lose, a rising ratio means only that the comparator lost more.
+4. **The ratio moves, and it mostly compresses.** Across 775 model-context-batch-class rows, 775 move the ROM-versus-GPU per-user ratio DOWN under speculation and 0 move it UP, spanning 0.016x to 0.920x. The ROM advantage compresses on most operating points.
+5. **At batch 1 the two extremes are opposite in sign, and they are the result.** DeepSeek-V4.1-Flash on `array` silicon goes from 7.10x to 0.18x -- a 0.025x movement -- while MiMo-V2.6-Flash on `wafer` silicon goes from 16.28x to 7.33x, a 0.451x movement. A layer that multiplied both sides by `tau` would have reported neither.
+6. **A moving ratio is not a win for either side, and the report says so on every table.** At the most favourable sourced acceptance (5.00) speculation is worth having on 14 of 777 ROM class rows and 757 of 777 GPU rows; everywhere else the design runs SLOWER with a drafter than without one. Where both sides lose, a rising ratio means only that the comparator lost more.
 7. **Compute is never a gain and always a loss.** A verification pass over `n` positions charges `n` times the arithmetic exactly, so per accepted token compute costs `(n/tau) >= 1` times what it did. A compute-bound design cannot be sped up by speculation at any acceptance rate; it can only be slowed. That is where the recommended ROM designs live, because the sizing rule gives them just enough compute for one token per sweep.
 8. **On a mask-ROM machine the draft pass costs a full array sweep, and that is the load-bearing assumption of the whole ROM verdict.** `stored/peak` is a technology constant in `src/opentallas/roofline.py`, so a pass reading only the drafter's region takes as long as sweeping the entire array. The alternative -- holding the drafter in the KV store -- is priced beside it on every ROM row and has NOT been costed in silicon area.
-9. **The mask-ROM designs are already storing this drafter, and already sweeping it on every ordinary token.** `_rom_stored_bytes` stores the whole released checkpoint, and the checkpoint ships the draft module for DeepSeek-V4-Flash-0731, DeepSeek-V4-Pro-0813, DeepSeek-V4.1-Flash, DeepSeek-V4.1-Flash-engram-hbm, DeepSeek-V4.1-Flash-engram-host. So the storage inflation is 1.000x, the extra array requirement is zero, and the autoregressive ROM baseline in the published study is ALREADY paying for a drafter it does not use. The HBM comparators are not: their engaged bytes exclude the draft categories entirely.
-10. **This profile does not apply to Qwen3-8B.** Its released checkpoint carries no draft weights at all, and transplanting a drafter that was never trained for it would be inventing a model. It is reported as not applicable rather than modelled.
-11. **This drafter's SEQUENTIAL step is what it costs on a mask-ROM machine, and it costs more than the drafter's own size.** The bias is applied once per draft token with no transformer re-run, so on a bandwidth machine it moves a table and is nearly free -- but under the locality rule every pass that touches the array takes the full-array sweep time whatever it reads, so `gamma` sequential applications cost `gamma` full sweeps. The draft pass is 11% to 99% of the whole speculative cycle on the ROM designs this report quotes (median 83%), almost all of it those sweeps. A block-diffusion drafter has no such term at all, which is the single largest structural difference between the two profiles on this silicon.
+9. **The mask-ROM designs are already storing this drafter, and already sweeping it on every ordinary token.** `_rom_stored_bytes` stores the whole released checkpoint, and the checkpoint ships the draft module for DeepSeek-V4-Flash-0731, DeepSeek-V4-Pro-0813, DeepSeek-V4.1-Flash, DeepSeek-V4.1-Flash-engram-hbm, DeepSeek-V4.1-Flash-engram-host, MiMo-V2.6-Flash, MiMo-V2.6-Pro. So the storage inflation is 1.000x, the extra array requirement is zero, and the autoregressive ROM baseline in the published study is ALREADY paying for a drafter it does not use. The HBM comparators are not: their engaged bytes exclude the draft categories entirely.
+10. **This profile does not apply to Kimi-K3, Qwen3-8B.** Their released checkpoints carry no draft weights at all, and transplanting a drafter that was never trained for them would be inventing a model. They are reported as not applicable rather than modelled.
+11. **This drafter's SEQUENTIAL step is what it costs on a mask-ROM machine, and it costs more than the drafter's own size.** The bias is applied once per draft token with no transformer re-run, so on a bandwidth machine it moves a table and is nearly free -- but under the locality rule every pass that touches the array takes the full-array sweep time whatever it reads, so `gamma` sequential applications cost `gamma` full sweeps. The draft pass is 7% to 99% of the whole speculative cycle on the ROM designs this report quotes (median 89%), almost all of it those sweeps. A block-diffusion drafter has no such term at all, which is the single largest structural difference between the two profiles on this silicon.
 12. **Every number here is conditional on inputs nobody has measured.** The drafter's own KV traffic is unsourced for both drafters and is published as a band on every row; the compute efficiency derate that decides which designs are compute-bound is graded `assumed` at 0.55; and no speculative decoder has ever been executed in this repository.
 
 ## What this layer is, and what it is not
@@ -82,30 +82,60 @@ Before any speculative arithmetic runs, every feasible point in every study is r
 
 | study | feasible points checked | failures |
 | --- | ---: | ---: |
-| `n5_vs_b200-deepseek-v41-flash` | 5,220 | 0 |
-| `n6_vs_a100-deepseek-v41-flash` | 4,110 | 0 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | 5,761 | 0 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | 4,443 | 0 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | 5,112 | 0 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | 4,196 | 0 |
-| `n5_vs_b200-flash-1m` | 2,695 | 0 |
-| `n5_vs_b200-flash-32k` | 4,246 | 0 |
-| `n5_vs_b200-flash-8k` | 4,372 | 0 |
-| `n5_vs_b200-pro-200k` | 4,339 | 0 |
-| `n5_vs_b200-pro-32k` | 4,912 | 0 |
-| `n5_vs_b200-pro-8k` | 4,838 | 0 |
-| `n6_vs_a100-flash-1m` | 1,875 | 0 |
-| `n6_vs_a100-flash-32k` | 4,288 | 0 |
-| `n6_vs_a100-flash-8k` | 4,162 | 0 |
-| `n6_vs_a100-pro-200k` | 3,397 | 0 |
-| `n6_vs_a100-pro-32k` | 3,531 | 0 |
-| `n6_vs_a100-pro-8k` | 3,492 | 0 |
-| `n5_vs_b200` | 9,413 | 0 |
-| `n6_vs_a100` | 7,820 | 0 |
-| `n5_vs_b200-quantised_variant` | 3,150 | 0 |
-| `n6_vs_a100-quantised_variant` | 2,890 | 0 |
+| `n5_vs_b200-deepseek-v41-flash` | 4,944 | 0 |
+| `n6_vs_a100-deepseek-v41-flash` | 3,732 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | 4,924 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | 3,743 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | 4,930 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | 3,770 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | 5,965 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | 4,718 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | 5,789 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | 4,460 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | 5,908 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | 4,648 | 0 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | 5,160 | 0 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | 4,364 | 0 |
+| `n5_vs_b200-kimi-k3` | 3,331 | 0 |
+| `n6_vs_a100-kimi-k3` | 1,744 | 0 |
+| `n5_vs_b200-kimi-k3-1m` | 1,611 | 0 |
+| `n6_vs_a100-kimi-k3-1m` | 1,091 | 0 |
+| `n5_vs_b200-kimi-k3-8k` | 3,075 | 0 |
+| `n6_vs_a100-kimi-k3-8k` | 2,298 | 0 |
+| `n5_vs_b200-mimo-v26-flash` | 2,781 | 0 |
+| `n6_vs_a100-mimo-v26-flash` | 2,451 | 0 |
+| `n5_vs_b200-mimo-v26-flash-1m` | 1,634 | 0 |
+| `n6_vs_a100-mimo-v26-flash-1m` | 1,309 | 0 |
+| `n5_vs_b200-mimo-v26-flash-8k` | 4,354 | 0 |
+| `n6_vs_a100-mimo-v26-flash-8k` | 4,556 | 0 |
+| `n5_vs_b200-mimo-v26-pro` | 1,523 | 0 |
+| `n6_vs_a100-mimo-v26-pro` | 1,209 | 0 |
+| `n5_vs_b200-mimo-v26-pro-1m` | 1,789 | 0 |
+| `n6_vs_a100-mimo-v26-pro-1m` | 1,319 | 0 |
+| `n5_vs_b200-mimo-v26-pro-8k` | 4,908 | 0 |
+| `n6_vs_a100-mimo-v26-pro-8k` | 3,783 | 0 |
+| `n5_vs_b200-qwen3-8b-1m` | 762 | 0 |
+| `n6_vs_a100-qwen3-8b-1m` | 597 | 0 |
+| `n5_vs_b200-qwen3-8b-200k` | 1,110 | 0 |
+| `n6_vs_a100-qwen3-8b-200k` | 937 | 0 |
+| `n5_vs_b200-flash-1m` | 2,479 | 0 |
+| `n5_vs_b200-flash-32k` | 4,582 | 0 |
+| `n5_vs_b200-flash-8k` | 4,540 | 0 |
+| `n5_vs_b200-pro-200k` | 4,423 | 0 |
+| `n5_vs_b200-pro-32k` | 4,388 | 0 |
+| `n5_vs_b200-pro-8k` | 4,328 | 0 |
+| `n6_vs_a100-flash-1m` | 1,801 | 0 |
+| `n6_vs_a100-flash-32k` | 4,468 | 0 |
+| `n6_vs_a100-flash-8k` | 4,418 | 0 |
+| `n6_vs_a100-pro-200k` | 3,339 | 0 |
+| `n6_vs_a100-pro-32k` | 3,365 | 0 |
+| `n6_vs_a100-pro-8k` | 3,614 | 0 |
+| `n5_vs_b200` | 8,991 | 0 |
+| `n6_vs_a100` | 7,618 | 0 |
+| `n5_vs_b200-quantised_variant` | 2,942 | 0 |
+| `n6_vs_a100-quantised_variant` | 2,704 | 0 |
 
-The identity checked is: `(max(memory, compute)/stage_balance + link_latency + layer_fixed_latency) x thermal_scale == step_time_s, with memory assembled by designs[].shared_memory_path and the compute-in-ROM fusion rule, and the weight and link terms independently rebuilt from the model profile and the technology file`.
+The identity checked is: `max(max(memory, compute)/stage_balance, serial path) x thermal_scale == step_time_s, with memory assembled by designs[].shared_memory_path and the compute-in-ROM fusion rule, and the serial path -- link_latency + layer_fixed_latency + the sweep on the path -- independently rebuilt from the model profile, the technology file and the token's operator graph (opentallas.critical_path)`.
 
 ## Headline: where speculation cannot pay at any acceptance rate
 
@@ -113,263 +143,574 @@ Counted at the LOW end of the unsourced drafter-KV band, which is the most favou
 
 | study | model | family | draft placement | binds on (autoregressive) | points | cannot pay at any gamma | tau* min | tau* median | tau* max |
 | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 1,110 | 134 | 1.33 | 3.24 | 8.58 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `thermal` | 340 | 0 | 1.17 | 3.39 | 4.83 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 730 | 0 | 1.36 | 2.29 | 5.05 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 1,030 | 562 | 5.29 | 8.19 | 25.88 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 78 | 72 | 2.25 | 19.90 | 26.22 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 1,232 | 143 | 1.11 | 3.01 | 9.03 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 700 | 159 | 1.72 | 5.96 | 16.59 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 1,030 | 969 | 6.29 | 66.15 | 290.53 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 78 | 72 | 4.44 | 62.65 | 71.22 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 1,232 | 447 | 1.37 | 6.15 | 41.86 |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 700 | 605 | 4.85 | 15.74 | 307.62 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `compute` | 1 | 1 | 8.23 | 8.23 | 8.23 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 360 | 110 | 1.77 | 6.46 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 959 | 0 | 1.27 | 2.47 | 6.69 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 993 | 709 | 5.41 | 8.66 | 29.34 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 78 | 49 | 1.30 | 19.47 | 23.25 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 1,174 | 123 | 1.13 | 3.00 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 545 | 185 | 2.07 | 7.62 | 22.92 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 993 | 922 | 6.08 | 61.61 | 294.07 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 78 | 52 | 2.48 | 53.00 | 142.81 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 1,174 | 429 | 1.48 | 6.43 | 25.49 |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 545 | 493 | 5.06 | 15.65 | 308.37 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,299 | 155 | 1.33 | 3.12 | 8.58 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `thermal` | 380 | 0 | 1.17 | 3.39 | 4.83 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 791 | 0 | 1.36 | 2.30 | 5.90 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 1,026 | 551 | 4.94 | 8.18 | 21.66 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 23 | 1 | 1.47 | 5.57 | 12.66 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 1,359 | 154 | 1.07 | 2.63 | 8.58 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 883 | 165 | 1.05 | 5.56 | 17.87 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 1,026 | 968 | 6.07 | 43.68 | 185.80 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 23 | 4 | 2.81 | 7.09 | 28.84 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 1,359 | 479 | 1.17 | 6.01 | 41.13 |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 883 | 787 | 5.06 | 16.67 | 188.95 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `compute` | 3 | 3 | 8.21 | 8.21 | 8.23 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 427 | 130 | 1.77 | 6.53 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 1,130 | 0 | 1.27 | 2.50 | 6.69 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 855 | 592 | 5.52 | 8.62 | 11.64 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 152 | 74 | 1.07 | 10.44 | 30.99 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 1,249 | 132 | 1.07 | 2.80 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 627 | 159 | 1.05 | 6.91 | 26.22 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 855 | 823 | 6.99 | 58.15 | 187.06 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 152 | 77 | 1.76 | 11.58 | 144.41 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 1,249 | 430 | 1.19 | 6.33 | 24.22 |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 627 | 575 | 5.06 | 19.85 | 189.65 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 864 | 106 | 1.33 | 3.75 | 8.58 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `thermal` | 300 | 0 | 1.17 | 3.39 | 4.83 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 716 | 0 | 1.36 | 2.40 | 5.91 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 1,028 | 600 | 4.94 | 8.21 | 25.22 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `kv_read` | 85 | 67 | 1.38 | 19.30 | 25.88 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 1,322 | 154 | 1.10 | 3.02 | 8.98 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 797 | 175 | 1.90 | 5.56 | 17.87 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 1,028 | 964 | 6.07 | 38.25 | 177.59 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `kv_read` | 85 | 69 | 2.69 | 50.23 | 70.27 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 1,322 | 485 | 1.26 | 6.29 | 37.78 |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 797 | 712 | 4.85 | 16.75 | 187.23 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `compute` | 5 | 5 | 8.21 | 8.21 | 8.25 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 362 | 111 | 1.77 | 6.33 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 953 | 0 | 1.27 | 2.52 | 6.69 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 823 | 601 | 5.52 | 8.81 | 25.98 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `kv_read` | 212 | 134 | 1.07 | 19.20 | 30.99 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 1,248 | 132 | 1.13 | 3.06 | 8.58 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 593 | 178 | 2.00 | 6.94 | 26.22 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 823 | 791 | 6.99 | 55.83 | 180.26 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `kv_read` | 212 | 137 | 1.76 | 41.33 | 144.45 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 1,248 | 427 | 1.32 | 6.35 | 24.12 |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 593 | 546 | 4.85 | 19.85 | 187.26 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `kv_read` | 100 | 0 | 1.47 | 2.49 | 4.12 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 833 | 26 | 1.17 | 2.08 | 8.49 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 253 | 0 | 1.29 | 2.94 | 6.25 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 393 | 0 | 1.28 | 2.09 | 3.40 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 188 | 95 | 5.59 | 8.19 | 9.33 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 58 | 0 | 1.07 | 2.93 | 178.69 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 492 | 33 | 1.09 | 2.00 | 108.75 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `thermal` | 35 | 0 | 1.25 | 3.87 | 4.94 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 343 | 47 | 1.80 | 3.50 | 8.83 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 188 | 182 | 7.79 | 31.61 | 120.46 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 58 | 8 | 1.08 | 4.35 | 355.68 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 492 | 101 | 1.09 | 4.15 | 212.97 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `thermal` | 35 | 21 | 1.37 | 13.49 | 65.51 |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 343 | 334 | 7.36 | 20.50 | 121.08 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 804 | 94 | 1.29 | 2.59 | 8.53 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 250 | 0 | 1.23 | 3.17 | 4.34 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 476 | 0 | 1.29 | 2.31 | 5.83 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 904 | 692 | 5.43 | 8.58 | 39.11 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 86 | 63 | 1.14 | 32.66 | 39.22 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 1,127 | 111 | 1.10 | 2.76 | 129.60 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `thermal` | 2 | 0 | 5.88 | 6.20 | 6.20 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 597 | 146 | 1.63 | 5.50 | 221.88 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 904 | 841 | 5.40 | 31.01 | 110.92 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 86 | 63 | 2.09 | 45.75 | 104.23 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 1,127 | 318 | 1.17 | 5.85 | 254.72 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `thermal` | 2 | 2 | 11.15 | 11.79 | 11.79 |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 597 | 550 | 5.20 | 22.49 | 442.63 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 4 | 4 | 8.49 | 8.50 | 8.50 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 803 | 124 | 1.29 | 2.60 | 8.53 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 264 | 0 | 1.23 | 3.17 | 4.63 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 509 | 0 | 1.29 | 2.34 | 6.55 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 968 | 736 | 5.32 | 8.61 | 81.70 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 72 | 68 | 2.56 | 79.09 | 84.99 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 1,153 | 136 | 1.10 | 2.91 | 129.60 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 599 | 160 | 1.63 | 5.45 | 252.87 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 968 | 900 | 5.29 | 32.72 | 113.67 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 72 | 66 | 3.79 | 53.39 | 169.76 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 1,153 | 322 | 1.17 | 5.97 | 254.72 |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 599 | 549 | 5.27 | 22.22 | 505.63 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 788 | 93 | 1.46 | 4.63 | 8.37 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 284 | 0 | 1.55 | 3.27 | 4.76 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 825 | 0 | 1.37 | 2.46 | 4.30 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 796 | 723 | 5.25 | 8.94 | 20.42 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 71 | 41 | 1.22 | 14.64 | 19.31 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 937 | 124 | 1.12 | 3.49 | 8.38 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `thermal` | 5 | 0 | 4.32 | 4.33 | 4.43 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 633 | 248 | 1.90 | 7.37 | 13.07 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 796 | 778 | 6.15 | 39.04 | 174.24 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 71 | 46 | 1.70 | 59.81 | 126.21 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 937 | 322 | 1.21 | 6.18 | 29.24 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `thermal` | 5 | 0 | 8.45 | 8.48 | 8.67 |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 633 | 543 | 6.29 | 14.27 | 181.14 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 889 | 121 | 1.46 | 4.96 | 8.38 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 321 | 0 | 1.22 | 3.29 | 4.83 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 930 | 0 | 1.38 | 2.50 | 6.21 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 913 | 810 | 5.18 | 9.17 | 62.59 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 45 | 32 | 2.47 | 55.63 | 61.80 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 1,100 | 149 | 1.12 | 3.49 | 16.95 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 714 | 261 | 1.91 | 7.51 | 26.56 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 913 | 866 | 5.95 | 43.21 | 174.74 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 45 | 32 | 4.60 | 82.93 | 92.59 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 1,100 | 327 | 1.40 | 5.97 | 29.04 |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 714 | 620 | 4.77 | 14.61 | 179.58 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 2 | 2 | 8.35 | 8.35 | 8.35 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 851 | 116 | 1.46 | 4.98 | 8.38 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 310 | 0 | 1.25 | 3.29 | 4.83 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 897 | 0 | 1.38 | 2.50 | 4.36 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 893 | 789 | 5.15 | 9.18 | 116.48 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 44 | 40 | 4.61 | 107.85 | 116.04 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 1,098 | 155 | 1.11 | 3.64 | 46.72 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 743 | 291 | 1.91 | 7.52 | 52.35 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 893 | 846 | 5.90 | 42.41 | 175.23 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 44 | 43 | 7.87 | 45.76 | 52.84 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 1,098 | 325 | 1.39 | 5.97 | 29.01 |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 743 | 643 | 4.77 | 14.27 | 179.35 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `kv_read` | 22 | 0 | 4.09 | 4.78 | 6.69 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 256 | 30 | 1.64 | 4.85 | 8.53 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 745 | 0 | 1.12 | 2.72 | 11.77 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 78 | 41 | 7.36 | 8.09 | 8.98 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 179 | 2 | 1.08 | 3.89 | 112.78 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 363 | 17 | 1.09 | 1.85 | 11.66 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 232 | 47 | 2.03 | 4.51 | 8.91 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 78 | 78 | 16.41 | 32.46 | 110.32 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 179 | 86 | 1.05 | 8.50 | 224.48 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 363 | 52 | 1.09 | 3.25 | 47.92 |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 232 | 223 | 7.94 | 18.11 | 122.94 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 21 | 17 | 7.54 | 8.41 | 8.51 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 381 | 117 | 1.65 | 5.96 | 8.54 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 918 | 0 | 1.19 | 2.74 | 7.03 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 843 | 785 | 5.62 | 10.03 | 39.83 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 208 | 124 | 1.09 | 30.96 | 120.94 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 1,248 | 128 | 1.14 | 3.10 | 71.25 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 669 | 243 | 2.13 | 7.26 | 33.80 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 843 | 787 | 6.88 | 36.33 | 117.14 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 208 | 136 | 1.56 | 37.90 | 241.21 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 1,248 | 249 | 1.20 | 5.83 | 137.77 |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 669 | 619 | 5.20 | 19.14 | 118.83 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 19 | 19 | 8.39 | 8.44 | 8.56 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 348 | 106 | 1.65 | 5.96 | 8.54 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 863 | 0 | 1.19 | 2.75 | 7.63 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 899 | 821 | 5.52 | 10.13 | 82.89 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 101 | 79 | 1.64 | 73.89 | 146.60 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 1,246 | 146 | 1.14 | 3.48 | 126.55 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 686 | 268 | 2.13 | 7.57 | 44.59 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 899 | 823 | 5.50 | 37.65 | 115.56 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 101 | 78 | 2.56 | 48.59 | 293.04 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 1,246 | 252 | 1.20 | 5.80 | 248.50 |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 686 | 636 | 5.27 | 19.48 | 118.83 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 23 | 12 | 7.00 | 8.10 | 8.22 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 305 | 80 | 1.99 | 6.16 | 8.38 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 891 | 0 | 1.21 | 3.05 | 6.51 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 754 | 684 | 5.23 | 9.86 | 20.44 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 71 | 38 | 1.30 | 14.39 | 20.54 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 890 | 114 | 1.17 | 3.68 | 8.39 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 463 | 193 | 2.04 | 7.80 | 14.84 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 754 | 734 | 6.40 | 41.70 | 157.60 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 71 | 38 | 1.41 | 46.36 | 129.10 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 890 | 316 | 1.20 | 6.43 | 19.81 |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 463 | 412 | 6.03 | 14.50 | 22.98 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 22 | 20 | 7.78 | 8.13 | 8.35 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 310 | 85 | 2.00 | 6.23 | 8.38 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 907 | 0 | 1.23 | 3.06 | 7.61 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 880 | 784 | 5.22 | 10.40 | 62.82 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 40 | 26 | 1.54 | 56.21 | 63.30 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 990 | 121 | 1.18 | 3.70 | 11.77 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 382 | 182 | 2.04 | 8.02 | 37.43 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 880 | 835 | 5.69 | 50.59 | 176.24 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 40 | 27 | 2.55 | 81.75 | 94.27 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 990 | 331 | 1.53 | 6.28 | 19.96 |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 382 | 351 | 4.77 | 15.30 | 182.18 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 24 | 23 | 7.82 | 8.17 | 8.37 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 294 | 80 | 2.00 | 6.22 | 8.38 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 882 | 0 | 1.23 | 3.05 | 7.79 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 833 | 739 | 5.16 | 10.35 | 116.52 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 53 | 38 | 2.68 | 107.59 | 116.76 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 984 | 136 | 1.18 | 3.88 | 33.36 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 422 | 206 | 2.04 | 8.19 | 49.56 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 833 | 790 | 5.86 | 40.12 | 175.88 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 53 | 38 | 4.68 | 46.00 | 53.01 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 984 | 319 | 1.52 | 6.16 | 19.94 |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 422 | 385 | 4.77 | 15.30 | 181.91 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `kv_read` | 13 | 0 | 2.45 | 3.40 | 4.44 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 806 | 48 | 1.29 | 2.33 | 8.51 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 227 | 0 | 1.23 | 3.12 | 4.21 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 387 | 0 | 1.29 | 2.25 | 3.32 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 629 | 438 | 6.30 | 8.55 | 14.53 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 95 | 38 | 1.07 | 8.58 | 186.49 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 964 | 106 | 1.10 | 2.28 | 109.89 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `thermal` | 22 | 4 | 1.66 | 7.65 | 9.80 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 566 | 91 | 1.63 | 4.71 | 14.82 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 629 | 616 | 7.08 | 58.98 | 115.01 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 95 | 52 | 1.26 | 15.10 | 371.42 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 964 | 308 | 1.14 | 5.82 | 215.41 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `thermal` | 22 | 14 | 3.13 | 14.39 | 38.57 |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 566 | 531 | 5.43 | 22.97 | 118.83 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `kv_read` | 7 | 0 | 3.18 | 3.32 | 3.70 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 633 | 37 | 1.27 | 3.56 | 8.36 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 250 | 0 | 1.48 | 3.19 | 6.41 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 722 | 0 | 1.20 | 2.38 | 5.21 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 144 | 137 | 5.17 | 8.87 | 10.52 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 53 | 10 | 1.22 | 5.10 | 9.13 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 357 | 22 | 1.07 | 2.04 | 8.38 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `thermal` | 4 | 0 | 1.74 | 3.35 | 3.39 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 276 | 86 | 1.72 | 5.01 | 8.46 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 144 | 144 | 8.55 | 68.89 | 150.95 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 53 | 30 | 1.26 | 11.02 | 148.33 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 357 | 79 | 1.09 | 3.78 | 43.75 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `thermal` | 4 | 0 | 3.45 | 7.51 | 7.55 |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 276 | 259 | 6.16 | 13.83 | 180.06 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 48 | 14 | 5.83 | 7.19 | 8.40 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 336 | 76 | 1.65 | 5.17 | 8.54 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 950 | 0 | 1.19 | 2.76 | 5.91 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 541 | 504 | 6.41 | 9.99 | 14.57 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 146 | 29 | 1.09 | 7.96 | 118.46 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 924 | 93 | 1.14 | 2.44 | 11.91 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 497 | 117 | 2.09 | 6.35 | 11.94 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 541 | 520 | 7.29 | 57.10 | 116.70 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 146 | 82 | 1.15 | 10.09 | 235.86 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 924 | 211 | 1.13 | 5.89 | 21.37 |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 497 | 475 | 5.98 | 59.05 | 119.47 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 4 | 0 | 5.32 | 5.39 | 6.47 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 242 | 45 | 1.98 | 5.88 | 8.38 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 721 | 10 | 1.08 | 3.00 | 12.69 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 71 | 69 | 5.36 | 8.62 | 10.71 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 64 | 1 | 1.31 | 3.86 | 10.44 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 208 | 0 | 1.08 | 1.95 | 4.39 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 92 | 25 | 2.04 | 7.52 | 8.36 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 71 | 71 | 10.17 | 57.16 | 118.19 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 64 | 34 | 1.16 | 9.49 | 137.62 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 208 | 35 | 1.08 | 2.67 | 49.87 |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 92 | 90 | 8.15 | 15.20 | 23.00 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 574 | 0 | 1.15 | 1.46 | 5.88 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 1,075 | 412 | 1.16 | 6.93 | 65.78 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `thermal` | 64 | 0 | 1.17 | 2.41 | 4.59 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 407 | 2 | 1.91 | 2.67 | 22.66 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 807 | 229 | 5.00 | 7.52 | 20.85 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 48 | 48 | 17.26 | 18.60 | 20.81 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 723 | 81 | 1.54 | 4.56 | 11.27 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 837 | 105 | 1.55 | 2.96 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 409 | 99 | 2.01 | 5.99 | 11.95 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 807 | 807 | 8.18 | 55.68 | 181.19 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 48 | 48 | 13.99 | 54.63 | 64.29 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 723 | 401 | 2.54 | 8.19 | 132.00 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 837 | 315 | 1.70 | 7.19 | 67.37 |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 409 | 373 | 6.88 | 16.40 | 277.26 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `compute` | 1 | 1 | 8.17 | 8.17 | 8.17 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 762 | 245 | 1.32 | 4.87 | 65.77 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 557 | 1 | 1.35 | 2.72 | 22.17 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 737 | 338 | 5.12 | 8.28 | 22.25 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 46 | 42 | 4.49 | 18.85 | 20.31 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 618 | 77 | 1.55 | 4.94 | 11.46 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 714 | 95 | 1.57 | 3.13 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 297 | 107 | 2.08 | 7.27 | 18.13 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 737 | 737 | 8.16 | 52.49 | 207.88 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 46 | 43 | 5.70 | 55.39 | 125.25 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 618 | 314 | 2.12 | 8.08 | 119.51 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 714 | 206 | 1.76 | 6.46 | 40.73 |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 297 | 274 | 6.27 | 16.22 | 275.79 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 601 | 0 | 1.15 | 1.45 | 5.79 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 1,103 | 399 | 1.16 | 6.76 | 65.78 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `thermal` | 61 | 0 | 1.19 | 2.46 | 4.37 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 407 | 0 | 2.02 | 2.65 | 6.89 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 745 | 147 | 5.08 | 7.47 | 9.91 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 126 | 36 | 3.20 | 7.74 | 9.58 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 658 | 71 | 1.56 | 4.09 | 8.29 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 857 | 105 | 1.48 | 2.73 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 366 | 67 | 1.88 | 6.08 | 9.16 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 745 | 745 | 8.18 | 44.81 | 184.69 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 126 | 123 | 4.37 | 69.18 | 188.58 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 658 | 363 | 2.57 | 8.19 | 111.18 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 857 | 313 | 1.70 | 6.99 | 65.86 |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 366 | 327 | 6.20 | 16.09 | 263.83 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `compute` | 2 | 0 | 6.71 | 6.72 | 6.72 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 811 | 251 | 1.32 | 4.56 | 65.72 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 574 | 0 | 1.64 | 2.67 | 12.16 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 683 | 214 | 4.86 | 8.15 | 10.56 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 125 | 8 | 2.57 | 7.47 | 10.28 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 531 | 57 | 1.57 | 4.08 | 8.27 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 771 | 100 | 1.53 | 2.88 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 246 | 71 | 2.14 | 7.60 | 10.66 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 683 | 683 | 8.18 | 40.94 | 204.26 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 125 | 111 | 2.70 | 55.13 | 183.67 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 531 | 280 | 2.77 | 8.18 | 115.20 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 771 | 203 | 1.72 | 6.52 | 39.19 |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 246 | 226 | 6.84 | 16.10 | 221.43 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 554 | 0 | 1.15 | 1.47 | 5.89 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 1,032 | 399 | 1.16 | 7.02 | 65.78 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `thermal` | 62 | 0 | 1.17 | 2.43 | 4.62 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 402 | 4 | 1.72 | 2.67 | 26.39 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 792 | 216 | 4.82 | 7.46 | 84.81 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 60 | 60 | 48.37 | 89.22 | 92.55 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 722 | 124 | 1.54 | 4.81 | 30.75 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 861 | 135 | 1.55 | 3.26 | 43.00 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 445 | 134 | 2.01 | 6.11 | 62.70 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 792 | 792 | 8.18 | 62.29 | 190.62 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 60 | 51 | 4.59 | 17.61 | 22.02 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 722 | 382 | 2.54 | 8.17 | 135.33 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 861 | 295 | 1.68 | 6.87 | 67.79 |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 445 | 406 | 6.87 | 16.39 | 281.52 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `compute` | 2 | 2 | 8.14 | 8.31 | 8.31 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `link_latency` | 707 | 224 | 1.32 | 4.76 | 65.74 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `gpu` | `in_hbm` | `weight_read` | 521 | 1 | 1.36 | 2.72 | 21.63 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `compute` | 776 | 355 | 5.27 | 8.26 | 90.44 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `kv_read` | 48 | 48 | 85.55 | 89.84 | 93.39 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 631 | 116 | 1.55 | 5.80 | 30.75 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `link_latency` | 771 | 127 | 1.57 | 3.40 | 37.08 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_kv_store` | `weight_read` | 314 | 117 | 2.08 | 7.59 | 53.12 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `compute` | 776 | 776 | 8.16 | 56.24 | 209.73 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `kv_read` | 48 | 46 | 5.97 | 17.87 | 22.91 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 631 | 307 | 2.76 | 8.01 | 120.78 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `link_latency` | 771 | 217 | 1.74 | 6.49 | 40.85 |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `rom` | `in_rom` | `weight_read` | 314 | 294 | 6.78 | 16.11 | 281.43 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `layer_fixed_latency` | 705 | 0 | 1.15 | 1.45 | 6.63 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,434 | 536 | 1.16 | 6.70 | 65.79 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `thermal` | 76 | 0 | 1.17 | 2.64 | 4.59 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 525 | 4 | 1.91 | 2.67 | 22.66 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 830 | 216 | 4.87 | 7.45 | 15.62 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 5 | 2 | 5.88 | 7.78 | 11.96 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 841 | 91 | 1.48 | 3.99 | 10.26 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 924 | 120 | 1.47 | 2.60 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 625 | 123 | 1.11 | 5.58 | 14.24 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 830 | 830 | 8.16 | 31.38 | 129.85 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 5 | 3 | 7.33 | 8.80 | 26.58 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 841 | 431 | 1.83 | 8.17 | 75.48 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 924 | 276 | 1.58 | 6.07 | 40.91 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 625 | 581 | 5.56 | 19.02 | 180.65 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `compute` | 3 | 2 | 7.62 | 8.17 | 8.18 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,032 | 324 | 1.32 | 4.63 | 65.77 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 725 | 2 | 1.38 | 2.72 | 22.17 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 713 | 210 | 5.23 | 8.16 | 9.66 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 107 | 98 | 4.00 | 21.28 | 22.17 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 755 | 88 | 1.48 | 4.87 | 16.03 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 894 | 114 | 1.47 | 2.68 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 489 | 138 | 1.11 | 6.72 | 19.52 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 713 | 711 | 7.34 | 40.29 | 151.40 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 107 | 104 | 4.04 | 93.80 | 109.10 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 755 | 403 | 1.91 | 8.18 | 88.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 894 | 217 | 1.60 | 5.63 | 37.17 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 489 | 453 | 5.66 | 19.79 | 180.65 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `layer_fixed_latency` | 735 | 0 | 1.15 | 1.45 | 6.50 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,542 | 552 | 1.16 | 6.48 | 65.78 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `thermal` | 76 | 0 | 1.19 | 2.78 | 4.37 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 535 | 0 | 1.99 | 2.65 | 7.21 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 738 | 152 | 4.66 | 7.40 | 8.32 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 71 | 0 | 3.00 | 7.58 | 8.37 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 766 | 75 | 1.49 | 4.62 | 8.29 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 876 | 111 | 1.47 | 2.65 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 450 | 66 | 1.28 | 5.26 | 9.60 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 738 | 738 | 8.15 | 22.31 | 128.08 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 71 | 63 | 3.32 | 49.84 | 84.06 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 766 | 421 | 2.68 | 8.20 | 103.44 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 876 | 248 | 1.58 | 6.11 | 39.75 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 450 | 418 | 5.67 | 19.53 | 176.19 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `compute` | 1 | 0 | 6.71 | 6.71 | 6.71 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,049 | 316 | 1.32 | 4.27 | 65.71 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 701 | 0 | 1.52 | 2.70 | 12.27 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 727 | 211 | 5.17 | 8.12 | 9.18 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `kv_read` | 92 | 0 | 2.76 | 6.47 | 7.88 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 617 | 63 | 1.49 | 4.29 | 8.28 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 888 | 111 | 1.47 | 2.68 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 385 | 84 | 1.61 | 6.66 | 11.98 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 727 | 725 | 7.27 | 33.73 | 143.24 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `kv_read` | 92 | 66 | 2.29 | 33.72 | 127.03 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 617 | 303 | 2.68 | 8.02 | 73.59 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 888 | 207 | 1.59 | 5.55 | 36.75 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 385 | 361 | 5.46 | 17.96 | 176.52 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `layer_fixed_latency` | 657 | 0 | 1.15 | 1.45 | 6.07 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 1,381 | 516 | 1.16 | 6.64 | 65.79 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `thermal` | 71 | 0 | 1.17 | 2.66 | 4.62 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 511 | 6 | 1.72 | 2.67 | 26.39 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 842 | 235 | 4.70 | 7.49 | 15.89 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 846 | 100 | 1.48 | 4.15 | 10.50 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 936 | 120 | 1.47 | 2.63 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 664 | 129 | 1.06 | 5.38 | 16.41 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 842 | 842 | 8.16 | 35.25 | 135.06 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 846 | 438 | 2.22 | 8.17 | 75.38 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 936 | 282 | 1.58 | 6.05 | 41.23 |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 664 | 611 | 5.53 | 18.90 | 181.83 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `compute` | 3 | 3 | 8.14 | 8.18 | 8.31 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `link_latency` | 973 | 305 | 1.32 | 4.63 | 65.75 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `gpu` | `in_hbm` | `weight_read` | 694 | 2 | 1.34 | 2.73 | 21.63 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `compute` | 796 | 299 | 5.09 | 8.22 | 25.48 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `layer_fixed_latency` | 740 | 98 | 1.48 | 4.85 | 18.28 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `link_latency` | 909 | 114 | 1.47 | 2.67 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_kv_store` | `weight_read` | 533 | 153 | 1.06 | 6.62 | 22.80 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `compute` | 796 | 794 | 7.33 | 44.58 | 146.75 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `layer_fixed_latency` | 740 | 410 | 2.37 | 8.19 | 84.88 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `link_latency` | 909 | 228 | 1.60 | 5.62 | 37.29 |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `rom` | `in_rom` | `weight_read` | 533 | 494 | 5.68 | 19.92 | 181.83 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `layer_fixed_latency` | 566 | 0 | 1.16 | 1.52 | 6.63 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 910 | 373 | 1.16 | 7.50 | 65.79 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `thermal` | 65 | 0 | 1.17 | 2.25 | 4.49 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 399 | 5 | 1.87 | 2.67 | 23.43 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 832 | 262 | 4.87 | 7.61 | 18.41 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `kv_read` | 51 | 50 | 5.14 | 17.55 | 19.58 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `layer_fixed_latency` | 870 | 93 | 1.54 | 4.53 | 10.26 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 901 | 120 | 1.53 | 2.87 | 8.56 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 566 | 102 | 1.98 | 5.84 | 14.24 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 832 | 832 | 8.16 | 30.41 | 104.46 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `kv_read` | 51 | 50 | 6.67 | 45.73 | 64.61 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `layer_fixed_latency` | 870 | 419 | 2.22 | 8.09 | 75.48 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 901 | 257 | 1.63 | 6.04 | 40.91 |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 566 | 531 | 5.56 | 20.21 | 179.66 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `compute` | 5 | 4 | 7.62 | 8.18 | 8.19 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `link_latency` | 787 | 274 | 1.32 | 5.38 | 65.77 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `gpu` | `in_hbm` | `weight_read` | 648 | 3 | 1.38 | 2.68 | 16.71 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `compute` | 680 | 222 | 5.23 | 8.19 | 20.25 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `kv_read` | 151 | 142 | 4.00 | 18.64 | 22.17 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `layer_fixed_latency` | 763 | 88 | 1.54 | 5.30 | 16.03 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `link_latency` | 864 | 114 | 1.49 | 2.79 | 8.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_kv_store` | `weight_read` | 466 | 127 | 2.00 | 6.84 | 19.52 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `compute` | 680 | 678 | 7.34 | 38.82 | 121.11 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `kv_read` | 151 | 148 | 4.05 | 56.17 | 109.12 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `layer_fixed_latency` | 763 | 405 | 1.91 | 8.18 | 88.58 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `link_latency` | 864 | 207 | 1.67 | 5.59 | 37.17 |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `rom` | `in_rom` | `weight_read` | 466 | 432 | 6.27 | 19.62 | 178.60 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `kv_read` | 115 | 0 | 1.21 | 1.47 | 16.65 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 396 | 0 | 1.11 | 1.37 | 8.01 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 604 | 162 | 1.12 | 4.63 | 65.38 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `thermal` | 25 | 0 | 1.29 | 1.62 | 2.34 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `weight_read` | 209 | 0 | 1.41 | 2.27 | 7.75 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 8 | 0 | 6.92 | 7.34 | 7.36 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 198 | 0 | 1.05 | 2.28 | 6.93 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 327 | 0 | 1.56 | 4.17 | 17.46 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 464 | 31 | 1.36 | 2.08 | 10.10 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `thermal` | 303 | 0 | 1.52 | 1.96 | 3.64 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 132 | 12 | 1.80 | 5.80 | 8.07 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 8 | 8 | 22.37 | 23.87 | 24.68 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 198 | 102 | 1.16 | 8.55 | 51.06 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 327 | 88 | 2.19 | 6.80 | 35.96 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 464 | 85 | 1.48 | 4.31 | 21.88 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `thermal` | 303 | 223 | 2.35 | 13.66 | 67.21 |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 132 | 114 | 5.95 | 12.51 | 22.96 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `kv_read` | 47 | 0 | 1.25 | 1.39 | 4.38 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 94 | 0 | 1.30 | 1.50 | 1.64 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 511 | 111 | 1.22 | 3.96 | 65.23 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `weight_read` | 359 | 0 | 1.39 | 1.84 | 16.20 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 26 | 0 | 6.83 | 7.48 | 7.84 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 522 | 0 | 1.06 | 2.20 | 7.10 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 280 | 0 | 1.56 | 4.27 | 15.37 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 478 | 31 | 1.35 | 1.93 | 9.43 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 134 | 14 | 1.90 | 5.30 | 8.07 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 26 | 26 | 14.23 | 23.27 | 27.35 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 522 | 251 | 1.10 | 6.98 | 41.61 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 280 | 52 | 2.33 | 5.90 | 26.84 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 478 | 87 | 1.44 | 3.67 | 13.01 |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 134 | 112 | 6.49 | 13.13 | 22.97 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `kv_read` | 396 | 5 | 1.19 | 1.93 | 20.66 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 320 | 0 | 1.10 | 1.27 | 6.51 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 406 | 82 | 1.09 | 2.92 | 64.89 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `thermal` | 34 | 0 | 1.32 | 1.78 | 2.06 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 3 | 0 | 7.82 | 7.82 | 7.82 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 107 | 0 | 1.04 | 1.16 | 7.19 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 203 | 0 | 1.54 | 5.14 | 17.21 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 115 | 0 | 1.33 | 1.94 | 4.35 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 50 | 10 | 2.13 | 6.78 | 8.01 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 3 | 3 | 16.69 | 16.75 | 16.78 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 107 | 41 | 1.11 | 1.45 | 51.30 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 203 | 80 | 2.32 | 6.79 | 30.61 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 115 | 7 | 1.36 | 2.39 | 14.56 |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 50 | 49 | 8.18 | 14.77 | 22.99 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `kv_read` | 364 | 0 | 1.12 | 1.44 | 19.05 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 454 | 49 | 1.10 | 1.87 | 61.98 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `weight_read` | 37 | 0 | 1.72 | 3.08 | 6.53 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 39 | 2 | 5.59 | 7.96 | 8.09 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 105 | 0 | 1.03 | 1.15 | 7.78 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 127 | 0 | 1.62 | 4.39 | 15.18 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 133 | 0 | 1.32 | 2.04 | 5.04 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 50 | 10 | 2.19 | 7.08 | 8.01 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 39 | 37 | 6.93 | 13.84 | 27.55 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 105 | 41 | 1.05 | 1.31 | 33.74 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 127 | 37 | 2.52 | 5.45 | 26.40 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 133 | 3 | 1.33 | 2.62 | 11.14 |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 50 | 49 | 8.33 | 14.75 | 22.99 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `kv_read` | 18 | 0 | 2.81 | 3.73 | 4.87 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 435 | 0 | 1.11 | 1.48 | 8.54 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 597 | 248 | 1.13 | 7.43 | 65.49 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `thermal` | 35 | 0 | 1.13 | 1.19 | 1.55 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `weight_read` | 325 | 0 | 1.40 | 2.46 | 12.81 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 534 | 54 | 4.78 | 7.46 | 10.36 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 177 | 1 | 1.33 | 6.19 | 11.25 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 810 | 64 | 1.54 | 3.99 | 19.86 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 783 | 72 | 1.29 | 2.52 | 11.77 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 640 | 27 | 1.30 | 5.28 | 10.08 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 534 | 534 | 8.04 | 16.44 | 65.10 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 177 | 141 | 2.27 | 26.51 | 80.66 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 810 | 343 | 2.16 | 7.88 | 47.33 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 783 | 184 | 1.56 | 5.04 | 21.14 |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 640 | 615 | 5.27 | 21.98 | 105.32 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `compute` | 19 | 0 | 5.57 | 6.46 | 7.97 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `layer_fixed_latency` | 106 | 0 | 1.44 | 1.60 | 1.83 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `link_latency` | 605 | 236 | 1.33 | 6.36 | 65.48 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `gpu` | `in_hbm` | `weight_read` | 630 | 2 | 1.12 | 2.26 | 17.89 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `compute` | 606 | 58 | 5.21 | 7.90 | 11.23 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `kv_read` | 280 | 7 | 1.21 | 6.06 | 11.11 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `layer_fixed_latency` | 808 | 66 | 1.54 | 4.17 | 17.51 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `link_latency` | 893 | 112 | 1.35 | 2.38 | 10.02 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_kv_store` | `weight_read` | 609 | 24 | 1.70 | 6.06 | 11.22 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `compute` | 606 | 606 | 8.02 | 20.05 | 74.72 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `kv_read` | 280 | 198 | 1.64 | 17.29 | 74.54 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `layer_fixed_latency` | 808 | 315 | 2.22 | 7.60 | 56.17 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `link_latency` | 893 | 174 | 1.53 | 4.47 | 13.85 |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `rom` | `in_rom` | `weight_read` | 609 | 572 | 5.43 | 20.15 | 105.32 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `kv_read` | 65 | 0 | 1.28 | 1.61 | 2.71 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `layer_fixed_latency` | 298 | 0 | 1.12 | 1.44 | 6.18 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 523 | 125 | 1.11 | 4.66 | 64.87 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `thermal` | 17 | 0 | 1.28 | 2.59 | 2.98 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `weight_read` | 200 | 0 | 1.71 | 2.27 | 13.37 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 6 | 0 | 7.69 | 7.78 | 7.86 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 102 | 0 | 1.09 | 1.25 | 6.76 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 114 | 0 | 1.52 | 3.78 | 7.85 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 148 | 0 | 1.39 | 1.77 | 4.07 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 50 | 10 | 1.80 | 5.23 | 8.03 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 6 | 6 | 17.27 | 17.69 | 21.61 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 102 | 55 | 1.39 | 14.52 | 51.45 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 114 | 34 | 1.97 | 6.78 | 19.56 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 148 | 17 | 1.42 | 2.32 | 16.00 |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 50 | 42 | 6.67 | 14.09 | 22.97 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `kv_read` | 15 | 0 | 1.31 | 1.36 | 1.49 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 364 | 71 | 1.49 | 3.56 | 64.63 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `weight_read` | 392 | 0 | 1.19 | 1.91 | 16.33 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 18 | 0 | 7.51 | 7.87 | 8.05 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 94 | 0 | 1.11 | 1.24 | 7.70 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 86 | 0 | 1.50 | 2.87 | 6.17 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 159 | 0 | 1.37 | 1.87 | 4.90 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 81 | 12 | 1.87 | 5.68 | 8.06 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 18 | 18 | 12.02 | 18.76 | 30.98 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 94 | 47 | 1.27 | 10.82 | 32.17 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 86 | 13 | 3.02 | 5.83 | 11.50 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 159 | 8 | 1.38 | 2.37 | 11.22 |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 81 | 73 | 7.30 | 14.08 | 22.98 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `kv_read` | 349 | 0 | 1.26 | 1.95 | 14.92 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `layer_fixed_latency` | 233 | 0 | 1.11 | 1.28 | 5.72 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 708 | 98 | 1.06 | 2.78 | 62.97 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `thermal` | 22 | 0 | 1.48 | 2.06 | 2.08 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 12 | 2 | 5.23 | 7.91 | 8.16 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 90 | 0 | 1.04 | 1.06 | 6.04 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 193 | 6 | 1.55 | 5.86 | 8.12 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 130 | 0 | 1.28 | 2.01 | 4.67 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 52 | 10 | 2.03 | 7.12 | 8.01 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 12 | 8 | 5.53 | 20.05 | 31.30 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 90 | 29 | 1.17 | 1.57 | 51.31 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 193 | 95 | 2.92 | 7.97 | 18.70 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 130 | 2 | 1.29 | 2.33 | 13.10 |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 52 | 50 | 7.93 | 13.99 | 22.99 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `kv_read` | 294 | 0 | 1.15 | 1.47 | 17.03 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 407 | 45 | 1.43 | 2.00 | 58.79 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `weight_read` | 162 | 0 | 1.07 | 2.08 | 12.50 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 43 | 8 | 4.63 | 8.01 | 8.10 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 85 | 0 | 1.03 | 1.05 | 5.59 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 140 | 2 | 1.55 | 4.78 | 8.08 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 138 | 0 | 1.27 | 2.10 | 5.20 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 50 | 10 | 2.07 | 7.35 | 8.01 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 43 | 39 | 6.49 | 15.13 | 34.54 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 85 | 23 | 1.07 | 1.29 | 33.92 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 140 | 45 | 3.19 | 6.49 | 22.92 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 138 | 6 | 1.27 | 2.42 | 9.99 |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 50 | 50 | 9.36 | 14.21 | 22.99 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `kv_read` | 2 | 0 | 3.98 | 4.47 | 4.47 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `layer_fixed_latency` | 499 | 0 | 1.12 | 1.51 | 7.28 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 942 | 339 | 1.16 | 6.19 | 65.02 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `thermal` | 44 | 0 | 1.14 | 1.65 | 2.87 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `weight_read` | 453 | 3 | 1.48 | 2.43 | 21.72 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 600 | 32 | 4.82 | 7.54 | 11.38 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 172 | 4 | 1.38 | 6.32 | 11.44 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 683 | 68 | 1.59 | 4.28 | 8.14 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 932 | 76 | 1.43 | 2.83 | 8.28 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 581 | 30 | 2.07 | 5.74 | 9.61 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 600 | 600 | 8.09 | 27.18 | 86.28 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 172 | 153 | 2.48 | 29.65 | 81.32 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 683 | 369 | 2.62 | 8.08 | 52.04 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 932 | 273 | 1.68 | 6.35 | 28.44 |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 581 | 545 | 6.34 | 20.61 | 108.29 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `compute` | 2 | 0 | 5.89 | 6.99 | 6.99 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `link_latency` | 571 | 198 | 1.50 | 5.70 | 65.00 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `gpu` | `in_hbm` | `weight_read` | 666 | 1 | 1.20 | 2.12 | 18.94 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `compute` | 564 | 32 | 5.26 | 7.95 | 11.60 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `kv_read` | 198 | 4 | 1.23 | 6.21 | 11.75 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `layer_fixed_latency` | 542 | 52 | 1.49 | 4.50 | 8.13 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `link_latency` | 830 | 96 | 1.48 | 2.83 | 8.30 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_kv_store` | `weight_read` | 410 | 36 | 2.13 | 6.73 | 11.65 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `compute` | 564 | 564 | 8.07 | 26.88 | 93.32 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `kv_read` | 198 | 154 | 1.82 | 29.58 | 107.26 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `layer_fixed_latency` | 542 | 278 | 2.82 | 8.06 | 59.59 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `link_latency` | 830 | 159 | 1.72 | 5.91 | 25.81 |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `rom` | `in_rom` | `weight_read` | 410 | 379 | 5.53 | 20.36 | 101.93 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `layer_fixed_latency` | 203 | 0 | 1.94 | 2.06 | 2.97 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 864 | 325 | 1.66 | 7.32 | 60.93 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 10 | 0 | 1.97 | 2.27 | 2.54 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 304 | 0 | 2.29 | 2.67 | 4.93 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 135 | 14 | 5.74 | 7.13 | 8.37 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 58 | 0 | 2.13 | 3.26 | 6.68 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 161 | 0 | 1.53 | 3.41 | 5.04 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 463 | 121 | 1.84 | 5.68 | 10.73 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `thermal` | 14 | 0 | 5.08 | 5.61 | 5.99 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 267 | 38 | 1.88 | 3.74 | 8.15 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 135 | 133 | 6.53 | 23.60 | 71.84 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 58 | 12 | 1.79 | 4.81 | 51.61 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 161 | 83 | 1.84 | 8.93 | 64.89 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 463 | 165 | 1.94 | 6.29 | 38.65 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `thermal` | 14 | 14 | 10.50 | 20.16 | 44.49 |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 267 | 240 | 6.31 | 16.63 | 116.78 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `layer_fixed_latency` | 410 | 0 | 1.26 | 1.57 | 4.55 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 861 | 365 | 1.23 | 7.78 | 65.62 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 44 | 0 | 1.23 | 1.39 | 2.25 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 335 | 0 | 2.32 | 2.66 | 11.25 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 484 | 220 | 5.37 | 8.19 | 20.20 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 44 | 38 | 5.70 | 26.54 | 34.76 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 1,056 | 130 | 1.45 | 5.52 | 21.44 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 933 | 208 | 1.55 | 4.16 | 9.04 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 415 | 64 | 1.65 | 5.30 | 15.01 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 484 | 480 | 8.03 | 12.58 | 44.29 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 44 | 40 | 5.60 | 31.46 | 98.85 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 1,056 | 710 | 1.61 | 18.25 | 59.31 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 933 | 306 | 1.61 | 6.31 | 30.52 |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 415 | 399 | 6.24 | 18.34 | 113.07 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `layer_fixed_latency` | 416 | 0 | 1.25 | 1.60 | 4.47 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 784 | 344 | 1.21 | 7.92 | 65.63 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 44 | 0 | 1.23 | 1.42 | 4.62 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 336 | 2 | 2.13 | 2.74 | 14.83 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 483 | 227 | 5.29 | 8.24 | 37.54 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 51 | 50 | 9.72 | 64.06 | 79.79 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 1,125 | 199 | 1.45 | 5.56 | 44.96 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 885 | 180 | 1.54 | 3.72 | 17.20 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 416 | 60 | 1.63 | 5.45 | 38.91 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 483 | 479 | 8.08 | 12.89 | 38.51 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 51 | 49 | 5.13 | 35.55 | 62.29 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 1,125 | 744 | 1.75 | 17.30 | 59.66 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 885 | 272 | 1.60 | 5.96 | 30.68 |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 416 | 400 | 7.12 | 18.38 | 113.29 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `layer_fixed_latency` | 381 | 0 | 1.49 | 1.85 | 2.60 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 1,239 | 518 | 1.41 | 7.78 | 64.82 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 60 | 0 | 1.55 | 3.46 | 4.73 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 475 | 0 | 2.56 | 2.94 | 4.72 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 649 | 220 | 5.14 | 7.71 | 13.85 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 48 | 42 | 6.77 | 13.26 | 14.40 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 345 | 12 | 1.35 | 3.25 | 8.98 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 934 | 242 | 1.70 | 5.68 | 8.39 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 292 | 60 | 1.98 | 6.92 | 10.91 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 649 | 635 | 7.13 | 25.33 | 107.53 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 48 | 45 | 5.23 | 74.45 | 106.71 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 345 | 229 | 1.86 | 9.93 | 73.66 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 934 | 356 | 1.76 | 7.62 | 33.34 |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 292 | 264 | 5.93 | 16.23 | 144.42 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `layer_fixed_latency` | 377 | 0 | 1.37 | 1.74 | 3.47 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 1,135 | 459 | 1.30 | 7.71 | 65.13 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 59 | 0 | 1.22 | 2.92 | 4.79 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 399 | 0 | 2.37 | 2.95 | 8.57 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 685 | 308 | 5.52 | 7.93 | 42.63 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 24 | 24 | 41.24 | 45.48 | 52.45 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 517 | 33 | 1.35 | 3.56 | 15.81 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 838 | 204 | 1.64 | 5.30 | 8.39 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 354 | 87 | 1.96 | 7.67 | 23.12 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 685 | 681 | 7.06 | 33.20 | 107.45 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 24 | 24 | 30.10 | 66.33 | 80.42 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 517 | 290 | 1.83 | 8.50 | 77.38 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 838 | 297 | 1.83 | 7.47 | 34.43 |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 354 | 316 | 6.69 | 16.28 | 146.75 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `layer_fixed_latency` | 350 | 0 | 1.34 | 1.74 | 3.46 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 1,028 | 411 | 1.29 | 7.70 | 65.09 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 56 | 0 | 1.25 | 2.92 | 4.80 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 386 | 2 | 2.33 | 2.94 | 18.98 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 694 | 299 | 5.53 | 7.89 | 87.96 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 34 | 34 | 85.84 | 93.75 | 105.31 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 531 | 60 | 1.35 | 3.66 | 29.56 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 878 | 228 | 1.63 | 5.35 | 21.37 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 371 | 93 | 1.95 | 7.70 | 34.89 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 694 | 692 | 7.68 | 34.30 | 109.24 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 34 | 34 | 16.66 | 40.39 | 44.41 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 531 | 296 | 1.82 | 8.46 | 71.55 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 878 | 312 | 1.81 | 7.46 | 34.58 |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 371 | 331 | 6.68 | 16.22 | 147.19 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 669 | 249 | 2.05 | 6.90 | 51.19 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 298 | 0 | 2.52 | 2.95 | 11.16 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 58 | 4 | 6.37 | 7.33 | 8.44 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 128 | 0 | 2.16 | 3.75 | 7.71 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 124 | 0 | 1.53 | 3.58 | 5.36 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 358 | 74 | 1.84 | 5.89 | 10.67 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 166 | 37 | 1.94 | 4.40 | 8.10 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 58 | 56 | 6.74 | 24.68 | 74.64 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 128 | 63 | 1.47 | 8.22 | 83.67 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 124 | 44 | 1.73 | 6.61 | 44.05 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 358 | 104 | 1.96 | 6.30 | 27.07 |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 166 | 147 | 7.08 | 17.20 | 117.86 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 2 | 1 | 7.65 | 8.20 | 8.20 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 949 | 316 | 1.40 | 6.09 | 65.56 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 489 | 0 | 1.44 | 3.03 | 7.17 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 566 | 327 | 5.16 | 8.50 | 21.65 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 137 | 122 | 4.19 | 25.94 | 34.76 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 857 | 79 | 1.45 | 6.05 | 22.98 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 1,006 | 215 | 1.59 | 4.33 | 8.77 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 462 | 136 | 2.07 | 6.98 | 23.54 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 566 | 540 | 5.93 | 16.76 | 60.31 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 137 | 125 | 3.04 | 47.29 | 98.85 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 857 | 526 | 1.64 | 11.75 | 67.90 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 1,006 | 275 | 1.62 | 5.97 | 27.69 |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 462 | 433 | 6.32 | 18.16 | 112.83 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `compute` | 1 | 1 | 8.56 | 8.56 | 8.56 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 882 | 292 | 1.39 | 6.07 | 65.57 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 507 | 0 | 1.40 | 2.98 | 12.14 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 583 | 365 | 6.10 | 8.53 | 51.52 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 61 | 60 | 7.85 | 59.87 | 79.79 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 934 | 172 | 1.45 | 6.83 | 33.50 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 983 | 201 | 1.58 | 4.20 | 11.22 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 467 | 135 | 2.07 | 7.24 | 33.81 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 583 | 567 | 7.26 | 16.17 | 61.71 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 61 | 58 | 5.33 | 34.91 | 62.29 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 934 | 592 | 1.82 | 12.27 | 68.30 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 983 | 251 | 1.61 | 5.78 | 27.82 |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 467 | 439 | 6.83 | 18.43 | 113.17 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 536 | 285 | 2.56 | 8.27 | 63.65 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 727 | 0 | 1.65 | 3.11 | 5.88 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 616 | 392 | 5.88 | 8.52 | 15.28 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 44 | 37 | 7.28 | 13.60 | 15.66 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 285 | 8 | 1.35 | 3.57 | 8.19 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 895 | 248 | 1.72 | 6.21 | 8.39 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 236 | 79 | 2.02 | 7.75 | 13.94 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 616 | 602 | 7.01 | 37.22 | 112.91 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 44 | 40 | 3.46 | 77.99 | 112.92 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 285 | 164 | 1.96 | 10.81 | 56.48 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 895 | 316 | 1.80 | 7.34 | 23.55 |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 236 | 205 | 5.72 | 15.33 | 23.00 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 475 | 266 | 3.15 | 8.27 | 64.87 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 724 | 1 | 1.45 | 3.09 | 14.91 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 607 | 420 | 5.59 | 8.68 | 47.58 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 23 | 21 | 7.70 | 48.79 | 53.04 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 410 | 27 | 1.35 | 4.06 | 23.94 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 825 | 206 | 1.69 | 5.49 | 8.39 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 301 | 116 | 1.99 | 8.16 | 34.49 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 607 | 605 | 7.00 | 43.53 | 121.75 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 23 | 21 | 6.22 | 69.42 | 80.73 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 410 | 214 | 1.79 | 8.16 | 83.71 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 825 | 260 | 1.88 | 7.07 | 24.77 |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 301 | 267 | 6.63 | 16.18 | 147.17 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `compute` | 1 | 1 | 8.37 | 8.37 | 8.37 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 482 | 284 | 2.83 | 8.35 | 65.08 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 797 | 1 | 1.45 | 3.09 | 19.11 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 675 | 466 | 5.59 | 8.75 | 94.57 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 29 | 28 | 9.50 | 96.61 | 105.31 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 445 | 54 | 1.35 | 4.48 | 30.64 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 872 | 238 | 1.68 | 5.88 | 14.64 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 313 | 128 | 1.99 | 8.18 | 40.26 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 675 | 673 | 7.06 | 42.33 | 122.99 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 29 | 29 | 8.74 | 42.53 | 45.12 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 445 | 241 | 1.92 | 10.08 | 85.62 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 872 | 280 | 1.87 | 7.19 | 24.98 |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 313 | 277 | 6.09 | 16.10 | 147.74 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `layer_fixed_latency` | 291 | 0 | 1.39 | 1.64 | 2.63 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 818 | 312 | 1.32 | 7.43 | 65.31 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `thermal` | 24 | 0 | 1.23 | 1.56 | 2.23 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 300 | 0 | 2.29 | 2.55 | 3.66 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 220 | 98 | 6.20 | 8.18 | 8.81 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 68 | 0 | 3.17 | 8.07 | 8.70 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 629 | 5 | 1.46 | 4.42 | 13.70 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 944 | 226 | 1.54 | 4.93 | 11.10 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 397 | 39 | 1.74 | 4.34 | 12.11 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 220 | 220 | 8.23 | 12.64 | 45.17 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 68 | 54 | 2.45 | 23.22 | 41.44 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 629 | 488 | 1.75 | 27.39 | 67.87 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 944 | 337 | 1.62 | 6.87 | 41.22 |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 397 | 370 | 6.25 | 21.77 | 111.76 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `layer_fixed_latency` | 154 | 0 | 2.14 | 2.26 | 2.71 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 977 | 386 | 1.68 | 7.47 | 59.78 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `thermal` | 20 | 0 | 3.35 | 4.13 | 4.41 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 335 | 0 | 2.55 | 2.89 | 5.91 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 106 | 15 | 6.30 | 7.71 | 8.60 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 44 | 10 | 3.20 | 5.16 | 8.56 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 133 | 0 | 1.41 | 2.81 | 6.64 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 318 | 78 | 1.92 | 5.98 | 8.39 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 197 | 21 | 1.83 | 4.63 | 8.17 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 106 | 104 | 7.51 | 49.88 | 97.74 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 44 | 30 | 3.62 | 16.68 | 139.08 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 133 | 51 | 2.00 | 6.24 | 68.07 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 318 | 111 | 2.14 | 7.14 | 33.01 |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 197 | 166 | 5.63 | 13.48 | 168.35 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `link_latency` | 853 | 288 | 1.56 | 6.03 | 64.63 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `gpu` | `in_hbm` | `weight_read` | 406 | 0 | 1.77 | 3.05 | 5.58 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `compute` | 400 | 137 | 6.71 | 8.60 | 10.10 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `kv_read` | 103 | 16 | 3.31 | 8.16 | 10.62 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `layer_fixed_latency` | 319 | 2 | 1.46 | 3.68 | 13.69 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `link_latency` | 965 | 223 | 1.59 | 5.30 | 11.35 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_kv_store` | `weight_read` | 363 | 41 | 2.11 | 5.98 | 8.82 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `compute` | 400 | 400 | 8.23 | 40.41 | 66.88 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `kv_read` | 103 | 77 | 1.80 | 15.04 | 72.28 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `layer_fixed_latency` | 319 | 215 | 1.82 | 22.08 | 54.51 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `link_latency` | 965 | 316 | 1.62 | 6.71 | 26.91 |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `rom` | `in_rom` | `weight_read` | 363 | 340 | 5.38 | 48.97 | 111.15 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `link_latency` | 568 | 228 | 1.94 | 7.70 | 50.89 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `gpu` | `in_hbm` | `weight_read` | 399 | 0 | 2.56 | 3.34 | 12.47 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `compute` | 54 | 11 | 6.47 | 7.94 | 9.23 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `kv_read` | 54 | 1 | 2.85 | 3.86 | 8.66 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `layer_fixed_latency` | 83 | 0 | 1.42 | 2.15 | 4.63 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `link_latency` | 161 | 18 | 1.93 | 4.50 | 8.32 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_kv_store` | `weight_read` | 68 | 13 | 1.90 | 4.80 | 8.18 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `compute` | 54 | 50 | 6.70 | 38.18 | 91.77 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `kv_read` | 54 | 36 | 2.84 | 9.26 | 126.66 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `layer_fixed_latency` | 83 | 26 | 2.05 | 4.52 | 31.62 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `link_latency` | 161 | 20 | 2.19 | 6.39 | 9.57 |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `rom` | `in_rom` | `weight_read` | 68 | 58 | 6.53 | 12.59 | 23.00 |
 
 ## Per model, per context, per batch and per design class
 
@@ -381,702 +722,1406 @@ Each row is that class's **fastest** feasible design at that batch, read against
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 4,014.6 | 13,864.4-13,864.4 | 1.45 | yes | 3.875x | 0.024x | 0.006x |
-| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,969.3 | 4,457.0-4,457.0 | 6.70 | **no** | `b200_sxm-x87-nvl72-hybrid` | 3,945.6 | 13,394.4-13,394.4 | 1.47 | yes | 1.513x | 0.333x | 0.220x |
-| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 4,014.6 | 13,864.4-13,864.4 | 1.45 | yes | 3.875x | 0.024x | 0.006x |
-| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,969.3 | 4,457.0-4,457.0 | 6.70 | **no** | `b200_sxm-x87-nvl72-hybrid` | 3,945.6 | 13,394.4-13,394.4 | 1.47 | yes | 1.513x | 0.333x | 0.220x |
-| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 3,752.8 | 11,488.2-11,488.2 | 1.63 | yes | 4.145x | 0.029x | 0.007x |
-| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4` | 5,942.8 | 3,512.9-3,512.9 | 8.46 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,895.4 | 12,300.8-12,300.8 | 1.58 | yes | 1.526x | 0.286x | 0.187x |
-| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 3,327.1 | 8,838.6-8,838.6 | 1.88 | yes | 4.675x | 0.038x | 0.008x |
-| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,925.3 | 5,114.1-5,114.1 | 5.79 | **no** | `b200_sxm-x231-nvl72-hybrid` | 3,819.8 | 11,824.6-11,824.6 | 1.62 | yes | 1.551x | 0.432x | 0.279x |
-| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 2,730.9 | 6,178.5-6,178.5 | 2.21 | yes | 5.696x | 0.055x | 0.010x |
-| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,864.5 | 5,056.0-5,056.0 | 5.80 | **no** | `b200_sxm-x347-nvl72-hybrid` | 3,671.5 | 10,420.9-10,420.9 | 1.76 | yes | 1.597x | 0.485x | 0.304x |
-| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 15,555.9 | 337.7-337.7 | 230.32 | **no** | `b200_sxm-x96-nvl72-hybrid` | 2,049.8 | 4,180.7-4,180.7 | 2.45 | yes | 7.589x | 0.081x | 0.011x |
-| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,685.6 | 4,845.7-4,845.7 | 5.87 | **no** | `b200_sxm-x347-nvl72-hybrid` | 3,184.1 | 7,805.5-7,805.5 | 2.04 | yes | 1.786x | 0.621x | 0.348x |
-| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 13,436.0 | 279.9-279.9 | 240.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 1,589.9 | 3,053.4-3,053.4 | 2.60 | yes | 8.451x | 0.092x | 0.011x |
-| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,358.7 | 4,473.4-4,473.4 | 5.99 | **no** | `b200_sxm-x347-nvl72-hybrid` | 2,544.0 | 5,262.6-5,262.6 | 2.42 | yes | 2.106x | 0.850x | 0.404x |
-| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 6,357.0 | 185.8-185.8 | 171.04 | **no** | `b200_sxm-x173-nvl72-hybrid` | 926.6 | 1,522.1-1,522.1 | 3.04 | yes | 6.860x | 0.122x | 0.018x |
-| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8` | 4,186.1 | 1,582.8-1,582.8 | 13.22 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,060.1 | 1,794.9-1,794.9 | 2.95 | yes | 3.949x | 0.882x | 0.223x |
-| DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 2,380.6 | 165.5-165.5 | 71.93 | **no** | `b200_sxm-x179-expert` | 483.8 | 691.1-691.1 | 3.50 | yes | 4.921x | 0.239x | 0.049x |
-| DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,803.6 | 107.9-107.9 | 129.97 | **no** | `b200_sxm-x347-expert` | 664.0 | 1,194.5-1,194.5 | 2.78 | yes | 4.222x | 0.090x | 0.021x |
-| DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 625.4 | 41.5-41.5 | 75.39 | **no** | `b200_sxm-x179-expert` | 235.1 | 186.2-186.2 | 6.31 | **no** | 2.660x | 0.223x | 0.084x |
-| DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,209.7 | 546.5-546.5 | 11.07 | **no** | `b200_sxm-x347-expert` | 379.9 | 356.5-356.5 | 5.33 | **no** | 3.185x | 1.533x | 0.481x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,228.3 | 665.8-665.8 | 39.26 | **no** | `b200_sxm-x93-nvl72-hybrid` | 697.7 | 2,980.8-2,980.8 | 1.17 | yes | 7.493x | 0.223x | 0.030x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,338.7 | 699.2-699.2 | 38.18 | **no** | `b200_sxm-x87-nvl72-hybrid` | 696.4 | 2,967.0-2,967.0 | 1.17 | yes | 7.666x | 0.236x | 0.031x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,228.3 | 665.8-665.8 | 39.26 | **no** | `b200_sxm-x93-nvl72-hybrid` | 697.7 | 2,980.8-2,980.8 | 1.17 | yes | 7.493x | 0.223x | 0.030x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,338.7 | 699.2-699.2 | 38.18 | **no** | `b200_sxm-x87-nvl72-hybrid` | 696.4 | 2,967.0-2,967.0 | 1.17 | yes | 7.666x | 0.236x | 0.031x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,228.3 | 665.8-665.8 | 39.26 | **no** | `b200_sxm-x93-nvl72-hybrid` | 686.9 | 2,773.4-2,773.4 | 1.24 | yes | 7.611x | 0.240x | 0.032x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,338.7 | 699.2-699.2 | 38.18 | **no** | `b200_sxm-x87-nvl72-hybrid` | 685.2 | 2,756.8-2,756.8 | 1.24 | yes | 7.791x | 0.254x | 0.033x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,228.3 | 665.8-665.8 | 39.26 | **no** | `b200_sxm-x93-nvl72-hybrid` | 667.1 | 2,570.3-2,570.3 | 1.30 | yes | 7.837x | 0.259x | 0.033x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,338.7 | 699.2-699.2 | 38.18 | **no** | `b200_sxm-x87-nvl72-hybrid` | 664.3 | 2,545.1-2,545.1 | 1.31 | yes | 8.036x | 0.275x | 0.034x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,228.3 | 665.8-665.8 | 39.26 | **no** | `b200_sxm-x93-nvl72-hybrid` | 637.4 | 2,234.0-2,234.0 | 1.43 | yes | 8.202x | 0.298x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,338.7 | 699.2-699.2 | 38.18 | **no** | `b200_sxm-x87-nvl72-hybrid` | 635.9 | 2,211.3-2,211.3 | 1.44 | yes | 8.396x | 0.316x | 0.038x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 5,087.5 | 339.7-339.7 | 74.88 | **no** | `b200_sxm-x93-nvl72-hybrid` | 594.1 | 1,896.3-1,896.3 | 1.57 | yes | 8.564x | 0.179x | 0.021x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,204.7 | 845.0-845.0 | 30.80 | **no** | `b200_sxm-x231-nvl72-hybrid` | 641.2 | 2,264.3-2,264.3 | 1.42 | yes | 8.117x | 0.373x | 0.046x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264-romfill` | 4,850.1 | 405.0-405.0 | 59.88 | **no** | `b200_sxm-x134-nvl72-hybrid` | 563.2 | 1,714.5-1,714.5 | 1.64 | yes | 8.611x | 0.236x | 0.027x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,201.5 | 840.4-840.4 | 30.95 | **no** | `b200_sxm-x347-nvl72-hybrid` | 618.6 | 2,069.5-2,069.5 | 1.49 | yes | 8.409x | 0.406x | 0.048x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 3,322.9 | 177.7-177.7 | 93.48 | **no** | `b200_sxm-x179-nvl72-hybrid` | 418.9 | 1,022.9-1,022.9 | 2.05 | yes | 7.933x | 0.174x | 0.022x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,179.1 | 422.8-422.8 | 49.42 | **no** | `b200_sxm-x347-nvl72-hybrid` | 501.3 | 1,358.8-1,358.8 | 1.84 | yes | 8.336x | 0.311x | 0.037x |
+| DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 1,640.8 | 86.8-86.8 | 94.49 | **no** | `b200_sxm-x179-nvl72-hybrid` | 235.5 | 449.1-449.1 | 2.62 | yes | 6.967x | 0.193x | 0.028x |
+| DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,147.3 | 107.6-107.6 | 99.83 | **no** | `b200_sxm-x347-nvl72-hybrid` | 302.6 | 685.5-685.5 | 2.21 | yes | 7.096x | 0.157x | 0.022x |
+| DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 558.9 | 41.2-41.2 | 67.83 | **no** | `b200_sxm-x179-nvl72-hybrid` | 133.2 | 154.1-154.1 | 4.32 | yes | 4.194x | 0.267x | 0.064x |
+| DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 685.8 | 85.1-85.1 | 40.30 | **no** | `b200_sxm-x347-nvl72-hybrid` | 159.6 | 202.5-202.5 | 3.94 | yes | 4.298x | 0.420x | 0.098x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.006x to 0.481x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.021x to 0.098x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-deepseek-v41-flash`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-tensor` | 1,152.3 | 2,843.4-2,843.4 | 2.03 | yes | 10.275x | 0.085x | 0.008x |
-| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,910.8 | 3,470.4-3,470.4 | 8.52 | **no** | `a100_sxm_80gb-x224-tensor` | 1,146.5 | 2,831.2-2,831.2 | 2.02 | yes | 5.156x | 1.226x | 0.238x |
-| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-tensor` | 1,019.5 | 1,867.3-1,867.3 | 2.73 | yes | 11.612x | 0.129x | 0.011x |
-| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,910.8 | 3,470.4-3,470.4 | 8.52 | **no** | `a100_sxm_80gb-x224-tensor` | 1,013.8 | 1,860.6-1,860.6 | 2.72 | yes | 5.830x | 1.865x | 0.320x |
-| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-tensor` | 829.0 | 1,113.1-1,113.1 | 3.72 | yes | 14.282x | 0.216x | 0.015x |
-| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,910.8 | 3,470.4-3,470.4 | 8.52 | **no** | `a100_sxm_80gb-x224-tensor` | 823.7 | 1,111.1-1,111.1 | 3.71 | yes | 7.176x | 3.123x | 0.435x |
-| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-hybrid` | 665.9 | 1,405.1-1,405.1 | 2.37 | yes | 17.781x | 0.171x | 0.010x |
-| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,871.4 | 3,884.3-3,884.3 | 7.56 | **no** | `a100_sxm_80gb-x448-hybrid` | 665.0 | 1,292.6-1,292.6 | 2.57 | yes | 8.829x | 3.005x | 0.340x |
-| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-hybrid` | 665.9 | 1,405.1-1,405.1 | 2.37 | yes | 17.781x | 0.171x | 0.010x |
-| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,794.4 | 3,838.5-3,838.5 | 7.55 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.713x | 3.242x | 0.372x |
-| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-hybrid` | 665.9 | 1,405.1-1,405.1 | 2.37 | yes | 17.781x | 0.171x | 0.010x |
-| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,555.2 | 3,671.0-3,671.0 | 7.57 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.353x | 3.101x | 0.371x |
-| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 11,839.5 | 240.5-240.5 | 246.12 | **no** | `a100_sxm_80gb-x260-hybrid` | 541.7 | 1,020.8-1,020.8 | 2.65 | yes | 21.858x | 0.236x | 0.011x |
-| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 5,157.9 | 1,254.8-1,254.8 | 20.55 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 7.756x | 1.060x | 0.137x |
-| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 5,207.3 | 180.0-180.0 | 144.64 | **no** | `a100_sxm_80gb-x337-hybrid` | 302.0 | 550.9-550.9 | 2.74 | yes | 17.241x | 0.327x | 0.019x |
-| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,852.0 | 1,142.2-1,142.2 | 16.86 | **no** | `a100_sxm_80gb-x672-hybrid` | 445.7 | 718.7-718.7 | 3.10 | yes | 8.642x | 1.589x | 0.184x |
-| DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 1,409.5 | 45.3-45.3 | 155.58 | **no** | `a100_sxm_80gb-x337-expert` | 222.3 | 359.0-359.0 | 3.10 | yes | 6.340x | 0.126x | 0.020x |
-| DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,045.7 | 77.8-77.8 | 131.50 | **no** | `a100_sxm_80gb-x672-expert` | 285.0 | 685.9-685.9 | 2.08 | yes | 7.179x | 0.113x | 0.016x |
-| DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 356.6 | 39.3-39.3 | 45.34 | **no** | `a100_sxm_80gb-x337-expert` | 139.7 | 92.8-92.8 | 7.52 | **no** | 2.554x | 0.424x | 0.166x |
-| DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 596.5 | 408.8-408.8 | 7.30 | **no** | `a100_sxm_80gb-x672-expert` | 206.5 | 183.1-183.1 | 5.64 | **no** | 2.889x | 2.233x | 0.773x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,055.1 | 533.3-533.3 | 47.40 | **no** | `a100_sxm_80gb-x224-hybrid` | 363.9 | 989.4-989.4 | 1.84 | yes | 13.893x | 0.539x | 0.039x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,055.1 | 533.3-533.3 | 47.40 | **no** | `a100_sxm_80gb-x224-hybrid` | 363.9 | 989.4-989.4 | 1.84 | yes | 13.893x | 0.539x | 0.039x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,055.1 | 533.3-533.3 | 47.40 | **no** | `a100_sxm_80gb-x224-hybrid` | 363.9 | 989.4-989.4 | 1.84 | yes | 13.893x | 0.539x | 0.039x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,055.1 | 533.3-533.3 | 47.40 | **no** | `a100_sxm_80gb-x224-hybrid` | 363.9 | 989.4-989.4 | 1.84 | yes | 13.893x | 0.539x | 0.039x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,055.1 | 533.3-533.3 | 47.40 | **no** | `a100_sxm_80gb-x224-hybrid` | 363.9 | 989.4-989.4 | 1.84 | yes | 13.893x | 0.539x | 0.039x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,951.9 | 469.3-469.3 | 52.75 | **no** | `a100_sxm_80gb-x258-hybrid` | 358.7 | 951.0-951.0 | 1.89 | yes | 13.806x | 0.494x | 0.036x |
+| DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 4,931.7 | 615.8-615.8 | 40.04 | **no** | `a100_sxm_80gb-x448-hybrid` | 357.8 | 884.0-884.0 | 2.02 | yes | 13.783x | 0.697x | 0.051x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 4,669.0 | 238.2-238.2 | 98.00 | **no** | `a100_sxm_80gb-x258-hybrid` | 317.5 | 720.3-720.3 | 2.20 | yes | 14.706x | 0.331x | 0.022x |
+| DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,927.4 | 612.4-612.4 | 40.23 | **no** | `a100_sxm_80gb-x672-hybrid` | 357.8 | 829.9-829.9 | 2.16 | yes | 13.771x | 0.738x | 0.054x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 2,994.5 | 93.1-93.1 | 160.87 | **no** | `a100_sxm_80gb-x335-hybrid` | 210.7 | 375.8-375.8 | 2.80 | yes | 14.212x | 0.248x | 0.017x |
+| DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,673.9 | 306.3-306.3 | 59.97 | **no** | `a100_sxm_80gb-x672-hybrid` | 278.5 | 514.8-514.8 | 2.70 | yes | 13.191x | 0.595x | 0.045x |
+| DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 1,194.1 | 45.2-45.2 | 132.17 | **no** | `a100_sxm_80gb-x337-hybrid` | 94.1 | 176.9-176.9 | 2.66 | yes | 12.692x | 0.255x | 0.020x |
+| DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,680.0 | 91.2-91.2 | 92.07 | **no** | `a100_sxm_80gb-x672-hybrid` | 144.9 | 249.0-249.0 | 2.91 | yes | 11.596x | 0.366x | 0.032x |
+| DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 331.5 | 39.0-39.0 | 42.48 | **no** | `a100_sxm_80gb-x337-hybrid` | 36.8 | 49.1-49.1 | 3.75 | yes | 9.020x | 0.795x | 0.088x |
+| DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 606.9 | 44.2-44.2 | 68.71 | **no** | `a100_sxm_80gb-x672-hybrid` | 57.8 | 115.4-115.4 | 2.51 | yes | 10.492x | 0.383x | 0.036x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.008x to 0.773x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.017x to 0.088x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-deepseek-v41-flash-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 4,977.8 | 530.7-530.7 | 46.90 | **no** | `b200_sxm-x116-nvl72-hybrid` | 701.2 | 3,019.6-3,019.6 | 1.16 | yes | 7.099x | 0.176x | 0.025x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,818.5 | 844.0-844.0 | 28.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 704.1 | 3,045.9-3,045.9 | 1.16 | yes | 6.844x | 0.277x | 0.040x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 4,977.8 | 530.7-530.7 | 46.90 | **no** | `b200_sxm-x116-nvl72-hybrid` | 701.2 | 3,019.6-3,019.6 | 1.16 | yes | 7.099x | 0.176x | 0.025x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,818.5 | 844.0-844.0 | 28.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 704.1 | 3,045.9-3,045.9 | 1.16 | yes | 6.844x | 0.277x | 0.040x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 4,977.8 | 530.7-530.7 | 46.90 | **no** | `b200_sxm-x116-nvl72-hybrid` | 691.3 | 2,819.5-2,819.5 | 1.23 | yes | 7.200x | 0.188x | 0.026x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,818.5 | 844.0-844.0 | 28.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 695.0 | 2,849.0-2,849.0 | 1.22 | yes | 6.933x | 0.296x | 0.043x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 4,977.8 | 530.7-530.7 | 46.90 | **no** | `b200_sxm-x116-nvl72-hybrid` | 672.6 | 2,511.5-2,511.5 | 1.34 | yes | 7.401x | 0.211x | 0.029x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,818.5 | 844.0-844.0 | 28.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 678.0 | 2,629.7-2,629.7 | 1.29 | yes | 7.107x | 0.321x | 0.045x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 4,977.8 | 530.7-530.7 | 46.90 | **no** | `b200_sxm-x116-nvl72-hybrid` | 645.7 | 2,341.0-2,341.0 | 1.38 | yes | 7.710x | 0.227x | 0.029x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,818.5 | 844.0-844.0 | 28.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 653.2 | 2,421.1-2,421.1 | 1.35 | yes | 7.377x | 0.349x | 0.047x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 4,903.9 | 470.3-470.3 | 52.14 | **no** | `b200_sxm-x134-nvl72-hybrid` | 615.5 | 2,064.7-2,064.7 | 1.49 | yes | 7.967x | 0.228x | 0.029x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,675.1 | 1,547.5-1,547.5 | 15.10 | **no** | `b200_sxm-x347-nvl72-hybrid` | 653.1 | 2,369.0-2,369.0 | 1.38 | yes | 7.158x | 0.653x | 0.091x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 4,584.6 | 238.8-238.8 | 96.01 | **no** | `b200_sxm-x134-nvl72-hybrid` | 558.8 | 1,705.0-1,705.0 | 1.64 | yes | 8.205x | 0.140x | 0.017x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,504.6 | 818.9-818.9 | 27.50 | **no** | `b200_sxm-x347-nvl72-hybrid` | 616.5 | 2,064.3-2,064.3 | 1.49 | yes | 7.307x | 0.397x | 0.054x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 3,058.6 | 174.8-174.8 | 87.47 | **no** | `b200_sxm-x179-nvl72-hybrid` | 411.5 | 1,012.3-1,012.3 | 2.03 | yes | 7.432x | 0.173x | 0.023x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,071.9 | 409.1-409.1 | 37.55 | **no** | `b200_sxm-x347-nvl72-hybrid` | 495.9 | 1,349.9-1,349.9 | 1.84 | yes | 6.195x | 0.303x | 0.049x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 1,269.4 | 44.2-44.2 | 143.71 | **no** | `b200_sxm-x179-nvl72-hybrid` | 226.5 | 442.2-442.2 | 2.56 | yes | 5.605x | 0.100x | 0.018x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,259.4 | 46.8-46.8 | 134.63 | **no** | `b200_sxm-x347-nvl72-hybrid` | 294.8 | 676.7-676.7 | 2.18 | yes | 4.272x | 0.069x | 0.016x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 363.9 | 38.7-38.7 | 46.97 | **no** | `b200_sxm-x179-nvl72-hybrid` | 122.2 | 150.9-150.9 | 4.05 | yes | 2.978x | 0.257x | 0.086x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 359.4 | 23.0-23.0 | 78.26 | **no** | `b200_sxm-x347-nvl72-hybrid` | 151.1 | 199.7-199.7 | 3.78 | yes | 2.378x | 0.115x | 0.048x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.016x to 0.091x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 4,695.2 | 753.2-753.2 | 31.17 | **no** | `a100_sxm_80gb-x312-hybrid` | 356.5 | 923.4-923.4 | 1.93 | yes | 13.172x | 0.816x | 0.062x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 4,457.6 | 1,269.8-1,269.8 | 17.55 | **no** | `a100_sxm_80gb-x168-hybrid` | 365.5 | 1,025.5-1,025.5 | 1.78 | yes | 12.194x | 1.238x | 0.102x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 4,695.2 | 753.2-753.2 | 31.17 | **no** | `a100_sxm_80gb-x312-hybrid` | 356.5 | 923.4-923.4 | 1.93 | yes | 13.172x | 0.816x | 0.062x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,256.3 | 699.4-699.4 | 30.43 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.958x | 0.845x | 0.071x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 4,695.2 | 753.2-753.2 | 31.17 | **no** | `a100_sxm_80gb-x312-hybrid` | 356.5 | 923.4-923.4 | 1.93 | yes | 13.172x | 0.816x | 0.062x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,256.3 | 699.4-699.4 | 30.43 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.958x | 0.845x | 0.071x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 4,695.2 | 753.2-753.2 | 31.17 | **no** | `a100_sxm_80gb-x312-hybrid` | 356.5 | 923.4-923.4 | 1.93 | yes | 13.172x | 0.816x | 0.062x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,256.3 | 699.4-699.4 | 30.43 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.958x | 0.845x | 0.071x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 4,695.2 | 753.2-753.2 | 31.17 | **no** | `a100_sxm_80gb-x312-hybrid` | 356.5 | 923.4-923.4 | 1.93 | yes | 13.172x | 0.816x | 0.062x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,256.3 | 699.4-699.4 | 30.43 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.958x | 0.845x | 0.071x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 4,658.6 | 362.2-362.2 | 64.31 | **no** | `a100_sxm_80gb-x337-hybrid` | 353.6 | 903.4-903.4 | 1.96 | yes | 13.174x | 0.401x | 0.030x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,142.7 | 367.5-367.5 | 56.36 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.638x | 0.444x | 0.038x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 4,239.1 | 185.4-185.4 | 114.31 | **no** | `a100_sxm_80gb-x335-hybrid` | 330.5 | 773.7-773.7 | 2.14 | yes | 12.825x | 0.240x | 0.019x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,559.7 | 364.0-364.0 | 48.89 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 10.001x | 0.440x | 0.044x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 2,465.2 | 91.3-91.3 | 134.94 | **no** | `a100_sxm_80gb-x337-hybrid` | 207.3 | 375.2-375.2 | 2.76 | yes | 11.891x | 0.243x | 0.020x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,875.7 | 93.6-93.6 | 100.18 | **no** | `a100_sxm_80gb-x672-hybrid` | 275.1 | 512.2-512.2 | 2.69 | yes | 6.817x | 0.183x | 0.027x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 833.5 | 44.0-44.0 | 94.67 | **no** | `a100_sxm_80gb-x337-hybrid` | 91.1 | 174.6-174.6 | 2.61 | yes | 9.154x | 0.252x | 0.028x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 597.6 | 23.6-23.6 | 126.73 | **no** | `a100_sxm_80gb-x672-hybrid` | 141.3 | 246.7-246.7 | 2.86 | yes | 4.231x | 0.096x | 0.023x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 223.3 | 35.7-35.7 | 31.23 | **no** | `a100_sxm_80gb-x337-hybrid` | 34.9 | 44.8-44.8 | 3.90 | yes | 6.390x | 0.798x | 0.125x |
+| DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 156.6 | 22.5-22.5 | 34.78 | **no** | `a100_sxm_80gb-x672-hybrid` | 55.6 | 113.4-113.4 | 2.45 | yes | 2.819x | 0.198x | 0.070x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.019x to 0.125x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-deepseek-v41-flash-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,280.8 | 696.2-696.2 | 37.93 | **no** | `b200_sxm-x90-nvl72-hybrid` | 697.2 | 2,974.4-2,974.4 | 1.17 | yes | 7.575x | 0.234x | 0.031x |
+| DeepSeek-V4.1-Flash | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,479.0 | 703.6-703.6 | 38.93 | **no** | `b200_sxm-x87-nvl72-hybrid` | 696.5 | 2,967.3-2,967.3 | 1.17 | yes | 7.866x | 0.237x | 0.030x |
+| DeepSeek-V4.1-Flash | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,280.8 | 696.2-696.2 | 37.93 | **no** | `b200_sxm-x90-nvl72-hybrid` | 697.2 | 2,974.4-2,974.4 | 1.17 | yes | 7.575x | 0.234x | 0.031x |
+| DeepSeek-V4.1-Flash | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,479.0 | 703.6-703.6 | 38.93 | **no** | `b200_sxm-x87-nvl72-hybrid` | 696.5 | 2,967.3-2,967.3 | 1.17 | yes | 7.866x | 0.237x | 0.030x |
+| DeepSeek-V4.1-Flash | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,280.8 | 696.2-696.2 | 37.93 | **no** | `b200_sxm-x90-nvl72-hybrid` | 686.3 | 2,766.0-2,766.0 | 1.24 | yes | 7.695x | 0.252x | 0.033x |
+| DeepSeek-V4.1-Flash | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,479.0 | 703.6-703.6 | 38.93 | **no** | `b200_sxm-x87-nvl72-hybrid` | 685.4 | 2,757.5-2,757.5 | 1.24 | yes | 7.994x | 0.255x | 0.032x |
+| DeepSeek-V4.1-Flash | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,280.8 | 696.2-696.2 | 37.93 | **no** | `b200_sxm-x90-nvl72-hybrid` | 666.1 | 2,559.1-2,559.1 | 1.30 | yes | 7.929x | 0.272x | 0.034x |
+| DeepSeek-V4.1-Flash | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,479.0 | 703.6-703.6 | 38.93 | **no** | `b200_sxm-x87-nvl72-hybrid` | 664.6 | 2,546.1-2,546.1 | 1.31 | yes | 8.244x | 0.276x | 0.034x |
+| DeepSeek-V4.1-Flash | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,280.8 | 696.2-696.2 | 37.93 | **no** | `b200_sxm-x90-nvl72-hybrid` | 634.9 | 2,173.1-2,173.1 | 1.46 | yes | 8.317x | 0.320x | 0.039x |
+| DeepSeek-V4.1-Flash | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 5,479.0 | 703.6-703.6 | 38.93 | **no** | `b200_sxm-x87-nvl72-hybrid` | 636.4 | 2,212.9-2,212.9 | 1.44 | yes | 8.609x | 0.318x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 5,211.3 | 355.5-355.5 | 73.29 | **no** | `b200_sxm-x90-nvl72-hybrid` | 590.7 | 1,872.2-1,872.2 | 1.58 | yes | 8.822x | 0.190x | 0.022x |
+| DeepSeek-V4.1-Flash | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,349.8 | 851.9-851.9 | 31.40 | **no** | `b200_sxm-x231-nvl72-hybrid` | 641.6 | 2,265.6-2,265.6 | 1.42 | yes | 8.338x | 0.376x | 0.045x |
+| DeepSeek-V4.1-Flash | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264-romfill` | 5,024.6 | 407.0-407.0 | 61.73 | **no** | `b200_sxm-x134-nvl72-hybrid` | 564.4 | 1,717.0-1,717.0 | 1.64 | yes | 8.903x | 0.237x | 0.027x |
+| DeepSeek-V4.1-Flash | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,346.7 | 847.1-847.1 | 31.56 | **no** | `b200_sxm-x347-nvl72-hybrid` | 619.1 | 2,070.9-2,070.9 | 1.49 | yes | 8.636x | 0.409x | 0.047x |
+| DeepSeek-V4.1-Flash | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352-romfill` | 3,402.3 | 202.1-202.1 | 84.18 | **no** | `b200_sxm-x179-nvl72-hybrid` | 420.8 | 1,025.7-1,025.7 | 2.05 | yes | 8.086x | 0.197x | 0.024x |
+| DeepSeek-V4.1-Flash | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,457.5 | 427.1-427.1 | 52.19 | **no** | `b200_sxm-x347-nvl72-hybrid` | 502.8 | 1,361.2-1,361.2 | 1.85 | yes | 8.866x | 0.314x | 0.035x |
+| DeepSeek-V4.1-Flash | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 1,713.1 | 90.2-90.2 | 94.91 | **no** | `b200_sxm-x173-nvl72-hybrid` | 235.8 | 431.8-431.8 | 2.73 | yes | 7.265x | 0.209x | 0.029x |
+| DeepSeek-V4.1-Flash | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,433.4 | 108.5-108.5 | 112.14 | **no** | `b200_sxm-x347-nvl72-hybrid` | 304.7 | 687.7-687.7 | 2.22 | yes | 7.987x | 0.158x | 0.020x |
+| DeepSeek-V4.1-Flash | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 620.7 | 43.0-43.0 | 72.16 | **no** | `b200_sxm-x173-nvl72-hybrid` | 133.8 | 144.3-144.3 | 4.64 | yes | 4.639x | 0.298x | 0.064x |
+| DeepSeek-V4.1-Flash | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 769.7 | 93.5-93.5 | 41.16 | **no** | `b200_sxm-x347-nvl72-hybrid` | 161.9 | 203.3-203.3 | 3.98 | yes | 4.755x | 0.460x | 0.097x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.020x to 0.097x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 5,026.9 | 499.4-499.4 | 50.33 | **no** | `a100_sxm_80gb-x244-hybrid` | 361.0 | 966.0-966.0 | 1.87 | yes | 13.927x | 0.517x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,233.2 | 536.6-536.6 | 48.76 | **no** | `a100_sxm_80gb-x224-hybrid` | 364.4 | 990.2-990.2 | 1.84 | yes | 14.362x | 0.542x | 0.038x |
+| DeepSeek-V4.1-Flash | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 5,026.9 | 499.4-499.4 | 50.33 | **no** | `a100_sxm_80gb-x244-hybrid` | 361.0 | 966.0-966.0 | 1.87 | yes | 13.927x | 0.517x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,233.2 | 536.6-536.6 | 48.76 | **no** | `a100_sxm_80gb-x224-hybrid` | 364.4 | 990.2-990.2 | 1.84 | yes | 14.362x | 0.542x | 0.038x |
+| DeepSeek-V4.1-Flash | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 5,026.9 | 499.4-499.4 | 50.33 | **no** | `a100_sxm_80gb-x244-hybrid` | 361.0 | 966.0-966.0 | 1.87 | yes | 13.927x | 0.517x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,233.2 | 536.6-536.6 | 48.76 | **no** | `a100_sxm_80gb-x224-hybrid` | 364.4 | 990.2-990.2 | 1.84 | yes | 14.362x | 0.542x | 0.038x |
+| DeepSeek-V4.1-Flash | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 5,026.9 | 499.4-499.4 | 50.33 | **no** | `a100_sxm_80gb-x244-hybrid` | 361.0 | 966.0-966.0 | 1.87 | yes | 13.927x | 0.517x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,233.2 | 536.6-536.6 | 48.76 | **no** | `a100_sxm_80gb-x224-hybrid` | 364.4 | 990.2-990.2 | 1.84 | yes | 14.362x | 0.542x | 0.038x |
+| DeepSeek-V4.1-Flash | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 5,026.9 | 499.4-499.4 | 50.33 | **no** | `a100_sxm_80gb-x244-hybrid` | 361.0 | 966.0-966.0 | 1.87 | yes | 13.927x | 0.517x | 0.037x |
+| DeepSeek-V4.1-Flash | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,233.2 | 536.6-536.6 | 48.76 | **no** | `a100_sxm_80gb-x224-hybrid` | 364.4 | 990.2-990.2 | 1.84 | yes | 14.362x | 0.542x | 0.038x |
+| DeepSeek-V4.1-Flash | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342-romfill` | 4,869.3 | 576.0-576.0 | 42.27 | **no** | `a100_sxm_80gb-x337-hybrid` | 356.0 | 906.7-906.7 | 1.96 | yes | 13.680x | 0.635x | 0.046x |
+| DeepSeek-V4.1-Flash | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,116.8 | 620.6-620.6 | 41.23 | **no** | `a100_sxm_80gb-x448-hybrid` | 358.3 | 884.6-884.6 | 2.03 | yes | 14.282x | 0.701x | 0.049x |
+| DeepSeek-V4.1-Flash | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 4,654.3 | 253.4-253.4 | 91.83 | **no** | `a100_sxm_80gb-x244-hybrid` | 315.5 | 711.1-711.1 | 2.22 | yes | 14.754x | 0.356x | 0.024x |
+| DeepSeek-V4.1-Flash | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,112.2 | 617.0-617.0 | 41.42 | **no** | `a100_sxm_80gb-x672-hybrid` | 358.3 | 830.5-830.5 | 2.16 | yes | 14.269x | 0.743x | 0.052x |
+| DeepSeek-V4.1-Flash | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 3,166.8 | 178.9-178.9 | 88.50 | **no** | `a100_sxm_80gb-x337-hybrid` | 212.2 | 378.7-378.7 | 2.80 | yes | 14.923x | 0.472x | 0.032x |
+| DeepSeek-V4.1-Flash | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,973.2 | 309.4-309.4 | 64.21 | **no** | `a100_sxm_80gb-x672-hybrid` | 279.4 | 515.5-515.5 | 2.71 | yes | 14.220x | 0.600x | 0.042x |
+| DeepSeek-V4.1-Flash | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 1,344.0 | 45.5-45.5 | 147.75 | **no** | `a100_sxm_80gb-x337-hybrid` | 94.9 | 177.5-177.5 | 2.67 | yes | 14.164x | 0.256x | 0.018x |
+| DeepSeek-V4.1-Flash | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 1,899.7 | 78.2-78.2 | 121.39 | **no** | `a100_sxm_80gb-x672-hybrid` | 145.8 | 249.6-249.6 | 2.92 | yes | 13.026x | 0.314x | 0.024x |
+| DeepSeek-V4.1-Flash | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 379.6 | 40.0-40.0 | 47.47 | **no** | `a100_sxm_80gb-x337-hybrid` | 37.2 | 50.3-50.3 | 3.70 | yes | 10.190x | 0.795x | 0.078x |
+| DeepSeek-V4.1-Flash | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 721.6 | 83.1-83.1 | 43.39 | **no** | `a100_sxm_80gb-x672-hybrid` | 58.5 | 115.9-115.9 | 2.52 | yes | 12.344x | 0.717x | 0.058x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.018x to 0.078x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-deepseek-v41-flash-engram-hbm`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 4,065.4 | 13,962.0-13,962.0 | 1.46 | yes | 4.399x | 0.046x | 0.011x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,986.1 | 7,543.8-7,543.8 | 3.97 | yes | `b200_sxm-x58-nvl72-tensor` | 4,173.9 | 14,748.5-14,748.5 | 1.42 | yes | 1.434x | 0.511x | 0.357x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 3,804.6 | 11,596.9-11,596.9 | 1.64 | yes | 4.701x | 0.056x | 0.012x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,986.1 | 7,543.8-7,543.8 | 3.97 | yes | `b200_sxm-x58-nvl72-tensor` | 3,933.1 | 12,391.1-12,391.1 | 1.59 | yes | 1.522x | 0.609x | 0.400x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 3,379.4 | 8,754.6-8,754.6 | 1.93 | yes | 5.292x | 0.074x | 0.014x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 5,978.8 | 7,541.0-7,541.0 | 3.96 | yes | `b200_sxm-x116-nvl72-hybrid` | 3,895.4 | 12,300.8-12,300.8 | 1.58 | yes | 1.535x | 0.613x | 0.399x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 2,781.4 | 6,136.3-6,136.3 | 2.27 | yes | 6.430x | 0.106x | 0.016x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,964.3 | 7,535.5-7,535.5 | 3.96 | yes | `b200_sxm-x231-nvl72-hybrid` | 3,819.8 | 11,824.6-11,824.6 | 1.62 | yes | 1.561x | 0.637x | 0.408x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 2,094.6 | 4,192.1-4,192.1 | 2.50 | yes | 8.539x | 0.155x | 0.018x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,915.6 | 7,442.6-7,442.6 | 3.97 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,671.5 | 10,420.9-10,420.9 | 1.76 | yes | 1.611x | 0.714x | 0.443x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 16,612.5 | 676.5-676.5 | 122.79 | **no** | `b200_sxm-x110-nvl72-hybrid` | 2,185.1 | 4,478.3-4,478.3 | 2.44 | yes | 7.603x | 0.151x | 0.020x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,782.4 | 7,112.6-7,112.6 | 4.06 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,184.1 | 7,805.4-7,805.4 | 2.04 | yes | 1.816x | 0.911x | 0.502x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 16,612.5 | 676.5-676.5 | 122.79 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,926.0 | 3,797.1-3,797.1 | 2.54 | yes | 8.625x | 0.178x | 0.021x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 5,568.7 | 181.1-181.1 | 153.78 | **no** | `b200_sxm-x116-nvl72-hybrid` | 1,589.9 | 3,053.4-3,053.4 | 2.60 | yes | 3.503x | 0.059x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,666.3 | 616.5-616.5 | 54.07 | **no** | `b200_sxm-x173-nvl72-hybrid` | 926.6 | 1,522.1-1,522.1 | 3.04 | yes | 7.194x | 0.405x | 0.056x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 5,568.7 | 181.1-181.1 | 153.78 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,060.1 | 1,794.9-1,794.9 | 2.95 | yes | 5.253x | 0.101x | 0.019x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,847.6 | 154.7-154.7 | 59.72 | **no** | `b200_sxm-x173-expert` | 474.9 | 670.0-670.0 | 3.54 | yes | 3.890x | 0.231x | 0.059x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 3,809.5 | 176.8-176.8 | 107.72 | **no** | `b200_sxm-x347-expert` | 664.0 | 1,194.5-1,194.5 | 2.78 | yes | 5.737x | 0.148x | 0.026x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 566.8 | 143.7-143.7 | 19.72 | **no** | `b200_sxm-x173-expert` | 228.7 | 179.7-179.7 | 6.36 | **no** | 2.478x | 0.799x | 0.323x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,273.2 | 665.9-665.9 | 9.56 | **no** | `b200_sxm-x347-expert` | 379.9 | 356.5-356.5 | 5.33 | **no** | 3.352x | 1.868x | 0.557x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 701.4 | 3,016.3-3,016.3 | 1.16 | yes | 7.658x | 0.404x | 0.053x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | 5,419.7 | 1,222.8-1,222.8 | 22.16 | **no** | `b200_sxm-x347-nvl72-hybrid` | 699.4 | 2,970.8-2,970.8 | 1.18 | yes | 7.749x | 0.412x | 0.053x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 691.5 | 2,826.1-2,826.1 | 1.22 | yes | 7.767x | 0.431x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 694.8 | 2,856.4-2,856.4 | 1.22 | yes | 7.728x | 0.451x | 0.058x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 672.8 | 2,516.7-2,516.7 | 1.34 | yes | 7.983x | 0.484x | 0.061x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 677.4 | 2,552.9-2,552.9 | 1.33 | yes | 7.927x | 0.505x | 0.064x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 639.3 | 2,089.9-2,089.9 | 1.53 | yes | 8.402x | 0.583x | 0.069x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 645.9 | 2,125.0-2,125.0 | 1.52 | yes | 8.314x | 0.607x | 0.073x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,361.8 | 632.2-632.2 | 42.40 | **no** | `b200_sxm-x49-hybrid` | 590.3 | 1,816.2-1,816.2 | 1.63 | yes | 9.083x | 0.348x | 0.038x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 5,363.4 | 1,315.6-1,315.6 | 20.38 | **no** | `b200_sxm-x87-nvl72-hybrid` | 635.9 | 2,211.3-2,211.3 | 1.44 | yes | 8.435x | 0.595x | 0.071x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 5,209.0 | 657.3-657.3 | 39.62 | **no** | `b200_sxm-x110-nvl72-hybrid` | 606.5 | 1,984.7-1,984.7 | 1.53 | yes | 8.589x | 0.331x | 0.039x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,337.0 | 1,350.1-1,350.1 | 19.77 | **no** | `b200_sxm-x231-nvl72-hybrid` | 641.2 | 2,264.3-2,264.3 | 1.42 | yes | 8.323x | 0.596x | 0.072x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 5,209.0 | 657.3-657.3 | 39.62 | **no** | `b200_sxm-x173-nvl72-hybrid` | 583.0 | 1,825.3-1,825.3 | 1.60 | yes | 8.934x | 0.360x | 0.040x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,334.9 | 1,342.9-1,342.9 | 19.86 | **no** | `b200_sxm-x347-nvl72-hybrid` | 618.6 | 2,069.5-2,069.5 | 1.49 | yes | 8.625x | 0.649x | 0.075x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,572.7 | 325.7-325.7 | 54.84 | **no** | `b200_sxm-x173-nvl72-hybrid` | 414.3 | 1,013.7-1,013.7 | 2.04 | yes | 8.624x | 0.321x | 0.037x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,536.9 | 684.4-684.4 | 33.15 | **no** | `b200_sxm-x347-nvl72-hybrid` | 501.3 | 1,358.8-1,358.8 | 1.84 | yes | 9.050x | 0.504x | 0.056x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,474.7 | 152.9-152.9 | 48.23 | **no** | `b200_sxm-x173-nvl72-hybrid` | 233.3 | 430.1-430.1 | 2.71 | yes | 6.320x | 0.355x | 0.056x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,637.2 | 175.8-175.8 | 74.99 | **no** | `b200_sxm-x347-nvl72-hybrid` | 302.6 | 685.5-685.5 | 2.21 | yes | 8.715x | 0.257x | 0.029x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 434.2 | 127.1-127.1 | 17.08 | **no** | `b200_sxm-x173-nvl72-hybrid` | 130.7 | 143.6-143.6 | 4.55 | yes | 3.323x | 0.886x | 0.267x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 872.6 | 144.5-144.5 | 30.20 | **no** | `b200_sxm-x347-nvl72-hybrid` | 159.6 | 202.5-202.5 | 3.94 | yes | 5.469x | 0.713x | 0.130x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.011x to 0.557x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.029x to 0.267x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 6 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-deepseek-v41-flash-engram-hbm`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 1,120.0 | 2,767.5-2,767.5 | 2.02 | yes | 12.312x | 0.161x | 0.013x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 5,932.5 | 6,073.3-6,073.3 | 4.88 | yes | `a100_sxm_80gb-x112-tensor` | 1,106.1 | 2,730.8-2,730.8 | 2.03 | yes | 5.364x | 2.224x | 0.415x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 987.6 | 1,828.1-1,828.1 | 2.70 | yes | 13.963x | 0.244x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 5,932.5 | 6,073.3-6,073.3 | 4.88 | yes | `a100_sxm_80gb-x112-tensor` | 973.8 | 1,810.2-1,810.2 | 2.69 | yes | 6.092x | 3.355x | 0.551x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 799.3 | 1,098.3-1,098.3 | 3.64 | yes | 17.253x | 0.407x | 0.024x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5,925.3 | 5,874.8-5,874.8 | 5.04 | **no** | `a100_sxm_80gb-x224-tensor` | 823.7 | 1,111.1-1,111.1 | 3.71 | yes | 7.194x | 5.287x | 0.735x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 690.8 | 1,513.8-1,513.8 | 2.28 | yes | 19.961x | 0.295x | 0.015x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,911.1 | 5,871.4-5,871.4 | 5.03 | **no** | `a100_sxm_80gb-x448-hybrid` | 665.0 | 1,292.6-1,292.6 | 2.57 | yes | 8.888x | 4.542x | 0.511x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 690.8 | 1,513.8-1,513.8 | 2.28 | yes | 19.961x | 0.295x | 0.015x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,846.0 | 5,794.7-5,794.7 | 5.04 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.790x | 4.895x | 0.557x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 567.9 | 1,110.7-1,110.7 | 2.56 | yes | 24.280x | 0.402x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,650.9 | 5,518.9-5,518.9 | 5.12 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.497x | 4.662x | 0.549x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 12,954.3 | 488.2-488.2 | 132.66 | **no** | `a100_sxm_80gb-x335-hybrid` | 588.8 | 1,130.5-1,130.5 | 2.60 | yes | 22.003x | 0.432x | 0.020x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,297.4 | 5,039.1-5,039.1 | 5.26 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 7.965x | 4.257x | 0.534x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,970.1 | 445.1-445.1 | 55.83 | **no** | `a100_sxm_80gb-x335-hybrid` | 301.9 | 551.1-551.1 | 2.74 | yes | 16.464x | 0.808x | 0.049x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,851.6 | 3,311.7-3,311.7 | 5.82 | **no** | `a100_sxm_80gb-x672-hybrid` | 445.7 | 718.7-718.7 | 3.10 | yes | 8.641x | 4.608x | 0.533x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 1,623.3 | 194.6-194.6 | 41.71 | **no** | `a100_sxm_80gb-x272-expert` | 202.4 | 292.3-292.3 | 3.46 | yes | 8.018x | 0.666x | 0.083x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,556.0 | 127.5-127.5 | 100.21 | **no** | `a100_sxm_80gb-x672-expert` | 285.0 | 685.9-685.9 | 2.08 | yes | 8.970x | 0.186x | 0.021x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 566.8 | 125.1-125.1 | 22.65 | **no** | `a100_sxm_80gb-x335-expert` | 139.1 | 92.1-92.1 | 7.55 | **no** | 4.075x | 1.359x | 0.333x |
-| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 657.8 | 105.4-105.4 | 31.21 | **no** | `a100_sxm_80gb-x672-expert` | 206.5 | 183.1-183.1 | 5.64 | **no** | 3.186x | 0.576x | 0.181x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x12-romfill` | 5,184.8 | 863.6-863.6 | 30.02 | **no** | `a100_sxm_80gb-x672-hybrid` | 357.8 | 829.9-829.9 | 2.16 | yes | 14.491x | 1.041x | 0.072x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.0 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.0 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.0 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.0 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,021.1 | 916.5-916.5 | 27.39 | **no** | `a100_sxm_80gb-x272-hybrid` | 360.8 | 954.3-954.3 | 1.89 | yes | 13.916x | 0.960x | 0.069x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,079.3 | 992.0-992.0 | 25.60 | **no** | `a100_sxm_80gb-x448-hybrid` | 357.8 | 884.0-884.0 | 2.02 | yes | 14.196x | 1.122x | 0.079x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,830.1 | 478.9-478.9 | 50.43 | **no** | `a100_sxm_80gb-x335-hybrid` | 333.0 | 776.7-776.7 | 2.14 | yes | 14.506x | 0.617x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,076.0 | 986.6-986.6 | 25.72 | **no** | `a100_sxm_80gb-x672-hybrid` | 357.8 | 829.9-829.9 | 2.16 | yes | 14.187x | 1.189x | 0.084x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,068.8 | 236.2-236.2 | 64.96 | **no** | `a100_sxm_80gb-x335-hybrid` | 210.7 | 375.8-375.8 | 2.80 | yes | 14.565x | 0.629x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,987.7 | 497.6-497.6 | 40.07 | **no** | `a100_sxm_80gb-x672-hybrid` | 278.5 | 514.8-514.8 | 2.70 | yes | 14.317x | 0.967x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 1,176.6 | 163.6-163.6 | 35.96 | **no** | `a100_sxm_80gb-x335-hybrid` | 93.8 | 176.4-176.4 | 2.66 | yes | 12.548x | 0.927x | 0.074x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 1,977.6 | 127.0-127.0 | 77.84 | **no** | `a100_sxm_80gb-x672-hybrid` | 144.9 | 249.0-249.0 | 2.91 | yes | 13.650x | 0.510x | 0.037x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 428.3 | 114.1-114.1 | 18.76 | **no** | `a100_sxm_80gb-x335-hybrid` | 36.7 | 48.2-48.2 | 3.80 | yes | 11.682x | 2.368x | 0.203x |
+| DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 602.7 | 104.5-104.5 | 28.84 | **no** | `a100_sxm_80gb-x672-hybrid` | 57.8 | 115.4-115.4 | 2.51 | yes | 10.419x | 0.906x | 0.087x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.013x to 0.735x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.037x to 0.203x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 2 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 5,145.7 | 1,045.1-1,045.1 | 24.62 | **no** | `b200_sxm-x57-nvl72-tensor` | 703.5 | 3,038.7-3,038.7 | 1.16 | yes | 7.314x | 0.344x | 0.047x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | 5,125.9 | 1,195.8-1,195.8 | 21.43 | **no** | `b200_sxm-x347-nvl72-hybrid` | 699.2 | 2,970.0-2,970.0 | 1.18 | yes | 7.331x | 0.403x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 5,145.7 | 1,045.1-1,045.1 | 24.62 | **no** | `b200_sxm-x57-nvl72-tensor` | 694.0 | 2,851.7-2,851.7 | 1.22 | yes | 7.414x | 0.366x | 0.049x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,830.4 | 848.3-848.3 | 28.47 | **no** | `b200_sxm-x144-nvl72-hybrid` | 704.1 | 3,045.9-3,045.9 | 1.16 | yes | 6.861x | 0.278x | 0.041x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 5,145.7 | 1,045.1-1,045.1 | 24.62 | **no** | `b200_sxm-x57-nvl72-tensor` | 676.0 | 2,546.4-2,546.4 | 1.33 | yes | 7.612x | 0.410x | 0.054x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,830.4 | 848.3-848.3 | 28.47 | **no** | `b200_sxm-x144-nvl72-hybrid` | 695.0 | 2,849.0-2,849.0 | 1.22 | yes | 6.950x | 0.298x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 5,145.7 | 1,045.1-1,045.1 | 24.62 | **no** | `b200_sxm-x57-nvl72-tensor` | 643.5 | 2,117.5-2,117.5 | 1.52 | yes | 7.996x | 0.494x | 0.062x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,830.4 | 848.3-848.3 | 28.47 | **no** | `b200_sxm-x144-nvl72-hybrid` | 678.0 | 2,629.7-2,629.7 | 1.29 | yes | 7.125x | 0.323x | 0.045x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x162-romfill` | 4,966.0 | 1,194.7-1,194.7 | 20.78 | **no** | `b200_sxm-x83-nvl72-hybrid` | 628.5 | 2,168.7-2,168.7 | 1.45 | yes | 7.901x | 0.551x | 0.070x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 4,830.4 | 848.3-848.3 | 28.47 | **no** | `b200_sxm-x144-nvl72-hybrid` | 653.2 | 2,421.1-2,421.1 | 1.35 | yes | 7.395x | 0.350x | 0.047x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,887.4 | 1,216.4-1,216.4 | 20.09 | **no** | `b200_sxm-x173-nvl72-hybrid` | 626.7 | 2,163.5-2,163.5 | 1.45 | yes | 7.799x | 0.562x | 0.072x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,675.0 | 2,377.7-2,377.7 | 9.83 | **no** | `b200_sxm-x347-nvl72-hybrid` | 653.1 | 2,369.0-2,369.0 | 1.38 | yes | 7.158x | 1.004x | 0.140x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,638.1 | 641.3-641.3 | 36.16 | **no** | `b200_sxm-x173-nvl72-hybrid` | 579.3 | 1,817.0-1,817.0 | 1.59 | yes | 8.006x | 0.353x | 0.044x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,504.6 | 1,298.8-1,298.8 | 17.34 | **no** | `b200_sxm-x347-nvl72-hybrid` | 616.5 | 2,064.3-2,064.3 | 1.49 | yes | 7.307x | 0.629x | 0.086x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 2,839.3 | 313.9-313.9 | 45.23 | **no** | `b200_sxm-x173-nvl72-hybrid` | 406.9 | 1,002.9-1,002.9 | 2.03 | yes | 6.978x | 0.313x | 0.045x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,071.8 | 654.1-654.1 | 23.48 | **no** | `b200_sxm-x347-nvl72-hybrid` | 495.9 | 1,349.9-1,349.9 | 1.84 | yes | 6.194x | 0.485x | 0.078x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 1,053.7 | 161.7-161.7 | 32.58 | **no** | `b200_sxm-x173-nvl72-hybrid` | 224.2 | 423.6-423.6 | 2.65 | yes | 4.700x | 0.382x | 0.081x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,249.0 | 169.0-169.0 | 36.96 | **no** | `b200_sxm-x347-nvl72-hybrid` | 294.8 | 676.7-676.7 | 2.18 | yes | 4.237x | 0.250x | 0.059x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 366.7 | 110.3-110.3 | 16.62 | **no** | `b200_sxm-x173-nvl72-hybrid` | 119.7 | 140.7-140.7 | 4.25 | yes | 3.064x | 0.784x | 0.256x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 359.7 | 44.8-44.8 | 40.12 | **no** | `b200_sxm-x347-nvl72-hybrid` | 151.1 | 199.7-199.7 | 3.78 | yes | 2.380x | 0.224x | 0.094x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.041x to 0.256x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 4,881.0 | 746.0-746.0 | 32.72 | **no** | `a100_sxm_80gb-x155-hybrid` | 362.2 | 1,014.4-1,014.4 | 1.79 | yes | 13.475x | 0.735x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x11-romfill` | 4,989.2 | 1,614.0-1,614.0 | 15.46 | **no** | `a100_sxm_80gb-x616-hybrid` | 356.0 | 840.2-840.2 | 2.12 | yes | 14.017x | 1.921x | 0.137x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 4,881.0 | 746.0-746.0 | 32.72 | **no** | `a100_sxm_80gb-x155-hybrid` | 362.2 | 1,014.4-1,014.4 | 1.79 | yes | 13.475x | 0.735x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 4,273.7 | 1,001.9-1,001.9 | 21.33 | **no** | `a100_sxm_80gb-x448-hybrid` | 356.0 | 881.5-881.5 | 2.02 | yes | 12.006x | 1.137x | 0.095x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 4,881.0 | 746.0-746.0 | 32.72 | **no** | `a100_sxm_80gb-x155-hybrid` | 362.2 | 1,014.4-1,014.4 | 1.79 | yes | 13.475x | 0.735x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 4,273.7 | 1,001.9-1,001.9 | 21.33 | **no** | `a100_sxm_80gb-x448-hybrid` | 356.0 | 881.5-881.5 | 2.02 | yes | 12.006x | 1.137x | 0.095x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 4,881.0 | 746.0-746.0 | 32.72 | **no** | `a100_sxm_80gb-x155-hybrid` | 362.2 | 1,014.4-1,014.4 | 1.79 | yes | 13.475x | 0.735x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 4,273.7 | 1,001.9-1,001.9 | 21.33 | **no** | `a100_sxm_80gb-x448-hybrid` | 356.0 | 881.5-881.5 | 2.02 | yes | 12.006x | 1.137x | 0.095x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 4,881.0 | 746.0-746.0 | 32.72 | **no** | `a100_sxm_80gb-x155-hybrid` | 362.2 | 1,014.4-1,014.4 | 1.79 | yes | 13.475x | 0.735x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,267.0 | 701.2-701.2 | 30.43 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.988x | 0.847x | 0.071x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 4,654.1 | 895.8-895.8 | 25.98 | **no** | `a100_sxm_80gb-x272-hybrid` | 358.9 | 951.4-951.4 | 1.89 | yes | 12.967x | 0.942x | 0.073x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,079.4 | 368.5-368.5 | 55.36 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 11.461x | 0.445x | 0.039x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 4,200.2 | 467.7-467.7 | 44.90 | **no** | `a100_sxm_80gb-x272-hybrid` | 319.1 | 731.0-731.0 | 2.18 | yes | 13.165x | 0.640x | 0.049x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,615.9 | 365.5-365.5 | 49.47 | **no** | `a100_sxm_80gb-x672-hybrid` | 356.0 | 827.7-827.7 | 2.15 | yes | 10.158x | 0.442x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 2,413.0 | 214.2-214.2 | 56.32 | **no** | `a100_sxm_80gb-x272-hybrid` | 189.4 | 341.5-341.5 | 2.77 | yes | 12.738x | 0.627x | 0.049x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,901.6 | 94.0-94.0 | 101.13 | **no** | `a100_sxm_80gb-x672-hybrid` | 275.1 | 512.2-512.2 | 2.69 | yes | 6.912x | 0.184x | 0.027x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 1,032.0 | 153.3-153.3 | 33.66 | **no** | `a100_sxm_80gb-x335-hybrid` | 90.7 | 174.1-174.1 | 2.61 | yes | 11.373x | 0.880x | 0.077x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 601.7 | 23.7-23.7 | 127.03 | **no** | `a100_sxm_80gb-x672-hybrid` | 141.3 | 246.7-246.7 | 2.86 | yes | 4.260x | 0.096x | 0.023x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 329.6 | 66.2-66.2 | 24.91 | **no** | `a100_sxm_80gb-x335-hybrid` | 34.8 | 44.0-44.0 | 3.96 | yes | 9.460x | 1.503x | 0.159x |
+| DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 157.6 | 22.9-22.9 | 34.39 | **no** | `a100_sxm_80gb-x672-hybrid` | 55.6 | 113.4-113.4 | 2.45 | yes | 2.835x | 0.202x | 0.071x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.023x to 0.159x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 5,462.9 | 660.5-660.5 | 41.35 | **no** | `b200_sxm-x47-nvl72-tensor` | 700.7 | 3,009.4-3,009.4 | 1.16 | yes | 7.796x | 0.219x | 0.028x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.8 | 1,305.2-1,305.2 | 21.16 | **no** | `b200_sxm-x58-nvl72-tensor` | 704.1 | 3,042.5-3,042.5 | 1.16 | yes | 7.845x | 0.429x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 5,462.9 | 660.5-660.5 | 41.35 | **no** | `b200_sxm-x47-nvl72-tensor` | 690.7 | 2,818.1-2,818.1 | 1.23 | yes | 7.909x | 0.234x | 0.030x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.8 | 1,305.2-1,305.2 | 21.16 | **no** | `b200_sxm-x58-nvl72-tensor` | 695.0 | 2,856.9-2,856.9 | 1.22 | yes | 7.948x | 0.457x | 0.057x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 5,462.9 | 660.5-660.5 | 41.35 | **no** | `b200_sxm-x47-nvl72-tensor` | 671.9 | 2,507.3-2,507.3 | 1.34 | yes | 8.131x | 0.263x | 0.032x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.8 | 1,305.2-1,305.2 | 21.16 | **no** | `b200_sxm-x58-nvl72-tensor` | 677.7 | 2,553.7-2,553.7 | 1.33 | yes | 8.151x | 0.511x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 5,462.9 | 660.5-660.5 | 41.35 | **no** | `b200_sxm-x47-hybrid` | 639.0 | 2,197.8-2,197.8 | 1.45 | yes | 8.550x | 0.301x | 0.035x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.8 | 1,305.2-1,305.2 | 21.16 | **no** | `b200_sxm-x58-nvl72-tensor` | 646.3 | 2,126.2-2,126.2 | 1.52 | yes | 8.547x | 0.614x | 0.072x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 5,462.9 | 660.5-660.5 | 41.35 | **no** | `b200_sxm-x47-hybrid` | 594.8 | 1,820.7-1,820.7 | 1.63 | yes | 9.185x | 0.363x | 0.039x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 5,515.1 | 1,332.4-1,332.4 | 20.70 | **no** | `b200_sxm-x87-nvl72-hybrid` | 636.4 | 2,212.9-2,212.9 | 1.44 | yes | 8.666x | 0.602x | 0.069x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 5,356.6 | 661.5-661.5 | 40.49 | **no** | `b200_sxm-x110-nvl72-hybrid` | 607.3 | 1,986.7-1,986.7 | 1.53 | yes | 8.821x | 0.333x | 0.038x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,484.8 | 1,367.5-1,367.5 | 20.05 | **no** | `b200_sxm-x231-nvl72-hybrid` | 641.6 | 2,265.6-2,265.6 | 1.42 | yes | 8.548x | 0.604x | 0.071x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 5,356.6 | 661.5-661.5 | 40.49 | **no** | `b200_sxm-x173-nvl72-hybrid` | 584.0 | 1,827.5-1,827.5 | 1.60 | yes | 9.172x | 0.362x | 0.039x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,483.1 | 1,360.2-1,360.2 | 20.16 | **no** | `b200_sxm-x347-nvl72-hybrid` | 619.1 | 2,070.9-2,070.9 | 1.49 | yes | 8.856x | 0.657x | 0.074x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,825.6 | 328.9-328.9 | 58.15 | **no** | `b200_sxm-x173-nvl72-hybrid` | 416.2 | 1,016.5-1,016.5 | 2.05 | yes | 9.191x | 0.324x | 0.035x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,845.1 | 693.3-693.3 | 34.94 | **no** | `b200_sxm-x347-nvl72-hybrid` | 502.8 | 1,361.2-1,361.2 | 1.85 | yes | 9.637x | 0.509x | 0.053x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,658.6 | 155.8-155.8 | 53.24 | **no** | `b200_sxm-x173-nvl72-hybrid` | 235.8 | 431.8-431.8 | 2.73 | yes | 7.034x | 0.361x | 0.051x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,988.1 | 177.8-177.8 | 84.02 | **no** | `b200_sxm-x347-nvl72-hybrid` | 304.7 | 687.7-687.7 | 2.22 | yes | 9.807x | 0.259x | 0.026x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 483.4 | 114.0-114.0 | 21.19 | **no** | `b200_sxm-x173-nvl72-hybrid` | 133.8 | 144.3-144.3 | 4.64 | yes | 3.613x | 0.790x | 0.219x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,022.9 | 149.5-149.5 | 34.22 | **no** | `b200_sxm-x347-nvl72-hybrid` | 161.9 | 203.3-203.3 | 3.98 | yes | 6.319x | 0.735x | 0.116x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.026x to 0.219x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 5,219.2 | 931.8-931.8 | 28.01 | **no** | `a100_sxm_80gb-x126-hybrid` | 368.7 | 1,044.6-1,044.6 | 1.77 | yes | 14.154x | 0.892x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,352.7 | 978.1-978.1 | 27.36 | **no** | `a100_sxm_80gb-x168-hybrid` | 368.0 | 1,029.9-1,029.9 | 1.79 | yes | 14.545x | 0.950x | 0.065x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 5,219.2 | 931.8-931.8 | 28.01 | **no** | `a100_sxm_80gb-x126-hybrid` | 368.7 | 1,044.6-1,044.6 | 1.77 | yes | 14.154x | 0.892x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,352.7 | 978.1-978.1 | 27.36 | **no** | `a100_sxm_80gb-x168-hybrid` | 368.0 | 1,029.9-1,029.9 | 1.79 | yes | 14.545x | 0.950x | 0.065x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 5,219.2 | 931.8-931.8 | 28.01 | **no** | `a100_sxm_80gb-x126-hybrid` | 368.7 | 1,044.6-1,044.6 | 1.77 | yes | 14.154x | 0.892x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,352.7 | 978.1-978.1 | 27.36 | **no** | `a100_sxm_80gb-x168-hybrid` | 368.0 | 1,029.9-1,029.9 | 1.79 | yes | 14.545x | 0.950x | 0.065x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 5,219.2 | 931.8-931.8 | 28.01 | **no** | `a100_sxm_80gb-x126-hybrid` | 368.7 | 1,044.6-1,044.6 | 1.77 | yes | 14.154x | 0.892x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,352.7 | 978.1-978.1 | 27.36 | **no** | `a100_sxm_80gb-x168-hybrid` | 368.0 | 1,029.9-1,029.9 | 1.79 | yes | 14.545x | 0.950x | 0.065x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 5,219.2 | 931.8-931.8 | 28.01 | **no** | `a100_sxm_80gb-x126-hybrid` | 368.7 | 1,044.6-1,044.6 | 1.77 | yes | 14.154x | 0.892x | 0.063x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,352.7 | 978.1-978.1 | 27.36 | **no** | `a100_sxm_80gb-x168-hybrid` | 368.0 | 1,029.9-1,029.9 | 1.79 | yes | 14.545x | 0.950x | 0.065x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,102.9 | 922.0-922.0 | 27.67 | **no** | `a100_sxm_80gb-x272-hybrid` | 361.3 | 955.1-955.1 | 1.89 | yes | 14.124x | 0.965x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,332.6 | 1,004.9-1,004.9 | 26.53 | **no** | `a100_sxm_80gb-x448-hybrid` | 358.3 | 884.6-884.6 | 2.03 | yes | 14.884x | 1.136x | 0.076x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,014.1 | 481.9-481.9 | 52.03 | **no** | `a100_sxm_80gb-x272-hybrid` | 322.6 | 735.2-735.2 | 2.19 | yes | 15.543x | 0.655x | 0.042x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,329.3 | 999.3-999.3 | 26.66 | **no** | `a100_sxm_80gb-x672-hybrid` | 358.3 | 830.5-830.5 | 2.16 | yes | 14.875x | 1.203x | 0.081x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,324.4 | 238.4-238.4 | 69.73 | **no** | `a100_sxm_80gb-x335-hybrid` | 211.7 | 376.5-376.5 | 2.81 | yes | 15.702x | 0.633x | 0.040x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,424.0 | 503.9-503.9 | 43.90 | **no** | `a100_sxm_80gb-x672-hybrid` | 279.4 | 515.5-515.5 | 2.71 | yes | 15.834x | 0.978x | 0.062x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,285.4 | 112.7-112.7 | 57.01 | **no** | `a100_sxm_80gb-x335-hybrid` | 94.6 | 177.0-177.0 | 2.67 | yes | 13.592x | 0.637x | 0.047x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,403.2 | 128.4-128.4 | 93.61 | **no** | `a100_sxm_80gb-x672-hybrid` | 145.8 | 249.6-249.6 | 2.92 | yes | 16.479x | 0.514x | 0.031x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 455.1 | 120.2-120.2 | 18.93 | **no** | `a100_sxm_80gb-x335-hybrid` | 37.2 | 49.4-49.4 | 3.76 | yes | 12.249x | 2.434x | 0.199x |
+| DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 759.1 | 107.8-107.8 | 35.21 | **no** | `a100_sxm_80gb-x672-hybrid` | 58.5 | 115.9-115.9 | 2.52 | yes | 12.986x | 0.930x | 0.072x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.031x to 0.199x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-deepseek-v41-flash-engram-host`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 4,065.4 | 13,962.0-13,962.0 | 1.46 | yes | 4.399x | 0.046x | 0.011x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,986.1 | 7,543.8-7,543.8 | 3.97 | yes | `b200_sxm-x58-nvl72-tensor` | 4,173.9 | 14,748.5-14,748.5 | 1.42 | yes | 1.434x | 0.511x | 0.357x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 3,804.6 | 11,596.9-11,596.9 | 1.64 | yes | 4.701x | 0.056x | 0.012x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,986.1 | 7,543.8-7,543.8 | 3.97 | yes | `b200_sxm-x58-nvl72-tensor` | 3,933.1 | 12,391.1-12,391.1 | 1.59 | yes | 1.522x | 0.609x | 0.400x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 3,379.4 | 8,754.6-8,754.6 | 1.93 | yes | 5.292x | 0.074x | 0.014x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 5,978.8 | 7,541.0-7,541.0 | 3.96 | yes | `b200_sxm-x116-nvl72-hybrid` | 3,895.4 | 12,300.8-12,300.8 | 1.58 | yes | 1.535x | 0.613x | 0.399x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 2,781.4 | 6,136.3-6,136.3 | 2.27 | yes | 6.430x | 0.106x | 0.016x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,964.3 | 7,535.5-7,535.5 | 3.96 | yes | `b200_sxm-x231-nvl72-hybrid` | 3,819.8 | 11,824.6-11,824.6 | 1.62 | yes | 1.561x | 0.637x | 0.408x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 17,885.6 | 649.0-649.0 | 137.78 | **no** | `b200_sxm-x49-nvl72-tensor` | 2,094.6 | 4,192.1-4,192.1 | 2.50 | yes | 8.539x | 0.155x | 0.018x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,915.6 | 7,442.6-7,442.6 | 3.97 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,671.5 | 10,420.9-10,420.9 | 1.76 | yes | 1.611x | 0.714x | 0.443x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 16,612.5 | 676.5-676.5 | 122.79 | **no** | `b200_sxm-x110-nvl72-hybrid` | 2,185.1 | 4,478.3-4,478.3 | 2.44 | yes | 7.603x | 0.151x | 0.020x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,782.4 | 7,112.6-7,112.6 | 4.06 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,184.1 | 7,805.5-7,805.5 | 2.04 | yes | 1.816x | 0.911x | 0.502x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 16,612.5 | 676.5-676.5 | 122.79 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,926.1 | 3,797.1-3,797.1 | 2.54 | yes | 8.625x | 0.178x | 0.021x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 5,568.7 | 181.1-181.1 | 153.78 | **no** | `b200_sxm-x116-nvl72-hybrid` | 1,589.9 | 3,053.4-3,053.4 | 2.60 | yes | 3.503x | 0.059x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,666.3 | 616.5-616.5 | 54.07 | **no** | `b200_sxm-x173-nvl72-hybrid` | 926.6 | 1,522.1-1,522.1 | 3.04 | yes | 7.194x | 0.405x | 0.056x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 5,568.7 | 181.1-181.1 | 153.78 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,060.1 | 1,794.9-1,794.9 | 2.95 | yes | 5.253x | 0.101x | 0.019x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,847.6 | 154.7-154.7 | 59.72 | **no** | `b200_sxm-x173-expert` | 474.9 | 670.0-670.0 | 3.54 | yes | 3.890x | 0.231x | 0.059x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 3,809.5 | 176.8-176.8 | 107.72 | **no** | `b200_sxm-x347-expert` | 664.0 | 1,194.5-1,194.5 | 2.78 | yes | 5.737x | 0.148x | 0.026x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 566.8 | 143.7-143.7 | 19.72 | **no** | `b200_sxm-x173-expert` | 228.7 | 179.7-179.7 | 6.36 | **no** | 2.478x | 0.799x | 0.323x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,273.5 | 665.9-665.9 | 9.56 | **no** | `b200_sxm-x347-expert` | 379.9 | 356.5-356.5 | 5.33 | **no** | 3.352x | 1.868x | 0.557x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 701.4 | 3,016.3-3,016.3 | 1.16 | yes | 7.658x | 0.404x | 0.053x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 704.0 | 3,042.2-3,042.2 | 1.16 | yes | 7.628x | 0.424x | 0.056x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 691.5 | 2,826.1-2,826.1 | 1.22 | yes | 7.767x | 0.431x | 0.055x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 694.8 | 2,856.4-2,856.4 | 1.22 | yes | 7.728x | 0.451x | 0.058x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 672.8 | 2,516.7-2,516.7 | 1.34 | yes | 7.983x | 0.484x | 0.061x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 677.4 | 2,552.9-2,552.9 | 1.33 | yes | 7.927x | 0.505x | 0.064x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,371.2 | 1,217.8-1,217.8 | 22.05 | **no** | `b200_sxm-x49-nvl72-tensor` | 639.3 | 2,089.9-2,089.9 | 1.53 | yes | 8.402x | 0.583x | 0.069x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 5,370.0 | 1,289.0-1,289.0 | 20.83 | **no** | `b200_sxm-x58-nvl72-tensor` | 645.9 | 2,125.0-2,125.0 | 1.52 | yes | 8.314x | 0.607x | 0.073x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 5,361.9 | 632.2-632.2 | 42.40 | **no** | `b200_sxm-x49-hybrid` | 590.3 | 1,816.2-1,816.2 | 1.63 | yes | 9.083x | 0.348x | 0.038x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 5,363.4 | 1,315.6-1,315.6 | 20.38 | **no** | `b200_sxm-x87-nvl72-hybrid` | 635.9 | 2,211.3-2,211.3 | 1.44 | yes | 8.435x | 0.595x | 0.071x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 5,209.1 | 657.3-657.3 | 39.62 | **no** | `b200_sxm-x110-nvl72-hybrid` | 606.5 | 1,984.7-1,984.7 | 1.53 | yes | 8.589x | 0.331x | 0.039x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,337.0 | 1,350.1-1,350.1 | 19.77 | **no** | `b200_sxm-x231-nvl72-hybrid` | 641.2 | 2,264.3-2,264.3 | 1.42 | yes | 8.323x | 0.596x | 0.072x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 5,209.1 | 657.3-657.3 | 39.62 | **no** | `b200_sxm-x173-nvl72-hybrid` | 583.0 | 1,825.3-1,825.3 | 1.60 | yes | 8.934x | 0.360x | 0.040x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,335.0 | 1,342.9-1,342.9 | 19.86 | **no** | `b200_sxm-x347-nvl72-hybrid` | 618.6 | 2,069.5-2,069.5 | 1.49 | yes | 8.625x | 0.649x | 0.075x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,572.7 | 325.7-325.7 | 54.84 | **no** | `b200_sxm-x173-nvl72-hybrid` | 414.3 | 1,013.7-1,013.7 | 2.04 | yes | 8.624x | 0.321x | 0.037x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,537.0 | 684.4-684.4 | 33.15 | **no** | `b200_sxm-x347-nvl72-hybrid` | 501.3 | 1,358.8-1,358.8 | 1.84 | yes | 9.050x | 0.504x | 0.056x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,474.7 | 152.9-152.9 | 48.23 | **no** | `b200_sxm-x173-nvl72-hybrid` | 233.3 | 430.1-430.1 | 2.71 | yes | 6.320x | 0.355x | 0.056x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,637.2 | 175.8-175.8 | 74.99 | **no** | `b200_sxm-x347-nvl72-hybrid` | 302.6 | 685.5-685.5 | 2.21 | yes | 8.715x | 0.257x | 0.029x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 434.2 | 127.1-127.1 | 17.08 | **no** | `b200_sxm-x173-nvl72-hybrid` | 130.7 | 143.6-143.6 | 4.55 | yes | 3.323x | 0.886x | 0.267x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 872.6 | 144.5-144.5 | 30.20 | **no** | `b200_sxm-x347-nvl72-hybrid` | 159.6 | 202.5-202.5 | 3.94 | yes | 5.469x | 0.713x | 0.130x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.011x to 0.557x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.029x to 0.267x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 6 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-deepseek-v41-flash-engram-host`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 1,120.0 | 2,767.5-2,767.5 | 2.02 | yes | 12.312x | 0.161x | 0.013x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 5,932.5 | 6,073.3-6,073.3 | 4.88 | yes | `a100_sxm_80gb-x112-tensor` | 1,106.1 | 2,730.8-2,730.8 | 2.03 | yes | 5.364x | 2.224x | 0.415x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 987.6 | 1,828.1-1,828.1 | 2.70 | yes | 13.963x | 0.244x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 5,932.5 | 6,073.3-6,073.3 | 4.88 | yes | `a100_sxm_80gb-x112-tensor` | 973.8 | 1,810.2-1,810.2 | 2.69 | yes | 6.092x | 3.355x | 0.551x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-tensor` | 799.3 | 1,098.3-1,098.3 | 3.64 | yes | 17.253x | 0.407x | 0.024x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5,925.4 | 5,874.8-5,874.8 | 5.04 | **no** | `a100_sxm_80gb-x224-tensor` | 823.7 | 1,111.1-1,111.1 | 3.71 | yes | 7.194x | 5.287x | 0.735x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 690.8 | 1,513.8-1,513.8 | 2.28 | yes | 19.961x | 0.295x | 0.015x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,911.1 | 5,871.4-5,871.4 | 5.03 | **no** | `a100_sxm_80gb-x448-hybrid` | 665.0 | 1,292.6-1,292.6 | 2.57 | yes | 8.888x | 4.542x | 0.511x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 690.8 | 1,513.8-1,513.8 | 2.28 | yes | 19.961x | 0.295x | 0.015x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,846.1 | 5,794.7-5,794.7 | 5.04 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.790x | 4.895x | 0.557x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 13,789.7 | 446.5-446.5 | 154.41 | **no** | `a100_sxm_80gb-x136-hybrid` | 567.9 | 1,110.7-1,110.7 | 2.56 | yes | 24.280x | 0.402x | 0.017x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,651.0 | 5,518.9-5,518.9 | 5.12 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 8.497x | 4.662x | 0.549x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 12,954.3 | 488.2-488.2 | 132.66 | **no** | `a100_sxm_80gb-x335-hybrid` | 588.8 | 1,130.5-1,130.5 | 2.60 | yes | 22.003x | 0.432x | 0.020x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,297.6 | 5,039.1-5,039.1 | 5.26 | **no** | `a100_sxm_80gb-x672-hybrid` | 665.0 | 1,183.8-1,183.8 | 2.81 | yes | 7.966x | 4.257x | 0.534x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,970.1 | 445.1-445.1 | 55.83 | **no** | `a100_sxm_80gb-x335-hybrid` | 301.9 | 551.1-551.1 | 2.74 | yes | 16.464x | 0.808x | 0.049x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,852.0 | 3,311.7-3,311.7 | 5.82 | **no** | `a100_sxm_80gb-x672-hybrid` | 445.7 | 718.7-718.7 | 3.10 | yes | 8.642x | 4.608x | 0.533x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 1,623.3 | 194.6-194.6 | 41.71 | **no** | `a100_sxm_80gb-x272-expert` | 202.4 | 292.3-292.3 | 3.46 | yes | 8.018x | 0.666x | 0.083x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,556.6 | 127.5-127.5 | 100.24 | **no** | `a100_sxm_80gb-x672-expert` | 285.0 | 685.9-685.9 | 2.08 | yes | 8.972x | 0.186x | 0.021x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 566.8 | 125.1-125.1 | 22.65 | **no** | `a100_sxm_80gb-x335-expert` | 139.1 | 92.1-92.1 | 7.55 | **no** | 4.075x | 1.359x | 0.333x |
-| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 658.0 | 105.4-105.4 | 31.22 | **no** | `a100_sxm_80gb-x672-expert` | 206.5 | 183.1-183.1 | 5.64 | **no** | 3.187x | 0.576x | 0.181x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.2 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.2 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.2 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.2 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 5,154.7 | 877.5-877.5 | 29.37 | **no** | `a100_sxm_80gb-x132-hybrid` | 366.0 | 1,031.9-1,031.9 | 1.77 | yes | 14.085x | 0.850x | 0.060x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 5,096.2 | 965.9-965.9 | 26.38 | **no** | `a100_sxm_80gb-x168-hybrid` | 367.5 | 1,029.0-1,029.0 | 1.79 | yes | 13.867x | 0.939x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,021.1 | 916.5-916.5 | 27.39 | **no** | `a100_sxm_80gb-x272-hybrid` | 360.8 | 954.3-954.3 | 1.89 | yes | 13.916x | 0.960x | 0.069x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,079.5 | 992.0-992.0 | 25.60 | **no** | `a100_sxm_80gb-x448-hybrid` | 357.8 | 884.0-884.0 | 2.02 | yes | 14.196x | 1.122x | 0.079x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 4,830.1 | 478.9-478.9 | 50.43 | **no** | `a100_sxm_80gb-x272-hybrid` | 321.9 | 734.3-734.3 | 2.19 | yes | 15.007x | 0.652x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,076.2 | 986.6-986.6 | 25.73 | **no** | `a100_sxm_80gb-x672-hybrid` | 357.8 | 829.9-829.9 | 2.16 | yes | 14.187x | 1.189x | 0.084x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,068.8 | 236.2-236.2 | 64.96 | **no** | `a100_sxm_80gb-x335-hybrid` | 210.7 | 375.8-375.8 | 2.80 | yes | 14.565x | 0.629x | 0.043x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,988.1 | 497.6-497.6 | 40.07 | **no** | `a100_sxm_80gb-x672-hybrid` | 278.5 | 514.8-514.8 | 2.70 | yes | 14.319x | 0.967x | 0.068x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 1,176.6 | 163.6-163.6 | 35.96 | **no** | `a100_sxm_80gb-x335-hybrid` | 93.8 | 176.4-176.4 | 2.66 | yes | 12.548x | 0.927x | 0.074x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 1,978.0 | 127.0-127.0 | 77.86 | **no** | `a100_sxm_80gb-x672-hybrid` | 144.9 | 249.0-249.0 | 2.91 | yes | 13.653x | 0.510x | 0.037x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 428.3 | 114.1-114.1 | 18.76 | **no** | `a100_sxm_80gb-x335-hybrid` | 36.7 | 48.2-48.2 | 3.80 | yes | 11.682x | 2.368x | 0.203x |
+| DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 602.8 | 104.5-104.5 | 28.84 | **no** | `a100_sxm_80gb-x672-hybrid` | 57.8 | 115.4-115.4 | 2.51 | yes | 10.421x | 0.906x | 0.087x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.013x to 0.735x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.037x to 0.203x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 2 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-kimi-k3`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | 1,428.2 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 288.3 | not applicable | -- | -- | 4.954x | -- | -- |
+| Kimi-K3 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 1,779.5 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 288.4 | not applicable | -- | -- | 6.169x | -- | -- |
+| Kimi-K3 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 1,322.3 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 288.4 | not applicable | -- | -- | 4.584x | -- | -- |
+| Kimi-K3 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,760.7 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 286.0 | not applicable | -- | -- | 6.156x | -- | -- |
+| Kimi-K3 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 1,322.3 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 286.0 | not applicable | -- | -- | 4.623x | -- | -- |
+| Kimi-K3 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,760.7 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 286.0 | not applicable | -- | -- | 6.156x | -- | -- |
+| Kimi-K3 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 1,301.1 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 276.9 | not applicable | -- | -- | 4.699x | -- | -- |
+| Kimi-K3 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,760.7 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 284.8 | not applicable | -- | -- | 6.182x | -- | -- |
+| Kimi-K3 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 1,154.8 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 260.6 | not applicable | -- | -- | 4.431x | -- | -- |
+| Kimi-K3 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,760.7 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 275.6 | not applicable | -- | -- | 6.389x | -- | -- |
+| Kimi-K3 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 911.1 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 234.2 | not applicable | -- | -- | 3.890x | -- | -- |
+| Kimi-K3 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,537.9 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 259.0 | not applicable | -- | -- | 5.937x | -- | -- |
+| Kimi-K3 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 580.6 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 197.6 | not applicable | -- | -- | 2.939x | -- | -- |
+| Kimi-K3 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1,264.7 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 232.1 | not applicable | -- | -- | 5.450x | -- | -- |
+| Kimi-K3 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 176.3 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 117.0 | not applicable | -- | -- | 1.506x | -- | -- |
+| Kimi-K3 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 509.1 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 152.2 | not applicable | -- | -- | 3.346x | -- | -- |
+| Kimi-K3 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x396` | 45.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 58.0 | not applicable | -- | -- | 0.790x | -- | -- |
+| Kimi-K3 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 144.4 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 78.2 | not applicable | -- | -- | 1.845x | -- | -- |
+| Kimi-K3 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x396` | 11.5 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 25.1 | not applicable | -- | -- | 0.458x | -- | -- |
+| Kimi-K3 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 36.9 | not applicable | -- | -- | `b200_sxm-x462-nvl72-hybrid` | 36.7 | not applicable | -- | -- | 1.006x | -- | -- |
+
+### `n6_vs_a100-kimi-k3`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x398` | 1,092.5 | not applicable | -- | -- | `a100_sxm_80gb-x393-hybrid` | 108.2 | not applicable | -- | -- | 10.093x | -- | -- |
+| Kimi-K3 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x10` | 1,701.7 | not applicable | -- | -- | `a100_sxm_80gb-x560-hybrid` | 109.7 | not applicable | -- | -- | 15.511x | -- | -- |
+| Kimi-K3 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 885.7 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 108.3 | not applicable | -- | -- | 8.179x | -- | -- |
+| Kimi-K3 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,402.1 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 108.3 | not applicable | -- | -- | 12.946x | -- | -- |
+| Kimi-K3 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 885.7 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 108.3 | not applicable | -- | -- | 8.179x | -- | -- |
+| Kimi-K3 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,402.1 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 108.3 | not applicable | -- | -- | 12.946x | -- | -- |
+| Kimi-K3 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 810.2 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 106.8 | not applicable | -- | -- | 7.588x | -- | -- |
+| Kimi-K3 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,402.1 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 108.3 | not applicable | -- | -- | 12.946x | -- | -- |
+| Kimi-K3 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 600.3 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 96.0 | not applicable | -- | -- | 6.252x | -- | -- |
+| Kimi-K3 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,402.1 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 108.3 | not applicable | -- | -- | 12.946x | -- | -- |
+| Kimi-K3 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 372.0 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 82.3 | not applicable | -- | -- | 4.519x | -- | -- |
+| Kimi-K3 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 1,164.3 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 101.8 | not applicable | -- | -- | 11.443x | -- | -- |
+| Kimi-K3 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 205.7 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 67.0 | not applicable | -- | -- | 3.071x | -- | -- |
+| Kimi-K3 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 851.0 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 87.7 | not applicable | -- | -- | 9.705x | -- | -- |
+| Kimi-K3 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 55.3 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 39.4 | not applicable | -- | -- | 1.404x | -- | -- |
+| Kimi-K3 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 301.9 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 58.1 | not applicable | -- | -- | 5.194x | -- | -- |
+| Kimi-K3 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 14.0 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 16.8 | not applicable | -- | -- | 0.832x | -- | -- |
+| Kimi-K3 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x22` | 81.8 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 32.3 | not applicable | -- | -- | 2.536x | -- | -- |
+| Kimi-K3 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 3.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 6.6 | not applicable | -- | -- | 0.528x | -- | -- |
+| Kimi-K3 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x22` | 20.8 | not applicable | -- | -- | `a100_sxm_80gb-x1231-hybrid` | 12.8 | not applicable | -- | -- | 1.624x | -- | -- |
+
+### `n5_vs_b200-kimi-k3-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x383` | 946.4 | not applicable | -- | -- | `b200_sxm-x195-nvl72-hybrid` | 285.4 | not applicable | -- | -- | 3.317x | -- | -- |
+| Kimi-K3 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x18` | 1,533.1 | not applicable | -- | -- | `b200_sxm-x520-nvl72-hybrid` | 283.0 | not applicable | -- | -- | 5.417x | -- | -- |
+| Kimi-K3 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,293.4 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 276.0 | not applicable | -- | -- | 4.685x | -- | -- |
+| Kimi-K3 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,293.4 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 276.0 | not applicable | -- | -- | 4.685x | -- | -- |
+| Kimi-K3 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,293.4 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 276.0 | not applicable | -- | -- | 4.685x | -- | -- |
+| Kimi-K3 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,293.4 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 276.0 | not applicable | -- | -- | 4.685x | -- | -- |
+| Kimi-K3 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,207.7 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 273.9 | not applicable | -- | -- | 4.410x | -- | -- |
+| Kimi-K3 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 1,143.4 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 257.6 | not applicable | -- | -- | 4.439x | -- | -- |
+| Kimi-K3 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 518.2 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 196.9 | not applicable | -- | -- | 2.632x | -- | -- |
+| Kimi-K3 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x68` | 151.9 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 120.5 | not applicable | -- | -- | 1.260x | -- | -- |
+| Kimi-K3 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x68` | 39.3 | not applicable | -- | -- | `b200_sxm-x1965-nvl72-hybrid` | 49.4 | not applicable | -- | -- | 0.795x | -- | -- |
+
+### `n6_vs_a100-kimi-k3-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x399` | 722.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 106.9 | not applicable | -- | -- | 6.757x | -- | -- |
+| Kimi-K3 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x23` | 1,333.7 | not applicable | -- | -- | `a100_sxm_80gb-x1287-hybrid` | 106.9 | not applicable | -- | -- | 12.480x | -- | -- |
+| Kimi-K3 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 1,084.9 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 10.751x | -- | -- |
+| Kimi-K3 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 1,084.9 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 10.751x | -- | -- |
+| Kimi-K3 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 1,084.9 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 10.751x | -- | -- |
+| Kimi-K3 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 1,084.9 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 10.751x | -- | -- |
+| Kimi-K3 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 956.7 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 9.480x | -- | -- |
+| Kimi-K3 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 750.1 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 100.9 | not applicable | -- | -- | 7.434x | -- | -- |
+| Kimi-K3 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 313.0 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 81.1 | not applicable | -- | -- | 3.862x | -- | -- |
+| Kimi-K3 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 87.5 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 55.1 | not applicable | -- | -- | 1.588x | -- | -- |
+| Kimi-K3 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x95` | 22.4 | not applicable | -- | -- | `a100_sxm_80gb-x5316-hybrid` | 28.7 | not applicable | -- | -- | 0.779x | -- | -- |
+
+### `n5_vs_b200-kimi-k3-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,928.0 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 288.8 | not applicable | -- | -- | 6.675x | -- | -- |
+| Kimi-K3 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7` | 2,162.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 288.9 | not applicable | -- | -- | 7.486x | -- | -- |
+| Kimi-K3 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,928.0 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 288.8 | not applicable | -- | -- | 6.675x | -- | -- |
+| Kimi-K3 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7` | 2,162.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 288.9 | not applicable | -- | -- | 7.486x | -- | -- |
+| Kimi-K3 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,928.0 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 286.6 | not applicable | -- | -- | 6.728x | -- | -- |
+| Kimi-K3 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7` | 2,162.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 286.7 | not applicable | -- | -- | 7.544x | -- | -- |
+| Kimi-K3 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,928.0 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 278.0 | not applicable | -- | -- | 6.936x | -- | -- |
+| Kimi-K3 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7` | 2,162.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 278.1 | not applicable | -- | -- | 7.777x | -- | -- |
+| Kimi-K3 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,928.0 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 262.6 | not applicable | -- | -- | 7.341x | -- | -- |
+| Kimi-K3 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7` | 2,162.9 | not applicable | -- | -- | `b200_sxm-x202-nvl72-hybrid` | 262.8 | not applicable | -- | -- | 8.230x | -- | -- |
+| Kimi-K3 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,731.2 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 237.6 | not applicable | -- | -- | 7.285x | -- | -- |
+| Kimi-K3 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,152.4 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 255.1 | not applicable | -- | -- | 8.438x | -- | -- |
+| Kimi-K3 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 1,499.1 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 202.5 | not applicable | -- | -- | 7.404x | -- | -- |
+| Kimi-K3 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 1,873.9 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 225.8 | not applicable | -- | -- | 8.299x | -- | -- |
+| Kimi-K3 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x395` | 719.1 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 124.3 | not applicable | -- | -- | 5.783x | -- | -- |
+| Kimi-K3 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,089.9 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 144.8 | not applicable | -- | -- | 7.525x | -- | -- |
+| Kimi-K3 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x395` | 219.5 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 65.9 | not applicable | -- | -- | 3.331x | -- | -- |
+| Kimi-K3 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 369.4 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 77.5 | not applicable | -- | -- | 4.764x | -- | -- |
+| Kimi-K3 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x395` | 57.8 | not applicable | -- | -- | `b200_sxm-x201-nvl72-hybrid` | 33.4 | not applicable | -- | -- | 1.729x | -- | -- |
+| Kimi-K3 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 99.2 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 39.6 | not applicable | -- | -- | 2.507x | -- | -- |
+
+### `n6_vs_a100-kimi-k3-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Kimi-K3 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,383.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 108.6 | not applicable | -- | -- | 12.737x | -- | -- |
+| Kimi-K3 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,860.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 109.5 | not applicable | -- | -- | 16.987x | -- | -- |
+| Kimi-K3 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,383.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 108.6 | not applicable | -- | -- | 12.737x | -- | -- |
+| Kimi-K3 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,860.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 109.5 | not applicable | -- | -- | 16.987x | -- | -- |
+| Kimi-K3 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,383.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 108.6 | not applicable | -- | -- | 12.737x | -- | -- |
+| Kimi-K3 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,860.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 109.5 | not applicable | -- | -- | 16.987x | -- | -- |
+| Kimi-K3 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,383.5 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 107.1 | not applicable | -- | -- | 12.913x | -- | -- |
+| Kimi-K3 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,860.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 109.5 | not applicable | -- | -- | 16.987x | -- | -- |
+| Kimi-K3 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,251.6 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 96.6 | not applicable | -- | -- | 12.953x | -- | -- |
+| Kimi-K3 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,855.7 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 104.8 | not applicable | -- | -- | 17.705x | -- | -- |
+| Kimi-K3 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 1,069.6 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 83.2 | not applicable | -- | -- | 12.853x | -- | -- |
+| Kimi-K3 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,648.8 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 92.2 | not applicable | -- | -- | 17.877x | -- | -- |
+| Kimi-K3 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 742.9 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 68.1 | not applicable | -- | -- | 10.901x | -- | -- |
+| Kimi-K3 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,327.9 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 79.0 | not applicable | -- | -- | 16.809x | -- | -- |
+| Kimi-K3 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x399` | 249.6 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 41.1 | not applicable | -- | -- | 6.077x | -- | -- |
+| Kimi-K3 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 554.8 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 49.3 | not applicable | -- | -- | 11.245x | -- | -- |
+| Kimi-K3 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 66.6 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 18.1 | not applicable | -- | -- | 3.685x | -- | -- |
+| Kimi-K3 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 159.4 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 23.7 | not applicable | -- | -- | 6.712x | -- | -- |
+| Kimi-K3 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x399` | 16.8 | not applicable | -- | -- | `a100_sxm_80gb-x394-hybrid` | 7.4 | not applicable | -- | -- | 2.253x | -- | -- |
+| Kimi-K3 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 40.9 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 9.2 | not applicable | -- | -- | 4.467x | -- | -- |
+
+### `n5_vs_b200-mimo-v26-flash`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x45` | 5,396.1 | 3,274.0-3,274.0 | 8.24 | **no** | `b200_sxm-x23-nvl72-tensor` | 713.1 | 2,994.0-2,994.0 | 1.19 | yes | 7.567x | 1.094x | 0.145x |
+| MiMo-V2.6-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | 5,503.2 | 8,245.3-8,245.3 | 3.34 | yes | `b200_sxm-x29-nvl72-tensor` | 725.5 | 3,109.5-3,109.5 | 1.17 | yes | 7.586x | 2.652x | 0.350x |
+| MiMo-V2.6-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 4,797.9 | 1,220.5-1,220.5 | 19.66 | **no** | `b200_sxm-x192-nvl72-hybrid` | 749.3 | 3,373.3-3,373.3 | 1.11 | yes | 6.403x | 0.362x | 0.057x |
+| MiMo-V2.6-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 3,663.1 | 2,224.7-2,224.7 | 8.23 | **no** | `b200_sxm-x636-nvl72-hybrid` | 744.2 | 3,359.8-3,359.8 | 1.11 | yes | 4.922x | 0.662x | 0.135x |
+| MiMo-V2.6-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 4,797.9 | 1,220.5-1,220.5 | 19.66 | **no** | `b200_sxm-x192-nvl72-hybrid` | 744.3 | 3,314.9-3,314.9 | 1.12 | yes | 6.446x | 0.368x | 0.057x |
+| MiMo-V2.6-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 3,663.1 | 2,224.7-2,224.7 | 8.23 | **no** | `b200_sxm-x636-nvl72-hybrid` | 744.2 | 3,359.8-3,359.8 | 1.11 | yes | 4.922x | 0.662x | 0.135x |
+| MiMo-V2.6-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 4,797.9 | 1,220.5-1,220.5 | 19.66 | **no** | `b200_sxm-x192-nvl72-hybrid` | 725.2 | 3,131.0-3,131.0 | 1.16 | yes | 6.616x | 0.390x | 0.059x |
+| MiMo-V2.6-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 3,496.8 | 1,322.6-1,322.6 | 13.22 | **no** | `b200_sxm-x636-nvl72-hybrid` | 744.2 | 3,359.8-3,359.8 | 1.11 | yes | 4.699x | 0.394x | 0.084x |
+| MiMo-V2.6-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x282` | 4,634.9 | 841.0-841.0 | 27.55 | **no** | `b200_sxm-x144-nvl72-hybrid` | 671.4 | 2,650.9-2,650.9 | 1.27 | yes | 6.903x | 0.317x | 0.046x |
+| MiMo-V2.6-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 3,364.9 | 701.1-701.1 | 24.00 | **no** | `b200_sxm-x636-nvl72-hybrid` | 733.3 | 3,232.3-3,232.3 | 1.13 | yes | 4.589x | 0.217x | 0.047x |
+| MiMo-V2.6-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 4,038.8 | 634.0-634.0 | 31.85 | **no** | `b200_sxm-x192-nvl72-hybrid` | 633.4 | 2,414.6-2,414.6 | 1.31 | yes | 6.376x | 0.263x | 0.041x |
+| MiMo-V2.6-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 2,771.2 | 690.2-690.2 | 20.07 | **no** | `b200_sxm-x636-nvl72-hybrid` | 710.0 | 2,992.9-2,992.9 | 1.19 | yes | 3.903x | 0.231x | 0.059x |
+| MiMo-V2.6-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 2,943.2 | 331.2-331.2 | 44.43 | **no** | `b200_sxm-x192-nvl72-hybrid` | 550.0 | 1,918.6-1,918.6 | 1.43 | yes | 5.351x | 0.173x | 0.032x |
+| MiMo-V2.6-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 1,859.8 | 396.4-396.4 | 23.46 | **no** | `b200_sxm-x636-nvl72-hybrid` | 668.9 | 2,639.9-2,639.9 | 1.27 | yes | 2.780x | 0.150x | 0.054x |
+| MiMo-V2.6-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 951.4 | 433.2-433.2 | 10.98 | **no** | `b200_sxm-x192-nvl72-hybrid` | 339.1 | 909.8-909.8 | 1.86 | yes | 2.806x | 0.476x | 0.170x |
+| MiMo-V2.6-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 600.3 | 101.0-101.0 | 29.72 | **no** | `b200_sxm-x636-nvl72-hybrid` | 512.4 | 1,605.3-1,605.3 | 1.60 | yes | 1.171x | 0.063x | 0.054x |
+| MiMo-V2.6-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 238.5 | 224.3-224.3 | 5.32 | **no** | `b200_sxm-x192-nvl72-hybrid` | 152.4 | 433.8-433.8 | 1.76 | yes | 1.565x | 0.517x | 0.330x |
+| MiMo-V2.6-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 159.0 | 25.3-25.3 | 31.40 | **no** | `b200_sxm-x636-nvl72-hybrid` | 297.9 | 688.0-688.0 | 2.16 | yes | 0.534x | 0.037x | 0.069x |
+| MiMo-V2.6-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 59.7 | 76.2-76.2 | 3.92 | yes | `b200_sxm-x192-nvl72-hybrid` | 51.4 | 171.2-171.2 | 1.50 | yes | 1.162x | 0.445x | 0.383x |
+| MiMo-V2.6-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x22` | 40.2 | 12.3-12.3 | 16.38 | **no** | `b200_sxm-x636-nvl72-hybrid` | 128.8 | 321.3-321.3 | 2.00 | yes | 0.312x | 0.038x | 0.122x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.032x to 0.383x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 2 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-flash`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x64` | 5,173.0 | 2,664.9-2,664.9 | 9.71 | **no** | `a100_sxm_80gb-x63-hybrid` | 331.6 | 1,047.1-1,047.1 | 1.58 | yes | 15.600x | 2.545x | 0.163x |
+| MiMo-V2.6-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 5,440.2 | 7,708.8-7,708.8 | 3.53 | yes | `a100_sxm_80gb-x56-hybrid` | 334.2 | 1,051.1-1,051.1 | 1.59 | yes | 16.280x | 7.334x | 0.451x |
+| MiMo-V2.6-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 3,903.2 | 1,928.9-1,928.9 | 10.12 | **no** | `a100_sxm_80gb-x391-hybrid` | 327.2 | 1,145.2-1,145.2 | 1.43 | yes | 11.928x | 1.684x | 0.141x |
+| MiMo-V2.6-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 3,134.8 | 1,722.7-1,722.7 | 9.10 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 1,139.6-1,139.6 | 1.42 | yes | 9.677x | 1.512x | 0.156x |
+| MiMo-V2.6-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 3,903.2 | 1,928.9-1,928.9 | 10.12 | **no** | `a100_sxm_80gb-x391-hybrid` | 327.2 | 1,145.2-1,145.2 | 1.43 | yes | 11.928x | 1.684x | 0.141x |
+| MiMo-V2.6-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 3,134.8 | 1,722.7-1,722.7 | 9.10 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 1,139.6-1,139.6 | 1.42 | yes | 9.677x | 1.512x | 0.156x |
+| MiMo-V2.6-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 3,860.3 | 1,558.9-1,558.9 | 12.38 | **no** | `a100_sxm_80gb-x283-hybrid` | 324.2 | 1,120.0-1,120.0 | 1.45 | yes | 11.906x | 1.392x | 0.117x |
+| MiMo-V2.6-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 3,134.8 | 1,722.7-1,722.7 | 9.10 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 1,139.6-1,139.6 | 1.42 | yes | 9.677x | 1.512x | 0.156x |
+| MiMo-V2.6-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 3,415.0 | 1,110.4-1,110.4 | 15.38 | **no** | `a100_sxm_80gb-x391-hybrid` | 323.4 | 1,131.3-1,131.3 | 1.43 | yes | 10.561x | 0.982x | 0.093x |
+| MiMo-V2.6-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 2,577.1 | 925.7-925.7 | 13.92 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 1,139.6-1,139.6 | 1.42 | yes | 7.956x | 0.812x | 0.102x |
+| MiMo-V2.6-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 2,658.9 | 605.7-605.7 | 21.95 | **no** | `a100_sxm_80gb-x391-hybrid` | 323.4 | 1,131.3-1,131.3 | 1.43 | yes | 8.223x | 0.535x | 0.065x |
+| MiMo-V2.6-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,983.5 | 495.9-495.9 | 20.00 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 1,240.1-1,240.1 | 1.30 | yes | 6.129x | 0.400x | 0.065x |
+| MiMo-V2.6-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,676.6 | 309.9-309.9 | 27.05 | **no** | `a100_sxm_80gb-x391-hybrid` | 301.0 | 1,025.0-1,025.0 | 1.47 | yes | 5.570x | 0.302x | 0.054x |
+| MiMo-V2.6-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,213.9 | 282.0-282.0 | 21.53 | **no** | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 1,240.1-1,240.1 | 1.30 | yes | 3.751x | 0.227x | 0.061x |
+| MiMo-V2.6-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 503.9 | 79.1-79.1 | 31.85 | **no** | `a100_sxm_80gb-x391-hybrid` | 162.2 | 533.4-533.4 | 1.52 | yes | 3.108x | 0.148x | 0.048x |
+| MiMo-V2.6-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 356.1 | 71.2-71.2 | 25.02 | **no** | `a100_sxm_80gb-x1735-hybrid` | 310.1 | 1,152.7-1,152.7 | 1.35 | yes | 1.148x | 0.062x | 0.054x |
+| MiMo-V2.6-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 131.0 | 38.2-38.2 | 17.17 | **no** | `a100_sxm_80gb-x391-hybrid` | 62.0 | 220.7-220.7 | 1.41 | yes | 2.112x | 0.173x | 0.082x |
+| MiMo-V2.6-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 92.0 | 17.8-17.8 | 25.80 | **no** | `a100_sxm_80gb-x1735-hybrid` | 172.4 | 584.9-584.9 | 1.47 | yes | 0.534x | 0.030x | 0.057x |
+| MiMo-V2.6-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 33.0 | 31.3-31.3 | 5.29 | **no** | `a100_sxm_80gb-x391-hybrid` | 22.2 | 65.6-65.6 | 1.69 | yes | 1.492x | 0.477x | 0.319x |
+| MiMo-V2.6-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x31` | 23.1 | 8.6-8.6 | 13.48 | **no** | `a100_sxm_80gb-x1735-hybrid` | 67.0 | 247.8-247.8 | 1.35 | yes | 0.345x | 0.035x | 0.100x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.048x to 0.451x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 1 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-mimo-v26-flash-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x105` | 4,359.9 | 2,564.7-2,564.7 | 8.50 | **no** | `b200_sxm-x53-nvl72-tensor` | 719.2 | 3,209.4-3,209.4 | 1.12 | yes | 6.062x | 0.799x | 0.132x |
+| MiMo-V2.6-Flash | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 5,253.1 | 2,916.6-2,916.6 | 9.01 | **no** | `b200_sxm-x58-nvl72-tensor` | 723.9 | 3,240.7-3,240.7 | 1.12 | yes | 7.257x | 0.900x | 0.124x |
+| MiMo-V2.6-Flash | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 2,458.8 | 550.3-550.3 | 22.34 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 685.0 | 3,052.8-3,052.8 | 1.12 | yes | 3.589x | 0.180x | 0.050x |
+| MiMo-V2.6-Flash | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 2,458.8 | 550.3-550.3 | 22.34 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 685.0 | 3,052.8-3,052.8 | 1.12 | yes | 3.589x | 0.180x | 0.050x |
+| MiMo-V2.6-Flash | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 2,458.8 | 550.3-550.3 | 22.34 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 685.0 | 3,052.8-3,052.8 | 1.12 | yes | 3.589x | 0.180x | 0.050x |
+| MiMo-V2.6-Flash | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 2,458.8 | 550.3-550.3 | 22.34 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 685.0 | 3,052.8-3,052.8 | 1.12 | yes | 3.589x | 0.180x | 0.050x |
+| MiMo-V2.6-Flash | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 2,302.8 | 547.2-547.2 | 21.04 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 685.0 | 3,052.8-3,052.8 | 1.12 | yes | 3.362x | 0.179x | 0.053x |
+| MiMo-V2.6-Flash | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 1,626.6 | 285.0-285.0 | 28.54 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 670.2 | 2,916.3-2,916.3 | 1.15 | yes | 2.427x | 0.098x | 0.040x |
+| MiMo-V2.6-Flash | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 586.9 | 81.7-81.7 | 35.91 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 565.7 | 2,400.0-2,400.0 | 1.18 | yes | 1.037x | 0.034x | 0.033x |
+| MiMo-V2.6-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 157.8 | 20.6-20.6 | 38.37 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 351.3 | 1,478.4-1,478.4 | 1.19 | yes | 0.449x | 0.014x | 0.031x |
+| MiMo-V2.6-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 40.0 | 5.1-5.1 | 38.91 | **no** | `b200_sxm-x3149-nvl72-hybrid` | 144.8 | 534.2-534.2 | 1.36 | yes | 0.276x | 0.010x | 0.035x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.031x to 0.132x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-flash-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x141` | 4,193.4 | 2,125.7-2,125.7 | 9.86 | **no** | `a100_sxm_80gb-x139-tensor` | 331.5 | 1,161.1-1,161.1 | 1.43 | yes | 12.650x | 1.831x | 0.145x |
+| MiMo-V2.6-Flash | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 5,049.5 | 4,558.8-4,558.8 | 5.54 | **no** | `a100_sxm_80gb-x112-tensor` | 327.6 | 1,149.5-1,149.5 | 1.43 | yes | 15.412x | 3.966x | 0.257x |
+| MiMo-V2.6-Flash | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x153` | 1,661.2 | 4,110.0-4,110.0 | 2.02 | yes | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 5.488x | 3.785x | 0.690x |
+| MiMo-V2.6-Flash | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 1,535.4 | 394.5-394.5 | 19.46 | **no** | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 5.073x | 0.363x | 0.072x |
+| MiMo-V2.6-Flash | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 1,535.4 | 394.5-394.5 | 19.46 | **no** | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 5.073x | 0.363x | 0.072x |
+| MiMo-V2.6-Flash | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 1,535.4 | 394.5-394.5 | 19.46 | **no** | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 5.073x | 0.363x | 0.072x |
+| MiMo-V2.6-Flash | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 1,535.4 | 394.5-394.5 | 19.46 | **no** | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 5.073x | 0.363x | 0.072x |
+| MiMo-V2.6-Flash | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 1,085.8 | 384.3-384.3 | 14.13 | **no** | `a100_sxm_80gb-x8562-hybrid` | 302.7 | 1,086.0-1,086.0 | 1.39 | yes | 3.587x | 0.354x | 0.099x |
+| MiMo-V2.6-Flash | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 346.8 | 100.4-100.4 | 17.28 | **no** | `a100_sxm_80gb-x8562-hybrid` | 275.8 | 1,033.4-1,033.4 | 1.33 | yes | 1.258x | 0.097x | 0.077x |
+| MiMo-V2.6-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 90.9 | 28.2-28.2 | 16.13 | **no** | `a100_sxm_80gb-x8562-hybrid` | 222.9 | 993.4-993.4 | 1.12 | yes | 0.408x | 0.028x | 0.070x |
+| MiMo-V2.6-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 22.9 | 7.1-7.1 | 16.26 | **no** | `a100_sxm_80gb-x8562-hybrid` | 95.2 | 390.7-390.7 | 1.22 | yes | 0.241x | 0.018x | 0.075x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.070x to 0.690x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 1 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-mimo-v26-flash-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 7,140.0 | 2,168.6-2,168.6 | 16.46 | **no** | `b200_sxm-x61-nvl72-tensor` | 758.2 | 3,384.7-3,384.7 | 1.12 | yes | 9.418x | 0.641x | 0.068x |
+| MiMo-V2.6-Flash | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 6,526.2 | 1,833.2-1,833.2 | 17.80 | **no** | `b200_sxm-x58-nvl72-tensor` | 757.2 | 3,373.7-3,373.7 | 1.12 | yes | 8.619x | 0.543x | 0.063x |
+| MiMo-V2.6-Flash | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 7,140.0 | 2,168.6-2,168.6 | 16.46 | **no** | `b200_sxm-x61-nvl72-tensor` | 748.9 | 3,246.5-3,246.5 | 1.15 | yes | 9.534x | 0.668x | 0.070x |
+| MiMo-V2.6-Flash | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 6,526.2 | 1,833.2-1,833.2 | 17.80 | **no** | `b200_sxm-x58-nvl72-tensor` | 747.6 | 3,231.8-3,231.8 | 1.16 | yes | 8.730x | 0.567x | 0.065x |
+| MiMo-V2.6-Flash | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 7,140.0 | 2,168.6-2,168.6 | 16.46 | **no** | `b200_sxm-x61-nvl72-tensor` | 731.6 | 3,012.3-3,012.3 | 1.21 | yes | 9.760x | 0.720x | 0.074x |
+| MiMo-V2.6-Flash | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 6,526.2 | 1,833.2-1,833.2 | 17.80 | **no** | `b200_sxm-x58-nvl72-tensor` | 729.7 | 2,993.2-2,993.2 | 1.22 | yes | 8.944x | 0.612x | 0.068x |
+| MiMo-V2.6-Flash | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 7,140.0 | 2,168.6-2,168.6 | 16.46 | **no** | `b200_sxm-x61-nvl72-tensor` | 701.4 | 2,692.7-2,692.7 | 1.30 | yes | 10.180x | 0.805x | 0.079x |
+| MiMo-V2.6-Flash | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 6,526.2 | 1,833.2-1,833.2 | 17.80 | **no** | `b200_sxm-x58-nvl72-tensor` | 698.5 | 2,671.1-2,671.1 | 1.31 | yes | 9.344x | 0.686x | 0.073x |
+| MiMo-V2.6-Flash | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x170-romfill` | 7,074.1 | 2,100.2-2,100.2 | 16.84 | **no** | `b200_sxm-x87-nvl72-hybrid` | 676.9 | 2,553.8-2,553.8 | 1.33 | yes | 10.451x | 0.822x | 0.079x |
+| MiMo-V2.6-Flash | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 6,388.4 | 3,972.7-3,972.7 | 8.04 | **no** | `b200_sxm-x173-nvl72-hybrid` | 714.3 | 2,886.9-2,886.9 | 1.24 | yes | 8.943x | 1.376x | 0.154x |
+| MiMo-V2.6-Flash | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,967.4 | 2,139.2-2,139.2 | 16.29 | **no** | `b200_sxm-x173-nvl72-hybrid` | 675.7 | 2,517.3-2,517.3 | 1.34 | yes | 10.312x | 0.850x | 0.082x |
+| MiMo-V2.6-Flash | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6,305.2 | 4,036.3-4,036.3 | 7.81 | **no** | `b200_sxm-x347-nvl72-hybrid` | 711.5 | 2,846.3-2,846.3 | 1.25 | yes | 8.862x | 1.418x | 0.160x |
+| MiMo-V2.6-Flash | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,929.3 | 1,140.0-1,140.0 | 30.39 | **no** | `b200_sxm-x173-nvl72-hybrid` | 619.2 | 2,069.7-2,069.7 | 1.50 | yes | 11.191x | 0.551x | 0.049x |
+| MiMo-V2.6-Flash | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6,075.1 | 2,270.4-2,270.4 | 13.38 | **no** | `b200_sxm-x347-nvl72-hybrid` | 671.7 | 2,431.8-2,431.8 | 1.38 | yes | 9.045x | 0.934x | 0.103x |
+| MiMo-V2.6-Flash | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,651.0 | 559.8-559.8 | 41.54 | **no** | `b200_sxm-x173-nvl72-hybrid` | 479.3 | 1,079.3-1,079.3 | 2.22 | yes | 9.704x | 0.519x | 0.053x |
+| MiMo-V2.6-Flash | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,129.5 | 1,164.0-1,164.0 | 17.74 | **no** | `b200_sxm-x347-nvl72-hybrid` | 545.1 | 1,409.0-1,409.0 | 1.93 | yes | 7.576x | 0.826x | 0.109x |
+| MiMo-V2.6-Flash | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,847.6 | 256.5-256.5 | 36.01 | **no** | `b200_sxm-x173-nvl72-hybrid` | 329.6 | 626.6-626.6 | 2.63 | yes | 5.605x | 0.409x | 0.073x |
+| MiMo-V2.6-Flash | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,614.2 | 304.5-304.5 | 26.51 | **no** | `b200_sxm-x347-nvl72-hybrid` | 388.1 | 611.1-611.1 | 3.18 | yes | 4.159x | 0.498x | 0.120x |
+| MiMo-V2.6-Flash | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 527.4 | 164.8-164.8 | 16.00 | **no** | `b200_sxm-x173-nvl72-hybrid` | 195.2 | 316.0-316.0 | 3.09 | yes | 2.702x | 0.521x | 0.193x |
+| MiMo-V2.6-Flash | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 452.3 | 237.3-237.3 | 9.53 | **no** | `b200_sxm-x347-nvl72-hybrid` | 242.8 | 306.4-306.4 | 3.96 | yes | 1.863x | 0.775x | 0.416x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.049x to 0.416x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-flash-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Flash | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 6,845.8 | 1,569.2-1,569.2 | 21.81 | **no** | `a100_sxm_80gb-x77-hybrid` | 369.9 | 1,123.9-1,123.9 | 1.65 | yes | 18.505x | 1.396x | 0.075x |
+| MiMo-V2.6-Flash | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,680.5 | 1,822.0-1,822.0 | 15.59 | **no** | `a100_sxm_80gb-x224-hybrid` | 369.3 | 1,216.5-1,216.5 | 1.52 | yes | 15.381x | 1.498x | 0.097x |
+| MiMo-V2.6-Flash | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 6,845.8 | 1,569.2-1,569.2 | 21.81 | **no** | `a100_sxm_80gb-x77-hybrid` | 369.9 | 1,123.9-1,123.9 | 1.65 | yes | 18.505x | 1.396x | 0.075x |
+| MiMo-V2.6-Flash | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,680.5 | 1,822.0-1,822.0 | 15.59 | **no** | `a100_sxm_80gb-x224-hybrid` | 369.3 | 1,216.5-1,216.5 | 1.52 | yes | 15.381x | 1.498x | 0.097x |
+| MiMo-V2.6-Flash | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 6,845.8 | 1,569.2-1,569.2 | 21.81 | **no** | `a100_sxm_80gb-x77-hybrid` | 369.9 | 1,123.9-1,123.9 | 1.65 | yes | 18.505x | 1.396x | 0.075x |
+| MiMo-V2.6-Flash | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,680.5 | 1,822.0-1,822.0 | 15.59 | **no** | `a100_sxm_80gb-x224-hybrid` | 369.3 | 1,216.5-1,216.5 | 1.52 | yes | 15.381x | 1.498x | 0.097x |
+| MiMo-V2.6-Flash | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 6,845.8 | 1,569.2-1,569.2 | 21.81 | **no** | `a100_sxm_80gb-x77-hybrid` | 369.9 | 1,123.9-1,123.9 | 1.65 | yes | 18.505x | 1.396x | 0.075x |
+| MiMo-V2.6-Flash | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 5,680.5 | 1,822.0-1,822.0 | 15.59 | **no** | `a100_sxm_80gb-x224-hybrid` | 369.3 | 1,216.5-1,216.5 | 1.52 | yes | 15.381x | 1.498x | 0.097x |
+| MiMo-V2.6-Flash | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x156-romfill` | 6,790.9 | 1,567.9-1,567.9 | 21.66 | **no** | `a100_sxm_80gb-x154-hybrid` | 366.7 | 1,168.0-1,168.0 | 1.57 | yes | 18.517x | 1.342x | 0.072x |
+| MiMo-V2.6-Flash | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,547.9 | 5,122.4-5,122.4 | 5.42 | **no** | `a100_sxm_80gb-x672-hybrid` | 363.0 | 1,258.4-1,258.4 | 1.44 | yes | 15.283x | 4.070x | 0.266x |
+| MiMo-V2.6-Flash | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,679.9 | 1,584.8-1,584.8 | 21.08 | **no** | `a100_sxm_80gb-x335-hybrid` | 364.5 | 1,223.7-1,223.7 | 1.49 | yes | 18.326x | 1.295x | 0.071x |
+| MiMo-V2.6-Flash | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,370.5 | 3,078.0-3,078.0 | 8.72 | **no** | `a100_sxm_80gb-x672-hybrid` | 363.0 | 1,258.4-1,258.4 | 1.44 | yes | 14.794x | 2.446x | 0.165x |
+| MiMo-V2.6-Flash | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,338.1 | 831.7-831.7 | 38.10 | **no** | `a100_sxm_80gb-x335-hybrid` | 337.9 | 1,064.2-1,064.2 | 1.59 | yes | 18.755x | 0.782x | 0.042x |
+| MiMo-V2.6-Flash | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,465.8 | 1,681.4-1,681.4 | 13.28 | **no** | `a100_sxm_80gb-x672-hybrid` | 363.0 | 1,258.4-1,258.4 | 1.44 | yes | 12.302x | 1.336x | 0.109x |
+| MiMo-V2.6-Flash | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,960.9 | 406.7-406.7 | 48.70 | **no** | `a100_sxm_80gb-x335-hybrid` | 212.3 | 605.9-605.9 | 1.75 | yes | 18.653x | 0.671x | 0.036x |
+| MiMo-V2.6-Flash | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,332.7 | 849.5-849.5 | 13.73 | **no** | `a100_sxm_80gb-x672-hybrid` | 279.3 | 839.4-839.4 | 1.66 | yes | 8.353x | 1.012x | 0.121x |
+| MiMo-V2.6-Flash | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,434.4 | 186.3-186.3 | 38.50 | **no** | `a100_sxm_80gb-x335-hybrid` | 101.5 | 301.4-301.4 | 1.68 | yes | 14.135x | 0.618x | 0.044x |
+| MiMo-V2.6-Flash | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 723.5 | 220.1-220.1 | 16.44 | **no** | `a100_sxm_80gb-x672-hybrid` | 148.4 | 432.1-432.1 | 1.72 | yes | 4.876x | 0.509x | 0.104x |
+| MiMo-V2.6-Flash | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 396.7 | 120.7-120.7 | 16.44 | **no** | `a100_sxm_80gb-x335-hybrid` | 56.2 | 119.3-119.3 | 2.36 | yes | 7.058x | 1.011x | 0.143x |
+| MiMo-V2.6-Flash | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 190.0 | 171.5-171.5 | 5.54 | **no** | `a100_sxm_80gb-x672-hybrid` | 71.9 | 207.3-207.3 | 1.73 | yes | 2.645x | 0.827x | 0.313x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.036x to 0.313x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-mimo-v26-pro`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x140` | 3,064.9 | 2,001.7-2,001.7 | 7.66 | **no** | `b200_sxm-x71-nvl72-tensor` | 503.6 | 2,223.4-2,223.4 | 1.13 | yes | 6.086x | 0.900x | 0.148x |
+| MiMo-V2.6-Pro | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | 3,548.1 | 2,048.0-2,048.0 | 8.66 | **no** | `b200_sxm-x87-nvl72-hybrid` | 485.8 | 2,085.5-2,085.5 | 1.16 | yes | 7.303x | 0.982x | 0.134x |
+| MiMo-V2.6-Pro | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 2,345.5 | 1,086.3-1,086.3 | 10.80 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 492.3 | 2,205.7-2,205.7 | 1.12 | yes | 4.765x | 0.492x | 0.103x |
+| MiMo-V2.6-Pro | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 2,345.5 | 1,086.3-1,086.3 | 10.80 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 492.3 | 2,205.7-2,205.7 | 1.12 | yes | 4.765x | 0.492x | 0.103x |
+| MiMo-V2.6-Pro | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 2,345.5 | 1,086.3-1,086.3 | 10.80 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 492.3 | 2,205.7-2,205.7 | 1.12 | yes | 4.765x | 0.492x | 0.103x |
+| MiMo-V2.6-Pro | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 2,179.3 | 1,070.8-1,070.8 | 10.18 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 492.3 | 2,205.7-2,205.7 | 1.12 | yes | 4.427x | 0.485x | 0.110x |
+| MiMo-V2.6-Pro | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 1,903.5 | 594.7-594.7 | 16.00 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 483.9 | 2,094.8-2,094.8 | 1.16 | yes | 3.934x | 0.284x | 0.072x |
+| MiMo-V2.6-Pro | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 1,576.3 | 316.4-316.4 | 24.91 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 463.2 | 1,880.3-1,880.3 | 1.23 | yes | 3.404x | 0.168x | 0.049x |
+| MiMo-V2.6-Pro | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 575.6 | 90.7-90.7 | 31.73 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 371.7 | 1,213.8-1,213.8 | 1.53 | yes | 1.549x | 0.075x | 0.048x |
+| MiMo-V2.6-Pro | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 158.2 | 22.8-22.8 | 34.68 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 221.5 | 533.1-533.1 | 2.08 | yes | 0.714x | 0.043x | 0.060x |
+| MiMo-V2.6-Pro | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x49` | 40.3 | 5.7-5.7 | 35.33 | **no** | `b200_sxm-x1416-nvl72-hybrid` | 99.0 | 260.8-260.8 | 1.90 | yes | 0.407x | 0.022x | 0.054x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.048x to 0.148x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-pro`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x180` | 2,984.6 | 1,710.7-1,710.7 | 8.72 | **no** | `a100_sxm_80gb-x178-tensor` | 224.9 | 710.0-710.0 | 1.58 | yes | 13.268x | 2.409x | 0.182x |
+| MiMo-V2.6-Pro | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 3,483.3 | 3,148.7-3,148.7 | 5.53 | **no** | `a100_sxm_80gb-x168-tensor` | 224.5 | 708.7-708.7 | 1.58 | yes | 15.516x | 4.443x | 0.286x |
+| MiMo-V2.6-Pro | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,895.0 | 844.7-844.7 | 11.22 | **no** | `a100_sxm_80gb-x3805-hybrid` | 205.0 | 665.2-665.2 | 1.54 | yes | 9.245x | 1.270x | 0.137x |
+| MiMo-V2.6-Pro | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,895.0 | 844.7-844.7 | 11.22 | **no** | `a100_sxm_80gb-x3805-hybrid` | 205.0 | 665.2-665.2 | 1.54 | yes | 9.245x | 1.270x | 0.137x |
+| MiMo-V2.6-Pro | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,895.0 | 844.7-844.7 | 11.22 | **no** | `a100_sxm_80gb-x3805-hybrid` | 205.0 | 665.2-665.2 | 1.54 | yes | 9.245x | 1.270x | 0.137x |
+| MiMo-V2.6-Pro | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,895.0 | 844.7-844.7 | 11.22 | **no** | `a100_sxm_80gb-x3805-hybrid` | 205.0 | 665.2-665.2 | 1.54 | yes | 9.245x | 1.270x | 0.137x |
+| MiMo-V2.6-Pro | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,455.4 | 444.7-444.7 | 16.37 | **no** | `a100_sxm_80gb-x3805-hybrid` | 205.0 | 665.2-665.2 | 1.54 | yes | 7.100x | 0.668x | 0.094x |
+| MiMo-V2.6-Pro | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 1,032.2 | 228.5-228.5 | 22.58 | **no** | `a100_sxm_80gb-x3805-hybrid` | 203.5 | 647.7-647.7 | 1.57 | yes | 5.071x | 0.353x | 0.070x |
+| MiMo-V2.6-Pro | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 342.9 | 64.8-64.8 | 26.44 | **no** | `a100_sxm_80gb-x3805-hybrid` | 163.4 | 431.4-431.4 | 1.89 | yes | 2.099x | 0.150x | 0.072x |
+| MiMo-V2.6-Pro | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 90.5 | 16.3-16.3 | 27.76 | **no** | `a100_sxm_80gb-x3805-hybrid` | 120.9 | 400.9-400.9 | 1.51 | yes | 0.749x | 0.041x | 0.054x |
+| MiMo-V2.6-Pro | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x68` | 22.9 | 4.1-4.1 | 28.02 | **no** | `a100_sxm_80gb-x3805-hybrid` | 53.9 | 172.3-172.3 | 1.57 | yes | 0.424x | 0.024x | 0.056x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.054x to 0.286x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-mimo-v26-pro-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x333` | 2,556.9 | 1,743.7-1,743.7 | 7.33 | **no** | `b200_sxm-x170-nvl72-hybrid` | 469.2 | 2,077.8-2,077.8 | 1.13 | yes | 5.449x | 0.839x | 0.154x |
+| MiMo-V2.6-Pro | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 3,359.6 | 2,529.4-2,529.4 | 6.64 | **no** | `b200_sxm-x116-nvl72-hybrid` | 471.0 | 2,078.7-2,078.7 | 1.13 | yes | 7.133x | 1.217x | 0.171x |
+| MiMo-V2.6-Pro | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,385.2 | 256.0-256.0 | 27.05 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 3.093x | 0.129x | 0.042x |
+| MiMo-V2.6-Pro | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,385.2 | 256.0-256.0 | 27.05 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 3.093x | 0.129x | 0.042x |
+| MiMo-V2.6-Pro | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,385.2 | 256.0-256.0 | 27.05 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 3.093x | 0.129x | 0.042x |
+| MiMo-V2.6-Pro | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,385.2 | 256.0-256.0 | 27.05 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 3.093x | 0.129x | 0.042x |
+| MiMo-V2.6-Pro | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,385.2 | 256.0-256.0 | 27.05 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 3.093x | 0.129x | 0.042x |
+| MiMo-V2.6-Pro | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 1,342.8 | 255.5-255.5 | 26.27 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 447.8 | 1,981.3-1,981.3 | 1.13 | yes | 2.998x | 0.129x | 0.043x |
+| MiMo-V2.6-Pro | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 554.4 | 66.1-66.1 | 41.97 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 401.8 | 1,593.9-1,593.9 | 1.26 | yes | 1.380x | 0.041x | 0.030x |
+| MiMo-V2.6-Pro | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 155.8 | 18.6-18.6 | 41.97 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 278.1 | 1,095.4-1,095.4 | 1.27 | yes | 0.560x | 0.017x | 0.030x |
+| MiMo-V2.6-Pro | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 39.9 | 4.6-4.6 | 42.96 | **no** | `b200_sxm-x6992-nvl72-hybrid` | 126.7 | 475.3-475.3 | 1.33 | yes | 0.315x | 0.010x | 0.031x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.030x to 0.171x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-pro-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x320` | 2,389.5 | 1,701.2-1,701.2 | 7.02 | **no** | `a100_sxm_80gb-x316-tensor` | 224.4 | 713.7-713.7 | 1.57 | yes | 10.646x | 2.383x | 0.224x |
+| MiMo-V2.6-Pro | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 3,205.3 | 1,850.1-1,850.1 | 8.66 | **no** | `a100_sxm_80gb-x336-hybrid` | 190.6 | 626.1-626.1 | 1.52 | yes | 16.821x | 2.955x | 0.176x |
+| MiMo-V2.6-Pro | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x339` | 873.9 | 2,598.6-2,598.6 | 1.68 | yes | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.622x | 4.086x | 0.884x |
+| MiMo-V2.6-Pro | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x339` | 805.6 | 2,090.1-2,090.1 | 1.93 | yes | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.260x | 3.287x | 0.771x |
+| MiMo-V2.6-Pro | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 796.3 | 182.5-182.5 | 21.81 | **no** | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.211x | 0.287x | 0.068x |
+| MiMo-V2.6-Pro | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 796.3 | 182.5-182.5 | 21.81 | **no** | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.211x | 0.287x | 0.068x |
+| MiMo-V2.6-Pro | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 796.3 | 182.5-182.5 | 21.81 | **no** | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.211x | 0.287x | 0.068x |
+| MiMo-V2.6-Pro | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 796.3 | 182.5-182.5 | 21.81 | **no** | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 4.211x | 0.287x | 0.068x |
+| MiMo-V2.6-Pro | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 327.2 | 91.0-91.0 | 17.97 | **no** | `a100_sxm_80gb-x18971-hybrid` | 189.1 | 636.0-636.0 | 1.49 | yes | 1.730x | 0.143x | 0.083x |
+| MiMo-V2.6-Pro | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 90.0 | 25.6-25.6 | 17.57 | **no** | `a100_sxm_80gb-x18971-hybrid` | 139.5 | 447.1-447.1 | 1.56 | yes | 0.645x | 0.057x | 0.089x |
+| MiMo-V2.6-Pro | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 22.9 | 6.4-6.4 | 17.83 | **no** | `a100_sxm_80gb-x18971-hybrid` | 77.4 | 335.4-335.4 | 1.15 | yes | 0.295x | 0.019x | 0.065x |
+
+**Does the ratio compress?** Of 11 class rows in this study, 11 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.065x to 0.884x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 2 of 11 ROM rows and 11 of 11 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-mimo-v26-pro-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 4,293.8 | 1,377.1-1,377.1 | 15.59 | **no** | `b200_sxm-x78-nvl72-hybrid` | 490.3 | 2,078.5-2,078.5 | 1.18 | yes | 8.758x | 0.663x | 0.076x |
+| MiMo-V2.6-Pro | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 4,202.7 | 1,300.6-1,300.6 | 16.16 | **no** | `b200_sxm-x87-nvl72-hybrid` | 494.2 | 2,116.2-2,116.2 | 1.17 | yes | 8.504x | 0.615x | 0.072x |
+| MiMo-V2.6-Pro | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 4,293.8 | 1,377.1-1,377.1 | 15.59 | **no** | `b200_sxm-x78-nvl72-hybrid` | 490.3 | 2,078.5-2,078.5 | 1.18 | yes | 8.758x | 0.663x | 0.076x |
+| MiMo-V2.6-Pro | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 4,202.7 | 1,300.6-1,300.6 | 16.16 | **no** | `b200_sxm-x87-nvl72-hybrid` | 494.2 | 2,116.2-2,116.2 | 1.17 | yes | 8.504x | 0.615x | 0.072x |
+| MiMo-V2.6-Pro | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 4,293.8 | 1,377.1-1,377.1 | 15.59 | **no** | `b200_sxm-x78-nvl72-hybrid` | 477.9 | 1,928.0-1,928.0 | 1.24 | yes | 8.984x | 0.714x | 0.080x |
+| MiMo-V2.6-Pro | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 4,202.7 | 1,300.6-1,300.6 | 16.16 | **no** | `b200_sxm-x87-nvl72-hybrid` | 482.8 | 1,972.2-1,972.2 | 1.22 | yes | 8.706x | 0.659x | 0.076x |
+| MiMo-V2.6-Pro | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 4,293.8 | 1,377.1-1,377.1 | 15.59 | **no** | `b200_sxm-x78-nvl72-hybrid` | 455.6 | 1,686.9-1,686.9 | 1.35 | yes | 9.424x | 0.816x | 0.087x |
+| MiMo-V2.6-Pro | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 4,202.7 | 1,300.6-1,300.6 | 16.16 | **no** | `b200_sxm-x87-nvl72-hybrid` | 461.9 | 1,739.0-1,739.0 | 1.33 | yes | 9.099x | 0.748x | 0.082x |
+| MiMo-V2.6-Pro | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x294-romfill` | 4,249.4 | 1,287.8-1,287.8 | 16.50 | **no** | `b200_sxm-x150-nvl72-hybrid` | 456.9 | 1,700.4-1,700.4 | 1.34 | yes | 9.301x | 0.757x | 0.081x |
+| MiMo-V2.6-Pro | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 4,172.4 | 1,383.3-1,383.3 | 15.08 | **no** | `b200_sxm-x173-nvl72-hybrid` | 464.5 | 1,757.7-1,757.7 | 1.32 | yes | 8.983x | 0.787x | 0.088x |
+| MiMo-V2.6-Pro | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x294-romfill` | 4,179.8 | 697.3-697.3 | 29.97 | **no** | `b200_sxm-x150-nvl72-hybrid` | 417.5 | 1,394.9-1,394.9 | 1.50 | yes | 10.012x | 0.500x | 0.050x |
+| MiMo-V2.6-Pro | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,144.5 | 1,410.8-1,410.8 | 14.69 | **no** | `b200_sxm-x347-nvl72-hybrid` | 464.2 | 1,750.1-1,750.1 | 1.33 | yes | 8.928x | 0.806x | 0.090x |
+| MiMo-V2.6-Pro | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392-romfill` | 3,902.5 | 686.3-686.3 | 28.43 | **no** | `b200_sxm-x200-nvl72-hybrid` | 387.1 | 1,163.0-1,163.0 | 1.66 | yes | 10.082x | 0.590x | 0.059x |
+| MiMo-V2.6-Pro | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,697.7 | 746.0-746.0 | 24.78 | **no** | `b200_sxm-x347-nvl72-hybrid` | 426.2 | 1,415.6-1,415.6 | 1.51 | yes | 8.675x | 0.527x | 0.061x |
+| MiMo-V2.6-Pro | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392-romfill` | 2,400.0 | 177.8-177.8 | 67.50 | **no** | `b200_sxm-x200-nvl72-hybrid` | 266.4 | 551.6-551.6 | 2.41 | yes | 9.009x | 0.322x | 0.036x |
+| MiMo-V2.6-Pro | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,259.3 | 372.8-372.8 | 30.30 | **no** | `b200_sxm-x347-nvl72-hybrid` | 310.8 | 741.2-741.2 | 2.10 | yes | 7.269x | 0.503x | 0.069x |
+| MiMo-V2.6-Pro | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 881.9 | 153.4-153.4 | 28.75 | **no** | `b200_sxm-x173-nvl72-hybrid` | 152.2 | 184.9-184.9 | 4.12 | yes | 5.793x | 0.830x | 0.143x |
+| MiMo-V2.6-Pro | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 792.0 | 94.9-94.9 | 41.75 | **no** | `b200_sxm-x347-nvl72-hybrid` | 197.6 | 307.0-307.0 | 3.22 | yes | 4.007x | 0.309x | 0.077x |
+| MiMo-V2.6-Pro | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392` | 345.6 | 96.9-96.9 | 17.84 | **no** | `b200_sxm-x200-nvl72-hybrid` | 89.2 | 102.3-102.3 | 4.36 | yes | 3.875x | 0.947x | 0.244x |
+| MiMo-V2.6-Pro | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 215.4 | 23.0-23.0 | 46.76 | **no** | `b200_sxm-x347-nvl72-hybrid` | 114.4 | 151.3-151.3 | 3.78 | yes | 1.884x | 0.152x | 0.081x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.036x to 0.244x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n6_vs_a100-mimo-v26-pro-8k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MiMo-V2.6-Pro | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 4,100.9 | 1,011.9-1,011.9 | 20.26 | **no** | `a100_sxm_80gb-x208-tensor` | 227.6 | 717.2-717.2 | 1.59 | yes | 18.019x | 1.411x | 0.078x |
+| MiMo-V2.6-Pro | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 3,649.2 | 1,549.1-1,549.1 | 11.78 | **no** | `a100_sxm_80gb-x280-tensor` | 229.0 | 722.3-722.3 | 1.59 | yes | 15.936x | 2.145x | 0.135x |
+| MiMo-V2.6-Pro | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 4,100.9 | 1,011.9-1,011.9 | 20.26 | **no** | `a100_sxm_80gb-x208-hybrid` | 211.6 | 662.3-662.3 | 1.60 | yes | 19.385x | 1.528x | 0.079x |
+| MiMo-V2.6-Pro | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 3,649.2 | 1,549.1-1,549.1 | 11.78 | **no** | `a100_sxm_80gb-x280-hybrid` | 212.9 | 671.3-671.3 | 1.59 | yes | 17.138x | 2.308x | 0.135x |
+| MiMo-V2.6-Pro | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 4,100.9 | 1,011.9-1,011.9 | 20.26 | **no** | `a100_sxm_80gb-x208-hybrid` | 211.6 | 662.3-662.3 | 1.60 | yes | 19.385x | 1.528x | 0.079x |
+| MiMo-V2.6-Pro | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 3,649.2 | 1,549.1-1,549.1 | 11.78 | **no** | `a100_sxm_80gb-x280-hybrid` | 212.9 | 671.3-671.3 | 1.59 | yes | 17.138x | 2.308x | 0.135x |
+| MiMo-V2.6-Pro | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 4,100.9 | 1,011.9-1,011.9 | 20.26 | **no** | `a100_sxm_80gb-x208-hybrid` | 195.4 | 591.7-591.7 | 1.65 | yes | 20.982x | 1.710x | 0.082x |
+| MiMo-V2.6-Pro | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 3,649.2 | 1,549.1-1,549.1 | 11.78 | **no** | `a100_sxm_80gb-x280-hybrid` | 202.3 | 549.1-549.1 | 1.84 | yes | 18.035x | 2.821x | 0.156x |
+| MiMo-V2.6-Pro | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x252-romfill` | 4,086.5 | 969.9-969.9 | 21.07 | **no** | `a100_sxm_80gb-x249-hybrid` | 182.3 | 470.1-470.1 | 1.94 | yes | 22.419x | 2.063x | 0.092x |
+| MiMo-V2.6-Pro | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,642.9 | 696.4-696.4 | 26.16 | **no** | `a100_sxm_80gb-x672-hybrid` | 205.8 | 583.0-583.0 | 1.77 | yes | 17.699x | 1.194x | 0.067x |
+| MiMo-V2.6-Pro | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x252-romfill` | 3,837.2 | 504.6-504.6 | 38.02 | **no** | `a100_sxm_80gb-x249-hybrid` | 178.1 | 527.2-527.2 | 1.69 | yes | 21.541x | 0.957x | 0.044x |
+| MiMo-V2.6-Pro | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,274.2 | 367.1-367.1 | 44.60 | **no** | `a100_sxm_80gb-x672-hybrid` | 189.6 | 541.6-541.6 | 1.75 | yes | 17.265x | 0.678x | 0.039x |
+| MiMo-V2.6-Pro | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378-romfill` | 3,568.8 | 493.6-493.6 | 36.15 | **no** | `a100_sxm_80gb-x373-hybrid` | 168.9 | 490.6-490.6 | 1.72 | yes | 21.129x | 1.006x | 0.048x |
+| MiMo-V2.6-Pro | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 2,736.1 | 363.4-363.4 | 37.64 | **no** | `a100_sxm_80gb-x672-hybrid` | 177.8 | 559.3-559.3 | 1.59 | yes | 15.390x | 0.650x | 0.042x |
+| MiMo-V2.6-Pro | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378-romfill` | 1,932.0 | 128.3-128.3 | 75.27 | **no** | `a100_sxm_80gb-x373-hybrid` | 105.4 | 271.9-271.9 | 1.94 | yes | 18.326x | 0.472x | 0.026x |
+| MiMo-V2.6-Pro | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,183.6 | 93.6-93.6 | 63.22 | **no** | `a100_sxm_80gb-x672-hybrid` | 133.9 | 363.2-363.2 | 1.84 | yes | 8.840x | 0.258x | 0.029x |
+| MiMo-V2.6-Pro | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378` | 782.0 | 130.2-130.2 | 30.02 | **no** | `a100_sxm_80gb-x373-hybrid` | 47.0 | 130.7-130.7 | 1.80 | yes | 16.643x | 0.996x | 0.060x |
+| MiMo-V2.6-Pro | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 345.9 | 23.6-23.6 | 73.35 | **no** | `a100_sxm_80gb-x672-hybrid` | 67.2 | 177.6-177.6 | 1.89 | yes | 5.150x | 0.133x | 0.026x |
+| MiMo-V2.6-Pro | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x378` | 231.4 | 33.4-33.4 | 34.59 | **no** | `a100_sxm_80gb-x373-hybrid` | 22.0 | 58.1-58.1 | 1.89 | yes | 10.535x | 0.576x | 0.055x |
+| MiMo-V2.6-Pro | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 89.5 | 22.5-22.5 | 19.86 | **no** | `a100_sxm_80gb-x672-hybrid` | 28.7 | 82.4-82.4 | 1.74 | yes | 3.120x | 0.274x | 0.088x |
+
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.026x to 0.156x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+
+### `n5_vs_b200-qwen3-8b-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Qwen3-8B | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x180` | 3,783.5 | not applicable | -- | -- | `b200_sxm-x92-nvl72-hybrid` | 772.6 | not applicable | -- | -- | 4.897x | -- | -- |
+| Qwen3-8B | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2-romfill` | 8,249.0 | not applicable | -- | -- | `b200_sxm-x58-nvl72-tensor` | 849.5 | not applicable | -- | -- | 9.711x | -- | -- |
+
+### `n6_vs_a100-qwen3-8b-1m`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Qwen3-8B | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x227` | 3,567.0 | not applicable | -- | -- | `a100_sxm_80gb-x224-tensor` | 468.9 | not applicable | -- | -- | 7.606x | -- | -- |
+| Qwen3-8B | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 8,205.5 | not applicable | -- | -- | `a100_sxm_80gb-x112-tensor` | 389.3 | not applicable | -- | -- | 21.076x | -- | -- |
+
+### `n5_vs_b200-qwen3-8b-200k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Qwen3-8B | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x60-romfill` | 7,120.3 | not applicable | -- | -- | `b200_sxm-x31-nvl72-tensor` | 1,034.4 | not applicable | -- | -- | 6.883x | -- | -- |
+| Qwen3-8B | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 9,134.8 | not applicable | -- | -- | `b200_sxm-x29-nvl72-tensor` | 1,018.3 | not applicable | -- | -- | 8.971x | -- | -- |
+| Qwen3-8B | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-tensor-x139-romfill` | 3,018.8 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | not applicable | -- | -- | 2.776x | -- | -- |
+| Qwen3-8B | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 2,737.9 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | not applicable | -- | -- | 2.517x | -- | -- |
+| Qwen3-8B | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 2,737.9 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | not applicable | -- | -- | 2.517x | -- | -- |
+| Qwen3-8B | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 2,737.9 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | not applicable | -- | -- | 2.517x | -- | -- |
+| Qwen3-8B | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 2,737.9 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | not applicable | -- | -- | 2.517x | -- | -- |
+| Qwen3-8B | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 1,809.5 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 1,075.6 | not applicable | -- | -- | 1.682x | -- | -- |
+| Qwen3-8B | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 602.2 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 851.3 | not applicable | -- | -- | 0.707x | -- | -- |
+| Qwen3-8B | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 158.3 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 481.1 | not applicable | -- | -- | 0.329x | -- | -- |
+| Qwen3-8B | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 40.0 | not applicable | -- | -- | `b200_sxm-x4016-nvl72-hybrid` | 177.1 | not applicable | -- | -- | 0.226x | -- | -- |
+
+### `n6_vs_a100-qwen3-8b-200k`
+
+| model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| Qwen3-8B | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x57-romfill` | 7,114.3 | not applicable | -- | -- | `a100_sxm_80gb-x56-tensor` | 461.8 | not applicable | -- | -- | 15.405x | -- | -- |
+| Qwen3-8B | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1-romfill` | 9,194.4 | not applicable | -- | -- | `a100_sxm_80gb-x56-tensor` | 461.8 | not applicable | -- | -- | 19.909x | -- | -- |
+| Qwen3-8B | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x196-romfill` | 2,704.1 | not applicable | -- | -- | `a100_sxm_80gb-x10969-tensor` | 475.1 | not applicable | -- | -- | 5.692x | -- | -- |
+| Qwen3-8B | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x196` | 2,461.8 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 456.0 | not applicable | -- | -- | 5.398x | -- | -- |
+| Qwen3-8B | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x196` | 2,041.1 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 456.0 | not applicable | -- | -- | 4.476x | -- | -- |
+| Qwen3-8B | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x196` | 1,518.6 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 456.0 | not applicable | -- | -- | 3.330x | -- | -- |
+| Qwen3-8B | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x196-romfill` | 1,490.4 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 456.0 | not applicable | -- | -- | 3.268x | -- | -- |
+| Qwen3-8B | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x196-romfill` | 1,191.2 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 456.0 | not applicable | -- | -- | 2.612x | -- | -- |
+| Qwen3-8B | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x196-romfill` | 354.2 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 419.8 | not applicable | -- | -- | 0.844x | -- | -- |
+| Qwen3-8B | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x196-romfill` | 91.5 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 256.3 | not applicable | -- | -- | 0.357x | -- | -- |
+| Qwen3-8B | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x196-romfill` | 23.0 | not applicable | -- | -- | `a100_sxm_80gb-x10969-hybrid` | 112.7 | not applicable | -- | -- | 0.204x | -- | -- |
 
 ### `n5_vs_b200-flash-1m`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x63` | 12,688.5 | 11,197.7-11,197.7 | 5.67 | **no** | `b200_sxm-x32-nvl72-tensor` | 3,539.8 | 11,637.8-11,637.8 | 1.52 | yes | 3.584x | 0.962x | 0.268x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 5,458.3 | 5,920.7-5,920.7 | 4.61 | yes | `b200_sxm-x58-nvl72-tensor` | 3,921.7 | 14,182.3-14,182.3 | 1.38 | yes | 1.392x | 0.417x | 0.300x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 3,852.3 | 13,429.7-13,429.7 | 1.43 | yes | 1.641x | 0.075x | 0.046x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4,447.5 | 9,633.6-9,633.6 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,590.6 | 10,248.4-10,248.4 | 1.75 | yes | 1.239x | 0.940x | 0.759x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 3,775.7 | 12,613.6-12,613.6 | 1.50 | yes | 1.674x | 0.080x | 0.048x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4,447.5 | 9,633.6-9,633.6 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,590.6 | 10,248.4-10,248.4 | 1.75 | yes | 1.239x | 0.940x | 0.759x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 3,500.4 | 10,499.0-10,499.0 | 1.67 | yes | 1.806x | 0.096x | 0.053x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4,447.5 | 9,633.6-9,633.6 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,590.6 | 10,248.4-10,248.4 | 1.75 | yes | 1.239x | 0.940x | 0.759x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 3,065.2 | 8,235.2-8,235.2 | 1.86 | yes | 2.062x | 0.123x | 0.060x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4,447.5 | 9,633.6-9,633.6 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,562.1 | 9,884.3-9,884.3 | 1.80 | yes | 1.249x | 0.975x | 0.781x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,479.7 | 5,992.4-5,992.4 | 2.07 | yes | 2.549x | 0.169x | 0.066x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4,447.5 | 9,633.6-9,633.6 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,350.8 | 8,224.1-8,224.1 | 2.04 | yes | 1.327x | 1.171x | 0.883x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,320.2 | 1,010.7-1,010.7 | 31.27 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,840.8 | 4,179.1-4,179.1 | 2.20 | yes | 3.433x | 0.242x | 0.070x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 3,760.8 | 8,496.6-8,496.6 | 2.21 | yes | `b200_sxm-x953-nvl72-hybrid` | 3,001.6 | 6,572.6-6,572.6 | 2.28 | yes | 1.253x | 1.293x | 1.032x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349-romfill` | 2,332.0 | 699.8-699.8 | 16.66 | **no** | `b200_sxm-x178-nvl72-hybrid` | 878.5 | 1,671.1-1,671.1 | 2.63 | yes | 2.655x | 0.419x | 0.158x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 1,922.4 | 469.7-469.7 | 20.46 | **no** | `b200_sxm-x953-nvl72-hybrid` | 1,906.5 | 3,375.6-3,375.6 | 2.82 | yes | 1.008x | 0.139x | 0.138x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x349-romfill` | 606.4 | 176.5-176.5 | 17.18 | **no** | `b200_sxm-x178-nvl72-hybrid` | 347.5 | 494.9-494.9 | 3.51 | yes | 1.745x | 0.357x | 0.204x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 650.5 | 428.4-428.4 | 7.59 | **no** | `b200_sxm-x953-nvl72-hybrid` | 896.9 | 1,288.0-1,288.0 | 3.48 | yes | 0.725x | 0.333x | 0.459x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x349-romfill` | 152.5 | 74.0-74.0 | 10.31 | **no** | `b200_sxm-x178-expert` | 114.1 | 172.9-172.9 | 3.30 | yes | 1.337x | 0.428x | 0.320x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x33-romfill` | 183.9 | 213.6-213.6 | 4.30 | yes | `b200_sxm-x953-expert` | 442.7 | 871.5-871.5 | 2.54 | yes | 0.415x | 0.245x | 0.590x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x113` | 3,387.3 | 501.3-501.3 | 33.79 | **no** | `b200_sxm-x58-nvl72-tensor` | 559.2 | 1,436.7-1,436.7 | 1.95 | yes | 6.058x | 0.349x | 0.058x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 3,790.6 | 1,671.8-1,671.8 | 11.34 | **no** | `b200_sxm-x58-nvl72-tensor` | 559.2 | 1,436.7-1,436.7 | 1.95 | yes | 6.779x | 1.164x | 0.172x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 2,745.8 | 1,471.8-1,471.8 | 9.33 | **no** | `b200_sxm-x142-nvl72-hybrid` | 558.7 | 1,429.0-1,429.0 | 1.95 | yes | 4.915x | 1.030x | 0.210x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,786.1 | 6,026.0-6,026.0 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 548.5 | 1,353.4-1,353.4 | 2.03 | yes | 5.079x | 4.452x | 0.877x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 2,745.8 | 1,471.8-1,471.8 | 9.33 | **no** | `b200_sxm-x142-nvl72-hybrid` | 548.5 | 1,402.2-1,402.2 | 1.96 | yes | 5.006x | 1.050x | 0.210x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,786.1 | 6,026.0-6,026.0 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 548.5 | 1,353.4-1,353.4 | 2.03 | yes | 5.079x | 4.452x | 0.877x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 2,745.8 | 1,471.8-1,471.8 | 9.33 | **no** | `b200_sxm-x142-nvl72-hybrid` | 535.4 | 1,364.6-1,364.6 | 1.96 | yes | 5.128x | 1.078x | 0.210x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,786.1 | 6,026.0-6,026.0 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 548.5 | 1,353.4-1,353.4 | 2.03 | yes | 5.079x | 4.452x | 0.877x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 2,745.8 | 1,471.8-1,471.8 | 9.33 | **no** | `b200_sxm-x142-nvl72-hybrid` | 535.2 | 1,313.4-1,313.4 | 2.04 | yes | 5.130x | 1.121x | 0.218x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,786.1 | 6,026.0-6,026.0 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 543.1 | 1,304.6-1,304.6 | 2.08 | yes | 5.130x | 4.619x | 0.900x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 2,745.8 | 1,471.8-1,471.8 | 9.33 | **no** | `b200_sxm-x142-nvl72-hybrid` | 482.5 | 957.3-957.3 | 2.52 | yes | 5.691x | 1.537x | 0.270x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,786.1 | 6,026.0-6,026.0 | 2.31 | yes | `b200_sxm-x953-nvl72-hybrid` | 531.8 | 1,249.9-1,249.9 | 2.13 | yes | 5.239x | 4.821x | 0.920x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 2,713.1 | 914.2-914.2 | 14.84 | **no** | `b200_sxm-x173-nvl72-hybrid` | 445.9 | 939.5-939.5 | 2.37 | yes | 6.084x | 0.973x | 0.160x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2,585.1 | 4,566.2-4,566.2 | 2.83 | yes | `b200_sxm-x953-nvl72-hybrid` | 525.7 | 1,062.9-1,062.9 | 2.47 | yes | 4.917x | 4.296x | 0.874x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 1,579.6 | 169.2-169.2 | 46.69 | **no** | `b200_sxm-x178-pipeline` | 320.0 | 583.2-583.2 | 2.74 | yes | 4.936x | 0.290x | 0.059x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 1,697.1 | 1,759.8-1,759.8 | 4.82 | yes | `b200_sxm-x953-nvl72-hybrid` | 473.6 | 803.9-803.9 | 2.95 | yes | 3.583x | 2.189x | 0.611x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 576.3 | 79.4-79.4 | 36.29 | **no** | `b200_sxm-x178-pipeline` | 160.8 | 248.4-248.4 | 3.24 | yes | 3.583x | 0.320x | 0.089x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 635.2 | 67.7-67.7 | 46.89 | **no** | `b200_sxm-x953-pipeline` | 349.3 | 354.1-354.1 | 4.93 | yes | 1.818x | 0.191x | 0.105x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 144.5 | 55.1-55.1 | 13.12 | **no** | `b200_sxm-x178-pipeline` | 58.3 | 147.4-147.4 | 1.98 | yes | 2.477x | 0.374x | 0.151x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 175.7 | 17.0-17.0 | 51.61 | **no** | `b200_sxm-x953-pipeline` | 192.5 | 222.0-222.0 | 4.34 | yes | 0.913x | 0.077x | 0.084x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 19 move the ROM-versus-GPU ratio DOWN under speculation and 1 move it UP. The movement spans 0.046x to 1.032x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.058x to 0.920x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 8 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 7 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-flash-32k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 20,313.6 | 1,170.9-1,170.9 | 86.75 | **no** | `b200_sxm-x26-nvl72-tensor` | 3,471.9 | 10,841.5-10,841.5 | 1.60 | yes | 5.851x | 0.108x | 0.018x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,947.5 | 13,993.7-13,993.7 | 1.41 | yes | 1.684x | 0.023x | 0.014x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 20,313.6 | 1,170.9-1,170.9 | 86.75 | **no** | `b200_sxm-x26-nvl72-tensor` | 3,218.9 | 8,826.6-8,826.6 | 1.82 | yes | 6.311x | 0.133x | 0.021x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,947.5 | 13,993.7-13,993.7 | 1.41 | yes | 1.684x | 0.023x | 0.014x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 20,313.6 | 1,170.9-1,170.9 | 86.75 | **no** | `b200_sxm-x26-nvl72-tensor` | 2,820.4 | 6,683.7-6,683.7 | 2.11 | yes | 7.202x | 0.175x | 0.024x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,774.4 | 12,010.6-12,010.6 | 1.57 | yes | 1.761x | 0.027x | 0.015x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 20,313.6 | 1,170.9-1,170.9 | 86.75 | **no** | `b200_sxm-x26-nvl72-tensor` | 2,288.0 | 4,918.5-4,918.5 | 2.33 | yes | 8.878x | 0.238x | 0.027x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,477.6 | 9,807.0-9,807.0 | 1.77 | yes | 1.912x | 0.033x | 0.017x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 19,024.5 | 1,201.9-1,201.9 | 79.14 | **no** | `b200_sxm-x44-nvl72-tensor` | 2,224.9 | 4,929.9-4,929.9 | 2.26 | yes | 8.551x | 0.244x | 0.029x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 3,026.6 | 7,412.6-7,412.6 | 2.04 | yes | 2.197x | 0.044x | 0.020x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18,398.7 | 1,214.8-1,214.8 | 75.73 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,764.3 | 6,306.3-6,306.3 | 2.19 | yes | 6.656x | 0.193x | 0.029x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 2,453.2 | 5,397.9-5,397.9 | 2.27 | yes | 2.710x | 0.060x | 0.022x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18,398.7 | 1,214.8-1,214.8 | 75.73 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,173.0 | 4,490.9-4,490.9 | 2.42 | yes | 8.467x | 0.270x | 0.032x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x116-nvl72-hybrid` | 1,870.2 | 3,745.7-3,745.7 | 2.50 | yes | 3.555x | 0.087x | 0.024x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 7,883.1 | 1,064.6-1,064.6 | 37.02 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,210.5 | 1,864.2-1,864.2 | 3.25 | yes | 6.512x | 0.571x | 0.088x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 6,648.0 | 325.9-325.9 | 102.00 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,344.7 | 2,187.2-2,187.2 | 3.07 | yes | 4.944x | 0.149x | 0.030x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 2,266.9 | 267.9-267.9 | 42.31 | **no** | `b200_sxm-x173-nvl72-hybrid` | 625.0 | 570.2-570.2 | 5.48 | **no** | 3.627x | 0.470x | 0.130x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 4,602.0 | 314.9-314.9 | 73.07 | **no** | `b200_sxm-x347-nvl72-hybrid` | 828.2 | 839.5-839.5 | 4.93 | yes | 5.557x | 0.375x | 0.068x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 580.2 | 172.9-172.9 | 16.78 | **no** | `b200_sxm-x173-expert` | 271.7 | 208.4-208.4 | 6.52 | **no** | 2.136x | 0.829x | 0.388x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,225.1 | 241.9-241.9 | 25.32 | **no** | `b200_sxm-x347-expert` | 448.2 | 412.0-412.0 | 5.44 | **no** | 2.734x | 0.587x | 0.215x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x44` | 4,377.2 | 1,268.2-1,268.2 | 17.26 | **no** | `b200_sxm-x22-nvl72-tensor` | 604.9 | 2,326.7-2,326.7 | 1.30 | yes | 7.236x | 0.545x | 0.075x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,240.3 | 1,201.4-1,201.4 | 17.65 | **no** | `b200_sxm-x58-nvl72-tensor` | 619.0 | 2,463.7-2,463.7 | 1.26 | yes | 6.850x | 0.488x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 4,351.3 | 1,103.8-1,103.8 | 19.71 | **no** | `b200_sxm-x26-nvl72-tensor` | 592.1 | 2,067.4-2,067.4 | 1.43 | yes | 7.349x | 0.534x | 0.073x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,240.3 | 1,201.4-1,201.4 | 17.65 | **no** | `b200_sxm-x58-nvl72-tensor` | 603.9 | 2,135.5-2,135.5 | 1.41 | yes | 7.022x | 0.563x | 0.080x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 4,351.3 | 1,103.8-1,103.8 | 19.71 | **no** | `b200_sxm-x26-hybrid` | 578.4 | 1,987.7-1,987.7 | 1.45 | yes | 7.524x | 0.555x | 0.074x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,240.3 | 1,201.4-1,201.4 | 17.65 | **no** | `b200_sxm-x58-hybrid` | 583.3 | 2,006.8-2,006.8 | 1.45 | yes | 7.269x | 0.599x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 4,351.3 | 1,103.8-1,103.8 | 19.71 | **no** | `b200_sxm-x26-hybrid` | 548.5 | 1,623.1-1,623.1 | 1.69 | yes | 7.933x | 0.680x | 0.086x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,240.3 | 1,201.4-1,201.4 | 17.65 | **no** | `b200_sxm-x58-hybrid` | 583.3 | 2,006.8-2,006.8 | 1.45 | yes | 7.269x | 0.599x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 4,311.3 | 1,133.3-1,133.3 | 19.02 | **no** | `b200_sxm-x44-hybrid` | 540.4 | 1,519.3-1,519.3 | 1.78 | yes | 7.978x | 0.746x | 0.094x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,240.3 | 1,201.4-1,201.4 | 17.65 | **no** | `b200_sxm-x58-hybrid` | 554.6 | 1,652.2-1,652.2 | 1.68 | yes | 7.646x | 0.727x | 0.095x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,249.7 | 1,141.4-1,141.4 | 18.62 | **no** | `b200_sxm-x173-nvl72-hybrid` | 573.4 | 1,784.4-1,784.4 | 1.61 | yes | 7.412x | 0.640x | 0.086x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 4,230.4 | 1,220.3-1,220.3 | 17.33 | **no** | `b200_sxm-x116-nvl72-hybrid` | 557.9 | 1,648.2-1,648.2 | 1.69 | yes | 7.583x | 0.740x | 0.098x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,249.7 | 1,141.4-1,141.4 | 18.62 | **no** | `b200_sxm-x173-nvl72-hybrid` | 537.4 | 1,454.1-1,454.1 | 1.85 | yes | 7.908x | 0.785x | 0.099x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 4,230.4 | 1,220.3-1,220.3 | 17.33 | **no** | `b200_sxm-x231-nvl72-hybrid` | 551.7 | 1,540.1-1,540.1 | 1.79 | yes | 7.667x | 0.792x | 0.103x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,282.0 | 569.7-569.7 | 28.81 | **no** | `b200_sxm-x173-nvl72-hybrid` | 395.0 | 782.9-782.9 | 2.52 | yes | 8.310x | 0.728x | 0.088x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,892.8 | 633.6-633.6 | 30.72 | **no** | `b200_sxm-x347-nvl72-hybrid` | 469.7 | 1,028.1-1,028.1 | 2.28 | yes | 8.288x | 0.616x | 0.074x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,633.5 | 262.4-262.4 | 31.13 | **no** | `b200_sxm-x173-nvl72-hybrid` | 222.1 | 427.7-427.7 | 2.60 | yes | 7.355x | 0.613x | 0.083x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,697.5 | 311.7-311.7 | 43.27 | **no** | `b200_sxm-x347-nvl72-hybrid` | 303.6 | 567.9-567.9 | 2.67 | yes | 8.884x | 0.549x | 0.062x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 503.6 | 166.3-166.3 | 15.14 | **no** | `b200_sxm-x173-nvl72-hybrid` | 115.4 | 182.7-182.7 | 3.16 | yes | 4.364x | 0.911x | 0.209x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,013.1 | 238.6-238.6 | 21.23 | **no** | `b200_sxm-x347-nvl72-hybrid` | 159.4 | 279.2-279.2 | 2.86 | yes | 6.354x | 0.855x | 0.135x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.014x to 0.388x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.062x to 0.209x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 17 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-flash-8k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 20,317.2 | 1,198.9-1,198.9 | 84.73 | **no** | `b200_sxm-x26-nvl72-tensor` | 3,474.6 | 10,846.7-10,846.7 | 1.60 | yes | 5.847x | 0.111x | 0.019x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 3,559.9 | 11,371.7-11,371.7 | 1.57 | yes | 2.182x | 0.032x | 0.015x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 20,317.2 | 1,198.9-1,198.9 | 84.73 | **no** | `b200_sxm-x26-nvl72-tensor` | 3,223.4 | 8,833.5-8,833.5 | 1.82 | yes | 6.303x | 0.136x | 0.022x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 3,319.5 | 9,356.4-9,356.4 | 1.77 | yes | 2.340x | 0.039x | 0.017x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 20,317.2 | 1,198.9-1,198.9 | 84.73 | **no** | `b200_sxm-x26-nvl72-tensor` | 2,827.4 | 6,691.5-6,691.5 | 2.11 | yes | 7.186x | 0.179x | 0.025x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 2,935.2 | 7,149.5-7,149.5 | 2.05 | yes | 2.647x | 0.051x | 0.019x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 20,317.2 | 1,198.9-1,198.9 | 84.73 | **no** | `b200_sxm-x26-nvl72-tensor` | 2,297.2 | 4,927.0-4,927.0 | 2.33 | yes | 8.844x | 0.243x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 2,410.5 | 5,286.3-5,286.3 | 2.28 | yes | 3.223x | 0.069x | 0.021x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 20,042.4 | 1,208.1-1,208.1 | 82.95 | **no** | `b200_sxm-x44-nvl72-tensor` | 2,235.2 | 4,940.0-4,940.0 | 2.26 | yes | 8.967x | 0.245x | 0.027x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 1,830.9 | 3,959.5-3,959.5 | 2.31 | yes | 4.243x | 0.092x | 0.022x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 19,337.7 | 1,221.0-1,221.0 | 79.19 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,772.4 | 6,314.7-6,314.7 | 2.20 | yes | 6.975x | 0.193x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 7,768.0 | 362.3-362.3 | 107.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 1,326.0 | 2,977.9-2,977.9 | 2.23 | yes | 5.858x | 0.122x | 0.021x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 19,337.7 | 1,221.0-1,221.0 | 79.19 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,183.1 | 4,499.4-4,499.4 | 2.43 | yes | 8.858x | 0.271x | 0.031x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 7,115.6 | 327.6-327.6 | 108.61 | **no** | `b200_sxm-x116-nvl72-hybrid` | 1,881.2 | 3,754.6-3,754.6 | 2.51 | yes | 3.782x | 0.087x | 0.023x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 8,410.1 | 1,079.2-1,079.2 | 38.96 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,223.0 | 1,870.1-1,870.1 | 3.27 | yes | 6.876x | 0.577x | 0.084x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 7,115.6 | 327.6-327.6 | 108.61 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,356.2 | 2,193.3-2,193.3 | 3.09 | yes | 5.247x | 0.149x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 2,443.0 | 271.6-271.6 | 44.98 | **no** | `b200_sxm-x173-nvl72-hybrid` | 638.5 | 572.4-572.4 | 5.58 | **no** | 3.826x | 0.474x | 0.124x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 4,939.9 | 317.3-317.3 | 77.85 | **no** | `b200_sxm-x347-nvl72-hybrid` | 839.9 | 841.9-841.9 | 4.99 | yes | 5.881x | 0.377x | 0.064x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 626.5 | 179.2-179.2 | 17.48 | **no** | `b200_sxm-x173-expert` | 282.0 | 209.7-209.7 | 6.72 | **no** | 2.221x | 0.854x | 0.385x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,637.4 | 768.6-768.6 | 10.65 | **no** | `b200_sxm-x347-expert` | 462.1 | 414.5-414.5 | 5.57 | **no** | 3.543x | 1.854x | 0.523x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 4,355.9 | 1,187.0-1,187.0 | 18.35 | **no** | `b200_sxm-x24-nvl72-tensor` | 607.1 | 2,417.4-2,417.4 | 1.26 | yes | 7.175x | 0.491x | 0.068x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,268.0 | 1,211.4-1,211.4 | 17.62 | **no** | `b200_sxm-x58-nvl72-tensor` | 620.0 | 2,477.5-2,477.5 | 1.25 | yes | 6.884x | 0.489x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 4,355.9 | 1,187.0-1,187.0 | 18.35 | **no** | `b200_sxm-x24-hybrid` | 595.5 | 2,128.5-2,128.5 | 1.40 | yes | 7.315x | 0.558x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,268.0 | 1,211.4-1,211.4 | 17.62 | **no** | `b200_sxm-x58-nvl72-tensor` | 607.1 | 2,205.0-2,205.0 | 1.38 | yes | 7.030x | 0.549x | 0.078x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 4,355.9 | 1,187.0-1,187.0 | 18.35 | **no** | `b200_sxm-x24-hybrid` | 586.2 | 2,004.7-2,004.7 | 1.46 | yes | 7.430x | 0.592x | 0.080x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,268.0 | 1,211.4-1,211.4 | 17.62 | **no** | `b200_sxm-x58-hybrid` | 583.6 | 2,023.4-2,023.4 | 1.44 | yes | 7.313x | 0.599x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 4,355.9 | 1,187.0-1,187.0 | 18.35 | **no** | `b200_sxm-x24-hybrid` | 552.6 | 1,639.1-1,639.1 | 1.69 | yes | 7.883x | 0.724x | 0.092x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,268.0 | 1,211.4-1,211.4 | 17.62 | **no** | `b200_sxm-x58-hybrid` | 583.6 | 2,023.4-2,023.4 | 1.44 | yes | 7.313x | 0.599x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 4,340.6 | 1,140.1-1,140.1 | 19.04 | **no** | `b200_sxm-x44-hybrid` | 541.0 | 1,580.5-1,580.5 | 1.71 | yes | 8.023x | 0.721x | 0.090x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 4,268.0 | 1,211.4-1,211.4 | 17.62 | **no** | `b200_sxm-x58-hybrid` | 555.0 | 1,709.5-1,709.5 | 1.62 | yes | 7.690x | 0.709x | 0.092x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,278.1 | 1,148.2-1,148.2 | 18.63 | **no** | `b200_sxm-x173-nvl72-hybrid` | 573.7 | 1,836.9-1,836.9 | 1.56 | yes | 7.457x | 0.625x | 0.084x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 4,257.6 | 1,230.9-1,230.9 | 17.30 | **no** | `b200_sxm-x116-nvl72-hybrid` | 558.4 | 1,708.1-1,708.1 | 1.63 | yes | 7.625x | 0.721x | 0.095x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,278.1 | 1,148.2-1,148.2 | 18.63 | **no** | `b200_sxm-x173-nvl72-hybrid` | 538.0 | 1,514.2-1,514.2 | 1.78 | yes | 7.951x | 0.758x | 0.095x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 4,257.6 | 1,230.9-1,230.9 | 17.30 | **no** | `b200_sxm-x231-nvl72-hybrid` | 552.2 | 1,593.8-1,593.8 | 1.73 | yes | 7.710x | 0.772x | 0.100x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,393.8 | 574.8-574.8 | 29.52 | **no** | `b200_sxm-x173-nvl72-hybrid` | 401.0 | 828.1-828.1 | 2.42 | yes | 8.462x | 0.694x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,018.6 | 638.3-638.3 | 31.48 | **no** | `b200_sxm-x347-nvl72-hybrid` | 472.1 | 1,063.5-1,063.5 | 2.22 | yes | 8.512x | 0.600x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,747.7 | 266.8-266.8 | 32.75 | **no** | `b200_sxm-x173-nvl72-hybrid` | 229.8 | 362.7-362.7 | 3.17 | yes | 7.606x | 0.736x | 0.097x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 2,867.5 | 314.7-314.7 | 45.56 | **no** | `b200_sxm-x347-nvl72-hybrid` | 305.2 | 596.7-596.7 | 2.56 | yes | 9.396x | 0.527x | 0.056x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 547.7 | 173.7-173.7 | 15.76 | **no** | `b200_sxm-x173-nvl72-hybrid` | 120.8 | 201.7-201.7 | 3.00 | yes | 4.534x | 0.862x | 0.190x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,113.7 | 246.3-246.3 | 22.61 | **no** | `b200_sxm-x347-nvl72-hybrid` | 162.1 | 301.1-301.1 | 2.69 | yes | 6.869x | 0.818x | 0.119x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.015x to 0.523x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.056x to 0.190x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 17 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-pro-200k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 2,277.1 | 6,609.7-6,609.7 | 1.72 | yes | 2.770x | 0.031x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 3,784.7 | 3,159.9-3,159.9 | 5.99 | **no** | `b200_sxm-x116-nvl72-hybrid` | 2,351.4 | 7,078.4-7,078.4 | 1.66 | yes | 1.610x | 0.446x | 0.277x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 2,277.1 | 6,609.7-6,609.7 | 1.72 | yes | 2.770x | 0.031x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 3,745.8 | 2,955.8-2,955.8 | 6.34 | **no** | `b200_sxm-x289-nvl72-hybrid` | 2,311.6 | 6,428.3-6,428.3 | 1.80 | yes | 1.620x | 0.460x | 0.284x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 2,201.6 | 5,991.0-5,991.0 | 1.84 | yes | 2.865x | 0.034x | 0.012x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 3,745.8 | 2,955.8-2,955.8 | 6.34 | **no** | `b200_sxm-x289-nvl72-hybrid` | 2,311.6 | 6,428.3-6,428.3 | 1.80 | yes | 1.620x | 0.460x | 0.284x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 1,946.2 | 4,628.8-4,628.8 | 2.10 | yes | 3.241x | 0.044x | 0.014x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 3,745.8 | 2,955.8-2,955.8 | 6.34 | **no** | `b200_sxm-x289-nvl72-hybrid` | 2,184.3 | 5,547.1-5,547.1 | 1.97 | yes | 1.715x | 0.533x | 0.311x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 1,587.3 | 3,333.2-3,333.2 | 2.38 | yes | 3.974x | 0.061x | 0.015x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,680.5 | 2,908.8-2,908.8 | 6.33 | **no** | `b200_sxm-x347-nvl72-hybrid` | 2,026.6 | 4,534.6-4,534.6 | 2.23 | yes | 1.816x | 0.641x | 0.353x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 1,175.5 | 2,236.4-2,236.4 | 2.63 | yes | 5.366x | 0.091x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 3,450.0 | 1,231.9-1,231.9 | 14.00 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,654.8 | 3,326.6-3,326.6 | 2.49 | yes | 2.085x | 0.370x | 0.178x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 6,308.0 | 202.7-202.7 | 155.59 | **no** | `b200_sxm-x157-nvl72-hybrid` | 800.1 | 1,504.9-1,504.9 | 2.66 | yes | 7.884x | 0.135x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 3,066.1 | 1,197.6-1,197.6 | 12.80 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,229.1 | 2,233.3-2,233.3 | 2.75 | yes | 2.495x | 0.536x | 0.215x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 2,584.2 | 172.7-172.7 | 74.83 | **no** | `b200_sxm-x173-nvl72-hybrid` | 376.0 | 681.0-681.0 | 2.76 | yes | 6.874x | 0.254x | 0.037x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,838.5 | 1,026.1-1,026.1 | 8.96 | **no** | `b200_sxm-x347-nvl72-hybrid` | 556.5 | 958.7-958.7 | 2.90 | yes | 3.304x | 1.070x | 0.324x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 691.3 | 43.3-43.3 | 79.92 | **no** | `b200_sxm-x173-nvl72-hybrid` | 193.6 | 230.8-230.8 | 4.19 | yes | 3.572x | 0.187x | 0.052x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 844.4 | 60.1-60.1 | 70.29 | **no** | `b200_sxm-x347-expert` | 267.1 | 535.7-535.7 | 2.49 | yes | 3.161x | 0.112x | 0.035x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 174.6 | 33.4-33.4 | 26.16 | **no** | `b200_sxm-x173-expert` | 90.1 | 79.7-79.7 | 5.65 | **no** | 1.939x | 0.418x | 0.216x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 214.5 | 22.4-22.4 | 47.93 | **no** | `b200_sxm-x347-expert` | 151.2 | 158.9-158.9 | 4.76 | yes | 1.418x | 0.141x | 0.099x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 409.5 | 1,347.4-1,347.4 | 1.52 | yes | 4.804x | 0.279x | 0.058x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 2,132.7 | 913.5-913.5 | 11.67 | **no** | `b200_sxm-x116-nvl72-hybrid` | 411.6 | 1,367.7-1,367.7 | 1.50 | yes | 5.181x | 0.668x | 0.129x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 409.5 | 1,347.4-1,347.4 | 1.52 | yes | 4.804x | 0.279x | 0.058x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 2,080.6 | 875.8-875.8 | 11.88 | **no** | `b200_sxm-x289-nvl72-hybrid` | 410.0 | 1,332.1-1,332.1 | 1.54 | yes | 5.075x | 0.657x | 0.130x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 400.8 | 1,215.0-1,215.0 | 1.65 | yes | 4.907x | 0.309x | 0.063x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 2,080.6 | 875.8-875.8 | 11.88 | **no** | `b200_sxm-x289-nvl72-hybrid` | 410.0 | 1,332.1-1,332.1 | 1.54 | yes | 5.075x | 0.657x | 0.130x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 397.3 | 1,192.4-1,192.4 | 1.67 | yes | 4.951x | 0.315x | 0.064x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 2,080.6 | 875.8-875.8 | 11.88 | **no** | `b200_sxm-x289-nvl72-hybrid` | 396.2 | 1,241.9-1,241.9 | 1.60 | yes | 5.251x | 0.705x | 0.134x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 377.8 | 991.7-991.7 | 1.90 | yes | 5.207x | 0.379x | 0.073x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 2,080.6 | 875.8-875.8 | 11.88 | **no** | `b200_sxm-x289-nvl72-hybrid` | 393.2 | 1,122.0-1,122.0 | 1.75 | yes | 5.291x | 0.781x | 0.148x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,967.0 | 375.6-375.6 | 26.18 | **no** | `b200_sxm-x157-nvl72-hybrid` | 334.3 | 710.2-710.2 | 2.35 | yes | 5.883x | 0.529x | 0.090x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 2,080.6 | 875.8-875.8 | 11.88 | **no** | `b200_sxm-x289-nvl72-hybrid` | 371.0 | 920.3-920.3 | 2.02 | yes | 5.608x | 0.952x | 0.170x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 1,953.8 | 198.2-198.2 | 49.30 | **no** | `b200_sxm-x157-nvl72-hybrid` | 281.9 | 567.6-567.6 | 2.48 | yes | 6.930x | 0.349x | 0.050x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 1,998.4 | 471.0-471.0 | 21.21 | **no** | `b200_sxm-x289-nvl72-hybrid` | 326.0 | 653.0-653.0 | 2.50 | yes | 6.131x | 0.721x | 0.118x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 1,320.2 | 89.6-89.6 | 73.66 | **no** | `b200_sxm-x173-nvl72-hybrid` | 165.2 | 251.5-251.5 | 3.29 | yes | 7.990x | 0.356x | 0.045x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 1,479.2 | 233.7-233.7 | 31.64 | **no** | `b200_sxm-x347-nvl72-hybrid` | 227.4 | 375.6-375.6 | 3.03 | yes | 6.504x | 0.622x | 0.096x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 529.2 | 42.7-42.7 | 62.03 | **no** | `b200_sxm-x173-nvl72-hybrid` | 71.3 | 118.5-118.5 | 3.01 | yes | 7.421x | 0.360x | 0.048x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 671.5 | 59.7-59.7 | 56.25 | **no** | `b200_sxm-x347-nvl72-hybrid` | 113.2 | 173.0-173.0 | 3.27 | yes | 5.930x | 0.345x | 0.058x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 149.7 | 32.1-32.1 | 23.29 | **no** | `b200_sxm-x173-nvl72-hybrid` | 28.9 | 48.6-48.6 | 2.97 | yes | 5.182x | 0.661x | 0.128x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 198.8 | 22.2-22.2 | 44.68 | **no** | `b200_sxm-x347-nvl72-hybrid` | 44.2 | 74.8-74.8 | 2.95 | yes | 4.499x | 0.297x | 0.066x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.011x to 0.353x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.045x to 0.170x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 19 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-pro-32k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 2,454.4 | 7,611.6-7,611.6 | 1.61 | yes | 2.767x | 0.030x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,832.3 | 2,986.2-2,986.2 | 6.42 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,476.9 | 7,734.8-7,734.8 | 1.60 | yes | 1.547x | 0.386x | 0.250x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 2,454.4 | 7,611.6-7,611.6 | 1.61 | yes | 2.767x | 0.030x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,832.3 | 2,986.2-2,986.2 | 6.42 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,476.9 | 7,734.8-7,734.8 | 1.60 | yes | 1.547x | 0.386x | 0.250x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 2,262.5 | 6,061.3-6,061.3 | 1.87 | yes | 3.001x | 0.038x | 0.013x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,832.3 | 2,986.2-2,986.2 | 6.42 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,287.8 | 6,169.8-6,169.8 | 1.85 | yes | 1.675x | 0.484x | 0.289x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 1,961.5 | 4,581.6-4,581.6 | 2.14 | yes | 3.462x | 0.050x | 0.014x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 3,827.8 | 2,985.6-2,985.6 | 6.41 | **no** | `b200_sxm-x231-nvl72-hybrid` | 2,127.2 | 5,243.6-5,243.6 | 2.03 | yes | 1.799x | 0.569x | 0.316x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 1,561.7 | 3,139.4-3,139.4 | 2.49 | yes | 4.348x | 0.073x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,782.7 | 2,946.7-2,946.7 | 6.42 | **no** | `b200_sxm-x347-nvl72-hybrid` | 2,037.2 | 4,545.2-4,545.2 | 2.24 | yes | 1.857x | 0.648x | 0.349x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 1,133.2 | 2,108.3-2,108.3 | 2.69 | yes | 5.992x | 0.109x | 0.018x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,634.2 | 2,803.8-2,803.8 | 6.48 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,669.1 | 3,338.1-3,338.1 | 2.50 | yes | 2.177x | 0.840x | 0.386x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 6,790.3 | 229.0-229.0 | 148.23 | **no** | `b200_sxm-x138-nvl72-hybrid` | 768.5 | 1,408.5-1,408.5 | 2.73 | yes | 8.836x | 0.163x | 0.018x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8` | 3,379.6 | 1,646.6-1,646.6 | 10.26 | **no** | `b200_sxm-x231-nvl72-hybrid` | 1,012.2 | 1,852.5-1,852.5 | 2.73 | yes | 3.339x | 0.889x | 0.266x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 3,183.6 | 176.2-176.2 | 90.33 | **no** | `b200_sxm-x173-nvl72-hybrid` | 388.0 | 688.7-688.7 | 2.82 | yes | 8.204x | 0.256x | 0.031x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 2,572.8 | 1,067.6-1,067.6 | 12.05 | **no** | `b200_sxm-x347-nvl72-hybrid` | 569.6 | 966.4-966.4 | 2.95 | yes | 4.517x | 1.105x | 0.245x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 865.8 | 44.1-44.1 | 98.06 | **no** | `b200_sxm-x173-nvl72-hybrid` | 206.8 | 235.9-235.9 | 4.38 | yes | 4.186x | 0.187x | 0.045x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,602.5 | 723.9-723.9 | 11.07 | **no** | `b200_sxm-x347-expert` | 279.4 | 545.3-545.3 | 2.56 | yes | 5.735x | 1.327x | 0.231x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 219.2 | 35.6-35.6 | 30.81 | **no** | `b200_sxm-x173-expert` | 102.3 | 82.3-82.3 | 6.21 | **no** | 2.144x | 0.432x | 0.202x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 576.2 | 316.4-316.4 | 9.10 | **no** | `b200_sxm-x347-expert` | 168.0 | 164.0-164.0 | 5.12 | **no** | 3.430x | 1.929x | 0.562x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 421.6 | 1,522.6-1,522.6 | 1.38 | yes | 4.854x | 0.283x | 0.058x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,253.4 | 898.3-898.3 | 12.54 | **no** | `b200_sxm-x144-nvl72-hybrid` | 422.2 | 1,541.5-1,541.5 | 1.37 | yes | 5.337x | 0.583x | 0.109x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 421.6 | 1,522.6-1,522.6 | 1.38 | yes | 4.854x | 0.283x | 0.058x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,253.4 | 898.3-898.3 | 12.54 | **no** | `b200_sxm-x144-nvl72-hybrid` | 422.2 | 1,541.5-1,541.5 | 1.37 | yes | 5.337x | 0.583x | 0.109x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 408.3 | 1,356.3-1,356.3 | 1.51 | yes | 5.011x | 0.318x | 0.064x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,253.4 | 898.3-898.3 | 12.54 | **no** | `b200_sxm-x144-nvl72-hybrid` | 409.4 | 1,363.3-1,363.3 | 1.50 | yes | 5.504x | 0.659x | 0.120x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 399.1 | 1,304.5-1,304.5 | 1.53 | yes | 5.127x | 0.331x | 0.065x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,253.4 | 898.3-898.3 | 12.54 | **no** | `b200_sxm-x144-nvl72-hybrid` | 402.0 | 1,320.9-1,320.9 | 1.52 | yes | 5.606x | 0.680x | 0.121x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 378.9 | 1,079.6-1,079.6 | 1.76 | yes | 5.400x | 0.400x | 0.074x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,253.4 | 898.3-898.3 | 12.54 | **no** | `b200_sxm-x144-nvl72-hybrid` | 382.2 | 1,094.4-1,094.4 | 1.75 | yes | 5.895x | 0.821x | 0.139x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,046.1 | 431.6-431.6 | 23.70 | **no** | `b200_sxm-x137-nvl72-hybrid` | 340.3 | 801.6-801.6 | 2.12 | yes | 6.013x | 0.539x | 0.090x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,237.3 | 901.0-901.0 | 12.42 | **no** | `b200_sxm-x347-nvl72-hybrid` | 385.7 | 1,082.9-1,082.9 | 1.78 | yes | 5.801x | 0.832x | 0.143x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 2,024.2 | 226.9-226.9 | 44.60 | **no** | `b200_sxm-x137-nvl72-hybrid` | 284.0 | 540.6-540.6 | 2.63 | yes | 7.128x | 0.420x | 0.059x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,190.2 | 474.1-474.1 | 23.10 | **no** | `b200_sxm-x347-nvl72-hybrid` | 352.2 | 816.2-816.2 | 2.16 | yes | 6.219x | 0.581x | 0.093x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 1,406.1 | 90.9-90.9 | 77.38 | **no** | `b200_sxm-x173-nvl72-hybrid` | 177.0 | 308.4-308.4 | 2.87 | yes | 7.943x | 0.295x | 0.037x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 1,826.7 | 238.9-238.9 | 38.23 | **no** | `b200_sxm-x347-nvl72-hybrid` | 237.1 | 443.6-443.6 | 2.67 | yes | 7.703x | 0.538x | 0.070x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 661.6 | 43.8-43.8 | 75.55 | **no** | `b200_sxm-x173-nvl72-hybrid` | 78.3 | 127.4-127.4 | 3.07 | yes | 8.444x | 0.344x | 0.041x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,015.4 | 60.9-60.9 | 83.35 | **no** | `b200_sxm-x347-nvl72-hybrid` | 119.1 | 191.1-191.1 | 3.12 | yes | 8.523x | 0.319x | 0.037x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 193.8 | 34.9-34.9 | 27.80 | **no** | `b200_sxm-x173-nvl72-hybrid` | 36.7 | 44.9-44.9 | 4.09 | yes | 5.278x | 0.776x | 0.147x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 396.8 | 76.4-76.4 | 25.98 | **no** | `b200_sxm-x347-nvl72-hybrid` | 51.7 | 73.8-73.8 | 3.50 | yes | 7.671x | 1.035x | 0.135x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.011x to 0.562x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.037x to 0.147x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-pro-8k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 2,447.2 | 7,570.2-7,570.2 | 1.62 | yes | 2.817x | 0.031x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,836.7 | 2,990.6-2,990.6 | 6.41 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,477.6 | 7,736.2-7,736.2 | 1.60 | yes | 1.549x | 0.387x | 0.250x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 2,447.2 | 7,570.2-7,570.2 | 1.62 | yes | 2.817x | 0.031x | 0.011x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,836.7 | 2,990.6-2,990.6 | 6.41 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,477.6 | 7,736.2-7,736.2 | 1.60 | yes | 1.549x | 0.387x | 0.250x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 2,254.9 | 6,025.6-6,025.6 | 1.87 | yes | 3.057x | 0.039x | 0.013x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 3,836.7 | 2,990.6-2,990.6 | 6.41 | **no** | `b200_sxm-x144-nvl72-hybrid` | 2,289.0 | 6,171.5-6,171.5 | 1.85 | yes | 1.676x | 0.485x | 0.289x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 1,953.6 | 4,550.8-4,550.8 | 2.15 | yes | 3.528x | 0.051x | 0.014x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 3,832.2 | 2,989.9-2,989.9 | 6.41 | **no** | `b200_sxm-x231-nvl72-hybrid` | 2,128.5 | 5,245.2-5,245.2 | 2.03 | yes | 1.800x | 0.570x | 0.317x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 1,554.1 | 3,116.5-3,116.5 | 2.49 | yes | 4.436x | 0.075x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,788.5 | 2,952.3-2,952.3 | 6.42 | **no** | `b200_sxm-x347-nvl72-hybrid` | 2,038.8 | 4,546.8-4,546.8 | 2.24 | yes | 1.858x | 0.649x | 0.349x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 1,126.8 | 2,093.5-2,093.5 | 2.69 | yes | 6.118x | 0.111x | 0.018x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,645.0 | 2,814.1-2,814.1 | 6.48 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,671.2 | 3,339.7-3,339.7 | 2.50 | yes | 2.181x | 0.843x | 0.386x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 6,893.2 | 232.5-232.5 | 148.25 | **no** | `b200_sxm-x136-nvl72-hybrid` | 763.9 | 1,400.7-1,400.7 | 2.73 | yes | 9.024x | 0.166x | 0.018x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,388.2 | 2,573.2-2,573.2 | 6.58 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,247.2 | 2,245.2-2,245.2 | 2.78 | yes | 2.717x | 1.146x | 0.422x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 3,295.9 | 176.8-176.8 | 93.24 | **no** | `b200_sxm-x173-nvl72-hybrid` | 389.9 | 689.9-689.9 | 2.83 | yes | 8.454x | 0.256x | 0.030x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 2,572.8 | 1,074.0-1,074.0 | 11.98 | **no** | `b200_sxm-x347-nvl72-hybrid` | 571.6 | 967.5-967.5 | 2.95 | yes | 4.501x | 1.110x | 0.247x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 899.1 | 44.3-44.3 | 101.53 | **no** | `b200_sxm-x173-nvl72-hybrid` | 208.9 | 236.7-236.7 | 4.41 | yes | 4.303x | 0.187x | 0.043x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,639.0 | 735.8-735.8 | 11.14 | **no** | `b200_sxm-x347-expert` | 281.3 | 546.8-546.8 | 2.57 | yes | 5.826x | 1.346x | 0.231x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 227.8 | 35.9-35.9 | 31.70 | **no** | `b200_sxm-x173-expert` | 104.3 | 82.7-82.7 | 6.31 | **no** | 2.183x | 0.434x | 0.199x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 595.3 | 325.6-325.6 | 9.14 | **no** | `b200_sxm-x347-expert` | 170.8 | 164.8-164.8 | 5.18 | **no** | 3.486x | 1.976x | 0.567x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 421.3 | 1,562.4-1,562.4 | 1.35 | yes | 5.128x | 0.285x | 0.056x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,309.2 | 903.5-903.5 | 12.78 | **no** | `b200_sxm-x144-nvl72-hybrid` | 422.3 | 1,555.1-1,555.1 | 1.36 | yes | 5.468x | 0.581x | 0.106x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 421.3 | 1,562.4-1,562.4 | 1.35 | yes | 5.128x | 0.285x | 0.056x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,309.2 | 903.5-903.5 | 12.78 | **no** | `b200_sxm-x144-nvl72-hybrid` | 422.3 | 1,555.1-1,555.1 | 1.36 | yes | 5.468x | 0.581x | 0.106x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 407.8 | 1,394.4-1,394.4 | 1.46 | yes | 5.297x | 0.319x | 0.060x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,309.2 | 903.5-903.5 | 12.78 | **no** | `b200_sxm-x144-nvl72-hybrid` | 409.4 | 1,405.1-1,405.1 | 1.46 | yes | 5.640x | 0.643x | 0.114x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 397.8 | 1,304.6-1,304.6 | 1.52 | yes | 5.430x | 0.341x | 0.063x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,309.2 | 903.5-903.5 | 12.78 | **no** | `b200_sxm-x144-nvl72-hybrid` | 402.0 | 1,330.8-1,330.8 | 1.51 | yes | 5.744x | 0.679x | 0.118x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 377.6 | 1,090.3-1,090.3 | 1.73 | yes | 5.721x | 0.408x | 0.071x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,309.2 | 903.5-903.5 | 12.78 | **no** | `b200_sxm-x144-nvl72-hybrid` | 382.4 | 1,114.5-1,114.5 | 1.72 | yes | 6.039x | 0.811x | 0.134x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 2,160.2 | 445.2-445.2 | 24.26 | **no** | `b200_sxm-x134-nvl72-hybrid` | 338.8 | 827.7-827.7 | 2.05 | yes | 6.377x | 0.538x | 0.084x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 2,306.9 | 474.4-474.4 | 24.32 | **no** | `b200_sxm-x144-nvl72-hybrid` | 344.3 | 846.7-846.7 | 2.03 | yes | 6.699x | 0.560x | 0.084x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308-romfill` | 2,103.9 | 229.1-229.1 | 45.92 | **no** | `b200_sxm-x157-nvl72-hybrid` | 296.3 | 611.6-611.6 | 2.42 | yes | 7.100x | 0.375x | 0.053x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,298.1 | 476.3-476.3 | 24.12 | **no** | `b200_sxm-x347-nvl72-hybrid` | 352.4 | 843.8-843.8 | 2.09 | yes | 6.522x | 0.564x | 0.087x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 1,465.3 | 171.6-171.6 | 42.69 | **no** | `b200_sxm-x173-nvl72-hybrid` | 177.4 | 321.4-321.4 | 2.76 | yes | 8.260x | 0.534x | 0.065x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 1,914.2 | 240.0-240.0 | 39.88 | **no** | `b200_sxm-x347-nvl72-hybrid` | 237.5 | 452.9-452.9 | 2.62 | yes | 8.061x | 0.530x | 0.066x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 687.0 | 44.0-44.0 | 78.14 | **no** | `b200_sxm-x173-nvl72-hybrid` | 78.6 | 136.8-136.8 | 2.87 | yes | 8.735x | 0.321x | 0.037x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,050.0 | 61.1-61.1 | 85.92 | **no** | `b200_sxm-x347-nvl72-hybrid` | 119.5 | 201.5-201.5 | 2.97 | yes | 8.788x | 0.303x | 0.035x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 202.6 | 35.3-35.3 | 28.70 | **no** | `b200_sxm-x173-nvl72-hybrid` | 38.3 | 48.9-48.9 | 3.91 | yes | 5.296x | 0.722x | 0.136x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 415.4 | 120.6-120.6 | 17.22 | **no** | `b200_sxm-x347-nvl72-hybrid` | 52.1 | 79.1-79.1 | 3.29 | yes | 7.974x | 1.525x | 0.191x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.011x to 0.567x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.035x to 0.191x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-flash-1m`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x63-romfill` | 11,704.1 | 10,009.0-10,009.0 | 5.85 | **no** | `a100_sxm_80gb-x62-tensor` | 1,003.9 | 2,636.8-2,636.8 | 1.90 | yes | 11.658x | 3.796x | 0.326x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 5,380.2 | 4,274.7-4,274.7 | 6.29 | **no** | `a100_sxm_80gb-x168-tensor` | 1,082.1 | 2,877.6-2,877.6 | 1.88 | yes | 4.972x | 1.485x | 0.299x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 5,202.7 | 9,150.3-9,150.3 | 2.84 | yes | `a100_sxm_80gb-x387-tensor` | 742.8 | 1,751.6-1,751.6 | 2.12 | yes | 7.004x | 5.224x | 0.746x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 3,457.0 | 7,681.6-7,681.6 | 2.25 | yes | `a100_sxm_80gb-x2574-tensor` | 754.3 | 1,775.1-1,775.1 | 2.12 | yes | 4.583x | 4.327x | 0.944x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 4,999.4 | 8,485.4-8,485.4 | 2.95 | yes | `a100_sxm_80gb-x387-hybrid` | 656.1 | 1,025.3-1,025.3 | 3.20 | yes | 7.620x | 8.276x | 1.086x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 3,457.0 | 7,681.6-7,681.6 | 2.25 | yes | `a100_sxm_80gb-x2574-tensor` | 662.7 | 1,142.4-1,142.4 | 2.90 | yes | 5.216x | 6.724x | 1.289x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 4,637.1 | 7,408.8-7,408.8 | 3.13 | yes | `a100_sxm_80gb-x387-hybrid` | 656.1 | 1,025.3-1,025.3 | 3.20 | yes | 7.068x | 7.226x | 1.022x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 3,457.0 | 7,681.6-7,681.6 | 2.25 | yes | `a100_sxm_80gb-x2574-hybrid` | 661.2 | 408.4-408.4 | 8.10 | **no** | 5.229x | 18.810x | 3.598x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 4,050.1 | 5,909.3-5,909.3 | 3.43 | yes | `a100_sxm_80gb-x387-hybrid` | 656.1 | 1,025.3-1,025.3 | 3.20 | yes | 6.173x | 5.763x | 0.934x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 3,457.0 | 7,681.6-7,681.6 | 2.25 | yes | `a100_sxm_80gb-x2574-hybrid` | 661.2 | 408.4-408.4 | 8.10 | **no** | 5.229x | 18.810x | 3.598x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 4,014.6 | 729.9-729.9 | 27.50 | **no** | `a100_sxm_80gb-x387-hybrid` | 656.1 | 1,025.3-1,025.3 | 3.20 | yes | 6.119x | 0.712x | 0.116x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 3,457.0 | 7,681.6-7,681.6 | 2.25 | yes | `a100_sxm_80gb-x2574-hybrid` | 661.2 | 408.4-408.4 | 8.10 | **no** | 5.229x | 18.810x | 3.598x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 4,014.6 | 729.9-729.9 | 27.50 | **no** | `a100_sxm_80gb-x387-hybrid` | 607.7 | 929.5-929.5 | 3.27 | yes | 6.607x | 0.785x | 0.119x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 3,019.5 | 346.3-346.3 | 43.59 | **no** | `a100_sxm_80gb-x2574-hybrid` | 661.2 | 408.4-408.4 | 8.10 | **no** | 4.567x | 0.848x | 0.186x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 1,609.9 | 155.7-155.7 | 51.71 | **no** | `a100_sxm_80gb-x387-hybrid` | 317.3 | 496.5-496.5 | 3.20 | yes | 5.073x | 0.314x | 0.062x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 1,284.9 | 335.9-335.9 | 19.13 | **no** | `a100_sxm_80gb-x2574-hybrid` | 661.2 | 408.4-408.4 | 8.10 | **no** | 1.943x | 0.822x | 0.423x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 413.4 | 38.9-38.9 | 53.06 | **no** | `a100_sxm_80gb-x387-expert` | 177.6 | 195.4-195.4 | 4.54 | yes | 2.328x | 0.199x | 0.086x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 389.6 | 299.7-299.7 | 6.50 | **no** | `a100_sxm_80gb-x2574-hybrid` | 424.5 | 257.9-257.9 | 8.23 | **no** | 0.918x | 1.162x | 1.266x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 103.8 | 32.6-32.6 | 15.90 | **no** | `--` | -- | ----- | -- | **no** | --x | --x | --x |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x46` | 104.7 | 6.2-6.2 | 84.72 | **no** | `a100_sxm_80gb-x2574-expert` | 261.2 | 319.5-319.5 | 4.09 | yes | 0.401x | 0.019x | 0.048x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x152` | 3,050.2 | 385.0-385.0 | 39.61 | **no** | `a100_sxm_80gb-x150-hybrid` | 286.1 | 510.7-510.7 | 2.80 | yes | 10.660x | 0.754x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 3,722.8 | 1,268.4-1,268.4 | 14.67 | **no** | `a100_sxm_80gb-x168-hybrid` | 286.5 | 507.5-507.5 | 2.82 | yes | 12.993x | 2.499x | 0.192x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 2,523.9 | 556.4-556.4 | 22.68 | **no** | `a100_sxm_80gb-x387-hybrid` | 279.8 | 447.3-447.3 | 3.13 | yes | 9.022x | 1.244x | 0.138x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,432.9 | 341.0-341.0 | 35.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 8.672x | 1.269x | 0.146x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 2,523.9 | 556.4-556.4 | 22.68 | **no** | `a100_sxm_80gb-x387-hybrid` | 279.8 | 447.3-447.3 | 3.13 | yes | 9.022x | 1.244x | 0.138x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,432.9 | 341.0-341.0 | 35.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 8.672x | 1.269x | 0.146x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 2,523.9 | 556.4-556.4 | 22.68 | **no** | `a100_sxm_80gb-x387-hybrid` | 279.8 | 447.3-447.3 | 3.13 | yes | 9.022x | 1.244x | 0.138x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,432.9 | 341.0-341.0 | 35.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 8.672x | 1.269x | 0.146x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 2,523.9 | 556.4-556.4 | 22.68 | **no** | `a100_sxm_80gb-x387-hybrid` | 279.8 | 447.3-447.3 | 3.13 | yes | 9.022x | 1.244x | 0.138x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,432.9 | 341.0-341.0 | 35.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 8.672x | 1.269x | 0.146x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 2,444.6 | 306.8-306.8 | 39.84 | **no** | `a100_sxm_80gb-x387-hybrid` | 279.8 | 447.3-447.3 | 3.13 | yes | 8.738x | 0.686x | 0.079x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,432.9 | 341.0-341.0 | 35.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 8.672x | 1.269x | 0.146x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 2,178.3 | 677.6-677.6 | 16.07 | **no** | `a100_sxm_80gb-x387-hybrid` | 259.3 | 381.0-381.0 | 3.40 | yes | 8.400x | 1.778x | 0.212x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 2,234.3 | 338.4-338.4 | 33.01 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 7.964x | 1.260x | 0.158x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 1,189.6 | 79.4-79.4 | 74.91 | **no** | `a100_sxm_80gb-x387-hybrid` | 161.4 | 202.4-202.4 | 3.99 | yes | 7.368x | 0.392x | 0.053x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 1,232.5 | 97.6-97.6 | 63.12 | **no** | `a100_sxm_80gb-x2574-hybrid` | 280.6 | 268.6-268.6 | 5.22 | **no** | 4.393x | 0.363x | 0.083x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 359.8 | 38.3-38.3 | 46.92 | **no** | `a100_sxm_80gb-x387-hybrid` | 77.9 | 101.5-101.5 | 3.83 | yes | 4.620x | 0.378x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 390.1 | 24.6-24.6 | 79.12 | **no** | `a100_sxm_80gb-x2574-hybrid` | 200.3 | 136.7-136.7 | 7.32 | **no** | 1.948x | 0.180x | 0.093x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 93.6 | 31.1-31.1 | 15.07 | **no** | `--` | -- | ----- | -- | **no** | --x | --x | --x |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x46` | 103.3 | 6.2-6.2 | 83.67 | **no** | `a100_sxm_80gb-x2574-hybrid` | 106.2 | 60.4-60.4 | 8.80 | **no** | 0.972x | 0.102x | 0.105x |
 
-**Does the ratio compress?** Of 19 class rows in this study, 12 move the ROM-versus-GPU ratio DOWN under speculation and 7 move it UP. The movement spans 0.048x to 3.598x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 19 class rows in this study, 19 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.053x to 0.212x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 9 of 20 ROM rows and 13 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 10 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-flash-32k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 15,837.4 | 846.0-846.0 | 93.60 | **no** | `a100_sxm_80gb-x71-tensor` | 1,031.9 | 2,702.5-2,702.5 | 1.91 | yes | 15.348x | 0.313x | 0.020x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 5,514.7 | 10,137.7-10,137.7 | 2.72 | yes | `a100_sxm_80gb-x56-tensor` | 1,007.9 | 2,625.3-2,625.3 | 1.92 | yes | 5.472x | 3.862x | 0.706x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 15,837.4 | 846.0-846.0 | 93.60 | **no** | `a100_sxm_80gb-x71-tensor` | 926.2 | 1,880.4-1,880.4 | 2.46 | yes | 17.100x | 0.450x | 0.026x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 5,473.8 | 8,851.0-8,851.0 | 3.09 | yes | `a100_sxm_80gb-x112-tensor` | 961.1 | 1,942.3-1,942.3 | 2.47 | yes | 5.695x | 4.557x | 0.800x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 15,837.4 | 846.0-846.0 | 93.60 | **no** | `a100_sxm_80gb-x71-tensor` | 769.9 | 1,182.4-1,182.4 | 3.26 | yes | 20.571x | 0.715x | 0.035x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5,467.7 | 8,847.2-8,847.2 | 3.09 | yes | `a100_sxm_80gb-x224-tensor` | 833.3 | 1,232.0-1,232.0 | 3.38 | yes | 6.561x | 7.181x | 1.095x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 15,837.4 | 846.0-846.0 | 93.60 | **no** | `a100_sxm_80gb-x71-hybrid` | 749.9 | 1,500.2-1,500.2 | 2.50 | yes | 21.118x | 0.564x | 0.027x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,455.6 | 8,839.8-8,839.8 | 3.09 | yes | `a100_sxm_80gb-x448-hybrid` | 713.5 | 1,005.0-1,005.0 | 3.55 | yes | 7.646x | 8.795x | 1.150x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 15,837.4 | 846.0-846.0 | 93.60 | **no** | `a100_sxm_80gb-x71-hybrid` | 646.9 | 1,186.6-1,186.6 | 2.73 | yes | 24.482x | 0.713x | 0.029x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,397.9 | 8,698.8-8,698.8 | 3.10 | yes | `a100_sxm_80gb-x672-hybrid` | 713.5 | 852.2-852.2 | 4.19 | yes | 7.566x | 10.208x | 1.349x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 14,829.5 | 877.6-877.6 | 84.49 | **no** | `a100_sxm_80gb-x146-hybrid` | 635.3 | 1,083.3-1,083.3 | 2.93 | yes | 23.344x | 0.810x | 0.035x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,222.7 | 8,202.5-8,202.5 | 3.18 | yes | `a100_sxm_80gb-x672-hybrid` | 713.5 | 852.2-852.2 | 4.19 | yes | 7.320x | 9.626x | 1.315x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 14,692.8 | 877.5-877.5 | 83.72 | **no** | `a100_sxm_80gb-x335-hybrid` | 645.4 | 958.3-958.3 | 3.37 | yes | 22.764x | 0.916x | 0.040x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,904.4 | 7,362.4-7,362.4 | 3.33 | yes | `a100_sxm_80gb-x672-hybrid` | 713.5 | 852.2-852.2 | 4.19 | yes | 6.874x | 8.640x | 1.257x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 5,947.4 | 769.3-769.3 | 38.65 | **no** | `a100_sxm_80gb-x335-hybrid` | 361.1 | 539.3-539.3 | 3.35 | yes | 16.468x | 1.426x | 0.087x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,591.1 | 4,560.0-4,560.0 | 3.94 | yes | `a100_sxm_80gb-x672-hybrid` | 508.1 | 575.3-575.3 | 4.42 | yes | 7.068x | 7.927x | 1.122x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,649.4 | 193.2-193.2 | 42.68 | **no** | `a100_sxm_80gb-x335-expert` | 287.5 | 415.9-415.9 | 3.46 | yes | 5.737x | 0.465x | 0.081x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,415.2 | 227.2-227.2 | 53.16 | **no** | `a100_sxm_80gb-x672-expert` | 360.7 | 792.4-792.4 | 2.28 | yes | 6.695x | 0.287x | 0.043x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x227` | 493.9 | 149.0-149.0 | 16.57 | **no** | `a100_sxm_80gb-x224-expert` | 117.1 | 73.0-73.0 | 8.02 | **no** | 4.217x | 2.040x | 0.484x |
-| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 623.7 | 174.5-174.5 | 17.87 | **no** | `a100_sxm_80gb-x672-expert` | 253.0 | 215.0-215.0 | 5.88 | **no** | 2.466x | 0.812x | 0.329x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 4,175.0 | 774.3-774.3 | 26.96 | **no** | `a100_sxm_80gb-x73-hybrid` | 337.6 | 887.7-887.7 | 1.90 | yes | 12.367x | 0.872x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 3,951.3 | 991.7-991.7 | 19.92 | **no** | `a100_sxm_80gb-x112-hybrid` | 344.2 | 898.4-898.4 | 1.92 | yes | 11.480x | 1.104x | 0.096x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 4,175.0 | 774.3-774.3 | 26.96 | **no** | `a100_sxm_80gb-x73-hybrid` | 337.6 | 887.7-887.7 | 1.90 | yes | 12.367x | 0.872x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 3,951.3 | 991.7-991.7 | 19.92 | **no** | `a100_sxm_80gb-x112-hybrid` | 344.2 | 898.4-898.4 | 1.92 | yes | 11.480x | 1.104x | 0.096x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 4,175.0 | 774.3-774.3 | 26.96 | **no** | `a100_sxm_80gb-x73-hybrid` | 337.6 | 887.7-887.7 | 1.90 | yes | 12.367x | 0.872x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 3,951.3 | 991.7-991.7 | 19.92 | **no** | `a100_sxm_80gb-x112-hybrid` | 344.2 | 898.4-898.4 | 1.92 | yes | 11.480x | 1.104x | 0.096x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 4,175.0 | 774.3-774.3 | 26.96 | **no** | `a100_sxm_80gb-x73-hybrid` | 337.6 | 887.7-887.7 | 1.90 | yes | 12.367x | 0.872x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 3,951.3 | 991.7-991.7 | 19.92 | **no** | `a100_sxm_80gb-x112-hybrid` | 344.2 | 898.4-898.4 | 1.92 | yes | 11.480x | 1.104x | 0.096x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 4,175.0 | 774.3-774.3 | 26.96 | **no** | `a100_sxm_80gb-x73-hybrid` | 316.4 | 745.1-745.1 | 2.12 | yes | 13.197x | 1.039x | 0.079x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 3,948.7 | 1,634.5-1,634.5 | 12.08 | **no** | `a100_sxm_80gb-x168-hybrid` | 341.4 | 852.7-852.7 | 2.00 | yes | 11.565x | 1.917x | 0.166x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 4,116.2 | 840.7-840.7 | 24.48 | **no** | `a100_sxm_80gb-x146-hybrid` | 314.6 | 692.5-692.5 | 2.27 | yes | 13.083x | 1.214x | 0.093x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 3,936.2 | 1,674.8-1,674.8 | 11.75 | **no** | `a100_sxm_80gb-x448-hybrid` | 333.1 | 674.8-674.8 | 2.47 | yes | 11.817x | 2.482x | 0.210x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,098.7 | 840.1-840.1 | 24.40 | **no** | `a100_sxm_80gb-x335-hybrid` | 313.9 | 620.0-620.0 | 2.53 | yes | 13.058x | 1.355x | 0.104x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,934.1 | 1,666.3-1,666.3 | 11.80 | **no** | `a100_sxm_80gb-x672-hybrid` | 333.1 | 601.2-601.2 | 2.77 | yes | 11.811x | 2.772x | 0.235x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 2,917.5 | 415.1-415.1 | 35.14 | **no** | `a100_sxm_80gb-x335-hybrid` | 211.0 | 310.9-310.9 | 3.39 | yes | 13.829x | 1.335x | 0.097x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,261.4 | 860.9-860.9 | 18.94 | **no** | `a100_sxm_80gb-x672-hybrid` | 269.0 | 388.1-388.1 | 3.46 | yes | 12.126x | 2.218x | 0.183x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,290.7 | 190.5-190.5 | 33.88 | **no** | `a100_sxm_80gb-x335-hybrid` | 106.5 | 160.7-160.7 | 3.31 | yes | 12.116x | 1.185x | 0.098x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 1,776.8 | 225.5-225.5 | 39.40 | **no** | `a100_sxm_80gb-x672-hybrid` | 155.0 | 193.6-193.6 | 4.00 | yes | 11.461x | 1.165x | 0.102x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 378.6 | 121.4-121.4 | 15.60 | **no** | `a100_sxm_80gb-x335-hybrid` | 45.8 | 72.4-72.4 | 3.16 | yes | 8.259x | 1.676x | 0.203x |
+| DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 567.0 | 172.6-172.6 | 16.42 | **no** | `a100_sxm_80gb-x672-hybrid` | 69.3 | 101.0-101.0 | 3.43 | yes | 8.184x | 1.709x | 0.209x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 14 move the ROM-versus-GPU ratio DOWN under speculation and 6 move it UP. The movement spans 0.020x to 1.349x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.071x to 0.235x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 8 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-flash-8k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 16,019.5 | 893.0-893.0 | 89.69 | **no** | `a100_sxm_80gb-x67-tensor` | 1,026.2 | 2,678.0-2,678.0 | 1.92 | yes | 15.611x | 0.333x | 0.021x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.4 | 8,881.3-8,881.3 | 3.11 | yes | `a100_sxm_80gb-x112-tensor` | 1,067.2 | 2,819.7-2,819.7 | 1.89 | yes | 5.176x | 3.150x | 0.609x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 16,019.5 | 893.0-893.0 | 89.69 | **no** | `a100_sxm_80gb-x67-tensor` | 920.4 | 1,864.2-1,864.2 | 2.47 | yes | 17.405x | 0.479x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 5,523.4 | 8,881.3-8,881.3 | 3.11 | yes | `a100_sxm_80gb-x112-tensor` | 961.5 | 1,942.6-1,942.6 | 2.47 | yes | 5.745x | 4.572x | 0.796x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 16,019.5 | 893.0-893.0 | 89.69 | **no** | `a100_sxm_80gb-x67-tensor` | 764.3 | 1,172.7-1,172.7 | 3.26 | yes | 20.960x | 0.761x | 0.036x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5,517.2 | 8,877.6-8,877.6 | 3.11 | yes | `a100_sxm_80gb-x224-tensor` | 833.6 | 1,232.1-1,232.1 | 3.38 | yes | 6.619x | 7.205x | 1.089x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 16,019.5 | 893.0-893.0 | 89.69 | **no** | `a100_sxm_80gb-x67-hybrid` | 723.5 | 1,434.6-1,434.6 | 2.52 | yes | 22.141x | 0.622x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,504.9 | 8,870.1-8,870.1 | 3.10 | yes | `a100_sxm_80gb-x448-hybrid` | 714.9 | 1,005.6-1,005.6 | 3.55 | yes | 7.700x | 8.821x | 1.146x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 16,019.5 | 893.0-893.0 | 89.69 | **no** | `a100_sxm_80gb-x67-hybrid` | 623.3 | 1,134.0-1,134.0 | 2.75 | yes | 25.703x | 0.788x | 0.031x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,462.5 | 8,738.0-8,738.0 | 3.13 | yes | `a100_sxm_80gb-x672-hybrid` | 714.9 | 852.6-852.6 | 4.19 | yes | 7.641x | 10.249x | 1.341x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 15,680.6 | 882.2-882.2 | 88.88 | **no** | `a100_sxm_80gb-x146-hybrid` | 637.2 | 1,084.5-1,084.5 | 2.94 | yes | 24.607x | 0.813x | 0.033x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5,345.0 | 8,272.4-8,272.4 | 3.23 | yes | `a100_sxm_80gb-x672-hybrid` | 714.9 | 852.6-852.6 | 4.19 | yes | 7.476x | 9.703x | 1.298x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 15,527.8 | 882.0-882.0 | 88.02 | **no** | `a100_sxm_80gb-x335-hybrid` | 647.2 | 959.1-959.1 | 3.37 | yes | 23.992x | 0.920x | 0.038x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 5,317.6 | 236.3-236.3 | 112.51 | **no** | `a100_sxm_80gb-x672-hybrid` | 714.9 | 852.6-852.6 | 4.19 | yes | 7.438x | 0.277x | 0.037x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,364.6 | 779.9-779.9 | 40.81 | **no** | `a100_sxm_80gb-x335-hybrid` | 363.4 | 540.3-540.3 | 3.36 | yes | 17.515x | 1.443x | 0.082x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 5,317.6 | 236.3-236.3 | 112.51 | **no** | `a100_sxm_80gb-x672-hybrid` | 510.3 | 575.8-575.8 | 4.43 | yes | 10.421x | 0.410x | 0.039x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,778.8 | 195.9-195.9 | 45.40 | **no** | `a100_sxm_80gb-x335-expert` | 293.3 | 431.8-431.8 | 3.40 | yes | 6.065x | 0.454x | 0.075x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 3,651.1 | 228.9-228.9 | 79.76 | **no** | `a100_sxm_80gb-x672-expert` | 365.2 | 821.1-821.1 | 2.22 | yes | 9.997x | 0.279x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x227` | 532.3 | 154.4-154.4 | 17.24 | **no** | `a100_sxm_80gb-x224-expert` | 121.5 | 76.0-76.0 | 8.00 | **no** | 4.380x | 2.032x | 0.464x |
-| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,134.4 | 631.7-631.7 | 8.98 | **no** | `a100_sxm_80gb-x672-expert` | 262.0 | 223.4-223.4 | 5.86 | **no** | 4.330x | 2.827x | 0.653x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 4,192.4 | 857.5-857.5 | 24.44 | **no** | `a100_sxm_80gb-x67-hybrid` | 341.4 | 917.7-917.7 | 1.86 | yes | 12.278x | 0.934x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 4,182.6 | 1,628.6-1,628.6 | 12.84 | **no** | `a100_sxm_80gb-x112-hybrid` | 345.9 | 915.1-915.1 | 1.89 | yes | 12.092x | 1.780x | 0.147x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 4,192.4 | 857.5-857.5 | 24.44 | **no** | `a100_sxm_80gb-x67-hybrid` | 341.4 | 917.7-917.7 | 1.86 | yes | 12.278x | 0.934x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 4,182.6 | 1,628.6-1,628.6 | 12.84 | **no** | `a100_sxm_80gb-x112-hybrid` | 345.9 | 915.1-915.1 | 1.89 | yes | 12.092x | 1.780x | 0.147x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 4,192.4 | 857.5-857.5 | 24.44 | **no** | `a100_sxm_80gb-x67-hybrid` | 341.4 | 917.7-917.7 | 1.86 | yes | 12.278x | 0.934x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 4,182.6 | 1,628.6-1,628.6 | 12.84 | **no** | `a100_sxm_80gb-x112-hybrid` | 345.9 | 915.1-915.1 | 1.89 | yes | 12.092x | 1.780x | 0.147x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 4,192.4 | 857.5-857.5 | 24.44 | **no** | `a100_sxm_80gb-x67-hybrid` | 341.4 | 917.7-917.7 | 1.86 | yes | 12.278x | 0.934x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 4,182.6 | 1,628.6-1,628.6 | 12.84 | **no** | `a100_sxm_80gb-x112-hybrid` | 345.9 | 915.1-915.1 | 1.89 | yes | 12.092x | 1.780x | 0.147x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 4,192.4 | 857.5-857.5 | 24.44 | **no** | `a100_sxm_80gb-x67-hybrid` | 315.0 | 739.7-739.7 | 2.13 | yes | 13.310x | 1.159x | 0.087x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 4,177.5 | 1,660.8-1,660.8 | 12.58 | **no** | `a100_sxm_80gb-x168-hybrid` | 343.1 | 867.7-867.7 | 1.98 | yes | 12.175x | 1.914x | 0.157x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 4,141.3 | 845.7-845.7 | 24.48 | **no** | `a100_sxm_80gb-x146-hybrid` | 316.9 | 704.0-704.0 | 2.25 | yes | 13.070x | 1.201x | 0.092x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 4,156.0 | 1,702.1-1,702.1 | 12.21 | **no** | `a100_sxm_80gb-x448-hybrid` | 334.7 | 684.1-684.1 | 2.45 | yes | 12.418x | 2.488x | 0.200x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,123.6 | 845.1-845.1 | 24.40 | **no** | `a100_sxm_80gb-x335-hybrid` | 316.0 | 632.1-632.1 | 2.50 | yes | 13.048x | 1.337x | 0.102x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,155.1 | 1,693.4-1,693.4 | 12.27 | **no** | `a100_sxm_80gb-x672-hybrid` | 334.7 | 608.6-608.6 | 2.75 | yes | 12.415x | 2.782x | 0.224x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,039.8 | 418.8-418.8 | 36.30 | **no** | `a100_sxm_80gb-x335-hybrid` | 214.1 | 321.8-321.8 | 3.33 | yes | 14.198x | 1.301x | 0.092x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,706.8 | 873.4-873.4 | 21.22 | **no** | `a100_sxm_80gb-x672-hybrid` | 271.7 | 395.8-395.8 | 3.43 | yes | 13.641x | 2.207x | 0.162x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,385.4 | 193.6-193.6 | 35.78 | **no** | `a100_sxm_80gb-x335-hybrid` | 107.3 | 167.8-167.8 | 3.20 | yes | 12.910x | 1.154x | 0.089x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 2,386.5 | 227.5-227.5 | 52.44 | **no** | `a100_sxm_80gb-x672-hybrid` | 155.9 | 198.9-198.9 | 3.92 | yes | 15.313x | 1.144x | 0.075x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 412.1 | 126.7-126.7 | 16.27 | **no** | `a100_sxm_80gb-x335-hybrid` | 46.4 | 79.1-79.1 | 2.94 | yes | 8.876x | 1.602x | 0.180x |
+| DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 845.0 | 177.9-177.9 | 23.75 | **no** | `a100_sxm_80gb-x672-hybrid` | 69.9 | 106.6-106.6 | 3.28 | yes | 12.081x | 1.669x | 0.138x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 16 move the ROM-versus-GPU ratio DOWN under speculation and 4 move it UP. The movement spans 0.021x to 1.341x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.075x to 0.224x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 6 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-pro-200k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x196` | 4,637.4 | 6,457.6-6,457.6 | 3.59 | yes | `a100_sxm_80gb-x193-tensor` | 682.3 | 1,467.0-1,467.0 | 2.33 | yes | 6.797x | 4.402x | 0.648x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 3,734.7 | 2,256.3-2,256.3 | 8.28 | **no** | `a100_sxm_80gb-x336-tensor` | 523.4 | 1,309.3-1,309.3 | 2.00 | yes | 7.136x | 1.723x | 0.241x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-tensor` | 466.7 | 871.5-871.5 | 2.68 | yes | 9.520x | 0.180x | 0.019x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 3,483.1 | 1,081.4-1,081.4 | 16.10 | **no** | `a100_sxm_80gb-x783-tensor` | 474.9 | 883.5-883.5 | 2.69 | yes | 7.334x | 1.224x | 0.167x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-tensor` | 381.1 | 522.1-522.1 | 3.65 | yes | 11.659x | 0.300x | 0.026x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 3,483.1 | 1,081.4-1,081.4 | 16.10 | **no** | `a100_sxm_80gb-x783-tensor` | 388.9 | 527.8-527.8 | 3.68 | yes | 8.957x | 2.049x | 0.229x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-tensor` | 279.1 | 291.2-291.2 | 4.79 | yes | 15.923x | 0.537x | 0.034x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 3,483.1 | 1,081.4-1,081.4 | 16.10 | **no** | `a100_sxm_80gb-x783-tensor` | 285.6 | 293.1-293.1 | 4.87 | yes | 12.196x | 3.689x | 0.302x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-hybrid` | 262.2 | 377.8-377.8 | 3.47 | yes | 16.945x | 0.414x | 0.024x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 3,426.3 | 1,079.1-1,079.1 | 15.88 | **no** | `a100_sxm_80gb-x783-hybrid` | 260.4 | 289.1-289.1 | 4.50 | yes | 13.160x | 3.732x | 0.284x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-hybrid` | 262.2 | 377.8-377.8 | 3.47 | yes | 16.945x | 0.414x | 0.024x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 3,030.6 | 1,061.3-1,061.3 | 14.28 | **no** | `a100_sxm_80gb-x783-hybrid` | 260.4 | 289.1-289.1 | 4.50 | yes | 11.640x | 3.670x | 0.315x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 4,443.3 | 156.5-156.5 | 141.96 | **no** | `a100_sxm_80gb-x391-hybrid` | 242.0 | 339.9-339.9 | 3.56 | yes | 18.364x | 0.460x | 0.025x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 2,462.0 | 1,027.2-1,027.2 | 11.98 | **no** | `a100_sxm_80gb-x783-hybrid` | 260.4 | 289.1-289.1 | 4.50 | yes | 9.456x | 3.553x | 0.376x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,849.6 | 145.0-145.0 | 63.76 | **no** | `a100_sxm_80gb-x391-hybrid` | 123.5 | 179.0-179.0 | 3.45 | yes | 14.978x | 0.810x | 0.054x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,158.1 | 861.4-861.4 | 6.72 | **no** | `a100_sxm_80gb-x783-hybrid` | 181.3 | 197.8-197.8 | 4.58 | yes | 6.389x | 4.356x | 0.682x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 484.6 | 36.3-36.3 | 66.72 | **no** | `a100_sxm_80gb-x391-expert` | 87.3 | 147.5-147.5 | 2.96 | yes | 5.551x | 0.246x | 0.044x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 406.2 | 20.1-20.1 | 100.98 | **no** | `a100_sxm_80gb-x783-expert` | 111.7 | 287.8-287.8 | 1.94 | yes | 3.637x | 0.070x | 0.019x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 122.0 | 26.8-26.8 | 22.79 | **no** | `a100_sxm_80gb-x391-expert` | 55.6 | 37.6-37.6 | 7.39 | **no** | 2.194x | 0.711x | 0.324x |
-| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 102.3 | 19.0-19.0 | 26.97 | **no** | `a100_sxm_80gb-x783-expert` | 81.9 | 74.9-74.9 | 5.47 | **no** | 1.249x | 0.253x | 0.203x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 2,091.7 | 652.0-652.0 | 16.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 167.5 | 294.1-294.1 | 2.85 | yes | 12.489x | 2.217x | 0.178x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,891.3 | 591.6-591.6 | 15.98 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 11.454x | 2.620x | 0.229x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,891.3 | 591.6-591.6 | 15.98 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 11.454x | 2.620x | 0.229x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,891.3 | 591.6-591.6 | 15.98 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 11.454x | 2.620x | 0.229x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,891.3 | 591.6-591.6 | 15.98 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 11.454x | 2.620x | 0.229x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,848.6 | 295.2-295.2 | 31.31 | **no** | `a100_sxm_80gb-x391-hybrid` | 166.4 | 280.7-280.7 | 2.96 | yes | 11.106x | 1.052x | 0.095x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,847.6 | 309.7-309.7 | 29.83 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 11.190x | 1.372x | 0.123x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,737.9 | 153.8-153.8 | 56.48 | **no** | `a100_sxm_80gb-x391-hybrid` | 156.9 | 250.4-250.4 | 3.13 | yes | 11.075x | 0.614x | 0.055x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,715.0 | 307.1-307.1 | 27.92 | **no** | `a100_sxm_80gb-x783-hybrid` | 165.1 | 225.8-225.8 | 3.66 | yes | 10.387x | 1.360x | 0.131x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,116.4 | 76.3-76.3 | 73.12 | **no** | `a100_sxm_80gb-x391-hybrid` | 89.7 | 113.8-113.8 | 3.94 | yes | 12.441x | 0.671x | 0.054x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 1,024.8 | 79.7-79.7 | 64.25 | **no** | `a100_sxm_80gb-x783-hybrid` | 123.8 | 144.9-144.9 | 4.27 | yes | 8.276x | 0.550x | 0.066x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 403.9 | 36.0-36.0 | 56.17 | **no** | `a100_sxm_80gb-x391-hybrid` | 36.2 | 50.6-50.6 | 3.58 | yes | 11.152x | 0.710x | 0.064x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 364.5 | 20.1-20.1 | 90.78 | **no** | `a100_sxm_80gb-x783-hybrid` | 57.4 | 64.4-64.4 | 4.45 | yes | 6.351x | 0.312x | 0.049x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 110.7 | 26.1-26.1 | 21.20 | **no** | `a100_sxm_80gb-x391-hybrid` | 13.1 | 21.8-21.8 | 3.02 | yes | 8.428x | 1.199x | 0.142x |
+| DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 99.0 | 18.9-18.9 | 26.19 | **no** | `a100_sxm_80gb-x783-hybrid` | 21.8 | 30.4-30.4 | 3.59 | yes | 4.538x | 0.621x | 0.137x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.019x to 0.682x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.049x to 0.229x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 1 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-pro-32k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-tensor` | 525.2 | 1,313.9-1,313.9 | 2.00 | yes | 9.838x | 0.126x | 0.013x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,782.8 | 2,278.2-2,278.2 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 523.5 | 1,309.5-1,309.5 | 2.00 | yes | 7.226x | 1.740x | 0.241x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-tensor` | 466.1 | 870.2-870.2 | 2.68 | yes | 11.087x | 0.190x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,782.8 | 2,278.2-2,278.2 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 464.4 | 867.5-867.5 | 2.68 | yes | 8.145x | 2.626x | 0.322x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-tensor` | 380.6 | 521.6-521.6 | 3.65 | yes | 13.578x | 0.318x | 0.023x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,782.8 | 2,278.2-2,278.2 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 379.0 | 520.7-520.7 | 3.64 | yes | 9.981x | 4.375x | 0.438x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-tensor` | 278.7 | 291.0-291.0 | 4.79 | yes | 18.541x | 0.570x | 0.031x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 3,782.5 | 2,252.7-2,252.7 | 8.40 | **no** | `a100_sxm_80gb-x448-tensor` | 281.0 | 291.9-291.9 | 4.81 | yes | 13.461x | 7.719x | 0.573x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-hybrid` | 262.2 | 381.7-381.7 | 3.43 | yes | 19.708x | 0.434x | 0.022x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,724.1 | 2,222.2-2,222.2 | 8.38 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.5 | 309.0-309.0 | 4.25 | yes | 14.187x | 7.191x | 0.507x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-hybrid` | 262.2 | 381.7-381.7 | 3.43 | yes | 19.708x | 0.434x | 0.022x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,527.5 | 2,109.9-2,109.9 | 8.36 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.5 | 309.0-309.0 | 4.25 | yes | 13.438x | 6.828x | 0.508x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 5,167.5 | 165.8-165.8 | 155.88 | **no** | `a100_sxm_80gb-x371-hybrid` | 239.0 | 337.9-337.9 | 3.54 | yes | 21.623x | 0.491x | 0.023x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,315.7 | 1,177.1-1,177.1 | 14.08 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.5 | 309.0-309.0 | 4.25 | yes | 12.632x | 3.809x | 0.302x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 2,292.1 | 148.6-148.6 | 77.11 | **no** | `a100_sxm_80gb-x391-hybrid` | 125.7 | 179.9-179.9 | 3.49 | yes | 18.232x | 0.826x | 0.045x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 2,379.9 | 968.3-968.3 | 12.29 | **no** | `a100_sxm_80gb-x672-hybrid` | 170.3 | 196.4-196.4 | 4.34 | yes | 13.975x | 4.931x | 0.353x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 607.5 | 37.2-37.2 | 81.62 | **no** | `a100_sxm_80gb-x391-expert` | 91.9 | 169.7-169.7 | 2.71 | yes | 6.610x | 0.219x | 0.033x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,086.9 | 566.4-566.4 | 9.59 | **no** | `a100_sxm_80gb-x672-expert` | 110.0 | 285.8-285.8 | 1.92 | yes | 9.881x | 1.982x | 0.201x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 153.2 | 28.8-28.8 | 26.57 | **no** | `a100_sxm_80gb-x391-expert` | 63.8 | 43.4-43.4 | 7.34 | **no** | 2.403x | 0.664x | 0.276x |
-| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 342.5 | 212.9-212.9 | 8.04 | **no** | `a100_sxm_80gb-x672-expert` | 84.2 | 74.4-74.4 | 5.66 | **no** | 4.068x | 2.863x | 0.704x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,987.3 | 569.1-569.1 | 17.46 | **no** | `a100_sxm_80gb-x391-hybrid` | 167.2 | 298.2-298.2 | 2.80 | yes | 11.885x | 1.908x | 0.161x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 2,220.4 | 660.7-660.7 | 16.80 | **no** | `a100_sxm_80gb-x448-hybrid` | 166.6 | 285.4-285.4 | 2.92 | yes | 13.331x | 2.315x | 0.174x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,987.3 | 569.1-569.1 | 17.46 | **no** | `a100_sxm_80gb-x391-hybrid` | 167.2 | 298.2-298.2 | 2.80 | yes | 11.885x | 1.908x | 0.161x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 2,220.4 | 660.7-660.7 | 16.80 | **no** | `a100_sxm_80gb-x448-hybrid` | 166.6 | 285.4-285.4 | 2.92 | yes | 13.331x | 2.315x | 0.174x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,987.3 | 569.1-569.1 | 17.46 | **no** | `a100_sxm_80gb-x391-hybrid` | 167.2 | 298.2-298.2 | 2.80 | yes | 11.885x | 1.908x | 0.161x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 2,220.4 | 660.7-660.7 | 16.80 | **no** | `a100_sxm_80gb-x448-hybrid` | 166.6 | 285.4-285.4 | 2.92 | yes | 13.331x | 2.315x | 0.174x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,987.3 | 569.1-569.1 | 17.46 | **no** | `a100_sxm_80gb-x391-hybrid` | 167.2 | 298.2-298.2 | 2.80 | yes | 11.885x | 1.908x | 0.161x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 2,220.4 | 660.7-660.7 | 16.80 | **no** | `a100_sxm_80gb-x448-hybrid` | 166.6 | 285.4-285.4 | 2.92 | yes | 13.331x | 2.315x | 0.174x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,987.3 | 569.1-569.1 | 17.46 | **no** | `a100_sxm_80gb-x391-hybrid` | 167.2 | 298.2-298.2 | 2.80 | yes | 11.885x | 1.908x | 0.161x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 2,220.4 | 660.7-660.7 | 16.80 | **no** | `a100_sxm_80gb-x448-hybrid` | 166.6 | 285.4-285.4 | 2.92 | yes | 13.331x | 2.315x | 0.174x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x373` | 1,974.4 | 317.6-317.6 | 31.08 | **no** | `a100_sxm_80gb-x368-hybrid` | 167.8 | 304.7-304.7 | 2.75 | yes | 11.768x | 1.042x | 0.089x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,213.2 | 667.5-667.5 | 16.58 | **no** | `a100_sxm_80gb-x672-hybrid` | 166.0 | 250.6-250.6 | 3.31 | yes | 13.335x | 2.663x | 0.200x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,859.7 | 155.7-155.7 | 59.73 | **no** | `a100_sxm_80gb-x391-hybrid` | 158.0 | 267.7-267.7 | 2.95 | yes | 11.771x | 0.581x | 0.049x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,093.1 | 346.1-346.1 | 30.23 | **no** | `a100_sxm_80gb-x672-hybrid` | 166.0 | 250.6-250.6 | 3.31 | yes | 12.612x | 1.381x | 0.110x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,297.8 | 77.5-77.5 | 83.71 | **no** | `a100_sxm_80gb-x391-hybrid` | 93.6 | 130.3-130.3 | 3.59 | yes | 13.861x | 0.595x | 0.043x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 1,632.0 | 173.2-173.2 | 47.10 | **no** | `a100_sxm_80gb-x672-hybrid` | 119.3 | 152.5-152.5 | 3.91 | yes | 13.685x | 1.136x | 0.083x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 505.5 | 37.0-37.0 | 68.29 | **no** | `a100_sxm_80gb-x391-hybrid` | 37.4 | 52.0-52.0 | 3.60 | yes | 13.507x | 0.712x | 0.053x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 893.2 | 86.5-86.5 | 51.62 | **no** | `a100_sxm_80gb-x672-hybrid` | 54.2 | 68.2-68.2 | 3.97 | yes | 16.489x | 1.269x | 0.077x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 142.2 | 28.5-28.5 | 24.96 | **no** | `a100_sxm_80gb-x391-hybrid` | 14.3 | 18.6-18.6 | 3.86 | yes | 9.914x | 1.535x | 0.155x |
+| DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 333.4 | 40.2-40.2 | 41.45 | **no** | `a100_sxm_80gb-x672-hybrid` | 20.0 | 32.9-32.9 | 3.04 | yes | 16.672x | 1.222x | 0.073x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.013x to 0.704x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.043x to 0.200x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100-pro-8k`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-tensor` | 526.1 | 1,316.3-1,316.3 | 2.00 | yes | 9.962x | 0.128x | 0.013x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,789.0 | 2,281.8-2,281.8 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 523.6 | 1,309.5-1,309.5 | 2.00 | yes | 7.237x | 1.742x | 0.241x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-tensor` | 467.0 | 871.7-871.7 | 2.68 | yes | 11.223x | 0.194x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,789.0 | 2,281.8-2,281.8 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 464.4 | 867.5-867.5 | 2.68 | yes | 8.158x | 2.630x | 0.322x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-tensor` | 381.5 | 522.3-522.3 | 3.65 | yes | 13.740x | 0.324x | 0.024x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 3,789.0 | 2,281.8-2,281.8 | 8.30 | **no** | `a100_sxm_80gb-x336-tensor` | 379.1 | 520.7-520.7 | 3.64 | yes | 9.996x | 4.382x | 0.438x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-tensor` | 279.5 | 291.3-291.3 | 4.80 | yes | 18.756x | 0.580x | 0.031x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 3,788.6 | 2,256.2-2,256.2 | 8.40 | **no** | `a100_sxm_80gb-x448-tensor` | 281.0 | 291.9-291.9 | 4.81 | yes | 13.480x | 7.730x | 0.573x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-hybrid` | 264.4 | 378.7-378.7 | 3.49 | yes | 19.823x | 0.446x | 0.023x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,731.9 | 2,226.7-2,226.7 | 8.38 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.8 | 309.1-309.1 | 4.25 | yes | 14.202x | 7.204x | 0.507x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-hybrid` | 264.4 | 378.7-378.7 | 3.49 | yes | 19.823x | 0.446x | 0.023x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,541.5 | 2,118.0-2,118.0 | 8.36 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.8 | 309.1-309.1 | 4.25 | yes | 13.478x | 6.852x | 0.508x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 5,241.4 | 169.0-169.0 | 155.11 | **no** | `a100_sxm_80gb-x391-hybrid` | 244.4 | 340.9-340.9 | 3.59 | yes | 21.447x | 0.496x | 0.023x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,315.7 | 1,180.3-1,180.3 | 14.05 | **no** | `a100_sxm_80gb-x672-hybrid` | 262.8 | 309.1-309.1 | 4.25 | yes | 12.618x | 3.819x | 0.303x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 2,375.6 | 149.2-149.2 | 79.63 | **no** | `a100_sxm_80gb-x391-hybrid` | 126.0 | 180.0-180.0 | 3.50 | yes | 18.847x | 0.829x | 0.044x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 2,497.1 | 977.0-977.0 | 12.78 | **no** | `a100_sxm_80gb-x672-hybrid` | 170.7 | 196.4-196.4 | 4.34 | yes | 14.632x | 4.973x | 0.340x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 631.0 | 37.4-37.4 | 84.47 | **no** | `a100_sxm_80gb-x391-expert` | 92.6 | 173.6-173.6 | 2.67 | yes | 6.813x | 0.215x | 0.032x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,188.8 | 578.4-578.4 | 10.28 | **no** | `a100_sxm_80gb-x672-expert` | 110.6 | 292.1-292.1 | 1.89 | yes | 10.749x | 1.980x | 0.184x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 159.2 | 29.2-29.2 | 27.30 | **no** | `a100_sxm_80gb-x391-expert` | 65.2 | 44.5-44.5 | 7.33 | **no** | 2.444x | 0.656x | 0.269x |
-| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 384.0 | 219.8-219.8 | 8.74 | **no** | `a100_sxm_80gb-x672-expert` | 85.6 | 76.1-76.1 | 5.63 | **no** | 4.485x | 2.889x | 0.644x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 2,266.7 | 665.1-665.1 | 17.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 168.4 | 313.4-313.4 | 2.69 | yes | 13.463x | 2.122x | 0.158x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 2,266.7 | 665.1-665.1 | 17.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 168.4 | 313.4-313.4 | 2.69 | yes | 13.463x | 2.122x | 0.158x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 2,266.7 | 665.1-665.1 | 17.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 168.4 | 313.4-313.4 | 2.69 | yes | 13.463x | 2.122x | 0.158x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 2,266.7 | 665.1-665.1 | 17.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 168.4 | 313.4-313.4 | 2.69 | yes | 13.463x | 2.122x | 0.158x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 2,266.7 | 665.1-665.1 | 17.04 | **no** | `a100_sxm_80gb-x336-hybrid` | 168.4 | 313.4-313.4 | 2.69 | yes | 13.463x | 2.122x | 0.158x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 2,073.7 | 324.8-324.8 | 31.92 | **no** | `a100_sxm_80gb-x361-hybrid` | 166.4 | 302.2-302.2 | 2.75 | yes | 12.464x | 1.075x | 0.086x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,257.9 | 670.9-670.9 | 16.83 | **no** | `a100_sxm_80gb-x672-hybrid` | 166.1 | 250.7-250.7 | 3.31 | yes | 13.596x | 2.676x | 0.197x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,948.6 | 297.1-297.1 | 32.80 | **no** | `a100_sxm_80gb-x391-hybrid` | 158.1 | 267.8-267.8 | 2.95 | yes | 12.323x | 1.109x | 0.090x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,220.5 | 347.6-347.6 | 31.94 | **no** | `a100_sxm_80gb-x672-hybrid` | 166.1 | 250.7-250.7 | 3.31 | yes | 13.371x | 1.387x | 0.104x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1,330.3 | 77.7-77.7 | 85.62 | **no** | `a100_sxm_80gb-x391-hybrid` | 93.8 | 131.7-131.7 | 3.56 | yes | 14.180x | 0.590x | 0.042x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 1,714.1 | 173.9-173.9 | 49.27 | **no** | `a100_sxm_80gb-x672-hybrid` | 119.4 | 153.1-153.1 | 3.90 | yes | 14.353x | 1.136x | 0.079x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 525.1 | 37.2-37.2 | 70.62 | **no** | `a100_sxm_80gb-x391-hybrid` | 37.5 | 53.7-53.7 | 3.49 | yes | 13.987x | 0.692x | 0.049x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 950.4 | 156.2-156.2 | 30.42 | **no** | `a100_sxm_80gb-x672-hybrid` | 54.3 | 69.8-69.8 | 3.89 | yes | 17.497x | 2.237x | 0.128x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 148.5 | 28.9-28.9 | 25.71 | **no** | `a100_sxm_80gb-x391-hybrid` | 14.4 | 19.8-19.8 | 3.65 | yes | 10.305x | 1.461x | 0.142x |
+| DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 365.5 | 69.6-69.6 | 26.25 | **no** | `a100_sxm_80gb-x672-hybrid` | 20.1 | 33.0-33.0 | 3.04 | yes | 18.207x | 2.109x | 0.116x |
 
-**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.013x to 0.644x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 20 class rows in this study, 20 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.042x to 0.197x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 18 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 20 ROM rows and 20 of 20 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill` | 28,190.4 | not applicable | -- | -- | `b200_sxm-x8-tensor` | 2,013.6 | not applicable | -- | -- | 14.000x | -- | -- |
-| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 6,464.4 | not applicable | -- | -- | `b200_sxm-x29-nvl72-tensor` | 3,724.5 | not applicable | -- | -- | 1.736x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-tensor-x62-romfill` | 14,725.8 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 3,730.3 | not applicable | -- | -- | 3.948x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 5,536.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 4,353.8 | not applicable | -- | -- | 1.272x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-tensor-x62-romfill` | 12,494.2 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 3,526.8 | not applicable | -- | -- | 3.543x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 5,536.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 4,319.3 | not applicable | -- | -- | 1.282x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-tensor-x62` | 9,588.1 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 3,180.0 | not applicable | -- | -- | 3.015x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,530.5 | not applicable | -- | -- | `b200_sxm-x231-nvl72-hybrid` | 4,211.0 | not applicable | -- | -- | 1.313x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 9,373.0 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 3,944.5 | not applicable | -- | -- | 2.376x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,187.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 4,196.5 | not applicable | -- | -- | 1.236x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 9,373.0 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 3,535.5 | not applicable | -- | -- | 2.651x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,183.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 3,918.6 | not applicable | -- | -- | 1.068x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 9,373.0 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 2,928.2 | not applicable | -- | -- | 3.201x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,015.8 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 3,460.3 | not applicable | -- | -- | 0.872x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,185.2 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,442.0 | not applicable | -- | -- | 2.209x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 1,127.6 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 2,033.5 | not applicable | -- | -- | 0.555x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 803.3 | not applicable | -- | -- | `b200_sxm-x173-hybrid` | 536.8 | not applicable | -- | -- | 1.497x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 336.6 | not applicable | -- | -- | `b200_sxm-x347-hybrid` | 787.1 | not applicable | -- | -- | 0.428x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hybrid-x340-romfill` | 201.3 | not applicable | -- | -- | `b200_sxm-x173-hybrid` | 169.7 | not applicable | -- | -- | 1.187x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 84.4 | not applicable | -- | -- | `b200_sxm-x347-hybrid` | 290.6 | not applicable | -- | -- | 0.290x | -- | -- |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x59` | 18,118.9 | 1,014.3-1,014.3 | 89.32 | **no** | `b200_sxm-x30-nvl72-tensor` | 3,566.3 | 11,493.3-11,493.3 | 1.55 | yes | 5.081x | 0.088x | 0.017x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-pipeline-x1` | 6,168.1 | 296.0-296.0 | 104.19 | **no** | `b200_sxm-x29-nvl72-tensor` | 3,540.5 | 11,332.1-11,332.1 | 1.56 | yes | 1.742x | 0.026x | 0.015x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 17,197.9 | 950.8-950.8 | 90.44 | **no** | `b200_sxm-x32-nvl72-tensor` | 3,369.9 | 9,769.7-9,769.7 | 1.72 | yes | 5.103x | 0.097x | 0.019x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5,328.6 | 10,625.4-10,625.4 | 2.51 | yes | `b200_sxm-x202-nvl72-hybrid` | 3,969.3 | 13,998.0-13,998.0 | 1.42 | yes | 1.342x | 0.759x | 0.565x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 17,197.9 | 950.8-950.8 | 90.44 | **no** | `b200_sxm-x32-nvl72-tensor` | 2,978.7 | 7,501.7-7,501.7 | 1.99 | yes | 5.774x | 0.127x | 0.022x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5,328.6 | 10,625.4-10,625.4 | 2.51 | yes | `b200_sxm-x202-nvl72-hybrid` | 3,911.6 | 13,239.5-13,239.5 | 1.48 | yes | 1.362x | 0.803x | 0.589x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 17,197.9 | 950.8-950.8 | 90.44 | **no** | `b200_sxm-x32-nvl72-tensor` | 2,442.8 | 5,545.6-5,545.6 | 2.20 | yes | 7.040x | 0.171x | 0.024x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5,325.7 | 10,622.7-10,622.7 | 2.51 | yes | `b200_sxm-x231-nvl72-hybrid` | 3,687.7 | 11,166.2-11,166.2 | 1.65 | yes | 1.444x | 0.951x | 0.659x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 17,197.9 | 950.8-950.8 | 90.44 | **no** | `b200_sxm-x32-nvl72-tensor` | 1,847.5 | 4,114.3-4,114.3 | 2.25 | yes | 9.309x | 0.231x | 0.025x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,229.6 | 10,403.5-10,403.5 | 2.51 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,573.1 | 9,886.0-9,886.0 | 1.81 | yes | 1.464x | 1.052x | 0.719x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x168-romfill` | 13,849.4 | 1,173.8-1,173.8 | 58.99 | **no** | `b200_sxm-x86-nvl72-hybrid` | 2,112.4 | 4,714.6-4,714.6 | 2.24 | yes | 6.556x | 0.249x | 0.038x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,916.6 | 9,645.4-9,645.4 | 2.55 | yes | `b200_sxm-x347-nvl72-hybrid` | 3,186.7 | 7,804.9-7,804.9 | 2.04 | yes | 1.543x | 1.236x | 0.801x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 13,829.4 | 1,173.8-1,173.8 | 58.91 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,107.3 | 4,433.7-4,433.7 | 2.38 | yes | 6.563x | 0.265x | 0.040x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4,390.9 | 8,418.6-8,418.6 | 2.61 | yes | `b200_sxm-x347-nvl72-hybrid` | 2,653.0 | 5,662.5-5,662.5 | 2.34 | yes | 1.655x | 1.487x | 0.898x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 5,526.7 | 974.8-974.8 | 28.35 | **no** | `b200_sxm-x173-nvl72-hybrid` | 1,131.8 | 1,825.1-1,825.1 | 3.10 | yes | 4.883x | 0.534x | 0.109x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 2,675.0 | 1,209.4-1,209.4 | 11.06 | **no** | `b200_sxm-x347-nvl72-hybrid` | 1,509.3 | 2,491.5-2,491.5 | 3.03 | yes | 1.772x | 0.485x | 0.274x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,521.0 | 245.1-245.1 | 31.02 | **no** | `b200_sxm-x173-nvl72-hybrid` | 546.5 | 555.3-555.3 | 4.92 | yes | 2.783x | 0.441x | 0.159x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,257.0 | 299.6-299.6 | 20.98 | **no** | `b200_sxm-x347-nvl72-hybrid` | 756.4 | 823.6-823.6 | 4.59 | yes | 1.662x | 0.364x | 0.219x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 464.4 | 139.8-139.8 | 16.61 | **no** | `b200_sxm-x173-expert` | 217.4 | 200.0-200.0 | 5.43 | **no** | 2.136x | 0.699x | 0.327x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 319.6 | 209.2-209.2 | 7.64 | **no** | `b200_sxm-x347-expert` | 371.8 | 395.6-395.6 | 4.70 | yes | 0.859x | 0.529x | 0.615x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x184` | 5,063.9 | 7,949.6-7,949.6 | 3.19 | yes | `b200_sxm-x94-nvl72-hybrid` | 2,193.2 | 6,367.7-6,367.7 | 1.72 | yes | 2.309x | 1.248x | 0.541x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 3,736.6 | 2,251.3-2,251.3 | 8.30 | **no** | `b200_sxm-x173-nvl72-hybrid` | 2,310.3 | 6,837.5-6,837.5 | 1.69 | yes | 1.617x | 0.329x | 0.204x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 2,402.2 | 7,264.1-7,264.1 | 1.65 | yes | 1.759x | 0.021x | 0.012x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 3,119.7 | 2,816.0-2,816.0 | 5.54 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 2,230.8 | 4,700.9-4,700.9 | 2.37 | yes | 1.398x | 0.599x | 0.428x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 2,327.0 | 6,648.2-6,648.2 | 1.75 | yes | 1.816x | 0.023x | 0.013x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 3,119.7 | 2,816.0-2,816.0 | 5.54 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 2,230.8 | 4,700.9-4,700.9 | 2.37 | yes | 1.398x | 0.599x | 0.428x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 2,070.3 | 5,147.9-5,147.9 | 2.01 | yes | 2.041x | 0.030x | 0.015x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 3,119.7 | 2,816.0-2,816.0 | 5.54 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 2,230.8 | 4,700.9-4,700.9 | 2.37 | yes | 1.398x | 0.599x | 0.428x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 1,702.9 | 3,762.4-3,762.4 | 2.26 | yes | 2.482x | 0.041x | 0.017x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 3,119.7 | 2,816.0-2,816.0 | 5.54 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 2,230.8 | 4,700.9-4,700.9 | 2.37 | yes | 1.398x | 0.599x | 0.428x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 1,271.2 | 2,520.3-2,520.3 | 2.52 | yes | 3.325x | 0.061x | 0.018x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 3,119.7 | 2,816.0-2,816.0 | 5.54 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 2,093.3 | 3,846.1-3,846.1 | 2.72 | yes | 1.490x | 0.732x | 0.491x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 4,226.3 | 154.6-154.6 | 136.71 | **no** | `b200_sxm-x203-nvl72-hybrid` | 867.4 | 1,674.4-1,674.4 | 2.59 | yes | 4.873x | 0.092x | 0.019x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 2,911.1 | 2,726.3-2,726.3 | 5.34 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 1,820.3 | 3,027.1-3,027.1 | 3.01 | yes | 1.599x | 0.901x | 0.563x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,769.6 | 143.0-143.0 | 61.90 | **no** | `b200_sxm-x203-nvl72-hybrid` | 366.2 | 682.2-682.2 | 2.68 | yes | 4.832x | 0.210x | 0.043x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,658.7 | 331.9-331.9 | 24.99 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 1,046.7 | 1,543.0-1,543.0 | 3.39 | yes | 1.585x | 0.215x | 0.136x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 462.6 | 35.9-35.9 | 64.49 | **no** | `b200_sxm-x203-nvl72-hybrid` | 163.4 | 216.0-216.0 | 3.78 | yes | 2.831x | 0.166x | 0.059x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 609.6 | 307.8-307.8 | 9.90 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 441.5 | 632.9-632.9 | 3.49 | yes | 1.381x | 0.486x | 0.352x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 116.5 | 26.2-26.2 | 22.22 | **no** | `--` | -- | ----- | -- | **no** | --x | --x | --x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x47` | 180.2 | 6.1-6.1 | 148.33 | **no** | `b200_sxm-x1358-expert` | 254.4 | 516.4-516.4 | 2.46 | yes | 0.708x | 0.012x | 0.017x |
+| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill` | 10,692.4 | not applicable | -- | -- | `b200_sxm-x8-tensor` | 943.8 | not applicable | -- | -- | 11.330x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 9,245.0 | not applicable | -- | -- | `b200_sxm-x29-nvl72-tensor` | 1,202.6 | not applicable | -- | -- | 7.687x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x62-romfill` | 9,796.1 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 1,202.3 | not applicable | -- | -- | 8.148x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 7,483.5 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,258.3 | not applicable | -- | -- | 5.947x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x62-romfill` | 9,796.1 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 1,178.6 | not applicable | -- | -- | 8.312x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 7,483.5 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,255.0 | not applicable | -- | -- | 5.963x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x170-romfill` | 9,712.9 | not applicable | -- | -- | `b200_sxm-x87-nvl72-hybrid` | 1,207.9 | not applicable | -- | -- | 8.041x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 7,471.7 | not applicable | -- | -- | `b200_sxm-x231-nvl72-hybrid` | 1,245.1 | not applicable | -- | -- | 6.001x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 9,591.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,217.5 | not applicable | -- | -- | 7.878x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6,532.0 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,242.6 | not applicable | -- | -- | 5.257x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 8,722.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,170.8 | not applicable | -- | -- | 7.450x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5,236.0 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,214.0 | not applicable | -- | -- | 4.313x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 7,119.0 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,087.4 | not applicable | -- | -- | 6.547x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,678.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,160.5 | not applicable | -- | -- | 3.169x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,148.4 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 811.6 | not applicable | -- | -- | 3.879x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 1,238.5 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 951.5 | not applicable | -- | -- | 1.302x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 801.0 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 439.4 | not applicable | -- | -- | 1.823x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 331.2 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 613.1 | not applicable | -- | -- | 0.540x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 201.1 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 166.6 | not applicable | -- | -- | 1.207x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 84.0 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 280.0 | not applicable | -- | -- | 0.300x | -- | -- |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x56` | 4,202.4 | 1,013.6-1,013.6 | 20.73 | **no** | `b200_sxm-x29-nvl72-tensor` | 599.7 | 2,149.1-2,149.1 | 1.40 | yes | 7.007x | 0.472x | 0.067x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 3,943.5 | 990.6-990.6 | 19.90 | **no** | `b200_sxm-x58-nvl72-tensor` | 607.7 | 2,192.7-2,192.7 | 1.39 | yes | 6.489x | 0.452x | 0.070x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 4,142.4 | 952.1-952.1 | 21.75 | **no** | `b200_sxm-x31-hybrid` | 585.0 | 1,899.5-1,899.5 | 1.54 | yes | 7.081x | 0.501x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 3,601.2 | 3,594.6-3,594.6 | 5.01 | **no** | `b200_sxm-x202-nvl72-hybrid` | 605.8 | 2,159.8-2,159.8 | 1.40 | yes | 5.945x | 1.664x | 0.280x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 4,142.4 | 952.1-952.1 | 21.75 | **no** | `b200_sxm-x31-hybrid` | 585.0 | 1,899.5-1,899.5 | 1.54 | yes | 7.081x | 0.501x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 3,601.2 | 3,594.6-3,594.6 | 5.01 | **no** | `b200_sxm-x202-nvl72-hybrid` | 602.4 | 2,132.6-2,132.6 | 1.41 | yes | 5.978x | 1.686x | 0.282x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 4,142.4 | 952.1-952.1 | 21.75 | **no** | `b200_sxm-x31-hybrid` | 547.7 | 1,498.9-1,498.9 | 1.83 | yes | 7.563x | 0.635x | 0.084x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 3,601.2 | 3,594.6-3,594.6 | 5.01 | **no** | `b200_sxm-x202-nvl72-hybrid` | 590.6 | 2,009.1-2,009.1 | 1.47 | yes | 6.097x | 1.789x | 0.293x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x61` | 4,118.7 | 897.9-897.9 | 22.94 | **no** | `b200_sxm-x31-hybrid` | 486.8 | 1,072.5-1,072.5 | 2.27 | yes | 8.462x | 0.837x | 0.099x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 3,601.2 | 3,594.6-3,594.6 | 5.01 | **no** | `b200_sxm-x202-nvl72-hybrid` | 576.5 | 1,779.8-1,779.8 | 1.62 | yes | 6.247x | 2.020x | 0.323x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x168-romfill` | 3,916.7 | 1,097.0-1,097.0 | 17.85 | **no** | `b200_sxm-x86-nvl72-hybrid` | 517.7 | 1,274.3-1,274.3 | 2.03 | yes | 7.565x | 0.861x | 0.114x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,571.7 | 3,577.0-3,577.0 | 4.99 | yes | `b200_sxm-x347-nvl72-hybrid` | 569.6 | 1,662.1-1,662.1 | 1.71 | yes | 6.271x | 2.152x | 0.343x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 3,914.0 | 1,096.8-1,096.8 | 17.84 | **no** | `b200_sxm-x173-nvl72-hybrid` | 513.7 | 1,228.6-1,228.6 | 2.09 | yes | 7.619x | 0.893x | 0.117x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3,458.0 | 2,112.7-2,112.7 | 8.18 | **no** | `b200_sxm-x347-nvl72-hybrid` | 552.7 | 1,489.5-1,489.5 | 1.86 | yes | 6.256x | 1.418x | 0.227x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 2,667.9 | 536.2-536.2 | 24.88 | **no** | `b200_sxm-x173-nvl72-hybrid` | 364.6 | 701.8-701.8 | 2.60 | yes | 7.318x | 0.764x | 0.104x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2,439.2 | 1,089.5-1,089.5 | 11.19 | **no** | `b200_sxm-x347-nvl72-hybrid` | 442.1 | 890.6-890.6 | 2.48 | yes | 5.518x | 1.223x | 0.222x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 1,133.1 | 235.9-235.9 | 24.02 | **no** | `b200_sxm-x173-nvl72-hybrid` | 197.9 | 368.7-368.7 | 2.68 | yes | 5.726x | 0.640x | 0.112x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 1,035.3 | 293.0-293.0 | 17.67 | **no** | `b200_sxm-x347-nvl72-hybrid` | 275.2 | 449.6-449.6 | 3.06 | yes | 3.763x | 0.652x | 0.173x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 344.6 | 118.7-118.7 | 14.52 | **no** | `b200_sxm-x173-nvl72-hybrid` | 87.7 | 182.9-182.9 | 2.40 | yes | 3.930x | 0.649x | 0.165x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 298.0 | 84.2-84.2 | 17.70 | **no** | `b200_sxm-x347-nvl72-hybrid` | 132.3 | 249.7-249.7 | 2.65 | yes | 2.252x | 0.337x | 0.150x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x340` | 1,581.9 | 321.0-321.0 | 24.64 | **no** | `b200_sxm-x173-nvl72-hybrid` | 376.7 | 907.1-907.1 | 2.08 | yes | 4.199x | 0.354x | 0.084x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 2,052.1 | 644.6-644.6 | 15.92 | **no** | `b200_sxm-x173-nvl72-hybrid` | 376.7 | 907.1-907.1 | 2.08 | yes | 5.448x | 0.711x | 0.130x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,575.6 | 282.2-282.2 | 27.92 | **no** | `b200_sxm-x203-nvl72-hybrid` | 378.3 | 909.3-909.3 | 2.08 | yes | 4.165x | 0.310x | 0.075x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,678.4 | 327.7-327.7 | 25.61 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 371.7 | 833.4-833.4 | 2.23 | yes | 4.515x | 0.393x | 0.087x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,575.6 | 282.2-282.2 | 27.92 | **no** | `b200_sxm-x203-nvl72-hybrid` | 374.4 | 896.3-896.3 | 2.09 | yes | 4.208x | 0.315x | 0.075x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,678.4 | 327.7-327.7 | 25.61 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 371.7 | 833.4-833.4 | 2.23 | yes | 4.515x | 0.393x | 0.087x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,575.6 | 282.2-282.2 | 27.92 | **no** | `b200_sxm-x203-nvl72-hybrid` | 363.9 | 829.5-829.5 | 2.19 | yes | 4.330x | 0.340x | 0.079x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,678.4 | 327.7-327.7 | 25.61 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 371.7 | 833.4-833.4 | 2.23 | yes | 4.515x | 0.393x | 0.087x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,575.6 | 282.2-282.2 | 27.92 | **no** | `b200_sxm-x203-nvl72-hybrid` | 350.8 | 739.4-739.4 | 2.37 | yes | 4.491x | 0.382x | 0.085x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,678.4 | 327.7-327.7 | 25.61 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 371.7 | 833.4-833.4 | 2.23 | yes | 4.515x | 0.393x | 0.087x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,575.6 | 282.2-282.2 | 27.92 | **no** | `b200_sxm-x203-nvl72-hybrid` | 310.8 | 635.9-635.9 | 2.44 | yes | 5.070x | 0.444x | 0.088x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,678.4 | 327.7-327.7 | 25.61 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 356.5 | 749.4-749.4 | 2.38 | yes | 4.708x | 0.437x | 0.093x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 1,568.9 | 150.2-150.2 | 52.21 | **no** | `b200_sxm-x203-nvl72-hybrid` | 257.2 | 416.2-416.2 | 3.09 | yes | 6.101x | 0.361x | 0.059x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 1,654.7 | 1,447.9-1,447.9 | 5.71 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 354.1 | 652.3-652.3 | 2.71 | yes | 4.673x | 2.220x | 0.475x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 958.0 | 74.3-74.3 | 64.44 | **no** | `b200_sxm-x203-nvl72-hybrid` | 148.6 | 212.6-212.6 | 3.49 | yes | 6.449x | 0.350x | 0.054x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 1,301.3 | 95.6-95.6 | 68.07 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 293.7 | 401.7-401.7 | 3.66 | yes | 4.430x | 0.238x | 0.054x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 339.6 | 34.8-34.8 | 48.83 | **no** | `b200_sxm-x203-nvl72-hybrid` | 64.8 | 90.2-90.2 | 3.59 | yes | 5.238x | 0.386x | 0.074x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 568.5 | 24.2-24.2 | 117.48 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 189.8 | 201.2-201.2 | 4.72 | yes | 2.995x | 0.120x | 0.040x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 92.0 | 24.1-24.1 | 19.07 | **no** | `--` | -- | ----- | -- | **no** | --x | --x | --x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x47` | 168.7 | 6.1-6.1 | 139.08 | **no** | `b200_sxm-x1358-nvl72-hybrid` | 92.1 | 95.3-95.3 | 4.83 | yes | 1.832x | 0.064x | 0.035x |
 
-**Does the ratio compress?** Of 39 class rows in this study, 39 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.012x to 0.898x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 39 class rows in this study, 39 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.035x to 0.475x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 7 of 40 ROM rows and 38 of 40 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 1 of 40 ROM rows and 39 of 40 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n6_vs_a100`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x16-romfill` | 25,281.1 | not applicable | -- | -- | `a100_sxm_80gb-x16-tensor` | 758.6 | not applicable | -- | -- | 33.326x | -- | -- |
-| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1-romfill` | 6,464.4 | not applicable | -- | -- | `a100_sxm_80gb-x56-tensor` | 1,109.0 | not applicable | -- | -- | 5.829x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x87-romfill` | 10,992.1 | not applicable | -- | -- | `a100_sxm_80gb-x86-tensor` | 1,084.9 | not applicable | -- | -- | 10.132x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x8-romfill` | 5,028.2 | not applicable | -- | -- | `a100_sxm_80gb-x448-tensor` | 889.3 | not applicable | -- | -- | 5.654x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x87-romfill` | 9,063.7 | not applicable | -- | -- | `a100_sxm_80gb-x86-tensor` | 927.9 | not applicable | -- | -- | 9.768x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x8` | 4,531.9 | not applicable | -- | -- | `a100_sxm_80gb-x448-tensor` | 783.0 | not applicable | -- | -- | 5.788x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x138` | 7,134.8 | not applicable | -- | -- | `a100_sxm_80gb-x136-tensor` | 744.2 | not applicable | -- | -- | 9.588x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 4,325.6 | not applicable | -- | -- | `a100_sxm_80gb-x448-tensor` | 632.0 | not applicable | -- | -- | 6.845x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x227` | 5,223.1 | not applicable | -- | -- | `a100_sxm_80gb-x224-hybrid` | 597.8 | not applicable | -- | -- | 8.737x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,846.9 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 591.2 | not applicable | -- | -- | 6.507x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,125.0 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 592.8 | not applicable | -- | -- | 8.645x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2,678.3 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 591.2 | not applicable | -- | -- | 4.530x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 5,125.0 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 561.3 | not applicable | -- | -- | 9.131x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,666.0 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 591.2 | not applicable | -- | -- | 2.818x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 1,773.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 445.0 | not applicable | -- | -- | 3.984x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 509.8 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 522.8 | not applicable | -- | -- | 0.975x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 452.2 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 236.5 | not applicable | -- | -- | 1.912x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 137.6 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 344.7 | not applicable | -- | -- | 0.399x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 113.4 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 82.3 | not applicable | -- | -- | 1.378x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 34.4 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 145.9 | not applicable | -- | -- | 0.236x | -- | -- |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x83` | 13,876.3 | 724.8-724.8 | 95.73 | **no** | `a100_sxm_80gb-x82-tensor` | 1,041.9 | 2,735.5-2,735.5 | 1.90 | yes | 13.318x | 0.265x | 0.020x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 5,467.3 | 8,680.6-8,680.6 | 3.15 | yes | `a100_sxm_80gb-x112-tensor` | 1,065.4 | 2,817.2-2,817.2 | 1.89 | yes | 5.131x | 3.081x | 0.600x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 13,172.6 | 691.1-691.1 | 95.31 | **no** | `a100_sxm_80gb-x87-tensor` | 940.3 | 1,908.7-1,908.7 | 2.46 | yes | 14.009x | 0.362x | 0.026x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 4,970.0 | 8,635.5-8,635.5 | 2.88 | yes | `a100_sxm_80gb-x560-tensor` | 748.4 | 1,761.4-1,761.4 | 2.12 | yes | 6.641x | 4.903x | 0.738x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 13,172.6 | 691.1-691.1 | 95.31 | **no** | `a100_sxm_80gb-x87-tensor` | 781.7 | 1,195.0-1,195.0 | 3.27 | yes | 16.851x | 0.578x | 0.034x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 4,970.0 | 8,635.5-8,635.5 | 2.88 | yes | `a100_sxm_80gb-x560-hybrid` | 703.9 | 917.1-917.1 | 3.84 | yes | 7.060x | 9.416x | 1.334x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 13,172.6 | 691.1-691.1 | 95.31 | **no** | `a100_sxm_80gb-x87-hybrid` | 737.9 | 1,473.8-1,473.8 | 2.50 | yes | 17.851x | 0.469x | 0.026x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 4,970.0 | 8,635.5-8,635.5 | 2.88 | yes | `a100_sxm_80gb-x560-hybrid` | 703.9 | 917.1-917.1 | 3.84 | yes | 7.060x | 9.416x | 1.334x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 13,172.6 | 691.1-691.1 | 95.31 | **no** | `a100_sxm_80gb-x87-hybrid` | 671.8 | 1,258.3-1,258.3 | 2.67 | yes | 19.607x | 0.549x | 0.028x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,787.7 | 8,441.4-8,441.4 | 2.84 | yes | `a100_sxm_80gb-x672-hybrid` | 703.9 | 849.4-849.4 | 4.14 | yes | 6.801x | 9.938x | 1.461x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x99` | 11,363.0 | 606.1-606.1 | 93.73 | **no** | `a100_sxm_80gb-x98-hybrid` | 540.9 | 957.6-957.6 | 2.82 | yes | 21.006x | 0.633x | 0.030x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 4,189.5 | 1,273.0-1,273.0 | 16.46 | **no** | `a100_sxm_80gb-x672-hybrid` | 703.9 | 849.4-849.4 | 4.14 | yes | 5.952x | 1.499x | 0.252x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 10,757.0 | 847.8-847.8 | 63.44 | **no** | `a100_sxm_80gb-x312-hybrid` | 624.0 | 950.2-950.2 | 3.28 | yes | 17.240x | 0.892x | 0.052x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 3,351.8 | 1,253.8-1,253.8 | 13.37 | **no** | `a100_sxm_80gb-x672-hybrid` | 703.9 | 849.4-849.4 | 4.14 | yes | 4.762x | 1.476x | 0.310x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,112.9 | 704.3-704.3 | 29.20 | **no** | `a100_sxm_80gb-x335-hybrid` | 346.6 | 532.7-532.7 | 3.25 | yes | 11.867x | 1.322x | 0.111x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,523.8 | 1,149.9-1,149.9 | 6.63 | **no** | `a100_sxm_80gb-x672-hybrid` | 493.5 | 571.4-571.4 | 4.32 | yes | 3.088x | 2.012x | 0.652x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x237` | 1,164.2 | 207.4-207.4 | 28.07 | **no** | `a100_sxm_80gb-x234-expert` | 212.1 | 235.6-235.6 | 4.50 | yes | 5.488x | 0.880x | 0.160x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 519.4 | 216.2-216.2 | 12.02 | **no** | `a100_sxm_80gb-x672-expert` | 332.9 | 639.8-639.8 | 2.60 | yes | 1.560x | 0.338x | 0.216x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 423.3 | 121.5-121.5 | 17.42 | **no** | `a100_sxm_80gb-x335-expert` | 129.6 | 85.9-85.9 | 7.54 | **no** | 3.267x | 1.414x | 0.433x |
-| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 130.8 | 23.1-23.1 | 28.28 | **no** | `a100_sxm_80gb-x672-expert` | 204.9 | 170.8-170.8 | 6.00 | **no** | 0.638x | 0.135x | 0.212x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x237` | 4,414.2 | 7,408.2-7,408.2 | 2.98 | yes | `a100_sxm_80gb-x234-tensor` | 689.9 | 1,485.0-1,485.0 | 2.32 | yes | 6.398x | 4.989x | 0.780x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x9` | 3,649.0 | 1,570.1-1,570.1 | 11.62 | **no** | `a100_sxm_80gb-x504-tensor` | 529.0 | 1,325.1-1,325.1 | 2.00 | yes | 6.898x | 1.185x | 0.172x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-tensor` | 481.5 | 894.7-894.7 | 2.69 | yes | 5.017x | 0.271x | 0.054x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-tensor` | 395.1 | 532.2-532.2 | 3.71 | yes | 6.114x | 0.455x | 0.074x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-tensor` | 290.8 | 294.7-294.7 | 4.93 | yes | 8.307x | 0.822x | 0.099x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-hybrid` | 251.9 | 120.0-120.0 | 10.50 | **no** | 9.589x | 2.019x | 0.211x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-hybrid` | 251.9 | 120.0-120.0 | 10.50 | **no** | 9.589x | 2.019x | 0.211x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 2,415.3 | 242.2-242.2 | 49.87 | **no** | `a100_sxm_80gb-x3694-hybrid` | 251.9 | 120.0-120.0 | 10.50 | **no** | 9.589x | 2.019x | 0.211x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,160.3 | 237.0-237.0 | 24.48 | **no** | `a100_sxm_80gb-x3694-hybrid` | 251.9 | 120.0-120.0 | 10.50 | **no** | 4.606x | 1.976x | 0.429x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 374.2 | 218.1-218.1 | 8.58 | **no** | `a100_sxm_80gb-x3694-hybrid` | 185.3 | 84.8-84.8 | 10.93 | **no** | 2.020x | 2.573x | 1.274x |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x66` | 103.4 | 4.3-4.3 | 119.61 | **no** | `a100_sxm_80gb-x3694-expert` | 121.8 | 209.6-209.6 | 2.91 | yes | 0.849x | 0.021x | 0.024x |
+| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x16-romfill` | 10,396.4 | not applicable | -- | -- | `a100_sxm_80gb-x16-hybrid` | 458.7 | not applicable | -- | -- | 22.666x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1-romfill` | 9,289.5 | not applicable | -- | -- | `a100_sxm_80gb-x56-tensor` | 537.8 | not applicable | -- | -- | 17.274x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 8,012.3 | not applicable | -- | -- | `a100_sxm_80gb-x272-tensor` | 544.1 | not applicable | -- | -- | 14.726x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,951.9 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 539.0 | not applicable | -- | -- | 11.043x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 8,012.3 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 532.5 | not applicable | -- | -- | 15.046x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,537.5 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 539.0 | not applicable | -- | -- | 10.274x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 8,012.3 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 514.3 | not applicable | -- | -- | 15.580x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5,459.7 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 534.5 | not applicable | -- | -- | 10.215x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 7,650.1 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 474.5 | not applicable | -- | -- | 16.124x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 4,524.5 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 520.1 | not applicable | -- | -- | 8.700x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 6,230.8 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 447.1 | not applicable | -- | -- | 13.937x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3,092.1 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 479.6 | not applicable | -- | -- | 6.448x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 4,555.8 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 430.7 | not applicable | -- | -- | 10.577x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 1,856.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 442.4 | not applicable | -- | -- | 4.196x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 1,594.7 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 354.0 | not applicable | -- | -- | 4.505x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 531.7 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 402.4 | not applicable | -- | -- | 1.321x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 431.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 206.7 | not applicable | -- | -- | 2.085x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 136.7 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 286.6 | not applicable | -- | -- | 0.477x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 111.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 77.9 | not applicable | -- | -- | 1.424x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 34.4 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 133.3 | not applicable | -- | -- | 0.258x | -- | -- |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x80` | 3,949.8 | 725.8-725.8 | 27.21 | **no** | `a100_sxm_80gb-x79-hybrid` | 333.5 | 814.8-814.8 | 2.05 | yes | 11.843x | 0.891x | 0.075x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 3,943.5 | 982.7-982.7 | 20.06 | **no** | `a100_sxm_80gb-x112-hybrid` | 333.1 | 799.3-799.3 | 2.08 | yes | 11.840x | 1.229x | 0.104x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 3,844.6 | 663.0-663.0 | 28.99 | **no** | `a100_sxm_80gb-x85-hybrid` | 331.3 | 803.4-803.4 | 2.06 | yes | 11.606x | 0.825x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 3,238.6 | 836.6-836.6 | 19.36 | **no** | `a100_sxm_80gb-x560-hybrid` | 322.7 | 583.8-583.8 | 2.76 | yes | 10.037x | 1.433x | 0.143x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 3,844.6 | 663.0-663.0 | 28.99 | **no** | `a100_sxm_80gb-x85-hybrid` | 331.3 | 803.4-803.4 | 2.06 | yes | 11.606x | 0.825x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 3,238.6 | 836.6-836.6 | 19.36 | **no** | `a100_sxm_80gb-x560-hybrid` | 322.7 | 583.8-583.8 | 2.76 | yes | 10.037x | 1.433x | 0.143x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 3,844.6 | 663.0-663.0 | 28.99 | **no** | `a100_sxm_80gb-x85-hybrid` | 331.3 | 803.4-803.4 | 2.06 | yes | 11.606x | 0.825x | 0.071x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 3,238.6 | 836.6-836.6 | 19.36 | **no** | `a100_sxm_80gb-x560-hybrid` | 322.7 | 583.8-583.8 | 2.76 | yes | 10.037x | 1.433x | 0.143x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 3,844.6 | 663.0-663.0 | 28.99 | **no** | `a100_sxm_80gb-x85-hybrid` | 311.7 | 678.8-678.8 | 2.30 | yes | 12.335x | 0.977x | 0.079x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 3,238.6 | 836.6-836.6 | 19.36 | **no** | `a100_sxm_80gb-x560-hybrid` | 322.7 | 583.8-583.8 | 2.76 | yes | 10.037x | 1.433x | 0.143x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 3,628.0 | 807.5-807.5 | 22.47 | **no** | `a100_sxm_80gb-x312-hybrid` | 324.1 | 671.9-671.9 | 2.41 | yes | 11.196x | 1.202x | 0.107x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 3,106.7 | 435.3-435.3 | 35.69 | **no** | `a100_sxm_80gb-x560-hybrid` | 322.7 | 583.8-583.8 | 2.76 | yes | 9.629x | 0.746x | 0.077x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 3,628.0 | 807.5-807.5 | 22.47 | **no** | `a100_sxm_80gb-x312-hybrid` | 296.6 | 539.7-539.7 | 2.75 | yes | 12.231x | 1.496x | 0.122x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 2,774.5 | 364.1-364.1 | 38.10 | **no** | `a100_sxm_80gb-x672-hybrid` | 322.7 | 555.2-555.2 | 2.91 | yes | 8.599x | 0.656x | 0.076x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 2,291.5 | 391.8-391.8 | 29.24 | **no** | `a100_sxm_80gb-x335-hybrid` | 195.1 | 283.0-283.0 | 3.45 | yes | 11.747x | 1.384x | 0.118x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 1,464.3 | 182.7-182.7 | 40.08 | **no** | `a100_sxm_80gb-x672-hybrid` | 249.1 | 333.7-333.7 | 3.73 | yes | 5.877x | 0.547x | 0.093x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 883.5 | 171.9-171.9 | 25.69 | **no** | `a100_sxm_80gb-x335-hybrid` | 95.1 | 130.1-130.1 | 3.66 | yes | 9.290x | 1.322x | 0.142x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 480.3 | 46.8-46.8 | 51.30 | **no** | `a100_sxm_80gb-x672-hybrid` | 143.1 | 169.7-169.7 | 4.22 | yes | 3.356x | 0.276x | 0.082x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 313.9 | 106.0-106.0 | 14.81 | **no** | `a100_sxm_80gb-x335-hybrid` | 37.6 | 69.2-69.2 | 2.72 | yes | 8.345x | 1.531x | 0.183x |
+| DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 128.2 | 23.0-23.0 | 27.84 | **no** | `a100_sxm_80gb-x672-hybrid` | 60.1 | 82.8-82.8 | 3.63 | yes | 2.134x | 0.278x | 0.130x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x389` | 1,467.1 | 488.0-488.0 | 15.03 | **no** | `a100_sxm_80gb-x384-hybrid` | 149.5 | 221.3-221.3 | 3.38 | yes | 9.816x | 2.205x | 0.225x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x9` | 1,978.5 | 456.9-456.9 | 21.65 | **no** | `a100_sxm_80gb-x504-hybrid` | 148.2 | 206.6-206.6 | 3.59 | yes | 13.349x | 2.212x | 0.166x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 1,495.8 | 236.5-236.5 | 31.62 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 10.095x | 2.437x | 0.241x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 989.0 | 68.6-68.6 | 72.08 | **no** | `a100_sxm_80gb-x3694-hybrid` | 148.2 | 97.1-97.1 | 7.63 | **no** | 6.674x | 0.707x | 0.106x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 361.2 | 17.3-17.3 | 104.66 | **no** | `a100_sxm_80gb-x3694-hybrid` | 109.3 | 64.0-64.0 | 8.53 | **no** | 3.305x | 0.269x | 0.082x |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x66` | 100.3 | 4.3-4.3 | 116.15 | **no** | `a100_sxm_80gb-x3694-hybrid` | 53.1 | 28.6-28.6 | 9.28 | **no** | 1.888x | 0.151x | 0.080x |
 
-**Does the ratio compress?** Of 31 class rows in this study, 27 move the ROM-versus-GPU ratio DOWN under speculation and 4 move it UP. The movement spans 0.020x to 1.461x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
+**Does the ratio compress?** Of 31 class rows in this study, 31 move the ROM-versus-GPU ratio DOWN under speculation and 0 move it UP. The movement spans 0.071x to 0.241x. The ratio compresses: speculation is worth more to the GPU comparator than to the ROM design on most of this study's operating points.
 
-**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 6 of 31 ROM rows and 24 of 31 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
+**A moving ratio is not a win for either side.** At the most favourable sourced acceptance (5.00) speculation is worth having on 0 of 31 ROM rows and 22 of 31 GPU rows; on every other row the honest reading is that the design runs SLOWER with a drafter than without one. Where both sides lose, a ratio that rises means only that the comparator lost more.
 
 ### `n5_vs_b200-quantised_variant`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 40,683.1 | not applicable | -- | -- | `b200_sxm-x2-tensor` | 1,712.2 | not applicable | -- | -- | 23.761x | -- | -- |
-| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 6,464.4 | not applicable | -- | -- | `b200_sxm-x29-nvl72-tensor` | 4,776.9 | not applicable | -- | -- | 1.353x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-tensor-x62-romfill` | 14,725.8 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 4,662.6 | not applicable | -- | -- | 3.158x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 5,536.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 5,001.5 | not applicable | -- | -- | 1.107x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-tensor-x62-romfill` | 12,494.2 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 4,349.1 | not applicable | -- | -- | 2.873x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 5,536.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 4,956.1 | not applicable | -- | -- | 1.117x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x196-romfill` | 9,944.2 | not applicable | -- | -- | `b200_sxm-x100-nvl72-hybrid` | 4,600.2 | not applicable | -- | -- | 2.162x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 5,530.5 | not applicable | -- | -- | `b200_sxm-x231-nvl72-hybrid` | 4,813.0 | not applicable | -- | -- | 1.149x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x196-romfill` | 9,944.2 | not applicable | -- | -- | `b200_sxm-x100-nvl72-hybrid` | 4,154.4 | not applicable | -- | -- | 2.394x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 5,187.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 4,682.1 | not applicable | -- | -- | 1.108x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x196-romfill` | 9,944.2 | not applicable | -- | -- | `b200_sxm-x100-nvl72-hybrid` | 3,480.0 | not applicable | -- | -- | 2.858x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 4,183.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 4,338.9 | not applicable | -- | -- | 0.964x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 9,944.2 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 3,207.6 | not applicable | -- | -- | 3.100x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 3,015.8 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 3,784.0 | not applicable | -- | -- | 0.797x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 3,323.3 | not applicable | -- | -- | `b200_sxm-x173-hybrid` | 1,569.6 | not applicable | -- | -- | 2.117x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12` | 1,127.6 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 2,141.1 | not applicable | -- | -- | 0.527x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 832.8 | not applicable | -- | -- | `b200_sxm-x173-hybrid` | 607.9 | not applicable | -- | -- | 1.370x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 336.6 | not applicable | -- | -- | `b200_sxm-x347-hybrid` | 949.7 | not applicable | -- | -- | 0.354x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N5-q4p25-HBMKV-array-hybrid-x340-romfill` | 208.4 | not applicable | -- | -- | `b200_sxm-x173-pipeline` | 188.7 | not applicable | -- | -- | 1.104x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 84.4 | not applicable | -- | -- | `b200_sxm-x347-pipeline` | 336.8 | not applicable | -- | -- | 0.251x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 12,043.2 | not applicable | -- | -- | `b200_sxm-x2-tensor` | 872.0 | not applicable | -- | -- | 13.811x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 9,137.9 | not applicable | -- | -- | `b200_sxm-x29-nvl72-tensor` | 1,294.7 | not applicable | -- | -- | 7.058x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 9,519.0 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 1,285.1 | not applicable | -- | -- | 7.407x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 7,387.4 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,307.2 | not applicable | -- | -- | 5.651x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 9,519.0 | not applicable | -- | -- | `b200_sxm-x32-nvl72-tensor` | 1,258.1 | not applicable | -- | -- | 7.566x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 7,387.4 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,303.7 | not applicable | -- | -- | 5.666x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x170-romfill` | 9,440.2 | not applicable | -- | -- | `b200_sxm-x87-nvl72-hybrid` | 1,268.3 | not applicable | -- | -- | 7.443x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 7,375.9 | not applicable | -- | -- | `b200_sxm-x231-nvl72-hybrid` | 1,292.9 | not applicable | -- | -- | 5.705x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 9,325.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,263.3 | not applicable | -- | -- | 7.382x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 6,402.3 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,282.0 | not applicable | -- | -- | 4.994x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 8,516.1 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,214.9 | not applicable | -- | -- | 7.010x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 5,147.2 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,251.5 | not applicable | -- | -- | 4.113x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 6,884.7 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 1,145.4 | not applicable | -- | -- | 6.011x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 3,595.4 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,199.0 | not applicable | -- | -- | 2.999x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 3,271.6 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 877.5 | not applicable | -- | -- | 3.728x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 1,227.3 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 1,010.0 | not applicable | -- | -- | 1.215x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 832.2 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 480.0 | not applicable | -- | -- | 1.734x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 331.1 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 671.6 | not applicable | -- | -- | 0.493x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 208.3 | not applicable | -- | -- | `b200_sxm-x173-nvl72-hybrid` | 179.0 | not applicable | -- | -- | 1.164x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12` | 84.0 | not applicable | -- | -- | `b200_sxm-x347-nvl72-hybrid` | 306.9 | not applicable | -- | -- | 0.274x | -- | -- |
 
 ### `n6_vs_a100-quantised_variant`
 
 | model | ctx | batch | class | ROM design | AR ROM tok/s | spec ROM tok/s (tau 5.00-5.00) | ROM tau* | ROM pays | iso-area GPU | AR GPU tok/s | spec GPU tok/s | GPU tau* | GPU pays | AR ratio | spec ratio | ratio move |
 | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N6-q4p25-SRAMKV-array-hw-hybrid-x8-romfill` | 33,480.9 | not applicable | -- | -- | `a100_sxm_80gb-x8-tensor` | 1,302.6 | not applicable | -- | -- | 25.704x | -- | -- |
-| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 6,464.4 | not applicable | -- | -- | `a100_sxm_80gb-x56-tensor` | 1,279.6 | not applicable | -- | -- | 5.052x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-tensor-x87-romfill` | 10,992.1 | not applicable | -- | -- | `a100_sxm_80gb-x86-hybrid` | 1,249.2 | not applicable | -- | -- | 8.799x | -- | -- |
-| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-tensor-x8-romfill` | 5,028.2 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 1,176.1 | not applicable | -- | -- | 4.275x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-tensor-x87-romfill` | 9,063.7 | not applicable | -- | -- | `a100_sxm_80gb-x86-hybrid` | 1,249.2 | not applicable | -- | -- | 7.255x | -- | -- |
-| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-tensor-x8` | 4,531.9 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 1,176.1 | not applicable | -- | -- | 3.853x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-tensor-x138` | 7,134.8 | not applicable | -- | -- | `a100_sxm_80gb-x136-hybrid` | 1,241.6 | not applicable | -- | -- | 5.747x | -- | -- |
-| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 4,325.6 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 1,176.1 | not applicable | -- | -- | 3.678x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-tensor-x227` | 5,223.1 | not applicable | -- | -- | `a100_sxm_80gb-x224-hybrid` | 1,202.8 | not applicable | -- | -- | 4.342x | -- | -- |
-| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 3,846.9 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 1,176.1 | not applicable | -- | -- | 3.271x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 5,125.0 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 1,182.7 | not applicable | -- | -- | 4.333x | -- | -- |
-| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 2,678.3 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 1,176.1 | not applicable | -- | -- | 2.277x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 5,125.0 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 1,063.5 | not applicable | -- | -- | 4.819x | -- | -- |
-| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12` | 1,666.0 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 1,176.1 | not applicable | -- | -- | 1.417x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 1,773.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 712.5 | not applicable | -- | -- | 2.488x | -- | -- |
-| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12` | 509.8 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 933.3 | not applicable | -- | -- | 0.546x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-pipeline-x340-romfill` | 452.2 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 295.5 | not applicable | -- | -- | 1.531x | -- | -- |
-| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 137.6 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 485.5 | not applicable | -- | -- | 0.283x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-pipeline-x340-romfill` | 113.4 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 88.4 | not applicable | -- | -- | 1.282x | -- | -- |
-| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-pipeline-x12` | 34.4 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 166.3 | not applicable | -- | -- | 0.207x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `array` | `ROM-N6-q4p25-SRAMKV-array-hw-tensor-x8-romfill` | 11,594.0 | not applicable | -- | -- | `a100_sxm_80gb-x8-tensor` | 749.4 | not applicable | -- | -- | 15.471x | -- | -- |
+| Qwen3-8B | 8,192 | 1 | `wafer` | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 9,155.9 | not applicable | -- | -- | `a100_sxm_80gb-x56-hybrid` | 740.4 | not applicable | -- | -- | 12.366x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 7,820.6 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 707.1 | not applicable | -- | -- | 11.060x | -- | -- |
+| Qwen3-8B | 8,192 | 2 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 5,928.2 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 704.7 | not applicable | -- | -- | 8.412x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 7,820.6 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 707.1 | not applicable | -- | -- | 11.060x | -- | -- |
+| Qwen3-8B | 8,192 | 4 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 5,498.6 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 704.7 | not applicable | -- | -- | 7.802x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 7,820.6 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 707.1 | not applicable | -- | -- | 11.060x | -- | -- |
+| Qwen3-8B | 8,192 | 8 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 5,385.8 | not applicable | -- | -- | `a100_sxm_80gb-x448-hybrid` | 704.7 | not applicable | -- | -- | 7.642x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x276-romfill` | 7,461.6 | not applicable | -- | -- | `a100_sxm_80gb-x272-hybrid` | 707.1 | not applicable | -- | -- | 10.553x | -- | -- |
+| Qwen3-8B | 8,192 | 16 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 4,472.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 704.7 | not applicable | -- | -- | 6.346x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 5,990.2 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 704.1 | not applicable | -- | -- | 8.507x | -- | -- |
+| Qwen3-8B | 8,192 | 32 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 3,047.9 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 704.7 | not applicable | -- | -- | 4.325x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 4,417.1 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 676.7 | not applicable | -- | -- | 6.528x | -- | -- |
+| Qwen3-8B | 8,192 | 64 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 1,832.2 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 704.7 | not applicable | -- | -- | 2.600x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 1,587.4 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 504.8 | not applicable | -- | -- | 3.144x | -- | -- |
+| Qwen3-8B | 8,192 | 256 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 529.8 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 608.4 | not applicable | -- | -- | 0.871x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-pipeline-x340-romfill` | 430.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 250.4 | not applicable | -- | -- | 1.717x | -- | -- |
+| Qwen3-8B | 8,192 | 1024 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 136.7 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 377.7 | not applicable | -- | -- | 0.362x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `array` | `ROM-N6-q4p25-HBMKV-array-hw-hybrid-x340` | 111.0 | not applicable | -- | -- | `a100_sxm_80gb-x335-hybrid` | 89.7 | not applicable | -- | -- | 1.237x | -- | -- |
+| Qwen3-8B | 8,192 | 4096 | `wafer` | `ROM-N6-q4p25-HBMKV-wafer-pipeline-x12` | 34.4 | not applicable | -- | -- | `a100_sxm_80gb-x672-hybrid` | 156.9 | not applicable | -- | -- | 0.219x | -- | -- |
 
 ## Where the drafter lives on a ROM machine
 
@@ -1086,437 +2131,783 @@ The same rule is what makes a SEQUENTIAL draft step expensive here. A per-positi
 
 | study | model | ctx | batch | class | design | tau* draft in ROM | tau* draft in KV store | KV placement feasible | why not |
 | --- | --- | ---: | ---: | --- | --- | ---: | ---: | --- | --- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 6.70 | 1.48 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 6.70 | 1.48 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4` | 8.46 | 1.44 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 5.79 | 1.51 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5.80 | 1.60 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | 230.32 | 7.84 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5.87 | 1.95 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 240.00 | 6.76 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 5.99 | 2.52 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 171.04 | 6.68 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8` | 13.22 | 3.90 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 71.93 | 8.68 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 129.97 | 16.66 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 75.39 | 8.92 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 11.07 | 6.90 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 8.52 | 1.93 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 8.52 | 1.93 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 8.52 | 1.93 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 7.56 | 1.95 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 7.55 | 2.12 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 7.57 | 2.73 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 246.12 | 9.54 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 20.55 | 3.13 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 144.64 | 9.80 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 16.86 | 4.72 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 155.58 | 10.44 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 131.50 | 23.80 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 45.34 | 9.34 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 7.30 | 5.44 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 3.97 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 3.97 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 3.96 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 3.96 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3.97 | 1.55 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 122.79 | 7.83 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4.06 | 1.85 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 122.79 | 7.83 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 153.78 | 21.65 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 54.07 | 8.52 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 153.78 | 21.65 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 59.72 | 9.22 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 107.72 | 19.77 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 19.72 | 5.24 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 9.56 | 5.17 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4.88 | 1.90 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4.88 | 1.90 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5.04 | 1.89 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5.03 | 1.89 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.04 | 2.04 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.12 | 2.59 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 132.66 | 9.68 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.26 | 3.44 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 55.83 | 9.72 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.82 | 5.36 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 41.71 | 9.07 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 100.21 | 27.07 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 22.65 | 8.57 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 31.21 | 19.19 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 3.97 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 3.97 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 3.96 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 3.96 | 1.46 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 137.78 | 8.01 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 3.97 | 1.55 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 122.79 | 7.83 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4.06 | 1.85 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 122.79 | 7.83 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 153.78 | 21.65 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 54.07 | 8.52 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 153.78 | 21.65 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 59.72 | 9.22 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 107.72 | 19.77 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 19.72 | 5.24 | yes | -- |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 9.56 | 5.17 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4.88 | 1.90 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 4.88 | 1.90 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 5.04 | 1.89 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 5.03 | 1.89 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.04 | 2.04 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | 154.41 | 9.87 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.12 | 2.59 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 132.66 | 9.68 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.26 | 3.44 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 55.83 | 9.72 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.82 | 5.36 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 41.71 | 9.07 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 100.24 | 27.08 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 22.65 | 8.57 | yes | -- |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 31.22 | 19.20 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x63` | 5.67 | 1.83 | NO | the KV store has no room for it |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 4.61 | 1.30 | NO | the KV store has no room for it |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.49 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.49 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.49 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.49 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.49 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 31.27 | 8.12 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.21 | 1.67 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349-romfill` | 16.66 | 8.43 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 20.46 | 1.50 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x349-romfill` | 17.18 | 8.69 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 7.59 | 1.22 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x349-romfill` | 10.31 | 8.55 | yes | -- |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x33-romfill` | 4.30 | 2.91 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 86.75 | 8.82 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 86.75 | 8.82 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 86.75 | 8.82 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | 86.75 | 8.82 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 79.14 | 8.68 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 75.73 | 8.36 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 75.73 | 8.36 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 37.02 | 9.47 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 102.00 | 32.85 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 42.31 | 10.62 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 73.07 | 31.01 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 16.78 | 9.35 | yes | -- |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 25.32 | 22.99 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 84.73 | 8.88 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 84.73 | 8.88 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 84.73 | 8.88 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | 84.73 | 8.88 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 82.95 | 8.72 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 79.19 | 8.38 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 107.19 | 34.16 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 79.19 | 8.38 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | 108.61 | 34.60 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 38.96 | 9.57 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x8-romfill` | 108.61 | 34.60 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 44.98 | 10.82 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 77.85 | 32.70 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 17.48 | 9.46 | yes | -- |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 10.65 | 5.14 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 5.99 | 1.85 | NO | the KV store has no room for it |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 6.34 | 1.98 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 6.34 | 1.98 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 6.34 | 1.98 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.33 | 2.20 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 14.00 | 2.62 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 155.59 | 9.25 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 12.80 | 3.41 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 74.83 | 9.82 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 8.96 | 4.27 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 79.92 | 10.35 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 70.29 | 17.61 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 26.16 | 9.40 | yes | -- |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 47.93 | 11.23 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.42 | 1.96 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.42 | 1.96 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.42 | 1.96 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 6.41 | 1.96 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.42 | 2.18 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.48 | 2.96 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | 148.23 | 9.44 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8` | 10.26 | 4.62 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 90.33 | 10.24 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 12.05 | 5.49 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 98.06 | 10.94 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 11.07 | 7.11 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 30.81 | 9.76 | yes | -- |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 9.10 | 7.68 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.41 | 1.95 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.41 | 1.95 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 6.41 | 1.95 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 6.41 | 1.95 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.42 | 2.17 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.48 | 2.95 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | 148.25 | 9.46 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 6.58 | 4.10 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 93.24 | 10.32 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 11.98 | 5.42 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 101.53 | 11.06 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 11.14 | 7.09 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 31.70 | 9.83 | yes | -- |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 9.14 | 7.67 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x63-romfill` | 5.85 | 2.35 | NO | the KV store has no room for it |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 6.29 | 1.41 | NO | the KV store has no room for it |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 2.84 | 1.28 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 2.25 | 1.62 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 2.95 | 1.46 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 2.25 | 1.62 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 3.13 | 1.77 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 2.25 | 1.62 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | 3.43 | 2.25 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 2.25 | 1.62 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 27.50 | 7.74 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46-romfill` | 2.25 | 1.62 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 27.50 | 7.74 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 43.59 | 1.67 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 51.71 | 4.50 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 19.13 | 1.68 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 53.06 | 4.58 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 6.50 | 1.30 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 15.90 | 4.03 | yes | -- |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x46` | 84.72 | 2.36 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 93.60 | 11.95 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 2.72 | 1.72 | NO | the KV store has no room for it |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 93.60 | 11.95 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 3.09 | 2.10 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 93.60 | 11.95 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 3.09 | 2.10 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 93.60 | 11.95 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 3.09 | 2.09 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | 93.60 | 11.95 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.10 | 2.32 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 84.49 | 11.50 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.18 | 3.08 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 83.72 | 11.41 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.33 | 4.08 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 38.65 | 11.81 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.94 | 5.39 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 42.68 | 12.90 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 53.16 | 35.73 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x227` | 16.57 | 8.76 | yes | -- |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 17.87 | 24.44 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 89.69 | 12.01 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 3.11 | 2.11 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 89.69 | 12.01 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 3.11 | 2.11 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 89.69 | 12.01 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4-romfill` | 3.11 | 2.11 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 89.69 | 12.01 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 3.10 | 2.10 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 89.69 | 12.01 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.13 | 2.33 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 88.88 | 11.70 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 3.23 | 3.13 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 88.02 | 11.60 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 112.51 | 57.70 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 40.81 | 12.08 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 112.51 | 57.70 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 45.40 | 13.29 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 79.76 | 53.41 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x227` | 17.24 | 8.82 | yes | -- |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 8.98 | 5.68 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x196` | 3.59 | 2.32 | NO | the KV store has no room for it |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 8.28 | 2.15 | NO | the KV store has no room for it |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 16.10 | 2.72 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 16.10 | 2.72 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 16.10 | 2.72 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 15.88 | 2.86 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 14.28 | 3.77 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 141.96 | 11.46 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 11.98 | 4.76 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 63.76 | 11.25 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 6.72 | 4.85 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 66.72 | 11.69 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 100.98 | 14.39 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 22.79 | 10.27 | yes | -- |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 26.97 | 10.57 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.04 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.04 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.04 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 8.40 | 3.03 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 8.38 | 3.48 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 8.36 | 5.03 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | 155.88 | 12.02 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 14.08 | 6.87 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 77.11 | 12.03 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 12.29 | 10.11 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 81.62 | 12.62 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 9.59 | 8.81 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 26.57 | 10.86 | yes | -- |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 8.04 | 7.80 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.03 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.03 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 8.30 | 3.03 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 8.40 | 3.02 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 8.38 | 3.47 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 8.36 | 5.02 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 155.11 | 12.08 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 14.05 | 6.84 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 79.63 | 12.17 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 12.78 | 10.50 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 84.47 | 12.80 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 10.28 | 9.42 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 27.30 | 10.97 | yes | -- |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 8.74 | 8.46 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x59` | 89.32 | 10.86 | NO | the KV store has no room for it |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-pipeline-x1` | 104.19 | 12.84 | NO | the KV store has no room for it |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 90.44 | 8.70 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 2.51 | 1.53 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 90.44 | 8.70 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 2.51 | 1.53 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 90.44 | 8.70 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 2.51 | 1.53 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x63` | 90.44 | 8.70 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2.51 | 1.63 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x168-romfill` | 58.99 | 8.28 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2.55 | 1.97 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 58.91 | 8.27 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 2.61 | 2.40 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 28.35 | 9.03 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 11.06 | 2.05 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 31.02 | 9.76 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 20.98 | 9.49 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 16.61 | 4.83 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 7.64 | 7.03 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-tensor-x184` | 3.19 | 1.67 | NO | the KV store has no room for it |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 8.30 | 1.58 | NO | the KV store has no room for it |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.54 | 1.91 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.54 | 1.91 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.54 | 1.91 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.54 | 1.91 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.54 | 1.91 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 136.71 | 8.89 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.34 | 2.09 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 61.90 | 9.07 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 24.99 | 2.13 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 64.49 | 9.39 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 9.90 | 1.82 | yes | -- |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 22.22 | 8.87 | NO | the KV store has no room for it |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x47` | 148.33 | 3.67 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x83` | 95.73 | 11.60 | NO | the KV store has no room for it |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 3.15 | 1.45 | NO | the KV store has no room for it |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 95.31 | 11.25 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 2.88 | 1.97 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 95.31 | 11.25 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 2.88 | 1.97 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 95.31 | 11.25 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10-romfill` | 2.88 | 1.97 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x88` | 95.31 | 11.25 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 2.84 | 2.14 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x99` | 93.73 | 11.58 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 16.46 | 2.43 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 63.44 | 10.50 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 13.37 | 2.73 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 29.20 | 10.64 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 6.63 | 2.17 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x237` | 28.07 | 8.54 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 12.02 | 8.27 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 17.42 | 7.09 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 28.28 | 4.96 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-tensor-x237` | 2.98 | 1.66 | NO | the KV store has no room for it |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x9` | 11.62 | 1.78 | NO | the KV store has no room for it |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 49.87 | 2.11 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 24.48 | 2.42 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 8.58 | 1.97 | yes | -- |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x66` | 119.61 | 3.79 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 39.26 | 2.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.18 | 3.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 39.26 | 2.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.18 | 3.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 39.26 | 2.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.18 | 3.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 39.26 | 2.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.18 | 3.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 39.26 | 2.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.18 | 3.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | 74.88 | 3.68 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 30.80 | 3.97 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264-romfill` | 59.88 | 3.88 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 30.95 | 3.98 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 93.48 | 4.50 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 49.42 | 7.00 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 94.49 | 6.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 99.83 | 13.04 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 67.83 | 8.43 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 40.30 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 47.40 | 6.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 47.40 | 6.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 47.40 | 6.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 47.40 | 6.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 47.40 | 6.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 52.75 | 3.28 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 40.04 | 6.48 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | 98.00 | 4.71 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 40.23 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 160.87 | 6.70 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 59.97 | 11.39 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 132.17 | 9.21 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 92.07 | 11.71 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 42.48 | 9.02 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 68.71 | 13.01 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 46.90 | 2.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.55 | 2.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 46.90 | 2.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.55 | 2.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 46.90 | 2.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.55 | 2.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 46.90 | 2.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.55 | 2.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | 46.90 | 2.92 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.55 | 2.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 52.14 | 2.80 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 15.10 | 2.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 96.01 | 3.75 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 27.50 | 4.15 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352` | 87.47 | 5.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 37.55 | 6.36 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 143.71 | 7.74 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 134.63 | 6.13 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | 46.97 | 8.29 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 78.26 | 5.94 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 31.17 | 2.68 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 17.55 | 3.42 | NO | the KV store has no room for it |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 31.17 | 2.68 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.43 | 2.60 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 31.17 | 2.68 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.43 | 2.60 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 31.17 | 2.68 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.43 | 2.60 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | 31.17 | 2.68 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.43 | 2.60 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 64.31 | 3.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 56.36 | 3.42 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 114.31 | 4.93 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 48.89 | 3.75 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 134.94 | 7.25 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 100.18 | 5.60 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 94.67 | 8.85 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 126.73 | 6.72 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 31.23 | 8.69 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 34.78 | 4.95 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 37.93 | 2.59 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.93 | 3.81 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 37.93 | 2.59 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.93 | 3.81 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 37.93 | 2.59 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.93 | 3.81 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 37.93 | 2.59 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.93 | 3.81 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 37.93 | 2.59 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 38.93 | 3.81 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | 73.29 | 3.55 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 31.40 | 3.82 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264-romfill` | 61.73 | 3.71 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 31.56 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x352-romfill` | 84.18 | 5.76 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 52.19 | 6.94 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 94.91 | 6.65 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 112.14 | 13.79 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 72.16 | 8.48 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 41.16 | 13.30 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 50.33 | 3.18 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 48.76 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 50.33 | 3.18 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 48.76 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 50.33 | 3.18 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 48.76 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 50.33 | 3.18 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 48.76 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 50.33 | 3.18 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 48.76 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342-romfill` | 42.27 | 3.31 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 41.23 | 6.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | 91.83 | 4.56 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 41.42 | 6.43 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x342` | 88.50 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 64.21 | 11.67 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 147.75 | 9.36 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 121.39 | 21.38 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x342` | 47.47 | 9.16 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 43.39 | 11.08 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | 22.16 | 2.10 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 42.40 | 3.50 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 20.38 | 3.94 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 39.62 | 3.58 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 19.77 | 3.87 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 39.62 | 3.58 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 19.86 | 3.88 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 54.84 | 5.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 33.15 | 6.83 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 48.23 | 7.93 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 74.99 | 14.10 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 17.08 | 5.98 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 30.20 | 13.73 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x12-romfill` | 30.02 | 2.37 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 27.39 | 3.21 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 25.60 | 6.35 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 50.43 | 4.58 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 25.72 | 6.38 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 64.96 | 7.06 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 40.07 | 11.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 35.96 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 77.84 | 21.25 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 18.76 | 8.12 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 28.84 | 17.83 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 24.62 | 2.80 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | 21.43 | 2.46 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 24.62 | 2.80 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.47 | 2.62 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 24.62 | 2.80 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.47 | 2.62 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | 24.62 | 2.80 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.47 | 2.62 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x162-romfill` | 20.78 | 2.96 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | 28.47 | 2.62 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 20.09 | 2.98 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 9.83 | 2.83 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 36.16 | 4.06 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 17.34 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 45.23 | 6.07 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 23.48 | 5.67 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 32.58 | 5.56 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 36.96 | 8.12 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 16.62 | 7.25 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 40.12 | 4.41 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 32.72 | 3.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x11-romfill` | 15.46 | 2.08 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 32.72 | 3.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 21.33 | 2.57 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 32.72 | 3.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 21.33 | 2.57 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 32.72 | 3.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8` | 21.33 | 2.57 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | 32.72 | 3.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.43 | 2.53 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 25.98 | 3.57 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 55.36 | 3.23 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 44.90 | 5.02 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 49.47 | 3.61 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276` | 56.32 | 6.56 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 101.13 | 5.24 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 33.66 | 7.78 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 127.03 | 6.20 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 24.91 | 8.50 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 34.39 | 4.38 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 41.35 | 3.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 21.16 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 41.35 | 3.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 21.16 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 41.35 | 3.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 21.16 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 41.35 | 3.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 21.16 | 3.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | 41.35 | 3.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 20.70 | 3.79 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 40.49 | 3.42 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 20.05 | 3.71 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 40.49 | 3.42 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 20.16 | 3.73 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 58.15 | 5.39 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 34.94 | 6.84 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 53.24 | 7.91 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 84.02 | 15.03 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 21.19 | 8.38 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 34.22 | 14.92 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 28.01 | 3.04 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 27.36 | 6.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 28.01 | 3.04 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 27.36 | 6.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 28.01 | 3.04 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 27.36 | 6.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 28.01 | 3.04 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 27.36 | 6.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | 28.01 | 3.04 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 27.36 | 6.49 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 27.67 | 3.10 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 26.53 | 6.33 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 52.03 | 4.43 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 26.66 | 6.35 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 69.73 | 7.00 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 43.90 | 12.09 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 57.01 | 9.31 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 93.61 | 24.84 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 18.93 | 7.63 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 35.21 | 21.34 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 22.05 | 2.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 20.83 | 3.99 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | 42.40 | 3.50 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 20.38 | 3.94 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x216-romfill` | 39.62 | 3.58 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 19.77 | 3.87 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 39.62 | 3.58 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 19.86 | 3.88 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 54.84 | 5.57 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 33.15 | 6.83 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 48.23 | 7.93 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 74.99 | 14.10 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 17.08 | 5.98 | yes | -- |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 30.20 | 13.73 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.51 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.51 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.51 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.51 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | 29.37 | 3.15 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 26.38 | 6.51 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 27.39 | 3.21 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 25.60 | 6.36 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x276-romfill` | 50.43 | 4.58 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 25.73 | 6.38 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 64.96 | 7.06 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 40.07 | 11.40 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 35.96 | 6.46 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 77.86 | 21.26 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 18.76 | 8.12 | yes | -- |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 28.84 | 17.83 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x45` | 8.24 | 3.32 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | 3.34 | 1.83 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 19.66 | 2.06 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 8.23 | 1.53 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 19.66 | 2.06 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 8.23 | 1.53 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 19.66 | 2.06 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 13.22 | 1.50 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x282` | 27.55 | 2.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 24.00 | 1.43 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 31.85 | 2.23 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 20.07 | 1.49 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376` | 44.43 | 2.16 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 23.46 | 1.35 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 10.98 | 3.61 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 29.72 | 1.18 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 5.32 | 3.47 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x22` | 31.40 | 1.16 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill` | 3.92 | 3.46 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x22` | 16.38 | 1.08 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x64` | 9.71 | 3.42 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 3.53 | 2.04 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 10.12 | 1.80 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 9.10 | 1.48 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 10.12 | 1.80 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 9.10 | 1.48 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 12.38 | 1.82 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 9.10 | 1.48 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 15.38 | 1.86 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 13.92 | 1.40 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 21.95 | 1.70 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 20.00 | 1.33 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 27.05 | 1.52 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 21.53 | 1.25 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.85 | 1.46 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 25.02 | 1.23 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 17.17 | 1.37 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 25.80 | 1.22 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 5.29 | 1.30 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x31` | 13.48 | 1.11 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x105` | 8.50 | 3.19 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 9.01 | 2.61 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 22.34 | 1.27 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 22.34 | 1.27 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 22.34 | 1.27 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 22.34 | 1.27 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 21.04 | 1.31 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 28.54 | 1.16 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 35.91 | 1.06 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 38.37 | 1.04 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | 38.91 | 1.04 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x141` | 9.86 | 3.49 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 5.54 | 2.48 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x153` | 2.02 | 1.51 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 19.46 | 1.15 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 19.46 | 1.15 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 19.46 | 1.15 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 19.46 | 1.15 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 14.13 | 1.18 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 17.28 | 1.05 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 16.13 | 1.03 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | 16.26 | 1.03 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 16.46 | 2.64 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 17.80 | 2.70 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 16.46 | 2.64 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 17.80 | 2.70 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 16.46 | 2.64 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 17.80 | 2.70 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | 16.46 | 2.64 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | 17.80 | 2.70 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x170-romfill` | 16.84 | 2.66 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 8.04 | 2.74 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 16.29 | 2.64 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 7.81 | 2.70 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 30.39 | 3.56 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 13.38 | 3.53 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 41.54 | 5.52 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 17.74 | 4.42 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 36.01 | 7.39 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 26.51 | 5.78 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 16.00 | 7.83 | yes | -- |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 9.53 | 3.72 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 21.81 | 3.24 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 15.59 | 2.62 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 21.81 | 3.24 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 15.59 | 2.62 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 21.81 | 3.24 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 15.59 | 2.62 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | 21.81 | 3.24 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 15.59 | 2.62 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x156-romfill` | 21.66 | 3.23 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 5.42 | 2.59 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 21.08 | 3.19 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 8.72 | 3.39 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 38.10 | 4.57 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 13.28 | 4.40 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 48.70 | 6.78 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 13.73 | 4.51 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 38.50 | 8.14 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 16.44 | 5.05 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 16.44 | 8.04 | yes | -- |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 5.54 | 2.55 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x140` | 7.66 | 3.00 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | 8.66 | 2.19 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 10.80 | 1.50 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 10.80 | 1.50 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 10.80 | 1.50 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 10.18 | 1.54 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 16.00 | 1.49 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 24.91 | 1.36 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 31.73 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | 34.68 | 1.17 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x49` | 35.33 | 1.16 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x180` | 8.72 | 3.28 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 5.53 | 2.36 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 11.22 | 1.43 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 11.22 | 1.43 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 11.22 | 1.43 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 11.22 | 1.43 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 16.37 | 1.33 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 22.58 | 1.26 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 26.44 | 1.23 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | 27.76 | 1.23 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x68` | 28.02 | 1.23 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x333` | 7.33 | 2.65 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 6.64 | 2.55 | NO | the KV store has no room for it |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 27.05 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 27.05 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 27.05 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 27.05 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 27.05 | 1.19 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 26.27 | 1.20 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 41.97 | 1.07 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 41.97 | 1.05 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | 42.96 | 1.04 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x320` | 7.02 | 3.39 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 8.66 | 2.81 | NO | the KV store has no room for it |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x339` | 1.68 | 1.41 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-tensor-x339` | 1.93 | 1.68 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 21.81 | 1.11 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 21.81 | 1.11 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 21.81 | 1.11 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 21.81 | 1.11 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 17.97 | 1.06 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 17.57 | 1.04 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x339` | 17.83 | 1.03 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 15.59 | 2.60 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 16.16 | 3.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 15.59 | 2.60 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 16.16 | 3.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 15.59 | 2.60 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 16.16 | 3.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | 15.59 | 2.60 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 16.16 | 3.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x294-romfill` | 16.50 | 2.48 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 15.08 | 3.12 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x294-romfill` | 29.97 | 3.12 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 14.69 | 3.08 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392-romfill` | 28.43 | 3.53 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 24.78 | 4.07 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392-romfill` | 67.50 | 6.23 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 30.30 | 5.14 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 28.75 | 5.92 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 41.75 | 6.62 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x392` | 17.84 | 7.51 | yes | -- |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 46.76 | 2.68 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 20.26 | 3.08 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 11.78 | 2.86 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 20.26 | 3.08 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 11.78 | 2.86 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 20.26 | 3.08 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 11.78 | 2.86 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | 20.26 | 3.08 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 11.78 | 2.86 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x252-romfill` | 21.07 | 2.87 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 26.16 | 2.76 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x252-romfill` | 38.02 | 3.84 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 44.60 | 3.50 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378-romfill` | 36.15 | 4.36 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 37.64 | 3.30 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378-romfill` | 75.27 | 7.51 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 63.22 | 4.14 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x378` | 30.02 | 7.56 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 73.35 | 4.58 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x378` | 34.59 | 8.14 | yes | -- |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 19.86 | 2.07 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x113` | 33.79 | 4.04 | NO | the KV store has no room for it |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 11.34 | 2.15 | NO | the KV store has no room for it |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 9.33 | 4.28 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.80 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 9.33 | 4.28 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.80 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 9.33 | 4.28 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.80 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 9.33 | 4.28 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.80 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279-romfill` | 9.33 | 4.28 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.31 | 1.80 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 14.84 | 4.90 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 2.83 | 2.00 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 46.69 | 4.59 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33-romfill` | 4.82 | 2.67 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 36.29 | 5.93 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 46.89 | 2.19 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x349` | 13.12 | 5.62 | yes | -- |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x33` | 51.61 | 2.13 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x44` | 17.26 | 7.59 | NO | the KV store has no room for it |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.65 | 6.38 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 19.71 | 3.03 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.65 | 6.38 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 19.71 | 3.03 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.65 | 6.38 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x51` | 19.71 | 3.03 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.65 | 6.38 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 19.02 | 3.05 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.65 | 6.38 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18.62 | 3.06 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 17.33 | 6.29 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18.62 | 3.06 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 17.33 | 6.29 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 28.81 | 5.09 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 30.72 | 10.45 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 31.13 | 8.29 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 43.27 | 18.62 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 15.14 | 8.69 | yes | -- |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 21.23 | 19.30 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 18.35 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.62 | 6.27 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 18.35 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.62 | 6.27 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 18.35 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.62 | 6.27 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | 18.35 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.62 | 6.27 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x87-romfill` | 19.04 | 2.96 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 17.62 | 6.27 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18.63 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill` | 17.30 | 6.18 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 18.63 | 2.97 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 17.30 | 6.18 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 29.52 | 4.99 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 31.48 | 10.55 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 32.75 | 8.31 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 45.56 | 19.36 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 15.76 | 8.75 | yes | -- |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 22.61 | 20.49 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | 11.67 | 2.93 | NO | the KV store has no room for it |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 11.88 | 3.17 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 11.88 | 3.17 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 11.88 | 3.17 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 11.88 | 3.17 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 26.18 | 3.07 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 11.88 | 3.17 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | 49.30 | 3.97 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x10-romfill` | 21.21 | 4.72 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 73.66 | 6.30 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 31.64 | 8.45 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 62.03 | 8.78 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 56.25 | 14.35 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 23.29 | 8.92 | yes | -- |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12` | 44.68 | 10.66 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.54 | 3.11 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.54 | 3.11 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.54 | 3.11 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.54 | 3.11 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.54 | 3.11 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 23.70 | 2.79 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 12.42 | 3.10 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | 44.60 | 3.84 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 23.10 | 4.85 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 77.38 | 5.63 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 38.23 | 9.59 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 75.55 | 8.98 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 83.35 | 19.99 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 27.80 | 9.19 | yes | -- |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 25.98 | 11.69 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.78 | 3.12 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.78 | 3.12 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.78 | 3.12 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.78 | 3.12 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 12.78 | 3.12 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | 24.26 | 2.84 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | 24.32 | 5.01 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x308-romfill` | 45.92 | 3.89 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 24.12 | 4.98 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 42.69 | 5.82 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 39.88 | 9.87 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 78.14 | 9.02 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 85.92 | 20.40 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340` | 28.70 | 9.24 | yes | -- |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 17.22 | 9.86 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x152` | 39.61 | 4.52 | NO | the KV store has no room for it |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | 14.67 | 2.27 | NO | the KV store has no room for it |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 22.68 | 3.58 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 35.67 | 1.79 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 22.68 | 3.58 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 35.67 | 1.79 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 22.68 | 3.58 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 35.67 | 1.79 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 22.68 | 3.58 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 35.67 | 1.79 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 39.84 | 3.58 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 35.67 | 1.79 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392-romfill` | 16.07 | 5.35 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 33.01 | 1.99 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | 74.91 | 4.51 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 63.12 | 2.20 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 46.92 | 4.72 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x46` | 79.12 | 2.36 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x392` | 15.07 | 4.36 | yes | -- |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x46` | 83.67 | 2.43 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 26.96 | 4.20 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 19.92 | 6.71 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 26.96 | 4.20 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 19.92 | 6.71 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 26.96 | 4.20 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 19.92 | 6.71 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 26.96 | 4.20 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | 19.92 | 6.71 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | 26.96 | 4.20 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 12.08 | 6.82 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 24.48 | 4.22 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 11.75 | 6.66 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 24.40 | 4.22 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 11.80 | 6.68 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 35.14 | 7.11 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 18.94 | 13.00 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 33.88 | 10.57 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 39.40 | 26.58 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 15.60 | 9.85 | yes | -- |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 16.42 | 22.39 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 24.44 | 4.11 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 12.84 | 7.14 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 24.44 | 4.11 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 12.84 | 7.14 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 24.44 | 4.11 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 12.84 | 7.14 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 24.44 | 4.11 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | 12.84 | 7.14 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | 24.44 | 4.11 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | 12.58 | 7.01 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x148-romfill` | 24.48 | 4.10 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 12.21 | 6.83 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 24.40 | 4.10 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 12.27 | 6.86 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 36.30 | 7.09 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 21.22 | 14.47 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 35.78 | 10.76 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 52.44 | 35.22 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 16.27 | 10.01 | yes | -- |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill` | 23.75 | 32.64 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | 16.04 | 3.46 | NO | the KV store has no room for it |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 15.98 | 3.01 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 15.98 | 3.01 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 15.98 | 3.01 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 15.98 | 3.01 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 31.31 | 3.89 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 29.83 | 4.47 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 56.48 | 5.44 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 27.92 | 4.92 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 73.12 | 7.98 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x14` | 64.25 | 9.57 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 56.17 | 10.30 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 90.78 | 13.08 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 21.20 | 9.85 | yes | -- |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x14` | 26.19 | 10.34 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 17.46 | 2.72 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 16.80 | 5.39 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 17.46 | 2.72 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 16.80 | 5.39 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 17.46 | 2.72 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 16.80 | 5.39 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 17.46 | 2.72 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 16.80 | 5.39 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 17.46 | 2.72 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 16.80 | 5.39 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x373` | 31.08 | 3.61 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 16.58 | 5.33 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 59.73 | 5.11 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 30.23 | 8.96 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 83.71 | 7.99 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 47.10 | 17.66 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 68.29 | 10.87 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 51.62 | 25.41 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 24.96 | 10.38 | yes | -- |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | 32,768 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 41.45 | 28.69 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 17.04 | 5.47 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 17.04 | 5.47 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 17.04 | 5.47 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 17.04 | 5.47 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 17.04 | 5.47 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 31.92 | 3.70 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 16.83 | 5.35 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 32.80 | 4.08 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 31.94 | 9.37 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 85.62 | 7.99 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 49.27 | 18.35 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 70.62 | 10.99 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 30.42 | 21.19 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 25.71 | 10.48 | yes | -- |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | 8,192 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 26.25 | 21.77 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x56` | 20.73 | 3.74 | NO | the KV store has no room for it |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 19.90 | 2.83 | NO | the KV store has no room for it |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 21.75 | 3.32 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5.01 | 2.65 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 21.75 | 3.32 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5.01 | 2.65 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x60` | 21.75 | 3.32 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5.01 | 2.65 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x61` | 22.94 | 3.38 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x7-romfill` | 5.01 | 2.65 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x168-romfill` | 17.85 | 3.51 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 4.99 | 2.65 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 17.84 | 3.51 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 8.18 | 3.64 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill` | 24.88 | 5.59 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 11.19 | 5.59 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill` | 24.02 | 8.18 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x12-romfill` | 17.67 | 8.21 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x340` | 14.52 | 5.78 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x12` | 17.70 | 3.40 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N5-native-SRAMKV-array-hw-hybrid-x340` | 24.64 | 4.25 | NO | the KV store has no room for it |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 15.92 | 2.39 | NO | the KV store has no room for it |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 27.92 | 4.09 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 25.61 | 1.74 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 27.92 | 4.09 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 25.61 | 1.74 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 27.92 | 4.09 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 25.61 | 1.74 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 27.92 | 4.09 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 25.61 | 1.74 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 27.92 | 4.09 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 25.61 | 1.74 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 52.21 | 4.76 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47-romfill` | 5.71 | 2.28 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `array` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | 64.44 | 6.64 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 68.07 | 2.64 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 48.83 | 8.38 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N5-native-HBMKV-wafer-hybrid-x47` | 117.48 | 3.32 | yes | -- |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `array` | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | 19.07 | 8.52 | NO | the KV store has no room for it |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N5-native-HBMKV-wafer-pipeline-x47` | 139.08 | 3.71 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x80` | 27.21 | 4.40 | NO | the KV store has no room for it |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | 20.06 | 2.99 | NO | the KV store has no room for it |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 28.99 | 4.49 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 19.36 | 2.47 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 28.99 | 4.49 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 19.36 | 2.47 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 28.99 | 4.49 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 19.36 | 2.47 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | 28.99 | 4.49 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 19.36 | 2.47 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 22.47 | 4.61 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x10` | 35.69 | 3.29 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x316-romfill` | 22.47 | 4.61 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 38.10 | 3.74 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340-romfill` | 29.24 | 7.23 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 40.08 | 5.22 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `array` | `ROM-N6-native-HBMKV-array-hw-pipeline-x340-romfill` | 25.69 | 9.74 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 51.30 | 5.98 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `array` | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 14.81 | 7.15 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | 200,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x12` | 27.84 | 4.98 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `array` | `ROM-N6-native-SRAMKV-array-hw-hybrid-x389` | 15.03 | 4.04 | NO | the KV store has no room for it |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | `wafer` | `ROM-N6-native-SRAMKV-wafer-hybrid-x9` | 21.65 | 2.68 | NO | the KV store has no room for it |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 2 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 16 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 31.62 | 2.04 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 256 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 72.08 | 2.85 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 1024 | `wafer` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | 104.66 | 3.53 | yes | -- |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | 1,000,000 | 4096 | `wafer` | `ROM-N6-native-HBMKV-wafer-pipeline-x66` | 116.15 | 3.80 | yes | -- |
 
 ## The capacity requirement, stated as a requirement
 
@@ -1524,49 +2915,89 @@ Every evaluated ROM design carries `weight_capacity_bytes == stored_weight_bytes
 
 | study | model | design | drafter already in the checkpoint | extra stored bytes | extra array mm2 | as a fraction of the design | sweep inflation if area is held fixed |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-array-hw-hybrid-x261` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-array-hw-hybrid-x227` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-array-hw-hybrid-x316` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-array-hw-hybrid-x176` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-array-hw-hybrid-x247` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-SRAMKV-wafer-hybrid-x12-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-hybrid-x111` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-SRAMKV-wafer-hybrid-x12-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x157` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-SRAMKV-wafer-hybrid-x11-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-hybrid-x92` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x128` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-HBMKV-array-hw-hybrid-x96` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-HBMKV-array-hw-hybrid-x138` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-tensor-x63` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-HBMKV-array-hw-hybrid-x134` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-HBMKV-wafer-hybrid-x3-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-array-hw-hybrid-x45` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-array-hw-hybrid-x64` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-array-hw-hybrid-x105` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-array-hw-hybrid-x141` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N5-native-HBMKV-array-hw-hybrid-x120-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N6-native-HBMKV-array-hw-hybrid-x78-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-array-hw-hybrid-x140` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-array-hw-hybrid-x180` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-array-hw-hybrid-x333` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-array-hw-hybrid-x320` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N5-native-HBMKV-array-hw-hybrid-x154` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N6-native-HBMKV-array-hw-hybrid-x211` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x113` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-array-hw-hybrid-x52` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-wafer-pipeline-x4-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-array-hw-hybrid-x51-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x44` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-array-hw-hybrid-x48` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-array-hw-hybrid-x308` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-wafer-hybrid-x4` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-array-hw-hybrid-x271` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-array-hw-hybrid-x268` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-array-hw-hybrid-x267` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-array-hw-hybrid-x264` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-wafer-hybrid-x5-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-tensor-x63-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x152` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-HBMKV-array-hw-hybrid-x72` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-HBMKV-array-hw-hybrid-x74` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-HBMKV-array-hw-hybrid-x68` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-HBMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x196` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-wafer-hybrid-x6` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-array-hw-hybrid-x376` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x59` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-wafer-pipeline-x1` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-tensor-x184` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x56` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x340` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x83` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x237` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x80` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x389` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 | `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-wafer-hybrid-x9` | YES -- it costs nothing extra to store | 0 | 0.0 | 0.0% | 1.0000x |
 
 ## Which design the published rule chooses once a block is verified
@@ -1575,34 +3006,64 @@ A re-ranking of designs the study already evaluated, under the study's own selec
 
 | study | model | published recommendation | rule reproduces it | under speculation, draft in ROM | draft in KV store | moves |
 | --- | --- | --- | --- | --- | --- | --- |
-| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-SRAMKV-array-hw-tensor-x88` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x96` | `ROM-N5-native-HBMKV-array-hw-tensor-x113` | yes |
-| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-array-hw-tensor-x113` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x126` | `ROM-N6-native-HBMKV-array-hw-tensor-x143` | yes |
-| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-tensor-x63` | yes | `ROM-N5-native-HBMKV-array-hw-tensor-x63` | `ROM-N5-native-HBMKV-array-hw-tensor-x63` | no |
-| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-tensor-x74` | yes | `ROM-N6-native-HBMKV-array-hw-tensor-x87` | `ROM-N6-native-HBMKV-array-hw-tensor-x90` | yes |
-| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-SRAMKV-array-hw-tensor-x57` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x57` | `ROM-N5-native-HBMKV-array-hw-tensor-x63` | no |
-| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-SRAMKV-array-hw-tensor-x68` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x80` | `ROM-N6-native-HBMKV-array-hw-tensor-x90` | yes |
-| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-tensor-x36` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x40` | `ROM-N5-native-HBMKV-array-hw-tensor-x279` | yes |
-| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-tensor-x34` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x34` | `ROM-N5-native-HBMKV-array-hw-tensor-x36` | no |
-| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-tensor-x34` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x34` | `ROM-N5-native-HBMKV-array-hw-tensor-x36` | no |
-| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-tensor-x154` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x170` | `ROM-N5-native-HBMKV-array-hw-tensor-x193` | yes |
-| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-tensor-x151` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x169` | `ROM-N5-native-HBMKV-array-hw-tensor-x193` | yes |
-| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-tensor-x160` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x160` | `ROM-N5-native-HBMKV-array-hw-tensor-x193` | no |
-| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-tensor-x50` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x57` | `ROM-N6-native-HBMKV-array-hw-tensor-x392` | yes |
-| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | `ROM-N6-native-HBMKV-array-hw-tensor-x54` | no |
-| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | `ROM-N6-native-HBMKV-array-hw-tensor-x53` | no |
-| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x196` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x227` | `ROM-N6-native-HBMKV-array-hw-tensor-x248` | yes |
-| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x195` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x227` | `ROM-N6-native-HBMKV-array-hw-tensor-x248` | yes |
-| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x194` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x221` | `ROM-N6-native-HBMKV-array-hw-tensor-x248` | yes |
+| `n5_vs_b200-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x2` | `ROM-N5-native-HBMKV-wafer-tensor-x2` | yes |
+| `n6_vs_a100-deepseek-v41-flash` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | yes | `ROM-N6-native-HBMKV-wafer-tensor-x2` | `ROM-N6-native-HBMKV-wafer-tensor-x2` | yes |
+| `n5_vs_b200-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x2` | `ROM-N5-native-HBMKV-array-hw-tensor-x97` | yes |
+| `n6_vs_a100-deepseek-v41-flash-1m` | DeepSeek-V4.1-Flash | `ROM-N6-native-SRAMKV-wafer-hybrid-x2` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x2` | `ROM-N6-native-HBMKV-array-hw-tensor-x143` | yes |
+| `n5_vs_b200-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N5-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x2` | `ROM-N5-native-HBMKV-wafer-tensor-x2` | yes |
+| `n6_vs_a100-deepseek-v41-flash-8k` | DeepSeek-V4.1-Flash | `ROM-N6-native-HBMKV-wafer-hybrid-x2` | yes | `ROM-N6-native-HBMKV-wafer-tensor-x2` | `ROM-N6-native-HBMKV-wafer-tensor-x2` | yes |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-hybrid-x59` | yes | `ROM-N5-native-HBMKV-array-hw-tensor-x59` | `ROM-N5-native-HBMKV-array-hw-tensor-x59` | yes |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x86` | yes | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | yes |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-array-hw-hybrid-x68` | yes | `ROM-N5-native-HBMKV-array-hw-tensor-x59` | `ROM-N5-native-HBMKV-array-hw-tensor-x59` | yes |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-1m` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x87` | yes | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | `ROM-N6-native-HBMKV-array-hw-tensor-x87` | yes |
+| `n5_vs_b200-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N5-native-HBMKV-wafer-tensor-x1` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x1` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | no |
+| `n6_vs_a100-deepseek-v41-flash-engram-hbm-8k` | DeepSeek-V4.1-Flash-engram-hbm | `ROM-N6-native-HBMKV-array-hw-hybrid-x85` | yes | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | yes |
+| `n5_vs_b200-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N5-native-SRAMKV-array-hw-hybrid-x59` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x1` | `ROM-N5-native-HBMKV-wafer-tensor-x1` | yes |
+| `n6_vs_a100-deepseek-v41-flash-engram-host` | DeepSeek-V4.1-Flash-engram-host | `ROM-N6-native-SRAMKV-array-hw-hybrid-x76` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x76` | `ROM-N6-native-HBMKV-array-hw-tensor-x75` | yes |
+| `n5_vs_b200-kimi-k3` | Kimi-K3 | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100-kimi-k3` | Kimi-K3 | `ROM-N6-native-SRAMKV-wafer-hybrid-x8` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n5_vs_b200-kimi-k3-1m` | Kimi-K3 | `ROM-N5-native-SRAMKV-wafer-tensor-x6` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100-kimi-k3-1m` | Kimi-K3 | `ROM-N6-native-SRAMKV-wafer-tensor-x8` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n5_vs_b200-kimi-k3-8k` | Kimi-K3 | `ROM-N5-native-HBMKV-wafer-hybrid-x5` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100-kimi-k3-8k` | Kimi-K3 | `ROM-N6-native-HBMKV-wafer-hybrid-x7` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n5_vs_b200-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-array-hw-tensor-x36` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | `ROM-N5-native-HBMKV-array-hw-hybrid-x188` | yes |
+| `n6_vs_a100-mimo-v26-flash` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-array-hw-hybrid-x264` | no |
+| `n5_vs_b200-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1` | `ROM-N5-native-HBMKV-wafer-hybrid-x109` | no |
+| `n6_vs_a100-mimo-v26-flash-1m` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-wafer-hybrid-x153` | no |
+| `n5_vs_b200-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N5-native-SRAMKV-array-hw-hybrid-x32` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x32` | `ROM-N5-native-HBMKV-array-hw-tensor-x34` | yes |
+| `n6_vs_a100-mimo-v26-flash-8k` | MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-array-hw-hybrid-x43` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x43` | `ROM-N6-native-HBMKV-array-hw-tensor-x47` | yes |
+| `n5_vs_b200-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x2` | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | yes |
+| `n6_vs_a100-mimo-v26-pro` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-wafer-hybrid-x3` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x3` | `ROM-N6-native-HBMKV-wafer-hybrid-x68` | yes |
+| `n5_vs_b200-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x3` | `ROM-N5-native-HBMKV-wafer-hybrid-x242` | yes |
+| `n6_vs_a100-mimo-v26-pro-1m` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-wafer-tensor-x3` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x3` | `ROM-N6-native-HBMKV-wafer-tensor-x339` | no |
+| `n5_vs_b200-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x2` | `ROM-N5-native-HBMKV-array-hw-tensor-x112` | yes |
+| `n6_vs_a100-mimo-v26-pro-8k` | MiMo-V2.6-Pro | `ROM-N6-native-SRAMKV-array-hw-hybrid-x139` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x3` | `ROM-N6-native-HBMKV-array-hw-tensor-x138` | yes |
+| `n5_vs_b200-qwen3-8b-1m` | Qwen3-8B | `ROM-N5-native-SRAMKV-wafer-hybrid-x2-romfill` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100-qwen3-8b-1m` | Qwen3-8B | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n5_vs_b200-qwen3-8b-200k` | Qwen3-8B | `ROM-N5-native-SRAMKV-array-hw-tensor-x21` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100-qwen3-8b-200k` | Qwen3-8B | `ROM-N6-native-SRAMKV-array-hw-tensor-x27` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n5_vs_b200-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x38` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | `ROM-N5-native-HBMKV-array-hw-hybrid-x279` | yes |
+| `n5_vs_b200-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x32` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x32` | `ROM-N5-native-HBMKV-array-hw-tensor-x32` | yes |
+| `n5_vs_b200-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x32` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x32` | `ROM-N5-native-HBMKV-array-hw-tensor-x32` | yes |
+| `n5_vs_b200-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x3` | `ROM-N5-native-HBMKV-array-hw-hybrid-x208` | yes |
+| `n5_vs_b200-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x3` | `ROM-N5-native-HBMKV-wafer-tensor-x3` | yes |
+| `n5_vs_b200-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | yes | `ROM-N5-native-HBMKV-wafer-tensor-x3` | `ROM-N5-native-HBMKV-wafer-tensor-x3` | yes |
+| `n6_vs_a100-flash-1m` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-array-hw-hybrid-x392` | no |
+| `n6_vs_a100-flash-32k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x43` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-array-hw-tensor-x45` | yes |
+| `n6_vs_a100-flash-8k` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x41` | yes | `ROM-N6-native-HBMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-array-hw-tensor-x45` | yes |
+| `n6_vs_a100-pro-200k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-wafer-hybrid-x4` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x4` | `ROM-N6-native-HBMKV-array-hw-tensor-x217` | yes |
+| `n6_vs_a100-pro-32k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-wafer-hybrid-x4` | yes | `ROM-N6-native-HBMKV-wafer-tensor-x4` | `ROM-N6-native-HBMKV-wafer-tensor-x4` | yes |
+| `n6_vs_a100-pro-8k` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | yes | `ROM-N6-native-HBMKV-wafer-tensor-x4` | `ROM-N6-native-HBMKV-wafer-tensor-x4` | yes |
 | `n5_vs_b200` | Qwen3-8B | `ROM-N5-native-SRAMKV-array-hw-tensor-x5-romfill` | yes | `--` | `--` | the drafter does not apply to this model |
-| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-tensor-x35` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x35` | `ROM-N5-native-HBMKV-array-hw-tensor-x56` | no |
-| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-array-hw-tensor-x166-romfill` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x182` | `ROM-N5-native-HBMKV-array-hw-tensor-x399` | yes |
-| `n6_vs_a100` | Qwen3-8B | `ROM-N6-native-SRAMKV-array-hw-tensor-x7-romfill` | yes | `--` | `--` | the drafter does not apply to this model |
-| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x44` | `ROM-N6-native-HBMKV-array-hw-tensor-x79` | no |
-| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-array-hw-tensor-x209` | yes | `ROM-N6-native-SRAMKV-array-hw-tensor-x236` | `ROM-N6-native-HBMKV-wafer-tensor-x66` | yes |
+| `n5_vs_b200` | DeepSeek-V4-Flash-0731 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x31` | yes | `ROM-N5-native-SRAMKV-array-hw-tensor-x31` | `ROM-N5-native-HBMKV-array-hw-hybrid-x56` | yes |
+| `n5_vs_b200` | DeepSeek-V4-Pro-0813 | `ROM-N5-native-SRAMKV-wafer-hybrid-x3` | yes | `ROM-N5-native-SRAMKV-wafer-tensor-x3` | `ROM-N5-native-HBMKV-array-hw-hybrid-x399-romfill` | yes |
+| `n6_vs_a100` | Qwen3-8B | `ROM-N6-native-SRAMKV-array-hw-tensor-x6` | yes | `--` | `--` | the drafter does not apply to this model |
+| `n6_vs_a100` | DeepSeek-V4-Flash-0731 | `ROM-N6-native-SRAMKV-array-hw-hybrid-x42` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | `ROM-N6-native-HBMKV-array-hw-tensor-x79` | yes |
+| `n6_vs_a100` | DeepSeek-V4-Pro-0813 | `ROM-N6-native-SRAMKV-wafer-hybrid-x4` | yes | `ROM-N6-native-SRAMKV-wafer-tensor-x4` | `ROM-N6-native-HBMKV-wafer-hybrid-x66` | yes |
 | `n5_vs_b200-quantised_variant` | Qwen3-8B | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | yes | `--` | `--` | the drafter does not apply to this model |
 | `n6_vs_a100-quantised_variant` | Qwen3-8B | `ROM-N6-q4p25-SRAMKV-array-hw-tensor-x3-romfill` | yes | `--` | `--` | the drafter does not apply to this model |
 
-**The rule reproduces the published autoregressive recommendation on 26 of 26 model-and-study rows.** Of the 22 rows where it reproduces and the drafter applies, verifying a block moves the chosen rung on 13. Where it moves, it moves toward machines with compute headroom for a block, which is exactly what the arithmetic predicts: a verification pass raises arithmetic intensity by the block size, and a machine sized with just enough compute for one token per sweep has no room for it. **This is a re-ranking of rungs that already exist. The speculative-optimal design has not been computed: that would need the area split re-solved, which is `balanced_area_split`'s job and not this layer's.**
+**The rule reproduces the published autoregressive recommendation on 56 of 56 model-and-study rows.** Of the 42 rows where it reproduces and the drafter applies, verifying a block moves the chosen rung on 36. Where it moves, it moves toward machines with compute headroom for a block, which is exactly what the arithmetic predicts: a verification pass raises arithmetic intensity by the block size, and a machine sized with just enough compute for one token per sweep has no room for it. **This is a re-ranking of rungs that already exist. The speculative-optimal design has not been computed: that would need the area split re-solved, which is `balanced_area_split`'s job and not this layer's.**
 
 ## The draft-traffic decomposition does not reproduce, and both readings are printed
 
@@ -1652,6 +3113,22 @@ External source, graded `published`: DSpark draft weight-traffic decomposition f
 | DeepSeek-V4.1-Flash-engram-host | 6 | 1,364,357,898 | 10.5% | -- | -- | --x |
 | DeepSeek-V4.1-Flash-engram-host | 7 | 1,466,990,972 | 11.3% | -- | -- | --x |
 | DeepSeek-V4.1-Flash-engram-host | 8 | 1,568,020,404 | 12.0% | -- | -- | --x |
+| MiMo-V2.6-Flash | 1 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 2 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 3 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 4 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 5 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 6 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 7 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Flash | 8 | 1,189,400,448 | 9.4% | -- | -- | --x |
+| MiMo-V2.6-Pro | 1 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 2 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 3 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 4 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 5 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 6 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 7 | 2,463,635,712 | 6.3% | -- | -- | --x |
+| MiMo-V2.6-Pro | 8 | 2,463,635,712 | 6.3% | -- | -- | --x |
 
 _CARRIED AS A CROSS-CHECK, NOT AS THE MODELLED INPUT. At the shipped block size 5 it gives 4,432,687,388 B, 11.17% of the 39,666,603,980 B target pass; at the served gamma = 7 it gives 4,697,452,828 B, 11.84%. The slope is exactly TWO rank-256 BF16 tables over a 129,280-token vocabulary, 66,191,360 B each (2 x 129280 x 256 x 2 = 132,382,720), which is the shape this repository's own committed tensor inventory records; one rank-512 table gives the identical byte total, so the slope alone cannot tell the two apart. The repository's own configs/models/deepseek-v4-pro-0813.json gives a different decomposition; the tool reports both and the divergence._
 
