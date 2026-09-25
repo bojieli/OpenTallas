@@ -136,14 +136,35 @@ def endpoint_check(rt, want) -> dict:
                                                       {"Content-Type": "application/json"}), timeout=60)
     except urllib.error.HTTPError as e:
         refused = e.code
+    client = openai_client_check(f"http://127.0.0.1:{httpd.server_address[1]}/v1", body["model"], want)
     httpd.shutdown()
-    return {"route": "/v1/chat/completions", "stream_events": len(events), "streamed_token_ids": ids,
+    return {"route": "/v1/chat/completions", "openai_client": client, "stream_events": len(events), "streamed_token_ids": ids,
             "streamed_text": text, "finish_reason": last["choices"][0]["finish_reason"],
             "usage": last.get("usage"), "stream_done_marker": events[-1] == "[DONE]",
             "plain_token_ids": plain["opentallas"]["token_ids"], "plain_content": plain["choices"][0]["message"]["content"],
             "sampling_request_http_status": refused, "expected_token_ids": want,
             "pass": ids == want and plain["opentallas"]["token_ids"] == want and events[-1] == "[DONE]"
-                    and last["choices"][0]["finish_reason"] == "stop" and refused == 400}
+                    and last["choices"][0]["finish_reason"] == "stop" and refused == 400
+                    and client.get("pass", True)}
+
+
+def openai_client_check(base_url: str, model: str, want: list[int]) -> dict:
+    """The same request from the openai Python client, streamed."""
+    try:
+        import openai
+    except ImportError:
+        return {"skipped": "openai package not installed"}
+    c = openai.OpenAI(base_url=base_url, api_key="unused")
+    ids, text, finish = [], "", None
+    for ev in c.chat.completions.create(model=model, messages=MESSAGES, max_tokens=8, temperature=0, stream=True):
+        extra = getattr(ev, "model_extra", None) or {}
+        if "token_id" in extra.get("opentallas", {}):
+            ids.append(extra["opentallas"]["token_id"])
+        if ev.choices:
+            text += ev.choices[0].delta.content or ""
+            finish = ev.choices[0].finish_reason or finish
+    return {"openai_version": openai.__version__, "token_ids": ids, "text": text, "finish_reason": finish,
+            "pass": ids == want and finish == "stop"}
 
 
 def fail_closed(rt, prompt) -> dict:

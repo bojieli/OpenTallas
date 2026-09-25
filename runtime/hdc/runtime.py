@@ -136,7 +136,10 @@ class HdcRuntime:
                 "prompt_tokens": len(r.prompt), "generated_tokens": len(r.tokens_out), "token_ids": r.tokens_out,
                 "status": r.status, "chip_cycles": r.cycles, "step_cycles": r.step_cycles,
                 "clock_hz": self.clock_hz, "modelled_seconds": secs,
-                "modelled_tokens_per_second": len(r.tokens_out) / secs if secs else 0.0}
+                "modelled_tokens_per_second": len(r.tokens_out) / secs if secs else 0.0,
+                # step engines: engine cycles of each decode step; the array: cycles between the user's tokens
+                "modelled_decode_tokens_per_second": (self.clock_hz * len(r.step_cycles) / sum(r.step_cycles)
+                                                      if r.step_cycles and sum(r.step_cycles) else 0.0)}
 
     def close(self) -> None:
         self._stop.set()
