@@ -21,8 +21,8 @@ DeepSeek profile's `kv_precision_sensitivity`.
 
 | Model | | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area GPU | GPU user tok/s | ratio |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |
-| Qwen3-8B | PRIMARY (BF16, 16.00 bits) | `ROM-N5-native-SRAMKV-array-hw-tensor-x5-romfill` | 4,075 | 9,332.7 | 2,290.2 | 1 | `b200_sxm-x3-tensor` | 631.1 | 14.79x |
-| Qwen3-8B | variant (4.25 bits, both sides) | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | 1 | `b200_sxm-x1` | 773.4 | 12.07x |
+| Qwen3-8B | PRIMARY (BF16, 16.00 bits) | `ROM-N5-native-SRAMKV-array-hw-tensor-x5-romfill` | 4,075 | 9,257.1 | 2,271.7 | 1 | `b200_sxm-x3-tensor` | 631.1 | 14.67x |
+| Qwen3-8B | variant (4.25 bits, both sides) | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | 1 | `b200_sxm-x1` | 773.4 | 11.98x |
 
 **Read the ratio column as a pair, never alone.** If the variant's ratio
 is larger than the primary's, quantisation did not level the comparison,
@@ -66,20 +66,20 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 **Recommended: `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2`** -- 2 x 815 mm2 reticle dies, 1,630 mm2 total, `tensor`-parallel, KV in SRAM, spare silicon to `sram`.
 
-- **9,334.5 tok/s per user** (0.11 ms/token), binding on `layer_fixed_latency`
-- **5,726.7 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 9,334 tok/s aggregate with every slot full, over 1 resident session (fill limited by `batch`)
-- 187 W at 0.115 W/mm2, 20.1 mJ/token, thermal scale 1.000
+- **9,261.9 tok/s per user** (0.11 ms/token), binding on `layer_fixed_latency`
+- **5,682.1 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 9,262 tok/s aggregate with every slot full, over 1 resident session (fill limited by `batch`)
+- 187 W at 0.115 W/mm2, 20.2 mJ/token, thermal scale 1.000
 
 **Iso-area, at the area the rule chose.** The comparator is 1 copies of one unified HBM die -- `b200_sxm-x1`, 1,600 mm2, area ratio 1.0188 -- running the `none` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
 | silicon mm2 | 1,630 | 1,600 | 1.0188 |
-| user tok/s | 9,334.5 | 773.4 | 12.07x |
-| aggregate tok/s | 9,334 | 773 | 12.07x |
+| user tok/s | 9,261.9 | 773.4 | 11.98x |
+| aggregate tok/s | 9,262 | 773 | 11.98x |
 | resident sessions | 1 | 130 | -- |
-| J/token | 0.0201 | 1.0033 | 50.0x |
+| J/token | 0.0202 | 1.0033 | 49.7x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
@@ -91,70 +91,66 @@ The GPU's own best machine at **any** area is `b200_sxm-x58-nvl72-tensor` at 92,
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,166.3 | 3,732.0 | 1 | 13.95x |
-| rank on per-user rate alone | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,166.3 | 3,732.0 | 1 | 13.95x |
-| smallest feasible machine | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | 1 | 12.07x |
-| **after -- this report's rule** | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | 1 | 12.07x |
+| before -- smallest within 5% of peak rate | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,043.2 | 3,694.2 | 1 | 13.81x |
+| rank on per-user rate alone | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,043.2 | 3,694.2 | 1 | 13.81x |
+| smallest feasible machine | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | 1 | 11.98x |
+| **after -- this report's rule** | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | 1 | 11.98x |
 
 **The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
 
 | design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | -- | 5,726.7 | ACCEPT |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x3-romfill` | 2,445 | 11,091.5 | 4,536.4 | 2,155.9 | 5,726.7 | stop |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,166.3 | 3,732.0 | 1,737.3 | 5,726.7 | stop |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | -- | 5,682.1 | ACCEPT |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x3-romfill` | 2,445 | 10,989.2 | 4,494.6 | 2,119.4 | 5,682.1 | stop |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,043.2 | 3,694.2 | 1,706.4 | 5,682.1 | stop |
 
 **The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` **<-- recommended** | 1,630 | 2 | 9,334.5 | 9,334 | 5,726.7 | 1 | `layer_fixed_latency` | 187 | 20.1 | `b200_sxm-x1` | 12.07x |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x3-romfill` | 2,445 | 3 | 11,091.5 | 11,092 | 4,536.4 | 1 | `layer_fixed_latency` | 250 | 22.5 | `b200_sxm-x2-tensor` | 12.72x |
-| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 4 | 12,166.3 | 12,166 | 3,732.0 | 1 | `layer_fixed_latency` | 325 | 26.7 | `b200_sxm-x2-tensor` | 13.95x |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` **<-- recommended** | 1,630 | 2 | 9,261.9 | 9,262 | 5,682.1 | 1 | `layer_fixed_latency` | 187 | 20.2 | `b200_sxm-x1` | 11.98x |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x3-romfill` | 2,445 | 3 | 10,989.2 | 10,989 | 4,494.6 | 1 | `layer_fixed_latency` | 250 | 22.7 | `b200_sxm-x2-tensor` | 12.60x |
+| `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 4 | 12,043.2 | 12,043 | 3,694.2 | 1 | `layer_fixed_latency` | 325 | 27.0 | `b200_sxm-x2-tensor` | 13.81x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
 | class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
 | --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| array | 237 | densest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | 1 |
-| array | 237 | fastest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,166.3 | 3,732.0 | 1 |
-| array | 237 | smallest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,334.5 | 5,726.7 | 1 |
-| wafer | 58 | densest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,874.6 | 105.5 | 1 |
-| wafer | 58 | fastest | `ROM-N5-q4p25-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 5,002.6 | 54.1 | 1 |
-| wafer | 58 | smallest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,874.6 | 105.5 | 1 |
+| array | 237 | densest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | 1 |
+| array | 237 | fastest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,043.2 | 3,694.2 | 1 |
+| array | 237 | smallest | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x2` | 1,630 | 9,261.9 | 5,682.1 | 1 |
+| wafer | 58 | densest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,401.3 | 246.6 | 1 |
+| wafer | 58 | fastest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,401.3 | 246.6 | 1 |
+| wafer | 58 | smallest | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,401.3 | 246.6 | 1 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | array | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,166.3 | 12,166 | 1 | 325 | 26.7 | `layer_fixed_latency` | `b200_sxm-x2-tensor` | 872.0 | 264 | 1,353.9 | 1.019 | 13.95x | 50.6x |
-| 1 | wafer | `ROM-N5-q4p25-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 5,002.6 | 5,003 | 1 | 7,906 | 1,580.3 | `link_latency` | `b200_sxm-x58-nvl72-tensor` | 1,318.4 | 7,774 | 15,966.9 | 0.996 | 3.79x | 10.1x |
-| 1 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x113-romfill` | 92,095 | 9,407.7 | 75,262 | 9,471 | 19,554 | 1,176.8 | `layer_fixed_latency` | `b200_sxm-x58-nvl72-tensor` | 1,318.4 | 7,774 | 15,966.9 | 0.992 | 7.14x | 13.6x |
-| 1 | wafer reference | `ROM-N5-q4p25-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 5,002.6 | -- | 1 | -- | 1,580.3 | -- | -- | -- | -- | -- | 0.996 | 0.53x wafer/array | -- |
-| 2 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 50,530 | 9,598.9 | 38,396 | 5,196 | 10,355 | 410.6 | `layer_fixed_latency` | `b200_sxm-x32-nvl72-tensor` | 1,285.1 | 4,287 | 4,701.8 | 0.987 | 7.47x | 11.5x |
-| 2 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | 49,308 | 4,325 | 30,951 | 2,872.7 | `link_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,307.2 | 23,197 | 23,739.4 | 1.002 | 3.43x | 8.3x |
-| 2 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,402.4 | 206,852 | 28,498 | 56,310 | 1,706.3 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,307.2 | 23,197 | 23,739.4 | 1.001 | 7.19x | 13.9x |
-| 2 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | -- | 4,325 | -- | 2,872.7 | -- | -- | -- | -- | -- | 0.999 | 0.48x wafer/array | -- |
-| 4 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 50,530 | 9,598.9 | 38,396 | 5,196 | 10,355 | 269.7 | `layer_fixed_latency` | `b200_sxm-x32-nvl72-tensor` | 1,258.1 | 4,287 | 2,461.6 | 0.987 | 7.63x | 9.1x |
-| 4 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | 49,308 | 4,325 | 30,951 | 1,500.8 | `link_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,303.7 | 23,197 | 12,070.2 | 1.002 | 3.44x | 8.0x |
-| 4 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,402.4 | 206,852 | 28,498 | 56,310 | 917.5 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,303.7 | 23,197 | 12,070.2 | 1.001 | 7.21x | 13.2x |
-| 4 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | -- | 4,325 | -- | 1,500.8 | -- | -- | -- | -- | -- | 0.999 | 0.48x wafer/array | -- |
-| 8 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x170-romfill` | 138,550 | 9,518.8 | 104,706 | 14,249 | 28,320 | 323.6 | `layer_fixed_latency` | `b200_sxm-x87-nvl72-hybrid` | 1,268.3 | 11,664 | 3,238.0 | 0.995 | 7.51x | 10.0x |
-| 8 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | 49,308 | 4,325 | 30,951 | 814.8 | `link_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,289.9 | 23,197 | 6,160.9 | 1.002 | 3.47x | 7.6x |
-| 8 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,402.4 | 206,852 | 28,498 | 56,310 | 523.2 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,289.9 | 23,197 | 6,160.9 | 1.001 | 7.29x | 11.8x |
-| 8 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 4,482.5 | -- | 4,325 | -- | 814.8 | -- | -- | -- | -- | -- | 0.999 | 0.48x wafer/array | -- |
-| 16 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,402.4 | 206,852 | 28,498 | 56,310 | 326.0 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,263.3 | 23,197 | 3,206.3 | 1.001 | 7.44x | 9.8x |
-| 16 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 4,459.3 | 98,105 | 8,650 | 61,837 | 818.4 | `link_latency` | `b200_sxm-x347-nvl72-hybrid` | 1,282.0 | 46,532 | 6,188.2 | 0.999 | 3.48x | 7.6x |
-| 32 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 8,579.9 | 368,938 | 28,498 | 77,190 | 236.9 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,214.9 | 23,197 | 1,766.3 | 1.001 | 7.06x | 7.5x |
-| 32 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 3,878.2 | 166,764 | 8,650 | 70,681 | 525.3 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,251.5 | 46,532 | 3,230.0 | 0.999 | 3.10x | 6.1x |
-| 64 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 6,926.4 | 588,747 | 28,498 | 105,506 | 195.7 | `kv_read` | `b200_sxm-x173-nvl72-hybrid` | 1,145.4 | 23,197 | 994.2 | 1.001 | 6.05x | 5.1x |
-| 64 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 3,053.5 | 195,423 | 8,650 | 74,293 | 380.2 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,199.0 | 46,532 | 1,784.9 | 0.999 | 2.55x | 4.7x |
-| 256 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 3,281.0 | 839,931 | 28,498 | 137,512 | 163.7 | `kv_read` | `b200_sxm-x173-nvl72-hybrid` | 877.5 | 23,197 | 415.6 | 1.001 | 3.74x | 2.5x |
-| 256 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 1,199.2 | 306,988 | 8,650 | 88,618 | 288.7 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,010.0 | 46,532 | 634.2 | 0.999 | 1.19x | 2.2x |
+| 1 | array | `ROM-N5-q4p25-SRAMKV-array-hw-tensor-x4-romfill` | 3,260 | 12,043.2 | 12,043 | 1 | 325 | 27.0 | `layer_fixed_latency` | `b200_sxm-x2-tensor` | 872.0 | 264 | 1,353.9 | 1.019 | 13.81x | 50.2x |
+| 1 | wafer | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,401.3 | 11,401 | 1 | 3,991 | 350.1 | `layer_fixed_latency` | `b200_sxm-x29-nvl72-tensor` | 1,294.7 | 3,885 | 8,399.5 | 0.996 | 8.81x | 24.0x |
+| 1 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x57-romfill` | 46,455 | 9,386.6 | 37,546 | 4,777 | 9,810 | 658.6 | `layer_fixed_latency` | `b200_sxm-x29-nvl72-tensor` | 1,294.7 | 3,885 | 8,399.5 | 1.001 | 7.25x | 12.8x |
+| 1 | wafer reference | `ROM-N5-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,401.3 | -- | 1 | -- | 350.1 | -- | -- | -- | -- | -- | 1.005 | 1.21x wafer/array | -- |
+| 2 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 50,530 | 9,519.0 | 38,076 | 5,196 | 10,314 | 412.9 | `layer_fixed_latency` | `b200_sxm-x32-nvl72-tensor` | 1,285.1 | 4,287 | 4,701.8 | 0.987 | 7.41x | 11.4x |
+| 2 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 369,800 | 8,847.0 | 17,694 | 5,766 | 35,078 | 1,982.5 | `layer_fixed_latency` | `b200_sxm-x231-nvl72-hybrid` | 1,303.5 | 30,975 | 31,601.8 | 1.001 | 6.79x | 15.9x |
+| 4 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x62-romfill` | 50,530 | 9,519.0 | 38,076 | 5,196 | 10,314 | 270.9 | `layer_fixed_latency` | `b200_sxm-x32-nvl72-tensor` | 1,258.1 | 4,287 | 2,461.6 | 0.987 | 7.57x | 9.1x |
+| 4 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 8,799.7 | 52,798 | 4,325 | 31,401 | 827.7 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,303.7 | 23,197 | 12,070.2 | 1.002 | 6.75x | 14.6x |
+| 4 | array @ wafer area | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,325.7 | 205,166 | 28,498 | 56,093 | 924.0 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,303.7 | 23,197 | 12,070.2 | 1.001 | 7.15x | 13.1x |
+| 4 | wafer reference | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x6-romfill` | 277,350 | 8,799.7 | -- | 4,325 | -- | 827.7 | -- | -- | -- | -- | -- | 0.999 | 0.94x wafer/array | -- |
+| 8 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x170-romfill` | 138,550 | 9,440.2 | 103,842 | 14,249 | 28,209 | 325.2 | `layer_fixed_latency` | `b200_sxm-x87-nvl72-hybrid` | 1,268.3 | 11,664 | 3,238.0 | 0.995 | 7.44x | 10.0x |
+| 8 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x8-romfill` | 369,800 | 8,783.4 | 70,267 | 5,766 | 41,851 | 595.6 | `layer_fixed_latency` | `b200_sxm-x231-nvl72-hybrid` | 1,292.9 | 30,975 | 8,165.5 | 1.001 | 6.79x | 13.7x |
+| 16 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 9,325.7 | 205,166 | 28,498 | 56,093 | 327.6 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,263.3 | 23,197 | 3,206.3 | 1.001 | 7.38x | 9.8x |
+| 16 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 7,392.8 | 118,284 | 8,650 | 64,399 | 544.4 | `layer_fixed_latency` | `b200_sxm-x347-nvl72-hybrid` | 1,282.0 | 46,532 | 6,188.2 | 0.999 | 5.77x | 11.4x |
+| 32 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 8,516.1 | 366,191 | 28,498 | 76,836 | 237.7 | `layer_fixed_latency` | `b200_sxm-x173-nvl72-hybrid` | 1,214.9 | 23,197 | 1,766.3 | 1.001 | 7.01x | 7.4x |
+| 32 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 5,572.3 | 178,313 | 8,650 | 72,100 | 404.3 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,251.5 | 46,532 | 3,230.0 | 0.999 | 4.45x | 8.0x |
+| 64 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 6,884.7 | 585,202 | 28,498 | 105,050 | 196.1 | `kv_read` | `b200_sxm-x173-nvl72-hybrid` | 1,145.4 | 23,197 | 994.2 | 1.001 | 6.01x | 5.1x |
+| 64 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 3,732.8 | 238,898 | 8,650 | 79,876 | 334.4 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,199.0 | 46,532 | 1,784.9 | 0.999 | 3.11x | 5.3x |
+| 256 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 3,271.6 | 837,528 | 28,498 | 137,204 | 163.8 | `kv_read` | `b200_sxm-x173-nvl72-hybrid` | 877.5 | 23,197 | 415.6 | 1.001 | 3.73x | 2.5x |
+| 256 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 1,233.4 | 315,744 | 8,650 | 89,742 | 284.2 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 1,010.0 | 46,532 | 634.2 | 0.999 | 1.22x | 2.2x |
 | 1024 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 832.2 | 852,132 | 28,498 | 138,550 | 162.6 | `thermal` | `b200_sxm-x173-nvl72-hybrid` | 480.0 | 23,197 | 260.0 | 1.001 | 1.73x | 1.6x |
-| 1024 | wafer | `ROM-N5-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 554,700 | 330.8 | 338,720 | 8,650 | 92,691 | 273.7 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 671.6 | 46,532 | 322.6 | 0.999 | 0.49x | 1.2x |
+| 1024 | wafer | `ROM-N5-q4p25-HBMKV-wafer-pipeline-x12-romfill` | 554,700 | 331.1 | 339,070 | 8,650 | 92,736 | 273.5 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 671.6 | 46,532 | 322.6 | 0.999 | 0.49x | 1.2x |
 | 4096 | array | `ROM-N5-q4p25-HBMKV-array-hw-hybrid-x340-romfill` | 277,100 | 208.3 | 853,168 | 28,498 | 138,550 | 162.4 | `thermal` | `b200_sxm-x173-nvl72-hybrid` | 179.0 | 23,197 | 214.8 | 1.001 | 1.16x | 1.3x |
-| 4096 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12` | 554,700 | 83.9 | 343,451 | 8,650 | 125,652 | 365.8 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 306.9 | 46,532 | 233.3 | 0.999 | 0.27x | 0.6x |
+| 4096 | wafer | `ROM-N5-q4p25-HBMKV-wafer-hybrid-x12` | 554,700 | 83.9 | 343,705 | 8,650 | 125,684 | 365.7 | `kv_read` | `b200_sxm-x347-nvl72-hybrid` | 306.9 | 46,532 | 233.3 | 0.999 | 0.27x | 0.6x |
 
 **The best design differs by batch, and here is where it changes.**
 
