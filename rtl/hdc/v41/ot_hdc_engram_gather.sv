@@ -45,8 +45,8 @@
 //
 // FLOW.  in_valid/in_ready take one token's row addresses; in_ready needs the
 // next slot free and every bank's previous request accepted.  One response
-// port per layer: a round-robin arbiter over the layer's 24 banks takes one
-// beat per cycle (the 192 beats of a layer's rows stream in 192 cycles), a
+// port per layer: a one-hot round-robin arbiter over the layer's 24 banks takes
+// one beat per cycle (the 192 beats of a layer's rows stream in 192 cycles), a
 // register stage, a 32-lane decode stage, the buffer write.  Latency from
 // accept to rdy with banks of fixed latency L and no stalls: 3 + L + 192 + 2.
 // ---------------------------------------------------------------------------
@@ -134,43 +134,50 @@ module ot_hdc_engram_gather #(
     generate
         for (gl = 0; gl < NL; gl = gl + 1) begin : g_layer
             wire [NC-1:0] v = rsp_valid[NC*gl +: NC];
-            reg  [CW-1:0] rr;                          // round-robin pointer: lowest priority last grant
-            // grant: first valid bank at or after rr + 1, wrapping
-            reg  [CW-1:0] gsel;
-            reg           gany;
-            integer k, j;
-            always @(*) begin
-                gsel = {CW{1'b0}}; gany = 1'b0;
-                for (k = NC - 1; k >= 0; k = k - 1) begin
-                    j = (rr + 1 + k) % NC;
-                    if (v[j]) begin gsel = j[CW-1:0]; gany = 1'b1; end
-                end
-            end
-            for (gc = 0; gc < NC; gc = gc + 1) begin : g_rdy
-                assign rsp_ready[NC*gl + gc] = gany && (gsel == gc);
-            end
-            // per-bank beat counter and latched scale
-            reg [BTW-1:0] bcnt [0:NC-1];
-            reg [7:0]     scl  [0:NC-1];
-            wire [DW-1:0] gdata = rsp_data[DW*(NC*gl + gsel) +: DW];
-            wire          gtag  = rsp_tag[NC*gl + gsel];
-            wire [BTW-1:0] gbeat = bcnt[gsel];
-            wire [7:0]    gscale = (gbeat == 0) ? gdata[DW-1 -: 8] : scl[gsel];
+            // round-robin arbiter, one-hot: the lowest valid bank strictly above the last grant
+            // (pmask), else the lowest valid bank
+            reg  [NC-1:0] pmask;
+            wire [NC-1:0] vm   = v & pmask;
+            wire [NC-1:0] pick = (vm != 0) ? vm : v;
+            wire [NC-1:0] gnt  = pick & (~pick + 1'b1);
+            wire          gany = (v != 0);
+            assign rsp_ready[NC*gl +: NC] = gnt;
+            // per-bank beat counter and latched scale (local to the bank: no select)
+            reg  [BTW-1:0] bcnt [0:NC-1];
+            reg  [7:0]     scl  [0:NC-1];
             integer c;
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) begin
-                    rr <= NC - 1;
+                    pmask <= {NC{1'b0}};
                     for (c = 0; c < NC; c = c + 1) bcnt[c] <= {BTW{1'b0}};
-                end else if (gany) begin
-                    rr <= gsel;
-                    bcnt[gsel] <= bcnt[gsel] + 1'b1;
+                end else begin
+                    if (gany) pmask <= ~(gnt | (gnt - 1'b1));
+                    for (c = 0; c < NC; c = c + 1) if (gnt[c]) bcnt[c] <= bcnt[c] + 1'b1;
                 end
             end
-            always @(posedge clk) if (gany && gbeat == 0) scl[gsel] <= gdata[DW-1 -: 8];
-            // stage 1
-            reg              s1_v;
+            always @(posedge clk)
+                for (c = 0; c < NC; c = c + 1)
+                    if (gnt[c] && bcnt[c] == 0) scl[c] <= rsp_data[DW*(NC*gl + c) + DW - 8 +: 8];
+            // one-hot AND-OR selection of the granted bank's beat
+            reg [DW-1:0]  gdata;
+            reg           gtag;
+            reg [BTW-1:0] gbeat;
+            reg [7:0]     gscl;
+            reg [CW-1:0]  gsel;
+            always @(*) begin
+                gdata = {DW{1'b0}}; gtag = 1'b0; gbeat = {BTW{1'b0}}; gscl = 8'd0; gsel = {CW{1'b0}};
+                for (c = 0; c < NC; c = c + 1) begin
+                    gdata = gdata | ({DW{gnt[c]}} & rsp_data[DW*(NC*gl + c) +: DW]);
+                    gtag  = gtag  | (gnt[c] & rsp_tag[NC*gl + c]);
+                    gbeat = gbeat | ({BTW{gnt[c]}} & bcnt[c]);
+                    gscl  = gscl  | ({8{gnt[c]}} & scl[c]);
+                    gsel  = gsel  | ({CW{gnt[c]}} & c[CW-1:0]);
+                end
+            end
+            // stage 1: the beat, its buffer address and both scale sources
+            reg              s1_v, s1_b0;
             reg [BAW-1:0]    s1_a;
-            reg [7:0]        s1_s;
+            reg [7:0]        s1_side, s1_scl;
             reg [8*LANES-1:0] s1_c;
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) s1_v <= 1'b0;
@@ -178,9 +185,12 @@ module ot_hdc_engram_gather #(
             end
             always @(posedge clk) if (gany) begin
                 s1_a <= {gtag, gsel, gbeat};
-                s1_s <= gscale;
+                s1_b0 <= (gbeat == 0);
+                s1_side <= gdata[DW-1 -: 8];
+                s1_scl <= gscl;
                 s1_c <= gdata[8*LANES-1:0];
             end
+            wire [7:0] s1_s = s1_b0 ? s1_side : s1_scl;   // the row's scale arrives on beat 0
             // stage 2: decode, buffer write
             wire [16*LANES-1:0] dec;
             for (gq = 0; gq < LANES; gq = gq + 1) begin : g_dec

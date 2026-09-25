@@ -69,7 +69,7 @@ MODES = [
 MUT_MODE = ("mutation", dict(LAT=30, JIT=60, STALL=30, GAP=30, BUB=40, CDEL=100), 150)
 GATHER_MUTATIONS = [
     ("subnormal tie rounds away from even", "(rem == half && q[0])", "(rem == half)"),
-    ("scale not latched for beats 1..7", "(gbeat == 0) ? gdata[DW-1 -: 8] : scl[gsel]", "gdata[DW-1 -: 8]"),
+    ("scale not latched for beats 1..7", "s1_b0 ? s1_side : s1_scl;", "s1_side;"),
     ("layer ready one beat early", "busy[0] && cnt0 == TOTV", "busy[0] && cnt0 >= TOTV - 1"),
     ("column offset not subtracted", "in_row[ROW_W*gb +: ROW_W] - OFF;", "in_row[ROW_W*gb +: ROW_W];"),
     ("slot tag ignored at the buffer", "s1_a <= {gtag, gsel, gbeat};", "s1_a <= {1'b0, gsel, gbeat};"),
