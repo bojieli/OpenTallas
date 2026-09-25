@@ -1467,6 +1467,20 @@ class RomLowering:
         #: STATE_READ results the graph names ``activation``, mapped to the state
         #: plane they re-present (see ``_state_tensors``).
         self._state_read_alias: dict[str, str] = {}
+        #: Outputs of kernels that commit at ``POSITION_START`` + row, and the
+        #: state resources they write (see ``_absolute_row_view``).
+        self._absolute_row_tensors: frozenset[str] = frozenset(
+            name
+            for kernel in self.graph.kernels
+            if str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+            for name in kernel.outputs
+        )
+        self._absolute_row_states: frozenset[str] = frozenset(
+            state_id
+            for kernel in self.graph.kernels
+            if str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+            for state_id in kernel.state_writes
+        )
         #: Next free byte of the explicit HBM map; zero until the first object
         #: is placed.  See :meth:`_hbm_address`.
         self._hbm_cursor = 0
@@ -3233,6 +3247,18 @@ class RomLowering:
             if slot_bytes <= 0:
                 raise RomLoweringError(f"state group {index} has no capacity")
             total = slot_bytes * len(members)
+            #: A resource an absolute-row writer commits to is addressed at
+            #: ``POSITION_START`` + row, and the verifier proves that over the
+            #: capability's whole POSITION_START range -- far wider than the
+            #: deployment's context -- so its objects carry that range as an
+            #: unreachable tail past the last slot.  Capacity, slots and the
+            #: STATE descriptor are unchanged; the host request window is sized
+            #: by the same argument.
+            object_bytes = total
+            if any(m.state_id in self._absolute_row_states for m in members):
+                object_bytes = total + row_bytes * int(
+                    self.capability.limits["max_context_positions"]
+                )
             group_key = f"state.{index}"
             self._state_group_count += 1
             self._state_group_shape[group_key] = (slot_bytes, capacity, row_elements)
@@ -3282,18 +3308,18 @@ class RomLowering:
             # while the commit record stays readable.
             committed = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
-                size_bytes=total,
-                source=ObjectSource.zeros(total),
+                size_bytes=object_bytes,
+                source=ObjectSource.zeros(object_bytes),
                 permissions=int(Permission.READ | Permission.STATE_COMMIT),
-                base_address=self._hbm_address(total),
+                base_address=self._hbm_address(object_bytes),
                 key=f"obj.{group_key}.committed",
             )
             prepared = self.builder.memory_object(
                 storage_class=StorageClass.STATE,
-                size_bytes=total,
-                source=ObjectSource.zeros(total),
+                size_bytes=object_bytes,
+                source=ObjectSource.zeros(object_bytes),
                 permissions=int(Permission.READ | Permission.STATE_PREPARE),
-                base_address=self._hbm_address(total),
+                base_address=self._hbm_address(object_bytes),
                 key=f"obj.{group_key}.prepared",
             )
             view = self._view(
@@ -3633,6 +3659,43 @@ class RomLowering:
             label="view.state",
         )
 
+    def _absolute_row_view(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        name: str,
+        run: LayerRun | None,
+        loop: int | None,
+    ) -> int | None:
+        """The destination of a ``committed_row: absolute_position`` write.
+
+        Position ``p`` is row ``p`` of the resource
+        (``runtime/reference/lookup.py::lookup_compressed_token_ids``), so one
+        block of the request's rows lands at ``POSITION_START`` + block offset.
+        V4.1's Engram token ring is the one such writer, and its reader,
+        ``DMA.NGRAM_HASH``, reads the committed prefix ``[0, CONTEXT_LENGTH)``.
+        Presented as that same prefix and walked by the context loop, the write
+        took ``[0, CONTEXT_LENGTH)`` of a host window that holds only this
+        request's ids: at decode, ring row 0 became the new token and rows 1..
+        kept stale prompt ids, so the n-grams hashed the wrong history.
+        """
+        tensor = self.tensors[name]
+        if loop is None or not shape.row_symbolic:
+            return None
+        rows = int(self._blocked_dims(tensor, shape)[0])
+        row = self._state_plane_row_elements(name, tensor)
+        return self._state_plane_view(
+            kernel,
+            name,
+            "out",
+            run,
+            leading_rows=rows,
+            extra_terms=(
+                DynamicTerm.loop(loop, rows * row),
+                DynamicTerm.symbol(Symbol.POSITION_START, row),
+            ),
+        )
+
     def _compressor_history_view(
         self,
         kernel: Kernel,
@@ -3851,7 +3914,13 @@ class RomLowering:
         destination row is addressed is saying its destination is a cache, so
         the rows moved are the source's.
         """
-        if kernel.attributes.get("cache_row") and kernel.inputs:
+        # ``committed_row: absolute_position`` says the same of a commit: the
+        # destination is the whole committed sequence, the rows moved are the
+        # request's.
+        if kernel.inputs and (
+            kernel.attributes.get("cache_row")
+            or str(kernel.attributes.get("committed_row", "")) == "absolute_position"
+        ):
             return self.tensors[kernel.inputs[0]]
         if kernel.outputs:
             return self.tensors[kernel.outputs[0]]
@@ -3875,11 +3944,30 @@ class RomLowering:
         # contraction sees the neutral graph's request-wide row grouping.
         # Other multiplied-symbol operations retain the older exact fallback:
         # iteration ``t`` presents precisely that token's multiplied rows.
+        #
+        # A phase-selected axis-0 JOIN is the exception to that fallback.  Its
+        # multiplied output is not "each token's rows": it is the SEGMENTS laid
+        # end to end -- every current row, then every compressed row -- and the
+        # attention indices address it that way (compressed row j at
+        # ``span + j``).  One token per iteration wrote ``[cur r, comp r]`` at
+        # rows ``2r, 2r + 1``, interleaving the two segments; measured on V4.1
+        # layers 20-39 (ratio 1), ROM and HBM residuals are bit-identical up to
+        # layer 20's attention and differ at rows 1..S-2 after it (a query that
+        # sees every row is permutation-invariant, so rows 0 and S-1 agreed).
+        # The join is therefore emitted as ONE block over the whole span -- the
+        # form HBM ships -- and ``whole_span_join`` pins that block below.
+        whole_span_join = (
+            symbol is not None
+            and multiplier > 1
+            and kernel.kind == "CONCAT"
+            and int(kernel.attributes.get("axis", 0)) == 0
+            and _phase_inputs(kernel.inputs, kernel.attributes) is not None
+        )
         batch_multiplier = (
             multiplier
             if symbol is not None
             and multiplier > 1
-            and kernel.kind in MULTIPLIED_SPAN_BATCH_KINDS
+            and (kernel.kind in MULTIPLIED_SPAN_BATCH_KINDS or whole_span_join)
             else 1
         )
         per_token = (
@@ -3912,6 +4000,17 @@ class RomLowering:
             symbol_max = min(symbol_max, horizon)
         configured = int(self.policy.token_block_rows or 0)
         divisor = max(min(configured or symbol_max, symbol_max), 1)
+        if whole_span_join:
+            # A second block would lay ITS segments after the first block's,
+            # interleaving them blockwise -- the defect above, one level up.
+            # The join is one block over the whole span whatever the target's
+            # token block; it runs once.
+            divisor = max(symbol_max, 1)
+            if divisor * self._widest_row(kernel) * multiplier > 0xFFFFFFFF:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: a whole-span join of "
+                    f"{symbol_max} tokens does not fit a 32-bit row term"
+                )
         # A view's row term advances by ``step * row width`` elements and that
         # stride is a 32-bit field, so the block is halved until every operand's
         # stride fits.  Halving costs iterations, never correctness; refusing
@@ -4085,6 +4184,45 @@ class RomLowering:
         )
         self.builder.open_loop(loop)
         return loop
+
+    def _context_capacity(self, kernel: Kernel) -> int:
+        """``CONTEXT_LENGTH`` positions one context-loop block must cover.
+
+        A18 resolves an axis only through a term that walks it, and the walk
+        test (``runtime/sim/memory.py::_walks_extent_axis``, 3d33a008) requires
+        the view's declared extent to hold one whole iteration.  A context loop
+        blocked by the capability's architectural bound -- 1,048,576 positions
+        on every V4.1 ROM target -- steps 1,048,576 rows of a compressed plane
+        that holds 8,192, so no operand walks it, no extent resolves, and the
+        decode KV join presented its full ``(16384, 512)`` output against an
+        ``(8320, 512)`` sum at the first decode step, on unmodified HEAD.
+
+        The block is the context the operands can actually hold: each
+        context-led operand's declared rows in context units, the smallest of
+        them, bounded by the horizon the graph was built for.  One iteration
+        still covers the whole context, which is all the loop is for.
+        """
+        bound = int(self.capability.limits["max_context_positions"])
+        horizon = int(self.graph.source.get("deployment_context_tokens") or 0)
+        if horizon:
+            bound = min(bound, horizon)
+        capacities: list[int] = []
+        for name in (*kernel.inputs, *kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or tensor.role in WEIGHT_ROLES:
+                continue
+            symbol, multiplier, axis = self._leading_symbol(tensor)
+            if symbol != int(Symbol.CONTEXT_LENGTH) or multiplier != 1:
+                continue
+            rows = int(self._dims(tensor)[0]) - int(axis.bias)
+            if rows <= 0:
+                continue
+            capacities.append(
+                rows * int(axis.unit) // max(int(axis.numerator), 1)
+            )
+        if capacities:
+            bound = min(bound, min(capacities))
+        return max(bound, 1)
 
     def _open_context_loop(
         self, kernel: Kernel, capacity: int, axis: RequestAxis
@@ -5226,6 +5364,10 @@ class RomLowering:
     ) -> int:
         tensor = self.tensors[name]
         writable = direction == "out"
+        if writable and name in self._absolute_row_tensors:
+            view = self._absolute_row_view(kernel, shape, name, run, loop)
+            if view is not None:
+                return view
         # A declared state effect is the authority: a kernel that writes a state
         # resource writes into that resource's prepared image, even when the
         # graph names the result as an ordinary activation.
@@ -5298,11 +5440,12 @@ class RomLowering:
                 and shape.row_symbolic
                 and self._leading_symbol(tensor)[0] is not None
             ):
-                # A re-presented state plane consumed ONE ROW PER ITERATION of
-                # the token loop -- the ratio-1 prefill join, which pairs query
-                # row r with compressed row r -- is that row of the state, not
-                # the whole capacity.  This is the blocked addressing the buffer
-                # path gave it, pointed at the object that actually holds it.
+                # A re-presented state plane consumed ONE BLOCK PER ITERATION of
+                # the token loop -- the ratio-1 prefill join, which lays the
+                # span's compressed rows after its current rows in one block --
+                # is that block of the state, not the whole capacity.  This is
+                # the blocked addressing the buffer path gave it, pointed at the
+                # object that actually holds it.
                 leading_rows = int(self._blocked_dims(tensor, shape)[0])
                 row = self._state_plane_row_elements(name, tensor)
                 terms = (DynamicTerm.loop(loop, leading_rows * row),)
@@ -8225,10 +8368,11 @@ class RomLowering:
         Both phases of the V4.1 attention join were measured, and they are
         stated differently:
 
-        * prefill's sum is a STATIC two rows -- one new token row joined to one
-          prefix row -- emitted inside the row loop and advancing by a row an
-          iteration.  Every operand there is the blocked per-row view, and that
-          is the form the closed cells already ship.
+        * prefill's sum is the declared ``2 * SPAN_TOKENS`` (ratio 1) -- every
+          current row, then every compressed row -- emitted as ONE block of the
+          row loop (see ``whole_span_join`` in ``_shape_of``; it was once one
+          token per iteration, which interleaved the two segments).  Every
+          operand there is the blocked view.
         * decode's sum is ``CONTEXT_LENGTH + 128``: the whole 128-row window
           joined to the whole compressed prefix, once.
 
@@ -9487,10 +9631,10 @@ class RomLowering:
                 # So when this kernel's phase layout needs a context form, the
                 # loop is opened on CONTEXT_LENGTH over the capability's declared
                 # context -- exactly what the no-plane branch below already does,
-                # and for the same stated reason.
-                context_divisor = int(
-                    self.capability.limits["max_context_positions"]
-                )
+                # and for the same stated reason -- over the context the
+                # DEPLOYMENT holds, not the capability's architectural bound
+                # (see ``_context_capacity``).
+                context_divisor = self._context_capacity(kernel)
                 context = self._open_context_loop(
                     kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
                 )
@@ -9519,7 +9663,7 @@ class RomLowering:
             # that resolves the context form has to be opened for the operand
             # rather than for a plane: one block over the whole context, run
             # once, exactly as ``_open_context_loop`` does for a plane.
-            context_divisor = int(self.capability.limits["max_context_positions"])
+            context_divisor = self._context_capacity(kernel)
             context = self._open_context_loop(
                 kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
             )

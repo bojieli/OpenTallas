@@ -1,0 +1,54 @@
+{
+ "def_sha256": "e90a08bacb80783af222795bf1e0c4feb599f2491fd8a57e0a44609222863670",
+ "flop_count": 260,
+ "register_columns_um": [
+  {
+   "count": 65,
+   "x_max": 4.05,
+   "x_min": 4.05
+  },
+  {
+   "count": 65,
+   "x_max": 1002.02,
+   "x_min": 1002.02
+  },
+  {
+   "count": 65,
+   "x_max": 1999.94,
+   "x_min": 1999.94
+  },
+  {
+   "count": 65,
+   "x_max": 2997.92,
+   "x_min": 2997.92
+  }
+ ],
+ "repeater_cell_count": 2318,
+ "repeater_cells_by_master": {
+  "BUFx10_ASAP7_75t_R": 4,
+  "BUFx12_ASAP7_75t_R": 5,
+  "BUFx12f_ASAP7_75t_R": 124,
+  "BUFx16f_ASAP7_75t_R": 594,
+  "BUFx24_ASAP7_75t_R": 155,
+  "BUFx2_ASAP7_75t_R": 196,
+  "BUFx3_ASAP7_75t_R": 438,
+  "BUFx4f_ASAP7_75t_R": 4,
+  "BUFx6f_ASAP7_75t_R": 602,
+  "BUFx8_ASAP7_75t_R": 1,
+  "INVx1_ASAP7_75t_R": 65,
+  "INVx2_ASAP7_75t_R": 65,
+  "INVx3_ASAP7_75t_R": 43,
+  "INVx4_ASAP7_75t_R": 6,
+  "INVx5_ASAP7_75t_R": 1,
+  "INVx8_ASAP7_75t_R": 15
+ },
+ "signal_wirelength_um_by_layer": {
+  "M2": 160806.8,
+  "M3": 2271.2,
+  "M4": 732.6,
+  "M5": 110.3,
+  "M6": 48915.8,
+  "M7": 184.0
+ },
+ "source": "6_final.def of this route, read by the staging script"
+}
