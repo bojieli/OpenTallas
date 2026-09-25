@@ -56,12 +56,19 @@ def synth_sdc() -> str:
     ])
 
 
-def budget_sdc(block: str, budget: dict[str, Any]) -> str:
-    """Per-port I/O delays from the budget table (no I/O false paths)."""
+def budget_sdc(block: str, budget: dict[str, Any], latency_ps: float = 0.0) -> str:
+    """Per-port I/O delays from the budget table (no I/O false paths).
+
+    The parent balances this block's clock insertion delay L, so the external
+    flops see the clock L late too: an input's external delay grows by L and
+    an output's shrinks by L relative to the block's (ideal) clock pin.
+    """
     entry = budget["blocks"][block]
+    L = latency_ps
     lines = [
         f"# Budgeted boundary constraints for {block} from {budget['name']}",
-        f"# (tools/chip_assembly/budgets.py); period {PERIOD_PS:g} ps.",
+        f"# (tools/chip_assembly/budgets.py); period {PERIOD_PS:g} ps; the external",
+        f"# flops are clocked {L:g} ps late, as the parent balances this block's insertion delay.",
         f"set clk_period {PERIOD_PS:g}",
         "create_clock -name clk -period $clk_period [get_ports clk]",
         f"set_clock_uncertainty {budget['uncertainty_ps']:g} [get_clocks clk]",
@@ -79,9 +86,9 @@ def budget_sdc(block: str, budget: dict[str, Any]) -> str:
             continue
         sel = f"[get_ports {{{port}}}]" if b["width"] == 1 else f"[get_ports {{{port}[*]}}]"
         if b["direction"] == "input":
-            lines.append(f"set_input_delay {b['external_ps']:.1f} -clock clk {sel}")
+            lines.append(f"set_input_delay {b['external_ps'] + L:.1f} -clock clk {sel}")
         else:
-            lines.append(f"set_output_delay {b['external_ps']:.1f} -clock clk {sel}")
+            lines.append(f"set_output_delay {b['external_ps'] - L:.1f} -clock clk {sel}")
             lines.append(f"set_load {b.get('load_ff', 4.0):.1f} {sel}")
     lines += fp.BLOCKS[block].extra_sdc
     return "\n".join(lines) + "\n"
@@ -150,7 +157,8 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
               record_only: bool = False) -> dict[str, Any]:
     budget = json.loads(budget_path.read_text(encoding="utf-8"))
     char = json.loads((work / "boundary.json").read_text(encoding="utf-8"))
-    spec = spec_for(block, budget_sdc(block.name, budget), char["ports"])
+    lat = fp.clock_latency_ps(block, orfs.results_dir(work, f"chip_{block.name}") / "1_2_yosys.v")
+    spec = spec_for(block, budget_sdc(block.name, budget, lat["latency_ps"]), char["ports"])
     if not record_only:
         cs.write_case(work, spec)
         cs.ensure_constraints(work, spec.nickname, spec.sdc)
@@ -216,6 +224,7 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
                         "paths), clock uncertainty from the budget, max transition 320 ps"),
         "metrics": m,
         "closed_against_budget": closed,
+        "clock_insertion_estimate": fp.clock_latency_ps(block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"),
         "budget_check": budget_check(block.name, budget, lib),
         "closed_basis": ("setup and hold met with the budgeted I/O constraints, zero DRC, zero "
                          "max-slew / max-cap / max-fanout violations"),

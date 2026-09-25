@@ -226,6 +226,33 @@ BLOCKS.update({
 })
 
 
+def clock_latency_ps(block: Block, netlist: Path | None = None) -> dict[str, Any]:
+    """The block's expected clock insertion delay (clock pin to its flops).
+
+    The parent's clock tree balances a macro's insertion delay (OpenROAD CTS
+    reads it from the macro's timing model), so the flops just outside a
+    block see the clock as late as the flops inside it.  A block's I/O
+    constraints therefore shift by it.  Measured: the worst source latency in
+    the clock-skew report of the block's flat routed record.  Otherwise
+    estimated from its cell count by the fit of those records,
+    110 ps + 80 ps x log2(cells / 10,000).
+    """
+    import re as _re
+    if block.record:
+        rpt = ROOT / Path(block.record).parent / "physical_artifacts" / "6_finish.rpt"
+        if rpt.is_file():
+            m = _re.search(r"^\s*([\d.]+) source latency \S+/CLK", rpt.read_text(), _re.M)
+            if m:
+                return {"latency_ps": float(m.group(1)), "basis": f"measured: {rpt.relative_to(ROOT)}"}
+    cells = None
+    if netlist and netlist.is_file():
+        cells = sum(1 for line in netlist.open() if "_ASAP7_75t_" in line)
+    if not cells:
+        return {"latency_ps": 250.0, "basis": "default"}
+    est = 110.0 + 80.0 * math.log2(max(cells, 10000) / 10000.0)
+    return {"latency_ps": round(est, 1), "basis": f"estimated from {cells} cells"}
+
+
 def edge_of(block: Block, port: str, bit: int | None) -> str:
     import re
     for rule in block.pin_edges:
