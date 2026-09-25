@@ -9,7 +9,9 @@ are copies of this repository's RTL timing model and routed results:
   stream-unit depths, reducer tail, barrier idle) and ``tools/hdc_isa.py``
   ``INTERLEAVE``;
 * the slowest routed fmax among the token path's units, and the routed stream
-  lane area (results/physical_abi3/asap7/hdc/).
+  lane area (results/physical_abi3/asap7/hdc/), and the routed Sinkhorn unit;
+* the wafer express network's field crossing and bandwidth
+  (``links.rom_wafer_express``, results/architecture/wafer_express_link_measurement.json).
 
 They are copied rather than read at run time on purpose: every roofline artifact
 pins ``technology.json`` by digest, so a changed constant must change that file
@@ -25,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -70,9 +73,30 @@ def expected() -> dict[str, float]:
     }
 
 
-def drift(raw: dict) -> dict[str, tuple[float, float]]:
+EXPRESS = ROOT / "results" / "architecture" / "wafer_express_link_measurement.json"
+
+
+def expected_links() -> dict[str, float]:
+    """The wafer express network, from its routed measurement (rtl/rom/ot_rom_express_link.sv)."""
+    m = json.loads(EXPRESS.read_text())
+    return {
+        "hop_latency_s": m["extrapolation_to_one_field"]["per_field_crossing"]["forwarding_mux"]["ns_at_1ghz"] * 1e-9,
+        "bytes_s": m["wires_per_field_edge"]["wires"] * 1.0e9 / 8.0,
+    }
+
+
+def _entries(raw: dict):
     rom = raw["serial_latency"]["rom_datapath"]
-    return {k: (rom[k]["value"], v) for k, v in expected().items() if float(rom[k]["value"]) != float(v)}
+    for k, v in expected().items():
+        yield f"serial_latency.rom_datapath.{k}", rom[k], v
+    link = raw["links"]["rom_wafer_express"]
+    for k, v in expected_links().items():
+        yield f"links.rom_wafer_express.{k}", link[k], v
+
+
+def drift(raw: dict) -> dict[str, tuple[float, float]]:
+    return {path: (node["value"], v) for path, node, v in _entries(raw)
+            if not math.isclose(float(node["value"]), float(v), rel_tol=1e-12)}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -83,15 +107,16 @@ def main(argv: list[str] | None = None) -> int:
     moved = drift(raw)
     if args.check:
         for k, (old, new) in moved.items():
-            print(f"serial_latency.rom_datapath.{k}: technology.json {old} != RTL {new}")
+            print(f"{k}: technology.json {old} != RTL/physical {new}")
         if moved:
             print(f"stale: run `{REGEN}` and commit the regenerated artifacts")
             return 1
-        print("serial_latency.rom_datapath matches the RTL timing model")
+        print("serial_latency.rom_datapath and links.rom_wafer_express match the RTL and physical results")
         return 0
+    nodes = {path: node for path, node, _v in _entries(raw)}
     for k, (_old, new) in moved.items():
-        raw["serial_latency"]["rom_datapath"][k]["value"] = new
-        print(f"serial_latency.rom_datapath.{k} -> {new}")
+        nodes[k]["value"] = new
+        print(f"{k} -> {new}")
     if moved:
         TECH.write_text(json.dumps(raw, indent=2, ensure_ascii=False) + "\n")
         print("now regenerate: python3 tools/regenerate_roofline.py")

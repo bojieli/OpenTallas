@@ -299,14 +299,20 @@ def test_committed_result_reproduces(tech):
 
 
 # -- the wafer express network ---------------------------------------------------------------------------
-def test_express_link_is_derived_from_the_wire_delay_and_the_field_pitch(tech):
+def test_express_link_is_the_routed_measurement_with_the_derivation_as_its_low_end(tech):
     e = tech.raw["links"]["rom_wafer_express"]
+    import sync_serial_latency_constants as sync
+    want = sync.expected_links()
+    assert e["hop_latency_s"]["value"] == pytest.approx(want["hop_latency_s"], rel=1e-12)
+    assert e["bytes_s"]["value"] == pytest.approx(want["bytes_s"], rel=1e-12)
+    assert e["hop_latency_s"]["grade"] == e["bytes_s"]["grade"] == "executed"
+    # the low end is the thick-metal N5 derivation: repeated global wire over one field pitch + router
     wire = tech.raw["latency"]["global_wire_delay_s_per_mm"]
     pitch_mm = math.sqrt(tech.raw["reticle"]["area_mm2"]["value"])
-    for key in ("value", "range_low", "range_high"):
-        assert e["hop_latency_s"][key] == pytest.approx(pitch_mm * wire[key] + e["router_latency_s"][key], rel=1e-12)
+    assert e["hop_latency_s"]["range_low"] == pytest.approx(
+        pitch_mm * wire["value"] + e["router_latency_s"]["value"], rel=1e-12)
     wires = pitch_mm * 1000 / e["wire_track_pitch_um"]["value"] * e["wire_layers"]["value"] * e["wire_track_share"]["value"]
-    assert e["bytes_s"]["value"] == pytest.approx(wires * e["wire_clock_hz"]["value"] / 8, rel=1e-12)
+    assert e["bytes_s"]["range_low"] == pytest.approx(wires * e["wire_clock_hz"]["value"] / 8, rel=1e-12)
     # the Cerebras-style core mesh stays as it was: the conservative case
     assert tech.raw["links"]["on_wafer_n5"]["hop_latency_s"]["value"] == pytest.approx(125e-9)
     assert set(e["alternative_to"]) == {"on_wafer", "on_wafer_n5"}
@@ -326,7 +332,7 @@ def test_a_wafer_point_chooses_between_the_mesh_and_the_express_network(tech):
     assert step.metrics["intra_link"] == best["intra_link"]
     mesh_only = min(row["step_s"] for row in search if row["intra_link"] == "on_wafer_n5")
     assert best["step_s"] <= mesh_only
-    # a field crossing on the express network is ~17x shorter than on the core mesh, so at batch 1 it wins
+    # a field crossing on the express network is ~4x shorter than on the core mesh, so at batch 1 it wins
     assert step.metrics["intra_link"] == "rom_wafer_express"
 
 

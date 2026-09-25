@@ -696,7 +696,6 @@ ASSUMED_INPUTS = frozenset(
         # The wafer express network: a stated router term and wire-track budget
         # over the assumed global-wire delay, and its topology.
         "links.rom_wafer_express.fabric",
-        "links.rom_wafer_express.hop_latency_s",
         "links.rom_wafer_express.router_latency_s",
         "links.rom_wafer_express.wire_clock_hz",
         "links.rom_wafer_express.wire_layers",
