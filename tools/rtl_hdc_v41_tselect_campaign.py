@@ -79,12 +79,12 @@ MUTATIONS = [
     # bucket with quota 0 and threshold {B, max lo}, which selects the same set -- so it is not listed)
     ("boundary quota ignores the count above it", "mq <= wrest;", "mq <= wkq;"),
     ("-0 not canonicalised to +0", "fkey = (v[VW-2:0] == 0) ?", "fkey = (v[VW-1:0] == 0) ?"),
-    ("strict threshold compare dropped", "c1_gt[l] <= lv && (k > tkey);", "c1_gt[l] <= lv && (k >= tkey);"),
+    ("strict threshold compare dropped", "c1_gt_d[gl] = lv && (k > tkey);", "c1_gt_d[gl] = lv && (k >= tkey);"),
     ("pass-2 histogram ignores the boundary bucket", "k[VW-1 -: RB] == bsel);", "1'b1);"),
     ("tie remainder not carried across beats", "else if (c2_v) rem <=", "else if (1'b0) rem <="),
-    ("compaction shift counts the lane itself", "sel_inc[(LW+1)*(l-1) +: LW+1];", "sel_inc[(LW+1)*l +: LW+1];"),
+    ("compaction shift counts the lane itself", "sel_inc[(LW+1)*(gl-1) +: LW+1];", "sel_inc[(LW+1)*gl +: LW+1];"),
     ("tree walk starts two edges early", "localparam integer DRAIN = 3 + RB - 1;", "localparam integer DRAIN = 3 + RB - 3;"),
-    ("empty lanes counted in the histogram", "e  = hs_ing ? s0_lv[l] :", "e  = hs_ing ? 1'b1 :"),
+    ("empty lanes counted in the histogram", "e  = hs_ing ? s0_lv[gl] :", "e  = hs_ing ? 1'b1 :"),
     ("rotate ignores the running fill", "if (cp_v) frun <= cp_l ?", "if (1'b0) frun <= cp_l ?"),
 ]
 
@@ -318,6 +318,9 @@ def mutations(s: Path, sets):
 
 
 def run(positions, quick=False) -> dict:
+    src = RTL.read_text()
+    for what, a, _ in MUTATIONS:                   # every mutation site exists exactly once
+        assert src.count(a) == 1, (what, src.count(a))
     sets, checks, real_meta = SC.real_sets(positions)
     configs, ok = [], True
     lint = {}

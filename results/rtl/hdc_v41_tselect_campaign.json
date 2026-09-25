@@ -1,0 +1,602 @@
+{
+  "claim_boundary": "functional cycle-level RTL simulation of the threshold SELECT alone (behavioural line memory in the bench) against tools/hdc_golden_v41.py topk_lowest_index; clock rate and area are in results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w64/.",
+  "configurations": [
+    {
+      "K": 512,
+      "beats": 12620,
+      "elements": 620891,
+      "expected_outputs": 78616,
+      "index_width": 16,
+      "lanes": 64,
+      "lat0": 47,
+      "latency_cycles": "2 x beats + 47 (+1 when the final pass-3 beat overflows the partial line)",
+      "line_address_width": 10,
+      "name": "index_topk_shipped_w64",
+      "pass": true,
+      "random_segments": 162,
+      "real_segments": {
+        "index": 381,
+        "index_all": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "beats": 12620,
+          "bubble_percent": 0,
+          "cycles": 71212,
+          "elements": 620891,
+          "errors": 0,
+          "gap_percent": 0,
+          "lat0_max": 48,
+          "lat0_min": 47,
+          "out_beats": 1875,
+          "outputs": 78616,
+          "pass": true,
+          "seed": 1,
+          "segments": 924,
+          "simulator": "verilator"
+        },
+        "bubbles_and_gaps": {
+          "beats": 12620,
+          "bubble_percent": 30,
+          "cycles": 77517,
+          "elements": 620891,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 48,
+          "lat0_min": 47,
+          "out_beats": 1875,
+          "outputs": 78616,
+          "pass": true,
+          "seed": 7,
+          "segments": 924,
+          "simulator": "verilator"
+        }
+      },
+      "two_level": {
+        "local": {
+          "beats": 5384,
+          "cycles": 18112,
+          "elements": 263436,
+          "errors": 0,
+          "expected_outputs": 26624,
+          "lat0_max": 47,
+          "lat0_min": 47,
+          "out_beats": 440,
+          "outputs": 26624,
+          "pass": true,
+          "segments": 52,
+          "vectors_sha256": "5c316902d40b4a34a6750a87eafdfb44d7bce551d3e918ff795137a0935f99d7"
+        },
+        "local_segments": 52,
+        "merge": {
+          "beats": 541,
+          "cycles": 2296,
+          "elements": 26624,
+          "errors": 0,
+          "expected_outputs": 6144,
+          "lat0_max": 47,
+          "lat0_min": 47,
+          "out_beats": 104,
+          "outputs": 6144,
+          "pass": true,
+          "segments": 12,
+          "vectors_sha256": "4a8354510d24b1c8aead76c672faf32842961624ee575c364db232d74d67d081"
+        },
+        "pass": true,
+        "trials": 12
+      },
+      "value_width": 16,
+      "vectors_sha256": "b5d1e82db7089a2e3bb26f0cacedbb3652e4023bb54e36d01663f144266e930d"
+    },
+    {
+      "K": 512,
+      "beats": 15047,
+      "elements": 394747,
+      "expected_outputs": 29917,
+      "index_width": 16,
+      "lanes": 32,
+      "lat0": 47,
+      "latency_cycles": "2 x beats + 47 (+1 when the final pass-3 beat overflows the partial line)",
+      "line_address_width": 11,
+      "name": "index_topk_shipped_w32",
+      "pass": true,
+      "random_segments": 62,
+      "real_segments": {
+        "index": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "beats": 15047,
+          "bubble_percent": 0,
+          "cycles": 61177,
+          "elements": 394747,
+          "errors": 0,
+          "gap_percent": 0,
+          "lat0_max": 48,
+          "lat0_min": 47,
+          "out_beats": 1194,
+          "outputs": 29917,
+          "pass": true,
+          "seed": 1,
+          "segments": 443,
+          "simulator": "verilator"
+        },
+        "bubbles_and_gaps": {
+          "beats": 15047,
+          "bubble_percent": 30,
+          "cycles": 67949,
+          "elements": 394747,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 48,
+          "lat0_min": 47,
+          "out_beats": 1194,
+          "outputs": 29917,
+          "pass": true,
+          "seed": 7,
+          "segments": 443,
+          "simulator": "verilator"
+        }
+      },
+      "two_level": {
+        "local": {
+          "beats": 3244,
+          "cycles": 10180,
+          "elements": 80208,
+          "errors": 0,
+          "expected_outputs": 5120,
+          "lat0_max": 47,
+          "lat0_min": 47,
+          "out_beats": 169,
+          "outputs": 5120,
+          "pass": true,
+          "segments": 10,
+          "vectors_sha256": "8186e21659e29b27b33e9e8079a824f12eb89b92ba59c636c36bb2fc1cdc4e2f"
+        },
+        "local_segments": 10,
+        "merge": {
+          "beats": 216,
+          "cycles": 951,
+          "elements": 5120,
+          "errors": 0,
+          "expected_outputs": 2048,
+          "lat0_max": 47,
+          "lat0_min": 47,
+          "out_beats": 67,
+          "outputs": 2048,
+          "pass": true,
+          "segments": 4,
+          "vectors_sha256": "0af1dbd55ab9e31c50962cf627b4915b6f6f9780851432fc51a83d5cbb9a9ddf"
+        },
+        "pass": true,
+        "trials": 4
+      },
+      "value_width": 16,
+      "vectors_sha256": "8f29fcfde4240729584e4674da480e80e7f0d5c1fc76e333a76f2ca6ae4331be"
+    },
+    {
+      "K": 16,
+      "beats": 83220,
+      "elements": 509318,
+      "expected_outputs": 23121,
+      "index_width": 16,
+      "lanes": 8,
+      "lat0": 45,
+      "latency_cycles": "2 x beats + 45 (+1 when the final pass-3 beat overflows the partial line)",
+      "line_address_width": 10,
+      "name": "index_topk_reduced_w8",
+      "pass": true,
+      "random_segments": 1502,
+      "real_segments": {
+        "index": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "beats": 83220,
+          "bubble_percent": 0,
+          "cycles": 317534,
+          "elements": 509318,
+          "errors": 0,
+          "gap_percent": 0,
+          "lat0_max": 46,
+          "lat0_min": 45,
+          "out_beats": 3814,
+          "outputs": 23121,
+          "pass": true,
+          "seed": 1,
+          "segments": 1883,
+          "simulator": "verilator"
+        },
+        "bubbles_and_gaps": {
+          "beats": 83220,
+          "bubble_percent": 30,
+          "cycles": 354285,
+          "elements": 509318,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 46,
+          "lat0_min": 45,
+          "out_beats": 3814,
+          "outputs": 23121,
+          "pass": true,
+          "seed": 7,
+          "segments": 1883,
+          "simulator": "verilator"
+        }
+      },
+      "two_level": {
+        "local": {
+          "beats": 8444,
+          "cycles": 31466,
+          "elements": 50938,
+          "errors": 0,
+          "expected_outputs": 2684,
+          "lat0_max": 45,
+          "lat0_min": 45,
+          "out_beats": 484,
+          "outputs": 2684,
+          "pass": true,
+          "segments": 168,
+          "vectors_sha256": "1f19afe3641c1a2b64a5c9f390d81c804bc3058757b0e432c9f045820f93c893"
+        },
+        "local_segments": 168,
+        "merge": {
+          "beats": 452,
+          "cycles": 3001,
+          "elements": 2684,
+          "errors": 0,
+          "expected_outputs": 640,
+          "lat0_max": 45,
+          "lat0_min": 45,
+          "out_beats": 112,
+          "outputs": 640,
+          "pass": true,
+          "segments": 40,
+          "vectors_sha256": "1b7dacdb063acb92eb49d14411c318555142e1ffbedef74f9387c85c28a3d672"
+        },
+        "pass": true,
+        "trials": 40
+      },
+      "value_width": 16,
+      "vectors_sha256": "27efe161701a036de2c941c85adfdf270f453886943e4316bf89f84eebd014f0"
+    },
+    {
+      "K": 64,
+      "beats": 15895,
+      "elements": 192176,
+      "expected_outputs": 29971,
+      "index_width": 12,
+      "lanes": 16,
+      "lat0": 45,
+      "latency_cycles": "2 x beats + 45 (+1 when the final pass-3 beat overflows the partial line)",
+      "line_address_width": 8,
+      "name": "candidate_blocks_reduced_w16",
+      "pass": true,
+      "random_segments": 602,
+      "real_segments": {
+        "candidate": 48
+      },
+      "runs": {
+        "back_to_back": {
+          "beats": 15895,
+          "bubble_percent": 0,
+          "cycles": 71171,
+          "elements": 192176,
+          "errors": 0,
+          "gap_percent": 0,
+          "lat0_max": 46,
+          "lat0_min": 45,
+          "out_beats": 2212,
+          "outputs": 29971,
+          "pass": true,
+          "seed": 1,
+          "segments": 650,
+          "simulator": "verilator"
+        },
+        "bubbles_and_gaps": {
+          "beats": 15895,
+          "bubble_percent": 30,
+          "cycles": 78204,
+          "elements": 192176,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 46,
+          "lat0_min": 45,
+          "out_beats": 2212,
+          "outputs": 29971,
+          "pass": true,
+          "seed": 7,
+          "segments": 650,
+          "simulator": "verilator"
+        }
+      },
+      "two_level": null,
+      "value_width": 16,
+      "vectors_sha256": "4b0ae3f3d7640d25242100e450b352fc9c1422b7ebfc17325681bae366fd2ffa"
+    },
+    {
+      "K": 7,
+      "beats": 28134,
+      "elements": 84636,
+      "expected_outputs": 7335,
+      "index_width": 10,
+      "lanes": 4,
+      "lat0": 43,
+      "latency_cycles": "2 x beats + 43 (+1 when the final pass-3 beat overflows the partial line)",
+      "line_address_width": 8,
+      "name": "k7_w4_edge",
+      "pass": true,
+      "random_segments": 1502,
+      "real_segments": {},
+      "runs": {
+        "back_to_back": {
+          "beats": 28134,
+          "bubble_percent": 0,
+          "cycles": 138558,
+          "elements": 84636,
+          "errors": 0,
+          "gap_percent": 0,
+          "lat0_max": 44,
+          "lat0_min": 43,
+          "out_beats": 2486,
+          "outputs": 7335,
+          "pass": true,
+          "seed": 1,
+          "segments": 1502,
+          "simulator": "verilator"
+        },
+        "bubbles_and_gaps": {
+          "beats": 28134,
+          "bubble_percent": 30,
+          "cycles": 151410,
+          "elements": 84636,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 44,
+          "lat0_min": 43,
+          "out_beats": 2486,
+          "outputs": 7335,
+          "pass": true,
+          "seed": 7,
+          "segments": 1502,
+          "simulator": "verilator"
+        },
+        "icarus_bubbles_and_gaps": {
+          "beats": 28134,
+          "bubble_percent": 30,
+          "cycles": 151410,
+          "elements": 84636,
+          "errors": 0,
+          "gap_percent": 20,
+          "lat0_max": 44,
+          "lat0_min": 43,
+          "out_beats": 2486,
+          "outputs": 7335,
+          "pass": true,
+          "seed": 7,
+          "segments": 1502,
+          "simulator": "icarus"
+        }
+      },
+      "two_level": {
+        "local": {
+          "beats": 5761,
+          "cycles": 24207,
+          "elements": 17434,
+          "errors": 0,
+          "expected_outputs": 1330,
+          "lat0_max": 43,
+          "lat0_min": 43,
+          "out_beats": 380,
+          "outputs": 1330,
+          "pass": true,
+          "segments": 190,
+          "vectors_sha256": "0024f96eae255de8cf04cf0756b5d4c4c49ea5b0cc46595ea259fe0d1a4b49a7"
+        },
+        "local_segments": 190,
+        "merge": {
+          "beats": 448,
+          "cycles": 2984,
+          "elements": 1330,
+          "errors": 0,
+          "expected_outputs": 280,
+          "lat0_max": 43,
+          "lat0_min": 43,
+          "out_beats": 80,
+          "outputs": 280,
+          "pass": true,
+          "segments": 40,
+          "vectors_sha256": "26b6154a961c845bc00296b4c8b8d4886f99b1e2eea65a1b23e1860df3613763"
+        },
+        "pass": true,
+        "trials": 40
+      },
+      "value_width": 16,
+      "vectors_sha256": "de27fb653f36b452657960744005af0f0ff8b96c4cb880b0c32122816abd091f"
+    }
+  ],
+  "input_sha256": {
+    "rtl/hdc/v41/ot_hdc_tselect.sv": "d10453064afe22ad87001c8f117c596537e2b7730ab38860d2f2740559d43f54",
+    "rtl/test/hdc_tselect_harness.cpp": "42de3737e54d23b0b7f2f5303bccd5ae09218503d0d12cf94a830248fa777db1",
+    "rtl/test/tb_hdc_tselect.sv": "36d0d2ae721a4c6c1ca08f917e6179c84e46b3f41594dc9cba3ce08d62d43039",
+    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/rtl_hdc_v41_select_campaign.py": "fb314c8a1ba8f3be1f204f9498f98f1c042b8c09006ca8ceb9e79226cb08cbd9",
+    "tools/rtl_hdc_v41_tselect_campaign.py": "ed47ec572e9b1430c0416f34c5ba787bf16676f5400f03d73cf4eedd70cf22d2"
+  },
+  "latency_definition": "clock edges from the edge that accepts a segment's last beat to the edge that registers its out_last beat: 2 x beats + LAT0 (+1 when the final pass-3 beat overflows the partial output line)",
+  "mutations": [
+    {
+      "caught": false,
+      "control": true,
+      "detail": {
+        "back_to_back": 0
+      },
+      "mutation": "none (control)"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 3419
+      },
+      "mutation": "tie to the higher index"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 1121
+      },
+      "mutation": "boundary quota ignores the count above it"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 0
+      },
+      "mutation": "-0 not canonicalised to +0"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 12074
+      },
+      "mutation": "strict threshold compare dropped"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 1447
+      },
+      "mutation": "pass-2 histogram ignores the boundary bucket"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 11736
+      },
+      "mutation": "tie remainder not carried across beats"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 3410
+      },
+      "mutation": "compaction shift counts the lane itself"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 784
+      },
+      "mutation": "tree walk starts two edges early"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 476
+      },
+      "mutation": "empty lanes counted in the histogram"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "back_to_back": 800
+      },
+      "mutation": "rotate ignores the running fill"
+    }
+  ],
+  "real_data": {
+    "candidate_block_size": 8,
+    "candidate_topk_blocks": 64,
+    "golden_selection_checks": {
+      "candidate": 48,
+      "index": 381,
+      "router": 1920
+    },
+    "index_topk": 16,
+    "positions": 48,
+    "router_topk": 6,
+    "tokens": [
+      0,
+      3563,
+      3745,
+      418,
+      170,
+      16,
+      3564,
+      3582,
+      3118,
+      3583,
+      2357,
+      276,
+      3270,
+      44,
+      790,
+      223,
+      2498,
+      1741,
+      858,
+      2588,
+      983,
+      1289,
+      2967,
+      2084,
+      106,
+      1236,
+      1183,
+      267,
+      1607,
+      2176,
+      3012,
+      3341,
+      2719,
+      4014,
+      3545,
+      1685,
+      786,
+      289,
+      1889,
+      1233,
+      2413,
+      1515,
+      2588,
+      1141,
+      1386,
+      2008,
+      1635,
+      1053,
+      2476
+    ]
+  },
+  "schema": "opentallas.hdc-v41-tselect-campaign.v1",
+  "semantics": "k largest values, ties to the lower index, -0 == +0, emitted in ascending position order; NaN outside the contract; input positions must ascend in stream order",
+  "status": "pass",
+  "verilator_lint": {
+    "configurations": {
+      "candidate_blocks_reduced_w16": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_reduced_w8": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_shipped_w32": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_shipped_w64": {
+        "messages": [],
+        "returncode": 0
+      },
+      "k7_w4_edge": {
+        "messages": [],
+        "returncode": 0
+      }
+    },
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED"
+    ]
+  }
+}
