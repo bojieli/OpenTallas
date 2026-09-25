@@ -7,8 +7,10 @@ operator graph.  This splits it into its independent pieces -- the two primary
 studies (each re-running its sensitivity tables on ``ROOFLINE_WORKERS``
 workers), the two quantised variants, the two context ladders and one process
 per candidate model -- runs them ``--jobs`` at a time, longest first, and then
-the two layers that read their output: ``tools/serial_latency_report.py`` and
-``tools/run_speculative_roofline.py`` (``SPECULATIVE_WORKERS`` workers).  Every
+the layers that read their output: ``tools/decode_critical_path.py``,
+``tools/wafer_vs_array_study.py``, ``tools/serial_latency_report.py`` and
+``tools/run_speculative_roofline.py`` (``SPECULATIVE_WORKERS`` workers, at most 4:
+each peaks at 6-10 GB).  ``--layers-only`` runs just that second half.  Every
 piece writes disjoint files by the code path ``run_all`` uses, so the bytes are
 the same as a single-process run.
 
@@ -85,13 +87,25 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--logs", type=Path, default=Path(os.environ.get("TMPDIR", "/tmp")) / "roofline-regen-logs")
     ap.add_argument("--skip-layers", action="store_true",
                     help="stop after the studies (no critical-path report, no speculative layer)")
+    ap.add_argument("--layers-only", action="store_true", help="only the layers that read the studies")
     args = ap.parse_args(argv)
+    if args.layers_only:
+        return layers(args.speculative_workers)
     if run(args.output, args.jobs, args.primary_workers, args.logs):
         return 1
     if args.skip_layers or args.output.resolve() != S.OUTPUT_ROOT.resolve():
         return 0
-    subprocess.run([sys.executable, str(ROOT / "tools" / "serial_latency_report.py")], cwd=ROOT, check=True)
-    env = dict(os.environ, SPECULATIVE_WORKERS=str(args.speculative_workers))
+    return layers(args.speculative_workers)
+
+
+def layers(speculative_workers: int) -> int:
+    """Everything that reads the regenerated studies, in dependency order: the standalone bottom-up
+    study (reads the V4.1 study rows), the wafer-vs-array study built on it, the serial-latency
+    report, and the speculative layer."""
+    for tool, extra in (("decode_critical_path.py", []), ("wafer_vs_array_study.py", ["--workers", "4"]),
+                        ("serial_latency_report.py", [])):
+        subprocess.run([sys.executable, str(ROOT / "tools" / tool), *extra], cwd=ROOT, check=True)
+    env = dict(os.environ, SPECULATIVE_WORKERS=str(speculative_workers))
     subprocess.run([sys.executable, str(ROOT / "tools" / "run_speculative_roofline.py"), "--force"],
                    cwd=ROOT, env=env, check=True)
     return 0
