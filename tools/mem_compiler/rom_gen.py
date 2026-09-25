@@ -320,6 +320,17 @@ def personalise_instance(spec: RomSpec, words: list[int], instance: str, out_dir
     return rec
 
 
+def die_signature(records: list[dict[str, Any]]) -> str:
+    """The per-die content signature: CRC-32 over every instance signature, in instance-name order.
+
+    On the V4.1 universal die every die carries the same macros and a different
+    via mask; the die signature is what the ROM BIST results must fold to for
+    that die, and the SHA-256 of the sorted via-map hashes pins the mask set.
+    """
+    words = [int(r["signature_crc32"], 16) for r in sorted(records, key=lambda r: r["instance"])]
+    return f"{ecc.signature(words, 32):08x}"
+
+
 def read_hex(path: Path) -> list[int]:
     return [int(line.split("//")[0], 16) for line in path.read_text().split() if line.strip()]
 
@@ -398,7 +409,10 @@ def main() -> int:
             for (r, c), ws in sorted(tiles.items())]
     manifest = {"schema": "opentallas.rom-personalisation.v1", "macro": spec.name, "ecc": args.ecc,
                 "image": str(args.image), "image_sha256": asap7.sha256_file(args.image),
-                "data_bits": args.data_bits, "tile_data_bits": tile_bits, "instances": recs}
+                "data_bits": args.data_bits, "tile_data_bits": tile_bits, "instances": recs,
+                "content_signature": die_signature(recs),
+                "viamap_set_sha256": hashlib.sha256("".join(
+                    r["viamap_sha256"] for r in sorted(recs, key=lambda r: r["instance"])).encode()).hexdigest()}
     (args.out / f"{args.instance_prefix}.personalisation.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     print(f"{len(recs)} instance(s) of {spec.name} personalised under {args.out}")
