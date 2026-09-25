@@ -242,7 +242,7 @@ def main(argv: list[str] | None = None) -> int:
         gate_sim.build_bench(bench, netlist, scan, names, cells, pats, srcs, obs, faults, scan["top"])
         t0 = time.time()
         res = gate_sim.run_bench(bench, simulator=args.simulator,
-                                 heavy=model_info["instances"] > 100000)
+                                 heavy=model_info["instances"] > 20000)   # big builds wait for the host gate
         confirmed = {"DT": [0, 0], "DS": [0, 0], "DS-clock": [0, 0]}
         misses = []
         for k, f in enumerate(faults):
