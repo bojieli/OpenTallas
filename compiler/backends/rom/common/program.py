@@ -9617,14 +9617,28 @@ class RomLowering:
         # let the attention join read its maximum.
         planes = self._request_sized_planes(kernel)
         consumer_paths = self._phase_consumer_paths(kernel)
+        #: A CONSUMER of a phase-split join whose one phase reads a context-sized
+        #: row space needs the context loop exactly as the join itself does.
+        #: ATTENTION.SPARSE is that consumer, and it also binds a request-sized
+        #: plane (the fused KV) that leads on the SPAN -- so the branch below
+        #: took the plane's span loop, and the decode KV view resolved to
+        #: ``floor(1/ratio) + 128`` = the 128-row window.  That was invisible
+        #: while decode selections were rebased by zero (every row < 128); with
+        #: the rebase fixed, compressed row 128 + j is refused as "outside the
+        #: 128 valid rows".
+        consumer_needs_context = consumer_paths is not None and any(
+            extent is not None and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
+            for _slot, phases in consumer_paths.items()
+            for extent, _static in phases.values()
+        )
         context = None
         context_divisor = 0
         if planes:
             plane = self.tensors[planes[0]]
             _s, _m, plane_axis = self._leading_symbol(plane)
-            if self._phase_layout_needs_context(kernel) and int(
-                plane_axis.symbol
-            ) != int(Symbol.CONTEXT_LENGTH):
+            if (
+                self._phase_layout_needs_context(kernel) or consumer_needs_context
+            ) and int(plane_axis.symbol) != int(Symbol.CONTEXT_LENGTH):
                 # The loop opened here RESOLVES the operands' A18 extents, and a
                 # context-derived extent can only be resolved by a loop that
                 # counts the CONTEXT.  Taking the symbol from the first
@@ -9657,15 +9671,7 @@ class RomLowering:
                 context = self._open_context_loop(
                     kernel, self._dims(plane)[0], plane_axis
                 )
-        elif self._phase_layout_needs_context(kernel) or (
-            consumer_paths is not None
-            and any(
-                extent is not None
-                and int(extent.symbol) != int(Symbol.SPAN_TOKENS)
-                for _slot, phases in consumer_paths.items()
-                for extent, _static in phases.values()
-            )
-        ):
+        elif self._phase_layout_needs_context(kernel) or consumer_needs_context:
             # A consumer of a phase-split join reads a *context*-sized row
             # space in one phase and a span-sized one in the other, and A18
             # resolves an extent only through a loop that walks it.  This
