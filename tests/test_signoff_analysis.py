@@ -327,3 +327,18 @@ def test_rtl_register_names_map_onto_routed_flops(tmp_path):
     # QN is the inverted register: T0 and T1 swap, the toggle count is the register's
     assert "(QN (T0 10) (T1 90) (TX 0) (TC 2))" in text
     assert "(INSTANCE u_d.genblk1.g_line.line\\[3\\]$_DFF_P_" in text
+
+
+@pytest.mark.skipif(shutil.which("g++") is None, reason="needs g++")
+def test_vcd2saif_ignores_zero_delay_glitches_and_dump_gaps(tmp_path):
+    exe = S.build_vcd2saif(tmp_path)
+    vcd = tmp_path / "g.vcd"
+    vcd.write_text("$timescale 1ps $end\n$scope module t $end\n$var wire 1 ! a $end\n$upscope $end\n"
+                   "$enddefinitions $end\n#0\n0!\n#100\n1!\n0!\n1!\n#200\n0!\n$dumpoff\nx!\n$end\n"
+                   "#500\n$dumpon\n1!\n$end\n#600\n")
+    out = tmp_path / "g.saif"
+    subprocess.run([str(exe), str(vcd), str(out), "t", "auto"], check=True, capture_output=True)
+    text = out.read_text()
+    # 0 -> (1,0,1 at one timestamp = 1) -> 0 -> [gap] -> 1: three toggles, the gap is not observed
+    assert "(a (T0 100) (T1 200) (TX 0) (TC 3))" in text
+    assert "(DURATION 300)" in text

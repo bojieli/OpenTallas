@@ -7,7 +7,7 @@
 // --scope (a dotted VCD scope path) are kept; the SAIF top instance is that
 // scope's last component, nested INSTANCE blocks follow the VCD scopes below it.
 //
-// Usage: vcd2saif IN.vcd OUT.saif SCOPE [BEGIN|auto [END]]   (auto: the first timestamp)
+// Usage: vcd2saif IN.vcd OUT.saif SCOPE[!] [BEGIN|auto [END]]   (auto: the first timestamp)
 //
 // A var that the VCD declares as a vector [msb:lsb] is written bit by bit as
 // NAME[i]; a scalar as NAME.  Names are written SAIF-escaped (\ before any
@@ -23,7 +23,9 @@
 
 struct Bit {
     unsigned long long t0 = 0, t1 = 0, tx = 0, tc = 0;
-    char val = 'x';
+    char val = 'x';          // value committed at the end of the last timestamp
+    char pend = 0;           // latest value seen in the current timestamp
+    bool dirty = false;
     unsigned long long since = 0;
 };
 
@@ -59,12 +61,30 @@ static inline void account(Bit &b, unsigned long long upto) {
     b.since = upto;
 }
 
-static inline void set_bit(Bit &b, char v) {
+// An event-driven simulator (Icarus) can write several changes of one signal
+// at one timestamp (zero-delay delta-cycle glitches, not physical).  Changes
+// are therefore held per timestamp and only the value at its end is compared
+// with the previous one: a toggle is a change between timestamps.
+static std::vector<size_t> dirty;
+
+static inline void set_bit(size_t i, char v) {
     if (v == 'X' || v == 'z' || v == 'Z') v = 'x';
-    if (v == b.val) return;
-    account(b, now);
-    if (now >= t_begin && now < t_end && (b.val == '0' || b.val == '1') && (v == '0' || v == '1')) b.tc++;
-    b.val = v;
+    Bit &b = bits[i];
+    b.pend = v;
+    if (!b.dirty) { b.dirty = true; dirty.push_back(i); }
+}
+
+static void commit() {
+    for (size_t i : dirty) {
+        Bit &b = bits[i];
+        b.dirty = false;
+        char v = b.pend;
+        if (v == b.val) continue;
+        account(b, now);
+        if (now >= t_begin && now < t_end && (b.val == '0' || b.val == '1') && (v == '0' || v == '1')) b.tc++;
+        b.val = v;
+    }
+    dirty.clear();
 }
 
 static std::string esc(const std::string &s) {
@@ -114,6 +134,8 @@ int main(int argc, char **argv) {
     }
     const char *in = argv[1], *out = argv[2];
     std::string want = argv[3];
+    bool own_only = !want.empty() && want.back() == '!';   // SCOPE! = that scope's own vars only
+    if (own_only) want.pop_back();
     bool auto_begin = argc > 4 && !strcmp(argv[4], "auto");
     if (argc > 4 && !auto_begin) t_begin = strtoull(argv[4], nullptr, 10);
     if (argc > 5) t_end = strtoull(argv[5], nullptr, 10);
@@ -165,9 +187,9 @@ int main(int argc, char **argv) {
                 if (n < 4) continue;
                 std::string full;
                 for (auto &s : path) full += (full.empty() ? "" : ".") + s;
-                if (!(full == want || full.rfind(want + ".", 0) == 0)) continue;
+                if (!(full == want || (!own_only && full.rfind(want + ".", 0) == 0))) continue;
                 Var v;
-                v.name = name;
+                v.name = name[0] == '\\' ? name + 1 : name;   // Icarus keeps an escaped identifier's backslash
                 v.width = width;
                 if (n == 5 && rng[0] == '[') {
                     int a = 0, b = 0;
@@ -199,6 +221,7 @@ int main(int argc, char **argv) {
         }
         char c = *p;
         if (c == '#') {
+            commit();
             now = strtoull(p + 1, nullptr, 10);
             if (auto_begin) {
                 t_begin = now; active_since = now;
@@ -212,6 +235,7 @@ int main(int argc, char **argv) {
             // $dumpoff / $dumpon (Icarus windows): the time between them is not
             // observed -- no T0/T1/TX, and it is excluded from DURATION
             if (!strncmp(p, "$dumpoff", 8) && active) {
+                commit();
                 for (auto &b : bits) account(b, now);
                 if (now > active_since) active_time += now - (active_since > t_begin ? active_since : t_begin);
                 active = false;
@@ -242,7 +266,7 @@ int main(int argc, char **argv) {
                 for (int k = 0; k < W; k++) {   // k = offset from lsb
                     int src = n - 1 - k;
                     char bv = src >= 0 ? val[src] : pad;
-                    set_bit(bits[v.first + k], bv);
+                    set_bit(v.first + k, bv);
                 }
             }
             changes++;
@@ -255,10 +279,11 @@ int main(int argc, char **argv) {
         while (L && (code[L - 1] == '\n' || code[L - 1] == '\r' || code[L - 1] == ' ')) code[--L] = 0;
         auto it = by_code.find(code);
         if (it == by_code.end()) continue;
-        for (size_t vi : it->second) set_bit(bits[vars[vi].first], c);
+        for (size_t vi : it->second) set_bit(vars[vi].first, c);
         changes++;
     }
     if (f != stdin) fclose(f);
+    commit();
     unsigned long long stop = t_end == ~0ULL ? now : t_end;
     if (stop > t_end) stop = t_end;
     if (active) {

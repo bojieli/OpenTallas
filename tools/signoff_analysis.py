@@ -1277,6 +1277,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--only", action="append")
     p.add_argument("--output")
     p.add_argument("--dry-run", action="store_true")
+    sm = sub.add_parser("summary", help="energy per token per architecture from the sign-off results")
+    sm.add_argument("config", nargs="?", default="configs/signoff/energy_per_token.json")
+    sm.add_argument("--output", default="results/physical_abi3/asap7/signoff/energy_per_token.json")
     p.add_argument("--activity-only", action="store_true",
                    help="run the simulations only (the routes may not exist yet); a later run reuses them")
     args = ap.parse_args(argv)
@@ -1296,14 +1299,15 @@ def main(argv: list[str] | None = None) -> int:
                     cycles_per_token=None, activity_meta=None)
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
         Path(args.output).write_text(json.dumps(r, indent=2, sort_keys=True) + "\n")
+    elif args.cmd == "summary":
+        r = summarize(Path(args.config))
+        Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.output).write_text(json.dumps(r, indent=2, sort_keys=True) + "\n")
     elif args.cmd == "plan":
         run_plan(Path(args.plan), only=args.only, output=Path(args.output) if args.output else None,
                  dry_run=args.dry_run, activity_only=args.activity_only)
     return 0
 
-
-if __name__ == "__main__":
-    raise SystemExit(main())
 
 
 # ---------------------------------------------------------------------------
@@ -1346,7 +1350,7 @@ def read_net_saif(path: Path) -> tuple[dict[str, tuple[int, int, int, int]], dic
         for line in f:
             m = rec.match(line)
             if m:
-                name = re.sub(r"\\(.)", r"\1", m.group(1))
+                name = re.sub(r"\\(.)", r"\1", m.group(1)).lstrip("\\")
                 nets[name] = (int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5)))
                 continue
             h = re.match(r"^\((TIMESCALE|DURATION|DIVIDER|DESIGN) (.*)\)\s*$", line)
@@ -1540,3 +1544,151 @@ def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str =
         o.write(")\n)\n")
     stats["flop_match_fraction"] = stats["flops_matched"] / stats["flops"] if stats["flops"] else None
     return stats
+
+
+# ---------------------------------------------------------------------------
+# summary: energy per token per architecture, against the analytical model
+# ---------------------------------------------------------------------------
+TECH = ROOT / "configs/hardware/technology.json"
+
+
+def saif_port_cycles(saif: Path, ports: Iterable[str], half_period_ps: int) -> dict[str, float]:
+    """Cycles each (scalar or vector) top-level port of the SAIF's top instance was
+    high: sum over bits of T1 / clock period.  Used for memory-port enables."""
+    want = set(ports)
+    out: dict[str, float] = {p: 0.0 for p in want}
+    seen_instances = 0
+    pat = re.compile(r"^\s*\((\S+) \(T0 (\d+)\) \(T1 (\d+)\)")
+    with open(saif, encoding="utf-8") as f:
+        for line in f:
+            if line.lstrip().startswith("(INSTANCE"):
+                seen_instances += 1
+                if seen_instances > 1:      # vcd2saif writes the top's nets before its children
+                    break
+                continue
+            m = pat.match(line)
+            if m:
+                base = m.group(1).replace("\\", "").split("[", 1)[0]
+                if base in want:
+                    out[base] += int(m.group(3)) / (2.0 * half_period_ps)
+    return out
+
+
+def tech_value(*path: str) -> dict[str, Any]:
+    node: Any = json.loads(TECH.read_text())
+    for p in path:
+        node = node[p]
+    return {"value": node["value"], "range_low": node.get("range_low"), "range_high": node.get("range_high"),
+            "grade": node.get("grade"), "source": f"configs/hardware/technology.json {'.'.join(path)}"}
+
+
+def _corner_energy(block: dict[str, Any], corner: str, cycles: int, period_ns: float, group: str | None,
+                   instances: float) -> dict[str, Any] | None:
+    c = block.get("corners", {}).get(corner)
+    if not c:
+        return None
+    p = c["power_by_hierarchy_w"].get(group) if group else c["power_w"]["total"]
+    if p is None or p.get("total") is None:
+        return None
+    t = period_ns * 1e-9 * cycles
+    dyn = ((p.get("internal") or 0.0) + (p.get("switching") or 0.0)) * t * instances
+    leak = (p.get("leakage") or 0.0) * t * instances
+    return {"dynamic_j": dyn, "leakage_j": leak, "total_j": dyn + leak, "power_w": p["total"] * instances}
+
+
+def summarize(cfg_path: Path) -> dict[str, Any]:
+    """Energy per token of each architecture's reduced vehicle, composed from
+    the sign-off results (logic, activity-annotated) and the analytical
+    model's per-byte memory and link energies (configs/hardware/technology.json)."""
+    cfg = json.loads(Path(cfg_path).read_text())
+    cache: dict[str, dict] = {}
+
+    def load(path: str) -> dict:
+        if path not in cache:
+            cache[path] = json.loads((ROOT / path).read_text())
+        return cache[path]
+
+    energy = {k: tech_value("energy", k) for k in ("rom_read_j_per_byte", "sram_read_j_per_byte", "hbm_j_per_byte")}
+    energy["ucie_j_per_bit"] = {"value": 0.29e-12, "range_low": 0.29e-12, "range_high": 0.29e-12,
+                                "grade": "published", "source": "configs/hardware/technology.json "
+                                "links.rom_package_ucie.bytes_s note (0.29 pJ/b, UCIe on CoWoS)"}
+    out: dict[str, Any] = {"schema": SCHEMA + ".energy_per_token", "config": rel(cfg_path),
+                           "generated_at": datetime.now(timezone.utc).isoformat(),
+                           "energy_terms": energy, "architectures": {}}
+    for name, arch in cfg["architectures"].items():
+        a: dict[str, Any] = {"description": arch.get("description"), "token_cycles": arch["token_cycles"],
+                             "clock_period_ns": arch["clock_period_ns"], "logic": {}, "memory": {}, "links": {},
+                             "static": {}, "missing": list(arch.get("missing", []))}
+        cycles, period = arch["token_cycles"], arch["clock_period_ns"]
+        token_s = cycles * period * 1e-9
+        a["token_time_s"] = token_s
+        totals = {c: 0.0 for c in ("TT", "SS", "FF")}
+        for item in arch.get("logic", []):
+            src = ROOT / item["signoff"]
+            if not src.exists():
+                a["missing"].append(f"{item['name']}: {item['signoff']} not produced")
+                continue
+            blk = load(item["signoff"])["blocks"].get(item["key"])
+            if blk is None:
+                a["missing"].append(f"{item['name']}: block {item['key']} not in {item['signoff']}")
+                continue
+            row = {"source": f"{item['signoff']}#blocks.{item['key']}", "group": item.get("group"),
+                   "instances": item.get("instances", 1), "activity": blk.get("activity", {}).get("source"),
+                   "note": item.get("note")}
+            for c in totals:
+                e = _corner_energy(blk, c, item.get("cycles", cycles), period, item.get("group"),
+                                   item.get("instances", 1))
+                if e:
+                    row[c] = e
+                    totals[c] += e["total_j"]
+            a["logic"][item["name"]] = row
+        mem_tt = 0.0
+        for item in arch.get("memory", []):
+            nbytes = item.get("bytes_per_token")
+            basis = item.get("basis")
+            if nbytes is None and item.get("ports_from_saif"):
+                ps = item["ports_from_saif"]
+                saif = _resolve(ps["saif"])
+                if saif and saif.exists():
+                    cyc = saif_port_cycles(saif, ps["ports"].keys(), ps["half_period_ps"])
+                    nbytes = sum(cyc[p] * b for p, b in ps["ports"].items())
+                    basis = (basis or "") + f" enable-high cycles {dict((p, round(v)) for p, v in cyc.items())}"
+            if nbytes is None:
+                a["missing"].append(f"memory {item['name']}: no byte count")
+                continue
+            term = energy[item["energy"]]
+            per = term["value"] * (8 if item["energy"].endswith("_bit") else 1)
+            lo = (term["range_low"] or term["value"]) * (8 if item["energy"].endswith("_bit") else 1)
+            hi = (term["range_high"] or term["value"]) * (8 if item["energy"].endswith("_bit") else 1)
+            e = nbytes * per
+            mem_tt += e
+            a["memory"][item["name"]] = {"bytes_per_token": nbytes, "energy_term": item["energy"],
+                                         "energy_j": e, "energy_j_low": nbytes * lo, "energy_j_high": nbytes * hi,
+                                         "basis": basis}
+        static_j = 0.0
+        for item in arch.get("static", []):
+            w = tech_value(*item["term"])["value"] * item.get("fraction", 1.0)
+            static_j += w * token_s
+            a["static"][item["name"]] = {"watts": w, "energy_j": w * token_s, "term": ".".join(item["term"]),
+                                         "fraction": item.get("fraction", 1.0), "basis": item.get("basis")}
+        a["totals_j"] = {"logic_TT": totals["TT"], "logic_SS": totals["SS"], "logic_FF": totals["FF"],
+                         "memory_and_links": mem_tt, "static": static_j,
+                         "token_TT": totals["TT"] + mem_tt + static_j}
+        # per-MAC projection from the matrix engine
+        me = arch.get("mac")
+        if me and me.get("logic") in a["logic"] and "TT" in a["logic"][me["logic"]]:
+            e_me = a["logic"][me["logic"]]["TT"]
+            macs = me["macs_per_token"]
+            a["pj_per_mac"] = {
+                "matrix_engine_logic_pj_per_mac": e_me["total_j"] / macs * 1e12,
+                "matrix_engine_dynamic_pj_per_mac": e_me["dynamic_j"] / macs * 1e12,
+                "token_pj_per_mac": a["totals_j"]["token_TT"] / macs * 1e12,
+                "macs_per_token": macs, "basis": me.get("basis"),
+                "analytical_mac_energy": tech_value("energy", "mac_energy_j_per_op", me.get("format", "bf16")),
+            }
+        out["architectures"][name] = a
+    return out
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
