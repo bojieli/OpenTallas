@@ -618,8 +618,9 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     #: last-block pin cannot stand in for it, because that is the last block of
     #: the PLANE, which is one block for every prefill row and, on a plane
     #: presented at capacity, a block past the context altogether.
-    #: results/abi3/deepseek_v41_candidate_pool_pin.json: at P10 every query
-    #: before row 7 admitted nothing on layers 21-39 and rows 8-9 lost 8 and 9.
+    #: results/abi3/deepseek_v41_pool_and_decode_path.json: at P10 every query
+    #: before row 7 admitted nothing and rows 8-9 lost positions 8 and 9 on the
+    #: pool-reading layers (24, 28, 32, 36 and the layers reusing their picks).
     ranks_blocks = _ranks_blocks(descriptor, 1)
     candidates = -(-context // ratio) if ranks_blocks else context // ratio
     # Zero candidates is not a fault.  A context shorter than one compression
