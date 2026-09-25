@@ -182,7 +182,7 @@ module ot_hdc_core_v41 #(
     reg [1:0]    me_split, me_hg;
     reg [AW-1:0] me_ogs;
     // SU
-    reg [NW-1:0] su_nout, su_nin;
+    reg [NW-1:0] su_nout, su_nin, su_chase;
     reg [1:0]    a_src, b_src, c_src, d_src, a_ind, dst, red, m2, e2, su_vec;
     reg [AW-1:0] a_base, a_so, a_si, a_ibase, b_base, b_so, b_si, c_base, c_so, c_si, d_base, d_so, d_si;
     reg [AW-1:0] o_base, o_so, o_si, o_row, r_base, r_so;
@@ -317,7 +317,7 @@ module ot_hdc_core_v41 #(
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
         me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_hg <= `F(ME_HG); me_ogs <= `F(ME_OGS);
-        su_nout <= c_su_nout; su_nin <= c_su_nin; su_vec <= `F(SU_VEC);
+        su_nout <= c_su_nout; su_nin <= c_su_nin; su_vec <= `F(SU_VEC); su_chase <= `F(SU_CHASE);
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + `DY(A_D); a_so <= `F(A_SO); a_si <= `F(A_SI);
         a_ind <= `F(A_IND); a_ibase <= `F(A_IBASE);
         b_src <= `F(B_SRC); b_base <= `F(B_BASE) + `DY(B_D); b_so <= `F(B_SO); b_si <= `F(B_SI); b_half <= `F(B_HALF);
@@ -364,7 +364,7 @@ module ot_hdc_core_v41 #(
 
     ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W), .SW(SW)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
-        .i_nout(su_nout), .i_nin(su_nin), .i_vec(su_vec), .i_asrc(a_src), .i_bsrc(b_src), .i_csrc(c_src), .i_dsrc(d_src),
+        .i_nout(su_nout), .i_nin(su_nin), .i_vec(su_vec), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src), .i_csrc(c_src), .i_dsrc(d_src),
         .i_abase(a_base), .i_aso(a_so), .i_asi(a_si), .i_aibase(a_ibase), .i_aind(a_ind),
         .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si), .i_bhalf(b_half),
         .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si), .i_cpair(c_pair),

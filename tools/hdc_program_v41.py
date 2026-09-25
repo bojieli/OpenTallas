@@ -788,6 +788,70 @@ class Builder:
         return schedule(self.prog)
 
 
+def su_static(f):
+    """A stream op whose vector-memory traffic is the same at every position: it
+    always issues, its counts and vector-memory bases take no DYN value, and A is
+    not gathered."""
+    if f.get("pred", 0) != I.PRED_ALWAYS or f.get("su_d_nout", 0) or f.get("su_d_nin", 0) or f.get("a_ind", 0):
+        return False
+    if f.get("red", 0) == I.RED_SEQ:
+        return False
+    return all(not f.get(f"{x}_d", 0) for x in "abcd" if f.get(f"{x}_src", 0) == I.SRC_VM) and \
+        not (f.get("dst", 0) == I.DST_VM and f.get("o_d", 0))
+
+
+def su_vectors(f, lanes=None):
+    """Per element (o, i) of a static stream op: its vector index, and its
+    vector-memory addresses read (A..D) and written (the element write)."""
+    lanes = lanes or I.SU_LANES
+    no, ni = f.get("su_nout", 0), f.get("su_nin", 0)
+    o, i = (x.reshape(-1) for x in np.meshgrid(np.arange(no), np.arange(ni), indexing="ij"))
+    vec = f.get("su_vec", 0)
+    if vec == I.VEC_I:
+        v = o * -(-ni // lanes) + i // lanes
+    elif vec == I.VEC_O:
+        v = (o // lanes) * ni + i
+    else:
+        v = o * ni + i
+
+    def at(x, half=False):
+        ii = i >> 1 if half else i
+        return f.get(f"{x}_base", 0) + o * f.get(f"{x}_so", 0) + ii * f.get(f"{x}_si", 0)
+    reads = []
+    for x in "abcd":
+        if f.get(f"{x}_src", 0) != I.SRC_VM:
+            continue
+        if x == "c" and f.get("c_pair"):
+            reads.append(at("a") ^ 1)
+        else:
+            reads.append(at(x, x in "bd" and f.get("b_half")))
+    writes = at("o") if f.get("dst", 0) == I.DST_VM else None
+    return v, reads, writes
+
+
+def chase_distance(prev, cur, lanes=None):
+    """The stream unit's chase distance D for `cur` right behind `prev` (both
+    static, same class): `cur` emits its first vector once fewer than D vectors
+    are in flight, then one per cycle, while `prev` (emitted without gaps)
+    retires one per cycle ahead of it -- so vector v goes only once `prev` has
+    retired every vector that wrote what v reads.  With n1 vectors in `prev`
+    and need[v] = 1 + the last of them that v reads (0 if none),
+    D = 1 + min_v (n1 + v - need[v])."""
+    pv, _, pw = su_vectors(prev, lanes)
+    n1 = int(pv.max()) + 1
+    writer = {}
+    if pw is not None:
+        for a, v in zip(pw.tolist(), pv.tolist()):
+            writer[a] = max(writer.get(a, -1), v)
+    cv, reads, _ = su_vectors(cur, lanes)
+    nv = int(cv.max()) + 1
+    need = np.zeros(nv, dtype=np.int64)
+    for r in reads:
+        w = np.array([writer.get(a, -1) for a in r.tolist()], dtype=np.int64) + 1
+        np.maximum.at(need, cv, w)
+    return int(1 + np.min(n1 + np.arange(nv) - need))
+
+
 def never_skipped(f):
     """An op that issues at every position: no predicate and no count from a DYN value."""
     if f.get("pred", 0) != I.PRED_ALWAYS:
@@ -795,6 +859,13 @@ def never_skipped(f):
     if f["unit"] == I.UNIT_XU and f.get("xu_op", 0) == I.XU_SEL:
         return f.get("xu_d_n", 0) == 0 and f.get("xu_n", 0) > 0
     return True
+
+
+CHASE = True                     # stream ops chase the previous stream op (su_chase) where they can
+
+
+def su_class(f):
+    return (f.get("m1", 0) in (I.M1_DIVB, I.M1_DIVIMM), f.get("sfu", 0))
 
 
 def schedule(prog):
@@ -816,15 +887,21 @@ def schedule(prog):
     wr = {u: set() for u in I.UNITS}
     rw = {u: set() for u in I.UNITS}              # reducer outputs (stream unit)
     last = {}
+    last_su = None                                  # the previous stream op (chase source)
     sequential = (I.UNIT_QE, I.UNIT_XU)
     for f, reads, writes, tag in prog:
         f = dict(f)
         wait = f.get("wait", 0)
         own = f["unit"]
         red = set(f.pop("_redw", ()))
+        chase = 0
         for u in I.UNITS:
             if u == own:
                 c = reads & wr[u]
+                if u == I.UNIT_SU and c and CHASE and not (reads & rw[u]) and su_static(f) and last_su \
+                        and su_static(last_su) and su_class(f) == su_class(last_su):
+                    chase = chase_distance(last_su, f)
+                    c = set()                      # chase the previous stream op instead of draining
                 if u == I.UNIT_SU:
                     c = c or (writes & rw[u])
                 if u == I.UNIT_ME and last.get(u) != (f.get("me_split", 0), f.get("me_wsrc", 0)):
@@ -837,6 +914,9 @@ def schedule(prog):
             if wait >> (u - 1) & 1:
                 rd[u], wr[u], rw[u] = set(), set(), set()
         f["wait"] = wait
+        if own == I.UNIT_SU:
+            f["su_chase"] = chase if not (wait >> (I.UNIT_SU - 1) & 1) else 0
+            last_su = f
         if own in sequential and never_skipped(f):
             rd[own], wr[own] = set(), set()
         if own in rd:

@@ -7,15 +7,17 @@ per-instruction wait masks on unit drains) and the four units:
 
 * ME  the matrix-vector engine: an element loop of tiles * k * IL cycles, then
       a fixed result latency to its drain;
-* SU  the V4.1 stream unit: one element per cycle (one per 8 in SEQ reductions),
-      the class depth (M1 multiply or divide, the SFU function), same-class
-      overlap of consecutive ops, a class change only once drained, the
-      reducer's tail;
+* SU  the V4.1 stream unit: one vector of SU_LANES elements per cycle (one
+      element per 8 cycles in SEQ reductions), the class depth (M1 multiply or
+      divide, the SFU function), same-class overlap of consecutive ops, a chase
+      (a vector waits for the in-flight count to fall below D), a class change
+      only once drained, the reducer's tail and the segment tree;
 * QE  the quantised engine: index read, activation blocks through the
       quantiser, alignment of the word stream to the block-dot lanes' free-
       running slot counter, tiles * nb * IL words, the lanes' latency;
 * XU  SELECT (n elements in, k indices out), Sinkhorn, Engram hash and gather;
-* HE  the hyper-connection projection engine: k * IL cycles, then its latency.
+* HE  the hyper-connection projection engine: k * IL cycles (k the chunk
+      length), then its latency and the chunk tree.
 
 Constants are the RTL's (`K`); `--calibrate TRACE` fits them to a Verilator
 issue trace (tb_hdc_core_v41 +TRACE) and reports every issue's error.  The
@@ -34,14 +36,14 @@ import hdc_isa_v41 as I
 ROOT = Path(__file__).resolve().parents[1]
 IL, W, G = I.INTERLEAVE, I.W_LANES, I.GROUPS
 
-# RTL constants (cycles), fitted by `calibrate` against the reduced vehicle's trace.
+# RTL constants (cycles), fitted by `calibrate` jointly against the reduced vehicle's traces
+# (stream-unit widths 4, 8, 16; before and after the K-splits and the overlap scheduling).
 K = dict(
     gap=6,              # go -> next go of a following instruction (S_GO, FETCH, WAIT, CAP, DEC, ISSUE)
     skip=5,             # a skipped instruction (predicate / zero count): ISSUE -> FETCH ..
     me_start=2,         # go -> first element
     me_drain=29,        # last element -> idle seen by the sequencer
-    me_next=0,         # last element -> a following op may be accepted
-    me_drain_kv=0,      # extra drain of a KV-sourced op
+    me_next=0,          # last element -> a following op may be accepted
     su_start=1,
     su_base=28,         # emit -> retire without M1 divide and SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
     su_div=26,          # extra depth of an M1 divide (31 vs 5)
@@ -50,12 +52,13 @@ K = dict(
     su_red=35,          # last retire -> idle seen, with a reduction
     su_tree=25,         # red_tree: the segment tree after the last segment sum
     su_tree_free=-1,    # red_tree: idle seen -> the unit accepts again
-    qe_start=-3,
+    su_chase=6,         # chase: the previous op's last emit + depth - D + this -> the first emit
+    qe_start=-2,
     qe_idx=2,
     qe_load=16,         # after the nb block reads: the quantiser's latency and the state step
     qe_rows_lat=25,     # last word -> last result written -> idle seen
-    qe_qdq_lat=21,      # QDQ: after the reads
-    qe_phase0=-3,        # absolute-cycle offset of the lanes' slot counter
+    qe_qdq_lat=20,      # QDQ: after the reads
+    qe_phase0=-3,       # absolute-cycle offset of the lanes' slot counter
     xu_sel=47,          # SELECT: after the n reads, to the last index written (plus k)
     xu_sink=4,          # simple Sinkhorn: sink_cycles() + this
     sk_step=7,          # routed Sinkhorn: core cycles per unit step (ot_hdc_sinkhorn_mc STEP_CYC)
@@ -87,7 +90,7 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
     t = 0                                     # sequencer: earliest next issue cycle
     free = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit accepts a new op from here
     idle = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit drained (as the sequencer sees it) at
-    su_cls, su_last_retire = None, 0
+    su_cls, su_last_retire, su_last_emit = None, 0, 0
     issues = []
     for n, f0 in enumerate(prog):
         f = {name: f0.get(name, 0) for name, _ in I.FIELDS}
@@ -127,14 +130,18 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
         elif unit == I.UNIT_ME:
             e = cnt[1] * cnt[2] * IL
             free[unit] = s + k["me_start"] + e - 1 + k["me_next"]
-            idle[unit] = s + k["me_start"] + e + k["me_drain"] + (k["me_drain_kv"] if f["me_wsrc"] else 0)
+            idle[unit] = s + k["me_start"] + e + k["me_drain"]
         elif unit == I.UNIT_SU:
             vec = f.get("su_vec", 0)
             e = (no * -(-ni // I.SU_LANES) if vec == I.VEC_I else
                  -(-no // I.SU_LANES) * ni if vec == I.VEC_O else no * ni)
             step = 8 if f["red"] == I.RED_SEQ else 1
-            last_emit = s + k["su_start"] + step * (e - 1)
             depth = k["su_base"] + (k["su_div"] if cls[0] else 0) + SFU_DEPTH[cls[1]]
+            first = s + k["su_start"]
+            if f.get("su_chase", 0) and su_cls == cls:   # vector 0 waits for the in-flight count to fall below D
+                first = max(first, su_last_emit + depth + k["su_chase"] - f["su_chase"])
+            last_emit = first + step * (e - 1)
+            su_last_emit = last_emit
             free[unit] = last_emit + 1
             su_last_retire = max(su_last_retire, last_emit + depth) if su_cls == cls else last_emit + depth
             su_cls = cls

@@ -60,7 +60,11 @@ are:
 
 Sequencing.  An instruction names the units whose in-flight work it must see
 drained (`wait`, a mask; bit u-1 for unit u, u = ME, SU, QE, XU, HE); the program generator computes
-it from region hazards, so independent units overlap.  `pred` skips an
+it from region hazards, so independent units overlap.  A stream op that reads the
+previous stream op's element writes may instead CHASE it (`su_chase` = D > 0,
+same class): it is accepted behind that op and emits a vector only while fewer
+than D vectors are in flight, D derived from the two ops' write and read orders
+so no read overtakes its write.  `pred` skips an
 instruction by position parity (group-completing compressor steps) or at
 position 0 (an empty index set).  A count that evaluates to zero skips.
 
@@ -161,7 +165,7 @@ FIELDS = [
     # HE
     ("he_nout", N), ("he_k", N), ("he_wbase", A), ("he_xbase", A), ("he_obase", A),
     # SU lane axis (SCALAR, VI, VO) and the segmented-tree reduction
-    ("su_vec", 2), ("red_tree", 1),
+    ("su_vec", 2), ("red_tree", 1), ("su_chase", N),
 ]
 
 

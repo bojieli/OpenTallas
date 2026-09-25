@@ -12,6 +12,15 @@
 //           every lane owns whole segments, so its reducer sums its segment in
 //           exactly the scalar order (P=8 interleaved partials, pairwise tree)
 //
+// CHASE (`i_chase` = D > 0): an op accepted behind a same-class op that
+// writes what it reads emits its FIRST vector only once fewer than D vectors
+// are in flight, then one vector every cycle.  The op it chases was emitted
+// without gaps, so it retires one vector per cycle ahead of this one; the
+// program generator derives D from both ops' write and read orders
+// (tools/hdc_program_v41.chase_distance), so every vector is read after the
+// vectors it depends on were written.  Only the first vector may wait: a
+// reducer needs a segment's elements without gaps.  (SEQ ops never chase.)
+//
 // Every lane is the whole scalar datapath (ot_hdc_v41_su_lane): each element
 // reads four operands and passes one fixed pipeline of qualified binary32
 // units:
@@ -605,6 +614,7 @@ module ot_hdc_v41_stream #(
     // instruction (DYN already added to the bases and counts)
     input  wire [NW-1:0]     i_nout, i_nin,
     input  wire [1:0]        i_vec,
+    input  wire [NW-1:0]     i_chase,        // > 0: the first vector waits for fewer vectors in flight
     input  wire [1:0]        i_asrc, i_bsrc, i_csrc, i_dsrc,
     input  wire [AW-1:0]     i_abase, i_aso, i_asi, i_aibase,
     input  wire [1:0]        i_aind,
@@ -668,7 +678,9 @@ module ot_hdc_v41_stream #(
     wire   retire;
     reg              seq;                   // SEQ reduction: one element per 8 cycles
     reg [2:0]        gap;
-    wire             emit = active && (!seq || gap == 3'd0);
+    reg [NW-1:0]     chase_r;                // cleared by the op's first emit
+    wire             chased = (chase_r == 0) || (inflight < chase_r);
+    wire             emit = active && (!seq || gap == 3'd0) && chased;
     reg [NW-1:0]     o, i, nout_r, nin_r;
     reg              i_last_r, o_last_r;
     reg [31:0]       g, total;
@@ -702,7 +714,11 @@ module ot_hdc_v41_stream #(
         if (accept) begin
             o <= 0; i <= 0; nout_r <= i_nout; nin_r <= i_nin; g <= 0; total <= i_nout * i_nin;
             i_last_r <= (i_nin <= i_istep); o_last_r <= (i_nout <= i_ostep);
-            istep <= i_istep; ostep <= i_ostep; vmode <= i_vec;
+            istep <= i_istep; ostep <= i_ostep; vmode <= i_vec; chase_r <= i_chase;
+        end else if (emit && chase_r != 0) begin
+            chase_r <= 0;
+        end
+        if (accept) begin
             fin_th <= {1'b0, i_nin} - 17'd8;
             seq <= (i_red == RED_SEQ);
             arow <= 0; acol <= 0; brow <= i_bbase; bcol <= 0; crow <= i_cbase; ccol <= 0;
